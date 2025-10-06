@@ -8471,32 +8471,17 @@ let
       descriptorRange = "npm:0.1.1";
       checksum = "10/673c11518dba2e582e42415cbefe928513616f3af25e12f6e4e6b1b98b52b3e6c14bc251a361654af63cd64f208f22a1f7556fa49da2bf7efcf28cb14f16f807";
     };
-    "@opentelemetry/api-logs@npm:0.52.1" = {
+    "@opentelemetry/api-logs@npm:0.204.0" = {
       name = "@opentelemetry/api-logs";
-      reference = "npm:0.52.1";
+      reference = "npm:0.204.0";
       linkType = "HARD";
-      outputName = "opentelemetry-api-logs-0.52.1-2fac882800";
-      outputHash = "7515667a41a38014ffda70674c0b77c9c68417cde9f8ce8840e675308b4431f99d879e8d347f1b08486561617f914c07ee704ad6ed8a6522dabc3a81ac39dc88";
+      outputName = "opentelemetry-api-logs-0.204.0-10cc39cd27";
+      outputHash = "698d04b3fc014ec68b5571ef5bebb9c276e290035f060aae6c2554410115d42d41ad41255a809bde4ca26e32bc833dba413c1d90dcda624c6c0307c309ba9d08";
       flatName = "api-logs";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.52.1";
-      checksum = "10/7515667a41a38014ffda70674c0b77c9c68417cde9f8ce8840e675308b4431f99d879e8d347f1b08486561617f914c07ee704ad6ed8a6522dabc3a81ac39dc88";
-      dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-      };
-    };
-    "@opentelemetry/api-logs@npm:0.53.0" = {
-      name = "@opentelemetry/api-logs";
-      reference = "npm:0.53.0";
-      linkType = "HARD";
-      outputName = "opentelemetry-api-logs-0.53.0-b2aa674d6a";
-      outputHash = "347b4554d6ee01afb29bd39e8f9cbbccd80abb0883fe6a84e3bcce8ab4dbfe357a2729246d2f66de0de6272846fd1bb2d71e286e18ad2690d9e7f46f02f00f73";
-      flatName = "api-logs";
-      languageName = "node";
-      scope = "opentelemetry";
-      descriptorRange = "npm:0.53.0";
-      checksum = "10/347b4554d6ee01afb29bd39e8f9cbbccd80abb0883fe6a84e3bcce8ab4dbfe357a2729246d2f66de0de6272846fd1bb2d71e286e18ad2690d9e7f46f02f00f73";
+      descriptorRange = "npm:0.204.0";
+      checksum = "10/698d04b3fc014ec68b5571ef5bebb9c276e290035f060aae6c2554410115d42d41ad41255a809bde4ca26e32bc833dba413c1d90dcda624c6c0307c309ba9d08";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
       };
@@ -8516,6 +8501,21 @@ let
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
       };
     };
+    "@opentelemetry/api-logs@npm:0.57.2" = {
+      name = "@opentelemetry/api-logs";
+      reference = "npm:0.57.2";
+      linkType = "HARD";
+      outputName = "opentelemetry-api-logs-0.57.2-97ef249ccb";
+      outputHash = "8e3bac962e8f1fc93bfee6b433121bd2e07e8a8d1b86ef0d9d4a2c54d1759b64c74cf5da400f82f5ab5a4fe0da481726d8635fd1b15d123cf43090fa0adb8ea8";
+      flatName = "api-logs";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:0.57.2";
+      checksum = "10/8e3bac962e8f1fc93bfee6b433121bd2e07e8a8d1b86ef0d9d4a2c54d1759b64c74cf5da400f82f5ab5a4fe0da481726d8635fd1b15d123cf43090fa0adb8ea8";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+      };
+    };
     "@opentelemetry/api@npm:1.9.0" = {
       name = "@opentelemetry/api";
       reference = "npm:1.9.0";
@@ -8528,48 +8528,29 @@ let
       descriptorRange = "npm:^1.9.0";
       checksum = "10/a607f0eef971893c4f2ee2a4c2069aade6ec3e84e2a1f5c2aac19f65c5d9eeea41aa72db917c1029faafdd71789a1a040bdc18f40d63690e22ccae5d7070f194";
     };
-    "@opentelemetry/context-async-hooks@npm:1.25.1" = {
+    "@opentelemetry/context-async-hooks@npm:2.1.0" = {
       name = "@opentelemetry/context-async-hooks";
-      reference = "npm:1.25.1";
+      reference = "npm:2.1.0";
       linkType = "HARD";
-      outputName = "opentelemetry-context-async-hooks-1.25.1-494f38401f";
-      outputHash = "0f708d738dd7fa00997a2e2536c1fd90faab5cc468510c3b3c272ed8dfc7a7fd6bd2612c31eb4e8b6caa73156d617f0046bb978fe84ba164ea15907d9e23869a";
+      outputName = "opentelemetry-context-async-hooks-2.1.0-b7d2429fa3";
+      outputHash = "72f0380ec1407303aadd173663c1cf83b80c104b79b7e1ded909d78cc63574d7d7011b85d21858dd0384839550406f0cdd346c0ecfa78f1915707340aa14ef1b";
       flatName = "context-async-hooks";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:^1.25.1";
-      checksum = "10/0f708d738dd7fa00997a2e2536c1fd90faab5cc468510c3b3c272ed8dfc7a7fd6bd2612c31eb4e8b6caa73156d617f0046bb978fe84ba164ea15907d9e23869a";
+      descriptorRange = "npm:^2.1.0";
+      checksum = "10/72f0380ec1407303aadd173663c1cf83b80c104b79b7e1ded909d78cc63574d7d7011b85d21858dd0384839550406f0cdd346c0ecfa78f1915707340aa14ef1b";
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/context-async-hooks@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:1.25.1" = {
+    "@opentelemetry/context-async-hooks@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0" = {
       name = "@opentelemetry/context-async-hooks";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:1.25.1";
-      canonicalPackage = packages."@opentelemetry/context-async-hooks@npm:1.25.1";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+      canonicalPackage = packages."@opentelemetry/context-async-hooks@npm:2.1.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
       };
-    };
-    "@opentelemetry/core@npm:1.26.0" = {
-      name = "@opentelemetry/core";
-      reference = "npm:1.26.0";
-      linkType = "HARD";
-      outputName = "opentelemetry-core-1.26.0-1d783a1642";
-      outputHash = "474b6bcf42cd2825d56f915eb0d6e6cdcb37777a11fc2618fc2fa50754f4b9b5df23944f3aab186cb3ab930db5c3a81efa3183362802314a966930110346e6a4";
-      flatName = "core";
-      languageName = "node";
-      scope = "opentelemetry";
-      descriptorRange = "npm:1.26.0";
-      checksum = "10/474b6bcf42cd2825d56f915eb0d6e6cdcb37777a11fc2618fc2fa50754f4b9b5df23944f3aab186cb3ab930db5c3a81efa3183362802314a966930110346e6a4";
-      dependencies = {
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-      };
-      packagePeers = [
-        "@opentelemetry/api"
-        "@types/opentelemetry__api"
-      ];
     };
     "@opentelemetry/core@npm:1.27.0" = {
       name = "@opentelemetry/core";
@@ -8590,38 +8571,57 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0" = {
+    "@opentelemetry/core@npm:2.1.0" = {
       name = "@opentelemetry/core";
-      reference = "virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
+      reference = "npm:2.1.0";
+      linkType = "HARD";
+      outputName = "opentelemetry-core-2.1.0-ea8b80bf70";
+      outputHash = "735bd1fe8a099c3aa3d7640875a5b30ab304f7e3b13efd622daabe47ff5470e9c453ad9fc119a5a0c0458ec2c7753f9a066afa32a269745b06b429ba7db90516";
+      flatName = "core";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:^2.1.0";
+      checksum = "10/735bd1fe8a099c3aa3d7640875a5b30ab304f7e3b13efd622daabe47ff5470e9c453ad9fc119a5a0c0458ec2c7753f9a066afa32a269745b06b429ba7db90516";
+      dependencies = {
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+      };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@types/opentelemetry__api"
+      ];
+    };
+    "@opentelemetry/core@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0" = {
+      name = "@opentelemetry/core";
+      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0";
       canonicalPackage = packages."@opentelemetry/core@npm:1.27.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
     };
-    "@opentelemetry/core@virtual:dccea05ef268babf571ca0574cb0120c2fd04d8a817ef2eaaa035d34f153fa3fc9649bd06ca9efb294b4448a218422a287cd62f2d727d968073635e51e0ceadd#npm:1.26.0" = {
+    "@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0" = {
       name = "@opentelemetry/core";
-      reference = "virtual:dccea05ef268babf571ca0574cb0120c2fd04d8a817ef2eaaa035d34f153fa3fc9649bd06ca9efb294b4448a218422a287cd62f2d727d968073635e51e0ceadd#npm:1.26.0";
-      canonicalPackage = packages."@opentelemetry/core@npm:1.26.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+      canonicalPackage = packages."@opentelemetry/core@npm:2.1.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
-    "@opentelemetry/instrumentation-amqplib@npm:0.43.0" = {
+    "@opentelemetry/instrumentation-amqplib@npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-amqplib";
-      reference = "npm:0.43.0";
+      reference = "npm:0.51.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-amqplib-0.43.0-55ff4cbbcb";
-      outputHash = "5d632e1b1ee8ac6a596aed90aa9e0fe5c9b0a5e1dd34d2bb209bf19227d945f535d07e6d03a2325ae1e90858923535a356745ef6580723531e532923b178d039";
+      outputName = "opentelemetry-instrumentation-amqplib-0.51.0-7efbee6e90";
+      outputHash = "be46037ebe797cff15785bf95ce93b8a95984b4cfd2329401d9c5ee0f3a488a9601ee259ca5e104a73a8677639fa8658d9111a356c45ada6b0f35a9271314167";
       flatName = "instrumentation-amqplib";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:^0.43.0";
-      checksum = "10/5d632e1b1ee8ac6a596aed90aa9e0fe5c9b0a5e1dd34d2bb209bf19227d945f535d07e6d03a2325ae1e90858923535a356745ef6580723531e532923b178d039";
+      descriptorRange = "npm:0.51.0";
+      checksum = "10/be46037ebe797cff15785bf95ce93b8a95984b4cfd2329401d9c5ee0f3a488a9601ee259ca5e104a73a8677639fa8658d9111a356c45ada6b0f35a9271314167";
       dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -8629,93 +8629,93 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-amqplib@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.43.0" = {
+    "@opentelemetry/instrumentation-amqplib@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-amqplib";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.43.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-amqplib@npm:0.43.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-amqplib@npm:0.51.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-connect@npm:0.40.0" = {
+    "@opentelemetry/instrumentation-connect@npm:0.48.0" = {
       name = "@opentelemetry/instrumentation-connect";
-      reference = "npm:0.40.0";
+      reference = "npm:0.48.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-connect-0.40.0-f8bb611ce2";
-      outputHash = "31d6adb3fbc04d4e831730562f57f8c54c6844e5214a31c70d5e855b7363202822d320cca603132ff9e4b4a597ecd4dcfb32ca2725cf5cd226fa239bf8fcd779";
+      outputName = "opentelemetry-instrumentation-connect-0.48.0-6cae76803d";
+      outputHash = "289edf6d1108f1fb7e9937d0be62fbf44879716c53addd226862c1ae4dedfe030961f8052248485177ae950382046b7c00cc50512f3a195a1c285f4c455dca81";
       flatName = "instrumentation-connect";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.40.0";
-      checksum = "10/31d6adb3fbc04d4e831730562f57f8c54c6844e5214a31c70d5e855b7363202822d320cca603132ff9e4b4a597ecd4dcfb32ca2725cf5cd226fa239bf8fcd779";
+      descriptorRange = "npm:0.48.0";
+      checksum = "10/289edf6d1108f1fb7e9937d0be62fbf44879716c53addd226862c1ae4dedfe030961f8052248485177ae950382046b7c00cc50512f3a195a1c285f4c455dca81";
       dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@types/connect" = packages."@types/connect@npm:3.4.36";
+        "@types/connect" = packages."@types/connect@npm:3.4.38";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-connect@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.40.0" = {
+    "@opentelemetry/instrumentation-connect@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0" = {
       name = "@opentelemetry/instrumentation-connect";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.40.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-connect@npm:0.40.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-connect@npm:0.48.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@types/connect" = packages."@types/connect@npm:3.4.36";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
+        "@types/connect" = packages."@types/connect@npm:3.4.38";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-dataloader@npm:0.12.0" = {
+    "@opentelemetry/instrumentation-dataloader@npm:0.22.0" = {
       name = "@opentelemetry/instrumentation-dataloader";
-      reference = "npm:0.12.0";
+      reference = "npm:0.22.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-dataloader-0.12.0-b918f5d903";
-      outputHash = "d560b519a6be6572a3bd3707f2035f4e1f8e50b95eee109ee138b9ebfadd1ec7bca288aeabb54e8299746eae9457001162dac6ccd92af5ba7449301e0bb139bd";
+      outputName = "opentelemetry-instrumentation-dataloader-0.22.0-99accf0e33";
+      outputHash = "8e15a6c5e5720819fccf406cc847c104d0364ad85a1561f8f96087cd13b5555b33b6c07403a83ef7fd02de29f090b6e7171efded1dd52583b6d6567f047f62ab";
       flatName = "instrumentation-dataloader";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.12.0";
-      checksum = "10/d560b519a6be6572a3bd3707f2035f4e1f8e50b95eee109ee138b9ebfadd1ec7bca288aeabb54e8299746eae9457001162dac6ccd92af5ba7449301e0bb139bd";
+      descriptorRange = "npm:0.22.0";
+      checksum = "10/8e15a6c5e5720819fccf406cc847c104d0364ad85a1561f8f96087cd13b5555b33b6c07403a83ef7fd02de29f090b6e7171efded1dd52583b6d6567f047f62ab";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-dataloader@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.12.0" = {
+    "@opentelemetry/instrumentation-dataloader@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.22.0" = {
       name = "@opentelemetry/instrumentation-dataloader";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.12.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-dataloader@npm:0.12.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.22.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-dataloader@npm:0.22.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-express@npm:0.44.0" = {
+    "@opentelemetry/instrumentation-express@npm:0.53.0" = {
       name = "@opentelemetry/instrumentation-express";
-      reference = "npm:0.44.0";
+      reference = "npm:0.53.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-express-0.44.0-a5325d32dd";
-      outputHash = "a2ae344c1c2b8346f6957dfadbe4c789a0abf08a5dbcd424c41b320faa5b72d9a399406041792ab6a18093b428958b067d3c66dcd492d9cc5d97a17347d3f88a";
+      outputName = "opentelemetry-instrumentation-express-0.53.0-7d15fe7a91";
+      outputHash = "30a354dde6c498ac82ee5423965a03e2f31e7ae82687b4135bbb20d967e066eb1accd6ca8a60da1e4cf2be8dfe6d07c413ead7fd89e166c36e7da92645e4493c";
       flatName = "instrumentation-express";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.44.0";
-      checksum = "10/a2ae344c1c2b8346f6957dfadbe4c789a0abf08a5dbcd424c41b320faa5b72d9a399406041792ab6a18093b428958b067d3c66dcd492d9cc5d97a17347d3f88a";
+      descriptorRange = "npm:0.53.0";
+      checksum = "10/30a354dde6c498ac82ee5423965a03e2f31e7ae82687b4135bbb20d967e066eb1accd6ca8a60da1e4cf2be8dfe6d07c413ead7fd89e166c36e7da92645e4493c";
       dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -8723,149 +8723,117 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-express@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.44.0" = {
+    "@opentelemetry/instrumentation-express@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0" = {
       name = "@opentelemetry/instrumentation-express";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.44.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-express@npm:0.44.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-express@npm:0.53.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-fastify@npm:0.41.0" = {
-      name = "@opentelemetry/instrumentation-fastify";
-      reference = "npm:0.41.0";
-      linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-fastify-0.41.0-81b0d0923e";
-      outputHash = "6f1af8af8b4ef213a1edde1ba14bc59635078d8953562bc48c431b42503ca91e6a837076093682eb8765a9490b61afdce4e33f966d19c4e436e4c1ffacb70ea1";
-      flatName = "instrumentation-fastify";
-      languageName = "node";
-      scope = "opentelemetry";
-      descriptorRange = "npm:0.41.0";
-      checksum = "10/6f1af8af8b4ef213a1edde1ba14bc59635078d8953562bc48c431b42503ca91e6a837076093682eb8765a9490b61afdce4e33f966d19c4e436e4c1ffacb70ea1";
-      dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-      };
-      packagePeers = [
-        "@opentelemetry/api"
-        "@types/opentelemetry__api"
-      ];
-    };
-    "@opentelemetry/instrumentation-fastify@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0" = {
-      name = "@opentelemetry/instrumentation-fastify";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-fastify@npm:0.41.0";
-      dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
-      };
-    };
-    "@opentelemetry/instrumentation-fs@npm:0.16.0" = {
+    "@opentelemetry/instrumentation-fs@npm:0.24.0" = {
       name = "@opentelemetry/instrumentation-fs";
-      reference = "npm:0.16.0";
+      reference = "npm:0.24.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-fs-0.16.0-433493c87e";
-      outputHash = "01ac3a8c488a85cbd63e8cdb62e4ab228af569c05d731c4615ff90a4fe699e2e619b626d6838f03e7aaeb715a695d6e45a5ba4c5a976e748c04276719924efb9";
+      outputName = "opentelemetry-instrumentation-fs-0.24.0-7243b86039";
+      outputHash = "9ccb9b9bb79bb8a372a42b8544e84f9e18dab5a1b128b891857e3186da67668493666b551c7909d27479003b73979ad85060f1d67cf1e5b1b01dc3810e47ea83";
       flatName = "instrumentation-fs";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.16.0";
-      checksum = "10/01ac3a8c488a85cbd63e8cdb62e4ab228af569c05d731c4615ff90a4fe699e2e619b626d6838f03e7aaeb715a695d6e45a5ba4c5a976e748c04276719924efb9";
+      descriptorRange = "npm:0.24.0";
+      checksum = "10/9ccb9b9bb79bb8a372a42b8544e84f9e18dab5a1b128b891857e3186da67668493666b551c7909d27479003b73979ad85060f1d67cf1e5b1b01dc3810e47ea83";
       dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-fs@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.16.0" = {
+    "@opentelemetry/instrumentation-fs@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.24.0" = {
       name = "@opentelemetry/instrumentation-fs";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.16.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-fs@npm:0.16.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.24.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-fs@npm:0.24.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-generic-pool@npm:0.39.0" = {
+    "@opentelemetry/instrumentation-generic-pool@npm:0.48.0" = {
       name = "@opentelemetry/instrumentation-generic-pool";
-      reference = "npm:0.39.0";
+      reference = "npm:0.48.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-generic-pool-0.39.0-1f618e5b52";
-      outputHash = "37b476cdddaf3fa2f83a340dcd6949e70cbead45cf747a953099fdb422cb0e89fd52017d0ca01e74283e5af4caa788eb4d163f81e4f21e6ba8e89d0a0dbc99c5";
+      outputName = "opentelemetry-instrumentation-generic-pool-0.48.0-1e449c64ea";
+      outputHash = "4827243b033e70fd8e62e8453b0932302dc6e2638123a47968661c8cab94a87e6149fe81160f75940bf3ab4e45b400fb3e61babd1e52fea219fa502668da220c";
       flatName = "instrumentation-generic-pool";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.39.0";
-      checksum = "10/37b476cdddaf3fa2f83a340dcd6949e70cbead45cf747a953099fdb422cb0e89fd52017d0ca01e74283e5af4caa788eb4d163f81e4f21e6ba8e89d0a0dbc99c5";
+      descriptorRange = "npm:0.48.0";
+      checksum = "10/4827243b033e70fd8e62e8453b0932302dc6e2638123a47968661c8cab94a87e6149fe81160f75940bf3ab4e45b400fb3e61babd1e52fea219fa502668da220c";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-generic-pool@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.39.0" = {
+    "@opentelemetry/instrumentation-generic-pool@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0" = {
       name = "@opentelemetry/instrumentation-generic-pool";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.39.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-generic-pool@npm:0.39.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-generic-pool@npm:0.48.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-graphql@npm:0.44.0" = {
+    "@opentelemetry/instrumentation-graphql@npm:0.52.0" = {
       name = "@opentelemetry/instrumentation-graphql";
-      reference = "npm:0.44.0";
+      reference = "npm:0.52.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-graphql-0.44.0-9322849725";
-      outputHash = "fca5234a9adf5bee2b7a0613372e9f5b8cfc4c64243ec84b5fdbae149b1e15ca7398b5eb8c755c8cf82816c7963b080dd6e85d1403e80057dc87ebf81498699a";
+      outputName = "opentelemetry-instrumentation-graphql-0.52.0-f984046dce";
+      outputHash = "8f4226237a492928d48750110d548f40c3fa2e2ecb42fcf977bc6cc188afbbb646fad673b3ecb2d21eab28415ee31b1d23afe27e5e2ebdaf17e89b6bf44aff0f";
       flatName = "instrumentation-graphql";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.44.0";
-      checksum = "10/fca5234a9adf5bee2b7a0613372e9f5b8cfc4c64243ec84b5fdbae149b1e15ca7398b5eb8c755c8cf82816c7963b080dd6e85d1403e80057dc87ebf81498699a";
+      descriptorRange = "npm:0.52.0";
+      checksum = "10/8f4226237a492928d48750110d548f40c3fa2e2ecb42fcf977bc6cc188afbbb646fad673b3ecb2d21eab28415ee31b1d23afe27e5e2ebdaf17e89b6bf44aff0f";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-graphql@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.44.0" = {
+    "@opentelemetry/instrumentation-graphql@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0" = {
       name = "@opentelemetry/instrumentation-graphql";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.44.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-graphql@npm:0.44.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-graphql@npm:0.52.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-hapi@npm:0.41.0" = {
+    "@opentelemetry/instrumentation-hapi@npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-hapi";
-      reference = "npm:0.41.0";
+      reference = "npm:0.51.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-hapi-0.41.0-94c247aba4";
-      outputHash = "5025db3e785476757947915e9512d454f565eabc883757d7a122e134f3cb2e5d418142f916e5ab4b2db2bfb9c59ab105f602c19af268442ae07106b5b547fa64";
+      outputName = "opentelemetry-instrumentation-hapi-0.51.0-dfc45c9ecc";
+      outputHash = "e098437a63807ec288c9e139554ac866909aac2c5da483a9d981f6f2bec33b4b28f73a1b04a2a069870998c2c32eaf68572c6bce3992de0f0b6c09a7e6da1b23";
       flatName = "instrumentation-hapi";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.41.0";
-      checksum = "10/5025db3e785476757947915e9512d454f565eabc883757d7a122e134f3cb2e5d418142f916e5ab4b2db2bfb9c59ab105f602c19af268442ae07106b5b547fa64";
+      descriptorRange = "npm:0.51.0";
+      checksum = "10/e098437a63807ec288c9e139554ac866909aac2c5da483a9d981f6f2bec33b4b28f73a1b04a2a069870998c2c32eaf68572c6bce3992de0f0b6c09a7e6da1b23";
       dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -8873,65 +8841,65 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-hapi@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0" = {
+    "@opentelemetry/instrumentation-hapi@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-hapi";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-hapi@npm:0.41.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-hapi@npm:0.51.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-http@npm:0.53.0" = {
+    "@opentelemetry/instrumentation-http@npm:0.204.0" = {
       name = "@opentelemetry/instrumentation-http";
-      reference = "npm:0.53.0";
+      reference = "npm:0.204.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-http-0.53.0-d7c0e5fb81";
-      outputHash = "c00e71f7a5a03723bf13e55e74dcc8e44d61b87fc38c50821fa6bf86a09d3eca68a62a4ccc6f35e70a6529c36d134eca77889852869d7a5a9b2af73f3fb5f097";
+      outputName = "opentelemetry-instrumentation-http-0.204.0-196b8d8533";
+      outputHash = "ce62b8a829293b9e584ecee317d5639f621588f7740b7fc21140d7aa831e7ea298d00e6cc87b95c63d80294387a7f236eb9d4e57124f12b28437c8dd4e82e944";
       flatName = "instrumentation-http";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.53.0";
-      checksum = "10/c00e71f7a5a03723bf13e55e74dcc8e44d61b87fc38c50821fa6bf86a09d3eca68a62a4ccc6f35e70a6529c36d134eca77889852869d7a5a9b2af73f3fb5f097";
+      descriptorRange = "npm:0.204.0";
+      checksum = "10/ce62b8a829293b9e584ecee317d5639f621588f7740b7fc21140d7aa831e7ea298d00e6cc87b95c63d80294387a7f236eb9d4e57124f12b28437c8dd4e82e944";
       dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.26.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "semver" = packages."semver@npm:7.7.2";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "forwarded-parse" = packages."forwarded-parse@npm:2.1.2";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-http@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.53.0" = {
+    "@opentelemetry/instrumentation-http@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0" = {
       name = "@opentelemetry/instrumentation-http";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.53.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-http@npm:0.53.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-http@npm:0.204.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "semver" = packages."semver@npm:7.7.2";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:dccea05ef268babf571ca0574cb0120c2fd04d8a817ef2eaaa035d34f153fa3fc9649bd06ca9efb294b4448a218422a287cd62f2d727d968073635e51e0ceadd#npm:1.26.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "forwarded-parse" = packages."forwarded-parse@npm:2.1.2";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-ioredis@npm:0.43.0" = {
+    "@opentelemetry/instrumentation-ioredis@npm:0.52.0" = {
       name = "@opentelemetry/instrumentation-ioredis";
-      reference = "npm:0.43.0";
+      reference = "npm:0.52.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-ioredis-0.43.0-64a0dc4875";
-      outputHash = "fa405f521134a375c3ae1894d39da2a62bd021695fbc6a28d7efe61202d9a3b895047cf59353d6773e5d8528aea24a63841110ba48800132f5aac47615603c10";
+      outputName = "opentelemetry-instrumentation-ioredis-0.52.0-8fdf4f5719";
+      outputHash = "65eb7aa6db4b84b460f264e2ee4c0cdbd3701a818e11c08b2bccf498795bea8e8be4bbf9519c8e7b8043563fd2f3699f57875854bc27be3236f326de3792a292";
       flatName = "instrumentation-ioredis";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.43.0";
-      checksum = "10/fa405f521134a375c3ae1894d39da2a62bd021695fbc6a28d7efe61202d9a3b895047cf59353d6773e5d8528aea24a63841110ba48800132f5aac47615603c10";
+      descriptorRange = "npm:0.52.0";
+      checksum = "10/65eb7aa6db4b84b460f264e2ee4c0cdbd3701a818e11c08b2bccf498795bea8e8be4bbf9519c8e7b8043563fd2f3699f57875854bc27be3236f326de3792a292";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
-        "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.36.2";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
+        "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.38.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -8939,91 +8907,91 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-ioredis@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.43.0" = {
+    "@opentelemetry/instrumentation-ioredis@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0" = {
       name = "@opentelemetry/instrumentation-ioredis";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.43.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-ioredis@npm:0.43.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-ioredis@npm:0.52.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.36.2";
+        "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.38.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-kafkajs@npm:0.4.0" = {
+    "@opentelemetry/instrumentation-kafkajs@npm:0.14.0" = {
       name = "@opentelemetry/instrumentation-kafkajs";
-      reference = "npm:0.4.0";
+      reference = "npm:0.14.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-kafkajs-0.4.0-e3312c2bea";
-      outputHash = "e5abcbbf2a458c3754d8a5790cf364384c84f51929ec66973ae1390020ef945a4be3d42db214a6738362a9d319e03ad6df0abc9470b2107568728d1e42f7ea94";
+      outputName = "opentelemetry-instrumentation-kafkajs-0.14.0-705b88c2ee";
+      outputHash = "488b0e7f42392a47dfbce3d1e728b34873793ee239c2646f9dffe1ecc9b1e2ea4337145cb5e4bcaa77a81899062ef586a6b3f391b4b4b49249529f29b871b053";
       flatName = "instrumentation-kafkajs";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.4.0";
-      checksum = "10/e5abcbbf2a458c3754d8a5790cf364384c84f51929ec66973ae1390020ef945a4be3d42db214a6738362a9d319e03ad6df0abc9470b2107568728d1e42f7ea94";
+      descriptorRange = "npm:0.14.0";
+      checksum = "10/488b0e7f42392a47dfbce3d1e728b34873793ee239c2646f9dffe1ecc9b1e2ea4337145cb5e4bcaa77a81899062ef586a6b3f391b4b4b49249529f29b871b053";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-kafkajs@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.4.0" = {
+    "@opentelemetry/instrumentation-kafkajs@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.14.0" = {
       name = "@opentelemetry/instrumentation-kafkajs";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.4.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-kafkajs@npm:0.4.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.14.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-kafkajs@npm:0.14.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-knex@npm:0.41.0" = {
+    "@opentelemetry/instrumentation-knex@npm:0.49.0" = {
       name = "@opentelemetry/instrumentation-knex";
-      reference = "npm:0.41.0";
+      reference = "npm:0.49.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-knex-0.41.0-4ccddedc4a";
-      outputHash = "273dbaf08f5256e2f8390b7846532baba6f4f9f39593c01d7fc756af346906b21214ac7b7007d4b7b7c2279acda4180b9ac89bc0e40befc1ccec80a64e2b75cb";
+      outputName = "opentelemetry-instrumentation-knex-0.49.0-66d96e3e13";
+      outputHash = "d4802b024dd2e49e63a65567fe3d6b8a6048c5cd70fb78a78134c56568496c8fc10ef867039f9525cabb5f9c06bb7e8ff07651bb5a15b89bdc0fb70a4cc5c96c";
       flatName = "instrumentation-knex";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.41.0";
-      checksum = "10/273dbaf08f5256e2f8390b7846532baba6f4f9f39593c01d7fc756af346906b21214ac7b7007d4b7b7c2279acda4180b9ac89bc0e40befc1ccec80a64e2b75cb";
+      descriptorRange = "npm:0.49.0";
+      checksum = "10/d4802b024dd2e49e63a65567fe3d6b8a6048c5cd70fb78a78134c56568496c8fc10ef867039f9525cabb5f9c06bb7e8ff07651bb5a15b89bdc0fb70a4cc5c96c";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-knex@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0" = {
+    "@opentelemetry/instrumentation-knex@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0" = {
       name = "@opentelemetry/instrumentation-knex";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-knex@npm:0.41.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-knex@npm:0.49.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-koa@npm:0.43.0" = {
+    "@opentelemetry/instrumentation-koa@npm:0.52.0" = {
       name = "@opentelemetry/instrumentation-koa";
-      reference = "npm:0.43.0";
+      reference = "npm:0.52.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-koa-0.43.0-875d0ccc9f";
-      outputHash = "b494196962c0840651e5fdec7350a8d9f443ee9e682e4c20c8b47ed82c6c34875adc7fd467ac04c3838edbf14bf79aafddb889f2755fc1957f27275a08442e83";
+      outputName = "opentelemetry-instrumentation-koa-0.52.0-c50e4044d2";
+      outputHash = "88a444bd92c3e1906167820e63e40bfe6531f54c28a8aacec51e2d527465818c002a5dfe72fbc1709cac6f6b4f5a0d01e798c4089731b0ec1b28fe94b9a729de";
       flatName = "instrumentation-koa";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.43.0";
-      checksum = "10/b494196962c0840651e5fdec7350a8d9f443ee9e682e4c20c8b47ed82c6c34875adc7fd467ac04c3838edbf14bf79aafddb889f2755fc1957f27275a08442e83";
+      descriptorRange = "npm:0.52.0";
+      checksum = "10/88a444bd92c3e1906167820e63e40bfe6531f54c28a8aacec51e2d527465818c002a5dfe72fbc1709cac6f6b4f5a0d01e798c4089731b0ec1b28fe94b9a729de";
       dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -9031,58 +8999,58 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-koa@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.43.0" = {
+    "@opentelemetry/instrumentation-koa@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0" = {
       name = "@opentelemetry/instrumentation-koa";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.43.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-koa@npm:0.43.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-koa@npm:0.52.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-lru-memoizer@npm:0.40.0" = {
+    "@opentelemetry/instrumentation-lru-memoizer@npm:0.49.0" = {
       name = "@opentelemetry/instrumentation-lru-memoizer";
-      reference = "npm:0.40.0";
+      reference = "npm:0.49.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-lru-memoizer-0.40.0-caf07c597e";
-      outputHash = "07bb795faedb0c01bf7dd2cc660431b2303fd1f3a904b3fcc06eb601fde94653f8391a40ccf101a391893187a68381ab6ea8a284118fff328d32b130fac2ea6c";
+      outputName = "opentelemetry-instrumentation-lru-memoizer-0.49.0-196549ad1e";
+      outputHash = "8aaad4a276ab9a754ceca28767261c930be98de728e9fab68ff304b2e6839b6d32c8e48984ff868499bf34765da76ee2e44bb98c54317fc904aed3480fecfd4b";
       flatName = "instrumentation-lru-memoizer";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.40.0";
-      checksum = "10/07bb795faedb0c01bf7dd2cc660431b2303fd1f3a904b3fcc06eb601fde94653f8391a40ccf101a391893187a68381ab6ea8a284118fff328d32b130fac2ea6c";
+      descriptorRange = "npm:0.49.0";
+      checksum = "10/8aaad4a276ab9a754ceca28767261c930be98de728e9fab68ff304b2e6839b6d32c8e48984ff868499bf34765da76ee2e44bb98c54317fc904aed3480fecfd4b";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-lru-memoizer@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.40.0" = {
+    "@opentelemetry/instrumentation-lru-memoizer@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0" = {
       name = "@opentelemetry/instrumentation-lru-memoizer";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.40.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-lru-memoizer@npm:0.40.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-lru-memoizer@npm:0.49.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-mongodb@npm:0.48.0" = {
+    "@opentelemetry/instrumentation-mongodb@npm:0.57.0" = {
       name = "@opentelemetry/instrumentation-mongodb";
-      reference = "npm:0.48.0";
+      reference = "npm:0.57.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-mongodb-0.48.0-492b8fc126";
-      outputHash = "84b6cef3d80086a05783c211cbfb62bf9ef59c9b17dcfd943fb13570eb2fe45c91dd07823a2aa81e2f81e3689a20cf0d02c6f765d4f9a1af67b75b44cd0293c9";
+      outputName = "opentelemetry-instrumentation-mongodb-0.57.0-9b2bf9cf01";
+      outputHash = "f6e20ee84c83cb2f9752e198f106c5b7008b4e530c0207863723967008d9741987862cf8cc2a6d8853041c99f029d0d4d80fdf20ed6048eb782ec502bb730888";
       flatName = "instrumentation-mongodb";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.48.0";
-      checksum = "10/84b6cef3d80086a05783c211cbfb62bf9ef59c9b17dcfd943fb13570eb2fe45c91dd07823a2aa81e2f81e3689a20cf0d02c6f765d4f9a1af67b75b44cd0293c9";
+      descriptorRange = "npm:0.57.0";
+      checksum = "10/f6e20ee84c83cb2f9752e198f106c5b7008b4e530c0207863723967008d9741987862cf8cc2a6d8853041c99f029d0d4d80fdf20ed6048eb782ec502bb730888";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -9090,30 +9058,30 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mongodb@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.48.0" = {
+    "@opentelemetry/instrumentation-mongodb@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0" = {
       name = "@opentelemetry/instrumentation-mongodb";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.48.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-mongodb@npm:0.48.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-mongodb@npm:0.57.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-mongoose@npm:0.42.0" = {
+    "@opentelemetry/instrumentation-mongoose@npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-mongoose";
-      reference = "npm:0.42.0";
+      reference = "npm:0.51.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-mongoose-0.42.0-5ccd1a5552";
-      outputHash = "58c3ba89ce43830451dcc105a2ebf352b296cf6b1b8f6194ac69c1fa39c18e50ee0092f8e514a27046cf35e0ade391425f7adf0e6e6b1fd8dbbec2b01f393be2";
+      outputName = "opentelemetry-instrumentation-mongoose-0.51.0-2e2f12adf3";
+      outputHash = "1c6d99a58cbedc8efa921411db62a8f756dd730cd5d0419b4073336c2b2f04d8e230665d5e54be200130caa7f0d55d37ba6514acbfafcc74f95c0035906a4556";
       flatName = "instrumentation-mongoose";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.42.0";
-      checksum = "10/58c3ba89ce43830451dcc105a2ebf352b296cf6b1b8f6194ac69c1fa39c18e50ee0092f8e514a27046cf35e0ade391425f7adf0e6e6b1fd8dbbec2b01f393be2";
+      descriptorRange = "npm:0.51.0";
+      checksum = "10/1c6d99a58cbedc8efa921411db62a8f756dd730cd5d0419b4073336c2b2f04d8e230665d5e54be200130caa7f0d55d37ba6514acbfafcc74f95c0035906a4556";
       dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
       };
       packagePeers = [
@@ -9121,126 +9089,97 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mongoose@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.42.0" = {
+    "@opentelemetry/instrumentation-mongoose@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-mongoose";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.42.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-mongoose@npm:0.42.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-mongoose@npm:0.51.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-mysql@npm:0.41.0" = {
+    "@opentelemetry/instrumentation-mysql@npm:0.50.0" = {
       name = "@opentelemetry/instrumentation-mysql";
-      reference = "npm:0.41.0";
+      reference = "npm:0.50.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-mysql-0.41.0-8ed0fc7132";
-      outputHash = "20ff56edc0b74cf8be2dd5960e210a6c20568169af5768fd78bb33f5a626e271fe2ac6cf7ad0e9629ff932a18feac04db99fffa3c867b27c679523dd2f4570d3";
+      outputName = "opentelemetry-instrumentation-mysql-0.50.0-af3bb71683";
+      outputHash = "c615b692e86e51d15f5e0c10669019e0d9cb728a175bda7d2e3ab7df07cb65f872f63f9c01843b3dc5a630379a2ccfaafc3a7c0396f09de7b025a891d5794ce4";
       flatName = "instrumentation-mysql";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.41.0";
-      checksum = "10/20ff56edc0b74cf8be2dd5960e210a6c20568169af5768fd78bb33f5a626e271fe2ac6cf7ad0e9629ff932a18feac04db99fffa3c867b27c679523dd2f4570d3";
+      descriptorRange = "npm:0.50.0";
+      checksum = "10/c615b692e86e51d15f5e0c10669019e0d9cb728a175bda7d2e3ab7df07cb65f872f63f9c01843b3dc5a630379a2ccfaafc3a7c0396f09de7b025a891d5794ce4";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@types/mysql" = packages."@types/mysql@npm:2.15.26";
+        "@types/mysql" = packages."@types/mysql@npm:2.15.27";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mysql@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0" = {
+    "@opentelemetry/instrumentation-mysql@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.50.0" = {
       name = "@opentelemetry/instrumentation-mysql";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-mysql@npm:0.41.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.50.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-mysql@npm:0.50.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@types/mysql" = packages."@types/mysql@npm:2.15.26";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
+        "@types/mysql" = packages."@types/mysql@npm:2.15.27";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
       };
     };
-    "@opentelemetry/instrumentation-mysql2@npm:0.41.0" = {
+    "@opentelemetry/instrumentation-mysql2@npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-mysql2";
-      reference = "npm:0.41.0";
+      reference = "npm:0.51.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-mysql2-0.41.0-6b4d79f962";
-      outputHash = "40f48b3f87bda347db2332020f0880223f49a894e0312d03e1f86aa48b8335b6db65955ea775b8bec2a687672bdbd9c0997294acdd4cf51765da0e22e1d98a35";
+      outputName = "opentelemetry-instrumentation-mysql2-0.51.0-e421e70cf3";
+      outputHash = "dab850b1a7a6f0a90e319c16a657218f366d9d06d8a78b1678f78b663db121a723276fe649e41cd67b3f36ff516efe5df8b13f684d989f1df94bf7137c05635d";
       flatName = "instrumentation-mysql2";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.41.0";
-      checksum = "10/40f48b3f87bda347db2332020f0880223f49a894e0312d03e1f86aa48b8335b6db65955ea775b8bec2a687672bdbd9c0997294acdd4cf51765da0e22e1d98a35";
+      descriptorRange = "npm:0.51.0";
+      checksum = "10/dab850b1a7a6f0a90e319c16a657218f366d9d06d8a78b1678f78b663db121a723276fe649e41cd67b3f36ff516efe5df8b13f684d989f1df94bf7137c05635d";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@npm:0.40.1";
+        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@npm:0.41.2";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mysql2@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0" = {
+    "@opentelemetry/instrumentation-mysql2@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-mysql2";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-mysql2@npm:0.41.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-mysql2@npm:0.51.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
-        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:cf0101770b9d21dc34e2a850b133ead26b157112502a25d5db92956323dfe53a9e4cf491d36e85560fca2b90f7f57133401df3cf8275b29075f56a7c91d5ebec#npm:0.40.1";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:e42d84e3e6bf98a2d5119fdb857edbe344e8c5bce392c77898b2ff51e1ea5059aea4c1b5d6f827de3a598846584ee6bfa40a7fa48700b646d3153c88bd356f9c#npm:0.41.2";
       };
     };
-    "@opentelemetry/instrumentation-nestjs-core@npm:0.40.0" = {
-      name = "@opentelemetry/instrumentation-nestjs-core";
-      reference = "npm:0.40.0";
-      linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-nestjs-core-0.40.0-72292ad0cc";
-      outputHash = "421f3e18c651b74383d5cd6a231431ecda3e49262f934dca27bf2272fe58334cbe2acf2f62ce5d82c0893d6f899e2921dfc6a6f78ab27f84a35bd8bfb77df9e4";
-      flatName = "instrumentation-nestjs-core";
-      languageName = "node";
-      scope = "opentelemetry";
-      descriptorRange = "npm:0.40.0";
-      checksum = "10/421f3e18c651b74383d5cd6a231431ecda3e49262f934dca27bf2272fe58334cbe2acf2f62ce5d82c0893d6f899e2921dfc6a6f78ab27f84a35bd8bfb77df9e4";
-      dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-      };
-      packagePeers = [
-        "@opentelemetry/api"
-        "@types/opentelemetry__api"
-      ];
-    };
-    "@opentelemetry/instrumentation-nestjs-core@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.40.0" = {
-      name = "@opentelemetry/instrumentation-nestjs-core";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.40.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-nestjs-core@npm:0.40.0";
-      dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
-      };
-    };
-    "@opentelemetry/instrumentation-pg@npm:0.44.0" = {
+    "@opentelemetry/instrumentation-pg@npm:0.57.0" = {
       name = "@opentelemetry/instrumentation-pg";
-      reference = "npm:0.44.0";
+      reference = "npm:0.57.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-pg-0.44.0-9b3561e8a5";
-      outputHash = "d902682a3630ff1ef392624165b46a2b4fe0fd696f42a588030f2c4ba73ccd2631792cf6b122bad0dfddb929044b96c285f63517704e7ccaf699a77150f5f3d9";
+      outputName = "opentelemetry-instrumentation-pg-0.57.0-c72eda8db7";
+      outputHash = "7ebaa287c1da8b6c0183e42f7bdc05fda99ad0e046208361fba173da8831ce0645b245c3c4c9ffdc234cc4c96c04622424e91f2cf18ff2d29b7d0f9ce3b7fc6e";
       flatName = "instrumentation-pg";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:0.44.0";
-      checksum = "10/d902682a3630ff1ef392624165b46a2b4fe0fd696f42a588030f2c4ba73ccd2631792cf6b122bad0dfddb929044b96c285f63517704e7ccaf699a77150f5f3d9";
+      descriptorRange = "npm:0.57.0";
+      checksum = "10/7ebaa287c1da8b6c0183e42f7bdc05fda99ad0e046208361fba173da8831ce0645b245c3c4c9ffdc234cc4c96c04622424e91f2cf18ff2d29b7d0f9ce3b7fc6e";
       dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@npm:0.40.1";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@npm:0.41.2";
         "@types/pg-pool" = packages."@types/pg-pool@npm:2.0.6";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
       };
@@ -9249,155 +9188,129 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-pg@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.44.0" = {
+    "@opentelemetry/instrumentation-pg@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0" = {
       name = "@opentelemetry/instrumentation-pg";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.44.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-pg@npm:0.44.0";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-pg@npm:0.57.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "@types/pg-pool" = packages."@types/pg-pool@npm:2.0.6";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
-        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:cf0101770b9d21dc34e2a850b133ead26b157112502a25d5db92956323dfe53a9e4cf491d36e85560fca2b90f7f57133401df3cf8275b29075f56a7c91d5ebec#npm:0.40.1";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:e42d84e3e6bf98a2d5119fdb857edbe344e8c5bce392c77898b2ff51e1ea5059aea4c1b5d6f827de3a598846584ee6bfa40a7fa48700b646d3153c88bd356f9c#npm:0.41.2";
       };
     };
-    "@opentelemetry/instrumentation-redis-4@npm:0.42.0" = {
-      name = "@opentelemetry/instrumentation-redis-4";
-      reference = "npm:0.42.0";
-      linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-redis-4-0.42.0-a5d48d293c";
-      outputHash = "d5ff240b826525cdc9935ab2885f65ea5c5d77ad31e9ee8142e6840b1c1603db025370b67fb828580a242fe7ff815d1335ff3845c48d8b94070f3683f71b0898";
-      flatName = "instrumentation-redis-4";
-      languageName = "node";
-      scope = "opentelemetry";
-      descriptorRange = "npm:0.42.0";
-      checksum = "10/d5ff240b826525cdc9935ab2885f65ea5c5d77ad31e9ee8142e6840b1c1603db025370b67fb828580a242fe7ff815d1335ff3845c48d8b94070f3683f71b0898";
-      dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
-        "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.36.2";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-      };
-      packagePeers = [
-        "@opentelemetry/api"
-        "@types/opentelemetry__api"
-      ];
-    };
-    "@opentelemetry/instrumentation-redis-4@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.42.0" = {
-      name = "@opentelemetry/instrumentation-redis-4";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.42.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-redis-4@npm:0.42.0";
-      dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.36.2";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
-      };
-    };
-    "@opentelemetry/instrumentation-tedious@npm:0.15.0" = {
-      name = "@opentelemetry/instrumentation-tedious";
-      reference = "npm:0.15.0";
-      linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-tedious-0.15.0-8ae68c6312";
-      outputHash = "adbc5a444a28c4732aafd8a8742e1ffea100325a91005b8417cd50625952c537842f3d6f6c9c29aa468e0b5d850b285fa43617cde0bcbc463da207b38d0eee08";
-      flatName = "instrumentation-tedious";
-      languageName = "node";
-      scope = "opentelemetry";
-      descriptorRange = "npm:0.15.0";
-      checksum = "10/adbc5a444a28c4732aafd8a8742e1ffea100325a91005b8417cd50625952c537842f3d6f6c9c29aa468e0b5d850b285fa43617cde0bcbc463da207b38d0eee08";
-      dependencies = {
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@types/tedious" = packages."@types/tedious@npm:4.0.14";
-      };
-      packagePeers = [
-        "@opentelemetry/api"
-        "@types/opentelemetry__api"
-      ];
-    };
-    "@opentelemetry/instrumentation-tedious@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.15.0" = {
-      name = "@opentelemetry/instrumentation-tedious";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.15.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-tedious@npm:0.15.0";
-      dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@types/tedious" = packages."@types/tedious@npm:4.0.14";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
-      };
-    };
-    "@opentelemetry/instrumentation-undici@npm:0.6.0" = {
-      name = "@opentelemetry/instrumentation-undici";
-      reference = "npm:0.6.0";
-      linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-undici-0.6.0-259dff9d13";
-      outputHash = "97291ecca9ff936dc4a418b380542f4dbb1f891692df44292dd61dc9e39aa1c347b70666cda5c30fbd78969d3b6ea602a6bafb30566b65eec0e00bcac459b2c4";
-      flatName = "instrumentation-undici";
-      languageName = "node";
-      scope = "opentelemetry";
-      descriptorRange = "npm:0.6.0";
-      checksum = "10/97291ecca9ff936dc4a418b380542f4dbb1f891692df44292dd61dc9e39aa1c347b70666cda5c30fbd78969d3b6ea602a6bafb30566b65eec0e00bcac459b2c4";
-      dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.53.0";
-      };
-      packagePeers = [
-        "@opentelemetry/api"
-        "@types/opentelemetry__api"
-      ];
-    };
-    "@opentelemetry/instrumentation-undici@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.6.0" = {
-      name = "@opentelemetry/instrumentation-undici";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.6.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation-undici@npm:0.6.0";
-      dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
-      };
-    };
-    "@opentelemetry/instrumentation@npm:0.52.1" = {
-      name = "@opentelemetry/instrumentation";
-      reference = "npm:0.52.1";
-      linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-0.52.1-8477b6362c";
-      outputHash = "87761bd593f2b905d88d0531a3a2a7f4b0186334ae413b4c172a86bd4de0fd6d2f906a1bfd9dd7bd172a228a44fa7a680f5802a1570dfe2fadad0768e80bd7a8";
-      flatName = "instrumentation";
-      languageName = "node";
-      scope = "opentelemetry";
-      descriptorRange = "npm:^0.49 || ^0.50 || ^0.51 || ^0.52.0";
-      checksum = "10/87761bd593f2b905d88d0531a3a2a7f4b0186334ae413b4c172a86bd4de0fd6d2f906a1bfd9dd7bd172a228a44fa7a680f5802a1570dfe2fadad0768e80bd7a8";
-      dependencies = {
-        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.52.1";
-        "@types/shimmer" = packages."@types/shimmer@npm:1.2.0";
-        "import-in-the-middle" = packages."import-in-the-middle@npm:1.11.2";
-        "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
-        "semver" = packages."semver@npm:7.7.2";
-        "shimmer" = packages."shimmer@npm:1.2.1";
-      };
-      packagePeers = [
-        "@opentelemetry/api"
-        "@types/opentelemetry__api"
-      ];
-    };
-    "@opentelemetry/instrumentation@npm:0.53.0" = {
-      name = "@opentelemetry/instrumentation";
+    "@opentelemetry/instrumentation-redis@npm:0.53.0" = {
+      name = "@opentelemetry/instrumentation-redis";
       reference = "npm:0.53.0";
       linkType = "HARD";
-      outputName = "opentelemetry-instrumentation-0.53.0-e20337344d";
-      outputHash = "4b994c8568a503a15655cba249b1dbdef3f67dfda37938abba6267ba75b6d72a9aa276be4b0c8874e86f98ab89d92877e1874e0565a7e67f062c43dfcbbb16a5";
-      flatName = "instrumentation";
+      outputName = "opentelemetry-instrumentation-redis-0.53.0-9865f5bac8";
+      outputHash = "606c8877819c99d62266a106fa15703316fb703a60dd82e4995ebf33d892fecea35e6f4457a56f218b29adac8f573bf5a5437feeb406fb65002e65ed70ee178a";
+      flatName = "instrumentation-redis";
       languageName = "node";
       scope = "opentelemetry";
       descriptorRange = "npm:0.53.0";
-      checksum = "10/4b994c8568a503a15655cba249b1dbdef3f67dfda37938abba6267ba75b6d72a9aa276be4b0c8874e86f98ab89d92877e1874e0565a7e67f062c43dfcbbb16a5";
+      checksum = "10/606c8877819c99d62266a106fa15703316fb703a60dd82e4995ebf33d892fecea35e6f4457a56f218b29adac8f573bf5a5437feeb406fb65002e65ed70ee178a";
       dependencies = {
-        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.53.0";
-        "@types/shimmer" = packages."@types/shimmer@npm:1.2.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
+        "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.38.2";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
+      };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@types/opentelemetry__api"
+      ];
+    };
+    "@opentelemetry/instrumentation-redis@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0" = {
+      name = "@opentelemetry/instrumentation-redis";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-redis@npm:0.53.0";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.38.2";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+      };
+    };
+    "@opentelemetry/instrumentation-tedious@npm:0.23.0" = {
+      name = "@opentelemetry/instrumentation-tedious";
+      reference = "npm:0.23.0";
+      linkType = "HARD";
+      outputName = "opentelemetry-instrumentation-tedious-0.23.0-be0bc0c506";
+      outputHash = "00d922782c709dbc6e9fdaa77197423f76707904a71a920d60642f669e496f37b64a6376609bfafcda4d0778cdab15b161a56426a20fb1a5c24a131c9d2db8a5";
+      flatName = "instrumentation-tedious";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:0.23.0";
+      checksum = "10/00d922782c709dbc6e9fdaa77197423f76707904a71a920d60642f669e496f37b64a6376609bfafcda4d0778cdab15b161a56426a20fb1a5c24a131c9d2db8a5";
+      dependencies = {
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
+        "@types/tedious" = packages."@types/tedious@npm:4.0.14";
+      };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@types/opentelemetry__api"
+      ];
+    };
+    "@opentelemetry/instrumentation-tedious@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.23.0" = {
+      name = "@opentelemetry/instrumentation-tedious";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.23.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-tedious@npm:0.23.0";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
+        "@types/tedious" = packages."@types/tedious@npm:4.0.14";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+      };
+    };
+    "@opentelemetry/instrumentation-undici@npm:0.15.0" = {
+      name = "@opentelemetry/instrumentation-undici";
+      reference = "npm:0.15.0";
+      linkType = "HARD";
+      outputName = "opentelemetry-instrumentation-undici-0.15.0-850205b19b";
+      outputHash = "5190d2e08785e05c92815e2b1db5d85d7427fc1c7c4529ffb7a076793e8ac71117b8f9007f42ddd22565147dfee5b2d2d3b0e8237d46f2b83d48dd1a353e2c11";
+      flatName = "instrumentation-undici";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:0.15.0";
+      checksum = "10/5190d2e08785e05c92815e2b1db5d85d7427fc1c7c4529ffb7a076793e8ac71117b8f9007f42ddd22565147dfee5b2d2d3b0e8237d46f2b83d48dd1a353e2c11";
+      dependencies = {
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.204.0";
+      };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@types/opentelemetry__api"
+      ];
+    };
+    "@opentelemetry/instrumentation-undici@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.15.0" = {
+      name = "@opentelemetry/instrumentation-undici";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.15.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation-undici@npm:0.15.0";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+      };
+    };
+    "@opentelemetry/instrumentation@npm:0.204.0" = {
+      name = "@opentelemetry/instrumentation";
+      reference = "npm:0.204.0";
+      linkType = "HARD";
+      outputName = "opentelemetry-instrumentation-0.204.0-ca488dba52";
+      outputHash = "a32b93e714e555dc1fca6c212bde565342370f0f62c1421e02cb307193ced1f8167223b3b70adc6e4539bf8508424f56b7249ecb527995406944434b29b73066";
+      flatName = "instrumentation";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:^0.204.0";
+      checksum = "10/a32b93e714e555dc1fca6c212bde565342370f0f62c1421e02cb307193ced1f8167223b3b70adc6e4539bf8508424f56b7249ecb527995406944434b29b73066";
+      dependencies = {
+        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.204.0";
         "import-in-the-middle" = packages."import-in-the-middle@npm:1.11.2";
         "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
-        "semver" = packages."semver@npm:7.7.2";
-        "shimmer" = packages."shimmer@npm:1.2.1";
       };
       packagePeers = [
         "@opentelemetry/api"
@@ -9428,37 +9341,33 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation@virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:0.52.1" = {
+    "@opentelemetry/instrumentation@npm:0.57.2" = {
       name = "@opentelemetry/instrumentation";
-      reference = "virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:0.52.1";
-      canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.52.1";
+      reference = "npm:0.57.2";
+      linkType = "HARD";
+      outputName = "opentelemetry-instrumentation-0.57.2-c480e6a5c7";
+      outputHash = "b66b840e87976a5edf551a7011a395df8df5985571ac0506412943d07b4309fcc78fe71d3f55217a00f44384fbf61f59f1e54d544ab12f5490f6a7a56b71e02a";
+      flatName = "instrumentation";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:^0.52.0 || ^0.53.0 || ^0.54.0 || ^0.55.0 || ^0.56.0 || ^0.57.0";
+      checksum = "10/b66b840e87976a5edf551a7011a395df8df5985571ac0506412943d07b4309fcc78fe71d3f55217a00f44384fbf61f59f1e54d544ab12f5490f6a7a56b71e02a";
       dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.52.1";
+        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.57.2";
         "@types/shimmer" = packages."@types/shimmer@npm:1.2.0";
         "import-in-the-middle" = packages."import-in-the-middle@npm:1.11.2";
         "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
         "semver" = packages."semver@npm:7.7.2";
         "shimmer" = packages."shimmer@npm:1.2.1";
       };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@types/opentelemetry__api"
+      ];
     };
-    "@opentelemetry/instrumentation@virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0" = {
+    "@opentelemetry/instrumentation@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:0.54.2" = {
       name = "@opentelemetry/instrumentation";
-      reference = "virtual:c904f3d3d27fc1594350061a7f967a8425598f40acce3a31bb1935df24fbc4adcc7bdfc60d077a284d665ee92cd8f31461eb715261f6bbd4a7949675a235187f#npm:0.53.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.53.0";
-      dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.53.0";
-        "@types/shimmer" = packages."@types/shimmer@npm:1.2.0";
-        "import-in-the-middle" = packages."import-in-the-middle@npm:1.11.2";
-        "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
-        "semver" = packages."semver@npm:7.7.2";
-        "shimmer" = packages."shimmer@npm:1.2.1";
-      };
-    };
-    "@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2" = {
-      name = "@opentelemetry/instrumentation";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
+      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:0.54.2";
       canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.54.2";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
@@ -9470,17 +9379,42 @@ let
         "shimmer" = packages."shimmer@npm:1.2.1";
       };
     };
-    "@opentelemetry/redis-common@npm:0.36.2" = {
+    "@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0" = {
+      name = "@opentelemetry/instrumentation";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.204.0";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.204.0";
+        "import-in-the-middle" = packages."import-in-the-middle@npm:1.11.2";
+        "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
+      };
+    };
+    "@opentelemetry/instrumentation@virtual:f40af87d10c2d852e556d36da0b52ebf19d1d95147bc8f0beb52976f08e492b3a11e22c417c50875ebb67c806cc44d9a2e5522d5f1299a52b388424d306a3416#npm:0.57.2" = {
+      name = "@opentelemetry/instrumentation";
+      reference = "virtual:f40af87d10c2d852e556d36da0b52ebf19d1d95147bc8f0beb52976f08e492b3a11e22c417c50875ebb67c806cc44d9a2e5522d5f1299a52b388424d306a3416#npm:0.57.2";
+      canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.57.2";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.57.2";
+        "@types/shimmer" = packages."@types/shimmer@npm:1.2.0";
+        "import-in-the-middle" = packages."import-in-the-middle@npm:1.11.2";
+        "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
+        "semver" = packages."semver@npm:7.7.2";
+        "shimmer" = packages."shimmer@npm:1.2.1";
+      };
+    };
+    "@opentelemetry/redis-common@npm:0.38.2" = {
       name = "@opentelemetry/redis-common";
-      reference = "npm:0.36.2";
+      reference = "npm:0.38.2";
       linkType = "HARD";
-      outputName = "opentelemetry-redis-common-0.36.2-15106e7250";
-      outputHash = "e7f610f79c95bab9156a9831162c7b55b94ab43c5e47ecb9efcc10c08a236395fdd54b6bb018da981e6641bac9da6fda1b50636fb49db584e87d988750d255e1";
+      outputName = "opentelemetry-redis-common-0.38.2-2a4cd967c7";
+      outputHash = "2a4f992572b1990a407ac92c7db941aecb6e8d71f034f4ea0b00b2b1739ad07c22767198a6759ab634cbbe9eebfbea062e2b79a25484289c226c665558041503";
       flatName = "redis-common";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:^0.36.2";
-      checksum = "10/e7f610f79c95bab9156a9831162c7b55b94ab43c5e47ecb9efcc10c08a236395fdd54b6bb018da981e6641bac9da6fda1b50636fb49db584e87d988750d255e1";
+      descriptorRange = "npm:^0.38.0";
+      checksum = "10/2a4f992572b1990a407ac92c7db941aecb6e8d71f034f4ea0b00b2b1739ad07c22767198a6759ab634cbbe9eebfbea062e2b79a25484289c226c665558041503";
     };
     "@opentelemetry/resources@npm:1.27.0" = {
       name = "@opentelemetry/resources";
@@ -9502,14 +9436,44 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/resources@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0" = {
+    "@opentelemetry/resources@npm:2.1.0" = {
       name = "@opentelemetry/resources";
-      reference = "virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
+      reference = "npm:2.1.0";
+      linkType = "HARD";
+      outputName = "opentelemetry-resources-2.1.0-9d023774bb";
+      outputHash = "8e2255443184fb889c54ed07fbcadb3b1595ce45219a39b5ac93e09648bf0b293098f84e2e47aec795deaf2d9d3db20302863f41e8e24195b2a19680eb9234fc";
+      flatName = "resources";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:^2.1.0";
+      checksum = "10/8e2255443184fb889c54ed07fbcadb3b1595ce45219a39b5ac93e09648bf0b293098f84e2e47aec795deaf2d9d3db20302863f41e8e24195b2a19680eb9234fc";
+      dependencies = {
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+      };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@types/opentelemetry__api"
+      ];
+    };
+    "@opentelemetry/resources@virtual:4b6733d31cb5179ee4b8bc2b9c6ce40a709293a9e3bdb895353cda4fe7f8f88e62b4b49372498119ee65a2f5e8b21f47d7e38abc764f2b2331a616ced7069a1e#npm:1.27.0" = {
+      name = "@opentelemetry/resources";
+      reference = "virtual:4b6733d31cb5179ee4b8bc2b9c6ce40a709293a9e3bdb895353cda4fe7f8f88e62b4b49372498119ee65a2f5e8b21f47d7e38abc764f2b2331a616ced7069a1e#npm:1.27.0";
       canonicalPackage = packages."@opentelemetry/resources@npm:1.27.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0";
+      };
+    };
+    "@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0" = {
+      name = "@opentelemetry/resources";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+      canonicalPackage = packages."@opentelemetry/resources@npm:2.1.0";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
       };
     };
     "@opentelemetry/sdk-trace-base@npm:1.27.0" = {
@@ -9533,15 +9497,47 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/sdk-trace-base@virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:1.27.0" = {
+    "@opentelemetry/sdk-trace-base@npm:2.1.0" = {
       name = "@opentelemetry/sdk-trace-base";
-      reference = "virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:1.27.0";
+      reference = "npm:2.1.0";
+      linkType = "HARD";
+      outputName = "opentelemetry-sdk-trace-base-2.1.0-4b8fe32a64";
+      outputHash = "bae338ed2f518e7873d17d28a756c1eed65990a5cc36930fba0f88a2e1f794ffa2eb2394f3eff1fd61420796536358534bce3be005c83812fc1a7f0ed9c61700";
+      flatName = "sdk-trace-base";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:^2.1.0";
+      checksum = "10/bae338ed2f518e7873d17d28a756c1eed65990a5cc36930fba0f88a2e1f794ffa2eb2394f3eff1fd61420796536358534bce3be005c83812fc1a7f0ed9c61700";
+      dependencies = {
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@npm:2.1.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+      };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@types/opentelemetry__api"
+      ];
+    };
+    "@opentelemetry/sdk-trace-base@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0" = {
+      name = "@opentelemetry/sdk-trace-base";
+      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0";
       canonicalPackage = packages."@opentelemetry/sdk-trace-base@npm:1.27.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:4b6733d31cb5179ee4b8bc2b9c6ce40a709293a9e3bdb895353cda4fe7f8f88e62b4b49372498119ee65a2f5e8b21f47d7e38abc764f2b2331a616ced7069a1e#npm:1.27.0";
+      };
+    };
+    "@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0" = {
+      name = "@opentelemetry/sdk-trace-base";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+      canonicalPackage = packages."@opentelemetry/sdk-trace-base@npm:2.1.0";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
       };
     };
     "@opentelemetry/semantic-conventions@npm:1.27.0" = {
@@ -9553,35 +9549,47 @@ let
       flatName = "semantic-conventions";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:^1.27.0";
+      descriptorRange = "npm:1.27.0";
       checksum = "10/98166522f299e2fe3d43376adbdeb92679b75ebb172e2a3c4c71f2942bd91585e9537618efbbae6dc08177699e5719368edf66d7e69e8636f360b85217bbdbe1";
     };
-    "@opentelemetry/sql-common@npm:0.40.1" = {
-      name = "@opentelemetry/sql-common";
-      reference = "npm:0.40.1";
+    "@opentelemetry/semantic-conventions@npm:1.37.0" = {
+      name = "@opentelemetry/semantic-conventions";
+      reference = "npm:1.37.0";
       linkType = "HARD";
-      outputName = "opentelemetry-sql-common-0.40.1-8e555e0757";
-      outputHash = "f887b4135be56c9ef6e29f040c9f75f34709e38c11897d59d284d7e73175a2dd2c6267c18061144e81a0045fc461b7813769db2e49c42a8d6becc58b1456d55c";
+      outputName = "opentelemetry-semantic-conventions-1.37.0-6c34392e86";
+      outputHash = "919951c2ddbe5509dad26afc7b09d9a5e3c169de187013d1836d2771a7e840e85ea500725128b798d7659d89aff480c07fd039cf77858df3f3573a15063db7c3";
+      flatName = "semantic-conventions";
+      languageName = "node";
+      scope = "opentelemetry";
+      descriptorRange = "npm:^1.37.0";
+      checksum = "10/919951c2ddbe5509dad26afc7b09d9a5e3c169de187013d1836d2771a7e840e85ea500725128b798d7659d89aff480c07fd039cf77858df3f3573a15063db7c3";
+    };
+    "@opentelemetry/sql-common@npm:0.41.2" = {
+      name = "@opentelemetry/sql-common";
+      reference = "npm:0.41.2";
+      linkType = "HARD";
+      outputName = "opentelemetry-sql-common-0.41.2-1bbdc61904";
+      outputHash = "3d57d5162c69c29484cb166e99ac733fff1dcefa26aea401e40035d5daa3aef21af78936af7943d0dfdab385ff053b879117c2fa3bd980412dd378222b10bea3";
       flatName = "sql-common";
       languageName = "node";
       scope = "opentelemetry";
-      descriptorRange = "npm:^0.40.1";
-      checksum = "10/f887b4135be56c9ef6e29f040c9f75f34709e38c11897d59d284d7e73175a2dd2c6267c18061144e81a0045fc461b7813769db2e49c42a8d6becc58b1456d55c";
+      descriptorRange = "npm:^0.41.0";
+      checksum = "10/3d57d5162c69c29484cb166e99ac733fff1dcefa26aea401e40035d5daa3aef21af78936af7943d0dfdab385ff053b879117c2fa3bd980412dd378222b10bea3";
       dependencies = {
-        "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
       };
       packagePeers = [
         "@opentelemetry/api"
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/sql-common@virtual:cf0101770b9d21dc34e2a850b133ead26b157112502a25d5db92956323dfe53a9e4cf491d36e85560fca2b90f7f57133401df3cf8275b29075f56a7c91d5ebec#npm:0.40.1" = {
+    "@opentelemetry/sql-common@virtual:e42d84e3e6bf98a2d5119fdb857edbe344e8c5bce392c77898b2ff51e1ea5059aea4c1b5d6f827de3a598846584ee6bfa40a7fa48700b646d3153c88bd356f9c#npm:0.41.2" = {
       name = "@opentelemetry/sql-common";
-      reference = "virtual:cf0101770b9d21dc34e2a850b133ead26b157112502a25d5db92956323dfe53a9e4cf491d36e85560fca2b90f7f57133401df3cf8275b29075f56a7c91d5ebec#npm:0.40.1";
-      canonicalPackage = packages."@opentelemetry/sql-common@npm:0.40.1";
+      reference = "virtual:e42d84e3e6bf98a2d5119fdb857edbe344e8c5bce392c77898b2ff51e1ea5059aea4c1b5d6f827de3a598846584ee6bfa40a7fa48700b646d3153c88bd356f9c#npm:0.41.2";
+      canonicalPackage = packages."@opentelemetry/sql-common@npm:0.41.2";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
       };
     };
     "@parcel/watcher-android-arm64@npm:2.5.1" = {
@@ -9897,21 +9905,32 @@ let
       descriptorRange = "npm:1.0.2";
       checksum = "10/51b497c443679e188e27180c41199997048b6bcf66679c6340dc6733979c8c32710e3ace25d1c04815791f7e5fad1b1e9d1d29671fbd5dc1670790df74a33063";
     };
-    "@prisma/instrumentation@npm:5.19.1" = {
+    "@prisma/instrumentation@npm:6.15.0" = {
       name = "@prisma/instrumentation";
-      reference = "npm:5.19.1";
+      reference = "npm:6.15.0";
       linkType = "HARD";
-      outputName = "prisma-instrumentation-5.19.1-349d54ba35";
-      outputHash = "62029ace33406901d1dfee136d4ae83b51d5787fbcdb104378edc890310e1989a0b0c95c1eb28fe8bfc314565aebee48189aebee600486859383d8981993045b";
+      outputName = "prisma-instrumentation-6.15.0-ab0e85dbe1";
+      outputHash = "25f69e3ea581b0cfa058c80acde5e5382d3b5d48e213654c011ab61909dd6311c17235dd26fa36c4e91d620f8ab49f1190732d6a48bbeec545e0664e1e1f86dc";
       flatName = "instrumentation";
       languageName = "node";
       scope = "prisma";
-      descriptorRange = "npm:5.19.1";
-      checksum = "10/62029ace33406901d1dfee136d4ae83b51d5787fbcdb104378edc890310e1989a0b0c95c1eb28fe8bfc314565aebee48189aebee600486859383d8981993045b";
+      descriptorRange = "npm:6.15.0";
+      checksum = "10/25f69e3ea581b0cfa058c80acde5e5382d3b5d48e213654c011ab61909dd6311c17235dd26fa36c4e91d620f8ab49f1190732d6a48bbeec545e0664e1e1f86dc";
+      dependencies = {
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.57.2";
+      };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@types/opentelemetry__api"
+      ];
+    };
+    "@prisma/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:6.15.0" = {
+      name = "@prisma/instrumentation";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:6.15.0";
+      canonicalPackage = packages."@prisma/instrumentation@npm:6.15.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:0.52.1";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:1.27.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f40af87d10c2d852e556d36da0b52ebf19d1d95147bc8f0beb52976f08e492b3a11e22c417c50875ebb67c806cc44d9a2e5522d5f1299a52b388424d306a3416#npm:0.57.2";
       };
     };
     "@radix-ui/colors@npm:0.1.9" = {
@@ -12326,42 +12345,44 @@ let
       descriptorRange = "npm:3.0.4";
       checksum = "10/8ce723ca07c6bf42b8de7bf7e3380eab2efc083cadf1f814d188c6c813af1461dfe46051a57bb54116113c0338473df64d6c17314ceeb7f4323437fff54da872";
     };
-    "@rollup/plugin-commonjs@npm:26.0.1" = {
+    "@rollup/plugin-commonjs@npm:28.0.1" = {
       name = "@rollup/plugin-commonjs";
-      reference = "npm:26.0.1";
+      reference = "npm:28.0.1";
       linkType = "HARD";
-      outputName = "rollup-plugin-commonjs-26.0.1-7d48d11c44";
-      outputHash = "d9846fbf9c279259b5bf508da6264e18b2572e8bbd6df2c4fd96f1ae40153b231b7864426e62bff6f2f53b5a73b6db2246cacc31d4eecdaf469cc16d683c2392";
+      outputName = "rollup-plugin-commonjs-28.0.1-5224cbb009";
+      outputHash = "e01d26ce411cec587eeac805aaa181f042a30bac1cf7f714b65028ed2abab7907d67de835e3fe99fd38f26eee17a60373d5c37518b29829de79b7c1b24a29e0d";
       flatName = "plugin-commonjs";
       languageName = "node";
       scope = "rollup";
-      descriptorRange = "npm:26.0.1";
-      checksum = "10/d9846fbf9c279259b5bf508da6264e18b2572e8bbd6df2c4fd96f1ae40153b231b7864426e62bff6f2f53b5a73b6db2246cacc31d4eecdaf469cc16d683c2392";
+      descriptorRange = "npm:28.0.1";
+      checksum = "10/e01d26ce411cec587eeac805aaa181f042a30bac1cf7f714b65028ed2abab7907d67de835e3fe99fd38f26eee17a60373d5c37518b29829de79b7c1b24a29e0d";
       dependencies = {
         "@rollup/pluginutils" = packages."@rollup/pluginutils@npm:5.0.2";
         "commondir" = packages."commondir@npm:1.0.1";
         "estree-walker" = packages."estree-walker@npm:2.0.2";
-        "glob" = packages."glob@npm:10.4.5";
+        "fdir" = packages."fdir@npm:6.5.0";
         "is-reference" = packages."is-reference@npm:1.2.1";
         "magic-string" = packages."magic-string@npm:0.30.10";
+        "picomatch" = packages."picomatch@npm:4.0.3";
       };
       packagePeers = [
         "@types/rollup"
         "rollup"
       ];
     };
-    "@rollup/plugin-commonjs@virtual:9985e04f8a41abb3512d430ca0b85b84620260ec5d6e21b9b0b82b49e11ac17ac34d1bf8a890a62d2e88fcb6a6419da6255c9e6c63a9df1f706ab4c30c0666ed#npm:26.0.1" = {
+    "@rollup/plugin-commonjs@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:28.0.1" = {
       name = "@rollup/plugin-commonjs";
-      reference = "virtual:9985e04f8a41abb3512d430ca0b85b84620260ec5d6e21b9b0b82b49e11ac17ac34d1bf8a890a62d2e88fcb6a6419da6255c9e6c63a9df1f706ab4c30c0666ed#npm:26.0.1";
-      canonicalPackage = packages."@rollup/plugin-commonjs@npm:26.0.1";
+      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:28.0.1";
+      canonicalPackage = packages."@rollup/plugin-commonjs@npm:28.0.1";
       dependencies = {
         "commondir" = packages."commondir@npm:1.0.1";
         "estree-walker" = packages."estree-walker@npm:2.0.2";
-        "glob" = packages."glob@npm:10.4.5";
         "is-reference" = packages."is-reference@npm:1.2.1";
         "magic-string" = packages."magic-string@npm:0.30.10";
-        "rollup" = packages."rollup@npm:3.29.5";
-        "@rollup/pluginutils" = packages."@rollup/pluginutils@virtual:fa4dbc09ea567e8f91050a82c6bf9d682d2327fb0ee332287795eea445e27dad0e993ed453a50cf2c580657b219ba83faa70d27bdfa201c1a339d9a892cffe8a#npm:5.0.2";
+        "picomatch" = packages."picomatch@npm:4.0.3";
+        "rollup" = packages."rollup@npm:4.52.4";
+        "@rollup/pluginutils" = packages."@rollup/pluginutils@virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:5.0.2";
+        "fdir" = packages."fdir@virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:6.5.0";
       };
     };
     "@rollup/pluginutils@npm:5.0.2" = {
@@ -12385,16 +12406,304 @@ let
         "rollup"
       ];
     };
-    "@rollup/pluginutils@virtual:fa4dbc09ea567e8f91050a82c6bf9d682d2327fb0ee332287795eea445e27dad0e993ed453a50cf2c580657b219ba83faa70d27bdfa201c1a339d9a892cffe8a#npm:5.0.2" = {
+    "@rollup/pluginutils@virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:5.0.2" = {
       name = "@rollup/pluginutils";
-      reference = "virtual:fa4dbc09ea567e8f91050a82c6bf9d682d2327fb0ee332287795eea445e27dad0e993ed453a50cf2c580657b219ba83faa70d27bdfa201c1a339d9a892cffe8a#npm:5.0.2";
+      reference = "virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:5.0.2";
       canonicalPackage = packages."@rollup/pluginutils@npm:5.0.2";
       dependencies = {
         "@types/estree" = packages."@types/estree@npm:1.0.8";
         "estree-walker" = packages."estree-walker@npm:2.0.2";
         "picomatch" = packages."picomatch@npm:2.3.1";
-        "rollup" = packages."rollup@npm:3.29.5";
+        "rollup" = packages."rollup@npm:4.52.4";
       };
+    };
+    "@rollup/rollup-android-arm-eabi@npm:4.52.4" = {
+      name = "@rollup/rollup-android-arm-eabi";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-android-arm-eabi-4.52.4-cae6a9c928";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch32);
+      flatName = "rollup-android-arm-eabi";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-android-arm64@npm:4.52.4" = {
+      name = "@rollup/rollup-android-arm64";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-android-arm64-4.52.4-92ac9bf55e";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "rollup-android-arm64";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-darwin-arm64@npm:4.52.4" = {
+      name = "@rollup/rollup-darwin-arm64";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-darwin-arm64-4.52.4-fb3c87598c";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
+      flatName = "rollup-darwin-arm64";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-darwin-x64@npm:4.52.4" = {
+      name = "@rollup/rollup-darwin-x64";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-darwin-x64-4.52.4-c49324b128";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
+      flatName = "rollup-darwin-x64";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-freebsd-arm64@npm:4.52.4" = {
+      name = "@rollup/rollup-freebsd-arm64";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-freebsd-arm64-4.52.4-e0304b5991";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "rollup-freebsd-arm64";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-freebsd-x64@npm:4.52.4" = {
+      name = "@rollup/rollup-freebsd-x64";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-freebsd-x64-4.52.4-f095df1ae6";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "rollup-freebsd-x64";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-arm-gnueabihf@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-arm-gnueabihf";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-arm-gnueabihf-4.52.4-f6456577d5";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
+      flatName = "rollup-linux-arm-gnueabihf";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-arm-musleabihf@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-arm-musleabihf";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-arm-musleabihf-4.52.4-d55a93dfad";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32) && (false);
+      flatName = "rollup-linux-arm-musleabihf";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-arm64-gnu@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-arm64-gnu";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-arm64-gnu-4.52.4-f210ca5232";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
+      flatName = "rollup-linux-arm64-gnu";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-arm64-musl@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-arm64-musl";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-arm64-musl-4.52.4-b3f13b77e9";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
+      flatName = "rollup-linux-arm64-musl";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-loong64-gnu@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-loong64-gnu";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-loong64-gnu-4.52.4-9b45d54f3e";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "rollup-linux-loong64-gnu";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-ppc64-gnu@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-ppc64-gnu";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-ppc64-gnu-4.52.4-98b092ceef";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "rollup-linux-ppc64-gnu";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-riscv64-gnu@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-riscv64-gnu";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-riscv64-gnu-4.52.4-c0856d3602";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "rollup-linux-riscv64-gnu";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-riscv64-musl@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-riscv64-musl";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-riscv64-musl-4.52.4-f5cc2ad315";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false) && (false);
+      flatName = "rollup-linux-riscv64-musl";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-s390x-gnu@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-s390x-gnu";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-s390x-gnu-4.52.4-b4949307e3";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (false);
+      flatName = "rollup-linux-s390x-gnu";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-x64-gnu@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-x64-gnu";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-x64-gnu-4.52.4-fc42a3286d";
+      outputHashByPlatform = {
+        "x86_64-linux" = "sha512-U9E6fU4eIsZvBDFGu9SxSjKGvy9y9IsuZXj1WkWp7b7MFCA9whAkvnwl48YJpICsSut4PW2FpOs+/VbX72jpYA==";
+      };
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
+      flatName = "rollup-linux-x64-gnu";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-linux-x64-musl@npm:4.52.4" = {
+      name = "@rollup/rollup-linux-x64-musl";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-linux-x64-musl-4.52.4-43b540fef4";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
+      flatName = "rollup-linux-x64-musl";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-openharmony-arm64@npm:4.52.4" = {
+      name = "@rollup/rollup-openharmony-arm64";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-openharmony-arm64-4.52.4-1dd7620836";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "rollup-openharmony-arm64";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-win32-arm64-msvc@npm:4.52.4" = {
+      name = "@rollup/rollup-win32-arm64-msvc";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-win32-arm64-msvc-4.52.4-ec02d58de2";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "rollup-win32-arm64-msvc";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-win32-ia32-msvc@npm:4.52.4" = {
+      name = "@rollup/rollup-win32-ia32-msvc";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-win32-ia32-msvc-4.52.4-bf75d38657";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isi686);
+      flatName = "rollup-win32-ia32-msvc";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-win32-x64-gnu@npm:4.52.4" = {
+      name = "@rollup/rollup-win32-x64-gnu";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-win32-x64-gnu-4.52.4-1ff41b82bd";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "rollup-win32-x64-gnu";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
+    };
+    "@rollup/rollup-win32-x64-msvc@npm:4.52.4" = {
+      name = "@rollup/rollup-win32-x64-msvc";
+      reference = "npm:4.52.4";
+      linkType = "HARD";
+      outputName = "rollup-rollup-win32-x64-msvc-4.52.4-40b06fa912";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isx86_64);
+      flatName = "rollup-win32-x64-msvc";
+      languageName = "node";
+      scope = "rollup";
+      descriptorRange = "npm:4.52.4";
     };
     "@rtsao/scc@npm:1.1.0" = {
       name = "@rtsao/scc";
@@ -12436,124 +12745,114 @@ let
         "selderee" = packages."selderee@npm:0.11.0";
       };
     };
-    "@sentry-internal/browser-utils@npm:8.38.0" = {
+    "@sentry-internal/browser-utils@npm:10.17.0" = {
       name = "@sentry-internal/browser-utils";
-      reference = "npm:8.38.0";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-internal-browser-utils-8.38.0-64e8f37342";
-      outputHash = "aa0870a204f45d466ae51c65e2daa56c2c095f7ff826a35fd5348e3b4982536ea8abd37ba86fcc90fc8b7d002a706eb002a191f9074df062b8360e20654d359c";
+      outputName = "sentry-internal-browser-utils-10.17.0-e655e1f955";
+      outputHash = "328851bbbbd563837105e1b6205130aa1eccbd679b84d54c4a657af47339e63ac868415d37e80b493005e9d7543dc61a5e47e52a17ebc5af1790f4c7cf09467e";
       flatName = "browser-utils";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/aa0870a204f45d466ae51c65e2daa56c2c095f7ff826a35fd5348e3b4982536ea8abd37ba86fcc90fc8b7d002a706eb002a191f9074df062b8360e20654d359c";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/328851bbbbd563837105e1b6205130aa1eccbd679b84d54c4a657af47339e63ac868415d37e80b493005e9d7543dc61a5e47e52a17ebc5af1790f4c7cf09467e";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
       };
     };
-    "@sentry-internal/feedback@npm:8.38.0" = {
+    "@sentry-internal/feedback@npm:10.17.0" = {
       name = "@sentry-internal/feedback";
-      reference = "npm:8.38.0";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-internal-feedback-8.38.0-bf2f02b9ea";
-      outputHash = "cc02bbce9f57765118f15ce0e42e85f521abbc1f01999b6b4be923c1f3c996ffdaee0a28025dbad599523a2d976483b8141336693b92c03b1e63012dc92c4016";
+      outputName = "sentry-internal-feedback-10.17.0-053f6f310c";
+      outputHash = "f6753f11b06809109a5d5189720370a78a66859738a1e8c9285db4fd7871030927458e92909e9729a6cd94c216de3d578b3bb836f39cbd697da972922960b57a";
       flatName = "feedback";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/cc02bbce9f57765118f15ce0e42e85f521abbc1f01999b6b4be923c1f3c996ffdaee0a28025dbad599523a2d976483b8141336693b92c03b1e63012dc92c4016";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/f6753f11b06809109a5d5189720370a78a66859738a1e8c9285db4fd7871030927458e92909e9729a6cd94c216de3d578b3bb836f39cbd697da972922960b57a";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
       };
     };
-    "@sentry-internal/replay-canvas@npm:8.38.0" = {
+    "@sentry-internal/replay-canvas@npm:10.17.0" = {
       name = "@sentry-internal/replay-canvas";
-      reference = "npm:8.38.0";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-internal-replay-canvas-8.38.0-bad0083579";
-      outputHash = "149b498ca83cbc18620bd85c1ebc683cc107c2e0a150e6174aeb3491a3c3bd2ba3e61cc22879c8fc93dfeb7249e28023d359b31ac3f95519499538809eecf55e";
+      outputName = "sentry-internal-replay-canvas-10.17.0-35aff9344f";
+      outputHash = "9dbfb29385fc82d0985dda5f5d981635778cb0c141faf863c6dc6d17ab22b7ad1666a824b0f3000d0165ddc3814b8c9b35393959b18a0f148d2c12adc37ebadc";
       flatName = "replay-canvas";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/149b498ca83cbc18620bd85c1ebc683cc107c2e0a150e6174aeb3491a3c3bd2ba3e61cc22879c8fc93dfeb7249e28023d359b31ac3f95519499538809eecf55e";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/9dbfb29385fc82d0985dda5f5d981635778cb0c141faf863c6dc6d17ab22b7ad1666a824b0f3000d0165ddc3814b8c9b35393959b18a0f148d2c12adc37ebadc";
       dependencies = {
-        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:8.38.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
       };
     };
-    "@sentry-internal/replay@npm:8.38.0" = {
+    "@sentry-internal/replay@npm:10.17.0" = {
       name = "@sentry-internal/replay";
-      reference = "npm:8.38.0";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-internal-replay-8.38.0-9ca78b1c09";
-      outputHash = "ac92c2947a10877b23127e799e537a5d9326a06c335dc2d6f051fcdfb58d100931d1eeb06bd40e1d2b321e8e8c4c59e250e96eca2edea728bc79312748039166";
+      outputName = "sentry-internal-replay-10.17.0-1b8326fcd5";
+      outputHash = "b9cce490dd0840f6284f9fecd1ec00f77c7e7a39daeffc8da25622ae4006ceaa20bd1dbb94756db20438dd2e60f341dbb3f5348a4839fcde59f508d13e5c097a";
       flatName = "replay";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/ac92c2947a10877b23127e799e537a5d9326a06c335dc2d6f051fcdfb58d100931d1eeb06bd40e1d2b321e8e8c4c59e250e96eca2edea728bc79312748039166";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/b9cce490dd0840f6284f9fecd1ec00f77c7e7a39daeffc8da25622ae4006ceaa20bd1dbb94756db20438dd2e60f341dbb3f5348a4839fcde59f508d13e5c097a";
       dependencies = {
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.38.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
       };
     };
-    "@sentry/babel-plugin-component-annotate@npm:2.22.6" = {
+    "@sentry/babel-plugin-component-annotate@npm:4.3.0" = {
       name = "@sentry/babel-plugin-component-annotate";
-      reference = "npm:2.22.6";
+      reference = "npm:4.3.0";
       linkType = "HARD";
-      outputName = "sentry-babel-plugin-component-annotate-2.22.6-1cb1522e69";
-      outputHash = "895c9e03a576721805494f1292ed1282027cdd81e0963b621be94c613451f628767ea28e5b5a2bc803df86de6b95a5835209ac30d81486916b4da87cc9853ac7";
+      outputName = "sentry-babel-plugin-component-annotate-4.3.0-474e76f875";
+      outputHash = "3abfad1432f2aeb0ed4d30c701e2037d088bda1f2d5f7f12b84dc1c523ff6b6fe4af08c9f4fd2a66df11a48a385f53d8e1cbe2432a45031f00be5bf826ce55cd";
       flatName = "babel-plugin-component-annotate";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.22.6";
-      checksum = "10/895c9e03a576721805494f1292ed1282027cdd81e0963b621be94c613451f628767ea28e5b5a2bc803df86de6b95a5835209ac30d81486916b4da87cc9853ac7";
+      descriptorRange = "npm:4.3.0";
+      checksum = "10/3abfad1432f2aeb0ed4d30c701e2037d088bda1f2d5f7f12b84dc1c523ff6b6fe4af08c9f4fd2a66df11a48a385f53d8e1cbe2432a45031f00be5bf826ce55cd";
     };
-    "@sentry/browser@npm:8.38.0" = {
+    "@sentry/browser@npm:10.17.0" = {
       name = "@sentry/browser";
-      reference = "npm:8.38.0";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-browser-8.38.0-e0508d74aa";
-      outputHash = "a465c66f71433339adb32d117c8d734596efb57727a2f212cfd84534c88c67ed08d9af27ced6e27903c67d6ac205d735a14d542ac90d72642b1a00244aac1aef";
+      outputName = "sentry-browser-10.17.0-9eda8948f8";
+      outputHash = "6bfc8ae92d988b79a4f2ced0be438f389fbf8d7d0ee82cbce1cbac02693b02a9a76df8375582bfca7578ec856c025d074f49de2c3e1f75a2185f9d52d2a61f65";
       flatName = "browser";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/a465c66f71433339adb32d117c8d734596efb57727a2f212cfd84534c88c67ed08d9af27ced6e27903c67d6ac205d735a14d542ac90d72642b1a00244aac1aef";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/6bfc8ae92d988b79a4f2ced0be438f389fbf8d7d0ee82cbce1cbac02693b02a9a76df8375582bfca7578ec856c025d074f49de2c3e1f75a2185f9d52d2a61f65";
       dependencies = {
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.38.0";
-        "@sentry-internal/feedback" = packages."@sentry-internal/feedback@npm:8.38.0";
-        "@sentry-internal/replay-canvas" = packages."@sentry-internal/replay-canvas@npm:8.38.0";
-        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:8.38.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.17.0";
+        "@sentry-internal/feedback" = packages."@sentry-internal/feedback@npm:10.17.0";
+        "@sentry-internal/replay-canvas" = packages."@sentry-internal/replay-canvas@npm:10.17.0";
+        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
       };
     };
-    "@sentry/bundler-plugin-core@npm:2.22.6" = {
+    "@sentry/bundler-plugin-core@npm:4.3.0" = {
       name = "@sentry/bundler-plugin-core";
-      reference = "npm:2.22.6";
+      reference = "npm:4.3.0";
       linkType = "HARD";
-      outputName = "sentry-bundler-plugin-core-2.22.6-50a41e56ef";
-      outputHash = "a5fbc2814d621d7b3885c20bf3ea99698a1ee3889af5ba34876864bc87ff36dbc39f0d5a0894433e18899b0c444cc177ffd4228b136cdd705445b582b68d5396";
+      outputName = "sentry-bundler-plugin-core-4.3.0-425af6035c";
+      outputHash = "20da2b968e1e534c478b307834e9e0bb1da1cbb62223f38f2ebef7783fee9c4fd4daaed508c18e4464ba2aea8497b0a6492fbb8f82ae5b9f3c667850d64a5d4b";
       flatName = "bundler-plugin-core";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.22.6";
-      checksum = "10/a5fbc2814d621d7b3885c20bf3ea99698a1ee3889af5ba34876864bc87ff36dbc39f0d5a0894433e18899b0c444cc177ffd4228b136cdd705445b582b68d5396";
+      descriptorRange = "npm:^4.3.0";
+      checksum = "10/20da2b968e1e534c478b307834e9e0bb1da1cbb62223f38f2ebef7783fee9c4fd4daaed508c18e4464ba2aea8497b0a6492fbb8f82ae5b9f3c667850d64a5d4b";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.3";
-        "@sentry/babel-plugin-component-annotate" = packages."@sentry/babel-plugin-component-annotate@npm:2.22.6";
-        "@sentry/cli" = packages."@sentry/cli@npm:2.38.2";
+        "@sentry/babel-plugin-component-annotate" = packages."@sentry/babel-plugin-component-annotate@npm:4.3.0";
+        "@sentry/cli" = packages."@sentry/cli@npm:2.56.0";
         "dotenv" = packages."dotenv@npm:16.4.5";
         "find-up" = packages."find-up@npm:5.0.0";
         "glob" = packages."glob@npm:9.3.5";
@@ -12561,126 +12860,137 @@ let
         "unplugin" = packages."unplugin@npm:1.0.1";
       };
     };
-    "@sentry/cli-darwin@npm:2.38.2" = {
+    "@sentry/cli-darwin@npm:2.56.0" = {
       name = "@sentry/cli-darwin";
-      reference = "npm:2.38.2";
+      reference = "npm:2.56.0";
       linkType = "HARD";
-      outputName = "sentry-cli-darwin-2.38.2-ba5f57a4ed";
-      outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-aygwzfxrbPNxaSBSwMY1yiETtPo+gQ8qCeVr8V3Hgnsj0Sp0J9g6X0HknMTwYvQBUQKYP8SrZSkLwyj3nykV7Q==";
-      };
+      outputName = "sentry-cli-darwin-2.56.0-7947fc2ec0";
+      outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin);
       flatName = "cli-darwin";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.38.2";
+      descriptorRange = "npm:2.56.0";
     };
-    "@sentry/cli-linux-arm@npm:2.38.2" = {
+    "@sentry/cli-linux-arm@npm:2.56.0" = {
       name = "@sentry/cli-linux-arm";
-      reference = "npm:2.38.2";
+      reference = "npm:2.56.0";
       linkType = "HARD";
-      outputName = "sentry-cli-linux-arm-2.38.2-cd55577060";
+      outputName = "sentry-cli-linux-arm-2.56.0-6199a87d9a";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isAarch32);
       flatName = "cli-linux-arm";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.38.2";
+      descriptorRange = "npm:2.56.0";
     };
-    "@sentry/cli-linux-arm64@npm:2.38.2" = {
+    "@sentry/cli-linux-arm64@npm:2.56.0" = {
       name = "@sentry/cli-linux-arm64";
-      reference = "npm:2.38.2";
+      reference = "npm:2.56.0";
       linkType = "HARD";
-      outputName = "sentry-cli-linux-arm64-2.38.2-bafca40cb4";
+      outputName = "sentry-cli-linux-arm64-2.56.0-2bb99af86d";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isAarch64);
       flatName = "cli-linux-arm64";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.38.2";
+      descriptorRange = "npm:2.56.0";
     };
-    "@sentry/cli-linux-i686@npm:2.38.2" = {
+    "@sentry/cli-linux-i686@npm:2.56.0" = {
       name = "@sentry/cli-linux-i686";
-      reference = "npm:2.38.2";
+      reference = "npm:2.56.0";
       linkType = "HARD";
-      outputName = "sentry-cli-linux-i686-2.38.2-2e0a2885ac";
+      outputName = "sentry-cli-linux-i686-2.56.0-e85d0a77da";
       outputHash = "";
       shouldBeUnplugged = true;
       flatName = "cli-linux-i686";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.38.2";
+      descriptorRange = "npm:2.56.0";
     };
-    "@sentry/cli-linux-x64@npm:2.38.2" = {
+    "@sentry/cli-linux-x64@npm:2.56.0" = {
       name = "@sentry/cli-linux-x64";
-      reference = "npm:2.38.2";
+      reference = "npm:2.56.0";
       linkType = "HARD";
-      outputName = "sentry-cli-linux-x64-2.38.2-62bd6a96eb";
+      outputName = "sentry-cli-linux-x64-2.56.0-853b6526c8";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-aq0i17/dUqGaW04VjLeVjQxXs7z93rCn/5dUU2E4RJOFgBGgi0Bk9oe5cHZQgKa4EttkhSf9mSkegKXsHUburA==";
+        "x86_64-linux" = "sha512-UbFuXJ5B9oMgTY5VdIw6VVvOnsoz4jPLXPQt8rwAwAAzeuMMOvagsaJoeBYwWwhaBPNrRU8mSdeaFjbJiUiA9w==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isx86_64);
       flatName = "cli-linux-x64";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.38.2";
+      descriptorRange = "npm:2.56.0";
     };
-    "@sentry/cli-win32-i686@npm:2.38.2" = {
-      name = "@sentry/cli-win32-i686";
-      reference = "npm:2.38.2";
+    "@sentry/cli-win32-arm64@npm:2.56.0" = {
+      name = "@sentry/cli-win32-arm64";
+      reference = "npm:2.56.0";
       linkType = "HARD";
-      outputName = "sentry-cli-win32-i686-2.38.2-ea463b4f2c";
+      outputName = "sentry-cli-win32-arm64-2.56.0-adb0d6fcac";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      installCondition = stdenv: (false) && (stdenv.isAarch64);
+      flatName = "cli-win32-arm64";
+      languageName = "node";
+      scope = "sentry";
+      descriptorRange = "npm:2.56.0";
+    };
+    "@sentry/cli-win32-i686@npm:2.56.0" = {
+      name = "@sentry/cli-win32-i686";
+      reference = "npm:2.56.0";
+      linkType = "HARD";
+      outputName = "sentry-cli-win32-i686-2.56.0-d45a716fed";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false);
       flatName = "cli-win32-i686";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.38.2";
+      descriptorRange = "npm:2.56.0";
     };
-    "@sentry/cli-win32-x64@npm:2.38.2" = {
+    "@sentry/cli-win32-x64@npm:2.56.0" = {
       name = "@sentry/cli-win32-x64";
-      reference = "npm:2.38.2";
+      reference = "npm:2.56.0";
       linkType = "HARD";
-      outputName = "sentry-cli-win32-x64-2.38.2-bba1749bb7";
+      outputName = "sentry-cli-win32-x64-2.56.0-b8df6ce860";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "cli-win32-x64";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.38.2";
+      descriptorRange = "npm:2.56.0";
     };
-    "@sentry/cli@npm:2.38.2" = {
+    "@sentry/cli@npm:2.56.0" = {
       name = "@sentry/cli";
-      reference = "npm:2.38.2";
+      reference = "npm:2.56.0";
       linkType = "HARD";
-      outputName = "sentry-cli-2.38.2-6038188690";
+      outputName = "sentry-cli-2.56.0-005cd59fdf";
       outputHashByPlatform = {
-        "aarch64-darwin" = "sha512-dqe5Rk/9i6MZ14oa70Lzl7FuFhDH2uaFNA3Jwmu8evuQ992qCokLXiKBFWOvRRfaMvMSrkvsmXeTjCBcdwb0xw==";
-        "x86_64-linux" = "sha512-dqe5Rk/9i6MZ14oa70Lzl7FuFhDH2uaFNA3Jwmu8evuQ992qCokLXiKBFWOvRRfaMvMSrkvsmXeTjCBcdwb0xw==";
+        "x86_64-linux" = "sha512-+jx/f3Zd0Lc1+ah6v+sWRl6Nl91ZI6QRq6qlcRvkw/3eiCqQDu2ow6zhMAFPNnURwMYo5L4OitV9P+9i8lMEHw==";
       };
       shouldBeUnplugged = true;
       flatName = "cli";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:^2.36.1";
-      checksum = "10/4595c35461c8a10c32edb38d55b556eef7af1aea20bacc8169dbff68c1b913142ec79d9e65027891e9741d32b2039c4cac331eea17930abf5dcdac8797c9008e";
+      descriptorRange = "npm:^2.51.0";
+      checksum = "10/6ed494c6c21c7da53c71ae9ca6b26d49efa29b12707019b6460653cc9e0087412df57e49f2a3d56fbef5d8d0bb64fa23b066d1d7307af7f1093d8804137875cb";
       bin = {
         "sentry-cli" = "bin/sentry-cli";
       };
       dependencies = {
-        "@sentry/cli-darwin" = packages."@sentry/cli-darwin@npm:2.38.2";
-        "@sentry/cli-linux-arm64" = packages."@sentry/cli-linux-arm64@npm:2.38.2";
-        "@sentry/cli-linux-arm" = packages."@sentry/cli-linux-arm@npm:2.38.2";
-        "@sentry/cli-linux-i686" = packages."@sentry/cli-linux-i686@npm:2.38.2";
-        "@sentry/cli-linux-x64" = packages."@sentry/cli-linux-x64@npm:2.38.2";
-        "@sentry/cli-win32-i686" = packages."@sentry/cli-win32-i686@npm:2.38.2";
-        "@sentry/cli-win32-x64" = packages."@sentry/cli-win32-x64@npm:2.38.2";
+        "@sentry/cli-darwin" = packages."@sentry/cli-darwin@npm:2.56.0";
+        "@sentry/cli-linux-arm64" = packages."@sentry/cli-linux-arm64@npm:2.56.0";
+        "@sentry/cli-linux-arm" = packages."@sentry/cli-linux-arm@npm:2.56.0";
+        "@sentry/cli-linux-i686" = packages."@sentry/cli-linux-i686@npm:2.56.0";
+        "@sentry/cli-linux-x64" = packages."@sentry/cli-linux-x64@npm:2.56.0";
+        "@sentry/cli-win32-arm64" = packages."@sentry/cli-win32-arm64@npm:2.56.0";
+        "@sentry/cli-win32-i686" = packages."@sentry/cli-win32-i686@npm:2.56.0";
+        "@sentry/cli-win32-x64" = packages."@sentry/cli-win32-x64@npm:2.56.0";
         "https-proxy-agent" = packages."https-proxy-agent@npm:5.0.1";
         "progress" = packages."progress@npm:2.0.3";
         "proxy-from-env" = packages."proxy-from-env@npm:1.1.0";
@@ -12688,53 +12998,47 @@ let
         "node-fetch" = packages."node-fetch@virtual:7c5a218dacf1bcd8f73d6a2c22159df6629da91f697408eb1538568f5de3f9ae8a475a2c7e274c516f89b825cad9c05855e469464c46b9b4f4760f1804ea60ea#npm:2.6.12";
       };
     };
-    "@sentry/core@npm:8.38.0" = {
+    "@sentry/core@npm:10.17.0" = {
       name = "@sentry/core";
-      reference = "npm:8.38.0";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-core-8.38.0-f634109a46";
-      outputHash = "3c49d4916690e67197074d900184fcf25874af3a0b2a4874eda025605cb55719487d9a17b395a643ceab79fa50847fc9f8d2c43723438e11e2c3b07849646e30";
+      outputName = "sentry-core-10.17.0-f1bbc1ee88";
+      outputHash = "556eaedf23402fe9f9b8a8cd577d61e71b42b9ef3e72bc22ee70705fc0050d1bf8a08dff44434f8a2ad1415e177b2e09d12f4d7ef51e2553c067ff805b3030e2";
       flatName = "core";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/3c49d4916690e67197074d900184fcf25874af3a0b2a4874eda025605cb55719487d9a17b395a643ceab79fa50847fc9f8d2c43723438e11e2c3b07849646e30";
-      dependencies = {
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
-      };
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/556eaedf23402fe9f9b8a8cd577d61e71b42b9ef3e72bc22ee70705fc0050d1bf8a08dff44434f8a2ad1415e177b2e09d12f4d7ef51e2553c067ff805b3030e2";
     };
-    "@sentry/nextjs@npm:8.38.0" = {
+    "@sentry/nextjs@npm:10.17.0" = {
       name = "@sentry/nextjs";
-      reference = "npm:8.38.0";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-nextjs-8.38.0-b87f4c2ed2";
-      outputHash = "03e161f8ac1e953fe0c5ded8579554627588b5e6eead5604394b63e30248aa0bc28dde854fc277de613cc0db2e67d7a5a0fc0a27c36bf3ce02451e3a1840fead";
+      outputName = "sentry-nextjs-10.17.0-1c2686f54b";
+      outputHash = "90a468bf2336ba2c0eb484d4c9dd0172e93702fa22ed6bd5423c6f572b0aeeb6d88c82dd3dc988a2681c7510afa1abb5705d428afca4f0bbed578d0a85b54fe8";
       flatName = "nextjs";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:~8.38.0";
-      checksum = "10/03e161f8ac1e953fe0c5ded8579554627588b5e6eead5604394b63e30248aa0bc28dde854fc277de613cc0db2e67d7a5a0fc0a27c36bf3ce02451e3a1840fead";
+      descriptorRange = "npm:~10.17.0";
+      checksum = "10/90a468bf2336ba2c0eb484d4c9dd0172e93702fa22ed6bd5423c6f572b0aeeb6d88c82dd3dc988a2681c7510afa1abb5705d428afca4f0bbed578d0a85b54fe8";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@npm:1.27.0";
-        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@npm:0.53.0";
         "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@npm:0.54.2";
         "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@npm:1.27.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@npm:26.0.1";
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.38.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/node" = packages."@sentry/node@npm:8.38.0";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@npm:8.38.0";
-        "@sentry/react" = packages."@sentry/react@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
-        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:8.38.0";
-        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@npm:2.22.6";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@npm:28.0.1";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.17.0";
+        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:4.3.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/node" = packages."@sentry/node@npm:10.17.0";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@npm:10.17.0";
+        "@sentry/react" = packages."@sentry/react@npm:10.17.0";
+        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:10.17.0";
+        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@npm:4.3.0";
         "chalk" = packages."chalk@npm:3.0.0";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d";
-        "rollup" = packages."rollup@npm:3.29.5";
+        "rollup" = packages."rollup@npm:4.52.4";
         "stacktrace-parser" = packages."stacktrace-parser@npm:0.1.10";
       };
       packagePeers = [
@@ -12744,147 +13048,199 @@ let
         "react"
       ];
     };
-    "@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.38.0" = {
+    "@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.17.0" = {
       name = "@sentry/nextjs";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.38.0";
-      canonicalPackage = packages."@sentry/nextjs@npm:8.38.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.17.0";
+      canonicalPackage = packages."@sentry/nextjs@npm:10.17.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:8.38.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/node" = packages."@sentry/node@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
-        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:8.38.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.17.0";
+        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:4.3.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/node" = packages."@sentry/node@npm:10.17.0";
+        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:10.17.0";
         "@types/react" = packages."@types/react@npm:18.3.24";
         "chalk" = packages."chalk@npm:3.0.0";
         "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.2";
         "react" = packages."react@npm:18.3.1";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d";
-        "rollup" = packages."rollup@npm:3.29.5";
+        "rollup" = packages."rollup@npm:4.52.4";
         "stacktrace-parser" = packages."stacktrace-parser@npm:0.1.10";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
-        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.53.0";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:1.27.0";
-        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@virtual:9985e04f8a41abb3512d430ca0b85b84620260ec5d6e21b9b0b82b49e11ac17ac34d1bf8a890a62d2e88fcb6a6419da6255c9e6c63a9df1f706ab4c30c0666ed#npm:26.0.1";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:8.38.0";
-        "@sentry/react" = packages."@sentry/react@virtual:9985e04f8a41abb3512d430ca0b85b84620260ec5d6e21b9b0b82b49e11ac17ac34d1bf8a890a62d2e88fcb6a6419da6255c9e6c63a9df1f706ab4c30c0666ed#npm:8.38.0";
-        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@virtual:9985e04f8a41abb3512d430ca0b85b84620260ec5d6e21b9b0b82b49e11ac17ac34d1bf8a890a62d2e88fcb6a6419da6255c9e6c63a9df1f706ab4c30c0666ed#npm:2.22.6";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:0.54.2";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0";
+        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:28.0.1";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0";
+        "@sentry/react" = packages."@sentry/react@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0";
+        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:4.3.0";
       };
     };
-    "@sentry/node@npm:8.38.0" = {
-      name = "@sentry/node";
-      reference = "npm:8.38.0";
+    "@sentry/node-core@npm:10.17.0" = {
+      name = "@sentry/node-core";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-node-8.38.0-ff38200f28";
-      outputHash = "6d973bb464047fa7aa585406711b9801c7eddeb5c2620ba54d1c1aafc5f757dfcd3cd0f7f21ac1d9ab39dc3212df46a67264b4fc3bf74cd447c6f2c17655008f";
-      flatName = "node";
+      outputName = "sentry-node-core-10.17.0-bc2ebb3002";
+      outputHash = "9881e8803ce74c4759692b89b058049b8c024b9486fb989fc90da5d0c8a4e6e49924681b80f013c7d4dc3e49c30158f965c5d4092c228b91a8bc316192e6f278";
+      flatName = "node-core";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/6d973bb464047fa7aa585406711b9801c7eddeb5c2620ba54d1c1aafc5f757dfcd3cd0f7f21ac1d9ab39dc3212df46a67264b4fc3bf74cd447c6f2c17655008f";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/9881e8803ce74c4759692b89b058049b8c024b9486fb989fc90da5d0c8a4e6e49924681b80f013c7d4dc3e49c30158f965c5d4092c228b91a8bc316192e6f278";
       dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@prisma/instrumentation" = packages."@prisma/instrumentation@npm:5.19.1";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
-        "import-in-the-middle" = packages."import-in-the-middle@npm:1.11.2";
-        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:1.25.1";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation-amqplib" = packages."@opentelemetry/instrumentation-amqplib@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.43.0";
-        "@opentelemetry/instrumentation-connect" = packages."@opentelemetry/instrumentation-connect@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.40.0";
-        "@opentelemetry/instrumentation-dataloader" = packages."@opentelemetry/instrumentation-dataloader@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.12.0";
-        "@opentelemetry/instrumentation-express" = packages."@opentelemetry/instrumentation-express@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.44.0";
-        "@opentelemetry/instrumentation-fastify" = packages."@opentelemetry/instrumentation-fastify@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-        "@opentelemetry/instrumentation-fs" = packages."@opentelemetry/instrumentation-fs@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.16.0";
-        "@opentelemetry/instrumentation-generic-pool" = packages."@opentelemetry/instrumentation-generic-pool@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.39.0";
-        "@opentelemetry/instrumentation-graphql" = packages."@opentelemetry/instrumentation-graphql@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.44.0";
-        "@opentelemetry/instrumentation-hapi" = packages."@opentelemetry/instrumentation-hapi@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.53.0";
-        "@opentelemetry/instrumentation-ioredis" = packages."@opentelemetry/instrumentation-ioredis@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.43.0";
-        "@opentelemetry/instrumentation-kafkajs" = packages."@opentelemetry/instrumentation-kafkajs@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.4.0";
-        "@opentelemetry/instrumentation-knex" = packages."@opentelemetry/instrumentation-knex@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-        "@opentelemetry/instrumentation-koa" = packages."@opentelemetry/instrumentation-koa@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.43.0";
-        "@opentelemetry/instrumentation-lru-memoizer" = packages."@opentelemetry/instrumentation-lru-memoizer@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.40.0";
-        "@opentelemetry/instrumentation-mongodb" = packages."@opentelemetry/instrumentation-mongodb@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.48.0";
-        "@opentelemetry/instrumentation-mongoose" = packages."@opentelemetry/instrumentation-mongoose@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.42.0";
-        "@opentelemetry/instrumentation-mysql2" = packages."@opentelemetry/instrumentation-mysql2@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-        "@opentelemetry/instrumentation-mysql" = packages."@opentelemetry/instrumentation-mysql@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.41.0";
-        "@opentelemetry/instrumentation-nestjs-core" = packages."@opentelemetry/instrumentation-nestjs-core@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.40.0";
-        "@opentelemetry/instrumentation-pg" = packages."@opentelemetry/instrumentation-pg@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.44.0";
-        "@opentelemetry/instrumentation-redis-4" = packages."@opentelemetry/instrumentation-redis-4@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.42.0";
-        "@opentelemetry/instrumentation-tedious" = packages."@opentelemetry/instrumentation-tedious@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.15.0";
-        "@opentelemetry/instrumentation-undici" = packages."@opentelemetry/instrumentation-undici@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.6.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:1.27.0";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:8.38.0";
-      };
-    };
-    "@sentry/opentelemetry@npm:8.38.0" = {
-      name = "@sentry/opentelemetry";
-      reference = "npm:8.38.0";
-      linkType = "HARD";
-      outputName = "sentry-opentelemetry-8.38.0-979b12901b";
-      outputHash = "846d52ba9b603d68b9e472611c5b931112d41b3ca81a26b67c7f778decaa3fad2245ad4e92ce1b12746f7b1810ecb79ed1ffb85f04560c77fb5f7e742c74da14";
-      flatName = "opentelemetry";
-      languageName = "node";
-      scope = "sentry";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/846d52ba9b603d68b9e472611c5b931112d41b3ca81a26b67c7f778decaa3fad2245ad4e92ce1b12746f7b1810ecb79ed1ffb85f04560c77fb5f7e742c74da14";
-      dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@npm:10.17.0";
+        "import-in-the-middle" = packages."import-in-the-middle@npm:1.14.4";
       };
       packagePeers = [
         "@opentelemetry/api"
+        "@opentelemetry/context-async-hooks"
         "@opentelemetry/core"
         "@opentelemetry/instrumentation"
+        "@opentelemetry/resources"
         "@opentelemetry/sdk-trace-base"
         "@opentelemetry/semantic-conventions"
         "@types/opentelemetry__api"
+        "@types/opentelemetry__context-async-hooks"
         "@types/opentelemetry__core"
         "@types/opentelemetry__instrumentation"
+        "@types/opentelemetry__resources"
         "@types/opentelemetry__sdk-trace-base"
         "@types/opentelemetry__semantic-conventions"
       ];
     };
-    "@sentry/opentelemetry@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:8.38.0" = {
-      name = "@sentry/opentelemetry";
-      reference = "virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:8.38.0";
-      canonicalPackage = packages."@sentry/opentelemetry@npm:8.38.0";
+    "@sentry/node-core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0" = {
+      name = "@sentry/node-core";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
+      canonicalPackage = packages."@sentry/node-core@npm:10.17.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:5d758910ca637f004fb79d2b26d75e7c805e9f5487d71f40eb3c3d2f466f41c223c13c40771d1280d26075a38dfecb2281cf375ba79727568586ca18e3ca1a2a#npm:1.27.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:ff38200f28802a8c52c7ce3526c65efc951b01336dc4d6b5f14c9f7d0dc1a40223a6cf0bb03197e5f4346d122d88c60ae45700fa2559a6d3cc3ac0138f4b036f#npm:0.54.2";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:349d54ba35af0e9ed8304850204c303b600a979c8034b46b8045138270bb53a0bad9805618971714d5bb9cd8030335a8d60391ee3957060d7afdd48f1505e2d9#npm:1.27.0";
-        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.27.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "import-in-the-middle" = packages."import-in-the-middle@npm:1.14.4";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
       };
     };
-    "@sentry/react@npm:8.38.0" = {
-      name = "@sentry/react";
-      reference = "npm:8.38.0";
+    "@sentry/node@npm:10.17.0" = {
+      name = "@sentry/node";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-react-8.38.0-9bec95f431";
-      outputHash = "0755aa307ccf3fa7be4628736c0decc01f87164290b5d971c19533fa5a9a2f2ddf3ef441f4178abbf2c7992dc1cd8bf905e6acf4f730bcb8ac871c73071d7ba3";
+      outputName = "sentry-node-10.17.0-7b444f86be";
+      outputHash = "085078c391f2c3bbedfb63f85c70ac46e155d3ff21c74b6a58f1c82418655369d6970782d924c2e914fed80c3cd587f2e88545f99b23ecf15498c6256b5b4f0d";
+      flatName = "node";
+      languageName = "node";
+      scope = "sentry";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/085078c391f2c3bbedfb63f85c70ac46e155d3ff21c74b6a58f1c82418655369d6970782d924c2e914fed80c3cd587f2e88545f99b23ecf15498c6256b5b4f0d";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "import-in-the-middle" = packages."import-in-the-middle@npm:1.14.4";
+        "minimatch" = packages."minimatch@npm:9.0.5";
+        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/instrumentation-amqplib" = packages."@opentelemetry/instrumentation-amqplib@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+        "@opentelemetry/instrumentation-connect" = packages."@opentelemetry/instrumentation-connect@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0";
+        "@opentelemetry/instrumentation-dataloader" = packages."@opentelemetry/instrumentation-dataloader@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.22.0";
+        "@opentelemetry/instrumentation-express" = packages."@opentelemetry/instrumentation-express@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0";
+        "@opentelemetry/instrumentation-fs" = packages."@opentelemetry/instrumentation-fs@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.24.0";
+        "@opentelemetry/instrumentation-generic-pool" = packages."@opentelemetry/instrumentation-generic-pool@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0";
+        "@opentelemetry/instrumentation-graphql" = packages."@opentelemetry/instrumentation-graphql@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
+        "@opentelemetry/instrumentation-hapi" = packages."@opentelemetry/instrumentation-hapi@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation-ioredis" = packages."@opentelemetry/instrumentation-ioredis@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
+        "@opentelemetry/instrumentation-kafkajs" = packages."@opentelemetry/instrumentation-kafkajs@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.14.0";
+        "@opentelemetry/instrumentation-knex" = packages."@opentelemetry/instrumentation-knex@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0";
+        "@opentelemetry/instrumentation-koa" = packages."@opentelemetry/instrumentation-koa@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
+        "@opentelemetry/instrumentation-lru-memoizer" = packages."@opentelemetry/instrumentation-lru-memoizer@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0";
+        "@opentelemetry/instrumentation-mongodb" = packages."@opentelemetry/instrumentation-mongodb@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0";
+        "@opentelemetry/instrumentation-mongoose" = packages."@opentelemetry/instrumentation-mongoose@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+        "@opentelemetry/instrumentation-mysql2" = packages."@opentelemetry/instrumentation-mysql2@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+        "@opentelemetry/instrumentation-mysql" = packages."@opentelemetry/instrumentation-mysql@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.50.0";
+        "@opentelemetry/instrumentation-pg" = packages."@opentelemetry/instrumentation-pg@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0";
+        "@opentelemetry/instrumentation-redis" = packages."@opentelemetry/instrumentation-redis@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0";
+        "@opentelemetry/instrumentation-tedious" = packages."@opentelemetry/instrumentation-tedious@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.23.0";
+        "@opentelemetry/instrumentation-undici" = packages."@opentelemetry/instrumentation-undici@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.15.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@prisma/instrumentation" = packages."@prisma/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:6.15.0";
+        "@sentry/node-core" = packages."@sentry/node-core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
+      };
+    };
+    "@sentry/opentelemetry@npm:10.17.0" = {
+      name = "@sentry/opentelemetry";
+      reference = "npm:10.17.0";
+      linkType = "HARD";
+      outputName = "sentry-opentelemetry-10.17.0-46571baed4";
+      outputHash = "8a5b575612cbe342f4267beca0b7793e0008373ee61bcd89b1723029f612a6936f3d248199868af002167d6f7d3cc35c0b263609273a6103721f3f5602be0286";
+      flatName = "opentelemetry";
+      languageName = "node";
+      scope = "sentry";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/8a5b575612cbe342f4267beca0b7793e0008373ee61bcd89b1723029f612a6936f3d248199868af002167d6f7d3cc35c0b263609273a6103721f3f5602be0286";
+      dependencies = {
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+      };
+      packagePeers = [
+        "@opentelemetry/api"
+        "@opentelemetry/context-async-hooks"
+        "@opentelemetry/core"
+        "@opentelemetry/sdk-trace-base"
+        "@opentelemetry/semantic-conventions"
+        "@types/opentelemetry__api"
+        "@types/opentelemetry__context-async-hooks"
+        "@types/opentelemetry__core"
+        "@types/opentelemetry__sdk-trace-base"
+        "@types/opentelemetry__semantic-conventions"
+      ];
+    };
+    "@sentry/opentelemetry@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0" = {
+      name = "@sentry/opentelemetry";
+      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0";
+      canonicalPackage = packages."@sentry/opentelemetry@npm:10.17.0";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:1.27.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+      };
+    };
+    "@sentry/opentelemetry@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0" = {
+      name = "@sentry/opentelemetry";
+      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
+      canonicalPackage = packages."@sentry/opentelemetry@npm:10.17.0";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+      };
+    };
+    "@sentry/react@npm:10.17.0" = {
+      name = "@sentry/react";
+      reference = "npm:10.17.0";
+      linkType = "HARD";
+      outputName = "sentry-react-10.17.0-69aa8a2aa7";
+      outputHash = "ba560c9c0e27d1c18860efe14a8d138b3e818e47c87655003063f022c9056c08ac6a1cb62c433fd1e39626b193baf26fe570aa21b922e5522f7fe127ad0a57f6";
       flatName = "react";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/0755aa307ccf3fa7be4628736c0decc01f87164290b5d971c19533fa5a9a2f2ddf3ef441f4178abbf2c7992dc1cd8bf905e6acf4f730bcb8ac871c73071d7ba3";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/ba560c9c0e27d1c18860efe14a8d138b3e818e47c87655003063f022c9056c08ac6a1cb62c433fd1e39626b193baf26fe570aa21b922e5522f7fe127ad0a57f6";
       dependencies = {
-        "@sentry/browser" = packages."@sentry/browser@npm:8.38.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@sentry/browser" = packages."@sentry/browser@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
       };
       packagePeers = [
@@ -12892,78 +13248,48 @@ let
         "react"
       ];
     };
-    "@sentry/react@virtual:9985e04f8a41abb3512d430ca0b85b84620260ec5d6e21b9b0b82b49e11ac17ac34d1bf8a890a62d2e88fcb6a6419da6255c9e6c63a9df1f706ab4c30c0666ed#npm:8.38.0" = {
+    "@sentry/react@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0" = {
       name = "@sentry/react";
-      reference = "virtual:9985e04f8a41abb3512d430ca0b85b84620260ec5d6e21b9b0b82b49e11ac17ac34d1bf8a890a62d2e88fcb6a6419da6255c9e6c63a9df1f706ab4c30c0666ed#npm:8.38.0";
-      canonicalPackage = packages."@sentry/react@npm:8.38.0";
+      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0";
+      canonicalPackage = packages."@sentry/react@npm:10.17.0";
       dependencies = {
-        "@sentry/browser" = packages."@sentry/browser@npm:8.38.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@sentry/browser" = packages."@sentry/browser@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
         "@types/react" = packages."@types/react@npm:18.3.24";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
         "react" = packages."react@npm:18.3.1";
       };
     };
-    "@sentry/types@npm:8.38.0" = {
-      name = "@sentry/types";
-      reference = "npm:8.38.0";
-      linkType = "HARD";
-      outputName = "sentry-types-8.38.0-55e7eb748a";
-      outputHash = "4b62a9dcd8f432975e47f49436dda2a280232fe62a4f65791a1a0dfde6cfe40e8dac84befd221b1544a86e14d2dd8c7231d4ce123ed4b34332649163ac98f6f7";
-      flatName = "types";
-      languageName = "node";
-      scope = "sentry";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/4b62a9dcd8f432975e47f49436dda2a280232fe62a4f65791a1a0dfde6cfe40e8dac84befd221b1544a86e14d2dd8c7231d4ce123ed4b34332649163ac98f6f7";
-    };
-    "@sentry/utils@npm:8.38.0" = {
-      name = "@sentry/utils";
-      reference = "npm:8.38.0";
-      linkType = "HARD";
-      outputName = "sentry-utils-8.38.0-aaa3da6572";
-      outputHash = "39607035301e13e5547986d611696f906831ffffa69e2cc59f2ece045aeb6b93e8fe6b5adf78ce2923952b16192d82b558be5614ae16995b15a2e216aa2d0c37";
-      flatName = "utils";
-      languageName = "node";
-      scope = "sentry";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/39607035301e13e5547986d611696f906831ffffa69e2cc59f2ece045aeb6b93e8fe6b5adf78ce2923952b16192d82b558be5614ae16995b15a2e216aa2d0c37";
-      dependencies = {
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-      };
-    };
-    "@sentry/vercel-edge@npm:8.38.0" = {
+    "@sentry/vercel-edge@npm:10.17.0" = {
       name = "@sentry/vercel-edge";
-      reference = "npm:8.38.0";
+      reference = "npm:10.17.0";
       linkType = "HARD";
-      outputName = "sentry-vercel-edge-8.38.0-88d676d5ec";
-      outputHash = "ad62ee27b09ed43fc763f1914db7d2ef70bc99203479110bd711583e56381160a2cefe7f523a402483923cb290a7429507b86b83986f30fceacaf60610eaa501";
+      outputName = "sentry-vercel-edge-10.17.0-44aecbe2ad";
+      outputHash = "ca89f1827c225040678ee768b13c8221c337891824cb4e3b5aeda95a01fc1692182390ce4b3d0a5725dc81695f9cf4a67d6abf0de86a9cd933810456ea6c1612";
       flatName = "vercel-edge";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:8.38.0";
-      checksum = "10/ad62ee27b09ed43fc763f1914db7d2ef70bc99203479110bd711583e56381160a2cefe7f523a402483923cb290a7429507b86b83986f30fceacaf60610eaa501";
+      descriptorRange = "npm:10.17.0";
+      checksum = "10/ca89f1827c225040678ee768b13c8221c337891824cb4e3b5aeda95a01fc1692182390ce4b3d0a5725dc81695f9cf4a67d6abf0de86a9cd933810456ea6c1612";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@sentry/core" = packages."@sentry/core@npm:8.38.0";
-        "@sentry/types" = packages."@sentry/types@npm:8.38.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:8.38.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
       };
     };
-    "@sentry/webpack-plugin@npm:2.22.6" = {
+    "@sentry/webpack-plugin@npm:4.3.0" = {
       name = "@sentry/webpack-plugin";
-      reference = "npm:2.22.6";
+      reference = "npm:4.3.0";
       linkType = "HARD";
-      outputName = "sentry-webpack-plugin-2.22.6-e1566af708";
-      outputHash = "dd701dba4037eed458c80cc4b8f5fd0e90b1e6221436148d5e9d20944b69c6572ce05943cf70317631499bf3c22f624c47d7207e4fa02e3a383e4bba1898356d";
+      outputName = "sentry-webpack-plugin-4.3.0-2658cc7e03";
+      outputHash = "cd9fa3aa875b1aed24b17bb27ccc122beb998b316cc414671e70285c788f9a5d7dc284448132c0527cc8d58e83049f67664ebe3128da75bf71bed5b02b3334a5";
       flatName = "webpack-plugin";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:2.22.6";
-      checksum = "10/dd701dba4037eed458c80cc4b8f5fd0e90b1e6221436148d5e9d20944b69c6572ce05943cf70317631499bf3c22f624c47d7207e4fa02e3a383e4bba1898356d";
+      descriptorRange = "npm:^4.3.0";
+      checksum = "10/cd9fa3aa875b1aed24b17bb27ccc122beb998b316cc414671e70285c788f9a5d7dc284448132c0527cc8d58e83049f67664ebe3128da75bf71bed5b02b3334a5";
       dependencies = {
-        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:2.22.6";
+        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:4.3.0";
         "unplugin" = packages."unplugin@npm:1.0.1";
         "uuid" = packages."uuid@npm:9.0.1";
       };
@@ -12972,12 +13298,12 @@ let
         "webpack"
       ];
     };
-    "@sentry/webpack-plugin@virtual:9985e04f8a41abb3512d430ca0b85b84620260ec5d6e21b9b0b82b49e11ac17ac34d1bf8a890a62d2e88fcb6a6419da6255c9e6c63a9df1f706ab4c30c0666ed#npm:2.22.6" = {
+    "@sentry/webpack-plugin@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:4.3.0" = {
       name = "@sentry/webpack-plugin";
-      reference = "virtual:9985e04f8a41abb3512d430ca0b85b84620260ec5d6e21b9b0b82b49e11ac17ac34d1bf8a890a62d2e88fcb6a6419da6255c9e6c63a9df1f706ab4c30c0666ed#npm:2.22.6";
-      canonicalPackage = packages."@sentry/webpack-plugin@npm:2.22.6";
+      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:4.3.0";
+      canonicalPackage = packages."@sentry/webpack-plugin@npm:4.3.0";
       dependencies = {
-        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:2.22.6";
+        "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:4.3.0";
         "unplugin" = packages."unplugin@npm:1.0.1";
         "uuid" = packages."uuid@npm:9.0.1";
       };
@@ -14841,6 +15167,21 @@ let
         "@types/node" = packages."@types/node@npm:22.18.0";
       };
     };
+    "@types/connect@npm:3.4.38" = {
+      name = "@types/connect";
+      reference = "npm:3.4.38";
+      linkType = "HARD";
+      outputName = "types-connect-3.4.38-a8a4c38337";
+      outputHash = "7eb1bc5342a9604facd57598a6c62621e244822442976c443efb84ff745246b10d06e8b309b6e80130026a396f19bf6793b7cecd7380169f369dac3bfc46fb99";
+      flatName = "connect";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:3.4.38";
+      checksum = "10/7eb1bc5342a9604facd57598a6c62621e244822442976c443efb84ff745246b10d06e8b309b6e80130026a396f19bf6793b7cecd7380169f369dac3bfc46fb99";
+      dependencies = {
+        "@types/node" = packages."@types/node@npm:22.18.0";
+      };
+    };
     "@types/cors@npm:2.8.19" = {
       name = "@types/cors";
       reference = "npm:2.8.19";
@@ -15404,17 +15745,17 @@ let
       descriptorRange = "npm:*";
       checksum = "10/6647b295fb2a5b8347c35efabaaed1777221f094be9941d387b4bf11df0eeacb3f8a4e495b8b66ce0e4c00593bc53ab5fc25f01ebb274cd989a834ae578099de";
     };
-    "@types/mysql@npm:2.15.26" = {
+    "@types/mysql@npm:2.15.27" = {
       name = "@types/mysql";
-      reference = "npm:2.15.26";
+      reference = "npm:2.15.27";
       linkType = "HARD";
-      outputName = "types-mysql-2.15.26-e8ee291ec4";
-      outputHash = "8f205eeaca8f94e998ce4707354bfd02b6ca0da5b7c22289f8f6ff864d549bfb95ca7ddc2f2ebe69eb8f7e3d1f5d8a5b9a2f98aee13824dbc48051bf53a1664d";
+      outputName = "types-mysql-2.15.27-76b107f5b9";
+      outputHash = "a8c743501036f494bb8b26ee04ce914c9cce88955d9ba48ff77d2b5b1bc403d4d99804dbf02238c1491fa93e2242983b1492ad8c2b39755dabd68683dada9e8f";
       flatName = "mysql";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:2.15.26";
-      checksum = "10/8f205eeaca8f94e998ce4707354bfd02b6ca0da5b7c22289f8f6ff864d549bfb95ca7ddc2f2ebe69eb8f7e3d1f5d8a5b9a2f98aee13824dbc48051bf53a1664d";
+      descriptorRange = "npm:2.15.27";
+      checksum = "10/a8c743501036f494bb8b26ee04ce914c9cce88955d9ba48ff77d2b5b1bc403d4d99804dbf02238c1491fa93e2242983b1492ad8c2b39755dabd68683dada9e8f";
       dependencies = {
         "@types/node" = packages."@types/node@npm:22.18.0";
       };
@@ -16975,9 +17316,9 @@ let
         "acorn"
       ];
     };
-    "acorn-import-attributes@virtual:bd0de6f92a7661612e01b7154625a4ba75ce6410b5fe5a75264a24ba405c17e2fad4f90bce2ea6d519a8327d77ce24367103a5c65440111a8f5a28ccb4e9928d#npm:1.9.5" = {
+    "acorn-import-attributes@virtual:ca914162230306833819e6279bd8f51b7fe90c69adb8b964e918e50b0c6896ef8e1890b4f31385badbf038ab34add1d374699c928f8f6854e2317cddfd2a5f0e#npm:1.9.5" = {
       name = "acorn-import-attributes";
-      reference = "virtual:bd0de6f92a7661612e01b7154625a4ba75ce6410b5fe5a75264a24ba405c17e2fad4f90bce2ea6d519a8327d77ce24367103a5c65440111a8f5a28ccb4e9928d#npm:1.9.5";
+      reference = "virtual:ca914162230306833819e6279bd8f51b7fe90c69adb8b964e918e50b0c6896ef8e1890b4f31385badbf038ab34add1d374699c928f8f6854e2317cddfd2a5f0e#npm:1.9.5";
       canonicalPackage = packages."acorn-import-attributes@npm:1.9.5";
       dependencies = {
         "acorn" = packages."acorn@npm:8.15.0";
@@ -22713,6 +23054,30 @@ let
         "ua-parser-js" = packages."ua-parser-js@npm:1.0.35";
       };
     };
+    "fdir@npm:6.5.0" = {
+      name = "fdir";
+      reference = "npm:6.5.0";
+      linkType = "HARD";
+      outputName = "fdir-6.5.0-8814a0dec7";
+      outputHash = "14ca1c9f0a0e8f4f2e9bf4e8551065a164a09545dae548c12a18d238b72e51e5a7b39bd8e5494b56463a0877672d0a6c1ef62c6fa0677db1b0c847773be939b1";
+      flatName = "fdir";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^6.2.0";
+      checksum = "10/14ca1c9f0a0e8f4f2e9bf4e8551065a164a09545dae548c12a18d238b72e51e5a7b39bd8e5494b56463a0877672d0a6c1ef62c6fa0677db1b0c847773be939b1";
+      packagePeers = [
+        "@types/picomatch"
+        "picomatch"
+      ];
+    };
+    "fdir@virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:6.5.0" = {
+      name = "fdir";
+      reference = "virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:6.5.0";
+      canonicalPackage = packages."fdir@npm:6.5.0";
+      dependencies = {
+        "picomatch" = packages."picomatch@npm:4.0.3";
+      };
+    };
     "fflate@npm:0.4.8" = {
       name = "fflate";
       reference = "npm:0.4.8";
@@ -22960,6 +23325,18 @@ let
         "cross-spawn" = packages."cross-spawn@npm:7.0.6";
         "signal-exit" = packages."signal-exit@npm:4.0.2";
       };
+    };
+    "forwarded-parse@npm:2.1.2" = {
+      name = "forwarded-parse";
+      reference = "npm:2.1.2";
+      linkType = "HARD";
+      outputName = "forwarded-parse-2.1.2-8cf38fd641";
+      outputHash = "fca4df8898248d123d9d29a9fdf48005dd757366c2c17c1e195e8311a9aa89caf9f5e592f58f7d3d635087675ff39e85c32c6205838510f6f1fa4109de519930";
+      flatName = "forwarded-parse";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:2.1.2";
+      checksum = "10/fca4df8898248d123d9d29a9fdf48005dd757366c2c17c1e195e8311a9aa89caf9f5e592f58f7d3d635087675ff39e85c32c6205838510f6f1fa4109de519930";
     };
     "forwarded@npm:0.2.0" = {
       name = "forwarded";
@@ -24917,7 +25294,25 @@ let
         "acorn" = packages."acorn@npm:8.15.0";
         "cjs-module-lexer" = packages."cjs-module-lexer@npm:1.3.1";
         "module-details-from-path" = packages."module-details-from-path@npm:1.0.3";
-        "acorn-import-attributes" = packages."acorn-import-attributes@virtual:bd0de6f92a7661612e01b7154625a4ba75ce6410b5fe5a75264a24ba405c17e2fad4f90bce2ea6d519a8327d77ce24367103a5c65440111a8f5a28ccb4e9928d#npm:1.9.5";
+        "acorn-import-attributes" = packages."acorn-import-attributes@virtual:ca914162230306833819e6279bd8f51b7fe90c69adb8b964e918e50b0c6896ef8e1890b4f31385badbf038ab34add1d374699c928f8f6854e2317cddfd2a5f0e#npm:1.9.5";
+      };
+    };
+    "import-in-the-middle@npm:1.14.4" = {
+      name = "import-in-the-middle";
+      reference = "npm:1.14.4";
+      linkType = "HARD";
+      outputName = "import-in-the-middle-1.14.4-ca91416223";
+      outputHash = "96b657cfe33dda86cc1160446039b1ff115154a0242ff26b275177621e12f88ba2b23df5f15e1fa8e5cba57ee8f8d02d353df0d2ec1b08d3a3503e3e4e987ab3";
+      flatName = "import-in-the-middle";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^1.14.2";
+      checksum = "10/96b657cfe33dda86cc1160446039b1ff115154a0242ff26b275177621e12f88ba2b23df5f15e1fa8e5cba57ee8f8d02d353df0d2ec1b08d3a3503e3e4e987ab3";
+      dependencies = {
+        "acorn" = packages."acorn@npm:8.15.0";
+        "cjs-module-lexer" = packages."cjs-module-lexer@npm:1.3.1";
+        "module-details-from-path" = packages."module-details-from-path@npm:1.0.3";
+        "acorn-import-attributes" = packages."acorn-import-attributes@virtual:ca914162230306833819e6279bd8f51b7fe90c69adb8b964e918e50b0c6896ef8e1890b4f31385badbf038ab34add1d374699c928f8f6854e2317cddfd2a5f0e#npm:1.9.5";
       };
     };
     "imurmurhash@npm:0.1.4" = {
@@ -30125,6 +30520,18 @@ let
       descriptorRange = "npm:^2.3.1";
       checksum = "10/60c2595003b05e4535394d1da94850f5372c9427ca4413b71210f437f7b2ca091dbd611c45e8b37d10036fa8eade25c1b8951654f9d3973bfa66a2ff4d3b08bc";
     };
+    "picomatch@npm:4.0.3" = {
+      name = "picomatch";
+      reference = "npm:4.0.3";
+      linkType = "HARD";
+      outputName = "picomatch-4.0.3-0a647b87cc";
+      outputHash = "57b99055f40b16798f2802916d9c17e9744e620a0db136554af01d19598b96e45e2f00014c91d1b8b13874b80caa8c295b3d589a3f72373ec4aaf54baa5962d5";
+      flatName = "picomatch";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.0.2";
+      checksum = "10/57b99055f40b16798f2802916d9c17e9744e620a0db136554af01d19598b96e45e2f00014c91d1b8b13874b80caa8c295b3d589a3f72373ec4aaf54baa5962d5";
+    };
     "pify@npm:2.3.0" = {
       name = "pify";
       reference = "npm:2.3.0";
@@ -32956,21 +33363,44 @@ let
         "glob" = packages."glob@npm:7.2.3";
       };
     };
-    "rollup@npm:3.29.5" = {
+    "rollup@npm:4.52.4" = {
       name = "rollup";
-      reference = "npm:3.29.5";
+      reference = "npm:4.52.4";
       linkType = "HARD";
-      outputName = "rollup-3.29.5-4622371c71";
-      outputHash = "5ce0e5f1d9288d4954db93993477f894eb3042ec98a7c9c19980e53b1f58296481e3dc6c2b1a2a3680b20eb6c3fe64ed97942d5ff29df658a059647c33b3593c";
+      outputName = "rollup-4.52.4-76faa8bcd6";
+      outputHash = "ca5e2ba511d29accc0a3e02546d777a95748b757040f907e8c58c236b507f8791ab18dbe7a86085c1e7746c8c246a94a1f1895d9e29404e30be46cf1a7405dce";
       flatName = "rollup";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:3.29.5";
-      checksum = "10/5ce0e5f1d9288d4954db93993477f894eb3042ec98a7c9c19980e53b1f58296481e3dc6c2b1a2a3680b20eb6c3fe64ed97942d5ff29df658a059647c33b3593c";
+      descriptorRange = "npm:^4.35.0";
+      checksum = "10/ca5e2ba511d29accc0a3e02546d777a95748b757040f907e8c58c236b507f8791ab18dbe7a86085c1e7746c8c246a94a1f1895d9e29404e30be46cf1a7405dce";
       bin = {
         "rollup" = "dist/bin/rollup";
       };
       dependencies = {
+        "@rollup/rollup-android-arm-eabi" = packages."@rollup/rollup-android-arm-eabi@npm:4.52.4";
+        "@rollup/rollup-android-arm64" = packages."@rollup/rollup-android-arm64@npm:4.52.4";
+        "@rollup/rollup-darwin-arm64" = packages."@rollup/rollup-darwin-arm64@npm:4.52.4";
+        "@rollup/rollup-darwin-x64" = packages."@rollup/rollup-darwin-x64@npm:4.52.4";
+        "@rollup/rollup-freebsd-arm64" = packages."@rollup/rollup-freebsd-arm64@npm:4.52.4";
+        "@rollup/rollup-freebsd-x64" = packages."@rollup/rollup-freebsd-x64@npm:4.52.4";
+        "@rollup/rollup-linux-arm-gnueabihf" = packages."@rollup/rollup-linux-arm-gnueabihf@npm:4.52.4";
+        "@rollup/rollup-linux-arm-musleabihf" = packages."@rollup/rollup-linux-arm-musleabihf@npm:4.52.4";
+        "@rollup/rollup-linux-arm64-gnu" = packages."@rollup/rollup-linux-arm64-gnu@npm:4.52.4";
+        "@rollup/rollup-linux-arm64-musl" = packages."@rollup/rollup-linux-arm64-musl@npm:4.52.4";
+        "@rollup/rollup-linux-loong64-gnu" = packages."@rollup/rollup-linux-loong64-gnu@npm:4.52.4";
+        "@rollup/rollup-linux-ppc64-gnu" = packages."@rollup/rollup-linux-ppc64-gnu@npm:4.52.4";
+        "@rollup/rollup-linux-riscv64-gnu" = packages."@rollup/rollup-linux-riscv64-gnu@npm:4.52.4";
+        "@rollup/rollup-linux-riscv64-musl" = packages."@rollup/rollup-linux-riscv64-musl@npm:4.52.4";
+        "@rollup/rollup-linux-s390x-gnu" = packages."@rollup/rollup-linux-s390x-gnu@npm:4.52.4";
+        "@rollup/rollup-linux-x64-gnu" = packages."@rollup/rollup-linux-x64-gnu@npm:4.52.4";
+        "@rollup/rollup-linux-x64-musl" = packages."@rollup/rollup-linux-x64-musl@npm:4.52.4";
+        "@rollup/rollup-openharmony-arm64" = packages."@rollup/rollup-openharmony-arm64@npm:4.52.4";
+        "@rollup/rollup-win32-arm64-msvc" = packages."@rollup/rollup-win32-arm64-msvc@npm:4.52.4";
+        "@rollup/rollup-win32-ia32-msvc" = packages."@rollup/rollup-win32-ia32-msvc@npm:4.52.4";
+        "@rollup/rollup-win32-x64-gnu" = packages."@rollup/rollup-win32-x64-gnu@npm:4.52.4";
+        "@rollup/rollup-win32-x64-msvc" = packages."@rollup/rollup-win32-x64-msvc@npm:4.52.4";
+        "@types/estree" = packages."@types/estree@npm:1.0.8";
         "fsevents" = packages."fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
       };
     };
@@ -33107,7 +33537,7 @@ let
         "@radix-ui/react-toggle-group" = packages."@radix-ui/react-toggle-group@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.11";
         "@radix-ui/react-use-controllable-state" = packages."@radix-ui/react-use-controllable-state@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.2";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.1";
-        "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.38.0";
+        "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.17.0";
         "@urql/devtools" = packages."@urql/devtools@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.0.3";
         "@urql/exchange-auth" = packages."@urql/exchange-auth@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
         "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:7.2.4";
