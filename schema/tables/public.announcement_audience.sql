@@ -13,7 +13,7 @@ ALTER TABLE public.announcement_audience ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.announcement_audience
     ADD CONSTRAINT announcement_audience_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.announcement_audience
-    ADD CONSTRAINT announcement_audience_announcement_id_fkey FOREIGN KEY (announcement_id) REFERENCES public.upozorneni(up_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT announcement_audience_announcement_id_fkey FOREIGN KEY (announcement_id) REFERENCES public.announcement(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.announcement_audience
     ADD CONSTRAINT announcement_audience_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
 ALTER TABLE ONLY public.announcement_audience

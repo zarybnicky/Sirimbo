@@ -361,6 +361,8 @@ export type AktualityPatch = {
 
 export type Announcement = {
   __typename?: 'Announcement';
+  /** Reads and enables pagination through a set of `AnnouncementAudience`. */
+  announcementAudiences: AnnouncementAudiencesConnection;
   /** Reads a single `User` that is related to this `Announcement`. */
   author: Maybe<User>;
   authorId: Maybe<Scalars['BigInt']['output']>;
@@ -382,6 +384,17 @@ export type Announcement = {
 };
 
 
+export type AnnouncementAnnouncementAudiencesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AnnouncementAudienceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementAudiencesOrderBy>>;
+};
+
+
 export type AnnouncementUpozorneniSkupiniesByUpsIdRodicArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -394,8 +407,8 @@ export type AnnouncementUpozorneniSkupiniesByUpsIdRodicArgs = {
 
 export type AnnouncementAudience = {
   __typename?: 'AnnouncementAudience';
-  /** Reads a single `Upozorneni` that is related to this `AnnouncementAudience`. */
-  announcement: Maybe<Upozorneni>;
+  /** Reads a single `Announcement` that is related to this `AnnouncementAudience`. */
+  announcement: Maybe<Announcement>;
   announcementId: Scalars['BigInt']['output'];
   audienceRole: Maybe<AnnouncementAudienceRole>;
   /** Reads a single `Cohort` that is related to this `AnnouncementAudience`. */
@@ -1487,8 +1500,8 @@ export type CreateAnnouncementAudienceInput = {
 /** The output of our create `AnnouncementAudience` mutation. */
 export type CreateAnnouncementAudiencePayload = {
   __typename?: 'CreateAnnouncementAudiencePayload';
-  /** Reads a single `Upozorneni` that is related to this `AnnouncementAudience`. */
-  announcement: Maybe<Upozorneni>;
+  /** Reads a single `Announcement` that is related to this `AnnouncementAudience`. */
+  announcement: Maybe<Announcement>;
   /** The `AnnouncementAudience` that was created by this mutation. */
   announcementAudience: Maybe<AnnouncementAudience>;
   /** An edge for our `AnnouncementAudience`. May be used by Relay 1. */
@@ -2181,43 +2194,6 @@ export type CreateTenantTrainerPayload = {
   tenantTrainer: Maybe<TenantTrainer>;
 };
 
-/** All input for the create `Upozorneni` mutation. */
-export type CreateUpozorneniInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Upozorneni` to be created by this mutation. */
-  upozorneni: UpozorneniInput;
-};
-
-/** The output of our create `Upozorneni` mutation. */
-export type CreateUpozorneniPayload = {
-  __typename?: 'CreateUpozorneniPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Tenant` that is related to this `Upozorneni`. */
-  tenant: Maybe<Tenant>;
-  /** The `Upozorneni` that was created by this mutation. */
-  upozorneni: Maybe<Upozorneni>;
-  /** An edge for our `Upozorneni`. May be used by Relay 1. */
-  upozorneniEdge: Maybe<UpozornenisEdge>;
-  /** Reads a single `User` that is related to this `Upozorneni`. */
-  userByUpKdo: Maybe<User>;
-};
-
-
-/** The output of our create `Upozorneni` mutation. */
-export type CreateUpozorneniPayloadUpozorneniEdgeArgs = {
-  orderBy?: Array<UpozornenisOrderBy>;
-};
-
 /** All input for the create `UserProxy` mutation. */
 export type CreateUserProxyInput = {
   /**
@@ -2342,8 +2318,8 @@ export type DeleteAnnouncementAudienceInput = {
 /** The output of our delete `AnnouncementAudience` mutation. */
 export type DeleteAnnouncementAudiencePayload = {
   __typename?: 'DeleteAnnouncementAudiencePayload';
-  /** Reads a single `Upozorneni` that is related to this `AnnouncementAudience`. */
-  announcement: Maybe<Upozorneni>;
+  /** Reads a single `Announcement` that is related to this `AnnouncementAudience`. */
+  announcement: Maybe<Announcement>;
   /** The `AnnouncementAudience` that was deleted by this mutation. */
   announcementAudience: Maybe<AnnouncementAudience>;
   /** An edge for our `AnnouncementAudience`. May be used by Relay 1. */
@@ -3028,52 +3004,6 @@ export type DeleteTransactionPayload = {
 /** The output of our delete `Transaction` mutation. */
 export type DeleteTransactionPayloadTransactionEdgeArgs = {
   orderBy?: Array<TransactionsOrderBy>;
-};
-
-/** All input for the `deleteUpozorneniById` mutation. */
-export type DeleteUpozorneniByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['BigInt']['input'];
-};
-
-/** All input for the `deleteUpozorneni` mutation. */
-export type DeleteUpozorneniInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  upId: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `Upozorneni` mutation. */
-export type DeleteUpozorneniPayload = {
-  __typename?: 'DeleteUpozorneniPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Tenant` that is related to this `Upozorneni`. */
-  tenant: Maybe<Tenant>;
-  /** The `Upozorneni` that was deleted by this mutation. */
-  upozorneni: Maybe<Upozorneni>;
-  /** An edge for our `Upozorneni`. May be used by Relay 1. */
-  upozorneniEdge: Maybe<UpozornenisEdge>;
-  /** Reads a single `User` that is related to this `Upozorneni`. */
-  userByUpKdo: Maybe<User>;
-};
-
-
-/** The output of our delete `Upozorneni` mutation. */
-export type DeleteUpozorneniPayloadUpozorneniEdgeArgs = {
-  orderBy?: Array<UpozornenisOrderBy>;
 };
 
 /** All input for the `deleteUserProxy` mutation. */
@@ -5154,8 +5084,6 @@ export type Mutation = {
   createTenantMembership: Maybe<CreateTenantMembershipPayload>;
   /** Creates a single `TenantTrainer`. */
   createTenantTrainer: Maybe<CreateTenantTrainerPayload>;
-  /** Creates a single `Upozorneni`. */
-  createUpozorneni: Maybe<CreateUpozorneniPayload>;
   /** Creates a single `UserProxy`. */
   createUserProxy: Maybe<CreateUserProxyPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
@@ -5209,10 +5137,6 @@ export type Mutation = {
   deleteTenantTrainer: Maybe<DeleteTenantTrainerPayload>;
   /** Deletes a single `Transaction` using a unique key. */
   deleteTransaction: Maybe<DeleteTransactionPayload>;
-  /** Deletes a single `Upozorneni` using a unique key. */
-  deleteUpozorneni: Maybe<DeleteUpozorneniPayload>;
-  /** Deletes a single `Upozorneni` using a unique key. */
-  deleteUpozorneniById: Maybe<DeleteUpozorneniPayload>;
   /** Deletes a single `UserProxy` using a unique key. */
   deleteUserProxy: Maybe<DeleteUserProxyPayload>;
   editRegistration: Maybe<EditRegistrationPayload>;
@@ -5276,10 +5200,6 @@ export type Mutation = {
   updateTenantSettingsKey: Maybe<UpdateTenantSettingsKeyPayload>;
   /** Updates a single `TenantTrainer` using a unique key and a patch. */
   updateTenantTrainer: Maybe<UpdateTenantTrainerPayload>;
-  /** Updates a single `Upozorneni` using a unique key and a patch. */
-  updateUpozorneni: Maybe<UpdateUpozorneniPayload>;
-  /** Updates a single `Upozorneni` using a unique key and a patch. */
-  updateUpozorneniById: Maybe<UpdateUpozorneniPayload>;
   /** Updates a single `UserProxy` using a unique key and a patch. */
   updateUserProxy: Maybe<UpdateUserProxyPayload>;
   upsertAnnouncement: Maybe<UpsertAnnouncementPayload>;
@@ -5450,12 +5370,6 @@ export type MutationCreateTenantTrainerArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateUpozorneniArgs = {
-  input: CreateUpozorneniInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserProxyArgs = {
   input: CreateUserProxyInput;
 };
@@ -5614,18 +5528,6 @@ export type MutationDeleteTenantTrainerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTransactionArgs = {
   input: DeleteTransactionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUpozorneniArgs = {
-  input: DeleteUpozorneniInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUpozorneniByIdArgs = {
-  input: DeleteUpozorneniByIdInput;
 };
 
 
@@ -5872,18 +5774,6 @@ export type MutationUpdateTenantSettingsKeyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTenantTrainerArgs = {
   input: UpdateTenantTrainerInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUpozorneniArgs = {
-  input: UpdateUpozorneniInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUpozorneniByIdArgs = {
-  input: UpdateUpozorneniByIdInput;
 };
 
 
@@ -7190,18 +7080,12 @@ export type Query = {
   transaction: Maybe<Transaction>;
   /** Reads and enables pagination through a set of `Transaction`. */
   transactions: Maybe<TransactionsConnection>;
-  /** Get a single `Upozorneni`. */
-  upozorneni: Maybe<Upozorneni>;
-  /** Get a single `Upozorneni`. */
-  upozorneniById: Maybe<Upozorneni>;
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupinies: Maybe<UpozorneniSkupiniesConnection>;
   /** Get a single `UpozorneniSkupiny`. */
   upozorneniSkupiny: Maybe<UpozorneniSkupiny>;
   /** Get a single `UpozorneniSkupiny`. */
   upozorneniSkupinyById: Maybe<UpozorneniSkupiny>;
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenis: Maybe<UpozornenisConnection>;
   /** Get a single `User`. */
   user: Maybe<User>;
   /** Get a single `User`. */
@@ -8071,18 +7955,6 @@ export type QueryTransactionsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUpozorneniArgs = {
-  upId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUpozorneniByIdArgs = {
-  id: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupiniesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -8103,18 +7975,6 @@ export type QueryUpozorneniSkupinyArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupinyByIdArgs = {
   id: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUpozornenisArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<UpozorneniCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
 
@@ -8580,8 +8440,6 @@ export type Tenant = {
   transactions: TransactionsConnection;
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupinies: UpozorneniSkupiniesConnection;
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenis: UpozornenisConnection;
   /** Reads and enables pagination through a set of `User`. */
   users: UsersConnection;
 };
@@ -8925,17 +8783,6 @@ export type TenantUpozorneniSkupiniesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
-};
-
-
-export type TenantUpozornenisArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<UpozorneniCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
 
@@ -9689,8 +9536,8 @@ export type UpdateAnnouncementAudienceInput = {
 /** The output of our update `AnnouncementAudience` mutation. */
 export type UpdateAnnouncementAudiencePayload = {
   __typename?: 'UpdateAnnouncementAudiencePayload';
-  /** Reads a single `Upozorneni` that is related to this `AnnouncementAudience`. */
-  announcement: Maybe<Upozorneni>;
+  /** Reads a single `Announcement` that is related to this `AnnouncementAudience`. */
+  announcement: Maybe<Announcement>;
   /** The `AnnouncementAudience` that was updated by this mutation. */
   announcementAudience: Maybe<AnnouncementAudience>;
   /** An edge for our `AnnouncementAudience`. May be used by Relay 1. */
@@ -10340,56 +10187,6 @@ export type UpdateTenantTrainerPayload = {
   tenantTrainer: Maybe<TenantTrainer>;
 };
 
-/** All input for the `updateUpozorneniById` mutation. */
-export type UpdateUpozorneniByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['BigInt']['input'];
-  /** An object where the defined keys will be set on the `Upozorneni` being updated. */
-  patch: UpozorneniPatch;
-};
-
-/** All input for the `updateUpozorneni` mutation. */
-export type UpdateUpozorneniInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Upozorneni` being updated. */
-  patch: UpozorneniPatch;
-  upId: Scalars['BigInt']['input'];
-};
-
-/** The output of our update `Upozorneni` mutation. */
-export type UpdateUpozorneniPayload = {
-  __typename?: 'UpdateUpozorneniPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `Tenant` that is related to this `Upozorneni`. */
-  tenant: Maybe<Tenant>;
-  /** The `Upozorneni` that was updated by this mutation. */
-  upozorneni: Maybe<Upozorneni>;
-  /** An edge for our `Upozorneni`. May be used by Relay 1. */
-  upozorneniEdge: Maybe<UpozornenisEdge>;
-  /** Reads a single `User` that is related to this `Upozorneni`. */
-  userByUpKdo: Maybe<User>;
-};
-
-
-/** The output of our update `Upozorneni` mutation. */
-export type UpdateUpozorneniPayloadUpozorneniEdgeArgs = {
-  orderBy?: Array<UpozornenisOrderBy>;
-};
-
 /** All input for the `updateUserProxy` mutation. */
 export type UpdateUserProxyInput = {
   /**
@@ -10418,130 +10215,6 @@ export type UpdateUserProxyPayload = {
   user: Maybe<User>;
   /** The `UserProxy` that was updated by this mutation. */
   userProxy: Maybe<UserProxy>;
-};
-
-export type Upozorneni = {
-  __typename?: 'Upozorneni';
-  /** Reads and enables pagination through a set of `AnnouncementAudience`. */
-  announcementAudiencesByAnnouncementId: AnnouncementAudiencesConnection;
-  createdAt: Scalars['Datetime']['output'];
-  id: Scalars['BigInt']['output'];
-  isVisible: Maybe<Scalars['Boolean']['output']>;
-  scheduledSince: Maybe<Scalars['Datetime']['output']>;
-  scheduledUntil: Maybe<Scalars['Datetime']['output']>;
-  sticky: Scalars['Boolean']['output'];
-  /** Reads a single `Tenant` that is related to this `Upozorneni`. */
-  tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt']['output'];
-  upId: Scalars['BigInt']['output'];
-  upKdo: Maybe<Scalars['BigInt']['output']>;
-  upLock: Scalars['Boolean']['output'];
-  upNadpis: Scalars['String']['output'];
-  upText: Scalars['String']['output'];
-  upTimestamp: Scalars['Datetime']['output'];
-  upTimestampAdd: Scalars['Datetime']['output'];
-  updatedAt: Maybe<Scalars['Datetime']['output']>;
-  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
-  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
-  /** Reads a single `User` that is related to this `Upozorneni`. */
-  userByUpKdo: Maybe<User>;
-};
-
-
-export type UpozorneniAnnouncementAudiencesByAnnouncementIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<AnnouncementAudienceCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<AnnouncementAudiencesOrderBy>>;
-};
-
-
-export type UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<UpozorneniSkupinyCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
-};
-
-/**
- * A condition to be used against `Upozorneni` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type UpozorneniCondition = {
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `isVisible` field. */
-  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Checks for equality with the object’s `scheduledSince` field. */
-  scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `scheduledUntil` field. */
-  scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `sticky` field. */
-  sticky?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `upId` field. */
-  upId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `upKdo` field. */
-  upKdo?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `upLock` field. */
-  upLock?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Checks for equality with the object’s `upNadpis` field. */
-  upNadpis?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `upText` field. */
-  upText?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `upTimestamp` field. */
-  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `upTimestampAdd` field. */
-  upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** An input for mutations affecting `Upozorneni` */
-export type UpozorneniInput = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
-  scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
-  scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
-  sticky?: InputMaybe<Scalars['Boolean']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  upId?: InputMaybe<Scalars['BigInt']['input']>;
-  upKdo?: InputMaybe<Scalars['BigInt']['input']>;
-  upLock?: InputMaybe<Scalars['Boolean']['input']>;
-  upNadpis: Scalars['String']['input'];
-  upText: Scalars['String']['input'];
-  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
-  upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
-export type UpozorneniPatch = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
-  scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
-  scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
-  sticky?: InputMaybe<Scalars['Boolean']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  upId?: InputMaybe<Scalars['BigInt']['input']>;
-  upKdo?: InputMaybe<Scalars['BigInt']['input']>;
-  upLock?: InputMaybe<Scalars['Boolean']['input']>;
-  upNadpis?: InputMaybe<Scalars['String']['input']>;
-  upText?: InputMaybe<Scalars['String']['input']>;
-  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
-  upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A connection to a list of `UpozorneniSkupiny` values. */
@@ -10594,8 +10267,6 @@ export type UpozorneniSkupiny = {
   /** Reads a single `Tenant` that is related to this `UpozorneniSkupiny`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  /** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
-  upozorneni: Maybe<Upozorneni>;
   upsColor: Scalars['String']['output'];
   upsId: Scalars['BigInt']['output'];
   upsIdRodic: Scalars['BigInt']['output'];
@@ -10620,64 +10291,6 @@ export type UpozorneniSkupinyCondition = {
   /** Checks for equality with the object’s `upsIdSkupina` field. */
   upsIdSkupina?: InputMaybe<Scalars['BigInt']['input']>;
 };
-
-/** A connection to a list of `Upozorneni` values. */
-export type UpozornenisConnection = {
-  __typename?: 'UpozornenisConnection';
-  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
-  edges: Array<UpozornenisEdge>;
-  /** A list of `Upozorneni` objects. */
-  nodes: Array<Upozorneni>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Upozorneni` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Upozorneni` edge in the connection. */
-export type UpozornenisEdge = {
-  __typename?: 'UpozornenisEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Upozorneni` at the end of the edge. */
-  node: Upozorneni;
-};
-
-/** Methods to use when ordering `Upozorneni`. */
-export type UpozornenisOrderBy =
-  | 'CREATED_AT_ASC'
-  | 'CREATED_AT_DESC'
-  | 'ID_ASC'
-  | 'ID_DESC'
-  | 'IS_VISIBLE_ASC'
-  | 'IS_VISIBLE_DESC'
-  | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'SCHEDULED_SINCE_ASC'
-  | 'SCHEDULED_SINCE_DESC'
-  | 'SCHEDULED_UNTIL_ASC'
-  | 'SCHEDULED_UNTIL_DESC'
-  | 'STICKY_ASC'
-  | 'STICKY_DESC'
-  | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC'
-  | 'UPDATED_AT_ASC'
-  | 'UPDATED_AT_DESC'
-  | 'UP_ID_ASC'
-  | 'UP_ID_DESC'
-  | 'UP_KDO_ASC'
-  | 'UP_KDO_DESC'
-  | 'UP_LOCK_ASC'
-  | 'UP_LOCK_DESC'
-  | 'UP_NADPIS_ASC'
-  | 'UP_NADPIS_DESC'
-  | 'UP_TEXT_ASC'
-  | 'UP_TEXT_DESC'
-  | 'UP_TIMESTAMP_ADD_ASC'
-  | 'UP_TIMESTAMP_ADD_DESC'
-  | 'UP_TIMESTAMP_ASC'
-  | 'UP_TIMESTAMP_DESC';
 
 /** All input for the `upsertAnnouncement` mutation. */
 export type UpsertAnnouncementInput = {
@@ -10791,8 +10404,6 @@ export type User = {
   uPrijmeni: Maybe<Scalars['String']['output']>;
   uTimestamp: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenisByUpKdo: UpozornenisConnection;
   /** Reads and enables pagination through a set of `UserProxy`. */
   userProxiesList: Array<UserProxy>;
 };
@@ -10874,17 +10485,6 @@ export type UserPlatbyItemsByPiIdUserArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
-};
-
-
-export type UserUpozornenisByUpKdoArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<UpozorneniCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
 
@@ -11128,7 +10728,6 @@ export type GraphCacheKeysConfig = {
   CreateTenantLocationPayload?: (data: WithTypename<CreateTenantLocationPayload>) => null | string,
   CreateTenantMembershipPayload?: (data: WithTypename<CreateTenantMembershipPayload>) => null | string,
   CreateTenantTrainerPayload?: (data: WithTypename<CreateTenantTrainerPayload>) => null | string,
-  CreateUpozorneniPayload?: (data: WithTypename<CreateUpozorneniPayload>) => null | string,
   CreateUserProxyPayload?: (data: WithTypename<CreateUserProxyPayload>) => null | string,
   DatetimeRange?: (data: WithTypename<DatetimeRange>) => null | string,
   DatetimeRangeBound?: (data: WithTypename<DatetimeRangeBound>) => null | string,
@@ -11154,7 +10753,6 @@ export type GraphCacheKeysConfig = {
   DeleteTenantMembershipPayload?: (data: WithTypename<DeleteTenantMembershipPayload>) => null | string,
   DeleteTenantTrainerPayload?: (data: WithTypename<DeleteTenantTrainerPayload>) => null | string,
   DeleteTransactionPayload?: (data: WithTypename<DeleteTransactionPayload>) => null | string,
-  DeleteUpozorneniPayload?: (data: WithTypename<DeleteUpozorneniPayload>) => null | string,
   DeleteUserProxyPayload?: (data: WithTypename<DeleteUserProxyPayload>) => null | string,
   Dokumenty?: (data: WithTypename<Dokumenty>) => null | string,
   EditRegistrationPayload?: (data: WithTypename<EditRegistrationPayload>) => null | string,
@@ -11259,14 +10857,10 @@ export type GraphCacheKeysConfig = {
   UpdateTenantSettingPayload?: (data: WithTypename<UpdateTenantSettingPayload>) => null | string,
   UpdateTenantSettingsKeyPayload?: (data: WithTypename<UpdateTenantSettingsKeyPayload>) => null | string,
   UpdateTenantTrainerPayload?: (data: WithTypename<UpdateTenantTrainerPayload>) => null | string,
-  UpdateUpozorneniPayload?: (data: WithTypename<UpdateUpozorneniPayload>) => null | string,
   UpdateUserProxyPayload?: (data: WithTypename<UpdateUserProxyPayload>) => null | string,
-  Upozorneni?: (data: WithTypename<Upozorneni>) => null | string,
   UpozorneniSkupiniesConnection?: (data: WithTypename<UpozorneniSkupiniesConnection>) => null | string,
   UpozorneniSkupiniesEdge?: (data: WithTypename<UpozorneniSkupiniesEdge>) => null | string,
   UpozorneniSkupiny?: (data: WithTypename<UpozorneniSkupiny>) => null | string,
-  UpozornenisConnection?: (data: WithTypename<UpozornenisConnection>) => null | string,
-  UpozornenisEdge?: (data: WithTypename<UpozornenisEdge>) => null | string,
   UpsertAnnouncementPayload?: (data: WithTypename<UpsertAnnouncementPayload>) => null | string,
   UpsertEventPayload?: (data: WithTypename<UpsertEventPayload>) => null | string,
   User?: (data: WithTypename<User>) => null | string,
@@ -11387,12 +10981,9 @@ export type GraphCacheResolvers = {
     tenantsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantsListArgs, Array<WithTypename<Tenant> | string>>,
     transaction?: GraphCacheResolver<WithTypename<Query>, QueryTransactionArgs, WithTypename<Transaction> | string>,
     transactions?: GraphCacheResolver<WithTypename<Query>, QueryTransactionsArgs, WithTypename<TransactionsConnection> | string>,
-    upozorneni?: GraphCacheResolver<WithTypename<Query>, QueryUpozorneniArgs, WithTypename<Upozorneni> | string>,
-    upozorneniById?: GraphCacheResolver<WithTypename<Query>, QueryUpozorneniByIdArgs, WithTypename<Upozorneni> | string>,
     upozorneniSkupinies?: GraphCacheResolver<WithTypename<Query>, QueryUpozorneniSkupiniesArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
     upozorneniSkupiny?: GraphCacheResolver<WithTypename<Query>, QueryUpozorneniSkupinyArgs, WithTypename<UpozorneniSkupiny> | string>,
     upozorneniSkupinyById?: GraphCacheResolver<WithTypename<Query>, QueryUpozorneniSkupinyByIdArgs, WithTypename<UpozorneniSkupiny> | string>,
-    upozornenis?: GraphCacheResolver<WithTypename<Query>, QueryUpozornenisArgs, WithTypename<UpozornenisConnection> | string>,
     user?: GraphCacheResolver<WithTypename<Query>, QueryUserArgs, WithTypename<User> | string>,
     userById?: GraphCacheResolver<WithTypename<Query>, QueryUserByIdArgs, WithTypename<User> | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<Query>, QueryUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
@@ -11463,6 +11054,7 @@ export type GraphCacheResolvers = {
     user?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
   },
   Announcement?: {
+    announcementAudiences?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementAnnouncementAudiencesArgs, WithTypename<AnnouncementAudiencesConnection> | string>,
     author?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, WithTypename<User> | string>,
     authorId?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt'] | string>,
     body?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String'] | string>,
@@ -11480,7 +11072,7 @@ export type GraphCacheResolvers = {
     upozorneniSkupiniesByUpsIdRodic?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementUpozorneniSkupiniesByUpsIdRodicArgs, WithTypename<UpozorneniSkupiniesConnection> | string>
   },
   AnnouncementAudience?: {
-    announcement?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, WithTypename<Upozorneni> | string>,
+    announcement?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, WithTypename<Announcement> | string>,
     announcementId?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, Scalars['BigInt'] | string>,
     audienceRole?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, AnnouncementAudienceRole | string>,
     cohort?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, WithTypename<Cohort> | string>,
@@ -11665,7 +11257,7 @@ export type GraphCacheResolvers = {
     user?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
   },
   CreateAnnouncementAudiencePayload?: {
-    announcement?: GraphCacheResolver<WithTypename<CreateAnnouncementAudiencePayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
+    announcement?: GraphCacheResolver<WithTypename<CreateAnnouncementAudiencePayload>, Record<string, never>, WithTypename<Announcement> | string>,
     announcementAudience?: GraphCacheResolver<WithTypename<CreateAnnouncementAudiencePayload>, Record<string, never>, WithTypename<AnnouncementAudience> | string>,
     announcementAudienceEdge?: GraphCacheResolver<WithTypename<CreateAnnouncementAudiencePayload>, CreateAnnouncementAudiencePayloadAnnouncementAudienceEdgeArgs, WithTypename<AnnouncementAudiencesEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<CreateAnnouncementAudiencePayload>, Record<string, never>, Scalars['String'] | string>,
@@ -11824,14 +11416,6 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<CreateTenantTrainerPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantTrainer?: GraphCacheResolver<WithTypename<CreateTenantTrainerPayload>, Record<string, never>, WithTypename<TenantTrainer> | string>
   },
-  CreateUpozorneniPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, Scalars['String'] | string>,
-    query?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenant?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<Tenant> | string>,
-    upozorneni?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
-    upozorneniEdge?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, CreateUpozorneniPayloadUpozorneniEdgeArgs, WithTypename<UpozornenisEdge> | string>,
-    userByUpKdo?: GraphCacheResolver<WithTypename<CreateUpozorneniPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   CreateUserProxyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, Scalars['String'] | string>,
     person?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<Person> | string>,
@@ -11857,7 +11441,7 @@ export type GraphCacheResolvers = {
     user?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<User> | string>
   },
   DeleteAnnouncementAudiencePayload?: {
-    announcement?: GraphCacheResolver<WithTypename<DeleteAnnouncementAudiencePayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
+    announcement?: GraphCacheResolver<WithTypename<DeleteAnnouncementAudiencePayload>, Record<string, never>, WithTypename<Announcement> | string>,
     announcementAudience?: GraphCacheResolver<WithTypename<DeleteAnnouncementAudiencePayload>, Record<string, never>, WithTypename<AnnouncementAudience> | string>,
     announcementAudienceEdge?: GraphCacheResolver<WithTypename<DeleteAnnouncementAudiencePayload>, DeleteAnnouncementAudiencePayloadAnnouncementAudienceEdgeArgs, WithTypename<AnnouncementAudiencesEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteAnnouncementAudiencePayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12016,14 +11600,6 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     transaction?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, Record<string, never>, WithTypename<Transaction> | string>,
     transactionEdge?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, DeleteTransactionPayloadTransactionEdgeArgs, WithTypename<TransactionsEdge> | string>
-  },
-  DeleteUpozorneniPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, Scalars['String'] | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenant?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, WithTypename<Tenant> | string>,
-    upozorneni?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
-    upozorneniEdge?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, DeleteUpozorneniPayloadUpozorneniEdgeArgs, WithTypename<UpozornenisEdge> | string>,
-    userByUpKdo?: GraphCacheResolver<WithTypename<DeleteUpozorneniPayload>, Record<string, never>, WithTypename<User> | string>
   },
   DeleteUserProxyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteUserProxyPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12744,7 +12320,6 @@ export type GraphCacheResolvers = {
     tenantTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     transactions?: GraphCacheResolver<WithTypename<Tenant>, TenantTransactionsArgs, WithTypename<TransactionsConnection> | string>,
     upozorneniSkupinies?: GraphCacheResolver<WithTypename<Tenant>, TenantUpozorneniSkupiniesArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
-    upozornenis?: GraphCacheResolver<WithTypename<Tenant>, TenantUpozornenisArgs, WithTypename<UpozornenisConnection> | string>,
     users?: GraphCacheResolver<WithTypename<Tenant>, TenantUsersArgs, WithTypename<UsersConnection> | string>
   },
   TenantAccountPayload?: {
@@ -12859,7 +12434,7 @@ export type GraphCacheResolvers = {
     user?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
   },
   UpdateAnnouncementAudiencePayload?: {
-    announcement?: GraphCacheResolver<WithTypename<UpdateAnnouncementAudiencePayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
+    announcement?: GraphCacheResolver<WithTypename<UpdateAnnouncementAudiencePayload>, Record<string, never>, WithTypename<Announcement> | string>,
     announcementAudience?: GraphCacheResolver<WithTypename<UpdateAnnouncementAudiencePayload>, Record<string, never>, WithTypename<AnnouncementAudience> | string>,
     announcementAudienceEdge?: GraphCacheResolver<WithTypename<UpdateAnnouncementAudiencePayload>, UpdateAnnouncementAudiencePayloadAnnouncementAudienceEdgeArgs, WithTypename<AnnouncementAudiencesEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateAnnouncementAudiencePayload>, Record<string, never>, Scalars['String'] | string>,
@@ -13005,41 +12580,12 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<UpdateTenantTrainerPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantTrainer?: GraphCacheResolver<WithTypename<UpdateTenantTrainerPayload>, Record<string, never>, WithTypename<TenantTrainer> | string>
   },
-  UpdateUpozorneniPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, Scalars['String'] | string>,
-    query?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, WithTypename<Query> | string>,
-    tenant?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, WithTypename<Tenant> | string>,
-    upozorneni?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, WithTypename<Upozorneni> | string>,
-    upozorneniEdge?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, UpdateUpozorneniPayloadUpozorneniEdgeArgs, WithTypename<UpozornenisEdge> | string>,
-    userByUpKdo?: GraphCacheResolver<WithTypename<UpdateUpozorneniPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   UpdateUserProxyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, Scalars['String'] | string>,
     person?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, WithTypename<Person> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, WithTypename<Query> | string>,
     user?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, WithTypename<User> | string>,
     userProxy?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
-  },
-  Upozorneni?: {
-    announcementAudiencesByAnnouncementId?: GraphCacheResolver<WithTypename<Upozorneni>, UpozorneniAnnouncementAudiencesByAnnouncementIdArgs, WithTypename<AnnouncementAudiencesConnection> | string>,
-    createdAt?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
-    id?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
-    isVisible?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
-    scheduledSince?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
-    scheduledUntil?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
-    sticky?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, WithTypename<Tenant> | string>,
-    tenantId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
-    upId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
-    upKdo?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
-    upLock?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
-    upNadpis?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['String'] | string>,
-    upText?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['String'] | string>,
-    upTimestamp?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
-    upTimestampAdd?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
-    updatedAt?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
-    upozorneniSkupiniesByUpsIdRodic?: GraphCacheResolver<WithTypename<Upozorneni>, UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
-    userByUpKdo?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, WithTypename<User> | string>
   },
   UpozorneniSkupiniesConnection?: {
     edges?: GraphCacheResolver<WithTypename<UpozorneniSkupiniesConnection>, Record<string, never>, Array<WithTypename<UpozorneniSkupiniesEdge> | string>>,
@@ -13057,21 +12603,10 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
-    upozorneni?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, WithTypename<Upozorneni> | string>,
     upsColor?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['String'] | string>,
     upsId?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     upsIdRodic?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     upsIdSkupina?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>
-  },
-  UpozornenisConnection?: {
-    edges?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Array<WithTypename<UpozornenisEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Array<WithTypename<Upozorneni> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  UpozornenisEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<UpozornenisEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<UpozornenisEdge>, Record<string, never>, WithTypename<Upozorneni> | string>
   },
   UpsertAnnouncementPayload?: {
     announcement?: GraphCacheResolver<WithTypename<UpsertAnnouncementPayload>, Record<string, never>, WithTypename<Announcement> | string>,
@@ -13114,7 +12649,6 @@ export type GraphCacheResolvers = {
     uPrijmeni?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uTimestamp?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
-    upozornenisByUpKdo?: GraphCacheResolver<WithTypename<User>, UserUpozornenisByUpKdoArgs, WithTypename<UpozornenisConnection> | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<User>, UserUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>
   },
   UserProxy?: {
@@ -13170,7 +12704,6 @@ export type GraphCacheOptimisticUpdaters = {
   createTenantLocation?: GraphCacheOptimisticMutationResolver<MutationCreateTenantLocationArgs, Maybe<WithTypename<CreateTenantLocationPayload>>>,
   createTenantMembership?: GraphCacheOptimisticMutationResolver<MutationCreateTenantMembershipArgs, Maybe<WithTypename<CreateTenantMembershipPayload>>>,
   createTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationCreateTenantTrainerArgs, Maybe<WithTypename<CreateTenantTrainerPayload>>>,
-  createUpozorneni?: GraphCacheOptimisticMutationResolver<MutationCreateUpozorneniArgs, Maybe<WithTypename<CreateUpozorneniPayload>>>,
   createUserProxy?: GraphCacheOptimisticMutationResolver<MutationCreateUserProxyArgs, Maybe<WithTypename<CreateUserProxyPayload>>>,
   deleteAktuality?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAktualityById?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityByIdArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
@@ -13198,8 +12731,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteTenantMembership?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantMembershipArgs, Maybe<WithTypename<DeleteTenantMembershipPayload>>>,
   deleteTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantTrainerArgs, Maybe<WithTypename<DeleteTenantTrainerPayload>>>,
   deleteTransaction?: GraphCacheOptimisticMutationResolver<MutationDeleteTransactionArgs, Maybe<WithTypename<DeleteTransactionPayload>>>,
-  deleteUpozorneni?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
-  deleteUpozorneniById?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniByIdArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUserProxy?: GraphCacheOptimisticMutationResolver<MutationDeleteUserProxyArgs, Maybe<WithTypename<DeleteUserProxyPayload>>>,
   editRegistration?: GraphCacheOptimisticMutationResolver<MutationEditRegistrationArgs, Maybe<WithTypename<EditRegistrationPayload>>>,
   getCurrentUser?: GraphCacheOptimisticMutationResolver<MutationGetCurrentUserArgs, Maybe<WithTypename<GetCurrentUserPayload>>>,
@@ -13241,8 +12772,6 @@ export type GraphCacheOptimisticUpdaters = {
   updateTenantSetting?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantSettingArgs, Maybe<WithTypename<UpdateTenantSettingPayload>>>,
   updateTenantSettingsKey?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantSettingsKeyArgs, Maybe<WithTypename<UpdateTenantSettingsKeyPayload>>>,
   updateTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantTrainerArgs, Maybe<WithTypename<UpdateTenantTrainerPayload>>>,
-  updateUpozorneni?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>,
-  updateUpozorneniById?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniByIdArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>,
   updateUserProxy?: GraphCacheOptimisticMutationResolver<MutationUpdateUserProxyArgs, Maybe<WithTypename<UpdateUserProxyPayload>>>,
   upsertAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpsertAnnouncementArgs, Maybe<WithTypename<UpsertAnnouncementPayload>>>,
   upsertEvent?: GraphCacheOptimisticMutationResolver<MutationUpsertEventArgs, Maybe<WithTypename<UpsertEventPayload>>>
@@ -13360,12 +12889,9 @@ export type GraphCacheUpdaters = {
     tenantsList?: GraphCacheUpdateResolver<{ tenantsList: Maybe<Array<WithTypename<Tenant>>> }, QueryTenantsListArgs>,
     transaction?: GraphCacheUpdateResolver<{ transaction: Maybe<WithTypename<Transaction>> }, QueryTransactionArgs>,
     transactions?: GraphCacheUpdateResolver<{ transactions: Maybe<WithTypename<TransactionsConnection>> }, QueryTransactionsArgs>,
-    upozorneni?: GraphCacheUpdateResolver<{ upozorneni: Maybe<WithTypename<Upozorneni>> }, QueryUpozorneniArgs>,
-    upozorneniById?: GraphCacheUpdateResolver<{ upozorneniById: Maybe<WithTypename<Upozorneni>> }, QueryUpozorneniByIdArgs>,
     upozorneniSkupinies?: GraphCacheUpdateResolver<{ upozorneniSkupinies: Maybe<WithTypename<UpozorneniSkupiniesConnection>> }, QueryUpozorneniSkupiniesArgs>,
     upozorneniSkupiny?: GraphCacheUpdateResolver<{ upozorneniSkupiny: Maybe<WithTypename<UpozorneniSkupiny>> }, QueryUpozorneniSkupinyArgs>,
     upozorneniSkupinyById?: GraphCacheUpdateResolver<{ upozorneniSkupinyById: Maybe<WithTypename<UpozorneniSkupiny>> }, QueryUpozorneniSkupinyByIdArgs>,
-    upozornenis?: GraphCacheUpdateResolver<{ upozornenis: Maybe<WithTypename<UpozornenisConnection>> }, QueryUpozornenisArgs>,
     user?: GraphCacheUpdateResolver<{ user: Maybe<WithTypename<User>> }, QueryUserArgs>,
     userById?: GraphCacheUpdateResolver<{ userById: Maybe<WithTypename<User>> }, QueryUserByIdArgs>,
     userProxiesList?: GraphCacheUpdateResolver<{ userProxiesList: Maybe<Array<WithTypename<UserProxy>>> }, QueryUserProxiesListArgs>,
@@ -13401,7 +12927,6 @@ export type GraphCacheUpdaters = {
     createTenantLocation?: GraphCacheUpdateResolver<{ createTenantLocation: Maybe<WithTypename<CreateTenantLocationPayload>> }, MutationCreateTenantLocationArgs>,
     createTenantMembership?: GraphCacheUpdateResolver<{ createTenantMembership: Maybe<WithTypename<CreateTenantMembershipPayload>> }, MutationCreateTenantMembershipArgs>,
     createTenantTrainer?: GraphCacheUpdateResolver<{ createTenantTrainer: Maybe<WithTypename<CreateTenantTrainerPayload>> }, MutationCreateTenantTrainerArgs>,
-    createUpozorneni?: GraphCacheUpdateResolver<{ createUpozorneni: Maybe<WithTypename<CreateUpozorneniPayload>> }, MutationCreateUpozorneniArgs>,
     createUserProxy?: GraphCacheUpdateResolver<{ createUserProxy: Maybe<WithTypename<CreateUserProxyPayload>> }, MutationCreateUserProxyArgs>,
     deleteAktuality?: GraphCacheUpdateResolver<{ deleteAktuality: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityArgs>,
     deleteAktualityById?: GraphCacheUpdateResolver<{ deleteAktualityById: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityByIdArgs>,
@@ -13429,8 +12954,6 @@ export type GraphCacheUpdaters = {
     deleteTenantMembership?: GraphCacheUpdateResolver<{ deleteTenantMembership: Maybe<WithTypename<DeleteTenantMembershipPayload>> }, MutationDeleteTenantMembershipArgs>,
     deleteTenantTrainer?: GraphCacheUpdateResolver<{ deleteTenantTrainer: Maybe<WithTypename<DeleteTenantTrainerPayload>> }, MutationDeleteTenantTrainerArgs>,
     deleteTransaction?: GraphCacheUpdateResolver<{ deleteTransaction: Maybe<WithTypename<DeleteTransactionPayload>> }, MutationDeleteTransactionArgs>,
-    deleteUpozorneni?: GraphCacheUpdateResolver<{ deleteUpozorneni: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniArgs>,
-    deleteUpozorneniById?: GraphCacheUpdateResolver<{ deleteUpozorneniById: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniByIdArgs>,
     deleteUserProxy?: GraphCacheUpdateResolver<{ deleteUserProxy: Maybe<WithTypename<DeleteUserProxyPayload>> }, MutationDeleteUserProxyArgs>,
     editRegistration?: GraphCacheUpdateResolver<{ editRegistration: Maybe<WithTypename<EditRegistrationPayload>> }, MutationEditRegistrationArgs>,
     getCurrentUser?: GraphCacheUpdateResolver<{ getCurrentUser: Maybe<WithTypename<GetCurrentUserPayload>> }, MutationGetCurrentUserArgs>,
@@ -13472,8 +12995,6 @@ export type GraphCacheUpdaters = {
     updateTenantSetting?: GraphCacheUpdateResolver<{ updateTenantSetting: Maybe<WithTypename<UpdateTenantSettingPayload>> }, MutationUpdateTenantSettingArgs>,
     updateTenantSettingsKey?: GraphCacheUpdateResolver<{ updateTenantSettingsKey: Maybe<WithTypename<UpdateTenantSettingsKeyPayload>> }, MutationUpdateTenantSettingsKeyArgs>,
     updateTenantTrainer?: GraphCacheUpdateResolver<{ updateTenantTrainer: Maybe<WithTypename<UpdateTenantTrainerPayload>> }, MutationUpdateTenantTrainerArgs>,
-    updateUpozorneni?: GraphCacheUpdateResolver<{ updateUpozorneni: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniArgs>,
-    updateUpozorneniById?: GraphCacheUpdateResolver<{ updateUpozorneniById: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniByIdArgs>,
     updateUserProxy?: GraphCacheUpdateResolver<{ updateUserProxy: Maybe<WithTypename<UpdateUserProxyPayload>> }, MutationUpdateUserProxyArgs>,
     upsertAnnouncement?: GraphCacheUpdateResolver<{ upsertAnnouncement: Maybe<WithTypename<UpsertAnnouncementPayload>> }, MutationUpsertAnnouncementArgs>,
     upsertEvent?: GraphCacheUpdateResolver<{ upsertEvent: Maybe<WithTypename<UpsertEventPayload>> }, MutationUpsertEventArgs>
@@ -13542,6 +13063,7 @@ export type GraphCacheUpdaters = {
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>
   },
   Announcement?: {
+    announcementAudiences?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, AnnouncementAnnouncementAudiencesArgs>,
     author?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     authorId?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     body?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
@@ -13903,14 +13425,6 @@ export type GraphCacheUpdaters = {
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantTrainerPayload>>, Record<string, never>>,
     tenantTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantTrainerPayload>>, Record<string, never>>
   },
-  CreateUpozorneniPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>,
-    upozorneni?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>,
-    upozorneniEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, CreateUpozorneniPayloadUpozorneniEdgeArgs>,
-    userByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUpozorneniPayload>>, Record<string, never>>
-  },
   CreateUserProxyPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>,
@@ -14095,14 +13609,6 @@ export type GraphCacheUpdaters = {
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTransactionPayload>>, Record<string, never>>,
     transaction?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTransactionPayload>>, Record<string, never>>,
     transactionEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTransactionPayload>>, DeleteTransactionPayloadTransactionEdgeArgs>
-  },
-  DeleteUpozorneniPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
-    upozorneni?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>,
-    upozorneniEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, DeleteUpozorneniPayloadUpozorneniEdgeArgs>,
-    userByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUpozorneniPayload>>, Record<string, never>>
   },
   DeleteUserProxyPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>,
@@ -14823,7 +14329,6 @@ export type GraphCacheUpdaters = {
     tenantTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantTrainersListArgs>,
     transactions?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTransactionsArgs>,
     upozorneniSkupinies?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantUpozorneniSkupiniesArgs>,
-    upozornenis?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantUpozornenisArgs>,
     users?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantUsersArgs>
   },
   TenantAccountPayload?: {
@@ -15084,41 +14589,12 @@ export type GraphCacheUpdaters = {
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantTrainerPayload>>, Record<string, never>>,
     tenantTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantTrainerPayload>>, Record<string, never>>
   },
-  UpdateUpozorneniPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>,
-    upozorneni?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>,
-    upozorneniEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, UpdateUpozorneniPayloadUpozorneniEdgeArgs>,
-    userByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUpozorneniPayload>>, Record<string, never>>
-  },
   UpdateUserProxyPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>,
     userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateUserProxyPayload>>, Record<string, never>>
-  },
-  Upozorneni?: {
-    announcementAudiencesByAnnouncementId?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, UpozorneniAnnouncementAudiencesByAnnouncementIdArgs>,
-    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    scheduledSince?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    scheduledUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    sticky?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    upId?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    upKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    upLock?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    upNadpis?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    upText?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    upTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    upTimestampAdd?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>,
-    upozorneniSkupiniesByUpsIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs>,
-    userByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Upozorneni>>, Record<string, never>>
   },
   UpozorneniSkupiniesConnection?: {
     edges?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiniesConnection>>, Record<string, never>>,
@@ -15136,21 +14612,10 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
-    upozorneni?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     upsColor?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     upsId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     upsIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>,
     upsIdSkupina?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozorneniSkupiny>>, Record<string, never>>
-  },
-  UpozornenisConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisConnection>>, Record<string, never>>
-  },
-  UpozornenisEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<UpozornenisEdge>>, Record<string, never>>
   },
   UpsertAnnouncementPayload?: {
     announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertAnnouncementPayload>>, Record<string, never>>,
@@ -15193,7 +14658,6 @@ export type GraphCacheUpdaters = {
     uPrijmeni?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uTimestamp?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
-    upozornenisByUpKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserUpozornenisByUpKdoArgs>,
     userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserUserProxiesListArgs>
   },
   UserProxy?: {
