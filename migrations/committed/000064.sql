@@ -1,3 +1,40 @@
+--! Previous: sha1:2be3fd8e627decbc6f3b8e3698c76026e55b0f35
+--! Hash: sha1:9da5f739a5cc82ff294b65f0c3c91525158de755
+
+--! split: 1-current.sql
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_catalog.pg_type t
+    join pg_catalog.pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public'
+      and t.typname = 'event_overlaps_conflict'
+  ) then
+    create type public.event_overlaps_conflict as (
+      person_id bigint,
+      person_name text,
+      first_instance_id bigint,
+      first_event_id bigint,
+      first_event_name text,
+      first_since timestamp with time zone,
+      first_until timestamp with time zone,
+      second_instance_id bigint,
+      second_event_id bigint,
+      second_event_name text,
+      second_since timestamp with time zone,
+      second_until timestamp with time zone,
+      overlap_range tstzrange
+    );
+  end if;
+end;
+$$;
+
+comment on type public.event_overlaps_conflict is 'Pair of overlapping event instances for a single attendee or trainer.';
+
+drop function if exists event_overlaps_trainer_report;
+drop function if exists event_overlaps_attendee_report;
+
 create or replace function public.event_overlaps_attendee_report(
   p_since timestamptz,
   p_until timestamptz

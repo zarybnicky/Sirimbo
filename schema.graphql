@@ -4372,38 +4372,6 @@ type EventInstanceAttendanceSummaryRecord {
   status: AttendanceType
 }
 
-type EventOverlapsAttendeeReportRecord {
-  firstEventId: BigInt
-  firstEventName: String
-  firstInstanceId: BigInt
-  firstSince: Datetime
-  firstUntil: Datetime
-  overlapRange: DatetimeRange
-  personId: BigInt
-  personName: String
-  secondEventId: BigInt
-  secondEventName: String
-  secondInstanceId: BigInt
-  secondSince: Datetime
-  secondUntil: Datetime
-}
-
-type EventOverlapsTrainerReportRecord {
-  firstEventId: BigInt
-  firstEventName: String
-  firstInstanceId: BigInt
-  firstSince: Datetime
-  firstUntil: Datetime
-  overlapRange: DatetimeRange
-  secondEventId: BigInt
-  secondEventName: String
-  secondInstanceId: BigInt
-  secondSince: Datetime
-  secondUntil: Datetime
-  personId: BigInt
-  personName: String
-}
-
 """
 A condition to be used against `EventInstance` object types. All fields are
 tested for equality and combined with a logical ‘and.’
@@ -4681,40 +4649,12 @@ enum EventLessonDemandsOrderBy {
   UPDATED_AT_DESC
 }
 
-"""A connection to a list of `EventOverlapsAttendeeReportRecord` values."""
-type EventOverlapsAttendeeReportConnection {
-  """
-  A list of edges which contains the `EventOverlapsAttendeeReportRecord` and cursor to aid in pagination.
-  """
-  edges: [EventOverlapsAttendeeReportEdge!]!
-
-  """A list of `EventOverlapsAttendeeReportRecord` objects."""
-  nodes: [EventOverlapsAttendeeReportRecord!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `EventOverlapsAttendeeReportRecord` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `EventOverlapsAttendeeReportRecord` edge in the connection."""
-type EventOverlapsAttendeeReportEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EventOverlapsAttendeeReportRecord` at the end of the edge."""
-  node: EventOverlapsAttendeeReportRecord!
-}
-
-type EventOverlapsAttendeeReportRecord {
+"""Pair of overlapping event instances for a single attendee or trainer."""
+type EventOverlapsConflict {
   firstEventId: BigInt
   firstEventName: String
   firstInstanceId: BigInt
   firstSince: Datetime
-  firstStatus: AttendanceType
   firstUntil: Datetime
   overlapRange: DatetimeRange
   personId: BigInt
@@ -4723,54 +4663,7 @@ type EventOverlapsAttendeeReportRecord {
   secondEventName: String
   secondInstanceId: BigInt
   secondSince: Datetime
-  secondStatus: AttendanceType
   secondUntil: Datetime
-}
-
-"""A connection to a list of `EventOverlapsTrainerReportRecord` values."""
-type EventOverlapsTrainerReportConnection {
-  """
-  A list of edges which contains the `EventOverlapsTrainerReportRecord` and cursor to aid in pagination.
-  """
-  edges: [EventOverlapsTrainerReportEdge!]!
-
-  """A list of `EventOverlapsTrainerReportRecord` objects."""
-  nodes: [EventOverlapsTrainerReportRecord!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `EventOverlapsTrainerReportRecord` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `EventOverlapsTrainerReportRecord` edge in the connection."""
-type EventOverlapsTrainerReportEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EventOverlapsTrainerReportRecord` at the end of the edge."""
-  node: EventOverlapsTrainerReportRecord!
-}
-
-type EventOverlapsTrainerReportRecord {
-  firstAssignmentSource: String
-  firstEventId: BigInt
-  firstEventName: String
-  firstInstanceId: BigInt
-  firstSince: Datetime
-  firstUntil: Datetime
-  overlapRange: DatetimeRange
-  secondAssignmentSource: String
-  secondEventId: BigInt
-  secondEventName: String
-  secondInstanceId: BigInt
-  secondSince: Datetime
-  secondUntil: Datetime
-  trainerId: BigInt
-  trainerName: String
 }
 
 """
@@ -8663,28 +8556,6 @@ type Query {
     orderBy: [EventInstancesOrderBy!]
   ): [EventInstance!]
 
-  eventOverlapsAttendeeReportList(
-    pSince: Datetime!
-    pUntil: Datetime
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values of the set."""
-    offset: Int
-  ): [EventOverlapsAttendeeReportRecord!]
-
-  eventOverlapsTrainerReportList(
-    pSince: Datetime!
-    pUntil: Datetime
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values of the set."""
-    offset: Int
-  ): [EventOverlapsTrainerReportRecord!]
-
   """Get a single `EventLessonDemand`."""
   eventLessonDemand(id: BigInt!): EventLessonDemand
 
@@ -8707,56 +8578,24 @@ type Query {
     """The method to use when ordering `EventLessonDemand`."""
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]
-
-  """
-  Reads and enables pagination through a set of `EventOverlapsAttendeeReportRecord`.
-  """
-  eventOverlapsAttendeeReport(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  eventOverlapsAttendeeReportList(
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
     pSince: Datetime
     pUntil: Datetime
-  ): EventOverlapsAttendeeReportConnection
-
-  """
-  Reads and enables pagination through a set of `EventOverlapsTrainerReportRecord`.
-  """
-  eventOverlapsTrainerReport(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  ): [EventOverlapsConflict!]
+  eventOverlapsTrainerReportList(
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
     pSince: Datetime
     pUntil: Datetime
-  ): EventOverlapsTrainerReportConnection
+  ): [EventOverlapsConflict!]
 
   """Get a single `EventRegistration`."""
   eventRegistration(id: BigInt!): EventRegistration

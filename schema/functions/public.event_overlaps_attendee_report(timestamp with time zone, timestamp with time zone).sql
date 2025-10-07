@@ -1,4 +1,4 @@
-CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS TABLE(person_id bigint, person_name text, first_instance_id bigint, first_event_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, first_status public.attendance_type, second_instance_id bigint, second_event_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, second_status public.attendance_type, overlap_range tstzrange)
+CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS SETOF public.event_overlaps_conflict
     LANGUAGE sql STABLE
     AS $$
   with target_range as (
@@ -38,13 +38,11 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
     i1.event_name as first_event_name,
     i1.since as first_since,
     i1.until as first_until,
-    i1.status as first_status,
     i2.instance_id as second_instance_id,
     i2.event_id as second_event_id,
     i2.event_name as second_event_name,
     i2.since as second_since,
     i2.until as second_until,
-    i2.status as second_status,
     tstzrange(
       greatest(i1.since, i2.since),
       least(i1.until, i2.until),
@@ -56,5 +54,7 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
     and i1.range && i2.range
     and greatest(i1.since, i2.since) < least(i1.until, i2.until);
 $$;
+
+COMMENT ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@simpleCollections only';
 
 GRANT ALL ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) TO anonymous;

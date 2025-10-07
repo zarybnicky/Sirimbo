@@ -210,6 +210,34 @@ CREATE TYPE public.event_instance_type_input AS (
 
 
 --
+-- Name: event_overlaps_conflict; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_overlaps_conflict AS (
+	person_id bigint,
+	person_name text,
+	first_instance_id bigint,
+	first_event_id bigint,
+	first_event_name text,
+	first_since timestamp with time zone,
+	first_until timestamp with time zone,
+	second_instance_id bigint,
+	second_event_id bigint,
+	second_event_name text,
+	second_since timestamp with time zone,
+	second_until timestamp with time zone,
+	overlap_range tstzrange
+);
+
+
+--
+-- Name: TYPE event_overlaps_conflict; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TYPE public.event_overlaps_conflict IS 'Pair of overlapping event instances for a single attendee or trainer.';
+
+
+--
 -- Name: event_payment_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -2740,7 +2768,7 @@ COMMENT ON FUNCTION public.event_my_registrations(e public.event) IS '@simpleCol
 -- Name: event_overlaps_attendee_report(timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS TABLE(person_id bigint, person_name text, first_instance_id bigint, first_event_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, first_status public.attendance_type, second_instance_id bigint, second_event_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, second_status public.attendance_type, overlap_range tstzrange)
+CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS SETOF public.event_overlaps_conflict
     LANGUAGE sql STABLE
     AS $$
   with target_range as (
@@ -2780,13 +2808,11 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
     i1.event_name as first_event_name,
     i1.since as first_since,
     i1.until as first_until,
-    i1.status as first_status,
     i2.instance_id as second_instance_id,
     i2.event_id as second_event_id,
     i2.event_name as second_event_name,
     i2.since as second_since,
     i2.until as second_until,
-    i2.status as second_status,
     tstzrange(
       greatest(i1.since, i2.since),
       least(i1.until, i2.until),
@@ -2801,10 +2827,17 @@ $$;
 
 
 --
+-- Name: FUNCTION event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@simpleCollections only';
+
+
+--
 -- Name: event_overlaps_trainer_report(timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS TABLE(trainer_id bigint, trainer_name text, first_instance_id bigint, first_event_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, first_assignment_source text, second_instance_id bigint, second_event_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, second_assignment_source text, overlap_range tstzrange)
+CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS SETOF public.event_overlaps_conflict
     LANGUAGE sql STABLE
     AS $$
   with target_range as (
@@ -2814,67 +2847,64 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
       '[]'
     ) as range
   ),
-  instance_assignments as (
-    select
-      eit.person_id,
-      eit.instance_id,
-      'instance'::text as assignment_source
-    from public.event_instance_trainer eit
-  ),
-  event_assignments as (
-    select
-      et.person_id,
-      ei.id as instance_id,
-      'event'::text as assignment_source
-    from public.event_trainer et
-    join public.event_instance ei on ei.event_id = et.event_id
-    where not exists (
-      select 1
-      from public.event_instance_trainer eit
-      where eit.instance_id = ei.id
-    )
-  ),
-  assignments as (
-    select * from instance_assignments
-    union all
-    select * from event_assignments
-  ),
   trainer_instances as (
     select
-      a.person_id,
-      p.name as trainer_name,
+      eit.person_id,
+      p.name as person_name,
       ei.id as instance_id,
       ei.since,
       ei.until,
       ei.range,
       e.id as event_id,
-      e.name as event_name,
-      a.assignment_source
-    from assignments a
-    join public.event_instance ei on ei.id = a.instance_id
+      e.name as event_name
+    from public.event_instance_trainer eit
+    join public.event_instance ei on ei.id = eit.instance_id
     join public.event e on e.id = ei.event_id
-    join public.person p on p.id = a.person_id
+    join public.person p on p.id = eit.person_id
     join target_range tr on true
     where
       ei.tenant_id = public.current_tenant_id()
       and not ei.is_cancelled
       and ei.range && tr.range
+    union all
+    select
+      et.person_id,
+      p.name as person_name,
+      ei.id as instance_id,
+      ei.since,
+      ei.until,
+      ei.range,
+      e.id as event_id,
+      e.name as event_name
+    from public.event_trainer et
+    join public.event_instance ei on ei.event_id = et.event_id
+    join public.event e on e.id = ei.event_id
+    join public.person p on p.id = et.person_id
+    join target_range tr on true
+    where
+      ei.tenant_id = public.current_tenant_id()
+      and not ei.is_cancelled
+      and ei.range && tr.range
+      and not exists (
+        select 1
+        from public.event_instance_trainer eit
+        where eit.instance_id = ei.id
+          and eit.person_id = et.person_id
+      )
   )
   select
-    ti1.person_id as trainer_id,
-    ti1.trainer_name,
+    ti1.person_id,
+    ti1.person_name,
     ti1.instance_id as first_instance_id,
     ti1.event_id as first_event_id,
     ti1.event_name as first_event_name,
     ti1.since as first_since,
     ti1.until as first_until,
-    ti1.assignment_source as first_assignment_source,
     ti2.instance_id as second_instance_id,
     ti2.event_id as second_event_id,
     ti2.event_name as second_event_name,
     ti2.since as second_since,
     ti2.until as second_until,
-    ti2.assignment_source as second_assignment_source,
     tstzrange(
       greatest(ti1.since, ti2.since),
       least(ti1.until, ti2.until),
@@ -2886,6 +2916,13 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
     and ti1.range && ti2.range
     and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
 $$;
+
+
+--
+-- Name: FUNCTION event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@simpleCollections only';
 
 
 --
