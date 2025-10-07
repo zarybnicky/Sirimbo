@@ -23,6 +23,7 @@ import { useTenant } from '@/ui/useTenant';
 import { TypeOf } from 'zod';
 import { EventForm } from '@/ui/event-form/types';
 import { tenantId } from '@/tenant/config';
+import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
 
 const Views: { [key: string]: (props: ViewProps) => React.ReactNode } = {
   month: Month,
@@ -399,6 +400,8 @@ export function Calendar() {
         backgroundEvents={emptyArray}
         resources={resources}
       />
+
+      <CalendarConflictsIndicator start={variables.start} end={variables.end ?? undefined} />
 
       {auth.isTrainerOrAdmin && (
         <Dialog open={!!creating} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
