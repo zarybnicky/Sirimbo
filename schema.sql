@@ -447,6 +447,30 @@ CREATE TYPE public.relationship_status AS ENUM (
 
 
 --
+-- Name: scoreboard_record; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.scoreboard_record AS (
+	person_id bigint,
+	cohort_id bigint,
+	lesson_total_score bigint,
+	group_total_score bigint,
+	event_total_score bigint,
+	manual_total_score bigint,
+	total_score bigint,
+	ranking bigint
+);
+
+
+--
+-- Name: TYPE scoreboard_record; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TYPE public.scoreboard_record IS '@foreignKey (person_id) references person (id)
+@foreignKey (cohort_id) references cohort (id)';
+
+
+--
 -- Name: transaction_source; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -4071,6 +4095,151 @@ COMMENT ON FUNCTION public.resolve_payment_with_credit(p public.payment) IS '@om
 
 
 --
+-- Name: scoreboard_entries(bigint, date, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.scoreboard_entries(cohort_id bigint DEFAULT NULL::bigint, since date DEFAULT NULL::date, until date DEFAULT NULL::date) RETURNS SETOF public.scoreboard_record
+    LANGUAGE sql STABLE
+    AS $$
+  with params as (
+    select
+      cohort_id as cohort_id,
+      coalesce(
+        since,
+        make_date(
+          (date_part('year', now())::int - case when date_part('month', now())::int < 9 then 1 else 0 end),
+          9,
+          1
+        )
+      ) as since,
+      coalesce(until, (date_trunc('day', now()) + interval '1 day')::date) as until
+  ),
+  membership as (
+    select
+      cm.person_id,
+      cm.cohort_id
+    from cohort_membership cm
+    join params p on true
+    where cm.tenant_id = current_tenant_id()
+      and cm.active
+      and (p.cohort_id is null or cm.cohort_id = p.cohort_id)
+  ),
+  attendance as (
+    select
+      ea.person_id,
+      case when p.cohort_id is null then null else matched_membership.cohort_id end as cohort_id,
+      case when e.type = 'lesson' then 1 else 0 end as lesson_score,
+      case when e.type = 'group' then floor((extract(epoch from (i.until - i.since)) / 60)::numeric / 45::numeric) else 0 end as group_score,
+      case when e.type = 'camp' then 3 + 2 * ((extract(epoch from (i.until - i.since)) > 86400)::int) else 0 end as event_score,
+      date_trunc('day', i.since)::date as day
+    from event_attendance ea
+    join event_registration er on er.id = ea.registration_id
+    join event e on e.id = er.event_id
+    join event_instance i on i.id = ea.instance_id
+    join params p on true
+    left join event_target_cohort tc on tc.id = er.target_cohort_id
+    join lateral (
+      select m.cohort_id
+      from membership m
+      where m.person_id = ea.person_id
+        and (p.cohort_id is null or m.cohort_id = p.cohort_id)
+        and (tc.cohort_id is null or tc.cohort_id = m.cohort_id)
+      limit 1
+    ) matched_membership on true
+    where (ea.status = 'attended' or e.type = 'lesson')
+      and e.type <> 'reservation'
+      and not i.is_cancelled
+      and i.since >= p.since::timestamptz
+      and i.until < p.until::timestamptz
+  ),
+  per_day as (
+    select
+      person_id,
+      cohort_id,
+      least(sum(lesson_score), 4) as lesson_score,
+      sum(group_score) as group_score,
+      sum(event_score) as event_score
+    from attendance
+    group by person_id, cohort_id, day
+  ),
+  aggregated as (
+    select
+      person_id,
+      cohort_id,
+      coalesce(sum(lesson_score), 0)::bigint as lesson_total_score,
+      coalesce(sum(group_score), 0)::bigint as group_total_score,
+      coalesce(sum(event_score), 0)::bigint as event_total_score
+    from per_day
+    group by person_id, cohort_id
+  ),
+  manual as (
+    select
+      sma.person_id,
+      case
+        when p.cohort_id is null then null
+        else coalesce(sma.cohort_id, p.cohort_id)
+      end as cohort_id,
+      sum(sma.points)::bigint as manual_total_score
+    from scoreboard_manual_adjustment sma
+    join params p on true
+    where sma.tenant_id = current_tenant_id()
+      and sma.awarded_at >= p.since
+      and sma.awarded_at < p.until
+      and (
+        p.cohort_id is null or
+        sma.cohort_id is null or
+        sma.cohort_id = p.cohort_id
+      )
+      and exists (
+        select 1
+        from membership mem
+        where mem.person_id = sma.person_id
+          and (
+            (p.cohort_id is null and sma.cohort_id is null)
+            or mem.cohort_id is not distinct from coalesce(sma.cohort_id, p.cohort_id)
+          )
+      )
+    group by 1, 2
+  ),
+  totals as (
+    select
+      coalesce(a.person_id, m.person_id) as person_id,
+      coalesce(a.cohort_id, m.cohort_id) as cohort_id,
+      coalesce(a.lesson_total_score, 0)::bigint as lesson_total_score,
+      coalesce(a.group_total_score, 0)::bigint as group_total_score,
+      coalesce(a.event_total_score, 0)::bigint as event_total_score,
+      coalesce(m.manual_total_score, 0)::bigint as manual_total_score,
+      (
+        coalesce(a.lesson_total_score, 0)::bigint +
+        coalesce(a.group_total_score, 0)::bigint +
+        coalesce(a.event_total_score, 0)::bigint +
+        coalesce(m.manual_total_score, 0)::bigint
+      ) as total_score
+    from aggregated a
+    full join manual m using (person_id, cohort_id)
+  )
+  select
+    person_id,
+    cohort_id,
+    lesson_total_score,
+    group_total_score,
+    event_total_score,
+    manual_total_score,
+    total_score,
+    rank() over (order by total_score desc, person_id) as ranking
+  from totals
+  order by total_score desc, person_id;
+$$;
+
+
+--
+-- Name: FUNCTION scoreboard_entries(cohort_id bigint, since date, until date); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.scoreboard_entries(cohort_id bigint, since date, until date) IS '@simpleCollections only';
+
+
+--
 -- Name: set_lesson_demand(bigint, bigint, integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -5916,51 +6085,15 @@ ALTER TABLE public.response_cache ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTI
 --
 
 CREATE VIEW public.scoreboard AS
- WITH members AS (
-         SELECT person.id
-           FROM (public.person
-             JOIN public.cohort_membership ON ((cohort_membership.person_id = person.id)))
-          WHERE (cohort_membership.active AND (cohort_membership.tenant_id = public.current_tenant_id()))
-        ), attendances AS (
-         SELECT event_attendance.person_id,
-                CASE
-                    WHEN (event.type = 'lesson'::public.event_type) THEN 1
-                    ELSE 0
-                END AS lesson_score,
-                CASE
-                    WHEN (event.type = 'group'::public.event_type) THEN floor(((EXTRACT(epoch FROM (i.until - i.since)) / (60)::numeric) / (45)::numeric))
-                    ELSE (0)::numeric
-                END AS group_score,
-                CASE
-                    WHEN (event.type = 'camp'::public.event_type) THEN (3 + (2 * ((EXTRACT(epoch FROM (i.until - i.since)) > (86400)::numeric))::integer))
-                    ELSE 0
-                END AS event_score,
-            i.since
-           FROM (((public.event_attendance
-             JOIN public.event_registration ON ((event_registration.id = event_attendance.registration_id)))
-             JOIN public.event ON ((event.id = event_registration.event_id)))
-             JOIN public.event_instance i ON ((event_attendance.instance_id = i.id)))
-          WHERE (((event_attendance.status = 'attended'::public.attendance_type) OR (event.type = 'lesson'::public.event_type)) AND (event.type <> 'reservation'::public.event_type) AND (NOT i.is_cancelled) AND (i.since > '2023-09-01 00:00:00+00'::timestamp with time zone) AND (i.until < date_trunc('day'::text, now())) AND (event_attendance.person_id IN ( SELECT members.id
-                   FROM members)))
-        ), per_day AS (
-         SELECT attendances.person_id,
-            LEAST(sum(attendances.lesson_score), (4)::bigint) AS lesson_score,
-            sum(attendances.group_score) AS group_score,
-            sum(attendances.event_score) AS event_score,
-            (((LEAST(sum(attendances.lesson_score), (4)::bigint))::numeric + sum(attendances.group_score)) + (sum(attendances.event_score))::numeric) AS total_score,
-            attendances.since
-           FROM attendances
-          GROUP BY attendances.person_id, attendances.since
-        )
  SELECT person_id,
-    (sum(lesson_score))::bigint AS lesson_total_score,
-    (sum(group_score))::bigint AS group_total_score,
-    (sum(event_score))::bigint AS event_total_score,
-    (sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint AS total_score,
-    rank() OVER (ORDER BY ((sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint) DESC) AS ranking
-   FROM per_day
-  GROUP BY person_id
-  ORDER BY ((sum((((lesson_score)::numeric + group_score) + (event_score)::numeric)))::bigint) DESC;
+    cohort_id,
+    lesson_total_score,
+    group_total_score,
+    event_total_score,
+    manual_total_score,
+    total_score,
+    ranking
+   FROM public.scoreboard_entries() scoreboard_entries(person_id, cohort_id, lesson_total_score, group_total_score, event_total_score, manual_total_score, total_score, ranking);
 
 
 --
@@ -5968,7 +6101,51 @@ CREATE VIEW public.scoreboard AS
 --
 
 COMMENT ON VIEW public.scoreboard IS '@foreignKey (person_id) references person (id)
+@foreignKey (cohort_id) references cohort (id)
 @simpleCollections only';
+
+
+--
+-- Name: scoreboard_manual_adjustment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.scoreboard_manual_adjustment (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    person_id bigint NOT NULL,
+    cohort_id bigint,
+    points integer NOT NULL,
+    reason text,
+    awarded_at date DEFAULT CURRENT_DATE NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE scoreboard_manual_adjustment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.scoreboard_manual_adjustment IS '@simpleCollections only';
+
+
+--
+-- Name: scoreboard_manual_adjustment_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.scoreboard_manual_adjustment_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: scoreboard_manual_adjustment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.scoreboard_manual_adjustment_id_seq OWNED BY public.scoreboard_manual_adjustment.id;
 
 
 --
@@ -6225,6 +6402,13 @@ ALTER TABLE ONLY public.platby_item ALTER COLUMN pi_id SET DEFAULT nextval('publ
 --
 
 ALTER TABLE ONLY public.platby_raw ALTER COLUMN pr_id SET DEFAULT nextval('public.platby_raw_pr_id_seq'::regclass);
+
+
+--
+-- Name: scoreboard_manual_adjustment id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scoreboard_manual_adjustment ALTER COLUMN id SET DEFAULT nextval('public.scoreboard_manual_adjustment_id_seq'::regclass);
 
 
 --
@@ -6700,6 +6884,14 @@ ALTER TABLE ONLY public.response_cache
 
 ALTER TABLE ONLY public.response_cache
     ADD CONSTRAINT response_cache_url_key UNIQUE (url);
+
+
+--
+-- Name: scoreboard_manual_adjustment scoreboard_manual_adjustment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scoreboard_manual_adjustment
+    ADD CONSTRAINT scoreboard_manual_adjustment_pkey PRIMARY KEY (id);
 
 
 --
@@ -7180,6 +7372,27 @@ CREATE INDEX pghero_space_stats_database_captured_at_idx ON public.pghero_space_
 
 
 --
+-- Name: scoreboard_manual_adjustment_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX scoreboard_manual_adjustment_cohort_id_idx ON public.scoreboard_manual_adjustment USING btree (cohort_id);
+
+
+--
+-- Name: scoreboard_manual_adjustment_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX scoreboard_manual_adjustment_person_id_idx ON public.scoreboard_manual_adjustment USING btree (person_id);
+
+
+--
+-- Name: scoreboard_manual_adjustment_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX scoreboard_manual_adjustment_tenant_id_idx ON public.scoreboard_manual_adjustment USING btree (tenant_id);
+
+
+--
 -- Name: since; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7478,6 +7691,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person FOR EACH
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.posting FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: scoreboard_manual_adjustment _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.scoreboard_manual_adjustment FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -8464,6 +8684,22 @@ ALTER TABLE ONLY public.posting
 
 
 --
+-- Name: scoreboard_manual_adjustment scoreboard_manual_adjustment_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scoreboard_manual_adjustment
+    ADD CONSTRAINT scoreboard_manual_adjustment_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
+
+
+--
+-- Name: scoreboard_manual_adjustment scoreboard_manual_adjustment_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scoreboard_manual_adjustment
+    ADD CONSTRAINT scoreboard_manual_adjustment_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: tenant_administrator tenant_administrator_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8874,6 +9110,13 @@ CREATE POLICY admin_manage ON public.payment_recipient TO administrator USING (t
 --
 
 CREATE POLICY admin_manage ON public.posting TO administrator USING (true);
+
+
+--
+-- Name: scoreboard_manual_adjustment admin_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_manage ON public.scoreboard_manual_adjustment TO administrator USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 
 
 --
@@ -9343,6 +9586,13 @@ CREATE POLICY manage_own ON public.users USING ((id = public.current_user_id()))
 
 
 --
+-- Name: scoreboard_manual_adjustment member_read; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_read ON public.scoreboard_manual_adjustment FOR SELECT TO member USING ((tenant_id = public.current_tenant_id()));
+
+
+--
 -- Name: account member_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -9646,6 +9896,12 @@ CREATE POLICY register_public ON public.event_external_registration FOR INSERT T
    FROM public.event
   WHERE (event_external_registration.event_id = event.id)));
 
+
+--
+-- Name: scoreboard_manual_adjustment; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.scoreboard_manual_adjustment ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: tenant; Type: ROW SECURITY; Schema: public; Owner: -
@@ -10752,6 +11008,13 @@ GRANT ALL ON FUNCTION public.resolve_payment_with_credit(p public.payment) TO an
 
 
 --
+-- Name: FUNCTION scoreboard_entries(cohort_id bigint, since date, until date); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.scoreboard_entries(cohort_id bigint, since date, until date) TO anonymous;
+
+
+--
 -- Name: FUNCTION set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer); Type: ACL; Schema: public; Owner: -
 --
 
@@ -11141,6 +11404,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.platby_raw_pr_id_seq TO anonymous;
 --
 
 GRANT ALL ON TABLE public.scoreboard TO anonymous;
+
+
+--
+-- Name: TABLE scoreboard_manual_adjustment; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.scoreboard_manual_adjustment TO administrator;
+GRANT SELECT ON TABLE public.scoreboard_manual_adjustment TO member;
 
 
 --

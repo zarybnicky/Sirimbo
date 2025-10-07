@@ -1,13 +1,13 @@
 CREATE VIEW public.scoreboard AS
- SELECT se.person_id,
-    se.cohort_id,
-    se.lesson_total_score,
-    se.group_total_score,
-    se.event_total_score,
-    se.manual_total_score,
-    se.total_score,
-    se.ranking
-   FROM public.scoreboard_entries() se;
+ SELECT person_id,
+    cohort_id,
+    lesson_total_score,
+    group_total_score,
+    event_total_score,
+    manual_total_score,
+    total_score,
+    ranking
+   FROM public.scoreboard_entries() scoreboard_entries(person_id, cohort_id, lesson_total_score, group_total_score, event_total_score, manual_total_score, total_score, ranking);
 
 COMMENT ON VIEW public.scoreboard IS '@foreignKey (person_id) references person (id)
 @foreignKey (cohort_id) references cohort (id)

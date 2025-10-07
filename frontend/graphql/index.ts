@@ -825,6 +825,10 @@ export type Cohort = {
   location: Scalars['String']['output'];
   name: Scalars['String']['output'];
   ordering: Scalars['Int']['output'];
+  /** Reads and enables pagination through a set of `ScoreboardManualAdjustment`. */
+  scoreboardManualAdjustmentsList: Array<ScoreboardManualAdjustment>;
+  /** Reads and enables pagination through a set of `Scoreboard`. */
+  scoreboardsList: Array<Scoreboard>;
   /** Reads a single `Tenant` that is related to this `Cohort`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -863,6 +867,22 @@ export type CohortEventTargetCohortsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventTargetCohortsOrderBy>>;
+};
+
+
+export type CohortScoreboardManualAdjustmentsListArgs = {
+  condition?: InputMaybe<ScoreboardManualAdjustmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ScoreboardManualAdjustmentsOrderBy>>;
+};
+
+
+export type CohortScoreboardsListArgs = {
+  condition?: InputMaybe<ScoreboardCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ScoreboardsOrderBy>>;
 };
 
 /** A condition to be used against `Cohort` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -2028,6 +2048,35 @@ export type CreatePersonPayloadPersonEdgeArgs = {
   orderBy?: Array<PeopleOrderBy>;
 };
 
+/** All input for the create `ScoreboardManualAdjustment` mutation. */
+export type CreateScoreboardManualAdjustmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `ScoreboardManualAdjustment` to be created by this mutation. */
+  scoreboardManualAdjustment: ScoreboardManualAdjustmentInput;
+};
+
+/** The output of our create `ScoreboardManualAdjustment` mutation. */
+export type CreateScoreboardManualAdjustmentPayload = {
+  __typename?: 'CreateScoreboardManualAdjustmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Cohort` that is related to this `ScoreboardManualAdjustment`. */
+  cohort: Maybe<Cohort>;
+  /** Reads a single `Person` that is related to this `ScoreboardManualAdjustment`. */
+  person: Maybe<Person>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** The `ScoreboardManualAdjustment` that was created by this mutation. */
+  scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
+};
+
 /** All input for the create `TenantAdministrator` mutation. */
 export type CreateTenantAdministratorInput = {
   /**
@@ -2786,6 +2835,34 @@ export type DeletePersonPayload = {
 /** The output of our delete `Person` mutation. */
 export type DeletePersonPayloadPersonEdgeArgs = {
   orderBy?: Array<PeopleOrderBy>;
+};
+
+/** All input for the `deleteScoreboardManualAdjustment` mutation. */
+export type DeleteScoreboardManualAdjustmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+};
+
+/** The output of our delete `ScoreboardManualAdjustment` mutation. */
+export type DeleteScoreboardManualAdjustmentPayload = {
+  __typename?: 'DeleteScoreboardManualAdjustmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Cohort` that is related to this `ScoreboardManualAdjustment`. */
+  cohort: Maybe<Cohort>;
+  /** Reads a single `Person` that is related to this `ScoreboardManualAdjustment`. */
+  person: Maybe<Person>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** The `ScoreboardManualAdjustment` that was deleted by this mutation. */
+  scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
 };
 
 /** All input for the `deleteTenantAdministrator` mutation. */
@@ -5064,6 +5141,8 @@ export type Mutation = {
   createPerson: Maybe<CreatePersonPayload>;
   /** Creates a single `PersonInvitation`. */
   createPersonInvitation: Maybe<CreatePersonInvitationPayload>;
+  /** Creates a single `ScoreboardManualAdjustment`. */
+  createScoreboardManualAdjustment: Maybe<CreateScoreboardManualAdjustmentPayload>;
   /** Creates a single `TenantAdministrator`. */
   createTenantAdministrator: Maybe<CreateTenantAdministratorPayload>;
   /** Creates a single `TenantLocation`. */
@@ -5111,6 +5190,8 @@ export type Mutation = {
   deletePersonInvitation: Maybe<DeletePersonInvitationPayload>;
   /** Deletes a single `PersonInvitation` using a unique key. */
   deletePersonInvitationByAccessToken: Maybe<DeletePersonInvitationPayload>;
+  /** Deletes a single `ScoreboardManualAdjustment` using a unique key. */
+  deleteScoreboardManualAdjustment: Maybe<DeleteScoreboardManualAdjustmentPayload>;
   /** Deletes a single `TenantAdministrator` using a unique key. */
   deleteTenantAdministrator: Maybe<DeleteTenantAdministratorPayload>;
   /** Deletes a single `TenantLocation` using a unique key. */
@@ -5167,6 +5248,8 @@ export type Mutation = {
   updatePayment: Maybe<UpdatePaymentPayload>;
   /** Updates a single `Person` using a unique key and a patch. */
   updatePerson: Maybe<UpdatePersonPayload>;
+  /** Updates a single `ScoreboardManualAdjustment` using a unique key and a patch. */
+  updateScoreboardManualAdjustment: Maybe<UpdateScoreboardManualAdjustmentPayload>;
   /** Updates a single `Tenant` using a unique key and a patch. */
   updateTenant: Maybe<UpdateTenantPayload>;
   /** Updates a single `TenantAdministrator` using a unique key and a patch. */
@@ -5326,6 +5409,12 @@ export type MutationCreatePersonInvitationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateScoreboardManualAdjustmentArgs = {
+  input: CreateScoreboardManualAdjustmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTenantAdministratorArgs = {
   input: CreateTenantAdministratorInput;
 };
@@ -5466,6 +5555,12 @@ export type MutationDeletePersonInvitationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePersonInvitationByAccessTokenArgs = {
   input: DeletePersonInvitationByAccessTokenInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteScoreboardManualAdjustmentArgs = {
+  input: DeleteScoreboardManualAdjustmentInput;
 };
 
 
@@ -5688,6 +5783,12 @@ export type MutationUpdatePaymentArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePersonArgs = {
   input: UpdatePersonInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateScoreboardManualAdjustmentArgs = {
+  input: UpdateScoreboardManualAdjustmentInput;
 };
 
 
@@ -6153,6 +6254,8 @@ export type Person = {
   phone: Maybe<Scalars['String']['output']>;
   prefixTitle: Scalars['String']['output'];
   recentAttendanceList: Maybe<Array<EventAttendance>>;
+  /** Reads and enables pagination through a set of `ScoreboardManualAdjustment`. */
+  scoreboardManualAdjustmentsList: Array<ScoreboardManualAdjustment>;
   /** Reads and enables pagination through a set of `Scoreboard`. */
   scoreboardsList: Array<Scoreboard>;
   suffixTitle: Scalars['String']['output'];
@@ -6277,6 +6380,14 @@ export type PersonPersonInvitationsListArgs = {
 export type PersonRecentAttendanceListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type PersonScoreboardManualAdjustmentsListArgs = {
+  condition?: InputMaybe<ScoreboardManualAdjustmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ScoreboardManualAdjustmentsOrderBy>>;
 };
 
 
@@ -7000,6 +7111,11 @@ export type Query = {
    */
   query: Query;
   refreshJwt: Maybe<Scalars['JwtToken']['output']>;
+  scoreboardEntriesList: Maybe<Array<ScoreboardRecord>>;
+  /** Get a single `ScoreboardManualAdjustment`. */
+  scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
+  /** Reads a set of `ScoreboardManualAdjustment`. */
+  scoreboardManualAdjustmentsList: Maybe<Array<ScoreboardManualAdjustment>>;
   /** Reads a set of `Scoreboard`. */
   scoreboardsList: Maybe<Array<Scoreboard>>;
   /** Reads and enables pagination through a set of `Announcement`. */
@@ -7771,6 +7887,31 @@ export type QueryPostingsListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryScoreboardEntriesListArgs = {
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  since?: InputMaybe<Scalars['Date']['input']>;
+  until?: InputMaybe<Scalars['Date']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryScoreboardManualAdjustmentArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryScoreboardManualAdjustmentsListArgs = {
+  condition?: InputMaybe<ScoreboardManualAdjustmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ScoreboardManualAdjustmentsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryScoreboardsListArgs = {
   condition?: InputMaybe<ScoreboardCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -8136,9 +8277,13 @@ export type ResetPasswordPayload = {
 
 export type Scoreboard = {
   __typename?: 'Scoreboard';
+  /** Reads a single `Cohort` that is related to this `Scoreboard`. */
+  cohort: Maybe<Cohort>;
+  cohortId: Maybe<Scalars['BigInt']['output']>;
   eventTotalScore: Maybe<Scalars['BigInt']['output']>;
   groupTotalScore: Maybe<Scalars['BigInt']['output']>;
   lessonTotalScore: Maybe<Scalars['BigInt']['output']>;
+  manualTotalScore: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Person` that is related to this `Scoreboard`. */
   person: Maybe<Person>;
   personId: Maybe<Scalars['BigInt']['output']>;
@@ -8151,12 +8296,16 @@ export type Scoreboard = {
  * for equality and combined with a logical ‘and.’
  */
 export type ScoreboardCondition = {
+  /** Checks for equality with the object’s `cohortId` field. */
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `eventTotalScore` field. */
   eventTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `groupTotalScore` field. */
   groupTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `lessonTotalScore` field. */
   lessonTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `manualTotalScore` field. */
+  manualTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `ranking` field. */
@@ -8165,14 +8314,126 @@ export type ScoreboardCondition = {
   totalScore?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
+export type ScoreboardManualAdjustment = {
+  __typename?: 'ScoreboardManualAdjustment';
+  awardedAt: Scalars['Date']['output'];
+  /** Reads a single `Cohort` that is related to this `ScoreboardManualAdjustment`. */
+  cohort: Maybe<Cohort>;
+  cohortId: Maybe<Scalars['BigInt']['output']>;
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
+  /** Reads a single `Person` that is related to this `ScoreboardManualAdjustment`. */
+  person: Maybe<Person>;
+  personId: Scalars['BigInt']['output'];
+  points: Scalars['Int']['output'];
+  reason: Maybe<Scalars['String']['output']>;
+  tenantId: Scalars['BigInt']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+};
+
+/**
+ * A condition to be used against `ScoreboardManualAdjustment` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type ScoreboardManualAdjustmentCondition = {
+  /** Checks for equality with the object’s `awardedAt` field. */
+  awardedAt?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `cohortId` field. */
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `personId` field. */
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `points` field. */
+  points?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `reason` field. */
+  reason?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `ScoreboardManualAdjustment` */
+export type ScoreboardManualAdjustmentInput = {
+  awardedAt?: InputMaybe<Scalars['Date']['input']>;
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  personId: Scalars['BigInt']['input'];
+  points: Scalars['Int']['input'];
+  reason?: InputMaybe<Scalars['String']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Represents an update to a `ScoreboardManualAdjustment`. Fields that are set will be updated. */
+export type ScoreboardManualAdjustmentPatch = {
+  awardedAt?: InputMaybe<Scalars['Date']['input']>;
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  points?: InputMaybe<Scalars['Int']['input']>;
+  reason?: InputMaybe<Scalars['String']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Methods to use when ordering `ScoreboardManualAdjustment`. */
+export type ScoreboardManualAdjustmentsOrderBy =
+  | 'AWARDED_AT_ASC'
+  | 'AWARDED_AT_DESC'
+  | 'COHORT_ID_ASC'
+  | 'COHORT_ID_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'NATURAL'
+  | 'PERSON_ID_ASC'
+  | 'PERSON_ID_DESC'
+  | 'POINTS_ASC'
+  | 'POINTS_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'REASON_ASC'
+  | 'REASON_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
+
+export type ScoreboardRecord = {
+  __typename?: 'ScoreboardRecord';
+  /** Reads a single `Cohort` that is related to this `ScoreboardRecord`. */
+  cohort: Maybe<Cohort>;
+  cohortId: Maybe<Scalars['BigInt']['output']>;
+  eventTotalScore: Maybe<Scalars['BigInt']['output']>;
+  groupTotalScore: Maybe<Scalars['BigInt']['output']>;
+  lessonTotalScore: Maybe<Scalars['BigInt']['output']>;
+  manualTotalScore: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `Person` that is related to this `ScoreboardRecord`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  ranking: Maybe<Scalars['BigInt']['output']>;
+  totalScore: Maybe<Scalars['BigInt']['output']>;
+};
+
 /** Methods to use when ordering `Scoreboard`. */
 export type ScoreboardsOrderBy =
+  | 'COHORT_ID_ASC'
+  | 'COHORT_ID_DESC'
   | 'EVENT_TOTAL_SCORE_ASC'
   | 'EVENT_TOTAL_SCORE_DESC'
   | 'GROUP_TOTAL_SCORE_ASC'
   | 'GROUP_TOTAL_SCORE_DESC'
   | 'LESSON_TOTAL_SCORE_ASC'
   | 'LESSON_TOTAL_SCORE_DESC'
+  | 'MANUAL_TOTAL_SCORE_ASC'
+  | 'MANUAL_TOTAL_SCORE_DESC'
   | 'NATURAL'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
@@ -9858,6 +10119,36 @@ export type UpdatePersonPayloadPersonEdgeArgs = {
   orderBy?: Array<PeopleOrderBy>;
 };
 
+/** All input for the `updateScoreboardManualAdjustment` mutation. */
+export type UpdateScoreboardManualAdjustmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+  /** An object where the defined keys will be set on the `ScoreboardManualAdjustment` being updated. */
+  patch: ScoreboardManualAdjustmentPatch;
+};
+
+/** The output of our update `ScoreboardManualAdjustment` mutation. */
+export type UpdateScoreboardManualAdjustmentPayload = {
+  __typename?: 'UpdateScoreboardManualAdjustmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Cohort` that is related to this `ScoreboardManualAdjustment`. */
+  cohort: Maybe<Cohort>;
+  /** Reads a single `Person` that is related to this `ScoreboardManualAdjustment`. */
+  person: Maybe<Person>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** The `ScoreboardManualAdjustment` that was updated by this mutation. */
+  scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
+};
+
 /** All input for the `updateTenantAdministrator` mutation. */
 export type UpdateTenantAdministratorInput = {
   /**
@@ -10515,6 +10806,7 @@ export type GraphCacheKeysConfig = {
   CreateNextCohortSubscriptionPaymentPayload?: (data: WithTypename<CreateNextCohortSubscriptionPaymentPayload>) => null | string,
   CreatePersonInvitationPayload?: (data: WithTypename<CreatePersonInvitationPayload>) => null | string,
   CreatePersonPayload?: (data: WithTypename<CreatePersonPayload>) => null | string,
+  CreateScoreboardManualAdjustmentPayload?: (data: WithTypename<CreateScoreboardManualAdjustmentPayload>) => null | string,
   CreateTenantAdministratorPayload?: (data: WithTypename<CreateTenantAdministratorPayload>) => null | string,
   CreateTenantLocationPayload?: (data: WithTypename<CreateTenantLocationPayload>) => null | string,
   CreateTenantMembershipPayload?: (data: WithTypename<CreateTenantMembershipPayload>) => null | string,
@@ -10539,6 +10831,7 @@ export type GraphCacheKeysConfig = {
   DeletePaymentPayload?: (data: WithTypename<DeletePaymentPayload>) => null | string,
   DeletePersonInvitationPayload?: (data: WithTypename<DeletePersonInvitationPayload>) => null | string,
   DeletePersonPayload?: (data: WithTypename<DeletePersonPayload>) => null | string,
+  DeleteScoreboardManualAdjustmentPayload?: (data: WithTypename<DeleteScoreboardManualAdjustmentPayload>) => null | string,
   DeleteTenantAdministratorPayload?: (data: WithTypename<DeleteTenantAdministratorPayload>) => null | string,
   DeleteTenantLocationPayload?: (data: WithTypename<DeleteTenantLocationPayload>) => null | string,
   DeleteTenantMembershipPayload?: (data: WithTypename<DeleteTenantMembershipPayload>) => null | string,
@@ -10619,6 +10912,8 @@ export type GraphCacheKeysConfig = {
   RejectMembershipApplicationPayload?: (data: WithTypename<RejectMembershipApplicationPayload>) => null | string,
   ResetPasswordPayload?: (data: WithTypename<ResetPasswordPayload>) => null | string,
   Scoreboard?: (data: WithTypename<Scoreboard>) => null | string,
+  ScoreboardManualAdjustment?: (data: WithTypename<ScoreboardManualAdjustment>) => null | string,
+  ScoreboardRecord?: (data: WithTypename<ScoreboardRecord>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
   SubmitFormPayload?: (data: WithTypename<SubmitFormPayload>) => null | string,
   SyncCohortMembershipsPayload?: (data: WithTypename<SyncCohortMembershipsPayload>) => null | string,
@@ -10647,6 +10942,7 @@ export type GraphCacheKeysConfig = {
   UpdateMembershipApplicationPayload?: (data: WithTypename<UpdateMembershipApplicationPayload>) => null | string,
   UpdatePaymentPayload?: (data: WithTypename<UpdatePaymentPayload>) => null | string,
   UpdatePersonPayload?: (data: WithTypename<UpdatePersonPayload>) => null | string,
+  UpdateScoreboardManualAdjustmentPayload?: (data: WithTypename<UpdateScoreboardManualAdjustmentPayload>) => null | string,
   UpdateTenantAdministratorPayload?: (data: WithTypename<UpdateTenantAdministratorPayload>) => null | string,
   UpdateTenantLocationPayload?: (data: WithTypename<UpdateTenantLocationPayload>) => null | string,
   UpdateTenantMembershipPayload?: (data: WithTypename<UpdateTenantMembershipPayload>) => null | string,
@@ -10757,6 +11053,9 @@ export type GraphCacheResolvers = {
     postingsList?: GraphCacheResolver<WithTypename<Query>, QueryPostingsListArgs, Array<WithTypename<Posting> | string>>,
     query?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Query> | string>,
     refreshJwt?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JwtToken'] | string>,
+    scoreboardEntriesList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardEntriesListArgs, Array<WithTypename<ScoreboardRecord> | string>>,
+    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardManualAdjustmentArgs, WithTypename<ScoreboardManualAdjustment> | string>,
+    scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     stickyAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<Query>, QueryTenantArgs, WithTypename<Tenant> | string>,
@@ -10950,6 +11249,8 @@ export type GraphCacheResolvers = {
     location?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String'] | string>,
     name?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String'] | string>,
     ordering?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['Int'] | string>,
+    scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Cohort>, CohortScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
+    scoreboardsList?: GraphCacheResolver<WithTypename<Cohort>, CohortScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     tenant?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt'] | string>
   },
@@ -11172,6 +11473,13 @@ export type GraphCacheResolvers = {
     personEdge?: GraphCacheResolver<WithTypename<CreatePersonPayload>, CreatePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
     query?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, WithTypename<Query> | string>
   },
+  CreateScoreboardManualAdjustmentPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, Scalars['String'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Cohort> | string>,
+    person?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Person> | string>,
+    query?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Query> | string>,
+    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<ScoreboardManualAdjustment> | string>
+  },
   CreateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateTenantAdministratorPayload>, Record<string, never>, Scalars['String'] | string>,
     person?: GraphCacheResolver<WithTypename<CreateTenantAdministratorPayload>, Record<string, never>, WithTypename<Person> | string>,
@@ -11348,6 +11656,13 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<DeletePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
     personEdge?: GraphCacheResolver<WithTypename<DeletePersonPayload>, DeletePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
     query?: GraphCacheResolver<WithTypename<DeletePersonPayload>, Record<string, never>, WithTypename<Query> | string>
+  },
+  DeleteScoreboardManualAdjustmentPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, Scalars['String'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Cohort> | string>,
+    person?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Person> | string>,
+    query?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Query> | string>,
+    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<ScoreboardManualAdjustment> | string>
   },
   DeleteTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteTenantAdministratorPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -11924,6 +12239,7 @@ export type GraphCacheResolvers = {
     phone?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     prefixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     recentAttendanceList?: GraphCacheResolver<WithTypename<Person>, PersonRecentAttendanceListArgs, Array<WithTypename<EventAttendance> | string>>,
+    scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     suffixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     taxIdentificationNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
@@ -12080,13 +12396,41 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, WithTypename<Query> | string>
   },
   Scoreboard?: {
+    cohort?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortId?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     eventTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     groupTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     lessonTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
+    manualTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     person?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     ranking?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
     totalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>
+  },
+  ScoreboardManualAdjustment?: {
+    awardedAt?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Date'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortId?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['BigInt'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Datetime'] | string>,
+    id?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['BigInt'] | string>,
+    person?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['BigInt'] | string>,
+    points?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Int'] | string>,
+    reason?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['String'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['BigInt'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  ScoreboardRecord?: {
+    cohort?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortId?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    eventTotalScore?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    groupTotalScore?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    lessonTotalScore?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    manualTotalScore?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    person?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    ranking?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    totalScore?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt'] | string>
   },
   SetLessonDemandPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12367,6 +12711,13 @@ export type GraphCacheResolvers = {
     personEdge?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, UpdatePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>,
     query?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, WithTypename<Query> | string>
   },
+  UpdateScoreboardManualAdjustmentPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, Scalars['String'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Cohort> | string>,
+    person?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Person> | string>,
+    query?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Query> | string>,
+    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<ScoreboardManualAdjustment> | string>
+  },
   UpdateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantAdministratorPayload>, Record<string, never>, Scalars['String'] | string>,
     person?: GraphCacheResolver<WithTypename<UpdateTenantAdministratorPayload>, Record<string, never>, WithTypename<Person> | string>,
@@ -12509,6 +12860,7 @@ export type GraphCacheOptimisticUpdaters = {
   createNextCohortSubscriptionPayment?: GraphCacheOptimisticMutationResolver<MutationCreateNextCohortSubscriptionPaymentArgs, Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>>>,
   createPerson?: GraphCacheOptimisticMutationResolver<MutationCreatePersonArgs, Maybe<WithTypename<CreatePersonPayload>>>,
   createPersonInvitation?: GraphCacheOptimisticMutationResolver<MutationCreatePersonInvitationArgs, Maybe<WithTypename<CreatePersonInvitationPayload>>>,
+  createScoreboardManualAdjustment?: GraphCacheOptimisticMutationResolver<MutationCreateScoreboardManualAdjustmentArgs, Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>>,
   createTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationCreateTenantAdministratorArgs, Maybe<WithTypename<CreateTenantAdministratorPayload>>>,
   createTenantLocation?: GraphCacheOptimisticMutationResolver<MutationCreateTenantLocationArgs, Maybe<WithTypename<CreateTenantLocationPayload>>>,
   createTenantMembership?: GraphCacheOptimisticMutationResolver<MutationCreateTenantMembershipArgs, Maybe<WithTypename<CreateTenantMembershipPayload>>>,
@@ -12533,6 +12885,7 @@ export type GraphCacheOptimisticUpdaters = {
   deletePerson?: GraphCacheOptimisticMutationResolver<MutationDeletePersonArgs, Maybe<WithTypename<DeletePersonPayload>>>,
   deletePersonInvitation?: GraphCacheOptimisticMutationResolver<MutationDeletePersonInvitationArgs, Maybe<WithTypename<DeletePersonInvitationPayload>>>,
   deletePersonInvitationByAccessToken?: GraphCacheOptimisticMutationResolver<MutationDeletePersonInvitationByAccessTokenArgs, Maybe<WithTypename<DeletePersonInvitationPayload>>>,
+  deleteScoreboardManualAdjustment?: GraphCacheOptimisticMutationResolver<MutationDeleteScoreboardManualAdjustmentArgs, Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>>,
   deleteTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantAdministratorArgs, Maybe<WithTypename<DeleteTenantAdministratorPayload>>>,
   deleteTenantLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantLocationArgs, Maybe<WithTypename<DeleteTenantLocationPayload>>>,
   deleteTenantMembership?: GraphCacheOptimisticMutationResolver<MutationDeleteTenantMembershipArgs, Maybe<WithTypename<DeleteTenantMembershipPayload>>>,
@@ -12570,6 +12923,7 @@ export type GraphCacheOptimisticUpdaters = {
   updateMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationUpdateMembershipApplicationArgs, Maybe<WithTypename<UpdateMembershipApplicationPayload>>>,
   updatePayment?: GraphCacheOptimisticMutationResolver<MutationUpdatePaymentArgs, Maybe<WithTypename<UpdatePaymentPayload>>>,
   updatePerson?: GraphCacheOptimisticMutationResolver<MutationUpdatePersonArgs, Maybe<WithTypename<UpdatePersonPayload>>>,
+  updateScoreboardManualAdjustment?: GraphCacheOptimisticMutationResolver<MutationUpdateScoreboardManualAdjustmentArgs, Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>>,
   updateTenant?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantArgs, Maybe<WithTypename<UpdateTenantPayload>>>,
   updateTenantAdministrator?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantAdministratorArgs, Maybe<WithTypename<UpdateTenantAdministratorPayload>>>,
   updateTenantLocation?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantLocationArgs, Maybe<WithTypename<UpdateTenantLocationPayload>>>,
@@ -12676,6 +13030,9 @@ export type GraphCacheUpdaters = {
     postingsList?: GraphCacheUpdateResolver<{ postingsList: Maybe<Array<WithTypename<Posting>>> }, QueryPostingsListArgs>,
     query?: GraphCacheUpdateResolver<{ query: WithTypename<Query> }, Record<string, never>>,
     refreshJwt?: GraphCacheUpdateResolver<{ refreshJwt: Maybe<Scalars['JwtToken']> }, Record<string, never>>,
+    scoreboardEntriesList?: GraphCacheUpdateResolver<{ scoreboardEntriesList: Maybe<Array<WithTypename<ScoreboardRecord>>> }, QueryScoreboardEntriesListArgs>,
+    scoreboardManualAdjustment?: GraphCacheUpdateResolver<{ scoreboardManualAdjustment: Maybe<WithTypename<ScoreboardManualAdjustment>> }, QueryScoreboardManualAdjustmentArgs>,
+    scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<{ scoreboardManualAdjustmentsList: Maybe<Array<WithTypename<ScoreboardManualAdjustment>>> }, QueryScoreboardManualAdjustmentsListArgs>,
     scoreboardsList?: GraphCacheUpdateResolver<{ scoreboardsList: Maybe<Array<WithTypename<Scoreboard>>> }, QueryScoreboardsListArgs>,
     stickyAnnouncements?: GraphCacheUpdateResolver<{ stickyAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryStickyAnnouncementsArgs>,
     tenant?: GraphCacheUpdateResolver<{ tenant: Maybe<WithTypename<Tenant>> }, QueryTenantArgs>,
@@ -12722,6 +13079,7 @@ export type GraphCacheUpdaters = {
     createNextCohortSubscriptionPayment?: GraphCacheUpdateResolver<{ createNextCohortSubscriptionPayment: Maybe<WithTypename<CreateNextCohortSubscriptionPaymentPayload>> }, MutationCreateNextCohortSubscriptionPaymentArgs>,
     createPerson?: GraphCacheUpdateResolver<{ createPerson: Maybe<WithTypename<CreatePersonPayload>> }, MutationCreatePersonArgs>,
     createPersonInvitation?: GraphCacheUpdateResolver<{ createPersonInvitation: Maybe<WithTypename<CreatePersonInvitationPayload>> }, MutationCreatePersonInvitationArgs>,
+    createScoreboardManualAdjustment?: GraphCacheUpdateResolver<{ createScoreboardManualAdjustment: Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>> }, MutationCreateScoreboardManualAdjustmentArgs>,
     createTenantAdministrator?: GraphCacheUpdateResolver<{ createTenantAdministrator: Maybe<WithTypename<CreateTenantAdministratorPayload>> }, MutationCreateTenantAdministratorArgs>,
     createTenantLocation?: GraphCacheUpdateResolver<{ createTenantLocation: Maybe<WithTypename<CreateTenantLocationPayload>> }, MutationCreateTenantLocationArgs>,
     createTenantMembership?: GraphCacheUpdateResolver<{ createTenantMembership: Maybe<WithTypename<CreateTenantMembershipPayload>> }, MutationCreateTenantMembershipArgs>,
@@ -12746,6 +13104,7 @@ export type GraphCacheUpdaters = {
     deletePerson?: GraphCacheUpdateResolver<{ deletePerson: Maybe<WithTypename<DeletePersonPayload>> }, MutationDeletePersonArgs>,
     deletePersonInvitation?: GraphCacheUpdateResolver<{ deletePersonInvitation: Maybe<WithTypename<DeletePersonInvitationPayload>> }, MutationDeletePersonInvitationArgs>,
     deletePersonInvitationByAccessToken?: GraphCacheUpdateResolver<{ deletePersonInvitationByAccessToken: Maybe<WithTypename<DeletePersonInvitationPayload>> }, MutationDeletePersonInvitationByAccessTokenArgs>,
+    deleteScoreboardManualAdjustment?: GraphCacheUpdateResolver<{ deleteScoreboardManualAdjustment: Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>> }, MutationDeleteScoreboardManualAdjustmentArgs>,
     deleteTenantAdministrator?: GraphCacheUpdateResolver<{ deleteTenantAdministrator: Maybe<WithTypename<DeleteTenantAdministratorPayload>> }, MutationDeleteTenantAdministratorArgs>,
     deleteTenantLocation?: GraphCacheUpdateResolver<{ deleteTenantLocation: Maybe<WithTypename<DeleteTenantLocationPayload>> }, MutationDeleteTenantLocationArgs>,
     deleteTenantMembership?: GraphCacheUpdateResolver<{ deleteTenantMembership: Maybe<WithTypename<DeleteTenantMembershipPayload>> }, MutationDeleteTenantMembershipArgs>,
@@ -12783,6 +13142,7 @@ export type GraphCacheUpdaters = {
     updateMembershipApplication?: GraphCacheUpdateResolver<{ updateMembershipApplication: Maybe<WithTypename<UpdateMembershipApplicationPayload>> }, MutationUpdateMembershipApplicationArgs>,
     updatePayment?: GraphCacheUpdateResolver<{ updatePayment: Maybe<WithTypename<UpdatePaymentPayload>> }, MutationUpdatePaymentArgs>,
     updatePerson?: GraphCacheUpdateResolver<{ updatePerson: Maybe<WithTypename<UpdatePersonPayload>> }, MutationUpdatePersonArgs>,
+    updateScoreboardManualAdjustment?: GraphCacheUpdateResolver<{ updateScoreboardManualAdjustment: Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>> }, MutationUpdateScoreboardManualAdjustmentArgs>,
     updateTenant?: GraphCacheUpdateResolver<{ updateTenant: Maybe<WithTypename<UpdateTenantPayload>> }, MutationUpdateTenantArgs>,
     updateTenantAdministrator?: GraphCacheUpdateResolver<{ updateTenantAdministrator: Maybe<WithTypename<UpdateTenantAdministratorPayload>> }, MutationUpdateTenantAdministratorArgs>,
     updateTenantLocation?: GraphCacheUpdateResolver<{ updateTenantLocation: Maybe<WithTypename<UpdateTenantLocationPayload>> }, MutationUpdateTenantLocationArgs>,
@@ -12966,6 +13326,8 @@ export type GraphCacheUpdaters = {
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     ordering?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortScoreboardManualAdjustmentsListArgs>,
+    scoreboardsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortScoreboardsListArgs>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>
   },
@@ -13188,6 +13550,13 @@ export type GraphCacheUpdaters = {
     personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonPayload>>, CreatePersonPayloadPersonEdgeArgs>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreatePersonPayload>>, Record<string, never>>
   },
+  CreateScoreboardManualAdjustmentPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    scoreboardManualAdjustment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>
+  },
   CreateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantAdministratorPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantAdministratorPayload>>, Record<string, never>>,
@@ -13364,6 +13733,13 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, Record<string, never>>,
     personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, DeletePersonPayloadPersonEdgeArgs>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonPayload>>, Record<string, never>>
+  },
+  DeleteScoreboardManualAdjustmentPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    scoreboardManualAdjustment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>
   },
   DeleteTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantAdministratorPayload>>, Record<string, never>>,
@@ -13940,6 +14316,7 @@ export type GraphCacheUpdaters = {
     phone?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     prefixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     recentAttendanceList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonRecentAttendanceListArgs>,
+    scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonScoreboardManualAdjustmentsListArgs>,
     scoreboardsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonScoreboardsListArgs>,
     suffixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     taxIdentificationNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
@@ -14096,13 +14473,41 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>
   },
   Scoreboard?: {
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
+    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
     eventTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
     groupTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
     lessonTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
+    manualTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
     ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
     totalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>
+  },
+  ScoreboardManualAdjustment?: {
+    awardedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    points?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    reason?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>
+  },
+  ScoreboardRecord?: {
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
+    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
+    eventTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
+    groupTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
+    lessonTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
+    manualTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
+    ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
+    totalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>
   },
   SetLessonDemandPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SetLessonDemandPayload>>, Record<string, never>>,
@@ -14382,6 +14787,13 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, Record<string, never>>,
     personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, UpdatePersonPayloadPersonEdgeArgs>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, Record<string, never>>
+  },
+  UpdateScoreboardManualAdjustmentPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    scoreboardManualAdjustment?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>
   },
   UpdateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantAdministratorPayload>>, Record<string, never>>,

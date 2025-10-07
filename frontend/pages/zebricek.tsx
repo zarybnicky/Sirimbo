@@ -1,69 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
-import { gql } from '@urql/core';
 import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
 import { TitleBar } from '@/ui/TitleBar';
 import { ScoreboardPeriodSelector } from '@/scoreboard/ScoreboardPeriodSelector';
 import { computeRange, formatDate, PeriodPreset } from '@/scoreboard/periods';
-
-type ScoreboardEntry = {
-  personId: string | null;
-  cohortId: string | null;
-  lessonTotalScore: string | null;
-  groupTotalScore: string | null;
-  eventTotalScore: string | null;
-  manualTotalScore: string | null;
-  totalScore: string | null;
-  ranking: string | null;
-  person: { id: string; name: string } | null;
-  cohort: { id: string; name: string } | null;
-};
-
-type CohortSummary = {
-  id: string;
-  name: string;
-  archivedAt: string | null;
-};
-
-type ScoreboardQueryResult = {
-  cohortsList: CohortSummary[];
-  scoreboardEntries: ScoreboardEntry[] | null;
-};
-
-type ScoreboardQueryVariables = {
-  cohortId?: string | null;
-  since?: string;
-  until?: string;
-};
-
-const ScoreboardDocument = gql`
-  query Scoreboard($cohortId: BigInt, $since: Date, $until: Date) {
-    cohortsList(orderBy: [NAME_ASC]) {
-      id
-      name
-      archivedAt
-    }
-    scoreboardEntries(cohortId: $cohortId, since: $since, until: $until) {
-      personId
-      cohortId
-      lessonTotalScore
-      groupTotalScore
-      eventTotalScore
-      manualTotalScore
-      totalScore
-      ranking
-      person {
-        id
-        name
-      }
-      cohort {
-        id
-        name
-      }
-    }
-  }
-`;
+import { ScoreboardDocument, ScoreboardQueryVariables } from '@/graphql/Scoreboard';
 
 export default function ScoreboardPage() {
   const [selectedCohortId, setSelectedCohortId] = React.useState<string | null>(null);
@@ -87,14 +29,14 @@ export default function ScoreboardPage() {
 
   const shouldPause = !period.since || !period.until;
 
-  const [{ data, fetching, error }] = useQuery<ScoreboardQueryResult, ScoreboardQueryVariables>({
+  const [{ data, fetching, error }] = useQuery({
     query: ScoreboardDocument,
     variables,
     pause: shouldPause,
   });
 
   const cohorts = data?.cohortsList ?? [];
-  const scoreboard = data?.scoreboardEntries ?? [];
+  const scoreboard = data?.scoreboardEntriesList ?? [];
   const activeCohort = selectedCohortId ? cohorts.find((item) => item.id === selectedCohortId) ?? null : null;
 
   const periodSummary =
@@ -162,7 +104,6 @@ export default function ScoreboardPage() {
                 {cohorts.map((cohort) => (
                   <option key={cohort.id} value={cohort.id}>
                     {cohort.name}
-                    {cohort.archivedAt ? ' (archivováno)' : ''}
                   </option>
                 ))}
               </select>
