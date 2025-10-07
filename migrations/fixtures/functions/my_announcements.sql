@@ -1,18 +1,8 @@
-CREATE or replace FUNCTION archived_announcements() RETURNS SETOF announcement
-    LANGUAGE sql STABLE
-    AS $$
-  select announcement.* from announcement
-  where is_visible = false
-    or (scheduled_until is null or scheduled_until >= now())
-  order by created_at desc;
-$$;
-GRANT ALL ON FUNCTION archived_announcements TO anonymous;
-
-CREATE or replace FUNCTION sticky_announcements(
+create or replace function sticky_announcements(
   order_by_updated boolean default false
-) RETURNS SETOF announcement
-    LANGUAGE sql STABLE
-    AS $$
+) returns setof announcement
+language sql stable
+as $$
   with audience_claims as (
     select
       translate(coalesce(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '[]'), '[]', '{}')::bigint[] as cohort_ids,
@@ -49,12 +39,14 @@ CREATE or replace FUNCTION sticky_announcements(
     case when order_by_updated then updated_at else created_at end desc,
     created_at desc;
 $$;
-GRANT ALL ON FUNCTION sticky_announcements TO anonymous;
+grant all on function sticky_announcements(order_by_updated boolean) to anonymous;
 
-CREATE or replace FUNCTION my_announcements(
-  archive boolean DEFAULT false,
+create or replace function my_announcements(
+  archive boolean default false,
   order_by_updated boolean default false
-) RETURNS SETOF announcement LANGUAGE sql STABLE AS $$
+) returns setof announcement
+language sql stable
+as $$
   with audience_claims as (
     select
       translate(coalesce(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '[]'), '[]', '{}')::bigint[] as cohort_ids,
@@ -91,4 +83,4 @@ CREATE or replace FUNCTION my_announcements(
     case when order_by_updated then updated_at else created_at end desc,
     created_at desc;
 $$;
-GRANT ALL ON FUNCTION my_announcements TO anonymous;
+grant all on function my_announcements(archive boolean, order_by_updated boolean) to anonymous;

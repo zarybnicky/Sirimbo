@@ -223,8 +223,6 @@ enum AktualitiesOrderBy {
   AT_FOTO_DESC
   AT_FOTO_MAIN_ASC
   AT_FOTO_MAIN_DESC
-  AT_ID_ASC
-  AT_ID_DESC
   AT_JMENO_ASC
   AT_JMENO_DESC
   AT_KAT_ASC
@@ -235,10 +233,6 @@ enum AktualitiesOrderBy {
   AT_PREVIEW_DESC
   AT_TEXT_ASC
   AT_TEXT_DESC
-  AT_TIMESTAMP_ADD_ASC
-  AT_TIMESTAMP_ADD_DESC
-  AT_TIMESTAMP_ASC
-  AT_TIMESTAMP_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   ID_ASC
@@ -257,18 +251,15 @@ enum AktualitiesOrderBy {
 type Aktuality {
   atFoto: BigInt
   atFotoMain: BigInt
-  atId: BigInt!
   atJmeno: String!
   atKat: String! @deprecated(reason: "true")
   atKdo: BigInt
   atPreview: String!
   atText: String!
-  atTimestamp: Datetime!
-  atTimestampAdd: Datetime!
   createdAt: Datetime
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFotoByAtFotoMain: GalerieFoto
+  galerieFoto: GalerieFoto
   id: BigInt!
 
   """Reads a single `Tenant` that is related to this `Aktuality`."""
@@ -292,9 +283,6 @@ input AktualityCondition {
   """Checks for equality with the object’s `atFotoMain` field."""
   atFotoMain: BigInt
 
-  """Checks for equality with the object’s `atId` field."""
-  atId: BigInt
-
   """Checks for equality with the object’s `atJmeno` field."""
   atJmeno: String
 
@@ -309,12 +297,6 @@ input AktualityCondition {
 
   """Checks for equality with the object’s `atText` field."""
   atText: String
-
-  """Checks for equality with the object’s `atTimestamp` field."""
-  atTimestamp: Datetime
-
-  """Checks for equality with the object’s `atTimestampAdd` field."""
-  atTimestampAdd: Datetime
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
@@ -336,14 +318,11 @@ input AktualityCondition {
 input AktualityInput {
   atFoto: BigInt
   atFotoMain: BigInt
-  atId: BigInt
   atJmeno: String!
   atKat: String
   atKdo: BigInt
   atPreview: String!
   atText: String!
-  atTimestamp: Datetime
-  atTimestampAdd: Datetime
   createdAt: Datetime
   id: BigInt
   tenantId: BigInt
@@ -357,14 +336,11 @@ Represents an update to a `Aktuality`. Fields that are set will be updated.
 input AktualityPatch {
   atFoto: BigInt
   atFotoMain: BigInt
-  atId: BigInt
   atJmeno: String
   atKat: String
   atKdo: BigInt
   atPreview: String
   atText: String
-  atTimestamp: Datetime
-  atTimestampAdd: Datetime
   createdAt: Datetime
   id: BigInt
   tenantId: BigInt
@@ -419,35 +395,6 @@ type Announcement {
   tenantId: BigInt!
   title: String!
   updatedAt: Datetime
-
-  """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
-  upozorneniSkupiniesByUpsIdRodic(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UpozorneniSkupinyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `UpozorneniSkupiny`."""
-    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UpozorneniSkupiniesConnection!
 }
 
 type AnnouncementAudience {
@@ -1054,35 +1001,6 @@ type Cohort {
   """Reads a single `Tenant` that is related to this `Cohort`."""
   tenant: Tenant
   tenantId: BigInt!
-
-  """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
-  upozorneniSkupiniesByUpsIdSkupina(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UpozorneniSkupinyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `UpozorneniSkupiny`."""
-    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UpozorneniSkupiniesConnection!
 }
 
 """
@@ -1753,7 +1671,7 @@ type CreateAktualityPayload {
   clientMutationId: String
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFotoByAtFotoMain: GalerieFoto
+  galerieFoto: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2115,7 +2033,7 @@ type CreateDokumentyPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  userByDKdo: User
+  user: User
 }
 
 """All input for the create `EventExternalRegistration` mutation."""
@@ -2159,7 +2077,7 @@ type CreateEventExternalRegistrationPayload {
   """
   Reads a single `User` that is related to this `EventExternalRegistration`.
   """
-  userByCreatedBy: User
+  user: User
 }
 
 """All input for the `createEvent` mutation."""
@@ -2684,25 +2602,14 @@ input DatetimeRangeInput {
   start: DatetimeRangeBoundInput
 }
 
-"""All input for the `deleteAktualityById` mutation."""
-input DeleteAktualityByIdInput {
+"""All input for the `deleteAktuality` mutation."""
+input DeleteAktualityInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
   id: BigInt!
-}
-
-"""All input for the `deleteAktuality` mutation."""
-input DeleteAktualityInput {
-  atId: BigInt!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
 }
 
 """The output of our delete `Aktuality` mutation."""
@@ -2723,7 +2630,7 @@ type DeleteAktualityPayload {
   clientMutationId: String
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFotoByAtFotoMain: GalerieFoto
+  galerieFoto: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2998,16 +2905,6 @@ type DeleteCouplePayload {
   woman: Person
 }
 
-"""All input for the `deleteDokumentyById` mutation."""
-input DeleteDokumentyByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
 """All input for the `deleteDokumenty` mutation."""
 input DeleteDokumentyInput {
   """
@@ -3015,7 +2912,7 @@ input DeleteDokumentyInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  dId: BigInt!
+  id: BigInt!
 }
 
 """The output of our delete `Dokumenty` mutation."""
@@ -3038,7 +2935,7 @@ type DeleteDokumentyPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  userByDKdo: User
+  user: User
 }
 
 """All input for the `deleteEventExternalRegistration` mutation."""
@@ -3080,7 +2977,7 @@ type DeleteEventExternalRegistrationPayload {
   """
   Reads a single `User` that is related to this `EventExternalRegistration`.
   """
-  userByCreatedBy: User
+  user: User
 }
 
 """All input for the `deleteEvent` mutation."""
@@ -3589,8 +3486,6 @@ enum DokumentiesOrderBy {
   CREATED_AT_DESC
   D_FILENAME_ASC
   D_FILENAME_DESC
-  D_ID_ASC
-  D_ID_DESC
   D_KATEGORIE_ASC
   D_KATEGORIE_DESC
   D_KDO_ASC
@@ -3615,7 +3510,6 @@ enum DokumentiesOrderBy {
 type Dokumenty {
   createdAt: Datetime
   dFilename: String!
-  dId: BigInt!
   dKategorie: Int!
   dKdo: BigInt!
   dName: String!
@@ -3629,7 +3523,7 @@ type Dokumenty {
   updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  userByDKdo: User
+  user: User
 }
 
 """
@@ -3642,9 +3536,6 @@ input DokumentyCondition {
 
   """Checks for equality with the object’s `dFilename` field."""
   dFilename: String
-
-  """Checks for equality with the object’s `dId` field."""
-  dId: BigInt
 
   """Checks for equality with the object’s `dKategorie` field."""
   dKategorie: Int
@@ -3675,7 +3566,6 @@ input DokumentyCondition {
 input DokumentyInput {
   createdAt: Datetime
   dFilename: String!
-  dId: BigInt
   dKategorie: Int!
   dKdo: BigInt!
   dName: String!
@@ -3692,7 +3582,6 @@ Represents an update to a `Dokumenty`. Fields that are set will be updated.
 input DokumentyPatch {
   createdAt: Datetime
   dFilename: String
-  dId: BigInt
   dKategorie: Int
   dKdo: BigInt
   dName: String
@@ -4128,7 +4017,7 @@ type EventExternalRegistration {
   """
   Reads a single `User` that is related to this `EventExternalRegistration`.
   """
-  userByCreatedBy: User
+  user: User
 }
 
 """
@@ -4646,6 +4535,98 @@ enum EventLessonDemandsOrderBy {
   TRAINER_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+"""A connection to a list of `EventOverlapsAttendeeReportRecord` values."""
+type EventOverlapsAttendeeReportConnection {
+  """
+  A list of edges which contains the `EventOverlapsAttendeeReportRecord` and cursor to aid in pagination.
+  """
+  edges: [EventOverlapsAttendeeReportEdge!]!
+
+  """A list of `EventOverlapsAttendeeReportRecord` objects."""
+  nodes: [EventOverlapsAttendeeReportRecord!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventOverlapsAttendeeReportRecord` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventOverlapsAttendeeReportRecord` edge in the connection."""
+type EventOverlapsAttendeeReportEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventOverlapsAttendeeReportRecord` at the end of the edge."""
+  node: EventOverlapsAttendeeReportRecord!
+}
+
+type EventOverlapsAttendeeReportRecord {
+  firstEventId: BigInt
+  firstEventName: String
+  firstInstanceId: BigInt
+  firstSince: Datetime
+  firstStatus: AttendanceType
+  firstUntil: Datetime
+  overlapRange: DatetimeRange
+  personId: BigInt
+  personName: String
+  secondEventId: BigInt
+  secondEventName: String
+  secondInstanceId: BigInt
+  secondSince: Datetime
+  secondStatus: AttendanceType
+  secondUntil: Datetime
+}
+
+"""A connection to a list of `EventOverlapsTrainerReportRecord` values."""
+type EventOverlapsTrainerReportConnection {
+  """
+  A list of edges which contains the `EventOverlapsTrainerReportRecord` and cursor to aid in pagination.
+  """
+  edges: [EventOverlapsTrainerReportEdge!]!
+
+  """A list of `EventOverlapsTrainerReportRecord` objects."""
+  nodes: [EventOverlapsTrainerReportRecord!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventOverlapsTrainerReportRecord` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventOverlapsTrainerReportRecord` edge in the connection."""
+type EventOverlapsTrainerReportEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventOverlapsTrainerReportRecord` at the end of the edge."""
+  node: EventOverlapsTrainerReportRecord!
+}
+
+type EventOverlapsTrainerReportRecord {
+  firstAssignmentSource: String
+  firstEventId: BigInt
+  firstEventName: String
+  firstInstanceId: BigInt
+  firstSince: Datetime
+  firstUntil: Datetime
+  overlapRange: DatetimeRange
+  secondAssignmentSource: String
+  secondEventId: BigInt
+  secondEventName: String
+  secondInstanceId: BigInt
+  secondSince: Datetime
+  secondUntil: Datetime
+  trainerId: BigInt
+  trainerName: String
 }
 
 """
@@ -5362,7 +5343,6 @@ type GalerieDir {
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection!
   gdHidden: Boolean!
-  gdId: BigInt!
   gdIdRodic: BigInt!
   gdLevel: Int!
   gdName: String!
@@ -5381,9 +5361,6 @@ for equality and combined with a logical ‘and.’
 input GalerieDirCondition {
   """Checks for equality with the object’s `gdHidden` field."""
   gdHidden: Boolean
-
-  """Checks for equality with the object’s `gdId` field."""
-  gdId: BigInt
 
   """Checks for equality with the object’s `gdIdRodic` field."""
   gdIdRodic: BigInt
@@ -5434,8 +5411,6 @@ type GalerieDirsEdge {
 enum GalerieDirsOrderBy {
   GD_HIDDEN_ASC
   GD_HIDDEN_DESC
-  GD_ID_ASC
-  GD_ID_DESC
   GD_ID_RODIC_ASC
   GD_ID_RODIC_DESC
   GD_LEVEL_ASC
@@ -5486,12 +5461,10 @@ type GalerieFoto {
 
   """Reads a single `GalerieDir` that is related to this `GalerieFoto`."""
   galerieDir: GalerieDir
-  gfId: BigInt!
   gfIdRodic: BigInt!
   gfKdo: BigInt!
   gfName: String!
   gfPath: String!
-  gfTimestamp: Datetime
   id: BigInt!
 
   """Reads a single `Tenant` that is related to this `GalerieFoto`."""
@@ -5511,9 +5484,6 @@ input GalerieFotoCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
-  """Checks for equality with the object’s `gfId` field."""
-  gfId: BigInt
-
   """Checks for equality with the object’s `gfIdRodic` field."""
   gfIdRodic: BigInt
 
@@ -5525,9 +5495,6 @@ input GalerieFotoCondition {
 
   """Checks for equality with the object’s `gfPath` field."""
   gfPath: String
-
-  """Checks for equality with the object’s `gfTimestamp` field."""
-  gfTimestamp: Datetime
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -5569,8 +5536,6 @@ type GalerieFotosEdge {
 enum GalerieFotosOrderBy {
   CREATED_AT_ASC
   CREATED_AT_DESC
-  GF_ID_ASC
-  GF_ID_DESC
   GF_ID_RODIC_ASC
   GF_ID_RODIC_DESC
   GF_KDO_ASC
@@ -5579,8 +5544,6 @@ enum GalerieFotosOrderBy {
   GF_NAME_DESC
   GF_PATH_ASC
   GF_PATH_DESC
-  GF_TIMESTAMP_ASC
-  GF_TIMESTAMP_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -6243,14 +6206,6 @@ type Mutation {
     input: DeleteAktualityInput!
   ): DeleteAktualityPayload
 
-  """Deletes a single `Aktuality` using a unique key."""
-  deleteAktualityById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAktualityByIdInput!
-  ): DeleteAktualityPayload
-
   """Deletes a single `Announcement` using a unique key."""
   deleteAnnouncement(
     """
@@ -6313,14 +6268,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteDokumentyInput!
-  ): DeleteDokumentyPayload
-
-  """Deletes a single `Dokumenty` using a unique key."""
-  deleteDokumentyById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteDokumentyByIdInput!
   ): DeleteDokumentyPayload
 
   """Deletes a single `Event` using a unique key."""
@@ -6559,14 +6506,6 @@ type Mutation {
     input: UpdateAktualityInput!
   ): UpdateAktualityPayload
 
-  """Updates a single `Aktuality` using a unique key and a patch."""
-  updateAktualityById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAktualityByIdInput!
-  ): UpdateAktualityPayload
-
   """Updates a single `Announcement` using a unique key and a patch."""
   updateAnnouncement(
     """
@@ -6623,14 +6562,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateDokumentyInput!
-  ): UpdateDokumentyPayload
-
-  """Updates a single `Dokumenty` using a unique key and a patch."""
-  updateDokumentyById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateDokumentyByIdInput!
   ): UpdateDokumentyPayload
 
   """Updates a single `Event` using a unique key and a patch."""
@@ -8171,10 +8102,7 @@ type Query {
   ): AktualitiesConnection
 
   """Get a single `Aktuality`."""
-  aktuality(atId: BigInt!): Aktuality
-
-  """Get a single `Aktuality`."""
-  aktualityById(id: BigInt!): Aktuality
+  aktuality(id: BigInt!): Aktuality
 
   """Get a single `Announcement`."""
   announcement(id: BigInt!): Announcement
@@ -8445,10 +8373,7 @@ type Query {
   ): [Dokumenty!]
 
   """Get a single `Dokumenty`."""
-  dokumenty(dId: BigInt!): Dokumenty
-
-  """Get a single `Dokumenty`."""
-  dokumentyById(id: BigInt!): Dokumenty
+  dokumenty(id: BigInt!): Dokumenty
 
   """Get a single `Event`."""
   event(id: BigInt!): Event
@@ -8571,6 +8496,56 @@ type Query {
     """The method to use when ordering `EventLessonDemand`."""
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]
+
+  """
+  Reads and enables pagination through a set of `EventOverlapsAttendeeReportRecord`.
+  """
+  eventOverlapsAttendeeReport(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+    pSince: Datetime
+    pUntil: Datetime
+  ): EventOverlapsAttendeeReportConnection
+
+  """
+  Reads and enables pagination through a set of `EventOverlapsTrainerReportRecord`.
+  """
+  eventOverlapsTrainerReport(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+    pSince: Datetime
+    pUntil: Datetime
+  ): EventOverlapsTrainerReportConnection
 
   """Get a single `EventRegistration`."""
   eventRegistration(id: BigInt!): EventRegistration
@@ -8740,10 +8715,7 @@ type Query {
   ): FormResponsesConnection
 
   """Get a single `GalerieDir`."""
-  galerieDir(gdId: BigInt!): GalerieDir
-
-  """Get a single `GalerieDir`."""
-  galerieDirById(id: BigInt!): GalerieDir
+  galerieDir(id: BigInt!): GalerieDir
 
   """Reads and enables pagination through a set of `GalerieDir`."""
   galerieDirs(
@@ -8775,10 +8747,7 @@ type Query {
   ): GalerieDirsConnection
 
   """Get a single `GalerieFoto`."""
-  galerieFoto(gfId: BigInt!): GalerieFoto
-
-  """Get a single `GalerieFoto`."""
-  galerieFotoById(id: BigInt!): GalerieFoto
+  galerieFoto(id: BigInt!): GalerieFoto
 
   """Reads and enables pagination through a set of `GalerieFoto`."""
   galerieFotos(
@@ -9303,46 +9272,8 @@ type Query {
     orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TransactionsConnection
 
-  """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
-  upozorneniSkupinies(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UpozorneniSkupinyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `UpozorneniSkupiny`."""
-    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UpozorneniSkupiniesConnection
-
-  """Get a single `UpozorneniSkupiny`."""
-  upozorneniSkupiny(upsId: BigInt!): UpozorneniSkupiny
-
-  """Get a single `UpozorneniSkupiny`."""
-  upozorneniSkupinyById(id: BigInt!): UpozorneniSkupiny
-
   """Get a single `User`."""
-  user(uId: BigInt!): User
-
-  """Get a single `User`."""
-  userById(id: BigInt!): User
+  user(id: BigInt!): User
 
   """Reads a set of `UserProxy`."""
   userProxiesList(
@@ -10553,35 +10484,6 @@ type Tenant {
     orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TransactionsConnection!
 
-  """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
-  upozorneniSkupinies(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UpozorneniSkupinyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `UpozorneniSkupiny`."""
-    orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UpozorneniSkupiniesConnection!
-
   """Reads and enables pagination through a set of `User`."""
   users(
     """Read all values in the set after (below) this cursor."""
@@ -11410,30 +11312,14 @@ A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/
 """
 scalar UUID
 
-"""All input for the `updateAktualityById` mutation."""
-input UpdateAktualityByIdInput {
+"""All input for the `updateAktuality` mutation."""
+input UpdateAktualityInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
   id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Aktuality` being updated.
-  """
-  patch: AktualityPatch!
-}
-
-"""All input for the `updateAktuality` mutation."""
-input UpdateAktualityInput {
-  atId: BigInt!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
 
   """
   An object where the defined keys will be set on the `Aktuality` being updated.
@@ -11459,7 +11345,7 @@ type UpdateAktualityPayload {
   clientMutationId: String
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFotoByAtFotoMain: GalerieFoto
+  galerieFoto: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -11728,21 +11614,6 @@ type UpdateCouplePayload {
   woman: Person
 }
 
-"""All input for the `updateDokumentyById` mutation."""
-input UpdateDokumentyByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Dokumenty` being updated.
-  """
-  patch: DokumentyPatch!
-}
-
 """All input for the `updateDokumenty` mutation."""
 input UpdateDokumentyInput {
   """
@@ -11750,7 +11621,7 @@ input UpdateDokumentyInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  dId: BigInt!
+  id: BigInt!
 
   """
   An object where the defined keys will be set on the `Dokumenty` being updated.
@@ -11778,7 +11649,7 @@ type UpdateDokumentyPayload {
   tenant: Tenant
 
   """Reads a single `User` that is related to this `Dokumenty`."""
-  userByDKdo: User
+  user: User
 }
 
 """All input for the `updateEventAttendance` mutation."""
@@ -12332,96 +12203,6 @@ type UpdateUserProxyPayload {
   userProxy: UserProxy
 }
 
-"""A connection to a list of `UpozorneniSkupiny` values."""
-type UpozorneniSkupiniesConnection {
-  """
-  A list of edges which contains the `UpozorneniSkupiny` and cursor to aid in pagination.
-  """
-  edges: [UpozorneniSkupiniesEdge!]!
-
-  """A list of `UpozorneniSkupiny` objects."""
-  nodes: [UpozorneniSkupiny!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `UpozorneniSkupiny` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `UpozorneniSkupiny` edge in the connection."""
-type UpozorneniSkupiniesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `UpozorneniSkupiny` at the end of the edge."""
-  node: UpozorneniSkupiny!
-}
-
-"""Methods to use when ordering `UpozorneniSkupiny`."""
-enum UpozorneniSkupiniesOrderBy {
-  ID_ASC
-  ID_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  UPS_COLOR_ASC
-  UPS_COLOR_DESC
-  UPS_ID_ASC
-  UPS_ID_DESC
-  UPS_ID_RODIC_ASC
-  UPS_ID_RODIC_DESC
-  UPS_ID_SKUPINA_ASC
-  UPS_ID_SKUPINA_DESC
-}
-
-type UpozorneniSkupiny {
-  """
-  Reads a single `Announcement` that is related to this `UpozorneniSkupiny`.
-  """
-  announcement: Announcement
-
-  """Reads a single `Cohort` that is related to this `UpozorneniSkupiny`."""
-  cohortByUpsIdSkupina: Cohort
-  id: BigInt!
-
-  """Reads a single `Tenant` that is related to this `UpozorneniSkupiny`."""
-  tenant: Tenant
-  tenantId: BigInt!
-  upsColor: String!
-  upsId: BigInt!
-  upsIdRodic: BigInt!
-  upsIdSkupina: BigInt!
-}
-
-"""
-A condition to be used against `UpozorneniSkupiny` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input UpozorneniSkupinyCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `upsColor` field."""
-  upsColor: String
-
-  """Checks for equality with the object’s `upsId` field."""
-  upsId: BigInt
-
-  """Checks for equality with the object’s `upsIdRodic` field."""
-  upsIdRodic: BigInt
-
-  """Checks for equality with the object’s `upsIdSkupina` field."""
-  upsIdSkupina: BigInt
-}
-
 """All input for the `upsertAnnouncement` mutation."""
 input UpsertAnnouncementInput {
   audiences: [AnnouncementAudienceTypeInputRecordInput]
@@ -12715,11 +12496,9 @@ type User {
   tenantId: BigInt!
   uCreatedAt: Datetime!
   uEmail: String!
-  uId: BigInt!
   uJmeno: String
   uLogin: String
   uPrijmeni: String
-  uTimestamp: Datetime
   updatedAt: Datetime!
 
   """Reads and enables pagination through a set of `UserProxy`."""
@@ -12768,9 +12547,6 @@ input UserCondition {
   """Checks for equality with the object’s `uEmail` field."""
   uEmail: String
 
-  """Checks for equality with the object’s `uId` field."""
-  uId: BigInt
-
   """Checks for equality with the object’s `uJmeno` field."""
   uJmeno: String
 
@@ -12779,9 +12555,6 @@ input UserCondition {
 
   """Checks for equality with the object’s `uPrijmeni` field."""
   uPrijmeni: String
-
-  """Checks for equality with the object’s `uTimestamp` field."""
-  uTimestamp: Datetime
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
@@ -12938,14 +12711,10 @@ enum UsersOrderBy {
   U_CREATED_AT_DESC
   U_EMAIL_ASC
   U_EMAIL_DESC
-  U_ID_ASC
-  U_ID_DESC
   U_JMENO_ASC
   U_JMENO_DESC
   U_LOGIN_ASC
   U_LOGIN_DESC
   U_PRIJMENI_ASC
   U_PRIJMENI_DESC
-  U_TIMESTAMP_ASC
-  U_TIMESTAMP_DESC
 }

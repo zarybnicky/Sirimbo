@@ -19,7 +19,7 @@ ALTER TABLE public.announcement ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.announcement
     ADD CONSTRAINT announcement_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.announcement
-    ADD CONSTRAINT announcement_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT announcement_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.announcement
     ADD CONSTRAINT announcement_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 

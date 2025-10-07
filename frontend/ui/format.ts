@@ -37,7 +37,7 @@ export const formatDefaultEventName = (event: {
     event.type === 'GROUP' ? 'Společná' :
     event.type === 'LESSON' ? (event.eventRegistrations.nodes.length > 0 ? event.eventRegistrations.nodes.map(formatRegistrant).join(', ') : 'VOLNO') :
     event.type === 'RESERVATION' ? `Nabídka: ${event.eventTrainersList.map(x => x.name).join(', ')}` :
-    'Prázdiny'
+    'Prázdniny'
   );
 }
 

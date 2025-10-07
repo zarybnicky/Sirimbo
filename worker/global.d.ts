@@ -1,5 +1,10 @@
 namespace GraphileWorker {
   interface Tasks {
+    notify_announcement: {
+      announcement_id: number;
+      user_ids: number[];
+    };
+
     send_invitation: {
       id: string;
     };

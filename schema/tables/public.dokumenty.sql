@@ -1,12 +1,11 @@
 CREATE TABLE public.dokumenty (
-    d_id bigint NOT NULL,
+    id bigint NOT NULL,
     d_path text NOT NULL,
     d_name text NOT NULL,
     d_filename text NOT NULL,
     d_kategorie smallint NOT NULL,
     d_kdo bigint NOT NULL,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    id bigint GENERATED ALWAYS AS (d_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     d_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
@@ -18,11 +17,9 @@ GRANT ALL ON TABLE public.dokumenty TO anonymous;
 ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.dokumenty
-    ADD CONSTRAINT dokumenty_unique_id UNIQUE (id);
+    ADD CONSTRAINT idx_23771_primary PRIMARY KEY (id);
 ALTER TABLE ONLY public.dokumenty
-    ADD CONSTRAINT idx_23771_primary PRIMARY KEY (d_id);
-ALTER TABLE ONLY public.dokumenty
-    ADD CONSTRAINT dokumenty_d_kdo_fkey FOREIGN KEY (d_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT dokumenty_d_kdo_fkey FOREIGN KEY (d_kdo) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.dokumenty
     ADD CONSTRAINT dokumenty_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 

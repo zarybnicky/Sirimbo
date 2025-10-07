@@ -2,7 +2,7 @@ import {
   EditRegistrationDocument,
   type EventFragment,
   type EventRegistrationFragment,
-  SetLessonDemandDocument
+  SetLessonDemandDocument,
 } from '@/graphql/Event';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';
@@ -11,20 +11,23 @@ import { SubmitButton } from '@/ui/submit';
 import { Minus, Plus } from 'lucide-react';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
+import { useZodForm } from '@/lib/use-schema-form';
+import { type TypeOf, z } from 'zod';
 
-type FormProps = {
-  note: string;
-};
+const Form = z.object({
+  note: z.string().default(''),
+});
+
+type FormValues = TypeOf<typeof Form>;
 
 export function MyRegistrationForm({ event, registration }: {
   event: EventFragment;
   registration: EventRegistrationFragment;
 }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useForm<FormProps>();
+  const { reset, control, handleSubmit } = useZodForm(Form);
   const edit = useMutation(EditRegistrationDocument)[1];
   const [{ fetching }, setMutation] = useMutation(SetLessonDemandDocument);
 
@@ -57,7 +60,7 @@ export function MyRegistrationForm({ event, registration }: {
     [setMutation, registration, myLessons]
   );
 
-  const onSubmit = useAsyncCallback(async ({ note }: FormProps) => {
+  const onSubmit = useAsyncCallback(async ({ note }: FormValues) => {
     await edit({ input: { registrationId: registration.id, note } });
     toast.success('Úprava přihlášky proběhla úspěšně.');
     onSuccess();

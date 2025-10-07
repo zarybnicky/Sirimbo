@@ -65,7 +65,7 @@ export default function InvitationPage() {
                 <>
                   Pokud jste se již registrovali,
                   {' '}
-                  <Link href="/dashboard">přihlašte se zde</Link>.
+                  <Link href="/dashboard">přihlaste se zde</Link>.
                 </>
               }
             />
@@ -78,7 +78,7 @@ export default function InvitationPage() {
                 <>
                   Pokud jste se již registrovali,
                   {' '}
-                  <Link href="/dashboard">přihlašte se zde</Link>.
+                  <Link href="/dashboard">přihlaste se zde</Link>.
                 </>
               }
             />

@@ -17,9 +17,9 @@ interface Props {
   className?: string;
 }
 
-export function AnnouncementAudienceBadges({ audiences, cohorts, roles, className }: Props) {
-  const derivedCohorts = collectCohorts(audiences, cohorts);
-  const derivedRoles = collectRoles(audiences, roles);
+export function AnnouncementAudienceBadges({ audiences, className }: Props) {
+  const derivedCohorts = audiences?.map(x => x.cohort).filter(truthyFilter) || [];
+  const derivedRoles = audiences?.map(x => x.audienceRole).filter(truthyFilter) || [];
 
   const hasCohorts = derivedCohorts.length > 0;
   const hasRoles = derivedRoles.length > 0;
@@ -60,26 +60,3 @@ export function AnnouncementAudienceBadges({ audiences, cohorts, roles, classNam
     </div>
   );
 }
-
-function collectCohorts(
-  audiences?: AnnouncementAudienceFragment[],
-  cohorts?: (CohortBasicFragment | null | undefined)[] | null,
-) {
-  const results: Map<string, CohortBasicFragment> = new Map([
-    ...cohorts?.filter(truthyFilter).map(x => [x.id, x] as const) || [],
-    ...audiences?.map(x => x.cohort).filter(truthyFilter)?.map(x => [x.id, x] as const) || [],
-  ]);
-  return [...results.values()];
-}
-
-function collectRoles(
-  audiences?: AnnouncementAudienceFragment[],
-  roles?: (AnnouncementAudienceRole | null | undefined)[] | null,
-) {
-  const seen = new Set<AnnouncementAudienceRole>([
-    ...roles?.filter(truthyFilter) || [],
-    ...audiences?.map(x => x.audienceRole).filter(truthyFilter) || [],
-  ]);
-  return [...seen];
-}
-

@@ -1,5 +1,5 @@
 CREATE TABLE public.aktuality (
-    at_id bigint NOT NULL,
+    id bigint NOT NULL,
     at_kdo bigint,
     at_kat text DEFAULT '1'::text NOT NULL,
     at_jmeno text NOT NULL,
@@ -9,11 +9,8 @@ CREATE TABLE public.aktuality (
     at_foto_main bigint,
     updated_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now(),
-    id bigint GENERATED ALWAYS AS (at_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    title_photo_url text,
-    at_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED NOT NULL,
-    at_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
+    title_photo_url text
 );
 
 COMMENT ON COLUMN public.aktuality.at_kat IS '@deprecated';
@@ -22,13 +19,11 @@ GRANT ALL ON TABLE public.aktuality TO anonymous;
 ALTER TABLE public.aktuality ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT aktuality_unique_id UNIQUE (id);
+    ADD CONSTRAINT idx_23753_primary PRIMARY KEY (id);
 ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT idx_23753_primary PRIMARY KEY (at_id);
+    ADD CONSTRAINT aktuality_at_foto_main_fkey FOREIGN KEY (at_foto_main) REFERENCES public.galerie_foto(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT aktuality_at_foto_main_fkey FOREIGN KEY (at_foto_main) REFERENCES public.galerie_foto(gf_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT aktuality_at_kdo_fkey FOREIGN KEY (at_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT aktuality_at_kdo_fkey FOREIGN KEY (at_kdo) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT aktuality_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 

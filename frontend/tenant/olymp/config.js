@@ -10,4 +10,5 @@ module.exports = {
   themePrimary: '#ed1734',
   themeAccent: 'red',
   themeNeutral: 'gray',
+  facebookPixelId: '704526480597551',
 };

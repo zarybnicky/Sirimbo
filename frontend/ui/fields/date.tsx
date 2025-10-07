@@ -122,7 +122,7 @@ export function DatePickerElement<T extends FieldValues>({
             selected={field.value}
             onSelect={(date) => {
               field.onChange(date);
-              setInput(toDatetimeLocal(new Date(field.value)));
+              setInput(date ? toDatetimeLocal(date) : '');
             }}
             locale={cs}
           />

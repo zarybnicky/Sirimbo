@@ -141,17 +141,8 @@ CREATE TYPE public.announcement_audience_role AS ENUM (
 
 CREATE TYPE public.announcement_audience_type_input AS (
 	id bigint,
+	cohort_id bigint,
 	audience_role public.announcement_audience_role
-);
-
-
---
--- Name: announcement_cohort_type_input; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.announcement_cohort_type_input AS (
-	id bigint,
-	cohort_id bigint
 );
 
 
@@ -617,7 +608,7 @@ $$;
 --
 
 CREATE TABLE public.users (
-    u_id bigint NOT NULL,
+    id bigint NOT NULL,
     u_login public.citext,
     u_pass character(40) NOT NULL,
     u_jmeno text,
@@ -627,11 +618,9 @@ CREATE TABLE public.users (
     u_ban boolean DEFAULT true NOT NULL,
     u_confirmed boolean DEFAULT false NOT NULL,
     u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    id bigint GENERATED ALWAYS AS (u_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     last_login timestamp with time zone,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    u_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED,
     last_active_at timestamp with time zone,
     last_version text
 );
@@ -1048,6 +1037,113 @@ $$;
 
 
 --
+-- Name: queue_announcement_notifications(bigint); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+declare
+  v_tenant_id bigint;
+  v_is_visible boolean;
+  v_since timestamptz;
+  v_until timestamptz;
+  v_user_ids bigint[];
+begin
+  select tenant_id,
+         coalesce(is_visible, false),
+         scheduled_since,
+         scheduled_until
+  into v_tenant_id,
+    v_is_visible,
+    v_since,
+    v_until
+  from announcement
+  where id = in_announcement_id;
+
+  if not found then
+    return;
+  end if;
+
+  if not (v_is_visible
+      and (v_since is null or v_since <= now())
+      and (v_until is null or v_until > now())) then
+    return;
+  end if;
+
+  with role_flags as (
+    select
+      coalesce(bool_or(audience_role = 'member'), false) as has_member,
+      coalesce(bool_or(audience_role = 'trainer'), false) as has_trainer,
+      coalesce(bool_or(audience_role = 'administrator'), false) as has_administrator
+    from announcement_audience
+    where announcement_id = in_announcement_id
+      and audience_role is not null
+  ),
+  role_people as (
+    select distinct ad.person_id
+    from auth_details ad
+    join role_flags rf on rf.has_member or rf.has_trainer or rf.has_administrator
+    where (
+      rf.has_member and v_tenant_id = any (coalesce(ad.tenant_memberships, '{}'::bigint[]))
+    ) or (
+      rf.has_trainer and v_tenant_id = any (coalesce(ad.tenant_trainers, '{}'::bigint[]))
+    ) or (
+      rf.has_administrator and v_tenant_id = any (coalesce(ad.tenant_administrators, '{}'::bigint[]))
+    )
+  ),
+  role_users as (
+    select distinct u.u_id as user_id
+    from role_people rp
+    join user_proxy up on up.person_id = rp.person_id and up.active
+    join users u on u.u_id = up.user_id
+    where u.tenant_id = v_tenant_id
+  ),
+  cohort_users as (
+    select distinct u.u_id as user_id
+    from announcement_audience aa
+    join cohort_membership cm
+      on cm.cohort_id = aa.cohort_id
+     and cm.active
+    join user_proxy up on up.person_id = cm.person_id and up.active
+    join users u on u.u_id = up.user_id
+    where aa.announcement_id = in_announcement_id
+      and aa.cohort_id is not null
+      and aa.tenant_id = v_tenant_id
+      and cm.tenant_id = v_tenant_id
+      and u.tenant_id = v_tenant_id
+  )
+  select array_agg(distinct user_id order by user_id)
+  into v_user_ids
+  from (
+    select user_id from role_users
+    union
+    select user_id from cohort_users
+  ) recipients;
+
+  if v_user_ids is null or array_length(v_user_ids, 1) = 0 then
+    return;
+  end if;
+
+  perform graphile_worker.add_job(
+    'notify_announcement',
+    json_build_object(
+      'announcement_id', in_announcement_id,
+      'user_ids', v_user_ids
+    )
+  );
+end;
+$$;
+
+
+--
+-- Name: FUNCTION queue_announcement_notifications(in_announcement_id bigint); Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) IS '@omit';
+
+
+--
 -- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1143,7 +1239,7 @@ $$;
 --
 
 CREATE FUNCTION app_private.tg_announcement__after_write() RETURNS trigger
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare
@@ -1176,7 +1272,7 @@ begin
     end if;
 
     if is_published and not was_published then
-      perform queue_announcement_notifications(rec.id);
+      perform app_private.queue_announcement_notifications(rec.id);
     end if;
   end loop;
 
@@ -1190,7 +1286,7 @@ $$;
 --
 
 CREATE FUNCTION app_private.tg_announcement_audience__after_write() RETURNS trigger
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare
@@ -1200,13 +1296,13 @@ begin
     for rec in (
       select distinct announcement_id from oldtable
     ) loop
-      perform queue_announcement_notifications(rec.announcement_id);
+      perform app_private.queue_announcement_notifications(rec.announcement_id);
     end loop;
   else
     for rec in (
       select distinct announcement_id from newtable
     ) loop
-      perform queue_announcement_notifications(rec.announcement_id);
+      perform app_private.queue_announcement_notifications(rec.announcement_id);
     end loop;
   end if;
   return null;
@@ -2617,6 +2713,158 @@ COMMENT ON FUNCTION public.event_my_registrations(e public.event) IS '@simpleCol
 
 
 --
+-- Name: event_overlaps_attendee_report(timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS TABLE(person_id bigint, person_name text, first_instance_id bigint, first_event_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, first_status public.attendance_type, second_instance_id bigint, second_event_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, second_status public.attendance_type, overlap_range tstzrange)
+    LANGUAGE sql STABLE
+    AS $$
+  with target_range as (
+    select tstzrange(
+      coalesce(p_since, '-infinity'::timestamptz),
+      coalesce(p_until, 'infinity'::timestamptz),
+      '[]'
+    ) as range
+  ),
+  instances as (
+    select
+      ea.person_id,
+      p.name as person_name,
+      ei.id as instance_id,
+      ei.since,
+      ei.until,
+      ei.range,
+      e.id as event_id,
+      e.name as event_name,
+      ea.status
+    from public.event_attendance ea
+    join public.event_instance ei on ei.id = ea.instance_id
+    join public.event e on e.id = ei.event_id
+    join public.person p on p.id = ea.person_id
+    join target_range tr on true
+    where
+      ei.tenant_id = public.current_tenant_id()
+      and not ei.is_cancelled
+      and ea.status <> 'cancelled'
+      and ei.range && tr.range
+  )
+  select
+    i1.person_id,
+    i1.person_name,
+    i1.instance_id as first_instance_id,
+    i1.event_id as first_event_id,
+    i1.event_name as first_event_name,
+    i1.since as first_since,
+    i1.until as first_until,
+    i1.status as first_status,
+    i2.instance_id as second_instance_id,
+    i2.event_id as second_event_id,
+    i2.event_name as second_event_name,
+    i2.since as second_since,
+    i2.until as second_until,
+    i2.status as second_status,
+    tstzrange(
+      greatest(i1.since, i2.since),
+      least(i1.until, i2.until),
+      '[]'
+    ) as overlap_range
+  from instances i1
+  join instances i2 on i1.person_id = i2.person_id
+    and i1.instance_id < i2.instance_id
+    and i1.range && i2.range
+    and greatest(i1.since, i2.since) < least(i1.until, i2.until);
+$$;
+
+
+--
+-- Name: event_overlaps_trainer_report(timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS TABLE(trainer_id bigint, trainer_name text, first_instance_id bigint, first_event_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, first_assignment_source text, second_instance_id bigint, second_event_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, second_assignment_source text, overlap_range tstzrange)
+    LANGUAGE sql STABLE
+    AS $$
+  with target_range as (
+    select tstzrange(
+      coalesce(p_since, '-infinity'::timestamptz),
+      coalesce(p_until, 'infinity'::timestamptz),
+      '[]'
+    ) as range
+  ),
+  instance_assignments as (
+    select
+      eit.person_id,
+      eit.instance_id,
+      'instance'::text as assignment_source
+    from public.event_instance_trainer eit
+  ),
+  event_assignments as (
+    select
+      et.person_id,
+      ei.id as instance_id,
+      'event'::text as assignment_source
+    from public.event_trainer et
+    join public.event_instance ei on ei.event_id = et.event_id
+    where not exists (
+      select 1
+      from public.event_instance_trainer eit
+      where eit.instance_id = ei.id
+    )
+  ),
+  assignments as (
+    select * from instance_assignments
+    union all
+    select * from event_assignments
+  ),
+  trainer_instances as (
+    select
+      a.person_id,
+      p.name as trainer_name,
+      ei.id as instance_id,
+      ei.since,
+      ei.until,
+      ei.range,
+      e.id as event_id,
+      e.name as event_name,
+      a.assignment_source
+    from assignments a
+    join public.event_instance ei on ei.id = a.instance_id
+    join public.event e on e.id = ei.event_id
+    join public.person p on p.id = a.person_id
+    join target_range tr on true
+    where
+      ei.tenant_id = public.current_tenant_id()
+      and not ei.is_cancelled
+      and ei.range && tr.range
+  )
+  select
+    ti1.person_id as trainer_id,
+    ti1.trainer_name,
+    ti1.instance_id as first_instance_id,
+    ti1.event_id as first_event_id,
+    ti1.event_name as first_event_name,
+    ti1.since as first_since,
+    ti1.until as first_until,
+    ti1.assignment_source as first_assignment_source,
+    ti2.instance_id as second_instance_id,
+    ti2.event_id as second_event_id,
+    ti2.event_name as second_event_name,
+    ti2.since as second_since,
+    ti2.until as second_until,
+    ti2.assignment_source as second_assignment_source,
+    tstzrange(
+      greatest(ti1.since, ti2.since),
+      least(ti1.until, ti2.until),
+      '[]'
+    ) as overlap_range
+  from trainer_instances ti1
+  join trainer_instances ti2 on ti1.person_id = ti2.person_id
+    and ti1.instance_id < ti2.instance_id
+    and ti1.range && ti2.range
+    and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
+$$;
+
+
+--
 -- Name: event_registrants(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2967,11 +3215,38 @@ $$;
 CREATE FUNCTION public.my_announcements(archive boolean DEFAULT false, order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
     LANGUAGE sql STABLE
     AS $$
+  with audience_claims as (
+    select
+      translate(coalesce(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '[]'), '[]', '{}')::bigint[] as cohort_ids,
+      coalesce(nullif(current_setting('jwt.claims.is_member', true), '')::boolean, false) as is_member,
+      coalesce(nullif(current_setting('jwt.claims.is_trainer', true), '')::boolean, false) as is_trainer,
+      coalesce(nullif(current_setting('jwt.claims.is_admin', true), '')::boolean, false) as is_admin
+  )
   select announcement.*
-  from public.announcement
-  where is_visible = not archive and is_sticky = false
+  from announcement
+  cross join audience_claims ac
+  where is_visible = not archive
+    and is_sticky = false
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
+    and (
+      not exists (
+        select 1
+        from announcement_audience aa_all
+        where aa_all.announcement_id = announcement.id
+      )
+      or exists (
+        select 1
+        from announcement_audience aa
+        where aa.announcement_id = announcement.id
+          and (
+            (aa.cohort_id is not null and aa.cohort_id = any (ac.cohort_ids))
+            or (aa.audience_role = 'member' and ac.is_member)
+            or (aa.audience_role = 'trainer' and ac.is_trainer)
+            or (aa.audience_role = 'administrator' and ac.is_admin)
+          )
+      )
+    )
   order by
     case when order_by_updated then updated_at else created_at end desc,
     created_at desc;
@@ -3492,113 +3767,6 @@ COMMENT ON FUNCTION public.post_without_cache(input_url text, data jsonb, header
 
 
 --
--- Name: queue_announcement_notifications(bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.queue_announcement_notifications(in_announcement_id bigint) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-declare
-  v_tenant_id bigint;
-  v_is_visible boolean;
-  v_since timestamptz;
-  v_until timestamptz;
-  v_user_ids bigint[];
-begin
-  select tenant_id,
-         coalesce(is_visible, false),
-         scheduled_since,
-         scheduled_until
-  into v_tenant_id,
-    v_is_visible,
-    v_since,
-    v_until
-  from announcement
-  where id = in_announcement_id;
-
-  if not found then
-    return;
-  end if;
-
-  if not (v_is_visible
-      and (v_since is null or v_since <= now())
-      and (v_until is null or v_until > now())) then
-    return;
-  end if;
-
-  with role_flags as (
-    select
-      coalesce(bool_or(audience_role = 'member'), false) as has_member,
-      coalesce(bool_or(audience_role = 'trainer'), false) as has_trainer,
-      coalesce(bool_or(audience_role = 'administrator'), false) as has_administrator
-    from announcement_audience
-    where announcement_id = in_announcement_id
-      and audience_role is not null
-  ),
-  role_people as (
-    select distinct ad.person_id
-    from auth_details ad
-    join role_flags rf on rf.has_member or rf.has_trainer or rf.has_administrator
-    where (
-      rf.has_member and v_tenant_id = any (coalesce(ad.tenant_memberships, '{}'::bigint[]))
-    ) or (
-      rf.has_trainer and v_tenant_id = any (coalesce(ad.tenant_trainers, '{}'::bigint[]))
-    ) or (
-      rf.has_administrator and v_tenant_id = any (coalesce(ad.tenant_administrators, '{}'::bigint[]))
-    )
-  ),
-  role_users as (
-    select distinct u.u_id as user_id
-    from role_people rp
-    join user_proxy up on up.person_id = rp.person_id and up.active
-    join users u on u.u_id = up.user_id
-    where u.tenant_id = v_tenant_id
-  ),
-  cohort_users as (
-    select distinct u.u_id as user_id
-    from announcement_audience aa
-    join cohort_membership cm
-      on cm.cohort_id = aa.cohort_id
-     and cm.active
-    join user_proxy up on up.person_id = cm.person_id and up.active
-    join users u on u.u_id = up.user_id
-    where aa.announcement_id = in_announcement_id
-      and aa.cohort_id is not null
-      and aa.tenant_id = v_tenant_id
-      and cm.tenant_id = v_tenant_id
-      and u.tenant_id = v_tenant_id
-  )
-  select array_agg(distinct user_id order by user_id)
-  into v_user_ids
-  from (
-    select user_id from role_users
-    union
-    select user_id from cohort_users
-  ) recipients;
-
-  if v_user_ids is null or array_length(v_user_ids, 1) = 0 then
-    return;
-  end if;
-
-  perform graphile_worker.add_job(
-    'notify_announcement',
-    json_build_object(
-      'announcement_id', in_announcement_id,
-      'user_ids', v_user_ids
-    )
-  );
-end;
-$$;
-
-
---
--- Name: FUNCTION queue_announcement_notifications(in_announcement_id bigint); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.queue_announcement_notifications(in_announcement_id bigint) IS '@omit';
-
-
---
 -- Name: refresh_jwt(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3942,11 +4110,38 @@ $$;
 CREATE FUNCTION public.sticky_announcements(order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
     LANGUAGE sql STABLE
     AS $$
+  with audience_claims as (
+    select
+      translate(coalesce(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '[]'), '[]', '{}')::bigint[] as cohort_ids,
+      coalesce(nullif(current_setting('jwt.claims.is_member', true), '')::boolean, false) as is_member,
+      coalesce(nullif(current_setting('jwt.claims.is_trainer', true), '')::boolean, false) as is_trainer,
+      coalesce(nullif(current_setting('jwt.claims.is_admin', true), '')::boolean, false) as is_admin
+  )
   select announcement.*
-  from public.announcement
-  where is_visible = true and is_sticky = true
+  from announcement
+  cross join audience_claims ac
+  where is_visible = true
+    and is_sticky = true
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
+    and (
+      not exists (
+        select 1
+        from announcement_audience aa_all
+        where aa_all.announcement_id = announcement.id
+      )
+      or exists (
+        select 1
+        from announcement_audience aa
+        where aa.announcement_id = announcement.id
+          and (
+            (aa.cohort_id is not null and aa.cohort_id = any (ac.cohort_ids))
+            or (aa.audience_role = 'member' and ac.is_member)
+            or (aa.audience_role = 'trainer' and ac.is_trainer)
+            or (aa.audience_role = 'administrator' and ac.is_admin)
+          )
+      )
+    )
   order by
     case when order_by_updated then updated_at else created_at end desc,
     created_at desc;
@@ -4147,10 +4342,10 @@ $$;
 
 
 --
--- Name: upsert_announcement(public.announcement_type_input, public.announcement_cohort_type_input[], public.announcement_audience_type_input[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: upsert_announcement(public.announcement_type_input, public.announcement_audience_type_input[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.upsert_announcement(info public.announcement_type_input, cohorts public.announcement_cohort_type_input[] DEFAULT NULL::public.announcement_cohort_type_input[], audiences public.announcement_audience_type_input[] DEFAULT NULL::public.announcement_audience_type_input[]) RETURNS public.announcement
+CREATE FUNCTION public.upsert_announcement(info public.announcement_type_input, audiences public.announcement_audience_type_input[] DEFAULT NULL::public.announcement_audience_type_input[]) RETURNS public.announcement
     LANGUAGE plpgsql
     AS $$
 declare
@@ -4193,75 +4388,66 @@ begin
     returning * into v_announcement;
   end if;
 
-  if cohorts is not null then
-    with cohort_input as (
-      select distinct (c).id as id, (c).cohort_id as cohort_id
-      from unnest(cohorts) c
+  if audiences is not null then
+    with audience_input as (
+      select distinct
+        (a).id as id,
+        (a).cohort_id as cohort_id,
+        (a).audience_role as audience_role
+      from unnest(audiences) a
     )
     delete from announcement_audience aa
-    using cohort_input ci
+    using audience_input ai
     where aa.announcement_id = v_announcement.id
-      and aa.id = ci.id
-      and ci.id is not null
-      and ci.cohort_id is null;
+      and aa.id = ai.id
+      and ai.id is not null
+      and ai.cohort_id is null
+      and ai.audience_role is null;
 
-    with cohort_input as (
-      select distinct (c).id as id, (c).cohort_id as cohort_id
-      from unnest(cohorts) c
+    with audience_input as (
+      select distinct
+        (a).id as id,
+        (a).cohort_id as cohort_id,
+        (a).audience_role as audience_role
+      from unnest(audiences) a
     )
     update announcement_audience aa
-    set cohort_id = ci.cohort_id
-    from cohort_input ci
+    set cohort_id = ai.cohort_id,
+        audience_role = ai.audience_role
+    from audience_input ai
     where aa.announcement_id = v_announcement.id
-      and aa.id = ci.id
-      and ci.id is not null
-      and ci.cohort_id is not null
-      and aa.cohort_id is distinct from ci.cohort_id;
+      and aa.id = ai.id
+      and ai.id is not null
+      and ((ai.cohort_id is not null and ai.audience_role is null) or (ai.cohort_id is null and ai.audience_role is not null))
+      and (
+        aa.cohort_id is distinct from ai.cohort_id or
+        aa.audience_role is distinct from ai.audience_role
+      );
 
-    with cohort_input as (
-      select distinct (c).cohort_id as cohort_id
-      from unnest(cohorts) c
-      where (c).id is null and (c).cohort_id is not null
+    with audience_input as (
+      select distinct
+        (a).cohort_id as cohort_id
+      from unnest(audiences) a
+      where (a).id is null
+        and (a).cohort_id is not null
+        and (a).audience_role is null
     )
     insert into announcement_audience (announcement_id, cohort_id)
-    select v_announcement.id, ci.cohort_id
-    from cohort_input ci
+    select v_announcement.id, ai.cohort_id
+    from audience_input ai
     on conflict (announcement_id, cohort_id) do nothing;
-  end if;
 
-  if audiences is not null then
-    with role_input as (
-      select distinct (a).id as id, (a).audience_role as audience_role
+    with audience_input as (
+      select distinct
+        (a).audience_role as audience_role
       from unnest(audiences) a
-    )
-    delete from announcement_audience aa
-    using role_input ri
-    where aa.announcement_id = v_announcement.id
-      and aa.id = ri.id
-      and ri.id is not null
-      and ri.audience_role is null;
-
-    with role_input as (
-      select distinct (a).id as id, (a).audience_role as audience_role
-      from unnest(audiences) a
-    )
-    update announcement_audience aa
-    set audience_role = ri.audience_role
-    from role_input ri
-    where aa.announcement_id = v_announcement.id
-      and aa.id = ri.id
-      and ri.id is not null
-      and ri.audience_role is not null
-      and aa.audience_role is distinct from ri.audience_role;
-
-    with role_input as (
-      select distinct (a).audience_role as audience_role
-      from unnest(audiences) a
-      where (a).id is null and (a).audience_role is not null
+      where (a).id is null
+        and (a).cohort_id is null
+        and (a).audience_role is not null
     )
     insert into announcement_audience (announcement_id, audience_role)
-    select v_announcement.id, ri.audience_role
-    from role_input ri
+    select v_announcement.id, ai.audience_role
+    from audience_input ai
     on conflict (announcement_id, audience_role) do nothing;
   end if;
 
@@ -4586,7 +4772,7 @@ ALTER TABLE public.accounting_period ALTER COLUMN id ADD GENERATED BY DEFAULT AS
 --
 
 CREATE TABLE public.aktuality (
-    at_id bigint NOT NULL,
+    id bigint NOT NULL,
     at_kdo bigint,
     at_kat text DEFAULT '1'::text NOT NULL,
     at_jmeno text NOT NULL,
@@ -4596,11 +4782,8 @@ CREATE TABLE public.aktuality (
     at_foto_main bigint,
     updated_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now(),
-    id bigint GENERATED ALWAYS AS (at_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    title_photo_url text,
-    at_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED NOT NULL,
-    at_timestamp_add timestamp with time zone GENERATED ALWAYS AS (created_at) STORED NOT NULL
+    title_photo_url text
 );
 
 
@@ -4627,7 +4810,7 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 -- Name: aktuality_at_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.at_id;
+ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.id;
 
 
 --
@@ -4885,14 +5068,13 @@ ALTER TABLE public.couple ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE public.dokumenty (
-    d_id bigint NOT NULL,
+    id bigint NOT NULL,
     d_path text NOT NULL,
     d_name text NOT NULL,
     d_filename text NOT NULL,
     d_kategorie smallint NOT NULL,
     d_kdo bigint NOT NULL,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    id bigint GENERATED ALWAYS AS (d_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     d_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
@@ -4922,7 +5104,7 @@ CREATE SEQUENCE public.dokumenty_d_id_seq
 -- Name: dokumenty_d_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.dokumenty_d_id_seq OWNED BY public.dokumenty.d_id;
+ALTER SEQUENCE public.dokumenty_d_id_seq OWNED BY public.dokumenty.id;
 
 
 --
@@ -5124,13 +5306,12 @@ ALTER TABLE public.form_responses ALTER COLUMN id ADD GENERATED BY DEFAULT AS ID
 --
 
 CREATE TABLE public.galerie_dir (
-    gd_id bigint NOT NULL,
+    id bigint NOT NULL,
     gd_id_rodic bigint NOT NULL,
     gd_name text NOT NULL,
     gd_level smallint DEFAULT '1'::smallint NOT NULL,
     gd_path text NOT NULL,
     gd_hidden boolean DEFAULT true NOT NULL,
-    id bigint GENERATED ALWAYS AS (gd_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
@@ -5158,7 +5339,7 @@ CREATE SEQUENCE public.galerie_dir_gd_id_seq
 -- Name: galerie_dir_gd_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.galerie_dir_gd_id_seq OWNED BY public.galerie_dir.gd_id;
+ALTER SEQUENCE public.galerie_dir_gd_id_seq OWNED BY public.galerie_dir.id;
 
 
 --
@@ -5166,16 +5347,14 @@ ALTER SEQUENCE public.galerie_dir_gd_id_seq OWNED BY public.galerie_dir.gd_id;
 --
 
 CREATE TABLE public.galerie_foto (
-    gf_id bigint NOT NULL,
+    id bigint NOT NULL,
     gf_id_rodic bigint NOT NULL,
     gf_name text NOT NULL,
     gf_path text NOT NULL,
     gf_kdo bigint NOT NULL,
     updated_at timestamp with time zone,
-    id bigint GENERATED ALWAYS AS (gf_id) STORED NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    gf_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -5202,7 +5381,7 @@ CREATE SEQUENCE public.galerie_foto_gf_id_seq
 -- Name: galerie_foto_gf_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.galerie_foto_gf_id_seq OWNED BY public.galerie_foto.gf_id;
+ALTER SEQUENCE public.galerie_foto_gf_id_seq OWNED BY public.galerie_foto.id;
 
 
 --
@@ -5900,46 +6079,6 @@ ALTER TABLE public.transaction ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENT
 
 
 --
--- Name: upozorneni_skupiny; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.upozorneni_skupiny (
-    ups_id bigint NOT NULL,
-    ups_id_rodic bigint NOT NULL,
-    ups_id_skupina bigint NOT NULL,
-    ups_color text NOT NULL,
-    id bigint GENERATED ALWAYS AS (ups_id) STORED NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE upozorneni_skupiny; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.upozorneni_skupiny IS '@omit create,update,delete';
-
-
---
--- Name: upozorneni_skupiny_ups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.upozorneni_skupiny_ups_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: upozorneni_skupiny_ups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.upozorneni_skupiny_ups_id_seq OWNED BY public.upozorneni_skupiny.ups_id;
-
-
---
 -- Name: user_proxy; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6001,35 +6140,35 @@ CREATE SEQUENCE public.users_u_id_seq
 -- Name: users_u_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.users_u_id_seq OWNED BY public.users.u_id;
+ALTER SEQUENCE public.users_u_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: aktuality at_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: aktuality id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.aktuality ALTER COLUMN at_id SET DEFAULT nextval('public.aktuality_at_id_seq'::regclass);
-
-
---
--- Name: dokumenty d_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.dokumenty ALTER COLUMN d_id SET DEFAULT nextval('public.dokumenty_d_id_seq'::regclass);
+ALTER TABLE ONLY public.aktuality ALTER COLUMN id SET DEFAULT nextval('public.aktuality_at_id_seq'::regclass);
 
 
 --
--- Name: galerie_dir gd_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: dokumenty id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.galerie_dir ALTER COLUMN gd_id SET DEFAULT nextval('public.galerie_dir_gd_id_seq'::regclass);
+ALTER TABLE ONLY public.dokumenty ALTER COLUMN id SET DEFAULT nextval('public.dokumenty_d_id_seq'::regclass);
 
 
 --
--- Name: galerie_foto gf_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: galerie_dir id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.galerie_foto ALTER COLUMN gf_id SET DEFAULT nextval('public.galerie_foto_gf_id_seq'::regclass);
+ALTER TABLE ONLY public.galerie_dir ALTER COLUMN id SET DEFAULT nextval('public.galerie_dir_gd_id_seq'::regclass);
+
+
+--
+-- Name: galerie_foto id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.galerie_foto ALTER COLUMN id SET DEFAULT nextval('public.galerie_foto_gf_id_seq'::regclass);
 
 
 --
@@ -6089,17 +6228,10 @@ ALTER TABLE ONLY public.platby_raw ALTER COLUMN pr_id SET DEFAULT nextval('publi
 
 
 --
--- Name: upozorneni_skupiny ups_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.upozorneni_skupiny ALTER COLUMN ups_id SET DEFAULT nextval('public.upozorneni_skupiny_ups_id_seq'::regclass);
-
-
---
--- Name: users u_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users ALTER COLUMN u_id SET DEFAULT nextval('public.users_u_id_seq'::regclass);
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_u_id_seq'::regclass);
 
 
 --
@@ -6144,14 +6276,6 @@ ALTER TABLE ONLY public.account
 
 ALTER TABLE ONLY public.accounting_period
     ADD CONSTRAINT accounting_period_pkey PRIMARY KEY (id);
-
-
---
--- Name: aktuality aktuality_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT aktuality_unique_id UNIQUE (id);
 
 
 --
@@ -6216,14 +6340,6 @@ ALTER TABLE ONLY public.cohort_subscription
 
 ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_pkey PRIMARY KEY (id);
-
-
---
--- Name: dokumenty dokumenty_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.dokumenty
-    ADD CONSTRAINT dokumenty_unique_id UNIQUE (id);
 
 
 --
@@ -6331,22 +6447,6 @@ ALTER TABLE ONLY public.form_responses
 
 
 --
--- Name: galerie_dir galerie_dir_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.galerie_dir
-    ADD CONSTRAINT galerie_dir_unique_id UNIQUE (id);
-
-
---
--- Name: galerie_foto galerie_foto_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.galerie_foto
-    ADD CONSTRAINT galerie_foto_unique_id UNIQUE (id);
-
-
---
 -- Name: event idx_23735_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6359,7 +6459,7 @@ ALTER TABLE ONLY public.event
 --
 
 ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT idx_23753_primary PRIMARY KEY (at_id);
+    ADD CONSTRAINT idx_23753_primary PRIMARY KEY (id);
 
 
 --
@@ -6367,7 +6467,7 @@ ALTER TABLE ONLY public.aktuality
 --
 
 ALTER TABLE ONLY public.dokumenty
-    ADD CONSTRAINT idx_23771_primary PRIMARY KEY (d_id);
+    ADD CONSTRAINT idx_23771_primary PRIMARY KEY (id);
 
 
 --
@@ -6375,7 +6475,7 @@ ALTER TABLE ONLY public.dokumenty
 --
 
 ALTER TABLE ONLY public.galerie_dir
-    ADD CONSTRAINT idx_23780_primary PRIMARY KEY (gd_id);
+    ADD CONSTRAINT idx_23780_primary PRIMARY KEY (id);
 
 
 --
@@ -6383,7 +6483,7 @@ ALTER TABLE ONLY public.galerie_dir
 --
 
 ALTER TABLE ONLY public.galerie_foto
-    ADD CONSTRAINT idx_23791_primary PRIMARY KEY (gf_id);
+    ADD CONSTRAINT idx_23791_primary PRIMARY KEY (id);
 
 
 --
@@ -6435,19 +6535,11 @@ ALTER TABLE ONLY public.platby_raw
 
 
 --
--- Name: upozorneni_skupiny idx_23955_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.upozorneni_skupiny
-    ADD CONSTRAINT idx_23955_primary PRIMARY KEY (ups_id);
-
-
---
 -- Name: users idx_23964_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT idx_23964_primary PRIMARY KEY (u_id);
+    ADD CONSTRAINT idx_23964_primary PRIMARY KEY (id);
 
 
 --
@@ -6667,27 +6759,11 @@ ALTER TABLE ONLY public.transaction
 
 
 --
--- Name: upozorneni_skupiny upozorneni_skupiny_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.upozorneni_skupiny
-    ADD CONSTRAINT upozorneni_skupiny_unique_id UNIQUE (id);
-
-
---
 -- Name: user_proxy user_proxy_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_proxy
     ADD CONSTRAINT user_proxy_pkey PRIMARY KEY (id);
-
-
---
--- Name: users users_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_unique_id UNIQUE (id);
 
 
 --
@@ -7062,20 +7138,6 @@ CREATE UNIQUE INDEX idx_23898_pr_hash ON public.platby_raw USING btree (pr_hash)
 
 
 --
--- Name: idx_23955_upozorneni_skupiny_ups_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23955_upozorneni_skupiny_ups_id_rodic_fkey ON public.upozorneni_skupiny USING btree (ups_id_rodic);
-
-
---
--- Name: idx_23955_upozorneni_skupiny_ups_id_skupina_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23955_upozorneni_skupiny_ups_id_skupina_fkey ON public.upozorneni_skupiny USING btree (ups_id_skupina);
-
-
---
 -- Name: idx_cm_tenant; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7094,13 +7156,6 @@ CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);
 --
 
 CREATE INDEX idx_event_tenant ON public.event USING btree (tenant_id, is_visible);
-
-
---
--- Name: idx_ups_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_ups_tenant ON public.upozorneni_skupiny USING btree (tenant_id);
 
 
 --
@@ -7254,14 +7309,14 @@ CREATE INDEX user_proxy_user_id_idx ON public.user_proxy USING btree (user_id);
 -- Name: users_email_key; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX users_email_key ON public.users USING btree (u_email) WHERE (u_id <> ALL (ARRAY[(916)::bigint, (914)::bigint, (915)::bigint, (587)::bigint, (765)::bigint, (696)::bigint, (786)::bigint, (259)::bigint, (306)::bigint, (540)::bigint, (443)::bigint, (1042)::bigint, (585)::bigint, (825)::bigint, (413)::bigint, (428)::bigint, (985)::bigint, (935)::bigint, (218)::bigint, (581)::bigint, (827)::bigint, (826)::bigint, (165)::bigint, (207)::bigint, (232)::bigint, (945)::bigint, (990)::bigint, (1039)::bigint, (1040)::bigint, (606)::bigint, (607)::bigint, (896)::bigint, (975)::bigint, (496)::bigint, (511)::bigint, (898)::bigint, (920)::bigint, (970)::bigint, (724)::bigint, (725)::bigint, (958)::bigint, (542)::bigint, (543)::bigint, (886)::bigint, (223)::bigint, (348)::bigint, (23)::bigint, (973)::bigint, (128)::bigint, (988)::bigint, (517)::bigint, (978)::bigint, (928)::bigint, (930)::bigint, (968)::bigint, (939)::bigint, (951)::bigint, (950)::bigint, (808)::bigint, (723)::bigint, (557)::bigint, (1013)::bigint, (1014)::bigint, (1015)::bigint, (820)::bigint, (841)::bigint, (599)::bigint, (681)::bigint, (31)::bigint, (40)::bigint, (120)::bigint, (360)::bigint, (417)::bigint, (419)::bigint, (545)::bigint, (39)::bigint, (643)::bigint, (670)::bigint, (782)::bigint, (790)::bigint, (668)::bigint, (894)::bigint, (922)::bigint, (925)::bigint, (803)::bigint, (812)::bigint, (153)::bigint, (602)::bigint, (198)::bigint, (239)::bigint, (397)::bigint, (686)::bigint, (846)::bigint, (537)::bigint, (893)::bigint, (974)::bigint, (993)::bigint, (755)::bigint, (805)::bigint, (337)::bigint, (155)::bigint, (629)::bigint, (630)::bigint, (554)::bigint, (994)::bigint, (661)::bigint, (891)::bigint, (434)::bigint, (436)::bigint, (640)::bigint, (829)::bigint, (683)::bigint, (505)::bigint, (1)::bigint, (648)::bigint, (649)::bigint, (677)::bigint, (4)::bigint, (162)::bigint, (17)::bigint, (565)::bigint, (700)::bigint, (701)::bigint, (952)::bigint, (999)::bigint, (1003)::bigint, (1006)::bigint, (346)::bigint, (576)::bigint, (986)::bigint, (582)::bigint, (315)::bigint, (753)::bigint, (76)::bigint, (93)::bigint, (316)::bigint, (359)::bigint, (370)::bigint, (508)::bigint, (506)::bigint, (509)::bigint, (510)::bigint, (754)::bigint, (811)::bigint, (430)::bigint, (654)::bigint, (598)::bigint, (612)::bigint, (698)::bigint, (923)::bigint, (943)::bigint, (971)::bigint, (679)::bigint, (798)::bigint, (799)::bigint]));
+CREATE UNIQUE INDEX users_email_key ON public.users USING btree (u_email) WHERE (id <> ALL (ARRAY[(916)::bigint, (914)::bigint, (915)::bigint, (587)::bigint, (765)::bigint, (696)::bigint, (786)::bigint, (259)::bigint, (306)::bigint, (540)::bigint, (443)::bigint, (1042)::bigint, (585)::bigint, (825)::bigint, (413)::bigint, (428)::bigint, (985)::bigint, (935)::bigint, (218)::bigint, (581)::bigint, (827)::bigint, (826)::bigint, (165)::bigint, (207)::bigint, (232)::bigint, (945)::bigint, (990)::bigint, (1039)::bigint, (1040)::bigint, (606)::bigint, (607)::bigint, (896)::bigint, (975)::bigint, (496)::bigint, (511)::bigint, (898)::bigint, (920)::bigint, (970)::bigint, (724)::bigint, (725)::bigint, (958)::bigint, (542)::bigint, (543)::bigint, (886)::bigint, (223)::bigint, (348)::bigint, (23)::bigint, (973)::bigint, (128)::bigint, (988)::bigint, (517)::bigint, (978)::bigint, (928)::bigint, (930)::bigint, (968)::bigint, (939)::bigint, (951)::bigint, (950)::bigint, (808)::bigint, (723)::bigint, (557)::bigint, (1013)::bigint, (1014)::bigint, (1015)::bigint, (820)::bigint, (841)::bigint, (599)::bigint, (681)::bigint, (31)::bigint, (40)::bigint, (120)::bigint, (360)::bigint, (417)::bigint, (419)::bigint, (545)::bigint, (39)::bigint, (643)::bigint, (670)::bigint, (782)::bigint, (790)::bigint, (668)::bigint, (894)::bigint, (922)::bigint, (925)::bigint, (803)::bigint, (812)::bigint, (153)::bigint, (602)::bigint, (198)::bigint, (239)::bigint, (397)::bigint, (686)::bigint, (846)::bigint, (537)::bigint, (893)::bigint, (974)::bigint, (993)::bigint, (755)::bigint, (805)::bigint, (337)::bigint, (155)::bigint, (629)::bigint, (630)::bigint, (554)::bigint, (994)::bigint, (661)::bigint, (891)::bigint, (434)::bigint, (436)::bigint, (640)::bigint, (829)::bigint, (683)::bigint, (505)::bigint, (1)::bigint, (648)::bigint, (649)::bigint, (677)::bigint, (4)::bigint, (162)::bigint, (17)::bigint, (565)::bigint, (700)::bigint, (701)::bigint, (952)::bigint, (999)::bigint, (1003)::bigint, (1006)::bigint, (346)::bigint, (576)::bigint, (986)::bigint, (582)::bigint, (315)::bigint, (753)::bigint, (76)::bigint, (93)::bigint, (316)::bigint, (359)::bigint, (370)::bigint, (508)::bigint, (506)::bigint, (509)::bigint, (510)::bigint, (754)::bigint, (811)::bigint, (430)::bigint, (654)::bigint, (598)::bigint, (612)::bigint, (698)::bigint, (923)::bigint, (943)::bigint, (971)::bigint, (679)::bigint, (798)::bigint, (799)::bigint]));
 
 
 --
 -- Name: users_login_key; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX users_login_key ON public.users USING btree (u_login) WHERE (u_id <> ALL (ARRAY[(1050)::bigint, (533)::bigint, (882)::bigint, (1075)::bigint, (489)::bigint, (82)::bigint, (1138)::bigint, (689)::bigint, (45)::bigint, (433)::bigint, (13)::bigint, (142)::bigint, (223)::bigint, (1046)::bigint, (498)::bigint, (1106)::bigint, (105)::bigint, (130)::bigint]));
+CREATE UNIQUE INDEX users_login_key ON public.users USING btree (u_login) WHERE (id <> ALL (ARRAY[(1050)::bigint, (533)::bigint, (882)::bigint, (1075)::bigint, (489)::bigint, (82)::bigint, (1138)::bigint, (689)::bigint, (45)::bigint, (433)::bigint, (13)::bigint, (142)::bigint, (223)::bigint, (1046)::bigint, (498)::bigint, (1106)::bigint, (105)::bigint, (130)::bigint]));
 
 
 --
@@ -7685,14 +7740,7 @@ ALTER TABLE ONLY public.accounting_period
 --
 
 ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT aktuality_at_foto_main_fkey FOREIGN KEY (at_foto_main) REFERENCES public.galerie_foto(gf_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: CONSTRAINT aktuality_at_foto_main_fkey ON aktuality; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT aktuality_at_foto_main_fkey ON public.aktuality IS '@fieldName galerieFotoByAtFotoMain';
+    ADD CONSTRAINT aktuality_at_foto_main_fkey FOREIGN KEY (at_foto_main) REFERENCES public.galerie_foto(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
@@ -7700,7 +7748,7 @@ COMMENT ON CONSTRAINT aktuality_at_foto_main_fkey ON public.aktuality IS '@field
 --
 
 ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT aktuality_at_kdo_fkey FOREIGN KEY (at_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT aktuality_at_kdo_fkey FOREIGN KEY (at_kdo) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
@@ -7740,7 +7788,7 @@ ALTER TABLE ONLY public.announcement_audience
 --
 
 ALTER TABLE ONLY public.announcement
-    ADD CONSTRAINT announcement_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT announcement_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
@@ -7756,7 +7804,7 @@ ALTER TABLE ONLY public.announcement
 --
 
 ALTER TABLE ONLY public.attachment
-    ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(u_id) ON DELETE SET NULL;
+    ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(id) ON DELETE SET NULL;
 
 
 --
@@ -7852,14 +7900,7 @@ ALTER TABLE ONLY public.couple
 --
 
 ALTER TABLE ONLY public.dokumenty
-    ADD CONSTRAINT dokumenty_d_kdo_fkey FOREIGN KEY (d_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: CONSTRAINT dokumenty_d_kdo_fkey ON dokumenty; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT dokumenty_d_kdo_fkey ON public.dokumenty IS '@fieldName userByDKdo';
+    ADD CONSTRAINT dokumenty_d_kdo_fkey FOREIGN KEY (d_kdo) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
@@ -8131,7 +8172,7 @@ ALTER TABLE ONLY public.galerie_dir
 --
 
 ALTER TABLE ONLY public.galerie_foto
-    ADD CONSTRAINT galerie_foto_gf_id_rodic_fkey FOREIGN KEY (gf_id_rodic) REFERENCES public.galerie_dir(gd_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT galerie_foto_gf_id_rodic_fkey FOREIGN KEY (gf_id_rodic) REFERENCES public.galerie_dir(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
@@ -8139,7 +8180,7 @@ ALTER TABLE ONLY public.galerie_foto
 --
 
 ALTER TABLE ONLY public.galerie_foto
-    ADD CONSTRAINT galerie_foto_gf_kdo_fkey FOREIGN KEY (gf_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT galerie_foto_gf_kdo_fkey FOREIGN KEY (gf_kdo) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
@@ -8155,7 +8196,7 @@ ALTER TABLE ONLY public.galerie_foto
 --
 
 ALTER TABLE ONLY public.membership_application
-    ADD CONSTRAINT membership_application_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT membership_application_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -8179,7 +8220,7 @@ ALTER TABLE ONLY public.otp_token
 --
 
 ALTER TABLE ONLY public.otp_token
-    ADD CONSTRAINT otp_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id) ON DELETE CASCADE;
+    ADD CONSTRAINT otp_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
@@ -8371,7 +8412,7 @@ ALTER TABLE ONLY public.platby_item
 --
 
 ALTER TABLE ONLY public.platby_item
-    ADD CONSTRAINT platby_item_pi_id_user_fkey FOREIGN KEY (pi_id_user) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT platby_item_pi_id_user_fkey FOREIGN KEY (pi_id_user) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
@@ -8511,37 +8552,6 @@ ALTER TABLE ONLY public.transaction
 
 
 --
--- Name: upozorneni_skupiny upozorneni_skupiny_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.upozorneni_skupiny
-    ADD CONSTRAINT upozorneni_skupiny_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
-
-
---
--- Name: upozorneni_skupiny upozorneni_skupiny_ups_id_rodic_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.upozorneni_skupiny
-    ADD CONSTRAINT upozorneni_skupiny_ups_id_rodic_fkey FOREIGN KEY (ups_id_rodic) REFERENCES public.announcement(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: upozorneni_skupiny upozorneni_skupiny_ups_id_skupina_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.upozorneni_skupiny
-    ADD CONSTRAINT upozorneni_skupiny_ups_id_skupina_fkey FOREIGN KEY (ups_id_skupina) REFERENCES public.cohort(id);
-
-
---
--- Name: CONSTRAINT upozorneni_skupiny_ups_id_skupina_fkey ON upozorneni_skupiny; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT upozorneni_skupiny_ups_id_skupina_fkey ON public.upozorneni_skupiny IS '@fieldName cohortByUpsIdSkupina';
-
-
---
 -- Name: user_proxy user_proxy_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8554,7 +8564,7 @@ ALTER TABLE ONLY public.user_proxy
 --
 
 ALTER TABLE ONLY public.user_proxy
-    ADD CONSTRAINT user_proxy_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT user_proxy_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -8792,13 +8802,6 @@ CREATE POLICY admin_all ON public.tenant_membership TO administrator USING (true
 --
 
 CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING (true);
-
-
---
--- Name: upozorneni_skupiny admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.upozorneni_skupiny TO administrator USING (true) WITH CHECK (true);
 
 
 --
@@ -9232,13 +9235,6 @@ CREATE POLICY current_tenant ON public.transaction AS RESTRICTIVE USING ((tenant
 
 
 --
--- Name: upozorneni_skupiny current_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY current_tenant ON public.upozorneni_skupiny AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
 -- Name: event_registration delete_my; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -9343,7 +9339,7 @@ CREATE POLICY manage_my ON public.membership_application USING ((created_by = pu
 -- Name: users manage_own; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY manage_own ON public.users USING ((u_id = public.current_user_id())) WITH CHECK ((u_id = public.current_user_id()));
+CREATE POLICY manage_own ON public.users USING ((id = public.current_user_id())) WITH CHECK ((id = public.current_user_id()));
 
 
 --
@@ -9479,13 +9475,6 @@ CREATE POLICY member_view ON public.posting FOR SELECT TO member USING (true);
 --
 
 CREATE POLICY member_view ON public.transaction FOR SELECT TO member USING (true);
-
-
---
--- Name: upozorneni_skupiny member_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY member_view ON public.upozorneni_skupiny FOR SELECT TO member USING (true);
 
 
 --
@@ -9761,12 +9750,6 @@ CREATE POLICY update_my ON public.event_registration FOR UPDATE USING ((( SELECT
 
 
 --
--- Name: upozorneni_skupiny; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.upozorneni_skupiny ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: user_proxy; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -9942,10 +9925,10 @@ GRANT ALL ON TABLE public.users TO anonymous;
 
 
 --
--- Name: COLUMN users.u_id; Type: ACL; Schema: public; Owner: -
+-- Name: COLUMN users.id; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT INSERT(u_id) ON TABLE public.users TO anonymous;
+GRANT INSERT(id) ON TABLE public.users TO anonymous;
 
 
 --
@@ -9988,6 +9971,13 @@ GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
 --
 
 GRANT ALL ON FUNCTION app_private.cron_update_memberships() TO administrator;
+
+
+--
+-- Name: FUNCTION queue_announcement_notifications(in_announcement_id bigint); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) TO anonymous;
 
 
 --
@@ -10296,6 +10286,20 @@ GRANT ALL ON FUNCTION public.event_is_registration_open(e public.event) TO anony
 --
 
 GRANT ALL ON FUNCTION public.event_my_registrations(e public.event) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) TO anonymous;
 
 
 --
@@ -10818,10 +10822,10 @@ GRANT ALL ON FUNCTION public.update_tenant_settings_key(path text[], new_value j
 
 
 --
--- Name: FUNCTION upsert_announcement(info public.announcement_type_input, cohorts public.announcement_cohort_type_input[], audiences public.announcement_audience_type_input[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION upsert_announcement(info public.announcement_type_input, audiences public.announcement_audience_type_input[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_input, cohorts public.announcement_cohort_type_input[], audiences public.announcement_audience_type_input[]) TO anonymous;
+GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_input, audiences public.announcement_audience_type_input[]) TO anonymous;
 
 
 --
@@ -11144,20 +11148,6 @@ GRANT ALL ON TABLE public.scoreboard TO anonymous;
 --
 
 GRANT ALL ON TABLE public.tenant_location TO anonymous;
-
-
---
--- Name: TABLE upozorneni_skupiny; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.upozorneni_skupiny TO anonymous;
-
-
---
--- Name: SEQUENCE upozorneni_skupiny_ups_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO anonymous;
 
 
 --
