@@ -9087,6 +9087,17 @@ type Query {
     orderBy: [ScoreboardsOrderBy!]
   ): [Scoreboard!]
 
+  """Calculates scoreboard totals for a specific cohort and časové období."""
+  scoreboardEntries(
+    cohortId: BigInt
+
+    """Počáteční datum období (včetně)."""
+    since: Date
+
+    """Koncové datum období (exkluzivně)."""
+    until: Date
+  ): [Scoreboard!]
+
   """Reads and enables pagination through a set of `Announcement`."""
   stickyAnnouncements(
     """Read all values in the set after (below) this cursor."""
@@ -9533,10 +9544,14 @@ type ResetPasswordPayload {
 }
 
 type Scoreboard {
+  cohortId: BigInt
   eventTotalScore: BigInt
   groupTotalScore: BigInt
   lessonTotalScore: BigInt
+  manualTotalScore: BigInt
 
+  """Reads a single `Cohort` that is related to this `Scoreboard`."""
+  cohort: Cohort
   """Reads a single `Person` that is related to this `Scoreboard`."""
   person: Person
   personId: BigInt
@@ -9549,6 +9564,9 @@ A condition to be used against `Scoreboard` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input ScoreboardCondition {
+  """Checks for equality with the object’s `cohortId` field."""
+  cohortId: BigInt
+
   """Checks for equality with the object’s `eventTotalScore` field."""
   eventTotalScore: BigInt
 
@@ -9557,6 +9575,9 @@ input ScoreboardCondition {
 
   """Checks for equality with the object’s `lessonTotalScore` field."""
   lessonTotalScore: BigInt
+
+  """Checks for equality with the object’s `manualTotalScore` field."""
+  manualTotalScore: BigInt
 
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
@@ -9570,12 +9591,16 @@ input ScoreboardCondition {
 
 """Methods to use when ordering `Scoreboard`."""
 enum ScoreboardsOrderBy {
+  COHORT_ID_ASC
+  COHORT_ID_DESC
   EVENT_TOTAL_SCORE_ASC
   EVENT_TOTAL_SCORE_DESC
   GROUP_TOTAL_SCORE_ASC
   GROUP_TOTAL_SCORE_DESC
   LESSON_TOTAL_SCORE_ASC
   LESSON_TOTAL_SCORE_DESC
+  MANUAL_TOTAL_SCORE_ASC
+  MANUAL_TOTAL_SCORE_DESC
   NATURAL
   PERSON_ID_ASC
   PERSON_ID_DESC
