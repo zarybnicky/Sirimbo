@@ -26,7 +26,7 @@ export function ArticleList() {
     return (data?.aktualities?.nodes || []).map((item) => ({
       id: item.id,
       title: item.atJmeno,
-      subtitle: item.atTimestampAdd ? fullDateFormatter.format(new Date(item.atTimestampAdd)) : '',
+      subtitle: item.createdAt ? fullDateFormatter.format(new Date(item.createdAt)) : '',
       href: {
         pathname: '/aktuality/[id]',
         query: { id: item.id },

@@ -21,7 +21,7 @@ type PageProps = {
 };
 
 function ArticlePage({ item }: PageProps) {
-  const galleryPath = item.galerieFotoByAtFotoMain?.gfPath;
+  const galleryPath = item.galerieFoto?.gfPath;
   const imageUrl = item.titlePhotoUrl ?? (galleryPath ? `/galerie/${galleryPath}` : '');
 
   return (
@@ -50,7 +50,7 @@ function ArticlePage({ item }: PageProps) {
         }}
       />
       <div className="text-neutral-11 mb-6 -mt-4">
-        {item.atTimestampAdd && fullDateFormatter.format(new Date(item.atTimestampAdd))}
+        {item.createdAt && fullDateFormatter.format(new Date(item.createdAt))}
       </div>
       <RichTextView value={item.atText} />
     </Layout>

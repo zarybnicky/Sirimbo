@@ -5,7 +5,7 @@ query FileList($category: Int) {
     dFilename
     dKategorie
     dTimestamp
-    userByDKdo {
+    user {
       id
       uJmeno
       uPrijmeni
