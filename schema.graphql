@@ -4260,6 +4260,42 @@ type EventInstanceAttendanceSummaryRecord {
   status: AttendanceType
 }
 
+type EventOverlapsAttendeeReportRecord {
+  firstEventId: BigInt
+  firstEventName: String
+  firstInstanceId: BigInt
+  firstSince: Datetime
+  firstStatus: AttendanceType
+  firstUntil: Datetime
+  overlapRange: DatetimeRange
+  personId: BigInt
+  personName: String
+  secondEventId: BigInt
+  secondEventName: String
+  secondInstanceId: BigInt
+  secondSince: Datetime
+  secondStatus: AttendanceType
+  secondUntil: Datetime
+}
+
+type EventOverlapsTrainerReportRecord {
+  firstAssignmentSource: String
+  firstEventId: BigInt
+  firstEventName: String
+  firstInstanceId: BigInt
+  firstSince: Datetime
+  firstUntil: Datetime
+  overlapRange: DatetimeRange
+  secondAssignmentSource: String
+  secondEventId: BigInt
+  secondEventName: String
+  secondInstanceId: BigInt
+  secondSince: Datetime
+  secondUntil: Datetime
+  trainerId: BigInt
+  trainerName: String
+}
+
 """
 A condition to be used against `EventInstance` object types. All fields are
 tested for equality and combined with a logical ‘and.’
@@ -8381,6 +8417,28 @@ type Query {
     """The method to use when ordering `EventInstance`."""
     orderBy: [EventInstancesOrderBy!]
   ): [EventInstance!]
+
+  eventOverlapsAttendeeReportList(
+    pSince: Datetime!
+    pUntil: Datetime
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values of the set."""
+    offset: Int
+  ): [EventOverlapsAttendeeReportRecord!]
+
+  eventOverlapsTrainerReportList(
+    pSince: Datetime!
+    pUntil: Datetime
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values of the set."""
+    offset: Int
+  ): [EventOverlapsTrainerReportRecord!]
 
   """Get a single `EventLessonDemand`."""
   eventLessonDemand(id: BigInt!): EventLessonDemand
