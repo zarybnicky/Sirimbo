@@ -1,3 +1,144 @@
+--! Previous: sha1:c13221efa223dfd1fa19945eb9b77962e24405f6
+--! Hash: sha1:2be3fd8e627decbc6f3b8e3698c76026e55b0f35
+
+--! split: 1-current.sql
+create or replace function get_current_user(version_id text default null) returns users
+language sql volatile security definer as $$
+  with updated_user as (
+    update users
+    set
+      last_active_at = now(),
+      last_version = version_id
+    where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+    returning *
+  )
+  select * from updated_user
+  union all
+  select *
+  from users
+  where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+    and not exists (select 1 from updated_user);
+$$;
+
+grant all on function get_current_user to anonymous;
+
+CREATE or replace FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_token
+    LANGUAGE sql STABLE
+    AS $$
+  with details as (
+    SELECT
+      users.id,
+      user_proxy.person_id as person_id,
+      tenant_memberships || tenant_trainers || tenant_administrators as my_tenant_ids,
+      cohort_memberships as my_cohort_ids,
+      couple_ids as my_couple_ids,
+      current_tenant_id() = ANY (tenant_memberships || tenant_trainers || tenant_administrators) as is_member,
+      current_tenant_id() = ANY (tenant_trainers) as is_trainer,
+      current_tenant_id() = ANY (tenant_administrators) as is_admin
+    from users
+    left join user_proxy on user_id=users.id
+    left join auth_details on user_proxy.person_id=auth_details.person_id
+    where users.id=u.id
+  ) select
+    extract(epoch from now() + interval '7 days')::integer,
+    u.id,
+    current_tenant_id(),
+    u.u_login,
+    u.u_email,
+    array_to_json(array_agg(person_id)) as my_person_ids,
+    array_to_json(app_private.array_accum(my_tenant_ids)) as my_tenant_ids,
+    array_to_json(app_private.array_accum(my_cohort_ids)) as my_cohort_ids,
+    array_to_json(app_private.array_accum(my_couple_ids)) as my_couple_ids,
+    bool_or(is_member) as is_member,
+    bool_or(is_trainer) as is_trainer,
+    bool_or(is_admin) as is_admin
+  from details group by id;
+$$;
+
+CREATE or replace FUNCTION refresh_jwt() RETURNS jwt_token
+    LANGUAGE sql STABLE SECURITY DEFINER
+    AS $$
+  SELECT app_private.create_jwt_token(users) FROM users WHERE id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+$$;
+
+GRANT ALL ON FUNCTION public.refresh_jwt() TO anonymous;
+
+CREATE or replace FUNCTION public.change_password(new_pass text) RETURNS void
+    LANGUAGE sql STRICT
+    AS $$
+  update users set u_pass = new_pass where id = current_user_id();
+$$;
+
+GRANT ALL ON FUNCTION public.change_password(new_pass text) TO anonymous;
+
+CREATE or replace FUNCTION public.reset_password(email character varying) RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  v_tenant tenant;
+  v_user users;
+  v_token otp_token;
+  v_people jsonb;
+  v_payload jsonb := null;
+begin
+  for v_user in (select * from users where u_email = email) loop
+    insert into otp_token (user_id)
+    values (v_user.id) returning * into v_token;
+
+    select jsonb_agg(person_name(person.*)) into v_people
+    from user_proxy join person on person_id=person.id
+    where active and user_id = v_user.id;
+
+    v_payload := coalesce(v_payload, jsonb_build_array()) || jsonb_build_object(
+      'login', v_user.u_login,
+      'email', v_user.u_email,
+      'token', v_token.access_token,
+      'people', v_people
+    );
+  end loop;
+
+  select * into v_tenant from tenant where id = current_tenant_id();
+
+  if v_payload is not null then
+    perform graphile_worker.add_job('forgotten_password_generate', json_build_object(
+      'origin', v_tenant.origins[1],
+      'intent', '/zapomenute-heslo',
+      'users', v_payload
+    ));
+  end if;
+end;
+$$;
+
+GRANT ALL ON FUNCTION public.reset_password(email character varying) TO anonymous;
+select verify_function('reset_password');
+
+CREATE or replace FUNCTION otp_login(token uuid, OUT usr users, OUT jwt jwt_token) RETURNS record
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  v_token otp_token;
+begin
+  select * into v_token from otp_token where access_token = token and used_at is null and expires_at > now();
+  if not found then
+    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
+  end if;
+  select * into usr from users where id = v_token.user_id;
+
+  jwt := app_private.create_jwt_token(usr);
+  perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
+  perform set_config('jwt.claims.my_person_ids', jwt.my_person_ids::text, true);
+  perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
+  perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
+  perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+
+  update users set last_login = now() where id = usr.id;
+  update otp_token set used_at = now() where id = v_token.id;
+end;
+$$;
+
+GRANT ALL ON FUNCTION otp_login TO anonymous;
+--select verify_function('public.otp_login');
+
 
 create or replace function app_private.queue_announcement_notifications(in_announcement_id bigint)
 returns void

@@ -687,7 +687,7 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     AS $$
   with details as (
     SELECT
-      u_id,
+      users.id,
       user_proxy.person_id as person_id,
       tenant_memberships || tenant_trainers || tenant_administrators as my_tenant_ids,
       cohort_memberships as my_cohort_ids,
@@ -696,12 +696,12 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
       current_tenant_id() = ANY (tenant_trainers) as is_trainer,
       current_tenant_id() = ANY (tenant_administrators) as is_admin
     from users
-    left join user_proxy on user_id=users.u_id
+    left join user_proxy on user_id=users.id
     left join auth_details on user_proxy.person_id=auth_details.person_id
-    where users.u_id=u.u_id
+    where users.id=u.id
   ) select
     extract(epoch from now() + interval '7 days')::integer,
-    u.u_id,
+    u.id,
     current_tenant_id(),
     u.u_login,
     u.u_email,
@@ -712,7 +712,7 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     bool_or(is_member) as is_member,
     bool_or(is_trainer) as is_trainer,
     bool_or(is_admin) as is_admin
-  from details group by u_id;
+  from details group by id;
 $$;
 
 
@@ -1117,20 +1117,20 @@ begin
     )
   ),
   role_users as (
-    select distinct u.u_id as user_id
+    select distinct u.id as user_id
     from role_people rp
     join user_proxy up on up.person_id = rp.person_id and up.active
-    join users u on u.u_id = up.user_id
+    join users u on u.id = up.user_id
     where u.tenant_id = v_tenant_id
   ),
   cohort_users as (
-    select distinct u.u_id as user_id
+    select distinct u.id as user_id
     from announcement_audience aa
     join cohort_membership cm
       on cm.cohort_id = aa.cohort_id
      and cm.active
     join user_proxy up on up.person_id = cm.person_id and up.active
-    join users u on u.u_id = up.user_id
+    join users u on u.id = up.user_id
     where aa.announcement_id = in_announcement_id
       and aa.cohort_id is not null
       and aa.tenant_id = v_tenant_id
@@ -1923,7 +1923,7 @@ $$;
 CREATE FUNCTION public.change_password(new_pass text) RETURNS void
     LANGUAGE sql STRICT
     AS $$
-  update users set u_pass = new_pass where u_id = current_user_id();
+  update users set u_pass = new_pass where id = current_user_id();
 $$;
 
 
@@ -3116,14 +3116,14 @@ CREATE FUNCTION public.get_current_user(version_id text DEFAULT NULL::text) RETU
     set
       last_active_at = now(),
       last_version = version_id
-    where u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+    where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
     returning *
   )
   select * from updated_user
   union all
   select *
   from users
-  where u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+  where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
     and not exists (select 1 from updated_user);
 $$;
 
@@ -3387,7 +3387,7 @@ begin
   if not found then
     raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
   end if;
-  select * into usr from users where u_id = v_token.user_id;
+  select * into usr from users where id = v_token.user_id;
 
   jwt := app_private.create_jwt_token(usr);
   perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
@@ -3797,7 +3797,7 @@ COMMENT ON FUNCTION public.post_without_cache(input_url text, data jsonb, header
 CREATE FUNCTION public.refresh_jwt() RETURNS public.jwt_token
     LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  SELECT app_private.create_jwt_token(users) FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+  SELECT app_private.create_jwt_token(users) FROM users WHERE id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
 $$;
 
 
@@ -4003,11 +4003,11 @@ declare
 begin
   for v_user in (select * from users where u_email = email) loop
     insert into otp_token (user_id)
-    values (v_user.u_id) returning * into v_token;
+    values (v_user.id) returning * into v_token;
 
     select jsonb_agg(person_name(person.*)) into v_people
     from user_proxy join person on person_id=person.id
-    where active and user_id = v_user.u_id;
+    where active and user_id = v_user.id;
 
     v_payload := coalesce(v_payload, jsonb_build_array()) || jsonb_build_object(
       'login', v_user.u_login,

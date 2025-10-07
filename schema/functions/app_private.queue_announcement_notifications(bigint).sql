@@ -51,20 +51,20 @@ begin
     )
   ),
   role_users as (
-    select distinct u.u_id as user_id
+    select distinct u.id as user_id
     from role_people rp
     join user_proxy up on up.person_id = rp.person_id and up.active
-    join users u on u.u_id = up.user_id
+    join users u on u.id = up.user_id
     where u.tenant_id = v_tenant_id
   ),
   cohort_users as (
-    select distinct u.u_id as user_id
+    select distinct u.id as user_id
     from announcement_audience aa
     join cohort_membership cm
       on cm.cohort_id = aa.cohort_id
      and cm.active
     join user_proxy up on up.person_id = cm.person_id and up.active
-    join users u on u.u_id = up.user_id
+    join users u on u.id = up.user_id
     where aa.announcement_id = in_announcement_id
       and aa.cohort_id is not null
       and aa.tenant_id = v_tenant_id

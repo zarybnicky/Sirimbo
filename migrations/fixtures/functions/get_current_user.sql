@@ -6,14 +6,14 @@ language sql volatile security definer as $$
     set
       last_active_at = now(),
       last_version = version_id
-    where u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+    where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
     returning *
   )
   select * from updated_user
   union all
   select *
   from users
-  where u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+  where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
     and not exists (select 1 from updated_user);
 $$;
 
