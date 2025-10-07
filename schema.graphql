@@ -4573,6 +4573,98 @@ enum EventLessonDemandsOrderBy {
   UPDATED_AT_DESC
 }
 
+"""A connection to a list of `EventOverlapsAttendeeReportRecord` values."""
+type EventOverlapsAttendeeReportConnection {
+  """
+  A list of edges which contains the `EventOverlapsAttendeeReportRecord` and cursor to aid in pagination.
+  """
+  edges: [EventOverlapsAttendeeReportEdge!]!
+
+  """A list of `EventOverlapsAttendeeReportRecord` objects."""
+  nodes: [EventOverlapsAttendeeReportRecord!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventOverlapsAttendeeReportRecord` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventOverlapsAttendeeReportRecord` edge in the connection."""
+type EventOverlapsAttendeeReportEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventOverlapsAttendeeReportRecord` at the end of the edge."""
+  node: EventOverlapsAttendeeReportRecord!
+}
+
+type EventOverlapsAttendeeReportRecord {
+  firstEventId: BigInt
+  firstEventName: String
+  firstInstanceId: BigInt
+  firstSince: Datetime
+  firstStatus: AttendanceType
+  firstUntil: Datetime
+  overlapRange: DatetimeRange
+  personId: BigInt
+  personName: String
+  secondEventId: BigInt
+  secondEventName: String
+  secondInstanceId: BigInt
+  secondSince: Datetime
+  secondStatus: AttendanceType
+  secondUntil: Datetime
+}
+
+"""A connection to a list of `EventOverlapsTrainerReportRecord` values."""
+type EventOverlapsTrainerReportConnection {
+  """
+  A list of edges which contains the `EventOverlapsTrainerReportRecord` and cursor to aid in pagination.
+  """
+  edges: [EventOverlapsTrainerReportEdge!]!
+
+  """A list of `EventOverlapsTrainerReportRecord` objects."""
+  nodes: [EventOverlapsTrainerReportRecord!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EventOverlapsTrainerReportRecord` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `EventOverlapsTrainerReportRecord` edge in the connection."""
+type EventOverlapsTrainerReportEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventOverlapsTrainerReportRecord` at the end of the edge."""
+  node: EventOverlapsTrainerReportRecord!
+}
+
+type EventOverlapsTrainerReportRecord {
+  firstAssignmentSource: String
+  firstEventId: BigInt
+  firstEventName: String
+  firstInstanceId: BigInt
+  firstSince: Datetime
+  firstUntil: Datetime
+  overlapRange: DatetimeRange
+  secondAssignmentSource: String
+  secondEventId: BigInt
+  secondEventName: String
+  secondInstanceId: BigInt
+  secondSince: Datetime
+  secondUntil: Datetime
+  trainerId: BigInt
+  trainerName: String
+}
+
 """
 Represents an update to a `Event`. Fields that are set will be updated.
 """
@@ -8462,6 +8554,56 @@ type Query {
     """The method to use when ordering `EventLessonDemand`."""
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]
+
+  """
+  Reads and enables pagination through a set of `EventOverlapsAttendeeReportRecord`.
+  """
+  eventOverlapsAttendeeReport(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+    pSince: Datetime
+    pUntil: Datetime
+  ): EventOverlapsAttendeeReportConnection
+
+  """
+  Reads and enables pagination through a set of `EventOverlapsTrainerReportRecord`.
+  """
+  eventOverlapsTrainerReport(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+    pSince: Datetime
+    pUntil: Datetime
+  ): EventOverlapsTrainerReportConnection
 
   """Get a single `EventRegistration`."""
   eventRegistration(id: BigInt!): EventRegistration
