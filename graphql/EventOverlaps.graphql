@@ -1,0 +1,30 @@
+query EventOverlapsReport($since: Datetime!, $until: Datetime) {
+  attendeeConflicts: eventOverlapsAttendeeReportList(pSince: $since, pUntil: $until) {
+    personId
+    personName
+    firstInstanceId
+    firstEventId
+    firstEventName
+    firstSince
+    firstUntil
+    secondInstanceId
+    secondEventId
+    secondEventName
+    secondSince
+    secondUntil
+  }
+  trainerConflicts: eventOverlapsTrainerReportList(pSince: $since, pUntil: $until) {
+    personId
+    personName
+    firstInstanceId
+    firstEventId
+    firstEventName
+    firstSince
+    firstUntil
+    secondInstanceId
+    secondEventId
+    secondEventName
+    secondSince
+    secondUntil
+  }
+}
