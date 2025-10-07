@@ -220,15 +220,11 @@ as $$
   membership as (
     select
       cm.person_id,
-      cm.cohort_id,
-      cm.since,
-      cm.until
+      cm.cohort_id
     from cohort_membership cm
     join params p on true
     where cm.tenant_id = current_tenant_id()
       and cm.active
-      and cm.since < p.until::timestamptz
-      and (cm.until is null or cm.until >= p.since::timestamptz)
       and (p.cohort_id is null or cm.cohort_id = p.cohort_id)
   ),
   attendance as (
@@ -249,8 +245,6 @@ as $$
       select m.cohort_id
       from membership m
       where m.person_id = ea.person_id
-        and m.since <= i.since
-        and (m.until is null or i.since <= m.until)
         and (p.cohort_id is null or m.cohort_id = p.cohort_id)
         and (tc.cohort_id is null or tc.cohort_id = m.cohort_id)
       limit 1
