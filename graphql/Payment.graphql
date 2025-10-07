@@ -143,3 +143,56 @@ query TenantTurnover {
     }
   }
 }
+
+query TenantTurnoverPage($offset: Int!, $postingsLimit: Int!) {
+  accountsList(condition: { personId: null }) {
+    id
+    currency
+    balance
+    postingsList(first: $postingsLimit, offset: $offset, orderBy: [CREATED_AT_DESC]) {
+      ...Posting
+    }
+  }
+}
+
+query TenantManualCreditTransactions($first: Int, $cursor: Cursor) {
+  tenant: getCurrentTenant {
+    id
+    transactions(
+      first: $first
+      after: $cursor
+      orderBy: [EFFECTIVE_DATE_DESC, ID_DESC]
+      condition: { source: MANUAL_CREDIT }
+    ) {
+      totalCount
+      nodes {
+        id
+        description
+        effectiveDate
+        createdAt
+        payment {
+          id
+          variableSymbol
+          specificSymbol
+        }
+        postingsList {
+          id
+          amount
+          account {
+            id
+            currency
+            person {
+              id
+              name
+            }
+          }
+        }
+      }
+      pageInfo {
+        __typename
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+}

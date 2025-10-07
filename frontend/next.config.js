@@ -100,7 +100,7 @@ module.exports = nextRoutes()(
             { source: '/member/download', destination: `${graphqlUrl}/member/download` },
             { source: '/galerie/:path*', destination: `${process.env.EXTERNAL_SERVER_URL}/galerie/:path*` },
             { source: '/graphql', destination: `${graphqlUrl}/graphql` },
-            { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
+            { source: '/graphiql', destination: `${graphqlUrl}/graphiql` },
             );
         } else {
           rewrites.push(

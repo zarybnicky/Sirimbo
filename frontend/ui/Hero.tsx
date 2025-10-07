@@ -32,7 +32,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       },
       name: x.atJmeno,
       summary: x.atPreview,
-      img: x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}` || '',
+      img: x.titlePhotoUrl || `/galerie/${x.galerieFoto?.gfPath}` || '',
       inset: false,
     })),
   ];

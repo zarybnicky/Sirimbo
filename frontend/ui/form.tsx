@@ -44,7 +44,7 @@ export function FieldHelper({ error, helperText }: FieldHelperProps) {
 const errorTranslation: { [key: string]: string } = {
   ACCOUNT_NOT_FOUND: 'Zadaná kombinace jména a e-mailu neexistuje',
   INVALID_PASSWORD: 'Nesprávné heslo',
-  ACCOUNT_DISABLED: 'Učet byl zablokován',
+  ACCOUNT_DISABLED: 'Účet byl zablokován',
   ACCOUNT_NOT_CONFIRMED: 'Účet ještě nebyl potvrzen',
 };
 

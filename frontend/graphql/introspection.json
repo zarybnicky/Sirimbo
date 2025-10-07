@@ -647,17 +647,6 @@
             "args": []
           },
           {
-            "name": "atId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "atJmeno",
             "type": {
               "kind": "NON_NULL",
@@ -710,28 +699,6 @@
             "args": []
           },
           {
-            "name": "atTimestamp",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "atTimestampAdd",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "createdAt",
             "type": {
               "kind": "SCALAR",
@@ -740,7 +707,7 @@
             "args": []
           },
           {
-            "name": "galerieFotoByAtFotoMain",
+            "name": "galerieFoto",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -1016,74 +983,6 @@
               "name": "Any"
             },
             "args": []
-          },
-          {
-            "name": "upozorneniSkupiniesByUpsIdRodic",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpozorneniSkupiniesConnection",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
           }
         ],
         "interfaces": []
@@ -2131,74 +2030,6 @@
               }
             },
             "args": []
-          },
-          {
-            "name": "upozorneniSkupiniesByUpsIdSkupina",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpozorneniSkupiniesConnection",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
           }
         ],
         "interfaces": []
@@ -3194,7 +3025,7 @@
             "args": []
           },
           {
-            "name": "galerieFotoByAtFotoMain",
+            "name": "galerieFoto",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -3810,7 +3641,7 @@
             "args": []
           },
           {
-            "name": "userByDKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -3870,7 +3701,7 @@
             "args": []
           },
           {
-            "name": "userByCreatedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -4726,7 +4557,7 @@
             "args": []
           },
           {
-            "name": "galerieFotoByAtFotoMain",
+            "name": "galerieFoto",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -5265,7 +5096,7 @@
             "args": []
           },
           {
-            "name": "userByDKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -5325,7 +5156,7 @@
             "args": []
           },
           {
-            "name": "userByCreatedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -6189,17 +6020,6 @@
             "args": []
           },
           {
-            "name": "dId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "dKategorie",
             "type": {
               "kind": "NON_NULL",
@@ -6291,7 +6111,7 @@
             "args": []
           },
           {
-            "name": "userByDKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -7460,7 +7280,7 @@
             "args": []
           },
           {
-            "name": "userByCreatedBy",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -9329,17 +9149,6 @@
             "args": []
           },
           {
-            "name": "gdId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "gdIdRodic",
             "type": {
               "kind": "NON_NULL",
@@ -9600,17 +9409,6 @@
             "args": []
           },
           {
-            "name": "gfId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "gfIdRodic",
             "type": {
               "kind": "NON_NULL",
@@ -9651,14 +9449,6 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
-            },
-            "args": []
-          },
-          {
-            "name": "gfTimestamp",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },
@@ -10975,26 +10765,6 @@
             ]
           },
           {
-            "name": "deleteAktualityById",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeleteAktualityPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "deleteAnnouncement",
             "type": {
               "kind": "OBJECT",
@@ -11136,26 +10906,6 @@
           },
           {
             "name": "deleteDokumenty",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeleteDokumentyPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deleteDokumentyById",
             "type": {
               "kind": "OBJECT",
               "name": "DeleteDokumentyPayload",
@@ -11855,26 +11605,6 @@
             ]
           },
           {
-            "name": "updateAktualityById",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpdateAktualityPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "updateAnnouncement",
             "type": {
               "kind": "OBJECT",
@@ -11996,26 +11726,6 @@
           },
           {
             "name": "updateDokumenty",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpdateDokumentyPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateDokumentyById",
             "type": {
               "kind": "OBJECT",
               "name": "UpdateDokumentyPayload",
@@ -15447,26 +15157,6 @@
             },
             "args": [
               {
-                "name": "atId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "aktualityById",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Aktuality",
-              "ofType": null
-            },
-            "args": [
-              {
                 "name": "id",
                 "type": {
                   "kind": "NON_NULL",
@@ -16259,26 +15949,6 @@
           },
           {
             "name": "dokumenty",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Dokumenty",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "dId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "dokumentyById",
             "type": {
               "kind": "OBJECT",
               "name": "Dokumenty",
@@ -17399,26 +17069,6 @@
             },
             "args": [
               {
-                "name": "gdId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "galerieDirById",
-            "type": {
-              "kind": "OBJECT",
-              "name": "GalerieDir",
-              "ofType": null
-            },
-            "args": [
-              {
                 "name": "id",
                 "type": {
                   "kind": "NON_NULL",
@@ -17497,26 +17147,6 @@
           },
           {
             "name": "galerieFoto",
-            "type": {
-              "kind": "OBJECT",
-              "name": "GalerieFoto",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "gfId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "galerieFotoById",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -19228,132 +18858,7 @@
             ]
           },
           {
-            "name": "upozorneniSkupinies",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpozorneniSkupiniesConnection",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "upozorneniSkupiny",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpozorneniSkupiny",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "upsId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "upozorneniSkupinyById",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpozorneniSkupiny",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "id",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "user",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "uId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "userById",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -22306,74 +21811,6 @@
             ]
           },
           {
-            "name": "upozorneniSkupinies",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpozorneniSkupiniesConnection",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "users",
             "type": {
               "kind": "NON_NULL",
@@ -23569,7 +23006,7 @@
             "args": []
           },
           {
-            "name": "galerieFotoByAtFotoMain",
+            "name": "galerieFoto",
             "type": {
               "kind": "OBJECT",
               "name": "GalerieFoto",
@@ -24040,7 +23477,7 @@
             "args": []
           },
           {
-            "name": "userByDKdo",
+            "name": "user",
             "type": {
               "kind": "OBJECT",
               "name": "User",
@@ -24862,199 +24299,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "UpozorneniSkupiniesConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "UpozorneniSkupiniesEdge",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "UpozorneniSkupiny",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UpozorneniSkupiniesEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UpozorneniSkupiny",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UpozorneniSkupiny",
-        "fields": [
-          {
-            "name": "announcement",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Announcement",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "cohortByUpsIdSkupina",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "tenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "upsColor",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "upsId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "upsIdRodic",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "upsIdSkupina",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "UpsertAnnouncementPayload",
         "fields": [
           {
@@ -25795,17 +25039,6 @@
           },
           {
             "name": "uEmail",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "uId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {

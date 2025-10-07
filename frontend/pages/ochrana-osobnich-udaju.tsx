@@ -117,7 +117,7 @@ export default function OchranaOsobnichUdajuPage() {
         <ul>
           <li>právo na přístup ke svým osobním údajům dle čl. 15 GDPR, </li>
           <li>
-            právo opravu osobních údajů dle čl. 16 GDPR, popřípadě omezení zpracování dle
+            právo na opravu osobních údajů dle čl. 16 GDPR, popřípadě omezení zpracování dle
             čl. 18 GDPR. 
           </li>
           <li>právo na výmaz osobních údajů dle čl. 17 GDPR. </li>

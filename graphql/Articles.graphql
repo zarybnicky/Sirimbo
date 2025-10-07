@@ -5,23 +5,23 @@ fragment Article on Aktuality {
   atKdo
   atJmeno
   atText
-  atTimestamp
-  atTimestampAdd
+  createdAt
+  updatedAt
   titlePhotoUrl
-  galerieFotoByAtFotoMain {
+  galerieFoto {
     id
     gfPath
   }
 }
 
 query Article($id: BigInt!) {
-  aktuality(atId: $id) {
+  aktuality(id: $id) {
     ...Article
   }
 }
 
 query Articles($first: Int, $offset: Int) {
-  aktualities(first: $first, offset: $offset, orderBy: [AT_TIMESTAMP_ADD_DESC]) {
+  aktualities(first: $first, offset: $offset, orderBy: [CREATED_AT_DESC]) {
     totalCount
     nodes {
       ...Article
@@ -38,7 +38,7 @@ mutation CreateArticle($input: AktualityInput!) {
 }
 
 mutation UpdateArticle($id: BigInt!, $patch: AktualityPatch!) {
-  updateAktualityById(input: {id: $id, patch: $patch}) {
+  updateAktuality(input: {id: $id, patch: $patch}) {
     aktuality {
       ...Article
     }
@@ -46,7 +46,7 @@ mutation UpdateArticle($id: BigInt!, $patch: AktualityPatch!) {
 }
 
 mutation DeleteArticle($id: BigInt!) {
-  deleteAktualityById(input: {id: $id}) {
+  deleteAktuality(input: {id: $id}) {
     __typename
   }
 }
