@@ -3813,6 +3813,40 @@ export type EventLessonDemandsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
+export type EventOverlapsAttendeeReportRecord = {
+  __typename?: 'EventOverlapsAttendeeReportRecord';
+  firstEventId: Maybe<Scalars['BigInt']['output']>;
+  firstEventName: Maybe<Scalars['String']['output']>;
+  firstInstanceId: Maybe<Scalars['BigInt']['output']>;
+  firstSince: Maybe<Scalars['Datetime']['output']>;
+  firstUntil: Maybe<Scalars['Datetime']['output']>;
+  overlapRange: Maybe<DatetimeRange>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  personName: Maybe<Scalars['String']['output']>;
+  secondEventId: Maybe<Scalars['BigInt']['output']>;
+  secondEventName: Maybe<Scalars['String']['output']>;
+  secondInstanceId: Maybe<Scalars['BigInt']['output']>;
+  secondSince: Maybe<Scalars['Datetime']['output']>;
+  secondUntil: Maybe<Scalars['Datetime']['output']>;
+};
+
+export type EventOverlapsTrainerReportRecord = {
+  __typename?: 'EventOverlapsTrainerReportRecord';
+  firstEventId: Maybe<Scalars['BigInt']['output']>;
+  firstEventName: Maybe<Scalars['String']['output']>;
+  firstInstanceId: Maybe<Scalars['BigInt']['output']>;
+  firstSince: Maybe<Scalars['Datetime']['output']>;
+  firstUntil: Maybe<Scalars['Datetime']['output']>;
+  overlapRange: Maybe<DatetimeRange>;
+  secondEventId: Maybe<Scalars['BigInt']['output']>;
+  secondEventName: Maybe<Scalars['String']['output']>;
+  secondInstanceId: Maybe<Scalars['BigInt']['output']>;
+  secondSince: Maybe<Scalars['Datetime']['output']>;
+  secondUntil: Maybe<Scalars['Datetime']['output']>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  personName: Maybe<Scalars['String']['output']>;
+};
+
 /** Represents an update to a `Event`. Fields that are set will be updated. */
 export type EventPatch = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
@@ -6822,6 +6856,8 @@ export type Query = {
   eventLessonDemandByRegistrationIdAndTrainerId: Maybe<EventLessonDemand>;
   /** Reads a set of `EventLessonDemand`. */
   eventLessonDemandsList: Maybe<Array<EventLessonDemand>>;
+  eventOverlapsAttendeeReportList: Maybe<Array<EventOverlapsAttendeeReportRecord>>;
+  eventOverlapsTrainerReportList: Maybe<Array<EventOverlapsTrainerReportRecord>>;
   /** Get a single `EventRegistration`. */
   eventRegistration: Maybe<EventRegistration>;
   /** Get a single `EventRegistration`. */
@@ -7277,6 +7313,24 @@ export type QueryEventLessonDemandsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventLessonDemandsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventOverlapsAttendeeReportListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  pSince: Scalars['Datetime']['input'];
+  pUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventOverlapsTrainerReportListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  pSince: Scalars['Datetime']['input'];
+  pUntil?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 
@@ -10448,6 +10502,8 @@ export type GraphCacheKeysConfig = {
   EventInstancesEdge?: (data: WithTypename<EventInstancesEdge>) => null | string,
   EventLessonDemand?: (data: WithTypename<EventLessonDemand>) => null | string,
   EventLessonDemandsEdge?: (data: WithTypename<EventLessonDemandsEdge>) => null | string,
+  EventOverlapsAttendeeReportRecord?: (data: WithTypename<EventOverlapsAttendeeReportRecord>) => null | string,
+  EventOverlapsTrainerReportRecord?: (data: WithTypename<EventOverlapsTrainerReportRecord>) => null | string,
   EventRegistration?: (data: WithTypename<EventRegistration>) => null | string,
   EventRegistrationsConnection?: (data: WithTypename<EventRegistrationsConnection>) => null | string,
   EventRegistrationsEdge?: (data: WithTypename<EventRegistrationsEdge>) => null | string,
@@ -10589,6 +10645,8 @@ export type GraphCacheResolvers = {
     eventLessonDemand?: GraphCacheResolver<WithTypename<Query>, QueryEventLessonDemandArgs, WithTypename<EventLessonDemand> | string>,
     eventLessonDemandByRegistrationIdAndTrainerId?: GraphCacheResolver<WithTypename<Query>, QueryEventLessonDemandByRegistrationIdAndTrainerIdArgs, WithTypename<EventLessonDemand> | string>,
     eventLessonDemandsList?: GraphCacheResolver<WithTypename<Query>, QueryEventLessonDemandsListArgs, Array<WithTypename<EventLessonDemand> | string>>,
+    eventOverlapsAttendeeReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsAttendeeReportListArgs, Array<WithTypename<EventOverlapsAttendeeReportRecord> | string>>,
+    eventOverlapsTrainerReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsTrainerReportListArgs, Array<WithTypename<EventOverlapsTrainerReportRecord> | string>>,
     eventRegistration?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationArgs, WithTypename<EventRegistration> | string>,
     eventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs, WithTypename<EventRegistration> | string>,
     eventRegistrations?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationsArgs, WithTypename<EventRegistrationsConnection> | string>,
@@ -11439,6 +11497,36 @@ export type GraphCacheResolvers = {
   EventLessonDemandsEdge?: {
     cursor?: GraphCacheResolver<WithTypename<EventLessonDemandsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<EventLessonDemandsEdge>, Record<string, never>, WithTypename<EventLessonDemand> | string>
+  },
+  EventOverlapsAttendeeReportRecord?: {
+    firstEventId?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    firstEventName?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    firstInstanceId?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    firstSince?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['Datetime'] | string>,
+    firstUntil?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['Datetime'] | string>,
+    overlapRange?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, WithTypename<DatetimeRange> | string>,
+    personId?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    personName?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    secondEventId?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    secondEventName?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    secondInstanceId?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    secondSince?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['Datetime'] | string>,
+    secondUntil?: GraphCacheResolver<WithTypename<EventOverlapsAttendeeReportRecord>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  EventOverlapsTrainerReportRecord?: {
+    firstEventId?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    firstEventName?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    firstInstanceId?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    firstSince?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['Datetime'] | string>,
+    firstUntil?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['Datetime'] | string>,
+    overlapRange?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, WithTypename<DatetimeRange> | string>,
+    secondEventId?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    secondEventName?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    secondInstanceId?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    secondSince?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['Datetime'] | string>,
+    secondUntil?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['Datetime'] | string>,
+    personId?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    trainerName?: GraphCacheResolver<WithTypename<EventOverlapsTrainerReportRecord>, Record<string, never>, Scalars['String'] | string>
   },
   EventRegistration?: {
     couple?: GraphCacheResolver<WithTypename<EventRegistration>, Record<string, never>, WithTypename<Couple> | string>,
@@ -12452,6 +12540,8 @@ export type GraphCacheUpdaters = {
     eventLessonDemand?: GraphCacheUpdateResolver<{ eventLessonDemand: Maybe<WithTypename<EventLessonDemand>> }, QueryEventLessonDemandArgs>,
     eventLessonDemandByRegistrationIdAndTrainerId?: GraphCacheUpdateResolver<{ eventLessonDemandByRegistrationIdAndTrainerId: Maybe<WithTypename<EventLessonDemand>> }, QueryEventLessonDemandByRegistrationIdAndTrainerIdArgs>,
     eventLessonDemandsList?: GraphCacheUpdateResolver<{ eventLessonDemandsList: Maybe<Array<WithTypename<EventLessonDemand>>> }, QueryEventLessonDemandsListArgs>,
+    eventOverlapsAttendeeReportList?: GraphCacheUpdateResolver<{ eventOverlapsAttendeeReportList: Maybe<Array<WithTypename<EventOverlapsAttendeeReportRecord>>> }, QueryEventOverlapsAttendeeReportListArgs>,
+    eventOverlapsTrainerReportList?: GraphCacheUpdateResolver<{ eventOverlapsTrainerReportList: Maybe<Array<WithTypename<EventOverlapsTrainerReportRecord>>> }, QueryEventOverlapsTrainerReportListArgs>,
     eventRegistration?: GraphCacheUpdateResolver<{ eventRegistration: Maybe<WithTypename<EventRegistration>> }, QueryEventRegistrationArgs>,
     eventRegistrationByEventIdAndPersonIdAndCoupleId?: GraphCacheUpdateResolver<{ eventRegistrationByEventIdAndPersonIdAndCoupleId: Maybe<WithTypename<EventRegistration>> }, QueryEventRegistrationByEventIdAndPersonIdAndCoupleIdArgs>,
     eventRegistrations?: GraphCacheUpdateResolver<{ eventRegistrations: Maybe<WithTypename<EventRegistrationsConnection>> }, QueryEventRegistrationsArgs>,
@@ -13399,6 +13489,40 @@ export type GraphCacheUpdaters = {
   EventLessonDemandsEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemandsEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemandsEdge>>, Record<string, never>>
+  },
+  EventOverlapsAttendeeReportRecord?: {
+    firstEventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    firstEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    firstInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    firstSince?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+
+    firstUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    overlapRange?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    personName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    secondEventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    secondEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    secondInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+    secondSince?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>,
+
+    secondUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsAttendeeReportRecord>>, Record<string, never>>
+  },
+  EventOverlapsTrainerReportRecord?: {
+
+    firstEventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    firstEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    firstInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    firstSince?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    firstUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    overlapRange?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+
+    secondEventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    secondEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    secondInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    secondSince?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    secondUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>,
+    personName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsTrainerReportRecord>>, Record<string, never>>
   },
   EventRegistration?: {
     couple?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistration>>, Record<string, never>>,
