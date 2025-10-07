@@ -17,6 +17,14 @@ function NumberField({ name, onChange, disabled, value: inValue, min, max, ...pr
   const value = inValue || 0;
   const minus = React.useCallback(() => onChange(value - 1), [onChange, value]);
   const plus = React.useCallback(() => onChange(value + 1), [onChange, value]);
+
+  const realOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.currentTarget.value)
+      onChange(0);
+    else
+      onChange(Number.parseFloat(e.currentTarget.value));
+  };
+
   return (
     <fieldset disabled={disabled} className="flex gap-2 relative">
       <button type="button" className="text-accent-9 disabled:text-accent-7" disabled={disabled || value <= min} onClick={minus}>
@@ -28,7 +36,7 @@ function NumberField({ name, onChange, disabled, value: inValue, min, max, ...pr
         type="number"
         {...props}
         value={inValue?.toString()}
-        onChange={(e) => e.currentTarget.value ? onChange(Number.parseFloat(e.currentTarget.value)) : undefined}
+        onChange={realOnChange}
         className={cn(
           "inline-block w-12 h-8 p-2 text-sm rounded-md",
           "bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7",

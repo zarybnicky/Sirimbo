@@ -7,7 +7,8 @@ import { useRouter } from 'next/router';
 
 export default function CreateAnnouncementPage() {
   const router = useRouter();
-  const onSuccess = React.useCallback((id: string) => {
+  const onSuccess = React.useCallback((id: string | undefined) => {
+    if (!id) return;
     router.push({
       pathname: '/nastenka/[id]',
       query: { id },

@@ -15,7 +15,7 @@ export function ArticlePublicList() {
           <ArticleCard
             key={x.id}
             header={x.atJmeno}
-            img={x.titlePhotoUrl || `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`}
+            img={x.titlePhotoUrl || `/galerie/${x.galerieFoto?.gfPath}`}
             preview={x.atPreview}
             href={{
               pathname: '/clanky/[id]/[...slug]',

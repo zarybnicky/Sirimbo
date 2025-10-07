@@ -47,7 +47,7 @@ ALTER TABLE public.membership_application ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.membership_application
     ADD CONSTRAINT membership_application_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.membership_application
-    ADD CONSTRAINT membership_application_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(u_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT membership_application_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.membership_application
     ADD CONSTRAINT membership_application_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 

@@ -8,15 +8,11 @@ if (process.env.ANALYZE === 'true') {
 }
 
 /** @type {(x: import('next').NextConfig) => import('next').NextConfig} */
-let withSentryConfig = (x) => x;
-if (process.env.NODE_ENV === 'production') {
-  const sentry = require('@sentry/nextjs');
-  withSentryConfig = cfg => sentry.withSentryConfig(cfg, {
-    tunnelRoute: '/sentry',
-    widenClientFileUpload: true,
-    silent: true,  // Suppresses all logs
-  });
-}
+const withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig(cfg, {
+  tunnelRoute: '/sentry',
+  widenClientFileUpload: true,
+  silent: true,  // Suppresses all logs
+});
 
 /** @type {import('next').NextConfig} */
 module.exports = nextRoutes()(
@@ -104,7 +100,7 @@ module.exports = nextRoutes()(
             { source: '/member/download', destination: `${graphqlUrl}/member/download` },
             { source: '/galerie/:path*', destination: `${process.env.EXTERNAL_SERVER_URL}/galerie/:path*` },
             { source: '/graphql', destination: `${graphqlUrl}/graphql` },
-            { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
+            { source: '/graphiql', destination: `${graphqlUrl}/graphiql` },
             );
         } else {
           rewrites.push(

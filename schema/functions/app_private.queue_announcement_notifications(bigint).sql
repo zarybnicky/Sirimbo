@@ -1,5 +1,5 @@
-CREATE FUNCTION public.queue_announcement_notifications(in_announcement_id bigint) RETURNS void
-    LANGUAGE plpgsql
+CREATE FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 declare
   v_tenant_id bigint;
@@ -93,4 +93,6 @@ begin
 end;
 $$;
 
-COMMENT ON FUNCTION public.queue_announcement_notifications(in_announcement_id bigint) IS '@omit';
+COMMENT ON FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) IS '@omit';
+
+GRANT ALL ON FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) TO anonymous;

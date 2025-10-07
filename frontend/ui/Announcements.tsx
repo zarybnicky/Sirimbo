@@ -17,8 +17,8 @@ const options = [
 export type SortOption = 'created' | 'updated';
 
 const sortOptions: Array<{ value: SortOption; label: string }> = [
-  { value: 'created', label: 'Data vytvoření' },
   { value: 'updated', label: 'Poslední úpravy' },
+  { value: 'created', label: 'Data vytvoření' },
 ];
 
 export function AnnouncementSortControls({
@@ -69,12 +69,7 @@ export function AnnouncementSortControls({
 export function MyAnnouncements() {
   const [page, setPage] = React.useState(1);
   const [state, setState] = React.useState('current');
-  const [sort, setSort] = React.useState<SortOption>('created');
-  const orderByUpdated = sort === 'updated';
-
-  const handleSortChange = React.useCallback((next: SortOption) => {
-    setSort(next);
-  }, []);
+  const [sort, setSort] = React.useState<SortOption>('updated');
 
   const [{ data }] = useQuery({
     query: MyAnnouncementsDocument,
@@ -82,7 +77,7 @@ export function MyAnnouncements() {
       first: 5,
       offset: (page - 1) * 5,
       archive: state === 'archive',
-      orderByUpdated,
+      orderByUpdated: sort === 'updated',
     },
   });
 
@@ -117,7 +112,7 @@ export function MyAnnouncements() {
             </ToggleGroupPrimitive.Item>
           ))}
         </ToggleGroupPrimitive.Root>
-        <AnnouncementSortControls sort={sort} onChange={handleSortChange} className="mb-3" />
+        <AnnouncementSortControls sort={sort} onChange={setSort} className="mb-3" />
       </div>
 
 
@@ -140,16 +135,13 @@ export function MyAnnouncements() {
 }
 
 export function StickyAnnouncements() {
-  const [sort, setSort] = React.useState<SortOption>('created');
-  const orderByUpdated = sort === 'updated';
-
-  const handleSortChange = React.useCallback((next: SortOption) => {
-    setSort(next);
-  }, []);
+  const [sort, setSort] = React.useState<SortOption>('updated');
 
   const [{ data }] = useQuery({
     query: StickyAnnouncementsDocument,
-    variables: { orderByUpdated },
+    variables: {
+      orderByUpdated: sort === 'updated',
+    },
   });
 
   if (!data?.stickyAnnouncements) {
@@ -160,7 +152,7 @@ export function StickyAnnouncements() {
     <div className="flex flex-col">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
         <h4 className="text-2xl tracking-wide grow">Stálá nástěnka</h4>
-        <AnnouncementSortControls sort={sort} onChange={handleSortChange} />
+        <AnnouncementSortControls sort={sort} onChange={setSort} />
       </div>
       <div className="space-y-2 rounded-lg">
         {data.stickyAnnouncements.nodes.map((a) => (
