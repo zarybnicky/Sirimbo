@@ -294,6 +294,20 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         ) {
           cache.invalidate('Query', field.fieldName, field.arguments);
         }
+        for (const field of cache
+          .inspectFields('Query')
+          .filter(field => field.fieldName.includes('eventOverlaps'))
+        ) {
+          cache.invalidate('Query', field.fieldName, field.arguments);
+        }
+      },
+      moveEventInstance(result, _args, cache, _info) {
+        for (const field of cache
+          .inspectFields('Query')
+          .filter(field => field.fieldName.includes('eventOverlaps'))
+        ) {
+          cache.invalidate('Query', field.fieldName, field.arguments);
+        }
       },
       deleteEventExternalRegistration(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventExternalRegistration', id: args.input.id });
@@ -331,6 +345,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           )
             cache.invalidate('Query', field.fieldName, field.arguments);
         }
+        for (const field of cache
+          .inspectFields('Query')
+          .filter(field => field.fieldName.includes('eventOverlaps'))
+        )
+          cache.invalidate('Query', field.fieldName, field.arguments);
       },
 
       createPersonInvitation(_result, args, cache, _info) {
