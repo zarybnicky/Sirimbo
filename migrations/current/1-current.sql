@@ -232,7 +232,7 @@ as $$
   attendance as (
     select
       ea.person_id,
-      case when p.cohort_id is null then null else m.cohort_id end as cohort_id,
+      case when p.cohort_id is null then null else matched_membership.cohort_id end as cohort_id,
       case when e.type = 'lesson' then 1 else 0 end as lesson_score,
       case when e.type = 'group' then floor((extract(epoch from (i.until - i.since)) / 60)::numeric / 45::numeric) else 0 end as group_score,
       case when e.type = 'camp' then 3 + 2 * ((extract(epoch from (i.until - i.since)) > 86400)::int) else 0 end as event_score,
@@ -242,15 +242,21 @@ as $$
     join event e on e.id = er.event_id
     join event_instance i on i.id = ea.instance_id
     join params p on true
-    join membership m on m.person_id = ea.person_id and m.active_range @> i.since
     left join event_target_cohort tc on tc.id = er.target_cohort_id
+    join lateral (
+      select m.cohort_id
+      from membership m
+      where m.person_id = ea.person_id
+        and m.active_range @> i.since
+        and (p.cohort_id is null or m.cohort_id = p.cohort_id)
+        and (tc.cohort_id is null or tc.cohort_id = m.cohort_id)
+      limit 1
+    ) matched_membership on true
     where (ea.status = 'attended' or e.type = 'lesson')
       and e.type <> 'reservation'
       and not i.is_cancelled
       and i.since >= p.since::timestamptz
       and i.until < p.until::timestamptz
-      and (p.cohort_id is null or m.cohort_id = p.cohort_id)
-      and (p.cohort_id is null or tc.cohort_id is null or tc.cohort_id = m.cohort_id)
   ),
   per_day as (
     select
@@ -292,11 +298,11 @@ as $$
       )
       and exists (
         select 1
-        from membership m
-        where m.person_id = sma.person_id
+        from membership mem
+        where mem.person_id = sma.person_id
           and (
             (p.cohort_id is null and sma.cohort_id is null)
-            or m.cohort_id is not distinct from coalesce(sma.cohort_id, p.cohort_id)
+            or mem.cohort_id is not distinct from coalesce(sma.cohort_id, p.cohort_id)
           )
       )
     group by 1, 2
