@@ -1,4 +1,4 @@
-CREATE FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+CREATE or replace FUNCTION otp_login(token uuid, OUT usr users, OUT jwt jwt_token) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
@@ -22,4 +22,5 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION otp_login TO anonymous;
+--select verify_function('public.otp_login');

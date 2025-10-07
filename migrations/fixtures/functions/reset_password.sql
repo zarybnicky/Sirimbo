@@ -1,4 +1,4 @@
-CREATE FUNCTION public.reset_password(email character varying) RETURNS void
+CREATE or replace FUNCTION public.reset_password(email character varying) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
@@ -37,3 +37,4 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION public.reset_password(email character varying) TO anonymous;
+select verify_function('reset_password');

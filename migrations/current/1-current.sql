@@ -100,8 +100,6 @@ grant all on function public.event_overlaps_attendee_report(
   p_until timestamp with time zone
 ) to anonymous;
 
-select verify_function('public.event_overlaps_attendee_report');
-
 create or replace function public.event_overlaps_trainer_report(
   p_since timestamp with time zone,
   p_until timestamp with time zone
@@ -196,5 +194,3 @@ grant all on function public.event_overlaps_trainer_report(
   p_since timestamp with time zone,
   p_until timestamp with time zone
 ) to anonymous;
-
-select verify_function('public.event_overlaps_trainer_report');
