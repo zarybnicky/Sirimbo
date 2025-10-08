@@ -94,10 +94,11 @@ module.exports = nextRoutes()(
       async rewrites() {
         const rewrites = [];
         if (process.env.NODE_ENV !== 'production') {
-          const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:5000';
+          const graphqlServer = process.env.GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz';
+          const externalServer = process.env.EXTERNAL_SERVER_URL || graphqlServer;
           rewrites.push(
             { source: '/member/download', destination: `${graphqlUrl}/member/download` },
-            { source: '/galerie/:path*', destination: `${process.env.EXTERNAL_SERVER_URL}/galerie/:path*` },
+            { source: '/galerie/:path*', destination: `${externalServer ?? ''}/galerie/:path*` },
             { source: '/graphql', destination: `${graphqlUrl}/graphql` },
             { source: '/graphiql', destination: `${graphqlUrl}/graphiql` },
             );
