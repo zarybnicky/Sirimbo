@@ -21,6 +21,7 @@ import {
 import {
   formatDefaultEventName,
   formatLongCoupleName,
+  formatOpenDateRange,
   fullDateFormatter,
   moneyFormatter,
 } from '@/ui/format';
@@ -62,6 +63,14 @@ export function EventView({ event }: { event: EventFullFragment }) {
         id: 'info',
         title: 'Informace',
         contents: () => <EventInfo event={event} />,
+      });
+    }
+
+    if (event.eventInstancesList.length > 0) {
+      tabs.push({
+        id: 'instances',
+        title: 'Termíny',
+        contents: () => <EventInstances event={event} />,
       });
     }
     const numRegistrations =
@@ -167,6 +176,47 @@ function Attendance({
                 ))}
             </tr>
           ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function EventInstances({ event }: { event: EventFullFragment }) {
+  return (
+    <div className="prose prose-accent max-w-none">
+      <table className="w-full">
+        <thead>
+          <tr>
+            <th scope="col" className="text-left">Termín</th>
+            <th scope="col" className="text-left">Trenéři</th>
+          </tr>
+        </thead>
+        <tbody>
+          {event.eventInstancesList.map((instance) => {
+            const trainerNames = instance.trainers
+              ?.map((trainer) => trainer?.name)
+              .filter((name): name is string => Boolean(name));
+
+            return (
+              <tr key={instance.id}>
+                <td>
+                  <Link
+                    href={{
+                      pathname: '/akce/[id]/termin/[instance]',
+                      query: { id: event.id, instance: instance.id },
+                    }}
+                  >
+                    {formatOpenDateRange(instance)}
+                  </Link>
+                  {instance.isCancelled && (
+                    <div className="text-sm text-muted-foreground">Zrušeno</div>
+                  )}
+                </td>
+                <td>{trainerNames?.length ? trainerNames.join(', ') : '—'}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
