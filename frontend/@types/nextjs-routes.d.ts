@@ -61,6 +61,7 @@ declare module "nextjs-routes" {
     | DynamicRoute<"/treninkove-skupiny/[id]", { "id": string }>
     | DynamicRoute<"/treninkove-skupiny/[id]/[...slug]", { "id": string; "slug": string[] }>
     | StaticRoute<"/upload">
+    | DynamicRoute<"/users/[id]", { "id": string }>
     | StaticRoute<"/vyhody-clenstvi">
     | StaticRoute<"/vystoupeni">
     | StaticRoute<"/zapomenute-heslo">
