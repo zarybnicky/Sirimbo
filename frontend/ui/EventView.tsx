@@ -2,6 +2,7 @@ import type { AttendanceType } from '@/graphql';
 import {
   EventDocument,
   type EventAttendanceSummaryFragment,
+  type EventFullFragment,
   EventPaymentsDocument,
   DeleteEventExternalRegistrationDocument,
   type EventFragment,
@@ -45,12 +46,9 @@ const labels: { [key in AttendanceType]: LucideIcon } = {
   CANCELLED: OctagonMinus,
 };
 
-export function EventView({ id }: { id: string }) {
+export function EventView({ event }: { event: EventFullFragment }) {
   const auth = useAuth();
   const [variant, setVariant] = useQueryParam('tab', StringParam);
-
-  const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
-  const event = data?.event;
 
   const tabs = React.useMemo(() => {
     const tabs: {

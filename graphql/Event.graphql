@@ -133,6 +133,15 @@ fragment EventRegistration on EventRegistration {
   createdAt
 }
 
+fragment EventFull on Event {
+  ...Event
+  ...EventRegistrations
+  ...EventAttendanceSummary
+  eventInstancesList(orderBy: SINCE_ASC) {
+    ...EventInstanceWithTrainer
+  }
+}
+
 query EventInstanceApproxPrice($id: BigInt!) {
   eventInstance(id: $id) {
     id
@@ -164,12 +173,7 @@ query EventRegistrants($id: BigInt!) {
 
 query Event($id: BigInt!) {
   event(id: $id) {
-    ...Event
-    ...EventRegistrations
-    ...EventAttendanceSummary
-    eventInstancesList(orderBy: SINCE_ASC) {
-      ...EventInstanceWithTrainer
-    }
+    ...EventFull
   }
 }
 

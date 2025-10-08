@@ -25,7 +25,9 @@ export default function EventPage() {
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       <WithSidebar sidebar={<EventList />}>
         <div className={auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
-          <EventView id={id} />
+          {data?.event && (
+            <EventView event={data.event} />
+          )}
         </div>
       </WithSidebar>
     </Layout>

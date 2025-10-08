@@ -47,7 +47,7 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
         aria-label={`Zobrazit ${totalConflicts} konfliktů v kalendáři`}
       >
         <AlertTriangle className="size-5" />
-        <span className="text-base font-semibold">{totalConflicts}</span>
+        <span className="font-semibold">{totalConflicts}</span>
       </button>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -66,7 +66,7 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
             <div className="space-y-8">
               {attendeeConflicts.length > 0 && (
                 <section>
-                  <h3 className="text-base font-semibold">Účastníci ({attendeeConflicts.length})</h3>
+                  <h3 className="font-semibold">Účastníci ({attendeeConflicts.length})</h3>
                   <ul className="mt-3 space-y-4">
                     {attendeeConflicts.map((conflict) => (
                       <li key={conflict.id} className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 shadow-sm">
@@ -87,7 +87,7 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
 
               {trainerConflicts.length > 0 && (
                 <section>
-                  <h3 className="text-base font-semibold">Trenéři ({trainerConflicts.length})</h3>
+                  <h3 className="font-semibold">Trenéři ({trainerConflicts.length})</h3>
                   <ul className="mt-3 space-y-4">
                     {trainerConflicts.map((conflict) => (
                       <li key={conflict.id} className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 shadow-sm">

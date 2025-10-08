@@ -91,12 +91,12 @@ export default function ScoreboardPage() {
           </dl>
         </section>
 
-        <section className="not-prose rounded-lg border border-border bg-surface p-4 space-y-4">
+        <section className="not-prose rounded-lg border border-border p-4 space-y-4">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <label className="flex flex-col gap-1 text-sm font-medium">
               Skupina
               <select
-                className="rounded-md border border-border bg-background px-3 py-2 text-base"
+                className="rounded-md border border-border px-3 py-2"
                 value={selectedCohortId ?? ''}
                 onChange={(event) => setSelectedCohortId(event.target.value ? event.target.value : null)}
               >

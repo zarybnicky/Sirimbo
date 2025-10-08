@@ -26,7 +26,6 @@ module.exports = nextRoutes()(
       output: 'standalone',
       experimental: {
         scrollRestoration: true,
-        webpackBuildWorker: true,
       },
 
       images: {
@@ -128,13 +127,11 @@ module.exports = nextRoutes()(
         return rewrites;
       },
 
-      webpack: (config, { webpack, buildId }) => {
-        config.plugins.push(new webpack.DefinePlugin({
-          'process.env.BUILD_ID': JSON.stringify(buildId),
+      compiler: {
+        define: {
           __SENTRY_DEBUG__: false,
           __SENTRY_TRACING__: false,
-        }));
-        return config;
+        },
       },
     }),
   ),

@@ -113,6 +113,10 @@ export default function OKlubuPage() {
             <td><b>700 Kč</b></td>
           </tr>
           <tr>
+            <td>Nemístenková vstupenka na galavečer na místě:</td>
+            <td><b>300 Kč</b></td>
+          </tr>
+          <tr>
             <td>Děti do 15 let:</td>
             <td><b>100 Kč</b></td>
           </tr>
