@@ -17,6 +17,9 @@ import { MarkAsPaidDocument } from '@/graphql/Payment';
 import { buttonCls } from '@/ui/style';
 import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
 import { Spinner } from '@/ui/Spinner';
+import Link from 'next/link';
+import type { LinkProps } from 'next/link';
+import { useAuth } from '@/ui/use-auth';
 
 type TenantAccountPage = NonNullable<TenantTurnoverPageQuery['accountsList']>[number];
 type TenantPosting = TenantAccountPage['postingsList'][number];
@@ -30,6 +33,9 @@ type ManualCreditTransaction = NonNullable<
 
 const TURNOVER_PAGE_SIZE = 50;
 const DEPOSIT_PAGE_SIZE = 50;
+
+const paymentDetailHref = (id: string): LinkProps['href'] =>
+  ({ pathname: '/platby/[id]', query: { id } } as unknown as LinkProps['href']);
 
 export default function PaymentsPage() {
   const [tab, setTab] = useQueryParam('tab', StringParam);
@@ -87,6 +93,7 @@ function UnpaidPayments() {
   const [{ data }] = useQuery({ query: UnpaidPaymentsDocument });
   const { unpaidPayments } = data || {};
   const markAsPaid = useMutation(MarkAsPaidDocument)[1];
+  const auth = useAuth();
 
   return (
     <>
@@ -107,6 +114,14 @@ function UnpaidPayments() {
                 </DropdownMenuButton>
               </DropdownMenuContent>
             </DropdownMenu>
+            {auth.isAdmin && x.payment?.id && (
+              <Link
+                href={paymentDetailHref(x.payment.id)}
+                className="mt-1 block text-xs font-medium text-accent-11 hover:underline"
+              >
+                Detail
+              </Link>
+            )}
           </span>
         </div>
       ))}
@@ -116,6 +131,7 @@ function UnpaidPayments() {
 
 function TenantTurnover() {
   const client = useClient();
+  const auth = useAuth();
   const [accounts, setAccounts] = React.useState<Map<string, TenantAccount>>(new Map());
   const [accountOrder, setAccountOrder] = React.useState<string[]>([]);
   const [nextOffset, setNextOffset] = React.useState(0);
@@ -269,6 +285,14 @@ function TenantTurnover() {
                           {specificSymbol && <>SS: {specificSymbol}</>}
                         </span>
                       )}
+                      {auth.isAdmin && payment?.id && (
+                        <Link
+                          href={paymentDetailHref(payment.id)}
+                          className="text-xs font-medium text-accent-11 hover:underline"
+                        >
+                          Detail platby
+                        </Link>
+                      )}
                     </div>
                     <span className="font-medium">
                       {moneyFormatter.format({ amount: posting.amount ?? '0', currency: account.currency })}
@@ -333,6 +357,7 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
     query: TenantManualCreditTransactionsDocument,
     variables: { first: DEPOSIT_PAGE_SIZE, cursor: cursor ?? undefined },
   });
+  const auth = useAuth();
 
   const transactions = data?.tenant?.transactions;
   const nodes = transactions?.nodes ?? [];
@@ -362,7 +387,7 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
   return (
     <>
       {nodes.map((transaction) => (
-        <DepositRow key={transaction.id} transaction={transaction} />
+        <DepositRow key={transaction.id} transaction={transaction} showDebug={auth.isAdmin} />
       ))}
       {hasMore && onLoadMore && endCursor && (
         <div className="flex justify-center py-3">
@@ -380,7 +405,7 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
   );
 }
 
-function DepositRow({ transaction }: { transaction: ManualCreditTransaction }) {
+function DepositRow({ transaction, showDebug }: { transaction: ManualCreditTransaction; showDebug: boolean }) {
   const effectiveDate = transaction.effectiveDate
     ? numericDateFormatter.format(new Date(transaction.effectiveDate))
     : '';
@@ -405,6 +430,14 @@ function DepositRow({ transaction }: { transaction: ManualCreditTransaction }) {
             {variableSymbol && specificSymbol && ' • '}
             {specificSymbol && <>SS: {specificSymbol}</>}
           </span>
+        )}
+        {showDebug && transaction.payment?.id && (
+          <Link
+            href={paymentDetailHref(transaction.payment.id)}
+            className="text-xs font-medium text-accent-11 hover:underline"
+          >
+            Detail platby
+          </Link>
         )}
       </div>
       <span className="font-medium">
