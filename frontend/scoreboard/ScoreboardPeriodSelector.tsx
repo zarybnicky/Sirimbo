@@ -1,4 +1,6 @@
 import React from 'react';
+import { Combobox } from '@/ui/fields/Combobox';
+import { TextField } from '@/ui/fields/text';
 import { PeriodPreset, periodLabels } from './periods';
 
 type ScoreboardPeriodSelectorProps = {
@@ -24,43 +26,56 @@ export function ScoreboardPeriodSelector({
   onCustomUntilChange,
   showCustomRangeWarning,
 }: ScoreboardPeriodSelectorProps) {
+  const periodOptions = React.useMemo(
+    () =>
+      Object.entries(periodLabels).map(([value, label]) => ({
+        id: value,
+        label,
+      })),
+    [],
+  );
+
+  const handlePresetChange = React.useCallback<
+    React.Dispatch<React.SetStateAction<string | null | undefined>>
+  >(
+    (value) => {
+      const nextValue = typeof value === 'function' ? value(preset) : value;
+
+      if (typeof nextValue === 'string') {
+        onPresetChange(nextValue as PeriodPreset);
+      }
+    },
+    [onPresetChange, preset],
+  );
+
   return (
     <>
-      <label className="flex flex-col gap-1 text-sm font-medium">
-        Období
-        <select
-          className="rounded-md border border-border bg-background px-3 py-2 text-base"
-          value={preset}
-          onChange={(event) => onPresetChange(event.target.value as PeriodPreset)}
-        >
-          {Object.entries(periodLabels).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
+      <Combobox
+        label="Období"
+        value={preset}
+        onChange={handlePresetChange}
+        options={periodOptions}
+        placeholder="Vyberte období"
+      />
 
       {preset === 'custom' ? (
         <>
-          <label className="flex flex-col gap-1 text-sm font-medium">
-            Od
-            <input
-              type="date"
-              className="rounded-md border border-border bg-background px-3 py-2 text-base"
-              value={customSince}
-              onChange={(event) => onCustomSinceChange(event.target.value)}
-            />
-          </label>
-          <label className="flex flex-col gap-1 text-sm font-medium">
-            Do
-            <input
-              type="date"
-              className="rounded-md border border-border bg-background px-3 py-2 text-base"
-              value={customUntil}
-              onChange={(event) => onCustomUntilChange(event.target.value)}
-            />
-          </label>
+          <TextField
+            className="space-y-1"
+            label="Od"
+            name="scoreboard-custom-since"
+            type="date"
+            value={customSince}
+            onChange={(event) => onCustomSinceChange(event.currentTarget.value)}
+          />
+          <TextField
+            className="space-y-1"
+            label="Do"
+            name="scoreboard-custom-until"
+            type="date"
+            value={customUntil}
+            onChange={(event) => onCustomUntilChange(event.currentTarget.value)}
+          />
           {showCustomRangeWarning ? (
             <p className="text-sm text-muted-foreground md:col-span-2 xl:col-span-4">
               Vyplňte prosím datum od i do, aby bylo možné žebříček spočítat.
@@ -68,15 +83,14 @@ export function ScoreboardPeriodSelector({
           ) : null}
         </>
       ) : (
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          Referenční datum
-          <input
-            type="date"
-            className="rounded-md border border-border bg-background px-3 py-2 text-base"
-            value={referenceDate}
-            onChange={(event) => onReferenceDateChange(event.target.value)}
-          />
-        </label>
+        <TextField
+          className="space-y-1"
+          label="Referenční datum"
+          name="scoreboard-reference-date"
+          type="date"
+          value={referenceDate}
+          onChange={(event) => onReferenceDateChange(event.currentTarget.value)}
+        />
       )}
     </>
   );

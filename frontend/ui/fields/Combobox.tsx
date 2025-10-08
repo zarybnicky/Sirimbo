@@ -8,7 +8,7 @@ import { cn } from '@/ui/cn';
 import { buttonCls } from '@/ui/style';
 
 type Item = { id: string | null; label: string };
-type ComboboxProps = {
+export type ComboboxProps = {
   value: string | null | undefined;
   onChange: React.Dispatch<React.SetStateAction<string | null | undefined>>;
   options?: Item[];
@@ -40,7 +40,7 @@ export function ComboboxElement<T extends FieldValues>({
   );
 }
 
-function Combobox({
+export function Combobox({
   value,
   onChange,
   options = [],
