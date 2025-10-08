@@ -301,7 +301,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           cache.invalidate('Query', field.fieldName, field.arguments);
         }
       },
-      moveEventInstance(result, _args, cache, _info) {
+      moveEventInstance(_result, _args, cache, _info) {
         for (const field of cache
           .inspectFields('Query')
           .filter(field => field.fieldName.includes('eventOverlaps'))

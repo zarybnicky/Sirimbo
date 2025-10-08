@@ -129,8 +129,8 @@ module.exports = nextRoutes()(
 
       compiler: {
         define: {
-          __SENTRY_DEBUG__: false,
-          __SENTRY_TRACING__: false,
+          __SENTRY_DEBUG__: 'false',
+          __SENTRY_TRACING__: 'false',
         },
       },
     }),

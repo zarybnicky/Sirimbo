@@ -6,9 +6,10 @@ import { TitleBar } from '@/ui/TitleBar';
 import { ScoreboardPeriodSelector } from '@/scoreboard/ScoreboardPeriodSelector';
 import { computeRange, formatDate, PeriodPreset } from '@/scoreboard/periods';
 import { ScoreboardDocument, ScoreboardQueryVariables } from '@/graphql/Scoreboard';
+import { Combobox } from '@/ui/fields/Combobox';
 
 export default function ScoreboardPage() {
-  const [selectedCohortId, setSelectedCohortId] = React.useState<string | null>(null);
+  const [selectedCohortId, setSelectedCohortId] = React.useState<string | null | undefined>(null);
   const [preset, setPreset] = React.useState<PeriodPreset>('schoolYear');
   const [referenceDate, setReferenceDate] = React.useState(() => formatDate(new Date()));
   const [customRange, setCustomRange] = React.useState<{ since: string; until: string }>({ since: '', until: '' });
@@ -35,7 +36,7 @@ export default function ScoreboardPage() {
     pause: shouldPause,
   });
 
-  const cohorts = data?.cohortsList ?? [];
+  const cohorts = data?.getCurrentTenant?.cohortsList ?? [];
   const scoreboard = data?.scoreboardEntriesList ?? [];
   const activeCohort = selectedCohortId ? cohorts.find((item) => item.id === selectedCohortId) ?? null : null;
 
@@ -93,7 +94,22 @@ export default function ScoreboardPage() {
 
         <section className="not-prose rounded-lg border border-border p-4 space-y-4">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <Combobox
+              label="Skupina"
+              value={selectedCohortId}
+              onChange={setSelectedCohortId}
+              options={[
+                { id: '', label: 'Všechny skupiny' },
+                ...cohorts.map(cohort => ({
+                  id: cohort.id,
+                  label: cohort.name
+                }))
+              ]}
+              placeholder="Všechny skupiny"
+            />
+
             <label className="flex flex-col gap-1 text-sm font-medium">
+
               Skupina
               <select
                 className="rounded-md border border-border px-3 py-2"
