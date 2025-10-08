@@ -38,6 +38,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
+import { truthyFilter } from './truthyFilter';
 
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
@@ -66,13 +67,6 @@ export function EventView({ event }: { event: EventFullFragment }) {
       });
     }
 
-    if (event.eventInstancesList.length > 0) {
-      tabs.push({
-        id: 'instances',
-        title: 'Termíny',
-        contents: () => <EventInstances event={event} />,
-      });
-    }
     const numRegistrations =
       (event.eventRegistrationsList.length ?? 0) +
       (event.eventExternalRegistrationsList.length ?? 0);
@@ -96,6 +90,11 @@ export function EventView({ event }: { event: EventFullFragment }) {
         id: 'payments',
         title: 'Platby',
         contents: () => <Payments event={event} />,
+      });
+      tabs.push({
+        id: 'instances',
+        title: 'Termíny',
+        contents: () => <EventInstances event={event} />,
       });
     }
     return tabs;
@@ -194,9 +193,10 @@ function EventInstances({ event }: { event: EventFullFragment }) {
         </thead>
         <tbody>
           {event.eventInstancesList.map((instance) => {
-            const trainerNames = instance.trainers
-              ?.map((trainer) => trainer?.name)
-              .filter((name): name is string => Boolean(name));
+            let trainerNames = instance.trainers?.map(x => x.name).filter(truthyFilter);
+
+            if (trainerNames.length === 0)
+              trainerNames = event.eventTrainersList?.map(x => x.name).filter(truthyFilter);
 
             return (
               <tr key={instance.id}>
