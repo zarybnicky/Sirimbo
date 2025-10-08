@@ -7,6 +7,7 @@ import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
+import Link from 'next/link';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -16,10 +17,23 @@ export default function PaymentDebugPage() {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
   const [{ data, fetching, error }] = useQuery({ query: PaymentDocument, variables: { id }, pause: !id });
+  const paymentId = data?.payment?.id;
 
   return (
     <Layout requireAdmin>
-      <TitleBar title={`Detail platby ${id ?? ''}`} />
+      <TitleBar title={`Detail platby ${id ?? ''}`}>
+        <Link href="/platby" className="text-sm font-medium text-accent-11 hover:underline">
+          Přehled plateb
+        </Link>
+        {paymentId && (
+          <Link
+            href={{ pathname: '/platby/[id]', query: { id: paymentId } }}
+            className="text-sm font-medium text-accent-11 hover:underline"
+          >
+            Veřejný detail
+          </Link>
+        )}
+      </TitleBar>
       <div className="space-y-6">
         {fetching && <p>Načítám…</p>}
         {error && <p className="text-accent-11">Nepodařilo se načíst platbu.</p>}
@@ -64,17 +78,34 @@ export default function PaymentDebugPage() {
             {payment.cohortSubscription && (
               <div>
                 <h3 className="font-medium text-neutral-12">Předplatné skupiny</h3>
-                <p>
-                  #{payment.cohortSubscription.id} – {payment.cohortSubscription.cohort?.name}
+                <p className="flex flex-wrap items-center gap-2">
+                  <span>#{payment.cohortSubscription.id}</span>
+                  {payment.cohortSubscription.cohort && (
+                    <Link
+                      href={{ pathname: '/treninkove-skupiny/[id]', query: { id: payment.cohortSubscription.cohort.id } }}
+                      className="text-sm font-medium text-accent-11 hover:underline"
+                    >
+                      {payment.cohortSubscription.cohort.name}
+                    </Link>
+                  )}
                 </p>
               </div>
             )}
             {payment.eventInstance && (
               <div>
                 <h3 className="font-medium text-neutral-12">Termín události</h3>
-                <p>
-                  #{payment.eventInstance.id} –{' '}
-                  {numericDateFormatter.format(new Date(payment.eventInstance.since))}
+                <p className="flex flex-wrap items-center gap-2">
+                  <span>
+                    #{payment.eventInstance.id} – {numericDateFormatter.format(new Date(payment.eventInstance.since))}
+                  </span>
+                  {payment.eventInstance.event && (
+                    <Link
+                      href={{ pathname: '/akce/[id]', query: { id: payment.eventInstance.event.id } }}
+                      className="text-sm font-medium text-accent-11 hover:underline"
+                    >
+                      {payment.eventInstance.event.name}
+                    </Link>
+                  )}
                 </p>
                 {payment.eventInstance.trainers.length > 0 && (
                   <ul className="ml-4 list-disc">
@@ -88,8 +119,16 @@ export default function PaymentDebugPage() {
             {payment.eventRegistration && (
               <div>
                 <h3 className="font-medium text-neutral-12">Registrace na akci</h3>
-                <p>
-                  #{payment.eventRegistration.id} – {payment.eventRegistration.event?.name}
+                <p className="flex flex-wrap items-center gap-2">
+                  <span>#{payment.eventRegistration.id}</span>
+                  {payment.eventRegistration.event && (
+                    <Link
+                      href={{ pathname: '/akce/[id]', query: { id: payment.eventRegistration.event.id } }}
+                      className="text-sm font-medium text-accent-11 hover:underline"
+                    >
+                      {payment.eventRegistration.event.name}
+                    </Link>
+                  )}
                 </p>
               </div>
             )}
@@ -190,7 +229,17 @@ function AccountSummary({ account, className }: { account?: AccountInfo | null; 
           </li>
           <li>
             <span className="font-semibold text-neutral-12">Osoba:</span>{' '}
-            {account.person ? `${account.person.name} (#${account.person.id})` : '—'}
+            {account.person ? (
+              <Link
+                href={{ pathname: '/clenove/[id]', query: { id: account.person.id } }}
+                className="font-medium text-accent-11 hover:underline"
+              >
+                {account.person.name} (#
+                {account.person.id})
+              </Link>
+            ) : (
+              '—'
+            )}
           </li>
           <li>
             <span className="font-semibold text-neutral-12">Tenant:</span>{' '}
