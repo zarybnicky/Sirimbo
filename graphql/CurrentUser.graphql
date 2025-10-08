@@ -30,6 +30,32 @@ query UserList {
   }
 }
 
+query UserDetail($id: BigInt!) {
+  user(id: $id) {
+    id
+    uEmail
+    uLogin
+    uJmeno
+    uPrijmeni
+    uCreatedAt
+    lastActiveAt
+    lastLogin
+    lastVersion
+    tenantId
+    userProxiesList(orderBy: CREATED_AT_ASC) {
+      id
+      since
+      until
+      active
+      status
+      person {
+        id
+        name
+      }
+    }
+  }
+}
+
 mutation LogInAs($id: BigInt!) {
   logInAs(input: { id: $id }) {
     result {
