@@ -34,8 +34,8 @@ type ManualCreditTransaction = NonNullable<
 const TURNOVER_PAGE_SIZE = 50;
 const DEPOSIT_PAGE_SIZE = 50;
 
-const paymentDebugHref = (id: string): LinkProps['href'] =>
-  ({ pathname: '/payment/[id]', query: { id } } as unknown as LinkProps['href']);
+const paymentDetailHref = (id: string): LinkProps['href'] =>
+  ({ pathname: '/platby/[id]', query: { id } } as unknown as LinkProps['href']);
 
 export default function PaymentsPage() {
   const [tab, setTab] = useQueryParam('tab', StringParam);
@@ -116,10 +116,10 @@ function UnpaidPayments() {
             </DropdownMenu>
             {auth.isAdmin && x.payment?.id && (
               <Link
-                href={paymentDebugHref(x.payment.id)}
+                href={paymentDetailHref(x.payment.id)}
                 className="mt-1 block text-xs font-medium text-accent-11 hover:underline"
               >
-                Debug detail
+                Detail
               </Link>
             )}
           </span>
@@ -287,10 +287,10 @@ function TenantTurnover() {
                       )}
                       {auth.isAdmin && payment?.id && (
                         <Link
-                          href={paymentDebugHref(payment.id)}
+                          href={paymentDetailHref(payment.id)}
                           className="text-xs font-medium text-accent-11 hover:underline"
                         >
-                          Debug detail platby
+                          Detail platby
                         </Link>
                       )}
                     </div>
@@ -433,10 +433,10 @@ function DepositRow({ transaction, showDebug }: { transaction: ManualCreditTrans
         )}
         {showDebug && transaction.payment?.id && (
           <Link
-            href={paymentDebugHref(transaction.payment.id)}
+            href={paymentDetailHref(transaction.payment.id)}
             className="text-xs font-medium text-accent-11 hover:underline"
           >
-            Debug detail platby
+            Detail platby
           </Link>
         )}
       </div>
