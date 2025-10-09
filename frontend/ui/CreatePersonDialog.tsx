@@ -275,11 +275,7 @@ export function CreatePersonDialog() {
                   </button>
                 </Collapsible.Trigger>
               </div>
-              <Collapsible.Content
-                forceMount
-                className="CollapsibleContent"
-                id="cohortIds-collapsible"
-              >
+              <Collapsible.Content forceMount className="[&[data-state=closed]>div]:hidden">
                 <VerticalCheckboxButtonGroupElement
                   control={control}
                   name="cohortIds"

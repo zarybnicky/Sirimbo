@@ -120,7 +120,7 @@ export function InstanceListElement({
               </button>
             </div>
 
-            <Collapsible.Content asChild>
+            <Collapsible.Content asChild forceMount className="[&[data-state=closed]>div]:hidden">
               <div className="w-full ml-4 gap-2 items-baseline">
                 <InstanceTrainerListElement control={control} index={index} />
               </div>
