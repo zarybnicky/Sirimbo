@@ -125,7 +125,7 @@ export function CreatePersonDialog() {
 
   const onSubmit = useAsyncCallback(async (data: TypeOf<typeof Form>) => {
     const { personId, isAdmin, isMember, isTrainer, joinDate, sendInvitation, cohortIds, ...p } = data;
-    const sanitizedCohortIds = cohortIds.filter((x): x is string => Boolean(x));
+    const sanitizedCohortIds = (cohortIds ?? []).filter((x): x is string => Boolean(x));
     const res = await create({
       input: {
         personId,
@@ -275,7 +275,11 @@ export function CreatePersonDialog() {
                   </button>
                 </Collapsible.Trigger>
               </div>
-              <Collapsible.Content className="CollapsibleContent" id="cohortIds-collapsible">
+              <Collapsible.Content
+                forceMount
+                className="CollapsibleContent"
+                id="cohortIds-collapsible"
+              >
                 <VerticalCheckboxButtonGroupElement
                   control={control}
                   name="cohortIds"
