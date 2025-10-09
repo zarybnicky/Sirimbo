@@ -117,6 +117,11 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
             <div>{tenantConfig.copyrightLine}</div>
             <div>Verze: {buildId?.slice(0, 7)}</div>
+            <div>
+              <Link href="/now" className="underline">
+                Právě probíhá
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
