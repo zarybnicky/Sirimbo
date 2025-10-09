@@ -118,8 +118,8 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
             <div>{tenantConfig.copyrightLine}</div>
             <div>Verze: {buildId?.slice(0, 7)}</div>
             <div>
-              <Link href="/now" className="underline">
-                Právě probíhá
+              <Link href="/now" target="_blank">
+                Právě probíhá ↗︎
               </Link>
             </div>
           </div>
