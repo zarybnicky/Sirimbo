@@ -293,7 +293,7 @@ function CouplesAndSolosTabContent({
   canManageMemberships,
 }: CouplesAndSolosTabContentProps) {
   const renderQuickMember = (membership: CohortMembership) => (
-    <span className="inline-flex items-center gap-2 text-sm">
+    <div className="flex items-center gap-2 text-sm">
       {canManageMemberships && (
         <CohortMembershipMenu data={membership}>
           <DropdownMenuTrigger.RowDots />
@@ -312,7 +312,7 @@ function CouplesAndSolosTabContent({
       ) : (
         <span>?</span>
       )}
-    </span>
+    </div>
   );
 
   return (
@@ -324,18 +324,13 @@ function CouplesAndSolosTabContent({
         {couples.length === 0 ? (
           <p className="text-sm text-neutral-11">Žádné páry v této skupině zatím nejsou.</p>
         ) : (
-          <ul className="space-y-2 text-sm text-neutral-12">
-            {couples.map(({ couple, manMembership, womanMembership }) => {
-              const coupleLabel = formatLongCoupleName(couple) || 'Neznámý pár';
-              return (
-                <li key={couple.id} className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <span className="font-semibold">{coupleLabel}:</span>
-                  {renderQuickMember(manMembership)}
-                  <span>&amp;</span>
-                  {renderQuickMember(womanMembership)}
-                </li>
-              );
-            })}
+          <ul className="grid gap-3 text-sm text-neutral-12">
+            {couples.map(({ couple, manMembership, womanMembership }) => (
+              <li key={couple.id} className="grid grid-cols-2 items-center gap-3">
+                {renderQuickMember(manMembership)}
+                {renderQuickMember(womanMembership)}
+              </li>
+            ))}
           </ul>
         )}
       </section>
