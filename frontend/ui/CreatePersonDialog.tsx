@@ -1,8 +1,9 @@
 'use client';
 
 import { CreatePersonDocument, FullPersonListDocument, CstsPersonDocument } from '@/graphql/Person';
+import { SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import { useZodForm } from '@/lib/use-schema-form';
-import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
+import { RadioButtonGroupElement, VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { ComboboxElement } from '@/ui/fields/Combobox';
@@ -12,7 +13,10 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { countries } from '@/lib/countries';
-import { Plus } from 'lucide-react';
+import { useCohorts } from '@/ui/useCohorts';
+import * as Collapsible from '@radix-ui/react-collapsible';
+import { FieldLabel } from '@/ui/form';
+import { ChevronDown, Plus } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -49,12 +53,14 @@ const Form = z.object({
   isAdmin: z.boolean().default(false),
   sendInvitation: z.boolean().default(false),
   joinDate: z.date(),
+  cohortIds: z.array(z.string()).default([]),
 });
 
 export function CreatePersonDialog() {
   const [open, setOpen] = React.useState<'existing' | 'new' | null>(null);
   const router = useRouter();
   const create = useMutation(CreatePersonDocument)[1];
+  const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
 
   const [personQuery] = useQuery({ query: FullPersonListDocument, pause: open !== 'existing' });
   const personOptions = React.useMemo(() => personQuery.data?.people?.nodes?.map(x => ({
@@ -63,6 +69,8 @@ export function CreatePersonDialog() {
   })).sort((x, y) => x.label.localeCompare(y.label)), [personQuery]);
 
   const { control, handleSubmit, getValues, setValue, reset, watch } = useZodForm(Form);
+  const { data: cohorts } = useCohorts({ visible: true });
+  const cohortOptions = React.useMemo(() => cohorts.map(x => ({ id: x.id, label: x.name })), [cohorts]);
 
   const [cstsId, setCstsId] = React.useState(Number.NaN);
   const [cstsQuery] = useQuery({
@@ -72,6 +80,8 @@ export function CreatePersonDialog() {
   });
 
   const personId = watch('personId');
+  const selectedCohortCount = watch('cohortIds')?.length ?? 0;
+  const [cohortPickerOpen, setCohortPickerOpen] = React.useState(false);
   React.useEffect(() => {
     const person = personQuery.data?.people?.nodes.find(x => x.id === personId);
     if (person) {
@@ -88,8 +98,10 @@ export function CreatePersonDialog() {
       setValue('phone', person.phone || undefined);
       setValue('email', person.email || undefined);
       setValue('sendInvitation', false);
+      setValue('cohortIds', person.cohortIds?.filter((x): x is string => Boolean(x)) ?? []);
+      setCohortPickerOpen((person.cohortIds?.filter((x): x is string => Boolean(x)) ?? []).length > 0);
     }
-  }, [setValue, personId]);
+  }, [setValue, personId, setCohortPickerOpen]);
 
   const email = watch('email');
   React.useEffect(() => {
@@ -106,11 +118,14 @@ export function CreatePersonDialog() {
       setValue('sendInvitation', false);
       setValue('nationality', "203");
       setValue('joinDate', new Date());
+      setValue('cohortIds', []);
+      setCohortPickerOpen(false);
     }
-  }, [open, reset, setValue])
+  }, [open, reset, setValue, setCohortPickerOpen]);
 
   const onSubmit = useAsyncCallback(async (data: TypeOf<typeof Form>) => {
-    const { personId, isAdmin, isMember, isTrainer, joinDate, sendInvitation, ...p } = data;
+    const { personId, isAdmin, isMember, isTrainer, joinDate, sendInvitation, cohortIds, ...p } = data;
+    const sanitizedCohortIds = cohortIds.filter((x): x is string => Boolean(x));
     const res = await create({
       input: {
         personId,
@@ -124,6 +139,12 @@ export function CreatePersonDialog() {
     });
     const id = res.data?.createPerson?.p?.id;
     if (id) {
+      await syncCohorts({
+        input: {
+          personId: id,
+          cohortIds: sanitizedCohortIds,
+        },
+      });
       toast.success('Přidáno.');
       setOpen(null);
       router.replace({
@@ -233,6 +254,36 @@ export function CreatePersonDialog() {
             </div>
 
             <DatePickerElement control={control} name="joinDate" label="Datum vstupu do klubu" />
+            <Collapsible.Root open={cohortPickerOpen} onOpenChange={setCohortPickerOpen}>
+              <div className="flex items-center justify-between gap-2">
+                <FieldLabel htmlFor="cohortIds">Tréninkové skupiny</FieldLabel>
+                <Collapsible.Trigger asChild>
+                  <button
+                    type="button"
+                    className={`${buttonCls({ size: 'xs', variant: 'outline' })} gap-1`}
+                    aria-expanded={cohortPickerOpen}
+                    aria-controls="cohortIds-collapsible"
+                  >
+                    <span>
+                      {cohortPickerOpen
+                        ? 'Skrýt'
+                        : selectedCohortCount > 0
+                          ? `Vybráno ${selectedCohortCount}`
+                          : 'Zobrazit'}
+                    </span>
+                    <ChevronDown className={`transition-transform ${cohortPickerOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                </Collapsible.Trigger>
+              </div>
+              <Collapsible.Content className="CollapsibleContent" id="cohortIds-collapsible">
+                <VerticalCheckboxButtonGroupElement
+                  control={control}
+                  name="cohortIds"
+                  options={cohortOptions}
+                  className="mt-2"
+                />
+              </Collapsible.Content>
+            </Collapsible.Root>
           </div>
 
           <div className="col-span-2">
