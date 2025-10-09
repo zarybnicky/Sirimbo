@@ -1,7 +1,6 @@
-query TrainerAttendanceReport {
-  trainerGroupAttendanceCompletionList {
-    trainerId
-    trainerName
+query TrainerAttendanceReport($since: Datetime, $until: Datetime) {
+  trainerGroupAttendanceCompletionList(since: $since, until: $until) {
+    personId
     totalInstances
     filledInstances
     partiallyFilledInstances
@@ -9,5 +8,9 @@ query TrainerAttendanceReport {
     filledRatio
     totalAttendances
     pendingAttendances
+    person: personByPersonId {
+      id
+      name
+    }
   }
 }

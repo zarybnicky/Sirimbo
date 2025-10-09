@@ -12,8 +12,7 @@ const percentFormatter = new Intl.NumberFormat('cs-CZ', {
 
 type TrainerAttendanceRow = {
   __typename?: 'TrainerGroupAttendanceCompletion';
-  trainerId: string;
-  trainerName: string;
+  personId: string;
   totalInstances: string;
   filledInstances: string;
   partiallyFilledInstances: string;
@@ -21,6 +20,11 @@ type TrainerAttendanceRow = {
   filledRatio: number | null;
   totalAttendances: string;
   pendingAttendances: string;
+  person: {
+    __typename?: 'Person';
+    id: string;
+    name: string;
+  } | null;
 };
 
 type TrainerAttendanceReportQuery = {
@@ -28,23 +32,26 @@ type TrainerAttendanceReportQuery = {
   trainerGroupAttendanceCompletionList: TrainerAttendanceRow[] | null;
 };
 
-type TrainerAttendanceReportQueryVariables = Record<string, never>;
+type TrainerAttendanceReportQueryVariables = {
+  since?: string | null;
+  until?: string | null;
+};
 
-const TrainerAttendanceReportDocument: TypedDocumentNode<
-  TrainerAttendanceReportQuery,
-  TrainerAttendanceReportQueryVariables
-> = gql`
-  query TrainerAttendanceReport {
-    trainerGroupAttendanceCompletionList {
-      trainerId
-    trainerName
-    totalInstances
-    filledInstances
-    partiallyFilledInstances
-    unfilledInstances
-    filledRatio
+const TrainerAttendanceReportDocument: TypedDocumentNode<TrainerAttendanceReportQuery, TrainerAttendanceReportQueryVariables> = gql`
+  query TrainerAttendanceReport($since: Datetime, $until: Datetime) {
+    trainerGroupAttendanceCompletionList(since: $since, until: $until) {
+      personId
+      totalInstances
+      filledInstances
+      partiallyFilledInstances
+      unfilledInstances
+      filledRatio
       totalAttendances
       pendingAttendances
+      person {
+        id
+        name
+      }
     }
   }
 `;
@@ -59,7 +66,10 @@ function parseCount(value: string | null | undefined) {
 }
 
 export default function TrainerAttendanceReportPage() {
-  const [{ data, fetching, error }] = useQuery({ query: TrainerAttendanceReportDocument });
+  const [{ data, fetching, error }] = useQuery({
+    query: TrainerAttendanceReportDocument,
+    variables: { since: null, until: null },
+  });
 
   const rows = React.useMemo(() => {
     const list = data?.trainerGroupAttendanceCompletionList ?? [];
@@ -76,7 +86,22 @@ export default function TrainerAttendanceReportPage() {
         return ratioA - ratioB;
       }
 
-      return a.trainerName.localeCompare(b.trainerName, 'cs');
+      const nameA = a.person?.name ?? '';
+      const nameB = b.person?.name ?? '';
+
+      if (!nameA && !nameB) {
+        return a.personId.localeCompare(b.personId, 'cs');
+      }
+
+      if (!nameA) {
+        return 1;
+      }
+
+      if (!nameB) {
+        return -1;
+      }
+
+      return nameA.localeCompare(nameB, 'cs');
     });
   }, [data?.trainerGroupAttendanceCompletionList]);
 
@@ -197,8 +222,8 @@ export default function TrainerAttendanceReportPage() {
                     const needsAttention = pending > 0 || unfilled > 0;
 
                     return (
-                      <tr key={row.trainerId} className={needsAttention ? 'bg-amber-50' : undefined}>
-                        <td className="px-3 py-2 font-medium text-foreground">{row.trainerName}</td>
+                      <tr key={row.personId} className={needsAttention ? 'bg-amber-50' : undefined}>
+                        <td className="px-3 py-2 font-medium text-foreground">{row.person?.name ?? '—'}</td>
                         <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(total)}</td>
                         <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(filled)}</td>
                         <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(partial)}</td>
