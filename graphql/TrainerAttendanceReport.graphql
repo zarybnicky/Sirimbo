@@ -1,0 +1,13 @@
+query TrainerAttendanceReport {
+  trainerGroupAttendanceCompletionList {
+    trainerId
+    trainerName
+    totalInstances
+    filledInstances
+    partiallyFilledInstances
+    unfilledInstances
+    filledRatio
+    totalAttendances
+    pendingAttendances
+  }
+}
