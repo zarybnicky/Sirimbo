@@ -247,32 +247,6 @@ function FullMemberRow({ membership, canManageMemberships }: MemberRowProps) {
   );
 }
 
-function CompactMemberRow({ membership, canManageMemberships }: MemberRowProps) {
-  return (
-    <div className="flex items-center gap-2 text-sm">
-      {canManageMemberships && (
-        <CohortMembershipMenu data={membership}>
-          <DropdownMenuTrigger.RowDots />
-        </CohortMembershipMenu>
-      )}
-      {membership.person ? (
-        <Link
-          className="underline font-bold"
-          href={{
-            pathname: '/clenove/[id]',
-            query: { id: membership.person?.id },
-          }}
-        >
-          {membership.person?.name}
-        </Link>
-      ) : (
-        <span>?</span>
-      )}
-      <span className="text-xs text-neutral-11">{formatOpenDateRange(membership)}</span>
-    </div>
-  );
-}
-
 type OverviewTabContentProps = {
   location?: string | null;
   description?: string | null;
@@ -318,6 +292,29 @@ function CouplesAndSolosTabContent({
   solos,
   canManageMemberships,
 }: CouplesAndSolosTabContentProps) {
+  const renderQuickMember = (membership: CohortMembership) => (
+    <span className="inline-flex items-center gap-2 text-sm">
+      {canManageMemberships && (
+        <CohortMembershipMenu data={membership}>
+          <DropdownMenuTrigger.RowDots />
+        </CohortMembershipMenu>
+      )}
+      {membership.person ? (
+        <Link
+          className="underline"
+          href={{
+            pathname: '/clenove/[id]',
+            query: { id: membership.person?.id },
+          }}
+        >
+          {membership.person?.name}
+        </Link>
+      ) : (
+        <span>?</span>
+      )}
+    </span>
+  );
+
   return (
     <div className="space-y-6">
       <section>
@@ -327,26 +324,19 @@ function CouplesAndSolosTabContent({
         {couples.length === 0 ? (
           <p className="text-sm text-neutral-11">Žádné páry v této skupině zatím nejsou.</p>
         ) : (
-          <div className="space-y-3">
+          <ul className="space-y-2 text-sm text-neutral-12">
             {couples.map(({ couple, manMembership, womanMembership }) => {
               const coupleLabel = formatLongCoupleName(couple) || 'Neznámý pár';
               return (
-                <div key={couple.id} className="rounded-md border border-neutral-7 p-3">
-                  <div className="text-sm font-semibold text-neutral-12">{coupleLabel}</div>
-                  <div className="mt-2 space-y-1">
-                    <CompactMemberRow
-                      membership={manMembership}
-                      canManageMemberships={canManageMemberships}
-                    />
-                    <CompactMemberRow
-                      membership={womanMembership}
-                      canManageMemberships={canManageMemberships}
-                    />
-                  </div>
-                </div>
+                <li key={couple.id} className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="font-semibold">{coupleLabel}:</span>
+                  {renderQuickMember(manMembership)}
+                  <span>&amp;</span>
+                  {renderQuickMember(womanMembership)}
+                </li>
               );
             })}
-          </div>
+          </ul>
         )}
       </section>
 
@@ -357,13 +347,11 @@ function CouplesAndSolosTabContent({
         {solos.length === 0 ? (
           <p className="text-sm text-neutral-11">Žádní sólisté.</p>
         ) : (
-          solos.map((membership) => (
-            <FullMemberRow
-              key={membership.id}
-              membership={membership}
-              canManageMemberships={canManageMemberships}
-            />
-          ))
+          <ul className="space-y-2 text-sm text-neutral-12">
+            {solos.map((membership) => (
+              <li key={membership.id}>{renderQuickMember(membership)}</li>
+            ))}
+          </ul>
         )}
       </section>
     </div>
