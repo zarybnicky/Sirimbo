@@ -126,7 +126,7 @@ export default function NowPage() {
       <div className="min-h-screen bg-neutral-1 text-neutral-12">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 py-10 lg:px-10">
           <header className="flex flex-col gap-2 border-b border-neutral-6 pb-6">
-            <h1 className="text-4xl font-bold tracking-tight text-white lg:text-5xl">Co se děje právě teď</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-neutral-12 lg:text-5xl">Co se děje právě teď</h1>
             <p className="text-lg text-neutral-11">
               {`Aktualizováno v ${shortTimeFormatter.format(reference)} · Zobrazeno následujících ${LOOKAHEAD_HOURS} h`}
             </p>
@@ -142,7 +142,7 @@ export default function NowPage() {
           ) : buckets.length === 0 ? (
             <div className="flex min-h-[50vh] items-center justify-center text-center text-neutral-11">
               <div>
-                <p className="text-2xl font-semibold text-white">Teď nic neprobíhá</p>
+                <p className="text-2xl font-semibold text-neutral-12">Teď nic neprobíhá</p>
                 <p className="mt-2 text-base">Podívejte se později nebo zkontrolujte plánované události níže.</p>
               </div>
             </div>
@@ -156,9 +156,9 @@ export default function NowPage() {
                     className="flex flex-col gap-5 rounded-3xl border border-neutral-6 bg-neutral-2 p-6 shadow-xl shadow-black/30 backdrop-blur"
                   >
                     <div className="flex items-baseline justify-between gap-4 border-b border-neutral-6 pb-4">
-                      <h2 className="text-2xl font-semibold text-white">{bucket.label}</h2>
+                      <h2 className="text-2xl font-semibold text-neutral-12">{bucket.label}</h2>
                       {bucket.current.length > 0 ? (
-                        <span className="rounded-full bg-green-3 px-3 py-1 text-sm font-medium text-green-11">
+                        <span className="rounded-full bg-accent-3 px-3 py-1 text-sm font-medium text-accent-11">
                           Probíhá
                         </span>
                       ) : (
@@ -177,13 +177,13 @@ export default function NowPage() {
                         return (
                           <article
                             key={instance.id}
-                            className="rounded-2xl border border-green-6 bg-green-3/30 p-5 shadow-inner"
+                            className="rounded-2xl border border-accent-7 bg-accent-3/40 p-5 shadow-inner"
                           >
-                            <p className="text-sm uppercase tracking-wide text-green-11">{formatEventType(event)}</p>
-                            <h3 className="mt-1 text-2xl font-semibold text-white">{getEventTitle(event)}</h3>
-                            <p className="mt-2 text-lg text-green-10">{formatTimeRange(since, until)}</p>
+                            <p className="text-sm uppercase tracking-wide text-accent-11">{formatEventType(event)}</p>
+                            <h3 className="mt-1 text-2xl font-semibold text-neutral-12">{getEventTitle(event)}</h3>
+                            <p className="mt-2 text-lg text-accent-10">{formatTimeRange(since, until)}</p>
                             {trainers ? (
-                              <p className="mt-2 text-sm text-green-9">{`Trenéři: ${trainers}`}</p>
+                              <p className="mt-2 text-sm text-accent-9">{`Trenéři: ${trainers}`}</p>
                             ) : null}
                           </article>
                         );
@@ -199,7 +199,7 @@ export default function NowPage() {
                       <h4 className="text-sm font-medium uppercase tracking-wide text-neutral-9">Co bude dál</h4>
                       {nextEvent ? (
                         <div className="mt-3 flex flex-col gap-1">
-                          <p className="text-lg font-semibold text-white">{getEventTitle(nextEvent.event)}</p>
+                          <p className="text-lg font-semibold text-neutral-12">{getEventTitle(nextEvent.event)}</p>
                           <p className="text-sm text-neutral-10">
                             {formatTimeRange(nextEvent.since, nextEvent.until)} · {formatStartsIn(reference, nextEvent.since)}
                           </p>
