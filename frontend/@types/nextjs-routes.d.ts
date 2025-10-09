@@ -38,6 +38,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/nastenka">
     | DynamicRoute<"/nastenka/[id]", { "id": string }>
     | StaticRoute<"/nastenka/add">
+    | StaticRoute<"/now">
     | StaticRoute<"/o-nas">
     | StaticRoute<"/ochrana-osobnich-udaju">
     | StaticRoute<"/otp">

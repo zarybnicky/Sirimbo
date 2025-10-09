@@ -97,10 +97,10 @@ module.exports = nextRoutes()(
           const graphqlServer = process.env.GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz';
           const externalServer = process.env.EXTERNAL_SERVER_URL || graphqlServer;
           rewrites.push(
-            { source: '/member/download', destination: `${graphqlUrl}/member/download` },
+            { source: '/member/download', destination: `${graphqlServer}/member/download` },
             { source: '/galerie/:path*', destination: `${externalServer ?? ''}/galerie/:path*` },
-            { source: '/graphql', destination: `${graphqlUrl}/graphql` },
-            { source: '/graphiql', destination: `${graphqlUrl}/graphiql` },
+            { source: '/graphql', destination: `${graphqlServer}/graphql` },
+            { source: '/graphiql', destination: `${graphqlServer}/graphiql` },
             );
         } else {
           rewrites.push(

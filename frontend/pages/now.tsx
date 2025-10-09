@@ -1,18 +1,17 @@
-import Head from 'next/head';
-import React from 'react';
-import { useQuery } from 'urql';
-
 import {
   EventInstanceRangeDocument,
   type EventInstanceRangeQuery,
   type EventInstanceRangeQueryVariables,
 } from '@/graphql/Event';
 import { formatDefaultEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
+import { truthyFilter } from '@/ui/truthyFilter';
+import { add } from 'date-arithmetic';
+import Head from 'next/head';
+import React from 'react';
+import { useQuery } from 'urql';
 
 const REFRESH_INTERVAL = 30_000;
-const LOOKAHEAD_HOURS = 24;
 const MILLISECONDS_IN_MINUTE = 60_000;
-const MILLISECONDS_IN_HOUR = 3_600_000;
 
 type Instance = NonNullable<EventInstanceRangeQuery['list']>[number];
 
@@ -30,26 +29,21 @@ type LocationBucket = {
   upcoming: EnrichedInstance[];
 };
 
-function getEventTitle(event: EnrichedInstance['event']) {
-  return event.summary?.trim() || formatDefaultEventName(event);
-}
-
-function formatTimeRange(since: Date, until: Date) {
-  return `${shortTimeFormatter.format(since)} – ${shortTimeFormatter.format(until)}`;
-}
-
 function formatStartsIn(now: Date, start: Date) {
   const diffMs = start.getTime() - now.getTime();
   const diffMinutes = Math.max(0, Math.round(diffMs / MILLISECONDS_IN_MINUTE));
   const hours = Math.floor(diffMinutes / 60);
   const minutes = diffMinutes % 60;
-  if (diffMinutes <= 0) return 'začíná teď';
+  if (diffMinutes <= 0) return 'právě začíná';
   if (hours === 0) return `za ${minutes} min`;
   if (minutes === 0) return `za ${hours} h`;
   return `za ${hours} h ${minutes} min`;
 }
 
-function gatherBuckets(data: EventInstanceRangeQuery | undefined, now: Date): LocationBucket[] {
+function gatherBuckets(
+  data: EventInstanceRangeQuery | undefined,
+  now: Date,
+): LocationBucket[] {
   const buckets = new Map<string, LocationBucket>();
 
   for (const instance of data?.list ?? []) {
@@ -60,8 +54,12 @@ function gatherBuckets(data: EventInstanceRangeQuery | undefined, now: Date): Lo
     const since = new Date(instance.since);
     const until = new Date(instance.until);
 
-    const locationName = event.location?.name || event.locationText || 'Bez určené místnosti';
-    const locationKey = event.location?.id ? `id:${event.location.id}` : event.locationText ? `txt:${event.locationText}` : 'none';
+    const locationName = event.location?.name || event.locationText || 'Neurčeno';
+    const locationKey = event.location?.id
+      ? `id:${event.location.id}`
+      : event.locationText
+        ? `txt:${event.locationText}`
+        : 'none';
 
     if (!buckets.has(locationKey)) {
       buckets.set(locationKey, {
@@ -95,25 +93,24 @@ function gatherBuckets(data: EventInstanceRangeQuery | undefined, now: Date): Lo
 
 export default function NowPage() {
   const [reference, setReference] = React.useState(() => new Date());
+  const end = React.useMemo(() => add(reference, 24, 'hours'), [reference]);
+
+  const variables = React.useMemo<EventInstanceRangeQueryVariables>(
+    () => ({
+      start: reference.toISOString(),
+      end: end.toISOString(),
+    }),
+    [reference, end],
+  );
 
   React.useEffect(() => {
     const intervalId = setInterval(() => setReference(new Date()), REFRESH_INTERVAL);
     return () => clearInterval(intervalId);
   }, []);
 
-  const end = React.useMemo(
-    () => new Date(reference.getTime() + LOOKAHEAD_HOURS * MILLISECONDS_IN_HOUR),
-    [reference],
-  );
-  const variables = React.useMemo<EventInstanceRangeQueryVariables>(() => ({
-    start: reference.toISOString(),
-    end: end.toISOString(),
-  }), [reference, end]);
-
   const [{ data, fetching, error }] = useQuery({
     query: EventInstanceRangeDocument,
     variables,
-    requestPolicy: 'cache-and-network',
   });
 
   const buckets = React.useMemo(() => gatherBuckets(data, reference), [data, reference]);
@@ -121,15 +118,17 @@ export default function NowPage() {
   return (
     <>
       <Head>
-        <title>Rozpis teď</title>
+        <title>Právě probíhá</title>
       </Head>
-      <div className="min-h-screen bg-neutral-1 text-neutral-12">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 py-10 lg:px-10">
-          <header className="flex flex-col gap-2 border-b border-neutral-6 pb-6">
-            <h1 className="text-4xl font-bold tracking-tight text-neutral-12 lg:text-5xl">Co se děje právě teď</h1>
-            <p className="text-lg text-neutral-11">
-              {`Aktualizováno v ${shortTimeFormatter.format(reference)} · Zobrazeno následujících ${LOOKAHEAD_HOURS} h`}
+      <div className="min-h-screen bg-accent-1 text-accent-12">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-10 lg:px-10">
+          <header className="flex flex-col gap-1 border-b border-accent-6 pb-6">
+            <p className="text-lg text-accent-11">
+              {`Aktualizováno v ${shortTimeFormatter.format(reference)}`}
             </p>
+            <h1 className="text-4xl font-bold tracking-tight text-accent-12">
+              Právě probíhá
+            </h1>
             {error ? (
               <p className="rounded-md border border-accent-6 bg-accent-3/30 px-4 py-2 text-sm text-accent-11">
                 Nepodařilo se načíst data. Zkuste stránku obnovit.
@@ -138,12 +137,15 @@ export default function NowPage() {
           </header>
 
           {fetching && !data ? (
-            <div className="flex min-h-[50vh] items-center justify-center text-neutral-9">Načítám aktuální rozpis…</div>
+            <div className="flex min-h-[50vh] items-center justify-center text-accent-9">
+              Načítám aktuální rozpis…
+            </div>
           ) : buckets.length === 0 ? (
-            <div className="flex min-h-[50vh] items-center justify-center text-center text-neutral-11">
+            <div className="flex min-h-[50vh] items-center justify-center text-center text-accent-11">
               <div>
-                <p className="text-2xl font-semibold text-neutral-12">Teď nic neprobíhá</p>
-                <p className="mt-2 text-base">Podívejte se později nebo zkontrolujte plánované události níže.</p>
+                <p className="text-2xl font-semibold text-accent-12">
+                  Právě nic neprobíhá
+                </p>
               </div>
             </div>
           ) : (
@@ -153,35 +155,48 @@ export default function NowPage() {
                 return (
                   <section
                     key={bucket.key}
-                    className="flex flex-col gap-5 rounded-3xl border border-neutral-6 bg-neutral-2 p-6 shadow-xl shadow-black/30 backdrop-blur"
+                    className="flex flex-col gap-3 rounded-3xl border border-accent-6 bg-accent-2 p-5 shadow-xl shadow-black/30 backdrop-blur"
                   >
-                    <div className="flex items-baseline justify-between gap-4 border-b border-neutral-6 pb-4">
-                      <h2 className="text-2xl font-semibold text-neutral-12">{bucket.label}</h2>
+                    <div className="flex items-baseline justify-between gap-4 border-b border-accent-6 pb-2">
+                      <h2 className="text-2xl font-semibold text-accent-12">
+                        {bucket.label}
+                      </h2>
                       {bucket.current.length > 0 ? (
                         <span className="rounded-full bg-accent-3 px-3 py-1 text-sm font-medium text-accent-11">
                           Probíhá
                         </span>
                       ) : (
-                        <span className="rounded-full bg-neutral-3 px-3 py-1 text-sm font-medium text-neutral-11">
+                        <span className="rounded-full bg-accent-3 px-3 py-1 text-sm font-medium text-accent-11">
                           Čeká se
                         </span>
                       )}
                     </div>
 
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-3">
                       {bucket.current.map(({ event, since, until, instance }) => {
-                        const trainers = (instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList)
-                          .map((trainer) => trainer.name)
-                          .filter(Boolean)
+                        const trainers = (
+                          instance.trainers.length > 0
+                            ? instance.trainers
+                            : event.eventTrainersList
+                        )
+                          .map((x) => x.name)
+                          .filter(truthyFilter)
                           .join(', ');
                         return (
                           <article
                             key={instance.id}
-                            className="rounded-2xl border border-accent-7 bg-accent-3/40 p-5 shadow-inner"
+                            className="rounded-2xl border border-accent-7 bg-accent-3/40 p-4 shadow-inner"
                           >
-                            <p className="text-sm uppercase tracking-wide text-accent-11">{formatEventType(event)}</p>
-                            <h3 className="mt-1 text-2xl font-semibold text-neutral-12">{getEventTitle(event)}</h3>
-                            <p className="mt-2 text-lg text-accent-10">{formatTimeRange(since, until)}</p>
+                            <p className="text-sm uppercase tracking-wide text-accent-11">
+                              {formatEventType(event)}
+                            </p>
+                            <h3 className="mt-1 text-2xl font-semibold text-accent-12">
+                              {formatDefaultEventName(event)}
+                            </h3>
+                            <p className="mt-2 text-lg text-accent-10">
+                              {shortTimeFormatter.format(since)} –{' '}
+                              {shortTimeFormatter.format(until)}
+                            </p>
                             {trainers ? (
                               <p className="mt-2 text-sm text-accent-9">{`Trenéři: ${trainers}`}</p>
                             ) : null}
@@ -189,23 +204,32 @@ export default function NowPage() {
                         );
                       })}
                       {bucket.current.length === 0 ? (
-                        <div className="rounded-2xl border border-neutral-6 bg-neutral-1 p-5 text-sm text-neutral-11">
-                          V této místnosti teď nic neprobíhá.
+                        <div className="rounded-2xl border border-accent-6 bg-accent-1 p-5 text-sm text-neutral-10">
+                          Právě zde nic neprobíhá.
                         </div>
                       ) : null}
                     </div>
 
-                    <div className="rounded-2xl border border-neutral-6 bg-neutral-1 p-5">
-                      <h4 className="text-sm font-medium uppercase tracking-wide text-neutral-9">Co bude dál</h4>
+                    <div className="rounded-2xl border border-accent-6 bg-accent-1 p-4">
+                      <h4 className="text-sm font-medium uppercase tracking-wide text-neutral-9">
+                        Co bude dál
+                      </h4>
                       {nextEvent ? (
                         <div className="mt-3 flex flex-col gap-1">
-                          <p className="text-lg font-semibold text-neutral-12">{getEventTitle(nextEvent.event)}</p>
-                          <p className="text-sm text-neutral-10">
-                            {formatTimeRange(nextEvent.since, nextEvent.until)} · {formatStartsIn(reference, nextEvent.since)}
+                          <p className="text-lg font-semibold text-accent-12">
+                            {formatDefaultEventName(nextEvent.event)}
+                          </p>
+                          <p className="text-sm text-neutral-9">
+                            {shortTimeFormatter.format(nextEvent.since)} –{' '}
+                            {shortTimeFormatter.format(nextEvent.until)}
+                            {' · '}
+                            {formatStartsIn(reference, nextEvent.since)}
                           </p>
                         </div>
                       ) : (
-                        <p className="mt-3 text-sm text-neutral-9">V této místnosti není v blízké době nic plánováno.</p>
+                        <p className="mt-3 text-sm text-neutral-9">
+                          Zde není v blízké době nic plánováno.
+                        </p>
                       )}
                     </div>
                   </section>

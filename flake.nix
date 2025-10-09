@@ -32,14 +32,9 @@
               "aarch64-darwin" = "sha512-3O3TyO9LdL7rDJHYwE5RCGJi2KuJSgniWztbX2qaO6dDmBXdmzPeUWzYirsuH7Rtakl9vlvkyU3KN9Eit2dtBA==";
             };
           };
-          "nodemon@npm:3.1.9" = {
+          "prettier@npm:3.6.2" = {
             outputHashByPlatform = {
-              "aarch64-darwin" = "sha512-9/xSfl1Iy2ukciyIZWmbfyvwX4sj7yjinD11NvXVVeXv+Lpf/Df5xqzyArkntOG26ZQvLgPzCJTyYUAh8XL3+g==";
-            };
-          };
-          "prettier@npm:3.3.3" = {
-            outputHashByPlatform = {
-              "x86_64-linux" = "sha512-29qUGIt4gye0OIrbU4JruJxrUUD4HEdiuLs7aWC6KPAOcccPB3/iFYy+BHo7SpT7MLah/Kn2TEg69IX/bdz7lw==";
+              "x86_64-linux" = "sha512-rVYnDoJ8P5DrWLzregu6iBN86J0suT21dNAVDXoPw6WOHAxoZ6UFemiQuwpanVmh315rz2cPPq4dFHh2UDjFcg==";
               "aarch64-darwin" = "sha512-29qUGIt4gye0OIrbU4JruJxrUUD4HEdiuLs7aWC6KPAOcccPB3/iFYy+BHo7SpT7MLah/Kn2TEg69IX/bdz7lw==";
             };
           };
@@ -58,8 +53,7 @@
       };
 
     in {
-      prettier = yarnPackages."prettier@npm:3.3.3";
-      nodemon = yarnPackages."nodemon@npm:3.1.9";
+      prettier = yarnPackages."prettier@npm:3.6.2";
       squawk = yarnPackages."squawk-cli@npm:1.4.0";
 
       graphile-migrate = final.callPackage ./nix/graphile-migrate {};
