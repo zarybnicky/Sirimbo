@@ -21,7 +21,6 @@ begin
 end;
 $$;
 
-comment on type public.trainer_group_attendance_completion is '@foreignKey (person_id) references person (id)';
 comment on column public.trainer_group_attendance_completion.person_id is '@foreignKey (person_id) references person (id)';
 
 create or replace function public.trainer_group_attendance_completion(
@@ -32,82 +31,79 @@ create or replace function public.trainer_group_attendance_completion(
   language sql
   stable
 as $$
-  with params as (
-    select
-      since,
-      until,
-      now() as now
-  ),
-  eligible_instances as (
+  with filtered_instances as (
     select ei.id, ei.event_id
     from event_instance ei
     join event e on e.id = ei.event_id
-    join params p on true
     where ei.tenant_id = current_tenant_id()
       and not ei.is_cancelled
       and e.type = 'group'
-      and coalesce(ei.until, ei.since) < coalesce(p.until, p.now)
-      and (p.since is null or coalesce(ei.since, ei.until) >= p.since)
-      and (p.until is null or coalesce(ei.until, ei.since) < p.until)
+      and coalesce(ei.until, ei.since) < coalesce(until, now())
+      and (since is null or coalesce(ei.since, ei.until) >= since)
+      and (until is null or coalesce(ei.until, ei.since) < until)
   ),
   trainer_instances as (
-    select distinct assignment.trainer_id, assignment.instance_id
-    from (
-      select eit.person_id as trainer_id, ei.id as instance_id
-      from eligible_instances ei
-      join event_instance_trainer eit on eit.instance_id = ei.id
+    select distinct trainer.person_id, trainer.instance_id
+    from filtered_instances fi
+    cross join lateral (
+      select eit.person_id, fi.id as instance_id
+      from event_instance_trainer eit
+      where eit.instance_id = fi.id
       union
-      select et.person_id as trainer_id, ei.id as instance_id
-      from eligible_instances ei
-      join event_trainer et on et.event_id = ei.event_id
-    ) assignment
+      select et.person_id, fi.id as instance_id
+      from event_trainer et
+      where et.event_id = fi.event_id
+    ) trainer
   ),
-  attendance_status as (
+  attendance_stats as (
     select
-      ti.trainer_id,
+      ti.person_id,
       ti.instance_id,
-      count(ea.*) as attendance_count,
-      count(ea.*) filter (where ea.status = 'unknown') as unknown_count
+      coalesce(stats.attendance_count, 0) as attendance_count,
+      coalesce(stats.unknown_count, 0) as unknown_count
     from trainer_instances ti
-    left join event_attendance ea on ea.instance_id = ti.instance_id
-    group by ti.trainer_id, ti.instance_id
+    left join lateral (
+      select
+        count(*) as attendance_count,
+        count(*) filter (where ea.status = 'unknown') as unknown_count
+      from event_attendance ea
+      where ea.instance_id = ti.instance_id
+    ) stats on true
   ),
   per_trainer as (
     select
-      trainer_id,
+      person_id,
       count(*) as total_instances,
-      count(*) filter (where unknown_count = 0 and attendance_count > 0) as filled_instances,
+      count(*) filter (where attendance_count > 0 and unknown_count = 0) as filled_instances,
       count(*) filter (
-        where unknown_count > 0
+        where attendance_count > 0
+          and unknown_count > 0
           and unknown_count < attendance_count
       ) as partially_filled_instances,
-      count(*) filter (
-        where attendance_count = 0
-          or unknown_count = attendance_count
-      ) as unfilled_instances,
+      count(*) filter (where attendance_count = 0 or unknown_count = attendance_count) as unfilled_instances,
       coalesce(sum(attendance_count), 0)::bigint as total_attendances,
       coalesce(sum(unknown_count), 0)::bigint as pending_attendances
-    from attendance_status
-    group by trainer_id
+    from attendance_stats
+    group by person_id
   )
   select
-    pt.trainer_id as person_id,
-    pt.total_instances,
-    pt.filled_instances,
-    pt.partially_filled_instances,
-    pt.unfilled_instances,
+    person_id,
+    total_instances,
+    filled_instances,
+    partially_filled_instances,
+    unfilled_instances,
     case
-      when pt.total_instances > 0 then (pt.filled_instances + pt.partially_filled_instances)::double precision / pt.total_instances::double precision
+      when total_instances > 0 then (filled_instances + partially_filled_instances)::double precision / total_instances
       else null
     end as filled_ratio,
-    pt.total_attendances,
-    pt.pending_attendances
-  from per_trainer pt
+    total_attendances,
+    pending_attendances
+  from per_trainer
   order by filled_ratio asc nulls last, person_id;
 $$;
 
 comment on function public.trainer_group_attendance_completion(timestamptz, timestamptz) is '@simpleCollections only';
 
-grant all on function public.trainer_group_attendance_completion(timestamptz, timestamptz) to anonymous;
+grant execute on function public.trainer_group_attendance_completion(timestamptz, timestamptz) to anonymous;
 
 select verify_function('trainer_group_attendance_completion');

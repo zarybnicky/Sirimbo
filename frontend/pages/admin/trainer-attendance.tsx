@@ -9,35 +9,9 @@ const percentFormatter = new Intl.NumberFormat('cs-CZ', {
   style: 'percent',
   maximumFractionDigits: 0,
 });
+const nameCollator = new Intl.Collator('cs');
 
-type TrainerAttendanceRow = {
-  __typename?: 'TrainerGroupAttendanceCompletion';
-  personId: string;
-  totalInstances: string;
-  filledInstances: string;
-  partiallyFilledInstances: string;
-  unfilledInstances: string;
-  filledRatio: number | null;
-  totalAttendances: string;
-  pendingAttendances: string;
-  person: {
-    __typename?: 'Person';
-    id: string;
-    name: string;
-  } | null;
-};
-
-type TrainerAttendanceReportQuery = {
-  __typename?: 'Query';
-  trainerGroupAttendanceCompletionList: TrainerAttendanceRow[] | null;
-};
-
-type TrainerAttendanceReportQueryVariables = {
-  since?: string | null;
-  until?: string | null;
-};
-
-const TrainerAttendanceReportDocument: TypedDocumentNode<TrainerAttendanceReportQuery, TrainerAttendanceReportQueryVariables> = gql`
+const TrainerAttendanceReportDocument = gql`
   query TrainerAttendanceReport($since: Datetime, $until: Datetime) {
     trainerGroupAttendanceCompletionList(since: $since, until: $until) {
       personId
@@ -46,7 +20,6 @@ const TrainerAttendanceReportDocument: TypedDocumentNode<TrainerAttendanceReport
       partiallyFilledInstances
       unfilledInstances
       filledRatio
-      totalAttendances
       pendingAttendances
       person {
         id
@@ -54,16 +27,34 @@ const TrainerAttendanceReportDocument: TypedDocumentNode<TrainerAttendanceReport
       }
     }
   }
-`;
+` satisfies TypedDocumentNode;
 
-function parseCount(value: string | null | undefined) {
-  if (typeof value !== 'string') {
-    return 0;
-  }
+type TrainerAttendanceReportQuery = typeof TrainerAttendanceReportDocument extends TypedDocumentNode<
+  infer TData,
+  any
+>
+  ? TData
+  : never;
 
-  const parsed = Number(value);
+type TrainerAttendanceRow = NonNullable<
+  NonNullable<TrainerAttendanceReportQuery['trainerGroupAttendanceCompletionList']>[number]
+>;
+
+const parseCount = (value?: string | null) => {
+  const parsed = Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
-}
+};
+
+type NormalizedRow = {
+  id: string;
+  name: string;
+  total: number;
+  filled: number;
+  partial: number;
+  unfilled: number;
+  pending: number;
+  ratio: number | null;
+};
 
 export default function TrainerAttendanceReportPage() {
   const [{ data, fetching, error }] = useQuery({
@@ -71,61 +62,49 @@ export default function TrainerAttendanceReportPage() {
     variables: { since: null, until: null },
   });
 
-  const rows = React.useMemo(() => {
-    const list = data?.trainerGroupAttendanceCompletionList ?? [];
+  const { rows, summary } = React.useMemo(() => {
+    const source = data?.trainerGroupAttendanceCompletionList ?? [];
+    const rows: NormalizedRow[] = source
+      .filter((row: TrainerAttendanceRow | null | undefined): row is TrainerAttendanceRow => Boolean(row))
+      .map((row: TrainerAttendanceRow): NormalizedRow => ({
+        id: row.personId,
+        name: row.person?.name ?? '—',
+        total: parseCount(row.totalInstances),
+        filled: parseCount(row.filledInstances),
+        partial: parseCount(row.partiallyFilledInstances),
+        unfilled: parseCount(row.unfilledInstances),
+        pending: parseCount(row.pendingAttendances),
+        ratio: typeof row.filledRatio === 'number' ? row.filledRatio : null,
+      }));
 
-    return [...list].sort((a, b) => {
-      const unfilledDiff = parseCount(b.unfilledInstances) - parseCount(a.unfilledInstances);
-      if (unfilledDiff !== 0) {
-        return unfilledDiff;
-      }
-
-      const ratioA = typeof a.filledRatio === 'number' ? a.filledRatio : -1;
-      const ratioB = typeof b.filledRatio === 'number' ? b.filledRatio : -1;
-      if (ratioA !== ratioB) {
-        return ratioA - ratioB;
-      }
-
-      const nameA = a.person?.name ?? '';
-      const nameB = b.person?.name ?? '';
-
-      if (!nameA && !nameB) {
-        return a.personId.localeCompare(b.personId, 'cs');
-      }
-
-      if (!nameA) {
-        return 1;
-      }
-
-      if (!nameB) {
-        return -1;
-      }
-
-      return nameA.localeCompare(nameB, 'cs');
+    rows.sort((a, b) => {
+      if (b.unfilled !== a.unfilled) return b.unfilled - a.unfilled;
+      const ratioDiff = (a.ratio ?? -1) - (b.ratio ?? -1);
+      if (ratioDiff !== 0) return ratioDiff;
+      const nameDiff = nameCollator.compare(a.name, b.name);
+      if (nameDiff !== 0) return nameDiff;
+      return a.id.localeCompare(b.id, 'cs');
     });
-  }, [data?.trainerGroupAttendanceCompletionList]);
 
-  const summary = React.useMemo(() => {
-    const totalInstances = rows.reduce((sum, row) => sum + parseCount(row.totalInstances), 0);
-    const fullyFilledInstances = rows.reduce((sum, row) => sum + parseCount(row.filledInstances), 0);
-    const partiallyFilledInstances = rows.reduce(
-      (sum, row) => sum + parseCount(row.partiallyFilledInstances),
-      0,
+    const totals = rows.reduce(
+      (acc, row) => ({
+        total: acc.total + row.total,
+        filled: acc.filled + row.filled,
+        partial: acc.partial + row.partial,
+        unfilled: acc.unfilled + row.unfilled,
+        pending: acc.pending + row.pending,
+      }),
+      { total: 0, filled: 0, partial: 0, unfilled: 0, pending: 0 },
     );
-    const unfilledInstances = rows.reduce((sum, row) => sum + parseCount(row.unfilledInstances), 0);
-    const pendingAttendances = rows.reduce((sum, row) => sum + parseCount(row.pendingAttendances), 0);
-    const filledRatio =
-      totalInstances > 0 ? (fullyFilledInstances + partiallyFilledInstances) / totalInstances : null;
 
     return {
-      totalInstances,
-      fullyFilledInstances,
-      partiallyFilledInstances,
-      unfilledInstances,
-      pendingAttendances,
-      filledRatio,
+      rows,
+      summary: {
+        ...totals,
+        ratio: totals.total > 0 ? (totals.filled + totals.partial) / totals.total : null,
+      },
     };
-  }, [rows]);
+  }, [data]);
 
   return (
     <Layout requireAdmin>
@@ -134,52 +113,43 @@ export default function TrainerAttendanceReportPage() {
 
         <section className="space-y-2 text-sm text-muted-foreground">
           <p>
-            Přehled vychází z minulých instancí skupinových lekcí, které nebyly zrušeny. Hodiny bez žádného záznamu
-            nebo pouze se stavem „nezadáno“ se uvádějí jako nevyplněné, zvlášť sledujeme částečně a plně vyplněné
-            případy.
+            Přehled vychází z minulých instancí skupinových lekcí, které nebyly zrušeny. Hodiny bez žádného záznamu nebo pouze se
+            stavem „nezadáno“ se uvádějí jako nevyplněné, zvlášť sledujeme částečně a plně vyplněné případy.
           </p>
           <p>
-            Do výpočtu se započítávají trenéři přiřazení přímo k instanci i k celé události. Údaje se vztahují pouze k
-            aktuálně zvolenému tenantovi.
+            Do výpočtu se započítávají trenéři přiřazení přímo k instanci i k celé události. Údaje se vztahují pouze k aktuálně
+            zvolenému tenantovi.
           </p>
         </section>
 
         <section className="rounded-lg border border-border bg-neutral-1 p-4 text-sm shadow-sm">
           <p className="font-medium text-foreground">Shrnutí</p>
-          {summary.totalInstances > 0 ? (
+          {summary.total > 0 ? (
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li>
                 Celkem sledovaných hodin:{' '}
-                <span className="font-semibold text-foreground">{numberFormatter.format(summary.totalInstances)}</span>
+                <span className="font-semibold text-foreground">{numberFormatter.format(summary.total)}</span>
               </li>
               <li>
                 Plně vyplněné hodiny:{' '}
-                <span className="font-semibold text-foreground">
-                  {numberFormatter.format(summary.fullyFilledInstances)}
-                </span>
+                <span className="font-semibold text-foreground">{numberFormatter.format(summary.filled)}</span>
               </li>
               <li>
                 Částečně vyplněné hodiny:{' '}
-                <span className="font-semibold text-foreground">
-                  {numberFormatter.format(summary.partiallyFilledInstances)}
-                </span>
+                <span className="font-semibold text-foreground">{numberFormatter.format(summary.partial)}</span>
               </li>
               <li>
                 Hodiny s nevyplněnou docházkou:{' '}
-                <span className="font-semibold text-destructive">
-                  {numberFormatter.format(summary.unfilledInstances)}
-                </span>
-                {summary.totalInstances > 0 && typeof summary.filledRatio === 'number' ? (
+                <span className="font-semibold text-destructive">{numberFormatter.format(summary.unfilled)}</span>
+                {summary.ratio !== null ? (
                   <span className="text-muted-foreground">
-                    {` · ${percentFormatter.format(summary.filledRatio)} alespoň částečně vyplněno`}
+                    {` · ${percentFormatter.format(summary.ratio)} alespoň částečně vyplněno`}
                   </span>
                 ) : null}
               </li>
               <li>
                 Zbývající jednotlivé záznamy docházky:{' '}
-                <span className="font-semibold text-destructive">
-                  {numberFormatter.format(summary.pendingAttendances)}
-                </span>
+                <span className="font-semibold text-destructive">{numberFormatter.format(summary.pending)}</span>
               </li>
             </ul>
           ) : (
@@ -212,30 +182,18 @@ export default function TrainerAttendanceReportPage() {
                 </thead>
                 <tbody className="divide-y divide-border">
                   {rows.map((row) => {
-                    const total = parseCount(row.totalInstances);
-                    const filled = parseCount(row.filledInstances);
-                    const partial = parseCount(row.partiallyFilledInstances);
-                    const unfilled = parseCount(row.unfilledInstances);
-                    const pending = parseCount(row.pendingAttendances);
-                    const ratio = typeof row.filledRatio === 'number' ? row.filledRatio : null;
-
-                    const needsAttention = pending > 0 || unfilled > 0;
-
+                    const needsAttention = row.pending > 0 || row.unfilled > 0;
                     return (
-                      <tr key={row.personId} className={needsAttention ? 'bg-amber-50' : undefined}>
-                        <td className="px-3 py-2 font-medium text-foreground">{row.person?.name ?? '—'}</td>
-                        <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(total)}</td>
-                        <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(filled)}</td>
-                        <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(partial)}</td>
+                      <tr key={row.id} className={needsAttention ? 'bg-amber-50' : undefined}>
+                        <td className="px-3 py-2 font-medium text-foreground">{row.name}</td>
+                        <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(row.total)}</td>
+                        <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(row.filled)}</td>
+                        <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(row.partial)}</td>
+                        <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(row.unfilled)}</td>
                         <td className="px-3 py-2 text-right text-foreground">
-                          {numberFormatter.format(unfilled)}
+                          {row.ratio !== null ? percentFormatter.format(row.ratio) : '–'}
                         </td>
-                        <td className="px-3 py-2 text-right text-foreground">
-                          {ratio !== null ? percentFormatter.format(ratio) : '–'}
-                        </td>
-                        <td className="px-3 py-2 text-right text-foreground">
-                          {numberFormatter.format(pending)}
-                        </td>
+                        <td className="px-3 py-2 text-right text-foreground">{numberFormatter.format(row.pending)}</td>
                       </tr>
                     );
                   })}
