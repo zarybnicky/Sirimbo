@@ -7078,6 +7078,7 @@ export type Query = {
   tenantTrainersList: Maybe<Array<TenantTrainer>>;
   /** Reads a set of `Tenant`. */
   tenantsList: Maybe<Array<Tenant>>;
+  trainerGroupAttendanceCompletionList: Maybe<Array<TrainerGroupAttendanceCompletion>>;
   /** Get a single `Transaction`. */
   transaction: Maybe<Transaction>;
   /** Reads and enables pagination through a set of `Transaction`. */
@@ -7946,6 +7947,15 @@ export type QueryTenantsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTrainerGroupAttendanceCompletionListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 
@@ -9454,6 +9464,20 @@ export type TenantsOrderBy =
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
 
+export type TrainerGroupAttendanceCompletion = {
+  __typename?: 'TrainerGroupAttendanceCompletion';
+  filledInstances: Maybe<Scalars['Int']['output']>;
+  filledRatio: Maybe<Scalars['Float']['output']>;
+  partiallyFilledInstances: Maybe<Scalars['Int']['output']>;
+  pendingAttendances: Maybe<Scalars['Int']['output']>;
+  /** Reads a single `Person` that is related to this `TrainerGroupAttendanceCompletion`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['Int']['output']>;
+  totalAttendances: Maybe<Scalars['Int']['output']>;
+  totalInstances: Maybe<Scalars['Int']['output']>;
+  unfilledInstances: Maybe<Scalars['Int']['output']>;
+};
+
 export type Transaction = {
   __typename?: 'Transaction';
   accountingPeriodId: Scalars['BigInt']['output'];
@@ -10848,6 +10872,7 @@ export type GraphCacheKeysConfig = {
   TenantSetting?: (data: WithTypename<TenantSetting>) => null | string,
   TenantSettingsEdge?: (data: WithTypename<TenantSettingsEdge>) => null | string,
   TenantTrainer?: (data: WithTypename<TenantTrainer>) => null | string,
+  TrainerGroupAttendanceCompletion?: (data: WithTypename<TrainerGroupAttendanceCompletion>) => null | string,
   Transaction?: (data: WithTypename<Transaction>) => null | string,
   TransactionsConnection?: (data: WithTypename<TransactionsConnection>) => null | string,
   TransactionsEdge?: (data: WithTypename<TransactionsEdge>) => null | string,
@@ -10993,6 +11018,7 @@ export type GraphCacheResolvers = {
     tenantTrainer?: GraphCacheResolver<WithTypename<Query>, QueryTenantTrainerArgs, WithTypename<TenantTrainer> | string>,
     tenantTrainersList?: GraphCacheResolver<WithTypename<Query>, QueryTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     tenantsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantsListArgs, Array<WithTypename<Tenant> | string>>,
+    trainerGroupAttendanceCompletionList?: GraphCacheResolver<WithTypename<Query>, QueryTrainerGroupAttendanceCompletionListArgs, Array<WithTypename<TrainerGroupAttendanceCompletion> | string>>,
     transaction?: GraphCacheResolver<WithTypename<Query>, QueryTransactionArgs, WithTypename<Transaction> | string>,
     transactions?: GraphCacheResolver<WithTypename<Query>, QueryTransactionsArgs, WithTypename<TransactionsConnection> | string>,
     user?: GraphCacheResolver<WithTypename<Query>, QueryUserArgs, WithTypename<User> | string>,
@@ -12460,6 +12486,17 @@ export type GraphCacheResolvers = {
     until?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>
   },
+  TrainerGroupAttendanceCompletion?: {
+    filledInstances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int'] | string>,
+    filledRatio?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Float'] | string>,
+    partiallyFilledInstances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int'] | string>,
+    pendingAttendances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int'] | string>,
+    person?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int'] | string>,
+    totalAttendances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int'] | string>,
+    totalInstances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int'] | string>,
+    unfilledInstances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int'] | string>
+  },
   Transaction?: {
     accountingPeriodId?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -12931,6 +12968,7 @@ export type GraphCacheUpdaters = {
     tenantTrainer?: GraphCacheUpdateResolver<{ tenantTrainer: Maybe<WithTypename<TenantTrainer>> }, QueryTenantTrainerArgs>,
     tenantTrainersList?: GraphCacheUpdateResolver<{ tenantTrainersList: Maybe<Array<WithTypename<TenantTrainer>>> }, QueryTenantTrainersListArgs>,
     tenantsList?: GraphCacheUpdateResolver<{ tenantsList: Maybe<Array<WithTypename<Tenant>>> }, QueryTenantsListArgs>,
+    trainerGroupAttendanceCompletionList?: GraphCacheUpdateResolver<{ trainerGroupAttendanceCompletionList: Maybe<Array<WithTypename<TrainerGroupAttendanceCompletion>>> }, QueryTrainerGroupAttendanceCompletionListArgs>,
     transaction?: GraphCacheUpdateResolver<{ transaction: Maybe<WithTypename<Transaction>> }, QueryTransactionArgs>,
     transactions?: GraphCacheUpdateResolver<{ transactions: Maybe<WithTypename<TransactionsConnection>> }, QueryTransactionsArgs>,
     user?: GraphCacheUpdateResolver<{ user: Maybe<WithTypename<User>> }, QueryUserArgs>,
@@ -14497,6 +14535,17 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>
+  },
+  TrainerGroupAttendanceCompletion?: {
+    filledInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,
+    filledRatio?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,
+    partiallyFilledInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,
+    pendingAttendances?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,
+    totalAttendances?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,
+    totalInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,
+    unfilledInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>
   },
   Transaction?: {
     accountingPeriodId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,

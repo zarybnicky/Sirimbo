@@ -8,20 +8,20 @@ begin
       and n.nspname = 'public'
   ) then
     create type public.trainer_group_attendance_completion as (
-      person_id bigint,
-      total_instances bigint,
-      filled_instances bigint,
-      partially_filled_instances bigint,
-      unfilled_instances bigint,
+      person_id integer,
+      total_instances integer,
+      filled_instances integer,
+      partially_filled_instances integer,
+      unfilled_instances integer,
       filled_ratio double precision,
-      total_attendances bigint,
-      pending_attendances bigint
+      total_attendances integer,
+      pending_attendances integer
     );
   end if;
 end;
 $$;
 
-comment on column public.trainer_group_attendance_completion.person_id is '@foreignKey (person_id) references person (id)';
+comment on type public.trainer_group_attendance_completion is '@foreignKey (person_id) references person (id)';
 
 create or replace function public.trainer_group_attendance_completion(
   since timestamptz default null,
@@ -38,9 +38,9 @@ as $$
     where ei.tenant_id = current_tenant_id()
       and not ei.is_cancelled
       and e.type = 'group'
-      and coalesce(ei.until, ei.since) < coalesce(until, now())
-      and (since is null or coalesce(ei.since, ei.until) >= since)
-      and (until is null or coalesce(ei.until, ei.since) < until)
+      and coalesce(ei.until, ei.since) < coalesce($2, now())
+      and ($1 is null or coalesce(ei.since, ei.until) >= $1)
+      and ($2 is null or coalesce(ei.until, ei.since) < $2)
   ),
   trainer_instances as (
     select distinct trainer.person_id, trainer.instance_id
@@ -53,6 +53,7 @@ as $$
       select et.person_id, fi.id as instance_id
       from event_trainer et
       where et.event_id = fi.event_id
+      and not exists (select 1 from event_instance_trainer where instance_id=fi.id)
     ) trainer
   ),
   attendance_stats as (
@@ -81,8 +82,8 @@ as $$
           and unknown_count < attendance_count
       ) as partially_filled_instances,
       count(*) filter (where attendance_count = 0 or unknown_count = attendance_count) as unfilled_instances,
-      coalesce(sum(attendance_count), 0)::bigint as total_attendances,
-      coalesce(sum(unknown_count), 0)::bigint as pending_attendances
+      coalesce(sum(attendance_count), 0) as total_attendances,
+      coalesce(sum(unknown_count), 0) as pending_attendances
     from attendance_stats
     group by person_id
   )
@@ -102,8 +103,6 @@ as $$
   order by filled_ratio asc nulls last, person_id;
 $$;
 
-comment on function public.trainer_group_attendance_completion(timestamptz, timestamptz) is '@simpleCollections only';
+comment on function public.trainer_group_attendance_completion is '@simpleCollections only';
 
-grant execute on function public.trainer_group_attendance_completion(timestamptz, timestamptz) to anonymous;
-
-select verify_function('trainer_group_attendance_completion');
+grant execute on function public.trainer_group_attendance_completion to anonymous;

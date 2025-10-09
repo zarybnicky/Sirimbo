@@ -7,7 +7,7 @@ query TrainerAttendanceReport($since: Datetime, $until: Datetime) {
     unfilledInstances
     filledRatio
     pendingAttendances
-    person: personByPersonId {
+    person {
       id
       name
     }
