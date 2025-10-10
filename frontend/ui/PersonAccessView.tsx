@@ -39,12 +39,12 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
                   '—'
                 )}
               </b>
-              <span className="text-muted-foreground">{formatOpenDateRange(proxy)}</span>
+              <span className="text-neutral-10">{formatOpenDateRange(proxy)}</span>
             </div>
 
-            <div className="flex flex-col gap-1 text-xs text-muted-foreground sm:text-sm">
+            <div className="flex flex-col gap-1 text-xs text-neutral-10 sm:text-sm">
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
-                <span className="font-medium text-foreground">Poslední aktivita</span>
+                <span className="font-medium text-neutral-12">Poslední aktivita</span>
                 <span>
                   {proxy.user?.lastActiveAt
                     ? fullDateFormatter.format(new Date(proxy.user.lastActiveAt))
@@ -52,7 +52,7 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
-                <span className="font-medium text-foreground">Verze aplikace</span>
+                <span className="font-medium text-neutral-12">Verze aplikace</span>
                 <span>{proxy.user?.lastVersion ?? '—'}</span>
               </div>
             </div>
