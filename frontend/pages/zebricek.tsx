@@ -180,11 +180,11 @@ export default function ScoreboardPage() {
 
                     const highlightClass =
                       rank === 1
-                        ? 'bg-accent-4/40'
+                        ? 'bg-[rgb(254,240,138)] text-black'
                         : rank === 2
-                          ? 'bg-accent-3/30'
+                          ? 'bg-[rgb(186,230,253)] text-black'
                           : rank === 3
-                            ? 'bg-accent-2/30'
+                            ? 'bg-[rgb(254,215,170)] text-black'
                             : '';
 
                     return (
