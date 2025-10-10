@@ -5,6 +5,8 @@ export type Config = {
   enableHome: boolean;
   enableArticles: boolean;
   enableStarletImport?: boolean;
+  useTrainerInitials: boolean;
+  lockEventsByDefault: boolean;
   themePrimary: string;
   themeAccent: string;
   themeNeutral: string;

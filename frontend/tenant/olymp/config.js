@@ -8,6 +8,8 @@ module.exports = {
   enableHome: true,
   enableArticles: true,
   enableStarletImport: false,
+  useTrainerInitials: false,
+  lockEventsByDefault: false,
   themePrimary: '#ed1734',
   themeAccent: 'red',
   themeNeutral: 'gray',
