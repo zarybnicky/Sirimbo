@@ -20,6 +20,7 @@ import { Spinner } from '@/ui/Spinner';
 import Link from 'next/link';
 import type { LinkProps } from 'next/link';
 import { useAuth } from '@/ui/use-auth';
+import { truthyFilter } from '@/ui/truthyFilter';
 
 type TenantAccountPage = NonNullable<TenantTurnoverPageQuery['accountsList']>[number];
 type TenantPosting = TenantAccountPage['postingsList'][number];
@@ -205,10 +206,7 @@ function TenantTurnover() {
   }, [fetchPage]);
 
   const orderedAccounts = React.useMemo(
-    () =>
-      accountOrder
-        .map((id) => accounts.get(id))
-        .filter((account): account is TenantAccount => Boolean(account)),
+    () => accountOrder.map((id) => accounts.get(id)).filter(truthyFilter),
     [accountOrder, accounts],
   );
   const isEmpty = orderedAccounts.every((account) => account.postings.length === 0);
@@ -275,8 +273,8 @@ function TenantTurnover() {
                     key={posting.id}
                     className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2"
                   >
-                    <span className="text-sm text-neutral-600 min-w-[5rem]">{displayDate}</span>
-                    <div className="flex min-w-[12rem] flex-1 flex-col gap-1">
+                    <span className="text-sm text-neutral-600 min-w-20">{displayDate}</span>
+                    <div className="flex min-w-48 flex-1 flex-col gap-1">
                       <span>{description}</span>
                       {(variableSymbol || specificSymbol) && (
                         <span className="text-xs text-neutral-500">
@@ -420,8 +418,8 @@ function DepositRow({ transaction, showDebug }: { transaction: ManualCreditTrans
 
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2">
-      <span className="text-sm text-neutral-600 min-w-[5rem]">{effectiveDate}</span>
-      <div className="flex min-w-[12rem] flex-1 flex-col gap-1">
+      <span className="text-sm text-neutral-600 min-w-20">{effectiveDate}</span>
+      <div className="flex min-w-48 flex-1 flex-col gap-1">
         <span className="font-medium">{personName}</span>
         <span className="text-sm text-neutral-600">{transaction.description || 'Dobití kreditu'}</span>
         {(variableSymbol || specificSymbol) && (

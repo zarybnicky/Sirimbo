@@ -90,8 +90,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
         id: 'payments',
         title: 'Platby',
         contents: () => <Payments event={event} />,
-      });
-      tabs.push({
+      }, {
         id: 'instances',
         title: 'Termíny',
         contents: () => <EventInstances event={event} />,

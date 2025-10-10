@@ -39,6 +39,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     "@typescript-eslint/no-require-imports": "off",
+    "@typescript-eslint/triple-slash-reference": "off",
     "tailwindcss/classnames-order": "off",
     "import/no-unused-modules": ["warn", {
       unusedExports: true,

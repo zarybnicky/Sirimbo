@@ -1,3 +1,5 @@
+import { add } from "date-arithmetic";
+
 export type PeriodPreset = 'schoolYear' | 'semester' | 'quarter' | 'month' | 'custom';
 
 export type PeriodRange = {
@@ -20,14 +22,6 @@ export const formatDate = (value: Date) => value.toISOString().slice(0, 10);
 const parseDate = (value: string): Date | null => {
   const parsed = new Date(`${value}T00:00:00Z`);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
-};
-
-const addMonths = (value: Date, months: number) => {
-  return new Date(Date.UTC(value.getUTCFullYear(), value.getUTCMonth() + months, value.getUTCDate()));
-};
-
-const addDays = (value: Date, days: number) => {
-  return new Date(Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate() + days));
 };
 
 const startOfSchoolYear = (value: Date) => {
@@ -53,7 +47,7 @@ export const computeRange = (
       return { since: null, until: null, displaySince: null, displayUntil: null };
     }
 
-    const untilExclusive = addDays(untilInclusive, 1);
+    const untilExclusive = add(untilInclusive, 1, 'day');
     return {
       since: formatDate(sinceDate),
       until: formatDate(untilExclusive),
@@ -70,12 +64,12 @@ export const computeRange = (
   const schoolYearStart = startOfSchoolYear(reference);
 
   if (preset === 'schoolYear') {
-    const untilDate = addMonths(schoolYearStart, 12);
+    const untilDate = add(schoolYearStart, 12, 'month');
     return {
       since: formatDate(schoolYearStart),
       until: formatDate(untilDate),
       displaySince: formatDate(schoolYearStart),
-      displayUntil: formatDate(addDays(untilDate, -1)),
+      displayUntil: formatDate(add(untilDate, -1, 'month')),
     };
   }
 
@@ -85,37 +79,37 @@ export const computeRange = (
 
   if (preset === 'semester') {
     const isSecondSemester = monthsDiff >= 5;
-    const sinceDate = isSecondSemester ? addMonths(schoolYearStart, 5) : schoolYearStart;
-    const untilDate = isSecondSemester ? addMonths(schoolYearStart, 12) : addMonths(schoolYearStart, 5);
+    const sinceDate = isSecondSemester ? add(schoolYearStart, 5, 'month') : schoolYearStart;
+    const untilDate = isSecondSemester ? add(schoolYearStart, 12, 'month') : add(schoolYearStart, 5, 'month');
     return {
       since: formatDate(sinceDate),
       until: formatDate(untilDate),
       displaySince: formatDate(sinceDate),
-      displayUntil: formatDate(addDays(untilDate, -1)),
+      displayUntil: formatDate(add(untilDate, -1, 'day')),
     };
   }
 
   if (preset === 'month') {
     const monthIndex = Math.max(0, Math.min(11, monthsDiff));
-    const sinceDate = addMonths(schoolYearStart, monthIndex);
-    const untilDate = addMonths(sinceDate, 1);
+    const sinceDate = add(schoolYearStart, monthIndex, 'month');
+    const untilDate = add(sinceDate, 1, 'month');
     return {
       since: formatDate(sinceDate),
       until: formatDate(untilDate),
       displaySince: formatDate(sinceDate),
-      displayUntil: formatDate(addDays(untilDate, -1)),
+      displayUntil: formatDate(add(untilDate, -1, 'day')),
     };
   }
 
   if (preset === 'quarter') {
     const quarterIndex = Math.max(0, Math.min(3, Math.floor(monthsDiff / 3)));
-    const sinceDate = addMonths(schoolYearStart, quarterIndex * 3);
-    const untilDate = addMonths(sinceDate, 3);
+    const sinceDate = add(schoolYearStart, quarterIndex * 3, 'month');
+    const untilDate = add(sinceDate, 3, 'month');
     return {
       since: formatDate(sinceDate),
       until: formatDate(untilDate),
       displaySince: formatDate(sinceDate),
-      displayUntil: formatDate(addDays(untilDate, -1)),
+      displayUntil: formatDate(add(untilDate, -1, 'day')),
     };
   }
 

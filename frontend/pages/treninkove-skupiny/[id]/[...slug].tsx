@@ -204,12 +204,8 @@ function getCouplesAndSolos(
   );
 
   const soloMembers = members
-    .filter((membership) => {
-      const personId = membership.person?.id;
-      return personId && !usedPersonIds.has(personId);
-    })
-    .slice()
-    .sort((a, b) => (a.person?.name || '').localeCompare(b.person?.name || '', 'cs'));
+      .filter((x) => x.person?.id && !usedPersonIds.has(x.person?.id))
+      .sort((a, b) => (a.person?.name || '').localeCompare(b.person?.name || '', 'cs'));
 
   return { couples: couplesWithMemberships, solos: soloMembers };
 }

@@ -86,7 +86,7 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 
     for (const cohortId of values.cohortIds) {
       const existing = oldAudiences.findIndex(x => x.cohortId === cohortId);
-      if (existing >= 0) {
+      if (existing !== -1) {
         newAudiences.push({ cohortId, id: oldAudiences[existing]!.id });
         delete oldAudiences[existing];
       } else {
@@ -95,7 +95,7 @@ export function AnnouncementForm({ id, data, onSuccess }: {
     }
     for (const audienceRole of values.audienceRoles) {
       const existing = oldAudiences.findIndex(x => x.audienceRole === audienceRole);
-      if (existing >= 0) {
+      if (existing !== -1) {
         newAudiences.push({ audienceRole, id: oldAudiences[existing]!.id });
         delete oldAudiences[existing];
       } else {
@@ -192,40 +192,36 @@ function AnnouncementAudienceEditor({ control }: {
 
 function AudienceRoleCheckboxes({ control }: { control: Control<FormValues> }) {
   const { field } = useController({ control, name: 'audienceRoles' });
-  const value: AnnouncementAudienceRole[] = field.value ?? [];
 
   const toggle = React.useCallback(
     (role: AnnouncementAudienceRole) => {
-      const next = new Set(value);
+      const next = new Set(field.value ?? []);
       if (next.has(role)) {
         next.delete(role);
       } else {
         next.add(role);
       }
-      field.onChange(Array.from(next));
+      field.onChange([...next]);
     },
-    [field, value],
+    [field],
   );
 
   return (
     <div className="space-y-1">
-      {ROLE_OPTIONS.map((role) => {
-        const checked = value.includes(role.value);
-        return (
-          <Checkbox
-            key={role.value}
-            name={`announcement-role-${role.value}`}
-            checked={checked}
-            value={role.value}
-            label={role.label}
-            helperText={role.helperText}
-            onChange={(event) => {
-              event.stopPropagation();
-              toggle(role.value);
-            }}
-          />
-        );
-      })}
+      {ROLE_OPTIONS.map((role) => (
+        <Checkbox
+          key={role.value}
+          name={`announcement-role-${role.value}`}
+          checked={field.value.includes(role.value)}
+          value={role.value}
+          label={role.label}
+          helperText={role.helperText}
+          onChange={(event) => {
+            event.stopPropagation();
+            toggle(role.value);
+          }}
+        />
+      ))}
     </div>
   );
 }
@@ -240,33 +236,32 @@ function AudienceCohortCheckboxes({
   loading?: boolean;
 }) {
   const { field } = useController({ control, name: 'cohortIds' });
-  const value: string[] = field.value ?? [];
 
   const toggle = React.useCallback(
     (cohortId: string) => {
-      const next = new Set(value);
+      const next = new Set(field.value);
       if (next.has(cohortId)) {
         next.delete(cohortId);
       } else {
         next.add(cohortId);
       }
-      field.onChange(Array.from(next));
+      field.onChange([...next]);
     },
-    [field, value],
+    [field],
   );
 
   if (loading) {
     return <div className="text-xs text-neutral-11">Načítám skupiny…</div>;
   }
 
-  if (!cohorts.length) {
+  if (cohorts.length === 0) {
     return <div className="text-xs text-neutral-11">Žádné skupiny nejsou k dispozici.</div>;
   }
 
   return (
     <div className="space-y-1">
       {cohorts.map((cohort) => {
-        const checked = value.includes(cohort.id);
+        const checked = field.value.includes(cohort.id);
         return (
           <Checkbox
             key={cohort.id}
