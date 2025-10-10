@@ -14,7 +14,7 @@ import { UpsertEventForm } from '../event-form/UpsertEventForm';
 import Link from "next/link";
 import { buttonCls } from "@/ui/style";
 import { cn } from "@/ui/cn";
-import { tenantId } from '@/tenant/config';
+import { tenantConfig } from '@/tenant/config';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -125,7 +125,7 @@ export function EventList() {
   const emptyEvent = React.useMemo(() => {
     const day = startOf(endOf(new Date(), 'week', 1), 'day');
     return {
-      isLocked: tenantId === '3',
+      isLocked: tenantConfig.lockEventsByDefault,
       instances: [{
         ...datetimeRangeToTimeRange(
           add(day, 9, 'hours'),

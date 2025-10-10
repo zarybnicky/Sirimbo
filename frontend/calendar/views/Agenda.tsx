@@ -14,7 +14,7 @@ import { cardCls } from '@/ui/style'
 import { TypeOf } from 'zod'
 import { EventForm } from '@/ui/event-form/types'
 import { truthyFilter } from '@/ui/truthyFilter'
-import { tenantId } from '@/tenant/config'
+import { tenantConfig } from '@/tenant/config'
 
 type MapItem = {
   lessons: Map<string, CalendarEvent[]>;
@@ -125,7 +125,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
         trainers: [],
       }],
       isVisible: true,
-      isLocked: tenantId === '3',
+      isLocked: tenantConfig.lockEventsByDefault,
       type: 'LESSON',
       capacity: 2,
       locationId: items[0]?.event?.location?.id,
