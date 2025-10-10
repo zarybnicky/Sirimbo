@@ -1,0 +1,26 @@
+{
+  "orgId": "team_jYuS2WKaZEUllNIZ4ddC2MnE",
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_9IjZcaUk9z9PvHtp3lTF7ZQnwEQC",
+      "name": "rozpisovnik-olymp",
+      "directory": "frontend/"
+    },
+    {
+      "id": "prj_61UYIOTjHQwBFq6F0mAJ5MdryDYM",
+      "name": "rozpisovnik-tsstarlet",
+      "directory": "frontend/"
+    },
+    {
+      "id": "prj_Bwv66QaHMo1nLAO6u82LIscdU0Mn",
+      "name": "rozpisovnik-kometa2",
+      "directory": "frontend/"
+    },
+    {
+      "id": "prj_eyiVWa0xpoXSpkNHucl1isvWHkYO",
+      "name": "rozpisovnik-kometa",
+      "directory": "frontend/"
+    }
+  ]
+}
