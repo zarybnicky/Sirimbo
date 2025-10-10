@@ -19,7 +19,7 @@ function formatTrainerLabel(name: string, useInitials: boolean): string {
   }
 
   const sanitized = name
-    .replace(/\b(Mgr\.|Ing\.|Bc\.)\s*/g, '')
+    .replaceAll(/\b(Mgr\.|Ing\.|Bc\.)\s*/g, '')
     .normalize('NFKD')
     .replaceAll(/[^A-Z]/g, '');
 

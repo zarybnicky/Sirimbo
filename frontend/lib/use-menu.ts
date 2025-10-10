@@ -1,6 +1,11 @@
 import { tenantConfig } from '@/tenant/config';
-import type { LinkProps } from 'next/link'
-type Route = LinkProps['href'];
+import type {
+  Config,
+  NavigationItem,
+  NavigationLink,
+  NavigationMenu,
+  Route,
+} from '@/tenant/types';
 
 export type MenuLink = {
   type: 'link';
@@ -23,88 +28,136 @@ export function getHrefs(x: MenuStructItem): Route[] {
   return x.type === 'link' ? [x.href] : x.children.flatMap((x) => getHrefs(x));
 }
 
-export const topMenu: MenuStructItem[] = [
-  { type: 'link', title: 'Domů', href: '/' },
-  {
-    type: 'menu',
-    title: 'Klub',
-    children: [
-      { type: 'link', title: 'O nás', href: '/o-nas' },
-      { type: 'link', title: 'Kde trénujeme', href: '/kde-trenujeme' },
-      { type: 'link', title: 'Tréninkové programy', href: '/treninkove-programy' },
-      { type: 'link', title: 'Trenéři', href: '/treneri' },
-      { type: 'link', title: 'Výhody členství', href: '/vyhody-clenstvi' },
-      { type: 'link', title: 'Galerie mistrů', href: '/galerie-mistru' },
-    ],
-  },
-  {
-    type: 'menu',
-    title: 'Nabízíme',
-    children: [
-      { type: 'link', title: 'Přípravka tanečního sportu', href: 'https://nabor.tkolymp.cz' as any },
-      { type: 'link', title: 'Vystoupení na akcích', href: '/vystoupeni' },
-      { type: 'link', title: 'Školní taneční kroužky', href: '/skolni-krouzky' },
-    ],
-  },
-  { type: 'link', title: 'Aktuality', href: '/clanky' },
-  { type: 'link', title: 'Galerie', href: '/galerie' },
-  { type: 'link', title: 'Akce', href: '/akce' },
-  { type: 'link', title: 'Kontakt', href: '/kontakt' },
-];
+function toMenuLink(link: NavigationLink, config: Config): MenuLink | null {
+  if (link.recruitmentLink && config.enableRecruitmentLink === false) {
+    return null;
+  }
+  return {
+    type: 'link',
+    title: link.title,
+    href: link.href,
+    requireTrainer: link.requireTrainer,
+    requireAdmin: link.requireAdmin,
+    className: link.className,
+  } satisfies MenuLink;
+}
 
-export const memberMenu: MenuStructItem[] = [
-  { type: 'link', title: 'Nástěnka', href: {
-    pathname: '/dashboard',
-    query: { tab: 'myAnnouncements' },
-  } },
-  ...(tenantConfig.enableArticles ? [
-    { type: 'link', title: 'Stálá nástěnka', className: 'lg:hidden', href: {
-      pathname: '/dashboard',
-      query: { tab: 'stickyAnnouncements' },
-    } },
-  ] as MenuStructItem[] : []),
-  { type: 'link', title: 'Profil', href: '/profil' },
-  {
-    type: 'menu',
+function isMenuLink(link: MenuLink | null): link is MenuLink {
+  return link !== null;
+}
+
+function toMenuItem(item: NavigationItem, config: Config): MenuStructItem | null {
+  if ('children' in item) {
+    const children = item.children
+      .map((child) => toMenuLink(child, config))
+      .filter(isMenuLink);
+    if (children.length === 0) {
+      return null;
+    }
+    return { type: 'menu', title: item.title, children } satisfies MenuStructItem;
+  }
+  return toMenuLink(item, config);
+}
+
+function isMenuStructItem(item: MenuStructItem | null): item is MenuStructItem {
+  return item !== null;
+}
+
+function buildMenu(items: NavigationItem[] | undefined, config: Config): MenuStructItem[] {
+  return (items ?? [])
+    .map((item) => toMenuItem(item, config))
+    .filter(isMenuStructItem);
+}
+
+function getDefaultMemberNavigation(config: Config): NavigationItem[] {
+  const navigation: NavigationItem[] = [
+    {
+      title: 'Nástěnka',
+      href: {
+        pathname: '/dashboard',
+        query: { tab: 'myAnnouncements' },
+      },
+    },
+  ];
+
+  if (config.enableArticles) {
+    navigation.push({
+      title: 'Stálá nástěnka',
+      className: 'lg:hidden',
+      href: {
+        pathname: '/dashboard',
+        query: { tab: 'stickyAnnouncements' },
+      },
+    });
+  }
+
+  navigation.push({ title: 'Profil', href: '/profil' });
+
+  const trainingMenu: NavigationMenu = {
     title: 'Tréninky',
     children: [
-      { type: 'link', title: 'Moje tréninky', href: {
-        pathname: '/dashboard',
-        query: { tab: 'myLessons' },
-      } },
-      { type: 'link', title: 'Kalendář', href: '/rozpis' },
-      { type: 'link', title: 'Seznam akcí', href: '/akce' },
+      {
+        title: 'Moje tréninky',
+        href: {
+          pathname: '/dashboard',
+          query: { tab: 'myLessons' },
+        },
+      },
+      { title: 'Kalendář', href: '/rozpis' },
+      { title: 'Seznam akcí', href: '/akce' },
     ],
-  },
-  {
-    type: 'menu',
+  };
+
+  const clubMenu: NavigationMenu = {
     title: 'Taneční klub',
     children: [
-      { type: 'link', title: 'Klub', href: '/tanecni-klub' },
-      { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
-      { type: 'link', title: 'Páry', href: '/pary' },
-      { type: 'link', title: 'Členové', href: '/clenove' },
-      { type: 'link', title: 'Žebříček', href: '/zebricek' },
-      ...(tenantConfig.enableArticles ? [
-        { type: 'link', title: 'Dokumenty', href: '/dokumenty' } as MenuLink,
-      ] : []),
+      { title: 'Klub', href: '/tanecni-klub' },
+      { title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
+      { title: 'Páry', href: '/pary' },
+      { title: 'Členové', href: '/clenove' },
+      { title: 'Žebříček', href: '/zebricek' },
     ],
-  },
-  {
-    type: 'menu',
+  };
+
+  if (config.enableArticles) {
+    clubMenu.children.push({ title: 'Dokumenty', href: '/dokumenty' });
+  }
+
+  const adminMenu: NavigationMenu = {
     title: 'Správa',
     children: [
-      { type: 'link', title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
-      { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
-      { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
-      ...(tenantConfig.enableArticles ? [
-        { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
-        { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
-        { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
-      ] as MenuLink[] : []),
-      ...(tenantConfig.enableStarletImport ? [
-        { type: 'link', title: 'Import z evidence', href: '/starlet-import', requireAdmin: true },
-      ] as MenuLink[] : []),
+      { title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
+      { title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
+      { title: 'Platby', href: '/platby', requireAdmin: true },
     ],
-  },
-];
+  };
+
+  if (config.enableArticles) {
+    adminMenu.children.push(
+      { title: 'Články', href: '/aktuality', requireTrainer: true },
+      { title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
+      { title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
+    );
+  }
+
+  if (config.enableStarletImport) {
+    adminMenu.children.push({
+      title: 'Import z evidence',
+      href: '/starlet-import',
+      requireAdmin: true,
+    });
+  }
+
+  navigation.push(trainingMenu, clubMenu, adminMenu);
+
+  return navigation;
+}
+
+const defaultMemberNavigation = getDefaultMemberNavigation(tenantConfig);
+
+export const topMenu: MenuStructItem[] = buildMenu(tenantConfig.publicNavigation, tenantConfig);
+
+export const memberMenu: MenuStructItem[] = buildMenu(
+  tenantConfig.memberNavigation ?? defaultMemberNavigation,
+  tenantConfig,
+);

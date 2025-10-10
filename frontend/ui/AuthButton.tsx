@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { useAuth } from '@/ui/use-auth';
-import { memberMenu } from '@/lib/use-menu';
+import { memberMenu, type MenuLink } from '@/lib/use-menu';
 import { User as Account } from 'lucide-react';
 import React from 'react';
 import { useSetAtom } from 'jotai';
@@ -19,6 +19,11 @@ import Link from 'next/link';
 export function AuthButton() {
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
+  const canAccessLink = React.useCallback(
+    (link: MenuLink) =>
+      (!link.requireTrainer || auth.isTrainerOrAdmin) && (!link.requireAdmin || auth.isAdmin),
+    [auth.isAdmin, auth.isTrainerOrAdmin],
+  );
 
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {
@@ -53,21 +58,34 @@ export function AuthButton() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        {memberMenu.map((item) =>
-          item.type === 'link' ? (
-            <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
-              {item.title}
-            </DropdownMenuLink>
-          ) : (
+        {memberMenu.map((item) => {
+          if (item.type === 'link') {
+            if (!canAccessLink(item)) {
+              return null;
+            }
+            return (
+              <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
+                {item.title}
+              </DropdownMenuLink>
+            );
+          }
+
+          const visibleChildren = item.children.filter(canAccessLink);
+          if (visibleChildren.length === 0) {
+            return null;
+          }
+
+          return (
             <React.Fragment key={item.title}>
               <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
-              {item.children.filter((item) => (!item.requireTrainer || auth.isTrainerOrAdmin) && (!item.requireAdmin || auth.isAdmin)).map((item) => (
-                <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
-                  {item.title}
+              {visibleChildren.map((child) => (
+                <DropdownMenuLink key={JSON.stringify(child.href)} href={child.href}>
+                  {child.title}
                 </DropdownMenuLink>
               ))}
             </React.Fragment>
-          ))}
+          );
+        })}
         <DropdownMenuButton onClick={signOut}>Odhlásit se</DropdownMenuButton>
       </DropdownMenuContent>
     </DropdownMenu>

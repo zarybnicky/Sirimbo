@@ -23,6 +23,12 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const router = useRouter();
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
+  const hasPublicNavigation = topMenu.length > 0;
+  const canAccessLink = React.useCallback(
+    (link: MenuLink) =>
+      (!link.requireTrainer || auth.isTrainerOrAdmin) && (!link.requireAdmin || auth.isAdmin),
+    [auth.isAdmin, auth.isTrainerOrAdmin],
+  );
 
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {
@@ -81,13 +87,22 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
         <div className="space-y-1 pt-3 mr-1">
           {(auth.user && isMounted) ? (
             <>
-              {memberMenu.map((x) => <SidebarSection key={x.title} item={x.type === 'link' ? x : {
-                ...x,
-                children: x.children.filter(item => (
-                  (!item.requireTrainer || auth.isTrainerOrAdmin) &&
-                  (!item.requireAdmin || auth.isAdmin))
-                )
-              }} />)}
+              {memberMenu.map((x) => {
+                if (x.type === 'link') {
+                  return canAccessLink(x) ? (
+                    <SidebarSection key={x.title} item={x} />
+                  ) : null;
+                }
+
+                const filteredChildren = x.children.filter(canAccessLink);
+                if (filteredChildren.length === 0) {
+                  return null;
+                }
+
+                return (
+                  <SidebarSection key={x.title} item={{ ...x, children: filteredChildren }} />
+                );
+              })}
 
               <Link
                 onClick={signOut}
@@ -106,7 +121,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {tenantConfig.enableHome && (
+          {tenantConfig.enableHome && hasPublicNavigation && (
             showTopMenu ? (
               topMenu.map((x) => <SidebarSection key={x.title} item={x} />)
             ) : (
