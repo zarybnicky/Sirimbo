@@ -1,36 +1,6 @@
-do $$
-begin
-  if not exists (
-    select 1
-    from pg_type t
-    join pg_namespace n on n.oid = t.typnamespace
-    where t.typname = 'trainer_group_attendance_completion'
-      and n.nspname = 'public'
-  ) then
-    create type public.trainer_group_attendance_completion as (
-      person_id integer,
-      total_instances integer,
-      filled_instances integer,
-      partially_filled_instances integer,
-      unfilled_instances integer,
-      filled_ratio double precision,
-      total_attendances integer,
-      pending_attendances integer
-    );
-  end if;
-end;
-$$;
-
-comment on type public.trainer_group_attendance_completion is '@foreignKey (person_id) references person (id)';
-
-create or replace function public.trainer_group_attendance_completion(
-  since timestamptz default null,
-  until timestamptz default null
-)
-  returns setof trainer_group_attendance_completion
-  language sql
-  stable
-as $$
+CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with time zone DEFAULT NULL::timestamp with time zone, until timestamp with time zone DEFAULT NULL::timestamp with time zone) RETURNS SETOF public.trainer_group_attendance_completion
+    LANGUAGE sql STABLE
+    AS $_$
   with filtered_instances as (
     select ei.id, ei.event_id
     from event_instance ei
@@ -101,8 +71,8 @@ as $$
     pending_attendances
   from per_trainer
   order by filled_ratio asc nulls last, person_id;
-$$;
+$_$;
 
-comment on function public.trainer_group_attendance_completion is '@simpleCollections only';
+COMMENT ON FUNCTION public.trainer_group_attendance_completion(since timestamp with time zone, until timestamp with time zone) IS '@simpleCollections only';
 
-grant execute on function public.trainer_group_attendance_completion to anonymous;
+GRANT ALL ON FUNCTION public.trainer_group_attendance_completion(since timestamp with time zone, until timestamp with time zone) TO anonymous;
