@@ -4,15 +4,16 @@ import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
 import { TitleBar } from '@/ui/TitleBar';
 import { ScoreboardPeriodSelector } from '@/scoreboard/ScoreboardPeriodSelector';
-import { computeRange, formatDate, PeriodPreset } from '@/scoreboard/periods';
+import { computeRange, PeriodPreset } from '@/scoreboard/periods';
 import { ScoreboardDocument, ScoreboardQueryVariables } from '@/graphql/Scoreboard';
 import { Combobox } from '@/ui/fields/Combobox';
+import { fullDateFormatter } from '@/ui/format';
 
 export default function ScoreboardPage() {
   const [selectedCohortId, setSelectedCohortId] = React.useState<string | null | undefined>(null);
   const [preset, setPreset] = React.useState<PeriodPreset>('schoolYear');
-  const [referenceDate, setReferenceDate] = React.useState(() => formatDate(new Date()));
-  const [customRange, setCustomRange] = React.useState<{ since: string; until: string }>({ since: '', until: '' });
+  const [referenceDate, setReferenceDate] = React.useState(() => new Date());
+  const [customRange, setCustomRange] = React.useState<{ since: Date | null; until: Date | null }>({ since: null, until: null });
 
   const period = React.useMemo(
     () => computeRange(preset, referenceDate, customRange.since, customRange.until),
@@ -39,11 +40,6 @@ export default function ScoreboardPage() {
   const cohorts = data?.getCurrentTenant?.cohortsList ?? [];
   const scoreboard = data?.scoreboardEntriesList ?? [];
   const activeCohort = selectedCohortId ? cohorts.find((item) => item.id === selectedCohortId) ?? null : null;
-
-  const periodSummary =
-    period.displaySince && period.displayUntil
-      ? `${period.displaySince} – ${period.displayUntil}`
-      : undefined;
 
   return (
     <Layout requireMember>
@@ -121,9 +117,12 @@ export default function ScoreboardPage() {
             />
           </div>
 
-          {periodSummary ? (
+          {(period.displaySince && period.displayUntil) ? (
             <p className="text-sm text-neutral-10">
-              Zobrazené období: <span className="font-medium text-neutral-12">{periodSummary}</span>
+              {'Zobrazené období: '}
+              <span className="font-medium text-neutral-12">
+                {fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
+              </span>
               {activeCohort ? ` · Skupina ${activeCohort.name}` : ' · Všechny skupiny'}
             </p>
           ) : null}

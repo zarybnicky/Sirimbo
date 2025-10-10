@@ -4,6 +4,8 @@ import { Layout } from '@/components/layout/Layout';
 import { TitleBar } from '@/ui/TitleBar';
 import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceReport';
 import { truthyFilter } from '@/ui/truthyFilter';
+import { computeRange } from '@/scoreboard/periods';
+import { fullDateFormatter } from '@/ui/format';
 
 const numberFormatter = new Intl.NumberFormat('cs-CZ');
 const percentFormatter = new Intl.NumberFormat('cs-CZ', {
@@ -12,9 +14,19 @@ const percentFormatter = new Intl.NumberFormat('cs-CZ', {
 });
 
 export default function TrainerAttendanceReportPage() {
+  const period = React.useMemo(() => {
+    const period = computeRange('schoolYear', new Date(), null, null);
+    if (period.until)
+      period.until = (new Date(period.until).getTime() > Date.now()) ? new Date().toISOString() : period.until;
+    return period;
+  }, []);
+
   const [{ data, fetching, error }] = useQuery({
     query: TrainerAttendanceReportDocument,
-    variables: { since: null, until: null },
+    variables: {
+      since: period.since,
+      until: period.until,
+    },
   });
 
   const { rows, summary } = React.useMemo(() => {
@@ -67,6 +79,11 @@ export default function TrainerAttendanceReportPage() {
           <p>
             Přehled vychází z proběhlých termínů vedených.
           </p>
+          {period.displaySince && period.displayUntil ? (
+            <p>
+              {fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
+            </p>
+          ) : null}
         </section>
 
         <section className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 text-sm shadow-sm">
@@ -74,7 +91,7 @@ export default function TrainerAttendanceReportPage() {
           {summary.total > 0 ? (
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li>
-                Celkem vedenýhc:{' '}
+                Celkem vedených:{' '}
                 <span className="font-semibold text-neutral-12">{numberFormatter.format(summary.total)}</span>
               </li>
               <li>

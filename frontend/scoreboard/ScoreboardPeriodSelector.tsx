@@ -6,12 +6,12 @@ import { PeriodPreset, periodLabels } from './periods';
 type ScoreboardPeriodSelectorProps = {
   preset: PeriodPreset;
   onPresetChange: (preset: PeriodPreset) => void;
-  referenceDate: string;
-  onReferenceDateChange: (value: string) => void;
-  customSince: string;
-  onCustomSinceChange: (value: string) => void;
-  customUntil: string;
-  onCustomUntilChange: (value: string) => void;
+  referenceDate: Date;
+  onReferenceDateChange: (value: Date) => void;
+  customSince: Date | null;
+  onCustomSinceChange: (value: Date | null) => void;
+  customUntil: Date | null;
+  onCustomUntilChange: (value: Date | null) => void;
   showCustomRangeWarning: boolean;
 };
 
@@ -65,16 +65,16 @@ export function ScoreboardPeriodSelector({
             label="Od"
             name="scoreboard-custom-since"
             type="date"
-            value={customSince}
-            onChange={(event) => onCustomSinceChange(event.currentTarget.value)}
+            value={customSince?.toISOString()?.slice(0, 10)}
+            onChange={(event) => onCustomSinceChange(event.currentTarget.value ? new Date(event.currentTarget.value) : null)}
           />
           <TextField
             className="space-y-1"
             label="Do"
             name="scoreboard-custom-until"
             type="date"
-            value={customUntil}
-            onChange={(event) => onCustomUntilChange(event.currentTarget.value)}
+            value={customUntil?.toISOString()?.slice(0, 10)}
+            onChange={(event) => onCustomUntilChange(event.currentTarget.value ? new Date(event.currentTarget.value) : null)}
           />
           {showCustomRangeWarning ? (
             <p className="text-sm text-neutral-10 md:col-span-2 xl:col-span-4">
@@ -88,8 +88,8 @@ export function ScoreboardPeriodSelector({
           label="Referenční datum"
           name="scoreboard-reference-date"
           type="date"
-          value={referenceDate}
-          onChange={(event) => onReferenceDateChange(event.currentTarget.value)}
+          value={referenceDate.toISOString().slice(0, 10)}
+          onChange={(event) => onReferenceDateChange(event.currentTarget.value ? new Date(event.currentTarget.value) : new Date())}
         />
       )}
     </>

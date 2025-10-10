@@ -2,11 +2,11 @@ import { add } from "date-arithmetic";
 
 export type PeriodPreset = 'schoolYear' | 'semester' | 'quarter' | 'month' | 'custom';
 
-export type PeriodRange = {
+type PeriodRange = {
   since: string | null;
   until: string | null;
-  displaySince: string | null;
-  displayUntil: string | null;
+  displaySince: Date | null
+  displayUntil: Date | null;
 };
 
 export const periodLabels: Record<PeriodPreset, string> = {
@@ -17,12 +17,7 @@ export const periodLabels: Record<PeriodPreset, string> = {
   custom: 'Vlastní interval',
 };
 
-export const formatDate = (value: Date) => value.toISOString().slice(0, 10);
-
-const parseDate = (value: string): Date | null => {
-  const parsed = new Date(`${value}T00:00:00Z`);
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
-};
+const formatDate = (value: Date) => value.toISOString().slice(0, 10);
 
 const startOfSchoolYear = (value: Date) => {
   const year = value.getUTCMonth() >= 8 ? value.getUTCFullYear() : value.getUTCFullYear() - 1;
@@ -31,34 +26,31 @@ const startOfSchoolYear = (value: Date) => {
 
 export const computeRange = (
   preset: PeriodPreset,
-  referenceDate: string,
-  customSince: string,
-  customUntil: string,
+  reference: Date,
+  customSince: Date | null,
+  customUntil: Date | null,
 ): PeriodRange => {
   if (preset === 'custom') {
     if (!customSince || !customUntil) {
-      return { since: null, until: null, displaySince: customSince || null, displayUntil: customUntil || null };
+      return {
+        since: null,
+        until: null,
+        displaySince: customSince,
+        displayUntil: customUntil,
+      };
     }
 
-    const sinceDate = parseDate(customSince);
-    const untilInclusive = parseDate(customUntil);
-
-    if (!sinceDate || !untilInclusive) {
+    if (!customSince || !customUntil) {
       return { since: null, until: null, displaySince: null, displayUntil: null };
     }
 
-    const untilExclusive = add(untilInclusive, 1, 'day');
+    const untilExclusive = add(customUntil, 1, 'day');
     return {
-      since: formatDate(sinceDate),
+      since: formatDate(customSince),
       until: formatDate(untilExclusive),
-      displaySince: formatDate(sinceDate),
-      displayUntil: formatDate(untilInclusive),
+      displaySince: customSince,
+      displayUntil: customUntil,
     };
-  }
-
-  const reference = parseDate(referenceDate);
-  if (!reference) {
-    return { since: null, until: null, displaySince: null, displayUntil: null };
   }
 
   const schoolYearStart = startOfSchoolYear(reference);
@@ -68,8 +60,8 @@ export const computeRange = (
     return {
       since: formatDate(schoolYearStart),
       until: formatDate(untilDate),
-      displaySince: formatDate(schoolYearStart),
-      displayUntil: formatDate(add(untilDate, -1, 'month')),
+      displaySince: schoolYearStart,
+      displayUntil: add(untilDate, -1, 'month'),
     };
   }
 
@@ -84,8 +76,8 @@ export const computeRange = (
     return {
       since: formatDate(sinceDate),
       until: formatDate(untilDate),
-      displaySince: formatDate(sinceDate),
-      displayUntil: formatDate(add(untilDate, -1, 'day')),
+      displaySince: sinceDate,
+      displayUntil: add(untilDate, -1, 'day'),
     };
   }
 
@@ -96,8 +88,8 @@ export const computeRange = (
     return {
       since: formatDate(sinceDate),
       until: formatDate(untilDate),
-      displaySince: formatDate(sinceDate),
-      displayUntil: formatDate(add(untilDate, -1, 'day')),
+      displaySince: sinceDate,
+      displayUntil: add(untilDate, -1, 'day'),
     };
   }
 
@@ -108,8 +100,8 @@ export const computeRange = (
     return {
       since: formatDate(sinceDate),
       until: formatDate(untilDate),
-      displaySince: formatDate(sinceDate),
-      displayUntil: formatDate(add(untilDate, -1, 'day')),
+      displaySince: sinceDate,
+      displayUntil: add(untilDate, -1, 'day'),
     };
   }
 
