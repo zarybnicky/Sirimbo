@@ -1,4 +1,5 @@
 import { tenantConfig } from '@/tenant/config.js';
+import { topMenu } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/catalog';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { LoginForm } from '@/ui/forms/LoginForm';
@@ -41,9 +42,9 @@ export const Layout = React.memo(function Layout({
   const auth = useAuth();
   const authLoading = useAuthLoading();
 
-  showTopMenu = showTopMenu && tenantConfig.enableHome;
+  showTopMenu = showTopMenu && tenantConfig.enableHome && topMenu.length > 0;
   if (hideTopMenuIfLoggedIn) {
-    showTopMenu = !auth.user;
+    showTopMenu = showTopMenu && !auth.user;
   }
 
   const missingPermission =

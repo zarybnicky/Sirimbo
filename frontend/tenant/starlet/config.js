@@ -7,12 +7,37 @@ module.exports = {
   favicon: '',
   enableHome: false,
   enableArticles: false,
+  enableRecruitmentLink: false,
   enableStarletImport: true,
   useTrainerInitials: true,
   lockEventsByDefault: true,
   themePrimary: '#D7A238',
   themeAccent: 'orange',
   themeNeutral: 'olive',
+  publicNavigation: [
+    { title: 'Domů', href: '/' },
+    {
+      title: 'Klub',
+      children: [
+        { title: 'O nás', href: '/o-nas' },
+        { title: 'Kde trénujeme', href: '/kde-trenujeme' },
+        { title: 'Tréninkové programy', href: '/treninkove-programy' },
+        { title: 'Trenéři', href: '/treneri' },
+        { title: 'Výhody členství', href: '/vyhody-clenstvi' },
+        { title: 'Galerie mistrů', href: '/galerie-mistru' },
+      ],
+    },
+    {
+      title: 'Nabízíme',
+      children: [
+        { title: 'Vystoupení na akcích', href: '/vystoupeni' },
+        { title: 'Školní taneční kroužky', href: '/skolni-krouzky' },
+      ],
+    },
+    { title: 'Galerie', href: '/galerie' },
+    { title: 'Akce', href: '/akce' },
+    { title: 'Kontakt', href: '/kontakt' },
+  ],
   accentLight: {
     orange1: 'hsl(45, 67%, 99%)',
     orange2: 'hsl(46, 100%, 96%)',
