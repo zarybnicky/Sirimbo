@@ -4,6 +4,7 @@ export type Config = {
   favicon: string;
   enableHome: boolean;
   enableArticles: boolean;
+  enableStarletImport?: boolean;
   themePrimary: string;
   themeAccent: string;
   themeNeutral: string;

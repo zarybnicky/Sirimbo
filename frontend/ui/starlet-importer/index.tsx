@@ -7,8 +7,12 @@ import { starletSettingsAtom, starletTokenAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { CohortComparisonForm } from './cohort-comparison-form';
 import { PersonComparisonForm } from './person-comparison-form';
+import { tenantConfig } from '@/tenant/config';
 
 export function StarletImporter() {
+  if (!tenantConfig.enableStarletImport) {
+    return null;
+  }
   const token = useAtomValue(starletTokenAtom);
   const { auth, folders, seasons } = useAtomValue(starletSettingsAtom);
 

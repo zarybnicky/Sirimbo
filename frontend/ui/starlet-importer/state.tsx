@@ -2,6 +2,9 @@ import { EvidenceStarletDocument } from '@/graphql/CurrentUser';
 import { fetchGql } from '@/graphql/query';
 import { UserRole } from '@/starlet/graphql';
 import { atom } from 'jotai';
+import { tenantConfig } from '@/tenant/config';
+
+const starletImportEnabled = Boolean(tenantConfig.enableStarletImport);
 
 type LoginToken =
   | { auth_ok: false }
@@ -19,6 +22,10 @@ const baseStarletTokenAtom = atom<LoginToken | undefined>();
 export const starletTokenAtom = atom(
   (get) => get(baseStarletTokenAtom),
   (get, set, login?: string, password?: string) => {
+    if (!starletImportEnabled) {
+      set(baseStarletTokenAtom, undefined);
+      return;
+    }
     const prevToken = get(baseStarletTokenAtom);
     if (prevToken?.auth_ok && prevToken.login !== login) {
       return;

@@ -7,6 +7,7 @@ module.exports = {
   favicon: '',
   enableHome: true,
   enableArticles: true,
+  enableStarletImport: false,
   themePrimary: '#ed1734',
   themeAccent: 'red',
   themeNeutral: 'gray',
