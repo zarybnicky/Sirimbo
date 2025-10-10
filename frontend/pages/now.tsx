@@ -3,6 +3,7 @@ import {
   type EventInstanceRangeQuery,
   type EventInstanceRangeQueryVariables,
 } from '@/graphql/Event';
+import { cn } from '@/ui/cn';
 import { formatDefaultEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { truthyFilter } from '@/ui/truthyFilter';
 import { add } from 'date-arithmetic';
@@ -22,12 +23,14 @@ type EnrichedInstance = {
   until: Date;
 };
 
-type LocationBucket = {
+type GroupingBucket = {
   key: string;
   label: string;
   current: EnrichedInstance[];
   upcoming: EnrichedInstance[];
 };
+
+type GroupingMode = 'location' | 'trainer';
 
 function formatStartsIn(now: Date, start: Date) {
   const diffMs = start.getTime() - now.getTime();
@@ -40,11 +43,50 @@ function formatStartsIn(now: Date, start: Date) {
   return `za ${hours} h ${minutes} min`;
 }
 
+function trainerGroups(instance: Instance, event: NonNullable<Instance['event']>) {
+  const trainers = instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList;
+
+  const groups = trainers
+    .map((trainer) => {
+      const key = trainer.personId
+        ? `person:${trainer.personId}`
+        : trainer.id
+          ? `trainer:${trainer.id}`
+          : trainer.name
+            ? `name:${trainer.name}`
+            : undefined;
+
+      if (!key) return null;
+
+      const label = trainer.name?.trim() ?? 'Neznámý trenér';
+
+      return { key, label };
+    })
+    .filter(truthyFilter);
+
+  if (groups.length === 0) {
+    return [{ key: 'trainer:none', label: 'Bez přiřazeného trenéra' }];
+  }
+
+  const seen = new Set<string>();
+  const uniqueGroups = [] as { key: string; label: string }[];
+
+  for (const group of groups) {
+    if (!seen.has(group.key)) {
+      seen.add(group.key);
+      uniqueGroups.push(group);
+    }
+  }
+
+  return uniqueGroups;
+}
+
 function gatherBuckets(
   data: EventInstanceRangeQuery | undefined,
   now: Date,
-): LocationBucket[] {
-  const buckets = new Map<string, LocationBucket>();
+  mode: GroupingMode,
+): GroupingBucket[] {
+  const buckets = new Map<string, GroupingBucket>();
 
   for (const instance of data?.list ?? []) {
     if (!instance || instance.isCancelled) continue;
@@ -61,21 +103,29 @@ function gatherBuckets(
         ? `txt:${event.locationText}`
         : 'none';
 
-    if (!buckets.has(locationKey)) {
-      buckets.set(locationKey, {
-        key: locationKey,
-        label: locationName,
-        current: [],
-        upcoming: [],
-      });
-    }
+    const groups =
+      mode === 'trainer'
+        ? trainerGroups(instance, event)
+        : [{ key: locationKey, label: locationName }];
 
-    const bucket = buckets.get(locationKey)!;
     const enriched: EnrichedInstance = { instance, event, since, until };
-    if (since <= now && until > now) {
-      bucket.current.push(enriched);
-    } else if (since > now) {
-      bucket.upcoming.push(enriched);
+
+    for (const group of groups) {
+      if (!buckets.has(group.key)) {
+        buckets.set(group.key, {
+          key: group.key,
+          label: group.label,
+          current: [],
+          upcoming: [],
+        });
+      }
+
+      const bucket = buckets.get(group.key)!;
+      if (since <= now && until > now) {
+        bucket.current.push(enriched);
+      } else if (since > now) {
+        bucket.upcoming.push(enriched);
+      }
     }
   }
 
@@ -91,8 +141,18 @@ function gatherBuckets(
   return result;
 }
 
+function formatTrainers(instance: Instance, event: NonNullable<Instance['event']>) {
+  return (
+    (instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList)
+      .map((x) => x.name)
+      .filter(truthyFilter)
+      .join(', ')
+  );
+}
+
 export default function NowPage() {
   const [reference, setReference] = React.useState(() => new Date());
+  const [grouping, setGrouping] = React.useState<GroupingMode>('location');
   const end = React.useMemo(() => add(reference, 24, 'hours'), [reference]);
 
   const variables = React.useMemo<EventInstanceRangeQueryVariables>(
@@ -113,7 +173,10 @@ export default function NowPage() {
     variables,
   });
 
-  const buckets = React.useMemo(() => gatherBuckets(data, reference), [data, reference]);
+  const buckets = React.useMemo(
+    () => gatherBuckets(data, reference, grouping),
+    [data, reference, grouping],
+  );
 
   return (
     <>
@@ -129,6 +192,29 @@ export default function NowPage() {
             <h1 className="text-4xl font-bold tracking-tight text-accent-12">
               Právě probíhá
             </h1>
+            <div className="mt-3 flex gap-2">
+              {(
+                [
+                  { key: 'location', label: 'Podle míst' },
+                  { key: 'trainer', label: 'Podle trenérů' },
+                ] as const
+              ).map(({ key, label }) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setGrouping(key)}
+                  className={cn(
+                    'rounded-full border px-4 py-2 text-sm font-medium transition',
+                    grouping === key
+                      ? 'border-accent-8 bg-accent-4 text-accent-12 shadow-inner'
+                      : 'border-accent-6 bg-accent-2 text-accent-10 hover:bg-accent-3',
+                  )}
+                  aria-pressed={grouping === key}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
             {error ? (
               <p className="rounded-md border border-accent-6 bg-accent-3/30 px-4 py-2 text-sm text-accent-11">
                 Nepodařilo se načíst data. Zkuste stránku obnovit.
@@ -151,7 +237,6 @@ export default function NowPage() {
           ) : (
             <div className="grid gap-6 lg:grid-cols-2">
               {buckets.map((bucket) => {
-                const nextEvent = bucket.upcoming[0];
                 return (
                   <section
                     key={bucket.key}
@@ -174,14 +259,7 @@ export default function NowPage() {
 
                     <div className="flex flex-col gap-3">
                       {bucket.current.map(({ event, since, until, instance }) => {
-                        const trainers = (
-                          instance.trainers.length > 0
-                            ? instance.trainers
-                            : event.eventTrainersList
-                        )
-                          .map((x) => x.name)
-                          .filter(truthyFilter)
-                          .join(', ');
+                        const trainers = formatTrainers(instance, event);
                         return (
                           <article
                             key={instance.id}
@@ -197,7 +275,7 @@ export default function NowPage() {
                               {shortTimeFormatter.format(since)} –{' '}
                               {shortTimeFormatter.format(until)}
                             </p>
-                            {trainers ? (
+                            {trainers && grouping === 'location' ? (
                               <p className="mt-2 text-sm text-accent-9">{`Trenéři: ${trainers}`}</p>
                             ) : null}
                           </article>
@@ -214,17 +292,26 @@ export default function NowPage() {
                       <h4 className="text-sm font-medium uppercase tracking-wide text-neutral-9">
                         Co bude dál
                       </h4>
-                      {nextEvent ? (
-                        <div className="mt-3 flex flex-col gap-1">
-                          <p className="text-lg font-semibold text-accent-12">
-                            {formatDefaultEventName(nextEvent.event)}
-                          </p>
-                          <p className="text-sm text-neutral-9">
-                            {shortTimeFormatter.format(nextEvent.since)} –{' '}
-                            {shortTimeFormatter.format(nextEvent.until)}
-                            {' · '}
-                            {formatStartsIn(reference, nextEvent.since)}
-                          </p>
+                      {bucket.upcoming.length > 0 ? (
+                        <div className="mt-3 flex flex-col gap-3">
+                          {bucket.upcoming.map(({ event, since, until, instance }) => {
+                            const trainers = formatTrainers(instance, event);
+                            return (
+                              <article key={`${instance.id}:${since.toISOString()}`} className="rounded-xl border border-accent-6 bg-accent-2/60 p-3">
+                                <p className="text-sm font-medium text-accent-12">
+                                  {formatDefaultEventName(event)}
+                                </p>
+                                <p className="text-sm text-neutral-9">
+                                  {shortTimeFormatter.format(since)} – {shortTimeFormatter.format(until)}
+                                  {' · '}
+                                  {formatStartsIn(reference, since)}
+                                </p>
+                                {trainers && grouping === 'location' ? (
+                                  <p className="text-xs text-neutral-9">{`Trenéři: ${trainers}`}</p>
+                                ) : null}
+                              </article>
+                            );
+                          })}
                         </div>
                       ) : (
                         <p className="mt-3 text-sm text-neutral-9">
