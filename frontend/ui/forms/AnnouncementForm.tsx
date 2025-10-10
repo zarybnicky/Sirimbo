@@ -181,7 +181,7 @@ function AnnouncementAudienceEditor({ control }: {
         <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">Shrnutí</h4>
         <AnnouncementAudienceBadges audiences={audiences} />
         {showWarning ? (
-          <div className="rounded-md border border-amber-7 bg-amber-3 px-3 py-2 text-xs text-amber-12">
+          <div className="rounded-md border border-accent-7 bg-accent-3 px-3 py-2 text-xs text-accent-12">
             Bez výběru konkrétního publika se oznámení zobrazí všem.
           </div>
         ) : null}

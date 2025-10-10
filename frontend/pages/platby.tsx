@@ -220,7 +220,7 @@ function TenantTurnover() {
   }
 
   if (error) {
-    return <p className="text-sm text-red-600">Nepodařilo se načíst obrat: {error}</p>;
+    return <p className="text-sm text-accent-11">Nepodařilo se načíst obrat: {error}</p>;
   }
 
   if (initialized && isEmpty) {
@@ -239,11 +239,11 @@ function TenantTurnover() {
             <section key={account.id} className="space-y-2">
               <header className="flex flex-wrap items-baseline justify-between gap-2">
                 <h3 className="text-lg font-semibold">Účet {account.currency}</h3>
-                <span className="text-sm text-neutral-500">
+                <span className="text-sm text-neutral-10">
                   Zůstatek: {moneyFormatter.format({ amount: account.balance ?? '0', currency: account.currency })}
                 </span>
               </header>
-              <p className="text-sm text-neutral-500">Žádné zaúčtované pohyby.</p>
+              <p className="text-sm text-neutral-10">Žádné zaúčtované pohyby.</p>
             </section>
           );
         }
@@ -252,7 +252,7 @@ function TenantTurnover() {
           <section key={account.id} className="space-y-2">
             <header className="flex flex-wrap items-baseline justify-between gap-2">
               <h3 className="text-lg font-semibold">Účet {account.currency}</h3>
-              <span className="text-sm text-neutral-500">
+              <span className="text-sm text-neutral-10">
                 Zůstatek: {moneyFormatter.format({ amount: account.balance ?? '0', currency: account.currency })}
               </span>
             </header>
@@ -273,11 +273,11 @@ function TenantTurnover() {
                     key={posting.id}
                     className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2"
                   >
-                    <span className="text-sm text-neutral-600 min-w-20">{displayDate}</span>
+                    <span className="text-sm text-neutral-11 min-w-20">{displayDate}</span>
                     <div className="flex min-w-48 flex-1 flex-col gap-1">
                       <span>{description}</span>
                       {(variableSymbol || specificSymbol) && (
-                        <span className="text-xs text-neutral-500">
+                        <span className="text-xs text-neutral-10">
                           {variableSymbol && <>VS: {variableSymbol}</>}
                           {variableSymbol && specificSymbol && ' • '}
                           {specificSymbol && <>SS: {specificSymbol}</>}
@@ -372,14 +372,14 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
 
   if (error) {
     return (
-      <div className="px-3 py-2 text-sm text-red-600">
+      <div className="px-3 py-2 text-sm text-accent-11">
         {cursor ? 'Nepodařilo se načíst další vklady.' : `Nepodařilo se načíst vklady: ${error.message}`}
       </div>
     );
   }
 
   if (!fetching && nodes.length === 0 && !cursor) {
-    return <div className="px-3 py-2 text-sm text-neutral-500">Žádná ruční dobití.</div>;
+    return <div className="px-3 py-2 text-sm text-neutral-10">Žádná ruční dobití.</div>;
   }
 
   return (
@@ -418,12 +418,12 @@ function DepositRow({ transaction, showDebug }: { transaction: ManualCreditTrans
 
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2">
-      <span className="text-sm text-neutral-600 min-w-20">{effectiveDate}</span>
+      <span className="text-sm text-neutral-11 min-w-20">{effectiveDate}</span>
       <div className="flex min-w-48 flex-1 flex-col gap-1">
         <span className="font-medium">{personName}</span>
-        <span className="text-sm text-neutral-600">{transaction.description || 'Dobití kreditu'}</span>
+        <span className="text-sm text-neutral-11">{transaction.description || 'Dobití kreditu'}</span>
         {(variableSymbol || specificSymbol) && (
-          <span className="text-xs text-neutral-500">
+          <span className="text-xs text-neutral-10">
             {variableSymbol && <>VS: {variableSymbol}</>}
             {variableSymbol && specificSymbol && ' • '}
             {specificSymbol && <>SS: {specificSymbol}</>}

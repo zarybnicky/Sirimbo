@@ -209,7 +209,7 @@ function EventInstances({ event }: { event: EventFullFragment }) {
                     {formatOpenDateRange(instance)}
                   </Link>
                   {instance.isCancelled && (
-                    <div className="text-sm text-muted-foreground">Zrušeno</div>
+                    <div className="text-sm text-neutral-10">Zrušeno</div>
                   )}
                 </td>
                 <td>{trainerNames?.length ? trainerNames.join(', ') : '—'}</td>

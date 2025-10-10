@@ -77,7 +77,7 @@ export function ScoreboardPeriodSelector({
             onChange={(event) => onCustomUntilChange(event.currentTarget.value)}
           />
           {showCustomRangeWarning ? (
-            <p className="text-sm text-muted-foreground md:col-span-2 xl:col-span-4">
+            <p className="text-sm text-neutral-10 md:col-span-2 xl:col-span-4">
               Vyplňte prosím datum od i do, aby bylo možné žebříček spočítat.
             </p>
           ) : null}

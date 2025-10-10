@@ -35,7 +35,7 @@ function UserPage() {
 
   return (
     <Layout requireAdmin>
-      <div className="content-narrow space-y-6">
+      <div className="mx-auto w-full max-w-3xl space-y-6">
         <div className="lg:hidden">
           <Link href="/clenove" className="flex gap-2">
             <CornerLeftUp className="size-4" />
@@ -45,13 +45,13 @@ function UserPage() {
 
         <header className="space-y-1">
           <h1 className="text-2xl font-semibold">Uživatel {user?.uEmail ?? id}</h1>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-neutral-10 text-sm">
             Login: {user?.uLogin ?? '—'}
           </p>
         </header>
 
         {fetching && <p>Načítám...</p>}
-        {error && <p className="text-destructive">Nepodařilo se načíst uživatele.</p>}
+        {error && <p className="text-accent-11">Nepodařilo se načíst uživatele.</p>}
         {!fetching && !error && !user && <p>Uživatel nebyl nalezen.</p>}
 
         {user && (
@@ -60,37 +60,37 @@ function UserPage() {
               <h2 className="text-lg font-medium">Základní informace</h2>
               <dl className="mt-2 grid gap-x-6 gap-y-2 sm:grid-cols-2">
                 <div>
-                  <dt className="text-sm text-muted-foreground">ID</dt>
+                  <dt className="text-sm text-neutral-10">ID</dt>
                   <dd className="text-sm font-medium">{user.id}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-muted-foreground">E-mail</dt>
+                  <dt className="text-sm text-neutral-10">E-mail</dt>
                   <dd className="text-sm font-medium">{user.uEmail}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-muted-foreground">Jméno</dt>
+                  <dt className="text-sm text-neutral-10">Jméno</dt>
                   <dd className="text-sm font-medium">
                     {[user.uJmeno, user.uPrijmeni].filter(Boolean).join(' ') || '—'}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-muted-foreground">Tenant ID</dt>
+                  <dt className="text-sm text-neutral-10">Tenant ID</dt>
                   <dd className="text-sm font-medium">{user.tenantId}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-muted-foreground">Vytvořen</dt>
+                  <dt className="text-sm text-neutral-10">Vytvořen</dt>
                   <dd className="text-sm font-medium">{formatDate(user.uCreatedAt)}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-muted-foreground">Poslední přihlášení</dt>
+                  <dt className="text-sm text-neutral-10">Poslední přihlášení</dt>
                   <dd className="text-sm font-medium">{formatDate(user.lastLogin)}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-muted-foreground">Poslední aktivita</dt>
+                  <dt className="text-sm text-neutral-10">Poslední aktivita</dt>
                   <dd className="text-sm font-medium">{formatDate(user.lastActiveAt)}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-muted-foreground">Poslední verze aplikace</dt>
+                  <dt className="text-sm text-neutral-10">Poslední verze aplikace</dt>
                   <dd className="text-sm font-medium">{user.lastVersion ?? '—'}</dd>
                 </div>
               </dl>
@@ -99,7 +99,7 @@ function UserPage() {
             <section>
               <h2 className="text-lg font-medium">Propojené osoby</h2>
               {user.userProxiesList.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Žádné propojené osoby.</p>
+                <p className="text-sm text-neutral-10">Žádné propojené osoby.</p>
               ) : (
                 <ul className="space-y-3">
                   {user.userProxiesList.map((proxy) => (
@@ -118,13 +118,13 @@ function UserPage() {
                               '—'
                             )}
                           </p>
-                          <p className="text-xs text-muted-foreground">Status: {proxy.status.toLowerCase()}</p>
+                          <p className="text-xs text-neutral-10">Status: {proxy.status.toLowerCase()}</p>
                         </div>
-                        <div className="text-xs text-muted-foreground mt-2 sm:mt-0">
+                        <div className="text-xs text-neutral-10 mt-2 sm:mt-0">
                           {proxy.active ? 'Aktivní' : 'Neaktivní'}
                         </div>
                       </div>
-                      <div className="mt-2 text-xs text-muted-foreground space-y-1">
+                      <div className="mt-2 text-xs text-neutral-10 space-y-1">
                         <div>Od: {formatDate(proxy.since)}</div>
                         <div>Do: {formatDate(proxy.until)}</div>
                       </div>
