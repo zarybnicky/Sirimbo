@@ -10,7 +10,7 @@ import { OtpLoginDocument } from '@/graphql/CurrentUser';
 import { LinkProps } from 'next/link';
 
 export default function OtpPage() {
-  const router = useRouter<'/otp'>();
+  const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const [loading, setLoading] = React.useState(true);
