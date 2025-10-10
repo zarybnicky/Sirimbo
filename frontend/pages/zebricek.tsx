@@ -108,23 +108,6 @@ export default function ScoreboardPage() {
               placeholder="Všechny skupiny"
             />
 
-            <label className="flex flex-col gap-1 text-sm font-medium">
-
-              Skupina
-              <select
-                className="rounded-md border border-neutral-6 px-3 py-2"
-                value={selectedCohortId ?? ''}
-                onChange={(event) => setSelectedCohortId(event.target.value || null)}
-              >
-                <option value="">Všechny skupiny</option>
-                {cohorts.map((cohort) => (
-                  <option key={cohort.id} value={cohort.id}>
-                    {cohort.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-
             <ScoreboardPeriodSelector
               preset={preset}
               onPresetChange={(value) => setPreset(value)}
