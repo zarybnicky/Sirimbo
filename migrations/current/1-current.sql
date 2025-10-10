@@ -1,1 +1,1 @@
-
+--!include functions/create_event_instance_payment.sql
