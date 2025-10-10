@@ -5,6 +5,7 @@ export type Config = {
   enableHome: boolean;
   enableArticles: boolean;
   useTrainerInitials: boolean;
+  lockEventsByDefault: boolean;
   themePrimary: string;
   themeAccent: string;
   themeNeutral: string;
