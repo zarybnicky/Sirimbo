@@ -65,7 +65,12 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 }) {
   const upsert = useMutation(UpsertAnnouncementDocument)[1];
 
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useZodForm(Form, {
+    defaultValues: {
+      audienceRoles: [],
+      cohortIds: [],
+    }
+  });
   React.useEffect(() => {
     reset({
       title: data?.title ?? '',
@@ -74,8 +79,8 @@ export function AnnouncementForm({ id, data, onSuccess }: {
       isSticky: data?.isSticky ?? false,
       scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
       scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
-      audienceRoles: data?.announcementAudiences.nodes.map(x => x.audienceRole).filter(truthyFilter),
-      cohortIds: data?.announcementAudiences.nodes.map(x => x.cohortId).filter(truthyFilter),
+      audienceRoles: data?.announcementAudiences.nodes.map(x => x.audienceRole).filter(truthyFilter) ?? [],
+      cohortIds: data?.announcementAudiences.nodes.map(x => x.cohortId).filter(truthyFilter) ?? [],
     });
   }, [data, reset]);
 
