@@ -10,6 +10,7 @@
       "graphql",
       "worker",
       "backend",
+      "csts",
       "mobile"
     ]
   },

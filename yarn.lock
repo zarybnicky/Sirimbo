@@ -9297,6 +9297,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rozpisovnik/csts@workspace:csts":
+  version: 0.0.0-use.local
+  resolution: "@rozpisovnik/csts@workspace:csts"
+  dependencies:
+    "@tsconfig/node18": "npm:^18.2.4"
+    "@types/node": "npm:^22.13.10"
+    typescript: "npm:~5.6.3"
+    zod: "npm:^3.24.1"
+  languageName: unknown
+  linkType: soft
+
 "@rtsao/scc@npm:^1.1.0":
   version: 1.1.0
   resolution: "@rtsao/scc@npm:1.1.0"
