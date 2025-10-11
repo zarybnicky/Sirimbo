@@ -22,7 +22,13 @@ comment on column csts.athlete.fetched_at is 'Timestamp when the record was last
 
 do $$
 begin
-  if to_regclass('csts.athlete_ranking') is not null then
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'csts'
+      and table_name = 'athlete_ranking'
+      and column_name = 'competitor_id'
+  ) then
     drop table if exists csts.athlete_primary_category;
     drop table if exists csts.athlete_ranking cascade;
   end if;
@@ -94,6 +100,28 @@ comment on column csts.competitor_ranking.ranklist_ranking is 'ČSTS published r
 comment on column csts.competitor_ranking.ranklist_points is 'ČSTS published ranklist points for the discipline and age.';
 comment on column csts.competitor_ranking.athlete_idt is 'Links the ranking entry directly to an athlete for solo categories.';
 comment on column csts.competitor_ranking.couple_id is 'Links the ranking entry to a couple competitor for partnered categories.';
+
+create or replace view csts.athlete_ranking as
+select
+  cr.athlete_idt as athlete_id,
+  cr.discipline,
+  cr.series,
+  cr.personal_class,
+  cr.personal_points,
+  cr.personal_domestic_finale_count,
+  cr.personal_foreign_finale_count,
+  cr.personal_approved
+from csts.competitor_ranking cr
+where cr.athlete_idt is not null;
+comment on view csts.athlete_ranking is 'Projection of athlete-specific ČSTS ranking information from competitor rankings.';
+comment on column csts.athlete_ranking.athlete_id is 'ČSTS athlete identifier mirrored from the competitor ranking row.';
+comment on column csts.athlete_ranking.discipline is 'Discipline (Standard/Latin/10 Dance) for the athlete ranking record.';
+comment on column csts.athlete_ranking.series is 'ČSTS ranking series associated with the athlete entry.';
+comment on column csts.athlete_ranking.personal_class is 'Athlete-specific class for the discipline as reported by ČSTS.';
+comment on column csts.athlete_ranking.personal_points is 'Athlete-specific ranking points for the discipline.';
+comment on column csts.athlete_ranking.personal_domestic_finale_count is 'Domestic finale count credited directly to the athlete.';
+comment on column csts.athlete_ranking.personal_foreign_finale_count is 'Foreign finale count credited directly to the athlete.';
+comment on column csts.athlete_ranking.personal_approved is 'Whether ČSTS marked the athlete''s personal class as approved.';
 
 create table if not exists csts.athlete_primary_category (
   athlete_idt integer not null references csts.athlete(idt) on delete cascade,
