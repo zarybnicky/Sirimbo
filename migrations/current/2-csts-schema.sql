@@ -43,6 +43,32 @@ create table if not exists csts.couple (
   formed_at timestamptz not null
 );
 
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'csts.couple'::regclass
+      and conname = 'couple_man_idt_fkey'
+  ) then
+    alter table csts.couple
+      add constraint couple_man_idt_fkey
+        foreign key (man_idt) references csts.athlete(idt) on delete cascade;
+  end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'csts.couple'::regclass
+      and conname = 'couple_woman_idt_fkey'
+  ) then
+    alter table csts.couple
+      add constraint couple_woman_idt_fkey
+        foreign key (woman_idt) references csts.athlete(idt) on delete cascade;
+  end if;
+end;
+$$;
+
 create table if not exists csts.competitor_ranking (
   competitor_id integer not null,
   discipline text not null,
