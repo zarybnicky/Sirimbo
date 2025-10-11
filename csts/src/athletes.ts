@@ -1,31 +1,34 @@
 import { z } from 'zod';
-import { MAX_IDT, MIN_IDT } from './idts.js';
+import { MAX_IDT, MIN_IDT } from './idts.ts';
 
 const rankingPointsSchema = z.object({
   rankingPointsAge: z.string(),
-  idt: z.number().finite(),
-  partner: z.string(),
-  partnerIdt: z.number().finite(),
-  medicalCheckupExpiration: z.string().nullable(),
+  medicalCheckupExpiration: z.string().optional().nullable().default(null),
   personalClass: z.string(),
   personalPoints: z.number().finite(),
   personalDomesticFinaleCount: z.number().finite(),
   personalForeignFinaleCount: z.number().finite(),
   personalApproved: z.boolean(),
-  ranklistRanking: z.number().finite(),
-  ranklistPoints: z.number().finite(),
-  id: z.number().finite(),
   competitorId: z.number().finite(),
-  age: z.string(),
   series: z.string(),
   discipline: z.string(),
   rankingAge: z.string(),
   competitors: z.string(),
-  class: z.string(),
-  points: z.number().finite(),
-  domesticFinaleCount: z.number().finite(),
-  foreignFinaleCount: z.number().finite(),
-  time: z.string(),
+
+  domesticFinaleCount: z.number().finite().optional(),
+  foreignFinaleCount: z.number().finite().optional(),
+
+  ranklistRanking: z.number().finite().optional(),
+  ranklistPoints: z.number().finite().optional(),
+
+  id: z.number().finite().optional(),
+  idt: z.number().finite().optional(),
+  age: z.string().optional(),
+  class: z.string().optional(),
+  points: z.number().finite().optional(),
+  partner: z.string().optional(),
+  partnerIdt: z.number().finite().optional(),
+  time: z.string().optional(),
 });
 
 const athleteSchema = z.object({
@@ -34,11 +37,11 @@ const athleteSchema = z.object({
   validFor: z.string(),
   age: z.string(),
   sex: z.string(),
-  medicalCheckupExpiration: z.string().nullable(),
+  medicalCheckupExpiration: z.string().nullable().optional().default(null),
   barcode: z.string(),
   rankingPoints: z.array(rankingPointsSchema),
-  stt: rankingPointsSchema,
-  lat: rankingPointsSchema,
+  stt: rankingPointsSchema.optional(),
+  lat: rankingPointsSchema.optional(),
 });
 
 const athletesResponseSchema = z.object({
@@ -78,5 +81,11 @@ export async function fetchAthletesByIdt(
   }
 
   const payload = await response.json();
-  return athletesResponseSchema.parse(payload);
+  try {
+    return athletesResponseSchema.parse(payload);
+  } catch (parseError) {
+    throw new Error('Failed to validate API response ' + JSON.stringify(payload), {
+      cause: parseError,
+    });
+  }
 }

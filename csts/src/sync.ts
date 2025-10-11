@@ -1,7 +1,7 @@
-import type { Athlete, FetchAthletesOptions, RankingPoints } from './athletes.js';
-import { fetchAthletesByIdt } from './athletes.js';
-import { iterateAthleteIdts } from './idts.js';
-import type { Client } from 'pg';
+import type { Athlete, FetchAthletesOptions, RankingPoints } from './athletes.ts';
+import { fetchAthletesByIdt } from './athletes.ts';
+import { iterateAthleteIdts } from './idts.ts';
+import type { Pool } from 'pg';
 
 export interface SynchronizeAthletesOptions extends FetchAthletesOptions {
   signal?: AbortSignal;
@@ -9,13 +9,16 @@ export interface SynchronizeAthletesOptions extends FetchAthletesOptions {
 }
 
 export async function synchronizeAthletes(
-  client: Client,
+  client: Pool,
   options: SynchronizeAthletesOptions = {},
 ): Promise<void> {
   const { signal, onFetchError, init } = options;
   const fetchOptions: FetchAthletesOptions = { init };
 
   for (const idt of iterateAthleteIdts()) {
+    await new Promise(r => setTimeout(r, 250));
+    console.log(idt);
+
     signal?.throwIfAborted?.();
 
     let response;
@@ -44,6 +47,9 @@ export async function synchronizeAthletes(
         for (const ranking of athlete.rankingPoints) {
           await upsertAthleteRanking(client, athlete, ranking);
 
+          if (!ranking.id || !ranking.competitorId)
+            continue;
+
           if (ranking.competitors === 'Couple') {
             const coupleId = await upsertCouple(client, athlete, ranking);
             if (coupleId !== null) {
@@ -69,7 +75,7 @@ export async function synchronizeAthletes(
   }
 }
 
-async function upsertAthlete(client: Client, athlete: Athlete): Promise<void> {
+async function upsertAthlete(client: Pool, athlete: Athlete): Promise<void> {
   await client.query(
     `
       insert into csts.athlete (
@@ -104,7 +110,7 @@ async function upsertAthlete(client: Client, athlete: Athlete): Promise<void> {
 }
 
 async function upsertAthleteRanking(
-  client: Client,
+  client: Pool,
   athlete: Athlete,
   ranking: RankingPoints,
 ): Promise<void> {
@@ -142,7 +148,7 @@ async function upsertAthleteRanking(
 }
 
 async function upsertCompetitorRanking(
-  client: Client,
+  client: Pool,
   ranking: RankingPoints,
   identifiers: { athleteIdt: number | null; coupleId: number | null },
 ): Promise<void> {
@@ -202,7 +208,7 @@ async function upsertCompetitorRanking(
 }
 
 async function upsertCouple(
-  client: Client,
+  client: Pool,
   athlete: Athlete,
   ranking: RankingPoints,
 ): Promise<number | null> {
@@ -258,6 +264,9 @@ function determineCoupleParticipants(
   athlete: Athlete,
   ranking: RankingPoints,
 ): { manIdt: number; womanIdt: number } | null {
+  if (!ranking.partnerIdt)
+    return null;
+
   if (athlete.sex === 'M') {
     return { manIdt: athlete.idt, womanIdt: ranking.partnerIdt };
   }

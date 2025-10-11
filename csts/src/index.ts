@@ -1,3 +1,3 @@
-export * from './idts.js';
-export * from './athletes.js';
-export * from './sync.js';
+export * from './idts.ts';
+export * from './athletes.ts';
+export * from './sync.ts';
