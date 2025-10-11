@@ -1,14 +1,5 @@
 import { z } from 'zod';
-
 import { MAX_IDT, MIN_IDT } from './idts.js';
-
-type FetchFunction = (
-  input: Parameters<typeof fetch>[0],
-  init?: Parameters<typeof fetch>[1],
-) => ReturnType<typeof fetch>;
-
-const defaultFetch: FetchFunction | undefined =
-  typeof fetch === 'function' ? fetch.bind(globalThis) : undefined;
 
 const rankingPointsSchema = z.object({
   rankingPointsAge: z.string(),
@@ -51,7 +42,7 @@ const athleteSchema = z.object({
 });
 
 const athletesResponseSchema = z.object({
-  collection: z.array(athleteSchema).nullish(),
+  collection: z.array(athleteSchema).default([]),
 });
 
 export type RankingPoints = z.infer<typeof rankingPointsSchema>;
@@ -64,15 +55,6 @@ export interface AthletesResponse {
 
 export interface FetchAthletesOptions {
   init?: Parameters<typeof fetch>[1];
-  fetch?: FetchFunction;
-}
-
-const API_ROOT = 'https://www.csts.cz/api/1';
-
-export function parseAthletesResponse(payload: unknown): AthletesResponse {
-  const { collection } = athletesResponseSchema.parse(payload);
-
-  return { collection: collection ?? [] };
 }
 
 export async function fetchAthletesByIdt(
@@ -87,17 +69,14 @@ export async function fetchAthletesByIdt(
     throw new RangeError(`The athlete IDT must be between ${MIN_IDT} and ${MAX_IDT}.`);
   }
 
-  const fetchImpl = options.fetch ?? defaultFetch;
-  if (!fetchImpl) {
-    throw new Error('No fetch implementation is available.');
-  }
-
-  const response = await fetchImpl(`${API_ROOT}/athletes/${idt}`, options.init);
+  const response = await fetch(`https://www.csts.cz/api/1/athletes/${idt}`, options.init);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch athlete ${idt}: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch athlete ${idt}: ${response.status} ${response.statusText}`,
+    );
   }
 
   const payload = await response.json();
-  return parseAthletesResponse(payload);
+  return athletesResponseSchema.parse(payload);
 }

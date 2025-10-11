@@ -1,18 +1,7 @@
 import type { Athlete, FetchAthletesOptions, RankingPoints } from './athletes.js';
 import { fetchAthletesByIdt } from './athletes.js';
 import { iterateAthleteIdts } from './idts.js';
-
-export interface QueryResult<Row = unknown> {
-  readonly rows: Row[];
-  readonly rowCount: number;
-}
-
-export interface DatabaseClient {
-  query<Row = unknown>(
-    queryText: string,
-    values?: readonly unknown[],
-  ): Promise<QueryResult<Row>>;
-}
+import type { Client } from 'pg';
 
 export interface SynchronizeAthletesOptions extends FetchAthletesOptions {
   signal?: AbortSignal;
@@ -20,11 +9,11 @@ export interface SynchronizeAthletesOptions extends FetchAthletesOptions {
 }
 
 export async function synchronizeAthletes(
-  client: DatabaseClient,
+  client: Client,
   options: SynchronizeAthletesOptions = {},
 ): Promise<void> {
-  const { signal, onFetchError, fetch: fetchImpl, init } = options;
-  const fetchOptions: FetchAthletesOptions = { fetch: fetchImpl, init };
+  const { signal, onFetchError, init } = options;
+  const fetchOptions: FetchAthletesOptions = { init };
 
   for (const idt of iterateAthleteIdts()) {
     signal?.throwIfAborted?.();
@@ -80,7 +69,7 @@ export async function synchronizeAthletes(
   }
 }
 
-async function upsertAthlete(client: DatabaseClient, athlete: Athlete): Promise<void> {
+async function upsertAthlete(client: Client, athlete: Athlete): Promise<void> {
   await client.query(
     `
       insert into csts.athlete (
@@ -115,7 +104,7 @@ async function upsertAthlete(client: DatabaseClient, athlete: Athlete): Promise<
 }
 
 async function upsertAthleteRanking(
-  client: DatabaseClient,
+  client: Client,
   athlete: Athlete,
   ranking: RankingPoints,
 ): Promise<void> {
@@ -153,7 +142,7 @@ async function upsertAthleteRanking(
 }
 
 async function upsertCompetitorRanking(
-  client: DatabaseClient,
+  client: Client,
   ranking: RankingPoints,
   identifiers: { athleteIdt: number | null; coupleId: number | null },
 ): Promise<void> {
@@ -213,7 +202,7 @@ async function upsertCompetitorRanking(
 }
 
 async function upsertCouple(
-  client: DatabaseClient,
+  client: Client,
   athlete: Athlete,
   ranking: RankingPoints,
 ): Promise<number | null> {
@@ -222,7 +211,9 @@ async function upsertCouple(
     return null;
   }
 
-  const uniqueParticipants = Array.from(new Set([participants.manIdt, participants.womanIdt]));
+  const uniqueParticipants = Array.from(
+    new Set([participants.manIdt, participants.womanIdt]),
+  );
   const { rowCount } = await client.query<{ idt: number }>(
     `select idt from csts.athlete where idt = any($1::int[])`,
     [uniqueParticipants],
