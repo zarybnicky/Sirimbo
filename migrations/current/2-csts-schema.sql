@@ -37,11 +37,10 @@ drop table if exists csts.athlete_personal_ranking;
 create table if not exists csts.couple (
   id integer primary key,
   couple_idt integer not null,
-  first_athlete_idt integer not null,
-  second_athlete_idt integer not null,
+  man_idt integer not null,
+  woman_idt integer not null,
   medical_checkup_expiration date,
-  formed_at timestamptz not null,
-  check (first_athlete_idt < second_athlete_idt)
+  formed_at timestamptz not null
 );
 
 create table if not exists csts.competitor_ranking (
@@ -89,11 +88,11 @@ create table if not exists csts.athlete_ranking (
 create unique index if not exists couple_couple_idt_key
   on csts.couple (couple_idt);
 
-create index if not exists couple_first_athlete_idx
-  on csts.couple (first_athlete_idt);
+create index if not exists couple_man_idx
+  on csts.couple (man_idt);
 
-create index if not exists couple_second_athlete_idx
-  on csts.couple (second_athlete_idt);
+create index if not exists couple_woman_idx
+  on csts.couple (woman_idt);
 
 create unique index if not exists competitor_ranking_athlete_unique
   on csts.competitor_ranking (athlete_idt, discipline)
