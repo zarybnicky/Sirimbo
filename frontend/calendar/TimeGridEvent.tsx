@@ -19,7 +19,7 @@ function formatTrainerLabel(name: string, useInitials: boolean): string {
   }
 
   const sanitized = name
-    .replace(/\b(Mgr\.|Ing\.|Bc\.)\s*/g, '')
+    .replaceAll(/\b(Mgr\.|Ing\.|Bc\.)\s*/g, '')
     .normalize('NFKD')
     .replaceAll(/[^A-Z]/g, '');
 
@@ -146,7 +146,7 @@ function TimeGridEvent({
         })}
       >
         {event.event.eventTargetCohortsList.length > 0 && (
-          <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
+          <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-sm inset-y-0 left-0 flex flex-col">
             {event.event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (
               <div key={color} className="flex-1 w-2" style={{ backgroundColor: color }} />
             ))}
