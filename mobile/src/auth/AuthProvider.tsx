@@ -139,20 +139,31 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
     async (loginValue: string, passwd: string) => {
       setStatus('loading');
       setError(null);
-      const data = await graphqlRequest<LoginResponse>(LOGIN_MUTATION, { login: loginValue, passwd });
-      const result = data.login?.result;
-      if (!result?.jwt || !result.usr) {
-        const error = new Error('Přihlášení se nezdařilo. Zkontrolujte přihlašovací údaje.');
-        setError(error);
+      try {
+        const data = await graphqlRequest<LoginResponse>(LOGIN_MUTATION, {
+          login: loginValue,
+          passwd,
+        });
+        const result = data.login?.result;
+        if (!result?.jwt || !result.usr) {
+          const error = new Error('Přihlášení se nezdařilo. Zkontrolujte přihlašovací údaje.');
+          setError(error);
+          setStatus('unauthenticated');
+          throw error;
+        }
+
+        await persistToken(result.jwt);
+        setUser(result.usr);
+        setStatus('authenticated');
+        setError(null);
+        return result.usr;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        setUser(null);
         setStatus('unauthenticated');
+        setError(error);
         throw error;
       }
-
-      await persistToken(result.jwt);
-      setUser(result.usr);
-      setStatus('authenticated');
-      setError(null);
-      return result.usr;
     },
     [persistToken],
   );
