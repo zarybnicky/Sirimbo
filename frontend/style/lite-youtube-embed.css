@@ -1,5 +1,5 @@
 .yt-lite {
-  background-color: #000;
+  @apply bg-neutral-12;
   position: relative;
   display: block;
   contain: content;
@@ -35,19 +35,20 @@
 .yt-lite > .lty-playbtn {
   width: 70px;
   height: 46px;
-  background-color: #212121;
+  @apply bg-neutral-11;
   z-index: 1;
   opacity: 0.8;
   border-radius: 14%;
   transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 .yt-lite:hover > .lty-playbtn {
-  background-color: red;
+  @apply bg-accent-9;
   opacity: 1;
 }
 .yt-lite > .lty-playbtn::before {
   content: "";
-  border-color: transparent transparent transparent #fff;
+  border-color: transparent;
+  @apply border-l-white;
   border-style: solid;
   border-width: 11px 0 11px 19px;
 }
