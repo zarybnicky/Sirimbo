@@ -11,25 +11,7 @@ create table if not exists csts.athlete (
   fetched_at timestamptz not null default now()
 );
 
-do $$
-declare
-  athlete_ranking_is_view boolean;
-begin
-  select exists (
-    select 1
-    from pg_catalog.pg_class c
-    join pg_catalog.pg_namespace n on n.oid = c.relnamespace
-    where c.relkind = 'v'
-      and n.nspname = 'csts'
-      and c.relname = 'athlete_ranking'
-  )
-  into athlete_ranking_is_view;
-
-  if athlete_ranking_is_view then
-    execute 'drop view csts.athlete_ranking';
-  end if;
-end;
-$$;
+drop view if exists csts.athlete_ranking;
 
 drop table if exists csts.athlete_primary_category;
 drop table if exists csts.athlete_personal_ranking;
@@ -37,37 +19,11 @@ drop table if exists csts.athlete_personal_ranking;
 create table if not exists csts.couple (
   id integer primary key,
   couple_idt integer not null,
-  man_idt integer not null,
-  woman_idt integer not null,
+  man_idt integer not null references csts.athlete(idt) on delete cascade,
+  woman_idt integer not null references csts.athlete(idt) on delete cascade,
   medical_checkup_expiration date,
   formed_at timestamptz not null
 );
-
-do $$
-begin
-  if not exists (
-    select 1
-    from pg_constraint
-    where conrelid = 'csts.couple'::regclass
-      and conname = 'couple_man_idt_fkey'
-  ) then
-    alter table csts.couple
-      add constraint couple_man_idt_fkey
-        foreign key (man_idt) references csts.athlete(idt) on delete cascade;
-  end if;
-
-  if not exists (
-    select 1
-    from pg_constraint
-    where conrelid = 'csts.couple'::regclass
-      and conname = 'couple_woman_idt_fkey'
-  ) then
-    alter table csts.couple
-      add constraint couple_woman_idt_fkey
-        foreign key (woman_idt) references csts.athlete(idt) on delete cascade;
-  end if;
-end;
-$$;
 
 create table if not exists csts.competitor_ranking (
   competitor_id integer not null,
@@ -91,13 +47,6 @@ create table if not exists csts.competitor_ranking (
     or (athlete_idt is null and couple_id is not null)
   )
 );
-
-alter table csts.competitor_ranking
-  drop column if exists personal_class,
-  drop column if exists personal_points,
-  drop column if exists personal_domestic_finale_count,
-  drop column if exists personal_foreign_finale_count,
-  drop column if exists personal_approved;
 
 create table if not exists csts.athlete_ranking (
   athlete_id integer not null references csts.athlete(idt) on delete cascade,
