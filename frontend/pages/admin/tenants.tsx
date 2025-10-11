@@ -7,6 +7,9 @@ import { typographyCls } from '@/ui/style';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 
+const integerFormatter = new Intl.NumberFormat('cs-CZ');
+const decimalFormatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
+
 const SYSTEM_ADMIN_TENANTS_QUERY = /* GraphQL */ `
   query SystemAdminTenants {
     systemAdminTenants {
@@ -27,8 +30,12 @@ const SYSTEM_ADMIN_TENANTS_QUERY = /* GraphQL */ `
         postalCode
       }
       membershipCount
+      pendingMembershipCount
+      expiredMembershipCount
       trainerCount
       administratorCount
+      sessionCountLast30Days
+      sessionCountPerTrainerLast30Days
     }
   }
 `;
@@ -78,8 +85,12 @@ type TenantRow = {
   czDic: string;
   address: AddressDomain | null;
   membershipCount: number;
+  pendingMembershipCount: number;
+  expiredMembershipCount: number;
   trainerCount: number;
   administratorCount: number;
+  sessionCountLast30Days: number;
+  sessionCountPerTrainerLast30Days: number;
 };
 
 type SystemAdminTenantsQueryResult = {
@@ -194,13 +205,25 @@ function TenantCard({ tenant, onUpdated }: TenantCardProps) {
 
       <div className="flex flex-wrap gap-3 text-xs">
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Členové: {tenant.membershipCount}
+          Aktivní členové: {integerFormatter.format(tenant.membershipCount)}
         </span>
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Trenéři: {tenant.trainerCount}
+          Čekající členové: {integerFormatter.format(tenant.pendingMembershipCount)}
         </span>
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Administrátoři: {tenant.administratorCount}
+          Expirace: {integerFormatter.format(tenant.expiredMembershipCount)}
+        </span>
+        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
+          Lekce (30 dní): {integerFormatter.format(tenant.sessionCountLast30Days)}
+        </span>
+        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
+          Lekce / trenér (30 dní): {decimalFormatter.format(tenant.sessionCountPerTrainerLast30Days)}
+        </span>
+        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
+          Trenéři: {integerFormatter.format(tenant.trainerCount)}
+        </span>
+        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
+          Administrátoři: {integerFormatter.format(tenant.administratorCount)}
         </span>
       </div>
     </div>
