@@ -81,13 +81,26 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
         <div className="space-y-1 pt-3 mr-1">
           {(auth.user && isMounted) ? (
             <>
-              {memberMenu.map((x) => <SidebarSection key={x.title} item={x.type === 'link' ? x : {
-                ...x,
-                children: x.children.filter(item => (
-                  (!item.requireTrainer || auth.isTrainerOrAdmin) &&
-                  (!item.requireAdmin || auth.isAdmin))
+              {memberMenu
+                .map((item) => item.type === 'link' ? item : {
+                  ...item,
+                  children: item.children.filter(child => (
+                    (!child.requireTrainer || auth.isTrainerOrAdmin) &&
+                    (!child.requireAdmin || auth.isAdmin) &&
+                    (!child.requireSystemAdmin || auth.isSystemAdmin)
+                  )),
+                })
+                .filter((item): item is MenuStructItem => item.type === 'link'
+                  ? (
+                    (!item.requireTrainer || auth.isTrainerOrAdmin) &&
+                    (!item.requireAdmin || auth.isAdmin) &&
+                    (!item.requireSystemAdmin || auth.isSystemAdmin)
+                  )
+                  : item.children.length > 0
                 )
-              }} />)}
+                .map((item) => (
+                  <SidebarSection key={item.title} item={item} />
+                ))}
 
               <Link
                 onClick={signOut}
