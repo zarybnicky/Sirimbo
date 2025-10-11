@@ -64,11 +64,6 @@ create table if not exists csts.competitor_ranking (
   points integer not null,
   domestic_finale_count integer not null,
   foreign_finale_count integer not null,
-  personal_class text not null,
-  personal_points integer not null,
-  personal_domestic_finale_count integer not null,
-  personal_foreign_finale_count integer not null,
-  personal_approved boolean not null,
   ranklist_ranking integer not null,
   ranklist_points integer not null,
   athlete_idt integer references csts.athlete(idt) on delete cascade,
@@ -91,27 +86,50 @@ comment on column csts.competitor_ranking.class is 'ČSTS class assigned to the 
 comment on column csts.competitor_ranking.points is 'Current ČSTS ranking points accumulated for the discipline.';
 comment on column csts.competitor_ranking.domestic_finale_count is 'Domestic finale count credited to the competitor in the discipline.';
 comment on column csts.competitor_ranking.foreign_finale_count is 'Foreign finale count credited to the competitor in the discipline.';
-comment on column csts.competitor_ranking.personal_class is 'Athlete-specific class for the discipline.';
-comment on column csts.competitor_ranking.personal_points is 'Athlete-specific points assigned within the discipline.';
-comment on column csts.competitor_ranking.personal_domestic_finale_count is 'Domestic finale count credited to the individual athlete.';
-comment on column csts.competitor_ranking.personal_foreign_finale_count is 'Foreign finale count credited to the individual athlete.';
-comment on column csts.competitor_ranking.personal_approved is 'Whether the athlete''s class for the discipline is approved.';
 comment on column csts.competitor_ranking.ranklist_ranking is 'ČSTS published ranklist position for the discipline and age.';
 comment on column csts.competitor_ranking.ranklist_points is 'ČSTS published ranklist points for the discipline and age.';
 comment on column csts.competitor_ranking.athlete_idt is 'Links the ranking entry directly to an athlete for solo categories.';
 comment on column csts.competitor_ranking.couple_id is 'Links the ranking entry to a couple competitor for partnered categories.';
+
+alter table csts.competitor_ranking
+  drop column if exists personal_class,
+  drop column if exists personal_points,
+  drop column if exists personal_domestic_finale_count,
+  drop column if exists personal_foreign_finale_count,
+  drop column if exists personal_approved;
+
+create table if not exists csts.athlete_personal_ranking (
+  competitor_id integer not null,
+  discipline text not null,
+  personal_class text not null,
+  personal_points integer not null,
+  personal_domestic_finale_count integer not null,
+  personal_foreign_finale_count integer not null,
+  personal_approved boolean not null,
+  primary key (competitor_id, discipline),
+  foreign key (competitor_id, discipline)
+    references csts.competitor_ranking (competitor_id, discipline)
+    on delete cascade
+);
+comment on table csts.athlete_personal_ranking is 'Athlete-specific ranking attributes linked to the parent competitor row.';
+comment on column csts.athlete_personal_ranking.personal_class is 'Athlete-specific class for the discipline.';
+comment on column csts.athlete_personal_ranking.personal_points is 'Athlete-specific points assigned within the discipline.';
+comment on column csts.athlete_personal_ranking.personal_domestic_finale_count is 'Domestic finale count credited to the individual athlete.';
+comment on column csts.athlete_personal_ranking.personal_foreign_finale_count is 'Foreign finale count credited to the individual athlete.';
+comment on column csts.athlete_personal_ranking.personal_approved is 'Whether the athlete''s class for the discipline is approved.';
 
 create or replace view csts.athlete_ranking as
 select
   cr.athlete_idt as athlete_id,
   cr.discipline,
   cr.series,
-  cr.personal_class,
-  cr.personal_points,
-  cr.personal_domestic_finale_count,
-  cr.personal_foreign_finale_count,
-  cr.personal_approved
+  apr.personal_class,
+  apr.personal_points,
+  apr.personal_domestic_finale_count,
+  apr.personal_foreign_finale_count,
+  apr.personal_approved
 from csts.competitor_ranking cr
+join csts.athlete_personal_ranking apr using (competitor_id, discipline)
 where cr.athlete_idt is not null;
 comment on view csts.athlete_ranking is 'Projection of athlete-specific ČSTS ranking information from competitor rankings.';
 comment on column csts.athlete_ranking.athlete_id is 'ČSTS athlete identifier mirrored from the competitor ranking row.';
