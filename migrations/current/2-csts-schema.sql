@@ -11,18 +11,14 @@ create table if not exists csts.athlete (
   fetched_at timestamptz not null default now()
 );
 
-drop view if exists csts.athlete_ranking;
-
-drop table if exists csts.athlete_primary_category;
-drop table if exists csts.athlete_personal_ranking;
-
 create table if not exists csts.couple (
   id integer primary key,
   couple_idt integer not null,
   man_idt integer not null references csts.athlete(idt) on delete cascade,
   woman_idt integer not null references csts.athlete(idt) on delete cascade,
   medical_checkup_expiration date,
-  formed_at timestamptz not null
+  formed_at timestamptz not null,
+  unique (couple_idt)
 );
 
 create table if not exists csts.competitor_ranking (
@@ -42,6 +38,8 @@ create table if not exists csts.competitor_ranking (
   athlete_idt integer references csts.athlete(idt) on delete cascade,
   couple_id integer references csts.couple(id) on delete cascade,
   primary key (competitor_id, discipline),
+  unique (athlete_idt, discipline),
+  unique (couple_id, discipline),
   check (
     (athlete_idt is not null and couple_id is null)
     or (athlete_idt is null and couple_id is not null)
@@ -60,22 +58,11 @@ create table if not exists csts.athlete_ranking (
   primary key (athlete_id, discipline, series)
 );
 
-create unique index if not exists couple_couple_idt_key
-  on csts.couple (couple_idt);
-
 create index if not exists couple_man_idx
   on csts.couple (man_idt);
 
 create index if not exists couple_woman_idx
   on csts.couple (woman_idt);
-
-create unique index if not exists competitor_ranking_athlete_unique
-  on csts.competitor_ranking (athlete_idt, discipline)
-  where athlete_idt is not null;
-
-create unique index if not exists competitor_ranking_couple_unique
-  on csts.competitor_ranking (couple_id, discipline)
-  where couple_id is not null;
 
 create index if not exists competitor_ranking_athlete_idx
   on csts.competitor_ranking (athlete_idt);
