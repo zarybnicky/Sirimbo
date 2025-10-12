@@ -7533,6 +7533,7 @@ export type QueryFilteredPeopleListArgs = {
   inCohorts?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
   isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
+  membershipState?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 

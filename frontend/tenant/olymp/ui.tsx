@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
-import SiFacebook from '@icons-pack/react-simple-icons/icons/SiFacebook';
-import SiInstagram from '@icons-pack/react-simple-icons/icons/SiInstagram';
-import SiYoutube from '@icons-pack/react-simple-icons/icons/SiYoutube';
+import { SiFacebook, SiInstagram, SiYoutube } from '@icons-pack/react-simple-icons';
 import LogoCsts from './logo-csts.svg';
 import LogoNsa from './logo-nsa.svg';
 import LogoProstejov from './logo-prostejov.svg';

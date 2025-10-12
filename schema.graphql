@@ -8727,6 +8727,7 @@ type Query {
     inCohorts: [BigInt]
     isAdmin: Boolean
     isTrainer: Boolean
+    membershipState: String
 
     """Skip the first `n` values."""
     offset: Int

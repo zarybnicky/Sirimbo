@@ -145,8 +145,8 @@ query UnpaidPayments {
   }
 }
 
-query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean) {
-  filteredPeopleList(inCohorts: $inCohorts, isTrainer: $isTrainer, isAdmin: $isAdmin) {
+query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipState: String) {
+  filteredPeopleList(inCohorts: $inCohorts, isTrainer: $isTrainer, isAdmin: $isAdmin, membershipState: $membershipState) {
     ...Person
     externalIds
     cohortMembershipsList {
@@ -165,15 +165,6 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean) 
 query PersonWithLinksList {
   filteredPeopleList {
     ...PersonWithLinks
-  }
-}
-
-query TrainerList($tenantId: BigInt) {
-  tenantTrainersList(condition: { tenantId: $tenantId, active: true }) {
-    id
-    person {
-      ...Person
-    }
   }
 }
 

@@ -8,22 +8,25 @@ import { toast } from 'react-toastify';
 import { ResetPasswordDocument } from '@/graphql/CurrentUser';
 import { useMutation } from 'urql';
 import { NextSeo } from 'next-seo';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { Layout } from '@/components/layout/Layout';
-import { useZodForm } from '@/lib/use-schema-form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { cardCls } from '@/ui/style';
 
 const Form = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 
 function ForgottenPasswordForm() {
   const router = useRouter();
-  const { control, handleSubmit } = useZodForm(Form);
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(Form),
+  });
   const resetPassword = useMutation(ResetPasswordDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (data: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (data: z.infer<typeof Form>) => {
     const res = await resetPassword({ input: data });
     if (res.data?.resetPassword?.__typename) {
       toast.success(

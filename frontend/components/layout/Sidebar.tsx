@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-const SidebarLogo = dynamic(() => getTenantUi('SidebarLogo'));
+const SidebarLogo = dynamic(() => getTenantUi('SidebarLogo'), { ssr: false });
 
 type SidebarProps = {
   isOpen: boolean;

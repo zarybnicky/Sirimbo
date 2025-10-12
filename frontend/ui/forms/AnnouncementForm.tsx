@@ -14,12 +14,12 @@ import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { useCohorts } from '@/ui/useCohorts';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useController, useWatch, type Control } from 'react-hook-form';
+import { useController, useForm, useWatch, type Control } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { truthyFilter } from '../truthyFilter';
-import { useZodForm } from '@/lib/use-schema-form';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const ROLE_OPTIONS: {
   value: AnnouncementAudienceRole;
@@ -47,16 +47,14 @@ const AUDIENCE_ROLE_VALUES = ['MEMBER', 'TRAINER', 'ADMINISTRATOR'] as const;
 
 const Form = z.object({
   title: z.string().min(1, 'Zadejte nadpis oznámení'),
-  body: z.string().default(''),
-  isVisible: z.boolean().default(true),
-  isSticky: z.boolean().default(false),
+  body: z.string().prefault(''),
+  isVisible: z.boolean().prefault(true),
+  isSticky: z.boolean().prefault(false),
   scheduledSince: z.date().nullable().optional(),
   scheduledUntil: z.date().nullable().optional(),
-  audienceRoles: z.array(z.enum(AUDIENCE_ROLE_VALUES)).default([]),
-  cohortIds: z.array(z.string()).default([]),
+  audienceRoles: z.array(z.enum(AUDIENCE_ROLE_VALUES)).prefault([]),
+  cohortIds: z.array(z.string()).prefault([]),
 });
-
-type FormValues = TypeOf<typeof Form>;
 
 export function AnnouncementForm({ id, data, onSuccess }: {
   id?: string;
@@ -65,11 +63,12 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 }) {
   const upsert = useMutation(UpsertAnnouncementDocument)[1];
 
-  const { reset, control, handleSubmit } = useZodForm(Form, {
+  const { reset, control, handleSubmit } = useForm({
     defaultValues: {
       audienceRoles: [],
       cohortIds: [],
-    }
+    },
+    resolver: zodResolver(Form),
   });
   React.useEffect(() => {
     reset({
@@ -85,7 +84,7 @@ export function AnnouncementForm({ id, data, onSuccess }: {
   }, [data, reset]);
 
 
-  const onSubmit = useAsyncCallback(async (values: FormValues) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const oldAudiences = [...data?.announcementAudiences.nodes || []];
     const newAudiences: UpsertAnnouncementInput['audiences'] = [];
 
@@ -151,9 +150,9 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 }
 
 function AnnouncementAudienceEditor({ control }: {
-  control: Control<FormValues>;
+  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
 }) {
-  const { audienceRoles = [], cohortIds = [] } = useWatch<FormValues>({ control });
+  const { audienceRoles = [], cohortIds = [] } = useWatch({ control });
   const { data: cohorts, fetching: cohortsLoading } = useCohorts();
 
   const audiences: AnnouncementAudienceFragment[] = [
@@ -195,7 +194,9 @@ function AnnouncementAudienceEditor({ control }: {
   );
 }
 
-function AudienceRoleCheckboxes({ control }: { control: Control<FormValues> }) {
+function AudienceRoleCheckboxes({ control }: {
+  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>
+}) {
   const { field } = useController({ control, name: 'audienceRoles' });
 
   const toggle = React.useCallback(
@@ -217,7 +218,7 @@ function AudienceRoleCheckboxes({ control }: { control: Control<FormValues> }) {
         <Checkbox
           key={role.value}
           name={`announcement-role-${role.value}`}
-          checked={field.value.includes(role.value)}
+          checked={field.value?.includes(role.value)}
           value={role.value}
           label={role.label}
           helperText={role.helperText}
@@ -236,7 +237,7 @@ function AudienceCohortCheckboxes({
   cohorts,
   loading,
 }: {
-  control: Control<FormValues>;
+  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>
   cohorts: { id: string; name?: string | null; colorRgb?: string | null }[];
   loading?: boolean;
 }) {
@@ -266,7 +267,7 @@ function AudienceCohortCheckboxes({
   return (
     <div className="space-y-1">
       {cohorts.map((cohort) => {
-        const checked = field.value.includes(cohort.id);
+        const checked = field.value?.includes(cohort.id);
         return (
           <Checkbox
             key={cohort.id}

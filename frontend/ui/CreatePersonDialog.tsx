@@ -1,8 +1,7 @@
 'use client';
 
-import { CreatePersonDocument, FullPersonListDocument, CstsPersonDocument } from '@/graphql/Person';
+import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
 import { SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
-import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement, VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
@@ -10,6 +9,7 @@ import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
+import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { countries } from '@/lib/countries';
@@ -22,14 +22,16 @@ import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { truthyFilter } from './truthyFilter';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  prefixTitle: z.string().default(''),
+  prefixTitle: z.string().prefault(''),
   firstName: z.string(),
   lastName: z.string(),
-  suffixTitle: z.string().default(''),
+  suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED']),
   birthDate: z.string().nullish(),
   cstsId: z
@@ -45,16 +47,16 @@ const Form = z.object({
     .regex(/^$|[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
-  bio: z.string().default(''),
-  email: z.string().email().optional(),
+  bio: z.string().prefault(''),
+  email: z.email().optional(),
   phone: z.string().optional(),
-  personId: z.string().nullish().default(null),
-  isMember: z.boolean().default(false),
-  isTrainer: z.boolean().default(false),
-  isAdmin: z.boolean().default(false),
-  sendInvitation: z.boolean().default(false),
+  personId: z.string().nullish().prefault(null),
+  isMember: z.boolean().prefault(false),
+  isTrainer: z.boolean().prefault(false),
+  isAdmin: z.boolean().prefault(false),
+  sendInvitation: z.boolean().prefault(false),
   joinDate: z.date(),
-  cohortIds: z.array(z.string()).default([]),
+  cohortIds: z.array(z.string()).prefault([]),
 });
 
 export function CreatePersonDialog() {
@@ -69,16 +71,11 @@ export function CreatePersonDialog() {
     label: x.name || '?',
   })).sort((x, y) => x.label.localeCompare(y.label)), [personQuery]);
 
-  const { control, handleSubmit, getValues, setValue, reset, watch } = useZodForm(Form);
+  const { control, handleSubmit, getValues, setValue, reset, watch } = useForm({
+    resolver: zodResolver(Form),
+  });
   const { data: cohorts } = useCohorts({ visible: true });
   const cohortOptions = React.useMemo(() => cohorts.map(x => ({ id: x.id, label: x.name })), [cohorts]);
-
-  const [cstsId, setCstsId] = React.useState(Number.NaN);
-  const [cstsQuery] = useQuery({
-    query: CstsPersonDocument,
-    pause: Number.isNaN(cstsId),
-    variables: { idt: cstsId },
-  });
 
   const personId = watch('personId');
   const selectedCohortCount = watch('cohortIds')?.length ?? 0;
@@ -114,7 +111,6 @@ export function CreatePersonDialog() {
   React.useEffect(() => {
     if (open) {
       reset();
-      setCstsId(Number.NaN);
       setValue('isMember', true);
       setValue('sendInvitation', false);
       setValue('nationality', "203");
@@ -124,7 +120,7 @@ export function CreatePersonDialog() {
     }
   }, [open, reset, setValue, setCohortPickerOpen]);
 
-  const onSubmit = useAsyncCallback(async (data: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (data: z.infer<typeof Form>) => {
     const { personId, isAdmin, isMember, isTrainer, joinDate, sendInvitation, cohortIds, ...p } = data;
     const sanitizedCohortIds = (cohortIds ?? []).filter(truthyFilter);
     const res = await create({
@@ -201,22 +197,7 @@ export function CreatePersonDialog() {
               placeholder="1111119999"
             />
 
-            <div>
-              <TextFieldElement
-                control={control}
-                name="cstsId"
-                label="ČSTS IDT"
-                placeholder="10000000"
-                onInput={(e) => setCstsId(Number.parseInt(e.currentTarget.value || '', 10))}
-              />
-              {cstsQuery.data ? (
-                cstsQuery.data.cstsAthlete ? (
-                  <span className="text-green-9">{cstsQuery.data?.cstsAthlete.name}</span>
-                ) : (
-                  <span className="text-primary">Nenalezeno</span>
-                )
-              ) : null}
-            </div>
+            <CstsIdFieldElement control={control} name="cstsId" />
 
             <TextFieldElement
               control={control}

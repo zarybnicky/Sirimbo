@@ -1,5 +1,3 @@
---! split: 1-current.sql
-
 create table if not exists app_private.system_admin_user (
   user_id bigint primary key references public.users(id) on delete cascade,
   created_at timestamptz not null default now(),
@@ -91,7 +89,7 @@ begin
   from public.tenant t
   cross join lateral (
     select
-      count(*) filter (where tm.status = 'active') as membership_count
+      count(*) filter (where tm.active) as membership_count
     from public.tenant_membership tm
     where tm.tenant_id = t.id
   ) as membership_counts
@@ -172,10 +170,8 @@ begin
 end;
 $$;
 
-comment on function public.system_admin_update_tenant(bigint, text, text, text, text[], public.address_domain, text, text)
-  is 'Allows system administrators to update tenant metadata without switching tenant context.';
-
-grant execute on function public.system_admin_update_tenant(bigint, text, text, text, text[], public.address_domain, text, text) to anonymous;
+comment on function public.system_admin_update_tenant is 'Allows system administrators to update tenant metadata without switching tenant context.';
+grant execute on function public.system_admin_update_tenant to anonymous;
 
 select verify_function('public.system_admin_update_tenant');
 
@@ -219,4 +215,6 @@ $$;
 
 comment on function app_private.create_jwt_token(public.users) is 'Generates the JWT payload including global system administrator flag.';
 
-select verify_function('app_private.create_jwt_token');
+--!include functions/former_filtered_people.sql
+
+grant all on function post_without_cache to administrator;

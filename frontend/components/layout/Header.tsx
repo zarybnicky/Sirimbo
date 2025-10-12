@@ -16,11 +16,11 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-const DesktopLogo = dynamic(() => getTenantUi('DesktopLogo'));
+const DesktopLogo = dynamic(() => getTenantUi('DesktopLogo'), { ssr: false });
 
-const MobileLogo = dynamic(() => getTenantUi('MobileLogo'));
+const MobileLogo = dynamic(() => getTenantUi('MobileLogo'), { ssr: false });
 
-const SocialIcons = dynamic(() => getTenantUi('SocialIcons'));
+const SocialIcons = dynamic(() => getTenantUi('SocialIcons'), { ssr: false });
 
 type Props = {
   isOpen: boolean;

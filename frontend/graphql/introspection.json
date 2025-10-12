@@ -17488,6 +17488,13 @@
                 }
               },
               {
+                "name": "membershipState",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "offset",
                 "type": {
                   "kind": "SCALAR",

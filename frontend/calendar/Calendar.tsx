@@ -20,7 +20,7 @@ import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { Spinner } from '@/ui/Spinner';
 import { useTenant } from '@/ui/useTenant';
-import { TypeOf } from 'zod';
+import { z } from 'zod';
 import { EventForm } from '@/ui/event-form/types';
 import { tenantConfig } from '@/tenant/config';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
@@ -262,14 +262,14 @@ export function Calendar() {
     });
   }, [moveEvent]);
 
-  const [creating, setCreating] = React.useState<undefined | Partial<TypeOf<typeof EventForm>>>();
+  const [creating, setCreating] = React.useState<undefined | Partial<z.infer<typeof EventForm>>>();
 
   const onSelectSlot = React.useCallback((slot: SlotInfo) => {
     if (slot.action === 'click') {
       slot.end = add(slot.start, 45, 'minutes');
     }
 
-    const def: Partial<TypeOf<typeof EventForm>> = {
+    const def: Partial<z.infer<typeof EventForm>> = {
       instances: [{
         ...datetimeRangeToTimeRange(slot.start, slot.end),
         isCancelled: false,
