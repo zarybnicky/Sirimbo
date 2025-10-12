@@ -14,6 +14,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/">
     | StaticRoute<"/404">
     | StaticRoute<"/500">
+    | StaticRoute<"/admin/tenants">
     | StaticRoute<"/akce">
     | DynamicRoute<"/akce/[id]", { "id": string }>
     | DynamicRoute<"/akce/[id]/termin/[instance]", { "id": string; "instance": string }>

@@ -8,6 +8,7 @@ export type MenuLink = {
   href: Route;
   requireTrainer?: boolean;
   requireAdmin?: boolean;
+  requireSystemAdmin?: boolean;
   className?: string;
 };
 
@@ -105,6 +106,7 @@ export const memberMenu: MenuStructItem[] = [
       ...(tenantConfig.enableStarletImport ? [
         { type: 'link', title: 'Import z evidence', href: '/starlet-import', requireAdmin: true },
       ] as MenuLink[] : []),
+      { type: 'link', title: 'Tenanti', href: '/admin/tenants' as Route, requireSystemAdmin: true },
     ],
   },
 ];

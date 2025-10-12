@@ -22,6 +22,7 @@ type LayoutProps = {
   requireMember?: boolean;
   requireAdmin?: boolean;
   requireTrainer?: boolean;
+  requireSystemAdmin?: boolean;
   className?: string;
 };
 
@@ -34,6 +35,7 @@ export const Layout = React.memo(function Layout({
   requireMember,
   requireAdmin,
   requireTrainer,
+  requireSystemAdmin,
   className,
 }: LayoutProps) {
   const router = useRouter();
@@ -50,7 +52,8 @@ export const Layout = React.memo(function Layout({
     (requireUser && !auth.isLoggedIn) ||
     (requireMember && !auth.isMember && !auth.isTrainerOrAdmin) ||
     (requireTrainer && !auth.isTrainerOrAdmin) ||
-    (requireAdmin && !auth.isAdmin);
+    (requireAdmin && !auth.isAdmin) ||
+    (requireSystemAdmin && !auth.isSystemAdmin);
   if (!authLoading && missingPermission) {
     children = auth.user ? (
       <ErrorPage
