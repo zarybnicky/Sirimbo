@@ -27,8 +27,8 @@
     "graphile-migrate": "^1.4.1",
     "graphql-tag": "^2.12.6",
     "prettier": "3.6.2",
-    "typescript": "~5.7.0",
-    "typescript-language-server": "^4.4.1"
+    "typescript": "~5.9.3",
+    "typescript-language-server": "^5.0.1"
   },
   "scripts": {
     "schema": "graphql-codegen --watch --config graphql.config.yml",
@@ -39,7 +39,7 @@
     "@types/pg": "8.10.2",
     "mjml-core@npm:4.14.1": "patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch"
   },
-  "packageManager": "yarn@4.5.3",
+  "packageManager": "yarn@4.10.3",
   "dependenciesMeta": {
     "mjml@4.14.1": {
       "unplugged": true

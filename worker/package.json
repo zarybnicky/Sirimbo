@@ -33,6 +33,6 @@
     "@types/pg": "~8.15.5",
     "esbuild": "^0.25.10",
     "glob": "^11.0.3",
-    "typescript": "~5.7.0"
+    "typescript": "~5.9.3"
   }
 }

@@ -4184,14 +4184,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/vector-icons@npm:^14.1.0":
-  version: 14.1.0
-  resolution: "@expo/vector-icons@npm:14.1.0"
+"@expo/vector-icons@npm:^15.0.2":
+  version: 15.0.2
+  resolution: "@expo/vector-icons@npm:15.0.2"
   peerDependencies:
-    expo-font: "*"
+    expo-font: ">=14.0.4"
     react: "*"
     react-native: "*"
-  checksum: 10/5b80a684042672e40f311a921fca7acc964fdddb1edd2c2c22253f5b9097e9fe441626ffa50c98ffc2622a3f1a9b5315a8a73796348d3b03108b4da2600384bc
+  checksum: 10/c500ec439ff47a6a72f39d7d6a8f423707312cf0fe9ecc0a034c038ed97d6831b5c0d51c8ff4de5f9d534740ed83b7406fa75e4dd27d770c98b2ec97f59167d8
   languageName: node
   linkType: hard
 
@@ -8488,7 +8488,7 @@ __metadata:
     "@types/node": "npm:^22.18.10"
     "@types/pg": "npm:^8"
     pg: "npm:^8.16.3"
-    typescript: "npm:~5.7.0"
+    typescript: "npm:~5.9.3"
     zod: "npm:^3.25.76"
   languageName: unknown
   linkType: soft
@@ -23652,7 +23652,7 @@ __metadata:
     pg: "npm:8.16.3"
     postgraphile: "npm:^5.0.0-beta.48"
     tamedevil: "npm:^0.0.0-beta.9"
-    typescript: "npm:~5.7.0"
+    typescript: "npm:~5.9.3"
     uglify-js: "npm:^3.19.3"
     ws: "npm:^8.18.3"
   bin:
@@ -23675,7 +23675,7 @@ __metadata:
   resolution: "rozpisovnik-mobile@workspace:mobile"
   dependencies:
     "@babel/core": "npm:^7.28.4"
-    "@expo/vector-icons": "npm:^14.1.0"
+    "@expo/vector-icons": "npm:^15.0.2"
     "@react-native-async-storage/async-storage": "npm:^1.24.0"
     "@react-navigation/bottom-tabs": "npm:^7.0.14"
     "@react-navigation/native": "npm:^7.0.14"
@@ -23696,7 +23696,7 @@ __metadata:
     react-native-reanimated: "npm:~3.16.7"
     react-native-safe-area-context: "npm:^4.14.1"
     react-native-screens: "npm:~4.16.0"
-    typescript: "npm:~5.7.0"
+    typescript: "npm:~5.9.3"
     urql: "npm:^4.2.2"
     wonka: "npm:^6.3.5"
   languageName: unknown
@@ -23818,7 +23818,7 @@ __metadata:
     tailwindcss: "npm:~3.4.18"
     tailwindcss-opentype: "npm:~1.2.0"
     thumbhash: "npm:^0.1.1"
-    typescript: "npm:~5.7.0"
+    typescript: "npm:~5.9.3"
     typescript-eslint: "npm:^7.18.0"
     typescript-event-target: "npm:~1.1.1"
     urql: "npm:4.2.2"
@@ -23853,7 +23853,7 @@ __metadata:
     mjml: "npm:^4.16.1"
     nodemailer: "npm:~6.9.16"
     pg: "npm:8.16.3"
-    typescript: "npm:~5.7.0"
+    typescript: "npm:~5.9.3"
     uglify-js: "npm:^3.19.3"
   bin:
     rozpisovnik-worker: ./rozpisovnik-worker
@@ -23879,8 +23879,8 @@ __metadata:
     prettier: "npm:3.6.2"
     prop-types: "npm:^15.8.1"
     squawk-cli: "npm:^1.6.1"
-    typescript: "npm:~5.7.0"
-    typescript-language-server: "npm:^4.4.1"
+    typescript: "npm:~5.9.3"
+    typescript-language-server: "npm:^5.0.1"
   dependenciesMeta:
     mjml@4.14.1:
       unplugged: true
@@ -25680,32 +25680,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-language-server@npm:^4.4.1":
-  version: 4.4.1
-  resolution: "typescript-language-server@npm:4.4.1"
+"typescript-language-server@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "typescript-language-server@npm:5.0.1"
   bin:
     typescript-language-server: lib/cli.mjs
-  checksum: 10/50944facebaa903fe78721f051524fa0c230a671b408d411f0a692ae43bdb61a480440913fb537307d4220f82895391e2fd0d86c2c962c13dc9476b345ecffcd
+  checksum: 10/2145a5dedfb0aca30c7dda250f42da1fcac0b503631c30f4c41bbabd4757bebbc6334b4cb9affd2a867b54650ec53607247fa578b0b1bc1d4bf635e6c4800739
   languageName: node
   linkType: hard
 
-"typescript@npm:~5.7.0":
-  version: 5.7.3
-  resolution: "typescript@npm:5.7.3"
+"typescript@npm:~5.9.3":
+  version: 5.9.3
+  resolution: "typescript@npm:5.9.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/6a7e556de91db3d34dc51cd2600e8e91f4c312acd8e52792f243c7818dfadb27bae677175fad6947f9c81efb6c57eb6b2d0c736f196a6ee2f1f7d57b74fc92fa
+  checksum: 10/c089d9d3da2729fd4ac517f9b0e0485914c4b3c26f80dc0cffcb5de1719a17951e92425d55db59515c1a7ddab65808466debb864d0d56dcf43f27007d0709594
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A~5.7.0#optional!builtin<compat/typescript>":
-  version: 5.7.3
-  resolution: "typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5"
+"typescript@patch:typescript@npm%3A~5.9.3#optional!builtin<compat/typescript>":
+  version: 5.9.3
+  resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/dc58d777eb4c01973f7fbf1fd808aad49a0efdf545528dab9b07d94fdcb65b8751742804c3057e9619a4627f2d9cc85547fdd49d9f4326992ad0181b49e61d81
+  checksum: 10/696e1b017bc2635f4e0c94eb4435357701008e2f272f553d06e35b494b8ddc60aa221145e286c28ace0c89ee32827a28c2040e3a69bdc108b1a5dc8fb40b72e3
   languageName: node
   linkType: hard
 
