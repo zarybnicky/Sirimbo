@@ -46,10 +46,7 @@ type CouplesAndSolos = {
 
 function TrainingCohortPage() {
   const router = useTypedRouter(QueryParams);
-  const idParam = React.useMemo(
-    () => router.query.id || router.query.slug,
-    [router.query.id, router.query.slug],
-  );
+  const idParam = router.query.id || router.query.slug;
   const [{ data: cohortQuery, fetching: fetchingCohort }] = useQuery({
     query: CohortWithMembersDocument,
     variables: { id: idParam || '0' },
@@ -104,19 +101,20 @@ function TrainingCohortPage() {
   );
 
   React.useEffect(() => {
-    if (!router.isReady || fetchingCohort) return;
-    if (idParam && !cohort) {
-      void router.replace('/404');
-    }
-  }, [cohort, fetchingCohort, idParam, router]);
+    if (!router.isReady || !idParam) return;
 
-  React.useEffect(() => {
-    if (!router.isReady || !cohort) return;
+    if (!fetchingCohort && !cohort) {
+      void router.replace('/404');
+      return;
+    }
+
+    if (!cohort) return;
+
     const expectedSlug = slugify(cohort.name);
     if (expectedSlug && router.query.slug !== expectedSlug) {
       void router.replace(`/treninkove-skupiny/${cohort.id}/${expectedSlug}`);
     }
-  }, [cohort, router]);
+  }, [cohort, fetchingCohort, idParam, router]);
 
   if (!cohort) {
     return (

@@ -18,10 +18,7 @@ const QueryParams = z.object({
 
 function TrainingGroupPage() {
   const router = useTypedRouter(QueryParams);
-  const idParam = React.useMemo(
-    () => router.query.id || router.query.slug,
-    [router.query.id, router.query.slug],
-  );
+  const idParam = router.query.id || router.query.slug;
   const [{ data, fetching }] = useQuery({
     query: CohortGroupDocument,
     variables: { id: idParam || '0' },
@@ -30,19 +27,20 @@ function TrainingGroupPage() {
   const item = data?.cohortGroup;
 
   React.useEffect(() => {
-    if (!router.isReady || fetching) return;
-    if (idParam && !item) {
-      void router.replace('/404');
-    }
-  }, [fetching, idParam, item, router]);
+    if (!router.isReady || !idParam) return;
 
-  React.useEffect(() => {
-    if (!router.isReady || !item) return;
+    if (!fetching && !item) {
+      void router.replace('/404');
+      return;
+    }
+
+    if (!item) return;
+
     const expectedSlug = slugify(item.name);
     if (expectedSlug && router.query.slug !== expectedSlug) {
       void router.replace(`/treninkove-programy/${item.id}/${expectedSlug}`);
     }
-  }, [item, router]);
+  }, [fetching, idParam, item, router]);
 
   if (!item) {
     return (

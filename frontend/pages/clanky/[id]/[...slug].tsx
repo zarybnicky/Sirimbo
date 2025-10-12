@@ -18,10 +18,7 @@ const QueryParams = z.object({
 
 function ArticlePage() {
   const router = useTypedRouter(QueryParams);
-  const idParam = React.useMemo(
-    () => router.query.id || router.query.slug,
-    [router.query.id, router.query.slug],
-  );
+  const idParam = router.query.id || router.query.slug;
   const isNumericId = React.useMemo(() => {
     if (!idParam) return false;
     return !Number.isNaN(Number.parseInt(idParam, 10));
@@ -37,23 +34,21 @@ function ArticlePage() {
     if (!router.isReady || !idParam) return;
     if (!isNumericId) {
       void router.replace('/404');
+      return;
     }
-  }, [idParam, isNumericId, router]);
 
-  React.useEffect(() => {
-    if (!router.isReady || fetching) return;
-    if (isNumericId && idParam && !item) {
+    if (!fetching && !item) {
       void router.replace('/404');
+      return;
     }
-  }, [fetching, idParam, isNumericId, item, router]);
 
-  React.useEffect(() => {
-    if (!router.isReady || !item) return;
+    if (!item) return;
+
     const expectedSlug = slugify(item.atJmeno);
     if (expectedSlug && router.query.slug !== expectedSlug) {
       void router.replace(`/clanky/${item.id}/${expectedSlug}`);
     }
-  }, [item, router]);
+  }, [fetching, idParam, isNumericId, item, router]);
 
   if (!item) {
     return (
