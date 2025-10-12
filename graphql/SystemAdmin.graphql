@@ -1,0 +1,50 @@
+query SystemAdminTenants {
+  systemAdminTenants {
+    nodes {
+      id
+      name
+      description
+      bankAccount
+      origins
+      czIco
+      czDic
+      address {
+        street
+        conscriptionNumber
+        orientationNumber
+        district
+        city
+        region
+        postalCode
+      }
+      membershipCount
+      trainerCount
+      administratorCount
+      sessionCountLast30Days
+      sessionCountPerTrainerLast30Days
+    }
+  }
+}
+
+mutation SystemAdminUpdateTenant($input: SystemAdminUpdateTenantInput!) {
+  systemAdminUpdateTenant(input: $input) {
+    tenant {
+      id
+      name
+      description
+      bankAccount
+      origins
+      czIco
+      czDic
+      address {
+        street
+        conscriptionNumber
+        orientationNumber
+        district
+        city
+        region
+        postalCode
+      }
+    }
+  }
+}

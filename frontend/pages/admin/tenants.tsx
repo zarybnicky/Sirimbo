@@ -4,7 +4,14 @@ import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { TitleBar } from '@/ui/TitleBar';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
 import { typographyCls } from '@/ui/style';
 import * as React from 'react';
@@ -13,119 +20,14 @@ import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import {
+  SystemAdminTenantsDocument,
+  SystemAdminUpdateTenantDocument,
+} from '@/graphql/SystemAdmin';
+import { AddressDomain, SystemAdminTenantsRecord } from '@/graphql';
 
 const integerFormatter = new Intl.NumberFormat('cs-CZ');
 const decimalFormatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
-
-const SYSTEM_ADMIN_TENANTS_QUERY = /* GraphQL */ `
-  query SystemAdminTenants {
-    systemAdminTenants {
-      id
-      name
-      description
-      bankAccount
-      origins
-      czIco
-      czDic
-      address {
-        street
-        conscriptionNumber
-        orientationNumber
-        district
-        city
-        region
-        postalCode
-      }
-      membershipCount
-      trainerCount
-      administratorCount
-      sessionCountLast30Days
-      sessionCountPerTrainerLast30Days
-    }
-  }
-`;
-
-const SYSTEM_ADMIN_UPDATE_TENANT_MUTATION = /* GraphQL */ `
-  mutation SystemAdminUpdateTenant($input: SystemAdminUpdateTenantInput!) {
-    systemAdminUpdateTenant(input: $input) {
-      tenant {
-        id
-        name
-        description
-        bankAccount
-        origins
-        czIco
-        czDic
-        address {
-          street
-          conscriptionNumber
-          orientationNumber
-          district
-          city
-          region
-          postalCode
-        }
-      }
-    }
-  }
-`;
-
-type AddressDomain = {
-  street?: string | null;
-  conscriptionNumber?: string | null;
-  orientationNumber?: string | null;
-  district?: string | null;
-  city?: string | null;
-  region?: string | null;
-  postalCode?: string | null;
-};
-
-type TenantRow = {
-  id: string;
-  name: string;
-  description: string;
-  bankAccount: string;
-  origins: string[] | null;
-  czIco: string;
-  czDic: string;
-  address: AddressDomain | null;
-  membershipCount: number;
-  trainerCount: number;
-  administratorCount: number;
-  sessionCountLast30Days: number;
-  sessionCountPerTrainerLast30Days: number;
-};
-
-type SystemAdminTenantsQueryResult = {
-  systemAdminTenants: TenantRow[];
-};
-
-type UpdateTenantVariables = {
-  input: {
-    tenantId: string;
-    name: string;
-    description: string;
-    bankAccount: string;
-    origins: string[];
-    czIco: string;
-    czDic: string;
-  };
-};
-
-type UpdateTenantResult = {
-  systemAdminUpdateTenant: {
-    tenant: {
-      id: string;
-      name: string;
-      description: string;
-      bankAccount: string;
-      origins: string[] | null;
-      czIco: string;
-      czDic: string;
-      address: AddressDomain | null;
-    };
-  };
-};
 
 const TenantFormSchema = z.object({
   name: z.string().min(1, 'Název je povinný'),
@@ -139,8 +41,8 @@ const TenantFormSchema = z.object({
 type TenantFormValues = z.infer<typeof TenantFormSchema>;
 
 export default function SystemAdminTenantsPage() {
-  const [{ data, fetching, error }, reexecute] = useQuery<SystemAdminTenantsQueryResult>({
-    query: SYSTEM_ADMIN_TENANTS_QUERY,
+  const [{ data, fetching, error }, reexecute] = useQuery({
+    query: SystemAdminTenantsDocument,
   });
 
   return (
@@ -160,10 +62,14 @@ export default function SystemAdminTenantsPage() {
       )}
 
       <div className="mt-6 grid gap-4">
-        {data?.systemAdminTenants?.map((tenant) => (
-          <TenantCard key={tenant.id} tenant={tenant} onUpdated={() => reexecute({ requestPolicy: 'network-only' })} />
+        {data?.systemAdminTenants?.nodes?.map((tenant) => (
+          <TenantCard
+            key={tenant.id}
+            tenant={tenant}
+            onUpdated={() => reexecute({ requestPolicy: 'network-only' })}
+          />
         ))}
-        {!fetching && !error && !data?.systemAdminTenants?.length && (
+        {!fetching && !error && !data?.systemAdminTenants?.nodes?.length && (
           <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
             Nebyly nalezeny žádné tenanty.
           </div>
@@ -174,7 +80,7 @@ export default function SystemAdminTenantsPage() {
 }
 
 type TenantCardProps = {
-  tenant: TenantRow;
+  tenant: SystemAdminTenantsRecord;
   onUpdated: () => void;
 };
 
@@ -185,14 +91,18 @@ function TenantCard({ tenant, onUpdated }: TenantCardProps) {
     <div className="space-y-3 rounded-lg border border-neutral-6 bg-neutral-2 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className={typographyCls({ variant: 'section', className: 'mb-1' })}>{tenant.name}</div>
+          <div className={typographyCls({ variant: 'section', className: 'mb-1' })}>
+            {tenant.name}
+          </div>
           <div className="text-xs text-neutral-11">ID: {tenant.id}</div>
         </div>
         <TenantEditDialog tenant={tenant} onUpdated={onUpdated} />
       </div>
 
       {tenant.description && (
-        <p className="whitespace-pre-wrap text-sm text-neutral-12">{tenant.description}</p>
+        <p className="whitespace-pre-wrap text-sm text-neutral-12">
+          {tenant.description}
+        </p>
       )}
 
       <dl className="grid gap-2 text-sm text-neutral-12 sm:grid-cols-2">
@@ -219,19 +129,23 @@ function TenantCard({ tenant, onUpdated }: TenantCardProps) {
 
       <div className="flex flex-wrap gap-3 text-xs">
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Aktivní členové: {integerFormatter.format(tenant.membershipCount)}
+          Aktivní členové:{' '}
+          {integerFormatter.format(Number.parseFloat(tenant.membershipCount || ''))}
         </span>
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Lekce (30 dní): {integerFormatter.format(tenant.sessionCountLast30Days)}
+          Lekce (30 dní):{' '}
+          {integerFormatter.format(Number.parseFloat(tenant.sessionCountLast30Days || ''))}
         </span>
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Lekce / trenér (30 dní): {decimalFormatter.format(tenant.sessionCountPerTrainerLast30Days)}
+          Lekce / trenér (30 dní):{' '}
+          {decimalFormatter.format(tenant.sessionCountPerTrainerLast30Days || 0)}
         </span>
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Trenéři: {integerFormatter.format(tenant.trainerCount)}
+          Trenéři: {integerFormatter.format(Number.parseFloat(tenant.trainerCount || ''))}
         </span>
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Administrátoři: {integerFormatter.format(tenant.administratorCount)}
+          Administrátoři:{' '}
+          {integerFormatter.format(Number.parseFloat(tenant.administratorCount || ''))}
         </span>
       </div>
     </div>
@@ -239,7 +153,7 @@ function TenantCard({ tenant, onUpdated }: TenantCardProps) {
 }
 
 type TenantEditDialogProps = {
-  tenant: TenantRow;
+  tenant: SystemAdminTenantsRecord;
   onUpdated: () => void;
 };
 
@@ -248,11 +162,9 @@ function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
   const defaultValues = React.useMemo(() => createFormState(tenant), [tenant]);
   const { control, handleSubmit, reset } = useForm({
     resolver: zodResolver(TenantFormSchema),
-    defaultValues
+    defaultValues,
   });
-  const [, updateTenant] = useMutation<UpdateTenantResult, UpdateTenantVariables>(
-    SYSTEM_ADMIN_UPDATE_TENANT_MUTATION
-  );
+  const [, updateTenant] = useMutation(SystemAdminUpdateTenantDocument);
 
   React.useEffect(() => {
     if (open) {
@@ -294,23 +206,14 @@ function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit.execute)}>
           <FormError error={onSubmit.error ?? null} />
 
-          <TextFieldElement
-            control={control}
-            name="name"
-            label="Název"
-            required
-          />
+          <TextFieldElement control={control} name="name" label="Název" required />
           <TextAreaElement
             control={control}
             name="description"
             label="Popis"
             className="min-h-24"
           />
-          <TextFieldElement
-            control={control}
-            name="bankAccount"
-            label="Bankovní účet"
-          />
+          <TextFieldElement control={control} name="bankAccount" label="Bankovní účet" />
           <TextFieldElement
             control={control}
             name="origins"
@@ -331,9 +234,9 @@ function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
   );
 }
 
-function createFormState(tenant: TenantRow): TenantFormValues {
+function createFormState(tenant: SystemAdminTenantsRecord): TenantFormValues {
   return {
-    name: tenant.name,
+    name: tenant.name || '',
     description: tenant.description || '',
     bankAccount: tenant.bankAccount || '',
     origins: tenant.origins?.join(', ') ?? '',
@@ -348,9 +251,13 @@ function formatAddress(address?: AddressDomain | null) {
   const streetParts = [
     address.street,
     [address.conscriptionNumber, address.orientationNumber].filter(Boolean).join('/'),
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const cityLine = [address.postalCode, address.city].filter(Boolean).join(' ');
 
-  return [streetParts, address.district, cityLine, address.region].filter(Boolean).join(', ');
+  return [streetParts, address.district, cityLine, address.region]
+    .filter(Boolean)
+    .join(', ');
 }
