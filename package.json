@@ -46,9 +46,9 @@
     }
   },
   "dependencies": {
-    "graphql": "^16.10.0",
+    "graphql": "^16.11.0",
     "prop-types": "^15.8.1",
-    "squawk-cli": "^1.4.0"
+    "squawk-cli": "^1.6.1"
   },
   "prettier": {
     "printWidth": 90,

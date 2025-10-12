@@ -28,8 +28,8 @@ export function PersonList() {
   const [cohort, setCohort] = useSessionStorage('personfilter-cohort');
   const [isTrainer, setIsTrainer] = useSessionStorage('personfilter-trainer');
   const [isAdmin, setIsAdmin] = useSessionStorage('personfilter-admin');
+  const [includeFormer, setIncludeFormer] = useSessionStorage('personfilter-include-former');
   const [search, setSearch] = useSessionStorage('personfilter-search', '');
-  const [membershipState, setMembershipState] = useSessionStorage('personfilter-membership-state', 'current');
 
   const { data: cohorts } = useCohorts();
   const cohortOptions = React.useMemo(() => [
@@ -38,18 +38,13 @@ export function PersonList() {
   ], [cohorts]);
   const [tab] = useQueryParam('tab', StringParam);
 
-  const membershipOptions = React.useMemo(() => [
-    { id: 'current', label: 'Aktuální členové' },
-    { id: 'former', label: 'Bývalí členové' },
-  ], []);
-
   const [{ data }] = useQuery({
     query: PersonListDocument,
     variables: {
       inCohorts: cohort === 'none' ? []  : (cohort ? [cohort] : null),
       isAdmin: !!isAdmin || null,
       isTrainer: !!isTrainer || null,
-      membershipState: membershipState || 'current',
+      membershipState: includeFormer ? 'former' : 'current',
     },
   });
   const nodes = React.useMemo(() => {
@@ -91,19 +86,19 @@ export function PersonList() {
 
         <div className="mt-2 w-full flex gap-2 justify-end">
           <ComboboxButton
-            value={membershipState}
-            onChange={setMembershipState}
-            placeholder="stav členství"
-            options={membershipOptions}
-          />
-
-          <ComboboxButton
             value={cohort}
             onChange={setCohort}
             placeholder="jen skupina"
             options={cohortOptions}
           />
 
+          <button
+            type="button"
+            className={buttonCls({ size: 'sm', variant: includeFormer ? 'primary' : 'outline' })}
+            onClick={() => setIncludeFormer(x => x ? null : '1')}
+          >
+            Zobrazit bývalé
+          </button>
           <button
             type="button"
             className={buttonCls({ size: 'sm', variant: isTrainer ? 'primary' : 'outline' })}
