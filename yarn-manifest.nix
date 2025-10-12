@@ -16214,7 +16214,7 @@ let
         "@tsconfig/node18" = packages."@tsconfig/node18@npm:18.2.4";
         "@types/node" = packages."@types/node@npm:22.18.10";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
       };
     };
     "@rtsao/scc@npm:1.1.0" = {
@@ -19960,7 +19960,7 @@ let
         "graphemer" = packages."graphemer@npm:1.4.0";
         "ignore" = packages."ignore@npm:5.3.1";
         "natural-compare" = packages."natural-compare@npm:1.4.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
@@ -19979,7 +19979,7 @@ let
         "graphemer" = packages."graphemer@npm:1.4.0";
         "ignore" = packages."ignore@npm:5.3.1";
         "natural-compare" = packages."natural-compare@npm:1.4.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
@@ -20044,7 +20044,7 @@ let
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:7.18.0";
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:7.18.0";
         "eslint" = packages."eslint@npm:8.57.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:f75b817dd18d959fcc2593c7d44575343f300beb628e54fc461a6270a4daf63d80a22b39919eca73dfa86baadba70f0735e3562912ae15d97999c0b807b56492#npm:7.18.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
       };
@@ -20058,7 +20058,7 @@ let
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
         "eslint" = packages."eslint@npm:8.57.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
       };
@@ -20149,7 +20149,7 @@ let
       canonicalPackage = packages."@typescript-eslint/type-utils@npm:8.10.0";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
@@ -20162,7 +20162,7 @@ let
       canonicalPackage = packages."@typescript-eslint/type-utils@npm:7.18.0";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:f75b817dd18d959fcc2593c7d44575343f300beb628e54fc461a6270a4daf63d80a22b39919eca73dfa86baadba70f0735e3562912ae15d97999c0b807b56492#npm:7.18.0";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
@@ -20256,7 +20256,7 @@ let
         "is-glob" = packages."is-glob@npm:4.0.3";
         "minimatch" = packages."minimatch@npm:9.0.5";
         "semver" = packages."semver@npm:7.7.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
       };
@@ -20302,7 +20302,7 @@ let
         "is-glob" = packages."is-glob@npm:4.0.3";
         "minimatch" = packages."minimatch@npm:9.0.5";
         "semver" = packages."semver@npm:7.7.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
       };
@@ -26722,7 +26722,7 @@ let
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.10.4";
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.9";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
         "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:3.5.5";
@@ -30937,7 +30937,7 @@ let
       canonicalPackage = packages."i18next@npm:25.6.0";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
       };
     };
     "iban@npm:0.0.14" = {
@@ -41914,7 +41914,7 @@ let
         "@types/ws" = packages."@types/ws@npm:8.18.1";
         "esbuild" = packages."esbuild@npm:0.25.10";
         "eslint" = packages."eslint@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.22.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
       };
     };
     "rozpisovnik-graphql@workspace:graphql" = {
@@ -41974,7 +41974,7 @@ let
         "@types/react" = packages."@types/react@npm:18.3.26";
         "@types/react-native" = packages."@types/react-native@npm:0.73.0";
         "babel-preset-expo" = packages."babel-preset-expo@npm:11.0.15";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
       };
     };
     "rozpisovnik-web@workspace:frontend" = {
@@ -42110,7 +42110,7 @@ let
         "eslint-plugin-unicorn" = packages."eslint-plugin-unicorn@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:56.0.1";
         "postcss" = packages."postcss@npm:8.5.6";
         "prettier" = packages."prettier@npm:3.6.2";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "typescript-eslint" = packages."typescript-eslint@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
         "webpack" = packages."webpack@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.102.1";
         "windy-radix-palette" = packages."windy-radix-palette@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.6.1";
@@ -42151,7 +42151,7 @@ let
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "esbuild" = packages."esbuild@npm:0.25.10";
         "glob" = packages."glob@npm:11.0.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
       };
     };
     "rozpisovnik@workspace:." = {
@@ -42183,7 +42183,7 @@ let
         "graphile-migrate" = packages."graphile-migrate@npm:1.4.1";
         "graphql-tag" = packages."graphql-tag@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:2.12.6";
         "prettier" = packages."prettier@npm:3.6.2";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "typescript-language-server" = packages."typescript-language-server@npm:4.4.1";
       };
     };
@@ -44715,7 +44715,7 @@ let
       reference = "virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
       canonicalPackage = packages."ts-api-utils@npm:1.3.0";
       dependencies = {
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
       };
     };
     "ts-interface-checker@npm:0.1.13" = {
@@ -45056,7 +45056,7 @@ let
       canonicalPackage = packages."typescript-eslint@npm:7.18.0";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
@@ -45093,33 +45093,33 @@ let
         "vscode-languageserver-protocol" = packages."vscode-languageserver-protocol@npm:3.17.3";
       };
     };
-    "typescript@npm:5.6.3" = {
+    "typescript@npm:5.7.3" = {
       name = "typescript";
-      reference = "npm:5.6.3";
+      reference = "npm:5.7.3";
       linkType = "HARD";
-      outputName = "typescript-5.6.3-cc9b3687b0";
-      outputHash = "c328e418e124b500908781d9f7b9b93cf08b66bf5936d94332b463822eea2f4e62973bfb3b8a745fdc038785cb66cf59d1092bac3ec2ac6a3e5854687f7833f1";
+      outputName = "typescript-5.7.3-e71b273452";
+      outputHash = "6a7e556de91db3d34dc51cd2600e8e91f4c312acd8e52792f243c7818dfadb27bae677175fad6947f9c81efb6c57eb6b2d0c736f196a6ee2f1f7d57b74fc92fa";
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~5.6.3";
-      checksum = "10/c328e418e124b500908781d9f7b9b93cf08b66bf5936d94332b463822eea2f4e62973bfb3b8a745fdc038785cb66cf59d1092bac3ec2ac6a3e5854687f7833f1";
+      descriptorRange = "npm:~5.7.0";
+      checksum = "10/6a7e556de91db3d34dc51cd2600e8e91f4c312acd8e52792f243c7818dfadb27bae677175fad6947f9c81efb6c57eb6b2d0c736f196a6ee2f1f7d57b74fc92fa";
       bin = {
         "tsc" = "bin/tsc";
         "tsserver" = "bin/tsserver";
       };
     };
-    "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40" = {
+    "typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5" = {
       name = "typescript";
-      reference = "patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40";
+      reference = "patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5";
       linkType = "HARD";
-      outputName = "typescript-5.6.3-8964a48ba3";
-      outputHash = "00504c01ee42d470c23495426af07512e25e6546bce7e24572e72a9ca2e6b2e9bea63de4286c3cfea644874da1467dcfca23f4f98f7caf20f8b03c0213bb6837";
+      outputName = "typescript-5.7.3-6da68bae26";
+      outputHash = "dc58d777eb4c01973f7fbf1fd808aad49a0efdf545528dab9b07d94fdcb65b8751742804c3057e9619a4627f2d9cc85547fdd49d9f4326992ad0181b49e61d81";
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "patch:typescript@npm%3A~5.6.3#optional!builtin<compat/typescript>";
-      checksum = "10/00504c01ee42d470c23495426af07512e25e6546bce7e24572e72a9ca2e6b2e9bea63de4286c3cfea644874da1467dcfca23f4f98f7caf20f8b03c0213bb6837";
+      descriptorRange = "patch:typescript@npm%3A~5.7.0#optional!builtin<compat/typescript>";
+      checksum = "10/dc58d777eb4c01973f7fbf1fd808aad49a0efdf545528dab9b07d94fdcb65b8751742804c3057e9619a4627f2d9cc85547fdd49d9f4326992ad0181b49e61d81";
       bin = {
         "tsc" = "bin/tsc";
         "tsserver" = "bin/tsserver";
