@@ -18,8 +18,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  folders: z.record(z.string(), z.boolean().default(false)),
-  seasons: z.record(z.string(), z.boolean().default(false)),
+  folders: z.record(z.string(), z.boolean().prefault(false)),
+  seasons: z.record(z.string(), z.boolean().prefault(false)),
 });
 
 type FolderOrSeason = {

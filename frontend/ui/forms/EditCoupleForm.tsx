@@ -11,8 +11,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  since: z.date().nullish().default(null),
-  until: z.date().nullish().default(null),
+  since: z.date().nullish().prefault(null),
+  until: z.date().nullish().prefault(null),
 });
 
 export function EditCoupleForm({ id }: { id: string }) {

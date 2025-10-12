@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  courses: z.record(z.string(), z.boolean().default(false)),
+  courses: z.record(z.string(), z.boolean().prefault(false)),
 });
 
 type SimpleCourse = {

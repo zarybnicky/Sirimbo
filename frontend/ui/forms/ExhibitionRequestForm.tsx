@@ -21,7 +21,7 @@ const Form = z.object({
   event: z.string(),
   exhibition: z.string().nullish(),
   phone: z.string(),
-  email: z.string().email(),
+  email: z.email(),
   notes: z.string().nullish(),
   op: z.boolean().refine(x => x),
 });

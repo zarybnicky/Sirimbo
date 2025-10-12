@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  note: z.string().default(''),
+  note: z.string().prefault(''),
 });
 
 type FormValues = z.infer<typeof Form>;

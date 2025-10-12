@@ -21,18 +21,18 @@ const RegistrationSchema = z.object({
   label: z.string(),
   personId: z.string().nullable(),
   coupleId: z.string().nullable(),
-  note: z.string().default(''),
+  note: z.string().prefault(''),
   lessons: z
     .array(
       z.object({
         lessonCount: z.number().min(0).optional(),
       }),
     )
-    .default([]),
+    .prefault([]),
 });
 
 const Form = z.object({
-  registrations: z.array(RegistrationSchema).default([]),
+  registrations: z.array(RegistrationSchema).prefault([]),
 });
 
 type FormValues = z.infer<typeof Form>;

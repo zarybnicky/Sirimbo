@@ -14,13 +14,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  prefixTitle: z.string().default(''),
+  prefixTitle: z.string().prefault(''),
   firstName: z.string(),
   lastName: z.string(),
-  suffixTitle: z.string().default(''),
+  suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN']),
   birthDate: z.string().nullish(),
-  email: z.string().email().nullish(),
+  email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),
   cstsId: z
     .string()
@@ -35,15 +35,15 @@ const Form = z.object({
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
-  bio: z.string().default(''),
+  bio: z.string().prefault(''),
   address: z.object({
-    city: z.string().nullish().default(''),
-    conscriptionNumber: z.string().nullish().default(''),
-    district: z.string().nullish().default(''),
-    orientationNumber: z.string().nullish().default(''),
-    postalCode: z.string().nullish().default(''),
-    region: z.string().nullish().default(''),
-    street: z.string().nullish().default(''),
+    city: z.string().nullish().prefault(''),
+    conscriptionNumber: z.string().nullish().prefault(''),
+    district: z.string().nullish().prefault(''),
+    orientationNumber: z.string().nullish().prefault(''),
+    postalCode: z.string().nullish().prefault(''),
+    region: z.string().nullish().prefault(''),
+    street: z.string().nullish().prefault(''),
   }),
 });
 

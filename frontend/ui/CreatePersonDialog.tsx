@@ -28,10 +28,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  prefixTitle: z.string().default(''),
+  prefixTitle: z.string().prefault(''),
   firstName: z.string(),
   lastName: z.string(),
-  suffixTitle: z.string().default(''),
+  suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED']),
   birthDate: z.string().nullish(),
   cstsId: z
@@ -47,16 +47,16 @@ const Form = z.object({
     .regex(/^$|[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
-  bio: z.string().default(''),
-  email: z.string().email().optional(),
+  bio: z.string().prefault(''),
+  email: z.email().optional(),
   phone: z.string().optional(),
-  personId: z.string().nullish().default(null),
-  isMember: z.boolean().default(false),
-  isTrainer: z.boolean().default(false),
-  isAdmin: z.boolean().default(false),
-  sendInvitation: z.boolean().default(false),
+  personId: z.string().nullish().prefault(null),
+  isMember: z.boolean().prefault(false),
+  isTrainer: z.boolean().prefault(false),
+  isAdmin: z.boolean().prefault(false),
+  sendInvitation: z.boolean().prefault(false),
   joinDate: z.date(),
-  cohortIds: z.array(z.string()).default([]),
+  cohortIds: z.array(z.string()).prefault([]),
 });
 
 export function CreatePersonDialog() {

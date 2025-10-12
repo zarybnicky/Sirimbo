@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  email: z.string().email(),
+  email: z.email(),
   passwd: z.string(),
 });
 

@@ -3,7 +3,7 @@ import { MAX_IDT, MIN_IDT } from './idts.ts';
 
 const rankingPointsSchema = z.object({
   rankingPointsAge: z.string(),
-  medicalCheckupExpiration: z.string().optional().nullable().default(null),
+  medicalCheckupExpiration: z.string().optional().nullable().prefault(null),
   personalClass: z.string(),
   personalPoints: z.number().finite(),
   personalDomesticFinaleCount: z.number().finite(),
@@ -37,7 +37,7 @@ const athleteSchema = z.object({
   validFor: z.string(),
   age: z.string(),
   sex: z.string(),
-  medicalCheckupExpiration: z.string().nullable().optional().default(null),
+  medicalCheckupExpiration: z.string().nullable().optional().prefault(null),
   barcode: z.string(),
   rankingPoints: z.array(rankingPointsSchema),
   stt: rankingPointsSchema.optional(),
@@ -45,7 +45,7 @@ const athleteSchema = z.object({
 });
 
 const athletesResponseSchema = z.object({
-  collection: z.array(athleteSchema).default([]),
+  collection: z.array(athleteSchema).prefault([]),
 });
 
 export type RankingPoints = z.infer<typeof rankingPointsSchema>;

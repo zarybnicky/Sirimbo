@@ -16,17 +16,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 const Form = z.object({
   firstName: z.string(),
   lastName: z.string(),
-  prefixTitle: z.string().default(''),
-  suffixTitle: z.string().default(''),
+  prefixTitle: z.string().prefault(''),
+  suffixTitle: z.string().prefault(''),
   nationality: z.string(),
   birthDate: z.string().nullish(),
   taxIdentificationNumber: z
     .string()
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
-  email: z.string().email(),
+  email: z.email(),
   phone: z.string().min(9).max(14),
-  note: z.string().default(''),
+  note: z.string().prefault(''),
 });
 
 export function NewExternalRegistrationForm({ event }: { event: EventFragment; }) {

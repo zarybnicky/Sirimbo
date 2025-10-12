@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 const Form = z.object({
   name: z.string(),
   description: z.string().nullish(),
-  isPublic: z.boolean().default(false),
+  isPublic: z.boolean().prefault(false),
   address: z.object({
     city: z.string().nullish(),
     conscriptionNumber: z.string().nullish(),

@@ -16,9 +16,9 @@ const Form = z
     checkPass: z.string(),
   })
   .refine((data) => data.newPass === data.checkPass, {
-    message: 'Nová hesla se neshodují',
     path: ['checkPass'],
-  });
+      error: 'Nová hesla se neshodují'
+});
 
 export function ChangePasswordForm() {
   const { onSuccess } = useFormResult();

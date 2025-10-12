@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { cardCls } from '@/ui/style';
 
 const Form = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 
 function ForgottenPasswordForm() {

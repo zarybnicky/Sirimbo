@@ -17,9 +17,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   name: z.string(),
-  description: z.string().optional().default(''),
+  description: z.string().optional().prefault(''),
   location: z.string().nullish(),
-  isVisible: z.boolean().default(false),
+  isVisible: z.boolean().prefault(false),
   colorRgb: z.string(),
   ordering: z.number().nullish(),
   cohortGroupId: z.string().nullish(),

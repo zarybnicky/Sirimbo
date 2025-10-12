@@ -23,8 +23,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   atJmeno: z.string().min(1, 'Zadejte název článku'),
-  atPreview: z.string().optional().default(''),
-  atText: z.string().optional().default(''),
+  atPreview: z.string().optional().prefault(''),
+  atText: z.string().optional().prefault(''),
 });
 
 type FormValues = z.infer<typeof Form>;

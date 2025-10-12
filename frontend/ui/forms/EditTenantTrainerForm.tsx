@@ -12,13 +12,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  since: z.date().nullish().default(null),
-  until: z.date().nullish().default(null),
-  memberPrice: z.number().optional().nullish().default(null),
-  guestPrice: z.number().optional().nullish().default(null),
-  memberPayout: z.number().optional().nullish().default(null),
-  guestPayout: z.number().optional().nullish().default(null),
-  createPayoutPayments: z.boolean().optional().default(true),
+  since: z.date().nullish().prefault(null),
+  until: z.date().nullish().prefault(null),
+  memberPrice: z.number().optional().nullish().prefault(null),
+  guestPrice: z.number().optional().nullish().prefault(null),
+  memberPayout: z.number().optional().nullish().prefault(null),
+  guestPayout: z.number().optional().nullish().prefault(null),
+  createPayoutPayments: z.boolean().optional().prefault(true),
 });
 
 export function EditTenantTrainerForm({ id }: { id: string }) {

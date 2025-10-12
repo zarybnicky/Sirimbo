@@ -47,13 +47,13 @@ const AUDIENCE_ROLE_VALUES = ['MEMBER', 'TRAINER', 'ADMINISTRATOR'] as const;
 
 const Form = z.object({
   title: z.string().min(1, 'Zadejte nadpis oznámení'),
-  body: z.string().default(''),
-  isVisible: z.boolean().default(true),
-  isSticky: z.boolean().default(false),
+  body: z.string().prefault(''),
+  isVisible: z.boolean().prefault(true),
+  isSticky: z.boolean().prefault(false),
   scheduledSince: z.date().nullable().optional(),
   scheduledUntil: z.date().nullable().optional(),
-  audienceRoles: z.array(z.enum(AUDIENCE_ROLE_VALUES)).default([]),
-  cohortIds: z.array(z.string()).default([]),
+  audienceRoles: z.array(z.enum(AUDIENCE_ROLE_VALUES)).prefault([]),
+  cohortIds: z.array(z.string()).prefault([]),
 });
 
 type FormValues = z.infer<typeof Form>;

@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 const Form = z.object({
   date: z.date(),
   amount: z.number(),
-  description: z.string().nullish().default(null),
+  description: z.string().nullish().prefault(null),
 });
 
 export function CreateCreditTransactionForm({ person }: {

@@ -17,13 +17,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  prefixTitle: z.string().default(''),
+  prefixTitle: z.string().prefault(''),
   firstName: z.string(),
   lastName: z.string(),
-  suffixTitle: z.string().default(''),
+  suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN']),
   birthDate: z.string().nullish(),
-  email: z.string().email().nullish(),
+  email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),
   cstsId: z
     .string()
@@ -38,7 +38,7 @@ const Form = z.object({
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
-  bio: z.string().default(''),
+  bio: z.string().prefault(''),
 });
 
 export function CreateMembershipApplicationForm({ data }: {

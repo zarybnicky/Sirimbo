@@ -10066,27 +10066,31 @@ let
         "graphql" = packages."graphql@npm:16.11.0";
       };
     };
-    "@hookform/resolvers@npm:3.9.1" = {
+    "@hookform/resolvers@npm:5.2.2" = {
       name = "@hookform/resolvers";
-      reference = "npm:3.9.1";
+      reference = "npm:5.2.2";
       linkType = "HARD";
-      outputName = "hookform-resolvers-3.9.1-f46d34e57e";
-      outputHash = "4e7a24f79ead48db5c869c17b5f47412a7d628939f743bdc1248ea3a291b1a9dd777cd02f84326e91d258283a6351566f13bca5cb30f996e5a9db7ee490b5cc5";
+      outputName = "hookform-resolvers-5.2.2-56cc31b72d";
+      outputHash = "93447287dc89827c517c72dc61e3be0217d3a5d9cbdb532317e5f5fd176c3eedb2ccd62d3c51fb403812939c9b7a4ebcaca35659a9bfb90e16ec38a2092d13a2";
       flatName = "resolvers";
       languageName = "node";
       scope = "hookform";
-      descriptorRange = "npm:~3.9.1";
-      checksum = "10/4e7a24f79ead48db5c869c17b5f47412a7d628939f743bdc1248ea3a291b1a9dd777cd02f84326e91d258283a6351566f13bca5cb30f996e5a9db7ee490b5cc5";
+      descriptorRange = "npm:~5.2.2";
+      checksum = "10/93447287dc89827c517c72dc61e3be0217d3a5d9cbdb532317e5f5fd176c3eedb2ccd62d3c51fb403812939c9b7a4ebcaca35659a9bfb90e16ec38a2092d13a2";
+      dependencies = {
+        "@standard-schema/utils" = packages."@standard-schema/utils@npm:0.3.0";
+      };
       packagePeers = [
         "@types/react-hook-form"
         "react-hook-form"
       ];
     };
-    "@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.1" = {
+    "@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.2" = {
       name = "@hookform/resolvers";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.1";
-      canonicalPackage = packages."@hookform/resolvers@npm:3.9.1";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.2";
+      canonicalPackage = packages."@hookform/resolvers@npm:5.2.2";
       dependencies = {
+        "@standard-schema/utils" = packages."@standard-schema/utils@npm:0.3.0";
         "react-hook-form" = packages."react-hook-form@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.65.0";
       };
     };
@@ -16208,7 +16212,7 @@ let
       descriptorRange = "workspace:csts";
       dependencies = {
         "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.16.3";
-        "zod" = packages."zod@npm:3.25.76";
+        "zod" = packages."zod@npm:4.1.12";
       };
       devDependencies = {
         "@tsconfig/node18" = packages."@tsconfig/node18@npm:18.2.4";
@@ -18356,161 +18360,173 @@ let
         "tslib" = packages."tslib@npm:2.8.1";
       };
     };
-    "@swc/core-darwin-arm64@npm:1.13.20" = {
-      name = "@swc/core-darwin-arm64";
-      reference = "npm:1.13.20";
+    "@standard-schema/utils@npm:0.3.0" = {
+      name = "@standard-schema/utils";
+      reference = "npm:0.3.0";
       linkType = "HARD";
-      outputName = "swc-core-darwin-arm64-1.13.20-7028e6a9e8";
+      outputName = "standard-schema-utils-0.3.0-37537c524c";
+      outputHash = "7084f875d322792f2e0a5904009434c8374b9345b09ba89828b68fd56fa3c2b366d35bf340d9e8c72736ef01793c2f70d350c372ed79845dc3566c58d34b4b51";
+      flatName = "utils";
+      languageName = "node";
+      scope = "standard-schema";
+      descriptorRange = "npm:^0.3.0";
+      checksum = "10/7084f875d322792f2e0a5904009434c8374b9345b09ba89828b68fd56fa3c2b366d35bf340d9e8c72736ef01793c2f70d350c372ed79845dc3566c58d34b4b51";
+    };
+    "@swc/core-darwin-arm64@npm:1.13.5" = {
+      name = "@swc/core-darwin-arm64";
+      reference = "npm:1.13.5";
+      linkType = "HARD";
+      outputName = "swc-core-darwin-arm64-1.13.5-dc7bbf06c2";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "core-darwin-arm64";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core-darwin-x64@npm:1.13.20" = {
+    "@swc/core-darwin-x64@npm:1.13.5" = {
       name = "@swc/core-darwin-x64";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-darwin-x64-1.13.20-e93614ef02";
+      outputName = "swc-core-darwin-x64-1.13.5-81855e2f82";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "core-darwin-x64";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core-linux-arm-gnueabihf@npm:1.13.20" = {
+    "@swc/core-linux-arm-gnueabihf@npm:1.13.5" = {
       name = "@swc/core-linux-arm-gnueabihf";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-linux-arm-gnueabihf-1.13.20-d881c1ba5b";
+      outputName = "swc-core-linux-arm-gnueabihf-1.13.5-c183a988ed";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
       flatName = "core-linux-arm-gnueabihf";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core-linux-arm64-gnu@npm:1.13.20" = {
+    "@swc/core-linux-arm64-gnu@npm:1.13.5" = {
       name = "@swc/core-linux-arm64-gnu";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-linux-arm64-gnu-1.13.20-cbc9b529db";
+      outputName = "swc-core-linux-arm64-gnu-1.13.5-d0a46bff00";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "core-linux-arm64-gnu";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core-linux-arm64-musl@npm:1.13.20" = {
+    "@swc/core-linux-arm64-musl@npm:1.13.5" = {
       name = "@swc/core-linux-arm64-musl";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-linux-arm64-musl-1.13.20-4cd03986c7";
+      outputName = "swc-core-linux-arm64-musl-1.13.5-7f6ee15ee0";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
       flatName = "core-linux-arm64-musl";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core-linux-x64-gnu@npm:1.13.20" = {
+    "@swc/core-linux-x64-gnu@npm:1.13.5" = {
       name = "@swc/core-linux-x64-gnu";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-linux-x64-gnu-1.13.20-56f8d988e7";
+      outputName = "swc-core-linux-x64-gnu-1.13.5-c1ac28d794";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-Eqaozb9712WbbuisaV5j/iZKdgExrMVHn1Ms2BH654IsyTm3lvuEwYvYvK8mX6jySVSsPUm3PBRAlHZHMEktfQ==";
+        "x86_64-linux" = "sha512-2RVTgD4Kf5AgIuXUEuifzJczcTD7t+UPOxOfGEswnSHeNshJ63u4hOdpGppX/MvIIMq1dnjqsibbzmgeCBAUEg==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "core-linux-x64-gnu";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core-linux-x64-musl@npm:1.13.20" = {
+    "@swc/core-linux-x64-musl@npm:1.13.5" = {
       name = "@swc/core-linux-x64-musl";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-linux-x64-musl-1.13.20-7d08d0609c";
+      outputName = "swc-core-linux-x64-musl-1.13.5-b115928c75";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
       flatName = "core-linux-x64-musl";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core-win32-arm64-msvc@npm:1.13.20" = {
+    "@swc/core-win32-arm64-msvc@npm:1.13.5" = {
       name = "@swc/core-win32-arm64-msvc";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-win32-arm64-msvc-1.13.20-609a3ac7ac";
+      outputName = "swc-core-win32-arm64-msvc-1.13.5-9f275105e3";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "core-win32-arm64-msvc";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core-win32-ia32-msvc@npm:1.13.20" = {
+    "@swc/core-win32-ia32-msvc@npm:1.13.5" = {
       name = "@swc/core-win32-ia32-msvc";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-win32-ia32-msvc-1.13.20-29588ec07b";
+      outputName = "swc-core-win32-ia32-msvc-1.13.5-f20bf521a1";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isi686);
       flatName = "core-win32-ia32-msvc";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core-win32-x64-msvc@npm:1.13.20" = {
+    "@swc/core-win32-x64-msvc@npm:1.13.5" = {
       name = "@swc/core-win32-x64-msvc";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-win32-x64-msvc-1.13.20-fac6f07c29";
+      outputName = "swc-core-win32-x64-msvc-1.13.5-d74b90478c";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "core-win32-x64-msvc";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:1.13.20";
+      descriptorRange = "npm:1.13.5";
     };
-    "@swc/core@npm:1.13.20" = {
+    "@swc/core@npm:1.13.5" = {
       name = "@swc/core";
-      reference = "npm:1.13.20";
+      reference = "npm:1.13.5";
       linkType = "HARD";
-      outputName = "swc-core-1.13.20-6d90212942";
+      outputName = "swc-core-1.13.5-55e2e860df";
       outputHash = "";
       shouldBeUnplugged = true;
       flatName = "core";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:^1.13.20";
-      checksum = "10/fdbd34f98d894cc765e44bab27da5fa95e604660ae061f5eafeaf459418e1d32e8b8f2333966a6c32fef4770e9948f9cec3bdacc8a35d6b1b32bc48677777261";
+      descriptorRange = "npm:1.13.5";
+      checksum = "10/75b44c5008cd043ca2aa33697aee677b3a30792c7e844d1b636d30fe8f865cbc95e606d396969c4bea9b95eb00bd3fc183b3359ec77d9c6a6f737c473ec2146e";
       dependencies = {
-        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.13.20";
-        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.13.20";
-        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.13.20";
-        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.13.20";
-        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.13.20";
-        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.13.20";
-        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.13.20";
-        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.13.20";
-        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.13.20";
-        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.13.20";
+        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.13.5";
+        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.13.5";
+        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.13.5";
+        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.13.5";
+        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.13.5";
+        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.13.5";
+        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.13.5";
+        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.13.5";
+        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.13.5";
+        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.13.5";
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
         "@swc/types" = packages."@swc/types@npm:0.1.25";
       };
@@ -18519,21 +18535,21 @@ let
         "@types/swc__helpers"
       ];
     };
-    "@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.20" = {
+    "@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.5" = {
       name = "@swc/core";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.20";
-      canonicalPackage = packages."@swc/core@npm:1.13.20";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.5";
+      canonicalPackage = packages."@swc/core@npm:1.13.5";
       dependencies = {
-        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.13.20";
-        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.13.20";
-        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.13.20";
-        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.13.20";
-        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.13.20";
-        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.13.20";
-        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.13.20";
-        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.13.20";
-        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.13.20";
-        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.13.20";
+        "@swc/core-darwin-arm64" = packages."@swc/core-darwin-arm64@npm:1.13.5";
+        "@swc/core-darwin-x64" = packages."@swc/core-darwin-x64@npm:1.13.5";
+        "@swc/core-linux-arm-gnueabihf" = packages."@swc/core-linux-arm-gnueabihf@npm:1.13.5";
+        "@swc/core-linux-arm64-gnu" = packages."@swc/core-linux-arm64-gnu@npm:1.13.5";
+        "@swc/core-linux-arm64-musl" = packages."@swc/core-linux-arm64-musl@npm:1.13.5";
+        "@swc/core-linux-x64-gnu" = packages."@swc/core-linux-x64-gnu@npm:1.13.5";
+        "@swc/core-linux-x64-musl" = packages."@swc/core-linux-x64-musl@npm:1.13.5";
+        "@swc/core-win32-arm64-msvc" = packages."@swc/core-win32-arm64-msvc@npm:1.13.5";
+        "@swc/core-win32-ia32-msvc" = packages."@swc/core-win32-ia32-msvc@npm:1.13.5";
+        "@swc/core-win32-x64-msvc" = packages."@swc/core-win32-x64-msvc@npm:1.13.5";
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
         "@swc/types" = packages."@swc/types@npm:0.1.25";
       };
@@ -18574,7 +18590,7 @@ let
       flatName = "types";
       languageName = "node";
       scope = "swc";
-      descriptorRange = "npm:^0.1.25";
+      descriptorRange = "npm:^0.1.24";
       checksum = "10/f6741450224892d12df43e5ca7f3cc0287df644dcd672626eb0cc2a3a8e3e875f4b29eb11336f37c7240cf6e010ba59eb3a79f4fb8bee5cbd168dfc1326ff369";
       dependencies = {
         "@swc/counter" = packages."@swc/counter@npm:0.1.3";
@@ -41994,7 +42010,7 @@ let
         "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:9.3.1";
         "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:43.3.1";
         "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:43.3.1";
-        "@hookform/resolvers" = packages."@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.9.1";
+        "@hookform/resolvers" = packages."@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.2";
         "@icons-pack/react-simple-icons" = packages."@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:13.8.0";
         "@next/bundle-analyzer" = packages."@next/bundle-analyzer@npm:15.5.4";
         "@radix-ui/colors" = packages."@radix-ui/colors@npm:0.1.9";
@@ -42071,13 +42087,13 @@ let
         "uuid" = packages."uuid@npm:13.0.0";
         "wonka" = packages."wonka@npm:6.3.5";
         "zod-i18n-map" = packages."zod-i18n-map@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.27.0";
-        "zod" = packages."zod@npm:3.24.4";
+        "zod" = packages."zod@npm:4.1.12";
       };
       devDependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
         "@biomejs/biome" = packages."@biomejs/biome@npm:2.2.5";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:4ac4429d58ef2843afb463cef83a51ecaa6444be614c303022d35f4064579a182f050ba58c2df385214dfccc1b4d3d02d8d3f271f5cd18c3e13d2a12b20d5a29#npm:3.2.0";
-        "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.20";
+        "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.5";
         "@tailwindcss/aspect-ratio" = packages."@tailwindcss/aspect-ratio@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.4.2";
         "@tailwindcss/forms" = packages."@tailwindcss/forms@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.10";
         "@tailwindcss/typography" = packages."@tailwindcss/typography@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.5.19";
@@ -47000,7 +47016,7 @@ let
       canonicalPackage = packages."zod-i18n-map@npm:2.27.0";
       dependencies = {
         "i18next" = packages."i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.6.0";
-        "zod" = packages."zod@npm:3.24.4";
+        "zod" = packages."zod@npm:4.1.12";
       };
     };
     "zod-validation-error@npm:2.1.0" = {
@@ -47027,18 +47043,6 @@ let
         "zod" = packages."zod@npm:3.25.76";
       };
     };
-    "zod@npm:3.24.4" = {
-      name = "zod";
-      reference = "npm:3.24.4";
-      linkType = "HARD";
-      outputName = "zod-3.24.4-f67b364e5d";
-      outputHash = "3d545792fa54bb27ee5dbc34a5709e81f603185fcc94c8204b5d95c20dc4c81d870ff9c51f3884a30ef05cdc601449f4c4df254ac4783f0827b1faed7c1cdb48";
-      flatName = "zod";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~3.24.4";
-      checksum = "10/3d545792fa54bb27ee5dbc34a5709e81f603185fcc94c8204b5d95c20dc4c81d870ff9c51f3884a30ef05cdc601449f4c4df254ac4783f0827b1faed7c1cdb48";
-    };
     "zod@npm:3.25.76" = {
       name = "zod";
       reference = "npm:3.25.76";
@@ -47048,8 +47052,20 @@ let
       flatName = "zod";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.25.76";
+      descriptorRange = "npm:^3.22.4";
       checksum = "10/f0c963ec40cd96858451d1690404d603d36507c1fc9682f2dae59ab38b578687d542708a7fdbf645f77926f78c9ed558f57c3d3aa226c285f798df0c4da16995";
+    };
+    "zod@npm:4.1.12" = {
+      name = "zod";
+      reference = "npm:4.1.12";
+      linkType = "HARD";
+      outputName = "zod-4.1.12-8e1ffc4d68";
+      outputHash = "c5f04e6ac306515c4db6ef73cf7705f521c7a2107c8c8912416a0658d689f361db9bee829b0bf01ef4a22492f1065c5cbcdb523ce532606ac6792fd714f3c326";
+      flatName = "zod";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.1.12";
+      checksum = "10/c5f04e6ac306515c4db6ef73cf7705f521c7a2107c8c8912416a0658d689f361db9bee829b0bf01ef4a22492f1065c5cbcdb523ce532606ac6792fd714f3c326";
     };
   };
 in
