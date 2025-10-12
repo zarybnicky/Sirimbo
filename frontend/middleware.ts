@@ -11,7 +11,7 @@ export const config = {
       missing: [
         {
           type: 'cookie',
-          key: TENANT_COOKIE_NAME,
+          key: 'tenant_id',
         },
       ],
     },
