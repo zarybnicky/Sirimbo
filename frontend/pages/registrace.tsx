@@ -11,6 +11,8 @@ import { RegisterWithoutInvitationDocument } from '@/graphql/CurrentUser';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { ErrorPage } from '@/ui/ErrorPage';
+import { tenantConfig } from '@/tenant/config';
 
 const Form = z.object({
   email: z.string().email(),
@@ -18,6 +20,7 @@ const Form = z.object({
 });
 
 export default function InvitationPage() {
+  const registrationEnabled = tenantConfig.enableRegistration;
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
@@ -32,6 +35,18 @@ export default function InvitationPage() {
     }
   });
 
+  if (!registrationEnabled) {
+    return (
+      <Layout className="grow content relative content-stretch">
+        <NextSeo title="Registrace uzavřena" noindex />
+        <ErrorPage
+          error="Registrace je uzavřena"
+          details="Nové registrace aktuálně nepřijímáme."
+        />
+      </Layout>
+    );
+  }
+
   if (!authLoading && auth.user) {
     void router.replace(auth.personIds.length > 0 ? '/dashboard' :'/profil');
   }
@@ -39,42 +54,41 @@ export default function InvitationPage() {
   return (
     <Layout className="grow content relative content-stretch">
       <NextSeo title="Přihláška nového člena" />
+      <div className="flex items-center justify-center h-full">
+        <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
+          <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
+            <h4 className="text-2xl">Přihláška nového člena</h4>
 
-    <div className="flex items-center justify-center h-full">
-      <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
-        <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
-          <h4 className="text-2xl">Přihláška nového člena</h4>
+            <FormError error={onSubmit.error} />
 
-          <FormError error={onSubmit.error} />
+            <p>
+              Než začnete vyplňovat přihlášku nového člena, vytvořte si prosím uživatelský účet v systému.
+            </p>
 
-          <p>
-            Než začnete vyplňovat přihlášku nového člena, vytvořte si prosím uživatelský účet v systému.
-          </p>
+            <TextFieldElement
+              control={control}
+              name="email"
+              label="E-mail"
+              autoComplete="email"
+              required
+              autoFocus
+            />
 
-          <TextFieldElement
-            control={control}
-            name="email"
-            label="E-mail"
-            autoComplete="email"
-            required
-            autoFocus
-          />
+            <TextFieldElement
+              control={control}
+              name="passwd"
+              type="password"
+              label="Heslo"
+              autoComplete="current-password"
+              required
+            />
 
-          <TextFieldElement
-            control={control}
-            name="passwd"
-            type="password"
-            label="Heslo"
-            autoComplete="current-password"
-            required
-          />
-
-          <SubmitButton className="w-full my-2" loading={onSubmit.loading}>
-            Vytvořit účet
-          </SubmitButton>
-        </form>
+            <SubmitButton className="w-full my-2" loading={onSubmit.loading}>
+              Vytvořit účet
+            </SubmitButton>
+          </form>
+        </div>
       </div>
-    </div>
     </Layout>
   );
 };
