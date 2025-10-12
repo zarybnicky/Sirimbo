@@ -5156,6 +5156,8 @@ export type Mutation = {
   setLessonDemand: Maybe<SetLessonDemandPayload>;
   submitForm: Maybe<SubmitFormPayload>;
   syncCohortMemberships: Maybe<SyncCohortMembershipsPayload>;
+  /** Allows system administrators to update tenant metadata without switching tenant context. */
+  systemAdminUpdateTenant: Maybe<SystemAdminUpdateTenantPayload>;
   tenantAccount: Maybe<TenantAccountPayload>;
   /** Updates a single `Aktuality` using a unique key and a patch. */
   updateAktuality: Maybe<UpdateAktualityPayload>;
@@ -5629,6 +5631,12 @@ export type MutationSubmitFormArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSyncCohortMembershipsArgs = {
   input: SyncCohortMembershipsInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationSystemAdminUpdateTenantArgs = {
+  input: SystemAdminUpdateTenantInput;
 };
 
 
@@ -7054,6 +7062,8 @@ export type Query = {
   scoreboardsList: Maybe<Array<Scoreboard>>;
   /** Reads and enables pagination through a set of `Announcement`. */
   stickyAnnouncements: Maybe<AnnouncementsConnection>;
+  /** Lists tenants with aggregate membership, staffing, and recent session statistics for system administrators. */
+  systemAdminTenants: Maybe<SystemAdminTenantsConnection>;
   /** Get a single `Tenant`. */
   tenant: Maybe<Tenant>;
   /** Get a single `TenantAdministrator`. */
@@ -7862,6 +7872,16 @@ export type QueryStickyAnnouncementsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QuerySystemAdminTenantsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTenantArgs = {
   id: Scalars['BigInt']['input'];
 };
@@ -8465,6 +8485,83 @@ export type SyncCohortMembershipsPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+};
+
+/** A connection to a list of `SystemAdminTenantsRecord` values. */
+export type SystemAdminTenantsConnection = {
+  __typename?: 'SystemAdminTenantsConnection';
+  /** A list of edges which contains the `SystemAdminTenantsRecord` and cursor to aid in pagination. */
+  edges: Array<SystemAdminTenantsEdge>;
+  /** A list of `SystemAdminTenantsRecord` objects. */
+  nodes: Array<SystemAdminTenantsRecord>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SystemAdminTenantsRecord` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `SystemAdminTenantsRecord` edge in the connection. */
+export type SystemAdminTenantsEdge = {
+  __typename?: 'SystemAdminTenantsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `SystemAdminTenantsRecord` at the end of the edge. */
+  node: SystemAdminTenantsRecord;
+};
+
+export type SystemAdminTenantsRecord = {
+  __typename?: 'SystemAdminTenantsRecord';
+  address: Maybe<AddressDomain>;
+  administratorCount: Maybe<Scalars['BigInt']['output']>;
+  bankAccount: Maybe<Scalars['String']['output']>;
+  czDic: Maybe<Scalars['String']['output']>;
+  czIco: Maybe<Scalars['String']['output']>;
+  description: Maybe<Scalars['String']['output']>;
+  id: Maybe<Scalars['BigInt']['output']>;
+  membershipCount: Maybe<Scalars['BigInt']['output']>;
+  name: Maybe<Scalars['String']['output']>;
+  origins: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  sessionCountLast30Days: Maybe<Scalars['BigInt']['output']>;
+  sessionCountPerTrainerLast30Days: Maybe<Scalars['Float']['output']>;
+  trainerCount: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** All input for the `systemAdminUpdateTenant` mutation. */
+export type SystemAdminUpdateTenantInput = {
+  address?: InputMaybe<AddressDomainInput>;
+  bankAccount?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  czDic?: InputMaybe<Scalars['String']['input']>;
+  czIco?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** The output of our `systemAdminUpdateTenant` mutation. */
+export type SystemAdminUpdateTenantPayload = {
+  __typename?: 'SystemAdminUpdateTenantPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  tenant: Maybe<Tenant>;
+  /** An edge for our `Tenant`. May be used by Relay 1. */
+  tenantEdge: Maybe<TenantsEdge>;
+};
+
+
+/** The output of our `systemAdminUpdateTenant` mutation. */
+export type SystemAdminUpdateTenantPayloadTenantEdgeArgs = {
+  orderBy?: Array<TenantsOrderBy>;
 };
 
 export type Tenant = {
@@ -9444,6 +9541,15 @@ export type TenantTrainersOrderBy =
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
+
+/** A `Tenant` edge in the connection. */
+export type TenantsEdge = {
+  __typename?: 'TenantsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Tenant` at the end of the edge. */
+  node: Tenant;
+};
 
 /** Methods to use when ordering `Tenant`. */
 export type TenantsOrderBy =
@@ -10865,6 +10971,10 @@ export type GraphCacheKeysConfig = {
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
   SubmitFormPayload?: (data: WithTypename<SubmitFormPayload>) => null | string,
   SyncCohortMembershipsPayload?: (data: WithTypename<SyncCohortMembershipsPayload>) => null | string,
+  SystemAdminTenantsConnection?: (data: WithTypename<SystemAdminTenantsConnection>) => null | string,
+  SystemAdminTenantsEdge?: (data: WithTypename<SystemAdminTenantsEdge>) => null | string,
+  SystemAdminTenantsRecord?: (data: WithTypename<SystemAdminTenantsRecord>) => null | string,
+  SystemAdminUpdateTenantPayload?: (data: WithTypename<SystemAdminUpdateTenantPayload>) => null | string,
   Tenant?: (data: WithTypename<Tenant>) => null | string,
   TenantAccountPayload?: (data: WithTypename<TenantAccountPayload>) => null | string,
   TenantAdministrator?: (data: WithTypename<TenantAdministrator>) => null | string,
@@ -10873,6 +10983,7 @@ export type GraphCacheKeysConfig = {
   TenantSetting?: (data: WithTypename<TenantSetting>) => null | string,
   TenantSettingsEdge?: (data: WithTypename<TenantSettingsEdge>) => null | string,
   TenantTrainer?: (data: WithTypename<TenantTrainer>) => null | string,
+  TenantsEdge?: (data: WithTypename<TenantsEdge>) => null | string,
   TrainerGroupAttendanceCompletion?: (data: WithTypename<TrainerGroupAttendanceCompletion>) => null | string,
   Transaction?: (data: WithTypename<Transaction>) => null | string,
   TransactionsConnection?: (data: WithTypename<TransactionsConnection>) => null | string,
@@ -11007,6 +11118,7 @@ export type GraphCacheResolvers = {
     scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
     scoreboardsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     stickyAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
+    systemAdminTenants?: GraphCacheResolver<WithTypename<Query>, QuerySystemAdminTenantsArgs, WithTypename<SystemAdminTenantsConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<Query>, QueryTenantArgs, WithTypename<Tenant> | string>,
     tenantAdministrator?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorArgs, WithTypename<TenantAdministrator> | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
@@ -12360,6 +12472,37 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<SyncCohortMembershipsPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<SyncCohortMembershipsPayload>, Record<string, never>, WithTypename<Query> | string>
   },
+  SystemAdminTenantsConnection?: {
+    edges?: GraphCacheResolver<WithTypename<SystemAdminTenantsConnection>, Record<string, never>, Array<WithTypename<SystemAdminTenantsEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<SystemAdminTenantsConnection>, Record<string, never>, Array<WithTypename<SystemAdminTenantsRecord> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<SystemAdminTenantsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<SystemAdminTenantsConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  SystemAdminTenantsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<SystemAdminTenantsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<SystemAdminTenantsEdge>, Record<string, never>, WithTypename<SystemAdminTenantsRecord> | string>
+  },
+  SystemAdminTenantsRecord?: {
+    address?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, WithTypename<AddressDomain> | string>,
+    administratorCount?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    bankAccount?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String'] | string>,
+    czDic?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String'] | string>,
+    czIco?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String'] | string>,
+    description?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String'] | string>,
+    id?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    membershipCount?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    name?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String'] | string>,
+    origins?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Array<Scalars['String'] | string>>,
+    sessionCountLast30Days?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    sessionCountPerTrainerLast30Days?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['Float'] | string>,
+    trainerCount?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['BigInt'] | string>
+  },
+  SystemAdminUpdateTenantPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, Record<string, never>, Scalars['String'] | string>,
+    query?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, Record<string, never>, WithTypename<Query> | string>,
+    tenant?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantEdge?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, SystemAdminUpdateTenantPayloadTenantEdgeArgs, WithTypename<TenantsEdge> | string>
+  },
   Tenant?: {
     accountsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccountsListArgs, Array<WithTypename<Account> | string>>,
     address?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<AddressDomain> | string>,
@@ -12486,6 +12629,10 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  TenantsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<TenantsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<TenantsEdge>, Record<string, never>, WithTypename<Tenant> | string>
   },
   TrainerGroupAttendanceCompletion?: {
     filledInstances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int'] | string>,
@@ -12830,6 +12977,7 @@ export type GraphCacheOptimisticUpdaters = {
   setLessonDemand?: GraphCacheOptimisticMutationResolver<MutationSetLessonDemandArgs, Maybe<WithTypename<SetLessonDemandPayload>>>,
   submitForm?: GraphCacheOptimisticMutationResolver<MutationSubmitFormArgs, Maybe<WithTypename<SubmitFormPayload>>>,
   syncCohortMemberships?: GraphCacheOptimisticMutationResolver<MutationSyncCohortMembershipsArgs, Maybe<WithTypename<SyncCohortMembershipsPayload>>>,
+  systemAdminUpdateTenant?: GraphCacheOptimisticMutationResolver<MutationSystemAdminUpdateTenantArgs, Maybe<WithTypename<SystemAdminUpdateTenantPayload>>>,
   tenantAccount?: GraphCacheOptimisticMutationResolver<MutationTenantAccountArgs, Maybe<WithTypename<TenantAccountPayload>>>,
   updateAktuality?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
   updateAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpdateAnnouncementArgs, Maybe<WithTypename<UpdateAnnouncementPayload>>>,
@@ -12957,6 +13105,7 @@ export type GraphCacheUpdaters = {
     scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<{ scoreboardManualAdjustmentsList: Maybe<Array<WithTypename<ScoreboardManualAdjustment>>> }, QueryScoreboardManualAdjustmentsListArgs>,
     scoreboardsList?: GraphCacheUpdateResolver<{ scoreboardsList: Maybe<Array<WithTypename<Scoreboard>>> }, QueryScoreboardsListArgs>,
     stickyAnnouncements?: GraphCacheUpdateResolver<{ stickyAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryStickyAnnouncementsArgs>,
+    systemAdminTenants?: GraphCacheUpdateResolver<{ systemAdminTenants: Maybe<WithTypename<SystemAdminTenantsConnection>> }, QuerySystemAdminTenantsArgs>,
     tenant?: GraphCacheUpdateResolver<{ tenant: Maybe<WithTypename<Tenant>> }, QueryTenantArgs>,
     tenantAdministrator?: GraphCacheUpdateResolver<{ tenantAdministrator: Maybe<WithTypename<TenantAdministrator>> }, QueryTenantAdministratorArgs>,
     tenantAdministratorsList?: GraphCacheUpdateResolver<{ tenantAdministratorsList: Maybe<Array<WithTypename<TenantAdministrator>>> }, QueryTenantAdministratorsListArgs>,
@@ -13050,6 +13199,7 @@ export type GraphCacheUpdaters = {
     setLessonDemand?: GraphCacheUpdateResolver<{ setLessonDemand: Maybe<WithTypename<SetLessonDemandPayload>> }, MutationSetLessonDemandArgs>,
     submitForm?: GraphCacheUpdateResolver<{ submitForm: Maybe<WithTypename<SubmitFormPayload>> }, MutationSubmitFormArgs>,
     syncCohortMemberships?: GraphCacheUpdateResolver<{ syncCohortMemberships: Maybe<WithTypename<SyncCohortMembershipsPayload>> }, MutationSyncCohortMembershipsArgs>,
+    systemAdminUpdateTenant?: GraphCacheUpdateResolver<{ systemAdminUpdateTenant: Maybe<WithTypename<SystemAdminUpdateTenantPayload>> }, MutationSystemAdminUpdateTenantArgs>,
     tenantAccount?: GraphCacheUpdateResolver<{ tenantAccount: Maybe<WithTypename<TenantAccountPayload>> }, MutationTenantAccountArgs>,
     updateAktuality?: GraphCacheUpdateResolver<{ updateAktuality: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityArgs>,
     updateAnnouncement?: GraphCacheUpdateResolver<{ updateAnnouncement: Maybe<WithTypename<UpdateAnnouncementPayload>> }, MutationUpdateAnnouncementArgs>,
@@ -14410,6 +14560,37 @@ export type GraphCacheUpdaters = {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SyncCohortMembershipsPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<SyncCohortMembershipsPayload>>, Record<string, never>>
   },
+  SystemAdminTenantsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsConnection>>, Record<string, never>>
+  },
+  SystemAdminTenantsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsEdge>>, Record<string, never>>
+  },
+  SystemAdminTenantsRecord?: {
+    address?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    administratorCount?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    bankAccount?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    czDic?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    czIco?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    description?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    membershipCount?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    origins?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    sessionCountLast30Days?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    sessionCountPerTrainerLast30Days?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    trainerCount?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>
+  },
+  SystemAdminUpdateTenantPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, Record<string, never>>,
+    query?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, Record<string, never>>,
+    tenantEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, SystemAdminUpdateTenantPayloadTenantEdgeArgs>
+  },
   Tenant?: {
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountsListArgs>,
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
@@ -14536,6 +14717,10 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>
+  },
+  TenantsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantsEdge>>, Record<string, never>>
   },
   TrainerGroupAttendanceCompletion?: {
     filledInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,

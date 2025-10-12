@@ -362,7 +362,8 @@ CREATE TYPE public.jwt_token AS (
 	my_couple_ids json,
 	is_member boolean,
 	is_trainer boolean,
-	is_admin boolean
+	is_admin boolean,
+	is_system_admin boolean
 );
 
 
@@ -737,20 +738,22 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     LANGUAGE sql STABLE
     AS $$
   with details as (
-    SELECT
+    select
       users.id,
       user_proxy.person_id as person_id,
       tenant_memberships || tenant_trainers || tenant_administrators as my_tenant_ids,
       cohort_memberships as my_cohort_ids,
       couple_ids as my_couple_ids,
-      current_tenant_id() = ANY (tenant_memberships || tenant_trainers || tenant_administrators) as is_member,
-      current_tenant_id() = ANY (tenant_trainers) as is_trainer,
-      current_tenant_id() = ANY (tenant_administrators) as is_admin
+      current_tenant_id() = any(tenant_memberships || tenant_trainers || tenant_administrators) as is_member,
+      current_tenant_id() = any(tenant_trainers) as is_trainer,
+      current_tenant_id() = any(tenant_administrators) as is_admin,
+      app_private.is_system_admin(users.id) as is_system_admin
     from users
-    left join user_proxy on user_id=users.id
-    left join auth_details on user_proxy.person_id=auth_details.person_id
-    where users.id=u.id
-  ) select
+    left join user_proxy on user_id = users.id
+    left join auth_details on user_proxy.person_id = auth_details.person_id
+    where users.id = u.id
+  )
+  select
     extract(epoch from now() + interval '7 days')::integer,
     u.id,
     current_tenant_id(),
@@ -762,9 +765,18 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     array_to_json(app_private.array_accum(my_couple_ids)) as my_couple_ids,
     bool_or(is_member) as is_member,
     bool_or(is_trainer) as is_trainer,
-    bool_or(is_admin) as is_admin
-  from details group by id;
+    bool_or(is_admin) as is_admin,
+    bool_or(is_system_admin) as is_system_admin
+  from details
+  group by id;
 $$;
+
+
+--
+-- Name: FUNCTION create_jwt_token(u public.users); Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON FUNCTION app_private.create_jwt_token(u public.users) IS 'Generates the JWT payload including global system administrator flag.';
 
 
 --
@@ -1065,6 +1077,27 @@ $_$;
 --
 
 COMMENT ON FUNCTION app_private.index_advisor(query text) IS '@omit';
+
+
+--
+-- Name: is_system_admin(bigint); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.is_system_admin(bigint) RETURNS boolean
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'app_private', 'public', 'pg_temp'
+    AS $_$
+  select coalesce(exists(
+    select 1 from app_private.system_admin_user sau where user_id = $1
+  ), false);
+$_$;
+
+
+--
+-- Name: FUNCTION is_system_admin(bigint); Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON FUNCTION app_private.is_system_admin(bigint) IS 'Returns true when the given user id has global system administrator privileges.';
 
 
 --
@@ -3155,6 +3188,66 @@ COMMENT ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean,
 
 
 --
+-- Name: former_filtered_people(boolean, boolean, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.former_filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.person
+    LANGUAGE sql STABLE
+    AS $$
+  with details as (
+    select
+      person.id as person_id,
+      array_remove(array_agg(distinct case when cm.tenant_id = current_tenant_id() then cm.cohort_id end), null) as cohort_memberships,
+      array_remove(array_agg(distinct case when tt.tenant_id = current_tenant_id() then tt.tenant_id end), null) as tenant_trainers,
+      array_remove(array_agg(distinct case when ta.tenant_id = current_tenant_id() then ta.tenant_id end), null) as tenant_administrators
+    from person
+    join tenant_membership tm on tm.person_id = person.id and tm.tenant_id = current_tenant_id()
+    left join cohort_membership cm on cm.person_id = person.id and cm.tenant_id = current_tenant_id() and cm.status = 'expired'
+    left join tenant_trainer tt on tt.person_id = person.id and tt.tenant_id = current_tenant_id() and tt.status = 'expired'
+    left join tenant_administrator ta on ta.person_id = person.id and ta.tenant_id = current_tenant_id() and ta.status = 'expired'
+    where
+      tm.status = 'expired'
+      and not exists (
+        select 1 from tenant_membership active_tm
+        where active_tm.person_id = person.id
+          and active_tm.tenant_id = current_tenant_id()
+          and active_tm.status = 'active'
+      )
+    group by person.id
+  )
+  select p.*
+  from person p
+  join details d on d.person_id = p.id
+  where
+    case
+      when in_cohorts is null then true
+      else coalesce(in_cohorts = d.cohort_memberships, false)
+        or coalesce(in_cohorts && d.cohort_memberships, false)
+    end
+    and case
+      when is_trainer is null then true
+      else is_trainer = (
+        current_tenant_id() = any (coalesce(d.tenant_trainers, array[]::bigint[]))
+      )
+    end
+    and case
+      when is_admin is null then true
+      else is_admin = (
+        current_tenant_id() = any (coalesce(d.tenant_administrators, array[]::bigint[]))
+      )
+    end
+  order by p.last_name, p.first_name
+$$;
+
+
+--
+-- Name: FUNCTION former_filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.former_filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]) IS '@omit';
+
+
+--
 -- Name: tenant; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4453,6 +4546,120 @@ $_$;
 
 
 --
+-- Name: system_admin_tenants(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.system_admin_tenants() RETURNS TABLE(id bigint, name text, description text, bank_account text, origins text[], cz_ico text, cz_dic text, address public.address_domain, membership_count bigint, trainer_count bigint, administrator_count bigint, session_count_last_30_days bigint, session_count_per_trainer_last_30_days double precision)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
+    AS $$
+begin
+  if not app_private.is_system_admin(current_user_id()) then
+    raise exception 'permission denied for system admin tenant overview'
+      using errcode = '42501';
+  end if;
+
+  return query
+  select
+    t.id,
+    t.name,
+    t.description,
+    t.bank_account,
+    t.origins,
+    t.cz_ico,
+    t.cz_dic,
+    t.address,
+    membership_counts.membership_count,
+    staffing.trainer_count,
+    administrators.administrator_count,
+    load.session_count_last_30_days,
+    load.session_count_per_trainer_last_30_days
+  from public.tenant t
+  cross join lateral (
+    select
+      count(*) filter (where tm.active) as membership_count
+    from public.tenant_membership tm
+    where tm.tenant_id = t.id
+  ) as membership_counts
+  cross join lateral (
+    select count(*) filter (where tt.active) as trainer_count
+    from public.tenant_trainer tt
+    where tt.tenant_id = t.id
+  ) as staffing
+  cross join lateral (
+    select count(*) filter (where ta.active) as administrator_count
+    from public.tenant_administrator ta
+    where ta.tenant_id = t.id
+  ) as administrators
+  cross join lateral (
+    select
+      count(*) as session_count_last_30_days,
+      case
+        when coalesce(staffing.trainer_count, 0) > 0 then count(*)::double precision / staffing.trainer_count::double precision
+        else 0::double precision
+      end as session_count_per_trainer_last_30_days
+    from public.event_instance ei
+    where ei.tenant_id = t.id
+      and coalesce(ei.is_cancelled, false) = false
+      and ei.since >= now() - interval '30 days'
+  ) as load
+  order by t.name;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION system_admin_tenants(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.system_admin_tenants() IS 'Lists tenants with aggregate membership, staffing, and recent session statistics for system administrators.';
+
+
+--
+-- Name: system_admin_update_tenant(bigint, text, text, text, text[], public.address_domain, text, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.system_admin_update_tenant(tenant_id bigint, name text DEFAULT NULL::text, description text DEFAULT NULL::text, bank_account text DEFAULT NULL::text, origins text[] DEFAULT NULL::text[], address public.address_domain DEFAULT NULL::public.address_type, cz_ico text DEFAULT NULL::text, cz_dic text DEFAULT NULL::text) RETURNS public.tenant
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
+    AS $$
+declare
+  v_tenant public.tenant;
+begin
+  if not app_private.is_system_admin(current_user_id()) then
+    raise exception 'permission denied for system admin tenant update'
+      using errcode = '42501';
+  end if;
+
+  update public.tenant t
+  set
+    name = coalesce(system_admin_update_tenant.name, t.name),
+    description = coalesce(system_admin_update_tenant.description, t.description),
+    bank_account = coalesce(system_admin_update_tenant.bank_account, t.bank_account),
+    origins = coalesce(system_admin_update_tenant.origins, t.origins),
+    address = coalesce(system_admin_update_tenant.address, t.address),
+    cz_ico = coalesce(system_admin_update_tenant.cz_ico, t.cz_ico),
+    cz_dic = coalesce(system_admin_update_tenant.cz_dic, t.cz_dic)
+  where t.id = tenant_id
+  returning t.* into v_tenant;
+
+  if not found then
+    raise exception 'tenant % not found', tenant_id using errcode = 'P0002';
+  end if;
+
+  return v_tenant;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text) IS 'Allows system administrators to update tenant metadata without switching tenant context.';
+
+
+--
 -- Name: tenant_account(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -5057,6 +5264,45 @@ CREATE VIEW app_private.meta_fks AS
              LEFT JOIN information_schema.constraint_column_usage con ON (((c.conname = (con.constraint_name)::name) AND (pg_namespace.nspname = (con.constraint_schema)::name))))) all_constraints
   WHERE (table_schema = ANY (ARRAY['public'::text, 'app_private'::text]))
   ORDER BY table_schema, table_name, column_name, constraint_name;
+
+
+--
+-- Name: system_admin_user; Type: TABLE; Schema: app_private; Owner: -
+--
+
+CREATE TABLE app_private.system_admin_user (
+    user_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    created_by bigint DEFAULT public.current_user_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE system_admin_user; Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON TABLE app_private.system_admin_user IS '@omit all';
+
+
+--
+-- Name: COLUMN system_admin_user.user_id; Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON COLUMN app_private.system_admin_user.user_id IS 'Globally privileged user allowed to manage tenants.';
+
+
+--
+-- Name: COLUMN system_admin_user.created_at; Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON COLUMN app_private.system_admin_user.created_at IS 'Timestamp when the system administrator role was granted.';
+
+
+--
+-- Name: COLUMN system_admin_user.created_by; Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON COLUMN app_private.system_admin_user.created_by IS 'User that granted the system administrator role.';
 
 
 --
@@ -6621,6 +6867,14 @@ COMMENT ON MATERIALIZED VIEW public.account_balances IS '@omit';
 
 
 --
+-- Name: system_admin_user system_admin_user_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.system_admin_user
+    ADD CONSTRAINT system_admin_user_pkey PRIMARY KEY (user_id);
+
+
+--
 -- Name: account account_tenant_id_person_id_currency_idx; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8103,6 +8357,14 @@ CREATE TRIGGER on_update_author BEFORE UPDATE ON public.aktuality FOR EACH ROW E
 --
 
 CREATE TRIGGER on_update_author_announcement BEFORE INSERT OR UPDATE ON public.announcement FOR EACH ROW EXECUTE FUNCTION public.on_update_author_announcement();
+
+
+--
+-- Name: system_admin_user system_admin_user_user_id_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.system_admin_user
+    ADD CONSTRAINT system_admin_user_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
@@ -10404,6 +10666,13 @@ GRANT ALL ON FUNCTION app_private.cron_update_memberships() TO administrator;
 
 
 --
+-- Name: FUNCTION is_system_admin(bigint); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.is_system_admin(bigint) TO anonymous;
+
+
+--
 -- Name: FUNCTION queue_announcement_notifications(in_announcement_id bigint); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -10796,6 +11065,13 @@ GRANT ALL ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolea
 
 
 --
+-- Name: FUNCTION former_filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.former_filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]) TO anonymous;
+
+
+--
 -- Name: TABLE tenant; Type: ACL; Schema: public; Owner: -
 --
 
@@ -11020,6 +11296,13 @@ GRANT ALL ON FUNCTION public.person_weekly_attendance(p public.person) TO anonym
 
 
 --
+-- Name: FUNCTION post_without_cache(input_url text, data jsonb, headers public.http_header[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.post_without_cache(input_url text, data jsonb, headers public.http_header[]) TO administrator;
+
+
+--
 -- Name: FUNCTION refresh_jwt(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -11217,6 +11500,20 @@ GRANT ALL ON FUNCTION public.sync_cohort_memberships(person_id bigint, cohort_id
 
 
 --
+-- Name: FUNCTION system_admin_tenants(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.system_admin_tenants() TO anonymous;
+
+
+--
+-- Name: FUNCTION system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text) TO anonymous;
+
+
+--
 -- Name: FUNCTION tenant_account(c text, OUT acc public.account); Type: ACL; Schema: public; Owner: -
 --
 
@@ -11277,6 +11574,13 @@ GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_i
 --
 
 GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) TO anonymous;
+
+
+--
+-- Name: TABLE system_admin_user; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT SELECT ON TABLE app_private.system_admin_user TO administrator;
 
 
 --

@@ -11925,6 +11925,26 @@
             ]
           },
           {
+            "name": "systemAdminUpdateTenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "SystemAdminUpdateTenantPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "tenantAccount",
             "type": {
               "kind": "OBJECT",
@@ -19002,6 +19022,51 @@
             ]
           },
           {
+            "name": "systemAdminTenants",
+            "type": {
+              "kind": "OBJECT",
+              "name": "SystemAdminTenantsConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "tenant",
             "type": {
               "kind": "OBJECT",
@@ -20511,6 +20576,273 @@
               "ofType": null
             },
             "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SystemAdminTenantsConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "SystemAdminTenantsEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "SystemAdminTenantsRecord",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SystemAdminTenantsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SystemAdminTenantsRecord",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SystemAdminTenantsRecord",
+        "fields": [
+          {
+            "name": "address",
+            "type": {
+              "kind": "OBJECT",
+              "name": "AddressDomain",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "administratorCount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "bankAccount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "czDic",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "czIco",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "description",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "membershipCount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "origins",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "sessionCountLast30Days",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "sessionCountPerTrainerLast30Days",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "trainerCount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SystemAdminUpdateTenantPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "interfaces": []
@@ -23612,6 +23944,33 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TenantsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Tenant",
+                "ofType": null
               }
             },
             "args": []

@@ -1,5 +1,4 @@
 import { Layout } from '@/components/layout/Layout';
-import { useZodForm } from '@/lib/use-schema-form';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError } from '@/ui/form';
@@ -12,6 +11,8 @@ import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 const integerFormatter = new Intl.NumberFormat('cs-CZ');
 const decimalFormatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
@@ -245,7 +246,10 @@ type TenantEditDialogProps = {
 function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
   const [open, setOpen] = React.useState(false);
   const defaultValues = React.useMemo(() => createFormState(tenant), [tenant]);
-  const { control, handleSubmit, reset } = useZodForm(TenantFormSchema, { defaultValues });
+  const { control, handleSubmit, reset } = useForm({
+    resolver: zodResolver(TenantFormSchema),
+    defaultValues
+  });
   const [, updateTenant] = useMutation<UpdateTenantResult, UpdateTenantVariables>(
     SYSTEM_ADMIN_UPDATE_TENANT_MUTATION
   );
@@ -257,18 +261,16 @@ function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
   }, [open, tenant, reset]);
 
   const onSubmit = useAsyncCallback(async (values: TenantFormValues) => {
-    const origins = (values.origins ?? '')
-      .split(',')
-      .map((value) => value.trim())
-      .filter(Boolean);
-
     const result = await updateTenant({
       input: {
         tenantId: tenant.id,
         name: values.name,
         description: values.description ?? '',
         bankAccount: values.bankAccount ?? '',
-        origins,
+        origins: (values.origins ?? '')
+          .split(',')
+          .map((value) => value.trim())
+          .filter(Boolean),
         czIco: values.czIco ?? '',
         czDic: values.czDic ?? '',
       },

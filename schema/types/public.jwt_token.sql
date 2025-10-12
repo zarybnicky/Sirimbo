@@ -10,5 +10,6 @@ CREATE TYPE public.jwt_token AS (
 	my_couple_ids json,
 	is_member boolean,
 	is_trainer boolean,
-	is_admin boolean
+	is_admin boolean,
+	is_system_admin boolean
 );

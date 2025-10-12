@@ -11,3 +11,5 @@ END;
 $$;
 
 COMMENT ON FUNCTION public.post_without_cache(input_url text, data jsonb, headers public.http_header[]) IS '@omit';
+
+GRANT ALL ON FUNCTION public.post_without_cache(input_url text, data jsonb, headers public.http_header[]) TO administrator;
