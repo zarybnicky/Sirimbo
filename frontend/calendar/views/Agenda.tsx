@@ -11,7 +11,7 @@ import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm'
 import { useAuth } from '@/ui/use-auth'
 import { add } from 'date-arithmetic'
 import { cardCls } from '@/ui/style'
-import { TypeOf } from 'zod'
+import { z } from 'zod'
 import { EventForm } from '@/ui/event-form/types'
 import { truthyFilter } from '@/ui/truthyFilter'
 import { tenantConfig } from '@/tenant/config'
@@ -115,7 +115,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
     return withLocation?.event?.location?.name || withLocation?.event?.locationText;
   }, [items]);
 
-  const nextEvent: Partial<TypeOf<typeof EventForm>> = React.useMemo(() => {
+  const nextEvent: Partial<z.infer<typeof EventForm>> = React.useMemo(() => {
     const lastEnd = items.at(-1)?.end ?? new Date();
     const trainer = items[0]?.event?.eventTrainersList[0]?.personId;
     return {

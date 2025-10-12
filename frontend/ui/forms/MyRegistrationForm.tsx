@@ -13,21 +13,24 @@ import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { useZodForm } from '@/lib/use-schema-form';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   note: z.string().default(''),
 });
 
-type FormValues = TypeOf<typeof Form>;
+type FormValues = z.infer<typeof Form>;
 
 export function MyRegistrationForm({ event, registration }: {
   event: EventFragment;
   registration: EventRegistrationFragment;
 }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   const edit = useMutation(EditRegistrationDocument)[1];
   const [{ fetching }, setMutation] = useMutation(SetLessonDemandDocument);
 

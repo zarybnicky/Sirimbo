@@ -1,5 +1,4 @@
 import { CreateCreditTransactionDocument } from '@/graphql/Payment';
-import { useZodForm } from '@/lib/use-schema-form';
 import { DatePickerElement } from '@/ui/fields/date';
 import { NumberFieldElement } from '@/ui/fields/number';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -10,7 +9,9 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   date: z.date(),
@@ -25,17 +26,18 @@ export function CreateCreditTransactionForm({ person }: {
   };
 }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit, watch } = useZodForm(Form, {
+  const { control, handleSubmit, watch } = useForm<z.infer<typeof Form>>({
     defaultValues: {
       date: new Date(),
       amount: 0,
       description: null,
-    }
+    },
+    resolver: zodResolver(Form),
   });
   const [isDeposit, setIsDeposit] = React.useState(true);
   const create = useMutation(CreateCreditTransactionDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     await create({
       input: {
         vDate: values.date.toISOString(),

@@ -1,5 +1,4 @@
 import { type EventFragment, RegisterToEventExternalDocument } from '@/graphql/Event';
-import { useZodForm } from '@/lib/use-schema-form';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
@@ -7,10 +6,12 @@ import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { ComboboxElement } from '../fields/Combobox';
 import { TextFieldElement } from '../fields/text';
 import { countries } from '@/lib/countries';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   firstName: z.string(),
@@ -32,13 +33,14 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment; }
   const { onSuccess } = useFormResult();
   const create = useMutation(RegisterToEventExternalDocument)[1];
 
-  const { control, watch, handleSubmit, formState: { errors } } = useZodForm(Form, {
+  const { control, watch, handleSubmit, formState: { errors } } = useForm<z.infer<typeof Form>>({
     defaultValues: {
       nationality: '203',
     },
+    resolver: zodResolver(Form),
   });
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const res = await create({
       input: {
         eventExternalRegistration: {

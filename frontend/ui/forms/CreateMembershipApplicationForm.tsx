@@ -1,5 +1,4 @@
 import { ConfirmMembershipApplicationDocument, CreateMembershipApplicationDocument, DeleteMembershipApplicationDocument, type MembershipApplicationFragment, UpdateMembershipApplicationDocument } from '@/graphql/CurrentUser';
-import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -13,7 +12,9 @@ import { Check, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   prefixTitle: z.string().default(''),
@@ -46,7 +47,9 @@ export function CreateMembershipApplicationForm({ data }: {
 }) {
   const { onSuccess } = useFormResult();
   const auth = useAuth();
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   const create = useMutation(CreateMembershipApplicationDocument)[1];
   const update = useMutation(UpdateMembershipApplicationDocument)[1];
   const confirm = useMutation(ConfirmMembershipApplicationDocument)[1];
@@ -60,7 +63,7 @@ export function CreateMembershipApplicationForm({ data }: {
     }
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     if (data) {
       await update({ input: { id: data.id, patch: values } });
     } else {

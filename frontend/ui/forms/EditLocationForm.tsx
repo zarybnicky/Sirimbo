@@ -1,5 +1,4 @@
 import { CreateTenantLocationDocument, TenantLocationDocument, UpdateTenantLocationDocument } from '@/graphql/Tenant';
-import { useZodForm } from '@/lib/use-schema-form';
 import { tenantId } from '@/tenant/config';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
@@ -8,7 +7,9 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   name: z.string(),
@@ -27,7 +28,9 @@ const Form = z.object({
 
 export function EditTenantLocationForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   const [query] = useQuery({ query: TenantLocationDocument, variables: { id }, pause: !id });
   const create = useMutation(CreateTenantLocationDocument)[1];
   const update = useMutation(UpdateTenantLocationDocument)[1];
@@ -53,7 +56,7 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
     }
   }, [reset, item]);
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     if (!Object.values(values.address || {}).some(Boolean)) {
       values.address = null;
     }

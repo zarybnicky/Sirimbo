@@ -4,8 +4,7 @@ import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { SubmitButton } from '@/ui/submit';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
-import { useZodForm } from '@/lib/use-schema-form';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { InvitationInfoDocument, RegisterUsingInvitationDocument } from '@/graphql/CurrentUser';
@@ -14,6 +13,8 @@ import { NextSeo } from 'next-seo';
 import Link from 'next/link';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { validate } from 'uuid';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
     email: z.string().email(),
@@ -26,7 +27,9 @@ export default function InvitationPage() {
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const [token] = useQueryParam('token', withDefault(StringParam, ''));
-  const { setValue, control, handleSubmit } = useZodForm(Form);
+  const { setValue, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
 
   const isValidToken = validate(token);
   const [{ data, fetching }] = useQuery({ query: InvitationInfoDocument, variables: { token }, pause: !isValidToken || !router.isReady });
@@ -37,7 +40,7 @@ export default function InvitationPage() {
     setValue('email', data?.invitationInfo || '');
   }, [data, setValue, token]);
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const response = await register({ input: values });
     if (response.data?.registerUsingInvitation?.result?.jwt) {
       router.replace('/dashboard');
