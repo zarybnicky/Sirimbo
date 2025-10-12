@@ -28,7 +28,7 @@ const Form = z.object({
 
 export function ExhibitionRequestForm() {
   const submit = useMutation(SubmitFormDocument)[1];
-  const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
 

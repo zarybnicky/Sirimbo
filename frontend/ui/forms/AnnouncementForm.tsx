@@ -56,8 +56,6 @@ const Form = z.object({
   cohortIds: z.array(z.string()).prefault([]),
 });
 
-type FormValues = z.infer<typeof Form>;
-
 export function AnnouncementForm({ id, data, onSuccess }: {
   id?: string;
   data?: AnnouncementFragment | null;
@@ -65,7 +63,7 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 }) {
   const upsert = useMutation(UpsertAnnouncementDocument)[1];
 
-  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { reset, control, handleSubmit } = useForm({
     defaultValues: {
       audienceRoles: [],
       cohortIds: [],
@@ -86,7 +84,7 @@ export function AnnouncementForm({ id, data, onSuccess }: {
   }, [data, reset]);
 
 
-  const onSubmit = useAsyncCallback(async (values: FormValues) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const oldAudiences = [...data?.announcementAudiences.nodes || []];
     const newAudiences: UpsertAnnouncementInput['audiences'] = [];
 
@@ -152,9 +150,9 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 }
 
 function AnnouncementAudienceEditor({ control }: {
-  control: Control<FormValues>;
+  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
 }) {
-  const { audienceRoles = [], cohortIds = [] } = useWatch<FormValues>({ control });
+  const { audienceRoles = [], cohortIds = [] } = useWatch({ control });
   const { data: cohorts, fetching: cohortsLoading } = useCohorts();
 
   const audiences: AnnouncementAudienceFragment[] = [
@@ -196,7 +194,9 @@ function AnnouncementAudienceEditor({ control }: {
   );
 }
 
-function AudienceRoleCheckboxes({ control }: { control: Control<FormValues> }) {
+function AudienceRoleCheckboxes({ control }: {
+  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>
+}) {
   const { field } = useController({ control, name: 'audienceRoles' });
 
   const toggle = React.useCallback(
@@ -218,7 +218,7 @@ function AudienceRoleCheckboxes({ control }: { control: Control<FormValues> }) {
         <Checkbox
           key={role.value}
           name={`announcement-role-${role.value}`}
-          checked={field.value.includes(role.value)}
+          checked={field.value?.includes(role.value)}
           value={role.value}
           label={role.label}
           helperText={role.helperText}
@@ -237,7 +237,7 @@ function AudienceCohortCheckboxes({
   cohorts,
   loading,
 }: {
-  control: Control<FormValues>;
+  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>
   cohorts: { id: string; name?: string | null; colorRgb?: string | null }[];
   loading?: boolean;
 }) {
@@ -267,7 +267,7 @@ function AudienceCohortCheckboxes({
   return (
     <div className="space-y-1">
       {cohorts.map((cohort) => {
-        const checked = field.value.includes(cohort.id);
+        const checked = field.value?.includes(cohort.id);
         return (
           <Checkbox
             key={cohort.id}

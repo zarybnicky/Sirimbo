@@ -28,7 +28,7 @@ export function MyRegistrationForm({ event, registration }: {
   registration: EventRegistrationFragment;
 }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const edit = useMutation(EditRegistrationDocument)[1];

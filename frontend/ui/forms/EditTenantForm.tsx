@@ -22,7 +22,7 @@ export function EditTenantForm() {
   const { onSuccess } = useFormResult();
   const doUpdate = useMutation(UpdateTenantDocument)[1];
 
-  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {

@@ -34,7 +34,7 @@ export function CohortForm({ id = '' }: { id?: string }) {
   const create = useMutation(CreateCohortDocument)[1];
   const update = useMutation(UpdateCohortDocument)[1];
 
-  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { reset, control, handleSubmit } = useForm({
     defaultValues: { colorRgb: '#ff0000' },
     resolver: zodResolver(Form),
   });

@@ -32,9 +32,9 @@ export function UpsertEventForm({ initialValue = {}, event }: {
   const [{ data: eventData }, fetchEvent] = useQuery({ query: EventDocument, variables: { id }, pause: true });
   const { data: tenant } = useTenant();
 
-  const { reset, control, handleSubmit, watch, setValue, getValues } = useForm<z.infer<typeof EventForm>>({
-    defaultValues: initialValue,
+  const { reset, control, handleSubmit, watch, setValue, getValues } = useForm<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>({
     resolver: zodResolver(EventForm),
+    defaultValues: initialValue,
   });
 
   const locationOptions = React.useMemo(() => {

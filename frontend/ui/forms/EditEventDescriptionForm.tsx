@@ -20,7 +20,7 @@ type NonEmptyArray<T> = [T, ...T[]];
 
 export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit, getValues } = useForm<z.infer<typeof Form>>({
+  const { reset, control, handleSubmit, getValues } = useForm({
     shouldUnregister: false,
     resolver: zodResolver(Form),
   });

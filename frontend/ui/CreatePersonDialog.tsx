@@ -71,7 +71,7 @@ export function CreatePersonDialog() {
     label: x.name || '?',
   })).sort((x, y) => x.label.localeCompare(y.label)), [personQuery]);
 
-  const { control, handleSubmit, getValues, setValue, reset, watch } = useForm<z.infer<typeof Form>>({
+  const { control, handleSubmit, getValues, setValue, reset, watch } = useForm({
     resolver: zodResolver(Form),
   });
   const { data: cohorts } = useCohorts({ visible: true });

@@ -47,7 +47,7 @@ export function CreateMembershipApplicationForm({ data }: {
 }) {
   const { onSuccess } = useFormResult();
   const auth = useAuth();
-  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const create = useMutation(CreateMembershipApplicationDocument)[1];

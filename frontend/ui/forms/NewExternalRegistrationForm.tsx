@@ -33,7 +33,7 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment; }
   const { onSuccess } = useFormResult();
   const create = useMutation(RegisterToEventExternalDocument)[1];
 
-  const { control, watch, handleSubmit, formState: { errors } } = useForm<z.infer<typeof Form>>({
+  const { control, watch, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       nationality: '203',
     },

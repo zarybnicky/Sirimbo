@@ -31,7 +31,7 @@ type SimpleCourse = {
 
 export function ChangeCoursesForm() {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit, reset } = useForm<z.infer<typeof Form>>({
+  const { control, handleSubmit, reset } = useForm({
     resolver: zodResolver(Form),
   });
   const update = useMutation(UpdateTenantSettingsDocument)[1];

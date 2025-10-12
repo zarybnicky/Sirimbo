@@ -26,7 +26,7 @@ export function CreateCreditTransactionForm({ person }: {
   };
 }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit, watch } = useForm<z.infer<typeof Form>>({
+  const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       date: new Date(),
       amount: 0,

@@ -23,7 +23,7 @@ const Form = z
 export function ChangePasswordForm() {
   const { onSuccess } = useFormResult();
   const doUpdate = useMutation(ChangePasswordDocument)[1];
-  const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const onSubmit = useAsyncCallback(async ({ newPass }: z.infer<typeof Form>) => {

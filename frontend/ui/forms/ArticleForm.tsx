@@ -40,7 +40,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
   const update = useMutation(UpdateArticleDocument)[1];
   const deleteMutation = useMutation(DeleteArticleDocument)[1];
 
-  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {

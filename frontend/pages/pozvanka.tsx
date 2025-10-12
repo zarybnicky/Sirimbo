@@ -27,7 +27,7 @@ export default function InvitationPage() {
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const [token] = useQueryParam('token', withDefault(StringParam, ''));
-  const { setValue, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { setValue, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
 

@@ -49,7 +49,7 @@ const Form = z.object({
 
 export function EditPersonForm({ data }: { data: PersonFragment }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { control, handleSubmit } = useForm({
     defaultValues: data as unknown as any,
     resolver: zodResolver(Form),
   });

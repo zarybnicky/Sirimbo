@@ -23,7 +23,7 @@ const categories = [
 ];
 
 export default function DocumentsPage() {
-  const { control, watch } = useForm<z.infer<typeof Form>>({
+  const { control, watch } = useForm({
     resolver: zodResolver(Form),
   });
   const category = watch('category');

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export type EventFormType = z.infer<typeof EventForm>;
+export type EventFormType = z.input<typeof EventForm>;
 
 export const EventForm = z.object({
   name: z.string().prefault(''),

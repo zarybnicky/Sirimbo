@@ -40,7 +40,7 @@ export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment })
     [data],
   );
 
-  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {

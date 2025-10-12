@@ -28,7 +28,7 @@ const Form = z.object({
 
 export function EditTenantLocationForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const [query] = useQuery({ query: TenantLocationDocument, variables: { id }, pause: !id });

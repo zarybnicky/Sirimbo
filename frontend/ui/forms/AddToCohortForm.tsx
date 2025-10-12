@@ -17,7 +17,7 @@ const Form = z.object({
 
 export function AddToCohortForm({ person }: { person: PersonFragment }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const createCohortMember = useMutation(CreateCohortMembershipDocument)[1];

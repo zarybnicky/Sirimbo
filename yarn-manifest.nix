@@ -9885,6 +9885,7 @@ let
       checksum = "10/93447287dc89827c517c72dc61e3be0217d3a5d9cbdb532317e5f5fd176c3eedb2ccd62d3c51fb403812939c9b7a4ebcaca35659a9bfb90e16ec38a2092d13a2";
       dependencies = {
         "@standard-schema/utils" = packages."@standard-schema/utils@npm:0.3.0";
+        "zod" = packages."zod@npm:4.1.12";
       };
       packagePeers = [
         "@types/react-hook-form"
@@ -9898,6 +9899,7 @@ let
       dependencies = {
         "@standard-schema/utils" = packages."@standard-schema/utils@npm:0.3.0";
         "react-hook-form" = packages."react-hook-form@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.65.0";
+        "zod" = packages."zod@npm:4.1.12";
       };
     };
     "@humanfs/core@npm:0.19.1" = {

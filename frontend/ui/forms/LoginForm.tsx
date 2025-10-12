@@ -23,7 +23,7 @@ type LoginFormProps = {
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
+  const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const doSignIn = useMutation(LoginDocument)[1];

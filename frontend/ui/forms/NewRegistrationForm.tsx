@@ -47,10 +47,10 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
     persons: new Set<string | null>(),
   });
 
-  const { watch, register, control, handleSubmit, setValue } = useForm<z.infer<typeof Form>>({
+  const { watch, register, control, handleSubmit, setValue } = useForm({
     resolver: zodResolver(Form),
   });
-  const { fields: fieldsInitial, append } = useFieldArray<FormValues>({ control, name: "registrations" });
+  const { fields: fieldsInitial, append } = useFieldArray({ control, name: "registrations" });
   const watchFieldArray = watch("registrations");
   const fields = fieldsInitial.map((field, index) => {
     return {
