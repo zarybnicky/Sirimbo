@@ -1,4 +1,8 @@
-CREATE FUNCTION public.create_event_instance_payment(i public.event_instance) RETURNS public.payment
+--! Previous: sha1:c29d6a1b66fade365ef49b36820487d7ad3d9eb1
+--! Hash: sha1:360b3d75f95a2a3fd99225dd7cecc28b93c9d119
+
+--! split: 1-current.sql
+CREATE or replace FUNCTION create_event_instance_payment(i event_instance) RETURNS payment
     LANGUAGE plpgsql
     AS $$
 declare
@@ -59,6 +63,49 @@ begin
 end
 $$;
 
-COMMENT ON FUNCTION public.create_event_instance_payment(i public.event_instance) IS '@omit';
+select verify_function('create_event_instance_payment');
 
-GRANT ALL ON FUNCTION public.create_event_instance_payment(i public.event_instance) TO anonymous;
+COMMENT ON FUNCTION create_event_instance_payment IS '@omit';
+GRANT ALL ON FUNCTION create_event_instance_payment TO anonymous;
+
+
+
+drop function if exists filtered_people(boolean, boolean, bigint[]);
+--include functions/former_filtered_people.sql
+CREATE or replace FUNCTION public.filtered_people(
+  is_trainer boolean,
+  is_admin boolean,
+  in_cohorts bigint[] default null,
+  membership_state text default 'current'
+) RETURNS SETOF person LANGUAGE plpgsql STABLE AS $$
+begin
+  if lower(coalesce(membership_state, 'current')) = 'former' then
+    return query
+      select *
+      from public.former_filtered_people(is_trainer, is_admin, in_cohorts);
+  end if;
+
+  return query
+    select person.*
+    from person
+    join auth_details on auth_details.person_id = person.id
+    where
+      current_tenant_id() = any (auth_details.allowed_tenants)
+      and case
+        when in_cohorts is null then true
+        else in_cohorts = auth_details.cohort_memberships
+          or in_cohorts && auth_details.cohort_memberships
+      end
+      and case
+        when is_trainer is null then true
+        else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers))
+      end
+      and case
+        when is_admin is null then true
+        else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators))
+      end
+    order by last_name, first_name;
+end;
+$$;
+COMMENT ON FUNCTION public.filtered_people IS '@simpleCollections only';
+GRANT ALL ON FUNCTION public.filtered_people TO anonymous;

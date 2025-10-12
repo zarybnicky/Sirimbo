@@ -2284,6 +2284,11 @@ begin
   if found then
     return payment;
   end if;
+
+  if current_tenant_id() <> 2 then
+    return null;
+  end if;
+
   select * into e from event where id = i.event_id;
   if e.payment_type <> 'after_instance' or not exists (select * from event_registration where event_id=e.id) then
     return null;
@@ -3105,28 +3110,48 @@ COMMENT ON FUNCTION public.fetch_with_cache(input_url text, headers public.http_
 
 
 --
--- Name: filtered_people(boolean, boolean, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: filtered_people(boolean, boolean, bigint[], text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.person
-    LANGUAGE sql STABLE
+CREATE FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[] DEFAULT NULL::bigint[], membership_state text DEFAULT 'current'::text) RETURNS SETOF public.person
+    LANGUAGE plpgsql STABLE
     AS $$
-  select person.* from person
-  join auth_details on person_id=person.id
-  where
-    current_tenant_id() = any (auth_details.allowed_tenants)
-    and case when in_cohorts is null then true else in_cohorts = auth_details.cohort_memberships OR in_cohorts && auth_details.cohort_memberships end
-    and case when is_trainer is null then true else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers)) end
-    and case when is_admin is null then true else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators)) end
-  order by last_name, first_name
+begin
+  if lower(coalesce(membership_state, 'current')) = 'former' then
+    return query
+      select *
+      from public.former_filtered_people(is_trainer, is_admin, in_cohorts);
+  end if;
+
+  return query
+    select person.*
+    from person
+    join auth_details on auth_details.person_id = person.id
+    where
+      current_tenant_id() = any (auth_details.allowed_tenants)
+      and case
+        when in_cohorts is null then true
+        else in_cohorts = auth_details.cohort_memberships
+          or in_cohorts && auth_details.cohort_memberships
+      end
+      and case
+        when is_trainer is null then true
+        else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers))
+      end
+      and case
+        when is_admin is null then true
+        else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators))
+      end
+    order by last_name, first_name;
+end;
 $$;
 
 
 --
--- Name: FUNCTION filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[], membership_state text); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[], membership_state text) IS '@simpleCollections only';
 
 
 --
@@ -10764,10 +10789,10 @@ GRANT ALL ON FUNCTION public.fetch_with_cache(input_url text, headers public.htt
 
 
 --
--- Name: FUNCTION filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[], membership_state text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[]) TO anonymous;
+GRANT ALL ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[], membership_state text) TO anonymous;
 
 
 --

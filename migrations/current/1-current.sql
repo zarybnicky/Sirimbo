@@ -1,3 +1,1 @@
---!include functions/create_event_instance_payment.sql
---!include functions/former_filtered_people.sql
---!include functions/filtered_people.sql
+
