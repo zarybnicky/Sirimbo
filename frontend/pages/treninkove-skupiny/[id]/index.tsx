@@ -1,1 +1,1 @@
-export { default, getStaticPaths, getStaticProps } from './[...slug]';
+export { default } from './[...slug]';

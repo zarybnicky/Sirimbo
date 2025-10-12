@@ -1,38 +1,74 @@
-import { CohortGroupDocument, type CohortGroupFragment } from '@/graphql/CohortGroup';
-import { fetchGql } from '@/graphql/query';
+import { CohortGroupDocument } from '@/graphql/CohortGroup';
 import { TitleBar } from '@/ui/TitleBar';
 import { RichTextView } from '@/ui/RichTextView';
 import { slugify } from '@/ui/slugify';
 import { Layout } from '@/components/layout/Layout';
-import type { GetStaticProps } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import { z } from 'zod';
-import { zRouterString } from '@/ui/useTypedRouter';
+import { useTypedRouter, zRouterString } from '@/ui/useTypedRouter';
 import { cardCls } from '@/ui/style';
+import { useQuery } from 'urql';
+import { Spinner } from '@/ui/Spinner';
 
 const QueryParams = z.object({
   id: zRouterString,
   slug: zRouterString,
 });
 
-type PageProps = {
-  item: CohortGroupFragment;
-};
+function TrainingGroupPage() {
+  const router = useTypedRouter(QueryParams);
+  const idParam = router.query.id || router.query.slug;
+  const [{ data, fetching }] = useQuery({
+    query: CohortGroupDocument,
+    variables: { id: idParam || '0' },
+    pause: !router.isReady || !idParam,
+  });
+  const item = data?.cohortGroup;
 
-function TrainingGroupPage({ item }: PageProps) {
+  React.useEffect(() => {
+    if (!router.isReady || !idParam || fetching) return;
+    if (!item) {
+      void router.replace('/404');
+      return;
+    }
+    const expectedSlug = slugify(item.name);
+    if (expectedSlug && router.query.slug !== expectedSlug) {
+      void router.replace({
+        pathname: '/treninkove-programy/[id]/[...slug]',
+        query: {
+          id: item.id,
+          slug: [expectedSlug],
+        },
+      });
+    }
+  }, [fetching, idParam, item, router]);
+
+  if (!item) {
+    return (
+      <Layout hideTopMenuIfLoggedIn>
+        <div className="flex justify-center py-10">
+          <Spinner />
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout hideTopMenuIfLoggedIn>
       <TitleBar title={item.name} />
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.cohortsList.map((item) => (
-          <div key={item.id} className={cardCls({ className: "group break-inside-avoid pl-8" })}>
+          <div
+            key={item.id}
+            className={cardCls({ className: 'group break-inside-avoid pl-8' })}
+          >
             <h5 className="text-xl underline">
               <Link
                 href={{
                   pathname: '/treninkove-skupiny/[id]',
-                  query: { id: item.id }
+                  query: { id: item.id },
                 }}
               >
                 {item.name}
@@ -51,39 +87,6 @@ function TrainingGroupPage({ item }: PageProps) {
       </div>
     </Layout>
   );
-};
+}
 
 export default TrainingGroupPage;
-
-export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
-export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const params = QueryParams.parse(context.params);
-  let { id } = params
-  if (!id) {
-    id = params.slug;
-  }
-  const item = await fetchGql(CohortGroupDocument, { id }).then((x) => x.cohortGroup);
-
-  if (!item) {
-    return {
-      revalidate: 60,
-      notFound: true,
-    };
-  }
-
-  const expectedSlug = slugify(item.name);
-  if (params.slug !== expectedSlug) {
-    return {
-      revalidate: 60,
-      redirect: {
-        destination: `/treninkove-programy/${item.id}/${expectedSlug}`,
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    revalidate: 60,
-    props: { item },
-  };
-};

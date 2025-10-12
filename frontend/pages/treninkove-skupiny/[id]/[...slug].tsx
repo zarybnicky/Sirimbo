@@ -1,11 +1,5 @@
 import { Layout } from '@/components/layout/Layout';
-import {
-  CohortDocument,
-  type CohortFragment,
-  CohortWithMembersDocument,
-  type CohortWithMembersQuery,
-} from '@/graphql/Cohorts';
-import { fetchGql } from '@/graphql/query';
+import { CohortWithMembersDocument, type CohortWithMembersQuery } from '@/graphql/Cohorts';
 import { CohortList } from '@/ui/lists/CohortList';
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
@@ -14,8 +8,7 @@ import { CohortForm } from '@/ui/forms/CohortForm';
 import { slugify } from '@/ui/slugify';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { zRouterString } from '@/ui/useTypedRouter';
-import type { GetStaticProps } from 'next';
+import { useTypedRouter, zRouterString } from '@/ui/useTypedRouter';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
@@ -29,15 +22,12 @@ import { formatLongCoupleName, formatOpenDateRange } from '@/ui/format';
 import { TabMenu } from '@/ui/TabMenu';
 import { useTenant } from '@/ui/useTenant';
 import type { CoupleFragment } from '@/graphql/Memberships';
+import { Spinner } from '@/ui/Spinner';
 
 const QueryParams = z.object({
   id: zRouterString,
   slug: zRouterString,
 });
-
-type PageProps = {
-  item: CohortFragment;
-};
 
 type CohortMembership = NonNullable<
   NonNullable<CohortWithMembersQuery['entity']>['cohortMembershipsList']
@@ -54,22 +44,25 @@ type CouplesAndSolos = {
   solos: CohortMembership[];
 };
 
-function TrainingCohortPage({ item }: PageProps) {
+function TrainingCohortPage() {
   const auth = useAuth();
   const { data: tenant } = useTenant();
-  const { id } = item;
-  const [{ data }] = useQuery({
+  const router = useTypedRouter(QueryParams);
+  const idParam = router.query.id || router.query.slug;
+  const [{ data: cohortQuery, fetching: fetchingCohort }] = useQuery({
     query: CohortWithMembersDocument,
-    variables: { id },
-    pause: !id,
+    variables: { id: idParam || '0' },
+    pause: !router.isReady || !idParam,
   });
+  const cohort = cohortQuery?.entity;
+  const cohortId = cohort?.id;
   const members = React.useMemo(
-    () => data?.entity?.cohortMembershipsList ?? [],
-    [data?.entity?.cohortMembershipsList],
+    () => cohort?.cohortMembershipsList ?? [],
+    [cohort?.cohortMembershipsList],
   );
   const description = React.useMemo(
-    () => data?.entity?.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', ''),
-    [data?.entity?.description],
+    () => cohort?.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', ''),
+    [cohort?.description],
   );
   const [tab, setTab] = React.useState<string>('overview');
 
@@ -78,6 +71,24 @@ function TrainingCohortPage({ item }: PageProps) {
     [members, tenant?.couplesList],
   );
 
+  React.useEffect(() => {
+    if (!router.isReady || !idParam || fetchingCohort) return;
+    if (!cohort) {
+      void router.replace('/404');
+      return;
+    }
+    const expectedSlug = slugify(cohort.name);
+    if (expectedSlug && router.query.slug !== expectedSlug) {
+      void router.replace({
+        pathname: '/treninkove-skupiny/[id]/[...slug]',
+        query: {
+          id: cohort.id,
+          slug: [expectedSlug],
+        }
+      });
+    }
+  }, [cohort, fetchingCohort, idParam, router]);
+
   const tabs = React.useMemo(
     () => [
       {
@@ -85,7 +96,7 @@ function TrainingCohortPage({ item }: PageProps) {
         title: 'Přehled',
         contents: () => (
           <OverviewTabContent
-            location={data?.entity?.location}
+            location={cohort?.location}
             description={description}
             members={members}
             canManageMemberships={auth.isAdmin}
@@ -104,23 +115,39 @@ function TrainingCohortPage({ item }: PageProps) {
         ),
       },
     ],
-    [auth.isAdmin, couples, data?.entity?.location, description, members, solos],
+    [auth.isAdmin, couples, cohort?.location, description, members, solos],
   );
+
+  if (!cohort) {
+    return (
+      <Layout hideTopMenuIfLoggedIn>
+        <WithSidebar sidebar={<CohortList />}>
+          <div className="flex justify-center py-10">
+            <Spinner />
+          </div>
+        </WithSidebar>
+      </Layout>
+    );
+  }
 
   return (
     <Layout hideTopMenuIfLoggedIn>
       <WithSidebar sidebar={<CohortList />}>
-        <TitleBar title={data?.entity?.name}>
-          {auth.isTrainerOrAdmin && (
-            <button type="button" className={buttonCls({ size: 'sm', variant: 'outline' })} onClick={() => exportCohort([id], data?.entity?.name)}>
+        <TitleBar title={cohort?.name}>
+          {auth.isTrainerOrAdmin && cohortId && (
+            <button
+              type="button"
+              className={buttonCls({ size: 'sm', variant: 'outline' })}
+              onClick={() => exportCohort([cohortId], cohort?.name)}
+            >
               Export členů
             </button>
           )}
-          {auth.isAdmin && (
+          {auth.isAdmin && cohortId && (
             <Dialog>
               <DialogTrigger.Edit size="sm" />
               <DialogContent>
-                <CohortForm id={id} />
+                <CohortForm id={cohortId} />
               </DialogContent>
             </Dialog>
           )}
@@ -134,39 +161,6 @@ function TrainingCohortPage({ item }: PageProps) {
 };
 
 export default TrainingCohortPage;
-
-export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
-export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const params = QueryParams.parse(context.params);
-  let { id } = params
-  if (!id) {
-    id = params.slug;
-  }
-  const item = await fetchGql(CohortDocument, { id }).then((x) => x.entity);
-
-  if (!item) {
-    return {
-      revalidate: 60,
-      notFound: true,
-    };
-  }
-
-  const expectedSlug = slugify(item.name);
-  if (params.slug !== expectedSlug) {
-    return {
-      revalidate: 60,
-      redirect: {
-        destination: `/treninkove-skupiny/${item.id}/${expectedSlug}`,
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    revalidate: 60,
-    props: { item },
-  };
-};
 
 function getCouplesAndSolos(
   members: CohortMembership[],

@@ -1,26 +1,59 @@
 import { RichTextView } from '@/ui/RichTextView';
-import { ArticleDocument, type ArticleFragment } from '@/graphql/Articles';
-import { fetchGql } from '@/graphql/query';
+import { ArticleDocument } from '@/graphql/Articles';
 import { TitleBar } from '@/ui/TitleBar';
 import { fullDateFormatter } from '@/ui/format';
 import { slugify } from '@/ui/slugify';
-import type { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { z } from 'zod';
-import { zRouterString } from '@/ui/useTypedRouter';
+import { useTypedRouter, zRouterString } from '@/ui/useTypedRouter';
+import { useQuery } from 'urql';
+import { Spinner } from '@/ui/Spinner';
 
 const QueryParams = z.object({
   id: zRouterString,
   slug: zRouterString,
 });
 
-type PageProps = {
-  item: ArticleFragment;
-};
+function ArticlePage() {
+  const router = useTypedRouter(QueryParams);
+  const idParam = router.query.id || router.query.slug;
+  const [{ data, fetching }] = useQuery({
+    query: ArticleDocument,
+    variables: { id: idParam || '0' },
+    pause: !router.isReady || !idParam,
+  });
+  const item = data?.aktuality;
 
-function ArticlePage({ item }: PageProps) {
+  React.useEffect(() => {
+    if (!router.isReady || !idParam || fetching) return;
+    if (!item) {
+      void router.replace('/404');
+      return;
+    }
+    const expectedSlug = slugify(item.atJmeno);
+    if (expectedSlug && router.query.slug !== expectedSlug) {
+      void router.replace({
+        pathname: '/clanky/[id]/[...slug]',
+        query: {
+          id: item.id,
+          slug: [expectedSlug],
+        },
+      });
+    }
+  }, [fetching, idParam, item, router]);
+
+  if (!item) {
+    return (
+      <Layout showTopMenu>
+        <div className="flex justify-center py-10">
+          <Spinner />
+        </div>
+      </Layout>
+    );
+  }
+
   const galleryPath = item.galerieFoto?.gfPath;
   const imageUrl = item.titlePhotoUrl ?? (galleryPath ? `/galerie/${galleryPath}` : '');
 
@@ -55,45 +88,6 @@ function ArticlePage({ item }: PageProps) {
       <RichTextView value={item.atText} />
     </Layout>
   );
-};
+}
 
 export default ArticlePage;
-
-export const getStaticPaths = () => ({ paths: [], fallback: 'blocking' });
-export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const params = QueryParams.parse(context.params);
-  let { id } = params;
-  if (!id) {
-    id = params.slug;
-  }
-  if (Number.isNaN(Number.parseInt(id, 10))) {
-    return {
-      revalidate: 60,
-      notFound: true,
-    };
-  }
-
-  const item = await fetchGql(ArticleDocument, { id }).then(x => x.aktuality);
-  if (!item) {
-    return {
-      revalidate: 60,
-      notFound: true,
-    };
-  }
-
-  const expectedSlug = slugify(item.atJmeno);
-  if (expectedSlug && params.slug !== expectedSlug) {
-    return {
-      revalidate: 60,
-      redirect: {
-        destination: `/clanky/${item.id}/${expectedSlug}`,
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    revalidate: 60,
-    props: { item },
-  };
-};
