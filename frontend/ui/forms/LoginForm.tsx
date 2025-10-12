@@ -1,4 +1,5 @@
 import { LoginDocument, type UserAuthFragment } from '@/graphql/CurrentUser';
+import { tenantConfig } from '@/tenant/config';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
@@ -23,6 +24,7 @@ type LoginFormProps = {
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const { control, handleSubmit } = useZodForm(Form);
   const doSignIn = useMutation(LoginDocument)[1];
+  const registrationEnabled = tenantConfig.enableRegistration;
 
   const onSubmit = useAsyncCallback(async ({ login, passwd }: FormValues) => {
     const result = await doSignIn({ login, passwd });
@@ -56,13 +58,17 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             Přihlásit
           </SubmitButton>
 
-          <div className="flex justify-between flex-wrap gap-2">
-            <Link
-              href="/registrace"
-              className="uppercase rounded-md px-3 text-sm py-2 text-accent-10 hover:bg-accent-3 text-left"
-            >
-              Přihlásit nového člena
-            </Link>
+          <div
+            className={`flex flex-wrap gap-2 ${registrationEnabled ? 'justify-between' : 'justify-end'}`}
+          >
+            {registrationEnabled && (
+              <Link
+                href="/registrace"
+                className="uppercase rounded-md px-3 text-sm py-2 text-accent-10 hover:bg-accent-3 text-left"
+              >
+                Přihlásit nového člena
+              </Link>
+            )}
             <Link
               href="/zapomenute-heslo"
               className="uppercase rounded-md px-3 text-sm py-2 text-accent-10 hover:bg-accent-3 text-right"
