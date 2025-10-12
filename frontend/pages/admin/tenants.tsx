@@ -1,11 +1,17 @@
 import { Layout } from '@/components/layout/Layout';
+import { useZodForm } from '@/lib/use-schema-form';
+import { TextFieldElement } from '@/ui/fields/text';
+import { TextAreaElement } from '@/ui/fields/textarea';
+import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
 import { typographyCls } from '@/ui/style';
 import * as React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
+import { z } from 'zod';
 
 const integerFormatter = new Intl.NumberFormat('cs-CZ');
 const decimalFormatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
@@ -30,8 +36,6 @@ const SYSTEM_ADMIN_TENANTS_QUERY = /* GraphQL */ `
         postalCode
       }
       membershipCount
-      pendingMembershipCount
-      expiredMembershipCount
       trainerCount
       administratorCount
       sessionCountLast30Days
@@ -85,8 +89,6 @@ type TenantRow = {
   czDic: string;
   address: AddressDomain | null;
   membershipCount: number;
-  pendingMembershipCount: number;
-  expiredMembershipCount: number;
   trainerCount: number;
   administratorCount: number;
   sessionCountLast30Days: number;
@@ -123,6 +125,17 @@ type UpdateTenantResult = {
     };
   };
 };
+
+const TenantFormSchema = z.object({
+  name: z.string().min(1, 'Název je povinný'),
+  description: z.string().optional(),
+  bankAccount: z.string().optional(),
+  origins: z.string().optional(),
+  czIco: z.string().optional(),
+  czDic: z.string().optional(),
+});
+
+type TenantFormValues = z.infer<typeof TenantFormSchema>;
 
 export default function SystemAdminTenantsPage() {
   const [{ data, fetching, error }, reexecute] = useQuery<SystemAdminTenantsQueryResult>({
@@ -208,12 +221,6 @@ function TenantCard({ tenant, onUpdated }: TenantCardProps) {
           Aktivní členové: {integerFormatter.format(tenant.membershipCount)}
         </span>
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Čekající členové: {integerFormatter.format(tenant.pendingMembershipCount)}
-        </span>
-        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Expirace: {integerFormatter.format(tenant.expiredMembershipCount)}
-        </span>
-        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
           Lekce (30 dní): {integerFormatter.format(tenant.sessionCountLast30Days)}
         </span>
         <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
@@ -235,32 +242,22 @@ type TenantEditDialogProps = {
   onUpdated: () => void;
 };
 
-type TenantFormState = {
-  name: string;
-  description: string;
-  bankAccount: string;
-  origins: string;
-  czIco: string;
-  czDic: string;
-};
-
 function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
   const [open, setOpen] = React.useState(false);
-  const [form, setForm] = React.useState<TenantFormState>(() => createFormState(tenant));
-  const [{ fetching, error }, updateTenant] = useMutation<UpdateTenantResult, UpdateTenantVariables>(
+  const defaultValues = React.useMemo(() => createFormState(tenant), [tenant]);
+  const { control, handleSubmit, reset } = useZodForm(TenantFormSchema, { defaultValues });
+  const [, updateTenant] = useMutation<UpdateTenantResult, UpdateTenantVariables>(
     SYSTEM_ADMIN_UPDATE_TENANT_MUTATION
   );
 
   React.useEffect(() => {
     if (open) {
-      setForm(createFormState(tenant));
+      reset(createFormState(tenant));
     }
-  }, [open, tenant]);
+  }, [open, tenant, reset]);
 
-  const handleSubmit = React.useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const origins = form.origins
+  const onSubmit = useAsyncCallback(async (values: TenantFormValues) => {
+    const origins = (values.origins ?? '')
       .split(',')
       .map((value) => value.trim())
       .filter(Boolean);
@@ -268,22 +265,22 @@ function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
     const result = await updateTenant({
       input: {
         tenantId: tenant.id,
-        name: form.name,
-        description: form.description,
-        bankAccount: form.bankAccount,
+        name: values.name,
+        description: values.description ?? '',
+        bankAccount: values.bankAccount ?? '',
         origins,
-        czIco: form.czIco,
-        czDic: form.czDic,
+        czIco: values.czIco ?? '',
+        czDic: values.czDic ?? '',
       },
     });
 
-    if (!result.error) {
-      onUpdated();
-      setOpen(false);
+    if (result.error) {
+      throw result.error;
     }
-  }, [form, tenant.id, updateTenant, onUpdated]);
 
-  const inputCls = 'w-full rounded-md border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent-7 focus:border-transparent';
+    onUpdated();
+    setOpen(false);
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -292,66 +289,39 @@ function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
         <DialogHeader>
           <DialogTitle>Upravit {tenant.name}</DialogTitle>
         </DialogHeader>
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          <label className="grid gap-1 text-sm">
-            <span className="font-semibold text-neutral-11">Název</span>
-            <input
-              className={inputCls}
-              value={form.name}
-              onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-            />
-          </label>
-          <label className="grid gap-1 text-sm">
-            <span className="font-semibold text-neutral-11">Popis</span>
-            <textarea
-              className={`${inputCls} min-h-24`}
-              value={form.description}
-              onChange={(event) => setForm((prev) => ({ ...prev, description: event.target.value }))}
-            />
-          </label>
-          <label className="grid gap-1 text-sm">
-            <span className="font-semibold text-neutral-11">Bankovní účet</span>
-            <input
-              className={inputCls}
-              value={form.bankAccount}
-              onChange={(event) => setForm((prev) => ({ ...prev, bankAccount: event.target.value }))}
-            />
-          </label>
-          <label className="grid gap-1 text-sm">
-            <span className="font-semibold text-neutral-11">Domény (oddělené čárkou)</span>
-            <input
-              className={inputCls}
-              value={form.origins}
-              onChange={(event) => setForm((prev) => ({ ...prev, origins: event.target.value }))}
-            />
-          </label>
+        <form className="grid gap-4" onSubmit={handleSubmit(onSubmit.execute)}>
+          <FormError error={onSubmit.error ?? null} />
+
+          <TextFieldElement
+            control={control}
+            name="name"
+            label="Název"
+            required
+          />
+          <TextAreaElement
+            control={control}
+            name="description"
+            label="Popis"
+            className="min-h-24"
+          />
+          <TextFieldElement
+            control={control}
+            name="bankAccount"
+            label="Bankovní účet"
+          />
+          <TextFieldElement
+            control={control}
+            name="origins"
+            label="Domény (oddělené čárkou)"
+            helperText="např. example.cz, www.example.cz"
+          />
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="grid gap-1 text-sm">
-              <span className="font-semibold text-neutral-11">IČO</span>
-              <input
-                className={inputCls}
-                value={form.czIco}
-                onChange={(event) => setForm((prev) => ({ ...prev, czIco: event.target.value }))}
-              />
-            </label>
-            <label className="grid gap-1 text-sm">
-              <span className="font-semibold text-neutral-11">DIČ</span>
-              <input
-                className={inputCls}
-                value={form.czDic}
-                onChange={(event) => setForm((prev) => ({ ...prev, czDic: event.target.value }))}
-              />
-            </label>
+            <TextFieldElement control={control} name="czIco" label="IČO" />
+            <TextFieldElement control={control} name="czDic" label="DIČ" />
           </div>
 
-          {error && (
-            <div className="rounded-md border border-red-7 bg-red-3 px-3 py-2 text-sm text-red-11">
-              Nepodařilo se uložit změny: {error.message}
-            </div>
-          )}
-
           <DialogFooter>
-            <SubmitButton loading={fetching}>Uložit změny</SubmitButton>
+            <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -359,7 +329,7 @@ function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
   );
 }
 
-function createFormState(tenant: TenantRow): TenantFormState {
+function createFormState(tenant: TenantRow): TenantFormValues {
   return {
     name: tenant.name,
     description: tenant.description || '',

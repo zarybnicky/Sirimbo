@@ -57,8 +57,6 @@ returns table (
   cz_dic text,
   address public.address_domain,
   membership_count bigint,
-  pending_membership_count bigint,
-  expired_membership_count bigint,
   trainer_count bigint,
   administrator_count bigint,
   session_count_last_30_days bigint,
@@ -85,9 +83,7 @@ begin
     t.cz_ico,
     t.cz_dic,
     t.address,
-    membership_counts.active_membership_count,
-    membership_counts.pending_membership_count,
-    membership_counts.expired_membership_count,
+    membership_counts.membership_count,
     staffing.trainer_count,
     administrators.administrator_count,
     load.session_count_last_30_days,
@@ -95,9 +91,7 @@ begin
   from public.tenant t
   cross join lateral (
     select
-      count(*) filter (where tm.status = 'active') as active_membership_count,
-      count(*) filter (where tm.status = 'pending') as pending_membership_count,
-      count(*) filter (where tm.status = 'expired') as expired_membership_count
+      count(*) filter (where tm.status = 'active') as membership_count
     from public.tenant_membership tm
     where tm.tenant_id = t.id
   ) as membership_counts
