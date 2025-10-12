@@ -50,7 +50,6 @@
     "glider-js": "~1.7.9",
     "graphql": "^16.11.0",
     "html-react-parser": "^5.2.6",
-    "i18next": "~25.6.0",
     "iban": "~0.0.14",
     "jotai": "^2.15.0",
     "leaflet": "^1.9.4",
@@ -79,7 +78,6 @@
     "react-paginate": "~8.3.0",
     "react-remove-scroll": "^2.7.1",
     "react-toastify": "~10.0.6",
-    "recharts": "^2.15.4",
     "sharp": "^0.34.4",
     "tailwind-merge": "~2.5.5",
     "tailwind-scrollbar": "~3.1.0",
@@ -92,8 +90,7 @@
     "use-query-params": "^2.2.1",
     "uuid": "^13.0.0",
     "wonka": "^6.3.5",
-    "zod": "~4.1.12",
-    "zod-i18n-map": "~2.27.0"
+    "zod": "~4.1.12"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",

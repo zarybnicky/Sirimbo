@@ -1897,25 +1897,6 @@ let
         "semver" = packages."semver@npm:6.3.1";
       };
     };
-    "@babel/generator@npm:7.2.0" = {
-      name = "@babel/generator";
-      reference = "npm:7.2.0";
-      linkType = "HARD";
-      outputName = "babel-generator-7.2.0-1a7cb0c007";
-      outputHash = "61520c478f52eff44eb3b460ae976f800eb06933f366890274e1a2ef1b7105a3271cd645915362fbc5646cd1e6688a4165b32e60cb6fbfa0715428433fdfba89";
-      flatName = "generator";
-      languageName = "node";
-      scope = "babel";
-      descriptorRange = "npm:7.2.0";
-      checksum = "10/61520c478f52eff44eb3b460ae976f800eb06933f366890274e1a2ef1b7105a3271cd645915362fbc5646cd1e6688a4165b32e60cb6fbfa0715428433fdfba89";
-      dependencies = {
-        "@babel/types" = packages."@babel/types@npm:7.28.4";
-        "jsesc" = packages."jsesc@npm:2.5.2";
-        "lodash" = packages."lodash@npm:4.17.21";
-        "source-map" = packages."source-map@npm:0.5.7";
-        "trim-right" = packages."trim-right@npm:1.0.1";
-      };
-    };
     "@babel/generator@npm:7.28.3" = {
       name = "@babel/generator";
       reference = "npm:7.28.3";
@@ -1994,15 +1975,15 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/helper-create-class-features-plugin@virtual:08e6d9e691ed8d7fe3201126c94e9b2254345e789d9d7963d3c52cd21c5b93c1db36b9826297cad91d019478d00544030d1288e510a7f06521d2939153527617#npm:7.28.3" = {
+    "@babel/helper-create-class-features-plugin@virtual:9c08b86c92729168c74e5e46976d40b61711e89b27115c37e4aac91ac1edaa3ff223e902afa28da2eca38fbf7661a81c178d17ac453ab5a5e401d61dcc023aab#npm:7.28.3" = {
       name = "@babel/helper-create-class-features-plugin";
-      reference = "virtual:08e6d9e691ed8d7fe3201126c94e9b2254345e789d9d7963d3c52cd21c5b93c1db36b9826297cad91d019478d00544030d1288e510a7f06521d2939153527617#npm:7.28.3";
+      reference = "virtual:9c08b86c92729168c74e5e46976d40b61711e89b27115c37e4aac91ac1edaa3ff223e902afa28da2eca38fbf7661a81c178d17ac453ab5a5e401d61dcc023aab#npm:7.28.3";
       canonicalPackage = packages."@babel/helper-create-class-features-plugin@npm:7.28.3";
       dependencies = {
         "@babel/helper-annotate-as-pure" = packages."@babel/helper-annotate-as-pure@npm:7.27.3";
         "@babel/helper-member-expression-to-functions" = packages."@babel/helper-member-expression-to-functions@npm:7.27.1";
         "@babel/helper-optimise-call-expression" = packages."@babel/helper-optimise-call-expression@npm:7.27.1";
-        "@babel/helper-replace-supers" = packages."@babel/helper-replace-supers@virtual:5b3812afd79bb582db54406b5aa562b68bbe286d602e9b96bca218e9aef4dbdc68eaffa9df348eceeaf771428ebaf7261ecbc472ba29783aac0cec6ceb6ff3ce#npm:7.27.1";
+        "@babel/helper-replace-supers" = packages."@babel/helper-replace-supers@virtual:00caee1961d2035fd3e7a89353b9991657eb5e096cf9163064082650834839424e3696668e60d29479aa928ff64f12c2760387e1c4676100fb86df7119fd7ff5#npm:7.27.1";
         "@babel/helper-skip-transparent-expression-wrappers" = packages."@babel/helper-skip-transparent-expression-wrappers@npm:7.27.1";
         "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
         "semver" = packages."semver@npm:6.3.1";
@@ -2044,9 +2025,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/helper-create-regexp-features-plugin@virtual:61528dc70b7efd05083d1da7a475913728a12af0cb6e358e991581594cf53461733e656082899b82c329d1ff92b81dd737255a73d1b2b01a3e7fe659415cbb63#npm:7.27.1" = {
+    "@babel/helper-create-regexp-features-plugin@virtual:df65a4fd4b77d608d6785cd85e75805ed64c376f130a42effa767f7982f2de36a69924748ea8d8eede4e987df32072dcad305ce7c5efc4e78970aac2b96c3c3b#npm:7.27.1" = {
       name = "@babel/helper-create-regexp-features-plugin";
-      reference = "virtual:61528dc70b7efd05083d1da7a475913728a12af0cb6e358e991581594cf53461733e656082899b82c329d1ff92b81dd737255a73d1b2b01a3e7fe659415cbb63#npm:7.27.1";
+      reference = "virtual:df65a4fd4b77d608d6785cd85e75805ed64c376f130a42effa767f7982f2de36a69924748ea8d8eede4e987df32072dcad305ce7c5efc4e78970aac2b96c3c3b#npm:7.27.1";
       canonicalPackage = packages."@babel/helper-create-regexp-features-plugin@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -2078,9 +2059,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/helper-define-polyfill-provider@virtual:6f2eaefbc5a70431fe61e17ba58d7201de6355fd19da432b89bc1a4c96695ce80b202c05efcca5f71e805a78185ae5c40f125370050398ef6909582347d3d836#npm:0.6.5" = {
+    "@babel/helper-define-polyfill-provider@virtual:cbbbba9a96110b75b4940adcdfc25a4eb837e3628e37ffcdf71d94d42fb23d1b6de2f55815ea10f4e7c177fcd539fbc63287ad4a9c26ccc0cc0e5d5a9a2551f0#npm:0.6.5" = {
       name = "@babel/helper-define-polyfill-provider";
-      reference = "virtual:6f2eaefbc5a70431fe61e17ba58d7201de6355fd19da432b89bc1a4c96695ce80b202c05efcca5f71e805a78185ae5c40f125370050398ef6909582347d3d836#npm:0.6.5";
+      reference = "virtual:cbbbba9a96110b75b4940adcdfc25a4eb837e3628e37ffcdf71d94d42fb23d1b6de2f55815ea10f4e7c177fcd539fbc63287ad4a9c26ccc0cc0e5d5a9a2551f0#npm:0.6.5";
       canonicalPackage = packages."@babel/helper-define-polyfill-provider@npm:0.6.5";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -2089,21 +2070,6 @@ let
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
         "lodash.debounce" = packages."lodash.debounce@npm:4.0.8";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.10#optional!builtin<compat/resolve>::version=1.22.10&hash=c3c19d";
-      };
-    };
-    "@babel/helper-environment-visitor@npm:7.24.7" = {
-      name = "@babel/helper-environment-visitor";
-      reference = "npm:7.24.7";
-      linkType = "HARD";
-      outputName = "babel-helper-environment-visitor-7.24.7-9a965bf523";
-      outputHash = "079d86e65701b29ebc10baf6ed548d17c19b808a07aa6885cc141b690a78581b180ee92b580d755361dc3b16adf975b2d2058b8ce6c86675fcaf43cf22f2f7c6";
-      flatName = "helper-environment-visitor";
-      languageName = "node";
-      scope = "babel";
-      descriptorRange = "npm:^7.18.9";
-      checksum = "10/079d86e65701b29ebc10baf6ed548d17c19b808a07aa6885cc141b690a78581b180ee92b580d755361dc3b16adf975b2d2058b8ce6c86675fcaf43cf22f2f7c6";
-      dependencies = {
-        "@babel/types" = packages."@babel/types@npm:7.28.4";
       };
     };
     "@babel/helper-globals@npm:7.28.0" = {
@@ -2171,9 +2137,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/helper-module-transforms@virtual:324fba8d4dc4a48d9496d5a9688c08c021770dc869770bff18ffac492d3986ba9a73435454c7375f4acf067b2f4655b6822ab8cab93094ffbc1c6fdcc2d4a9c8#npm:7.28.3" = {
+    "@babel/helper-module-transforms@virtual:bebe70e99538708360145c73a7e88b7cdca474e06f810a3bf024f8eda1b7196279d58326fc86c62e112fd90c1af8bd085118866e799d180123ef257d99fcafe8#npm:7.28.3" = {
       name = "@babel/helper-module-transforms";
-      reference = "virtual:324fba8d4dc4a48d9496d5a9688c08c021770dc869770bff18ffac492d3986ba9a73435454c7375f4acf067b2f4655b6822ab8cab93094ffbc1c6fdcc2d4a9c8#npm:7.28.3";
+      reference = "virtual:bebe70e99538708360145c73a7e88b7cdca474e06f810a3bf024f8eda1b7196279d58326fc86c62e112fd90c1af8bd085118866e799d180123ef257d99fcafe8#npm:7.28.3";
       canonicalPackage = packages."@babel/helper-module-transforms@npm:7.28.3";
       dependencies = {
         "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.27.1";
@@ -2240,9 +2206,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/helper-remap-async-to-generator@virtual:4a70e616247366419b2b51af6c966aadc87dbc6a576db8219088ef253b7b6c5917c3a55688a210b6ad678451389347ea0217bcc6a94b22d84f4c1d6d4cc2b44d#npm:7.27.1" = {
+    "@babel/helper-remap-async-to-generator@virtual:c34cda7d2406cbef66850c94249cc9c2977bde7d7a0810696f26882cb4aff2907f3dffa08205913ad81d42e82aa2bc7cad439ac0ca6848c76ffb252f6ad54e04#npm:7.27.1" = {
       name = "@babel/helper-remap-async-to-generator";
-      reference = "virtual:4a70e616247366419b2b51af6c966aadc87dbc6a576db8219088ef253b7b6c5917c3a55688a210b6ad678451389347ea0217bcc6a94b22d84f4c1d6d4cc2b44d#npm:7.27.1";
+      reference = "virtual:c34cda7d2406cbef66850c94249cc9c2977bde7d7a0810696f26882cb4aff2907f3dffa08205913ad81d42e82aa2bc7cad439ac0ca6848c76ffb252f6ad54e04#npm:7.27.1";
       canonicalPackage = packages."@babel/helper-remap-async-to-generator@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -2272,22 +2238,22 @@ let
         "@types/babel__core"
       ];
     };
+    "@babel/helper-replace-supers@virtual:00caee1961d2035fd3e7a89353b9991657eb5e096cf9163064082650834839424e3696668e60d29479aa928ff64f12c2760387e1c4676100fb86df7119fd7ff5#npm:7.27.1" = {
+      name = "@babel/helper-replace-supers";
+      reference = "virtual:00caee1961d2035fd3e7a89353b9991657eb5e096cf9163064082650834839424e3696668e60d29479aa928ff64f12c2760387e1c4676100fb86df7119fd7ff5#npm:7.27.1";
+      canonicalPackage = packages."@babel/helper-replace-supers@npm:7.27.1";
+      dependencies = {
+        "@babel/helper-member-expression-to-functions" = packages."@babel/helper-member-expression-to-functions@npm:7.27.1";
+        "@babel/helper-optimise-call-expression" = packages."@babel/helper-optimise-call-expression@npm:7.27.1";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
+      };
+    };
     "@babel/helper-replace-supers@virtual:0478ed4e0883c9bc1dea8d20126a2c9710a24ee7e410372259983e2c5aef3f674112da38a60670ce1d57c16703036aa5b31b16458622112735c84f1d0c0ccf12#npm:7.27.1" = {
       name = "@babel/helper-replace-supers";
       reference = "virtual:0478ed4e0883c9bc1dea8d20126a2c9710a24ee7e410372259983e2c5aef3f674112da38a60670ce1d57c16703036aa5b31b16458622112735c84f1d0c0ccf12#npm:7.27.1";
       canonicalPackage = packages."@babel/helper-replace-supers@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-member-expression-to-functions" = packages."@babel/helper-member-expression-to-functions@npm:7.27.1";
-        "@babel/helper-optimise-call-expression" = packages."@babel/helper-optimise-call-expression@npm:7.27.1";
-        "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
-      };
-    };
-    "@babel/helper-replace-supers@virtual:5b3812afd79bb582db54406b5aa562b68bbe286d602e9b96bca218e9aef4dbdc68eaffa9df348eceeaf771428ebaf7261ecbc472ba29783aac0cec6ceb6ff3ce#npm:7.27.1" = {
-      name = "@babel/helper-replace-supers";
-      reference = "virtual:5b3812afd79bb582db54406b5aa562b68bbe286d602e9b96bca218e9aef4dbdc68eaffa9df348eceeaf771428ebaf7261ecbc472ba29783aac0cec6ceb6ff3ce#npm:7.27.1";
-      canonicalPackage = packages."@babel/helper-replace-supers@npm:7.27.1";
-      dependencies = {
         "@babel/helper-member-expression-to-functions" = packages."@babel/helper-member-expression-to-functions@npm:7.27.1";
         "@babel/helper-optimise-call-expression" = packages."@babel/helper-optimise-call-expression@npm:7.27.1";
         "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
@@ -2414,40 +2380,6 @@ let
         "@babel/types" = packages."@babel/types@npm:7.28.4";
       };
     };
-    "@babel/plugin-proposal-async-generator-functions@npm:7.20.7" = {
-      name = "@babel/plugin-proposal-async-generator-functions";
-      reference = "npm:7.20.7";
-      linkType = "HARD";
-      outputName = "babel-plugin-proposal-async-generator-functions-7.20.7-14b8ab2230";
-      outputHash = "111109ee118c9e69982f08d5e119eab04190b36a0f40e22e873802d941956eee66d2aa5a15f5321e51e3f9aa70a91136451b987fe15185ef8cc547ac88937723";
-      flatName = "plugin-proposal-async-generator-functions";
-      languageName = "node";
-      scope = "babel";
-      descriptorRange = "npm:^7.0.0";
-      checksum = "10/111109ee118c9e69982f08d5e119eab04190b36a0f40e22e873802d941956eee66d2aa5a15f5321e51e3f9aa70a91136451b987fe15185ef8cc547ac88937723";
-      dependencies = {
-        "@babel/helper-environment-visitor" = packages."@babel/helper-environment-visitor@npm:7.24.7";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/helper-remap-async-to-generator" = packages."@babel/helper-remap-async-to-generator@npm:7.27.1";
-        "@babel/plugin-syntax-async-generators" = packages."@babel/plugin-syntax-async-generators@npm:7.8.4";
-      };
-      packagePeers = [
-        "@babel/core"
-        "@types/babel__core"
-      ];
-    };
-    "@babel/plugin-proposal-async-generator-functions@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.20.7" = {
-      name = "@babel/plugin-proposal-async-generator-functions";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.20.7";
-      canonicalPackage = packages."@babel/plugin-proposal-async-generator-functions@npm:7.20.7";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-environment-visitor" = packages."@babel/helper-environment-visitor@npm:7.24.7";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/helper-remap-async-to-generator" = packages."@babel/helper-remap-async-to-generator@virtual:4a70e616247366419b2b51af6c966aadc87dbc6a576db8219088ef253b7b6c5917c3a55688a210b6ad678451389347ea0217bcc6a94b22d84f4c1d6d4cc2b44d#npm:7.27.1";
-        "@babel/plugin-syntax-async-generators" = packages."@babel/plugin-syntax-async-generators@virtual:4a70e616247366419b2b51af6c966aadc87dbc6a576db8219088ef253b7b6c5917c3a55688a210b6ad678451389347ea0217bcc6a94b22d84f4c1d6d4cc2b44d#npm:7.8.4";
-      };
-    };
     "@babel/plugin-proposal-class-properties@npm:7.18.6" = {
       name = "@babel/plugin-proposal-class-properties";
       reference = "npm:7.18.6";
@@ -2457,7 +2389,7 @@ let
       flatName = "plugin-proposal-class-properties";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.18.0";
+      descriptorRange = "npm:^7.0.0";
       checksum = "10/49a78a2773ec0db56e915d9797e44fd079ab8a9b2e1716e0df07c92532f2c65d76aeda9543883916b8e0ff13606afeffa67c5b93d05b607bc87653ad18a91422";
       dependencies = {
         "@babel/helper-create-class-features-plugin" = packages."@babel/helper-create-class-features-plugin@npm:7.28.3";
@@ -2499,14 +2431,14 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-proposal-decorators@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.28.0" = {
+    "@babel/plugin-proposal-decorators@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.28.0" = {
       name = "@babel/plugin-proposal-decorators";
-      reference = "virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.28.0";
+      reference = "virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.28.0";
       canonicalPackage = packages."@babel/plugin-proposal-decorators@npm:7.28.0";
       dependencies = {
-        "@babel/helper-create-class-features-plugin" = packages."@babel/helper-create-class-features-plugin@virtual:08e6d9e691ed8d7fe3201126c94e9b2254345e789d9d7963d3c52cd21c5b93c1db36b9826297cad91d019478d00544030d1288e510a7f06521d2939153527617#npm:7.28.3";
+        "@babel/helper-create-class-features-plugin" = packages."@babel/helper-create-class-features-plugin@virtual:9c08b86c92729168c74e5e46976d40b61711e89b27115c37e4aac91ac1edaa3ff223e902afa28da2eca38fbf7661a81c178d17ac453ab5a5e401d61dcc023aab#npm:7.28.3";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-syntax-decorators" = packages."@babel/plugin-syntax-decorators@virtual:08e6d9e691ed8d7fe3201126c94e9b2254345e789d9d7963d3c52cd21c5b93c1db36b9826297cad91d019478d00544030d1288e510a7f06521d2939153527617#npm:7.27.1";
+        "@babel/plugin-syntax-decorators" = packages."@babel/plugin-syntax-decorators@virtual:9c08b86c92729168c74e5e46976d40b61711e89b27115c37e4aac91ac1edaa3ff223e902afa28da2eca38fbf7661a81c178d17ac453ab5a5e401d61dcc023aab#npm:7.27.1";
       };
     };
     "@babel/plugin-proposal-export-default-from@npm:7.27.1" = {
@@ -2518,7 +2450,7 @@ let
       flatName = "plugin-proposal-export-default-from";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/cf9eb3c80bcee3ee82d28f1053db97fa6c6e4dea819f73df5a3cb9155d45efc29914e86353572eab36adfe691ca1573e6e2cddae4edbdd475253044575eb7a24";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -2528,43 +2460,13 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-proposal-export-default-from@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-proposal-export-default-from@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-proposal-export-default-from";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-proposal-export-default-from@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-      };
-    };
-    "@babel/plugin-proposal-logical-assignment-operators@npm:7.20.7" = {
-      name = "@babel/plugin-proposal-logical-assignment-operators";
-      reference = "npm:7.20.7";
-      linkType = "HARD";
-      outputName = "babel-plugin-proposal-logical-assignment-operators-7.20.7-14484768d8";
-      outputHash = "cdd7b8136cc4db3f47714d5266f9e7b592a2ac5a94a5878787ce08890e97c8ab1ca8e94b27bfeba7b0f2b1549a026d9fc414ca2196de603df36fb32633bbdc19";
-      flatName = "plugin-proposal-logical-assignment-operators";
-      languageName = "node";
-      scope = "babel";
-      descriptorRange = "npm:^7.18.0";
-      checksum = "10/cdd7b8136cc4db3f47714d5266f9e7b592a2ac5a94a5878787ce08890e97c8ab1ca8e94b27bfeba7b0f2b1549a026d9fc414ca2196de603df36fb32633bbdc19";
-      dependencies = {
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-syntax-logical-assignment-operators" = packages."@babel/plugin-syntax-logical-assignment-operators@npm:7.10.4";
-      };
-      packagePeers = [
-        "@babel/core"
-        "@types/babel__core"
-      ];
-    };
-    "@babel/plugin-proposal-logical-assignment-operators@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.20.7" = {
-      name = "@babel/plugin-proposal-logical-assignment-operators";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.20.7";
-      canonicalPackage = packages."@babel/plugin-proposal-logical-assignment-operators@npm:7.20.7";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-syntax-logical-assignment-operators" = packages."@babel/plugin-syntax-logical-assignment-operators@virtual:ddcfcd2bb13f70f376ed114485432bb162ca879e7b5744bbd60daa48b5580cef15b8139efc265cd3bf1d09936f656b5cb2e6baeefb55c7514439a158255398f0#npm:7.10.4";
       };
     };
     "@babel/plugin-proposal-nullish-coalescing-operator@npm:7.18.6" = {
@@ -2576,7 +2478,7 @@ let
       flatName = "plugin-proposal-nullish-coalescing-operator";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.18.0";
+      descriptorRange = "npm:^7.13.8";
       checksum = "10/949c9ddcdecdaec766ee610ef98f965f928ccc0361dd87cf9f88cf4896a6ccd62fce063d4494778e50da99dea63d270a1be574a62d6ab81cbe9d85884bf55a7d";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -2587,44 +2489,14 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-proposal-nullish-coalescing-operator@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.18.6" = {
+    "@babel/plugin-proposal-nullish-coalescing-operator@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.18.6" = {
       name = "@babel/plugin-proposal-nullish-coalescing-operator";
-      reference = "virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.18.6";
+      reference = "virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.18.6";
       canonicalPackage = packages."@babel/plugin-proposal-nullish-coalescing-operator@npm:7.18.6";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-syntax-nullish-coalescing-operator" = packages."@babel/plugin-syntax-nullish-coalescing-operator@virtual:084089a631743eb2e7e5b74362965e9a9ec4946c7ebcc1e9341f955ff2e53abab9a1757af440c1e51092fb169ec2c46a8b57db92686c7d1ccd259958bfe6fb2f#npm:7.8.3";
-      };
-    };
-    "@babel/plugin-proposal-numeric-separator@npm:7.18.6" = {
-      name = "@babel/plugin-proposal-numeric-separator";
-      reference = "npm:7.18.6";
-      linkType = "HARD";
-      outputName = "babel-plugin-proposal-numeric-separator-7.18.6-cfcd55888a";
-      outputHash = "f370ea584c55bf4040e1f78c80b4eeb1ce2e6aaa74f87d1a48266493c33931d0b6222d8cee3a082383d6bb648ab8d6b7147a06f974d3296ef3bc39c7851683ec";
-      flatName = "plugin-proposal-numeric-separator";
-      languageName = "node";
-      scope = "babel";
-      descriptorRange = "npm:^7.0.0";
-      checksum = "10/f370ea584c55bf4040e1f78c80b4eeb1ce2e6aaa74f87d1a48266493c33931d0b6222d8cee3a082383d6bb648ab8d6b7147a06f974d3296ef3bc39c7851683ec";
-      dependencies = {
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-syntax-numeric-separator" = packages."@babel/plugin-syntax-numeric-separator@npm:7.10.4";
-      };
-      packagePeers = [
-        "@babel/core"
-        "@types/babel__core"
-      ];
-    };
-    "@babel/plugin-proposal-numeric-separator@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.18.6" = {
-      name = "@babel/plugin-proposal-numeric-separator";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.18.6";
-      canonicalPackage = packages."@babel/plugin-proposal-numeric-separator@npm:7.18.6";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-syntax-numeric-separator" = packages."@babel/plugin-syntax-numeric-separator@virtual:bcd93bcbadc01d9fca731e5f7d908be0d35ed5d1f54be41d71e90bef130dea1c7604bb6810b40b301537cf08794629f8383ee9d10df6ad026d039aa43f9796e4#npm:7.10.4";
+        "@babel/plugin-syntax-nullish-coalescing-operator" = packages."@babel/plugin-syntax-nullish-coalescing-operator@virtual:21d2623e3d7f9a37c721fd7d6065806a21e0e66c39dd9abe06251f9e24a384b08ad1c7bda19771f07bfde0cd0b7637ab8dc459fc7755b093992c1436bf75a638#npm:7.8.3";
       };
     };
     "@babel/plugin-proposal-object-rest-spread@npm:7.20.7" = {
@@ -2636,7 +2508,7 @@ let
       flatName = "plugin-proposal-object-rest-spread";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.20.0";
+      descriptorRange = "npm:^7.0.0";
       checksum = "10/cb0f8f2ff98d7bb64ee91c28b20e8ab15d9bc7043f0932cbb9e51e1bbfb623b12f206a1171e070299c9cf21948c320b710d6d72a42f68a5bfd2702354113a1c5";
       dependencies = {
         "@babel/compat-data" = packages."@babel/compat-data@npm:7.28.4";
@@ -2663,36 +2535,6 @@ let
         "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.7";
       };
     };
-    "@babel/plugin-proposal-optional-catch-binding@npm:7.18.6" = {
-      name = "@babel/plugin-proposal-optional-catch-binding";
-      reference = "npm:7.18.6";
-      linkType = "HARD";
-      outputName = "babel-plugin-proposal-optional-catch-binding-7.18.6-a4235a25be";
-      outputHash = "7b5b39fb5d8d6d14faad6cb68ece5eeb2fd550fb66b5af7d7582402f974f5bc3684641f7c192a5a57e0f59acfae4aada6786be1eba030881ddc590666eff4d1e";
-      flatName = "plugin-proposal-optional-catch-binding";
-      languageName = "node";
-      scope = "babel";
-      descriptorRange = "npm:^7.0.0";
-      checksum = "10/7b5b39fb5d8d6d14faad6cb68ece5eeb2fd550fb66b5af7d7582402f974f5bc3684641f7c192a5a57e0f59acfae4aada6786be1eba030881ddc590666eff4d1e";
-      dependencies = {
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-syntax-optional-catch-binding" = packages."@babel/plugin-syntax-optional-catch-binding@npm:7.8.3";
-      };
-      packagePeers = [
-        "@babel/core"
-        "@types/babel__core"
-      ];
-    };
-    "@babel/plugin-proposal-optional-catch-binding@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.18.6" = {
-      name = "@babel/plugin-proposal-optional-catch-binding";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.18.6";
-      canonicalPackage = packages."@babel/plugin-proposal-optional-catch-binding@npm:7.18.6";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-syntax-optional-catch-binding" = packages."@babel/plugin-syntax-optional-catch-binding@virtual:ac1d2da0978b22c5558e91b6604cdd3e8dbdbf50d62a1d339fb331e59c2247914afbcc87feb848c548c3ca1f68914649bbf8e32955556e475bc17a48ac4d21ea#npm:7.8.3";
-      };
-    };
     "@babel/plugin-proposal-optional-chaining@npm:7.21.0" = {
       name = "@babel/plugin-proposal-optional-chaining";
       reference = "npm:7.21.0";
@@ -2702,7 +2544,7 @@ let
       flatName = "plugin-proposal-optional-chaining";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.20.0";
+      descriptorRange = "npm:^7.13.12";
       checksum = "10/522cd133aff5c94c0ef36ff83c64f03deee183815da68b65b6950e81972ace3b514e032df07ea76d0f9ec8cc7a49578092907adfa17fccb4612117557c04a882";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -2714,15 +2556,15 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-proposal-optional-chaining@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.21.0" = {
+    "@babel/plugin-proposal-optional-chaining@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.21.0" = {
       name = "@babel/plugin-proposal-optional-chaining";
-      reference = "virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.21.0";
+      reference = "virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.21.0";
       canonicalPackage = packages."@babel/plugin-proposal-optional-chaining@npm:7.21.0";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
         "@babel/helper-skip-transparent-expression-wrappers" = packages."@babel/helper-skip-transparent-expression-wrappers@npm:7.27.1";
-        "@babel/plugin-syntax-optional-chaining" = packages."@babel/plugin-syntax-optional-chaining@virtual:6bcbdecbec5da05e23d9f4550bf948af857f29ea32f313762fb98a9346cbc346aba196a36f0b012a7652be7959c6aad0deae3613c69fb90cec4b6ce647d2f5a2#npm:7.8.3";
+        "@babel/plugin-syntax-optional-chaining" = packages."@babel/plugin-syntax-optional-chaining@virtual:432f3619a06e71f4ba200f2c8f784f1410e9077f067c6b791240c03dcc08d069702cb4baf07a10f3c01f01650d950e77ffcc08c9eb86ca8083555812ca0e739d#npm:7.8.3";
       };
     };
     "@babel/plugin-syntax-async-generators@npm:7.8.4" = {
@@ -2751,15 +2593,6 @@ let
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
         "@types/babel__core" = packages."@types/babel__core@npm:7.20.5";
-      };
-    };
-    "@babel/plugin-syntax-async-generators@virtual:4a70e616247366419b2b51af6c966aadc87dbc6a576db8219088ef253b7b6c5917c3a55688a210b6ad678451389347ea0217bcc6a94b22d84f4c1d6d4cc2b44d#npm:7.8.4" = {
-      name = "@babel/plugin-syntax-async-generators";
-      reference = "virtual:4a70e616247366419b2b51af6c966aadc87dbc6a576db8219088ef253b7b6c5917c3a55688a210b6ad678451389347ea0217bcc6a94b22d84f4c1d6d4cc2b44d#npm:7.8.4";
-      canonicalPackage = packages."@babel/plugin-syntax-async-generators@npm:7.8.4";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
       };
     };
     "@babel/plugin-syntax-bigint@npm:7.8.3" = {
@@ -2874,9 +2707,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-syntax-decorators@virtual:08e6d9e691ed8d7fe3201126c94e9b2254345e789d9d7963d3c52cd21c5b93c1db36b9826297cad91d019478d00544030d1288e510a7f06521d2939153527617#npm:7.27.1" = {
+    "@babel/plugin-syntax-decorators@virtual:9c08b86c92729168c74e5e46976d40b61711e89b27115c37e4aac91ac1edaa3ff223e902afa28da2eca38fbf7661a81c178d17ac453ab5a5e401d61dcc023aab#npm:7.27.1" = {
       name = "@babel/plugin-syntax-decorators";
-      reference = "virtual:08e6d9e691ed8d7fe3201126c94e9b2254345e789d9d7963d3c52cd21c5b93c1db36b9826297cad91d019478d00544030d1288e510a7f06521d2939153527617#npm:7.27.1";
+      reference = "virtual:9c08b86c92729168c74e5e46976d40b61711e89b27115c37e4aac91ac1edaa3ff223e902afa28da2eca38fbf7661a81c178d17ac453ab5a5e401d61dcc023aab#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-syntax-decorators@npm:7.27.1";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -2891,7 +2724,7 @@ let
       flatName = "plugin-syntax-dynamic-import";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.8.0";
+      descriptorRange = "npm:^7.8.3";
       checksum = "10/ce307af83cf433d4ec42932329fad25fa73138ab39c7436882ea28742e1c0066626d224e0ad2988724c82644e41601cef607b36194f695cb78a1fcdc959637bd";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -2901,9 +2734,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-syntax-dynamic-import@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.8.3" = {
+    "@babel/plugin-syntax-dynamic-import@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.8.3" = {
       name = "@babel/plugin-syntax-dynamic-import";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.8.3";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.8.3";
       canonicalPackage = packages."@babel/plugin-syntax-dynamic-import@npm:7.8.3";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -2919,7 +2752,7 @@ let
       flatName = "plugin-syntax-export-default-from";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/d9a6a9c51f644a5ed139dbe1e8cf5a38c9b390af27ad2fc6f0eba579ac543b039efff34200744bfc8523132c06aa6de921238bd2088948bb4dce4571cea43438";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -2929,9 +2762,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-syntax-export-default-from@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-syntax-export-default-from@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-syntax-export-default-from";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-syntax-export-default-from@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -2947,7 +2780,7 @@ let
       flatName = "plugin-syntax-flow";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.18.0";
+      descriptorRange = "npm:^7.0.0";
       checksum = "10/7baca3171ed595d04c865b0ce46fca7f21900686df9d7fcd1017036ce78bb5483e33803de810831e68d39cf478953db69f49ae3f3de2e3207bc4ba49a96b6739";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -3104,20 +2937,20 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-syntax-jsx@virtual:9239295ec612dcce6b5fed2a98f8958ced353049710a7d850c17c550473463887b954c364e5f47eedfad8403c7cc9af485b90d94c20c13dd158d975fdce26d9d#npm:7.27.1" = {
-      name = "@babel/plugin-syntax-jsx";
-      reference = "virtual:9239295ec612dcce6b5fed2a98f8958ced353049710a7d850c17c550473463887b954c364e5f47eedfad8403c7cc9af485b90d94c20c13dd158d975fdce26d9d#npm:7.27.1";
-      canonicalPackage = packages."@babel/plugin-syntax-jsx@npm:7.27.1";
-      dependencies = {
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-      };
-    };
     "@babel/plugin-syntax-jsx@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1" = {
       name = "@babel/plugin-syntax-jsx";
       reference = "virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-syntax-jsx@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
+        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
+      };
+    };
+    "@babel/plugin-syntax-jsx@virtual:acc068d5c7f4090f3bdaa8723f62007504aadaf594516d4f2a86fe37d23eef37c27721b7aa0c5a267a3045bc8ae488d5698ebe3ce1e476d2085812ac9609fd46#npm:7.27.1" = {
+      name = "@babel/plugin-syntax-jsx";
+      reference = "virtual:acc068d5c7f4090f3bdaa8723f62007504aadaf594516d4f2a86fe37d23eef37c27721b7aa0c5a267a3045bc8ae488d5698ebe3ce1e476d2085812ac9609fd46#npm:7.27.1";
+      canonicalPackage = packages."@babel/plugin-syntax-jsx@npm:7.27.1";
+      dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
       };
     };
@@ -3149,15 +2982,6 @@ let
         "@types/babel__core" = packages."@types/babel__core@npm:7.20.5";
       };
     };
-    "@babel/plugin-syntax-logical-assignment-operators@virtual:ddcfcd2bb13f70f376ed114485432bb162ca879e7b5744bbd60daa48b5580cef15b8139efc265cd3bf1d09936f656b5cb2e6baeefb55c7514439a158255398f0#npm:7.10.4" = {
-      name = "@babel/plugin-syntax-logical-assignment-operators";
-      reference = "virtual:ddcfcd2bb13f70f376ed114485432bb162ca879e7b5744bbd60daa48b5580cef15b8139efc265cd3bf1d09936f656b5cb2e6baeefb55c7514439a158255398f0#npm:7.10.4";
-      canonicalPackage = packages."@babel/plugin-syntax-logical-assignment-operators@npm:7.10.4";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-      };
-    };
     "@babel/plugin-syntax-nullish-coalescing-operator@npm:7.8.3" = {
       name = "@babel/plugin-syntax-nullish-coalescing-operator";
       reference = "npm:7.8.3";
@@ -3167,7 +2991,7 @@ let
       flatName = "plugin-syntax-nullish-coalescing-operator";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:^7.8.3";
       checksum = "10/87aca4918916020d1fedba54c0e232de408df2644a425d153be368313fdde40d96088feed6c4e5ab72aac89be5d07fef2ddf329a15109c5eb65df006bf2580d1";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -3177,9 +3001,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-syntax-nullish-coalescing-operator@virtual:084089a631743eb2e7e5b74362965e9a9ec4946c7ebcc1e9341f955ff2e53abab9a1757af440c1e51092fb169ec2c46a8b57db92686c7d1ccd259958bfe6fb2f#npm:7.8.3" = {
+    "@babel/plugin-syntax-nullish-coalescing-operator@virtual:21d2623e3d7f9a37c721fd7d6065806a21e0e66c39dd9abe06251f9e24a384b08ad1c7bda19771f07bfde0cd0b7637ab8dc459fc7755b093992c1436bf75a638#npm:7.8.3" = {
       name = "@babel/plugin-syntax-nullish-coalescing-operator";
-      reference = "virtual:084089a631743eb2e7e5b74362965e9a9ec4946c7ebcc1e9341f955ff2e53abab9a1757af440c1e51092fb169ec2c46a8b57db92686c7d1ccd259958bfe6fb2f#npm:7.8.3";
+      reference = "virtual:21d2623e3d7f9a37c721fd7d6065806a21e0e66c39dd9abe06251f9e24a384b08ad1c7bda19771f07bfde0cd0b7637ab8dc459fc7755b093992c1436bf75a638#npm:7.8.3";
       canonicalPackage = packages."@babel/plugin-syntax-nullish-coalescing-operator@npm:7.8.3";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -3223,15 +3047,6 @@ let
         "@types/babel__core" = packages."@types/babel__core@npm:7.20.5";
       };
     };
-    "@babel/plugin-syntax-numeric-separator@virtual:bcd93bcbadc01d9fca731e5f7d908be0d35ed5d1f54be41d71e90bef130dea1c7604bb6810b40b301537cf08794629f8383ee9d10df6ad026d039aa43f9796e4#npm:7.10.4" = {
-      name = "@babel/plugin-syntax-numeric-separator";
-      reference = "virtual:bcd93bcbadc01d9fca731e5f7d908be0d35ed5d1f54be41d71e90bef130dea1c7604bb6810b40b301537cf08794629f8383ee9d10df6ad026d039aa43f9796e4#npm:7.10.4";
-      canonicalPackage = packages."@babel/plugin-syntax-numeric-separator@npm:7.10.4";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-      };
-    };
     "@babel/plugin-syntax-object-rest-spread@npm:7.8.3" = {
       name = "@babel/plugin-syntax-object-rest-spread";
       reference = "npm:7.8.3";
@@ -3241,7 +3056,7 @@ let
       flatName = "plugin-syntax-object-rest-spread";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.8.3";
+      descriptorRange = "npm:^7.0.0";
       checksum = "10/fddcf581a57f77e80eb6b981b10658421bc321ba5f0a5b754118c6a92a5448f12a0c336f77b8abf734841e102e5126d69110a306eadb03ca3e1547cab31f5cbf";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -3297,15 +3112,6 @@ let
         "@types/babel__core" = packages."@types/babel__core@npm:7.20.5";
       };
     };
-    "@babel/plugin-syntax-optional-catch-binding@virtual:ac1d2da0978b22c5558e91b6604cdd3e8dbdbf50d62a1d339fb331e59c2247914afbcc87feb848c548c3ca1f68914649bbf8e32955556e475bc17a48ac4d21ea#npm:7.8.3" = {
-      name = "@babel/plugin-syntax-optional-catch-binding";
-      reference = "virtual:ac1d2da0978b22c5558e91b6604cdd3e8dbdbf50d62a1d339fb331e59c2247914afbcc87feb848c548c3ca1f68914649bbf8e32955556e475bc17a48ac4d21ea#npm:7.8.3";
-      canonicalPackage = packages."@babel/plugin-syntax-optional-catch-binding@npm:7.8.3";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-      };
-    };
     "@babel/plugin-syntax-optional-chaining@npm:7.8.3" = {
       name = "@babel/plugin-syntax-optional-chaining";
       reference = "npm:7.8.3";
@@ -3315,7 +3121,7 @@ let
       flatName = "plugin-syntax-optional-chaining";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:^7.8.3";
       checksum = "10/eef94d53a1453361553c1f98b68d17782861a04a392840341bc91780838dd4e695209c783631cf0de14c635758beafb6a3a65399846ffa4386bff90639347f30";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -3325,6 +3131,15 @@ let
         "@types/babel__core"
       ];
     };
+    "@babel/plugin-syntax-optional-chaining@virtual:432f3619a06e71f4ba200f2c8f784f1410e9077f067c6b791240c03dcc08d069702cb4baf07a10f3c01f01650d950e77ffcc08c9eb86ca8083555812ca0e739d#npm:7.8.3" = {
+      name = "@babel/plugin-syntax-optional-chaining";
+      reference = "virtual:432f3619a06e71f4ba200f2c8f784f1410e9077f067c6b791240c03dcc08d069702cb4baf07a10f3c01f01650d950e77ffcc08c9eb86ca8083555812ca0e739d#npm:7.8.3";
+      canonicalPackage = packages."@babel/plugin-syntax-optional-chaining@npm:7.8.3";
+      dependencies = {
+        "@babel/core" = packages."@babel/core@npm:7.28.4";
+        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
+      };
+    };
     "@babel/plugin-syntax-optional-chaining@virtual:48ae6bf7d03a5e6e4c94106cfdd8129a42327753f82ef71961ecaa91770a76cdbb2a56075b539ea95c993eb1f9c3d57185beebfa009753d9092292f66b7e9f75#npm:7.8.3" = {
       name = "@babel/plugin-syntax-optional-chaining";
       reference = "virtual:48ae6bf7d03a5e6e4c94106cfdd8129a42327753f82ef71961ecaa91770a76cdbb2a56075b539ea95c993eb1f9c3d57185beebfa009753d9092292f66b7e9f75#npm:7.8.3";
@@ -3332,15 +3147,6 @@ let
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
         "@types/babel__core" = packages."@types/babel__core@npm:7.20.5";
-      };
-    };
-    "@babel/plugin-syntax-optional-chaining@virtual:6bcbdecbec5da05e23d9f4550bf948af857f29ea32f313762fb98a9346cbc346aba196a36f0b012a7652be7959c6aad0deae3613c69fb90cec4b6ce647d2f5a2#npm:7.8.3" = {
-      name = "@babel/plugin-syntax-optional-chaining";
-      reference = "virtual:6bcbdecbec5da05e23d9f4550bf948af857f29ea32f313762fb98a9346cbc346aba196a36f0b012a7652be7959c6aad0deae3613c69fb90cec4b6ce647d2f5a2#npm:7.8.3";
-      canonicalPackage = packages."@babel/plugin-syntax-optional-chaining@npm:7.8.3";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
       };
     };
     "@babel/plugin-syntax-private-property-in-object@npm:7.14.5" = {
@@ -3418,17 +3224,17 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-syntax-typescript@virtual:16bfc019483ff43f02a648057b4d23b8f1c43a8871dacdb9ce89057235a9ee2d961f42f125bcc56aa465f4f6fd249c63887fe90a766810ca3a82f34a1173ad98#npm:7.27.1" = {
+    "@babel/plugin-syntax-typescript@virtual:19b666184d954257c9bb16e07fafc5022886cd35a306722e60181089951df01dfd1c08287084d587a496f4db5e97c69aa06e505313a8295e980036d64fdd8a2b#npm:7.27.1" = {
       name = "@babel/plugin-syntax-typescript";
-      reference = "virtual:16bfc019483ff43f02a648057b4d23b8f1c43a8871dacdb9ce89057235a9ee2d961f42f125bcc56aa465f4f6fd249c63887fe90a766810ca3a82f34a1173ad98#npm:7.27.1";
+      reference = "virtual:19b666184d954257c9bb16e07fafc5022886cd35a306722e60181089951df01dfd1c08287084d587a496f4db5e97c69aa06e505313a8295e980036d64fdd8a2b#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-syntax-typescript@npm:7.27.1";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
       };
     };
-    "@babel/plugin-syntax-typescript@virtual:57d5d6fd590fbae925158103ea71ddf4c4c1f1bc46d67ca6228d027f727f6e12d69d1bcadb5c65dbf4d2523a6e482194afce95b6c3dfc6b732bb8b2923b192e5#npm:7.27.1" = {
+    "@babel/plugin-syntax-typescript@virtual:62530f015eeba34566663e555e0b1c3ab16234b4c88b9d8f0f58ef7af821edf1a1d9e8955440e5c0e1232c019d8425017a8b51e2070263ebf50f74a9901fc46d#npm:7.27.1" = {
       name = "@babel/plugin-syntax-typescript";
-      reference = "virtual:57d5d6fd590fbae925158103ea71ddf4c4c1f1bc46d67ca6228d027f727f6e12d69d1bcadb5c65dbf4d2523a6e482194afce95b6c3dfc6b732bb8b2923b192e5#npm:7.27.1";
+      reference = "virtual:62530f015eeba34566663e555e0b1c3ab16234b4c88b9d8f0f58ef7af821edf1a1d9e8955440e5c0e1232c019d8425017a8b51e2070263ebf50f74a9901fc46d#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-syntax-typescript@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -3491,7 +3297,7 @@ let
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/helper-remap-async-to-generator" = packages."@babel/helper-remap-async-to-generator@virtual:4a70e616247366419b2b51af6c966aadc87dbc6a576db8219088ef253b7b6c5917c3a55688a210b6ad678451389347ea0217bcc6a94b22d84f4c1d6d4cc2b44d#npm:7.27.1";
+        "@babel/helper-remap-async-to-generator" = packages."@babel/helper-remap-async-to-generator@virtual:c34cda7d2406cbef66850c94249cc9c2977bde7d7a0810696f26882cb4aff2907f3dffa08205913ad81d42e82aa2bc7cad439ac0ca6848c76ffb252f6ad54e04#npm:7.27.1";
         "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
       };
     };
@@ -3504,7 +3310,7 @@ let
       flatName = "plugin-transform-async-to-generator";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.20.0";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/d79d7a7ae7d416f6a48200017d027a6ba94c09c7617eea8b4e9c803630f00094c1a4fc32bf20ce3282567824ce3fcbda51653aac4003c71ea4e681b331338979";
       dependencies = {
         "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.27.1";
@@ -3516,15 +3322,15 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-async-to-generator@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-transform-async-to-generator@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-transform-async-to-generator";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-async-to-generator@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
         "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.27.1";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/helper-remap-async-to-generator" = packages."@babel/helper-remap-async-to-generator@virtual:4a70e616247366419b2b51af6c966aadc87dbc6a576db8219088ef253b7b6c5917c3a55688a210b6ad678451389347ea0217bcc6a94b22d84f4c1d6d4cc2b44d#npm:7.27.1";
+        "@babel/helper-remap-async-to-generator" = packages."@babel/helper-remap-async-to-generator@virtual:c34cda7d2406cbef66850c94249cc9c2977bde7d7a0810696f26882cb4aff2907f3dffa08205913ad81d42e82aa2bc7cad439ac0ca6848c76ffb252f6ad54e04#npm:7.27.1";
       };
     };
     "@babel/plugin-transform-block-scoped-functions@npm:7.22.5" = {
@@ -3701,21 +3507,21 @@ let
         "@types/babel__core"
       ];
     };
+    "@babel/plugin-transform-destructuring@virtual:40753f2a71627865e5f868fe11ce3e20074247ac0ea9fb5ec37cfb708bcb30cd100949a38e8ff536f314e49efaaa6e86916cb71f9a9b4fca2dc02647be8eca48#npm:7.28.0" = {
+      name = "@babel/plugin-transform-destructuring";
+      reference = "virtual:40753f2a71627865e5f868fe11ce3e20074247ac0ea9fb5ec37cfb708bcb30cd100949a38e8ff536f314e49efaaa6e86916cb71f9a9b4fca2dc02647be8eca48#npm:7.28.0";
+      canonicalPackage = packages."@babel/plugin-transform-destructuring@npm:7.28.0";
+      dependencies = {
+        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
+      };
+    };
     "@babel/plugin-transform-destructuring@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.0" = {
       name = "@babel/plugin-transform-destructuring";
       reference = "virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.0";
       canonicalPackage = packages."@babel/plugin-transform-destructuring@npm:7.28.0";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
-      };
-    };
-    "@babel/plugin-transform-destructuring@virtual:e9eeb902d7227cd4cc5dd7a0ac25f28da907ca57c62b0163f27c11884ffc3f1c82b804919dcfdee6c5e5a28a2ba6a9ac089590206e881b71674d4a75a3d53cad#npm:7.28.0" = {
-      name = "@babel/plugin-transform-destructuring";
-      reference = "virtual:e9eeb902d7227cd4cc5dd7a0ac25f28da907ca57c62b0163f27c11884ffc3f1c82b804919dcfdee6c5e5a28a2ba6a9ac089590206e881b71674d4a75a3d53cad#npm:7.28.0";
-      canonicalPackage = packages."@babel/plugin-transform-destructuring@npm:7.28.0";
-      dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
         "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
       };
@@ -3739,9 +3545,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-export-namespace-from@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1" = {
+    "@babel/plugin-transform-export-namespace-from@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.1" = {
       name = "@babel/plugin-transform-export-namespace-from";
-      reference = "virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1";
+      reference = "virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-export-namespace-from@npm:7.27.1";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -3756,7 +3562,7 @@ let
       flatName = "plugin-transform-flow-strip-types";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.20.0";
+      descriptorRange = "npm:^7.0.0";
       checksum = "10/22e260866b122b7d0c35f2c55b2d422b175606b4d14c9ba116b1fbe88e08cc8b024c1c41bb62527cfc5f7ccc0ed06c752e5945cb1ee22465a30aa5623e617940";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -3953,12 +3759,12 @@ let
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
       };
     };
-    "@babel/plugin-transform-modules-commonjs@virtual:dc16273cc0d193036961d05ed003ce5029a85b9b78ea079afd3751093f13ccf94f7bdee186286932dc20773130976c528e35e3cf48a0acc475a074b99b5a667a#npm:7.27.1" = {
+    "@babel/plugin-transform-modules-commonjs@virtual:e2f02fc6b63816078949fdf80a58be773755bf8473320d04e03461c862c17b816a035ed8d6ba0ee3e8bcd4378e78f90c831a2ab416e407c67866c2790256242e#npm:7.27.1" = {
       name = "@babel/plugin-transform-modules-commonjs";
-      reference = "virtual:dc16273cc0d193036961d05ed003ce5029a85b9b78ea079afd3751093f13ccf94f7bdee186286932dc20773130976c528e35e3cf48a0acc475a074b99b5a667a#npm:7.27.1";
+      reference = "virtual:e2f02fc6b63816078949fdf80a58be773755bf8473320d04e03461c862c17b816a035ed8d6ba0ee3e8bcd4378e78f90c831a2ab416e407c67866c2790256242e#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-modules-commonjs@npm:7.27.1";
       dependencies = {
-        "@babel/helper-module-transforms" = packages."@babel/helper-module-transforms@virtual:324fba8d4dc4a48d9496d5a9688c08c021770dc869770bff18ffac492d3986ba9a73435454c7375f4acf067b2f4655b6822ab8cab93094ffbc1c6fdcc2d4a9c8#npm:7.28.3";
+        "@babel/helper-module-transforms" = packages."@babel/helper-module-transforms@virtual:bebe70e99538708360145c73a7e88b7cdca474e06f810a3bf024f8eda1b7196279d58326fc86c62e112fd90c1af8bd085118866e799d180123ef257d99fcafe8#npm:7.28.3";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
       };
     };
@@ -3971,7 +3777,7 @@ let
       flatName = "plugin-transform-named-capturing-groups-regex";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/a711c92d9753df26cefc1792481e5cbff4fe4f32b383d76b25e36fa865d8023b1b9aa6338cf18f5c0e864c71a7fbe8115e840872ccd61a914d9953849c68de7d";
       dependencies = {
         "@babel/helper-create-regexp-features-plugin" = packages."@babel/helper-create-regexp-features-plugin@npm:7.27.1";
@@ -3982,13 +3788,13 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-named-capturing-groups-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-transform-named-capturing-groups-regex@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-transform-named-capturing-groups-regex";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-named-capturing-groups-regex@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-create-regexp-features-plugin" = packages."@babel/helper-create-regexp-features-plugin@virtual:61528dc70b7efd05083d1da7a475913728a12af0cb6e358e991581594cf53461733e656082899b82c329d1ff92b81dd737255a73d1b2b01a3e7fe659415cbb63#npm:7.27.1";
+        "@babel/helper-create-regexp-features-plugin" = packages."@babel/helper-create-regexp-features-plugin@virtual:df65a4fd4b77d608d6785cd85e75805ed64c376f130a42effa767f7982f2de36a69924748ea8d8eede4e987df32072dcad305ce7c5efc4e78970aac2b96c3c3b#npm:7.27.1";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
       };
     };
@@ -4071,6 +3877,18 @@ let
         "@types/babel__core"
       ];
     };
+    "@babel/plugin-transform-object-rest-spread@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.28.4" = {
+      name = "@babel/plugin-transform-object-rest-spread";
+      reference = "virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.28.4";
+      canonicalPackage = packages."@babel/plugin-transform-object-rest-spread@npm:7.28.4";
+      dependencies = {
+        "@babel/helper-compilation-targets" = packages."@babel/helper-compilation-targets@npm:7.27.2";
+        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
+        "@babel/plugin-transform-destructuring" = packages."@babel/plugin-transform-destructuring@virtual:40753f2a71627865e5f868fe11ce3e20074247ac0ea9fb5ec37cfb708bcb30cd100949a38e8ff536f314e49efaaa6e86916cb71f9a9b4fca2dc02647be8eca48#npm:7.28.0";
+        "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.7";
+        "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
+      };
+    };
     "@babel/plugin-transform-object-rest-spread@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.28.4" = {
       name = "@babel/plugin-transform-object-rest-spread";
       reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.28.4";
@@ -4081,18 +3899,6 @@ let
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
         "@babel/plugin-transform-destructuring" = packages."@babel/plugin-transform-destructuring@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.0";
         "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.7";
-        "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
-      };
-    };
-    "@babel/plugin-transform-object-rest-spread@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.28.4" = {
-      name = "@babel/plugin-transform-object-rest-spread";
-      reference = "virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.28.4";
-      canonicalPackage = packages."@babel/plugin-transform-object-rest-spread@npm:7.28.4";
-      dependencies = {
-        "@babel/helper-compilation-targets" = packages."@babel/helper-compilation-targets@npm:7.27.2";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-transform-destructuring" = packages."@babel/plugin-transform-destructuring@virtual:e9eeb902d7227cd4cc5dd7a0ac25f28da907ca57c62b0163f27c11884ffc3f1c82b804919dcfdee6c5e5a28a2ba6a9ac089590206e881b71674d4a75a3d53cad#npm:7.28.0";
-        "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.7";
         "@babel/traverse" = packages."@babel/traverse@npm:7.28.4";
       };
     };
@@ -4203,20 +4009,20 @@ let
         "@types/babel__core"
       ];
     };
+    "@babel/plugin-transform-parameters@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.7" = {
+      name = "@babel/plugin-transform-parameters";
+      reference = "virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.7";
+      canonicalPackage = packages."@babel/plugin-transform-parameters@npm:7.27.7";
+      dependencies = {
+        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
+      };
+    };
     "@babel/plugin-transform-parameters@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.7" = {
       name = "@babel/plugin-transform-parameters";
       reference = "virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.7";
       canonicalPackage = packages."@babel/plugin-transform-parameters@npm:7.27.7";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-      };
-    };
-    "@babel/plugin-transform-parameters@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.7" = {
-      name = "@babel/plugin-transform-parameters";
-      reference = "virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.7";
-      canonicalPackage = packages."@babel/plugin-transform-parameters@npm:7.27.7";
-      dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
       };
     };
@@ -4229,7 +4035,7 @@ let
       flatName = "plugin-transform-private-methods";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.22.5";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/c76f8f6056946466116e67eb9d8014a2d748ade2062636ab82045c1dac9c233aff10e597777bc5af6f26428beb845ceb41b95007abef7d0484da95789da56662";
       dependencies = {
         "@babel/helper-create-class-features-plugin" = packages."@babel/helper-create-class-features-plugin@npm:7.28.3";
@@ -4240,9 +4046,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-private-methods@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-transform-private-methods@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-transform-private-methods";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-private-methods@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -4259,7 +4065,7 @@ let
       flatName = "plugin-transform-private-property-in-object";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.22.11";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/d4466d42a02c5a318d9d7b8102969fd032b17ff044918dfd462d5cc49bd11f5773ee0794781702afdf4727ba11e9be6cbea1e396bc0a7307761bb9a56399012a";
       dependencies = {
         "@babel/helper-annotate-as-pure" = packages."@babel/helper-annotate-as-pure@npm:7.27.3";
@@ -4271,9 +4077,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-private-property-in-object@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-transform-private-property-in-object@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-transform-private-property-in-object";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-private-property-in-object@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -4329,9 +4135,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-react-display-name@virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.28.0" = {
+    "@babel/plugin-transform-react-display-name@virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.28.0" = {
       name = "@babel/plugin-transform-react-display-name";
-      reference = "virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.28.0";
+      reference = "virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.28.0";
       canonicalPackage = packages."@babel/plugin-transform-react-display-name@npm:7.28.0";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -4365,12 +4171,12 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-react-jsx-development@virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1" = {
+    "@babel/plugin-transform-react-jsx-development@virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1" = {
       name = "@babel/plugin-transform-react-jsx-development";
-      reference = "virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1";
+      reference = "virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-react-jsx-development@npm:7.27.1";
       dependencies = {
-        "@babel/plugin-transform-react-jsx" = packages."@babel/plugin-transform-react-jsx@virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1";
+        "@babel/plugin-transform-react-jsx" = packages."@babel/plugin-transform-react-jsx@virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1";
       };
     };
     "@babel/plugin-transform-react-jsx-self@npm:7.27.1" = {
@@ -4382,7 +4188,7 @@ let
       flatName = "plugin-transform-react-jsx-self";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/72cbae66a58c6c36f7e12e8ed79f292192d858dd4bb00e9e89d8b695e4c5cb6ef48eec84bffff421a5db93fd10412c581f1cccdb00264065df76f121995bdb68";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -4392,9 +4198,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-react-jsx-self@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-transform-react-jsx-self@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-transform-react-jsx-self";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-react-jsx-self@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -4410,7 +4216,7 @@ let
       flatName = "plugin-transform-react-jsx-source";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/e2843362adb53692be5ee9fa07a386d2d8883daad2063a3575b3c373fc14cdf4ea7978c67a183cb631b4c9c8d77b2f48c24c088f8e65cc3600cb8e97d72a7161";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -4420,9 +4226,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-react-jsx-source@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-transform-react-jsx-source@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-transform-react-jsx-source";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-react-jsx-source@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -4452,15 +4258,15 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-react-jsx@virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1" = {
+    "@babel/plugin-transform-react-jsx@virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1" = {
       name = "@babel/plugin-transform-react-jsx";
-      reference = "virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1";
+      reference = "virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-react-jsx@npm:7.27.1";
       dependencies = {
         "@babel/helper-annotate-as-pure" = packages."@babel/helper-annotate-as-pure@npm:7.27.3";
         "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.27.1";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/plugin-syntax-jsx" = packages."@babel/plugin-syntax-jsx@virtual:9239295ec612dcce6b5fed2a98f8958ced353049710a7d850c17c550473463887b954c364e5f47eedfad8403c7cc9af485b90d94c20c13dd158d975fdce26d9d#npm:7.27.1";
+        "@babel/plugin-syntax-jsx" = packages."@babel/plugin-syntax-jsx@virtual:acc068d5c7f4090f3bdaa8723f62007504aadaf594516d4f2a86fe37d23eef37c27721b7aa0c5a267a3045bc8ae488d5698ebe3ce1e476d2085812ac9609fd46#npm:7.27.1";
         "@babel/types" = packages."@babel/types@npm:7.28.4";
       };
     };
@@ -4497,9 +4303,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-react-pure-annotations@virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1" = {
+    "@babel/plugin-transform-react-pure-annotations@virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1" = {
       name = "@babel/plugin-transform-react-pure-annotations";
-      reference = "virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1";
+      reference = "virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-react-pure-annotations@npm:7.27.1";
       dependencies = {
         "@babel/helper-annotate-as-pure" = packages."@babel/helper-annotate-as-pure@npm:7.27.3";
@@ -4543,7 +4349,7 @@ let
       flatName = "plugin-transform-runtime";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/5e8d45f3d243ff15cf4ebe59c2bf52e33bb5864092365dd332330256c96eaa7a16e3cecb1c9e826d5ced7e3cc0b0925c2ca29df674d97252c8eb90ecddab1d78";
       dependencies = {
         "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.27.1";
@@ -4558,17 +4364,17 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-runtime@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.28.3" = {
+    "@babel/plugin-transform-runtime@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.28.3" = {
       name = "@babel/plugin-transform-runtime";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.28.3";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.28.3";
       canonicalPackage = packages."@babel/plugin-transform-runtime@npm:7.28.3";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
         "@babel/helper-module-imports" = packages."@babel/helper-module-imports@npm:7.27.1";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "babel-plugin-polyfill-corejs2" = packages."babel-plugin-polyfill-corejs2@virtual:ed3d8041e87be74ae413c462b27f0e56e1ac83e9cee2d6942a5108e31a01c8eb71ab254098d1306cbd7d1972ca56e531ff9fb0b3ae2fe4cd56f9e07a9fa4c88f#npm:0.4.14";
-        "babel-plugin-polyfill-corejs3" = packages."babel-plugin-polyfill-corejs3@virtual:ed3d8041e87be74ae413c462b27f0e56e1ac83e9cee2d6942a5108e31a01c8eb71ab254098d1306cbd7d1972ca56e531ff9fb0b3ae2fe4cd56f9e07a9fa4c88f#npm:0.13.0";
-        "babel-plugin-polyfill-regenerator" = packages."babel-plugin-polyfill-regenerator@virtual:ed3d8041e87be74ae413c462b27f0e56e1ac83e9cee2d6942a5108e31a01c8eb71ab254098d1306cbd7d1972ca56e531ff9fb0b3ae2fe4cd56f9e07a9fa4c88f#npm:0.6.5";
+        "babel-plugin-polyfill-corejs2" = packages."babel-plugin-polyfill-corejs2@virtual:951fe8acf4998ff6869a15e7dcfadd3c3833cec02c91c390e5fe842f9c7be873a398d1a9f5b0e1ee032406c7551061c1c3399c8e51547fbaaeb90d3f6aee0134#npm:0.4.14";
+        "babel-plugin-polyfill-corejs3" = packages."babel-plugin-polyfill-corejs3@virtual:951fe8acf4998ff6869a15e7dcfadd3c3833cec02c91c390e5fe842f9c7be873a398d1a9f5b0e1ee032406c7551061c1c3399c8e51547fbaaeb90d3f6aee0134#npm:0.13.0";
+        "babel-plugin-polyfill-regenerator" = packages."babel-plugin-polyfill-regenerator@virtual:951fe8acf4998ff6869a15e7dcfadd3c3833cec02c91c390e5fe842f9c7be873a398d1a9f5b0e1ee032406c7551061c1c3399c8e51547fbaaeb90d3f6aee0134#npm:0.6.5";
         "semver" = packages."semver@npm:6.3.1";
       };
     };
@@ -4639,7 +4445,7 @@ let
       flatName = "plugin-transform-sticky-regex";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.0.0";
+      descriptorRange = "npm:^7.24.7";
       checksum = "10/e1414a502efba92c7974681767e365a8cda6c5e9e5f33472a9eaa0ce2e75cea0a9bef881ff8dda37c7810ad902f98d3c00ead92a3ac3b73a79d011df85b5a189";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -4649,9 +4455,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-sticky-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-transform-sticky-regex@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-transform-sticky-regex";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-sticky-regex@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -4709,9 +4515,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-typescript@virtual:d6007fc3ee260aac7c38f3bf3858d359e3de93affbfc68d8fa260a6ca344f3564172f2974f5f7683ee10af7006c2d42d45696ebd60143e6d199164e9ee28939c#npm:7.28.0" = {
+    "@babel/plugin-transform-typescript@virtual:ab177f14287a17b9bfd453b3c7ed6264a3a542652baccc729380756c200c9ed72747662617f0cef1ac82835dc9294a792c3ac60d96fbf072f2ed9627af6a3b79#npm:7.28.0" = {
       name = "@babel/plugin-transform-typescript";
-      reference = "virtual:d6007fc3ee260aac7c38f3bf3858d359e3de93affbfc68d8fa260a6ca344f3564172f2974f5f7683ee10af7006c2d42d45696ebd60143e6d199164e9ee28939c#npm:7.28.0";
+      reference = "virtual:ab177f14287a17b9bfd453b3c7ed6264a3a542652baccc729380756c200c9ed72747662617f0cef1ac82835dc9294a792c3ac60d96fbf072f2ed9627af6a3b79#npm:7.28.0";
       canonicalPackage = packages."@babel/plugin-transform-typescript@npm:7.28.0";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -4719,19 +4525,19 @@ let
         "@babel/helper-create-class-features-plugin" = packages."@babel/helper-create-class-features-plugin@virtual:fa8cfc48f2523e10b3db0e97bab650784b31e5e33e4b60eb003e87f4f556f3a534a4686be42cd0f4b262de1046b773bc43c200d1d15a365ddad4f47913bf3ff1#npm:7.28.3";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
         "@babel/helper-skip-transparent-expression-wrappers" = packages."@babel/helper-skip-transparent-expression-wrappers@npm:7.27.1";
-        "@babel/plugin-syntax-typescript" = packages."@babel/plugin-syntax-typescript@virtual:57d5d6fd590fbae925158103ea71ddf4c4c1f1bc46d67ca6228d027f727f6e12d69d1bcadb5c65dbf4d2523a6e482194afce95b6c3dfc6b732bb8b2923b192e5#npm:7.27.1";
+        "@babel/plugin-syntax-typescript" = packages."@babel/plugin-syntax-typescript@virtual:62530f015eeba34566663e555e0b1c3ab16234b4c88b9d8f0f58ef7af821edf1a1d9e8955440e5c0e1232c019d8425017a8b51e2070263ebf50f74a9901fc46d#npm:7.27.1";
       };
     };
-    "@babel/plugin-transform-typescript@virtual:dc16273cc0d193036961d05ed003ce5029a85b9b78ea079afd3751093f13ccf94f7bdee186286932dc20773130976c528e35e3cf48a0acc475a074b99b5a667a#npm:7.28.0" = {
+    "@babel/plugin-transform-typescript@virtual:e2f02fc6b63816078949fdf80a58be773755bf8473320d04e03461c862c17b816a035ed8d6ba0ee3e8bcd4378e78f90c831a2ab416e407c67866c2790256242e#npm:7.28.0" = {
       name = "@babel/plugin-transform-typescript";
-      reference = "virtual:dc16273cc0d193036961d05ed003ce5029a85b9b78ea079afd3751093f13ccf94f7bdee186286932dc20773130976c528e35e3cf48a0acc475a074b99b5a667a#npm:7.28.0";
+      reference = "virtual:e2f02fc6b63816078949fdf80a58be773755bf8473320d04e03461c862c17b816a035ed8d6ba0ee3e8bcd4378e78f90c831a2ab416e407c67866c2790256242e#npm:7.28.0";
       canonicalPackage = packages."@babel/plugin-transform-typescript@npm:7.28.0";
       dependencies = {
         "@babel/helper-annotate-as-pure" = packages."@babel/helper-annotate-as-pure@npm:7.27.3";
-        "@babel/helper-create-class-features-plugin" = packages."@babel/helper-create-class-features-plugin@virtual:08e6d9e691ed8d7fe3201126c94e9b2254345e789d9d7963d3c52cd21c5b93c1db36b9826297cad91d019478d00544030d1288e510a7f06521d2939153527617#npm:7.28.3";
+        "@babel/helper-create-class-features-plugin" = packages."@babel/helper-create-class-features-plugin@virtual:9c08b86c92729168c74e5e46976d40b61711e89b27115c37e4aac91ac1edaa3ff223e902afa28da2eca38fbf7661a81c178d17ac453ab5a5e401d61dcc023aab#npm:7.28.3";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
         "@babel/helper-skip-transparent-expression-wrappers" = packages."@babel/helper-skip-transparent-expression-wrappers@npm:7.27.1";
-        "@babel/plugin-syntax-typescript" = packages."@babel/plugin-syntax-typescript@virtual:16bfc019483ff43f02a648057b4d23b8f1c43a8871dacdb9ce89057235a9ee2d961f42f125bcc56aa465f4f6fd249c63887fe90a766810ca3a82f34a1173ad98#npm:7.27.1";
+        "@babel/plugin-syntax-typescript" = packages."@babel/plugin-syntax-typescript@virtual:19b666184d954257c9bb16e07fafc5022886cd35a306722e60181089951df01dfd1c08287084d587a496f4db5e97c69aa06e505313a8295e980036d64fdd8a2b#npm:7.27.1";
       };
     };
     "@babel/plugin-transform-unicode-regex@npm:7.27.1" = {
@@ -4754,13 +4560,13 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/plugin-transform-unicode-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1" = {
+    "@babel/plugin-transform-unicode-regex@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1" = {
       name = "@babel/plugin-transform-unicode-regex";
-      reference = "virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+      reference = "virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
       canonicalPackage = packages."@babel/plugin-transform-unicode-regex@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-create-regexp-features-plugin" = packages."@babel/helper-create-regexp-features-plugin@virtual:61528dc70b7efd05083d1da7a475913728a12af0cb6e358e991581594cf53461733e656082899b82c329d1ff92b81dd737255a73d1b2b01a3e7fe659415cbb63#npm:7.27.1";
+        "@babel/helper-create-regexp-features-plugin" = packages."@babel/helper-create-regexp-features-plugin@virtual:df65a4fd4b77d608d6785cd85e75805ed64c376f130a42effa767f7982f2de36a69924748ea8d8eede4e987df32072dcad305ce7c5efc4e78970aac2b96c3c3b#npm:7.27.1";
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
       };
     };
@@ -4785,9 +4591,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/preset-flow@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.27.1" = {
+    "@babel/preset-flow@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.27.1" = {
       name = "@babel/preset-flow";
-      reference = "virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.27.1";
+      reference = "virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.27.1";
       canonicalPackage = packages."@babel/preset-flow@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -4820,17 +4626,17 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/preset-react@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1" = {
+    "@babel/preset-react@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.1" = {
       name = "@babel/preset-react";
-      reference = "virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1";
+      reference = "virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.1";
       canonicalPackage = packages."@babel/preset-react@npm:7.27.1";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
         "@babel/helper-validator-option" = packages."@babel/helper-validator-option@npm:7.27.1";
-        "@babel/plugin-transform-react-display-name" = packages."@babel/plugin-transform-react-display-name@virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.28.0";
-        "@babel/plugin-transform-react-jsx" = packages."@babel/plugin-transform-react-jsx@virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1";
-        "@babel/plugin-transform-react-jsx-development" = packages."@babel/plugin-transform-react-jsx-development@virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1";
-        "@babel/plugin-transform-react-pure-annotations" = packages."@babel/plugin-transform-react-pure-annotations@virtual:66d22afa00b399fcc0a0481be49263780965f29de2716f3cb03ea107c4a5b63534acec954e6a8dd66516d178cfdadaaa44611e31f0c1b1f52601c32bb15efb25#npm:7.27.1";
+        "@babel/plugin-transform-react-display-name" = packages."@babel/plugin-transform-react-display-name@virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.28.0";
+        "@babel/plugin-transform-react-jsx" = packages."@babel/plugin-transform-react-jsx@virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1";
+        "@babel/plugin-transform-react-jsx-development" = packages."@babel/plugin-transform-react-jsx-development@virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1";
+        "@babel/plugin-transform-react-pure-annotations" = packages."@babel/plugin-transform-react-pure-annotations@virtual:7bf0526497d565feb0250295d881f5febf46f233eff9e0288a39425ba408586569fb6ed14618e94a06032cfcd20bf803c1050e84ce2b3be8e64639ec9e949f96#npm:7.27.1";
       };
     };
     "@babel/preset-typescript@npm:7.27.1" = {
@@ -4842,7 +4648,7 @@ let
       flatName = "preset-typescript";
       languageName = "node";
       scope = "babel";
-      descriptorRange = "npm:^7.23.0";
+      descriptorRange = "npm:^7.16.7";
       checksum = "10/9d8e75326b3c93fa016ba7aada652800fc77bc05fcc181888700a049935e8cf1284b549de18a5d62ef3591d02f097ea6de1111f7d71a991aaf36ba74657bd145";
       dependencies = {
         "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
@@ -4856,9 +4662,21 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/preset-typescript@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.27.1" = {
+    "@babel/preset-typescript@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.1" = {
       name = "@babel/preset-typescript";
-      reference = "virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.27.1";
+      reference = "virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.1";
+      canonicalPackage = packages."@babel/preset-typescript@npm:7.27.1";
+      dependencies = {
+        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
+        "@babel/helper-validator-option" = packages."@babel/helper-validator-option@npm:7.27.1";
+        "@babel/plugin-syntax-jsx" = packages."@babel/plugin-syntax-jsx@virtual:acc068d5c7f4090f3bdaa8723f62007504aadaf594516d4f2a86fe37d23eef37c27721b7aa0c5a267a3045bc8ae488d5698ebe3ce1e476d2085812ac9609fd46#npm:7.27.1";
+        "@babel/plugin-transform-modules-commonjs" = packages."@babel/plugin-transform-modules-commonjs@virtual:e2f02fc6b63816078949fdf80a58be773755bf8473320d04e03461c862c17b816a035ed8d6ba0ee3e8bcd4378e78f90c831a2ab416e407c67866c2790256242e#npm:7.27.1";
+        "@babel/plugin-transform-typescript" = packages."@babel/plugin-transform-typescript@virtual:e2f02fc6b63816078949fdf80a58be773755bf8473320d04e03461c862c17b816a035ed8d6ba0ee3e8bcd4378e78f90c831a2ab416e407c67866c2790256242e#npm:7.28.0";
+      };
+    };
+    "@babel/preset-typescript@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.27.1" = {
+      name = "@babel/preset-typescript";
+      reference = "virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.27.1";
       canonicalPackage = packages."@babel/preset-typescript@npm:7.27.1";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -4866,19 +4684,7 @@ let
         "@babel/helper-validator-option" = packages."@babel/helper-validator-option@npm:7.27.1";
         "@babel/plugin-syntax-jsx" = packages."@babel/plugin-syntax-jsx@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
         "@babel/plugin-transform-modules-commonjs" = packages."@babel/plugin-transform-modules-commonjs@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-typescript" = packages."@babel/plugin-transform-typescript@virtual:d6007fc3ee260aac7c38f3bf3858d359e3de93affbfc68d8fa260a6ca344f3564172f2974f5f7683ee10af7006c2d42d45696ebd60143e6d199164e9ee28939c#npm:7.28.0";
-      };
-    };
-    "@babel/preset-typescript@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1" = {
-      name = "@babel/preset-typescript";
-      reference = "virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1";
-      canonicalPackage = packages."@babel/preset-typescript@npm:7.27.1";
-      dependencies = {
-        "@babel/helper-plugin-utils" = packages."@babel/helper-plugin-utils@npm:7.27.1";
-        "@babel/helper-validator-option" = packages."@babel/helper-validator-option@npm:7.27.1";
-        "@babel/plugin-syntax-jsx" = packages."@babel/plugin-syntax-jsx@virtual:9239295ec612dcce6b5fed2a98f8958ced353049710a7d850c17c550473463887b954c364e5f47eedfad8403c7cc9af485b90d94c20c13dd158d975fdce26d9d#npm:7.27.1";
-        "@babel/plugin-transform-modules-commonjs" = packages."@babel/plugin-transform-modules-commonjs@virtual:dc16273cc0d193036961d05ed003ce5029a85b9b78ea079afd3751093f13ccf94f7bdee186286932dc20773130976c528e35e3cf48a0acc475a074b99b5a667a#npm:7.27.1";
-        "@babel/plugin-transform-typescript" = packages."@babel/plugin-transform-typescript@virtual:dc16273cc0d193036961d05ed003ce5029a85b9b78ea079afd3751093f13ccf94f7bdee186286932dc20773130976c528e35e3cf48a0acc475a074b99b5a667a#npm:7.28.0";
+        "@babel/plugin-transform-typescript" = packages."@babel/plugin-transform-typescript@virtual:ab177f14287a17b9bfd453b3c7ed6264a3a542652baccc729380756c200c9ed72747662617f0cef1ac82835dc9294a792c3ac60d96fbf072f2ed9627af6a3b79#npm:7.28.0";
       };
     };
     "@babel/register@npm:7.28.3" = {
@@ -4904,9 +4710,9 @@ let
         "@types/babel__core"
       ];
     };
-    "@babel/register@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.28.3" = {
+    "@babel/register@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.28.3" = {
       name = "@babel/register";
-      reference = "virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.28.3";
+      reference = "virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.28.3";
       canonicalPackage = packages."@babel/register@npm:7.28.3";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -7533,7 +7339,7 @@ let
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.26";
         "@types/react-native" = packages."@types/react-native@npm:0.73.0";
-        "expo-font" = packages."expo-font@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:12.0.10";
+        "expo-font" = packages."expo-font@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:14.0.9";
         "react" = packages."react@npm:18.3.1";
         "react-native" = packages."react-native@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:0.76.9";
       };
@@ -10746,23 +10552,6 @@ let
         "pirates" = packages."pirates@npm:4.0.7";
         "slash" = packages."slash@npm:3.0.0";
         "write-file-atomic" = packages."write-file-atomic@npm:4.0.2";
-      };
-    };
-    "@jest/types@npm:24.9.0" = {
-      name = "@jest/types";
-      reference = "npm:24.9.0";
-      linkType = "HARD";
-      outputName = "jest-types-24.9.0-d3aae63b88";
-      outputHash = "22bdbf26f32e18b48b5b8881332cfdc93bfb87daf84f336c492dd3d4f0731b9b0bf3c854351508f9debc4dce8b8ca015156686f6119f6d11431ffa875ae046e5";
-      flatName = "types";
-      languageName = "node";
-      scope = "jest";
-      descriptorRange = "npm:^24.9.0";
-      checksum = "10/22bdbf26f32e18b48b5b8881332cfdc93bfb87daf84f336c492dd3d4f0731b9b0bf3c854351508f9debc4dce8b8ca015156686f6119f6d11431ffa875ae046e5";
-      dependencies = {
-        "@types/istanbul-lib-coverage" = packages."@types/istanbul-lib-coverage@npm:2.0.6";
-        "@types/istanbul-reports" = packages."@types/istanbul-reports@npm:1.1.2";
-        "@types/yargs" = packages."@types/yargs@npm:13.0.12";
       };
     };
     "@jest/types@npm:29.6.3" = {
@@ -14865,21 +14654,6 @@ let
       descriptorRange = "npm:0.82.0";
       checksum = "10/3925d7a5f57c7c0a5c1673f6491d17b19889d5220ff0ebcb329c835b3bc12ec8557e8056d8d5cb7cea0fd2bbfbd7d319798ba086c124d90f4f3015a5b6011070";
     };
-    "@react-native/babel-plugin-codegen@npm:0.74.87" = {
-      name = "@react-native/babel-plugin-codegen";
-      reference = "npm:0.74.87";
-      linkType = "HARD";
-      outputName = "react-native-babel-plugin-codegen-0.74.87-31567c2937";
-      outputHash = "c418a7e3d40ef1b757150b030cffc6a7ad92b1a7f4c3d3a406c559a7d54f4f7f89a6e216d18549544fbace414a0ffec5deee0631f5ad0361171fe7888aaeddfc";
-      flatName = "babel-plugin-codegen";
-      languageName = "node";
-      scope = "react-native";
-      descriptorRange = "npm:0.74.87";
-      checksum = "10/c418a7e3d40ef1b757150b030cffc6a7ad92b1a7f4c3d3a406c559a7d54f4f7f89a6e216d18549544fbace414a0ffec5deee0631f5ad0361171fe7888aaeddfc";
-      dependencies = {
-        "@react-native/codegen" = packages."@react-native/codegen@virtual:31567c2937e97a7b05aa372de0d98e1e3d9f109e9ddfa89ba986aa7b01bb63fc2081bb7dd1aeb05d227ed1fbd11fb438b0be27c79482e59bc4a578e82fa2b3b9#npm:0.74.87";
-      };
-    };
     "@react-native/babel-plugin-codegen@npm:0.76.9" = {
       name = "@react-native/babel-plugin-codegen";
       reference = "npm:0.76.9";
@@ -14894,67 +14668,6 @@ let
       dependencies = {
         "@react-native/codegen" = packages."@react-native/codegen@virtual:1b9953f60aacfd53a594b18de10287abb64fcfc7fd446645d3cf49f196fe5b713967f1ede0de613f402135b9893dd9b4be7f1b5be6e19db7d3695f3542830654#npm:0.76.9";
       };
-    };
-    "@react-native/babel-preset@npm:0.74.87" = {
-      name = "@react-native/babel-preset";
-      reference = "npm:0.74.87";
-      linkType = "HARD";
-      outputName = "react-native-babel-preset-0.74.87-7ca2c65087";
-      outputHash = "f71e57ad9c7f2e456a55983bba6841bff952c75b8a3bccb53eccb698055ec0f7cf8f2c7261ca7a04a1a513dda7340c3709006c87998288afa4caf2f4896a4f39";
-      flatName = "babel-preset";
-      languageName = "node";
-      scope = "react-native";
-      descriptorRange = "npm:0.74.87";
-      checksum = "10/f71e57ad9c7f2e456a55983bba6841bff952c75b8a3bccb53eccb698055ec0f7cf8f2c7261ca7a04a1a513dda7340c3709006c87998288afa4caf2f4896a4f39";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/plugin-proposal-async-generator-functions" = packages."@babel/plugin-proposal-async-generator-functions@npm:7.20.7";
-        "@babel/plugin-proposal-class-properties" = packages."@babel/plugin-proposal-class-properties@npm:7.18.6";
-        "@babel/plugin-proposal-export-default-from" = packages."@babel/plugin-proposal-export-default-from@npm:7.27.1";
-        "@babel/plugin-proposal-logical-assignment-operators" = packages."@babel/plugin-proposal-logical-assignment-operators@npm:7.20.7";
-        "@babel/plugin-proposal-nullish-coalescing-operator" = packages."@babel/plugin-proposal-nullish-coalescing-operator@npm:7.18.6";
-        "@babel/plugin-proposal-numeric-separator" = packages."@babel/plugin-proposal-numeric-separator@npm:7.18.6";
-        "@babel/plugin-proposal-object-rest-spread" = packages."@babel/plugin-proposal-object-rest-spread@npm:7.20.7";
-        "@babel/plugin-proposal-optional-catch-binding" = packages."@babel/plugin-proposal-optional-catch-binding@npm:7.18.6";
-        "@babel/plugin-proposal-optional-chaining" = packages."@babel/plugin-proposal-optional-chaining@npm:7.21.0";
-        "@babel/plugin-syntax-dynamic-import" = packages."@babel/plugin-syntax-dynamic-import@npm:7.8.3";
-        "@babel/plugin-syntax-export-default-from" = packages."@babel/plugin-syntax-export-default-from@npm:7.27.1";
-        "@babel/plugin-syntax-flow" = packages."@babel/plugin-syntax-flow@npm:7.27.1";
-        "@babel/plugin-syntax-nullish-coalescing-operator" = packages."@babel/plugin-syntax-nullish-coalescing-operator@npm:7.8.3";
-        "@babel/plugin-syntax-optional-chaining" = packages."@babel/plugin-syntax-optional-chaining@npm:7.8.3";
-        "@babel/plugin-transform-arrow-functions" = packages."@babel/plugin-transform-arrow-functions@npm:7.27.1";
-        "@babel/plugin-transform-async-to-generator" = packages."@babel/plugin-transform-async-to-generator@npm:7.27.1";
-        "@babel/plugin-transform-block-scoping" = packages."@babel/plugin-transform-block-scoping@npm:7.28.4";
-        "@babel/plugin-transform-classes" = packages."@babel/plugin-transform-classes@npm:7.28.4";
-        "@babel/plugin-transform-computed-properties" = packages."@babel/plugin-transform-computed-properties@npm:7.27.1";
-        "@babel/plugin-transform-destructuring" = packages."@babel/plugin-transform-destructuring@npm:7.28.0";
-        "@babel/plugin-transform-flow-strip-types" = packages."@babel/plugin-transform-flow-strip-types@npm:7.27.1";
-        "@babel/plugin-transform-function-name" = packages."@babel/plugin-transform-function-name@npm:7.27.1";
-        "@babel/plugin-transform-literals" = packages."@babel/plugin-transform-literals@npm:7.27.1";
-        "@babel/plugin-transform-modules-commonjs" = packages."@babel/plugin-transform-modules-commonjs@npm:7.27.1";
-        "@babel/plugin-transform-named-capturing-groups-regex" = packages."@babel/plugin-transform-named-capturing-groups-regex@npm:7.27.1";
-        "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@npm:7.27.7";
-        "@babel/plugin-transform-private-methods" = packages."@babel/plugin-transform-private-methods@npm:7.27.1";
-        "@babel/plugin-transform-private-property-in-object" = packages."@babel/plugin-transform-private-property-in-object@npm:7.27.1";
-        "@babel/plugin-transform-react-display-name" = packages."@babel/plugin-transform-react-display-name@npm:7.28.0";
-        "@babel/plugin-transform-react-jsx-self" = packages."@babel/plugin-transform-react-jsx-self@npm:7.27.1";
-        "@babel/plugin-transform-react-jsx-source" = packages."@babel/plugin-transform-react-jsx-source@npm:7.27.1";
-        "@babel/plugin-transform-react-jsx" = packages."@babel/plugin-transform-react-jsx@npm:7.27.1";
-        "@babel/plugin-transform-runtime" = packages."@babel/plugin-transform-runtime@npm:7.28.3";
-        "@babel/plugin-transform-shorthand-properties" = packages."@babel/plugin-transform-shorthand-properties@npm:7.27.1";
-        "@babel/plugin-transform-spread" = packages."@babel/plugin-transform-spread@npm:7.27.1";
-        "@babel/plugin-transform-sticky-regex" = packages."@babel/plugin-transform-sticky-regex@npm:7.27.1";
-        "@babel/plugin-transform-typescript" = packages."@babel/plugin-transform-typescript@npm:7.28.0";
-        "@babel/plugin-transform-unicode-regex" = packages."@babel/plugin-transform-unicode-regex@npm:7.27.1";
-        "@babel/template" = packages."@babel/template@npm:7.27.2";
-        "@react-native/babel-plugin-codegen" = packages."@react-native/babel-plugin-codegen@npm:0.74.87";
-        "babel-plugin-transform-flow-enums" = packages."babel-plugin-transform-flow-enums@npm:0.0.2";
-        "react-refresh" = packages."react-refresh@npm:0.14.2";
-      };
-      packagePeers = [
-        "@babel/core"
-        "@types/babel__core"
-      ];
     };
     "@react-native/babel-preset@npm:0.76.9" = {
       name = "@react-native/babel-preset";
@@ -15025,14 +14738,14 @@ let
       canonicalPackage = packages."@react-native/babel-preset@npm:0.76.9";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/plugin-proposal-export-default-from" = packages."@babel/plugin-proposal-export-default-from@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-syntax-dynamic-import" = packages."@babel/plugin-syntax-dynamic-import@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.8.3";
-        "@babel/plugin-syntax-export-default-from" = packages."@babel/plugin-syntax-export-default-from@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-syntax-nullish-coalescing-operator" = packages."@babel/plugin-syntax-nullish-coalescing-operator@virtual:084089a631743eb2e7e5b74362965e9a9ec4946c7ebcc1e9341f955ff2e53abab9a1757af440c1e51092fb169ec2c46a8b57db92686c7d1ccd259958bfe6fb2f#npm:7.8.3";
-        "@babel/plugin-syntax-optional-chaining" = packages."@babel/plugin-syntax-optional-chaining@virtual:6bcbdecbec5da05e23d9f4550bf948af857f29ea32f313762fb98a9346cbc346aba196a36f0b012a7652be7959c6aad0deae3613c69fb90cec4b6ce647d2f5a2#npm:7.8.3";
+        "@babel/plugin-proposal-export-default-from" = packages."@babel/plugin-proposal-export-default-from@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
+        "@babel/plugin-syntax-dynamic-import" = packages."@babel/plugin-syntax-dynamic-import@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.8.3";
+        "@babel/plugin-syntax-export-default-from" = packages."@babel/plugin-syntax-export-default-from@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
+        "@babel/plugin-syntax-nullish-coalescing-operator" = packages."@babel/plugin-syntax-nullish-coalescing-operator@virtual:21d2623e3d7f9a37c721fd7d6065806a21e0e66c39dd9abe06251f9e24a384b08ad1c7bda19771f07bfde0cd0b7637ab8dc459fc7755b093992c1436bf75a638#npm:7.8.3";
+        "@babel/plugin-syntax-optional-chaining" = packages."@babel/plugin-syntax-optional-chaining@virtual:432f3619a06e71f4ba200f2c8f784f1410e9077f067c6b791240c03dcc08d069702cb4baf07a10f3c01f01650d950e77ffcc08c9eb86ca8083555812ca0e739d#npm:7.8.3";
         "@babel/plugin-transform-arrow-functions" = packages."@babel/plugin-transform-arrow-functions@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
         "@babel/plugin-transform-async-generator-functions" = packages."@babel/plugin-transform-async-generator-functions@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.28.0";
-        "@babel/plugin-transform-async-to-generator" = packages."@babel/plugin-transform-async-to-generator@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+        "@babel/plugin-transform-async-to-generator" = packages."@babel/plugin-transform-async-to-generator@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-block-scoping" = packages."@babel/plugin-transform-block-scoping@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.4";
         "@babel/plugin-transform-class-properties" = packages."@babel/plugin-transform-class-properties@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-classes" = packages."@babel/plugin-transform-classes@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.4";
@@ -15044,107 +14757,32 @@ let
         "@babel/plugin-transform-literals" = packages."@babel/plugin-transform-literals@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
         "@babel/plugin-transform-logical-assignment-operators" = packages."@babel/plugin-transform-logical-assignment-operators@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-modules-commonjs" = packages."@babel/plugin-transform-modules-commonjs@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-named-capturing-groups-regex" = packages."@babel/plugin-transform-named-capturing-groups-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+        "@babel/plugin-transform-named-capturing-groups-regex" = packages."@babel/plugin-transform-named-capturing-groups-regex@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-nullish-coalescing-operator" = packages."@babel/plugin-transform-nullish-coalescing-operator@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-numeric-separator" = packages."@babel/plugin-transform-numeric-separator@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-object-rest-spread" = packages."@babel/plugin-transform-object-rest-spread@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.28.4";
         "@babel/plugin-transform-optional-catch-binding" = packages."@babel/plugin-transform-optional-catch-binding@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-optional-chaining" = packages."@babel/plugin-transform-optional-chaining@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.7";
-        "@babel/plugin-transform-private-methods" = packages."@babel/plugin-transform-private-methods@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-private-property-in-object" = packages."@babel/plugin-transform-private-property-in-object@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+        "@babel/plugin-transform-private-methods" = packages."@babel/plugin-transform-private-methods@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
+        "@babel/plugin-transform-private-property-in-object" = packages."@babel/plugin-transform-private-property-in-object@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-react-display-name" = packages."@babel/plugin-transform-react-display-name@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.0";
         "@babel/plugin-transform-react-jsx" = packages."@babel/plugin-transform-react-jsx@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-react-jsx-self" = packages."@babel/plugin-transform-react-jsx-self@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-react-jsx-source" = packages."@babel/plugin-transform-react-jsx-source@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+        "@babel/plugin-transform-react-jsx-self" = packages."@babel/plugin-transform-react-jsx-self@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
+        "@babel/plugin-transform-react-jsx-source" = packages."@babel/plugin-transform-react-jsx-source@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-regenerator" = packages."@babel/plugin-transform-regenerator@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.28.4";
-        "@babel/plugin-transform-runtime" = packages."@babel/plugin-transform-runtime@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.28.3";
+        "@babel/plugin-transform-runtime" = packages."@babel/plugin-transform-runtime@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.28.3";
         "@babel/plugin-transform-shorthand-properties" = packages."@babel/plugin-transform-shorthand-properties@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
         "@babel/plugin-transform-spread" = packages."@babel/plugin-transform-spread@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-sticky-regex" = packages."@babel/plugin-transform-sticky-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-typescript" = packages."@babel/plugin-transform-typescript@virtual:d6007fc3ee260aac7c38f3bf3858d359e3de93affbfc68d8fa260a6ca344f3564172f2974f5f7683ee10af7006c2d42d45696ebd60143e6d199164e9ee28939c#npm:7.28.0";
-        "@babel/plugin-transform-unicode-regex" = packages."@babel/plugin-transform-unicode-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
+        "@babel/plugin-transform-sticky-regex" = packages."@babel/plugin-transform-sticky-regex@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
+        "@babel/plugin-transform-typescript" = packages."@babel/plugin-transform-typescript@virtual:ab177f14287a17b9bfd453b3c7ed6264a3a542652baccc729380756c200c9ed72747662617f0cef1ac82835dc9294a792c3ac60d96fbf072f2ed9627af6a3b79#npm:7.28.0";
+        "@babel/plugin-transform-unicode-regex" = packages."@babel/plugin-transform-unicode-regex@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/template" = packages."@babel/template@npm:7.27.2";
         "@react-native/babel-plugin-codegen" = packages."@react-native/babel-plugin-codegen@npm:0.76.9";
         "babel-plugin-syntax-hermes-parser" = packages."babel-plugin-syntax-hermes-parser@npm:0.25.1";
         "babel-plugin-transform-flow-enums" = packages."babel-plugin-transform-flow-enums@npm:0.0.2";
         "react-refresh" = packages."react-refresh@npm:0.14.2";
       };
-    };
-    "@react-native/babel-preset@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:0.74.87" = {
-      name = "@react-native/babel-preset";
-      reference = "virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:0.74.87";
-      canonicalPackage = packages."@react-native/babel-preset@npm:0.74.87";
-      dependencies = {
-        "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/plugin-proposal-async-generator-functions" = packages."@babel/plugin-proposal-async-generator-functions@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.20.7";
-        "@babel/plugin-proposal-class-properties" = packages."@babel/plugin-proposal-class-properties@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.18.6";
-        "@babel/plugin-proposal-export-default-from" = packages."@babel/plugin-proposal-export-default-from@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-proposal-logical-assignment-operators" = packages."@babel/plugin-proposal-logical-assignment-operators@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.20.7";
-        "@babel/plugin-proposal-nullish-coalescing-operator" = packages."@babel/plugin-proposal-nullish-coalescing-operator@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.18.6";
-        "@babel/plugin-proposal-numeric-separator" = packages."@babel/plugin-proposal-numeric-separator@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.18.6";
-        "@babel/plugin-proposal-object-rest-spread" = packages."@babel/plugin-proposal-object-rest-spread@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.20.7";
-        "@babel/plugin-proposal-optional-catch-binding" = packages."@babel/plugin-proposal-optional-catch-binding@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.18.6";
-        "@babel/plugin-proposal-optional-chaining" = packages."@babel/plugin-proposal-optional-chaining@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.21.0";
-        "@babel/plugin-syntax-dynamic-import" = packages."@babel/plugin-syntax-dynamic-import@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.8.3";
-        "@babel/plugin-syntax-export-default-from" = packages."@babel/plugin-syntax-export-default-from@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-syntax-flow" = packages."@babel/plugin-syntax-flow@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-syntax-nullish-coalescing-operator" = packages."@babel/plugin-syntax-nullish-coalescing-operator@virtual:084089a631743eb2e7e5b74362965e9a9ec4946c7ebcc1e9341f955ff2e53abab9a1757af440c1e51092fb169ec2c46a8b57db92686c7d1ccd259958bfe6fb2f#npm:7.8.3";
-        "@babel/plugin-syntax-optional-chaining" = packages."@babel/plugin-syntax-optional-chaining@virtual:6bcbdecbec5da05e23d9f4550bf948af857f29ea32f313762fb98a9346cbc346aba196a36f0b012a7652be7959c6aad0deae3613c69fb90cec4b6ce647d2f5a2#npm:7.8.3";
-        "@babel/plugin-transform-arrow-functions" = packages."@babel/plugin-transform-arrow-functions@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-async-to-generator" = packages."@babel/plugin-transform-async-to-generator@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-block-scoping" = packages."@babel/plugin-transform-block-scoping@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.4";
-        "@babel/plugin-transform-classes" = packages."@babel/plugin-transform-classes@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.4";
-        "@babel/plugin-transform-computed-properties" = packages."@babel/plugin-transform-computed-properties@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-destructuring" = packages."@babel/plugin-transform-destructuring@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.0";
-        "@babel/plugin-transform-flow-strip-types" = packages."@babel/plugin-transform-flow-strip-types@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-function-name" = packages."@babel/plugin-transform-function-name@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-literals" = packages."@babel/plugin-transform-literals@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-modules-commonjs" = packages."@babel/plugin-transform-modules-commonjs@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-named-capturing-groups-regex" = packages."@babel/plugin-transform-named-capturing-groups-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.7";
-        "@babel/plugin-transform-private-methods" = packages."@babel/plugin-transform-private-methods@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-private-property-in-object" = packages."@babel/plugin-transform-private-property-in-object@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-react-display-name" = packages."@babel/plugin-transform-react-display-name@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.28.0";
-        "@babel/plugin-transform-react-jsx" = packages."@babel/plugin-transform-react-jsx@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-react-jsx-self" = packages."@babel/plugin-transform-react-jsx-self@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-react-jsx-source" = packages."@babel/plugin-transform-react-jsx-source@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-runtime" = packages."@babel/plugin-transform-runtime@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.28.3";
-        "@babel/plugin-transform-shorthand-properties" = packages."@babel/plugin-transform-shorthand-properties@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-spread" = packages."@babel/plugin-transform-spread@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-sticky-regex" = packages."@babel/plugin-transform-sticky-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/plugin-transform-typescript" = packages."@babel/plugin-transform-typescript@virtual:d6007fc3ee260aac7c38f3bf3858d359e3de93affbfc68d8fa260a6ca344f3564172f2974f5f7683ee10af7006c2d42d45696ebd60143e6d199164e9ee28939c#npm:7.28.0";
-        "@babel/plugin-transform-unicode-regex" = packages."@babel/plugin-transform-unicode-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/template" = packages."@babel/template@npm:7.27.2";
-        "@react-native/babel-plugin-codegen" = packages."@react-native/babel-plugin-codegen@npm:0.74.87";
-        "babel-plugin-transform-flow-enums" = packages."babel-plugin-transform-flow-enums@npm:0.0.2";
-        "react-refresh" = packages."react-refresh@npm:0.14.2";
-      };
-    };
-    "@react-native/codegen@npm:0.74.87" = {
-      name = "@react-native/codegen";
-      reference = "npm:0.74.87";
-      linkType = "HARD";
-      outputName = "react-native-codegen-0.74.87-f772b0a115";
-      outputHash = "4f962484bbde32cc7f70199c7a942d41620ef7c95f978129197fb0079d4a2371d7e385e1b30c98f84d66b2c2c9a4226a74c99b4f9fc334f1b4cba3c08e760df0";
-      flatName = "codegen";
-      languageName = "node";
-      scope = "react-native";
-      descriptorRange = "npm:0.74.87";
-      checksum = "10/4f962484bbde32cc7f70199c7a942d41620ef7c95f978129197fb0079d4a2371d7e385e1b30c98f84d66b2c2c9a4226a74c99b4f9fc334f1b4cba3c08e760df0";
-      dependencies = {
-        "@babel/parser" = packages."@babel/parser@npm:7.28.4";
-        "glob" = packages."glob@npm:7.2.3";
-        "hermes-parser" = packages."hermes-parser@npm:0.19.1";
-        "invariant" = packages."invariant@npm:2.2.4";
-        "jscodeshift" = packages."jscodeshift@npm:0.14.0";
-        "mkdirp" = packages."mkdirp@npm:0.5.6";
-        "nullthrows" = packages."nullthrows@npm:1.1.1";
-      };
-      packagePeers = [
-        "@babel/preset-env"
-        "@types/babel__preset-env"
-      ];
     };
     "@react-native/codegen@npm:0.76.9" = {
       name = "@react-native/codegen";
@@ -15206,24 +14844,10 @@ let
         "glob" = packages."glob@npm:7.2.3";
         "hermes-parser" = packages."hermes-parser@npm:0.23.1";
         "invariant" = packages."invariant@npm:2.2.4";
-        "jscodeshift" = packages."jscodeshift@virtual:39ff8dcc54701ce6315c8aeea4c8aeb4185f5e3820da1df9047d21c3947ca31a5537cf1df709eabf44628154dda3b1aa832b7086825199f41c8605fd90769ba5#npm:0.14.0";
+        "jscodeshift" = packages."jscodeshift@virtual:8568e4c43f178e296fb16d3b389a57d9e31adf40d5b97fa1951c8783d837019ee2bff0f54d690673456cf62cbd579706e38e9d45be4fbb33daf2de0e3d1a1b13#npm:0.14.0";
         "mkdirp" = packages."mkdirp@npm:0.5.6";
         "nullthrows" = packages."nullthrows@npm:1.1.1";
         "yargs" = packages."yargs@npm:17.7.2";
-      };
-    };
-    "@react-native/codegen@virtual:31567c2937e97a7b05aa372de0d98e1e3d9f109e9ddfa89ba986aa7b01bb63fc2081bb7dd1aeb05d227ed1fbd11fb438b0be27c79482e59bc4a578e82fa2b3b9#npm:0.74.87" = {
-      name = "@react-native/codegen";
-      reference = "virtual:31567c2937e97a7b05aa372de0d98e1e3d9f109e9ddfa89ba986aa7b01bb63fc2081bb7dd1aeb05d227ed1fbd11fb438b0be27c79482e59bc4a578e82fa2b3b9#npm:0.74.87";
-      canonicalPackage = packages."@react-native/codegen@npm:0.74.87";
-      dependencies = {
-        "@babel/parser" = packages."@babel/parser@npm:7.28.4";
-        "glob" = packages."glob@npm:7.2.3";
-        "hermes-parser" = packages."hermes-parser@npm:0.19.1";
-        "invariant" = packages."invariant@npm:2.2.4";
-        "jscodeshift" = packages."jscodeshift@virtual:39ff8dcc54701ce6315c8aeea4c8aeb4185f5e3820da1df9047d21c3947ca31a5537cf1df709eabf44628154dda3b1aa832b7086825199f41c8605fd90769ba5#npm:0.14.0";
-        "mkdirp" = packages."mkdirp@npm:0.5.6";
-        "nullthrows" = packages."nullthrows@npm:1.1.1";
       };
     };
     "@react-native/codegen@virtual:bf2ffff01579b616258293258cb246a03fc090d18dba029e182e9ab32d1b3bf0f0f01a045c435a1279514cb42c8cbe1a571fa44cb262cdac0f747f272fb7ccfe#npm:0.82.0" = {
@@ -18839,123 +18463,6 @@ let
         "@types/node" = packages."@types/node@npm:22.18.10";
       };
     };
-    "@types/d3-array@npm:3.2.1" = {
-      name = "@types/d3-array";
-      reference = "npm:3.2.1";
-      linkType = "HARD";
-      outputName = "types-d3-array-3.2.1-40c200ccb1";
-      outputHash = "4a9ecacaa859cff79e10dcec0c79053f027a4749ce0a4badeaff7400d69a9c44eb8210b147916b6ff5309be049030e7d68a0e333294ff3fa11c44aa1af4ba458";
-      flatName = "d3-array";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^3.0.3";
-      checksum = "10/4a9ecacaa859cff79e10dcec0c79053f027a4749ce0a4badeaff7400d69a9c44eb8210b147916b6ff5309be049030e7d68a0e333294ff3fa11c44aa1af4ba458";
-    };
-    "@types/d3-color@npm:3.1.3" = {
-      name = "@types/d3-color";
-      reference = "npm:3.1.3";
-      linkType = "HARD";
-      outputName = "types-d3-color-3.1.3-220f383461";
-      outputHash = "1cf0f512c09357b25d644ab01b54200be7c9b15c808333b0ccacf767fff36f17520b2fcde9dad45e1bd7ce84befad39b43da42b4fded57680fa2127006ca3ece";
-      flatName = "d3-color";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:*";
-      checksum = "10/1cf0f512c09357b25d644ab01b54200be7c9b15c808333b0ccacf767fff36f17520b2fcde9dad45e1bd7ce84befad39b43da42b4fded57680fa2127006ca3ece";
-    };
-    "@types/d3-ease@npm:3.0.2" = {
-      name = "@types/d3-ease";
-      reference = "npm:3.0.2";
-      linkType = "HARD";
-      outputName = "types-d3-ease-3.0.2-04834f8d6b";
-      outputHash = "d8f92a8a7a008da71f847a16227fdcb53a8938200ecdf8d831ab6b49aba91e8921769761d3bfa7e7191b28f62783bfd8b0937e66bae39d4dd7fb0b63b50d4a94";
-      flatName = "d3-ease";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^3.0.0";
-      checksum = "10/d8f92a8a7a008da71f847a16227fdcb53a8938200ecdf8d831ab6b49aba91e8921769761d3bfa7e7191b28f62783bfd8b0937e66bae39d4dd7fb0b63b50d4a94";
-    };
-    "@types/d3-interpolate@npm:3.0.4" = {
-      name = "@types/d3-interpolate";
-      reference = "npm:3.0.4";
-      linkType = "HARD";
-      outputName = "types-d3-interpolate-3.0.4-e863f31b1c";
-      outputHash = "72a883afd52c91132598b02a8cdfced9e783c54ca7e4459f9e29d5f45d11fb33f2cabc844e42fd65ba6e28f2a931dcce1add8607d2f02ef6fb8ea5b83ae84127";
-      flatName = "d3-interpolate";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^3.0.1";
-      checksum = "10/72a883afd52c91132598b02a8cdfced9e783c54ca7e4459f9e29d5f45d11fb33f2cabc844e42fd65ba6e28f2a931dcce1add8607d2f02ef6fb8ea5b83ae84127";
-      dependencies = {
-        "@types/d3-color" = packages."@types/d3-color@npm:3.1.3";
-      };
-    };
-    "@types/d3-path@npm:3.0.2" = {
-      name = "@types/d3-path";
-      reference = "npm:3.0.2";
-      linkType = "HARD";
-      outputName = "types-d3-path-3.0.2-856f9f270c";
-      outputHash = "fc974ffd75ff9268ea689cec764fffdd582d96f6f113db5bd2aba6d5d4a843eccc7919730fbca9134bd97ba6c91c13018a0c7c3f0813b73259f3603d140e0cb5";
-      flatName = "d3-path";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:*";
-      checksum = "10/fc974ffd75ff9268ea689cec764fffdd582d96f6f113db5bd2aba6d5d4a843eccc7919730fbca9134bd97ba6c91c13018a0c7c3f0813b73259f3603d140e0cb5";
-    };
-    "@types/d3-scale@npm:4.0.8" = {
-      name = "@types/d3-scale";
-      reference = "npm:4.0.8";
-      linkType = "HARD";
-      outputName = "types-d3-scale-4.0.8-56a8af5d03";
-      outputHash = "376e4f2199ee6db70906651587a4521976920fa5eaa847a976c434e7a8171cbfeeab515cc510c5130b1f64fcf95b9750a7fd21dfc0a40fc3398641aa7dd4e7e2";
-      flatName = "d3-scale";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^4.0.2";
-      checksum = "10/376e4f2199ee6db70906651587a4521976920fa5eaa847a976c434e7a8171cbfeeab515cc510c5130b1f64fcf95b9750a7fd21dfc0a40fc3398641aa7dd4e7e2";
-      dependencies = {
-        "@types/d3-time" = packages."@types/d3-time@npm:3.0.3";
-      };
-    };
-    "@types/d3-shape@npm:3.1.6" = {
-      name = "@types/d3-shape";
-      reference = "npm:3.1.6";
-      linkType = "HARD";
-      outputName = "types-d3-shape-3.1.6-e9f2cc5cff";
-      outputHash = "75abf403ec5b8c11e761256aa6b3546533d61e2e12f15c82bed6b606e963dcdfb9868a2038c46099173c8830423b35ddaf14d1162f96ad9da18a2e90b0fa7d25";
-      flatName = "d3-shape";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^3.1.0";
-      checksum = "10/75abf403ec5b8c11e761256aa6b3546533d61e2e12f15c82bed6b606e963dcdfb9868a2038c46099173c8830423b35ddaf14d1162f96ad9da18a2e90b0fa7d25";
-      dependencies = {
-        "@types/d3-path" = packages."@types/d3-path@npm:3.0.2";
-      };
-    };
-    "@types/d3-time@npm:3.0.3" = {
-      name = "@types/d3-time";
-      reference = "npm:3.0.3";
-      linkType = "HARD";
-      outputName = "types-d3-time-3.0.3-db6a45d526";
-      outputHash = "4e6bf24ec422f0893747e5020592e107bb3d96764a43d5f0bff666202bd71f052c73f735b50ec66296a6efd5766ca40b6a4e8ce3bbc61217dbe9467340608c12";
-      flatName = "d3-time";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^3.0.0";
-      checksum = "10/4e6bf24ec422f0893747e5020592e107bb3d96764a43d5f0bff666202bd71f052c73f735b50ec66296a6efd5766ca40b6a4e8ce3bbc61217dbe9467340608c12";
-    };
-    "@types/d3-timer@npm:3.0.2" = {
-      name = "@types/d3-timer";
-      reference = "npm:3.0.2";
-      linkType = "HARD";
-      outputName = "types-d3-timer-3.0.2-94e22db08a";
-      outputHash = "1643eebfa5f4ae3eb00b556bbc509444d88078208ec2589ddd8e4a24f230dd4cf2301e9365947e70b1bee33f63aaefab84cd907822aae812b9bc4871b98ab0e1";
-      flatName = "d3-timer";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^3.0.0";
-      checksum = "10/1643eebfa5f4ae3eb00b556bbc509444d88078208ec2589ddd8e4a24f230dd4cf2301e9365947e70b1bee33f63aaefab84cd907822aae812b9bc4871b98ab0e1";
-    };
     "@types/date-arithmetic@npm:4.1.4" = {
       name = "@types/date-arithmetic";
       reference = "npm:4.1.4";
@@ -19213,22 +18720,6 @@ let
       checksum = "10/b91e9b60f865ff08cb35667a427b70f6c2c63e88105eadd29a112582942af47ed99c60610180aa8dcc22382fa405033f141c119c69b95db78c4c709fbadfeeb4";
       dependencies = {
         "@types/istanbul-lib-coverage" = packages."@types/istanbul-lib-coverage@npm:2.0.6";
-      };
-    };
-    "@types/istanbul-reports@npm:1.1.2" = {
-      name = "@types/istanbul-reports";
-      reference = "npm:1.1.2";
-      linkType = "HARD";
-      outputName = "types-istanbul-reports-1.1.2-4f435a3d0f";
-      outputHash = "00866e815d1e68d0a590d691506937b79d8d65ad8eab5ed34dbfee66136c7c0f4ea65327d32046d5fe469f22abea2b294987591dc66365ebc3991f7e413b2d78";
-      flatName = "istanbul-reports";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^1.1.1";
-      checksum = "10/00866e815d1e68d0a590d691506937b79d8d65ad8eab5ed34dbfee66136c7c0f4ea65327d32046d5fe469f22abea2b294987591dc66365ebc3991f7e413b2d78";
-      dependencies = {
-        "@types/istanbul-lib-coverage" = packages."@types/istanbul-lib-coverage@npm:2.0.6";
-        "@types/istanbul-lib-report" = packages."@types/istanbul-lib-report@npm:3.0.3";
       };
     };
     "@types/istanbul-reports@npm:3.0.4" = {
@@ -19870,21 +19361,6 @@ let
       scope = "types";
       descriptorRange = "npm:*";
       checksum = "10/a794eb750e8ebc6273a51b12a0002de41343ffe46befef460bdbb57262d187fdf608bc6615b7b11c462c63c3ceb70abe2564c8dd8ee0f7628f38a314f74a9b9b";
-    };
-    "@types/yargs@npm:13.0.12" = {
-      name = "@types/yargs";
-      reference = "npm:13.0.12";
-      linkType = "HARD";
-      outputName = "types-yargs-13.0.12-a1b52b90a3";
-      outputHash = "d970b79cf16100328fffb615a4d1617332384ca6966cc15bf6ad11feef44e598045d2247eb94e49159ef1211842911e9c3e92a34a44bd0f671d1e01af8103e02";
-      flatName = "yargs";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:^13.0.0";
-      checksum = "10/d970b79cf16100328fffb615a4d1617332384ca6966cc15bf6ad11feef44e598045d2247eb94e49159ef1211842911e9c3e92a34a44bd0f671d1e01af8103e02";
-      dependencies = {
-        "@types/yargs-parser" = packages."@types/yargs-parser@npm:21.0.3";
-      };
     };
     "@types/yargs@npm:17.0.33" = {
       name = "@types/yargs";
@@ -20580,7 +20056,7 @@ let
       flatName = "exchange-retry";
       languageName = "node";
       scope = "urql";
-      descriptorRange = "npm:^1.3.0";
+      descriptorRange = "npm:^1.3.2";
       checksum = "10/766b8866735188f42d7371d73babd40ec166fb0adb1e9c133f6ab419f3b9e4d2aa4df4660992e12f8ccda803584e46b0104e108079e204d7d49d82dfcc93cdae";
       dependencies = {
         "@urql/core" = packages."@urql/core@npm:5.2.0";
@@ -21448,7 +20924,7 @@ let
       flatName = "ansi-regex";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.0.0";
+      descriptorRange = "npm:^4.1.0";
       checksum = "10/b1a6ee44cb6ecdabaa770b2ed500542714d4395d71c7e5c25baa631f680fb2ad322eb9ba697548d498a6fd366949fc8b5bfcf48d49a32803611f648005b01888";
     };
     "ansi-regex@npm:5.0.1" = {
@@ -21484,7 +20960,7 @@ let
       flatName = "ansi-styles";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.2.0";
+      descriptorRange = "npm:^3.2.1";
       checksum = "10/d85ade01c10e5dd77b6c89f34ed7531da5830d2cb5882c645f330079975b716438cd7ebb81d0d6e6b4f9c577f19ae41ab55f07f19786b02f9dfd9e0377395665";
       dependencies = {
         "color-convert" = packages."color-convert@npm:1.9.3";
@@ -22120,9 +21596,9 @@ let
         "@types/babel__core"
       ];
     };
-    "babel-core@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.0.0-bridge.0" = {
+    "babel-core@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.0.0-bridge.0" = {
       name = "babel-core";
-      reference = "virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.0.0-bridge.0";
+      reference = "virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.0.0-bridge.0";
       canonicalPackage = packages."babel-core@npm:7.0.0-bridge.0";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
@@ -22224,14 +21700,14 @@ let
         "@types/babel__core"
       ];
     };
-    "babel-plugin-polyfill-corejs2@virtual:ed3d8041e87be74ae413c462b27f0e56e1ac83e9cee2d6942a5108e31a01c8eb71ab254098d1306cbd7d1972ca56e531ff9fb0b3ae2fe4cd56f9e07a9fa4c88f#npm:0.4.14" = {
+    "babel-plugin-polyfill-corejs2@virtual:951fe8acf4998ff6869a15e7dcfadd3c3833cec02c91c390e5fe842f9c7be873a398d1a9f5b0e1ee032406c7551061c1c3399c8e51547fbaaeb90d3f6aee0134#npm:0.4.14" = {
       name = "babel-plugin-polyfill-corejs2";
-      reference = "virtual:ed3d8041e87be74ae413c462b27f0e56e1ac83e9cee2d6942a5108e31a01c8eb71ab254098d1306cbd7d1972ca56e531ff9fb0b3ae2fe4cd56f9e07a9fa4c88f#npm:0.4.14";
+      reference = "virtual:951fe8acf4998ff6869a15e7dcfadd3c3833cec02c91c390e5fe842f9c7be873a398d1a9f5b0e1ee032406c7551061c1c3399c8e51547fbaaeb90d3f6aee0134#npm:0.4.14";
       canonicalPackage = packages."babel-plugin-polyfill-corejs2@npm:0.4.14";
       dependencies = {
         "@babel/compat-data" = packages."@babel/compat-data@npm:7.28.4";
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-define-polyfill-provider" = packages."@babel/helper-define-polyfill-provider@virtual:6f2eaefbc5a70431fe61e17ba58d7201de6355fd19da432b89bc1a4c96695ce80b202c05efcca5f71e805a78185ae5c40f125370050398ef6909582347d3d836#npm:0.6.5";
+        "@babel/helper-define-polyfill-provider" = packages."@babel/helper-define-polyfill-provider@virtual:cbbbba9a96110b75b4940adcdfc25a4eb837e3628e37ffcdf71d94d42fb23d1b6de2f55815ea10f4e7c177fcd539fbc63287ad4a9c26ccc0cc0e5d5a9a2551f0#npm:0.6.5";
         "semver" = packages."semver@npm:6.3.1";
       };
     };
@@ -22255,13 +21731,13 @@ let
         "@types/babel__core"
       ];
     };
-    "babel-plugin-polyfill-corejs3@virtual:ed3d8041e87be74ae413c462b27f0e56e1ac83e9cee2d6942a5108e31a01c8eb71ab254098d1306cbd7d1972ca56e531ff9fb0b3ae2fe4cd56f9e07a9fa4c88f#npm:0.13.0" = {
+    "babel-plugin-polyfill-corejs3@virtual:951fe8acf4998ff6869a15e7dcfadd3c3833cec02c91c390e5fe842f9c7be873a398d1a9f5b0e1ee032406c7551061c1c3399c8e51547fbaaeb90d3f6aee0134#npm:0.13.0" = {
       name = "babel-plugin-polyfill-corejs3";
-      reference = "virtual:ed3d8041e87be74ae413c462b27f0e56e1ac83e9cee2d6942a5108e31a01c8eb71ab254098d1306cbd7d1972ca56e531ff9fb0b3ae2fe4cd56f9e07a9fa4c88f#npm:0.13.0";
+      reference = "virtual:951fe8acf4998ff6869a15e7dcfadd3c3833cec02c91c390e5fe842f9c7be873a398d1a9f5b0e1ee032406c7551061c1c3399c8e51547fbaaeb90d3f6aee0134#npm:0.13.0";
       canonicalPackage = packages."babel-plugin-polyfill-corejs3@npm:0.13.0";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-define-polyfill-provider" = packages."@babel/helper-define-polyfill-provider@virtual:6f2eaefbc5a70431fe61e17ba58d7201de6355fd19da432b89bc1a4c96695ce80b202c05efcca5f71e805a78185ae5c40f125370050398ef6909582347d3d836#npm:0.6.5";
+        "@babel/helper-define-polyfill-provider" = packages."@babel/helper-define-polyfill-provider@virtual:cbbbba9a96110b75b4940adcdfc25a4eb837e3628e37ffcdf71d94d42fb23d1b6de2f55815ea10f4e7c177fcd539fbc63287ad4a9c26ccc0cc0e5d5a9a2551f0#npm:0.6.5";
         "core-js-compat" = packages."core-js-compat@npm:3.46.0";
       };
     };
@@ -22284,34 +21760,13 @@ let
         "@types/babel__core"
       ];
     };
-    "babel-plugin-polyfill-regenerator@virtual:ed3d8041e87be74ae413c462b27f0e56e1ac83e9cee2d6942a5108e31a01c8eb71ab254098d1306cbd7d1972ca56e531ff9fb0b3ae2fe4cd56f9e07a9fa4c88f#npm:0.6.5" = {
+    "babel-plugin-polyfill-regenerator@virtual:951fe8acf4998ff6869a15e7dcfadd3c3833cec02c91c390e5fe842f9c7be873a398d1a9f5b0e1ee032406c7551061c1c3399c8e51547fbaaeb90d3f6aee0134#npm:0.6.5" = {
       name = "babel-plugin-polyfill-regenerator";
-      reference = "virtual:ed3d8041e87be74ae413c462b27f0e56e1ac83e9cee2d6942a5108e31a01c8eb71ab254098d1306cbd7d1972ca56e531ff9fb0b3ae2fe4cd56f9e07a9fa4c88f#npm:0.6.5";
+      reference = "virtual:951fe8acf4998ff6869a15e7dcfadd3c3833cec02c91c390e5fe842f9c7be873a398d1a9f5b0e1ee032406c7551061c1c3399c8e51547fbaaeb90d3f6aee0134#npm:0.6.5";
       canonicalPackage = packages."babel-plugin-polyfill-regenerator@npm:0.6.5";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@babel/helper-define-polyfill-provider" = packages."@babel/helper-define-polyfill-provider@virtual:6f2eaefbc5a70431fe61e17ba58d7201de6355fd19da432b89bc1a4c96695ce80b202c05efcca5f71e805a78185ae5c40f125370050398ef6909582347d3d836#npm:0.6.5";
-      };
-    };
-    "babel-plugin-react-compiler@npm:0.0.0-experimental-592953e-20240517" = {
-      name = "babel-plugin-react-compiler";
-      reference = "npm:0.0.0-experimental-592953e-20240517";
-      linkType = "HARD";
-      outputName = "babel-plugin-react-compiler-0.0.0-experimental-592953e-20240517-7fd215bbb0";
-      outputHash = "53416c11bd20f2fdd103e40fb2ce43f54ba0dfc824946d40053672b2b88d9ce8be796837892b6b5efd6bafd6947c5dab34d03d10317aaab96da34fe42f19e7bf";
-      flatName = "babel-plugin-react-compiler";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:0.0.0-experimental-592953e-20240517";
-      checksum = "10/53416c11bd20f2fdd103e40fb2ce43f54ba0dfc824946d40053672b2b88d9ce8be796837892b6b5efd6bafd6947c5dab34d03d10317aaab96da34fe42f19e7bf";
-      dependencies = {
-        "@babel/generator" = packages."@babel/generator@npm:7.2.0";
-        "@babel/types" = packages."@babel/types@npm:7.28.4";
-        "chalk" = packages."chalk@npm:4.1.2";
-        "invariant" = packages."invariant@npm:2.2.4";
-        "pretty-format" = packages."pretty-format@npm:24.9.0";
-        "zod-validation-error" = packages."zod-validation-error@virtual:7fd215bbb0ec50392e1798f6019af951cbc8f3a1301ad25d4e57018f7a9beef60f119c5a661655dfa27ae16456a9a550e1dbb8b6762f2610e149660649f313fc#npm:2.1.0";
-        "zod" = packages."zod@npm:3.25.76";
+        "@babel/helper-define-polyfill-provider" = packages."@babel/helper-define-polyfill-provider@virtual:cbbbba9a96110b75b4940adcdfc25a4eb837e3628e37ffcdf71d94d42fb23d1b6de2f55815ea10f4e7c177fcd539fbc63287ad4a9c26ccc0cc0e5d5a9a2551f0#npm:0.6.5";
       };
     };
     "babel-plugin-react-native-web@npm:0.19.13" = {
@@ -22323,7 +21778,7 @@ let
       flatName = "babel-plugin-react-native-web";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~0.19.10";
+      descriptorRange = "npm:~0.19.13";
       checksum = "10/05ef14f7ffad194a80f27624d52d6f661e5956e606a41aefd34220016357068b6dead23f5c80671345f4e5878dd6ed5cb3a567aef128e38570780458a141d07a";
     };
     "babel-plugin-syntax-hermes-parser@npm:0.23.1" = {
@@ -22454,30 +21909,6 @@ let
         "@types/babel__core" = packages."@types/babel__core@npm:7.20.5";
       };
     };
-    "babel-preset-expo@npm:11.0.15" = {
-      name = "babel-preset-expo";
-      reference = "npm:11.0.15";
-      linkType = "HARD";
-      outputName = "babel-preset-expo-11.0.15-fa1aaada1e";
-      outputHash = "be5862180c1e69053c22fee05ec50258aab97c4cc6780634313d8497726a6de1b76cc3badd00ebdc44aaf63f1f767082a430a7d486b935cf58dc20e0ca3377a9";
-      flatName = "babel-preset-expo";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^11.0.15";
-      checksum = "10/be5862180c1e69053c22fee05ec50258aab97c4cc6780634313d8497726a6de1b76cc3badd00ebdc44aaf63f1f767082a430a7d486b935cf58dc20e0ca3377a9";
-      dependencies = {
-        "@babel/plugin-proposal-decorators" = packages."@babel/plugin-proposal-decorators@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.28.0";
-        "@babel/plugin-transform-export-namespace-from" = packages."@babel/plugin-transform-export-namespace-from@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1";
-        "@babel/plugin-transform-object-rest-spread" = packages."@babel/plugin-transform-object-rest-spread@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.28.4";
-        "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.7";
-        "@babel/preset-react" = packages."@babel/preset-react@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1";
-        "@babel/preset-typescript" = packages."@babel/preset-typescript@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1";
-        "@react-native/babel-preset" = packages."@react-native/babel-preset@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:0.74.87";
-        "babel-plugin-react-compiler" = packages."babel-plugin-react-compiler@npm:0.0.0-experimental-592953e-20240517";
-        "babel-plugin-react-native-web" = packages."babel-plugin-react-native-web@npm:0.19.13";
-        "react-refresh" = packages."react-refresh@npm:0.14.2";
-      };
-    };
     "babel-preset-expo@npm:12.0.11" = {
       name = "babel-preset-expo";
       reference = "npm:12.0.11";
@@ -22512,12 +21943,12 @@ let
       reference = "virtual:ff2d5f6da0844d1c5c2ece4748b618c9bca35c399f54e29d1318722b1ae02f8116d1e9afb52ed45bb1f90b9c253badcaaf7bf4c3727f9ea93eed661b93141463#npm:12.0.11";
       canonicalPackage = packages."babel-preset-expo@npm:12.0.11";
       dependencies = {
-        "@babel/plugin-proposal-decorators" = packages."@babel/plugin-proposal-decorators@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.28.0";
-        "@babel/plugin-transform-export-namespace-from" = packages."@babel/plugin-transform-export-namespace-from@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1";
-        "@babel/plugin-transform-object-rest-spread" = packages."@babel/plugin-transform-object-rest-spread@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.28.4";
-        "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.7";
-        "@babel/preset-react" = packages."@babel/preset-react@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1";
-        "@babel/preset-typescript" = packages."@babel/preset-typescript@virtual:fa1aaada1e83d92484e50c1705d8cad4ea9edeba2d201f71711bf6e589c6f4be4661cfb82eaca366a77cf172749451baa7caa9fce6fcf57ff489b0bad358e308#npm:7.27.1";
+        "@babel/plugin-proposal-decorators" = packages."@babel/plugin-proposal-decorators@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.28.0";
+        "@babel/plugin-transform-export-namespace-from" = packages."@babel/plugin-transform-export-namespace-from@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.1";
+        "@babel/plugin-transform-object-rest-spread" = packages."@babel/plugin-transform-object-rest-spread@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.28.4";
+        "@babel/plugin-transform-parameters" = packages."@babel/plugin-transform-parameters@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.7";
+        "@babel/preset-react" = packages."@babel/preset-react@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.1";
+        "@babel/preset-typescript" = packages."@babel/preset-typescript@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:7.27.1";
         "@react-native/babel-preset" = packages."@react-native/babel-preset@virtual:23ff2d2bd766012120d0dd1d014a4f3a84a7ca5048f86c116a783ee10014e9d81a9d42bf66c96a543fda79e5eade5cf787d2e128b4e25e093fb41908b0bbf846#npm:0.76.9";
         "babel-plugin-react-native-web" = packages."babel-plugin-react-native-web@npm:0.19.13";
         "react-refresh" = packages."react-refresh@npm:0.14.2";
@@ -25094,160 +24525,6 @@ let
       descriptorRange = "npm:^6.6.0";
       checksum = "10/8ff6340c9352e85974961ee8719de1dc725e7d2cb7085a02c641bbe71a2c3eec6868e2bb296201d239d855df280952da5336cfd01a46db0c66e54597d753e7d6";
     };
-    "d3-array@npm:3.2.4" = {
-      name = "d3-array";
-      reference = "npm:3.2.4";
-      linkType = "HARD";
-      outputName = "d3-array-3.2.4-b427632bcc";
-      outputHash = "5800c467f89634776a5977f6dae3f4e127d91be80f1d07e3e6e35303f9de93e6636d014b234838eea620f7469688d191b3f41207a30040aab750a63c97ec1d7c";
-      flatName = "d3-array";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.1.6";
-      checksum = "10/5800c467f89634776a5977f6dae3f4e127d91be80f1d07e3e6e35303f9de93e6636d014b234838eea620f7469688d191b3f41207a30040aab750a63c97ec1d7c";
-      dependencies = {
-        "internmap" = packages."internmap@npm:2.0.3";
-      };
-    };
-    "d3-color@npm:3.1.0" = {
-      name = "d3-color";
-      reference = "npm:3.1.0";
-      linkType = "HARD";
-      outputName = "d3-color-3.1.0-fc73fe3b15";
-      outputHash = "536ba05bfd9f4fcd6fa289b5974f5c846b21d186875684637e22bf6855e6aba93e24a2eb3712985c6af3f502fbbfa03708edb72f58142f626241a8a17258e545";
-      flatName = "d3-color";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:1 - 3";
-      checksum = "10/536ba05bfd9f4fcd6fa289b5974f5c846b21d186875684637e22bf6855e6aba93e24a2eb3712985c6af3f502fbbfa03708edb72f58142f626241a8a17258e545";
-    };
-    "d3-ease@npm:3.0.1" = {
-      name = "d3-ease";
-      reference = "npm:3.0.1";
-      linkType = "HARD";
-      outputName = "d3-ease-3.0.1-f8f3709dc7";
-      outputHash = "985d46e868494e9e6806fedd20bad712a50dcf98f357bf604a843a9f6bc17714a657c83dd762f183173dcde983a3570fa679b2bc40017d40b24163cdc4167796";
-      flatName = "d3-ease";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.0.1";
-      checksum = "10/985d46e868494e9e6806fedd20bad712a50dcf98f357bf604a843a9f6bc17714a657c83dd762f183173dcde983a3570fa679b2bc40017d40b24163cdc4167796";
-    };
-    "d3-format@npm:3.1.0" = {
-      name = "d3-format";
-      reference = "npm:3.1.0";
-      linkType = "HARD";
-      outputName = "d3-format-3.1.0-dfc19924ca";
-      outputHash = "a0fe23d2575f738027a3db0ce57160e5a473ccf24808c1ed46d45ef4f3211076b34a18b585547d34e365e78dcc26dd4ab15c069731fc4b1c07a26bfced09ea31";
-      flatName = "d3-format";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:1 - 3";
-      checksum = "10/a0fe23d2575f738027a3db0ce57160e5a473ccf24808c1ed46d45ef4f3211076b34a18b585547d34e365e78dcc26dd4ab15c069731fc4b1c07a26bfced09ea31";
-    };
-    "d3-interpolate@npm:3.0.1" = {
-      name = "d3-interpolate";
-      reference = "npm:3.0.1";
-      linkType = "HARD";
-      outputName = "d3-interpolate-3.0.1-77ddca7977";
-      outputHash = "988d66497ef5c190cf64f8c80cd66e1e9a58c4d1f8932d776a8e3ae59330291795d5a342f5a97602782ccbef21a5df73bc7faf1f0dc46a5145ba6243a82a0f0e";
-      flatName = "d3-interpolate";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.0.1";
-      checksum = "10/988d66497ef5c190cf64f8c80cd66e1e9a58c4d1f8932d776a8e3ae59330291795d5a342f5a97602782ccbef21a5df73bc7faf1f0dc46a5145ba6243a82a0f0e";
-      dependencies = {
-        "d3-color" = packages."d3-color@npm:3.1.0";
-      };
-    };
-    "d3-path@npm:3.1.0" = {
-      name = "d3-path";
-      reference = "npm:3.1.0";
-      linkType = "HARD";
-      outputName = "d3-path-3.1.0-8d69e9e4e5";
-      outputHash = "8e97a9ab4930a05b18adda64cf4929219bac913a5506cf8585631020253b39309549632a5cbeac778c0077994442ddaaee8316ee3f380e7baf7566321b84e76a";
-      flatName = "d3-path";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.1.0";
-      checksum = "10/8e97a9ab4930a05b18adda64cf4929219bac913a5506cf8585631020253b39309549632a5cbeac778c0077994442ddaaee8316ee3f380e7baf7566321b84e76a";
-    };
-    "d3-scale@npm:4.0.2" = {
-      name = "d3-scale";
-      reference = "npm:4.0.2";
-      linkType = "HARD";
-      outputName = "d3-scale-4.0.2-d17a53447b";
-      outputHash = "e2dc4243586eae2a0fdf91de1df1a90d51dfacb295933f0ca7e9184c31203b01436bef69906ad40f1100173a5e6197ae753cb7b8a1a8fcfda43194ea9cad6493";
-      flatName = "d3-scale";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.0.2";
-      checksum = "10/e2dc4243586eae2a0fdf91de1df1a90d51dfacb295933f0ca7e9184c31203b01436bef69906ad40f1100173a5e6197ae753cb7b8a1a8fcfda43194ea9cad6493";
-      dependencies = {
-        "d3-array" = packages."d3-array@npm:3.2.4";
-        "d3-format" = packages."d3-format@npm:3.1.0";
-        "d3-interpolate" = packages."d3-interpolate@npm:3.0.1";
-        "d3-time-format" = packages."d3-time-format@npm:4.1.0";
-        "d3-time" = packages."d3-time@npm:3.1.0";
-      };
-    };
-    "d3-shape@npm:3.2.0" = {
-      name = "d3-shape";
-      reference = "npm:3.2.0";
-      linkType = "HARD";
-      outputName = "d3-shape-3.2.0-0beb7d8b02";
-      outputHash = "2e861f4d4781ee8abd85d2b435f848d667479dcf01a4e0db3a06600a5bdeddedb240f88229ec7b3bf7fa300c2b3526faeaf7e75f9a24dbf4396d3cc5358ff39d";
-      flatName = "d3-shape";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.1.0";
-      checksum = "10/2e861f4d4781ee8abd85d2b435f848d667479dcf01a4e0db3a06600a5bdeddedb240f88229ec7b3bf7fa300c2b3526faeaf7e75f9a24dbf4396d3cc5358ff39d";
-      dependencies = {
-        "d3-path" = packages."d3-path@npm:3.1.0";
-      };
-    };
-    "d3-time-format@npm:4.1.0" = {
-      name = "d3-time-format";
-      reference = "npm:4.1.0";
-      linkType = "HARD";
-      outputName = "d3-time-format-4.1.0-7f352c4634";
-      outputHash = "ffc0959258fbb90e3890bfb31b43b764f51502b575e87d0af2c85b85ac379120d246914d07fca9f533d1bcedc27b2841d308a00fd64848c3e2cad9eff5c9a0aa";
-      flatName = "d3-time-format";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:2 - 4";
-      checksum = "10/ffc0959258fbb90e3890bfb31b43b764f51502b575e87d0af2c85b85ac379120d246914d07fca9f533d1bcedc27b2841d308a00fd64848c3e2cad9eff5c9a0aa";
-      dependencies = {
-        "d3-time" = packages."d3-time@npm:3.1.0";
-      };
-    };
-    "d3-time@npm:3.1.0" = {
-      name = "d3-time";
-      reference = "npm:3.1.0";
-      linkType = "HARD";
-      outputName = "d3-time-3.1.0-fb068fd1c9";
-      outputHash = "c110bed295ce63e8180e45b82a9b0ba114d5f33ff315871878f209c1a6d821caa505739a2b07f38d1396637155b8e7372632dacc018e11fbe8ceef58f6af806d";
-      flatName = "d3-time";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.0.0";
-      checksum = "10/c110bed295ce63e8180e45b82a9b0ba114d5f33ff315871878f209c1a6d821caa505739a2b07f38d1396637155b8e7372632dacc018e11fbe8ceef58f6af806d";
-      dependencies = {
-        "d3-array" = packages."d3-array@npm:3.2.4";
-      };
-    };
-    "d3-timer@npm:3.0.1" = {
-      name = "d3-timer";
-      reference = "npm:3.0.1";
-      linkType = "HARD";
-      outputName = "d3-timer-3.0.1-45083f465d";
-      outputHash = "004128602bb187948d72c7dc153f0f063f38ac7a584171de0b45e3a841ad2e17f1e40ad396a4af9cce5551b6ab4a838d5246d23492553843d9da4a4050a911e2";
-      flatName = "d3-timer";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.0.1";
-      checksum = "10/004128602bb187948d72c7dc153f0f063f38ac7a584171de0b45e3a841ad2e17f1e40ad396a4af9cce5551b6ab4a838d5246d23492553843d9da4a4050a911e2";
-    };
     "damerau-levenshtein@npm:1.0.8" = {
       name = "damerau-levenshtein";
       reference = "npm:1.0.8";
@@ -25466,18 +24743,6 @@ let
       scope = null;
       descriptorRange = "npm:^1.2.0";
       checksum = "10/ad8c51a7e7e0720c70ec2eeb1163b66da03e7616d7b98c9ef43cce2416395e84c1e9548dd94f5f6ffecfee9f8b94251fc57121a8b021f2ff2469b2bae247b8aa";
-    };
-    "decimal.js-light@npm:2.5.1" = {
-      name = "decimal.js-light";
-      reference = "npm:2.5.1";
-      linkType = "HARD";
-      outputName = "decimal.js-light-2.5.1-2a858493a8";
-      outputHash = "6360911e31221a9b8b90e23020aa969d104e182c5c6518589cdfedc3ced31bf1f19cf931e265bd451ae6ee3a35ee15e81f5456a86813606fda96f8374616688f";
-      flatName = "decimal.js-light";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.4.1";
-      checksum = "10/6360911e31221a9b8b90e23020aa969d104e182c5c6518589cdfedc3ced31bf1f19cf931e265bd451ae6ee3a35ee15e81f5456a86813606fda96f8374616688f";
     };
     "decode-uri-component@npm:0.2.2" = {
       name = "decode-uri-component";
@@ -26260,7 +25525,7 @@ let
       flatName = "end-of-stream";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.1.0";
+      descriptorRange = "npm:^1.4.1";
       checksum = "10/1e0cfa6e7f49887544e03314f9dfc56a8cb6dde910cbb445983ecc2ff426fc05946df9d75d8a21a3a64f2cecfe1bf88f773952029f46756b2ed64a24e95b1fb8";
       dependencies = {
         "once" = packages."once@npm:1.4.0";
@@ -27876,25 +27141,6 @@ let
         "web-streams-polyfill" = packages."web-streams-polyfill@npm:3.3.3";
       };
     };
-    "expo-font@npm:12.0.10" = {
-      name = "expo-font";
-      reference = "npm:12.0.10";
-      linkType = "HARD";
-      outputName = "expo-font-12.0.10-96d74b87ba";
-      outputHash = "639602e4aa8e134ef367a672d36d28c7188ddaa1170fd112c1c221c7bdea4782a01035fde50c17420cbb9c43c61da4a80ea38696eb8daf8dcfa028e30bdf4063";
-      flatName = "expo-font";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~12.0.10";
-      checksum = "10/639602e4aa8e134ef367a672d36d28c7188ddaa1170fd112c1c221c7bdea4782a01035fde50c17420cbb9c43c61da4a80ea38696eb8daf8dcfa028e30bdf4063";
-      dependencies = {
-        "fontfaceobserver" = packages."fontfaceobserver@npm:2.3.0";
-      };
-      packagePeers = [
-        "@types/expo"
-        "expo"
-      ];
-    };
     "expo-font@npm:13.0.4" = {
       name = "expo-font";
       reference = "npm:13.0.4";
@@ -27916,13 +27162,41 @@ let
         "react"
       ];
     };
-    "expo-font@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:12.0.10" = {
+    "expo-font@npm:14.0.9" = {
       name = "expo-font";
-      reference = "virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:12.0.10";
-      canonicalPackage = packages."expo-font@npm:12.0.10";
+      reference = "npm:14.0.9";
+      linkType = "HARD";
+      outputName = "expo-font-14.0.9-427358d088";
+      outputHash = "";
+      shouldBeUnplugged = true;
+      flatName = "expo-font";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:~14.0.9";
+      checksum = "10/29511a5ba7b8a2c37d7941d6d2908f9a07d7efbf227b507a85582fc9e24ac3eb9e119e0b8329e37835e8250ec10e65fe80076c4f81cac91904c718fd892386c5";
       dependencies = {
+        "fontfaceobserver" = packages."fontfaceobserver@npm:2.3.0";
+      };
+      packagePeers = [
+        "@types/expo"
+        "@types/react-native"
+        "@types/react"
+        "expo"
+        "react-native"
+        "react"
+      ];
+    };
+    "expo-font@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:14.0.9" = {
+      name = "expo-font";
+      reference = "virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:14.0.9";
+      canonicalPackage = packages."expo-font@npm:14.0.9";
+      dependencies = {
+        "@types/react" = packages."@types/react@npm:18.3.26";
+        "@types/react-native" = packages."@types/react-native@npm:0.73.0";
         "expo" = packages."expo@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:52.0.47";
         "fontfaceobserver" = packages."fontfaceobserver@npm:2.3.0";
+        "react" = packages."react@npm:18.3.1";
+        "react-native" = packages."react-native@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:0.76.9";
       };
     };
     "expo-font@virtual:ff2d5f6da0844d1c5c2ece4748b618c9bca35c399f54e29d1318722b1ae02f8116d1e9afb52ed45bb1f90b9c253badcaaf7bf4c3727f9ea93eed661b93141463#npm:13.0.4" = {
@@ -28240,18 +27514,6 @@ let
       scope = null;
       descriptorRange = "npm:^3.1.3";
       checksum = "10/e21a9d8d84f53493b6aa15efc9cfd53dd5b714a1f23f67fb5dc8f574af80df889b3bce25dc081887c6d25457cce704e636395333abad896ccdec03abaf1f3f9d";
-    };
-    "fast-equals@npm:5.0.1" = {
-      name = "fast-equals";
-      reference = "npm:5.0.1";
-      linkType = "HARD";
-      outputName = "fast-equals-5.0.1-bbae54ff7b";
-      outputHash = "9dc1ef767903600e5694a89a787782fc3a4f56cc04d235afc13616c848c33563b8f415b1c6a248b2a236424f624aa1a7513f46b7fa69590a640e7784f1296bce";
-      flatName = "fast-equals";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^5.0.1";
-      checksum = "10/9dc1ef767903600e5694a89a787782fc3a4f56cc04d235afc13616c848c33563b8f415b1c6a248b2a236424f624aa1a7513f46b7fa69590a640e7784f1296bce";
     };
     "fast-glob@npm:3.3.1" = {
       name = "fast-glob";
@@ -30447,18 +29709,6 @@ let
       descriptorRange = "npm:0.0.0";
       checksum = "10/8b6fc8a64c2fa18c9aa6ddb8831c92253b6a2f10adf7d5d8f361b574f07e91b64f0c44b1370665075c33c17dd71c02fd19422124a3d2aa1717c37006ab12a1f0";
     };
-    "hermes-estree@npm:0.19.1" = {
-      name = "hermes-estree";
-      reference = "npm:0.19.1";
-      linkType = "HARD";
-      outputName = "hermes-estree-0.19.1-e23907b22e";
-      outputHash = "dadafea5cf8fcf7d2c2d3d43740898c73b03db4747d4cc83e3cdb06bfcfbf3ee97f4ee26f077aea455771703f5bd18a4cb40c1ce7af9e38ce541d6c03fc8847a";
-      flatName = "hermes-estree";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:0.19.1";
-      checksum = "10/dadafea5cf8fcf7d2c2d3d43740898c73b03db4747d4cc83e3cdb06bfcfbf3ee97f4ee26f077aea455771703f5bd18a4cb40c1ce7af9e38ce541d6c03fc8847a";
-    };
     "hermes-estree@npm:0.23.1" = {
       name = "hermes-estree";
       reference = "npm:0.23.1";
@@ -30494,21 +29744,6 @@ let
       scope = null;
       descriptorRange = "npm:0.32.0";
       checksum = "10/65a30a86a5a560152a2de1842c7bc7ecdadebd62e9cdd7d1809a824de7bc19e8d6a42907d3caff91d9f823862405d4b200447aa0bc25ba16072937e93d0acbd5";
-    };
-    "hermes-parser@npm:0.19.1" = {
-      name = "hermes-parser";
-      reference = "npm:0.19.1";
-      linkType = "HARD";
-      outputName = "hermes-parser-0.19.1-ee11958fe7";
-      outputHash = "4fd886ce3ab80c79b258fa60085f2915f587aef57bf59e17f6cfe3b0ad2e7b1a1cfff8371b736392f66cff0658a90ece279b608edcb5589f8c56957e799c56f2";
-      flatName = "hermes-parser";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:0.19.1";
-      checksum = "10/4fd886ce3ab80c79b258fa60085f2915f587aef57bf59e17f6cfe3b0ad2e7b1a1cfff8371b736392f66cff0658a90ece279b608edcb5589f8c56957e799c56f2";
-      dependencies = {
-        "hermes-estree" = packages."hermes-estree@npm:0.19.1";
-      };
     };
     "hermes-parser@npm:0.23.1" = {
       name = "hermes-parser";
@@ -30927,34 +30162,6 @@ let
         "ms" = packages."ms@npm:2.1.3";
       };
     };
-    "i18next@npm:25.6.0" = {
-      name = "i18next";
-      reference = "npm:25.6.0";
-      linkType = "HARD";
-      outputName = "i18next-25.6.0-5c4e79ecde";
-      outputHash = "3eaa354f7028ff6051e4294c09bf518183c6653c019cfeed73fc4504786b3a474c3b55ed6b9832e122ba2538167b3eb85ae71fdd6423fb9ec9ebe2156b061d66";
-      flatName = "i18next";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~25.6.0";
-      checksum = "10/3eaa354f7028ff6051e4294c09bf518183c6653c019cfeed73fc4504786b3a474c3b55ed6b9832e122ba2538167b3eb85ae71fdd6423fb9ec9ebe2156b061d66";
-      dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
-      };
-      packagePeers = [
-        "@types/typescript"
-        "typescript"
-      ];
-    };
-    "i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.6.0" = {
-      name = "i18next";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.6.0";
-      canonicalPackage = packages."i18next@npm:25.6.0";
-      dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
-      };
-    };
     "iban@npm:0.0.14" = {
       name = "iban";
       reference = "npm:0.0.14";
@@ -31262,18 +30469,6 @@ let
         "hasown" = packages."hasown@npm:2.0.2";
         "side-channel" = packages."side-channel@npm:1.1.0";
       };
-    };
-    "internmap@npm:2.0.3" = {
-      name = "internmap";
-      reference = "npm:2.0.3";
-      linkType = "HARD";
-      outputName = "internmap-2.0.3-d74f5c9998";
-      outputHash = "873e0e7fcfe32f999aa0997a0b648b1244508e56e3ea6b8259b5245b50b5eeb3853fba221f96692bd6d1def501da76c32d64a5cb22a0b26cdd9b445664f805e0";
-      flatName = "internmap";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:1 - 2";
-      checksum = "10/873e0e7fcfe32f999aa0997a0b648b1244508e56e3ea6b8259b5245b50b5eeb3853fba221f96692bd6d1def501da76c32d64a5cb22a0b26cdd9b445664f805e0";
     };
     "interpret@npm:3.1.1" = {
       name = "interpret";
@@ -32709,21 +31904,21 @@ let
         "@types/babel__preset-env"
       ];
     };
-    "jscodeshift@virtual:39ff8dcc54701ce6315c8aeea4c8aeb4185f5e3820da1df9047d21c3947ca31a5537cf1df709eabf44628154dda3b1aa832b7086825199f41c8605fd90769ba5#npm:0.14.0" = {
+    "jscodeshift@virtual:8568e4c43f178e296fb16d3b389a57d9e31adf40d5b97fa1951c8783d837019ee2bff0f54d690673456cf62cbd579706e38e9d45be4fbb33daf2de0e3d1a1b13#npm:0.14.0" = {
       name = "jscodeshift";
-      reference = "virtual:39ff8dcc54701ce6315c8aeea4c8aeb4185f5e3820da1df9047d21c3947ca31a5537cf1df709eabf44628154dda3b1aa832b7086825199f41c8605fd90769ba5#npm:0.14.0";
+      reference = "virtual:8568e4c43f178e296fb16d3b389a57d9e31adf40d5b97fa1951c8783d837019ee2bff0f54d690673456cf62cbd579706e38e9d45be4fbb33daf2de0e3d1a1b13#npm:0.14.0";
       canonicalPackage = packages."jscodeshift@npm:0.14.0";
       dependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
         "@babel/parser" = packages."@babel/parser@npm:7.28.4";
         "@babel/plugin-proposal-class-properties" = packages."@babel/plugin-proposal-class-properties@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.18.6";
-        "@babel/plugin-proposal-nullish-coalescing-operator" = packages."@babel/plugin-proposal-nullish-coalescing-operator@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.18.6";
-        "@babel/plugin-proposal-optional-chaining" = packages."@babel/plugin-proposal-optional-chaining@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.21.0";
+        "@babel/plugin-proposal-nullish-coalescing-operator" = packages."@babel/plugin-proposal-nullish-coalescing-operator@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.18.6";
+        "@babel/plugin-proposal-optional-chaining" = packages."@babel/plugin-proposal-optional-chaining@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.21.0";
         "@babel/plugin-transform-modules-commonjs" = packages."@babel/plugin-transform-modules-commonjs@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/preset-flow" = packages."@babel/preset-flow@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.27.1";
-        "@babel/preset-typescript" = packages."@babel/preset-typescript@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.27.1";
-        "@babel/register" = packages."@babel/register@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.28.3";
-        "babel-core" = packages."babel-core@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.0.0-bridge.0";
+        "@babel/preset-flow" = packages."@babel/preset-flow@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.27.1";
+        "@babel/preset-typescript" = packages."@babel/preset-typescript@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.27.1";
+        "@babel/register" = packages."@babel/register@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.28.3";
+        "babel-core" = packages."babel-core@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.0.0-bridge.0";
         "chalk" = packages."chalk@npm:4.1.2";
         "flow-parser" = packages."flow-parser@npm:0.287.0";
         "graceful-fs" = packages."graceful-fs@npm:4.2.11";
@@ -32746,21 +31941,6 @@ let
       scope = null;
       descriptorRange = "npm:~0.5.0";
       checksum = "10/fab949f585c71e169c5cbe00f049f20de74f067081bbd64a55443bad1c71e1b5a5b448f2359bf2fe06f5ed7c07e2e4a9101843b01c823c30b6afc11f5bfaf724";
-      bin = {
-        "jsesc" = "bin/jsesc";
-      };
-    };
-    "jsesc@npm:2.5.2" = {
-      name = "jsesc";
-      reference = "npm:2.5.2";
-      linkType = "HARD";
-      outputName = "jsesc-2.5.2-c5acb78804";
-      outputHash = "d2096abdcdec56969764b40ffc91d4a23408aa2f351b4d1c13f736f25476643238c43fdbaf38a191c26b1b78fd856d965f5d4d0dde7b89459cd94025190cdf13";
-      flatName = "jsesc";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.5.1";
-      checksum = "10/d2096abdcdec56969764b40ffc91d4a23408aa2f351b4d1c13f736f25476643238c43fdbaf38a191c26b1b78fd856d965f5d4d0dde7b89459cd94025190cdf13";
       bin = {
         "jsesc" = "bin/jsesc";
       };
@@ -39447,24 +38627,6 @@ let
       descriptorRange = "npm:^5.6.0";
       checksum = "10/9c082500d1e93434b5b291bd651662936b8bd6204ec9fa17d563116a192d6d86b98f6d328526b4e8d783c07d5499e2614a807520249692da9ec81564b2f439cd";
     };
-    "pretty-format@npm:24.9.0" = {
-      name = "pretty-format";
-      reference = "npm:24.9.0";
-      linkType = "HARD";
-      outputName = "pretty-format-24.9.0-cf0850262c";
-      outputHash = "f6664330e8129fd9039d328c90abea3ea6b8acf36f813cc8fc83aad8b1f755b54f756e317c88ef75f66132caeae107bb4b5f134ae7380bbf57e35d37bcfb197f";
-      flatName = "pretty-format";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^24";
-      checksum = "10/f6664330e8129fd9039d328c90abea3ea6b8acf36f813cc8fc83aad8b1f755b54f756e317c88ef75f66132caeae107bb4b5f134ae7380bbf57e35d37bcfb197f";
-      dependencies = {
-        "@jest/types" = packages."@jest/types@npm:24.9.0";
-        "ansi-regex" = packages."ansi-regex@npm:4.1.1";
-        "ansi-styles" = packages."ansi-styles@npm:3.2.1";
-        "react-is" = packages."react-is@npm:16.13.1";
-      };
-    };
     "pretty-format@npm:29.7.0" = {
       name = "pretty-format";
       reference = "npm:29.7.0";
@@ -40326,8 +39488,8 @@ let
         "@babel/plugin-transform-optional-chaining" = packages."@babel/plugin-transform-optional-chaining@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
         "@babel/plugin-transform-shorthand-properties" = packages."@babel/plugin-transform-shorthand-properties@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
         "@babel/plugin-transform-template-literals" = packages."@babel/plugin-transform-template-literals@virtual:9581cb509d9a825bfa250a2fc8e491faec591e29de07f1b6f82a337fcf32d4477dc6f4b2ca8575be3d73826e0c9c29bf5354ba6800fb6135f88e1bfe106ddf89#npm:7.27.1";
-        "@babel/plugin-transform-unicode-regex" = packages."@babel/plugin-transform-unicode-regex@virtual:6a8596e8e2f5050e925027545637ef5eb12f7faf768c994736fe4e83f41730835da93b7250a96a24deadc1db352d6876e1cb7e70f1690a176142b62becd931ad#npm:7.27.1";
-        "@babel/preset-typescript" = packages."@babel/preset-typescript@virtual:a066de45edd9aa27f9891389163f01b95096d55dcc384431c596e444d3442ad3124e0232eb6b3e6b796e67c8d381a4776942ed12f63acf85f866db8286204229#npm:7.27.1";
+        "@babel/plugin-transform-unicode-regex" = packages."@babel/plugin-transform-unicode-regex@virtual:eb10a32d0318b95d0a28a692e6f2b333a7dfe4c8be88ad424e13ae4b059fc2a1240230c637fc04fa9e74118bb20f09bbde97a085cc2af788dbd478e9556a7bf8#npm:7.27.1";
+        "@babel/preset-typescript" = packages."@babel/preset-typescript@virtual:ff3ee2cf9f7cb1ecd2e11fc827a3855fc1efc4cbddd6af9f345771a9db49ca9b68cfeb9816eb0fbf6c33cda318b5e21a35538ce51d1adb1082e14a4f0e0fe071#npm:7.27.1";
         "@types/react" = packages."@types/react@npm:18.3.26";
         "@types/react-native" = packages."@types/react-native@npm:0.73.0";
         "convert-source-map" = packages."convert-source-map@npm:2.0.0";
@@ -40768,43 +39930,6 @@ let
         "use-sidecar" = packages."use-sidecar@virtual:78c69e33b9f92e548e9bb4a66ccad362ab8a7281afed18f19c6f74caa490591354379bd7414647b3d31ff7763e0e0eece7455353bd1b6e4e8fdf2f5f1cc2ad5c#npm:1.1.3";
       };
     };
-    "react-smooth@npm:4.0.4" = {
-      name = "react-smooth";
-      reference = "npm:4.0.4";
-      linkType = "HARD";
-      outputName = "react-smooth-4.0.4-43b25757d0";
-      outputHash = "cc5593356d154253f61a2c0b7b2fa8a979527495e2fe47c4252628d86e93c72c75df988c5438867d373de4e5a47d871ab9262474c02e66c411f94f047ecb5b0f";
-      flatName = "react-smooth";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.0.4";
-      checksum = "10/cc5593356d154253f61a2c0b7b2fa8a979527495e2fe47c4252628d86e93c72c75df988c5438867d373de4e5a47d871ab9262474c02e66c411f94f047ecb5b0f";
-      dependencies = {
-        "fast-equals" = packages."fast-equals@npm:5.0.1";
-        "prop-types" = packages."prop-types@npm:15.8.1";
-        "react-transition-group" = packages."react-transition-group@npm:4.4.5";
-      };
-      packagePeers = [
-        "@types/react-dom"
-        "@types/react"
-        "react-dom"
-        "react"
-      ];
-    };
-    "react-smooth@virtual:39ec38bb0b308ea63721313b3cdee18452c841782075be8c16fc0f25af6ed01ea334e01e747023a3eb887c46a39efe3096615cb250ebee594b7cf99f94670cdd#npm:4.0.4" = {
-      name = "react-smooth";
-      reference = "virtual:39ec38bb0b308ea63721313b3cdee18452c841782075be8c16fc0f25af6ed01ea334e01e747023a3eb887c46a39efe3096615cb250ebee594b7cf99f94670cdd#npm:4.0.4";
-      canonicalPackage = packages."react-smooth@npm:4.0.4";
-      dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.26";
-        "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
-        "fast-equals" = packages."fast-equals@npm:5.0.1";
-        "prop-types" = packages."prop-types@npm:15.8.1";
-        "react" = packages."react@npm:18.3.1";
-        "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "react-transition-group" = packages."react-transition-group@virtual:933c1f18faef11fb8c06a154040eb3458c6677dd3549d294babbfa9a2f65f5c2e065982e605319ed8e7be4b737930c254ae72c28381ca148f1c1db88172f384c#npm:4.4.5";
-      };
-    };
     "react-ssr-prepass@npm:1.5.0" = {
       name = "react-ssr-prepass";
       reference = "npm:1.5.0";
@@ -40890,45 +40015,6 @@ let
         "@types/react" = packages."@types/react@npm:18.3.26";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
         "clsx" = packages."clsx@npm:2.1.0";
-        "react" = packages."react@npm:18.3.1";
-        "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-      };
-    };
-    "react-transition-group@npm:4.4.5" = {
-      name = "react-transition-group";
-      reference = "npm:4.4.5";
-      linkType = "HARD";
-      outputName = "react-transition-group-4.4.5-98ea4ef96e";
-      outputHash = "ca32d3fd2168c976c5d90a317f25d5f5cd723608b415fb3b9006f9d793c8965c619562d0884503a3e44e4b06efbca4fdd1520f30e58ca3e00a0890e637d55419";
-      flatName = "react-transition-group";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^4.4.5";
-      checksum = "10/ca32d3fd2168c976c5d90a317f25d5f5cd723608b415fb3b9006f9d793c8965c619562d0884503a3e44e4b06efbca4fdd1520f30e58ca3e00a0890e637d55419";
-      dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
-        "dom-helpers" = packages."dom-helpers@npm:5.2.1";
-        "loose-envify" = packages."loose-envify@npm:1.4.0";
-        "prop-types" = packages."prop-types@npm:15.8.1";
-      };
-      packagePeers = [
-        "@types/react-dom"
-        "@types/react"
-        "react-dom"
-        "react"
-      ];
-    };
-    "react-transition-group@virtual:933c1f18faef11fb8c06a154040eb3458c6677dd3549d294babbfa9a2f65f5c2e065982e605319ed8e7be4b737930c254ae72c28381ca148f1c1db88172f384c#npm:4.4.5" = {
-      name = "react-transition-group";
-      reference = "virtual:933c1f18faef11fb8c06a154040eb3458c6677dd3549d294babbfa9a2f65f5c2e065982e605319ed8e7be4b737930c254ae72c28381ca148f1c1db88172f384c#npm:4.4.5";
-      canonicalPackage = packages."react-transition-group@npm:4.4.5";
-      dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.28.4";
-        "@types/react" = packages."@types/react@npm:18.3.26";
-        "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
-        "dom-helpers" = packages."dom-helpers@npm:5.2.1";
-        "loose-envify" = packages."loose-envify@npm:1.4.0";
-        "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
       };
@@ -41106,68 +40192,6 @@ let
         "esprima" = packages."esprima@npm:4.0.1";
         "source-map" = packages."source-map@npm:0.6.1";
         "tslib" = packages."tslib@npm:2.8.1";
-      };
-    };
-    "recharts-scale@npm:0.4.5" = {
-      name = "recharts-scale";
-      reference = "npm:0.4.5";
-      linkType = "HARD";
-      outputName = "recharts-scale-0.4.5-30646fd0f5";
-      outputHash = "6e1118635018bd0622b5e978e56a8764ced5741140709e025c5989a0cb40c4b0bebb7c4e231c11ab8d6127a85fef8c68d92662c6f3c22af9551737a767cea014";
-      flatName = "recharts-scale";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^0.4.4";
-      checksum = "10/6e1118635018bd0622b5e978e56a8764ced5741140709e025c5989a0cb40c4b0bebb7c4e231c11ab8d6127a85fef8c68d92662c6f3c22af9551737a767cea014";
-      dependencies = {
-        "decimal.js-light" = packages."decimal.js-light@npm:2.5.1";
-      };
-    };
-    "recharts@npm:2.15.4" = {
-      name = "recharts";
-      reference = "npm:2.15.4";
-      linkType = "HARD";
-      outputName = "recharts-2.15.4-b9e86f4161";
-      outputHash = "d29656d465ccdfcf95de7bc35e53c1f30fbd45e3d7b53c70bc2cd1892707058606eab8b0a648c1e1d0b3f21cc3b6774abf3f304da4d4534f550500909623492f";
-      flatName = "recharts";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.15.4";
-      checksum = "10/d29656d465ccdfcf95de7bc35e53c1f30fbd45e3d7b53c70bc2cd1892707058606eab8b0a648c1e1d0b3f21cc3b6774abf3f304da4d4534f550500909623492f";
-      dependencies = {
-        "clsx" = packages."clsx@npm:2.1.0";
-        "eventemitter3" = packages."eventemitter3@npm:4.0.7";
-        "lodash" = packages."lodash@npm:4.17.21";
-        "react-is" = packages."react-is@npm:18.3.1";
-        "react-smooth" = packages."react-smooth@npm:4.0.4";
-        "recharts-scale" = packages."recharts-scale@npm:0.4.5";
-        "tiny-invariant" = packages."tiny-invariant@npm:1.3.1";
-        "victory-vendor" = packages."victory-vendor@npm:36.8.2";
-      };
-      packagePeers = [
-        "@types/react-dom"
-        "@types/react"
-        "react-dom"
-        "react"
-      ];
-    };
-    "recharts@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.4" = {
-      name = "recharts";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.4";
-      canonicalPackage = packages."recharts@npm:2.15.4";
-      dependencies = {
-        "@types/react" = packages."@types/react@npm:18.3.26";
-        "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
-        "clsx" = packages."clsx@npm:2.1.0";
-        "eventemitter3" = packages."eventemitter3@npm:4.0.7";
-        "lodash" = packages."lodash@npm:4.17.21";
-        "react" = packages."react@npm:18.3.1";
-        "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
-        "react-is" = packages."react-is@npm:18.3.1";
-        "react-smooth" = packages."react-smooth@virtual:39ec38bb0b308ea63721313b3cdee18452c841782075be8c16fc0f25af6ed01ea334e01e747023a3eb887c46a39efe3096615cb250ebee594b7cf99f94670cdd#npm:4.0.4";
-        "recharts-scale" = packages."recharts-scale@npm:0.4.5";
-        "tiny-invariant" = packages."tiny-invariant@npm:1.3.1";
-        "victory-vendor" = packages."victory-vendor@npm:36.8.2";
       };
     };
     "reflect.getprototypeof@npm:1.0.10" = {
@@ -41572,7 +40596,7 @@ let
       flatName = "resolve";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.22.10";
+      descriptorRange = "npm:^1.22.2";
       checksum = "10/0a398b44da5c05e6e421d70108822c327675febb880eebe905587628de401854c61d5df02866ff34fc4cb1173a51c9f0e84a94702738df3611a62e2acdc68181";
       bin = {
         "resolve" = "bin/resolve";
@@ -41647,7 +40671,7 @@ let
       flatName = "resolve";
       languageName = "node";
       scope = null;
-      descriptorRange = "patch:resolve@npm%3A^1.22.10#optional!builtin<compat/resolve>";
+      descriptorRange = "patch:resolve@npm%3A^1.22.2#optional!builtin<compat/resolve>";
       checksum = "10/d4d878bfe3702d215ea23e75e0e9caf99468e3db76f5ca100d27ebdc527366fee3877e54bce7d47cc72ca8952fc2782a070d238bfa79a550eeb0082384c3b81a";
       bin = {
         "resolve" = "bin/resolve";
@@ -41969,7 +40993,7 @@ let
         "@react-navigation/native" = packages."@react-navigation/native@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:7.1.18";
         "@urql/core" = packages."@urql/core@npm:5.2.0";
         "@urql/exchange-auth" = packages."@urql/exchange-auth@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
-        "expo-font" = packages."expo-font@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:12.0.10";
+        "expo-font" = packages."expo-font@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:14.0.9";
         "expo-status-bar" = packages."expo-status-bar@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:2.0.1";
         "expo" = packages."expo@virtual:654625ee0fd276e8bf65c99c721d183f72a03773e584d1d600ca366b6ff1f3787ae81c75c14694b19a3f9a9fccac1883fa9d518b85c3b9cccbaaa03fe4d3340a#npm:52.0.47";
         "graphql" = packages."graphql@npm:16.11.0";
@@ -41987,7 +41011,6 @@ let
         "@tsconfig/react-native" = packages."@tsconfig/react-native@npm:3.0.7";
         "@types/react" = packages."@types/react@npm:18.3.26";
         "@types/react-native" = packages."@types/react-native@npm:0.73.0";
-        "babel-preset-expo" = packages."babel-preset-expo@npm:11.0.15";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
       };
     };
@@ -42044,7 +41067,6 @@ let
         "glider-js" = packages."glider-js@npm:1.7.9";
         "graphql" = packages."graphql@npm:16.11.0";
         "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.6";
-        "i18next" = packages."i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.6.0";
         "iban" = packages."iban@npm:0.0.14";
         "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.0";
         "leaflet" = packages."leaflet@npm:1.9.4";
@@ -42073,7 +41095,6 @@ let
         "react-remove-scroll" = packages."react-remove-scroll@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.7.1";
         "react-toastify" = packages."react-toastify@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.0.6";
         "react" = packages."react@npm:18.3.1";
-        "recharts" = packages."recharts@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.4";
         "sharp" = packages."sharp@npm:0.34.4";
         "tailwind-merge" = packages."tailwind-merge@npm:2.5.5";
         "tailwind-scrollbar" = packages."tailwind-scrollbar@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.1.0";
@@ -42086,7 +41107,6 @@ let
         "use-query-params" = packages."use-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
         "uuid" = packages."uuid@npm:13.0.0";
         "wonka" = packages."wonka@npm:6.3.5";
-        "zod-i18n-map" = packages."zod-i18n-map@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.27.0";
         "zod" = packages."zod@npm:4.1.12";
       };
       devDependencies = {
@@ -43266,7 +42286,7 @@ let
       flatName = "source-map";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.5.0";
+      descriptorRange = "npm:^0.5.6";
       checksum = "10/9b4ac749ec5b5831cad1f8cc4c19c4298ebc7474b24a0acf293e2f040f03f8eeccb3d01f12aa0f90cf46d555c887e03912b83a042c627f419bda5152d89c5269";
     };
     "source-map@npm:0.6.1" = {
@@ -44547,18 +43567,6 @@ let
       descriptorRange = "npm:^0.1.1";
       checksum = "10/efe49aa0ef32127533d93663d3448bcc02324b2e78022e1e68871abae5e1b22ae0cdf812c1fdc5c8c64b8011b6f058e14aeed9e42a5e1ec52275ed2514ba2713";
     };
-    "tiny-invariant@npm:1.3.1" = {
-      name = "tiny-invariant";
-      reference = "npm:1.3.1";
-      linkType = "HARD";
-      outputName = "tiny-invariant-1.3.1-a8ca214e49";
-      outputHash = "872dbd1ff20a21303a2fd20ce3a15602cfa7fcf9b228bd694a52e2938224313b5385a1078cb667ed7375d1612194feaca81c4ecbe93121ca1baebe344de4f84c";
-      flatName = "tiny-invariant";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.3.1";
-      checksum = "10/872dbd1ff20a21303a2fd20ce3a15602cfa7fcf9b228bd694a52e2938224313b5385a1078cb667ed7375d1612194feaca81c4ecbe93121ca1baebe344de4f84c";
-    };
     "title-case@npm:3.0.3" = {
       name = "title-case";
       reference = "npm:3.0.3";
@@ -44690,18 +43698,6 @@ let
       scope = null;
       descriptorRange = "npm:>=0.3.0 <0.4";
       checksum = "10/ffbb8460a934f271b7b7ae654e676f740d81037d6c20ab9fd05781cfdf644929f494399b5cb3aa3db4ab69cbfef06ff8f885560d523ca49b7da33763f6c4c9f1";
-    };
-    "trim-right@npm:1.0.1" = {
-      name = "trim-right";
-      reference = "npm:1.0.1";
-      linkType = "HARD";
-      outputName = "trim-right-1.0.1-8ccc457eb4";
-      outputHash = "9120af534e006a7424a4f9358710e6e707887b6ccf7ea69e50d6ac6464db1fe22268400def01752f09769025d480395159778153fb98d4a2f6f40d4cf5d4f3b6";
-      flatName = "trim-right";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.1";
-      checksum = "10/9120af534e006a7424a4f9358710e6e707887b6ccf7ea69e50d6ac6464db1fe22268400def01752f09769025d480395159778153fb98d4a2f6f40d4cf5d4f3b6";
     };
     "ts-api-utils@npm:1.3.0" = {
       name = "ts-api-utils";
@@ -45900,34 +44896,6 @@ let
       descriptorRange = "npm:^1";
       checksum = "10/31389debef15a480849b8331b220782230b9815a8e0dbb7b9a8369559aed2e9a7800cd904d4371ea74f4c3527db456dc8e7ac5befce5f0d289014dbdf47b2242";
     };
-    "victory-vendor@npm:36.8.2" = {
-      name = "victory-vendor";
-      reference = "npm:36.8.2";
-      linkType = "HARD";
-      outputName = "victory-vendor-36.8.2-692a3ffdef";
-      outputHash = "52d2335469e0083c15e1f57a183f3245e3636d0a1ca9d928f2d9e36d5d098248e137340198f6db03f9b8f2a2836cae904e4e5a80a938dca8e722ce57e58e08cb";
-      flatName = "victory-vendor";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^36.6.8";
-      checksum = "10/52d2335469e0083c15e1f57a183f3245e3636d0a1ca9d928f2d9e36d5d098248e137340198f6db03f9b8f2a2836cae904e4e5a80a938dca8e722ce57e58e08cb";
-      dependencies = {
-        "@types/d3-array" = packages."@types/d3-array@npm:3.2.1";
-        "@types/d3-ease" = packages."@types/d3-ease@npm:3.0.2";
-        "@types/d3-interpolate" = packages."@types/d3-interpolate@npm:3.0.4";
-        "@types/d3-scale" = packages."@types/d3-scale@npm:4.0.8";
-        "@types/d3-shape" = packages."@types/d3-shape@npm:3.1.6";
-        "@types/d3-time" = packages."@types/d3-time@npm:3.0.3";
-        "@types/d3-timer" = packages."@types/d3-timer@npm:3.0.2";
-        "d3-array" = packages."d3-array@npm:3.2.4";
-        "d3-ease" = packages."d3-ease@npm:3.0.1";
-        "d3-interpolate" = packages."d3-interpolate@npm:3.0.1";
-        "d3-scale" = packages."d3-scale@npm:4.0.2";
-        "d3-shape" = packages."d3-shape@npm:3.2.0";
-        "d3-time" = packages."d3-time@npm:3.1.0";
-        "d3-timer" = packages."d3-timer@npm:3.0.1";
-      };
-    };
     "vlq@npm:1.0.1" = {
       name = "vlq";
       reference = "npm:1.0.1";
@@ -46991,69 +45959,6 @@ let
         "compress-commons" = packages."compress-commons@npm:4.1.1";
         "readable-stream" = packages."readable-stream@npm:3.6.2";
       };
-    };
-    "zod-i18n-map@npm:2.27.0" = {
-      name = "zod-i18n-map";
-      reference = "npm:2.27.0";
-      linkType = "HARD";
-      outputName = "zod-i18n-map-2.27.0-b67d344bdf";
-      outputHash = "4063bb7cfeed3bdd2084de7a5d55e8b3efb940cb8c07ac1d8d4173e4d2c24cd386b10eb6e1353ce8e6a6060a346a77fd0ad190c624fd886a4b516f044c34968d";
-      flatName = "zod-i18n-map";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~2.27.0";
-      checksum = "10/4063bb7cfeed3bdd2084de7a5d55e8b3efb940cb8c07ac1d8d4173e4d2c24cd386b10eb6e1353ce8e6a6060a346a77fd0ad190c624fd886a4b516f044c34968d";
-      packagePeers = [
-        "@types/i18next"
-        "@types/zod"
-        "i18next"
-        "zod"
-      ];
-    };
-    "zod-i18n-map@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.27.0" = {
-      name = "zod-i18n-map";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.27.0";
-      canonicalPackage = packages."zod-i18n-map@npm:2.27.0";
-      dependencies = {
-        "i18next" = packages."i18next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:25.6.0";
-        "zod" = packages."zod@npm:4.1.12";
-      };
-    };
-    "zod-validation-error@npm:2.1.0" = {
-      name = "zod-validation-error";
-      reference = "npm:2.1.0";
-      linkType = "HARD";
-      outputName = "zod-validation-error-2.1.0-220f5f6e0b";
-      outputHash = "fdd3a9fdf176571404abf22af3af330e89227c3cb2e7092d61d0c6dfc8dd688648025346303585a03db51aa466efef5ebb8bdf14dbe630ccdedd5d0aa00741ab";
-      flatName = "zod-validation-error";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.1.0";
-      checksum = "10/fdd3a9fdf176571404abf22af3af330e89227c3cb2e7092d61d0c6dfc8dd688648025346303585a03db51aa466efef5ebb8bdf14dbe630ccdedd5d0aa00741ab";
-      packagePeers = [
-        "@types/zod"
-        "zod"
-      ];
-    };
-    "zod-validation-error@virtual:7fd215bbb0ec50392e1798f6019af951cbc8f3a1301ad25d4e57018f7a9beef60f119c5a661655dfa27ae16456a9a550e1dbb8b6762f2610e149660649f313fc#npm:2.1.0" = {
-      name = "zod-validation-error";
-      reference = "virtual:7fd215bbb0ec50392e1798f6019af951cbc8f3a1301ad25d4e57018f7a9beef60f119c5a661655dfa27ae16456a9a550e1dbb8b6762f2610e149660649f313fc#npm:2.1.0";
-      canonicalPackage = packages."zod-validation-error@npm:2.1.0";
-      dependencies = {
-        "zod" = packages."zod@npm:3.25.76";
-      };
-    };
-    "zod@npm:3.25.76" = {
-      name = "zod";
-      reference = "npm:3.25.76";
-      linkType = "HARD";
-      outputName = "zod-3.25.76-7de26333f8";
-      outputHash = "f0c963ec40cd96858451d1690404d603d36507c1fc9682f2dae59ab38b578687d542708a7fdbf645f77926f78c9ed558f57c3d3aa226c285f798df0c4da16995";
-      flatName = "zod";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^3.22.4";
-      checksum = "10/f0c963ec40cd96858451d1690404d603d36507c1fc9682f2dae59ab38b578687d542708a7fdbf645f77926f78c9ed558f57c3d3aa226c285f798df0c4da16995";
     };
     "zod@npm:4.1.12" = {
       name = "zod";
