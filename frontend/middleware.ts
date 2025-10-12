@@ -58,12 +58,15 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   const stringTenantId = String(tenantId);
+  const cookieDomain = hostname ?? request.nextUrl.hostname;
+
   response.cookies.set({
     name: TENANT_COOKIE_NAME,
     value: stringTenantId,
     path: '/',
     sameSite: 'lax',
     secure: request.nextUrl.protocol === 'https:',
+    ...(cookieDomain ? { domain: cookieDomain } : {}),
   });
   request.cookies.set(TENANT_COOKIE_NAME, stringTenantId);
 
