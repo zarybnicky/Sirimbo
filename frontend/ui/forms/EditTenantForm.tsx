@@ -1,5 +1,4 @@
 import { UpdateTenantDocument } from '@/graphql/Tenant';
-import { useZodForm } from '@/lib/use-schema-form';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
@@ -8,7 +7,9 @@ import { useTenant } from '@/ui/useTenant';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   name: z.string(),
@@ -21,12 +22,14 @@ export function EditTenantForm() {
   const { onSuccess } = useFormResult();
   const doUpdate = useMutation(UpdateTenantDocument)[1];
 
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   React.useEffect(() => {
     reset(Form.partial().optional().parse(data));
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     if (!data) return;
     await doUpdate({ input: { id: data.id, patch: values } });
     onSuccess();

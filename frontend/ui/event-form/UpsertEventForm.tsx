@@ -1,5 +1,4 @@
 import { EventDocument, type EventFragment, UpsertEventDocument } from '@/graphql/Event';
-import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement, type RadioButtonGroupItem } from '@/ui/fields/RadioButtonGroupElement';
 import { CohortListElement } from '@/ui/event-form/CohortListElement';
 import { InstanceListElement } from '@/ui/event-form/InstanceListElement';
@@ -15,14 +14,16 @@ import { diff } from 'date-arithmetic';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-import type { TypeOf } from 'zod';
+import { z } from 'zod';
 import { useFormResult } from '@/ui/form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 type NonEmptyArray<T> = [T, ...T[]];
 const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyArray<T> => !!array?.length;
 
 export function UpsertEventForm({ initialValue = {}, event }: {
-  initialValue?: Partial<TypeOf<typeof EventForm>>;
+  initialValue?: Partial<z.infer<typeof EventForm>>;
   event?: EventFragment;
 }) {
   const { onSuccess } = useFormResult();
@@ -31,8 +32,9 @@ export function UpsertEventForm({ initialValue = {}, event }: {
   const [{ data: eventData }, fetchEvent] = useQuery({ query: EventDocument, variables: { id }, pause: true });
   const { data: tenant } = useTenant();
 
-  const { reset, control, handleSubmit, watch, setValue, getValues } = useZodForm(EventForm, {
+  const { reset, control, handleSubmit, watch, setValue, getValues } = useForm<z.infer<typeof EventForm>>({
     defaultValues: initialValue,
+    resolver: zodResolver(EventForm),
   });
 
   const locationOptions = React.useMemo(() => {
@@ -126,7 +128,7 @@ export function UpsertEventForm({ initialValue = {}, event }: {
     setValue('capacity', type === 'LESSON' ? 2 : 0);
   }, [setValue, type]);
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof EventForm>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof EventForm>) => {
     const result = await upsert({
       input: {
         info: {

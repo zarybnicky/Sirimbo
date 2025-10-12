@@ -17,8 +17,9 @@ import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { useZodForm } from '@/lib/use-schema-form';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   atJmeno: z.string().min(1, 'Zadejte název článku'),
@@ -26,7 +27,7 @@ const Form = z.object({
   atText: z.string().optional().default(''),
 });
 
-type FormValues = TypeOf<typeof Form>;
+type FormValues = z.infer<typeof Form>;
 
 export function ArticleForm({ id = '' }: { id?: string }) {
   const router = useRouter();
@@ -39,7 +40,9 @@ export function ArticleForm({ id = '' }: { id?: string }) {
   const update = useMutation(UpdateArticleDocument)[1];
   const deleteMutation = useMutation(DeleteArticleDocument)[1];
 
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   React.useEffect(() => {
     reset({
       atJmeno: data?.atJmeno ?? '',

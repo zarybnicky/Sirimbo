@@ -3,8 +3,7 @@ import { Layout } from '@/components/layout/Layout';
 import { SubmitButton } from '@/ui/submit';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
-import { useZodForm } from '@/lib/use-schema-form';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { RegisterWithoutInvitationDocument } from '@/graphql/CurrentUser';
@@ -13,6 +12,8 @@ import { NextSeo } from 'next-seo';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { tenantConfig } from '@/tenant/config';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   email: z.string().email(),
@@ -24,11 +25,13 @@ export default function InvitationPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const { control, handleSubmit } = useZodForm(Form);
+  const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
 
   const register = useMutation(RegisterWithoutInvitationDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const response = await register({ input: values });
     if (response.data?.registerWithoutInvitation?.result?.jwt) {
       router.replace('/dashboard');

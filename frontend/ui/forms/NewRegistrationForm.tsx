@@ -9,11 +9,11 @@ import { useAuth } from '@/ui/use-auth';
 import { CheckCircle, Circle } from 'lucide-react';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useFieldArray } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { useZodForm } from '@/lib/use-schema-form';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const RegistrationSchema = z.object({
   selected: z.boolean(),
@@ -35,7 +35,7 @@ const Form = z.object({
   registrations: z.array(RegistrationSchema).default([]),
 });
 
-type FormValues = TypeOf<typeof Form>;
+type FormValues = z.infer<typeof Form>;
 type FormRegistration = FormValues['registrations'][number];
 
 export function NewRegistrationForm({ event }: { event: EventFragment; }) {
@@ -47,7 +47,9 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
     persons: new Set<string | null>(),
   });
 
-  const { watch, register, control, handleSubmit, setValue } = useZodForm(Form);
+  const { watch, register, control, handleSubmit, setValue } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   const { fields: fieldsInitial, append } = useFieldArray<FormValues>({ control, name: "registrations" });
   const watchFieldArray = watch("registrations");
   const fields = fieldsInitial.map((field, index) => {

@@ -1,5 +1,4 @@
 import { type PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
-import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -10,7 +9,9 @@ import { countries } from '@/lib/countries';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   prefixTitle: z.string().default(''),
@@ -48,12 +49,13 @@ const Form = z.object({
 
 export function EditPersonForm({ data }: { data: PersonFragment }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useZodForm(Form, {
+  const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
     defaultValues: data as unknown as any,
+    resolver: zodResolver(Form),
   });
   const update = useMutation(UpdatePersonDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     await update({ input: { id: data.id, patch: values } });
     onSuccess();
   });

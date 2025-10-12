@@ -1,5 +1,4 @@
 import { type EventFragment, UpdateEventDocument } from '@/graphql/Event';
-import { useZodForm } from '@/lib/use-schema-form';
 import { TabMenu } from '@/ui/TabMenu';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { FormError, useFormResult } from '@/ui/form';
@@ -7,7 +6,9 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   summary: z.string(),
@@ -19,8 +20,9 @@ type NonEmptyArray<T> = [T, ...T[]];
 
 export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit, getValues } = useZodForm(Form, {
+  const { reset, control, handleSubmit, getValues } = useForm<z.infer<typeof Form>>({
     shouldUnregister: false,
+    resolver: zodResolver(Form),
   });
   const update = useMutation(UpdateEventDocument)[1];
   const [tab, setTab] = React.useState('summary');
@@ -37,7 +39,7 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
     }
   }, [reset, getValues, event]);
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     await update({ id: event.id, patch: values });
     onSuccess();
   });

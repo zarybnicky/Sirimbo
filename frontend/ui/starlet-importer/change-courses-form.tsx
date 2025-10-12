@@ -3,7 +3,6 @@ import {
   UpdateTenantSettingsDocument,
 } from '@/graphql/CurrentUser';
 import { fetchGql } from '@/graphql/query';
-import { useZodForm } from '@/lib/use-schema-form';
 import { EnumerateCoursesDocument } from '@/starlet/graphql/Query';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { useFormResult } from '@/ui/form';
@@ -12,9 +11,11 @@ import { print } from '@0no-co/graphql.web';
 import React, { useEffect, useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { starletSettingsAtom, starletTokenAtom } from './state';
 import { useAtomValue } from 'jotai';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   courses: z.record(z.string(), z.boolean().default(false)),
@@ -30,7 +31,9 @@ type SimpleCourse = {
 
 export function ChangeCoursesForm() {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit, reset } = useZodForm(Form);
+  const { control, handleSubmit, reset } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   const update = useMutation(UpdateTenantSettingsDocument)[1];
   const token = useAtomValue(starletTokenAtom);
 
@@ -54,7 +57,7 @@ export function ChangeCoursesForm() {
     ).then(setCourses);
   }, [folders, token, seasons]);
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     await update({
       input: {
         path: ['evidenceCourses'],

@@ -7,22 +7,25 @@ import Link from 'next/link';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { useZodForm } from '@/lib/use-schema-form';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   login: z.string().min(1, 'Zadejte přihlašovací jméno nebo e-mail'),
   passwd: z.string().min(1, 'Zadejte heslo'),
 });
 
-type FormValues = TypeOf<typeof Form>;
+type FormValues = z.infer<typeof Form>;
 
 type LoginFormProps = {
   onSuccess?: (result: UserAuthFragment | null) => void;
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { control, handleSubmit } = useZodForm(Form);
+  const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   const doSignIn = useMutation(LoginDocument)[1];
   const registrationEnabled = tenantConfig.enableRegistration;
 

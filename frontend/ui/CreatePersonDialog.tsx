@@ -2,7 +2,6 @@
 
 import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
 import { SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
-import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement, VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
@@ -23,8 +22,10 @@ import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { truthyFilter } from './truthyFilter';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   prefixTitle: z.string().default(''),
@@ -70,7 +71,9 @@ export function CreatePersonDialog() {
     label: x.name || '?',
   })).sort((x, y) => x.label.localeCompare(y.label)), [personQuery]);
 
-  const { control, handleSubmit, getValues, setValue, reset, watch } = useZodForm(Form);
+  const { control, handleSubmit, getValues, setValue, reset, watch } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   const { data: cohorts } = useCohorts({ visible: true });
   const cohortOptions = React.useMemo(() => cohorts.map(x => ({ id: x.id, label: x.name })), [cohorts]);
 
@@ -117,7 +120,7 @@ export function CreatePersonDialog() {
     }
   }, [open, reset, setValue, setCohortPickerOpen]);
 
-  const onSubmit = useAsyncCallback(async (data: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (data: z.infer<typeof Form>) => {
     const { personId, isAdmin, isMember, isTrainer, joinDate, sendInvitation, cohortIds, ...p } = data;
     const sanitizedCohortIds = (cohortIds ?? []).filter(truthyFilter);
     const res = await create({

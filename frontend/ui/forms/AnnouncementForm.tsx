@@ -14,12 +14,12 @@ import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { useCohorts } from '@/ui/useCohorts';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useController, useWatch, type Control } from 'react-hook-form';
+import { useController, useForm, useWatch, type Control } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { truthyFilter } from '../truthyFilter';
-import { useZodForm } from '@/lib/use-schema-form';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const ROLE_OPTIONS: {
   value: AnnouncementAudienceRole;
@@ -56,7 +56,7 @@ const Form = z.object({
   cohortIds: z.array(z.string()).default([]),
 });
 
-type FormValues = TypeOf<typeof Form>;
+type FormValues = z.infer<typeof Form>;
 
 export function AnnouncementForm({ id, data, onSuccess }: {
   id?: string;
@@ -65,11 +65,12 @@ export function AnnouncementForm({ id, data, onSuccess }: {
 }) {
   const upsert = useMutation(UpsertAnnouncementDocument)[1];
 
-  const { reset, control, handleSubmit } = useZodForm(Form, {
+  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
     defaultValues: {
       audienceRoles: [],
       cohortIds: [],
-    }
+    },
+    resolver: zodResolver(Form),
   });
   React.useEffect(() => {
     reset({

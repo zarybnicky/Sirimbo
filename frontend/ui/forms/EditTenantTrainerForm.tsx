@@ -1,5 +1,4 @@
 import { TenantTrainerDocument, UpdateTenantTrainerDocument } from '@/graphql/Memberships';
-import { useZodForm } from '@/lib/use-schema-form';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -8,7 +7,9 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   since: z.date().nullish().default(null),
@@ -22,7 +23,9 @@ const Form = z.object({
 
 export function EditTenantTrainerForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useForm<z.infer<typeof Form>>({
+    resolver: zodResolver(Form),
+  });
   const [query] = useQuery({ query: TenantTrainerDocument, variables: { id }, pause: !id });
   const update = useMutation(UpdateTenantTrainerDocument)[1];
 
@@ -42,7 +45,7 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
     }
   }, [reset, item]);
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     await update({
       input: {
         id,

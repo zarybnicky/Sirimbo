@@ -1,12 +1,13 @@
 import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
-import { useZodForm } from '@/lib/use-schema-form';
 import { TextFieldElement } from '@/ui/fields/text';
 import { useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const AuthForm = z.object({
   login: z.string(),
@@ -15,10 +16,12 @@ const AuthForm = z.object({
 
 export function ChangeLoginForm() {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useZodForm(AuthForm);
+  const { control, handleSubmit } = useForm<z.infer<typeof AuthForm>>({
+    resolver: zodResolver(AuthForm),
+  });
   const update = useMutation(UpdateTenantSettingsDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof AuthForm>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof AuthForm>) => {
     await update({
       input: {
         path: ['evidenceAuth'],
