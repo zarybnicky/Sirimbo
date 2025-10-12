@@ -3,6 +3,7 @@ import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
+import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { countries } from '@/lib/countries';
@@ -72,7 +73,7 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
       <TextFieldElement type="date" control={control} label="Datum narození" name="birthDate" />
       <TextFieldElement control={control} name="taxIdentificationNumber" label="Rodné číslo" placeholder="1111119999" />
 
-      <TextFieldElement control={control} name="cstsId" label="ČSTS IDT" placeholder="10000000" />
+      <CstsIdFieldElement control={control} name="cstsId" />
       <TextFieldElement control={control} name="wdsfId" label="WDSF MIN" placeholder="10000000" />
 
       <div className="col-full">
