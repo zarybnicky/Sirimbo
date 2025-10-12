@@ -1,6 +1,6 @@
 'use client';
 
-import { CreatePersonDocument, FullPersonListDocument, CstsPersonDocument } from '@/graphql/Person';
+import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
 import { SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement, VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
@@ -10,6 +10,7 @@ import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
+import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { countries } from '@/lib/countries';
@@ -73,13 +74,6 @@ export function CreatePersonDialog() {
   const { data: cohorts } = useCohorts({ visible: true });
   const cohortOptions = React.useMemo(() => cohorts.map(x => ({ id: x.id, label: x.name })), [cohorts]);
 
-  const [cstsId, setCstsId] = React.useState(Number.NaN);
-  const [cstsQuery] = useQuery({
-    query: CstsPersonDocument,
-    pause: Number.isNaN(cstsId),
-    variables: { idt: cstsId },
-  });
-
   const personId = watch('personId');
   const selectedCohortCount = watch('cohortIds')?.length ?? 0;
   const [cohortPickerOpen, setCohortPickerOpen] = React.useState(false);
@@ -114,7 +108,6 @@ export function CreatePersonDialog() {
   React.useEffect(() => {
     if (open) {
       reset();
-      setCstsId(Number.NaN);
       setValue('isMember', true);
       setValue('sendInvitation', false);
       setValue('nationality', "203");
@@ -201,22 +194,7 @@ export function CreatePersonDialog() {
               placeholder="1111119999"
             />
 
-            <div>
-              <TextFieldElement
-                control={control}
-                name="cstsId"
-                label="ČSTS IDT"
-                placeholder="10000000"
-                onInput={(e) => setCstsId(Number.parseInt(e.currentTarget.value || '', 10))}
-              />
-              {cstsQuery.data ? (
-                cstsQuery.data.cstsAthlete ? (
-                  <span className="text-green-9">{cstsQuery.data?.cstsAthlete.name}</span>
-                ) : (
-                  <span className="text-primary">Nenalezeno</span>
-                )
-              ) : null}
-            </div>
+            <CstsIdFieldElement control={control} name="cstsId" />
 
             <TextFieldElement
               control={control}
