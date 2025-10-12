@@ -27,18 +27,20 @@ function TrainingGroupPage() {
   const item = data?.cohortGroup;
 
   React.useEffect(() => {
-    if (!router.isReady || !idParam) return;
-
-    if (!fetching && !item) {
+    if (!router.isReady || !idParam || fetching) return;
+    if (!item) {
       void router.replace('/404');
       return;
     }
-
-    if (!item) return;
-
     const expectedSlug = slugify(item.name);
     if (expectedSlug && router.query.slug !== expectedSlug) {
-      void router.replace(`/treninkove-programy/${item.id}/${expectedSlug}`);
+      void router.replace({
+        pathname: '/treninkove-programy/[id]/[...slug]',
+        query: {
+          id: item.id,
+          slug: [expectedSlug],
+        },
+      });
     }
   }, [fetching, idParam, item, router]);
 
@@ -58,12 +60,15 @@ function TrainingGroupPage() {
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.cohortsList.map((item) => (
-          <div key={item.id} className={cardCls({ className: "group break-inside-avoid pl-8" })}>
+          <div
+            key={item.id}
+            className={cardCls({ className: 'group break-inside-avoid pl-8' })}
+          >
             <h5 className="text-xl underline">
               <Link
                 href={{
                   pathname: '/treninkove-skupiny/[id]',
-                  query: { id: item.id }
+                  query: { id: item.id },
                 }}
               >
                 {item.name}
@@ -82,6 +87,6 @@ function TrainingGroupPage() {
       </div>
     </Layout>
   );
-};
+}
 
 export default TrainingGroupPage;

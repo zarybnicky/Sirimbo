@@ -45,6 +45,8 @@ type CouplesAndSolos = {
 };
 
 function TrainingCohortPage() {
+  const auth = useAuth();
+  const { data: tenant } = useTenant();
   const router = useTypedRouter(QueryParams);
   const idParam = router.query.id || router.query.slug;
   const [{ data: cohortQuery, fetching: fetchingCohort }] = useQuery({
@@ -53,8 +55,6 @@ function TrainingCohortPage() {
     pause: !router.isReady || !idParam,
   });
   const cohort = cohortQuery?.entity;
-  const auth = useAuth();
-  const { data: tenant } = useTenant();
   const cohortId = cohort?.id;
   const members = React.useMemo(
     () => cohort?.cohortMembershipsList ?? [],
@@ -70,6 +70,24 @@ function TrainingCohortPage() {
     () => getCouplesAndSolos(members, tenant?.couplesList ?? []),
     [members, tenant?.couplesList],
   );
+
+  React.useEffect(() => {
+    if (!router.isReady || !idParam || fetchingCohort) return;
+    if (!cohort) {
+      void router.replace('/404');
+      return;
+    }
+    const expectedSlug = slugify(cohort.name);
+    if (expectedSlug && router.query.slug !== expectedSlug) {
+      void router.replace({
+        pathname: '/treninkove-skupiny/[id]/[...slug]',
+        query: {
+          id: cohort.id,
+          slug: [expectedSlug],
+        }
+      });
+    }
+  }, [cohort, fetchingCohort, idParam, router]);
 
   const tabs = React.useMemo(
     () => [
@@ -99,22 +117,6 @@ function TrainingCohortPage() {
     ],
     [auth.isAdmin, couples, cohort?.location, description, members, solos],
   );
-
-  React.useEffect(() => {
-    if (!router.isReady || !idParam) return;
-
-    if (!fetchingCohort && !cohort) {
-      void router.replace('/404');
-      return;
-    }
-
-    if (!cohort) return;
-
-    const expectedSlug = slugify(cohort.name);
-    if (expectedSlug && router.query.slug !== expectedSlug) {
-      void router.replace(`/treninkove-skupiny/${cohort.id}/${expectedSlug}`);
-    }
-  }, [cohort, fetchingCohort, idParam, router]);
 
   if (!cohort) {
     return (

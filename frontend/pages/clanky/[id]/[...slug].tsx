@@ -19,36 +19,30 @@ const QueryParams = z.object({
 function ArticlePage() {
   const router = useTypedRouter(QueryParams);
   const idParam = router.query.id || router.query.slug;
-  const isNumericId = React.useMemo(() => {
-    if (!idParam) return false;
-    return !Number.isNaN(Number.parseInt(idParam, 10));
-  }, [idParam]);
   const [{ data, fetching }] = useQuery({
     query: ArticleDocument,
     variables: { id: idParam || '0' },
-    pause: !router.isReady || !idParam || !isNumericId,
+    pause: !router.isReady || !idParam,
   });
   const item = data?.aktuality;
 
   React.useEffect(() => {
-    if (!router.isReady || !idParam) return;
-    if (!isNumericId) {
+    if (!router.isReady || !idParam || fetching) return;
+    if (!item) {
       void router.replace('/404');
       return;
     }
-
-    if (!fetching && !item) {
-      void router.replace('/404');
-      return;
-    }
-
-    if (!item) return;
-
     const expectedSlug = slugify(item.atJmeno);
     if (expectedSlug && router.query.slug !== expectedSlug) {
-      void router.replace(`/clanky/${item.id}/${expectedSlug}`);
+      void router.replace({
+        pathname: '/clanky/[id]/[...slug]',
+        query: {
+          id: item.id,
+          slug: [expectedSlug],
+        },
+      });
     }
-  }, [fetching, idParam, isNumericId, item, router]);
+  }, [fetching, idParam, item, router]);
 
   if (!item) {
     return (
@@ -94,6 +88,6 @@ function ArticlePage() {
       <RichTextView value={item.atText} />
     </Layout>
   );
-};
+}
 
 export default ArticlePage;
