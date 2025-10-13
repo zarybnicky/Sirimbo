@@ -72,7 +72,6 @@ module.exports = nextRoutes()(
         if (tenantConfig.enableArticles) {
           redirects.push(
             { source: '/mistrovstvi', destination: 'https://mistrovstvi.tkolymp.cz', permanent: true },
-            { source: '/druzstva', destination: 'https://mistrovstvi.tkolymp.cz', permanent: true },
             { source: '/prijdtancit', destination: 'https://nabor.tkolymp.cz', permanent: true },
             { source: '/prijdtancit/deti', destination: 'https://nabor.tkolymp.cz', permanent: true },
             { source: '/prijdtancit/mladez', destination: 'https://nabor.tkolymp.cz', permanent: true },
