@@ -13,7 +13,6 @@ import {
   DialogTrigger,
 } from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
-import { typographyCls } from '@/ui/style';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
@@ -22,11 +21,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
   SystemAdminTenantsDocument,
+  SystemAdminTenantsQuery,
   SystemAdminUpdateTenantDocument,
 } from '@/graphql/SystemAdmin';
 import { AddressDomain, SystemAdminTenantsRecord } from '@/graphql';
+import { DataTable } from '@/ui/DataTable';
+import { ColumnDef } from '@tanstack/react-table';
 
-const integerFormatter = new Intl.NumberFormat('cs-CZ');
 const decimalFormatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
 
 const TenantFormSchema = z.object({
@@ -39,6 +40,30 @@ const TenantFormSchema = z.object({
 });
 
 type TenantFormValues = z.infer<typeof TenantFormSchema>;
+
+const columns: ColumnDef<
+  NonNullable<SystemAdminTenantsQuery['systemAdminTenants']>['nodes'][number]
+>[] = [
+  { accessorKey: 'id', header: 'ID', cell: (info) => info.getValue() },
+  { accessorKey: 'name', header: 'Jméno', cell: (info) => info.getValue() },
+  { accessorKey: 'membershipCount', header: 'Členové', cell: (info) => info.getValue() },
+  { accessorKey: 'trainerCount', header: 'Trenéři', cell: (info) => info.getValue() },
+  {
+    accessorKey: 'administratorCount',
+    header: 'Správci',
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: 'sessionCountLast30Days',
+    header: 'Lekce / 30 dní',
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: 'sessionCountPerTrainerLast30Days',
+    header: 'Lekce / trenér / 30 dní',
+    cell: (info) => decimalFormatter.format(Number.parseFloat(info.getValue() as string)),
+  },
+];
 
 export default function SystemAdminTenantsPage() {
   const [{ data, fetching, error }, reexecute] = useQuery({
@@ -61,14 +86,14 @@ export default function SystemAdminTenantsPage() {
         </div>
       )}
 
-      <div className="mt-6 grid gap-4">
-        {data?.systemAdminTenants?.nodes?.map((tenant) => (
-          <TenantCard
-            key={tenant.id}
-            tenant={tenant}
-            onUpdated={() => reexecute({ requestPolicy: 'network-only' })}
+      <div className="mt-6 grid gap-4 col-feature">
+        {!fetching && data?.systemAdminTenants?.nodes && (
+          <DataTable
+            data={data.systemAdminTenants.nodes}
+            columns={columns}
+            renderExpanded={(row) => <TenantCard tenant={row} onUpdated={reexecute} />}
           />
-        ))}
+        )}
         {!fetching && !error && !data?.systemAdminTenants?.nodes?.length && (
           <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
             Nebyly nalezeny žádné tenanty.
@@ -90,12 +115,6 @@ function TenantCard({ tenant, onUpdated }: TenantCardProps) {
   return (
     <div className="space-y-3 rounded-lg border border-neutral-6 bg-neutral-2 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className={typographyCls({ variant: 'section', className: 'mb-1' })}>
-            {tenant.name}
-          </div>
-          <div className="text-xs text-neutral-11">ID: {tenant.id}</div>
-        </div>
         <TenantEditDialog tenant={tenant} onUpdated={onUpdated} />
       </div>
 
@@ -126,28 +145,6 @@ function TenantCard({ tenant, onUpdated }: TenantCardProps) {
           <dd>{address || '—'}</dd>
         </div>
       </dl>
-
-      <div className="flex flex-wrap gap-3 text-xs">
-        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Aktivní členové:{' '}
-          {integerFormatter.format(Number.parseFloat(tenant.membershipCount || ''))}
-        </span>
-        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Lekce (30 dní):{' '}
-          {integerFormatter.format(Number.parseFloat(tenant.sessionCountLast30Days || ''))}
-        </span>
-        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Lekce / trenér (30 dní):{' '}
-          {decimalFormatter.format(tenant.sessionCountPerTrainerLast30Days || 0)}
-        </span>
-        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Trenéři: {integerFormatter.format(Number.parseFloat(tenant.trainerCount || ''))}
-        </span>
-        <span className="rounded-full bg-neutral-3 px-3 py-1 font-semibold text-neutral-11">
-          Administrátoři:{' '}
-          {integerFormatter.format(Number.parseFloat(tenant.administratorCount || ''))}
-        </span>
-      </div>
     </div>
   );
 }
