@@ -11,7 +11,7 @@ const SocialIcons = dynamic(() => getTenantUi('SocialIcons'), { ssr: false });
 const Sponsors = dynamic(() => getTenantUi('Sponsors'), { ssr: false });
 
 function Footer() {
-  return <div className="col-full-width content bg-[#292524] text-white py-12">
+  return <div className="col-full-width content bg-neutral-1 text-neutral-12 py-12">
     <div className="col-feature grid grid-cols-2 gap-2">
       <h2 className="col-span-2 text-3xl font-bold">Kontakt</h2>
       <div className="col-span-2 md:col-span-1">

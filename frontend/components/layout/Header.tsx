@@ -36,7 +36,7 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
   }, []);
 
   return (
-    <div className="sticky z-20 top-0 inset-x-0 text-white bg-[#292524] shadow-lg">
+    <div className="sticky z-20 top-0 inset-x-0 text-neutral-12 bg-neutral-1 shadow-lg">
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
@@ -85,10 +85,11 @@ function DesktopMenuItem({ item: x }: { item: MenuStructItem }) {
   const classes = cn(
     'flex gap-1 rounded-none transition-colors',
     'uppercase text-sm font-bold justify-center items-center',
-    'hover:text-white hover:border-b-[3px] border-white data-[state=open]:border-b-[3px]',
+    'border-b-[3px] border-transparent hover:border-accent-8 data-[state=open]:border-accent-9',
+    'hover:text-neutral-12',
     inPath
-      ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide -mb-px'
-      : 'text-[#f3f3f3] drop-shadow',
+      ? 'text-neutral-12 drop-shadow-xl border-accent-9 tracking-wide -mb-px'
+      : 'text-neutral-11 drop-shadow',
   );
   if (x.type === 'link') {
     return (
