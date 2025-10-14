@@ -32,9 +32,18 @@ export default function InvitationPage() {
     }
   });
 
-  if (!authLoading && auth.user) {
-    void router.replace(auth.personIds.length > 0 ? '/dashboard' :'/profil');
-  }
+  const personCount = auth.personIds.length;
+
+  React.useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
+    if (!authLoading && auth.user) {
+      const destination = personCount > 0 ? '/dashboard' : '/profil';
+      void router.replace(destination);
+    }
+  }, [authLoading, auth.user, personCount, router, router.isReady]);
 
   return (
     <Layout className="grow content relative content-stretch">

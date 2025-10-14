@@ -14,14 +14,24 @@ export default function LoginPage() {
   const authLoading = useAuthLoading();
 
   const onSuccess = React.useCallback((user: UserAuthFragment | null) => {
-    const redirect = router.query?.from as string | undefined;
+    const fromParam = router.query?.from;
+    const redirect = Array.isArray(fromParam) ? fromParam[0] : fromParam ?? undefined;
     const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
     void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
   }, [router]);
 
-  if (!authLoading && auth.user) {
-    void router.replace(auth.personIds.length === 0 ? '/profil' :'/dashboard');
-  }
+  const personCount = auth.personIds.length;
+
+  React.useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
+    if (!authLoading && auth.user) {
+      const destination = personCount === 0 ? '/profil' : '/dashboard';
+      void router.replace(destination);
+    }
+  }, [authLoading, auth.user, personCount, router, router.isReady]);
 
   return (
     <Layout className="grow content relative content-stretch">
