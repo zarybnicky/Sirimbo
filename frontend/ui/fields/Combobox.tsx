@@ -6,6 +6,7 @@ import React from 'react';
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { cn } from '@/ui/cn';
 import { buttonCls } from '@/ui/style';
+import { rankItem } from "@tanstack/match-sorter-utils"
 
 type Item = { id: string | null; label: string };
 export type ComboboxProps = {
@@ -142,7 +143,10 @@ export function ComboboxSearchArea({ value, onChange, options }: {
   options: Item[];
 }) {
   return (
-    <Command className="border rounded-md bg-neutral-1 h-full max-h-full relative">
+    <Command
+      className="border rounded-md bg-neutral-1 h-full max-h-full relative"
+      filter={(value, search) => rankItem(value, search).rank}
+    >
       <div className="relative border-b" cmdk-input-wrapper="">
         <Search className="absolute left-3 top-[.8rem] size-4 shrink-0 opacity-50" />
         <Command.Input
@@ -174,7 +178,7 @@ export function ComboboxSearchArea({ value, onChange, options }: {
       >
         {options.map((item) => (
           <Command.Item
-            value={`${item.id}: ${item.label.normalize('NFKD')} ${item.label}`}
+            value={`${item.id}: ${item.label}`}
             key={item.id}
             onSelect={(value) => onChange(value.split(/: (.*)/)[0] || null)}
             className={cn(
