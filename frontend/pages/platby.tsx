@@ -11,12 +11,13 @@ import {
   type TenantTurnoverPageQuery,
 } from '@/graphql/Payment';
 import { PersonAccountsDocument, UnpaidPaymentsDocument } from '@/graphql/Person';
-import { describePosting, moneyFormatter, numericDateFormatter } from '@/ui/format';
+import { describePosting, moneyFormatter } from '@/ui/format';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { MarkAsPaidDocument } from '@/graphql/Payment';
 import { buttonCls } from '@/ui/style';
 import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
 import { Spinner } from '@/ui/Spinner';
+import { PaymentTransactionRow } from '@/ui/payments/PaymentTransactionRow';
 import Link from 'next/link';
 import type { LinkProps } from 'next/link';
 import { useAuth } from '@/ui/use-auth';
@@ -261,41 +262,22 @@ function TenantTurnover() {
               {postings.map((posting) => {
                 const transaction = posting.transaction;
                 const payment = transaction.payment;
-                const displayDate = transaction.effectiveDate
-                  ? numericDateFormatter.format(new Date(transaction.effectiveDate))
-                  : '';
+                const effectiveDate = transaction.effectiveDate
+                  ? new Date(transaction.effectiveDate)
+                  : null;
                 const description = transaction.description || describePosting(payment, posting);
-                const variableSymbol = payment?.variableSymbol;
-                const specificSymbol = payment?.specificSymbol;
-
                 return (
-                  <div
+                  <PaymentTransactionRow
                     key={posting.id}
-                    className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2"
-                  >
-                    <span className="text-sm text-neutral-11 min-w-20">{displayDate}</span>
-                    <div className="flex min-w-48 flex-1 flex-col gap-1">
-                      <span>{description}</span>
-                      {(variableSymbol || specificSymbol) && (
-                        <span className="text-xs text-neutral-10">
-                          {variableSymbol && <>VS: {variableSymbol}</>}
-                          {variableSymbol && specificSymbol && ' • '}
-                          {specificSymbol && <>SS: {specificSymbol}</>}
-                        </span>
-                      )}
-                      {auth.isAdmin && payment?.id && (
-                        <Link
-                          href={paymentDetailHref(payment.id)}
-                          className="text-xs font-medium text-accent-11 hover:underline"
-                        >
-                          Detail platby
-                        </Link>
-                      )}
-                    </div>
-                    <span className="font-medium">
-                      {moneyFormatter.format({ amount: posting.amount ?? '0', currency: account.currency })}
-                    </span>
-                  </div>
+                    date={effectiveDate}
+                    primaryLabel={description}
+                    variableSymbol={payment?.variableSymbol}
+                    specificSymbol={payment?.specificSymbol}
+                    amount={posting.amount ?? '0'}
+                    currency={account.currency}
+                    paymentId={payment?.id}
+                    showDebugLink={auth.isAdmin}
+                  />
                 );
               })}
             </div>
@@ -405,42 +387,26 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
 
 function DepositRow({ transaction, showDebug }: { transaction: ManualCreditTransaction; showDebug: boolean }) {
   const effectiveDate = transaction.effectiveDate
-    ? numericDateFormatter.format(new Date(transaction.effectiveDate))
-    : '';
+    ? new Date(transaction.effectiveDate)
+    : null;
 
   const personPosting = transaction.postingsList.find((posting) => posting.account?.person);
   const accountPosting = personPosting ?? transaction.postingsList[0];
   const personName = personPosting?.account?.person?.name ?? '—';
   const amount = accountPosting?.amount ?? '0';
   const currency = accountPosting?.account?.currency ?? 'CZK';
-  const variableSymbol = transaction.payment?.variableSymbol;
-  const specificSymbol = transaction.payment?.specificSymbol;
 
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2">
-      <span className="text-sm text-neutral-11 min-w-20">{effectiveDate}</span>
-      <div className="flex min-w-48 flex-1 flex-col gap-1">
-        <span className="font-medium">{personName}</span>
-        <span className="text-sm text-neutral-11">{transaction.description || 'Dobití kreditu'}</span>
-        {(variableSymbol || specificSymbol) && (
-          <span className="text-xs text-neutral-10">
-            {variableSymbol && <>VS: {variableSymbol}</>}
-            {variableSymbol && specificSymbol && ' • '}
-            {specificSymbol && <>SS: {specificSymbol}</>}
-          </span>
-        )}
-        {showDebug && transaction.payment?.id && (
-          <Link
-            href={paymentDetailHref(transaction.payment.id)}
-            className="text-xs font-medium text-accent-11 hover:underline"
-          >
-            Detail platby
-          </Link>
-        )}
-      </div>
-      <span className="font-medium">
-        {moneyFormatter.format({ amount: amount ?? '0', currency })}
-      </span>
-    </div>
+    <PaymentTransactionRow
+      date={effectiveDate}
+      primaryLabel={personName}
+      secondaryLabel={transaction.description || 'Dobití kreditu'}
+      variableSymbol={transaction.payment?.variableSymbol}
+      specificSymbol={transaction.payment?.specificSymbol}
+      amount={amount}
+      currency={currency}
+      paymentId={transaction.payment?.id}
+      showDebugLink={showDebug}
+    />
   );
 }

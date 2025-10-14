@@ -1,6 +1,6 @@
 import { PersonPaymentsDocument } from "@/graphql/Person";
 import React from "react";
-import { describePosting, fullDateFormatter, moneyFormatter, numericDateFormatter } from "@/ui/format";
+import { describePosting, fullDateFormatter, moneyFormatter } from "@/ui/format";
 import { useMutation, useQuery } from "urql";
 import { QRPayment } from "@/ui/QRPayment";
 import { useTenant } from "@/ui/useTenant";
@@ -9,10 +9,11 @@ import { CreateCreditTransactionForm } from "@/ui/forms/CreateCreditTransactionF
 import { exportPostings } from "@/ui/reports/export-postings";
 import { buttonCls } from "@/ui/style";
 import { useAuth } from "./use-auth";
-import { DropdownMenu, DropdownMenuButton } from "./dropdown";
+import { DropdownMenu, DropdownMenuButton, DropdownMenuTrigger } from "./dropdown";
 import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
 import { DeleteTransactionDocument } from "@/graphql/Payment";
 import { PaymentMenu } from "./EventView";
+import { PaymentTransactionRow } from "@/ui/payments/PaymentTransactionRow";
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const auth = useAuth();
@@ -97,33 +98,50 @@ export function PersonPaymentsView({ id }: { id: string }) {
 
           <div>
             <h3>Minulé</h3>
-            {account.postingsList.sort(
-              (x, y) => (y.transaction?.effectiveDate || '').localeCompare(x.transaction?.effectiveDate || '')
-            ).map(
-              posting => posting.transaction ? (posting.transaction.payment ? (
-                <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
-                  <PaymentMenu id={posting.transaction.payment.id}>
-                    <span>
-                      {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
-                      {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
-                    </span>
-                    <span>{moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}</span>
-                  </PaymentMenu>
-                </div>
-              ) : (
-                <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
-                  <TransactionMenu id={posting.transaction.id}>
-                    <span>
-                      {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
-                      {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
-                    </span>
-                    <span>{moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}</span>
-                  </TransactionMenu>
-                </div>
-              )) : (
-                <React.Fragment key={posting.id} />
-              )
-            )}
+            <div className="mt-2 overflow-hidden divide-y rounded-md border">
+              {[...account.postingsList]
+                .sort((a, b) => (b?.transaction?.effectiveDate || '').localeCompare(a?.transaction?.effectiveDate || ''))
+                .map((posting) => {
+                  if (!posting?.transaction) {
+                    return null;
+                  }
+
+                  const { transaction } = posting;
+                  const payment = transaction.payment;
+                  const effectiveDate = transaction.effectiveDate
+                    ? new Date(transaction.effectiveDate)
+                    : null;
+                  const description = transaction.description || describePosting(payment, posting);
+                  const amount = posting.amount ?? '0';
+
+                  const row = (
+                    <PaymentTransactionRow
+                      date={effectiveDate}
+                      primaryLabel={description}
+                      amount={amount}
+                      currency="CZK"
+                      variableSymbol={payment?.variableSymbol}
+                      specificSymbol={payment?.specificSymbol}
+                      paymentId={payment?.id}
+                      showDebugLink={auth.isAdmin}
+                    />
+                  );
+
+                  if (payment) {
+                    return (
+                      <PaymentMenu key={posting.id} id={payment.id}>
+                        <DropdownMenuTrigger asChild>{row}</DropdownMenuTrigger>
+                      </PaymentMenu>
+                    );
+                  }
+
+                  return (
+                    <TransactionMenu key={posting.id} id={transaction.id}>
+                      <DropdownMenuTrigger asChild>{row}</DropdownMenuTrigger>
+                    </TransactionMenu>
+                  );
+                })}
+            </div>
           </div>
         </div>
       ))}
