@@ -110,7 +110,7 @@ function GroupLesson({ calendarEvent }: {
     >
       {hasConflicts && (
         <>
-          <div className="absolute right-6 top-3 text-red-11" aria-hidden>
+          <div className="absolute right-8 top-3 text-red-11" aria-hidden>
             <AlertTriangle className="size-4" />
           </div>
           <span className="sr-only">Kolize: {conflictNames}</span>
