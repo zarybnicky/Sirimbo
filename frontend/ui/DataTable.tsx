@@ -170,7 +170,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         cell: ({ row }) => (
           <button
             onClick={row.getToggleExpandedHandler()}
-            className="size-7 rounded bg-neutral-1 text-accent-11 ring-1 ring-inset ring-neutral-6 hover:bg-neutral-3"
+            className="size-7 rounded-md border border-neutral-6 bg-neutral-2 text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
             aria-label={row.getIsExpanded() ? "Collapse" : "Expand"}
           >
             {row.getIsExpanded() ? "−" : "+"}
@@ -232,19 +232,19 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const selected = table.getFilteredSelectedRowModel().rows
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4 rounded-xl border border-neutral-6 bg-neutral-2 p-4 shadow-sm">
       {/* Toolbar / Selected actions */}
       {selected.length > 0 ? (
         selectedActions ? (
           <div>{selectedActions({ selected: selected.map((r) => r.original), table })}</div>
         ) : (
-          <div className="flex items-center gap-3 rounded border border-neutral-6 bg-neutral-1 px-3 py-2 text-neutral-12">
-            <span className="font-medium">{selected.length} selected</span>
+          <div className="flex items-center gap-3 rounded-lg border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm text-neutral-12 shadow-sm">
+            <span className="font-medium text-neutral-11">{selected.length} selected</span>
             <div className="ml-auto flex gap-2">
-              <button className="rounded border border-neutral-6 bg-neutral-1 px-2 py-1 hover:bg-neutral-3">
+              <button className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8">
                 Export
               </button>
-              <button className="rounded bg-[var(--tomato-9)] px-2 py-1 text-white hover:bg-[var(--tomato-10)]">
+              <button className="rounded-lg bg-[var(--tomato-9)] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[var(--tomato-10)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tomato-9)]">
                 Delete
               </button>
             </div>
@@ -263,21 +263,21 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       {/* Scroll container with reserved scrollbar gutter so sticky header never covers it */}
       <div
         ref={scrollRef as React.RefObject<HTMLDivElement>}
-        className="max-h-[60vh] overflow-auto rounded border border-neutral-6 [scrollbar-gutter:stable]"
+        className="max-h-[60vh] overflow-auto rounded-lg border border-neutral-6 bg-neutral-1 shadow-inner [scrollbar-gutter:stable]"
       >
-        <table className="min-w-full border-collapse">
-          <thead className="sticky top-0 z-10 bg-neutral-1">
+        <table className="min-w-full border-collapse text-sm">
+          <thead className="sticky top-0 z-10 bg-neutral-2/90 backdrop-blur">
             {table.getHeaderGroups().map((hg) => (
               <tr key={hg.id} className="text-left">
                 {hg.headers.map((h) => (
                   <th
                     key={h.id}
                     style={{ width: h.getSize() }}
-                    className="whitespace-nowrap border-b border-neutral-6 p-2 text-neutral-12"
+                    className="whitespace-nowrap border-b border-neutral-6 p-3 text-xs font-semibold uppercase tracking-wide text-neutral-11"
                   >
                     {h.isPlaceholder ? null : (
                       <button
-                        className="inline-flex items-center gap-1 text-neutral-12"
+                        className="inline-flex items-center gap-1 text-neutral-11 transition hover:text-neutral-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
                         onClick={h.column.getToggleSortingHandler()}
                       >
                         {flexRender(h.column.columnDef.header, h.getContext())}
@@ -306,7 +306,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
                 <React.Fragment key={row.id}>
                   <tr
                     data-selected={row.getIsSelected() ? "" : undefined}
-                    className="border-b border-neutral-6 data-[selected]:bg-[color-mix(in_oklab,var(--accent-9)_8%,transparent)] hover:bg-neutral-2 cursor-default"
+                    className="cursor-default border-b border-neutral-6 transition data-[selected]:bg-[color-mix(in_oklab,var(--accent-9)_10%,transparent)] hover:bg-neutral-2"
                     style={{ height: v.size }}
                     onClick={() => onRowClick?.(row)}
                   >
@@ -314,7 +314,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
                       <td
                         key={cell.id}
                         style={{ width: cell.column.getSize() }}
-                        className="p-2 text-neutral-12"
+                        className="p-3 text-sm text-neutral-12"
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
@@ -323,7 +323,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
 
                   {row.getIsExpanded() && renderExpanded && (
                     <tr className="bg-neutral-1">
-                      <td colSpan={row.getVisibleCells().length} className="p-2">
+                      <td colSpan={row.getVisibleCells().length} className="p-3">
                         {renderExpanded(row.original)}
                       </td>
                     </tr>
@@ -342,22 +342,22 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between py-2 text-sm text-neutral-12">
-        <div>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm text-neutral-11">
+        <div className="font-medium text-neutral-12">
           {selected.length} / {table.getFilteredRowModel().rows.length} selected
         </div>
-        <div className="space-x-2">
+        <div className="flex gap-2">
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="rounded border border-neutral-6 bg-neutral-1 px-2 py-1 enabled:hover:bg-neutral-3 disabled:opacity-50"
+            className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
           >
             Prev
           </button>
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="rounded border border-neutral-6 bg-neutral-1 px-2 py-1 enabled:hover:bg-neutral-3 disabled:opacity-50"
+            className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
           >
             Next
           </button>
@@ -382,19 +382,19 @@ function DefaultToolbar<TData>({
         value={globalFilter ?? ""}
         onChange={(e) => setGlobalFilter(e.target.value)}
         placeholder="Search…"
-        className="h-8 w-56 rounded border border-neutral-6 bg-neutral-1 px-2 text-neutral-12 placeholder:text-neutral-11"
+        className="h-9 w-64 rounded-lg border border-neutral-6 bg-neutral-1 px-3 text-sm text-neutral-12 placeholder:text-neutral-11 transition focus:border-transparent focus:outline-none focus:ring-2 focus:ring-accent-8"
       />
 
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button className="h-8 rounded border border-neutral-6 bg-neutral-1 px-2 text-neutral-12 hover:bg-neutral-3">
+          <button className="h-9 rounded-lg border border-neutral-6 bg-neutral-2 px-3 text-sm font-medium text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8">
             Columns
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content
           align="start"
           sideOffset={6}
-          className="min-w-48 rounded border border-neutral-6 bg-neutral-1 p-1 text-neutral-12 shadow z-20"
+          className="z-20 min-w-48 rounded-lg border border-neutral-6 bg-neutral-2 p-1 text-sm text-neutral-12 shadow-lg"
         >
           {table
             .getAllLeafColumns()
@@ -404,7 +404,7 @@ function DefaultToolbar<TData>({
                 key={col.id}
                 checked={col.getIsVisible()}
                 onCheckedChange={(v) => col.toggleVisibility(!!v)}
-                className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 outline-none data-[highlighted]:bg-neutral-3"
+                className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 outline-none transition data-[highlighted]:bg-neutral-3"
               >
                 <DropdownMenu.ItemIndicator>
                   <CheckIcon />
