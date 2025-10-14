@@ -53,9 +53,7 @@ export default function SkolniKrouzkyPage() {
           alt="Společné foto závěrečného vystoupení Olymp Dance"
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          style={{
-            maxWidth: "100%",
-          }} />
+        />
       </div>
     </Layout>
   );
