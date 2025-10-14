@@ -17,7 +17,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useController, useForm, useWatch, type Control } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { truthyFilter } from '../truthyFilter';
+import { isTruthy } from '../truthyFilter';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -78,8 +78,8 @@ export function AnnouncementForm({ id, data, onSuccess }: {
       isSticky: data?.isSticky ?? false,
       scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
       scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
-      audienceRoles: data?.announcementAudiences.nodes.map(x => x.audienceRole).filter(truthyFilter) ?? [],
-      cohortIds: data?.announcementAudiences.nodes.map(x => x.cohortId).filter(truthyFilter) ?? [],
+      audienceRoles: data?.announcementAudiences.nodes.map(x => x.audienceRole).filter(isTruthy) ?? [],
+      cohortIds: data?.announcementAudiences.nodes.map(x => x.cohortId).filter(isTruthy) ?? [],
     });
   }, [data, reset]);
 

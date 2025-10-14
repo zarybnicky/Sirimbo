@@ -38,7 +38,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
-import { truthyFilter } from './truthyFilter';
+import { isTruthy } from './truthyFilter';
 
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
@@ -192,10 +192,10 @@ function EventInstances({ event }: { event: EventFullFragment }) {
         </thead>
         <tbody>
           {event.eventInstancesList.map((instance) => {
-            let trainerNames = instance.trainers?.map(x => x.name).filter(truthyFilter);
+            let trainerNames = instance.trainers?.map(x => x.name).filter(isTruthy);
 
             if (trainerNames.length === 0)
-              trainerNames = event.eventTrainersList?.map(x => x.name).filter(truthyFilter);
+              trainerNames = event.eventTrainersList?.map(x => x.name).filter(isTruthy);
 
             return (
               <tr key={instance.id}>

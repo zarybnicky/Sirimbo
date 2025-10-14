@@ -20,7 +20,7 @@ import { Spinner } from '@/ui/Spinner';
 import Link from 'next/link';
 import type { LinkProps } from 'next/link';
 import { useAuth } from '@/ui/use-auth';
-import { truthyFilter } from '@/ui/truthyFilter';
+import { isTruthy } from '@/ui/truthyFilter';
 
 type TenantAccountPage = NonNullable<TenantTurnoverPageQuery['accountsList']>[number];
 type TenantPosting = TenantAccountPage['postingsList'][number];
@@ -206,7 +206,7 @@ function TenantTurnover() {
   }, [fetchPage]);
 
   const orderedAccounts = React.useMemo(
-    () => accountOrder.map((id) => accounts.get(id)).filter(truthyFilter),
+    () => accountOrder.map((id) => accounts.get(id)).filter(isTruthy),
     [accountOrder, accounts],
   );
   const isEmpty = orderedAccounts.every((account) => account.postings.length === 0);

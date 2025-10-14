@@ -8,7 +8,7 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus } from 'lucide-react';
 import { buttonCls } from "@/ui/style";
 import { useAuth } from "@/ui/use-auth";
-import { truthyFilter } from "./truthyFilter";
+import { isTruthy } from "./truthyFilter";
 
 export function AddToPersonButton({ person }: { person: { id: string; } }) {
   const auth = useAuth();
@@ -19,7 +19,7 @@ export function AddToPersonButton({ person }: { person: { id: string; } }) {
   const userOptions = React.useMemo(() => {
     return (userQuery.data?.users?.nodes || []).map(x => ({
       id: x.id,
-      label: [x.uEmail, x.uLogin].filter(truthyFilter).join(', '),
+      label: [x.uEmail, x.uLogin].filter(isTruthy).join(', '),
     }));
   }, [userQuery]);
 

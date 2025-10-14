@@ -3,7 +3,7 @@ import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
 import { TitleBar } from '@/ui/TitleBar';
 import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceReport';
-import { truthyFilter } from '@/ui/truthyFilter';
+import { isTruthy } from '@/ui/truthyFilter';
 import { computeRange } from '@/scoreboard/periods';
 import { fullDateFormatter } from '@/ui/format';
 
@@ -32,7 +32,7 @@ export default function TrainerAttendanceReportPage() {
   const { rows, summary } = React.useMemo(() => {
     const source = data?.trainerGroupAttendanceCompletionList ?? [];
     const rows = source
-      .filter(truthyFilter)
+      .filter(isTruthy)
       .map((row) => ({
         name: row.person?.name ?? '—',
         total: row.totalInstances ?? 0,

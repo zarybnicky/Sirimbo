@@ -9,7 +9,7 @@ import { type DragSubject, calendarConflictsFor, dragSubjectAtom, isDraggingAtom
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
-import { truthyFilter } from '@/ui/truthyFilter';
+import { isTruthy } from '@/ui/truthyFilter';
 import { tenantConfig } from '@/tenant/config';
 import { AlertTriangle } from 'lucide-react';
 
@@ -184,7 +184,7 @@ function TimeGridEvent({
         )}
         {event.event.eventTargetCohortsList.length > 0 && (
           <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-sm inset-y-0 left-0 flex flex-col">
-            {event.event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (
+            {event.event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(isTruthy).map(color => (
               <div key={color} className="flex-1 w-2" style={{ backgroundColor: color }} />
             ))}
           </div>

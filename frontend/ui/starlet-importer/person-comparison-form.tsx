@@ -11,7 +11,7 @@ import { useMutation, useQuery } from 'urql';
 import { SubmitButton } from '../submit';
 import { useAtomValue } from 'jotai';
 import { starletSettingsAtom, starletTokenAtom } from './state';
-import { truthyFilter } from '../truthyFilter';
+import { isTruthy } from '../truthyFilter';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
@@ -442,7 +442,7 @@ function compare(
   studentLoop: for (const student of students) {
     const person = studentToPerson.get(student.ref_keys[0]!);
     if (!person) continue;
-    const partnerIds = (person.gender === 'MAN' ? person.activeCouplesList?.map(c => c.woman?.id) ?? [] : person.activeCouplesList?.map(c => c.man?.id) ?? []).filter(truthyFilter);
+    const partnerIds = (person.gender === 'MAN' ? person.activeCouplesList?.map(c => c.woman?.id) ?? [] : person.activeCouplesList?.map(c => c.man?.id) ?? []).filter(isTruthy);
 
     const processedPartnerIds = new Set();
     for (const partnerRefKey of student.partner_ref_keys) {
@@ -475,7 +475,7 @@ function disambiguateCandidates(student: DeduplicatedStudent, candidates: Person
     student.year ? byBirthYears.find(x => x[0] === student.year) : undefined,
     byBirthYears.find(x => x[0] === 1900),
     !student.year ? byBirthYears.find(Boolean) : undefined,
-  ].filter(truthyFilter).map(x => x[1]).find(Boolean);
+  ].filter(isTruthy).map(x => x[1]).find(Boolean);
 }
 
 async function fetchCoursesWithStudents(auth_token: string, courses: string[]) {
@@ -547,9 +547,9 @@ function deduplicateStudents(courses: CleanedCourse[]) {
     if (candidates.length === 0)
       continue;
 
-    const birthYears = new Set(candidates.map(x => x.year).filter(truthyFilter));
-    const phones = new Set(candidates.map(x => x.phone).filter(truthyFilter));
-    const emails = new Set(candidates.map(x => x.email).filter(truthyFilter));
+    const birthYears = new Set(candidates.map(x => x.year).filter(isTruthy));
+    const phones = new Set(candidates.map(x => x.phone).filter(isTruthy));
+    const emails = new Set(candidates.map(x => x.email).filter(isTruthy));
 
     if (birthYears.size < 2) {
       if (phones.size < 2 && emails.size < 2) {
@@ -581,25 +581,25 @@ function deduplicateStudents(courses: CleanedCourse[]) {
 }
 
 function mergeCandidates(candidates: QueriedStudent[]): DeduplicatedStudent {
-  const sex = candidates.map(x => x.sex).find(truthyFilter);
+  const sex = candidates.map(x => x.sex).find(isTruthy);
   return {
-    normal_name: candidates.map(x => x.normal_name).find(truthyFilter)!,
-    name: candidates.map(x => x.name).find(truthyFilter) || '?',
-    surname: candidates.map(x => x.surname).find(truthyFilter) || '?',
+    normal_name: candidates.map(x => x.normal_name).find(isTruthy)!,
+    name: candidates.map(x => x.name).find(isTruthy) || '?',
+    surname: candidates.map(x => x.surname).find(isTruthy) || '?',
     gender: sex === 'FEMALE' ? 'WOMAN' : 'MAN',
-    email: candidates.map(x => x.email).find(truthyFilter) || null,
-    phone: candidates.map(x => x.phone).find(truthyFilter) || null,
-    year: candidates.map(x => x.year).find(truthyFilter) || null,
-    street: candidates.map(x => x.street).find(truthyFilter) || null,
-    street_no: candidates.map(x => x.street_no).find(truthyFilter) || null,
-    city: candidates.map(x => x.city).find(truthyFilter) || null,
-    post_code: candidates.map(x => x.post_code).find(truthyFilter) || null,
-    keys: candidates.map(x => x.key).filter(truthyFilter),
-    course_names: candidates.map(x => x.course_name).filter(truthyFilter),
-    course_keys: candidates.map(x => x.course_key).filter(truthyFilter),
-    ref_keys: candidates.map(x => x.ref_key).filter(truthyFilter),
-    partner_names: candidates.map(x => x.partner_name).filter(truthyFilter),
-    partner_ref_keys: candidates.map(x => x.partner_ref_key).filter(truthyFilter),
+    email: candidates.map(x => x.email).find(isTruthy) || null,
+    phone: candidates.map(x => x.phone).find(isTruthy) || null,
+    year: candidates.map(x => x.year).find(isTruthy) || null,
+    street: candidates.map(x => x.street).find(isTruthy) || null,
+    street_no: candidates.map(x => x.street_no).find(isTruthy) || null,
+    city: candidates.map(x => x.city).find(isTruthy) || null,
+    post_code: candidates.map(x => x.post_code).find(isTruthy) || null,
+    keys: candidates.map(x => x.key).filter(isTruthy),
+    course_names: candidates.map(x => x.course_name).filter(isTruthy),
+    course_keys: candidates.map(x => x.course_key).filter(isTruthy),
+    ref_keys: candidates.map(x => x.ref_key).filter(isTruthy),
+    partner_names: candidates.map(x => x.partner_name).filter(isTruthy),
+    partner_ref_keys: candidates.map(x => x.partner_ref_key).filter(isTruthy),
   };
 }
 

@@ -18,7 +18,7 @@ import { Clock, MapPin, User, Users, Coins } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
-import { truthyFilter } from './truthyFilter';
+import { isTruthy } from './truthyFilter';
 
 export function EventSummary({
   event,
@@ -148,7 +148,7 @@ function EventInstancePriceView({ id, event }: { id: string; event: EventFragmen
   });
 
   const priceString = (response.data?.eventInstance?.approxPriceList ?? [])
-    .filter(truthyFilter)
+    .filter(isTruthy)
     .filter((x) => !Number.isNaN(x.amount) && x.amount !== 'NaN')
     .map((price) => moneyFormatter.format(price))
     .join(', ');

@@ -13,7 +13,7 @@ import { add } from 'date-arithmetic'
 import { cardCls } from '@/ui/style'
 import { z } from 'zod'
 import { EventForm } from '@/ui/event-form/types'
-import { truthyFilter } from '@/ui/truthyFilter'
+import { isTruthy } from '@/ui/truthyFilter'
 import { tenantConfig } from '@/tenant/config'
 import { useAtomValue } from 'jotai'
 import { calendarConflictsFor } from '../state'
@@ -118,7 +118,7 @@ function GroupLesson({ calendarEvent }: {
       )}
       {event.eventTargetCohortsList.length > 0 && (
         <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
-          {event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (
+          {event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(isTruthy).map(color => (
             <div key={color} className="flex-1 w-2" style={{ backgroundColor: color }} />
           ))}
         </div>

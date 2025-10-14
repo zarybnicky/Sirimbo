@@ -18,6 +18,7 @@ import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 import { useAuth } from '../use-auth';
+import { isTruthy, keyIsNonNull } from '../truthyFilter';
 
 export function EventInstanceMenu({
   event,
@@ -52,15 +53,6 @@ export function EventInstanceMenu({
       return;
     }
 
-    const trainerInputs = event.eventTrainersList.map((trainer) => ({
-      personId: trainer.personId,
-      lessonsOffered: trainer.lessonsOffered,
-    }));
-
-    const cohortInputs = event.eventTargetCohortsList
-      .map((target) => (target.cohort?.id ? { cohortId: target.cohort.id } : null))
-      .filter((value): value is { cohortId: string } => value !== null);
-
     const upsertResult = await upsertEvent({
       input: {
         info: {
@@ -80,8 +72,11 @@ export function EventInstanceMenu({
           guestPrice: null,
           memberPrice: null,
         },
-        trainers: trainerInputs,
-        cohorts: cohortInputs,
+        trainers: event.eventTrainersList.map((x) => ({
+          personId: x.personId,
+          lessonsOffered: x.lessonsOffered,
+        })),
+        cohorts: event.eventTargetCohortsList.filter(keyIsNonNull('cohort')).map((x) => ({ cohortId: x.cohort.id })),
         registrations: [],
         instances: [],
       },

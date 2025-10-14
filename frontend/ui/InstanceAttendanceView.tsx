@@ -9,6 +9,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { cn } from '@/ui/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import Link from 'next/link';
+import { keyIsNonNull } from './truthyFilter';
 
 export function InstanceAttendanceView({ id }: { id: string }) {
   const auth = useAuth();
@@ -24,8 +25,8 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   const isMyEvent = auth.isAdmin || (auth.isTrainer && trainerIds.find(x => auth.personIds.includes(x)));
   const attendanceList = instance.eventAttendancesByInstanceIdList
     .filter((x) => x.status !== 'CANCELLED')
-    .filter((x) => x.person)
-    .sort((x, y) => `${x.person?.lastName}${x.person?.firstName}`.localeCompare(`${y.person?.lastName}${y.person?.firstName}`));
+    .filter(keyIsNonNull('person'))
+    .sort((x, y) => `${x.person.lastName}${x.person.firstName}`.localeCompare(`${y.person.lastName}${y.person.firstName}`));
 
   return (
     <div className="max-w-full overflow-x-auto">

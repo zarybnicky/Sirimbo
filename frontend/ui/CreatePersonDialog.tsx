@@ -23,7 +23,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { truthyFilter } from './truthyFilter';
+import { isTruthy } from './truthyFilter';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -96,8 +96,8 @@ export function CreatePersonDialog() {
       setValue('phone', person.phone || undefined);
       setValue('email', person.email || undefined);
       setValue('sendInvitation', false);
-      setValue('cohortIds', person.cohortIds?.filter(truthyFilter) ?? []);
-      setCohortPickerOpen((person.cohortIds?.filter(truthyFilter) ?? []).length > 0);
+      setValue('cohortIds', person.cohortIds?.filter(isTruthy) ?? []);
+      setCohortPickerOpen((person.cohortIds?.filter(isTruthy) ?? []).length > 0);
     }
   }, [setValue, personId, setCohortPickerOpen]);
 
@@ -122,7 +122,7 @@ export function CreatePersonDialog() {
 
   const onSubmit = useAsyncCallback(async (data: z.infer<typeof Form>) => {
     const { personId, isAdmin, isMember, isTrainer, joinDate, sendInvitation, cohortIds, ...p } = data;
-    const sanitizedCohortIds = (cohortIds ?? []).filter(truthyFilter);
+    const sanitizedCohortIds = (cohortIds ?? []).filter(isTruthy);
     const res = await create({
       input: {
         personId,

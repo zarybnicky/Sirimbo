@@ -1,7 +1,7 @@
 import { AnnouncementAudienceRole } from '@/graphql';
 import { CohortBasicFragment } from '@/graphql/Cohorts';
 import { cn } from '@/ui/cn';
-import { truthyFilter } from './truthyFilter';
+import { isTruthy } from './truthyFilter';
 import { AnnouncementAudienceFragment } from '@/graphql/Announcement';
 
 const ROLE_LABEL: Record<AnnouncementAudienceRole, string> = {
@@ -18,8 +18,8 @@ interface Props {
 }
 
 export function AnnouncementAudienceBadges({ audiences, className }: Props) {
-  const derivedCohorts = audiences?.map(x => x.cohort).filter(truthyFilter) || [];
-  const derivedRoles = audiences?.map(x => x.audienceRole).filter(truthyFilter) || [];
+  const derivedCohorts = audiences?.map(x => x.cohort).filter(isTruthy) || [];
+  const derivedRoles = audiences?.map(x => x.audienceRole).filter(isTruthy) || [];
 
   const hasCohorts = derivedCohorts.length > 0;
   const hasRoles = derivedRoles.length > 0;

@@ -5,7 +5,7 @@ import {
 } from '@/graphql/Event';
 import { cn } from '@/ui/cn';
 import { formatDefaultEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
-import { truthyFilter } from '@/ui/truthyFilter';
+import { isTruthy } from '@/ui/truthyFilter';
 import { add } from 'date-arithmetic';
 import Head from 'next/head';
 import React from 'react';
@@ -62,7 +62,7 @@ function trainerGroups(instance: Instance, event: NonNullable<Instance['event']>
 
       return { key, label };
     })
-    .filter(truthyFilter);
+    .filter(isTruthy);
 
   if (groups.length === 0) {
     return [{ key: 'trainer:none', label: 'Bez přiřazeného trenéra' }];
@@ -145,7 +145,7 @@ function formatTrainers(instance: Instance, event: NonNullable<Instance['event']
   return (
     (instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList)
       .map((x) => x.name)
-      .filter(truthyFilter)
+      .filter(isTruthy)
       .join(', ')
   );
 }

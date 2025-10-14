@@ -9,10 +9,10 @@ import { CreateCreditTransactionForm } from "@/ui/forms/CreateCreditTransactionF
 import { exportPostings } from "@/ui/reports/export-postings";
 import { buttonCls } from "@/ui/style";
 import { useAuth } from "./use-auth";
-import { DropdownMenu, DropdownMenuButton } from "./dropdown";
-import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuButton } from "./dropdown";
 import { DeleteTransactionDocument } from "@/graphql/Payment";
 import { PaymentMenu } from "./EventView";
+import { keyIsNonNull } from "./truthyFilter";
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const auth = useAuth();
@@ -97,12 +97,13 @@ export function PersonPaymentsView({ id }: { id: string }) {
 
           <div>
             <h3>Minulé</h3>
-            {account.postingsList.sort(
-              (x, y) => (y.transaction?.effectiveDate || '').localeCompare(x.transaction?.effectiveDate || '')
-            ).map(
-              posting => posting.transaction ? (posting.transaction.payment ? (
+            {account.postingsList
+              .filter(keyIsNonNull('transaction'))
+              .sort((x, y) => y.transaction.effectiveDate.localeCompare(x.transaction.effectiveDate))
+              .map(posting => posting.transaction.payment ? (
                 <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
                   <PaymentMenu id={posting.transaction.payment.id}>
+                    <DropdownMenuTrigger.RowDots />
                     <span>
                       {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
                       {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
@@ -113,6 +114,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
               ) : (
                 <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
                   <TransactionMenu id={posting.transaction.id}>
+                    <DropdownMenuTrigger.RowDots />
                     <span>
                       {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
                       {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
@@ -120,8 +122,6 @@ export function PersonPaymentsView({ id }: { id: string }) {
                     <span>{moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}</span>
                   </TransactionMenu>
                 </div>
-              )) : (
-                <React.Fragment key={posting.id} />
               )
             )}
           </div>
@@ -134,6 +134,8 @@ export function PersonPaymentsView({ id }: { id: string }) {
 function TransactionMenu({ id, children }: { id: string; children: React.ReactNode }) {
   const doDelete = useMutation(DeleteTransactionDocument)[1];
   const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
+  const auth = useAuth();
+  if (!auth.isAdmin) return children;
   return (
     <DropdownMenu>
       {children}

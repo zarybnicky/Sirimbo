@@ -9,7 +9,7 @@ import { buttonCls } from '@/ui/style';
 import { rankItem } from "@tanstack/match-sorter-utils"
 
 type Item = { id: string | null; label: string };
-export type ComboboxProps = {
+type ComboboxProps = {
   value: string | null | undefined;
   onChange: React.Dispatch<React.SetStateAction<string | null | undefined>>;
   options?: Item[];
