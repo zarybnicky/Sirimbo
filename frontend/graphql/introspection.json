@@ -4362,6 +4362,15 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -5874,6 +5883,15 @@
             "type": {
               "kind": "OBJECT",
               "name": "ScoreboardManualAdjustment",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
               "ofType": null
             },
             "args": []
@@ -20333,6 +20351,15 @@
             "args": []
           },
           {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "tenantId",
             "type": {
               "kind": "NON_NULL",
@@ -22683,6 +22710,59 @@
                   "ofType": {
                     "kind": "OBJECT",
                     "name": "Posting",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "scoreboardManualAdjustmentsList",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ScoreboardManualAdjustment",
                     "ofType": null
                   }
                 }
@@ -25316,6 +25396,15 @@
             "type": {
               "kind": "OBJECT",
               "name": "ScoreboardManualAdjustment",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
               "ofType": null
             },
             "args": []

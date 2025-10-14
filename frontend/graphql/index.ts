@@ -2075,6 +2075,8 @@ export type CreateScoreboardManualAdjustmentPayload = {
   query: Maybe<Query>;
   /** The `ScoreboardManualAdjustment` that was created by this mutation. */
   scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
+  /** Reads a single `Tenant` that is related to this `ScoreboardManualAdjustment`. */
+  tenant: Maybe<Tenant>;
 };
 
 /** All input for the create `TenantAdministrator` mutation. */
@@ -2863,6 +2865,8 @@ export type DeleteScoreboardManualAdjustmentPayload = {
   query: Maybe<Query>;
   /** The `ScoreboardManualAdjustment` that was deleted by this mutation. */
   scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
+  /** Reads a single `Tenant` that is related to this `ScoreboardManualAdjustment`. */
+  tenant: Maybe<Tenant>;
 };
 
 /** All input for the `deleteTenantAdministrator` mutation. */
@@ -8286,6 +8290,8 @@ export type ScoreboardManualAdjustment = {
   personId: Scalars['BigInt']['output'];
   points: Scalars['Int']['output'];
   reason: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Tenant` that is related to this `ScoreboardManualAdjustment`. */
+  tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
@@ -8635,6 +8641,8 @@ export type Tenant = {
   platbyItems: PlatbyItemsConnection;
   /** Reads and enables pagination through a set of `Posting`. */
   postingsList: Array<Posting>;
+  /** Reads and enables pagination through a set of `ScoreboardManualAdjustment`. */
+  scoreboardManualAdjustmentsList: Array<ScoreboardManualAdjustment>;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
   tenantAdministratorsList: Array<TenantAdministrator>;
   /** Reads and enables pagination through a set of `TenantLocation`. */
@@ -8930,6 +8938,14 @@ export type TenantPostingsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PostingsOrderBy>>;
+};
+
+
+export type TenantScoreboardManualAdjustmentsListArgs = {
+  condition?: InputMaybe<ScoreboardManualAdjustmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ScoreboardManualAdjustmentsOrderBy>>;
 };
 
 
@@ -10206,6 +10222,8 @@ export type UpdateScoreboardManualAdjustmentPayload = {
   query: Maybe<Query>;
   /** The `ScoreboardManualAdjustment` that was updated by this mutation. */
   scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
+  /** Reads a single `Tenant` that is related to this `ScoreboardManualAdjustment`. */
+  tenant: Maybe<Tenant>;
 };
 
 /** All input for the `updateTenantAdministrator` mutation. */
@@ -11540,7 +11558,8 @@ export type GraphCacheResolvers = {
     cohort?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Cohort> | string>,
     person?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Person> | string>,
     query?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Query> | string>,
-    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<ScoreboardManualAdjustment> | string>
+    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<ScoreboardManualAdjustment> | string>,
+    tenant?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   CreateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateTenantAdministratorPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -11724,7 +11743,8 @@ export type GraphCacheResolvers = {
     cohort?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Cohort> | string>,
     person?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Person> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Query> | string>,
-    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<ScoreboardManualAdjustment> | string>
+    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<ScoreboardManualAdjustment> | string>,
+    tenant?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   DeleteTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteTenantAdministratorPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12440,6 +12460,7 @@ export type GraphCacheResolvers = {
     personId?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['BigInt'] | string>,
     points?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Int'] | string>,
     reason?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['String'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Datetime'] | string>
   },
@@ -12543,6 +12564,7 @@ export type GraphCacheResolvers = {
     platbyCategories?: GraphCacheResolver<WithTypename<Tenant>, TenantPlatbyCategoriesArgs, WithTypename<PlatbyCategoriesConnection> | string>,
     platbyItems?: GraphCacheResolver<WithTypename<Tenant>, TenantPlatbyItemsArgs, WithTypename<PlatbyItemsConnection> | string>,
     postingsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPostingsListArgs, Array<WithTypename<Posting> | string>>,
+    scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Tenant>, TenantScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
     tenantLocationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
@@ -12785,7 +12807,8 @@ export type GraphCacheResolvers = {
     cohort?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Cohort> | string>,
     person?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Person> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Query> | string>,
-    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<ScoreboardManualAdjustment> | string>
+    scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<ScoreboardManualAdjustment> | string>,
+    tenant?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   UpdateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantAdministratorPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -13628,7 +13651,8 @@ export type GraphCacheUpdaters = {
     cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
-    scoreboardManualAdjustment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>
+    scoreboardManualAdjustment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateScoreboardManualAdjustmentPayload>>, Record<string, never>>
   },
   CreateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantAdministratorPayload>>, Record<string, never>>,
@@ -13812,7 +13836,8 @@ export type GraphCacheUpdaters = {
     cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>,
-    scoreboardManualAdjustment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>
+    scoreboardManualAdjustment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteScoreboardManualAdjustmentPayload>>, Record<string, never>>
   },
   DeleteTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantAdministratorPayload>>, Record<string, never>>,
@@ -14528,6 +14553,7 @@ export type GraphCacheUpdaters = {
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
     points?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
     reason?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>
   },
@@ -14631,6 +14657,7 @@ export type GraphCacheUpdaters = {
     platbyCategories?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPlatbyCategoriesArgs>,
     platbyItems?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPlatbyItemsArgs>,
     postingsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPostingsListArgs>,
+    scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantScoreboardManualAdjustmentsListArgs>,
     tenantAdministratorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantAdministratorsListArgs>,
     tenantLocationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantLocationsListArgs>,
     tenantMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantTenantMembershipsListArgs>,
@@ -14873,7 +14900,8 @@ export type GraphCacheUpdaters = {
     cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
-    scoreboardManualAdjustment?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>
+    scoreboardManualAdjustment?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>,
+    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateScoreboardManualAdjustmentPayload>>, Record<string, never>>
   },
   UpdateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantAdministratorPayload>>, Record<string, never>>,

@@ -2448,6 +2448,11 @@ type CreateScoreboardManualAdjustmentPayload {
 
   """The `ScoreboardManualAdjustment` that was created by this mutation."""
   scoreboardManualAdjustment: ScoreboardManualAdjustment
+
+  """
+  Reads a single `Tenant` that is related to this `ScoreboardManualAdjustment`.
+  """
+  tenant: Tenant
 }
 
 """All input for the create `TenantAdministrator` mutation."""
@@ -3389,6 +3394,11 @@ type DeleteScoreboardManualAdjustmentPayload {
 
   """The `ScoreboardManualAdjustment` that was deleted by this mutation."""
   scoreboardManualAdjustment: ScoreboardManualAdjustment
+
+  """
+  Reads a single `Tenant` that is related to this `ScoreboardManualAdjustment`.
+  """
+  tenant: Tenant
 }
 
 """All input for the `deleteTenantAdministrator` mutation."""
@@ -9720,6 +9730,11 @@ type ScoreboardManualAdjustment {
   personId: BigInt!
   points: Int!
   reason: String
+
+  """
+  Reads a single `Tenant` that is related to this `ScoreboardManualAdjustment`.
+  """
+  tenant: Tenant
   tenantId: BigInt!
   updatedAt: Datetime!
 }
@@ -10686,6 +10701,25 @@ type Tenant {
     """The method to use when ordering `Posting`."""
     orderBy: [PostingsOrderBy!]
   ): [Posting!]!
+
+  """
+  Reads and enables pagination through a set of `ScoreboardManualAdjustment`.
+  """
+  scoreboardManualAdjustmentsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ScoreboardManualAdjustmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `ScoreboardManualAdjustment`."""
+    orderBy: [ScoreboardManualAdjustmentsOrderBy!]
+  ): [ScoreboardManualAdjustment!]!
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
   tenantAdministratorsList(
@@ -12299,6 +12333,11 @@ type UpdateScoreboardManualAdjustmentPayload {
 
   """The `ScoreboardManualAdjustment` that was updated by this mutation."""
   scoreboardManualAdjustment: ScoreboardManualAdjustment
+
+  """
+  Reads a single `Tenant` that is related to this `ScoreboardManualAdjustment`.
+  """
+  tenant: Tenant
 }
 
 """All input for the `updateTenantAdministrator` mutation."""
