@@ -7,8 +7,9 @@ import { origin } from '@/graphql/query';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/layout/Layout';
 import { cardCls } from '@/ui/style';
-import { useZodForm } from '@/lib/use-schema-form';
 import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   category: z.string().nullable().optional(),
@@ -22,7 +23,9 @@ const categories = [
 ];
 
 export default function DocumentsPage() {
-  const { control, watch } = useZodForm(Form);
+  const { control, watch } = useForm({
+    resolver: zodResolver(Form),
+  });
   const category = watch('category');
 
   const [{ data }] = useQuery({

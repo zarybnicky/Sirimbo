@@ -1,28 +1,46 @@
 import { Layout } from '@/components/layout/Layout';
 import { TenantSettingsDocument } from '@/graphql/CurrentUser';
+import { tenantConfig, tenantId } from '@/tenant/config';
 import { TitleBar } from '@/ui/TitleBar';
 import React, { useEffect } from 'react';
 import { useQuery } from 'urql';
 import { starletSettingsAtom, starletTokenAtom } from '@/ui/starlet-importer/state';
 import { useAtom } from 'jotai';
 import { StarletImporter } from '@/ui/starlet-importer';
+import { useRouter } from 'next/router';
 
 export default function StarletImportPage() {
+  const router = useRouter();
+  const isEnabled = Boolean(tenantConfig.enableStarletImport);
   const [{ data: settingsQuery }] = useQuery({
     query: TenantSettingsDocument,
+    pause: !isEnabled,
     variables: {
-      tenantId: process.env.NEXT_PUBLIC_TENANT_ID || '1',
+      tenantId,
     },
   });
   const [, logIn] = useAtom(starletTokenAtom);
   const [{ auth }, setSettings] = useAtom(starletSettingsAtom);
-  useEffect(() => {
-    setSettings(settingsQuery?.tenantSetting?.settings || '{}')
-  }, [setSettings, settingsQuery]);
 
   useEffect(() => {
+    if (!isEnabled) {
+      void router.replace('/404');
+    }
+  }, [isEnabled, router]);
+
+  useEffect(() => {
+    if (!isEnabled) return;
+    setSettings(settingsQuery?.tenantSetting?.settings || '{}')
+  }, [isEnabled, setSettings, settingsQuery]);
+
+  useEffect(() => {
+    if (!isEnabled) return;
     logIn(auth?.login, auth?.password);
-  }, [auth?.login, auth?.password, logIn]);
+  }, [auth?.login, auth?.password, isEnabled, logIn]);
+
+  if (!isEnabled) {
+    return null;
+  }
 
   return (
     <Layout requireAdmin>

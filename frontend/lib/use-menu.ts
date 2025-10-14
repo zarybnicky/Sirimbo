@@ -1,4 +1,4 @@
-import { tenantConfig, tenantId } from '@/tenant/config';
+import { tenantConfig } from '@/tenant/config';
 import type { LinkProps } from 'next/link'
 type Route = LinkProps['href'];
 
@@ -8,6 +8,7 @@ export type MenuLink = {
   href: Route;
   requireTrainer?: boolean;
   requireAdmin?: boolean;
+  requireSystemAdmin?: boolean;
   className?: string;
 };
 
@@ -102,9 +103,10 @@ export const memberMenu: MenuStructItem[] = [
         { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
         { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
       ] as MenuLink[] : []),
-      ...(tenantId === '3' ? [
+      ...(tenantConfig.enableStarletImport ? [
         { type: 'link', title: 'Import z evidence', href: '/starlet-import', requireAdmin: true },
       ] as MenuLink[] : []),
+      { type: 'link', title: 'Tenanti', href: '/admin/tenants' as Route, requireSystemAdmin: true },
     ],
   },
 ];

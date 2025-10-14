@@ -1,5 +1,4 @@
 import { SubmitFormDocument } from '@/graphql/Crm';
-import { useZodForm } from '@/lib/use-schema-form';
 import { RadioGroup } from '@/ui/fields/RadioGroup';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
@@ -10,8 +9,10 @@ import { SubmitButton } from '@/ui/submit';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { cardCls } from '../style';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   date: z.date(),
@@ -20,16 +21,18 @@ const Form = z.object({
   event: z.string(),
   exhibition: z.string().nullish(),
   phone: z.string(),
-  email: z.string().email(),
+  email: z.email(),
   notes: z.string().nullish(),
   op: z.boolean().refine(x => x),
 });
 
 export function ExhibitionRequestForm() {
   const submit = useMutation(SubmitFormDocument)[1];
-  const { control, handleSubmit } = useZodForm(Form);
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(Form),
+  });
 
-  const onSubmit = useAsyncCallback(async ({ op: _, ...data }: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async ({ op: _, ...data }: z.infer<typeof Form>) => {
     if (typeof fbq !== 'undefined') {
       fbq('track', 'SubmitApplication');
     }

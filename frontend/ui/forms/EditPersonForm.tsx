@@ -1,24 +1,26 @@
 import { type PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
-import { useZodForm } from '@/lib/use-schema-form';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
+import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { countries } from '@/lib/countries';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  prefixTitle: z.string().default(''),
+  prefixTitle: z.string().prefault(''),
   firstName: z.string(),
   lastName: z.string(),
-  suffixTitle: z.string().default(''),
+  suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN']),
   birthDate: z.string().nullish(),
-  email: z.string().email().nullish(),
+  email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),
   cstsId: z
     .string()
@@ -33,26 +35,27 @@ const Form = z.object({
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
-  bio: z.string().default(''),
+  bio: z.string().prefault(''),
   address: z.object({
-    city: z.string().nullish().default(''),
-    conscriptionNumber: z.string().nullish().default(''),
-    district: z.string().nullish().default(''),
-    orientationNumber: z.string().nullish().default(''),
-    postalCode: z.string().nullish().default(''),
-    region: z.string().nullish().default(''),
-    street: z.string().nullish().default(''),
+    city: z.string().nullish().prefault(''),
+    conscriptionNumber: z.string().nullish().prefault(''),
+    district: z.string().nullish().prefault(''),
+    orientationNumber: z.string().nullish().prefault(''),
+    postalCode: z.string().nullish().prefault(''),
+    region: z.string().nullish().prefault(''),
+    street: z.string().nullish().prefault(''),
   }),
 });
 
 export function EditPersonForm({ data }: { data: PersonFragment }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useZodForm(Form, {
+  const { control, handleSubmit } = useForm({
     defaultValues: data as unknown as any,
+    resolver: zodResolver(Form),
   });
   const update = useMutation(UpdatePersonDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     await update({ input: { id: data.id, patch: values } });
     onSuccess();
   });
@@ -72,7 +75,7 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
       <TextFieldElement type="date" control={control} label="Datum narození" name="birthDate" />
       <TextFieldElement control={control} name="taxIdentificationNumber" label="Rodné číslo" placeholder="1111119999" />
 
-      <TextFieldElement control={control} name="cstsId" label="ČSTS IDT" placeholder="10000000" />
+      <CstsIdFieldElement control={control} name="cstsId" />
       <TextFieldElement control={control} name="wdsfId" label="WDSF MIN" placeholder="10000000" />
 
       <div className="col-full">

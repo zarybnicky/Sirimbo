@@ -14,9 +14,11 @@ declare module "nextjs-routes" {
     | StaticRoute<"/">
     | StaticRoute<"/404">
     | StaticRoute<"/500">
+    | StaticRoute<"/admin/tenants">
     | StaticRoute<"/akce">
     | DynamicRoute<"/akce/[id]", { "id": string }>
     | DynamicRoute<"/akce/[id]/termin/[instance]", { "id": string; "instance": string }>
+    | StaticRoute<"/akce/vyplnenost-dochazky">
     | StaticRoute<"/aktuality">
     | DynamicRoute<"/aktuality/[id]", { "id": string }>
     | StaticRoute<"/aktuality/add">
@@ -38,6 +40,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/nastenka">
     | DynamicRoute<"/nastenka/[id]", { "id": string }>
     | StaticRoute<"/nastenka/add">
+    | StaticRoute<"/now">
     | StaticRoute<"/o-nas">
     | StaticRoute<"/ochrana-osobnich-udaju">
     | StaticRoute<"/otp">
@@ -61,6 +64,7 @@ declare module "nextjs-routes" {
     | DynamicRoute<"/treninkove-skupiny/[id]", { "id": string }>
     | DynamicRoute<"/treninkove-skupiny/[id]/[...slug]", { "id": string; "slug": string[] }>
     | StaticRoute<"/upload">
+    | DynamicRoute<"/users/[id]", { "id": string }>
     | StaticRoute<"/vyhody-clenstvi">
     | StaticRoute<"/vystoupeni">
     | StaticRoute<"/zapomenute-heslo">

@@ -1,5 +1,4 @@
 import { CoupleDocument, UpdateCoupleDocument } from '@/graphql/Memberships';
-import { useZodForm } from '@/lib/use-schema-form';
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
 import { formatLongCoupleName } from '@/ui/format';
@@ -7,16 +6,20 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  since: z.date().nullish().default(null),
-  until: z.date().nullish().default(null),
+  since: z.date().nullish().prefault(null),
+  until: z.date().nullish().prefault(null),
 });
 
 export function EditCoupleForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useZodForm(Form);
+  const { reset, control, handleSubmit } = useForm({
+    resolver: zodResolver(Form),
+  });
   const [query] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
   const update = useMutation(UpdateCoupleDocument)[1];
 
@@ -31,7 +34,7 @@ export function EditCoupleForm({ id }: { id: string }) {
     }
   }, [reset, item]);
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     await update({
       input: {
         id,

@@ -44,11 +44,33 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - The frontend consumes the API via URQL. Operation documents reside in `graphql/*.graphql`, and typed documents live alongside feature code in `frontend/graphql`. Keep documents and generated types aligned, but avoid committing regenerated artifacts unless asked.
 - `graphql.config.yml` and `graphql-starlet.config.yml` configure code generation for different tenant bundles.
 
+## Frontend conventions
+- We use Radix primitives wrapped in our custom wrappers.
+- We use Tailwind processed Radix colors. In the project they are aliased as `accent` and `neutral`, with the usual scale 1 to 12 (`bg-neutral-2`, `text-accent-11`). We don't use shadcn colors (border, background, etc.).
+
+- 1: App background (page, root, outer container) → Use for body, app shell, or scroll areas.
+- 2: Slightly raised elements (cards, panels, sections) → Use for cards, secondary surfaces, or hover backgrounds on dark text.
+- 3: Input backgrounds, subtle separators → Use for form fields, menu items, table rows, nested surfaces.
+- 4: Neutral border, subtle component outlines. → Use for borders, dividers, disabled controls, tooltips.
+- 5: Interactive hover states (backgrounds that respond). → Use for button hover, list hover, tabs, switch track.
+- 6: More prominent but still restrained backgrounds. → Use for active background, selected state, focused field bg.
+- 7: Default solid surfaces or filled components. → Use for filled buttons, accent UI, highlighted areas.
+- 8: Hover/active state for filled UI, or strong accent background. → Use for button hover, selected tab bg, slider fill, badge bg.
+- 9: Base accent color (the “brand” shade). → Use for primary buttons, links, toggles, charts, icons.
+- 10: Text/foreground on colored backgrounds. → Use for text over accent (on 9/8), icons, badges, contrast overlays.
+- 11: Strong text color within accent schemes. → Use for headings, highlighted text, active icon, focus border.
+- 12: Primary foreground (text/icons on neutral backgrounds). → Use for body text, titles, critical info, any high-contrast content.
+- Avoid using 9–12 for large surfaces; keep them for accents or text.
+- Step down (e.g., 3–5) for backgrounds, up (10–12) for text/foreground.
+- For dark themes, Radix automatically inverts the perceptual weight—keep the same numeric semantics.
+
 ## Common tasks & commands
 - Run the API in development: `yarn workspace rozpisovnik-api start` (expects `DATABASE_URL`, `JWT_SECRET`, S3 env vars, etc.).
+- For quick development work, use primarily `tsc` to check correctness - the Next build is slow
 - Build and lint the Next.js app after changes: `yarn workspace rozpisovnik-web lint` / `build`.
 - Queue worker jobs: `yarn workspace rozpisovnik-worker start` (after building tasks with `yarn workspace rozpisovnik-worker build` if needed).
 - Update the split schema after refreshing `schema.sql`: `python schema/split.py < schema.sql`.
-- Create a new migration: `graphile-migrate migrate` (writes to `migrations/current/1-current.sql`). Ensure scripts are idempotent.
+- Create a new migration: write to `migrations/current/`, named like `1-event-attendance.sql`, prefixed by an increasing number, in kebab-case. Ensure scripts are idempotent.
+- Don't add GraphQL documents to code, add them to the root graphql/ folder, and run graphql-codegen, which will generate types and documents in `frontend/graphql/`.
 
 Keep this guide in sync as the project evolves.

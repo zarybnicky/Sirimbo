@@ -16,11 +16,11 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-const DesktopLogo = dynamic(() => getTenantUi('DesktopLogo'));
+const DesktopLogo = dynamic(() => getTenantUi('DesktopLogo'), { ssr: false });
 
-const MobileLogo = dynamic(() => getTenantUi('MobileLogo'));
+const MobileLogo = dynamic(() => getTenantUi('MobileLogo'), { ssr: false });
 
-const SocialIcons = dynamic(() => getTenantUi('SocialIcons'));
+const SocialIcons = dynamic(() => getTenantUi('SocialIcons'), { ssr: false });
 
 type Props = {
   isOpen: boolean;
@@ -78,6 +78,7 @@ function DesktopMenuItem({ item: x }: { item: MenuStructItem }) {
   const { pathname } = useRouter();
   const inPath = !!getHrefs(x).some((x) => {
     const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
+    if (!y) return false;
     return y === '/' ? pathname === '/' : pathname.startsWith(y);
   });
 

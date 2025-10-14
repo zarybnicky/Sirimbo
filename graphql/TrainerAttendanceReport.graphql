@@ -1,0 +1,15 @@
+query TrainerAttendanceReport($since: Datetime, $until: Datetime) {
+  trainerGroupAttendanceCompletionList(since: $since, until: $until) {
+    personId
+    totalInstances
+    filledInstances
+    partiallyFilledInstances
+    unfilledInstances
+    filledRatio
+    pendingAttendances
+    person {
+      id
+      name
+    }
+  }
+}

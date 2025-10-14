@@ -16,6 +16,7 @@ interface AuthState {
   isMember: boolean;
   isTrainer: boolean;
   isAdmin: boolean;
+  isSystemAdmin: boolean;
   isTrainerOrAdmin: boolean;
   isLoggedIn: boolean;
 }
@@ -28,6 +29,7 @@ const defaultAuthState: AuthState = {
   isMember: false,
   isTrainer: false,
   isAdmin: false,
+  isSystemAdmin: false,
   isTrainerOrAdmin: false,
   isLoggedIn: false,
 };
@@ -81,6 +83,10 @@ export const authAtom = atom<AuthState, [string | null, UserAuthFragment | null]
 
       const persons = user.userProxiesList.flatMap(x => x.person ? [x.person] : []) || [];
 
+      const isSystemAdmin = !!jwt.is_system_admin;
+      const isAdmin = !!jwt.is_admin || isSystemAdmin;
+      const isTrainer = !!jwt.is_trainer;
+
       nextValue = {
         user,
         persons,
@@ -88,10 +94,11 @@ export const authAtom = atom<AuthState, [string | null, UserAuthFragment | null]
         personIds: persons.map(x => x.id),
 
         isLoggedIn: !!user?.id,
-        isMember: jwt.is_member,
-        isTrainer: jwt.is_trainer,
-        isAdmin: jwt.is_admin,
-        isTrainerOrAdmin: jwt.is_admin || jwt.is_trainer,
+        isMember: !!jwt.is_member,
+        isTrainer,
+        isAdmin,
+        isSystemAdmin,
+        isTrainerOrAdmin: isAdmin || isTrainer,
       };
     }
 

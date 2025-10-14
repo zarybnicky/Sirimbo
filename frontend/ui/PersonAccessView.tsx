@@ -28,15 +28,23 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
           <div className="grow min-w-0 space-y-2 text-sm">
             <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3">
               <b className="break-words">
-                {proxy.user?.uEmail}
-                {proxy.user?.uLogin ? `, ${proxy.user.uLogin}` : ''}
+                {proxy.user ? (
+                  <Link
+                    href={{ pathname: '/users/[id]', query: { id: proxy.user.id } }}
+                    className="underline"
+                  >
+                    {[proxy.user.uEmail, proxy.user.uLogin].filter(Boolean).join(', ')}
+                  </Link>
+                ) : (
+                  '—'
+                )}
               </b>
-              <span className="text-muted-foreground">{formatOpenDateRange(proxy)}</span>
+              <span className="text-neutral-10">{formatOpenDateRange(proxy)}</span>
             </div>
 
-            <div className="flex flex-col gap-1 text-xs text-muted-foreground sm:text-sm">
+            <div className="flex flex-col gap-1 text-xs text-neutral-10 sm:text-sm">
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
-                <span className="font-medium text-foreground">Poslední aktivita</span>
+                <span className="font-medium text-neutral-12">Poslední aktivita</span>
                 <span>
                   {proxy.user?.lastActiveAt
                     ? fullDateFormatter.format(new Date(proxy.user.lastActiveAt))
@@ -44,7 +52,7 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
-                <span className="font-medium text-foreground">Verze aplikace</span>
+                <span className="font-medium text-neutral-12">Verze aplikace</span>
                 <span>{proxy.user?.lastVersion ?? '—'}</span>
               </div>
             </div>

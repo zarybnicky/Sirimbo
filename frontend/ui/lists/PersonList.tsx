@@ -28,6 +28,7 @@ export function PersonList() {
   const [cohort, setCohort] = useSessionStorage('personfilter-cohort');
   const [isTrainer, setIsTrainer] = useSessionStorage('personfilter-trainer');
   const [isAdmin, setIsAdmin] = useSessionStorage('personfilter-admin');
+  const [includeFormer, setIncludeFormer] = useSessionStorage('personfilter-include-former');
   const [search, setSearch] = useSessionStorage('personfilter-search', '');
 
   const { data: cohorts } = useCohorts();
@@ -43,6 +44,7 @@ export function PersonList() {
       inCohorts: cohort === 'none' ? []  : (cohort ? [cohort] : null),
       isAdmin: !!isAdmin || null,
       isTrainer: !!isTrainer || null,
+      membershipState: includeFormer ? 'former' : 'current',
     },
   });
   const nodes = React.useMemo(() => {
@@ -90,6 +92,13 @@ export function PersonList() {
             options={cohortOptions}
           />
 
+          <button
+            type="button"
+            className={buttonCls({ size: 'sm', variant: includeFormer ? 'primary' : 'outline' })}
+            onClick={() => setIncludeFormer(x => x ? null : '1')}
+          >
+            Zobrazit bývalé
+          </button>
           <button
             type="button"
             className={buttonCls({ size: 'sm', variant: isTrainer ? 'primary' : 'outline' })}

@@ -10,7 +10,21 @@ import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 import { truthyFilter } from '@/ui/truthyFilter';
-import { tenantId } from '@/tenant/config';
+import { tenantConfig } from '@/tenant/config';
+
+function formatTrainerLabel(name: string, useInitials: boolean): string {
+  if (!name) return '';
+  if (!useInitials) {
+    return name;
+  }
+
+  const sanitized = name
+    .replaceAll(/\b(Mgr\.|Ing\.|Bc\.)\s*/g, '')
+    .normalize('NFKD')
+    .replaceAll(/[^A-Z]/g, '');
+
+  return sanitized || name;
+}
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : `${v}%`;
@@ -88,12 +102,9 @@ function TimeGridEvent({
       ? event.instance.trainers
       : event.event?.eventTrainersList ?? [];
     for (const trainer of trainers) {
-      if (!trainer.name) continue;
-      if (tenantId === '3') {
-        label += `, ${trainer.name.replace('Mgr.', '').replace('Ing.', '').replace('Bc.', '').normalize('NFKD').replaceAll(/[^A-Z]/g, '')}`;
-      } else {
-        label += `, ${trainer.name}`;
-      }
+      const trainerLabel = formatTrainerLabel(trainer.name ?? '', tenantConfig.useTrainerInitials);
+      if (!trainerLabel) continue;
+      label += `, ${trainerLabel}`;
     }
 
     const location = event.event.location?.name || event.event.locationText || '';
@@ -135,7 +146,7 @@ function TimeGridEvent({
         })}
       >
         {event.event.eventTargetCohortsList.length > 0 && (
-          <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
+          <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-sm inset-y-0 left-0 flex flex-col">
             {event.event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (
               <div key={color} className="flex-1 w-2" style={{ backgroundColor: color }} />
             ))}

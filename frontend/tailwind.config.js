@@ -5,8 +5,15 @@ const { tenantConfig: tenant } = require('./tenant/config.js');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './**/*.{js,ts,jsx,tsx}',
-    "../../libs/**/*.{js,ts,jsx,tsx}",
+    './calendar/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './lib/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './scoreboard/**/*.{js,ts,jsx,tsx}',
+    './starlet/**/*.{js,ts,jsx,tsx}',
+    './style/**/*.{js,ts,jsx,tsx}',
+    './tenant/**/*.{js,ts,jsx,tsx}',
+    './ui/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: 'media',
   corePlugins: {

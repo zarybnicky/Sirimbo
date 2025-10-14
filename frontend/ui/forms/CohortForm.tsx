@@ -1,6 +1,5 @@
 import { CohortGroupListDocument } from '@/graphql/CohortGroup';
 import { CohortDocument, CreateCohortDocument, UpdateCohortDocument } from '@/graphql/Cohorts';
-import { useZodForm } from '@/lib/use-schema-form';
 import { ColorPicker } from '@/ui/fields/ColorPicker';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
@@ -12,13 +11,15 @@ import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   name: z.string(),
-  description: z.string().optional().default(''),
+  description: z.string().optional().prefault(''),
   location: z.string().nullish(),
-  isVisible: z.boolean().default(false),
+  isVisible: z.boolean().prefault(false),
   colorRgb: z.string(),
   ordering: z.number().nullish(),
   cohortGroupId: z.string().nullish(),
@@ -33,14 +34,15 @@ export function CohortForm({ id = '' }: { id?: string }) {
   const create = useMutation(CreateCohortDocument)[1];
   const update = useMutation(UpdateCohortDocument)[1];
 
-  const { reset, control, handleSubmit } = useZodForm(Form, {
+  const { reset, control, handleSubmit } = useForm({
     defaultValues: { colorRgb: '#ff0000' },
+    resolver: zodResolver(Form),
   });
   React.useEffect(() => {
     reset(Form.partial().optional().parse(data));
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (patch: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (patch: z.infer<typeof Form>) => {
     if (id) {
       const res = await update({ id, patch });
       const newId = res.data?.updateCohort?.cohort?.id;

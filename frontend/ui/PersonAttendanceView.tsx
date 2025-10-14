@@ -1,5 +1,4 @@
 import { PersonAttendanceDocument } from '@/graphql/Person';
-// import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/InstanceAttendanceView';
 import React from 'react';

@@ -170,7 +170,9 @@ begin
       end if;
     else
       insert into event_trainer (event_id, person_id, lessons_offered)
-      values (v_event.id, trainer.person_id, coalesce(trainer.lessons_offered, 0));
+      values (v_event.id, trainer.person_id, coalesce(trainer.lessons_offered, 0))
+      on conflict (event_id, person_id) do update
+      set lessons_offered = coalesce(trainer.lessons_offered, 0);
     end if;
   end loop;
 

@@ -4,10 +4,11 @@ import { useAsyncCallback } from 'react-async-hook';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { ChangePasswordDocument } from '@/graphql/CurrentUser';
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { useMutation } from 'urql';
 import { DialogTitle } from '@/ui/dialog';
-import { useZodForm } from '@/lib/use-schema-form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z
   .object({
@@ -15,15 +16,17 @@ const Form = z
     checkPass: z.string(),
   })
   .refine((data) => data.newPass === data.checkPass, {
-    message: 'Nová hesla se neshodují',
     path: ['checkPass'],
-  });
+      error: 'Nová hesla se neshodují'
+});
 
 export function ChangePasswordForm() {
   const { onSuccess } = useFormResult();
   const doUpdate = useMutation(ChangePasswordDocument)[1];
-  const { control, handleSubmit } = useZodForm(Form);
-  const onSubmit = useAsyncCallback(async ({ newPass }: TypeOf<typeof Form>) => {
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(Form),
+  });
+  const onSubmit = useAsyncCallback(async ({ newPass }: z.infer<typeof Form>) => {
     await doUpdate({ input: { newPass } });
     onSuccess();
   });

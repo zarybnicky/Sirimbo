@@ -4,15 +4,16 @@ import { useQuery } from 'urql';
 import { Layout } from '@/components/layout/Layout';
 import { TitleBar } from '@/ui/TitleBar';
 import { ScoreboardPeriodSelector } from '@/scoreboard/ScoreboardPeriodSelector';
-import { computeRange, formatDate, PeriodPreset } from '@/scoreboard/periods';
+import { computeRange, PeriodPreset } from '@/scoreboard/periods';
 import { ScoreboardDocument, ScoreboardQueryVariables } from '@/graphql/Scoreboard';
 import { Combobox } from '@/ui/fields/Combobox';
+import { fullDateFormatter } from '@/ui/format';
 
 export default function ScoreboardPage() {
   const [selectedCohortId, setSelectedCohortId] = React.useState<string | null | undefined>(null);
   const [preset, setPreset] = React.useState<PeriodPreset>('schoolYear');
-  const [referenceDate, setReferenceDate] = React.useState(() => formatDate(new Date()));
-  const [customRange, setCustomRange] = React.useState<{ since: string; until: string }>({ since: '', until: '' });
+  const [referenceDate, setReferenceDate] = React.useState(() => new Date());
+  const [customRange, setCustomRange] = React.useState<{ since: Date | null; until: Date | null }>({ since: null, until: null });
 
   const period = React.useMemo(
     () => computeRange(preset, referenceDate, customRange.since, customRange.until),
@@ -39,11 +40,6 @@ export default function ScoreboardPage() {
   const cohorts = data?.getCurrentTenant?.cohortsList ?? [];
   const scoreboard = data?.scoreboardEntriesList ?? [];
   const activeCohort = selectedCohortId ? cohorts.find((item) => item.id === selectedCohortId) ?? null : null;
-
-  const periodSummary =
-    period.displaySince && period.displayUntil
-      ? `${period.displaySince} – ${period.displayUntil}`
-      : undefined;
 
   return (
     <Layout requireMember>
@@ -92,7 +88,7 @@ export default function ScoreboardPage() {
           </dl>
         </section>
 
-        <section className="not-prose rounded-lg border border-border p-4 space-y-4">
+        <section className="not-prose rounded-lg border border-neutral-6 p-4 space-y-4">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <Combobox
               label="Skupina"
@@ -108,23 +104,6 @@ export default function ScoreboardPage() {
               placeholder="Všechny skupiny"
             />
 
-            <label className="flex flex-col gap-1 text-sm font-medium">
-
-              Skupina
-              <select
-                className="rounded-md border border-border px-3 py-2"
-                value={selectedCohortId ?? ''}
-                onChange={(event) => setSelectedCohortId(event.target.value ? event.target.value : null)}
-              >
-                <option value="">Všechny skupiny</option>
-                {cohorts.map((cohort) => (
-                  <option key={cohort.id} value={cohort.id}>
-                    {cohort.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-
             <ScoreboardPeriodSelector
               preset={preset}
               onPresetChange={(value) => setPreset(value)}
@@ -138,9 +117,12 @@ export default function ScoreboardPage() {
             />
           </div>
 
-          {periodSummary ? (
-            <p className="text-sm text-muted-foreground">
-              Zobrazené období: <span className="font-medium text-foreground">{periodSummary}</span>
+          {(period.displaySince && period.displayUntil) ? (
+            <p className="text-sm text-neutral-10">
+              {'Zobrazené období: '}
+              <span className="font-medium text-neutral-12">
+                {fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
+              </span>
               {activeCohort ? ` · Skupina ${activeCohort.name}` : ' · Všechny skupiny'}
             </p>
           ) : null}
@@ -148,7 +130,7 @@ export default function ScoreboardPage() {
 
         <section>
           {error ? (
-            <p className="not-prose rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
+            <p className="not-prose rounded-md border border-accent-7 bg-accent-3 p-3 text-sm text-accent-11">
               Nepodařilo se načíst žebříček. Zkuste to prosím znovu.
             </p>
           ) : null}
@@ -163,13 +145,13 @@ export default function ScoreboardPage() {
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border text-left">
+                  <tr className="border-b border-neutral-6 text-left">
                     <th className="py-2 pr-2" />
                     <th className="py-2 pr-4">Člen</th>
-                    <th className="py-2 px-2 text-center">Lekce</th>
-                    <th className="py-2 px-2 text-center">Skupiny</th>
-                    <th className="py-2 px-2 text-center">Akce</th>
-                    <th className="py-2 px-2 text-center">Manuální</th>
+                    <th className="p-2 text-center">Lekce</th>
+                    <th className="p-2 text-center">Skupiny</th>
+                    <th className="p-2 text-center">Akce</th>
+                    <th className="p-2 text-center">Manuální</th>
                     <th className="py-2 pl-2 text-center">Celkem</th>
                   </tr>
                 </thead>

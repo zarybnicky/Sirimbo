@@ -1,5 +1,4 @@
 import { configureUrql } from '@/graphql/query';
-import csZodTranslation from '@/public/locales/cs/zod.json';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
@@ -8,7 +7,6 @@ import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
 import { Analytics } from "@vercel/analytics/react";
-import i18next from 'i18next';
 import { Provider, createStore } from 'jotai';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
@@ -20,7 +18,7 @@ import * as React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
-import { makeZodI18nMap } from 'zod-i18n-map';
+import { cs } from "zod/locales"
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -35,16 +33,7 @@ Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
-void i18next.init({
-  lng: 'cs',
-  resources: {
-    cs: { zod: csZodTranslation },
-  },
-});
-z.setErrorMap(makeZodI18nMap({
-  ns: 'zod',
-  t: i18next.t,
-}));
+z.config(cs());
 
 function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   resetUrqlClient: () => void;

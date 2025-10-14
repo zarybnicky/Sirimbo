@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-const SidebarLogo = dynamic(() => getTenantUi('SidebarLogo'));
+const SidebarLogo = dynamic(() => getTenantUi('SidebarLogo'), { ssr: false });
 
 type SidebarProps = {
   isOpen: boolean;
@@ -81,13 +81,26 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
         <div className="space-y-1 pt-3 mr-1">
           {(auth.user && isMounted) ? (
             <>
-              {memberMenu.map((x) => <SidebarSection key={x.title} item={x.type === 'link' ? x : {
-                ...x,
-                children: x.children.filter(item => (
-                  (!item.requireTrainer || auth.isTrainerOrAdmin) &&
-                  (!item.requireAdmin || auth.isAdmin))
+              {memberMenu
+                .map((item) => item.type === 'link' ? item : {
+                  ...item,
+                  children: item.children.filter(child => (
+                    (!child.requireTrainer || auth.isTrainerOrAdmin) &&
+                    (!child.requireAdmin || auth.isAdmin) &&
+                    (!child.requireSystemAdmin || auth.isSystemAdmin)
+                  )),
+                })
+                .filter((item): item is MenuStructItem => item.type === 'link'
+                  ? (
+                    (!item.requireTrainer || auth.isTrainerOrAdmin) &&
+                    (!item.requireAdmin || auth.isAdmin) &&
+                    (!item.requireSystemAdmin || auth.isSystemAdmin)
+                  )
+                  : item.children.length > 0
                 )
-              }} />)}
+                .map((item) => (
+                  <SidebarSection key={item.title} item={item} />
+                ))}
 
               <Link
                 onClick={signOut}
@@ -117,6 +130,11 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
             <div>{tenantConfig.copyrightLine}</div>
             <div>Verze: {buildId?.slice(0, 7)}</div>
+            <div>
+              <Link href="/now" target="_blank">
+                Právě probíhá ↗︎
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
@@ -134,6 +152,7 @@ function SidebarLink({ item, onClick }: SidebarLinkProps) {
 
   const inPath = !!getHrefs(item).some((x) => {
     const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
+    if (!y) return false;
     return y === '/' ? false : pathname.startsWith(y);
   });
 

@@ -1,13 +1,14 @@
 import { CreateInvitationDocument } from "@/graphql/Invitation";
 import { type PersonBasicFragment } from "@/graphql/Person";
-import { useZodForm } from "@/lib/use-schema-form";
 import { TextFieldElement } from "@/ui/fields/text";
 import { useFormResult } from "@/ui/form";
 import { SubmitButton } from "@/ui/submit";
 import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useMutation } from "urql";
-import { type TypeOf, z } from "zod";
+import { z } from "zod";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   email: z.string(),
@@ -15,10 +16,12 @@ const Form = z.object({
 
 export function CreateInvitationForm({ person }: { person: PersonBasicFragment }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useZodForm(Form);
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(Form),
+  });
   const createInvitation = useMutation(CreateInvitationDocument)[1];
 
-  const onSubmit = useAsyncCallback(async (values: TypeOf<typeof Form>) => {
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     await createInvitation({ input: { personInvitation: { personId: person.id, email: values.email }} })
     onSuccess();
   });

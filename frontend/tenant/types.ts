@@ -4,6 +4,10 @@ export type Config = {
   favicon: string;
   enableHome: boolean;
   enableArticles: boolean;
+  enableRegistration: boolean;
+  enableStarletImport?: boolean;
+  useTrainerInitials: boolean;
+  lockEventsByDefault: boolean;
   themePrimary: string;
   themeAccent: string;
   themeNeutral: string;

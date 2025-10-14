@@ -1,54 +1,54 @@
-import { type TypeOf, z } from 'zod';
+import { z } from 'zod';
 
-export type EventFormType = TypeOf<typeof EventForm>;
+export type EventFormType = z.input<typeof EventForm>;
 
 export const EventForm = z.object({
-  name: z.string().default(''),
+  name: z.string().prefault(''),
   type: z.enum(['CAMP', 'LESSON', 'RESERVATION', 'HOLIDAY', 'GROUP']),
-  summary: z.string().default(''),
-  description: z.string().default(''),
-  descriptionMember: z.string().default(''),
-  locationId: z.string().optional().nullish().default(null),
-  locationText: z.string().default(''),
-  capacity: z.number().nullish().default(0),
-  isVisible: z.boolean().default(false),
-  isPublic: z.boolean().default(false),
-  enableNotes: z.boolean().default(false),
-  isLocked: z.boolean().default(false),
-  titleImageLegacy: z.string().nullish().default(null),
+  summary: z.string().prefault(''),
+  description: z.string().prefault(''),
+  descriptionMember: z.string().prefault(''),
+  locationId: z.string().optional().nullish().prefault(null),
+  locationText: z.string().prefault(''),
+  capacity: z.number().nullish().prefault(0),
+  isVisible: z.boolean().prefault(false),
+  isPublic: z.boolean().prefault(false),
+  enableNotes: z.boolean().prefault(false),
+  isLocked: z.boolean().prefault(false),
+  titleImageLegacy: z.string().nullish().prefault(null),
   instances: z.array(
     z.object({
-      itemId: z.string().nullish().default(null).optional(),
-      date: z.string().nullish().optional().default(null),
+      itemId: z.string().nullish().prefault(null).optional(),
+      date: z.string().nullish().optional().prefault(null),
       startTime: z.string(),
       endTime: z.string(),
-      isCancelled: z.boolean().nullish().default(false),
+      isCancelled: z.boolean().nullish().prefault(false),
       trainers: z.array(
         z.object({
-          itemId: z.string().nullish().default(null).optional(),
+          itemId: z.string().nullish().prefault(null).optional(),
           personId: z.string().nullish(),
         }),
-      ).default([]),
+      ).prefault([]),
     }),
   ),
   trainers: z.array(
     z.object({
-      itemId: z.string().nullish().default(null).optional(),
+      itemId: z.string().nullish().prefault(null).optional(),
       personId: z.string().nullish(),
-      lessonsOffered: z.number().nullish().default(null),
+      lessonsOffered: z.number().nullish().prefault(null),
     }),
-  ).default([]),
+  ).prefault([]),
   cohorts: z.array(
     z.object({
-      itemId: z.string().nullish().default(null).optional(),
+      itemId: z.string().nullish().prefault(null).optional(),
       cohortId: z.string().nullish(),
     }),
-  ).default([]),
+  ).prefault([]),
   registrations: z.array(
     z.object({
-      itemId: z.string().nullish().default(null).optional(),
-      personId: z.string().nullish().optional().default(null),
-      coupleId: z.string().nullish().optional().default(null),
+      itemId: z.string().nullish().prefault(null).optional(),
+      personId: z.string().nullish().optional().prefault(null),
+      coupleId: z.string().nullish().optional().prefault(null),
     }),
-  ).default([]),
+  ).prefault([]),
 });
