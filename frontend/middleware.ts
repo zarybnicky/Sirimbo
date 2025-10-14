@@ -35,40 +35,23 @@ for (const entry of TENANT_HOST_ENTRIES) {
 
 const DEFAULT_TENANT_ID = Number.parseInt(process.env.NEXT_PUBLIC_TENANT_ID ?? '1', 10);
 
-function getHostname(request: NextRequest): string | null {
+export function middleware(request: NextRequest) {
   const forwardedHost = request.headers.get('x-forwarded-host');
   const hostHeader = forwardedHost ?? request.headers.get('host') ?? request.nextUrl.host;
-  return hostHeader?.split(':')[0]?.toLowerCase() ?? null;
-}
+  const hostname = hostHeader?.split(':')[0]?.toLowerCase() ?? null;
 
-function resolveTenantId(hostname: string | null): number {
-  if (hostname) {
-    const tenantId = hostToTenantId.get(hostname);
-    if (tenantId) {
-      return tenantId;
-    }
-  }
-  return DEFAULT_TENANT_ID;
-}
-
-export function middleware(request: NextRequest) {
-  const hostname = getHostname(request);
-  const tenantId = resolveTenantId(hostname);
+  const tenantId = hostToTenantId.get(hostname ?? '') ?? DEFAULT_TENANT_ID;
 
   const response = NextResponse.next();
 
-  const stringTenantId = String(tenantId);
-  const cookieDomain = hostname ?? request.nextUrl.hostname;
-
   response.cookies.set({
     name: TENANT_COOKIE_NAME,
-    value: stringTenantId,
+    value: String(tenantId),
     path: '/',
     sameSite: 'lax',
     secure: request.nextUrl.protocol === 'https:',
-    ...(cookieDomain ? { domain: cookieDomain } : {}),
+    domain: hostname ?? request.nextUrl.hostname ?? undefined,
   });
-  request.cookies.set(TENANT_COOKIE_NAME, stringTenantId);
 
   return response;
 }
