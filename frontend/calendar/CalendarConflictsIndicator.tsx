@@ -5,6 +5,8 @@ import { Spinner } from '@/ui/Spinner';
 import { AlertTriangle } from 'lucide-react';
 import React from 'react';
 import { useQuery } from 'urql';
+import { useSetAtom } from 'jotai';
+import { calendarConflictsAtom, type CalendarInstanceConflict } from './state';
 
 type CalendarConflictsIndicatorProps = {
   start: string;
@@ -18,20 +20,73 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
     [start, end],
   );
   const [{ data, fetching }] = useQuery({ query: EventOverlapsReportDocument, variables });
+  const setInstanceConflicts = useSetAtom(calendarConflictsAtom);
 
   const attendeeConflicts = React.useMemo(() => {
     return (data?.attendeeConflicts ?? [])
-      .map((conflict) => normalizeConflict(conflict, 'Neznámý účastník'))
+      .map((conflict) => normalizeConflict(conflict, 'Neznámý účastník', 'attendee'))
       .filter((conflict): conflict is NormalizedConflict => conflict !== null)
       .sort(sortByFirstSince);
   }, [data?.attendeeConflicts]);
   const trainerConflicts = React.useMemo(() => {
     return (data?.trainerConflicts ?? [])
-      .map((conflict) => normalizeConflict(conflict, 'Neznámý trenér'))
+      .map((conflict) => normalizeConflict(conflict, 'Neznámý trenér', 'trainer'))
       .filter((conflict): conflict is NormalizedConflict => conflict !== null)
       .sort(sortByFirstSince);
   }, [data?.trainerConflicts]);
 
+  const conflictsByInstance = React.useMemo(() => {
+    const map: Record<string, CalendarInstanceConflict[]> = {};
+    const addConflict = (instanceId: string | null | undefined, conflict: CalendarInstanceConflict) => {
+      if (!instanceId) {
+        return;
+      }
+      map[instanceId] = [...(map[instanceId] ?? []), conflict];
+    };
+
+    const pushConflicts = (conflict: NormalizedConflict) => {
+      const base: Pick<CalendarInstanceConflict, 'role' | 'personName' | 'fallbackName'> = {
+        role: conflict.role,
+        personName: conflict.personName,
+        fallbackName: conflict.fallbackName,
+      };
+
+      if (conflict.firstInstanceId) {
+        addConflict(conflict.firstInstanceId, {
+          id: `${conflict.id}:first`,
+          ...base,
+          otherEventName: conflict.secondName,
+          otherSince: conflict.secondSince,
+          otherUntil: conflict.secondUntil,
+        });
+      }
+
+      if (conflict.secondInstanceId) {
+        addConflict(conflict.secondInstanceId, {
+          id: `${conflict.id}:second`,
+          ...base,
+          otherEventName: conflict.firstName,
+          otherSince: conflict.firstSince,
+          otherUntil: conflict.firstUntil,
+        });
+      }
+    };
+
+    for (const conflict of attendeeConflicts) {
+      pushConflicts(conflict);
+    }
+    for (const conflict of trainerConflicts) {
+      pushConflicts(conflict);
+    }
+
+    return map;
+  }, [attendeeConflicts, trainerConflicts]);
+
+  React.useEffect(() => {
+    setInstanceConflicts(conflictsByInstance);
+  }, [conflictsByInstance, setInstanceConflicts]);
+
+  React.useEffect(() => () => setInstanceConflicts({}), [setInstanceConflicts]);
   const totalConflicts = attendeeConflicts.length + trainerConflicts.length;
 
   if (!data || totalConflicts === 0) {
@@ -116,11 +171,16 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
 type RawAttendeeConflict = NonNullable<EventOverlapsReportQuery['attendeeConflicts']>[number];
 type RawTrainerConflict = NonNullable<EventOverlapsReportQuery['trainerConflicts']>[number];
 
+type ConflictRole = CalendarInstanceConflict['role'];
+
 type NormalizedConflictBase = {
   id: string;
+  role: ConflictRole;
+  firstInstanceId: string | null;
   firstName: string;
   firstSince: string;
   firstUntil: string;
+  secondInstanceId: string | null;
   secondName: string;
   secondSince: string;
   secondUntil: string;
@@ -136,6 +196,7 @@ type RawConflict = RawAttendeeConflict | RawTrainerConflict;
 function normalizeConflict(
   conflict: RawConflict | null | undefined,
   fallbackName: string,
+  role: ConflictRole,
 ): NormalizedConflict | null {
   if (
     !conflict?.firstSince ||
@@ -155,11 +216,14 @@ function normalizeConflict(
 
   return {
     id,
+    role,
     personName: conflict.personName ?? null,
     fallbackName,
+    firstInstanceId: conflict.firstInstanceId ?? null,
     firstName,
     firstSince: conflict.firstSince,
     firstUntil: conflict.firstUntil,
+    secondInstanceId: conflict.secondInstanceId ?? null,
     secondName,
     secondSince: conflict.secondSince,
     secondUntil: conflict.secondUntil,
