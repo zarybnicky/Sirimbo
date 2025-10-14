@@ -1,5 +1,16 @@
 import { atom } from 'jotai'
+import { selectAtom } from 'jotai/utils'
 import type { CalendarEvent, DragAction, DragDirection, InteractionInfo, SlotInfo } from './types';
+
+export type CalendarInstanceConflict = {
+  id: string;
+  role: 'attendee' | 'trainer';
+  personName: string | null;
+  fallbackName: string;
+  otherEventName: string;
+  otherSince: string;
+  otherUntil: string;
+};
 
 export const timeslotsAtom = atom(4);
 export const stepAtom = atom(15);
@@ -21,6 +32,20 @@ export const dragListenersAtom = atom({
   onSelectSlot: (_slot: SlotInfo) => {},
   onDrillDown: (_date: Date) => {},
 });
+
+export const calendarConflictsAtom = atom<Record<string, CalendarInstanceConflict[]>>({});
+
+const emptyConflicts: CalendarInstanceConflict[] = [];
+
+export const calendarConflictsFor = (instanceId: string | null | undefined) =>
+  selectAtom(
+    calendarConflictsAtom,
+    (conflicts) => {
+      if (!instanceId) return emptyConflicts;
+      return conflicts[instanceId] ?? emptyConflicts;
+    },
+    (a, b) => a.length === b.length && a.every((value, index) => value === b[index]),
+  );
 
 // declare function onDropFromOutside(info: {
 //   start: Date;

@@ -11,6 +11,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { useAuth } from '@/ui/use-auth';
 import { diff } from 'date-arithmetic';
 import React from 'react';
+import { useAtomValue } from 'jotai';
+import { calendarConflictsFor } from '@/calendar/state';
+import { AlertTriangle } from 'lucide-react';
 
 type Props = {
   event: EventFragment;
@@ -31,6 +34,25 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
   const start = new Date(instance.since);
   const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
+
+  const conflictsAtom = React.useMemo(() => calendarConflictsFor(instance.id), [instance.id]);
+  const conflicts = useAtomValue(conflictsAtom);
+  const hasConflicts = conflicts.length > 0;
+  const conflictNames = React.useMemo(
+    () => conflicts.map((conflict) => conflict.personName ?? conflict.fallbackName).join(', '),
+    [conflicts],
+  );
+  const conflictSummary = React.useMemo(() => {
+    if (!hasConflicts) return '';
+    return conflicts
+      .map((conflict) => {
+        const person = conflict.personName ?? conflict.fallbackName;
+        const otherSince = shortTimeFormatter.format(new Date(conflict.otherSince));
+        const otherUntil = shortTimeFormatter.format(new Date(conflict.otherUntil));
+        return `${person}: ${conflict.otherEventName} (${otherSince}–${otherUntil})`;
+      })
+      .join(' • ');
+  }, [conflicts, hasConflicts]);
 
   const trainerIds = [
     ...event.eventTrainersList.map((x) => x.personId),
@@ -74,6 +96,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}
+            title={conflictSummary ? `Kolize – ${conflictSummary}` : undefined}
           >
             <div className="text-neutral-11">
               {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
@@ -93,7 +116,15 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
                     </>
                     : 'VOLNO'))}
             </div>
+            {hasConflicts && (
+              <div className="flex items-center text-red-11" aria-hidden>
+                <AlertTriangle className="size-4" />
+              </div>
+            )}
             {duration < 120 && <div className="text-neutral-11">{duration}&apos;</div>}
+            {hasConflicts && (
+              <span className="sr-only">Kolize: {conflictNames}</span>
+            )}
           </div>
         </PopoverTrigger>
 

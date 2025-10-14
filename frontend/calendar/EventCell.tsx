@@ -1,13 +1,15 @@
 import React, { useCallback } from 'react';
 import type { CalendarEvent, DragDirection, Resource } from './types';
+import { shortTimeIntl } from './localizer';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
-import { useAtom, useSetAtom } from 'jotai';
-import { type DragSubject, dragSubjectAtom } from './state';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { type DragSubject, calendarConflictsFor, dragSubjectAtom } from './state';
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 import { truthyFilter } from '@/ui/truthyFilter';
+import { AlertTriangle } from 'lucide-react';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -32,6 +34,25 @@ function EventCell({
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const getCurrentEvent = useCallback((v: DragSubject) => v?.event === event ? v : null, [event]);
   const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
+
+  const conflictsAtom = React.useMemo(() => calendarConflictsFor(event.instance.id), [event.instance.id]);
+  const conflicts = useAtomValue(conflictsAtom);
+  const hasConflicts = conflicts.length > 0;
+  const conflictNames = React.useMemo(
+    () => conflicts.map((conflict) => conflict.personName ?? conflict.fallbackName).join(', '),
+    [conflicts],
+  );
+  const conflictSummary = React.useMemo(() => {
+    if (!hasConflicts) return '';
+    return conflicts
+      .map((conflict) => {
+        const person = conflict.personName ?? conflict.fallbackName;
+        const otherSince = shortTimeIntl.format(new Date(conflict.otherSince));
+        const otherUntil = shortTimeIntl.format(new Date(conflict.otherUntil));
+        return `${person}: ${conflict.otherEventName} (${otherSince}–${otherUntil})`;
+      })
+      .join(' • ');
+  }, [conflicts, hasConflicts]);
 
   const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
     if ((e as React.MouseEvent).button) {
@@ -64,8 +85,18 @@ function EventCell({
             'rbc-drag-preview': event.__isPreview,
             'rbc-dragged-event': !!currentDragSubject,
             'pl-3': event.event.eventTargetCohortsList.length > 0,
+            'relative': true,
           })}
+          title={conflictSummary ? `Kolize – ${conflictSummary}` : undefined}
         >
+          {hasConflicts && (
+            <>
+              <div className="absolute right-1 top-1 text-red-11 drop-shadow" aria-hidden>
+                <AlertTriangle className="size-4" />
+              </div>
+              <span className="sr-only">Kolize: {conflictNames}</span>
+            </>
+          )}
           {event.event.eventTargetCohortsList.length > 0 && (
             <div className="absolute rounded-l-lg overflow-hidden border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
               {event.event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (

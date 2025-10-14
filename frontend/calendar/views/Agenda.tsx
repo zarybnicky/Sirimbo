@@ -1,6 +1,6 @@
 import { EventButton } from '@/ui/EventButton'
 import { EventSummary } from '@/ui/EventSummary'
-import { datetimeRangeToTimeRange, formatEventType, formatWeekDay } from '@/ui/format'
+import { datetimeRangeToTimeRange, formatEventType, formatWeekDay, shortTimeFormatter } from '@/ui/format'
 import { startOf } from 'date-arithmetic'
 import Link from 'next/link'
 import React from 'react'
@@ -15,6 +15,9 @@ import { z } from 'zod'
 import { EventForm } from '@/ui/event-form/types'
 import { truthyFilter } from '@/ui/truthyFilter'
 import { tenantConfig } from '@/tenant/config'
+import { useAtomValue } from 'jotai'
+import { calendarConflictsFor } from '../state'
+import { AlertTriangle } from 'lucide-react'
 
 type MapItem = {
   lessons: Map<string, CalendarEvent[]>;
@@ -79,13 +82,40 @@ function GroupLesson({ calendarEvent }: {
   calendarEvent: CalendarEvent;
 }) {
   const { event, instance } = calendarEvent;
+  const conflictsAtom = React.useMemo(() => calendarConflictsFor(instance.id), [instance.id]);
+  const conflicts = useAtomValue(conflictsAtom);
+  const hasConflicts = conflicts.length > 0;
+  const conflictNames = React.useMemo(
+    () => conflicts.map((conflict) => conflict.personName ?? conflict.fallbackName).join(', '),
+    [conflicts],
+  );
+  const conflictSummary = React.useMemo(() => {
+    if (!hasConflicts) return '';
+    return conflicts
+      .map((conflict) => {
+        const person = conflict.personName ?? conflict.fallbackName;
+        const otherSince = shortTimeFormatter.format(new Date(conflict.otherSince));
+        const otherUntil = shortTimeFormatter.format(new Date(conflict.otherUntil));
+        return `${person}: ${conflict.otherEventName} (${otherSince}–${otherUntil})`;
+      })
+      .join(' • ');
+  }, [conflicts, hasConflicts]);
   return (
     <div
       className={cardCls({
         className: "group min-w-[200px] w-72 rounded-lg border-accent-7 border" +
           (event.eventTargetCohortsList.length > 0 ? ' pl-6' : ' pl-3')
       })}
+      title={conflictSummary ? `Kolize – ${conflictSummary}` : undefined}
     >
+      {hasConflicts && (
+        <>
+          <div className="absolute right-8 top-3 text-red-11" aria-hidden>
+            <AlertTriangle className="size-4" />
+          </div>
+          <span className="sr-only">Kolize: {conflictNames}</span>
+        </>
+      )}
       {event.eventTargetCohortsList.length > 0 && (
         <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
           {event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(truthyFilter).map(color => (
