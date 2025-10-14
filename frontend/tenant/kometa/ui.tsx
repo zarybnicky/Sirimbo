@@ -54,11 +54,7 @@ export function SidebarLogo() {
           alt=""
           src={LogoOnDark}
           priority
-          style={{
-            width: 'auto',
-            maxWidth: "100%",
-            height: "auto"
-          }} />
+        />
       </Link>
     </div>
   );
@@ -71,9 +67,6 @@ export function MobileLogo() {
       src={LogoOnWhite}
       height="50"
       priority
-      style={{
-        maxWidth: "100%",
-        height: "auto"
-      }} />
+    />
   );
 }

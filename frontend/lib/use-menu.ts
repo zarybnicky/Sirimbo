@@ -106,6 +106,12 @@ export const memberMenu: MenuStructItem[] = [
       ...(tenantConfig.enableStarletImport ? [
         { type: 'link', title: 'Import z evidence', href: '/starlet-import', requireAdmin: true },
       ] as MenuLink[] : []),
+      ],
+  },
+  {
+    type: 'menu',
+    title: 'Systém',
+    children: [
       { type: 'link', title: 'Tenanti', href: '/admin/tenants' as Route, requireSystemAdmin: true },
     ],
   },

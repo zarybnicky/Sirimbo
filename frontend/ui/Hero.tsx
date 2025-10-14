@@ -101,10 +101,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
                 fill
                 priority={i === 0}
                 sizes="100vw"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto"
-                }} />
+              />
             ) : (
               <Image
                 className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
@@ -114,10 +111,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
                 fill
                 priority={i === 0}
                 sizes="100vw"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto"
-                }} />
+              />
             )}
           </div>
         </Link>

@@ -86,10 +86,7 @@ export function MobileLogo() {
         src={LogoOnDark}
         height="50"
         priority
-        style={{
-          maxWidth: "100%",
-          height: "auto"
-        }} />
+      />
     </Link>
   );
 }

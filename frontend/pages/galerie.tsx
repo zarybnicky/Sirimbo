@@ -44,15 +44,7 @@ export default function GalleryPage() {
             className="relative aspect-w-16 aspect-h-9 group"
           >
             <div className="absolute inset-0 border-8 border-accent-7 overflow-hidden">
-              <Image
-                src={item.image}
-                fill
-                alt=""
-                style={{
-                  objectFit: 'cover',
-                  maxWidth: "100%",
-                  height: "auto"
-                }} />
+              <Image src={item.image} fill alt="" className="object-cover" />
             </div>
             <div
               className={cn(

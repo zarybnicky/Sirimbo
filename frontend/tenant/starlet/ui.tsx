@@ -56,10 +56,7 @@ export function SidebarLogo() {
           src={LogoIcon}
           priority
           sizes="100vw"
-          style={{
-            width: "100%",
-            height: "auto"
-          }} />
+        />
       </Link>
     </div>
   );
@@ -73,9 +70,6 @@ export function MobileLogo() {
       src={LogoIcon}
       height="65"
       priority
-      style={{
-        maxWidth: "100%",
-        height: "auto"
-      }} />
+    />
   );
 }

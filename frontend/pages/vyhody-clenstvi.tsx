@@ -36,10 +36,7 @@ export default function VyhodyClenstvi() {
           alt=""
           src={VyhodyImage}
           sizes="100vw"
-          style={{
-            width: "100%",
-            height: "auto"
-          }} />
+        />
       </div>
     </Layout>
   );

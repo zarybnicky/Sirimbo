@@ -7,9 +7,8 @@ import Link from 'next/link';
 import { buttonCls, cardCls } from '@/ui/style';
 import { buildId } from '@/lib/build-id';
 
-const SocialIcons = dynamic(() => getTenantUi('SocialIcons'));
-
-const Sponsors = dynamic(() => getTenantUi('Sponsors'));
+const SocialIcons = dynamic(() => getTenantUi('SocialIcons'), { ssr: false });
+const Sponsors = dynamic(() => getTenantUi('Sponsors'), { ssr: false });
 
 function Footer() {
   return <div className="col-full-width content bg-[#292524] text-white py-12">

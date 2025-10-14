@@ -28,7 +28,7 @@ export default function HomePage() {
 
       <div className="col-feature my-12">
         <h4 className="text-3xl font-bold text-primary">Aktuálně</h4>
-        <div className="grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mt-3 mb-6">
+        <div className="grid place-items-stretch gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-3 mb-6">
           {data?.aktualities?.nodes?.map((x) => (
             <ArticleCard
               key={x.id}

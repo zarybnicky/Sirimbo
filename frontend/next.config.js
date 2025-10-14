@@ -107,8 +107,6 @@ module.exports = nextRoutes()(
           rewrites.push(
             { source: '/member/download', destination: "https://api.rozpisovnik.cz/member/download" },
             { source: '/galerie/:path*', destination: 'https://api.rozpisovnik.cz/galerie/:path*' },
-            { source: "/ingest", destination: "https://eu.posthog.com" },
-            { source: "/ingest/:path*", destination: "https://eu.posthog.com/:path*" },
           );
         }
 

@@ -33,10 +33,7 @@ export default function OKlubuPage() {
           alt=""
           src={ONasImage}
           sizes="1256px"
-          style={{
-            width: "100%",
-            height: "auto"
-          }} />
+        />
       </div>
     </Layout>
   );

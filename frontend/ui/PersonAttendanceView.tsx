@@ -25,20 +25,6 @@ export function PersonAttendanceView({ id }: Props) {
 
   return (
     <div>
-      {/* <ResponsiveContainer width="100%" minHeight={200}>
-        <AreaChart
-          height={200}
-          data={item.weeklyAttendanceList || []}
-          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="week" />
-          <YAxis dataKey="eventCount" name="Účasti" />
-          <Tooltip />
-          <Area type="monotone" dataKey="eventCount" name="Účasti" stroke="#8884d8" fill="#8884d8" />
-        </AreaChart>
-      </ResponsiveContainer> */}
-
       <div className="grid grid-cols-[1fr_50px]">
         {attendanceList.map((item) => (
           <React.Fragment key={item.id}>

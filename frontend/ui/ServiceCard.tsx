@@ -28,10 +28,7 @@ export function ServiceCard(props: ServiceCardProps) {
           alt={props.header}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"
-          style={{
-            maxWidth: "100%",
-            height: "auto"
-          }} />
+        />
       </div>
       <div className="bg-neutral-9 group-even:bg-accent-9 h-3 md:h-auto md:w-3" />
       <div className="grow basis-4 px-4 py-6 md:p-8">

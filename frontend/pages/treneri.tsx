@@ -66,10 +66,7 @@ function TrainerCard(props: TrainerCardProps) {
             alt={props.name}
             width={200}
             height={219}
-            style={{
-              maxWidth: "100%",
-              height: "auto"
-            }} />
+          />
         )}
       </div>
       <h3 className="text-4xl mb-4 text-accent-7 drop-shadow">{props.name}</h3>

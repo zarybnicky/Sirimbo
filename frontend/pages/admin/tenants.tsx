@@ -72,7 +72,7 @@ export default function SystemAdminTenantsPage() {
 
   return (
     <Layout requireSystemAdmin>
-      <TitleBar title="Správa tenantů" />
+      <TitleBar title="Kluby" />
 
       {fetching && (
         <div className="flex h-40 items-center justify-center">
@@ -82,7 +82,7 @@ export default function SystemAdminTenantsPage() {
 
       {error && (
         <div className="rounded-md border border-red-7 bg-red-3 p-4 text-sm text-red-11">
-          Nepodařilo se načíst seznam tenantů: {error.message}
+          Nepodařilo se načíst seznam klubů: {error.message}
         </div>
       )}
 
@@ -96,7 +96,7 @@ export default function SystemAdminTenantsPage() {
         )}
         {!fetching && !error && !data?.systemAdminTenants?.nodes?.length && (
           <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
-            Nebyly nalezeny žádné tenanty.
+            Nebyly nalezeny žádné kluby.
           </div>
         )}
       </div>
