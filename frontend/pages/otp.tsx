@@ -22,8 +22,7 @@ export default function OtpPage() {
       return;
     }
 
-    const tokenParam = router.query.token;
-    const token = Array.isArray(tokenParam) ? tokenParam[0] : tokenParam;
+    const token = router.query.token;
 
     if (!token) {
       setStatus('Použitý odkaz již vypršel nebo je neplatný.');
@@ -41,8 +40,7 @@ export default function OtpPage() {
       }
 
       setStatus('Přesměrovávám...');
-      const fromParam = router.query.from;
-      const redirect = Array.isArray(fromParam) ? fromParam[0] : fromParam ?? undefined;
+      const redirect = router.query.from;
       const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
       void router.push(!user.otpLogin?.result?.usr?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
     })();

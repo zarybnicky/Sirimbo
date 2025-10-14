@@ -14,8 +14,7 @@ export default function LoginPage() {
   const authLoading = useAuthLoading();
 
   const onSuccess = React.useCallback((user: UserAuthFragment | null) => {
-    const fromParam = router.query?.from;
-    const redirect = Array.isArray(fromParam) ? fromParam[0] : fromParam ?? undefined;
+    const redirect = router.query?.from as string | undefined;
     const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
     void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
   }, [router]);
