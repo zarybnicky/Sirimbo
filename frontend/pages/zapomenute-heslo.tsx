@@ -69,9 +69,15 @@ export default function ForgottenPasswordPage() {
   const auth = useAuth();
   const authLoading = useAuthLoading();
 
-  if (!authLoading && auth.user) {
-    void router.replace('/dashboard');
-  }
+  React.useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
+    if (!authLoading && auth.user) {
+      void router.replace('/dashboard');
+    }
+  }, [authLoading, auth.user, router, router.isReady]);
   return (
     <Layout className="grow content relative content-stretch">
       <NextSeo title="Zapomenuté heslo" />

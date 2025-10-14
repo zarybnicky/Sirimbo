@@ -38,6 +38,18 @@ export default function InvitationPage() {
     }
   });
 
+  const personCount = auth.personIds.length;
+  React.useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
+    if (!authLoading && auth.user) {
+      const destination = personCount > 0 ? '/dashboard' : '/profil';
+      void router.replace(destination);
+    }
+  }, [authLoading, auth.user, personCount, router, router.isReady]);
+
   if (!registrationEnabled) {
     return (
       <Layout className="grow content relative content-stretch">
@@ -48,10 +60,6 @@ export default function InvitationPage() {
         />
       </Layout>
     );
-  }
-
-  if (!authLoading && auth.user) {
-    void router.replace(auth.personIds.length > 0 ? '/dashboard' :'/profil');
   }
 
   return (
