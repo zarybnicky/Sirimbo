@@ -10,8 +10,7 @@
       "graphql",
       "worker",
       "backend",
-      "csts",
-      "mobile"
+      "csts"
     ]
   },
   "devDependencies": {
