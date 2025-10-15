@@ -374,7 +374,7 @@ function collectList(value: string | undefined, options: { sort?: boolean } = {}
 }
 
 function getField(record: CsvRecord, key: FieldAliasKey): string | undefined {
-  if (!Object.hasOwn(record, key)) {
+  if (!(key in record)) {
     return undefined;
   }
 
