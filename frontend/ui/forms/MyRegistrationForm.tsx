@@ -8,6 +8,7 @@ import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';
 import { formatRegistrant } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
+import { buttonCls } from '@/ui/style';
 import { Minus, Plus } from 'lucide-react';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -93,7 +94,7 @@ export function MyRegistrationForm({ event, registration }: {
           <div key={trainer.id} className="flex flex-wrap gap-2">
             <button
               type="button"
-              className="text-accent-9 disabled:text-accent-7"
+              className={buttonCls({ display: 'iconOnly', variant: 'subtle', size: 'icon' })}
               onClick={() => changeLessonCount(-1, trainer)}
               disabled={fetching || !myLessons[trainer.id]}
             >
@@ -102,7 +103,7 @@ export function MyRegistrationForm({ event, registration }: {
             <div className="text-xl tabular-nums">{myLessons[trainer.id] ?? 0}x</div>
             <button
               type="button"
-              className="text-accent-9 disabled:text-accent-7"
+              className={buttonCls({ display: 'iconOnly', variant: 'subtle', size: 'icon' })}
               onClick={() => changeLessonCount(1, trainer)}
               disabled={fetching || (trainer.lessonsRemaining ?? 0) < 1}
             >

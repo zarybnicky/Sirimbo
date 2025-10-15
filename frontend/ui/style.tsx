@@ -1,24 +1,36 @@
 import { tv } from 'tailwind-variants';
 
 export const buttonCls = tv({
-  base: 'relative appearance-none',
+  base: 'relative appearance-none focus:outline-none disabled:cursor-not-allowed transition-colors',
   variants: {
     display: {
       none: ' ',
       button: 'inline-flex gap-1 shadow-md uppercase font-medium justify-center items-center',
-      listItem: 'flex flex-col gap-1 shadow-sm font-medium items-start mb-0.5',
+      iconOnly: 'inline-flex items-center justify-center',
+      listItem: [
+        'group w-full text-left flex items-center gap-2',
+        'px-2.5 py-2 text-sm first:rounded-t-xl border last:rounded-b-xl',
+        'bg-neutral-1 text-accent-11 border-y border-l last:border-r border-accent-7',
+        'data-[state=on]:text-white data-[state=on]:bg-accent-9 data-[state=on]:border-accent-10',
+        'disabled:text-neutral-11 disabled:border-neutral-6',
+        'disabled:data-[state=on]:text-white disabled:data-[state=on]:bg-neutral-9 disabled:data-[state=on]:border-neutral-10',
+        'focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10',
+      ].join(' '),
     },
     variant: {
       none: ' ',
       primary: 'bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11',
       outline: 'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7',
       outlineDark: 'bg-neutral-12 text-neutral-0',
+      subtle: 'bg-transparent text-accent-9 hover:text-accent-10 disabled:text-accent-7 disabled:hover:text-accent-7',
     },
     size: {
+      none: 'p-0 [&_svg]:w-5 [&_svg]:h-5',
       xs: 'px-1.5 py-1 text-xs rounded-xl tracking-tight [&_svg]:w-3 [&_svg]:h-3',
       sm: 'px-2 py-1.5 text-xs rounded-xl tracking-tight [&_svg]:w-3 [&_svg]:h-3',
       md: 'px-3 py-2 text-sm rounded-xl [&_svg]:w-4 [&_svg]:h-4',
       lg: 'px-6 py-3 text-base rounded-xl [&_svg]:w-5 [&_svg]:h-5',
+      icon: 'p-0 leading-none [&_svg]:w-5 [&_svg]:h-5',
     },
   },
   defaultVariants: {

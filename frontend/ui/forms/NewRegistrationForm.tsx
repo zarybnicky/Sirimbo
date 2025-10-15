@@ -1,5 +1,6 @@
 import { type EventFragment, RegisterToEventDocument } from '@/graphql/Event';
 import { cn } from '@/ui/cn';
+import { buttonCls } from '@/ui/style';
 import { NumberFieldElement } from '@/ui/fields/number';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';
@@ -143,14 +144,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
               key={id}
               data-state={selected ? 'on' : ''}
               onClick={() => setValue(`registrations.${index}.selected`, !selected, { shouldTouch: true })}
-              className={cn(
-                'flex gap-2 items-center appearance-none',
-                'group w-full data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-accent-11',
-                'px-2.5 py-2 text-sm first:rounded-t-xl border last:rounded-b-xl',
-                'border-y border-l last:border-r border-accent-7 data-[state=on]:border-accent-10',
-                'disabled:border-neutral-6 disabled:data-[state=on]:border-neutral-10 disabled:data-[state=on]:bg-neutral-9 disabled:text-neutral-11 disabled:data-[state=on]:text-white',
-                'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10'
-              )}
+              className={buttonCls({ display: 'listItem', variant: 'none', size: 'none' })}
             >
               <div className="flex gap-2 items-center">
                 {selected ? (
