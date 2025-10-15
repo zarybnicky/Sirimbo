@@ -129,6 +129,7 @@ export function InstanceListElement({
                       control={control}
                       name={`instances.${index}.endDate`}
                       type="date"
+                      className="grow"
                       required
                       aria-label="Konec (datum)"
                     />
