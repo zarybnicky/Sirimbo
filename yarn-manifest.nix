@@ -59,6 +59,35 @@ let
       descriptorRange = "npm:^5.2.0";
       checksum = "10/bdc35758b552bcf045733ac047fb7f9a07c4678b944c641adfbd41f798b4b91fffd0fdc0df2578d9b0afc7b4d636aa6e110ead5d6281a2adc1ab90efd7f057f8";
     };
+    "@apm-js-collab/code-transformer@npm:0.8.2" = {
+      name = "@apm-js-collab/code-transformer";
+      reference = "npm:0.8.2";
+      linkType = "HARD";
+      outputName = "apm-js-collab-code-transformer-0.8.2-3aab0c1ad0";
+      outputHash = "ff4b8fea9a27ef4e82a0a022bececfa9966e5e2a4ae1e6ca0b31f4a2bbc6d79f5bd1257f281ed8a90900d693e1a88a79c42982eabe7ca999b267d5d69c57393f";
+      flatName = "code-transformer";
+      languageName = "node";
+      scope = "apm-js-collab";
+      descriptorRange = "npm:^0.8.0";
+      checksum = "10/ff4b8fea9a27ef4e82a0a022bececfa9966e5e2a4ae1e6ca0b31f4a2bbc6d79f5bd1257f281ed8a90900d693e1a88a79c42982eabe7ca999b267d5d69c57393f";
+    };
+    "@apm-js-collab/tracing-hooks@npm:0.3.1" = {
+      name = "@apm-js-collab/tracing-hooks";
+      reference = "npm:0.3.1";
+      linkType = "HARD";
+      outputName = "apm-js-collab-tracing-hooks-0.3.1-2b5f9ee479";
+      outputHash = "0af2220168d4fc2700ec577632eac066f756c3aaa34ef2e833ea4725abb80f7486c1a585a93e8f0d8304c51192f63c53e7ddd70290abac489a734f9693359f7f";
+      flatName = "tracing-hooks";
+      languageName = "node";
+      scope = "apm-js-collab";
+      descriptorRange = "npm:^0.3.1";
+      checksum = "10/0af2220168d4fc2700ec577632eac066f756c3aaa34ef2e833ea4725abb80f7486c1a585a93e8f0d8304c51192f63c53e7ddd70290abac489a734f9693359f7f";
+      dependencies = {
+        "@apm-js-collab/code-transformer" = packages."@apm-js-collab/code-transformer@npm:0.8.2";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
+        "module-details-from-path" = packages."module-details-from-path@npm:1.0.4";
+      };
+    };
     "@ardatan/relay-compiler@npm:12.0.0" = {
       name = "@ardatan/relay-compiler";
       reference = "npm:12.0.0";
@@ -3063,136 +3092,136 @@ let
         "@babel/helper-validator-identifier" = packages."@babel/helper-validator-identifier@npm:7.27.1";
       };
     };
-    "@biomejs/biome@npm:2.2.5" = {
+    "@biomejs/biome@npm:2.2.6" = {
       name = "@biomejs/biome";
-      reference = "npm:2.2.5";
+      reference = "npm:2.2.6";
       linkType = "HARD";
-      outputName = "biomejs-biome-2.2.5-e88af0ef5c";
-      outputHash = "93047a13827e9d1a09a9e5521f24ba8f4e9d6976af58ccb07d92f2c45f6d5eb56d040f46305a77defb63e9484484077d0204453289f3e512cb9450750c04aa51";
+      outputName = "biomejs-biome-2.2.6-4a3013dea6";
+      outputHash = "ad67744c6a33aa2db10b13ded8ccf44afda039bb42f575496dd451c0167ea37c152e08104142db0b74e3927441469746ea4349c788da9f0e58f0e0f9e47441b4";
       flatName = "biome";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:^2.2.5";
-      checksum = "10/93047a13827e9d1a09a9e5521f24ba8f4e9d6976af58ccb07d92f2c45f6d5eb56d040f46305a77defb63e9484484077d0204453289f3e512cb9450750c04aa51";
+      descriptorRange = "npm:^2.2.6";
+      checksum = "10/ad67744c6a33aa2db10b13ded8ccf44afda039bb42f575496dd451c0167ea37c152e08104142db0b74e3927441469746ea4349c788da9f0e58f0e0f9e47441b4";
       bin = {
         "biome" = "bin/biome";
       };
       dependencies = {
-        "@biomejs/cli-darwin-arm64" = packages."@biomejs/cli-darwin-arm64@npm:2.2.5";
-        "@biomejs/cli-darwin-x64" = packages."@biomejs/cli-darwin-x64@npm:2.2.5";
-        "@biomejs/cli-linux-arm64-musl" = packages."@biomejs/cli-linux-arm64-musl@npm:2.2.5";
-        "@biomejs/cli-linux-arm64" = packages."@biomejs/cli-linux-arm64@npm:2.2.5";
-        "@biomejs/cli-linux-x64-musl" = packages."@biomejs/cli-linux-x64-musl@npm:2.2.5";
-        "@biomejs/cli-linux-x64" = packages."@biomejs/cli-linux-x64@npm:2.2.5";
-        "@biomejs/cli-win32-arm64" = packages."@biomejs/cli-win32-arm64@npm:2.2.5";
-        "@biomejs/cli-win32-x64" = packages."@biomejs/cli-win32-x64@npm:2.2.5";
+        "@biomejs/cli-darwin-arm64" = packages."@biomejs/cli-darwin-arm64@npm:2.2.6";
+        "@biomejs/cli-darwin-x64" = packages."@biomejs/cli-darwin-x64@npm:2.2.6";
+        "@biomejs/cli-linux-arm64-musl" = packages."@biomejs/cli-linux-arm64-musl@npm:2.2.6";
+        "@biomejs/cli-linux-arm64" = packages."@biomejs/cli-linux-arm64@npm:2.2.6";
+        "@biomejs/cli-linux-x64-musl" = packages."@biomejs/cli-linux-x64-musl@npm:2.2.6";
+        "@biomejs/cli-linux-x64" = packages."@biomejs/cli-linux-x64@npm:2.2.6";
+        "@biomejs/cli-win32-arm64" = packages."@biomejs/cli-win32-arm64@npm:2.2.6";
+        "@biomejs/cli-win32-x64" = packages."@biomejs/cli-win32-x64@npm:2.2.6";
       };
     };
-    "@biomejs/cli-darwin-arm64@npm:2.2.5" = {
+    "@biomejs/cli-darwin-arm64@npm:2.2.6" = {
       name = "@biomejs/cli-darwin-arm64";
-      reference = "npm:2.2.5";
+      reference = "npm:2.2.6";
       linkType = "HARD";
-      outputName = "biomejs-cli-darwin-arm64-2.2.5-8aecd9606a";
+      outputName = "biomejs-cli-darwin-arm64-2.2.6-92b36efac7";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "cli-darwin-arm64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.5";
+      descriptorRange = "npm:2.2.6";
     };
-    "@biomejs/cli-darwin-x64@npm:2.2.5" = {
+    "@biomejs/cli-darwin-x64@npm:2.2.6" = {
       name = "@biomejs/cli-darwin-x64";
-      reference = "npm:2.2.5";
+      reference = "npm:2.2.6";
       linkType = "HARD";
-      outputName = "biomejs-cli-darwin-x64-2.2.5-d9c822da8d";
+      outputName = "biomejs-cli-darwin-x64-2.2.6-6e7a023d11";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "cli-darwin-x64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.5";
+      descriptorRange = "npm:2.2.6";
     };
-    "@biomejs/cli-linux-arm64-musl@npm:2.2.5" = {
+    "@biomejs/cli-linux-arm64-musl@npm:2.2.6" = {
       name = "@biomejs/cli-linux-arm64-musl";
-      reference = "npm:2.2.5";
+      reference = "npm:2.2.6";
       linkType = "HARD";
-      outputName = "biomejs-cli-linux-arm64-musl-2.2.5-c65a298f65";
+      outputName = "biomejs-cli-linux-arm64-musl-2.2.6-5b62c68834";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
       flatName = "cli-linux-arm64-musl";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.5";
+      descriptorRange = "npm:2.2.6";
     };
-    "@biomejs/cli-linux-arm64@npm:2.2.5" = {
+    "@biomejs/cli-linux-arm64@npm:2.2.6" = {
       name = "@biomejs/cli-linux-arm64";
-      reference = "npm:2.2.5";
+      reference = "npm:2.2.6";
       linkType = "HARD";
-      outputName = "biomejs-cli-linux-arm64-2.2.5-08102e1adb";
+      outputName = "biomejs-cli-linux-arm64-2.2.6-0c862f8e74";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "cli-linux-arm64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.5";
+      descriptorRange = "npm:2.2.6";
     };
-    "@biomejs/cli-linux-x64-musl@npm:2.2.5" = {
+    "@biomejs/cli-linux-x64-musl@npm:2.2.6" = {
       name = "@biomejs/cli-linux-x64-musl";
-      reference = "npm:2.2.5";
+      reference = "npm:2.2.6";
       linkType = "HARD";
-      outputName = "biomejs-cli-linux-x64-musl-2.2.5-e6f8b8ac77";
+      outputName = "biomejs-cli-linux-x64-musl-2.2.6-5bbd15a094";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
       flatName = "cli-linux-x64-musl";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.5";
+      descriptorRange = "npm:2.2.6";
     };
-    "@biomejs/cli-linux-x64@npm:2.2.5" = {
+    "@biomejs/cli-linux-x64@npm:2.2.6" = {
       name = "@biomejs/cli-linux-x64";
-      reference = "npm:2.2.5";
+      reference = "npm:2.2.6";
       linkType = "HARD";
-      outputName = "biomejs-cli-linux-x64-2.2.5-e27c6fb0de";
+      outputName = "biomejs-cli-linux-x64-2.2.6-4a33e6061b";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-j8dbUe5jIWstz0BDEitd2MZanFQMTcZ/BYv2Sf/b41Cw+lPW3oZog7KMckPD2CX1smbWSgXkjtiBwavyW9MVfQ==";
+        "x86_64-linux" = "sha512-yjK5dH4y7UMGZl8QCuYROcHfW/+F8PNEqjw+KTiqXU2XLoWQ/IXiwTPKb9jnpy67XXEBgt2wHcjT4rebtKzvfQ==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "cli-linux-x64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.5";
+      descriptorRange = "npm:2.2.6";
     };
-    "@biomejs/cli-win32-arm64@npm:2.2.5" = {
+    "@biomejs/cli-win32-arm64@npm:2.2.6" = {
       name = "@biomejs/cli-win32-arm64";
-      reference = "npm:2.2.5";
+      reference = "npm:2.2.6";
       linkType = "HARD";
-      outputName = "biomejs-cli-win32-arm64-2.2.5-52ecb3818b";
+      outputName = "biomejs-cli-win32-arm64-2.2.6-95fffd4c1d";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "cli-win32-arm64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.5";
+      descriptorRange = "npm:2.2.6";
     };
-    "@biomejs/cli-win32-x64@npm:2.2.5" = {
+    "@biomejs/cli-win32-x64@npm:2.2.6" = {
       name = "@biomejs/cli-win32-x64";
-      reference = "npm:2.2.5";
+      reference = "npm:2.2.6";
       linkType = "HARD";
-      outputName = "biomejs-cli-win32-x64-2.2.5-04471b2571";
+      outputName = "biomejs-cli-win32-x64-2.2.6-08e8b1424b";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "cli-win32-x64";
       languageName = "node";
       scope = "biomejs";
-      descriptorRange = "npm:2.2.5";
+      descriptorRange = "npm:2.2.6";
     };
     "@ckeditor/ckeditor5-adapter-ckfinder@npm:43.3.1" = {
       name = "@ckeditor/ckeditor5-adapter-ckfinder";
@@ -4511,345 +4540,345 @@ let
       descriptorRange = "npm:^0.9.0";
       checksum = "10/038132359397348e378c593a773b1148cd0cf0a2285ffd067a0f63447b945f5278860d9de718f906a74c7c940ba1783ac2ca18f1c06a307b01cc0e3944e783b1";
     };
-    "@esbuild/aix-ppc64@npm:0.25.10" = {
+    "@esbuild/aix-ppc64@npm:0.25.11" = {
       name = "@esbuild/aix-ppc64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-aix-ppc64-0.25.10-d9db006168";
+      outputName = "esbuild-aix-ppc64-0.25.11-2e54946e65";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (false);
       flatName = "aix-ppc64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/android-arm@npm:0.25.10" = {
+    "@esbuild/android-arm@npm:0.25.11" = {
       name = "@esbuild/android-arm";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-android-arm-0.25.10-9d630fc2fe";
+      outputName = "esbuild-android-arm-0.25.11-5322d8ebcd";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch32);
       flatName = "android-arm";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/android-arm64@npm:0.25.10" = {
+    "@esbuild/android-arm64@npm:0.25.11" = {
       name = "@esbuild/android-arm64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-android-arm64-0.25.10-43dc5dba86";
+      outputName = "esbuild-android-arm64-0.25.11-12b6400dcf";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "android-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/android-x64@npm:0.25.10" = {
+    "@esbuild/android-x64@npm:0.25.11" = {
       name = "@esbuild/android-x64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-android-x64-0.25.10-2842408101";
+      outputName = "esbuild-android-x64-0.25.11-9e3254cbde";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "android-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/darwin-arm64@npm:0.25.10" = {
+    "@esbuild/darwin-arm64@npm:0.25.11" = {
       name = "@esbuild/darwin-arm64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-darwin-arm64-0.25.10-ebe53dcd22";
+      outputName = "esbuild-darwin-arm64-0.25.11-7a6e28b3d4";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "darwin-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/darwin-x64@npm:0.25.10" = {
+    "@esbuild/darwin-x64@npm:0.25.11" = {
       name = "@esbuild/darwin-x64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-darwin-x64-0.25.10-ce4bbc052b";
+      outputName = "esbuild-darwin-x64-0.25.11-d6cc76e269";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "darwin-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/freebsd-arm64@npm:0.25.10" = {
+    "@esbuild/freebsd-arm64@npm:0.25.11" = {
       name = "@esbuild/freebsd-arm64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-freebsd-arm64-0.25.10-2cb16518ea";
+      outputName = "esbuild-freebsd-arm64-0.25.11-50768f1198";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "freebsd-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/freebsd-x64@npm:0.25.10" = {
+    "@esbuild/freebsd-x64@npm:0.25.11" = {
       name = "@esbuild/freebsd-x64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-freebsd-x64-0.25.10-c1b35333d4";
+      outputName = "esbuild-freebsd-x64-0.25.11-1d45bfa37a";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "freebsd-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/linux-arm@npm:0.25.10" = {
+    "@esbuild/linux-arm@npm:0.25.11" = {
       name = "@esbuild/linux-arm";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-linux-arm-0.25.10-5d26e911b3";
+      outputName = "esbuild-linux-arm-0.25.11-841701f23e";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch32);
       flatName = "linux-arm";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/linux-arm64@npm:0.25.10" = {
+    "@esbuild/linux-arm64@npm:0.25.11" = {
       name = "@esbuild/linux-arm64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-linux-arm64-0.25.10-5799adb0db";
+      outputName = "esbuild-linux-arm64-0.25.11-12c19732d2";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "linux-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/linux-ia32@npm:0.25.10" = {
+    "@esbuild/linux-ia32@npm:0.25.11" = {
       name = "@esbuild/linux-ia32";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-linux-ia32-0.25.10-b18c1ccf5b";
+      outputName = "esbuild-linux-ia32-0.25.11-7ca809f3e7";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isi686);
       flatName = "linux-ia32";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/linux-loong64@npm:0.25.10" = {
+    "@esbuild/linux-loong64@npm:0.25.11" = {
       name = "@esbuild/linux-loong64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-linux-loong64-0.25.10-1f364991a4";
+      outputName = "esbuild-linux-loong64-0.25.11-29b15b8a71";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-loong64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/linux-mips64el@npm:0.25.10" = {
+    "@esbuild/linux-mips64el@npm:0.25.11" = {
       name = "@esbuild/linux-mips64el";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-linux-mips64el-0.25.10-c625f3d019";
+      outputName = "esbuild-linux-mips64el-0.25.11-1e1a1ddb05";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-mips64el";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/linux-ppc64@npm:0.25.10" = {
+    "@esbuild/linux-ppc64@npm:0.25.11" = {
       name = "@esbuild/linux-ppc64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-linux-ppc64-0.25.10-a60f3f93ca";
+      outputName = "esbuild-linux-ppc64-0.25.11-425afbafa4";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-ppc64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/linux-riscv64@npm:0.25.10" = {
+    "@esbuild/linux-riscv64@npm:0.25.11" = {
       name = "@esbuild/linux-riscv64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-linux-riscv64-0.25.10-a1b0a91701";
+      outputName = "esbuild-linux-riscv64-0.25.11-0a413d6b2e";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-riscv64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/linux-s390x@npm:0.25.10" = {
+    "@esbuild/linux-s390x@npm:0.25.11" = {
       name = "@esbuild/linux-s390x";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-linux-s390x-0.25.10-b40783f814";
+      outputName = "esbuild-linux-s390x-0.25.11-64e738d134";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (false);
       flatName = "linux-s390x";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/linux-x64@npm:0.25.10" = {
+    "@esbuild/linux-x64@npm:0.25.11" = {
       name = "@esbuild/linux-x64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-linux-x64-0.25.10-0a0d315acd";
+      outputName = "esbuild-linux-x64-0.25.11-9d2ebbe6fb";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-GPxGcTlB3tykXj7nAr3/PdOlvKYVJiw1e+Hcehiw8YU3XChXtVQ1XqcseUBVI2ozdNQqCyBRlc2LEgMxlSQYVQ==";
+        "x86_64-linux" = "sha512-e1wMA719GJcmjpMnV2tg8oPWvAVFRaTqEhV4iRx2yPsUxRlRyAW4TLzKtX/CVcz866V+QUAT6DLxv2na1LrVLw==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "linux-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/netbsd-arm64@npm:0.25.10" = {
+    "@esbuild/netbsd-arm64@npm:0.25.11" = {
       name = "@esbuild/netbsd-arm64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-netbsd-arm64-0.25.10-41c218b2cc";
+      outputName = "esbuild-netbsd-arm64-0.25.11-fe14373c1b";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "netbsd-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/netbsd-x64@npm:0.25.10" = {
+    "@esbuild/netbsd-x64@npm:0.25.11" = {
       name = "@esbuild/netbsd-x64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-netbsd-x64-0.25.10-984ceee7cf";
+      outputName = "esbuild-netbsd-x64-0.25.11-c61d02e17e";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "netbsd-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/openbsd-arm64@npm:0.25.10" = {
+    "@esbuild/openbsd-arm64@npm:0.25.11" = {
       name = "@esbuild/openbsd-arm64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-openbsd-arm64-0.25.10-38a8fe63b4";
+      outputName = "esbuild-openbsd-arm64-0.25.11-c940bff779";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "openbsd-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/openbsd-x64@npm:0.25.10" = {
+    "@esbuild/openbsd-x64@npm:0.25.11" = {
       name = "@esbuild/openbsd-x64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-openbsd-x64-0.25.10-e6d71ac3d7";
+      outputName = "esbuild-openbsd-x64-0.25.11-3d1857c563";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "openbsd-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/openharmony-arm64@npm:0.25.10" = {
+    "@esbuild/openharmony-arm64@npm:0.25.11" = {
       name = "@esbuild/openharmony-arm64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-openharmony-arm64-0.25.10-e376717794";
+      outputName = "esbuild-openharmony-arm64-0.25.11-07c6b711dd";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "openharmony-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/sunos-x64@npm:0.25.10" = {
+    "@esbuild/sunos-x64@npm:0.25.11" = {
       name = "@esbuild/sunos-x64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-sunos-x64-0.25.10-22fb7402ff";
+      outputName = "esbuild-sunos-x64-0.25.11-d53bce34f5";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "sunos-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/win32-arm64@npm:0.25.10" = {
+    "@esbuild/win32-arm64@npm:0.25.11" = {
       name = "@esbuild/win32-arm64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-win32-arm64-0.25.10-cb58e3f887";
+      outputName = "esbuild-win32-arm64-0.25.11-3b3f2890fd";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "win32-arm64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/win32-ia32@npm:0.25.10" = {
+    "@esbuild/win32-ia32@npm:0.25.11" = {
       name = "@esbuild/win32-ia32";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-win32-ia32-0.25.10-ff6a56f73b";
+      outputName = "esbuild-win32-ia32-0.25.11-0208320c71";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isi686);
       flatName = "win32-ia32";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
-    "@esbuild/win32-x64@npm:0.25.10" = {
+    "@esbuild/win32-x64@npm:0.25.11" = {
       name = "@esbuild/win32-x64";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-win32-x64-0.25.10-4e12e97189";
+      outputName = "esbuild-win32-x64-0.25.11-a0301442a5";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "win32-x64";
       languageName = "node";
       scope = "esbuild";
-      descriptorRange = "npm:0.25.10";
+      descriptorRange = "npm:0.25.11";
     };
     "@eslint-community/eslint-utils@npm:4.7.0" = {
       name = "@eslint-community/eslint-utils";
@@ -8214,153 +8243,153 @@ let
       descriptorRange = "npm:^2.2.0";
       checksum = "10/839624ba6baab655c4f7393e8b8561516849926651e02f40484729b9869436b1e077906810bcac0bba4762448512d3ebd2f6d9b463d8ab0d5f54d75ca5306519";
     };
-    "@next/bundle-analyzer@npm:15.5.4" = {
+    "@next/bundle-analyzer@npm:15.5.5" = {
       name = "@next/bundle-analyzer";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-bundle-analyzer-15.5.4-1588b3fb31";
-      outputHash = "10b28e15a5711a999c8dd6c8ab565167d332916bb5aa507a15207c319787f5c1555a9b51dc67467ad7fc72fab379c3fc0e1f822f8c27129f8d2006e16838a62b";
+      outputName = "next-bundle-analyzer-15.5.5-3b387c8a6a";
+      outputHash = "baf2231f00e22363ba9825d6e5dfa2cecf0a5d0bb0924cbcf90c4b41e37763358af04903f247dd7b9d120ddee1f1858bedec796a96eeaed34bbacdb8b0875703";
       flatName = "bundle-analyzer";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:~15.5.4";
-      checksum = "10/10b28e15a5711a999c8dd6c8ab565167d332916bb5aa507a15207c319787f5c1555a9b51dc67467ad7fc72fab379c3fc0e1f822f8c27129f8d2006e16838a62b";
+      descriptorRange = "npm:~15.5.5";
+      checksum = "10/baf2231f00e22363ba9825d6e5dfa2cecf0a5d0bb0924cbcf90c4b41e37763358af04903f247dd7b9d120ddee1f1858bedec796a96eeaed34bbacdb8b0875703";
       dependencies = {
         "webpack-bundle-analyzer" = packages."webpack-bundle-analyzer@npm:4.10.1";
       };
     };
-    "@next/env@npm:15.5.4" = {
+    "@next/env@npm:15.5.5" = {
       name = "@next/env";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-env-15.5.4-d8cfef30c8";
-      outputHash = "0727ef6dbb15c04d85119e3d4b28e000ca0a4dbb8bce46b2657181776545912181c74dd370e75ea8157bffbaf33bc687bd34c49b33e0b3a598c22295892ae1d9";
+      outputName = "next-env-15.5.5-971e8a91d4";
+      outputHash = "28f0d2203d952ffa3d190ab7308d1b7fdb6136df9e9381a42ed82eda8f11b50954ea930fabd413905e3b41b58f6aec21ddd253e2329440ae3f1191a6fdefe96b";
       flatName = "env";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
-      checksum = "10/0727ef6dbb15c04d85119e3d4b28e000ca0a4dbb8bce46b2657181776545912181c74dd370e75ea8157bffbaf33bc687bd34c49b33e0b3a598c22295892ae1d9";
+      descriptorRange = "npm:15.5.5";
+      checksum = "10/28f0d2203d952ffa3d190ab7308d1b7fdb6136df9e9381a42ed82eda8f11b50954ea930fabd413905e3b41b58f6aec21ddd253e2329440ae3f1191a6fdefe96b";
     };
-    "@next/eslint-plugin-next@npm:15.5.4" = {
+    "@next/eslint-plugin-next@npm:15.5.5" = {
       name = "@next/eslint-plugin-next";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-eslint-plugin-next-15.5.4-b176803242";
-      outputHash = "cb4523cb5ddde2e0c7b176e5517c8365875fbdb2b3b9b19f0822835a5766f7b87f0ea2d868589a0d5f7019947120be7ddfead8fae32c871e6b710e00d07f05ee";
+      outputName = "next-eslint-plugin-next-15.5.5-e8352e77ef";
+      outputHash = "0912755441bd0bda84fba9242ebce3e9114ae3a94d0e434792083936377168e574e20cf2d3264e7d237da4410e76532c201bd4e4e62f5eba9278985894bb1c2d";
       flatName = "eslint-plugin-next";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
-      checksum = "10/cb4523cb5ddde2e0c7b176e5517c8365875fbdb2b3b9b19f0822835a5766f7b87f0ea2d868589a0d5f7019947120be7ddfead8fae32c871e6b710e00d07f05ee";
+      descriptorRange = "npm:15.5.5";
+      checksum = "10/0912755441bd0bda84fba9242ebce3e9114ae3a94d0e434792083936377168e574e20cf2d3264e7d237da4410e76532c201bd4e4e62f5eba9278985894bb1c2d";
       dependencies = {
         "fast-glob" = packages."fast-glob@npm:3.3.1";
       };
     };
-    "@next/swc-darwin-arm64@npm:15.5.4" = {
+    "@next/swc-darwin-arm64@npm:15.5.5" = {
       name = "@next/swc-darwin-arm64";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-swc-darwin-arm64-15.5.4-922cce56b6";
+      outputName = "next-swc-darwin-arm64-15.5.5-48ec08967d";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isAarch64);
       flatName = "swc-darwin-arm64";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
+      descriptorRange = "npm:15.5.5";
     };
-    "@next/swc-darwin-x64@npm:15.5.4" = {
+    "@next/swc-darwin-x64@npm:15.5.5" = {
       name = "@next/swc-darwin-x64";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-swc-darwin-x64-15.5.4-eab5f8f6d1";
+      outputName = "next-swc-darwin-x64-15.5.5-2585e97d4e";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isDarwin) && (stdenv.isx86_64);
       flatName = "swc-darwin-x64";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
+      descriptorRange = "npm:15.5.5";
     };
-    "@next/swc-linux-arm64-gnu@npm:15.5.4" = {
+    "@next/swc-linux-arm64-gnu@npm:15.5.5" = {
       name = "@next/swc-linux-arm64-gnu";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-swc-linux-arm64-gnu-15.5.4-72f83041dc";
+      outputName = "next-swc-linux-arm64-gnu-15.5.5-77ecdfde22";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64);
       flatName = "swc-linux-arm64-gnu";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
+      descriptorRange = "npm:15.5.5";
     };
-    "@next/swc-linux-arm64-musl@npm:15.5.4" = {
+    "@next/swc-linux-arm64-musl@npm:15.5.5" = {
       name = "@next/swc-linux-arm64-musl";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-swc-linux-arm64-musl-15.5.4-f36486987e";
+      outputName = "next-swc-linux-arm64-musl-15.5.5-e941b51709";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isAarch64) && (false);
       flatName = "swc-linux-arm64-musl";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
+      descriptorRange = "npm:15.5.5";
     };
-    "@next/swc-linux-x64-gnu@npm:15.5.4" = {
+    "@next/swc-linux-x64-gnu@npm:15.5.5" = {
       name = "@next/swc-linux-x64-gnu";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-swc-linux-x64-gnu-15.5.4-86a61e904c";
+      outputName = "next-swc-linux-x64-gnu-15.5.5-e2bad733b9";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-ENui/uYioRUem+9FOoDBUzNzukPyEwBhBpfG/Pvqy1AhIJYr0UZdcsV+p4qzPWWy3DXWbGVjcw6J08Vi8Ns2TA==";
+        "x86_64-linux" = "sha512-+qpxbMBgdoPXSwk6bq0n7hTFzlBA9yLkS5ixxkPgQ5nihFfLrcCR18fJJaNkPsGZBka8fZBx+XoOqtBumzBj2w==";
       };
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64);
       flatName = "swc-linux-x64-gnu";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
+      descriptorRange = "npm:15.5.5";
     };
-    "@next/swc-linux-x64-musl@npm:15.5.4" = {
+    "@next/swc-linux-x64-musl@npm:15.5.5" = {
       name = "@next/swc-linux-x64-musl";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-swc-linux-x64-musl-15.5.4-e238842ed4";
+      outputName = "next-swc-linux-x64-musl-15.5.5-af71545a70";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (stdenv.isLinux) && (stdenv.isx86_64) && (false);
       flatName = "swc-linux-x64-musl";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
+      descriptorRange = "npm:15.5.5";
     };
-    "@next/swc-win32-arm64-msvc@npm:15.5.4" = {
+    "@next/swc-win32-arm64-msvc@npm:15.5.5" = {
       name = "@next/swc-win32-arm64-msvc";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-swc-win32-arm64-msvc-15.5.4-a1699a47d4";
+      outputName = "next-swc-win32-arm64-msvc-15.5.5-0f356b00f6";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isAarch64);
       flatName = "swc-win32-arm64-msvc";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
+      descriptorRange = "npm:15.5.5";
     };
-    "@next/swc-win32-x64-msvc@npm:15.5.4" = {
+    "@next/swc-win32-x64-msvc@npm:15.5.5" = {
       name = "@next/swc-win32-x64-msvc";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-swc-win32-x64-msvc-15.5.4-94f5e8ded0";
+      outputName = "next-swc-win32-x64-msvc-15.5.5-9ce09dfa69";
       outputHash = "";
       shouldBeUnplugged = true;
       installCondition = stdenv: (false) && (stdenv.isx86_64);
       flatName = "swc-win32-x64-msvc";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:15.5.4";
+      descriptorRange = "npm:15.5.5";
     };
     "@nodelib/fs.scandir@npm:2.1.5" = {
       name = "@nodelib/fs.scandir";
@@ -8491,9 +8520,9 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/context-async-hooks@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0" = {
+    "@opentelemetry/context-async-hooks@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0" = {
       name = "@opentelemetry/context-async-hooks";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
       canonicalPackage = packages."@opentelemetry/context-async-hooks@npm:2.1.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
@@ -8518,9 +8547,9 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0" = {
+    "@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0" = {
       name = "@opentelemetry/core";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
       canonicalPackage = packages."@opentelemetry/core@npm:2.1.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
@@ -8548,14 +8577,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-amqplib@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0" = {
+    "@opentelemetry/instrumentation-amqplib@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-amqplib";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-amqplib@npm:0.51.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -8581,14 +8610,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-connect@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0" = {
+    "@opentelemetry/instrumentation-connect@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.48.0" = {
       name = "@opentelemetry/instrumentation-connect";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.48.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-connect@npm:0.48.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
         "@types/connect" = packages."@types/connect@npm:3.4.38";
       };
@@ -8612,13 +8641,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-dataloader@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.22.0" = {
+    "@opentelemetry/instrumentation-dataloader@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.22.0" = {
       name = "@opentelemetry/instrumentation-dataloader";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.22.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.22.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-dataloader@npm:0.22.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
       };
     };
     "@opentelemetry/instrumentation-express@npm:0.53.0" = {
@@ -8642,14 +8671,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-express@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0" = {
+    "@opentelemetry/instrumentation-express@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.53.0" = {
       name = "@opentelemetry/instrumentation-express";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.53.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-express@npm:0.53.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -8673,14 +8702,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-fs@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.24.0" = {
+    "@opentelemetry/instrumentation-fs@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.24.0" = {
       name = "@opentelemetry/instrumentation-fs";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.24.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.24.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-fs@npm:0.24.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
       };
     };
     "@opentelemetry/instrumentation-generic-pool@npm:0.48.0" = {
@@ -8702,13 +8731,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-generic-pool@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0" = {
+    "@opentelemetry/instrumentation-generic-pool@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.48.0" = {
       name = "@opentelemetry/instrumentation-generic-pool";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.48.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-generic-pool@npm:0.48.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
       };
     };
     "@opentelemetry/instrumentation-graphql@npm:0.52.0" = {
@@ -8730,13 +8759,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-graphql@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0" = {
+    "@opentelemetry/instrumentation-graphql@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.52.0" = {
       name = "@opentelemetry/instrumentation-graphql";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.52.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-graphql@npm:0.52.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
       };
     };
     "@opentelemetry/instrumentation-hapi@npm:0.51.0" = {
@@ -8760,14 +8789,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-hapi@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0" = {
+    "@opentelemetry/instrumentation-hapi@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-hapi";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-hapi@npm:0.51.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -8793,14 +8822,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-http@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0" = {
+    "@opentelemetry/instrumentation-http@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0" = {
       name = "@opentelemetry/instrumentation-http";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-http@npm:0.204.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
         "forwarded-parse" = packages."forwarded-parse@npm:2.1.2";
       };
@@ -8826,13 +8855,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-ioredis@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0" = {
+    "@opentelemetry/instrumentation-ioredis@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.52.0" = {
       name = "@opentelemetry/instrumentation-ioredis";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.52.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-ioredis@npm:0.52.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.38.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
@@ -8857,13 +8886,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-kafkajs@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.14.0" = {
+    "@opentelemetry/instrumentation-kafkajs@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.14.0" = {
       name = "@opentelemetry/instrumentation-kafkajs";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.14.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.14.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-kafkajs@npm:0.14.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -8887,13 +8916,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-knex@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0" = {
+    "@opentelemetry/instrumentation-knex@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.49.0" = {
       name = "@opentelemetry/instrumentation-knex";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.49.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-knex@npm:0.49.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -8918,14 +8947,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-koa@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0" = {
+    "@opentelemetry/instrumentation-koa@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.52.0" = {
       name = "@opentelemetry/instrumentation-koa";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.52.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-koa@npm:0.52.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -8948,13 +8977,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-lru-memoizer@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0" = {
+    "@opentelemetry/instrumentation-lru-memoizer@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.49.0" = {
       name = "@opentelemetry/instrumentation-lru-memoizer";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.49.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-lru-memoizer@npm:0.49.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
       };
     };
     "@opentelemetry/instrumentation-mongodb@npm:0.57.0" = {
@@ -8977,13 +9006,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mongodb@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0" = {
+    "@opentelemetry/instrumentation-mongodb@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.57.0" = {
       name = "@opentelemetry/instrumentation-mongodb";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.57.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-mongodb@npm:0.57.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -9008,14 +9037,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mongoose@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0" = {
+    "@opentelemetry/instrumentation-mongoose@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-mongoose";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-mongoose@npm:0.51.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -9040,13 +9069,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mysql@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.50.0" = {
+    "@opentelemetry/instrumentation-mysql@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.50.0" = {
       name = "@opentelemetry/instrumentation-mysql";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.50.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.50.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-mysql@npm:0.50.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
         "@types/mysql" = packages."@types/mysql@npm:2.15.27";
       };
@@ -9072,15 +9101,15 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-mysql2@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0" = {
+    "@opentelemetry/instrumentation-mysql2@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0" = {
       name = "@opentelemetry/instrumentation-mysql2";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-mysql2@npm:0.51.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
-        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:e42d84e3e6bf98a2d5119fdb857edbe344e8c5bce392c77898b2ff51e1ea5059aea4c1b5d6f827de3a598846584ee6bfa40a7fa48700b646d3153c88bd356f9c#npm:0.41.2";
+        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:665acd85d42aa76f3d411f4cc8785f68a635ea10e4a781e7e822a107ca75f2aee4b16f6a380facb842fd9842a46b93fad01bb61425815055b61b843059cb4a9f#npm:0.41.2";
       };
     };
     "@opentelemetry/instrumentation-pg@npm:0.57.0" = {
@@ -9107,16 +9136,16 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-pg@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0" = {
+    "@opentelemetry/instrumentation-pg@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.57.0" = {
       name = "@opentelemetry/instrumentation-pg";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.57.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-pg@npm:0.57.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
-        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:e42d84e3e6bf98a2d5119fdb857edbe344e8c5bce392c77898b2ff51e1ea5059aea4c1b5d6f827de3a598846584ee6bfa40a7fa48700b646d3153c88bd356f9c#npm:0.41.2";
+        "@opentelemetry/sql-common" = packages."@opentelemetry/sql-common@virtual:665acd85d42aa76f3d411f4cc8785f68a635ea10e4a781e7e822a107ca75f2aee4b16f6a380facb842fd9842a46b93fad01bb61425815055b61b843059cb4a9f#npm:0.41.2";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "@types/pg-pool" = packages."@types/pg-pool@npm:2.0.6";
       };
@@ -9142,13 +9171,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-redis@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0" = {
+    "@opentelemetry/instrumentation-redis@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.53.0" = {
       name = "@opentelemetry/instrumentation-redis";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.53.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-redis@npm:0.53.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/redis-common" = packages."@opentelemetry/redis-common@npm:0.38.2";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
@@ -9174,13 +9203,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-tedious@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.23.0" = {
+    "@opentelemetry/instrumentation-tedious@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.23.0" = {
       name = "@opentelemetry/instrumentation-tedious";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.23.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.23.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-tedious@npm:0.23.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
         "@types/tedious" = packages."@types/tedious@npm:4.0.14";
       };
@@ -9205,14 +9234,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation-undici@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.15.0" = {
+    "@opentelemetry/instrumentation-undici@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.15.0" = {
       name = "@opentelemetry/instrumentation-undici";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.15.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.15.0";
       canonicalPackage = packages."@opentelemetry/instrumentation-undici@npm:0.15.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
       };
     };
     "@opentelemetry/instrumentation@npm:0.204.0" = {
@@ -9260,20 +9289,9 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0" = {
+    "@opentelemetry/instrumentation@virtual:2a24cacccadce205c97c97f9370df488f4a332c19986b0ce55151ab2967e7fcdd3471d1b02f7c48d013d5393f24b78d53a10884d97e371eeaabdb619b0649aa1#npm:0.57.2" = {
       name = "@opentelemetry/instrumentation";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
-      canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.204.0";
-      dependencies = {
-        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.204.0";
-        "import-in-the-middle" = packages."import-in-the-middle@npm:1.14.4";
-        "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
-      };
-    };
-    "@opentelemetry/instrumentation@virtual:f40af87d10c2d852e556d36da0b52ebf19d1d95147bc8f0beb52976f08e492b3a11e22c417c50875ebb67c806cc44d9a2e5522d5f1299a52b388424d306a3416#npm:0.57.2" = {
-      name = "@opentelemetry/instrumentation";
-      reference = "virtual:f40af87d10c2d852e556d36da0b52ebf19d1d95147bc8f0beb52976f08e492b3a11e22c417c50875ebb67c806cc44d9a2e5522d5f1299a52b388424d306a3416#npm:0.57.2";
+      reference = "virtual:2a24cacccadce205c97c97f9370df488f4a332c19986b0ce55151ab2967e7fcdd3471d1b02f7c48d013d5393f24b78d53a10884d97e371eeaabdb619b0649aa1#npm:0.57.2";
       canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.57.2";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
@@ -9283,6 +9301,17 @@ let
         "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
         "semver" = packages."semver@npm:7.7.3";
         "shimmer" = packages."shimmer@npm:1.2.1";
+      };
+    };
+    "@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0" = {
+      name = "@opentelemetry/instrumentation";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
+      canonicalPackage = packages."@opentelemetry/instrumentation@npm:0.204.0";
+      dependencies = {
+        "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
+        "@opentelemetry/api-logs" = packages."@opentelemetry/api-logs@npm:0.204.0";
+        "import-in-the-middle" = packages."import-in-the-middle@npm:1.14.4";
+        "require-in-the-middle" = packages."require-in-the-middle@npm:7.3.0";
       };
     };
     "@opentelemetry/redis-common@npm:0.38.2" = {
@@ -9317,13 +9346,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0" = {
+    "@opentelemetry/resources@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0" = {
       name = "@opentelemetry/resources";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
       canonicalPackage = packages."@opentelemetry/resources@npm:2.1.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -9348,14 +9377,14 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0" = {
+    "@opentelemetry/sdk-trace-base@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0" = {
       name = "@opentelemetry/sdk-trace-base";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
       canonicalPackage = packages."@opentelemetry/sdk-trace-base@npm:2.1.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
       };
     };
@@ -9390,13 +9419,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@opentelemetry/sql-common@virtual:e42d84e3e6bf98a2d5119fdb857edbe344e8c5bce392c77898b2ff51e1ea5059aea4c1b5d6f827de3a598846584ee6bfa40a7fa48700b646d3153c88bd356f9c#npm:0.41.2" = {
+    "@opentelemetry/sql-common@virtual:665acd85d42aa76f3d411f4cc8785f68a635ea10e4a781e7e822a107ca75f2aee4b16f6a380facb842fd9842a46b93fad01bb61425815055b61b843059cb4a9f#npm:0.41.2" = {
       name = "@opentelemetry/sql-common";
-      reference = "virtual:e42d84e3e6bf98a2d5119fdb857edbe344e8c5bce392c77898b2ff51e1ea5059aea4c1b5d6f827de3a598846584ee6bfa40a7fa48700b646d3153c88bd356f9c#npm:0.41.2";
+      reference = "virtual:665acd85d42aa76f3d411f4cc8785f68a635ea10e4a781e7e822a107ca75f2aee4b16f6a380facb842fd9842a46b93fad01bb61425815055b61b843059cb4a9f#npm:0.41.2";
       canonicalPackage = packages."@opentelemetry/sql-common@npm:0.41.2";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
       };
     };
     "@parcel/watcher-android-arm64@npm:2.5.1" = {
@@ -9719,13 +9748,13 @@ let
         "@types/opentelemetry__api"
       ];
     };
-    "@prisma/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:6.15.0" = {
+    "@prisma/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:6.15.0" = {
       name = "@prisma/instrumentation";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:6.15.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:6.15.0";
       canonicalPackage = packages."@prisma/instrumentation@npm:6.15.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:f40af87d10c2d852e556d36da0b52ebf19d1d95147bc8f0beb52976f08e492b3a11e22c417c50875ebb67c806cc44d9a2e5522d5f1299a52b388424d306a3416#npm:0.57.2";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:2a24cacccadce205c97c97f9370df488f4a332c19986b0ce55151ab2967e7fcdd3471d1b02f7c48d013d5393f24b78d53a10884d97e371eeaabdb619b0649aa1#npm:0.57.2";
       };
     };
     "@radix-ui/colors@npm:0.1.9" = {
@@ -12298,15 +12327,15 @@ let
         "rollup"
       ];
     };
-    "@rollup/plugin-commonjs@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:28.0.1" = {
+    "@rollup/plugin-commonjs@virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:28.0.1" = {
       name = "@rollup/plugin-commonjs";
-      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:28.0.1";
+      reference = "virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:28.0.1";
       canonicalPackage = packages."@rollup/plugin-commonjs@npm:28.0.1";
       dependencies = {
-        "@rollup/pluginutils" = packages."@rollup/pluginutils@virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:5.0.2";
+        "@rollup/pluginutils" = packages."@rollup/pluginutils@virtual:2cb644afe3c6a4d8cb93acc7cb4a29ef7725cecf8e0334b7cad0eb265efb5926a3be01f4dff3a41c32e736a6a0aad3b7a12f43b908d718df83cf91c448fdcb81#npm:5.0.2";
         "commondir" = packages."commondir@npm:1.0.1";
         "estree-walker" = packages."estree-walker@npm:2.0.2";
-        "fdir" = packages."fdir@virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:6.5.0";
+        "fdir" = packages."fdir@virtual:2cb644afe3c6a4d8cb93acc7cb4a29ef7725cecf8e0334b7cad0eb265efb5926a3be01f4dff3a41c32e736a6a0aad3b7a12f43b908d718df83cf91c448fdcb81#npm:6.5.0";
         "is-reference" = packages."is-reference@npm:1.2.1";
         "magic-string" = packages."magic-string@npm:0.30.10";
         "picomatch" = packages."picomatch@npm:4.0.3";
@@ -12334,9 +12363,9 @@ let
         "rollup"
       ];
     };
-    "@rollup/pluginutils@virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:5.0.2" = {
+    "@rollup/pluginutils@virtual:2cb644afe3c6a4d8cb93acc7cb4a29ef7725cecf8e0334b7cad0eb265efb5926a3be01f4dff3a41c32e736a6a0aad3b7a12f43b908d718df83cf91c448fdcb81#npm:5.0.2" = {
       name = "@rollup/pluginutils";
-      reference = "virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:5.0.2";
+      reference = "virtual:2cb644afe3c6a4d8cb93acc7cb4a29ef7725cecf8e0334b7cad0eb265efb5926a3be01f4dff3a41c32e736a6a0aad3b7a12f43b908d718df83cf91c448fdcb81#npm:5.0.2";
       canonicalPackage = packages."@rollup/pluginutils@npm:5.0.2";
       dependencies = {
         "@types/estree" = packages."@types/estree@npm:1.0.8";
@@ -12650,7 +12679,7 @@ let
       };
       devDependencies = {
         "@tsconfig/node18" = packages."@tsconfig/node18@npm:18.2.4";
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
       };
@@ -12695,66 +12724,66 @@ let
         "selderee" = packages."selderee@npm:0.11.0";
       };
     };
-    "@sentry-internal/browser-utils@npm:10.17.0" = {
+    "@sentry-internal/browser-utils@npm:10.19.0" = {
       name = "@sentry-internal/browser-utils";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-internal-browser-utils-10.17.0-e655e1f955";
-      outputHash = "328851bbbbd563837105e1b6205130aa1eccbd679b84d54c4a657af47339e63ac868415d37e80b493005e9d7543dc61a5e47e52a17ebc5af1790f4c7cf09467e";
+      outputName = "sentry-internal-browser-utils-10.19.0-cd081f448c";
+      outputHash = "cf2926ef90318c78ab42fabd41fadb830ff8ee3f4d6f4a471559352ed250933aeeca811cc45c062796a240401e5a2a3954db019297d8b13c618451a20ee15713";
       flatName = "browser-utils";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/328851bbbbd563837105e1b6205130aa1eccbd679b84d54c4a657af47339e63ac868415d37e80b493005e9d7543dc61a5e47e52a17ebc5af1790f4c7cf09467e";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/cf2926ef90318c78ab42fabd41fadb830ff8ee3f4d6f4a471559352ed250933aeeca811cc45c062796a240401e5a2a3954db019297d8b13c618451a20ee15713";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
       };
     };
-    "@sentry-internal/feedback@npm:10.17.0" = {
+    "@sentry-internal/feedback@npm:10.19.0" = {
       name = "@sentry-internal/feedback";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-internal-feedback-10.17.0-053f6f310c";
-      outputHash = "f6753f11b06809109a5d5189720370a78a66859738a1e8c9285db4fd7871030927458e92909e9729a6cd94c216de3d578b3bb836f39cbd697da972922960b57a";
+      outputName = "sentry-internal-feedback-10.19.0-41d88e6117";
+      outputHash = "0e5860651bafe5bd81ed6c99d7983a6286df9b77e6f4ea249b065a56d3c59c47efee5fab4c40de80bf9e99db228a9e556039544ab18ce55f885f536777c393e3";
       flatName = "feedback";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/f6753f11b06809109a5d5189720370a78a66859738a1e8c9285db4fd7871030927458e92909e9729a6cd94c216de3d578b3bb836f39cbd697da972922960b57a";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/0e5860651bafe5bd81ed6c99d7983a6286df9b77e6f4ea249b065a56d3c59c47efee5fab4c40de80bf9e99db228a9e556039544ab18ce55f885f536777c393e3";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
       };
     };
-    "@sentry-internal/replay-canvas@npm:10.17.0" = {
+    "@sentry-internal/replay-canvas@npm:10.19.0" = {
       name = "@sentry-internal/replay-canvas";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-internal-replay-canvas-10.17.0-35aff9344f";
-      outputHash = "9dbfb29385fc82d0985dda5f5d981635778cb0c141faf863c6dc6d17ab22b7ad1666a824b0f3000d0165ddc3814b8c9b35393959b18a0f148d2c12adc37ebadc";
+      outputName = "sentry-internal-replay-canvas-10.19.0-3ebc666955";
+      outputHash = "2993d0eb2f03f1f382c9560df74734be1286d031dc2da93b6f2ea4ef0c866592bf25c06e6d5442c0ea1590e079b66d485cee4cc75ec4ccb7b32a2b3780bd2e31";
       flatName = "replay-canvas";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/9dbfb29385fc82d0985dda5f5d981635778cb0c141faf863c6dc6d17ab22b7ad1666a824b0f3000d0165ddc3814b8c9b35393959b18a0f148d2c12adc37ebadc";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/2993d0eb2f03f1f382c9560df74734be1286d031dc2da93b6f2ea4ef0c866592bf25c06e6d5442c0ea1590e079b66d485cee4cc75ec4ccb7b32a2b3780bd2e31";
       dependencies = {
-        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:10.17.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:10.19.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
       };
     };
-    "@sentry-internal/replay@npm:10.17.0" = {
+    "@sentry-internal/replay@npm:10.19.0" = {
       name = "@sentry-internal/replay";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-internal-replay-10.17.0-1b8326fcd5";
-      outputHash = "b9cce490dd0840f6284f9fecd1ec00f77c7e7a39daeffc8da25622ae4006ceaa20bd1dbb94756db20438dd2e60f341dbb3f5348a4839fcde59f508d13e5c097a";
+      outputName = "sentry-internal-replay-10.19.0-d48b66a426";
+      outputHash = "9d64ccddc21616371461c02b8234d24015a97fa791297cd57b3daf0a298bcbae823f245eb079d8a6544bf27a4ea9dfbdb6153c917fd037ac4bd02b6973fab169";
       flatName = "replay";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/b9cce490dd0840f6284f9fecd1ec00f77c7e7a39daeffc8da25622ae4006ceaa20bd1dbb94756db20438dd2e60f341dbb3f5348a4839fcde59f508d13e5c097a";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/9d64ccddc21616371461c02b8234d24015a97fa791297cd57b3daf0a298bcbae823f245eb079d8a6544bf27a4ea9dfbdb6153c917fd037ac4bd02b6973fab169";
       dependencies = {
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.17.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.19.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
       };
     };
     "@sentry/babel-plugin-component-annotate@npm:4.3.0" = {
@@ -12769,23 +12798,23 @@ let
       descriptorRange = "npm:4.3.0";
       checksum = "10/3abfad1432f2aeb0ed4d30c701e2037d088bda1f2d5f7f12b84dc1c523ff6b6fe4af08c9f4fd2a66df11a48a385f53d8e1cbe2432a45031f00be5bf826ce55cd";
     };
-    "@sentry/browser@npm:10.17.0" = {
+    "@sentry/browser@npm:10.19.0" = {
       name = "@sentry/browser";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-browser-10.17.0-9eda8948f8";
-      outputHash = "6bfc8ae92d988b79a4f2ced0be438f389fbf8d7d0ee82cbce1cbac02693b02a9a76df8375582bfca7578ec856c025d074f49de2c3e1f75a2185f9d52d2a61f65";
+      outputName = "sentry-browser-10.19.0-144b4ac27d";
+      outputHash = "c7133c57b38bd95565079dfd676ce629fee964541d3073566810ced3e2ebc7a113dfb0c1489773d97f617d3507c08ce6a73a7eaf77556dd5577fbdff317243e6";
       flatName = "browser";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/6bfc8ae92d988b79a4f2ced0be438f389fbf8d7d0ee82cbce1cbac02693b02a9a76df8375582bfca7578ec856c025d074f49de2c3e1f75a2185f9d52d2a61f65";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/c7133c57b38bd95565079dfd676ce629fee964541d3073566810ced3e2ebc7a113dfb0c1489773d97f617d3507c08ce6a73a7eaf77556dd5577fbdff317243e6";
       dependencies = {
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.17.0";
-        "@sentry-internal/feedback" = packages."@sentry-internal/feedback@npm:10.17.0";
-        "@sentry-internal/replay-canvas" = packages."@sentry-internal/replay-canvas@npm:10.17.0";
-        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:10.17.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.19.0";
+        "@sentry-internal/feedback" = packages."@sentry-internal/feedback@npm:10.19.0";
+        "@sentry-internal/replay-canvas" = packages."@sentry-internal/replay-canvas@npm:10.19.0";
+        "@sentry-internal/replay" = packages."@sentry-internal/replay@npm:10.19.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
       };
     };
     "@sentry/bundler-plugin-core@npm:4.3.0" = {
@@ -12948,29 +12977,29 @@ let
         "which" = packages."which@npm:2.0.2";
       };
     };
-    "@sentry/core@npm:10.17.0" = {
+    "@sentry/core@npm:10.19.0" = {
       name = "@sentry/core";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-core-10.17.0-f1bbc1ee88";
-      outputHash = "556eaedf23402fe9f9b8a8cd577d61e71b42b9ef3e72bc22ee70705fc0050d1bf8a08dff44434f8a2ad1415e177b2e09d12f4d7ef51e2553c067ff805b3030e2";
+      outputName = "sentry-core-10.19.0-b2de0c259c";
+      outputHash = "4556a07feebceabd007bfd5f5d98de6a00cb4ace6f0b51362bad67353663d58ba40759ec37cd8d24c00dc819e21475ca7fd3767dba0a33fb3accd2bec3e752a8";
       flatName = "core";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/556eaedf23402fe9f9b8a8cd577d61e71b42b9ef3e72bc22ee70705fc0050d1bf8a08dff44434f8a2ad1415e177b2e09d12f4d7ef51e2553c067ff805b3030e2";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/4556a07feebceabd007bfd5f5d98de6a00cb4ace6f0b51362bad67353663d58ba40759ec37cd8d24c00dc819e21475ca7fd3767dba0a33fb3accd2bec3e752a8";
     };
-    "@sentry/nextjs@npm:10.17.0" = {
+    "@sentry/nextjs@npm:10.19.0" = {
       name = "@sentry/nextjs";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-nextjs-10.17.0-1c2686f54b";
-      outputHash = "90a468bf2336ba2c0eb484d4c9dd0172e93702fa22ed6bd5423c6f572b0aeeb6d88c82dd3dc988a2681c7510afa1abb5705d428afca4f0bbed578d0a85b54fe8";
+      outputName = "sentry-nextjs-10.19.0-c939b585b8";
+      outputHash = "56a0cd20915814f55386526b6367f3f16feac973c7d0bb06150ba4c3dd54d88c87f6040f7c55dfb92036b9a2467977d58f8e410aac1a2c1452fba78f8d635320";
       flatName = "nextjs";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:~10.17.0";
-      checksum = "10/90a468bf2336ba2c0eb484d4c9dd0172e93702fa22ed6bd5423c6f572b0aeeb6d88c82dd3dc988a2681c7510afa1abb5705d428afca4f0bbed578d0a85b54fe8";
+      descriptorRange = "npm:~10.19.0";
+      checksum = "10/56a0cd20915814f55386526b6367f3f16feac973c7d0bb06150ba4c3dd54d88c87f6040f7c55dfb92036b9a2467977d58f8e410aac1a2c1452fba78f8d635320";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
         "@opentelemetry/core" = packages."@opentelemetry/core@npm:2.1.0";
@@ -12978,13 +13007,13 @@ let
         "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@npm:2.1.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
         "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@npm:28.0.1";
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.17.0";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.19.0";
         "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:4.3.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
-        "@sentry/node" = packages."@sentry/node@npm:10.17.0";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@npm:10.17.0";
-        "@sentry/react" = packages."@sentry/react@npm:10.17.0";
-        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
+        "@sentry/node" = packages."@sentry/node@npm:10.19.0";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@npm:10.19.0";
+        "@sentry/react" = packages."@sentry/react@npm:10.19.0";
+        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:10.19.0";
         "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@npm:4.3.0";
         "chalk" = packages."chalk@npm:3.0.0";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d";
@@ -12998,48 +13027,49 @@ let
         "react"
       ];
     };
-    "@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.17.0" = {
+    "@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.19.0" = {
       name = "@sentry/nextjs";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.17.0";
-      canonicalPackage = packages."@sentry/nextjs@npm:10.17.0";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.19.0";
+      canonicalPackage = packages."@sentry/nextjs@npm:10.19.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
-        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:28.0.1";
-        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.17.0";
+        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:28.0.1";
+        "@sentry-internal/browser-utils" = packages."@sentry-internal/browser-utils@npm:10.19.0";
         "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:4.3.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
-        "@sentry/node" = packages."@sentry/node@npm:10.17.0";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0";
-        "@sentry/react" = packages."@sentry/react@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0";
-        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:10.17.0";
-        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:4.3.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
+        "@sentry/node" = packages."@sentry/node@npm:10.19.0";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:10.19.0";
+        "@sentry/react" = packages."@sentry/react@virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:10.19.0";
+        "@sentry/vercel-edge" = packages."@sentry/vercel-edge@npm:10.19.0";
+        "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:4.3.0";
         "@types/react" = packages."@types/react@npm:18.3.26";
         "chalk" = packages."chalk@npm:3.0.0";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
         "react" = packages."react@npm:18.3.1";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d";
         "rollup" = packages."rollup@npm:4.52.4";
         "stacktrace-parser" = packages."stacktrace-parser@npm:0.1.10";
       };
     };
-    "@sentry/node-core@npm:10.17.0" = {
+    "@sentry/node-core@npm:10.19.0" = {
       name = "@sentry/node-core";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-node-core-10.17.0-bc2ebb3002";
-      outputHash = "9881e8803ce74c4759692b89b058049b8c024b9486fb989fc90da5d0c8a4e6e49924681b80f013c7d4dc3e49c30158f965c5d4092c228b91a8bc316192e6f278";
+      outputName = "sentry-node-core-10.19.0-c6470cd3fe";
+      outputHash = "0f7a70331ae7f3fd834bf51cc111b79088a3456032086e7d4ce79c4adf8c4c04249e7369449939cef8258edfe6c48c4d6ffbafb6a6777a4d6e07867581ac8547";
       flatName = "node-core";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/9881e8803ce74c4759692b89b058049b8c024b9486fb989fc90da5d0c8a4e6e49924681b80f013c7d4dc3e49c30158f965c5d4092c228b91a8bc316192e6f278";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/0f7a70331ae7f3fd834bf51cc111b79088a3456032086e7d4ce79c4adf8c4c04249e7369449939cef8258edfe6c48c4d6ffbafb6a6777a4d6e07867581ac8547";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@npm:10.17.0";
+        "@apm-js-collab/tracing-hooks" = packages."@apm-js-collab/tracing-hooks@npm:0.3.1";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@npm:10.19.0";
         "import-in-the-middle" = packages."import-in-the-middle@npm:1.14.4";
       };
       packagePeers = [
@@ -13059,85 +13089,86 @@ let
         "@types/opentelemetry__semantic-conventions"
       ];
     };
-    "@sentry/node-core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0" = {
+    "@sentry/node-core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:10.19.0" = {
       name = "@sentry/node-core";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
-      canonicalPackage = packages."@sentry/node-core@npm:10.17.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:10.19.0";
+      canonicalPackage = packages."@sentry/node-core@npm:10.19.0";
       dependencies = {
+        "@apm-js-collab/tracing-hooks" = packages."@apm-js-collab/tracing-hooks@npm:0.3.1";
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:10.19.0";
         "import-in-the-middle" = packages."import-in-the-middle@npm:1.14.4";
       };
     };
-    "@sentry/node@npm:10.17.0" = {
+    "@sentry/node@npm:10.19.0" = {
       name = "@sentry/node";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-node-10.17.0-7b444f86be";
-      outputHash = "085078c391f2c3bbedfb63f85c70ac46e155d3ff21c74b6a58f1c82418655369d6970782d924c2e914fed80c3cd587f2e88545f99b23ecf15498c6256b5b4f0d";
+      outputName = "sentry-node-10.19.0-4f274d543d";
+      outputHash = "e8d5d72918f5515c71c7d05ddc11c632ccc55d808b5c9e907ab3afc4ea953464746692ac8d9bd77f3a0ba706d694d04b781c86721ff553dda13032ad10d1b643";
       flatName = "node";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/085078c391f2c3bbedfb63f85c70ac46e155d3ff21c74b6a58f1c82418655369d6970782d924c2e914fed80c3cd587f2e88545f99b23ecf15498c6256b5b4f0d";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/e8d5d72918f5515c71c7d05ddc11c632ccc55d808b5c9e907ab3afc4ea953464746692ac8d9bd77f3a0ba706d694d04b781c86721ff553dda13032ad10d1b643";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/instrumentation-amqplib" = packages."@opentelemetry/instrumentation-amqplib@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
-        "@opentelemetry/instrumentation-connect" = packages."@opentelemetry/instrumentation-connect@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0";
-        "@opentelemetry/instrumentation-dataloader" = packages."@opentelemetry/instrumentation-dataloader@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.22.0";
-        "@opentelemetry/instrumentation-express" = packages."@opentelemetry/instrumentation-express@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0";
-        "@opentelemetry/instrumentation-fs" = packages."@opentelemetry/instrumentation-fs@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.24.0";
-        "@opentelemetry/instrumentation-generic-pool" = packages."@opentelemetry/instrumentation-generic-pool@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.48.0";
-        "@opentelemetry/instrumentation-graphql" = packages."@opentelemetry/instrumentation-graphql@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
-        "@opentelemetry/instrumentation-hapi" = packages."@opentelemetry/instrumentation-hapi@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
-        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
-        "@opentelemetry/instrumentation-ioredis" = packages."@opentelemetry/instrumentation-ioredis@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
-        "@opentelemetry/instrumentation-kafkajs" = packages."@opentelemetry/instrumentation-kafkajs@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.14.0";
-        "@opentelemetry/instrumentation-knex" = packages."@opentelemetry/instrumentation-knex@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0";
-        "@opentelemetry/instrumentation-koa" = packages."@opentelemetry/instrumentation-koa@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.52.0";
-        "@opentelemetry/instrumentation-lru-memoizer" = packages."@opentelemetry/instrumentation-lru-memoizer@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.49.0";
-        "@opentelemetry/instrumentation-mongodb" = packages."@opentelemetry/instrumentation-mongodb@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0";
-        "@opentelemetry/instrumentation-mongoose" = packages."@opentelemetry/instrumentation-mongoose@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
-        "@opentelemetry/instrumentation-mysql2" = packages."@opentelemetry/instrumentation-mysql2@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.51.0";
-        "@opentelemetry/instrumentation-mysql" = packages."@opentelemetry/instrumentation-mysql@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.50.0";
-        "@opentelemetry/instrumentation-pg" = packages."@opentelemetry/instrumentation-pg@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.57.0";
-        "@opentelemetry/instrumentation-redis" = packages."@opentelemetry/instrumentation-redis@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.53.0";
-        "@opentelemetry/instrumentation-tedious" = packages."@opentelemetry/instrumentation-tedious@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.23.0";
-        "@opentelemetry/instrumentation-undici" = packages."@opentelemetry/instrumentation-undici@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.15.0";
-        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:0.204.0";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/instrumentation-amqplib" = packages."@opentelemetry/instrumentation-amqplib@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0";
+        "@opentelemetry/instrumentation-connect" = packages."@opentelemetry/instrumentation-connect@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.48.0";
+        "@opentelemetry/instrumentation-dataloader" = packages."@opentelemetry/instrumentation-dataloader@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.22.0";
+        "@opentelemetry/instrumentation-express" = packages."@opentelemetry/instrumentation-express@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.53.0";
+        "@opentelemetry/instrumentation-fs" = packages."@opentelemetry/instrumentation-fs@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.24.0";
+        "@opentelemetry/instrumentation-generic-pool" = packages."@opentelemetry/instrumentation-generic-pool@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.48.0";
+        "@opentelemetry/instrumentation-graphql" = packages."@opentelemetry/instrumentation-graphql@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.52.0";
+        "@opentelemetry/instrumentation-hapi" = packages."@opentelemetry/instrumentation-hapi@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0";
+        "@opentelemetry/instrumentation-http" = packages."@opentelemetry/instrumentation-http@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
+        "@opentelemetry/instrumentation-ioredis" = packages."@opentelemetry/instrumentation-ioredis@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.52.0";
+        "@opentelemetry/instrumentation-kafkajs" = packages."@opentelemetry/instrumentation-kafkajs@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.14.0";
+        "@opentelemetry/instrumentation-knex" = packages."@opentelemetry/instrumentation-knex@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.49.0";
+        "@opentelemetry/instrumentation-koa" = packages."@opentelemetry/instrumentation-koa@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.52.0";
+        "@opentelemetry/instrumentation-lru-memoizer" = packages."@opentelemetry/instrumentation-lru-memoizer@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.49.0";
+        "@opentelemetry/instrumentation-mongodb" = packages."@opentelemetry/instrumentation-mongodb@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.57.0";
+        "@opentelemetry/instrumentation-mongoose" = packages."@opentelemetry/instrumentation-mongoose@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0";
+        "@opentelemetry/instrumentation-mysql2" = packages."@opentelemetry/instrumentation-mysql2@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.51.0";
+        "@opentelemetry/instrumentation-mysql" = packages."@opentelemetry/instrumentation-mysql@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.50.0";
+        "@opentelemetry/instrumentation-pg" = packages."@opentelemetry/instrumentation-pg@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.57.0";
+        "@opentelemetry/instrumentation-redis" = packages."@opentelemetry/instrumentation-redis@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.53.0";
+        "@opentelemetry/instrumentation-tedious" = packages."@opentelemetry/instrumentation-tedious@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.23.0";
+        "@opentelemetry/instrumentation-undici" = packages."@opentelemetry/instrumentation-undici@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.15.0";
+        "@opentelemetry/instrumentation" = packages."@opentelemetry/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:0.204.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
-        "@prisma/instrumentation" = packages."@prisma/instrumentation@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:6.15.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
-        "@sentry/node-core" = packages."@sentry/node-core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
-        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
+        "@prisma/instrumentation" = packages."@prisma/instrumentation@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:6.15.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
+        "@sentry/node-core" = packages."@sentry/node-core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:10.19.0";
+        "@sentry/opentelemetry" = packages."@sentry/opentelemetry@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:10.19.0";
         "import-in-the-middle" = packages."import-in-the-middle@npm:1.14.4";
         "minimatch" = packages."minimatch@npm:9.0.5";
       };
     };
-    "@sentry/opentelemetry@npm:10.17.0" = {
+    "@sentry/opentelemetry@npm:10.19.0" = {
       name = "@sentry/opentelemetry";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-opentelemetry-10.17.0-46571baed4";
-      outputHash = "8a5b575612cbe342f4267beca0b7793e0008373ee61bcd89b1723029f612a6936f3d248199868af002167d6f7d3cc35c0b263609273a6103721f3f5602be0286";
+      outputName = "sentry-opentelemetry-10.19.0-44d47b2d1a";
+      outputHash = "8144203aba190a76b9cfe861f8587d5c73a1578901ad9a871b6c320261da85e710d31e7aa11b469fc500d24302dd2a78f3d3d0871eb5674991aa1b50bc860fc6";
       flatName = "opentelemetry";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/8a5b575612cbe342f4267beca0b7793e0008373ee61bcd89b1723029f612a6936f3d248199868af002167d6f7d3cc35c0b263609273a6103721f3f5602be0286";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/8144203aba190a76b9cfe861f8587d5c73a1578901ad9a871b6c320261da85e710d31e7aa11b469fc500d24302dd2a78f3d3d0871eb5674991aa1b50bc860fc6";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
       };
       packagePeers = [
         "@opentelemetry/api"
@@ -13152,45 +13183,45 @@ let
         "@types/opentelemetry__semantic-conventions"
       ];
     };
-    "@sentry/opentelemetry@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0" = {
+    "@sentry/opentelemetry@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:10.19.0" = {
       name = "@sentry/opentelemetry";
-      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0";
-      canonicalPackage = packages."@sentry/opentelemetry@npm:10.17.0";
+      reference = "virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:10.19.0";
+      canonicalPackage = packages."@sentry/opentelemetry@npm:10.19.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
       };
     };
-    "@sentry/opentelemetry@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0" = {
+    "@sentry/opentelemetry@virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:10.19.0" = {
       name = "@sentry/opentelemetry";
-      reference = "virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:10.17.0";
-      canonicalPackage = packages."@sentry/opentelemetry@npm:10.17.0";
+      reference = "virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:10.19.0";
+      canonicalPackage = packages."@sentry/opentelemetry@npm:10.19.0";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/context-async-hooks" = packages."@opentelemetry/context-async-hooks@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
+        "@opentelemetry/core" = packages."@opentelemetry/core@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@opentelemetry/sdk-trace-base" = packages."@opentelemetry/sdk-trace-base@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
         "@opentelemetry/semantic-conventions" = packages."@opentelemetry/semantic-conventions@npm:1.37.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
       };
     };
-    "@sentry/react@npm:10.17.0" = {
+    "@sentry/react@npm:10.19.0" = {
       name = "@sentry/react";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-react-10.17.0-69aa8a2aa7";
-      outputHash = "ba560c9c0e27d1c18860efe14a8d138b3e818e47c87655003063f022c9056c08ac6a1cb62c433fd1e39626b193baf26fe570aa21b922e5522f7fe127ad0a57f6";
+      outputName = "sentry-react-10.19.0-f0a1ee60e9";
+      outputHash = "9ce0e2b5d4ce7071ff08a4c1bf1b045ef6a26527dbb1e0701502c709b16496d50c57da62311ea76d0a3ee6baf8d665178a20c89e89d151e9890f357f22304a63";
       flatName = "react";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/ba560c9c0e27d1c18860efe14a8d138b3e818e47c87655003063f022c9056c08ac6a1cb62c433fd1e39626b193baf26fe570aa21b922e5522f7fe127ad0a57f6";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/9ce0e2b5d4ce7071ff08a4c1bf1b045ef6a26527dbb1e0701502c709b16496d50c57da62311ea76d0a3ee6baf8d665178a20c89e89d151e9890f357f22304a63";
       dependencies = {
-        "@sentry/browser" = packages."@sentry/browser@npm:10.17.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/browser" = packages."@sentry/browser@npm:10.19.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
       };
       packagePeers = [
@@ -13198,33 +13229,33 @@ let
         "react"
       ];
     };
-    "@sentry/react@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0" = {
+    "@sentry/react@virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:10.19.0" = {
       name = "@sentry/react";
-      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:10.17.0";
-      canonicalPackage = packages."@sentry/react@npm:10.17.0";
+      reference = "virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:10.19.0";
+      canonicalPackage = packages."@sentry/react@npm:10.19.0";
       dependencies = {
-        "@sentry/browser" = packages."@sentry/browser@npm:10.17.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@sentry/browser" = packages."@sentry/browser@npm:10.19.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
         "@types/react" = packages."@types/react@npm:18.3.26";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
         "react" = packages."react@npm:18.3.1";
       };
     };
-    "@sentry/vercel-edge@npm:10.17.0" = {
+    "@sentry/vercel-edge@npm:10.19.0" = {
       name = "@sentry/vercel-edge";
-      reference = "npm:10.17.0";
+      reference = "npm:10.19.0";
       linkType = "HARD";
-      outputName = "sentry-vercel-edge-10.17.0-44aecbe2ad";
-      outputHash = "ca89f1827c225040678ee768b13c8221c337891824cb4e3b5aeda95a01fc1692182390ce4b3d0a5725dc81695f9cf4a67d6abf0de86a9cd933810456ea6c1612";
+      outputName = "sentry-vercel-edge-10.19.0-89745e01a6";
+      outputHash = "ea79f92a5f57ab61d76dbb112f77ecf1b4f839ec0cdc4b1571a7167d711f50b3f5c81dc9b318c9b91faba83642580d9a01b1648b1fdcb9a8c269f53b44756a2f";
       flatName = "vercel-edge";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:10.17.0";
-      checksum = "10/ca89f1827c225040678ee768b13c8221c337891824cb4e3b5aeda95a01fc1692182390ce4b3d0a5725dc81695f9cf4a67d6abf0de86a9cd933810456ea6c1612";
+      descriptorRange = "npm:10.19.0";
+      checksum = "10/ea79f92a5f57ab61d76dbb112f77ecf1b4f839ec0cdc4b1571a7167d711f50b3f5c81dc9b318c9b91faba83642580d9a01b1648b1fdcb9a8c269f53b44756a2f";
       dependencies = {
         "@opentelemetry/api" = packages."@opentelemetry/api@npm:1.9.0";
-        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:7b444f86be0d65b9b400e9f72437fa446226236b89b834ddbcca11b81f6cdf1fb265fd966fcaf2f93f2daa5277dde4835c0ff4ecbb309561e795da8398ca5c6d#npm:2.1.0";
-        "@sentry/core" = packages."@sentry/core@npm:10.17.0";
+        "@opentelemetry/resources" = packages."@opentelemetry/resources@virtual:4f274d543da63fe8e76f6681e81f946dbeaa433f68a81feb817705b6f4175a3262d71b837ef4fb62c2c3587cfe8f8f49b458ab30f0e9749a4c7970c4ff07a7de#npm:2.1.0";
+        "@sentry/core" = packages."@sentry/core@npm:10.19.0";
       };
     };
     "@sentry/webpack-plugin@npm:4.3.0" = {
@@ -13248,9 +13279,9 @@ let
         "webpack"
       ];
     };
-    "@sentry/webpack-plugin@virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:4.3.0" = {
+    "@sentry/webpack-plugin@virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:4.3.0" = {
       name = "@sentry/webpack-plugin";
-      reference = "virtual:3ff0cb1edbbaa9c22cd5237eec562e52c75be4f9d06315f705c99bc57f0ce13dac70bd7b77efe0bf00f08d5c72f10d2edc8528cf29d37c691bdd27b352b6d3e7#npm:4.3.0";
+      reference = "virtual:b1197009f80e9c39ff14642f039d1dc56b7a873a54e9a291677c7aa4dc6f09ec58732d44a1c7e2278a637efa078cda137dd61bb9f7f00a37471392ae787165b7#npm:4.3.0";
       canonicalPackage = packages."@sentry/webpack-plugin@npm:4.3.0";
       dependencies = {
         "@sentry/bundler-plugin-core" = packages."@sentry/bundler-plugin-core@npm:4.3.0";
@@ -15194,7 +15225,7 @@ let
       checksum = "10/33041e88eae00af2cfa0827e951e5f1751eafab2a8b6fce06cd89ef368a988907996436b1325180edaeddd1c0c7d0d0d4c20a6c9ff294a91e0039a9db9e9b658";
       dependencies = {
         "@types/connect" = packages."@types/connect@npm:3.4.38";
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/compression@npm:1.8.1" = {
@@ -15210,7 +15241,7 @@ let
       checksum = "10/cd746c830a5c981568d36989c3c43a55caf1872b54e3f9891b82fba04501de11882091df3ece11fbede2de01179c99d08639a08831e06c3966873f928407c01a";
       dependencies = {
         "@types/express" = packages."@types/express@npm:5.0.3";
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/connect@npm:3.4.38" = {
@@ -15225,7 +15256,7 @@ let
       descriptorRange = "npm:*";
       checksum = "10/7eb1bc5342a9604facd57598a6c62621e244822442976c443efb84ff745246b10d06e8b309b6e80130026a396f19bf6793b7cecd7380169f369dac3bfc46fb99";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/cors@npm:2.8.19" = {
@@ -15240,7 +15271,7 @@ let
       descriptorRange = "npm:^2.8.19";
       checksum = "10/9545cc532c9218754443f48a0c98c1a9ba4af1fe54a3425c95de75ff3158147bb39e666cb7c6bf98cc56a9c6dc7b4ce5b2cbdae6b55d5942e50c81b76ed6b825";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/date-arithmetic@npm:4.1.4" = {
@@ -15326,7 +15357,7 @@ let
       descriptorRange = "npm:^5.0.0";
       checksum = "10/9bccbf4c927a877e4fe60f9664737ec6ac39d4d906dbb2c8d00f67849bb0968833573c48602b5e77d3e0129fd1bdbe0eae08e68485f028ebf8c557806caa3377";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
         "@types/qs" = packages."@types/qs@npm:6.9.7";
         "@types/range-parser" = packages."@types/range-parser@npm:1.2.4";
         "@types/send" = packages."@types/send@npm:0.17.1";
@@ -15445,7 +15476,7 @@ let
       descriptorRange = "npm:^1.1.3";
       checksum = "10/a80f9a5c0825f3d1288af9ced3aeb909e2716f9ce1326e9e7e6a8bbfd80c1cf8b273fe0a6fadb282946aba1d21a33acd05e6317ac711084cc690c8fca490f0a4";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/js-yaml@npm:4.0.5" = {
@@ -15521,7 +15552,7 @@ let
       checksum = "10/d7960d995ad815511c7f4e7f09d91522dfe16e7e800cdd6226c8b1b624c534e0f3b8f8f3beb60e3189865269f028002f1a490189beca5afd02bc96ef1d68f21f";
       dependencies = {
         "@types/ms" = packages."@types/ms@npm:0.7.31";
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/leaflet@npm:1.9.21" = {
@@ -15659,7 +15690,7 @@ let
       descriptorRange = "npm:~1.9.10";
       checksum = "10/67c974efe93ae4f20084acc56800671fa7258eeef0126947f4cff8559493b2f72148676ca11c7bf88ae2e71031392108984d87bce913d89aeed78b82b82aee44";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/ms@npm:0.7.31" = {
@@ -15686,7 +15717,7 @@ let
       descriptorRange = "npm:2.15.27";
       checksum = "10/a8c743501036f494bb8b26ee04ce914c9cce88955d9ba48ff77d2b5b1bc403d4d99804dbf02238c1491fa93e2242983b1492ad8c2b39755dabd68683dada9e8f";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/node@npm:14.18.51" = {
@@ -15701,21 +15732,6 @@ let
       descriptorRange = "npm:^14.6.0";
       checksum = "10/49abb0fb4bcf7bf41076bcfc38616818dd099cca9c9623b8de29a458d83942cdf94ceb6dc61709225d34f81516bdb104edfd30121b25105db98bcdb457302cc8";
     };
-    "@types/node@npm:22.13.17" = {
-      name = "@types/node";
-      reference = "npm:22.13.17";
-      linkType = "HARD";
-      outputName = "types-node-22.13.17-888d18fda5";
-      outputHash = "b2bb532c6c7a8e8f87a49b3d2f7d5372a5c79f3b015522cfb116c974a89e438b40e03a1d46398871cba119085b5efd2e02e5acdbfc7596d6c60142f77ae9547c";
-      flatName = "node";
-      languageName = "node";
-      scope = "types";
-      descriptorRange = "npm:~22.13.17";
-      checksum = "10/b2bb532c6c7a8e8f87a49b3d2f7d5372a5c79f3b015522cfb116c974a89e438b40e03a1d46398871cba119085b5efd2e02e5acdbfc7596d6c60142f77ae9547c";
-      dependencies = {
-        "undici-types" = packages."undici-types@npm:6.20.0";
-      };
-    };
     "@types/node@npm:22.18.10" = {
       name = "@types/node";
       reference = "npm:22.18.10";
@@ -15725,10 +15741,25 @@ let
       flatName = "node";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:^22.18.10";
+      descriptorRange = "npm:^22.16.3";
       checksum = "10/07e9ce07767c48fc4860c78d2d9c90a87ef6fa30fa065beb2fd838ae1ba6fe787218f344a01cb14b4bf0a97cdfea5488fcbfbd343ccd07ab97154bceeb394f2f";
       dependencies = {
         "undici-types" = packages."undici-types@npm:6.21.0";
+      };
+    };
+    "@types/node@npm:24.7.2" = {
+      name = "@types/node";
+      reference = "npm:24.7.2";
+      linkType = "HARD";
+      outputName = "types-node-24.7.2-c42e5df6ef";
+      outputHash = "62073022f7fc11363683e6ce82332193129c3053e7f973127a83b0daa5d755ecf5806d310f5a7c78375e6c3d309aa15b4ae87c4c1797a9eec091425d36098b60";
+      flatName = "node";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^24.7.2";
+      checksum = "10/62073022f7fc11363683e6ce82332193129c3053e7f973127a83b0daa5d755ecf5806d310f5a7c78375e6c3d309aa15b4ae87c4c1797a9eec091425d36098b60";
+      dependencies = {
+        "undici-types" = packages."undici-types@npm:7.14.0";
       };
     };
     "@types/nodemailer@npm:6.4.20" = {
@@ -15744,7 +15775,7 @@ let
       checksum = "10/050b6aa95c97a1bf645f0735c5da20a5b4aa30df1fc8bcc8a60c039b5f45f450689e5f51821d144d038148f3dae8427bb7d91f503c6390960a1390e562147a4f";
       dependencies = {
         "@aws-sdk/client-ses" = packages."@aws-sdk/client-ses@npm:3.879.0";
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/normalize-package-data@npm:2.4.4" = {
@@ -15798,7 +15829,7 @@ let
       descriptorRange = "npm:8.10.2";
       checksum = "10/6c69c7f3bcbbbd5db4bbd25200d23efbcba1d34df9b392bc76a8c995972d4d5e83f83b2ce981d461e3268293393e35a81cac0bf7f739eead2a7db30031fd4ffc";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
         "pg-protocol" = packages."pg-protocol@npm:1.10.3";
         "pg-types" = packages."pg-types@npm:4.0.1";
       };
@@ -15945,7 +15976,7 @@ let
       checksum = "10/6420837887858f7aa82f2c0272f73edb42385bd0978f43095e83590a405d86c8cc6d918c30b2d542f1d8bddc9f3d16c2e8fdfca936940de71b97c45f228d1896";
       dependencies = {
         "@types/mime" = packages."@types/mime@npm:1.3.2";
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/serve-static@npm:1.15.2" = {
@@ -15962,7 +15993,7 @@ let
       dependencies = {
         "@types/http-errors" = packages."@types/http-errors@npm:2.0.1";
         "@types/mime" = packages."@types/mime@npm:3.0.1";
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/shimmer@npm:1.2.0" = {
@@ -15989,7 +16020,7 @@ let
       descriptorRange = "npm:^4.0.14";
       checksum = "10/c8f6480cf68d95b5e9f64fa6210f50915e8ff124638965a2c5a4c87641cc7f762155b9a8e01e3e517d48f8931e2d3920a40c4e677398e8b93c9cf1c8a36d2fbb";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@types/uuid@npm:9.0.8" = {
@@ -16016,7 +16047,7 @@ let
       descriptorRange = "npm:^8.18.1";
       checksum = "10/1ce05e3174dcacf28dae0e9b854ef1c9a12da44c7ed73617ab6897c5cbe4fccbb155a20be5508ae9a7dde2f83bd80f5cf3baa386b934fc4b40889ec963e94f3a";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
       };
     };
     "@typescript-eslint/eslint-plugin@npm:7.18.0" = {
@@ -16081,6 +16112,25 @@ let
         "typescript"
       ];
     };
+    "@typescript-eslint/eslint-plugin@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:8.10.0" = {
+      name = "@typescript-eslint/eslint-plugin";
+      reference = "virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/eslint-plugin@npm:8.10.0";
+      dependencies = {
+        "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.12.1";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:8.10.0";
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
+        "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:c6b69002de2d9213225b21d669e7f0b443ae1446512859e487403d78867e0a079be483723c12b14ed476abc81e92e5f8b23ab634b28e8e6acf2ff61379f2ef6e#npm:8.10.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:c6b69002de2d9213225b21d669e7f0b443ae1446512859e487403d78867e0a079be483723c12b14ed476abc81e92e5f8b23ab634b28e8e6acf2ff61379f2ef6e#npm:8.10.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
+        "eslint" = packages."eslint@npm:8.57.1";
+        "graphemer" = packages."graphemer@npm:1.4.0";
+        "ignore" = packages."ignore@npm:5.3.1";
+        "natural-compare" = packages."natural-compare@npm:1.4.0";
+        "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
+      };
+    };
     "@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0" = {
       name = "@typescript-eslint/eslint-plugin";
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
@@ -16092,25 +16142,6 @@ let
         "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:7.18.0";
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:7.18.0";
-        "eslint" = packages."eslint@npm:8.57.1";
-        "graphemer" = packages."graphemer@npm:1.4.0";
-        "ignore" = packages."ignore@npm:5.3.1";
-        "natural-compare" = packages."natural-compare@npm:1.4.0";
-        "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
-      };
-    };
-    "@typescript-eslint/eslint-plugin@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0" = {
-      name = "@typescript-eslint/eslint-plugin";
-      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/eslint-plugin@npm:8.10.0";
-      dependencies = {
-        "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.12.1";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
-        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
-        "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
-        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
-        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
         "eslint" = packages."eslint@npm:8.57.1";
         "graphemer" = packages."graphemer@npm:1.4.0";
         "ignore" = packages."ignore@npm:5.3.1";
@@ -16169,6 +16200,20 @@ let
         "typescript"
       ];
     };
+    "@typescript-eslint/parser@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:8.10.0" = {
+      name = "@typescript-eslint/parser";
+      reference = "virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/parser@npm:8.10.0";
+      dependencies = {
+        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:1d4273bd49f01944ac9aba29a7d01cd556ae6fc58d1c173dd16bc2d187fe4c86eac058dffe23e874a863df85d2f0cdd5d134b4bdbfaff254a14856743db1d52c#npm:8.10.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
+        "eslint" = packages."eslint@npm:8.57.1";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
+      };
+    };
     "@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0" = {
       name = "@typescript-eslint/parser";
       reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
@@ -16178,20 +16223,6 @@ let
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:7.18.0";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:f75b817dd18d959fcc2593c7d44575343f300beb628e54fc461a6270a4daf63d80a22b39919eca73dfa86baadba70f0735e3562912ae15d97999c0b807b56492#npm:7.18.0";
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:7.18.0";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
-        "eslint" = packages."eslint@npm:8.57.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
-      };
-    };
-    "@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0" = {
-      name = "@typescript-eslint/parser";
-      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/parser@npm:8.10.0";
-      dependencies = {
-        "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0";
-        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
         "eslint" = packages."eslint@npm:8.57.1";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
@@ -16277,13 +16308,13 @@ let
         "typescript"
       ];
     };
-    "@typescript-eslint/type-utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0" = {
+    "@typescript-eslint/type-utils@virtual:c6b69002de2d9213225b21d669e7f0b443ae1446512859e487403d78867e0a079be483723c12b14ed476abc81e92e5f8b23ab634b28e8e6acf2ff61379f2ef6e#npm:8.10.0" = {
       name = "@typescript-eslint/type-utils";
-      reference = "virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
+      reference = "virtual:c6b69002de2d9213225b21d669e7f0b443ae1446512859e487403d78867e0a079be483723c12b14ed476abc81e92e5f8b23ab634b28e8e6acf2ff61379f2ef6e#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/type-utils@npm:8.10.0";
       dependencies = {
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0";
-        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:1d4273bd49f01944ac9aba29a7d01cd556ae6fc58d1c173dd16bc2d187fe4c86eac058dffe23e874a863df85d2f0cdd5d134b4bdbfaff254a14856743db1d52c#npm:8.10.0";
+        "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:c6b69002de2d9213225b21d669e7f0b443ae1446512859e487403d78867e0a079be483723c12b14ed476abc81e92e5f8b23ab634b28e8e6acf2ff61379f2ef6e#npm:8.10.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
         "eslint" = packages."eslint@npm:8.57.1";
         "ts-api-utils" = packages."ts-api-utils@virtual:d133c7bb079d9b17c1cbb4baa1735af4473878ab7b009ef664b9832307b43d9dd0be7c8b9d008c0647c67c914c20b2bcfc65dd1bcd2c996afb5ed5283a51d5e4#npm:1.3.0";
@@ -16379,9 +16410,9 @@ let
         "typescript"
       ];
     };
-    "@typescript-eslint/typescript-estree@virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0" = {
+    "@typescript-eslint/typescript-estree@virtual:1d4273bd49f01944ac9aba29a7d01cd556ae6fc58d1c173dd16bc2d187fe4c86eac058dffe23e874a863df85d2f0cdd5d134b4bdbfaff254a14856743db1d52c#npm:8.10.0" = {
       name = "@typescript-eslint/typescript-estree";
-      reference = "virtual:01610b5ae9972e63f22cd9f9b166286ea638efc73573f3c89db091c72bd9aa23c970334a84a622ce05071b9b0bb80c8f94918d4a6c4622eba084634a463cc315#npm:8.10.0";
+      reference = "virtual:1d4273bd49f01944ac9aba29a7d01cd556ae6fc58d1c173dd16bc2d187fe4c86eac058dffe23e874a863df85d2f0cdd5d134b4bdbfaff254a14856743db1d52c#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:8.10.0";
       dependencies = {
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
@@ -16395,21 +16426,6 @@ let
         "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
       };
     };
-    "@typescript-eslint/typescript-estree@virtual:70107cb97a4ab4730acf61f6abbe5d7294879b916abb5699087bd6b7a8380fbb03c39482170b62ab6b9dd0d743114d911e3eb019f7df482d45b8aff0eb8b4b46#npm:8.10.0" = {
-      name = "@typescript-eslint/typescript-estree";
-      reference = "virtual:70107cb97a4ab4730acf61f6abbe5d7294879b916abb5699087bd6b7a8380fbb03c39482170b62ab6b9dd0d743114d911e3eb019f7df482d45b8aff0eb8b4b46#npm:8.10.0";
-      canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:8.10.0";
-      dependencies = {
-        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
-        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
-        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
-        "fast-glob" = packages."fast-glob@npm:3.3.2";
-        "is-glob" = packages."is-glob@npm:4.0.3";
-        "minimatch" = packages."minimatch@npm:9.0.5";
-        "semver" = packages."semver@npm:7.7.3";
-        "ts-api-utils" = packages."ts-api-utils@virtual:111d46e676e1ad25340fb6b6265b3b41cb12fa317c40eabafb9d8580329c0218e024a5dd8156aa805d2b719b8a7a17f28edcccfafc442a308d7f417896f83665#npm:1.3.0";
-      };
-    };
     "@typescript-eslint/typescript-estree@virtual:f1609deb39ab4a569cb3f31824783986d490d2d8c778cdd450148e78dbc1e4ca1431a59f0d88d524bd3a98d4bfc773f23bb43975b838b9c071ddff195a0c0d5f#npm:7.18.0" = {
       name = "@typescript-eslint/typescript-estree";
       reference = "virtual:f1609deb39ab4a569cb3f31824783986d490d2d8c778cdd450148e78dbc1e4ca1431a59f0d88d524bd3a98d4bfc773f23bb43975b838b9c071ddff195a0c0d5f#npm:7.18.0";
@@ -16419,6 +16435,21 @@ let
         "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:7.18.0";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
         "globby" = packages."globby@npm:11.1.0";
+        "is-glob" = packages."is-glob@npm:4.0.3";
+        "minimatch" = packages."minimatch@npm:9.0.5";
+        "semver" = packages."semver@npm:7.7.3";
+        "ts-api-utils" = packages."ts-api-utils@virtual:111d46e676e1ad25340fb6b6265b3b41cb12fa317c40eabafb9d8580329c0218e024a5dd8156aa805d2b719b8a7a17f28edcccfafc442a308d7f417896f83665#npm:1.3.0";
+      };
+    };
+    "@typescript-eslint/typescript-estree@virtual:f3120db49f3841a55c2ccc7233265a304b113388c443c1d2fc06a6d96c724eed339fd18588c494a8b268083f15d6eb919920f51a75116475cfc77efc54b076e8#npm:8.10.0" = {
+      name = "@typescript-eslint/typescript-estree";
+      reference = "virtual:f3120db49f3841a55c2ccc7233265a304b113388c443c1d2fc06a6d96c724eed339fd18588c494a8b268083f15d6eb919920f51a75116475cfc77efc54b076e8#npm:8.10.0";
+      canonicalPackage = packages."@typescript-eslint/typescript-estree@npm:8.10.0";
+      dependencies = {
+        "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
+        "@typescript-eslint/visitor-keys" = packages."@typescript-eslint/visitor-keys@npm:8.10.0";
+        "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
+        "fast-glob" = packages."fast-glob@npm:3.3.2";
         "is-glob" = packages."is-glob@npm:4.0.3";
         "minimatch" = packages."minimatch@npm:9.0.5";
         "semver" = packages."semver@npm:7.7.3";
@@ -16485,15 +16516,15 @@ let
         "eslint"
       ];
     };
-    "@typescript-eslint/utils@virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0" = {
+    "@typescript-eslint/utils@virtual:c6b69002de2d9213225b21d669e7f0b443ae1446512859e487403d78867e0a079be483723c12b14ed476abc81e92e5f8b23ab634b28e8e6acf2ff61379f2ef6e#npm:8.10.0" = {
       name = "@typescript-eslint/utils";
-      reference = "virtual:cf92a68e755d8c8d4af2811f67202a76f7a00d71d03121c255b2d772482224421cc6143a0e2ef9b8247200fb10f8c0a0fb6db37d8425e4ebbe3d2f8803375c76#npm:8.10.0";
+      reference = "virtual:c6b69002de2d9213225b21d669e7f0b443ae1446512859e487403d78867e0a079be483723c12b14ed476abc81e92e5f8b23ab634b28e8e6acf2ff61379f2ef6e#npm:8.10.0";
       canonicalPackage = packages."@typescript-eslint/utils@npm:8.10.0";
       dependencies = {
         "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:dd20287a5a1e86b12a5b04609f98bd729fafd847d08e1fc89cdc68f92d1acf209e53b09ef0af4b6e7781d88e1f9acf94e3bf34619939e434ad5ffb0f24855eb4#npm:4.7.0";
         "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:8.10.0";
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:8.10.0";
-        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:70107cb97a4ab4730acf61f6abbe5d7294879b916abb5699087bd6b7a8380fbb03c39482170b62ab6b9dd0d743114d911e3eb019f7df482d45b8aff0eb8b4b46#npm:8.10.0";
+        "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:f3120db49f3841a55c2ccc7233265a304b113388c443c1d2fc06a6d96c724eed339fd18588c494a8b268083f15d6eb919920f51a75116475cfc77efc54b076e8#npm:8.10.0";
         "eslint" = packages."eslint@npm:8.57.1";
       };
     };
@@ -16776,7 +16807,7 @@ let
       canonicalPackage = packages."@vercel/analytics@npm:1.5.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.26";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
         "react" = packages."react@npm:18.3.1";
       };
     };
@@ -19585,7 +19616,7 @@ let
       canonicalPackage = packages."cookies-next@npm:5.0.2";
       dependencies = {
         "cookie" = packages."cookie@npm:1.0.1";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
       };
     };
     "core-js-compat@npm:3.46.0" = {
@@ -21022,50 +21053,50 @@ let
         "is-symbol" = packages."is-symbol@npm:1.1.1";
       };
     };
-    "esbuild@npm:0.25.10" = {
+    "esbuild@npm:0.25.11" = {
       name = "esbuild";
-      reference = "npm:0.25.10";
+      reference = "npm:0.25.11";
       linkType = "HARD";
-      outputName = "esbuild-0.25.10-f26f7be387";
+      outputName = "esbuild-0.25.11-44fa5ada25";
       outputHashByPlatform = {
-        "x86_64-linux" = "sha512-SpL1gywqUzuuA9feReupgFASeR1EVc3kQqOyJaLGV2BwajQSZB0YThe2/rd1DGPJvOsi8+F8uz+iiCpinDpExQ==";
+        "x86_64-linux" = "sha512-ViruxonOBjS+tXsP2C4ZqKCNmAyf2xDIqn2kbnNDmJrF1UaShIurrWRaUDfmEDYcvPfY8II8rM3pF4gKc4DfqA==";
       };
       shouldBeUnplugged = true;
       flatName = "esbuild";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.25.10";
-      checksum = "10/a8e4d33d7e785b7c8e1255d2ef532a53d1406659dbf2d0d3cdeb95c4760f51f86683e42974643b4f1dbe58381b6c7ce1217d4c8325f84353fbfc40be7b326358";
+      descriptorRange = "npm:^0.25.11";
+      checksum = "10/287dfc7909d169501be9daa55973ae9398bd69c7114dfc0b682eef04c22f5c33fdba934398af0f36ed5aab1366ee4be25062235d6a1bff4b74fa3d185e208e56";
       bin = {
         "esbuild" = "bin/esbuild";
       };
       dependencies = {
-        "@esbuild/aix-ppc64" = packages."@esbuild/aix-ppc64@npm:0.25.10";
-        "@esbuild/android-arm64" = packages."@esbuild/android-arm64@npm:0.25.10";
-        "@esbuild/android-arm" = packages."@esbuild/android-arm@npm:0.25.10";
-        "@esbuild/android-x64" = packages."@esbuild/android-x64@npm:0.25.10";
-        "@esbuild/darwin-arm64" = packages."@esbuild/darwin-arm64@npm:0.25.10";
-        "@esbuild/darwin-x64" = packages."@esbuild/darwin-x64@npm:0.25.10";
-        "@esbuild/freebsd-arm64" = packages."@esbuild/freebsd-arm64@npm:0.25.10";
-        "@esbuild/freebsd-x64" = packages."@esbuild/freebsd-x64@npm:0.25.10";
-        "@esbuild/linux-arm64" = packages."@esbuild/linux-arm64@npm:0.25.10";
-        "@esbuild/linux-arm" = packages."@esbuild/linux-arm@npm:0.25.10";
-        "@esbuild/linux-ia32" = packages."@esbuild/linux-ia32@npm:0.25.10";
-        "@esbuild/linux-loong64" = packages."@esbuild/linux-loong64@npm:0.25.10";
-        "@esbuild/linux-mips64el" = packages."@esbuild/linux-mips64el@npm:0.25.10";
-        "@esbuild/linux-ppc64" = packages."@esbuild/linux-ppc64@npm:0.25.10";
-        "@esbuild/linux-riscv64" = packages."@esbuild/linux-riscv64@npm:0.25.10";
-        "@esbuild/linux-s390x" = packages."@esbuild/linux-s390x@npm:0.25.10";
-        "@esbuild/linux-x64" = packages."@esbuild/linux-x64@npm:0.25.10";
-        "@esbuild/netbsd-arm64" = packages."@esbuild/netbsd-arm64@npm:0.25.10";
-        "@esbuild/netbsd-x64" = packages."@esbuild/netbsd-x64@npm:0.25.10";
-        "@esbuild/openbsd-arm64" = packages."@esbuild/openbsd-arm64@npm:0.25.10";
-        "@esbuild/openbsd-x64" = packages."@esbuild/openbsd-x64@npm:0.25.10";
-        "@esbuild/openharmony-arm64" = packages."@esbuild/openharmony-arm64@npm:0.25.10";
-        "@esbuild/sunos-x64" = packages."@esbuild/sunos-x64@npm:0.25.10";
-        "@esbuild/win32-arm64" = packages."@esbuild/win32-arm64@npm:0.25.10";
-        "@esbuild/win32-ia32" = packages."@esbuild/win32-ia32@npm:0.25.10";
-        "@esbuild/win32-x64" = packages."@esbuild/win32-x64@npm:0.25.10";
+        "@esbuild/aix-ppc64" = packages."@esbuild/aix-ppc64@npm:0.25.11";
+        "@esbuild/android-arm64" = packages."@esbuild/android-arm64@npm:0.25.11";
+        "@esbuild/android-arm" = packages."@esbuild/android-arm@npm:0.25.11";
+        "@esbuild/android-x64" = packages."@esbuild/android-x64@npm:0.25.11";
+        "@esbuild/darwin-arm64" = packages."@esbuild/darwin-arm64@npm:0.25.11";
+        "@esbuild/darwin-x64" = packages."@esbuild/darwin-x64@npm:0.25.11";
+        "@esbuild/freebsd-arm64" = packages."@esbuild/freebsd-arm64@npm:0.25.11";
+        "@esbuild/freebsd-x64" = packages."@esbuild/freebsd-x64@npm:0.25.11";
+        "@esbuild/linux-arm64" = packages."@esbuild/linux-arm64@npm:0.25.11";
+        "@esbuild/linux-arm" = packages."@esbuild/linux-arm@npm:0.25.11";
+        "@esbuild/linux-ia32" = packages."@esbuild/linux-ia32@npm:0.25.11";
+        "@esbuild/linux-loong64" = packages."@esbuild/linux-loong64@npm:0.25.11";
+        "@esbuild/linux-mips64el" = packages."@esbuild/linux-mips64el@npm:0.25.11";
+        "@esbuild/linux-ppc64" = packages."@esbuild/linux-ppc64@npm:0.25.11";
+        "@esbuild/linux-riscv64" = packages."@esbuild/linux-riscv64@npm:0.25.11";
+        "@esbuild/linux-s390x" = packages."@esbuild/linux-s390x@npm:0.25.11";
+        "@esbuild/linux-x64" = packages."@esbuild/linux-x64@npm:0.25.11";
+        "@esbuild/netbsd-arm64" = packages."@esbuild/netbsd-arm64@npm:0.25.11";
+        "@esbuild/netbsd-x64" = packages."@esbuild/netbsd-x64@npm:0.25.11";
+        "@esbuild/openbsd-arm64" = packages."@esbuild/openbsd-arm64@npm:0.25.11";
+        "@esbuild/openbsd-x64" = packages."@esbuild/openbsd-x64@npm:0.25.11";
+        "@esbuild/openharmony-arm64" = packages."@esbuild/openharmony-arm64@npm:0.25.11";
+        "@esbuild/sunos-x64" = packages."@esbuild/sunos-x64@npm:0.25.11";
+        "@esbuild/win32-arm64" = packages."@esbuild/win32-arm64@npm:0.25.11";
+        "@esbuild/win32-ia32" = packages."@esbuild/win32-ia32@npm:0.25.11";
+        "@esbuild/win32-x64" = packages."@esbuild/win32-x64@npm:0.25.11";
       };
     };
     "escalade@npm:3.2.0" = {
@@ -21128,19 +21159,19 @@ let
       descriptorRange = "npm:^4.0.0";
       checksum = "10/98b48897d93060f2322108bf29db0feba7dd774be96cd069458d1453347b25ce8682ecc39859d4bca2203cc0ab19c237bcc71755eff49a0f8d90beadeeba5cc5";
     };
-    "eslint-config-next@npm:15.5.4" = {
+    "eslint-config-next@npm:15.5.5" = {
       name = "eslint-config-next";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "eslint-config-next-15.5.4-fe5e635561";
-      outputHash = "f2a4a779d0523e655a04fa071e47e7e50ae89cff0194eda023eceb4d4762056e2a9d67900cff35a25c28696de2d91de5bb786eeda1e0f93b6d5c14bd9f5349d7";
+      outputName = "eslint-config-next-15.5.5-5b2400f0b3";
+      outputHash = "8e6fbcacac3b961b666baa31397eb8fbfd48ecbf10e3da97122bb33a3a10e854e7b46bdc6d4b1a46ca7524ff44be071cd783376732adaa09878381951d96d812";
       flatName = "eslint-config-next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~15.5.4";
-      checksum = "10/f2a4a779d0523e655a04fa071e47e7e50ae89cff0194eda023eceb4d4762056e2a9d67900cff35a25c28696de2d91de5bb786eeda1e0f93b6d5c14bd9f5349d7";
+      descriptorRange = "npm:~15.5.5";
+      checksum = "10/8e6fbcacac3b961b666baa31397eb8fbfd48ecbf10e3da97122bb33a3a10e854e7b46bdc6d4b1a46ca7524ff44be071cd783376732adaa09878381951d96d812";
       dependencies = {
-        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:15.5.4";
+        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:15.5.5";
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.10.4";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@npm:8.10.0";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@npm:8.10.0";
@@ -21158,22 +21189,22 @@ let
         "typescript"
       ];
     };
-    "eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4" = {
+    "eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5" = {
       name = "eslint-config-next";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
-      canonicalPackage = packages."eslint-config-next@npm:15.5.4";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
+      canonicalPackage = packages."eslint-config-next@npm:15.5.5";
       dependencies = {
-        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:15.5.4";
+        "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:15.5.5";
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.10.4";
-        "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
+        "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:8.10.0";
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.9";
-        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:3.5.5";
-        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:2.31.0";
-        "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:6.10.2";
-        "eslint-plugin-react" = packages."eslint-plugin-react@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:7.37.4";
-        "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:5.0.0";
+        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:3.5.5";
+        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:2.31.0";
+        "eslint-plugin-jsx-a11y" = packages."eslint-plugin-jsx-a11y@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:6.10.2";
+        "eslint-plugin-react" = packages."eslint-plugin-react@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:7.37.4";
+        "eslint-plugin-react-hooks" = packages."eslint-plugin-react-hooks@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:5.0.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
       };
     };
@@ -21222,16 +21253,16 @@ let
         "eslint"
       ];
     };
-    "eslint-import-resolver-typescript@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:3.5.5" = {
+    "eslint-import-resolver-typescript@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:3.5.5" = {
       name = "eslint-import-resolver-typescript";
-      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:3.5.5";
+      reference = "virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:3.5.5";
       canonicalPackage = packages."eslint-import-resolver-typescript@npm:3.5.5";
       dependencies = {
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.18.3";
         "eslint" = packages."eslint@npm:8.57.1";
-        "eslint-module-utils" = packages."eslint-module-utils@virtual:39919f15c465427f70ac6ef08009afe9bdbb2206fd169ecc1e53081b13d7698f97fbc078aa420ed9f877a48f86d0e9a77d57bd9777aedc9c0cb49ac5339a26dd#npm:2.12.0";
-        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:2.31.0";
+        "eslint-module-utils" = packages."eslint-module-utils@virtual:843217146fe1ca2ef4783f17ddd6fa812a92c3f3799fb7d8d1bb8fdfe5437dc411b1a8a262ca177e873583773d11a692f8d76fa1f88259de8da11906ef6ebb08#npm:2.12.0";
+        "eslint-plugin-import" = packages."eslint-plugin-import@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:2.31.0";
         "get-tsconfig" = packages."get-tsconfig@npm:4.6.2";
         "globby" = packages."globby@npm:13.2.2";
         "is-core-module" = packages."is-core-module@npm:2.16.1";
@@ -21266,25 +21297,25 @@ let
         "eslint"
       ];
     };
-    "eslint-module-utils@virtual:01b5e94d380edd7748b7005e0f830a4aedbc20665b7233ebe8feb43e77442af71975f91d0c0a884d1cd749465c561a231d8a42b3eae3c096b87e3e2aed6e3a03#npm:2.12.0" = {
+    "eslint-module-utils@virtual:3c35eb96d5e0c896a065b1fcdb366ebed9ea8b081d94136185e2fa29fcd27811616aa5cc8fe5a432e057297e5c821a76b55f37090b68949e28b956117f32c89b#npm:2.12.0" = {
       name = "eslint-module-utils";
-      reference = "virtual:01b5e94d380edd7748b7005e0f830a4aedbc20665b7233ebe8feb43e77442af71975f91d0c0a884d1cd749465c561a231d8a42b3eae3c096b87e3e2aed6e3a03#npm:2.12.0";
+      reference = "virtual:3c35eb96d5e0c896a065b1fcdb366ebed9ea8b081d94136185e2fa29fcd27811616aa5cc8fe5a432e057297e5c821a76b55f37090b68949e28b956117f32c89b#npm:2.12.0";
       canonicalPackage = packages."eslint-module-utils@npm:2.12.0";
       dependencies = {
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:8.10.0";
         "debug" = packages."debug@virtual:2a426afc4b2eef43db12a540d29c2b5476640459bfcd5c24f86bb401cf8cce97e63bd81794d206a5643057e7f662643afd5ce3dfc4d4bfd8e706006c6309c5fa#npm:3.2.7";
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.9";
       };
     };
-    "eslint-module-utils@virtual:39919f15c465427f70ac6ef08009afe9bdbb2206fd169ecc1e53081b13d7698f97fbc078aa420ed9f877a48f86d0e9a77d57bd9777aedc9c0cb49ac5339a26dd#npm:2.12.0" = {
+    "eslint-module-utils@virtual:843217146fe1ca2ef4783f17ddd6fa812a92c3f3799fb7d8d1bb8fdfe5437dc411b1a8a262ca177e873583773d11a692f8d76fa1f88259de8da11906ef6ebb08#npm:2.12.0" = {
       name = "eslint-module-utils";
-      reference = "virtual:39919f15c465427f70ac6ef08009afe9bdbb2206fd169ecc1e53081b13d7698f97fbc078aa420ed9f877a48f86d0e9a77d57bd9777aedc9c0cb49ac5339a26dd#npm:2.12.0";
+      reference = "virtual:843217146fe1ca2ef4783f17ddd6fa812a92c3f3799fb7d8d1bb8fdfe5437dc411b1a8a262ca177e873583773d11a692f8d76fa1f88259de8da11906ef6ebb08#npm:2.12.0";
       canonicalPackage = packages."eslint-module-utils@npm:2.12.0";
       dependencies = {
         "debug" = packages."debug@virtual:2a426afc4b2eef43db12a540d29c2b5476640459bfcd5c24f86bb401cf8cce97e63bd81794d206a5643057e7f662643afd5ce3dfc4d4bfd8e706006c6309c5fa#npm:3.2.7";
         "eslint" = packages."eslint@npm:8.57.1";
-        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:3.5.5";
+        "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:3.5.5";
       };
     };
     "eslint-plugin-de-morgan@npm:1.3.1" = {
@@ -21350,13 +21381,13 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-import@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:2.31.0" = {
+    "eslint-plugin-import@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:2.31.0" = {
       name = "eslint-plugin-import";
-      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:2.31.0";
+      reference = "virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:2.31.0";
       canonicalPackage = packages."eslint-plugin-import@npm:2.31.0";
       dependencies = {
         "@rtsao/scc" = packages."@rtsao/scc@npm:1.1.0";
-        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:8.10.0";
+        "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:8.10.0";
         "array-includes" = packages."array-includes@npm:3.1.8";
         "array.prototype.findlastindex" = packages."array.prototype.findlastindex@npm:1.2.5";
         "array.prototype.flat" = packages."array.prototype.flat@npm:1.3.2";
@@ -21365,7 +21396,7 @@ let
         "doctrine" = packages."doctrine@npm:2.1.0";
         "eslint" = packages."eslint@npm:8.57.1";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.9";
-        "eslint-module-utils" = packages."eslint-module-utils@virtual:01b5e94d380edd7748b7005e0f830a4aedbc20665b7233ebe8feb43e77442af71975f91d0c0a884d1cd749465c561a231d8a42b3eae3c096b87e3e2aed6e3a03#npm:2.12.0";
+        "eslint-module-utils" = packages."eslint-module-utils@virtual:3c35eb96d5e0c896a065b1fcdb366ebed9ea8b081d94136185e2fa29fcd27811616aa5cc8fe5a432e057297e5c821a76b55f37090b68949e28b956117f32c89b#npm:2.12.0";
         "hasown" = packages."hasown@npm:2.0.2";
         "is-core-module" = packages."is-core-module@npm:2.16.1";
         "is-glob" = packages."is-glob@npm:4.0.3";
@@ -21411,9 +21442,9 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-jsx-a11y@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:6.10.2" = {
+    "eslint-plugin-jsx-a11y@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:6.10.2" = {
       name = "eslint-plugin-jsx-a11y";
-      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:6.10.2";
+      reference = "virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:6.10.2";
       canonicalPackage = packages."eslint-plugin-jsx-a11y@npm:6.10.2";
       dependencies = {
         "aria-query" = packages."aria-query@npm:5.3.2";
@@ -21450,9 +21481,9 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-react-hooks@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:5.0.0" = {
+    "eslint-plugin-react-hooks@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:5.0.0" = {
       name = "eslint-plugin-react-hooks";
-      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:5.0.0";
+      reference = "virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:5.0.0";
       canonicalPackage = packages."eslint-plugin-react-hooks@npm:5.0.0";
       dependencies = {
         "eslint" = packages."eslint@npm:8.57.1";
@@ -21494,9 +21525,9 @@ let
         "eslint"
       ];
     };
-    "eslint-plugin-react@virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:7.37.4" = {
+    "eslint-plugin-react@virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:7.37.4" = {
       name = "eslint-plugin-react";
-      reference = "virtual:c59c45a04dd27f57d3a98e0f051fd3978f84b599044ab08ee6e8e93c58dfaec592b1e6bf1ed83b6a61fd318abba410ca875a8067de831fb3a31ec4cd2d945451#npm:7.37.4";
+      reference = "virtual:1dfef98aca5e0ac37cdb913e9187c45926772310cb7aaf465534e9521e5d8775ad92b5d07d75ba0017788bc91661cd7b24ba7ce17d7bf42e731b8a86e3ea2fe6#npm:7.37.4";
       canonicalPackage = packages."eslint-plugin-react@npm:7.37.4";
       dependencies = {
         "array-includes" = packages."array-includes@npm:3.1.8";
@@ -22480,9 +22511,9 @@ let
         "picomatch"
       ];
     };
-    "fdir@virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:6.5.0" = {
+    "fdir@virtual:2cb644afe3c6a4d8cb93acc7cb4a29ef7725cecf8e0334b7cad0eb265efb5926a3be01f4dff3a41c32e736a6a0aad3b7a12f43b908d718df83cf91c448fdcb81#npm:6.5.0" = {
       name = "fdir";
-      reference = "virtual:f40751e994a753f61f79ecf567d75fcef2cc883e0d0bfee2e4133e2458ae17ea759157c44a943629593bf55c56d0ef6cd5241bc126158cbed93b66fcd647234a#npm:6.5.0";
+      reference = "virtual:2cb644afe3c6a4d8cb93acc7cb4a29ef7725cecf8e0334b7cad0eb265efb5926a3be01f4dff3a41c32e736a6a0aad3b7a12f43b908d718df83cf91c448fdcb81#npm:6.5.0";
       canonicalPackage = packages."fdir@npm:6.5.0";
       dependencies = {
         "picomatch" = packages."picomatch@npm:4.0.3";
@@ -24229,39 +24260,39 @@ let
         "uglify-js" = packages."uglify-js@npm:3.19.3";
       };
     };
-    "html-react-parser@npm:5.2.6" = {
+    "html-react-parser@npm:5.2.7" = {
       name = "html-react-parser";
-      reference = "npm:5.2.6";
+      reference = "npm:5.2.7";
       linkType = "HARD";
-      outputName = "html-react-parser-5.2.6-ade37ca517";
-      outputHash = "be2903fd932d44ff6cae66bd18b025d318879e16eb1e67c0ae6dc640e5c77509da41b61948c0d404a43b5362b57b7cfa3963df242b9773d4c7a16f410db7f2ac";
+      outputName = "html-react-parser-5.2.7-868d444299";
+      outputHash = "8627823e9c4931bf1457d703fc57ee81feeea7f0d170ffc5f6b8d73c8b8002d1bf1d05b3f1dd92210b717a95087122464e527321bd9a345ee48b9aa383938198";
       flatName = "html-react-parser";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.2.6";
-      checksum = "10/be2903fd932d44ff6cae66bd18b025d318879e16eb1e67c0ae6dc640e5c77509da41b61948c0d404a43b5362b57b7cfa3963df242b9773d4c7a16f410db7f2ac";
+      descriptorRange = "npm:^5.2.7";
+      checksum = "10/8627823e9c4931bf1457d703fc57ee81feeea7f0d170ffc5f6b8d73c8b8002d1bf1d05b3f1dd92210b717a95087122464e527321bd9a345ee48b9aa383938198";
       dependencies = {
         "domhandler" = packages."domhandler@npm:5.0.3";
         "html-dom-parser" = packages."html-dom-parser@npm:5.1.1";
         "react-property" = packages."react-property@npm:2.0.2";
-        "style-to-js" = packages."style-to-js@npm:1.1.17";
+        "style-to-js" = packages."style-to-js@npm:1.1.18";
       };
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.6" = {
+    "html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.7" = {
       name = "html-react-parser";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.6";
-      canonicalPackage = packages."html-react-parser@npm:5.2.6";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.7";
+      canonicalPackage = packages."html-react-parser@npm:5.2.7";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.26";
         "domhandler" = packages."domhandler@npm:5.0.3";
         "html-dom-parser" = packages."html-dom-parser@npm:5.1.1";
         "react" = packages."react@npm:18.3.1";
         "react-property" = packages."react-property@npm:2.0.2";
-        "style-to-js" = packages."style-to-js@npm:1.1.17";
+        "style-to-js" = packages."style-to-js@npm:1.1.18";
       };
     };
     "html-to-text@npm:9.0.5" = {
@@ -24640,7 +24671,7 @@ let
         "acorn-import-attributes" = packages."acorn-import-attributes@virtual:ca914162230306833819e6279bd8f51b7fe90c69adb8b964e918e50b0c6896ef8e1890b4f31385badbf038ab34add1d374699c928f8f6854e2317cddfd2a5f0e#npm:1.9.5";
         "acorn" = packages."acorn@npm:8.15.0";
         "cjs-module-lexer" = packages."cjs-module-lexer@npm:1.3.1";
-        "module-details-from-path" = packages."module-details-from-path@npm:1.0.3";
+        "module-details-from-path" = packages."module-details-from-path@npm:1.0.4";
       };
     };
     "imurmurhash@npm:0.1.4" = {
@@ -25621,7 +25652,7 @@ let
       descriptorRange = "npm:^27.4.5";
       checksum = "10/06c6e2a84591d9ede704d5022fc13791e8876e83397c89d481b0063332abbb64c0f01ef4ca7de520b35c7a1058556078d6bdc3631376f4e9ffb42316c1a8488e";
       dependencies = {
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
         "merge-stream" = packages."merge-stream@npm:2.0.0";
         "supports-color" = packages."supports-color@npm:8.1.1";
       };
@@ -27968,17 +27999,17 @@ let
         "mkdirp" = "bin/cmd.js";
       };
     };
-    "module-details-from-path@npm:1.0.3" = {
+    "module-details-from-path@npm:1.0.4" = {
       name = "module-details-from-path";
-      reference = "npm:1.0.3";
+      reference = "npm:1.0.4";
       linkType = "HARD";
-      outputName = "module-details-from-path-1.0.3-396d5203b4";
-      outputHash = "f93226e9154fc8cb91f4609b639167ec7ad9155b30be4924d9717656648a3ae5f181d4e2338434d4c5afc7b5f4c10dd3b64109e5b89a4be70b20a25ba3573d54";
+      outputName = "module-details-from-path-1.0.4-c3d0545459";
+      outputHash = "2ebfada5358492f6ab496b70f70a1042f2ee7a4c79d29467f59ed6704f741fb4461d7cecb5082144ed39a05fec4d19e9ff38b731c76228151be97227240a05b2";
       flatName = "module-details-from-path";
       languageName = "node";
       scope = null;
       descriptorRange = "npm:^1.0.3";
-      checksum = "10/f93226e9154fc8cb91f4609b639167ec7ad9155b30be4924d9717656648a3ae5f181d4e2338434d4c5afc7b5f4c10dd3b64109e5b89a4be70b20a25ba3573d54";
+      checksum = "10/2ebfada5358492f6ab496b70f70a1042f2ee7a4c79d29467f59ed6704f741fb4461d7cecb5082144ed39a05fec4d19e9ff38b731c76228151be97227240a05b2";
     };
     "morgan@npm:1.10.1" = {
       name = "morgan";
@@ -28156,7 +28187,7 @@ let
       canonicalPackage = packages."next-query-params@npm:5.1.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.26";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
         "use-query-params" = packages."use-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.1";
@@ -28189,7 +28220,7 @@ let
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.26";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
       };
@@ -28229,30 +28260,30 @@ let
         "urql" = packages."urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:4.2.2";
       };
     };
-    "next@npm:15.5.4" = {
+    "next@npm:15.5.5" = {
       name = "next";
-      reference = "npm:15.5.4";
+      reference = "npm:15.5.5";
       linkType = "HARD";
-      outputName = "next-15.5.4-2693b30f50";
-      outputHash = "6cc933dd0e829e122e0232776b6fda5d9ff1a3c9c5f423163bb5962c524c479e0ad21cd8a6556ac028a17758b56e3988af4e11c5792ad986c973a370e42d1689";
+      outputName = "next-15.5.5-c94e78d1f8";
+      outputHash = "658fa4221c70ecd9af6135da2f31b85ab07f89b40c031f6443d5fb7922a743bd13337dd53c6ae21241f486708edec0ec4f0b08e7f4b79f522c7a7cf52cf4f610";
       flatName = "next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:15.5.4";
-      checksum = "10/6cc933dd0e829e122e0232776b6fda5d9ff1a3c9c5f423163bb5962c524c479e0ad21cd8a6556ac028a17758b56e3988af4e11c5792ad986c973a370e42d1689";
+      descriptorRange = "npm:15.5.5";
+      checksum = "10/658fa4221c70ecd9af6135da2f31b85ab07f89b40c031f6443d5fb7922a743bd13337dd53c6ae21241f486708edec0ec4f0b08e7f4b79f522c7a7cf52cf4f610";
       bin = {
         "next" = "dist/bin/next";
       };
       dependencies = {
-        "@next/env" = packages."@next/env@npm:15.5.4";
-        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.5.4";
-        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.5.4";
-        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.5.4";
-        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.5.4";
-        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.5.4";
-        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.5.4";
-        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.5.4";
-        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.5.4";
+        "@next/env" = packages."@next/env@npm:15.5.5";
+        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.5.5";
+        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.5.5";
+        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.5.5";
+        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.5.5";
+        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.5.5";
+        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.5.5";
+        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.5.5";
+        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.5.5";
         "@swc/helpers" = packages."@swc/helpers@npm:0.5.15";
         "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001748";
         "postcss" = packages."postcss@npm:8.4.31";
@@ -28274,20 +28305,20 @@ let
         "sass"
       ];
     };
-    "next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4" = {
+    "next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5" = {
       name = "next";
-      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
-      canonicalPackage = packages."next@npm:15.5.4";
+      reference = "virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
+      canonicalPackage = packages."next@npm:15.5.5";
       dependencies = {
-        "@next/env" = packages."@next/env@npm:15.5.4";
-        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.5.4";
-        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.5.4";
-        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.5.4";
-        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.5.4";
-        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.5.4";
-        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.5.4";
-        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.5.4";
-        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.5.4";
+        "@next/env" = packages."@next/env@npm:15.5.5";
+        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:15.5.5";
+        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:15.5.5";
+        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:15.5.5";
+        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:15.5.5";
+        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:15.5.5";
+        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:15.5.5";
+        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:15.5.5";
+        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:15.5.5";
         "@swc/helpers" = packages."@swc/helpers@npm:0.5.15";
         "@types/react" = packages."@types/react@npm:18.3.26";
         "@types/react-dom" = packages."@types/react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.7";
@@ -28296,7 +28327,7 @@ let
         "react" = packages."react@npm:18.3.1";
         "react-dom" = packages."react-dom@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:18.3.1";
         "sharp" = packages."sharp@npm:0.34.4";
-        "styled-jsx" = packages."styled-jsx@virtual:4949fd202ab93d0e9a4efa3fe437b062e178eab4a33b6e4f8d3bba59fa9cac42a62a68678e2e5f2433de6f2ca633e30582e4411fa076fc4831486c78f60000d0#npm:5.1.6";
+        "styled-jsx" = packages."styled-jsx@virtual:8e6e32ce54a0dd52563472b0d30e30c37da1b75c1084339dc48edeb1ea7d307d96f52677e6a0953a8331393fe22b55d89ffa46c5063e96258d8e86e61197da0a#npm:5.1.6";
       };
     };
     "nextjs-google-analytics@npm:2.3.7" = {
@@ -28328,7 +28359,7 @@ let
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.26";
         "fsevents" = packages."fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
         "react" = packages."react@npm:18.3.1";
         "tslib" = packages."tslib@npm:2.8.1";
       };
@@ -28361,7 +28392,7 @@ let
       canonicalPackage = packages."nextjs-routes@npm:2.2.5";
       dependencies = {
         "chokidar" = packages."chokidar@npm:4.0.3";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
       };
     };
     "no-case@npm:2.3.2" = {
@@ -31297,7 +31328,7 @@ let
       checksum = "10/883343b9ba15d42dd443b20fba5f9135cc4b7c2c2af3ae87f0105c28c499f98438a414e49bbfafd3f607dbe60a91c0da3610d31c9c3f61d222e565a8e8dd161e";
       dependencies = {
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.4.3";
-        "module-details-from-path" = packages."module-details-from-path@npm:1.0.3";
+        "module-details-from-path" = packages."module-details-from-path@npm:1.0.4";
         "resolve" = packages."resolve@patch:resolve@npm%3A1.22.10#optional!builtin<compat/resolve>::version=1.22.10&hash=c3c19d";
       };
     };
@@ -31656,11 +31687,11 @@ let
         "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.4";
         "@types/jsonwebtoken" = packages."@types/jsonwebtoken@npm:9.0.10";
         "@types/morgan" = packages."@types/morgan@npm:1.9.10";
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
         "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.20";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "@types/ws" = packages."@types/ws@npm:8.18.1";
-        "esbuild" = packages."esbuild@npm:0.25.10";
+        "esbuild" = packages."esbuild@npm:0.25.11";
         "eslint" = packages."eslint@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.22.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
       };
@@ -31705,7 +31736,7 @@ let
         "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:43.3.1";
         "@hookform/resolvers" = packages."@hookform/resolvers@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.2";
         "@icons-pack/react-simple-icons" = packages."@icons-pack/react-simple-icons@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:13.8.0";
-        "@next/bundle-analyzer" = packages."@next/bundle-analyzer@npm:15.5.4";
+        "@next/bundle-analyzer" = packages."@next/bundle-analyzer@npm:15.5.5";
         "@radix-ui/colors" = packages."@radix-ui/colors@npm:0.1.9";
         "@radix-ui/react-checkbox" = packages."@radix-ui/react-checkbox@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.3";
         "@radix-ui/react-collapsible" = packages."@radix-ui/react-collapsible@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.12";
@@ -31716,7 +31747,7 @@ let
         "@radix-ui/react-toggle-group" = packages."@radix-ui/react-toggle-group@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.11";
         "@radix-ui/react-use-controllable-state" = packages."@radix-ui/react-use-controllable-state@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.2.2";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.1.1";
-        "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.17.0";
+        "@sentry/nextjs" = packages."@sentry/nextjs@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:10.19.0";
         "@tanstack/match-sorter-utils" = packages."@tanstack/match-sorter-utils@npm:8.19.4";
         "@tanstack/react-table" = packages."@tanstack/react-table@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:8.21.3";
         "@tanstack/react-virtual" = packages."@tanstack/react-virtual@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.13.12";
@@ -31741,7 +31772,7 @@ let
         "fuzzysort" = packages."fuzzysort@npm:3.1.0";
         "glider-js" = packages."glider-js@npm:1.7.9";
         "graphql" = packages."graphql@npm:16.11.0";
-        "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.6";
+        "html-react-parser" = packages."html-react-parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.2.7";
         "iban" = packages."iban@npm:0.0.14";
         "jotai" = packages."jotai@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.15.0";
         "leaflet" = packages."leaflet@npm:1.9.4";
@@ -31752,7 +31783,7 @@ let
         "next-query-params" = packages."next-query-params@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.1.0";
         "next-seo" = packages."next-seo@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:6.8.0";
         "next-urql" = packages."next-urql@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:5.0.2";
-        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+        "next" = packages."next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
         "nextjs-google-analytics" = packages."nextjs-google-analytics@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.3.7";
         "nextjs-routes" = packages."nextjs-routes@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:2.2.5";
         "nprogress" = packages."nprogress@npm:0.2.0";
@@ -31786,7 +31817,7 @@ let
       };
       devDependencies = {
         "@babel/core" = packages."@babel/core@npm:7.28.4";
-        "@biomejs/biome" = packages."@biomejs/biome@npm:2.2.5";
+        "@biomejs/biome" = packages."@biomejs/biome@npm:2.2.6";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:4ac4429d58ef2843afb463cef83a51ecaa6444be614c303022d35f4064579a182f050ba58c2df385214dfccc1b4d3d02d8d3f271f5cd18c3e13d2a12b20d5a29#npm:3.2.0";
         "@swc/core" = packages."@swc/core@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.13.5";
         "@tailwindcss/aspect-ratio" = packages."@tailwindcss/aspect-ratio@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:0.4.2";
@@ -31801,7 +31832,7 @@ let
         "@types/lodash.chunk" = packages."@types/lodash.chunk@npm:4.2.9";
         "@types/lodash.range" = packages."@types/lodash.range@npm:3.2.9";
         "@types/lodash.sortby" = packages."@types/lodash.sortby@npm:4.7.9";
-        "@types/node" = packages."@types/node@npm:22.13.17";
+        "@types/node" = packages."@types/node@npm:24.7.2";
         "@types/nprogress" = packages."@types/nprogress@npm:0.2.3";
         "@types/qrcode.react" = packages."@types/qrcode.react@npm:1.0.5";
         "@types/react" = packages."@types/react@npm:18.3.26";
@@ -31810,7 +31841,7 @@ let
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:7.18.0";
         "eslint" = packages."eslint@npm:8.57.1";
-        "eslint-config-next" = packages."eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.4";
+        "eslint-config-next" = packages."eslint-config-next@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:15.5.5";
         "eslint-plugin-de-morgan" = packages."eslint-plugin-de-morgan@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:1.3.1";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:3.18.2";
         "eslint-plugin-unicorn" = packages."eslint-plugin-unicorn@virtual:489e9bf59e3d6fb42db5e0d82a1b19aa095dafed7c5dc6954765c0c751cc5344542a79e26abc1f28207f039912d218686ffc28eac719c9323e80a46b49a342a0#npm:56.0.1";
@@ -31852,10 +31883,10 @@ let
         "@tsconfig/node18" = packages."@tsconfig/node18@npm:18.2.4";
         "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.4";
         "@types/mjml" = packages."@types/mjml@npm:4.7.4";
-        "@types/node" = packages."@types/node@npm:22.18.10";
+        "@types/node" = packages."@types/node@npm:24.7.2";
         "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.20";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
-        "esbuild" = packages."esbuild@npm:0.25.10";
+        "esbuild" = packages."esbuild@npm:0.25.11";
         "glob" = packages."glob@npm:11.0.3";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
       };
@@ -33236,32 +33267,32 @@ let
       descriptorRange = "npm:^2.1.0";
       checksum = "10/d5fe6e4333cddc17569331048e403e876ffcf629989815f0359b0caf05dae9441b7eef3d7dd07427313ac8b3f05a8f60abc1f61efc15f97245dbc24028362bc9";
     };
-    "style-to-js@npm:1.1.17" = {
+    "style-to-js@npm:1.1.18" = {
       name = "style-to-js";
-      reference = "npm:1.1.17";
+      reference = "npm:1.1.18";
       linkType = "HARD";
-      outputName = "style-to-js-1.1.17-a000758235";
-      outputHash = "431f2fca8a55a61939a83ff0f58638e2996621ad93a97cf93f2be5115f411330d4e506ccf18621bd45607ec161546b763bb6961ad08238ad939b6261ff377230";
+      outputName = "style-to-js-1.1.18-9c01e5c94a";
+      outputHash = "6cef016881e436b2c29059d7082f8604b654c8fcfba4aa4448a49f0269d0b6e1c66cbde9478e4a8b6088b5ef1d3f609f7233d0c26fa435c17842a9eeb2a327e9";
       flatName = "style-to-js";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:1.1.17";
-      checksum = "10/431f2fca8a55a61939a83ff0f58638e2996621ad93a97cf93f2be5115f411330d4e506ccf18621bd45607ec161546b763bb6961ad08238ad939b6261ff377230";
+      descriptorRange = "npm:1.1.18";
+      checksum = "10/6cef016881e436b2c29059d7082f8604b654c8fcfba4aa4448a49f0269d0b6e1c66cbde9478e4a8b6088b5ef1d3f609f7233d0c26fa435c17842a9eeb2a327e9";
       dependencies = {
-        "style-to-object" = packages."style-to-object@npm:1.0.9";
+        "style-to-object" = packages."style-to-object@npm:1.0.11";
       };
     };
-    "style-to-object@npm:1.0.9" = {
+    "style-to-object@npm:1.0.11" = {
       name = "style-to-object";
-      reference = "npm:1.0.9";
+      reference = "npm:1.0.11";
       linkType = "HARD";
-      outputName = "style-to-object-1.0.9-8b847db36c";
-      outputHash = "fd0c131a83103fe4025afd8e0fd90c605054d485ad80f2ab402e7afa79f482f4b05fff40b6aa661cb1b835e5c56bb0644dc38cbf9b3d2982fc552435db3dae50";
+      outputName = "style-to-object-1.0.11-2775e98444";
+      outputHash = "8a201b1dd2a1cc5418deed4fc4b16d1383ba5bf57672b0be3955b5281eb6485b89ecdd85be59557d6e79ff842c65f65a84c0465e78cf761ae27e9b3d9ea2e5ba";
       flatName = "style-to-object";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:1.0.9";
-      checksum = "10/fd0c131a83103fe4025afd8e0fd90c605054d485ad80f2ab402e7afa79f482f4b05fff40b6aa661cb1b835e5c56bb0644dc38cbf9b3d2982fc552435db3dae50";
+      descriptorRange = "npm:1.0.11";
+      checksum = "10/8a201b1dd2a1cc5418deed4fc4b16d1383ba5bf57672b0be3955b5281eb6485b89ecdd85be59557d6e79ff842c65f65a84c0465e78cf761ae27e9b3d9ea2e5ba";
       dependencies = {
         "inline-style-parser" = packages."inline-style-parser@npm:0.2.4";
       };
@@ -33289,9 +33320,9 @@ let
         "react"
       ];
     };
-    "styled-jsx@virtual:4949fd202ab93d0e9a4efa3fe437b062e178eab4a33b6e4f8d3bba59fa9cac42a62a68678e2e5f2433de6f2ca633e30582e4411fa076fc4831486c78f60000d0#npm:5.1.6" = {
+    "styled-jsx@virtual:8e6e32ce54a0dd52563472b0d30e30c37da1b75c1084339dc48edeb1ea7d307d96f52677e6a0953a8331393fe22b55d89ffa46c5063e96258d8e86e61197da0a#npm:5.1.6" = {
       name = "styled-jsx";
-      reference = "virtual:4949fd202ab93d0e9a4efa3fe437b062e178eab4a33b6e4f8d3bba59fa9cac42a62a68678e2e5f2433de6f2ca633e30582e4411fa076fc4831486c78f60000d0#npm:5.1.6";
+      reference = "virtual:8e6e32ce54a0dd52563472b0d30e30c37da1b75c1084339dc48edeb1ea7d307d96f52677e6a0953a8331393fe22b55d89ffa46c5063e96258d8e86e61197da0a#npm:5.1.6";
       canonicalPackage = packages."styled-jsx@npm:5.1.6";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.3.26";
@@ -34310,18 +34341,6 @@ let
       descriptorRange = "npm:^0.1.2";
       checksum = "10/a05fa2006bf4606051c10fc7968f08ce7b28fa646befafa282813aeb1ac1a56f65cb1b577ca7851af2726198d59475bb49b11776036257b843eaacee2860a4ec";
     };
-    "undici-types@npm:6.20.0" = {
-      name = "undici-types";
-      reference = "npm:6.20.0";
-      linkType = "HARD";
-      outputName = "undici-types-6.20.0-bd21e669af";
-      outputHash = "583ac7bbf4ff69931d3985f4762cde2690bb607844c16a5e2fbb92ed312fe4fa1b365e953032d469fa28ba8b224e88a595f0b10a449332f83fa77c695e567dbe";
-      flatName = "undici-types";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~6.20.0";
-      checksum = "10/583ac7bbf4ff69931d3985f4762cde2690bb607844c16a5e2fbb92ed312fe4fa1b365e953032d469fa28ba8b224e88a595f0b10a449332f83fa77c695e567dbe";
-    };
     "undici-types@npm:6.21.0" = {
       name = "undici-types";
       reference = "npm:6.21.0";
@@ -34333,6 +34352,18 @@ let
       scope = null;
       descriptorRange = "npm:~6.21.0";
       checksum = "10/ec8f41aa4359d50f9b59fa61fe3efce3477cc681908c8f84354d8567bb3701fafdddf36ef6bff307024d3feb42c837cf6f670314ba37fc8145e219560e473d14";
+    };
+    "undici-types@npm:7.14.0" = {
+      name = "undici-types";
+      reference = "npm:7.14.0";
+      linkType = "HARD";
+      outputName = "undici-types-7.14.0-d9eb643e6a";
+      outputHash = "0f8709b21437697af35801e33bddbe9992e0cf1771959c41850b1946f63822b825e03ce99f44bf19e4f5c3ccc5166e0be59f541565c36ce86163dc2c5870bc62";
+      flatName = "undici-types";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:~7.14.0";
+      checksum = "10/0f8709b21437697af35801e33bddbe9992e0cf1771959c41850b1946f63822b825e03ce99f44bf19e4f5c3ccc5166e0be59f541565c36ce86163dc2c5870bc62";
     };
     "unique-filename@npm:3.0.0" = {
       name = "unique-filename";

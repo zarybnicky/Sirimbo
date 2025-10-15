@@ -54,7 +54,7 @@
 
     in {
       prettier = yarnPackages."prettier@npm:3.6.2";
-      squawk = yarnPackages."squawk-cli@npm:1.4.0";
+      squawk = yarnPackages."squawk-cli@npm:1.6.1";
 
       graphile-migrate = final.callPackage ./nix/graphile-migrate {};
       tbls = final.callPackage ./nix/tbls {};

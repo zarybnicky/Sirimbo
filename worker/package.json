@@ -28,10 +28,10 @@
     "@tsconfig/node18": "^18.2.4",
     "@types/html-to-text": "~9.0.4",
     "@types/mjml": "^4.7.4",
-    "@types/node": "^22.18.10",
+    "@types/node": "^24.7.2",
     "@types/nodemailer": "~6.4.20",
     "@types/pg": "~8.15.5",
-    "esbuild": "^0.25.10",
+    "esbuild": "^0.25.11",
     "glob": "^11.0.3",
     "typescript": "~5.9.3"
   }
