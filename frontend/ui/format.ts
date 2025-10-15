@@ -111,18 +111,26 @@ export const formatOpenDateRange = (item: { since: string | null, until: string 
   ? `do ${fullDateFormatter.format(new Date(item.until))}`
   : 'neomezeně';
 
-export const timeRangeToDatetimeRange = (date: string, x: {
-  startTime: string;
-  endTime: string;
-}): { since: Date, until: Date; } => {
+export const timeRangeToDatetimeRange = (
+  date: string | null | undefined,
+  x: {
+    startTime: string;
+    endTime: string;
+    endDate?: string | null | undefined;
+  },
+): { since: Date, until: Date; } => {
+  const fallbackDate = new Date().toISOString().slice(0, 10);
+  const startDate = date || x.endDate || fallbackDate;
+  const endDate = x.endDate || startDate;
   return {
-    since: new Date(`${date}T${x.startTime}`),
-    until: new Date(`${date}T${x.endTime}`),
+    since: new Date(`${startDate}T${x.startTime}`),
+    until: new Date(`${endDate}T${x.endTime}`),
   };
 };
 
 export const datetimeRangeToTimeRange = (start: Date, end: Date): {
   date: string;
+  endDate: string;
   startTime: string;
   endTime: string;
 } => {
@@ -132,6 +140,7 @@ export const datetimeRangeToTimeRange = (start: Date, end: Date): {
   const endDict: Record<string, string> = Object.assign({}, ...endParts.map((x) => ({ [x.type]: x.value })));
   return {
     date: `${startDict.year}-${startDict.month}-${startDict.day}`,
+    endDate: `${endDict.year}-${endDict.month}-${endDict.day}`,
     startTime: `${startDict.hour}:${startDict.minute}:${startDict.second}`,
     endTime: `${endDict.hour}:${endDict.minute}:${endDict.second}`,
   };
