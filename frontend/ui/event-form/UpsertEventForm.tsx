@@ -87,7 +87,7 @@ export function UpsertEventForm({ initialValue = {}, event }: {
     }
   }, [reset, eventData]);
 
-  const type = watch('type');
+  const type = watch('type') ?? 'LESSON';
   const trainers = watch('trainers');
   const instances = watch('instances');
   const registrations = watch('registrations');
@@ -209,7 +209,7 @@ export function UpsertEventForm({ initialValue = {}, event }: {
         <TextFieldElement control={control} type="number" name="capacity" label="Maximální počet účastníků (nepovinný)" />
       )}
 
-      <InstanceListElement control={control} name="instances" />
+      <InstanceListElement control={control} name="instances" type={type} />
       <TrainerListElement control={control} name="trainers" />
 
       {!!memberPrice && type === 'LESSON' && (

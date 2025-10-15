@@ -20,6 +20,7 @@ export const EventForm = z.object({
     z.object({
       itemId: z.string().nullish().prefault(null).optional(),
       date: z.string().nullish().optional().prefault(null),
+      endDate: z.string().nullish().optional().prefault(null),
       startTime: z.string(),
       endTime: z.string(),
       isCancelled: z.boolean().nullish().prefault(false),
