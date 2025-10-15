@@ -8,5 +8,3 @@ CREATE FUNCTION app_private.is_system_admin(bigint) RETURNS boolean
 $_$;
 
 COMMENT ON FUNCTION app_private.is_system_admin(bigint) IS 'Returns true when the given user id has global system administrator privileges.';
-
-GRANT ALL ON FUNCTION app_private.is_system_admin(bigint) TO anonymous;

@@ -1,5 +1,6 @@
 CREATE FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) RETURNS public.account
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   select * into acc from account

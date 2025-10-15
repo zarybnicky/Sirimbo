@@ -1,5 +1,6 @@
 CREATE FUNCTION app_private.tg_event_instance__create_attendance() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   insert into event_attendance (registration_id, instance_id, person_id)

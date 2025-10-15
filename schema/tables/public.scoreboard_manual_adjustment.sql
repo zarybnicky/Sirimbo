@@ -22,6 +22,8 @@ ALTER TABLE ONLY public.scoreboard_manual_adjustment
     ADD CONSTRAINT scoreboard_manual_adjustment_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
 ALTER TABLE ONLY public.scoreboard_manual_adjustment
     ADD CONSTRAINT scoreboard_manual_adjustment_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.scoreboard_manual_adjustment
+    ADD CONSTRAINT scoreboard_manual_adjustment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_manage ON public.scoreboard_manual_adjustment TO administrator USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
 CREATE POLICY member_read ON public.scoreboard_manual_adjustment FOR SELECT TO member USING ((tenant_id = public.current_tenant_id()));

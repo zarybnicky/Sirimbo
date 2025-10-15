@@ -56,3 +56,6 @@ CREATE POLICY manage_admin ON public.membership_application TO administrator USI
 CREATE POLICY manage_my ON public.membership_application USING ((created_by = public.current_user_id()));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.membership_application FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+CREATE INDEX membership_application_created_by_idx ON public.membership_application USING btree (created_by);
+CREATE INDEX membership_application_tenant_id_idx ON public.membership_application USING btree (tenant_id);

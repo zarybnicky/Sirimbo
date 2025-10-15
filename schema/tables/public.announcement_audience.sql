@@ -28,4 +28,5 @@ CREATE TRIGGER _600_notify_announcement_audience_update AFTER UPDATE ON public.a
 
 CREATE UNIQUE INDEX announcement_audience_announcement_cohort_idx ON public.announcement_audience USING btree (announcement_id, cohort_id);
 CREATE UNIQUE INDEX announcement_audience_announcement_role_idx ON public.announcement_audience USING btree (announcement_id, audience_role);
+CREATE INDEX announcement_audience_cohort_id_idx ON public.announcement_audience USING btree (cohort_id);
 CREATE INDEX announcement_audience_tenant_idx ON public.announcement_audience USING btree (tenant_id);

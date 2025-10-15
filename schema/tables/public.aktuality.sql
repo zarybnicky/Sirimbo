@@ -34,6 +34,7 @@ CREATE POLICY public_view ON public.aktuality FOR SELECT USING (true);
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER on_update_author BEFORE UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION public.on_update_author_aktuality();
 
+CREATE INDEX aktuality_at_foto_main_idx ON public.aktuality USING btree (at_foto_main);
 CREATE INDEX idx_23753_aktuality_at_foto_main_fkey ON public.aktuality USING btree (at_foto_main);
 CREATE INDEX idx_23753_aktuality_at_kdo_fkey ON public.aktuality USING btree (at_kdo);
 CREATE INDEX idx_23753_at_timestamp_add ON public.aktuality USING btree (created_at);

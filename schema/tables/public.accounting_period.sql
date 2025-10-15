@@ -24,3 +24,5 @@ CREATE POLICY current_tenant ON public.accounting_period AS RESTRICTIVE USING ((
 CREATE POLICY public_view ON public.accounting_period FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.accounting_period FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+CREATE INDEX accounting_period_tenant_id_idx ON public.accounting_period USING btree (tenant_id);

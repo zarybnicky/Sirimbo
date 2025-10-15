@@ -41,3 +41,9 @@ CREATE POLICY member_view ON public.payment FOR SELECT TO member USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.payment FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.payment FOR EACH ROW EXECUTE FUNCTION app_private.tg_payment__fill_accounting_period();
+
+CREATE INDEX payment_accounting_period_id_idx ON public.payment USING btree (accounting_period_id);
+CREATE INDEX payment_cohort_subscription_id_idx ON public.payment USING btree (cohort_subscription_id);
+CREATE INDEX payment_event_instance_id_idx ON public.payment USING btree (event_instance_id);
+CREATE INDEX payment_event_registration_id_idx ON public.payment USING btree (event_registration_id);
+CREATE INDEX payment_tenant_id_idx ON public.payment USING btree (tenant_id);

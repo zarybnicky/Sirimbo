@@ -23,3 +23,7 @@ ALTER TABLE ONLY public.payment_debtor
 CREATE POLICY admin_manage ON public.payment_debtor TO administrator USING (true);
 CREATE POLICY current_tenant ON public.payment_debtor AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY member_view ON public.payment_debtor FOR SELECT TO member USING (true);
+
+CREATE INDEX payment_debtor_payment_id_idx ON public.payment_debtor USING btree (payment_id);
+CREATE INDEX payment_debtor_person_id_idx ON public.payment_debtor USING btree (person_id);
+CREATE INDEX payment_debtor_tenant_id_idx ON public.payment_debtor USING btree (tenant_id);

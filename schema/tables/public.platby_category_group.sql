@@ -28,3 +28,5 @@ CREATE POLICY member_view ON public.platby_category_group FOR SELECT TO member U
 
 CREATE UNIQUE INDEX idx_23868_pcg_id_group ON public.platby_category_group USING btree (pcg_id_group, pcg_id_category);
 CREATE INDEX idx_23868_platby_category_group_pcg_id_category_fkey ON public.platby_category_group USING btree (pcg_id_category);
+CREATE INDEX platby_category_group_pcg_id_category_idx ON public.platby_category_group USING btree (pcg_id_category);
+CREATE INDEX platby_category_group_tenant_id_idx ON public.platby_category_group USING btree (tenant_id);

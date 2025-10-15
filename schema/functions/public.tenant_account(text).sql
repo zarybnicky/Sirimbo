@@ -1,5 +1,6 @@
 CREATE FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS public.account
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   select * into acc from account

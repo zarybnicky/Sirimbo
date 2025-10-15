@@ -1,5 +1,6 @@
 CREATE FUNCTION app_private.tg_event_instance__update_parent_range() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN

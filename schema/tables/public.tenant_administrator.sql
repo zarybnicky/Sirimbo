@@ -34,3 +34,4 @@ CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON pub
 
 CREATE INDEX tenant_administrator_person_id_idx ON public.tenant_administrator USING btree (person_id);
 CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING gist (active_range, tenant_id, person_id);
+CREATE INDEX tenant_administrator_tenant_id_idx ON public.tenant_administrator USING btree (tenant_id);

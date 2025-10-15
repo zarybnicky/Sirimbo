@@ -20,3 +20,5 @@ ALTER TABLE ONLY public.attachment
 
 CREATE POLICY admin_all ON public.attachment TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY public_view ON public.attachment FOR SELECT TO anonymous USING (true);
+
+CREATE INDEX attachment_uploaded_by_idx ON public.attachment USING btree (uploaded_by);

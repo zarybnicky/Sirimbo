@@ -1,5 +1,6 @@
 CREATE FUNCTION public.verify_function(f regproc, relid regclass DEFAULT 0) RETURNS void
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   error text[];

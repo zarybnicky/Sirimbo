@@ -1,5 +1,6 @@
 CREATE FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) RETURNS void
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_tenant_id bigint;
@@ -94,5 +95,3 @@ end;
 $$;
 
 COMMENT ON FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) IS '@omit';
-
-GRANT ALL ON FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) TO anonymous;

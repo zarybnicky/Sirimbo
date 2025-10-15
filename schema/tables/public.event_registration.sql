@@ -51,3 +51,4 @@ CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING
 CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);
 CREATE INDEX event_registration_person_id_idx ON public.event_registration USING btree (person_id);
 CREATE INDEX event_registration_target_cohort_id_idx ON public.event_registration USING btree (target_cohort_id);
+CREATE INDEX event_registration_tenant_id_idx ON public.event_registration USING btree (tenant_id);

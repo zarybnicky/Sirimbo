@@ -48,6 +48,8 @@ CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
+CREATE INDEX event_location_id_idx ON public.event USING btree (location_id);
+CREATE INDEX event_payment_recipient_id_idx ON public.event USING btree (payment_recipient_id);
 CREATE INDEX event_type_idx ON public.event USING btree (type);
 CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);
 CREATE INDEX idx_event_tenant ON public.event USING btree (tenant_id, is_visible);

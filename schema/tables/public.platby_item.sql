@@ -36,3 +36,5 @@ CREATE POLICY view_my ON public.platby_item FOR SELECT TO member USING ((pi_id_u
 CREATE UNIQUE INDEX idx_23891_pi_id_raw ON public.platby_item USING btree (pi_id_raw);
 CREATE INDEX idx_23891_platby_item_pi_id_category_fkey ON public.platby_item USING btree (pi_id_category);
 CREATE INDEX idx_23891_platby_item_pi_id_user_fkey ON public.platby_item USING btree (pi_id_user);
+CREATE INDEX platby_item_pi_id_category_idx ON public.platby_item USING btree (pi_id_category);
+CREATE INDEX platby_item_tenant_id_idx ON public.platby_item USING btree (tenant_id);

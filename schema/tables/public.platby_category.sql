@@ -31,3 +31,4 @@ CREATE POLICY current_tenant ON public.platby_category AS RESTRICTIVE USING ((te
 CREATE POLICY member_view ON public.platby_category FOR SELECT TO member USING (true);
 
 CREATE UNIQUE INDEX idx_23855_pc_symbol ON public.platby_category USING btree (pc_symbol);
+CREATE INDEX platby_category_tenant_id_idx ON public.platby_category USING btree (tenant_id);

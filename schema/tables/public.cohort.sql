@@ -25,3 +25,6 @@ ALTER TABLE ONLY public.cohort
 
 CREATE POLICY admin_all ON public.cohort TO administrator USING (true) WITH CHECK (true);
 CREATE POLICY all_view ON public.cohort FOR SELECT USING (true);
+
+CREATE INDEX cohort_cohort_group_id_idx ON public.cohort USING btree (cohort_group_id);
+CREATE INDEX cohort_tenant_id_idx ON public.cohort USING btree (tenant_id);

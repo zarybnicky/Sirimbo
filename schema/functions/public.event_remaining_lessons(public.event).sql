@@ -1,5 +1,6 @@
 CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select (
     select coalesce(sum(lessons_offered), 0) from event_trainer where event_id = e.id

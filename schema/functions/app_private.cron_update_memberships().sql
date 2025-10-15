@@ -25,5 +25,3 @@ CREATE FUNCTION app_private.cron_update_memberships() RETURNS void
   update tenant_administrator set status = 'pending' where now() < since and status <> 'pending';
   update tenant_administrator set status = 'expired' where now() > until and status <> 'expired';
 $$;
-
-GRANT ALL ON FUNCTION app_private.cron_update_memberships() TO administrator;

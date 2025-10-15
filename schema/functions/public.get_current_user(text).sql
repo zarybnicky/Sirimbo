@@ -1,5 +1,6 @@
 CREATE FUNCTION public.get_current_user(version_id text DEFAULT NULL::text) RETURNS public.users
     LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   with updated_user as (
     update users

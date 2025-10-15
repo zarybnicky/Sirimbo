@@ -29,5 +29,7 @@ CREATE POLICY member_view ON public.dokumenty FOR SELECT TO member USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
+CREATE INDEX dokumenty_d_kdo_idx ON public.dokumenty USING btree (d_kdo);
+CREATE INDEX dokumenty_tenant_id_idx ON public.dokumenty USING btree (tenant_id);
 CREATE UNIQUE INDEX idx_23771_d_path ON public.dokumenty USING btree (d_path);
 CREATE INDEX idx_23771_dokumenty_d_kdo_fkey ON public.dokumenty USING btree (d_kdo);

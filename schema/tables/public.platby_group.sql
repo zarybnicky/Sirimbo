@@ -23,3 +23,5 @@ ALTER TABLE ONLY public.platby_group
 CREATE POLICY admin_all ON public.platby_group TO administrator USING (true);
 CREATE POLICY current_tenant ON public.platby_group AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY member_view ON public.platby_group FOR SELECT TO member USING (true);
+
+CREATE INDEX platby_group_tenant_id_idx ON public.platby_group USING btree (tenant_id);

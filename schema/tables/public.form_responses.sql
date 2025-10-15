@@ -22,3 +22,5 @@ CREATE POLICY admin_all ON public.form_responses TO administrator USING (true);
 CREATE POLICY current_tenant ON public.form_responses AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.form_responses FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+CREATE INDEX form_responses_tenant_id_idx ON public.form_responses USING btree (tenant_id);

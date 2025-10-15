@@ -30,3 +30,6 @@ CREATE POLICY admin_create ON public.person_invitation USING ((EXISTS ( SELECT 1
 CREATE POLICY current_tenant ON public.person_invitation AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 CREATE TRIGGER _500_send AFTER INSERT ON public.person_invitation FOR EACH ROW EXECUTE FUNCTION app_private.tg_person_invitation__send();
+
+CREATE INDEX person_invitation_person_id_idx ON public.person_invitation USING btree (person_id);
+CREATE INDEX person_invitation_tenant_id_idx ON public.person_invitation USING btree (tenant_id);

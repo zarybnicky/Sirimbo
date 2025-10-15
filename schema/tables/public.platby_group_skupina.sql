@@ -29,3 +29,5 @@ CREATE POLICY member_view ON public.platby_group_skupina FOR SELECT TO member US
 CREATE UNIQUE INDEX idx_23885_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
 CREATE INDEX idx_23885_platby_group_skupina_pgs_id_group_fkey ON public.platby_group_skupina USING btree (pgs_id_group);
 CREATE UNIQUE INDEX idx_23886_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
+CREATE INDEX platby_group_skupina_pgs_id_group_idx ON public.platby_group_skupina USING btree (pgs_id_group);
+CREATE INDEX platby_group_skupina_tenant_id_idx ON public.platby_group_skupina USING btree (tenant_id);

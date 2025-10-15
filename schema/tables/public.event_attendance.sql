@@ -49,3 +49,4 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_attendanc
 
 CREATE INDEX event_attendance_instance_id_idx ON public.event_attendance USING btree (instance_id);
 CREATE INDEX event_attendance_person_id_idx ON public.event_attendance USING btree (person_id);
+CREATE INDEX event_attendance_tenant_id_idx ON public.event_attendance USING btree (tenant_id);

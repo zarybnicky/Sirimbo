@@ -1,5 +1,6 @@
 CREATE FUNCTION public.submit_form(type text, data jsonb, url text) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_email text;

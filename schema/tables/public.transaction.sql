@@ -31,3 +31,7 @@ CREATE POLICY member_view ON public.transaction FOR SELECT TO member USING (true
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg_payment__fill_accounting_period();
 CREATE TRIGGER _300_effective_date BEFORE INSERT OR UPDATE ON public.transaction FOR EACH ROW EXECUTE FUNCTION app_private.tg_transaction__effective_date();
+
+CREATE INDEX transaction_accounting_period_id_idx ON public.transaction USING btree (accounting_period_id);
+CREATE INDEX transaction_payment_id_idx ON public.transaction USING btree (payment_id);
+CREATE INDEX transaction_tenant_id_idx ON public.transaction USING btree (tenant_id);

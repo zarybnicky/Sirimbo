@@ -1,5 +1,6 @@
 CREATE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   payment_id bigint;

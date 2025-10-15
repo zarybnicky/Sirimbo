@@ -56,3 +56,7 @@ CREATE POLICY view_visible_event ON public.event_external_registration FOR SELEC
   WHERE (event_external_registration.event_id = event.id))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_external_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+CREATE INDEX event_external_registration_created_by_idx ON public.event_external_registration USING btree (created_by);
+CREATE INDEX event_external_registration_event_id_idx ON public.event_external_registration USING btree (event_id);
+CREATE INDEX event_external_registration_tenant_id_idx ON public.event_external_registration USING btree (tenant_id);

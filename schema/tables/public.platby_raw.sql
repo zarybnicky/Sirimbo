@@ -27,3 +27,4 @@ CREATE POLICY member_view ON public.platby_raw FOR SELECT TO member USING ((EXIS
   WHERE ((platby_item.pi_id_raw = platby_raw.pr_id) AND (platby_item.pi_id_user = public.current_user_id())))));
 
 CREATE UNIQUE INDEX idx_23898_pr_hash ON public.platby_raw USING btree (pr_hash);
+CREATE INDEX platby_raw_tenant_id_idx ON public.platby_raw USING btree (tenant_id);

@@ -1,5 +1,6 @@
 CREATE FUNCTION app_private.tg_transaction__effective_date() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   if NEW.effective_date is null then

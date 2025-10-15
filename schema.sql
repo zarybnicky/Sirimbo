@@ -670,6 +670,7 @@ END;
 
 CREATE FUNCTION app_private.can_trainer_edit_event(eid bigint) RETURNS boolean
     LANGUAGE sql STABLE SECURITY DEFINER LEAKPROOF PARALLEL SAFE
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select exists (
     select 1 from event_trainer where eid = event_id and person_id = any (current_person_ids())
@@ -1150,6 +1151,7 @@ $$;
 
 CREATE FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) RETURNS void
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_tenant_id bigint;
@@ -1334,6 +1336,7 @@ COMMENT ON FUNCTION app_private.tg__timestamps() IS 'This trigger should be call
 
 CREATE FUNCTION app_private.tg_account_balances__update() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 BEGIN
 	REFRESH MATERIALIZED VIEW account_balances;
@@ -1348,6 +1351,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_announcement__after_write() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare
@@ -1395,6 +1399,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_announcement_audience__after_write() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare
@@ -1424,6 +1429,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_auth_details__refresh() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 BEGIN
   perform graphile_worker.add_job('refresh_auth_details', job_key := 'refresh_auth_details');
@@ -1438,6 +1444,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_cohort_membership__on_status() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   if NEW.status = 'expired' and (TG_OP = 'INSERT' or OLD.status <> NEW.status) then
@@ -1499,6 +1506,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_event_instance__create_attendance() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   insert into event_attendance (registration_id, instance_id, person_id)
@@ -1516,6 +1524,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   payment_id bigint;
@@ -1549,6 +1558,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_event_instance__update_parent_range() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
@@ -1576,6 +1586,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_event_registration__create_attendance() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   insert into event_attendance (registration_id, instance_id, person_id)
@@ -1592,6 +1603,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_event_target_cohort__register_members() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   insert into event_registration (event_id, person_id, target_cohort_id)
@@ -1608,6 +1620,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_event_target_cohort__unregister_members() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   delete from event_registration where target_cohort_id = OLD.id;
@@ -1622,6 +1635,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_payment__fill_accounting_period() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   period accounting_period;
@@ -1651,6 +1665,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_person_invitation__send() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   perform graphile_worker.add_job('send_invitation', json_build_object('id', NEW.id));
@@ -1681,6 +1696,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_transaction__effective_date() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   if NEW.effective_date is null then
@@ -3029,6 +3045,7 @@ $$;
 
 CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select (
     select coalesce(sum(lessons_offered), 0) from event_trainer where event_id = e.id
@@ -3044,6 +3061,7 @@ $$;
 
 CREATE FUNCTION public.event_remaining_person_spots(e public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select e.capacity - (
     select coalesce(sum(case when couple_id is not null then 2 else 1 end), 0)
@@ -3277,6 +3295,7 @@ COMMENT ON TABLE public.tenant IS '@omit create,delete
 
 CREATE FUNCTION public.get_current_tenant() RETURNS public.tenant
     LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   SELECT * FROM tenant WHERE id = current_tenant_id();
 $$;
@@ -3288,6 +3307,7 @@ $$;
 
 CREATE FUNCTION public.get_current_user(version_id text DEFAULT NULL::text) RETURNS public.users
     LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   with updated_user as (
     update users
@@ -3312,6 +3332,7 @@ $$;
 
 CREATE FUNCTION public.invitation_info(token uuid) RETURNS text
     LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select email from person_invitation where access_token=token and used_at is null;
 $$;
@@ -3323,6 +3344,7 @@ $$;
 
 CREATE FUNCTION public.invitation_name(token uuid) RETURNS text
     LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select person_name(person.*)
   from person_invitation join person on person.id=person_id
@@ -3336,6 +3358,7 @@ $$;
 
 CREATE FUNCTION public.log_in_as(id bigint, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $_$
 begin
   select users.* into usr from users where users.id=$1;
@@ -3350,6 +3373,7 @@ $_$;
 
 CREATE FUNCTION public.login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_salt varchar;
@@ -3557,6 +3581,7 @@ $$;
 
 CREATE FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_token otp_token;
@@ -3724,6 +3749,7 @@ COMMENT ON FUNCTION public.people_without_access_with_invitation() IS '@simpleCo
 
 CREATE FUNCTION public.person_account(p_id bigint, c text, OUT acc public.account) RETURNS public.account
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   select * into acc from account
@@ -3974,6 +4000,7 @@ COMMENT ON FUNCTION public.post_without_cache(input_url text, data jsonb, header
 
 CREATE FUNCTION public.refresh_jwt() RETURNS public.jwt_token
     LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   SELECT app_private.create_jwt_token(users) FROM users WHERE id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
 $$;
@@ -3985,6 +4012,7 @@ $$;
 
 CREATE FUNCTION public.register_to_event(INOUT registration public.event_registration, lessons public.event_lesson_demand[]) RETURNS public.event_registration
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   event event;
@@ -4024,6 +4052,7 @@ COMMENT ON FUNCTION public.register_to_event(INOUT registration public.event_reg
 
 CREATE FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   event event;
@@ -4064,6 +4093,7 @@ $$;
 
 CREATE FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text DEFAULT NULL::text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   invitation person_invitation;
@@ -4101,6 +4131,7 @@ $$;
 
 CREATE FUNCTION public.register_without_invitation(email text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_salt text;
@@ -4171,6 +4202,7 @@ $$;
 
 CREATE FUNCTION public.reset_password(email character varying) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_tenant tenant;
@@ -4423,6 +4455,7 @@ COMMENT ON FUNCTION public.scoreboard_entries(cohort_id bigint, since date, unti
 
 CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_demand
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 #variable_conflict use_variable
 declare
@@ -4501,6 +4534,7 @@ $$;
 
 CREATE FUNCTION public.submit_form(type text, data jsonb, url text) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_email text;
@@ -4665,6 +4699,7 @@ COMMENT ON FUNCTION public.system_admin_update_tenant(tenant_id bigint, name tex
 
 CREATE FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS public.account
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   select * into acc from account
@@ -5160,6 +5195,7 @@ $$;
 
 CREATE FUNCTION public.verify_function(f regproc, relid regclass DEFAULT 0) RETURNS void
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   error text[];
@@ -7394,6 +7430,27 @@ CREATE UNIQUE INDEX account_balances_id_idx ON public.account_balances USING btr
 
 
 --
+-- Name: account_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX account_person_id_idx ON public.account USING btree (person_id);
+
+
+--
+-- Name: accounting_period_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX accounting_period_tenant_id_idx ON public.accounting_period USING btree (tenant_id);
+
+
+--
+-- Name: aktuality_at_foto_main_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX aktuality_at_foto_main_idx ON public.aktuality USING btree (at_foto_main);
+
+
+--
 -- Name: announcement_audience_announcement_cohort_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7405,6 +7462,13 @@ CREATE UNIQUE INDEX announcement_audience_announcement_cohort_idx ON public.anno
 --
 
 CREATE UNIQUE INDEX announcement_audience_announcement_role_idx ON public.announcement_audience USING btree (announcement_id, audience_role);
+
+
+--
+-- Name: announcement_audience_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX announcement_audience_cohort_id_idx ON public.announcement_audience USING btree (cohort_id);
 
 
 --
@@ -7436,10 +7500,31 @@ CREATE INDEX announcement_tenant_id_idx ON public.announcement USING btree (tena
 
 
 --
+-- Name: attachment_uploaded_by_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX attachment_uploaded_by_idx ON public.attachment USING btree (uploaded_by);
+
+
+--
 -- Name: auth_details_person_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX auth_details_person_id_idx ON public.auth_details USING btree (person_id);
+
+
+--
+-- Name: cohort_cohort_group_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_cohort_group_id_idx ON public.cohort USING btree (cohort_group_id);
+
+
+--
+-- Name: cohort_group_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_group_tenant_id_idx ON public.cohort_group USING btree (tenant_id);
 
 
 --
@@ -7478,6 +7563,34 @@ CREATE INDEX cohort_membership_status_idx ON public.cohort_membership USING btre
 
 
 --
+-- Name: cohort_subscription_account_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_subscription_account_id_idx ON public.cohort_subscription USING btree (account_id);
+
+
+--
+-- Name: cohort_subscription_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_subscription_cohort_id_idx ON public.cohort_subscription USING btree (cohort_id);
+
+
+--
+-- Name: cohort_subscription_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_subscription_tenant_id_idx ON public.cohort_subscription USING btree (tenant_id);
+
+
+--
+-- Name: cohort_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_tenant_id_idx ON public.cohort USING btree (tenant_id);
+
+
+--
 -- Name: couple_active_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7485,10 +7598,38 @@ CREATE INDEX couple_active_idx ON public.couple USING btree (active);
 
 
 --
+-- Name: couple_man_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
+
+
+--
 -- Name: couple_range_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX couple_range_idx ON public.couple USING gist (active_range, man_id, woman_id);
+
+
+--
+-- Name: couple_woman_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX couple_woman_id_idx ON public.couple USING btree (woman_id);
+
+
+--
+-- Name: dokumenty_d_kdo_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dokumenty_d_kdo_idx ON public.dokumenty USING btree (d_kdo);
+
+
+--
+-- Name: dokumenty_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dokumenty_tenant_id_idx ON public.dokumenty USING btree (tenant_id);
 
 
 --
@@ -7506,10 +7647,45 @@ CREATE INDEX event_attendance_person_id_idx ON public.event_attendance USING btr
 
 
 --
+-- Name: event_attendance_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_attendance_tenant_id_idx ON public.event_attendance USING btree (tenant_id);
+
+
+--
+-- Name: event_external_registration_created_by_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_external_registration_created_by_idx ON public.event_external_registration USING btree (created_by);
+
+
+--
+-- Name: event_external_registration_event_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_external_registration_event_id_idx ON public.event_external_registration USING btree (event_id);
+
+
+--
+-- Name: event_external_registration_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_external_registration_tenant_id_idx ON public.event_external_registration USING btree (tenant_id);
+
+
+--
 -- Name: event_instance_event_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
+
+
+--
+-- Name: event_instance_location_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_location_id_idx ON public.event_instance USING btree (location_id);
 
 
 --
@@ -7555,10 +7731,31 @@ CREATE INDEX event_lesson_demand_registration_id_idx ON public.event_lesson_dema
 
 
 --
+-- Name: event_lesson_demand_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_lesson_demand_tenant_id_idx ON public.event_lesson_demand USING btree (tenant_id);
+
+
+--
 -- Name: event_lesson_demand_trainer_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX event_lesson_demand_trainer_id_idx ON public.event_lesson_demand USING btree (trainer_id);
+
+
+--
+-- Name: event_location_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_location_id_idx ON public.event USING btree (location_id);
+
+
+--
+-- Name: event_payment_recipient_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_payment_recipient_id_idx ON public.event USING btree (payment_recipient_id);
 
 
 --
@@ -7590,6 +7787,13 @@ CREATE INDEX event_registration_target_cohort_id_idx ON public.event_registratio
 
 
 --
+-- Name: event_registration_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_registration_tenant_id_idx ON public.event_registration USING btree (tenant_id);
+
+
+--
 -- Name: event_target_cohort_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7601,6 +7805,13 @@ CREATE INDEX event_target_cohort_cohort_id_idx ON public.event_target_cohort USI
 --
 
 CREATE INDEX event_target_cohort_event_id_idx ON public.event_target_cohort USING btree (event_id);
+
+
+--
+-- Name: event_target_cohort_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_target_cohort_tenant_id_idx ON public.event_target_cohort USING btree (tenant_id);
 
 
 --
@@ -7629,6 +7840,34 @@ CREATE INDEX event_trainer_tenant_event_idx ON public.event_trainer USING btree 
 --
 
 CREATE INDEX event_type_idx ON public.event USING btree (type);
+
+
+--
+-- Name: form_responses_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX form_responses_tenant_id_idx ON public.form_responses USING btree (tenant_id);
+
+
+--
+-- Name: galerie_dir_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX galerie_dir_tenant_id_idx ON public.galerie_dir USING btree (tenant_id);
+
+
+--
+-- Name: galerie_foto_gf_id_rodic_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX galerie_foto_gf_id_rodic_idx ON public.galerie_foto USING btree (gf_id_rodic);
+
+
+--
+-- Name: galerie_foto_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX galerie_foto_tenant_id_idx ON public.galerie_foto USING btree (tenant_id);
 
 
 --
@@ -7786,6 +8025,125 @@ CREATE INDEX is_visible ON public.event USING btree (is_visible);
 
 
 --
+-- Name: membership_application_created_by_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX membership_application_created_by_idx ON public.membership_application USING btree (created_by);
+
+
+--
+-- Name: membership_application_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX membership_application_tenant_id_idx ON public.membership_application USING btree (tenant_id);
+
+
+--
+-- Name: otp_token_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX otp_token_tenant_id_idx ON public.otp_token USING btree (tenant_id);
+
+
+--
+-- Name: otp_token_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX otp_token_user_id_idx ON public.otp_token USING btree (user_id);
+
+
+--
+-- Name: payment_accounting_period_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_accounting_period_id_idx ON public.payment USING btree (accounting_period_id);
+
+
+--
+-- Name: payment_cohort_subscription_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_cohort_subscription_id_idx ON public.payment USING btree (cohort_subscription_id);
+
+
+--
+-- Name: payment_debtor_payment_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_debtor_payment_id_idx ON public.payment_debtor USING btree (payment_id);
+
+
+--
+-- Name: payment_debtor_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_debtor_person_id_idx ON public.payment_debtor USING btree (person_id);
+
+
+--
+-- Name: payment_debtor_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_debtor_tenant_id_idx ON public.payment_debtor USING btree (tenant_id);
+
+
+--
+-- Name: payment_event_instance_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_event_instance_id_idx ON public.payment USING btree (event_instance_id);
+
+
+--
+-- Name: payment_event_registration_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_event_registration_id_idx ON public.payment USING btree (event_registration_id);
+
+
+--
+-- Name: payment_recipient_account_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_recipient_account_id_idx ON public.payment_recipient USING btree (account_id);
+
+
+--
+-- Name: payment_recipient_payment_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_recipient_payment_id_idx ON public.payment_recipient USING btree (payment_id);
+
+
+--
+-- Name: payment_recipient_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_recipient_tenant_id_idx ON public.payment_recipient USING btree (tenant_id);
+
+
+--
+-- Name: payment_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_tenant_id_idx ON public.payment USING btree (tenant_id);
+
+
+--
+-- Name: person_invitation_person_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX person_invitation_person_id_idx ON public.person_invitation USING btree (person_id);
+
+
+--
+-- Name: person_invitation_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX person_invitation_tenant_id_idx ON public.person_invitation USING btree (tenant_id);
+
+
+--
 -- Name: pghero_query_stats_database_captured_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7797,6 +8155,97 @@ CREATE INDEX pghero_query_stats_database_captured_at_idx ON public.pghero_query_
 --
 
 CREATE INDEX pghero_space_stats_database_captured_at_idx ON public.pghero_space_stats USING btree (database, captured_at);
+
+
+--
+-- Name: platby_category_group_pcg_id_category_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX platby_category_group_pcg_id_category_idx ON public.platby_category_group USING btree (pcg_id_category);
+
+
+--
+-- Name: platby_category_group_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX platby_category_group_tenant_id_idx ON public.platby_category_group USING btree (tenant_id);
+
+
+--
+-- Name: platby_category_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX platby_category_tenant_id_idx ON public.platby_category USING btree (tenant_id);
+
+
+--
+-- Name: platby_group_skupina_pgs_id_group_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX platby_group_skupina_pgs_id_group_idx ON public.platby_group_skupina USING btree (pgs_id_group);
+
+
+--
+-- Name: platby_group_skupina_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX platby_group_skupina_tenant_id_idx ON public.platby_group_skupina USING btree (tenant_id);
+
+
+--
+-- Name: platby_group_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX platby_group_tenant_id_idx ON public.platby_group USING btree (tenant_id);
+
+
+--
+-- Name: platby_item_pi_id_category_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX platby_item_pi_id_category_idx ON public.platby_item USING btree (pi_id_category);
+
+
+--
+-- Name: platby_item_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX platby_item_tenant_id_idx ON public.platby_item USING btree (tenant_id);
+
+
+--
+-- Name: platby_raw_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX platby_raw_tenant_id_idx ON public.platby_raw USING btree (tenant_id);
+
+
+--
+-- Name: posting_account_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX posting_account_id_idx ON public.posting USING btree (account_id);
+
+
+--
+-- Name: posting_original_account_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX posting_original_account_id_idx ON public.posting USING btree (original_account_id);
+
+
+--
+-- Name: posting_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX posting_tenant_id_idx ON public.posting USING btree (tenant_id);
+
+
+--
+-- Name: posting_transaction_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX posting_transaction_id_idx ON public.posting USING btree (transaction_id);
 
 
 --
@@ -7842,10 +8291,24 @@ CREATE INDEX tenant_administrator_range_idx ON public.tenant_administrator USING
 
 
 --
+-- Name: tenant_administrator_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_administrator_tenant_id_idx ON public.tenant_administrator USING btree (tenant_id);
+
+
+--
 -- Name: tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);
+
+
+--
+-- Name: tenant_location_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_location_tenant_id_idx ON public.tenant_location USING btree (tenant_id);
 
 
 --
@@ -7895,6 +8358,34 @@ CREATE INDEX tenant_trainer_person_id_idx ON public.tenant_trainer USING btree (
 --
 
 CREATE INDEX tenant_trainer_range_idx ON public.tenant_trainer USING gist (active_range, tenant_id, person_id);
+
+
+--
+-- Name: tenant_trainer_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_trainer_tenant_id_idx ON public.tenant_trainer USING btree (tenant_id);
+
+
+--
+-- Name: transaction_accounting_period_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX transaction_accounting_period_id_idx ON public.transaction USING btree (accounting_period_id);
+
+
+--
+-- Name: transaction_payment_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX transaction_payment_id_idx ON public.transaction USING btree (payment_id);
+
+
+--
+-- Name: transaction_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX transaction_tenant_id_idx ON public.transaction USING btree (tenant_id);
 
 
 --
@@ -7958,6 +8449,13 @@ CREATE UNIQUE INDEX users_email_key ON public.users USING btree (u_email) WHERE 
 --
 
 CREATE UNIQUE INDEX users_login_key ON public.users USING btree (u_login) WHERE (id <> ALL (ARRAY[(1050)::bigint, (533)::bigint, (882)::bigint, (1075)::bigint, (489)::bigint, (82)::bigint, (1138)::bigint, (689)::bigint, (45)::bigint, (433)::bigint, (13)::bigint, (142)::bigint, (223)::bigint, (1046)::bigint, (498)::bigint, (1106)::bigint, (105)::bigint, (130)::bigint]));
+
+
+--
+-- Name: users_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_tenant_id_idx ON public.users USING btree (tenant_id);
 
 
 --
@@ -9133,6 +9631,14 @@ ALTER TABLE ONLY public.scoreboard_manual_adjustment
 
 ALTER TABLE ONLY public.scoreboard_manual_adjustment
     ADD CONSTRAINT scoreboard_manual_adjustment_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: scoreboard_manual_adjustment scoreboard_manual_adjustment_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scoreboard_manual_adjustment
+    ADD CONSTRAINT scoreboard_manual_adjustment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 
 --
@@ -10603,13 +11109,6 @@ GRANT ALL ON TABLE public.transaction TO anonymous;
 
 
 --
--- Name: FUNCTION can_trainer_edit_event(eid bigint); Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON FUNCTION app_private.can_trainer_edit_event(eid bigint) TO anonymous;
-
-
---
 -- Name: TABLE users; Type: ACL; Schema: public; Owner: -
 --
 
@@ -10659,38 +11158,10 @@ GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
 
 
 --
--- Name: FUNCTION cron_update_memberships(); Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON FUNCTION app_private.cron_update_memberships() TO administrator;
-
-
---
--- Name: FUNCTION is_system_admin(bigint); Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON FUNCTION app_private.is_system_admin(bigint) TO anonymous;
-
-
---
--- Name: FUNCTION queue_announcement_notifications(in_announcement_id bigint); Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) TO anonymous;
-
-
---
 -- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.cohort_membership TO anonymous;
-
-
---
--- Name: FUNCTION tg_cohort_membership__on_status(); Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON FUNCTION app_private.tg_cohort_membership__on_status() TO trainer;
 
 
 --
@@ -11577,13 +12048,6 @@ GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, instance
 
 
 --
--- Name: TABLE system_admin_user; Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT SELECT ON TABLE app_private.system_admin_user TO administrator;
-
-
---
 -- Name: TABLE accounting_period; Type: ACL; Schema: public; Owner: -
 --
 
@@ -11897,6 +12361,13 @@ GRANT ALL ON TABLE public.scoreboard TO anonymous;
 
 GRANT ALL ON TABLE public.scoreboard_manual_adjustment TO administrator;
 GRANT SELECT ON TABLE public.scoreboard_manual_adjustment TO member;
+
+
+--
+-- Name: SEQUENCE scoreboard_manual_adjustment_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT USAGE ON SEQUENCE public.scoreboard_manual_adjustment_id_seq TO administrator;
 
 
 --

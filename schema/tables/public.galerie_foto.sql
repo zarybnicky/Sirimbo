@@ -29,5 +29,7 @@ CREATE POLICY public_view ON public.galerie_foto FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.galerie_foto FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
+CREATE INDEX galerie_foto_gf_id_rodic_idx ON public.galerie_foto USING btree (gf_id_rodic);
+CREATE INDEX galerie_foto_tenant_id_idx ON public.galerie_foto USING btree (tenant_id);
 CREATE INDEX idx_23791_galerie_foto_gf_kdo_fkey ON public.galerie_foto USING btree (gf_kdo);
 CREATE INDEX idx_23791_gf_id_rodic ON public.galerie_foto USING btree (gf_id_rodic);

@@ -9,8 +9,6 @@ COMMENT ON COLUMN app_private.system_admin_user.user_id IS 'Globally privileged 
 COMMENT ON COLUMN app_private.system_admin_user.created_at IS 'Timestamp when the system administrator role was granted.';
 COMMENT ON COLUMN app_private.system_admin_user.created_by IS 'User that granted the system administrator role.';
 
-GRANT SELECT ON TABLE app_private.system_admin_user TO administrator;
-
 ALTER TABLE ONLY app_private.system_admin_user
     ADD CONSTRAINT system_admin_user_pkey PRIMARY KEY (user_id);
 ALTER TABLE ONLY app_private.system_admin_user

@@ -31,3 +31,7 @@ CREATE POLICY current_tenant ON public.cohort_subscription AS RESTRICTIVE USING 
 CREATE POLICY member_view ON public.cohort_subscription FOR SELECT TO member USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.cohort_subscription FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+CREATE INDEX cohort_subscription_account_id_idx ON public.cohort_subscription USING btree (account_id);
+CREATE INDEX cohort_subscription_cohort_id_idx ON public.cohort_subscription USING btree (cohort_id);
+CREATE INDEX cohort_subscription_tenant_id_idx ON public.cohort_subscription USING btree (tenant_id);

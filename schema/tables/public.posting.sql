@@ -32,3 +32,8 @@ CREATE POLICY member_view ON public.posting FOR SELECT TO member USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.posting FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _900_fix_balance_entries AFTER INSERT OR DELETE OR UPDATE OF amount OR TRUNCATE ON public.posting FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_account_balances__update();
+
+CREATE INDEX posting_account_id_idx ON public.posting USING btree (account_id);
+CREATE INDEX posting_original_account_id_idx ON public.posting USING btree (original_account_id);
+CREATE INDEX posting_tenant_id_idx ON public.posting USING btree (tenant_id);
+CREATE INDEX posting_transaction_id_idx ON public.posting USING btree (transaction_id);

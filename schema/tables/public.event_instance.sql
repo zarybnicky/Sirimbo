@@ -39,5 +39,6 @@ CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE ON public.event_instance
 CREATE TRIGGER _500_update_parent_range AFTER INSERT OR DELETE OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 
 CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
+CREATE INDEX event_instance_location_id_idx ON public.event_instance USING btree (location_id);
 CREATE INDEX event_instance_range_idx ON public.event_instance USING btree (tenant_id, since, until);
 CREATE INDEX event_instance_since_idx ON public.event_instance USING btree (since);
