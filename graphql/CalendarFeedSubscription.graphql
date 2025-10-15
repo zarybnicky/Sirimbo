@@ -1,0 +1,38 @@
+fragment CalendarFeedSubscriptionFields on CalendarFeedSubscription {
+  id
+  token
+  onlyType
+  onlyMine
+  startOffsetDays
+  endOffsetDays
+  createdAt
+  updatedAt
+}
+
+query CalendarFeedSubscriptions {
+  calendarFeedSubscriptionsList(orderBy: CREATED_AT_ASC) {
+    ...CalendarFeedSubscriptionFields
+  }
+}
+
+mutation CreateCalendarFeedSubscription($input: CalendarFeedSubscriptionInput!) {
+  createCalendarFeedSubscription(input: { calendarFeedSubscription: $input }) {
+    calendarFeedSubscription {
+      ...CalendarFeedSubscriptionFields
+    }
+  }
+}
+
+mutation UpdateCalendarFeedSubscription($id: BigInt!, $patch: CalendarFeedSubscriptionPatch!) {
+  updateCalendarFeedSubscription(input: { id: $id, patch: $patch }) {
+    calendarFeedSubscription {
+      ...CalendarFeedSubscriptionFields
+    }
+  }
+}
+
+mutation DeleteCalendarFeedSubscription($id: BigInt!) {
+  deleteCalendarFeedSubscription(input: { id: $id }) {
+    deletedCalendarFeedSubscriptionId
+  }
+}
