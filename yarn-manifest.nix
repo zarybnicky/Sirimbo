@@ -12684,6 +12684,28 @@ let
         "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
       };
     };
+    "@rozpisovnik/wdsf@workspace:wdsf" = {
+      name = "@rozpisovnik/wdsf";
+      reference = "workspace:wdsf";
+      linkType = "SOFT";
+      outputName = "rozpisovnik-wdsf-0.0.1-5c355c02bc";
+      src = ./wdsf;
+      shouldBeUnplugged = true;
+      flatName = "wdsf";
+      languageName = "unknown";
+      scope = "rozpisovnik";
+      descriptorRange = "workspace:wdsf";
+      dependencies = {
+        "pg" = packages."pg@virtual:825faa4bdbe4765fb9aa70e23ba9200137337a2899b71fa7b28263c75366a9dbd99b359f5f68b8a1687424f087a94917038c9f73fb781bfbb3eef78bed76c28d#npm:8.16.3";
+        "zod" = packages."zod@npm:4.1.12";
+      };
+      devDependencies = {
+        "@tsconfig/node18" = packages."@tsconfig/node18@npm:18.2.4";
+        "@types/node" = packages."@types/node@npm:24.7.2";
+        "@types/pg" = packages."@types/pg@npm:8.10.2";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5";
+      };
+    };
     "@rtsao/scc@npm:1.1.0" = {
       name = "@rtsao/scc";
       reference = "npm:1.1.0";

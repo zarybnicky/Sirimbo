@@ -10,7 +10,8 @@
       "graphql",
       "worker",
       "backend",
-      "csts"
+      "csts",
+      "wdsf"
     ]
   },
   "devDependencies": {

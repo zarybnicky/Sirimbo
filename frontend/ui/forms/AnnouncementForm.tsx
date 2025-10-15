@@ -153,7 +153,7 @@ function AnnouncementAudienceEditor({ control }: {
   control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
 }) {
   const { audienceRoles = [], cohortIds = [] } = useWatch({ control });
-  const { data: cohorts, fetching: cohortsLoading } = useCohorts();
+  const { data: cohorts, fetching: cohortsLoading } = useCohorts({ visible: true });
 
   const audiences: AnnouncementAudienceFragment[] = [
     ...audienceRoles.map(x => ({ id: '', cohortId: null, cohort: null, audienceRole: x })),

@@ -6850,6 +6850,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@rozpisovnik/wdsf@workspace:wdsf":
+  version: 0.0.0-use.local
+  resolution: "@rozpisovnik/wdsf@workspace:wdsf"
+  dependencies:
+    "@tsconfig/node18": "npm:^18.2.4"
+    "@types/node": "npm:^24.7.2"
+    "@types/pg": "npm:^8.15.5"
+    pg: "npm:^8.16.3"
+    typescript: "npm:~5.9.3"
+    zod: "npm:^4.1.12"
+  languageName: unknown
+  linkType: soft
+
 "@rtsao/scc@npm:^1.1.0":
   version: 1.1.0
   resolution: "@rtsao/scc@npm:1.1.0"
