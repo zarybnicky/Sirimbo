@@ -1,4 +1,8 @@
 import Link from '@tiptap/extension-link';
+import { Table } from '@tiptap/extension-table';
+import { TableCell } from '@tiptap/extension-table-cell';
+import { TableHeader } from '@tiptap/extension-table-header';
+import { TableRow } from '@tiptap/extension-table-row';
 import StarterKit from '@tiptap/starter-kit';
 import { EditorContent, useEditor, type Editor as TipTapEditor } from '@tiptap/react';
 import React from 'react';
@@ -35,6 +39,12 @@ export default function Editor(props: EditorProps) {
             rel: 'noopener noreferrer',
           },
         }),
+        Table.configure({
+          resizable: true,
+        }),
+        TableRow,
+        TableHeader,
+        TableCell,
       ],
       content: realInitial,
       editorProps: {
@@ -191,6 +201,66 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
   ],
   [
     {
+      key: 'insertTable',
+      label: 'Table',
+      title: 'Insert table',
+      run: (editor) => {
+        const config = promptTableConfig();
+        if (!config) {
+          return;
+        }
+
+        editor
+          .chain()
+          .focus()
+          .insertTable({
+            rows: config.rows,
+            cols: config.columns,
+            withHeaderRow: config.withHeaderRow,
+          })
+          .run();
+      },
+      isEnabled: (editor) =>
+        editor.can().chain().focus().insertTable({ rows: 1, cols: 1, withHeaderRow: true }).run(),
+    },
+    {
+      key: 'addRowAfter',
+      label: 'Row +',
+      title: 'Add row below',
+      run: (editor) => editor.chain().focus().addRowAfter().run(),
+      isEnabled: (editor) => editor.can().chain().focus().addRowAfter().run(),
+    },
+    {
+      key: 'deleteRow',
+      label: 'Row -',
+      title: 'Delete row',
+      run: (editor) => editor.chain().focus().deleteRow().run(),
+      isEnabled: (editor) => editor.can().chain().focus().deleteRow().run(),
+    },
+    {
+      key: 'addColumnAfter',
+      label: 'Col +',
+      title: 'Add column to the right',
+      run: (editor) => editor.chain().focus().addColumnAfter().run(),
+      isEnabled: (editor) => editor.can().chain().focus().addColumnAfter().run(),
+    },
+    {
+      key: 'deleteColumn',
+      label: 'Col -',
+      title: 'Delete column',
+      run: (editor) => editor.chain().focus().deleteColumn().run(),
+      isEnabled: (editor) => editor.can().chain().focus().deleteColumn().run(),
+    },
+    {
+      key: 'deleteTable',
+      label: 'Del Tbl',
+      title: 'Delete table',
+      run: (editor) => editor.chain().focus().deleteTable().run(),
+      isEnabled: (editor) => editor.can().chain().focus().deleteTable().run(),
+    },
+  ],
+  [
+    {
       key: 'undo',
       label: 'Undo',
       title: 'Undo',
@@ -325,6 +395,42 @@ function normalizeUrl(rawUrl: string): string | null {
     console.warn('Invalid link URL provided to TipTap editor:', error);
     return null;
   }
+}
+
+type TableConfig = {
+  rows: number;
+  columns: number;
+  withHeaderRow: boolean;
+};
+
+function promptTableConfig(): TableConfig | null {
+  const response = window.prompt('Enter table size (rows × columns)', '3x3');
+  if (response === null) {
+    return null;
+  }
+
+  const normalized = response.replace(/\s+/g, '').toLowerCase();
+  const [rawRows, rawColumns] = normalized.split(/[x×]/);
+  const rows = Number.parseInt(rawRows ?? '', 10);
+  const columns = Number.parseInt(rawColumns ?? '', 10);
+
+  if (!Number.isFinite(rows) || rows <= 0 || !Number.isFinite(columns) || columns <= 0) {
+    console.warn('Invalid table size provided to TipTap editor:', response);
+    return null;
+  }
+
+  const clampedRows = clamp(rows, 1, 12);
+  const clampedColumns = clamp(columns, 1, 12);
+
+  return {
+    rows: clampedRows,
+    columns: clampedColumns,
+    withHeaderRow: true,
+  };
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
 }
 
 function ToolbarButton(props: { action: ToolbarAction; editor: TipTapEditor }) {

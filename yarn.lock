@@ -9413,6 +9413,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-table-cell@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@tiptap/extension-table-cell@npm:3.7.0"
+  peerDependencies:
+    "@tiptap/extension-table": ^3.7.0
+  checksum: 10/649d451653ea1d935055c1e56a28959da32b54ab101cadf5c0acb60eb99dd3d3157a65ac5b0c67d0dc374bd471d83421a1bad3f6378ebde6745031e2a331a366
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-table-header@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@tiptap/extension-table-header@npm:3.7.0"
+  peerDependencies:
+    "@tiptap/extension-table": ^3.7.0
+  checksum: 10/3c76c31ccce01bc99d02190eac1920c5fb5cfad709b54fe8ada4304c4834ccd5132bac2f2e6d8b5c928b8aa2ccd8b5ad0320e765913132e9a1ad407fcbebc561
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-table-row@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@tiptap/extension-table-row@npm:3.7.0"
+  peerDependencies:
+    "@tiptap/extension-table": ^3.7.0
+  checksum: 10/9cd236f13cc2a1bf4d1a6e50105444c63f526f71c9c974af324d88a3f32c891bc47c9b7ad5c12e29af1be5d3f29cf907dc6a2fd5c600d0f264515ab6ae5d70c5
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-table@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@tiptap/extension-table@npm:3.7.0"
+  peerDependencies:
+    "@tiptap/core": ^3.7.0
+    "@tiptap/pm": ^3.7.0
+  checksum: 10/8cdf5d18c689dbc20b608f1296313fcc2ff078b19859d5b60c85dff4ca6505dec4bed44d3dee0a4193fef301eda400c04c36029540ad146584fbda0aa0e5e066
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-text@npm:^3.7.0":
   version: 3.7.0
   resolution: "@tiptap/extension-text@npm:3.7.0"
@@ -22619,6 +22656,10 @@ __metadata:
     "@tanstack/react-virtual": "npm:^3.13.12"
     "@tiptap/core": "npm:^3.7.0"
     "@tiptap/extension-link": "npm:^3.7.0"
+    "@tiptap/extension-table": "npm:^3.7.0"
+    "@tiptap/extension-table-cell": "npm:^3.7.0"
+    "@tiptap/extension-table-header": "npm:^3.7.0"
+    "@tiptap/extension-table-row": "npm:^3.7.0"
     "@tiptap/pm": "npm:^3.7.0"
     "@tiptap/react": "npm:^3.7.0"
     "@tiptap/starter-kit": "npm:^3.7.0"
