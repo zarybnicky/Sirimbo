@@ -22618,6 +22618,7 @@ __metadata:
     "@tanstack/react-table": "npm:^8.21.3"
     "@tanstack/react-virtual": "npm:^3.13.12"
     "@tiptap/core": "npm:^3.7.0"
+    "@tiptap/extension-link": "npm:^3.7.0"
     "@tiptap/pm": "npm:^3.7.0"
     "@tiptap/react": "npm:^3.7.0"
     "@tiptap/starter-kit": "npm:^3.7.0"

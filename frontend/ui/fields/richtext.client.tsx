@@ -1,3 +1,4 @@
+import Link from '@tiptap/extension-link';
 import StarterKit from '@tiptap/starter-kit';
 import { EditorContent, useEditor, type Editor as TipTapEditor } from '@tiptap/react';
 import React from 'react';
@@ -24,7 +25,17 @@ export default function Editor(props: EditorProps) {
 
   const editor = useEditor(
     {
-      extensions: [StarterKit],
+      extensions: [
+        StarterKit,
+        Link.configure({
+          autolink: true,
+          linkOnPaste: true,
+          openOnClick: false,
+          HTMLAttributes: {
+            rel: 'noopener noreferrer',
+          },
+        }),
+      ],
       content: realInitial,
       editorProps: {
         attributes: {
@@ -139,11 +150,43 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
     },
     {
       key: 'blockquote',
-      label: <span className="text-lg">“”</span>,
+      label: <span className="text-lg">“</span>,
       title: 'Blockquote',
       run: (editor) => editor.chain().focus().toggleBlockquote().run(),
       isActive: (editor) => editor.isActive('blockquote'),
       isEnabled: (editor) => editor.can().chain().focus().toggleBlockquote().run(),
+    },
+  ],
+  [
+    {
+      key: 'link',
+      label: 'Link',
+      title: 'Insert link',
+      run: (editor) => {
+        const previousUrl = editor.getAttributes('link').href as string | undefined;
+        const rawUrl = window.prompt('Enter a URL', previousUrl ?? '');
+        if (rawUrl === null) {
+          return;
+        }
+
+        const normalizedUrl = normalizeUrl(rawUrl);
+        if (!normalizedUrl) {
+          editor.chain().focus().extendMarkRange('link').unsetLink().run();
+          return;
+        }
+
+        editor.chain().focus().extendMarkRange('link').setLink({ href: normalizedUrl }).run();
+      },
+      isActive: (editor) => editor.isActive('link'),
+    },
+    {
+      key: 'unlink',
+      label: 'Unlink',
+      title: 'Remove link',
+      run: (editor) => {
+        editor.chain().focus().extendMarkRange('link').unsetLink().run();
+      },
+      isEnabled: (editor) => editor.isActive('link'),
     },
   ],
   [
@@ -193,6 +236,8 @@ function Toolbar(props: { editor: TipTapEditor | null }) {
 
   return (
     <div className="flex flex-wrap items-center gap-1 border-b border-accent-4 bg-accent-2 px-2 py-1 text-sm text-accent-12">
+      <HeadingSelect editor={editor} />
+      <div className="mx-1 h-5 w-px bg-accent-4" />
       {TOOLBAR_GROUPS.map((group, groupIndex) => (
         <React.Fragment key={`group-${groupIndex}`}>
           {groupIndex > 0 ? <div className="mx-1 h-5 w-px bg-accent-4" /> : null}
@@ -203,6 +248,83 @@ function Toolbar(props: { editor: TipTapEditor | null }) {
       ))}
     </div>
   );
+}
+
+const HEADING_OPTIONS = [
+  { key: 'paragraph', label: 'Paragraph' },
+  { key: 'heading-1', label: 'Heading 1', level: 1 },
+  { key: 'heading-2', label: 'Heading 2', level: 2 },
+  { key: 'heading-3', label: 'Heading 3', level: 3 },
+  { key: 'heading-4', label: 'Heading 4', level: 4 },
+] as const;
+
+function HeadingSelect(props: { editor: TipTapEditor }) {
+  const { editor } = props;
+
+  const activeOption = HEADING_OPTIONS.find((option) => {
+    if ('level' in option) {
+      return editor.isActive('heading', { level: option.level });
+    }
+
+    return editor.isActive('paragraph') || !editor.isActive('heading');
+  });
+
+  const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
+    const option = HEADING_OPTIONS.find((item) => item.key === event.target.value);
+    if (!option) {
+      return;
+    }
+
+    if ('level' in option) {
+      editor.chain().focus().setHeading({ level: option.level }).run();
+      return;
+    }
+
+    editor.chain().focus().setParagraph().run();
+  };
+
+  return (
+    <select
+      className="h-7 rounded border border-accent-4 bg-accent-1 px-2 text-sm font-medium text-accent-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-7"
+      aria-label="Text style"
+      value={activeOption?.key ?? 'paragraph'}
+      onChange={handleChange}
+    >
+      {HEADING_OPTIONS.map((option) => {
+        const isDisabled = 'level' in option
+          ? !editor.can().chain().focus().setHeading({ level: option.level }).run()
+          : !editor.can().chain().focus().setParagraph().run();
+
+        return (
+          <option key={option.key} value={option.key} disabled={isDisabled}>
+            {option.label}
+          </option>
+        );
+      })}
+    </select>
+  );
+}
+
+function normalizeUrl(rawUrl: string): string | null {
+  const trimmed = rawUrl.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  if (trimmed.startsWith('/') || trimmed.startsWith('#') || trimmed.startsWith('?')) {
+    return trimmed;
+  }
+
+  const hasScheme = /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed);
+  const candidate = hasScheme ? trimmed : `https://${trimmed}`;
+
+  try {
+    const url = new URL(candidate, window.location.href);
+    return url.toString();
+  } catch (error) {
+    console.warn('Invalid link URL provided to TipTap editor:', error);
+    return null;
+  }
 }
 
 function ToolbarButton(props: { action: ToolbarAction; editor: TipTapEditor }) {
