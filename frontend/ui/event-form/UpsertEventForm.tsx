@@ -165,8 +165,7 @@ export function UpsertEventForm({ initialValue = {}, event }: {
           itemId: undefined,
         })),
         instances: values.instances.map(x => {
-          const { date } = x;
-          const y = date ? timeRangeToDatetimeRange(date, x) : null;
+          const y = x.date ? timeRangeToDatetimeRange(x.date, x) : null;
           return {
             id: x.itemId,
             since: y?.since?.toISOString() || null,
