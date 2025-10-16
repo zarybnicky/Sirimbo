@@ -112,15 +112,13 @@ export const formatOpenDateRange = (item: { since: string | null, until: string 
   : 'neomezeně';
 
 export const timeRangeToDatetimeRange = (
-  date: string | null | undefined,
+  startDate: string,
   x: {
     startTime: string;
     endTime: string;
     endDate?: string | null | undefined;
   },
 ): { since: Date, until: Date; } => {
-  const fallbackDate = new Date().toISOString().slice(0, 10);
-  const startDate = date || x.endDate || fallbackDate;
   const endDate = x.endDate || startDate;
   return {
     since: new Date(`${startDate}T${x.startTime}`),
