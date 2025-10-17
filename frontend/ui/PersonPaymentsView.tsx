@@ -1,5 +1,5 @@
-import { PersonPaymentsDocument } from "@/graphql/Person";
-import React from "react";
+import { PersonPaymentsDocument, PersonPaymentsQuery } from "@/graphql/Person";
+import React, { useMemo } from "react";
 import { describePosting, fullDateFormatter, moneyFormatter, numericDateFormatter } from "@/ui/format";
 import { useMutation, useQuery } from "urql";
 import { QRPayment } from "@/ui/QRPayment";
@@ -12,7 +12,9 @@ import { useAuth } from "./use-auth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuButton } from "./dropdown";
 import { DeleteTransactionDocument } from "@/graphql/Payment";
 import { PaymentMenu } from "./EventView";
-import { keyIsNonNull } from "./truthyFilter";
+import { isTruthy, keyIsNonNull } from "./truthyFilter";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { DataTable } from "./DataTable";
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const auth = useAuth();
@@ -103,7 +105,6 @@ export function PersonPaymentsView({ id }: { id: string }) {
               .map(posting => posting.transaction.payment ? (
                 <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
                   <PaymentMenu id={posting.transaction.payment.id}>
-                    <DropdownMenuTrigger.RowDots />
                     <span>
                       {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
                       {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
@@ -114,7 +115,6 @@ export function PersonPaymentsView({ id }: { id: string }) {
               ) : (
                 <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
                   <TransactionMenu id={posting.transaction.id}>
-                    <DropdownMenuTrigger.RowDots />
                     <span>
                       {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
                       {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
@@ -124,6 +124,8 @@ export function PersonPaymentsView({ id }: { id: string }) {
                 </div>
               )
             )}
+
+            <AccountPaymentsTable account={account} />
           </div>
         </div>
       ))}
@@ -131,17 +133,89 @@ export function PersonPaymentsView({ id }: { id: string }) {
   );
 }
 
-function TransactionMenu({ id, children }: { id: string; children: React.ReactNode }) {
+function TransactionMenu({ id, children }: { id: string; children?: React.ReactNode }) {
   const doDelete = useMutation(DeleteTransactionDocument)[1];
   const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
   const auth = useAuth();
   if (!auth.isAdmin) return children;
   return (
     <DropdownMenu>
-      {children}
+      <div className="flex gap-2">
+        <DropdownMenuTrigger.RowDots />
+        {children}
+      </div>
       <DropdownMenuContent>
         <DropdownMenuButton onClick={onDelete}>Smazat platbu</DropdownMenuButton>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+type Account = NonNullable<NonNullable<PersonPaymentsQuery["person"]>["accountsList"]>[number];
+type Posting = NonNullable<Account["postingsList"]>[number];
+type PostingRow = Posting & { transaction: NonNullable<Posting["transaction"]> };
+
+const columnHelper = createColumnHelper<PostingRow>();
+const columns = (isAdmin: boolean, currency: string): ColumnDef<PostingRow, any>[] => ([
+  isAdmin && columnHelper.display({
+    id: "actions",
+    enableSorting: false,
+    cell: ({ row }) => {
+      const { transaction } = row.original;
+      return transaction.payment ? (
+        <PaymentMenu id={transaction.payment.id} />
+      ) : (
+        <TransactionMenu id={transaction.id} />
+      );
+    },
+  }),
+  columnHelper.accessor('transaction.effectiveDate', {
+    header: "Datum",
+    sortingFn: 'datetime',
+    cell: (info) => (
+      <time dateTime={info.getValue()} className="text-sm font-medium text-neutral-12">
+        {numericDateFormatter.format(new Date(info.getValue()))}
+      </time>
+    ),
+  }),
+  columnHelper.accessor("transaction.description", {
+    header: "Popis",
+    cell: ({ getValue, row }) => (
+      <span className="text-sm text-neutral-12">
+        {getValue() || describePosting(row.original.transaction.payment ?? undefined, row.original)}
+      </span>
+    ),
+  }),
+  columnHelper.accessor("amount", {
+    header: "Částka",
+    cell: (info) => (
+      <div className="text-right text-sm font-semibold text-neutral-12">
+        {moneyFormatter.format({ amount: info.getValue(), currency })}
+      </div>
+    ),
+  }),
+].filter(isTruthy));
+
+function AccountPaymentsTable({ account }: { account: Account }) {
+  const auth = useAuth();
+  const currency = account.currency ?? "CZK";
+  const columnDef = useMemo(() => columns(auth.isAdmin, currency), [currency, auth.isAdmin]);
+  const rows = (account.postingsList ?? [])
+    .filter(keyIsNonNull("transaction")) as PostingRow[];
+  rows.sort((a, b) => b.transaction.effectiveDate.localeCompare(a.transaction.effectiveDate));
+
+  if (rows.length === 0) {
+    return <p>Žádné pohyby.</p>;
+  }
+
+  return (
+    <DataTable
+      data={rows}
+      columns={columnDef}
+      enableSelection={false}
+      enablePagination={false}
+      toolbar={() => null}
+      estimatedRowHeight={48}
+    />
   );
 }

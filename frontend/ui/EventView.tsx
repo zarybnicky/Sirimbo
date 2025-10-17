@@ -279,14 +279,17 @@ function EventExternalRegistrationMenu({
   );
 }
 
-export function PaymentMenu({ id, children }: { id: string; children: React.ReactNode }) {
+export function PaymentMenu({ id, children }: { id: string; children?: React.ReactNode }) {
   const doDelete = useMutation(DeletePaymentDocument)[1];
   const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
   const auth = useAuth();
   if (!auth.isAdmin) return children;
   return (
     <DropdownMenu>
-      {children}
+      <div className="flex gap-2">
+        <DropdownMenuTrigger.RowDots />
+        {children}
+      </div>
       <DropdownMenuContent>
         <DropdownMenuButton onClick={onDelete}>Smazat platbu</DropdownMenuButton>
       </DropdownMenuContent>
@@ -309,9 +312,8 @@ function Payments({ event }: { event: EventFragment }) {
               <div key={transaction.id}>
                 <div className="flex gap-2 items-center">
                   <PaymentMenu id={payment.id}>
-                    <DropdownMenuTrigger.RowDots />
+                     Za lekci {fullDateFormatter.format(new Date(reg.since))}
                   </PaymentMenu>
-                  Za lekci {fullDateFormatter.format(new Date(reg.since))}
                 </div>
                 <ul>
                   {transaction.postingsList.map((posting) => (

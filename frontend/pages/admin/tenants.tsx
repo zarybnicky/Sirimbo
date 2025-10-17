@@ -44,23 +44,16 @@ type TenantFormValues = z.infer<typeof TenantFormSchema>;
 const columns: ColumnDef<
   NonNullable<SystemAdminTenantsQuery['systemAdminTenants']>['nodes'][number]
 >[] = [
-  { accessorKey: 'id', header: 'ID', cell: (info) => info.getValue() },
-  { accessorKey: 'name', header: 'Jméno', cell: (info) => info.getValue() },
-  { accessorKey: 'membershipCount', header: 'Členové', cell: (info) => info.getValue() },
-  { accessorKey: 'trainerCount', header: 'Trenéři', cell: (info) => info.getValue() },
-  {
-    accessorKey: 'administratorCount',
-    header: 'Správci',
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: 'sessionCountLast30Days',
-    header: 'Lekce / 30 dní',
-    cell: (info) => info.getValue(),
-  },
+  { accessorKey: 'id', header: 'ID' },
+  { accessorKey: 'name', header: 'Jméno' },
+  { accessorKey: 'membershipCount', header: 'Členové', sortingFn: 'alphanumeric' },
+  { accessorKey: 'trainerCount', header: 'Trenéři', sortingFn: 'alphanumeric' },
+  { accessorKey: 'administratorCount', header: 'Správci', sortingFn: 'alphanumeric' },
+  { accessorKey: 'sessionCountLast30Days', header: 'Lekce / 30 dní', sortingFn: 'alphanumeric' },
   {
     accessorKey: 'sessionCountPerTrainerLast30Days',
     header: 'Lekce / trenér / 30 dní',
+    sortingFn: 'alphanumeric',
     cell: (info) => decimalFormatter.format(Number.parseFloat(info.getValue() as string)),
   },
 ];

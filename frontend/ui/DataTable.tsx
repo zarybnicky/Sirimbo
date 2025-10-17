@@ -19,6 +19,8 @@ import {
   type Table as TableType,
   type Row,
   OnChangeFn,
+  HeaderContext,
+  CellContext,
 } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import { rankItem } from "@tanstack/match-sorter-utils"
@@ -86,6 +88,10 @@ export type DataTableProps<TData, TValue> = {
   /** navigation */
   onRowClick?: (row: Row<TData>) => void;
   renderExpanded?: (row: TData) => React.ReactNode;
+
+  /** feature toggles */
+  enableSelection?: boolean;
+  enablePagination?: boolean;
 }
 
 export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
@@ -111,6 +117,9 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
     selectedActions,
     onRowClick,
     renderExpanded,
+
+    enableSelection = true,
+    enablePagination = true,
   } = props
 
   // internal fallbacks
@@ -121,16 +130,16 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const [iSelection, iSetSelection] = React.useState<RowSelectionState>(ext?.rowSelection ?? {})
   const [iExpanded, iSetExpanded] = React.useState<ExpandedState>(ext?.expanded ?? {})
   const [iPagination, iSetPagination] = React.useState<PaginationState>(
-    ext?.pagination ?? { pageIndex: 0, pageSize: 20 }
+    ext?.pagination ?? { pageIndex: 0, pageSize: 50 }
   )
 
   const sorting = ext?.sorting ?? iSorting
   const columnFilters = ext?.columnFilters ?? iColFilters
   const globalFilter = ext?.globalFilter ?? iGlobal
   const columnVisibility = ext?.columnVisibility ?? iColVis
-  const rowSelection = ext?.rowSelection ?? iSelection
+  const rowSelection = (enableSelection ? ext?.rowSelection : undefined) ?? iSelection
   const expanded = ext?.expanded ?? iExpanded
-  const pagination = ext?.pagination ?? iPagination
+  const pagination = enablePagination ? ext?.pagination ?? iPagination : undefined
 
   const setSorting = extSetSorting ?? iSetSorting
   const setColFilters = extSetColFilters ?? iSetColFilters
@@ -144,17 +153,17 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
     data,
     columns: [
       // selection column
-      {
+      enableSelection && {
         id: "__select",
         size: 36,
-        header: ({ table }) => (
+        header: ({ table }: HeaderContext<TData, unknown>) => (
           <RadixCheckbox
             checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
             onCheckedChange={(v) => table.toggleAllPageRowsSelected(!!v)}
             ariaLabel="Select all rows"
           />
         ),
-        cell: ({ row }) => (
+        cell: ({ row }: CellContext<TData, unknown>) => (
           <RadixCheckbox
             checked={row.getIsSelected()}
             onCheckedChange={(v) => row.toggleSelected(!!v)}
@@ -167,10 +176,10 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       renderExpanded && {
         id: "__expand",
         header: () => null,
-        cell: ({ row }) => (
+        cell: ({ row }: CellContext<TData, unknown>) => (
           <button
             onClick={row.getToggleExpandedHandler()}
-            className="size-7 rounded-md border border-neutral-6 bg-neutral-2 text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+            className="size-7 rounded-md border border-neutral-6 bg-neutral-1 text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
             aria-label={row.getIsExpanded() ? "Collapse" : "Expand"}
           >
             {row.getIsExpanded() ? "−" : "+"}
@@ -182,32 +191,32 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       },
       // user columns
       ...columns,
-    ] as ColumnDef<TData, TValue>[],
+    ].filter(Boolean) as ColumnDef<TData, TValue>[],
     state: {
       sorting,
       columnFilters,
       globalFilter,
       columnVisibility,
-      rowSelection,
+      ...(enableSelection ? { rowSelection } : {}),
       expanded,
-      pagination,
+      ...(enablePagination && pagination ? { pagination } : {}),
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColFilters,
     onGlobalFilterChange: setGlobal,
     onColumnVisibilityChange: setColVis,
-    onRowSelectionChange: setSelection,
+    onRowSelectionChange: enableSelection ? setSelection : undefined,
     onExpandedChange: setExpanded,
-    onPaginationChange: setPagination,
+    onPaginationChange: enablePagination ? setPagination : undefined,
 
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
     globalFilterFn: fuzzyFilter,
     filterFns: { fuzzy: fuzzyFilter },
-    enableRowSelection: true,
+    enableRowSelection: enableSelection,
     getRowCanExpand: React.useMemo(() => renderExpanded ? () => true : () => false, [renderExpanded]),
     debugTable: false,
   })
@@ -229,25 +238,17 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
     ? rowVirtualizer.getTotalSize() - virtualItems.at(-1)!.end
     : 0
 
-  const selected = table.getFilteredSelectedRowModel().rows
+  const selected = enableSelection ? table.getFilteredSelectedRowModel().rows : []
 
   return (
-    <div className="space-y-4 rounded-xl border border-neutral-6 bg-neutral-2 p-4 shadow-sm">
+    <div className="space-y-4 rounded-xl border border-neutral-6 bg-neutral-1/80 p-4 shadow-sm">
       {/* Toolbar / Selected actions */}
-      {selected.length > 0 ? (
+      {enableSelection && selected.length > 0 ? (
         selectedActions ? (
           <div>{selectedActions({ selected: selected.map((r) => r.original), table })}</div>
         ) : (
           <div className="flex items-center gap-3 rounded-lg border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm text-neutral-12 shadow-sm">
-            <span className="font-medium text-neutral-11">{selected.length} selected</span>
-            <div className="ml-auto flex gap-2">
-              <button className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8">
-                Export
-              </button>
-              <button className="rounded-lg bg-[var(--tomato-9)] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[var(--tomato-10)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tomato-9)]">
-                Delete
-              </button>
-            </div>
+            <span className="font-medium text-neutral-11">Vybráno {selected.length}</span>
           </div>
         )
       ) : toolbar ? (
@@ -266,14 +267,13 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         className="max-h-[60vh] overflow-auto rounded-lg border border-neutral-6 bg-neutral-1 shadow-inner [scrollbar-gutter:stable]"
       >
         <table className="min-w-full border-collapse text-sm">
-          <thead className="sticky top-0 z-10 bg-neutral-2/90 backdrop-blur">
+          <thead className="sticky top-0 z-10 bg-neutral-2/80 backdrop-blur">
             {table.getHeaderGroups().map((hg) => (
               <tr key={hg.id} className="text-left">
                 {hg.headers.map((h) => (
                   <th
                     key={h.id}
-                    style={{ width: h.getSize() }}
-                    className="whitespace-nowrap border-b border-neutral-6 p-3 text-xs font-semibold uppercase tracking-wide text-neutral-11"
+                    className="border-b border-neutral-6 p-3 text-xs font-semibold uppercase tracking-wide text-neutral-11"
                   >
                     {h.isPlaceholder ? null : (
                       <button
@@ -305,15 +305,14 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
               return (
                 <React.Fragment key={row.id}>
                   <tr
-                    data-selected={row.getIsSelected() ? "" : undefined}
-                    className="cursor-default border-b border-neutral-6 transition data-[selected]:bg-[color-mix(in_oklab,var(--accent-9)_10%,transparent)] hover:bg-neutral-2"
+                    data-selected={enableSelection && row.getIsSelected() ? "" : undefined}
+                    className="cursor-default border-b border-neutral-6 transition data-[selected]:bg-accent-3 hover:bg-neutral-2/60"
                     style={{ height: v.size }}
                     onClick={() => onRowClick?.(row)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        style={{ width: cell.column.getSize() }}
                         className="p-3 text-sm text-neutral-12"
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -342,27 +341,29 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       </div>
 
       {/* Footer */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm text-neutral-11">
-        <div className="font-medium text-neutral-12">
-          {selected.length} / {table.getFilteredRowModel().rows.length} selected
+      {enablePagination && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm text-neutral-11">
+          <div className="font-medium text-neutral-12">
+                                                         Vybráno {selected.length} z {table.getFilteredRowModel().rows.length}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+            >
+               Zpět
+            </button>
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+            >
+               Další
+            </button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
-          >
-            Prev
-          </button>
-          <button
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
@@ -381,14 +382,14 @@ function DefaultToolbar<TData>({
       <input
         value={globalFilter ?? ""}
         onChange={(e) => setGlobalFilter(e.target.value)}
-        placeholder="Search…"
+        placeholder="Hledat…"
         className="h-9 w-64 rounded-lg border border-neutral-6 bg-neutral-1 px-3 text-sm text-neutral-12 placeholder:text-neutral-11 transition focus:border-transparent focus:outline-none focus:ring-2 focus:ring-accent-8"
       />
 
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button className="h-9 rounded-lg border border-neutral-6 bg-neutral-2 px-3 text-sm font-medium text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8">
-            Columns
+            Sloupce
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content
