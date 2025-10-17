@@ -4,7 +4,8 @@ import { TableCell } from '@tiptap/extension-table-cell';
 import { TableHeader } from '@tiptap/extension-table-header';
 import { TableRow } from '@tiptap/extension-table-row';
 import StarterKit from '@tiptap/starter-kit';
-import { BubbleMenu, EditorContent, useEditor, type Editor as TipTapEditor } from '@tiptap/react';
+import { BubbleMenu } from '@tiptap/react/menus';
+import { EditorContent, useEditor, type Editor as TipTapEditor } from '@tiptap/react';
 import React from 'react';
 
 export type EditorProps = {
