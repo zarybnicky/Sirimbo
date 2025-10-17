@@ -57,7 +57,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
       <div
         onClick={() => setIsOpen(false)}
         className={cn(
-          "fixed inset-0 z-20 bg-black/10 transition duration-200 ease-in-out",
+          'fixed inset-0 z-20 bg-neutral-12/10 transition duration-200 ease-in-out',
           isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         )}
       />
@@ -71,7 +71,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           showTopMenu ? 'lg:hidden' : '',
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
           'z-50 lg:z-auto flex-none pb-10 transition duration-200 ease-in-out sm:pb-0',
-          'bg-accent-1 lg:bg-primary lg:text-white',
+          'bg-accent-1 text-neutral-12 lg:bg-accent-9 lg:text-white',
           'overflow-y-auto scrollbar max-h-screen min-h-screen'
         )}
       >
@@ -164,7 +164,7 @@ function SidebarLink({ item, onClick }: SidebarLinkProps) {
         'rounded-2xl px-3 py-1.5',
         'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
         'tracking-wider text-sm',
-        inPath ? 'underline font-bold bg-neutral-11 text-white lg:bg-accent-9' : '',
+        inPath ? 'underline font-bold bg-neutral-11 text-white lg:bg-accent-10' : '',
         item.className,
       )}
     >
