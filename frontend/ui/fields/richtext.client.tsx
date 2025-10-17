@@ -4,7 +4,7 @@ import { TableCell } from '@tiptap/extension-table-cell';
 import { TableHeader } from '@tiptap/extension-table-header';
 import { TableRow } from '@tiptap/extension-table-row';
 import StarterKit from '@tiptap/starter-kit';
-import { EditorContent, useEditor, type Editor as TipTapEditor } from '@tiptap/react';
+import { BubbleMenu, EditorContent, useEditor, type Editor as TipTapEditor } from '@tiptap/react';
 import React from 'react';
 
 export type EditorProps = {
@@ -93,7 +93,10 @@ export default function Editor(props: EditorProps) {
       <input type="hidden" name={name} value={value} />
       <div className="rounded-md border border-accent-4 bg-accent-1 focus-within:border-accent-7">
         <Toolbar editor={editor} />
-        <EditorContent editor={editor} />
+        <div className="relative">
+          <BubbleToolbar editor={editor} />
+          <EditorContent editor={editor} />
+        </div>
       </div>
     </>
   );
@@ -172,30 +175,14 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
       key: 'link',
       label: 'Odkaz',
       title: 'Vložit odkaz',
-      run: (editor) => {
-        const previousUrl = editor.getAttributes('link').href as string | undefined;
-        const rawUrl = window.prompt('Zadejte URL', previousUrl ?? '');
-        if (rawUrl === null) {
-          return;
-        }
-
-        const normalizedUrl = normalizeUrl(rawUrl);
-        if (!normalizedUrl) {
-          editor.chain().focus().extendMarkRange('link').unsetLink().run();
-          return;
-        }
-
-        editor.chain().focus().extendMarkRange('link').setLink({ href: normalizedUrl }).run();
-      },
+      run: promptAndSetLink,
       isActive: (editor) => editor.isActive('link'),
     },
     {
       key: 'unlink',
       label: 'Zrušit odkaz',
       title: 'Odstranit odkaz',
-      run: (editor) => {
-        editor.chain().focus().extendMarkRange('link').unsetLink().run();
-      },
+      run: unsetLink,
       isEnabled: (editor) => editor.isActive('link'),
     },
   ],
@@ -320,6 +307,114 @@ function Toolbar(props: { editor: TipTapEditor | null }) {
   );
 }
 
+const BUBBLE_TOOLBAR_GROUPS: ToolbarAction[][] = [
+  [
+    {
+      key: 'bubble-bold',
+      label: <span className="font-semibold">B</span>,
+      title: 'Tučné',
+      run: (editor) => editor.chain().focus().toggleBold().run(),
+      isActive: (editor) => editor.isActive('bold'),
+      isEnabled: (editor) => editor.can().chain().focus().toggleBold().run(),
+    },
+    {
+      key: 'bubble-italic',
+      label: <span className="italic">I</span>,
+      title: 'Kurzíva',
+      run: (editor) => editor.chain().focus().toggleItalic().run(),
+      isActive: (editor) => editor.isActive('italic'),
+      isEnabled: (editor) => editor.can().chain().focus().toggleItalic().run(),
+    },
+    {
+      key: 'bubble-strike',
+      label: <span className="line-through">S</span>,
+      title: 'Přeškrtnuté',
+      run: (editor) => editor.chain().focus().toggleStrike().run(),
+      isActive: (editor) => editor.isActive('strike'),
+      isEnabled: (editor) => editor.can().chain().focus().toggleStrike().run(),
+    },
+  ],
+  [
+    {
+      key: 'bubble-link',
+      label: 'Odkaz',
+      title: 'Vložit odkaz',
+      run: promptAndSetLink,
+      isActive: (editor) => editor.isActive('link'),
+    },
+    {
+      key: 'bubble-unlink',
+      label: 'Zrušit',
+      title: 'Odstranit odkaz',
+      run: unsetLink,
+      isEnabled: (editor) => editor.isActive('link'),
+    },
+  ],
+];
+
+function BubbleToolbar(props: { editor: TipTapEditor | null }) {
+  const { editor } = props;
+
+  const [, forceUpdate] = React.useReducer((value) => value + 1, 0);
+
+  React.useEffect(() => {
+    if (!editor) {
+      return;
+    }
+
+    const rerender = () => forceUpdate();
+    editor.on('selectionUpdate', rerender);
+    editor.on('transaction', rerender);
+    editor.on('focus', rerender);
+    editor.on('blur', rerender);
+
+    return () => {
+      editor.off('selectionUpdate', rerender);
+      editor.off('transaction', rerender);
+      editor.off('focus', rerender);
+      editor.off('blur', rerender);
+    };
+  }, [editor]);
+
+  if (!editor) {
+    return null;
+  }
+
+  return (
+    <BubbleMenu
+      editor={editor}
+      tippyOptions={{
+        duration: 150,
+        placement: 'top',
+        appendTo: () => document.body,
+      }}
+      shouldShow={({ editor: bubbleEditor, state }) => {
+        if (!bubbleEditor.isEditable) {
+          return false;
+        }
+
+        const { empty } = state.selection;
+        if (!empty) {
+          return true;
+        }
+
+        return bubbleEditor.isActive('link');
+      }}
+    >
+      <div className="flex items-center gap-1 rounded-md border border-accent-5 bg-accent-1 p-1 shadow-md">
+        {BUBBLE_TOOLBAR_GROUPS.map((group, groupIndex) => (
+          <React.Fragment key={`bubble-group-${groupIndex}`}>
+            {groupIndex > 0 ? <div className="mx-1 h-4 w-px bg-accent-4" /> : null}
+            {group.map((action) => (
+              <ToolbarButton key={action.key} action={action} editor={editor} variant="bubble" />
+            ))}
+          </React.Fragment>
+        ))}
+      </div>
+    </BubbleMenu>
+  );
+}
+
 const HEADING_OPTIONS = [
   { key: 'paragraph', label: 'Odstavec' },
   { key: 'heading-1', label: 'Nadpis 1', level: 1 },
@@ -433,14 +528,27 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-function ToolbarButton(props: { action: ToolbarAction; editor: TipTapEditor }) {
-  const { action, editor } = props;
+function ToolbarButton(props: {
+  action: ToolbarAction;
+  editor: TipTapEditor;
+  variant?: 'toolbar' | 'bubble';
+}) {
+  const { action, editor, variant = 'toolbar' } = props;
   const isActive = action.isActive?.(editor) ?? false;
   const isEnabled = action.isEnabled ? action.isEnabled(editor) : true;
 
   const baseStyles =
-    'inline-flex h-7 items-center rounded px-2 font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-7 disabled:opacity-50 disabled:hover:bg-transparent';
-  const stateStyles = isActive ? ' bg-accent-4' : ' hover:bg-accent-3';
+    variant === 'bubble'
+      ? 'inline-flex h-7 items-center rounded px-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-7 disabled:opacity-50 disabled:hover:bg-transparent'
+      : 'inline-flex h-7 items-center rounded px-2 font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-7 disabled:opacity-50 disabled:hover:bg-transparent';
+  const stateStyles =
+    variant === 'bubble'
+      ? isActive
+        ? ' bg-accent-9 text-accent-1'
+        : ' hover:bg-accent-3'
+      : isActive
+        ? ' bg-accent-4'
+        : ' hover:bg-accent-3';
 
   return (
     <button
@@ -459,4 +567,24 @@ function ToolbarButton(props: { action: ToolbarAction; editor: TipTapEditor }) {
       {action.label}
     </button>
   );
+}
+
+function promptAndSetLink(editor: TipTapEditor) {
+  const previousUrl = editor.getAttributes('link').href as string | undefined;
+  const rawUrl = window.prompt('Zadejte URL', previousUrl ?? '');
+  if (rawUrl === null) {
+    return;
+  }
+
+  const normalizedUrl = normalizeUrl(rawUrl);
+  if (!normalizedUrl) {
+    unsetLink(editor);
+    return;
+  }
+
+  editor.chain().focus().extendMarkRange('link').setLink({ href: normalizedUrl }).run();
+}
+
+function unsetLink(editor: TipTapEditor) {
+  editor.chain().focus().extendMarkRange('link').unsetLink().run();
 }
