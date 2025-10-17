@@ -99,32 +99,6 @@ export function PersonPaymentsView({ id }: { id: string }) {
 
           <div>
             <h3>Minulé</h3>
-            {account.postingsList
-              .filter(keyIsNonNull('transaction'))
-              .sort((x, y) => y.transaction.effectiveDate.localeCompare(x.transaction.effectiveDate))
-              .map(posting => posting.transaction.payment ? (
-                <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
-                  <PaymentMenu id={posting.transaction.payment.id}>
-                    <span>
-                      {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
-                      {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
-                    </span>
-                    <span>{moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}</span>
-                  </PaymentMenu>
-                </div>
-              ) : (
-                <div key={posting.id} className="justify-between gap-2 flex flex-wrap">
-                  <TransactionMenu id={posting.transaction.id}>
-                    <span>
-                      {numericDateFormatter.format(new Date(posting.transaction.effectiveDate))}{' '}
-                      {posting.transaction.description || describePosting(posting.transaction.payment, posting)}
-                    </span>
-                    <span>{moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}</span>
-                  </TransactionMenu>
-                </div>
-              )
-            )}
-
             <AccountPaymentsTable account={account} />
           </div>
         </div>
@@ -188,6 +162,7 @@ const columns = (isAdmin: boolean, currency: string): ColumnDef<PostingRow, any>
   }),
   columnHelper.accessor("amount", {
     header: "Částka",
+    sortingFn: 'alphanumeric',
     cell: (info) => (
       <div className="text-right text-sm font-semibold text-neutral-12">
         {moneyFormatter.format({ amount: info.getValue(), currency })}
