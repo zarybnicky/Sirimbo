@@ -6,20 +6,13 @@ import { formatEventType } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { buttonCls } from '@/ui/style';
 import { useConfirm } from '@/ui/Confirm';
+import { TextField } from '@/ui/fields/text';
+import { Checkbox } from '@/ui/fields/checkbox';
+import { Combobox } from '@/ui/fields/Combobox';
 import { CalendarIcon, CopyIcon, FilePlus2Icon, PencilIcon, Trash2Icon } from 'lucide-react';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-
-const inputClass = [
-  'block w-full sm:text-sm rounded-md',
-  'bg-accent-2 border border-accent-7 text-accent-12 placeholder:text-accent-7',
-  'focus:outline-none focus:ring-accent-7 focus:border-accent-8',
-].join(' ');
-
-const checkboxClass = [
-  'inline-flex items-center gap-2 text-sm text-neutral-12',
-];
 
 const eventTypeOptions: EventType[] = ['CAMP', 'GROUP', 'HOLIDAY', 'LESSON', 'RESERVATION'];
 
@@ -65,6 +58,10 @@ export function CalendarFeedDialog() {
 
   const feeds = data?.calendarFeedSubscriptionsList ?? [];
   const saving = createResult.fetching || updateResult.fetching;
+  const eventTypeItems = React.useMemo(
+    () => eventTypeOptions.map((type) => ({ id: type, label: formatEventType({ type }) })),
+    [],
+  );
 
   React.useEffect(() => {
     if (!open) {
@@ -193,53 +190,50 @@ export function CalendarFeedDialog() {
           <div className="grid gap-6">
             <form className="grid gap-3" onSubmit={handleSubmit}>
               <fieldset className="grid gap-3" disabled={saving}>
-                <label className="grid gap-1 text-sm text-neutral-11">
-                  <span>Typ akce</span>
-                  <select
-                    className={inputClass}
-                    value={form.onlyType}
-                    onChange={(event) => setForm((prev) => ({ ...prev, onlyType: event.currentTarget.value }))}
-                  >
-                    <option value="">Všechny typy</option>
-                    {eventTypeOptions.map((type) => (
-                      <option key={type} value={type}>
-                        {formatEventType({ type })}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <Combobox
+                  value={form.onlyType || null}
+                  onChange={(value) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      onlyType: (value ?? '') as FormState['onlyType'],
+                    }))
+                  }
+                  options={eventTypeItems}
+                  label="Typ akce"
+                  placeholder="Všechny typy"
+                />
 
-                <label className={checkboxClass.join(' ')}>
-                  <input
-                    type="checkbox"
-                    checked={form.onlyMine}
-                    onChange={(event) => setForm((prev) => ({ ...prev, onlyMine: event.currentTarget.checked }))}
-                  />
-                  Pouze moje události
-                </label>
+                <Checkbox
+                  name="onlyMine"
+                  label="Pouze moje události"
+                  checked={form.onlyMine}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, onlyMine: event.currentTarget.checked }))
+                  }
+                />
 
-                <label className="grid gap-1 text-sm text-neutral-11">
-                  <span>Začátek období (dny)</span>
-                  <input
-                    type="number"
-                    className={inputClass}
-                    value={form.startOffsetDays}
-                    onChange={(event) => setForm((prev) => ({ ...prev, startOffsetDays: event.currentTarget.value }))}
-                  />
-                  <span className="text-xs text-neutral-10">{startLabel}</span>
-                </label>
+                <TextField
+                  name="startOffsetDays"
+                  type="number"
+                  label="Začátek období (dny)"
+                  value={form.startOffsetDays}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, startOffsetDays: event.currentTarget.value }))
+                  }
+                  helperText={startLabel}
+                />
 
-                <label className="grid gap-1 text-sm text-neutral-11">
-                  <span>Konec období (dny)</span>
-                  <input
-                    type="number"
-                    className={inputClass}
-                    value={form.endOffsetDays}
-                    onChange={(event) => setForm((prev) => ({ ...prev, endOffsetDays: event.currentTarget.value }))}
-                    placeholder="bez omezení"
-                  />
-                  <span className="text-xs text-neutral-10">{endLabel}</span>
-                </label>
+                <TextField
+                  name="endOffsetDays"
+                  type="number"
+                  label="Konec období (dny)"
+                  value={form.endOffsetDays}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, endOffsetDays: event.currentTarget.value }))
+                  }
+                  placeholder="bez omezení"
+                  helperText={endLabel}
+                />
               </fieldset>
 
               <div className="flex flex-wrap gap-2 justify-end">
