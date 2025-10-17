@@ -241,7 +241,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const selected = enableSelection ? table.getFilteredSelectedRowModel().rows : []
 
   return (
-    <div className="space-y-4 rounded-xl border border-neutral-6 bg-neutral-1/80 p-4 shadow-sm">
+    <div className="space-y-4">
       {/* Toolbar / Selected actions */}
       {enableSelection && selected.length > 0 ? (
         selectedActions ? (
@@ -344,7 +344,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       {enablePagination && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm text-neutral-11">
           <div className="font-medium text-neutral-12">
-                                                         Vybráno {selected.length} z {table.getFilteredRowModel().rows.length}
+            Vybráno {selected.length} z {table.getFilteredRowModel().rows.length}
           </div>
           <div className="flex gap-2">
             <button
