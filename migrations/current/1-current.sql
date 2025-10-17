@@ -39,28 +39,16 @@ grant all on table public.calendar_feed_subscription to anonymous;
 
 alter table public.calendar_feed_subscription enable row level security;
 
-do $$
-begin
-  if not exists (
-    select 1 from pg_policies where schemaname = 'public' and tablename = 'calendar_feed_subscription' and policyname = 'calendar_feed_subscription_admin_all'
-  ) then
-    create policy calendar_feed_subscription_admin_all on public.calendar_feed_subscription
-      to administrator using (true) with check (true);
-  end if;
-end;
-$$;
+select app_private.drop_policies('public.calendar_feed_subscription');
 
-do $$
-begin
-  if not exists (
-    select 1 from pg_policies where schemaname = 'public' and tablename = 'calendar_feed_subscription' and policyname = 'calendar_feed_subscription_manage_own'
-  ) then
-    create policy calendar_feed_subscription_manage_own on public.calendar_feed_subscription
-      using (user_id = public.current_user_id())
-      with check (user_id = public.current_user_id());
-  end if;
-end;
-$$;
+create policy calendar_feed_subscription_admin_all on public.calendar_feed_subscription
+  to administrator
+  using (true)
+  with check (true);
+
+create policy calendar_feed_subscription_manage_own on public.calendar_feed_subscription
+  using (user_id = public.current_user_id())
+  with check (user_id = public.current_user_id());
 
 do $$
 begin
