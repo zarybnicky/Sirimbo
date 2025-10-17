@@ -119,7 +119,7 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
     {
       key: 'bold',
       label: <span className="font-semibold">B</span>,
-      title: 'Bold',
+      title: 'Tučné',
       run: (editor) => editor.chain().focus().toggleBold().run(),
       isActive: (editor) => editor.isActive('bold'),
       isEnabled: (editor) => editor.can().chain().focus().toggleBold().run(),
@@ -127,7 +127,7 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
     {
       key: 'italic',
       label: <span className="italic">I</span>,
-      title: 'Italic',
+      title: 'Kurzíva',
       run: (editor) => editor.chain().focus().toggleItalic().run(),
       isActive: (editor) => editor.isActive('italic'),
       isEnabled: (editor) => editor.can().chain().focus().toggleItalic().run(),
@@ -135,7 +135,7 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
     {
       key: 'strike',
       label: <span className="line-through">S</span>,
-      title: 'Strikethrough',
+      title: 'Přeškrtnuté',
       run: (editor) => editor.chain().focus().toggleStrike().run(),
       isActive: (editor) => editor.isActive('strike'),
       isEnabled: (editor) => editor.can().chain().focus().toggleStrike().run(),
@@ -144,16 +144,16 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
   [
     {
       key: 'bulletList',
-      label: '• List',
-      title: 'Bullet list',
+      label: '• Seznam',
+      title: 'Odrážkový seznam',
       run: (editor) => editor.chain().focus().toggleBulletList().run(),
       isActive: (editor) => editor.isActive('bulletList'),
       isEnabled: (editor) => editor.can().chain().focus().toggleBulletList().run(),
     },
     {
       key: 'orderedList',
-      label: '1. List',
-      title: 'Numbered list',
+      label: '1. Seznam',
+      title: 'Číslovaný seznam',
       run: (editor) => editor.chain().focus().toggleOrderedList().run(),
       isActive: (editor) => editor.isActive('orderedList'),
       isEnabled: (editor) => editor.can().chain().focus().toggleOrderedList().run(),
@@ -161,7 +161,7 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
     {
       key: 'blockquote',
       label: <span className="text-lg">“</span>,
-      title: 'Blockquote',
+      title: 'Citace',
       run: (editor) => editor.chain().focus().toggleBlockquote().run(),
       isActive: (editor) => editor.isActive('blockquote'),
       isEnabled: (editor) => editor.can().chain().focus().toggleBlockquote().run(),
@@ -170,11 +170,11 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
   [
     {
       key: 'link',
-      label: 'Link',
-      title: 'Insert link',
+      label: 'Odkaz',
+      title: 'Vložit odkaz',
       run: (editor) => {
         const previousUrl = editor.getAttributes('link').href as string | undefined;
-        const rawUrl = window.prompt('Enter a URL', previousUrl ?? '');
+        const rawUrl = window.prompt('Zadejte URL', previousUrl ?? '');
         if (rawUrl === null) {
           return;
         }
@@ -191,8 +191,8 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
     },
     {
       key: 'unlink',
-      label: 'Unlink',
-      title: 'Remove link',
+      label: 'Zrušit odkaz',
+      title: 'Odstranit odkaz',
       run: (editor) => {
         editor.chain().focus().extendMarkRange('link').unsetLink().run();
       },
@@ -202,8 +202,8 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
   [
     {
       key: 'insertTable',
-      label: 'Table',
-      title: 'Insert table',
+      label: 'Tabulka',
+      title: 'Vložit tabulku',
       run: (editor) => {
         const config = promptTableConfig();
         if (!config) {
@@ -225,36 +225,36 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
     },
     {
       key: 'addRowAfter',
-      label: 'Row +',
-      title: 'Add row below',
+      label: 'Řádek +',
+      title: 'Přidat řádek níže',
       run: (editor) => editor.chain().focus().addRowAfter().run(),
       isEnabled: (editor) => editor.can().chain().focus().addRowAfter().run(),
     },
     {
       key: 'deleteRow',
-      label: 'Row -',
-      title: 'Delete row',
+      label: 'Řádek -',
+      title: 'Smazat řádek',
       run: (editor) => editor.chain().focus().deleteRow().run(),
       isEnabled: (editor) => editor.can().chain().focus().deleteRow().run(),
     },
     {
       key: 'addColumnAfter',
-      label: 'Col +',
-      title: 'Add column to the right',
+      label: 'Sloupec +',
+      title: 'Přidat sloupec vpravo',
       run: (editor) => editor.chain().focus().addColumnAfter().run(),
       isEnabled: (editor) => editor.can().chain().focus().addColumnAfter().run(),
     },
     {
       key: 'deleteColumn',
-      label: 'Col -',
-      title: 'Delete column',
+      label: 'Sloupec -',
+      title: 'Smazat sloupec',
       run: (editor) => editor.chain().focus().deleteColumn().run(),
       isEnabled: (editor) => editor.can().chain().focus().deleteColumn().run(),
     },
     {
       key: 'deleteTable',
-      label: 'Del Tbl',
-      title: 'Delete table',
+      label: 'Smazat tab.',
+      title: 'Smazat tabulku',
       run: (editor) => editor.chain().focus().deleteTable().run(),
       isEnabled: (editor) => editor.can().chain().focus().deleteTable().run(),
     },
@@ -262,15 +262,15 @@ const TOOLBAR_GROUPS: ToolbarAction[][] = [
   [
     {
       key: 'undo',
-      label: 'Undo',
-      title: 'Undo',
+      label: 'Zpět',
+      title: 'Zpět',
       run: (editor) => editor.chain().focus().undo().run(),
       isEnabled: (editor) => editor.can().chain().focus().undo().run(),
     },
     {
       key: 'redo',
-      label: 'Redo',
-      title: 'Redo',
+      label: 'Znovu',
+      title: 'Znovu',
       run: (editor) => editor.chain().focus().redo().run(),
       isEnabled: (editor) => editor.can().chain().focus().redo().run(),
     },
@@ -321,11 +321,11 @@ function Toolbar(props: { editor: TipTapEditor | null }) {
 }
 
 const HEADING_OPTIONS = [
-  { key: 'paragraph', label: 'Paragraph' },
-  { key: 'heading-1', label: 'Heading 1', level: 1 },
-  { key: 'heading-2', label: 'Heading 2', level: 2 },
-  { key: 'heading-3', label: 'Heading 3', level: 3 },
-  { key: 'heading-4', label: 'Heading 4', level: 4 },
+  { key: 'paragraph', label: 'Odstavec' },
+  { key: 'heading-1', label: 'Nadpis 1', level: 1 },
+  { key: 'heading-2', label: 'Nadpis 2', level: 2 },
+  { key: 'heading-3', label: 'Nadpis 3', level: 3 },
+  { key: 'heading-4', label: 'Nadpis 4', level: 4 },
 ] as const;
 
 function HeadingSelect(props: { editor: TipTapEditor }) {
@@ -356,7 +356,7 @@ function HeadingSelect(props: { editor: TipTapEditor }) {
   return (
     <select
       className="h-7 rounded border border-accent-4 bg-accent-1 px-2 text-sm font-medium text-accent-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-7"
-      aria-label="Text style"
+      aria-label="Styl textu"
       value={activeOption?.key ?? 'paragraph'}
       onChange={handleChange}
     >
@@ -404,7 +404,7 @@ type TableConfig = {
 };
 
 function promptTableConfig(): TableConfig | null {
-  const response = window.prompt('Enter table size (rows × columns)', '3x3');
+  const response = window.prompt('Zadejte velikost tabulky (řádky × sloupce)', '3x3');
   if (response === null) {
     return null;
   }
