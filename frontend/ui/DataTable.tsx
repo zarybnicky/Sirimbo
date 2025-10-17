@@ -18,6 +18,8 @@ import {
   type PaginationState,
   type Table as TableType,
   type Row,
+  type HeaderContext,
+  type CellContext,
   OnChangeFn,
 } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
@@ -153,14 +155,14 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       enableSelection && {
         id: "__select",
         size: 36,
-        header: ({ table }) => (
+        header: ({ table }: HeaderContext<TData, unknown>) => (
           <RadixCheckbox
             checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
             onCheckedChange={(v) => table.toggleAllPageRowsSelected(!!v)}
             ariaLabel="Select all rows"
           />
         ),
-        cell: ({ row }) => (
+        cell: ({ row }: CellContext<TData, unknown>) => (
           <RadixCheckbox
             checked={row.getIsSelected()}
             onCheckedChange={(v) => row.toggleSelected(!!v)}
@@ -173,7 +175,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       renderExpanded && {
         id: "__expand",
         header: () => null,
-        cell: ({ row }) => (
+        cell: ({ row }: CellContext<TData, unknown>) => (
           <button
             onClick={row.getToggleExpandedHandler()}
             className="size-7 rounded-md border border-neutral-6 bg-neutral-1 text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
@@ -246,14 +248,6 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         ) : (
           <div className="flex items-center gap-3 rounded-lg border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm text-neutral-12 shadow-sm">
             <span className="font-medium text-neutral-11">{selected.length} selected</span>
-            <div className="ml-auto flex gap-2">
-              <button className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8">
-                Export
-              </button>
-              <button className="rounded-lg bg-[var(--tomato-9)] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[var(--tomato-10)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tomato-9)]">
-                Delete
-              </button>
-            </div>
           </div>
         )
       ) : toolbar ? (
