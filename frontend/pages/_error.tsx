@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/nextjs';
+import { captureUnderscoreErrorException } from '@sentry/nextjs';
 import type { NextPageContext } from 'next';
 import NextErrorComponent, { type ErrorProps } from 'next/error';
 
@@ -7,7 +7,7 @@ export default function CustomErrorComponent(props: ErrorProps) {
 }
 
 CustomErrorComponent.getInitialProps = async (contextData: NextPageContext) => {
-  await Sentry.captureUnderscoreErrorException(contextData);
+  await captureUnderscoreErrorException(contextData);
   return NextErrorComponent.getInitialProps(contextData);
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import * as Sentry from '@sentry/nextjs';
+import { captureException } from '@sentry/nextjs';
 import { toast } from 'react-toastify';
 import { TypedEventTarget } from 'typescript-event-target';
 import type { CombinedError } from 'urql';
@@ -19,7 +19,7 @@ const onError = ({ detail: combined }: CustomEvent<CombinedError>) => {
       toast.error('Zřejmě již v systému máte účet. Přihlaste se a vyplňte si přihlášku v sekci "Profil"');
     } else {
       toast.error(ex.message);
-      Sentry.captureException(combined);
+      captureException(combined);
     }
   }
 };
