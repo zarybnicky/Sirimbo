@@ -266,7 +266,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         ref={scrollRef as React.RefObject<HTMLDivElement>}
         className="max-h-[60vh] overflow-auto rounded-lg border border-neutral-6 bg-neutral-1 shadow-inner [scrollbar-gutter:stable]"
       >
-        <table className="min-w-full border-collapse text-sm">
+        <table className="min-w-full border-collapse text-sm m-0">
           <thead className="sticky top-0 z-10 bg-neutral-2/80 backdrop-blur">
             {table.getHeaderGroups().map((hg) => (
               <tr key={hg.id} className="text-left">
