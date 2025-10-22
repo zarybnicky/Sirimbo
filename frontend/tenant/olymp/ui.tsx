@@ -9,18 +9,18 @@ import LogoNsa from './logo-nsa.svg';
 import LogoProstejov from './logo-prostejov.svg';
 import LogoOlomouc from './logo-olomouc.jpg';
 import LogoKraj from './logo-kraj.png';
-import tenantConfig from './config.js';
+import { config } from './config';
 import { DefaultSeo } from 'next-seo';
 import LogoOnDark from './logo.webp';
 import Image from 'next/image';
 
 export function TenantSeo() {
   return <DefaultSeo
-    titleTemplate={`%s · ${tenantConfig.shortName}`}
-    defaultTitle={tenantConfig.shortName}
+    titleTemplate={`%s · ${config.shortName}`}
+    defaultTitle={config.shortName}
     themeColor="#000"
     facebook={{ appId: '704526480597551' }}
-    openGraph={{ siteName: tenantConfig.shortName }}
+    openGraph={{ siteName: config.shortName }}
     additionalMetaTags={[
       { name: "wot-verification", content: "ec0cf41ab42dae52d3d4" },
       { name: "msvalidate.01", content: "7BD6C8B5748FC22EF06AB3AE89900885" },
@@ -236,7 +236,7 @@ export function Footer() {
       </div>
 
       <div className="mt-4 col-span-2 flex flex-wrap justify-between">
-        <div>{tenantConfig.copyrightLine}</div>
+        <div>{config.copyrightLine}</div>
         <div>
           <div>Realizace: Jakub Zárybnický</div>
           <div>

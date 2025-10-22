@@ -1,7 +1,6 @@
- /**
- * @type {import("../types").TenantConfig}
- */
-module.exports = {
+import { TenantConfig } from "../types";
+
+export const config: TenantConfig = {
   shortName: "TK Starlet",
   copyrightLine: "© 2024 TK Starlet Brno, z. s.",
   favicon: '',

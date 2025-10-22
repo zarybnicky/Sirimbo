@@ -3,7 +3,7 @@ import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import deepEqual from 'fast-deep-equal';
-import { tenancyCatalog } from '@/tenant/catalog';
+import { tenantCatalog } from '@/tenant/catalog';
 import type { TenantConfig } from '@/tenant/types';
 
 interface AuthState {
@@ -70,7 +70,7 @@ export const tenantIdAtom = atom<string, [string], void>(
   (get) => get(baseTenantIdAtom),
   (_get, set, nextValue) => {
     set(baseTenantIdAtom, nextValue);
-    set(tenantConfigAtom, tenancyCatalog.find(x => x.id === Number.parseInt(nextValue))?.config ?? emptyConfig);
+    set(tenantConfigAtom, tenantCatalog[Number.parseInt(nextValue)]?.config ?? emptyConfig);
   },
 );
 

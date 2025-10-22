@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unused-modules */
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { serverTenantCatalog } from './tenant/catalog-server';
 
 export const config = {
   matcher: [
@@ -16,16 +17,9 @@ export const config = {
   ],
 };
 
-const TENANT_HOST_ENTRIES: Array<{ id: number; hosts: string[] }> = [
-  { id: 1, hosts: ['olymp.rozpisovnik.cz', 'tkolymp.cz'] },
-  { id: 2, hosts: ['dspkometa.rozpisovnik.cz'] },
-  { id: 3, hosts: ['tkstarlet.rozpisovnik.cz'] },
-  { id: 4, hosts: ['dspkometa2.rozpisovnik.cz'] },
-];
-
 const hostToTenantId = new Map<string, number>();
 
-for (const entry of TENANT_HOST_ENTRIES) {
+for (const entry of Object.values(serverTenantCatalog)) {
   for (const host of entry.hosts) {
     hostToTenantId.set(host.toLowerCase(), entry.id);
   }

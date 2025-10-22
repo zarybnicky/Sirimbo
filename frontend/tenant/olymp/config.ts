@@ -1,7 +1,6 @@
- /**
- * @type {import("../types").TenantConfig}
- */
-module.exports = {
+import { TenantConfig } from "../types";
+
+export const config: TenantConfig = {
   shortName: "TK Olymp",
   copyrightLine: "© 2024 TK Olymp Olomouc, z. s.",
   favicon: '',

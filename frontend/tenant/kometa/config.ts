@@ -1,7 +1,6 @@
- /**
- * @type {import("../types").TenantConfig}
- */
-module.exports = {
+import { TenantConfig } from "../types";
+
+export const config: TenantConfig = {
   shortName: "DSP Kometa",
   copyrightLine: "© 2024 DSP Kometa Brno, z. s.",
   favicon: '',

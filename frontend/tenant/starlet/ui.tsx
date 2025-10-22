@@ -1,5 +1,5 @@
 import React from 'react';
-import tenantConfig from './config.js';
+import { config } from './config';
 import { DefaultSeo } from 'next-seo';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,10 +8,10 @@ import LogoIcon from './logo-white-no-text.png';
 export function TenantSeo() {
   return (
     <DefaultSeo
-      titleTemplate={`%s · ${tenantConfig.shortName}`}
-      defaultTitle={tenantConfig.shortName}
+      titleTemplate={`%s · ${config.shortName}`}
+      defaultTitle={config.shortName}
       themeColor="#000"
-      openGraph={{ siteName: tenantConfig.shortName }}
+      openGraph={{ siteName: config.shortName }}
       additionalMetaTags={[
         { name: 'viewport', content: 'initial-scale=1,width=device-width' },
       ]}
