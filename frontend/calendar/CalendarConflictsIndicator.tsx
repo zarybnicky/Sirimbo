@@ -97,7 +97,7 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
     <>
       <button
         type="button"
-        className="fixed bottom-6 right-6 z-30 flex h-12 min-w-12 items-center justify-center gap-1 rounded-full bg-accent-9 px-4 text-white shadow-lg transition hover:bg-accent-10 focus:outline-none focus:ring-2 focus:ring-accent-3 focus:ring-offset-2"
+        className="fixed bottom-6 right-6 z-30 flex h-12 min-w-12 items-center justify-center gap-1 rounded-full bg-accent-9 px-4 text-white shadow-lg transition-colors hover:bg-accent-10 focus:outline-none focus:ring-2 focus:ring-accent-3 focus:ring-offset-2"
         onClick={() => setOpen(true)}
         aria-label={`Zobrazit ${totalConflicts} konfliktů v kalendáři`}
       >

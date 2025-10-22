@@ -23,7 +23,7 @@ export function ServiceCard(props: ServiceCardProps) {
     >
       <div className="relative overflow-hidden min-h-[300px]">
         <Image
-          className="sm:rounded-l-lg object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
+          className="sm:rounded-l-lg object-cover object-[50%_30%] transition-transform duration-300 group-hover:scale-110"
           src={props.image}
           alt={props.header}
           fill

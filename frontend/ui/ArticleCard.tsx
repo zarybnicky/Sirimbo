@@ -20,7 +20,7 @@ export function ArticleCard(x: Props) {
           {x.img && (
             <Image
               fill
-              className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
+              className="object-cover object-[50%_30%] transition-transform duration-300 group-hover:scale-110"
               src={x.img}
               alt={x.header}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"

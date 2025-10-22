@@ -179,7 +179,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         cell: ({ row }: CellContext<TData, unknown>) => (
           <button
             onClick={row.getToggleExpandedHandler()}
-            className="size-7 rounded-md border border-neutral-6 bg-neutral-1 text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+            className="size-7 rounded-md border border-neutral-6 bg-neutral-1 text-neutral-12 transition-colors hover:border-neutral-7 hover:bg-neutral-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
             aria-label={row.getIsExpanded() ? "Collapse" : "Expand"}
           >
             {row.getIsExpanded() ? "−" : "+"}
@@ -277,7 +277,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
                   >
                     {h.isPlaceholder ? null : (
                       <button
-                        className="inline-flex items-center gap-1 text-neutral-11 transition hover:text-neutral-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+                        className="inline-flex items-center gap-1 text-neutral-11 transition-colors hover:text-neutral-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
                         onClick={h.column.getToggleSortingHandler()}
                       >
                         {flexRender(h.column.columnDef.header, h.getContext())}
@@ -306,7 +306,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
                 <React.Fragment key={row.id}>
                   <tr
                     data-selected={enableSelection && row.getIsSelected() ? "" : undefined}
-                    className="cursor-default border-b border-neutral-6 transition data-[selected]:bg-accent-3 hover:bg-neutral-2/60"
+                    className="cursor-default border-b border-neutral-6 transition-colors data-[selected]:bg-accent-3 hover:bg-neutral-2/60"
                     style={{ height: v.size }}
                     onClick={() => onRowClick?.(row)}
                   >
@@ -350,14 +350,14 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
             <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+              className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition-colors enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
             >
                Zpět
             </button>
             <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+              className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition-colors enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
             >
                Další
             </button>
@@ -383,12 +383,12 @@ function DefaultToolbar<TData>({
         value={globalFilter ?? ""}
         onChange={(e) => setGlobalFilter(e.target.value)}
         placeholder="Hledat…"
-        className="h-9 w-64 rounded-lg border border-neutral-6 bg-neutral-1 px-3 text-sm text-neutral-12 placeholder:text-neutral-11 transition focus:border-transparent focus:outline-none focus:ring-2 focus:ring-accent-8"
+        className="h-9 w-64 rounded-lg border border-neutral-6 bg-neutral-1 px-3 text-sm text-neutral-12 placeholder:text-neutral-11 transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-accent-8"
       />
 
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button className="h-9 rounded-lg border border-neutral-6 bg-neutral-2 px-3 text-sm font-medium text-neutral-12 transition hover:border-neutral-7 hover:bg-neutral-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8">
+          <button className="h-9 rounded-lg border border-neutral-6 bg-neutral-2 px-3 text-sm font-medium text-neutral-12 transition-colors hover:border-neutral-7 hover:bg-neutral-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8">
             Sloupce
           </button>
         </DropdownMenu.Trigger>
@@ -405,7 +405,7 @@ function DefaultToolbar<TData>({
                 key={col.id}
                 checked={col.getIsVisible()}
                 onCheckedChange={(v) => col.toggleVisibility(!!v)}
-                className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 outline-none transition data-[highlighted]:bg-neutral-3"
+                className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 outline-none transition-colors data-[highlighted]:bg-neutral-3"
               >
                 <DropdownMenu.ItemIndicator>
                   <CheckIcon />

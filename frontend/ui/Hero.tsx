@@ -94,7 +94,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
           <div className="h-[60vh]">
             {x.inset ? (
               <Image
-                className="object-contain transition duration-300 group-hover:scale-110"
+                className="object-contain transition-transform duration-300 group-hover:scale-110"
                 src={x.img}
                 alt={x.name}
                 quality={90}
@@ -104,7 +104,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
               />
             ) : (
               <Image
-                className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
+                className="object-cover object-[50%_30%] transition-transform duration-300 group-hover:scale-110"
                 src={x.img}
                 alt={x.name}
                 quality={90}
