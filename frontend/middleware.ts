@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unused-modules */
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { serverTenantCatalog } from './tenant/catalog-server';
+import { hostToTenantId } from './tenant/catalog-server';
 
 export const config = {
   matcher: [
@@ -11,14 +11,6 @@ export const config = {
     },
   ],
 };
-
-const hostToTenantId = new Map<string, string>();
-
-for (const entry of Object.values(serverTenantCatalog)) {
-  for (const host of entry.hosts) {
-    hostToTenantId.set(host.toLowerCase(), String(entry.id));
-  }
-}
 
 export function middleware(request: NextRequest) {
   const forwardedHost = request.headers.get('x-forwarded-host');

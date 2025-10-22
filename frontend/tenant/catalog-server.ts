@@ -38,3 +38,11 @@ export const serverTenantCatalog = {
     config: kometaConfig,
   },
 };
+
+export const hostToTenantId = new Map<string, string>();
+
+for (const entry of Object.values(serverTenantCatalog)) {
+  for (const host of entry.hosts) {
+    hostToTenantId.set(host.toLowerCase(), String(entry.id));
+  }
+}

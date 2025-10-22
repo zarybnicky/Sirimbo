@@ -1,14 +1,20 @@
 import { buildId } from '@/lib/build-id';
-import { type MenuLink, type MenuStructItem, getHrefs, useMemberMenu, topMenu } from '@/lib/use-menu';
+import {
+  type MenuLink,
+  type MenuStructItem,
+  getHrefs,
+  useMemberMenu,
+  topMenu,
+} from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/catalog';
-import { serverTenantCatalog } from '@/tenant/catalog-server';
+import { hostToTenantId, serverTenantCatalog } from '@/tenant/catalog-server';
 import { cn } from '@/ui/cn';
 import { authAtom, storeRef, tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 
 type SidebarProps = {
   isOpen: boolean;
@@ -23,7 +29,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const tenantId = useAtomValue(tenantIdAtom);
   const { enableHome, copyrightLine: newCopyrightLine } = useAtomValue(tenantConfigAtom);
   const memberMenu = useMemberMenu();
-  const SidebarLogo = useMemo(() => getTenantUi(tenantId, 'SidebarLogo'), [tenantId],);
+  const SidebarLogo = React.useMemo(() => getTenantUi(tenantId, 'SidebarLogo'), [tenantId]);
 
   const [copyrightLine, setCopyrightLine] = React.useState('');
 
@@ -69,38 +75,38 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
       <nav
         className={cn(
           'fixed lg:sticky inset-y-0 left-0',
-          isOpen
-            ? 'translate-x-0 shadow-lg'
-            : '-translate-x-full lg:translate-x-0',
+          isOpen ? 'translate-x-0 shadow-lg' : '-translate-x-full lg:translate-x-0',
           showTopMenu ? 'lg:hidden' : '',
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
           'z-50 lg:z-auto flex-none pb-10 transition-transform duration-200 ease-in-out sm:pb-0',
           'bg-accent-1 text-neutral-12 lg:bg-accent-9 lg:text-white',
-          'overflow-y-auto scrollbar max-h-screen min-h-screen'
+          'overflow-y-auto scrollbar max-h-screen min-h-screen',
         )}
       >
-        {!showTopMenu && (
-          <SidebarLogo />
-        )}
+        {!showTopMenu && <SidebarLogo />}
         <div className="space-y-1 pt-3 mr-1">
-          {(auth.user && isMounted) ? (
+          {auth.user && isMounted ? (
             <>
               {memberMenu
-                .map((item) => item.type === 'link' ? item : {
-                  ...item,
-                  children: item.children.filter(child => (
-                    (!child.requireTrainer || auth.isTrainerOrAdmin) &&
-                    (!child.requireAdmin || auth.isAdmin) &&
-                    (!child.requireSystemAdmin || auth.isSystemAdmin)
-                  )),
-                })
-                .filter((item): item is MenuStructItem => item.type === 'link'
-                  ? (
-                    (!item.requireTrainer || auth.isTrainerOrAdmin) &&
-                    (!item.requireAdmin || auth.isAdmin) &&
-                    (!item.requireSystemAdmin || auth.isSystemAdmin)
-                  )
-                  : item.children.length > 0
+                .map((item) =>
+                  item.type === 'link'
+                    ? item
+                    : {
+                        ...item,
+                        children: item.children.filter(
+                          (child) =>
+                            (!child.requireTrainer || auth.isTrainerOrAdmin) &&
+                            (!child.requireAdmin || auth.isAdmin) &&
+                            (!child.requireSystemAdmin || auth.isSystemAdmin),
+                        ),
+                      },
+                )
+                .filter((item): item is MenuStructItem =>
+                  item.type === 'link'
+                    ? (!item.requireTrainer || auth.isTrainerOrAdmin) &&
+                      (!item.requireAdmin || auth.isAdmin) &&
+                      (!item.requireSystemAdmin || auth.isSystemAdmin)
+                    : item.children.length > 0,
                 )
                 .map((item) => (
                   <SidebarSection key={item.title} item={item} />
@@ -123,13 +129,12 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {enableHome && (
-            showTopMenu ? (
+          {enableHome &&
+            (showTopMenu ? (
               topMenu.map((x) => <SidebarSection key={x.title} item={x} />)
             ) : (
               <SidebarLink item={{ type: 'link', title: 'Veřejná sekce', href: '/' }} />
-            )
-          )}
+            ))}
 
           <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
             <div>{copyrightLine}</div>
@@ -139,9 +144,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
                 Právě probíhá ↗︎
               </Link>
             </div>
-            {auth.isSystemAdmin && (
-              <TenantSelect />
-            )}
+            {auth.isSystemAdmin && <TenantSelect />}
           </div>
         </div>
       </nav>
@@ -151,14 +154,29 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
 
 function TenantSelect() {
   const [tenantId, setTenantId] = useAtom(tenantIdAtom);
-  const onChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    storeRef.resetUrqlClient();
-    setTenantId(e.currentTarget.value);
-  }, [setTenantId])
+  const onChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      storeRef.resetUrqlClient();
+      setTenantId(e.currentTarget.value);
+    },
+    [setTenantId],
+  );
+
+  const [canShow, setCanShow] = React.useState(false);
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && tenantId) {
+      setCanShow(!hostToTenantId.get(window.origin));
+    }
+  }, [tenantId]);
+
+  if (!canShow) return null;
+
   return (
     <select className="text-neutral-12" onChange={onChange} value={tenantId}>
-      {Object.values(serverTenantCatalog).map(x => (
-        <option key={x.id} value={x.id}>{x.name}</option>
+      {Object.values(serverTenantCatalog).map((x) => (
+        <option key={x.id} value={x.id}>
+          {x.name}
+        </option>
       ))}
     </select>
   );
