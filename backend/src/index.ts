@@ -8,10 +8,12 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 import { postgraphile } from 'postgraphile';
+import { grafserv } from 'postgraphile/grafserv/express/v4';
+import { createServer } from 'node:http';
+
 import { pool } from './db.ts';
 import preset from './graphile.config.ts';
-import { grafserv } from "postgraphile/grafserv/express/v4";
-import { createServer } from "node:http";
+import { registerCalendarFeedEndpoint } from './calendarFeedEndpoint.ts';
 
 const app = express();
 
@@ -25,10 +27,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text({ type: 'application/graphql' }));
 
 app.get('/member/download', async function (req, res) {
-  const {rows} = await pool.query('select * from dokumenty where d_id=$1', [req.query.id]);
-  if (rows.length < 1 ) {
+  const { rows } = await pool.query('select * from dokumenty where d_id=$1', [req.query.id]);
+  if (rows.length < 1) {
     res.status(404).send('Nenalezeno');
-    return
+    return;
   }
 
   let path = rows[0].d_path;
@@ -40,9 +42,10 @@ app.get('/member/download', async function (req, res) {
   res.download(path, rows[0].d_filename);
 });
 
+registerCalendarFeedEndpoint(app);
 
 const server = createServer(app);
-server.on("error", (e) => {
+server.on('error', (e) => {
   console.error(e);
 });
 
@@ -65,4 +68,7 @@ server.listen(preset.grafserv?.port ?? 5000, () => {
   }
 });
 
-process.on('unhandledRejection', (reason) => { throw reason; });
+process.on('unhandledRejection', (reason) => {
+  throw reason;
+});
+

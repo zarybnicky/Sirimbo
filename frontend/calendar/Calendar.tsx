@@ -24,6 +24,7 @@ import { z } from 'zod';
 import { EventForm } from '@/ui/event-form/types';
 import { tenantConfig } from '@/tenant/config';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
+import { CalendarFeedDialog } from './CalendarFeedDialog';
 
 const Views: { [key: string]: (props: ViewProps) => React.ReactNode } = {
   month: Month,
@@ -386,6 +387,8 @@ export function Calendar() {
           )}
 
           <TrainerFilter />
+
+          <CalendarFeedDialog />
 
           {fetching && <Spinner />}
         </div>
