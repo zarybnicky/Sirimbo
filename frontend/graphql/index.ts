@@ -9102,7 +9102,7 @@ export type TenantAdministratorInput = {
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<RelationshipStatus>;
-  tenantId: Scalars['BigInt']['input'];
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -9236,7 +9236,7 @@ export type TenantLocationInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
-  tenantId: Scalars['BigInt']['input'];
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -9322,7 +9322,7 @@ export type TenantMembershipInput = {
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<RelationshipStatus>;
-  tenantId: Scalars['BigInt']['input'];
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -9496,7 +9496,7 @@ export type TenantTrainerInput = {
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<RelationshipStatus>;
-  tenantId: Scalars['BigInt']['input'];
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };

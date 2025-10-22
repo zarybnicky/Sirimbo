@@ -10975,7 +10975,7 @@ input TenantAdministratorInput {
   personId: BigInt!
   since: Datetime
   status: RelationshipStatus
-  tenantId: BigInt!
+  tenantId: BigInt
   until: Datetime
   updatedAt: Datetime
 }
@@ -11151,7 +11151,7 @@ input TenantLocationInput {
   description: String
   isPublic: Boolean
   name: String!
-  tenantId: BigInt!
+  tenantId: BigInt
   updatedAt: Datetime
 }
 
@@ -11249,7 +11249,7 @@ input TenantMembershipInput {
   personId: BigInt!
   since: Datetime
   status: RelationshipStatus
-  tenantId: BigInt!
+  tenantId: BigInt
   until: Datetime
   updatedAt: Datetime
 }
@@ -11448,7 +11448,7 @@ input TenantTrainerInput {
   personId: BigInt!
   since: Datetime
   status: RelationshipStatus
-  tenantId: BigInt!
+  tenantId: BigInt
   until: Datetime
   updatedAt: Datetime
 }

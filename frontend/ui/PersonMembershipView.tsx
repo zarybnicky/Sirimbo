@@ -4,7 +4,6 @@ import {
   CreateTenantTrainerDocument,
 } from '@/graphql/Memberships';
 import type { PersonWithLinksFragment } from '@/graphql/Person';
-import { tenantId } from '@/tenant/config';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
 import { formatLongCoupleName, formatOpenDateRange, moneyFormatter } from '@/ui/format';
@@ -17,20 +16,23 @@ import { TenantMembershipMenu } from '@/ui/menus/TenantMembershipMenu';
 import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
+import { useAtomValue } from 'jotai';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useMutation } from 'urql';
+import { tenantIdAtom } from '@/ui/state/auth';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
+  const tenantId = useAtomValue(tenantIdAtom);
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
 
-  const addAsMember = React.useCallback(() => createTenantMember({ input: { tenantMembership: { personId: item.id, tenantId } } }), [createTenantMember, item.id]);
-  const addAsTrainer = React.useCallback(() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id, tenantId } } }), [createTenantTrainer, item.id]);
-  const addAsAdmin = React.useCallback(() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id, tenantId } } }), [createTenantAdmin, item.id]);
+  const addAsMember = React.useCallback(() => createTenantMember({ input: { tenantMembership: { personId: item.id } } }), [createTenantMember, item.id]);
+  const addAsTrainer = React.useCallback(() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id } } }), [createTenantTrainer, item.id]);
+  const addAsAdmin = React.useCallback(() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id } } }), [createTenantAdmin, item.id]);
 
   return (
     <div key="info" className="prose prose-accent mb-2">

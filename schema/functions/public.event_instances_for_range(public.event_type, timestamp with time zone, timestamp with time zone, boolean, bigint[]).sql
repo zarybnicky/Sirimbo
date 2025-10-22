@@ -8,9 +8,9 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
      event_instance.updated_at,
      event_instance.since,
      event_instance.until,
-     event_instance.range,
      event_instance.location_id,
-     event_instance.is_cancelled
+     event_instance.is_cancelled,
+     event_instance.range
     FROM (public.event_instance
       JOIN public.event ON ((event_instance.event_id = event.id)))
    WHERE (event.is_visible AND (event_instance.since <= event_instances_for_range.end_range) AND (event_instance.until >= event_instances_for_range.start_range) AND ((event_instances_for_range.only_type IS NULL) OR (event.type = event_instances_for_range.only_type)) AND ((event_instances_for_range.trainer_ids IS NULL) OR (EXISTS ( SELECT 1

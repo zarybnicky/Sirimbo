@@ -12,8 +12,7 @@ CREATE TABLE public.scoreboard_manual_adjustment (
 
 COMMENT ON TABLE public.scoreboard_manual_adjustment IS '@simpleCollections only';
 
-GRANT ALL ON TABLE public.scoreboard_manual_adjustment TO administrator;
-GRANT SELECT ON TABLE public.scoreboard_manual_adjustment TO member;
+GRANT ALL ON TABLE public.scoreboard_manual_adjustment TO anonymous;
 ALTER TABLE public.scoreboard_manual_adjustment ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.scoreboard_manual_adjustment
@@ -25,8 +24,9 @@ ALTER TABLE ONLY public.scoreboard_manual_adjustment
 ALTER TABLE ONLY public.scoreboard_manual_adjustment
     ADD CONSTRAINT scoreboard_manual_adjustment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
-CREATE POLICY admin_manage ON public.scoreboard_manual_adjustment TO administrator USING ((tenant_id = public.current_tenant_id())) WITH CHECK ((tenant_id = public.current_tenant_id()));
-CREATE POLICY member_read ON public.scoreboard_manual_adjustment FOR SELECT TO member USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY admin_all ON public.scoreboard_manual_adjustment TO administrator USING (true);
+CREATE POLICY current_tenant ON public.scoreboard_manual_adjustment AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY member_read ON public.scoreboard_manual_adjustment FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.scoreboard_manual_adjustment FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

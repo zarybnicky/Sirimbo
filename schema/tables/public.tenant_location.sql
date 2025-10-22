@@ -4,7 +4,7 @@ CREATE TABLE public.tenant_location (
     description text DEFAULT ''::text NOT NULL,
     address public.address_domain,
     is_public boolean DEFAULT true,
-    tenant_id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );

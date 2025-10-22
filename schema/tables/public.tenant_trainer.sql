@@ -1,5 +1,5 @@
 CREATE TABLE public.tenant_trainer (
-    tenant_id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     person_id bigint NOT NULL,
     since timestamp with time zone DEFAULT now() NOT NULL,
     until timestamp with time zone,

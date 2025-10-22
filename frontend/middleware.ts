@@ -48,6 +48,7 @@ export function middleware(request: NextRequest) {
     sameSite: 'lax',
     secure: request.nextUrl.protocol === 'https:',
     domain: hostname ?? request.nextUrl.hostname ?? undefined,
+    expires: 1000 * 60 * 60 * 24 * 365 * 10,
   });
 
   return response;

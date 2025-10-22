@@ -6,9 +6,9 @@ CREATE TABLE public.event_instance (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     since timestamp with time zone NOT NULL,
     until timestamp with time zone NOT NULL,
-    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
     location_id bigint,
-    is_cancelled boolean DEFAULT false
+    is_cancelled boolean DEFAULT false,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL
 );
 
 COMMENT ON TABLE public.event_instance IS '@omit create,delete

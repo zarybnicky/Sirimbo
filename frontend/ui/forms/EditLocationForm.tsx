@@ -1,5 +1,4 @@
 import { CreateTenantLocationDocument, TenantLocationDocument, UpdateTenantLocationDocument } from '@/graphql/Tenant';
-import { tenantId } from '@/tenant/config';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
@@ -62,7 +61,7 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
     }
     await (id
       ? update({ input: { id, patch: { ...values, isPublic: !!values.isPublic } } })
-      : create({ input: { tenantLocation: { ...values, isPublic: !!values.isPublic, tenantId } } }));
+      : create({ input: { tenantLocation: { ...values, isPublic: !!values.isPublic } } }));
     onSuccess();
   });
 
