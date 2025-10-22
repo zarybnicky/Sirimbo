@@ -163,7 +163,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
       locationText: items[0]?.event?.locationText,
       trainers: trainer ? [{ itemId: null, personId: trainer, lessonsOffered: 0 }] : [],
     };
-  }, [items]);
+  }, [items, lockEventsByDefault]);
 
   return (
     <div className={cardCls({ className: "group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border" })}>

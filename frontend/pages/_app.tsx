@@ -2,7 +2,7 @@ import { configureUrql } from '@/graphql/query';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
-import { storeRef, tenantIdAtom } from '@/ui/state/auth';
+import { setNewTenant, storeRef } from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
@@ -21,6 +21,7 @@ import { z } from 'zod';
 import { cs } from "zod/locales"
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { getCookie } from 'cookies-next/client';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -47,16 +48,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   }
 
   useLayoutEffect(() => {
-    const newTenantId = String(getCookie('tenant_id'));
-    storeRef.current.set(tenantIdAtom, newTenantId);
-    const root = document.querySelector('body');
-    if (root) {
-      root.classList.forEach((cls) => {
-        if (cls.includes('tenant-'))
-          root.classList.remove(cls);
-      });
-      root.classList.add(`tenant-${newTenantId}`);
-    }
+    setNewTenant(String(getCookie('tenant_id')));
   }, []);
 
   return (
@@ -71,6 +63,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
           <ErrorNotifier />
           <UserRefresher />
           <ToastContainer limit={3} />
+          <SpeedInsights />
         </ConfirmProvider>
       </Provider>
     </QueryParamProvider>

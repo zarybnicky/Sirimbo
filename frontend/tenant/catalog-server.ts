@@ -1,6 +1,7 @@
 import type { TenantConfig } from './types';
 
 import { config as kometaConfig } from './kometa/config';
+import { config as kometaConfig2 } from './kometa/config2';
 import { config as olympConfig } from './olymp/config';
 import { config as starletConfig } from './starlet/config';
 
@@ -32,7 +33,7 @@ export const serverTenantCatalog = {
   },
   4: {
     id: 4,
-    name: kometaConfig.shortName,
+    name: kometaConfig2.shortName,
     hosts: ['dspkometa2.rozpisovnik.cz'],
     config: kometaConfig,
   },

@@ -19,7 +19,7 @@ export default function LoginPage() {
     const redirect = router.query?.from as string | undefined;
     const defaultRedirect = enableHome ? '/dashboard' : '/rozpis';
     void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
-  }, [router]);
+  }, [enableHome, router]);
 
   const personCount = auth.personIds.length;
 

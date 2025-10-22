@@ -133,7 +133,7 @@ function TimeGridEvent({
       label += `, ${location}`;
 
     return label;
-  }, [event, startsAfterDay, startsBeforeDay]);
+  }, [event.end, event.event?.eventTrainersList, event.event.location?.name, event.event.locationText, event.instance.trainers, event.start, startsAfterDay, startsBeforeDay, useTrainerInitials]);
 
   const triggerTitle = React.useMemo(() => {
     const parts = [label, title];

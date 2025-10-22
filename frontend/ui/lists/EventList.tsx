@@ -137,7 +137,7 @@ export function EventList() {
         trainers: [],
       }],
     };
-  }, []);
+  }, [lockEventsByDefault]);
 
   return (
     <div className="flex flex-col h-full">

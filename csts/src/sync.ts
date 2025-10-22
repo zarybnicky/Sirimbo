@@ -13,17 +13,17 @@ export async function synchronizeAthletes(
   options: SynchronizeAthletesOptions = {},
 ): Promise<void> {
   const { signal, onFetchError, init } = options;
-  const fetchOptions: FetchAthletesOptions = { init };
+
+  let notFoundContiguous = 0;
 
   for (const idt of iterateAthleteIdts()) {
     await new Promise(r => setTimeout(r, 250));
-    console.log(idt);
 
     signal?.throwIfAborted?.();
 
     let response;
     try {
-      response = await fetchAthletesByIdt(idt, fetchOptions);
+      response = await fetchAthletesByIdt(idt, { init });
     } catch (error) {
       if (onFetchError) {
         await onFetchError(idt, error);
@@ -34,8 +34,16 @@ export async function synchronizeAthletes(
     }
 
     if (response.collection.length === 0) {
+      console.log(`${idt} not found`);
+      notFoundContiguous++;
+      if (notFoundContiguous > 100) {
+        console.log("Didn't find 100 in a row, we might be at the end");
+        break;
+      }
       continue;
     }
+    notFoundContiguous = 0;
+    console.log(idt);
 
     for (const athlete of response.collection) {
       signal?.throwIfAborted?.();

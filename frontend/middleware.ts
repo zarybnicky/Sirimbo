@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
   const forwardedHost = request.headers.get('x-forwarded-host');
   const hostHeader = forwardedHost ?? request.headers.get('host') ?? request.nextUrl.host;
   const hostname = hostHeader?.split(':')[0]?.toLowerCase() ?? null;
-  const tenantId = hostToTenantId.get(hostname ?? '') ?? '1';
+  const tenantId = hostToTenantId.get(hostname ?? '') ?? '2';
 
   request.cookies.set('tenant_id', tenantId);
 

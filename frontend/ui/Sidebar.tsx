@@ -1,13 +1,14 @@
 import { buildId } from '@/lib/build-id';
 import { type MenuLink, type MenuStructItem, getHrefs, useMemberMenu, topMenu } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/catalog';
+import { serverTenantCatalog } from '@/tenant/catalog-server';
 import { cn } from '@/ui/cn';
 import { authAtom, storeRef, tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 type SidebarProps = {
   isOpen: boolean;
@@ -20,14 +21,17 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
   const tenantId = useAtomValue(tenantIdAtom);
-  const { enableHome, copyrightLine } = useAtomValue(tenantConfigAtom);
+  const { enableHome, copyrightLine: newCopyrightLine } = useAtomValue(tenantConfigAtom);
   const memberMenu = useMemberMenu();
   const SidebarLogo = useMemo(() => getTenantUi(tenantId, 'SidebarLogo'), [tenantId],);
+
+  const [copyrightLine, setCopyrightLine] = React.useState('');
 
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {
     setIsMounted(true);
-  }, []);
+    setCopyrightLine(newCopyrightLine);
+  }, [newCopyrightLine]);
 
   React.useEffect(() => {
     const track = () => setIsOpen(false);
@@ -135,10 +139,28 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
                 Právě probíhá ↗︎
               </Link>
             </div>
+            {auth.isSystemAdmin && (
+              <TenantSelect />
+            )}
           </div>
         </div>
       </nav>
     </>
+  );
+}
+
+function TenantSelect() {
+  const [tenantId, setTenantId] = useAtom(tenantIdAtom);
+  const onChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    storeRef.resetUrqlClient();
+    setTenantId(e.currentTarget.value);
+  }, [setTenantId])
+  return (
+    <select className="text-neutral-12" onChange={onChange} value={tenantId}>
+      {Object.values(serverTenantCatalog).map(x => (
+        <option key={x.id} value={x.id}>{x.name}</option>
+      ))}
+    </select>
   );
 }
 

@@ -5,34 +5,34 @@ const rankingPointsSchema = z.object({
   rankingPointsAge: z.string(),
   medicalCheckupExpiration: z.string().optional().nullable().prefault(null),
   personalClass: z.string(),
-  personalPoints: z.number().finite(),
-  personalDomesticFinaleCount: z.number().finite(),
-  personalForeignFinaleCount: z.number().finite(),
+  personalPoints: z.number(),
+  personalDomesticFinaleCount: z.number(),
+  personalForeignFinaleCount: z.number(),
   personalApproved: z.boolean(),
-  competitorId: z.number().finite(),
+  competitorId: z.number(),
   series: z.string(),
   discipline: z.string(),
   rankingAge: z.string(),
   competitors: z.string(),
 
-  domesticFinaleCount: z.number().finite().optional(),
-  foreignFinaleCount: z.number().finite().optional(),
+  domesticFinaleCount: z.number().optional(),
+  foreignFinaleCount: z.number().optional(),
 
-  ranklistRanking: z.number().finite().optional(),
-  ranklistPoints: z.number().finite().optional(),
+  ranklistRanking: z.number().optional(),
+  ranklistPoints: z.number().optional(),
 
-  id: z.number().finite().optional(),
-  idt: z.number().finite().optional(),
+  id: z.number().optional(),
+  idt: z.number().optional(),
   age: z.string().optional(),
   class: z.string().optional(),
-  points: z.number().finite().optional(),
+  points: z.number().optional(),
   partner: z.string().optional(),
-  partnerIdt: z.number().finite().optional(),
+  partnerIdt: z.number().optional(),
   time: z.string().optional(),
 });
 
 const athleteSchema = z.object({
-  idt: z.number().finite(),
+  idt: z.number(),
   name: z.string(),
   validFor: z.string(),
   age: z.string(),
@@ -45,7 +45,7 @@ const athleteSchema = z.object({
 });
 
 const athletesResponseSchema = z.object({
-  collection: z.array(athleteSchema).prefault([]),
+  collection: z.array(athleteSchema),
 });
 
 export type RankingPoints = z.infer<typeof rankingPointsSchema>;

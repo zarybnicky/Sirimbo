@@ -46,7 +46,7 @@ export default function OtpPage() {
       const defaultRedirect = enableHome ? '/dashboard' : '/rozpis';
       void router.push(!user.otpLogin?.result?.usr?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
     })();
-  }, [doSignInWithOtp, router, router.isReady, router.query.from, router.query.token]);
+  }, [doSignInWithOtp, enableHome, router, router.isReady, router.query.from, router.query.token]);
 
   const personCount = auth.personIds.length;
 

@@ -5,7 +5,7 @@ type IdtRange = {
 
 const IDT_RANGES: readonly IdtRange[] = [
   // Legacy allocation block.
-  { start: 18_000_000, end: 18_094_999 },
+  { start: 18_000_000, end: 18_092_599 },
   // Newer allocations restarted at 10 600 000 before wrapping back above 18M.
   { start: 10_600_000, end: 17_999_999 },
   // Future growth beyond the legacy block.

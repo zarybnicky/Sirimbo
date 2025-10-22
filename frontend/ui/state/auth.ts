@@ -5,6 +5,7 @@ import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import deepEqual from 'fast-deep-equal';
 import { tenantCatalog } from '@/tenant/catalog';
 import type { TenantConfig } from '@/tenant/types';
+import { getCookie } from 'cookies-next/client';
 
 interface AuthState {
   user: null | {
@@ -64,15 +65,34 @@ const emptyConfig: TenantConfig = {
   useTrainerInitials: false,
   lockEventsByDefault: false,
 };
-const baseTenantIdAtom = atom<string>('');
-export const tenantConfigAtom = atom<TenantConfig>(emptyConfig);
+const baseTenantIdAtom = atom<string>(
+  getCookie('tenant_id') ?? '',
+);
+export const tenantConfigAtom = atom<TenantConfig>(
+  tenantCatalog[Number.parseInt(getCookie('tenant_id') ?? '')]?.config ?? emptyConfig,
+);
 export const tenantIdAtom = atom<string, [string], void>(
   (get) => get(baseTenantIdAtom),
   (_get, set, nextValue) => {
     set(baseTenantIdAtom, nextValue);
     set(tenantConfigAtom, tenantCatalog[Number.parseInt(nextValue)]?.config ?? emptyConfig);
+
+    if (typeof document !== 'undefined') {
+      const root = document.querySelector('body');
+      if (root) {
+        for (const cls of root.classList) {
+          if (cls.includes('tenant-'))
+            root.classList.remove(cls);
+        }
+        root.classList.add(`tenant-${nextValue}`);
+      }
+    }
   },
 );
+
+export const setNewTenant = (tenantId: string) => {
+  storeRef.current.set(tenantIdAtom, tenantId);
+};
 
 export const authLoadingAtom = atom(true);
 

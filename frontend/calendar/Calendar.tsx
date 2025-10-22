@@ -322,7 +322,7 @@ export function Calendar() {
     }
 
     setTimeout(() => setCreating(prev => prev || def));
-  }, [onlyMine, auth.persons, events]);
+  }, [lockEventsByDefault, onlyMine, auth.persons, events]);
 
   React.useEffect(() => {
     setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });
