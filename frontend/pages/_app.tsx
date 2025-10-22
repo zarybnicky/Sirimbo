@@ -49,9 +49,14 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   useLayoutEffect(() => {
     const newTenantId = String(getCookie('tenant_id'));
     storeRef.current.set(tenantIdAtom, newTenantId);
-    const root = document.querySelector('#__next');
-    if (root)
-      root.className = `tenant-${newTenantId}`;
+    const root = document.querySelector('body');
+    if (root) {
+      root.classList.forEach((cls) => {
+        if (cls.includes('tenant-'))
+          root.classList.remove(cls);
+      });
+      root.classList.add(`tenant-${newTenantId}`);
+    }
   }, []);
 
   return (
