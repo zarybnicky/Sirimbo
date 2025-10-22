@@ -92,7 +92,7 @@ module.exports = nextRoutes()(
             source: '/',
             destination: '/dashboard',
             missing: [
-              { type: 'host', value: '(?<host>.*olymp.*)' },
+              { type: 'host', value: '.*olymp.*' },
               { type: 'cookie', key: 'tenant_id', value: '1' },
             ],
           },
@@ -100,7 +100,7 @@ module.exports = nextRoutes()(
             source: '/clanky/:path*',
             destination: '/dashboard',
             missing: [
-              { type: 'host', value: '(?<host>.*olymp.*)' },
+              { type: 'host', value: '.*olymp.*' },
               { type: 'cookie', key: 'tenant_id', value: '1' },
             ],
           },

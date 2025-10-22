@@ -7,12 +7,7 @@ export const config = {
   matcher: [
     {
       source: '/((?!_next/static|_next/image|favicon.ico).*)',
-      missing: [
-        {
-          type: 'cookie',
-          key: 'tenant_id',
-        },
-      ],
+      missing: [{ type: 'cookie', key: 'tenant_id' }],
     },
   ],
 };
@@ -34,7 +29,7 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next({
     headers: {
       cookie: `tenant_id=${tenantId}`,
-    }
+    },
   });
 
   response.cookies.set({
