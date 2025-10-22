@@ -1,11 +1,7 @@
 {
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
-    yarnpnp2nix.url = "github:madjam002/yarnpnp2nix";
-    yarnpnp2nix.inputs.nixpkgs.follows = "nixpkgs";
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
 
-  outputs = { self, nixpkgs, yarnpnp2nix, ... }: let
+  outputs = { self, nixpkgs, ... }: let
     allSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ];
     forAllSystems = fn: nixpkgs.lib.genAttrs allSystems (system: fn (import nixpkgs {
       inherit system;
@@ -21,46 +17,24 @@
   in {
     nixosModules.default = ./nix/module.nix;
 
-    overlays.default = final: prev: let
-      yarnPackages = yarnpnp2nix.lib.${final.system}.mkYarnPackagesFromManifest {
-        pkgs = final;
-        yarnManifest = import ./yarn-manifest.nix;
-        packageOverrides = {
-          "node-gyp@npm:9.4.0" = {
-            outputHashByPlatform = {
-              "x86_64-linux" = "sha512-3O3TyO9LdL7rDJHYwE5RCGJi2KuJSgniWztbX2qaO6dDmBXdmzPeUWzYirsuH7Rtakl9vlvkyU3KN9Eit2dtBA==";
-              "aarch64-darwin" = "sha512-3O3TyO9LdL7rDJHYwE5RCGJi2KuJSgniWztbX2qaO6dDmBXdmzPeUWzYirsuH7Rtakl9vlvkyU3KN9Eit2dtBA==";
-            };
-          };
-          "prettier@npm:3.6.2" = {
-            outputHashByPlatform = {
-              "x86_64-linux" = "sha512-rVYnDoJ8P5DrWLzregu6iBN86J0suT21dNAVDXoPw6WOHAxoZ6UFemiQuwpanVmh315rz2cPPq4dFHh2UDjFcg==";
-              "aarch64-darwin" = "sha512-29qUGIt4gye0OIrbU4JruJxrUUD4HEdiuLs7aWC6KPAOcccPB3/iFYy+BHo7SpT7MLah/Kn2TEg69IX/bdz7lw==";
-            };
-          };
-          "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40" = {
-            outputHash = "sha512-AFBMAe5C1HDCNJVCavB1EuJeZUa85+JFcucqnKLmsum+pj3kKGw8/qZEh02hRn3PyiP0+Y98ryD4sDwCE7toNw==";
-          };
-          "rozpisovnik-worker@workspace:worker" = {
-            shouldBeUnplugged = true;
-            build = "node build.cjs && rm .gitignore";
-          };
-          "rozpisovnik-api@workspace:backend" = {
-            shouldBeUnplugged = true;
-            build = "node build.cjs";
-          };
-        };
-      };
-
-    in {
-      prettier = yarnPackages."prettier@npm:3.6.2";
-      squawk = yarnPackages."squawk-cli@npm:1.6.1";
-
+    overlays.default = final: prev: {
       graphile-migrate = final.callPackage ./nix/graphile-migrate {};
       tbls = final.callPackage ./nix/tbls {};
 
-      rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
-      rozpisovnik-worker = yarnPackages."rozpisovnik-worker@workspace:worker";
+      rozpisovnik-worker = final.callPackage ./nix/build-pnpm-package.nix {
+        packageJSON = final.lib.importJSON ./worker/package.json;
+        workspaceFolder = "worker";
+        pnpmDepsHash = "sha256-dy8d6p10fXNOgGpBcrhjqC/GSUVClIwyOonxwDAsr3A=";
+        postInstall = "cp -s $out/share/worker/rozpisovnik-worker $out/bin/";
+      };
+
+      rozpisovnik-api = final.callPackage ./nix/build-pnpm-package.nix {
+        packageJSON = final.lib.importJSON ./backend/package.json;
+        workspaceFolder = "backend";
+        pnpmDepsHash = "sha256-f7k9DjhHO7hrUx9OaY5Rk2Q3csrIxq5kF6WMlunSFT8=";
+        postInstall = "cp -s $out/share/backend/dist/index.cjs $out/bin/rozpisovnik-api";
+      };
+
       rozpisovnik-migrations = final.runCommand "rozpisovnik-migrations" {} ''
         mkdir -p $out
         cp -r ${./migrations} $out/migrations
@@ -71,17 +45,17 @@
     devShells = forAllSystems (pkgs: {
       default = pkgs.mkShell {
         buildInputs = [
-          pkgs.prettier
+          pkgs.nodePackages.prettier
           pkgs.nodemon
           pkgs.graphile-migrate
-          pkgs.yarn
+          pkgs.pnpm_9
           pkgs.nodejs
           pkgs.postgresql_17
           pkgs.sqlint
           pkgs.pgformatter
-          pkgs.squawk
           pkgs.tbls
           pkgs.overmind
+          pkgs.prefetch-npm-deps
         ];
       };
     });

@@ -1,8 +1,5 @@
 schema.sql
 libs/graphql/*.ts
-yarn-manifest.nix
-.yarn/releases/*
-.yarn/plugins/*
-.yarn/sdks/*
+pnpm-lock.yaml
 introspection.json
 dbdoc/

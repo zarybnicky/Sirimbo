@@ -3,11 +3,11 @@
 This document is for fellow ChatGPT/Codex-style agents working in this repository. Use it as a quick reference before you make changes.
 
 ## Workflow expectations
-- Use the checked-in Yarn 4 workspaces (Node 22.x) for JavaScript/TypeScript tooling.
+- Use the checked-in PNPM 9 workspaces (Node 22.x) for JavaScript/TypeScript tooling.
 - Keep the repo tidy: run targeted commands rather than regenerating every artifact. In particular **do not commit regenerated GraphQL codegen output** (the typed client definitions in `frontend/graphql` and `graphql/`); only update them when explicitly requested and include them in a separate PR if needed.
 - Prefer incremental SQL migrations. When altering the database, author idempotent scripts in `migrations/current/1-current.sql` (or add fixtures under `migrations/fixtures/...`) and rely on Graphile Migrate to promote them.
 - `schema/` is generated from the canonical `schema.sql` dump via `python schema/split.py < schema.sql`. Do not hand-edit files under `schema/`—regenerate from the dump instead.
-- When making frontend changes, ensure `yarn workspace rozpisovnik-web build` completes successfully and report the command under Testing.
+- When making frontend changes, ensure `pnpm --filter rozpisovnik-web build` completes successfully and report the command under Testing.
 
 ## High-level structure
 - `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs and HTTP proxy resolvers). Multi-tenancy and JWT enrichment are handled in `backend/src/graphile.config.ts`.
@@ -65,10 +65,10 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - For dark themes, Radix automatically inverts the perceptual weight—keep the same numeric semantics.
 
 ## Common tasks & commands
-- Run the API in development: `yarn workspace rozpisovnik-api start` (expects `DATABASE_URL`, `JWT_SECRET`, S3 env vars, etc.).
+- Run the API in development: `pnpm --filter rozpisovnik-api start` (expects `DATABASE_URL`, `JWT_SECRET`, S3 env vars, etc.).
 - For quick development work, use primarily `tsc` to check correctness - the Next build is slow
-- Build and lint the Next.js app after changes: `yarn workspace rozpisovnik-web lint` / `build`.
-- Queue worker jobs: `yarn workspace rozpisovnik-worker start` (after building tasks with `yarn workspace rozpisovnik-worker build` if needed).
+- Build and lint the Next.js app after changes: `pnpm --filter rozpisovnik-web lint` / `build`.
+- Queue worker jobs: `pnpm --filter rozpisovnik-worker start` (after building tasks with `pnpm --filter rozpisovnik-worker build` if needed).
 - Update the split schema after refreshing `schema.sql`: `python schema/split.py < schema.sql`.
 - Create a new migration: write to `migrations/current/`, named like `1-event-attendance.sql`, prefixed by an increasing number, in kebab-case. Ensure scripts are idempotent.
 - Don't add GraphQL documents to code, add them to the root graphql/ folder, and run graphql-codegen, which will generate types and documents in `frontend/graphql/`.

@@ -1,4 +1,6 @@
-const { tenantConfig } = require('./tenant/config.js');
+//@ts-check
+
+/** @type {any} */
 const nextRoutes = require("nextjs-routes/config");
 
 /** @type {(x: import('next').NextConfig) => import('next').NextConfig} */
@@ -52,48 +54,57 @@ module.exports = nextRoutes()(
       },
 
       async redirects() {
-        /** @type {import('next').Redirect[]} */
+        /** @type {Awaited<ReturnType<NonNullable<import('next').NextConfig['redirects']>>>} */
         const redirects = [
           { source: '/home', destination: '/', permanent: true },
           { source: '/aktualne', destination: '/clanky', permanent: true },
           { source: '/aktualne/:path*', destination: '/clanky/:path*', permanent: true },
-          { source: '/oklubu/saly', destination: '/kde-trenujeme', permanent: true },
-          { source: '/oklubu/klubovi-treneri', destination: '/treneri', permanent: true },
-          { source: '/oklubu/externi-treneri', destination: '/treneri', permanent: true },
-          { source: '/member', destination: '/dashboard', permanent: true },
-          { source: '/member/akce', destination: '/akce', permanent: true },
-          { source: '/member/rozpis', destination: '/rozpis', permanent: true },
-          { source: '/member/nabidka', destination: '/rozpis', permanent: true },
-          { source: '/member/treninky', destination: '/rozpis', permanent: true },
-          { source: '/member/dokumenty', destination: '/dokumenty', permanent: true },
-          { source: '/member/profil', destination: '/profil', permanent: true },
         ];
 
-        if (tenantConfig.enableArticles) {
-          redirects.push(
-            { source: '/mistrovstvi', destination: 'https://mistrovstvi.tkolymp.cz', permanent: true },
-            { source: '/prijdtancit', destination: 'https://nabor.tkolymp.cz', permanent: true },
-            { source: '/prijdtancit/deti', destination: 'https://nabor.tkolymp.cz', permanent: true },
-            { source: '/prijdtancit/mladez', destination: 'https://nabor.tkolymp.cz', permanent: true },
-          );
-        }
+        const olympSpecificRedirects = [
+          { source: '/camp', destination: '/clanky/468/letni-soustredeni-mohelnice', permanent: false },
+          { source: '/mistrovstvi', destination: 'https://mistrovstvi.tkolymp.cz', permanent: true },
+          { source: '/prijdtancit', destination: 'https://nabor.tkolymp.cz', permanent: true },
+          { source: '/prijdtancit/deti', destination: 'https://nabor.tkolymp.cz', permanent: true },
+          { source: '/prijdtancit/mladez', destination: 'https://nabor.tkolymp.cz', permanent: true },
+        ];
 
-        if (!tenantConfig.enableHome) {
-          redirects.push(
-            { source: '/', destination: '/dashboard', permanent: false },
-          )
-        }
-        if (!tenantConfig.enableArticles) {
-          redirects.push(
-            { source: '/clanky/:path*', destination: '/dashboard', permanent: false },
-          )
+        /** @type {Awaited<ReturnType<NonNullable<import('next').NextConfig['redirects']>>>[0]['has']} */
+        const olympSpecificConditions = [
+          { type: 'host', value: '(?<host>.*olymp.*)' },
+          { type: 'cookie', key: 'tenant_id', value: '1' },
+        ];
+
+        for (const condition of olympSpecificConditions) {
+          redirects.push(...olympSpecificRedirects.map(x => ({
+            ...x,
+            has: [condition],
+          })))
         }
 
         return redirects;
       },
 
       async rewrites() {
-        const rewrites = [];
+        /** @type {Awaited<ReturnType<NonNullable<import('next').NextConfig['rewrites']>>>} */
+        const rewrites = [
+          {
+            source: '/',
+            destination: '/dashboard',
+            missing: [
+              { type: 'host', value: '(?<host>.*olymp.*)' },
+              { type: 'cookie', key: 'tenant_id', value: '1' },
+            ],
+          },
+          {
+            source: '/clanky/:path*',
+            destination: '/dashboard',
+            missing: [
+              { type: 'host', value: '(?<host>.*olymp.*)' },
+              { type: 'cookie', key: 'tenant_id', value: '1' },
+            ],
+          },
+        ];
         if (process.env.NODE_ENV !== 'production') {
           const graphqlServer = process.env.GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz';
           const externalServer = process.env.EXTERNAL_SERVER_URL || graphqlServer;
@@ -102,7 +113,7 @@ module.exports = nextRoutes()(
             { source: '/galerie/:path*', destination: `${externalServer ?? ''}/galerie/:path*` },
             { source: '/graphql', destination: `${graphqlServer}/graphql` },
             { source: '/graphiql', destination: `${graphqlServer}/graphiql` },
-            );
+          );
         } else {
           rewrites.push(
             { source: '/member/download', destination: "https://api.rozpisovnik.cz/member/download" },
@@ -110,20 +121,6 @@ module.exports = nextRoutes()(
           );
         }
 
-        if (!tenantConfig.enableHome) {
-          rewrites.push(
-            { source: '/', destination: '/dashboard' },
-          )
-        }
-        if (!tenantConfig.enableArticles) {
-          rewrites.push(
-            { source: '/clanky/:path*', destination: '/dashboard' },
-          )
-        } else {
-          rewrites.push(
-            { source: '/camp', destination: '/clanky/468/letni-soustredeni-mohelnice' },
-          )
-        }
         return rewrites;
       },
 

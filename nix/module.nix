@@ -247,7 +247,6 @@ in {
           User = cfg.user;
           Group = cfg.group;
           ExecStart = "${pkgs.rozpisovnik-worker}/bin/rozpisovnik-worker";
-          WorkingDirectory = "${pkgs.rozpisovnik-worker.package}/node_modules/rozpisovnik-worker";
           Restart = "always";
           RestartSec = "10s";
         };

@@ -1,6 +1,6 @@
-backend: yarn workspace rozpisovnik-api start
-frontend: yarn workspace rozpisovnik-web dev
+backend: pnpm --filter rozpisovnik-api start
+frontend: pnpm --filter rozpisovnik-web dev
 migrate: graphile-migrate watch
-schema: yarn schema
-schema-starlet: yarn schema-starlet
-worker: yarn workspace rozpisovnik-worker start
+schema: pnpm schema
+schema-starlet: pnpm schema-starlet
+worker: pnpm --filter rozpisovnik-worker start

@@ -1,0 +1,9 @@
+packages:
+  - frontend
+  - graphql
+  - worker
+  - backend
+  - csts
+  - wdsf
+
+injectWorkspacePackages: true

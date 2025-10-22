@@ -237,7 +237,7 @@ function normaliseHeaderKey(input: string): string {
 function printUsage() {
   const script = path.basename(process.argv[1] ?? 'import_people_from_csv.ts');
   console.error(
-    `Usage: yarn workspace rozpisovnik-api import:people <file> [--tenant-id <id>] [--default-nationality <value>] [--create-missing-cohorts] [--default-cohort-color <hex>] [--sync-memberships] [--dry-run]\n`,
+    `Usage: pnpm --filter rozpisovnik-api import:people <file> [--tenant-id <id>] [--default-nationality <value>] [--create-missing-cohorts] [--default-cohort-color <hex>] [--sync-memberships] [--dry-run]\n`,
   );
   console.error('Environment: set DATABASE_URL for the target PostgreSQL instance.');
   console.error(`You are running ${script}.`);

@@ -21,14 +21,11 @@
     "pg": "8.16.3",
     "uglify-js": "^3.19.3"
   },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.4",
     "@types/html-to-text": "~9.0.4",
     "@types/mjml": "^4.7.4",
-    "@types/node": "^24.7.2",
+    "@types/node": "^24.9.1",
     "@types/nodemailer": "~6.4.20",
     "@types/pg": "~8.15.5",
     "esbuild": "^0.25.11",
