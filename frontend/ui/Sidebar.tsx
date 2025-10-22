@@ -1,9 +1,8 @@
 import { buildId } from '@/lib/build-id';
-import { type MenuLink, type MenuStructItem, getHrefs, memberMenu, topMenu } from '@/lib/use-menu';
-import { tenantConfig } from '@/tenant/config.js';
+import { type MenuLink, type MenuStructItem, getHrefs, useMemberMenu, topMenu } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/catalog';
 import { cn } from '@/ui/cn';
-import { authAtom, storeRef, tenantIdAtom } from '@/ui/state/auth';
+import { authAtom, storeRef, tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom } from 'jotai';
 import Link from 'next/link';
@@ -21,6 +20,8 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
   const tenantId = useAtomValue(tenantIdAtom);
+  const { enableHome, copyrightLine } = useAtomValue(tenantConfigAtom);
+  const memberMenu = useMemberMenu();
   const SidebarLogo = useMemo(() => getTenantUi(tenantId, 'SidebarLogo'), [tenantId],);
 
   const [isMounted, setIsMounted] = React.useState(false);
@@ -103,7 +104,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
 
               <Link
                 onClick={signOut}
-                href={tenantConfig.enableHome ? '/' : '/dashboard'}
+                href={enableHome ? '/' : '/dashboard'}
                 className={cn(
                   'rounded-2xl px-3 py-1.5',
                   'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
@@ -118,7 +119,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {tenantConfig.enableHome && (
+          {enableHome && (
             showTopMenu ? (
               topMenu.map((x) => <SidebarSection key={x.title} item={x} />)
             ) : (
@@ -127,7 +128,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           )}
 
           <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
-            <div>{tenantConfig.copyrightLine}</div>
+            <div>{copyrightLine}</div>
             <div>Verze: {buildId?.slice(0, 7)}</div>
             <div>
               <Link href="/now" target="_blank">

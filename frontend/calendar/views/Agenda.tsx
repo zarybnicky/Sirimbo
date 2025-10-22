@@ -14,10 +14,10 @@ import { cardCls } from '@/ui/style'
 import { z } from 'zod'
 import { EventForm } from '@/ui/event-form/types'
 import { isTruthy } from '@/ui/truthyFilter'
-import { tenantConfig } from '@/tenant/config'
 import { useAtomValue } from 'jotai'
 import { calendarConflictsFor } from '../state'
 import { AlertTriangle } from 'lucide-react'
+import { tenantConfigAtom } from '@/ui/state/auth'
 
 type MapItem = {
   lessons: Map<string, CalendarEvent[]>;
@@ -139,6 +139,7 @@ function GroupLesson({ calendarEvent }: {
 
 function LessonGroup({ items }: { items: CalendarEvent[] }) {
   const auth = useAuth();
+  const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
 
   const location = React.useMemo(() => {
     const withLocation = items.find(x => !!x.event?.location?.name || !!x.event?.locationText);
@@ -155,7 +156,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
         trainers: [],
       }],
       isVisible: true,
-      isLocked: tenantConfig.lockEventsByDefault,
+      isLocked: lockEventsByDefault,
       type: 'LESSON',
       capacity: 2,
       locationId: items[0]?.event?.location?.id,

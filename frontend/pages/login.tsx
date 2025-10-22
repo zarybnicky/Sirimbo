@@ -4,18 +4,20 @@ import { Layout } from '@/ui/Layout';
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import * as React from 'react';
-import { tenantConfig } from '@/tenant/config';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import { LinkProps } from 'next/link';
+import { useAtomValue } from 'jotai';
+import { tenantConfigAtom } from '@/ui/state/auth';
 
 export default function LoginPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
+  const { enableHome } = useAtomValue(tenantConfigAtom);
 
   const onSuccess = React.useCallback((user: UserAuthFragment | null) => {
     const redirect = router.query?.from as string | undefined;
-    const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
+    const defaultRedirect = enableHome ? '/dashboard' : '/rozpis';
     void router.push(!user?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
   }, [router]);
 

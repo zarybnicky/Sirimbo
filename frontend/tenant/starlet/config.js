@@ -6,7 +6,6 @@ module.exports = {
   copyrightLine: "© 2024 TK Starlet Brno, z. s.",
   favicon: '',
   enableHome: false,
-  enableArticles: false,
   enableRegistration: false,
   enableStarletImport: true,
   useTrainerInitials: true,

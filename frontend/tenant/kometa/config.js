@@ -6,7 +6,6 @@ module.exports = {
   copyrightLine: "© 2024 DSP Kometa Brno, z. s.",
   favicon: '',
   enableHome: false,
-  enableArticles: false,
   enableRegistration: true,
   enableStarletImport: false,
   useTrainerInitials: false,

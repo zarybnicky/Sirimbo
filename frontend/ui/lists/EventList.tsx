@@ -14,7 +14,8 @@ import { UpsertEventForm } from '../event-form/UpsertEventForm';
 import Link from "next/link";
 import { buttonCls } from "@/ui/style";
 import { cn } from "@/ui/cn";
-import { tenantConfig } from '@/tenant/config';
+import { tenantConfigAtom } from '../state/auth';
+import { useAtomValue } from 'jotai';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -117,6 +118,7 @@ export function EventList() {
   const [search, setSearch] = React.useState('');
   const { query: { id: currentId } } = useTypedRouter(QueryParams);
   const auth = useAuth();
+  const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
 
   const handleLoadMore = React.useCallback((cursor: number) => {
     setPages((xs) => [...xs, cursor]);
@@ -125,7 +127,7 @@ export function EventList() {
   const emptyEvent = React.useMemo(() => {
     const day = startOf(endOf(new Date(), 'week', 1), 'day');
     return {
-      isLocked: tenantConfig.lockEventsByDefault,
+      isLocked: lockEventsByDefault,
       instances: [{
         ...datetimeRangeToTimeRange(
           add(day, 9, 'hours'),

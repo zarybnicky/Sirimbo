@@ -1,5 +1,6 @@
-import { tenantConfig } from '@/tenant/config';
-import type { LinkProps } from 'next/link'
+import { tenantConfigAtom } from '@/ui/state/auth';
+import { useAtomValue } from 'jotai';
+import type { LinkProps } from 'next/link';
 type Route = LinkProps['href'];
 
 export type MenuLink = {
@@ -42,7 +43,11 @@ export const topMenu: MenuStructItem[] = [
     type: 'menu',
     title: 'Nabízíme',
     children: [
-      { type: 'link', title: 'Přípravka tanečního sportu', href: 'https://nabor.tkolymp.cz' as any },
+      {
+        type: 'link',
+        title: 'Přípravka tanečního sportu',
+        href: 'https://nabor.tkolymp.cz' as any,
+      },
       { type: 'link', title: 'Vystoupení na akcích', href: '/vystoupeni' },
       { type: 'link', title: 'Školní taneční kroužky', href: '/skolni-krouzky' },
     ],
@@ -53,66 +58,108 @@ export const topMenu: MenuStructItem[] = [
   { type: 'link', title: 'Kontakt', href: '/kontakt' },
 ];
 
-export const memberMenu: MenuStructItem[] = [
-  { type: 'link', title: 'Nástěnka', href: {
-    pathname: '/dashboard',
-    query: { tab: 'myAnnouncements' },
-  } },
-  ...(tenantConfig.enableArticles ? [
-    { type: 'link', title: 'Stálá nástěnka', className: 'lg:hidden', href: {
-      pathname: '/dashboard',
-      query: { tab: 'stickyAnnouncements' },
-    } },
-  ] as MenuStructItem[] : []),
-  { type: 'link', title: 'Profil', href: '/profil' },
-  {
-    type: 'menu',
-    title: 'Tréninky',
-    children: [
-      { type: 'link', title: 'Moje tréninky', href: {
+export function useMemberMenu(): MenuStructItem[] {
+  const { enableHome, enableStarletImport } = useAtomValue(tenantConfigAtom);
+  return [
+    {
+      type: 'link',
+      title: 'Nástěnka',
+      href: {
         pathname: '/dashboard',
-        query: { tab: 'myLessons' },
-      } },
-      { type: 'link', title: 'Kalendář', href: '/rozpis' },
-      { type: 'link', title: 'Seznam akcí', href: '/akce' },
-    ],
-  },
-  {
-    type: 'menu',
-    title: 'Taneční klub',
-    children: [
-      { type: 'link', title: 'Klub', href: '/tanecni-klub' },
-      { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
-      { type: 'link', title: 'Páry', href: '/pary' },
-      { type: 'link', title: 'Členové', href: '/clenove' },
-      { type: 'link', title: 'Žebříček', href: '/zebricek' },
-      ...(tenantConfig.enableArticles ? [
-        { type: 'link', title: 'Dokumenty', href: '/dokumenty' } as MenuLink,
-      ] : []),
-    ],
-  },
-  {
-    type: 'menu',
-    title: 'Správa',
-    children: [
-      { type: 'link', title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
-      { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
-      { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
-      ...(tenantConfig.enableArticles ? [
-        { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
-        { type: 'link', title: 'Vyplněné formuláře', href: '/crm', requireAdmin: true },
-        { type: 'link', title: 'Upload (WIP)', href: '/upload', requireAdmin: true },
-      ] as MenuLink[] : []),
-      ...(tenantConfig.enableStarletImport ? [
-        { type: 'link', title: 'Import z evidence', href: '/starlet-import', requireAdmin: true },
-      ] as MenuLink[] : []),
+        query: { tab: 'myAnnouncements' },
+      },
+    },
+    ...(enableHome
+      ? ([
+          {
+            type: 'link',
+            title: 'Stálá nástěnka',
+            className: 'lg:hidden',
+            href: {
+              pathname: '/dashboard',
+              query: { tab: 'stickyAnnouncements' },
+            },
+          },
+        ] as MenuStructItem[])
+      : []),
+    { type: 'link', title: 'Profil', href: '/profil' },
+    {
+      type: 'menu',
+      title: 'Tréninky',
+      children: [
+        {
+          type: 'link',
+          title: 'Moje tréninky',
+          href: {
+            pathname: '/dashboard',
+            query: { tab: 'myLessons' },
+          },
+        },
+        { type: 'link', title: 'Kalendář', href: '/rozpis' },
+        { type: 'link', title: 'Seznam akcí', href: '/akce' },
       ],
-  },
-  {
-    type: 'menu',
-    title: 'Systém',
-    children: [
-      { type: 'link', title: 'Tenanti', href: '/admin/tenants' as Route, requireSystemAdmin: true },
-    ],
-  },
-];
+    },
+    {
+      type: 'menu',
+      title: 'Taneční klub',
+      children: [
+        { type: 'link', title: 'Klub', href: '/tanecni-klub' },
+        { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
+        { type: 'link', title: 'Páry', href: '/pary' },
+        { type: 'link', title: 'Členové', href: '/clenove' },
+        { type: 'link', title: 'Žebříček', href: '/zebricek' },
+        ...(enableHome
+          ? [{ type: 'link', title: 'Dokumenty', href: '/dokumenty' } as MenuLink]
+          : []),
+      ],
+    },
+    {
+      type: 'menu',
+      title: 'Správa',
+      children: [
+        { type: 'link', title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
+        { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
+        { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
+        ...(enableHome
+          ? ([
+              { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
+              {
+                type: 'link',
+                title: 'Vyplněné formuláře',
+                href: '/crm',
+                requireAdmin: true,
+              },
+              {
+                type: 'link',
+                title: 'Upload (WIP)',
+                href: '/upload',
+                requireAdmin: true,
+              },
+            ] as MenuLink[])
+          : []),
+        ...(enableStarletImport
+          ? ([
+              {
+                type: 'link',
+                title: 'Import z evidence',
+                href: '/starlet-import',
+                requireAdmin: true,
+              },
+            ] as MenuLink[])
+          : []),
+      ],
+    },
+    {
+      type: 'menu',
+      title: 'Systém',
+      children: [
+        {
+          type: 'link',
+          title: 'Tenanti',
+          href: '/admin/tenants' as Route,
+          requireSystemAdmin: true,
+        },
+      ],
+    },
+  ];
+}

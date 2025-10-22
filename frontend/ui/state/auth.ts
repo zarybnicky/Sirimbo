@@ -59,19 +59,18 @@ const emptyConfig: TenantConfig = {
   copyrightLine: '',
   favicon: '',
   enableHome: true,
-  enableArticles: true,
   enableRegistration: true,
   enableStarletImport: false,
   useTrainerInitials: false,
   lockEventsByDefault: false,
 };
-export const baseTenantIdAtom = atom<string>('');
-export const baseTenantConfigAtom = atom<TenantConfig>(emptyConfig);
+const baseTenantIdAtom = atom<string>('');
+export const tenantConfigAtom = atom<TenantConfig>(emptyConfig);
 export const tenantIdAtom = atom<string, [string], void>(
   (get) => get(baseTenantIdAtom),
   (_get, set, nextValue) => {
     set(baseTenantIdAtom, nextValue);
-    set(baseTenantConfigAtom, tenancyCatalog.find(x => x.id === Number.parseInt(nextValue))?.config ?? emptyConfig);
+    set(tenantConfigAtom, tenancyCatalog.find(x => x.id === Number.parseInt(nextValue))?.config ?? emptyConfig);
   },
 );
 

@@ -11,9 +11,10 @@ import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { ErrorPage } from '@/ui/ErrorPage';
-import { tenantConfig } from '@/tenant/config';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAtomValue } from 'jotai';
+import { tenantConfigAtom } from '@/ui/state/auth';
 
 const Form = z.object({
   email: z.email(),
@@ -21,7 +22,7 @@ const Form = z.object({
 });
 
 export default function InvitationPage() {
-  const registrationEnabled = tenantConfig.enableRegistration;
+  const { enableRegistration } = useAtomValue(tenantConfigAtom);
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
@@ -50,7 +51,7 @@ export default function InvitationPage() {
     }
   }, [authLoading, auth.user, personCount, router, router.isReady]);
 
-  if (!registrationEnabled) {
+  if (!enableRegistration) {
     return (
       <Layout className="grow content relative content-stretch">
         <NextSeo title="Registrace uzavřena" noindex />

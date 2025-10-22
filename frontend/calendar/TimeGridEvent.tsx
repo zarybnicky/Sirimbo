@@ -10,8 +10,8 @@ import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 import { isTruthy } from '@/ui/truthyFilter';
-import { tenantConfig } from '@/tenant/config';
 import { AlertTriangle } from 'lucide-react';
+import { tenantConfigAtom } from '@/ui/state/auth';
 
 function formatTrainerLabel(name: string, useInitials: boolean): string {
   if (!name) return '';
@@ -54,6 +54,7 @@ function TimeGridEvent({
   slotMetrics,
   resource,
 }: TimeGridEventProps) {
+  const { useTrainerInitials } = useAtomValue(tenantConfigAtom);
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const getCurrentEvent = useCallback((v: DragSubject) => v?.event === event ? v : null, [event]);
@@ -122,7 +123,7 @@ function TimeGridEvent({
       ? event.instance.trainers
       : event.event?.eventTrainersList ?? [];
     for (const trainer of trainers) {
-      const trainerLabel = formatTrainerLabel(trainer.name ?? '', tenantConfig.useTrainerInitials);
+      const trainerLabel = formatTrainerLabel(trainer.name ?? '', useTrainerInitials);
       if (!trainerLabel) continue;
       label += `, ${trainerLabel}`;
     }

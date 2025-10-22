@@ -3,16 +3,18 @@ import { Layout } from '@/ui/Layout';
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import * as React from 'react';
-import { tenantConfig } from '@/tenant/config';
 import { Spinner } from '@/ui/Spinner';
 import { useMutation } from 'urql';
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
 import { LinkProps } from 'next/link';
+import { useAtomValue } from 'jotai';
+import { tenantConfigAtom } from '@/ui/state/auth';
 
 export default function OtpPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
+  const { enableHome } = useAtomValue(tenantConfigAtom);
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
   const doSignInWithOtp = useMutation(OtpLoginDocument)[1];
@@ -41,7 +43,7 @@ export default function OtpPage() {
 
       setStatus('Přesměrovávám...');
       const redirect = router.query.from;
-      const defaultRedirect = tenantConfig.enableArticles ? '/dashboard' : '/rozpis';
+      const defaultRedirect = enableHome ? '/dashboard' : '/rozpis';
       void router.push(!user.otpLogin?.result?.usr?.userProxiesList.length ? '/profil' : (redirect || defaultRedirect) as LinkProps['href']);
     })();
   }, [doSignInWithOtp, router, router.isReady, router.query.from, router.query.token]);

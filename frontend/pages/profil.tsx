@@ -11,16 +11,17 @@ import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
 import { useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
-import { tenantConfig } from '@/tenant/config';
+import { useAtomValue } from 'jotai';
+import { tenantConfigAtom } from '@/ui/state/auth';
 
 type Tabs = TabMenuProps['options'];
 
 export default function ProfilePage() {
   const auth = useAuth();
-  const showMembershipApplications = tenantConfig.enableRegistration;
+  const { enableRegistration } = useAtomValue(tenantConfigAtom);
   const [{ data }] = useQuery({
     query: MyMembershipApplicationsDocument,
-    pause: !showMembershipApplications,
+    pause: !enableRegistration,
   });
   const [variant, setVariant] = useQueryParam('person', StringParam);
 
@@ -32,7 +33,7 @@ export default function ProfilePage() {
       contents: () => <PersonView key={x.id} id={x.id} />,
     }));
 
-    if (showMembershipApplications) {
+    if (enableRegistration) {
       newTabs.push({
         id: 'applications',
         title: 'Přihlášky člena',
@@ -57,7 +58,7 @@ export default function ProfilePage() {
       });
     }
     setTabs(newTabs);
-  }, [auth.persons, data?.membershipApplicationsList, showMembershipApplications]);
+  }, [auth.persons, data?.membershipApplicationsList, enableRegistration]);
 
   return (
     <Layout requireUser>

@@ -1,4 +1,3 @@
-import { tenantConfig } from '@/tenant/config.js';
 import { getTenantUi } from '@/tenant/catalog';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { LoginForm } from '@/ui/forms/LoginForm';
@@ -8,7 +7,7 @@ import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
-import { tenantIdAtom } from './state/auth';
+import { tenantConfigAtom, tenantIdAtom } from './state/auth';
 import { useAtomValue } from 'jotai';
 
 type LayoutProps = {
@@ -41,10 +40,11 @@ export const Layout = React.memo(function Layout({
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const tenantId = useAtomValue(tenantIdAtom);
+  const { enableHome } = useAtomValue(tenantConfigAtom);
   const TenantSeo = useMemo(() => getTenantUi(tenantId, 'TenantSeo'), [tenantId]);
   const Footer = useMemo(() => getTenantUi(tenantId, 'Footer'), [tenantId]);
 
-  showTopMenu = showTopMenu && tenantConfig.enableHome;
+  showTopMenu = showTopMenu && enableHome;
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !auth.user;
   }

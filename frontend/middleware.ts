@@ -31,15 +31,17 @@ for (const entry of TENANT_HOST_ENTRIES) {
   }
 }
 
-const DEFAULT_TENANT_ID = Number.parseInt(process.env.NEXT_PUBLIC_TENANT_ID ?? '1', 10);
-
 export function middleware(request: NextRequest) {
   const forwardedHost = request.headers.get('x-forwarded-host');
   const hostHeader = forwardedHost ?? request.headers.get('host') ?? request.nextUrl.host;
   const hostname = hostHeader?.split(':')[0]?.toLowerCase() ?? null;
-  const tenantId = hostToTenantId.get(hostname ?? '') ?? DEFAULT_TENANT_ID;
+  const tenantId = hostToTenantId.get(hostname ?? '') ?? '1';
 
-  const response = NextResponse.next();
+  const response = NextResponse.next({
+    headers: {
+      cookie: `tenant_id=${tenantId}`,
+    }
+  });
 
   response.cookies.set({
     name: 'tenant_id',

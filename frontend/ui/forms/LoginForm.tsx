@@ -1,5 +1,4 @@
 import { LoginDocument, type UserAuthFragment } from '@/graphql/CurrentUser';
-import { tenantConfig } from '@/tenant/config';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
@@ -10,6 +9,8 @@ import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAtomValue } from 'jotai';
+import { tenantConfigAtom } from '../state/auth';
 
 const Form = z.object({
   login: z.string().min(1, 'Zadejte přihlašovací jméno nebo e-mail'),
@@ -23,11 +24,11 @@ type LoginFormProps = {
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
+  const { enableRegistration } = useAtomValue(tenantConfigAtom);
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const doSignIn = useMutation(LoginDocument)[1];
-  const registrationEnabled = tenantConfig.enableRegistration;
 
   const onSubmit = useAsyncCallback(async ({ login, passwd }: FormValues) => {
     const result = await doSignIn({ login, passwd });
@@ -62,9 +63,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           </SubmitButton>
 
           <div
-            className={`flex flex-wrap gap-2 ${registrationEnabled ? 'justify-between' : 'justify-end'}`}
+            className={`flex flex-wrap gap-2 ${enableRegistration ? 'justify-between' : 'justify-end'}`}
           >
-            {registrationEnabled && (
+            {enableRegistration && (
               <Link
                 href="/registrace"
                 className="uppercase rounded-md px-3 text-sm py-2 text-accent-10 hover:bg-accent-3 text-left"

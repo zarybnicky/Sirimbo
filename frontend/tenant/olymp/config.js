@@ -6,7 +6,6 @@ module.exports = {
   copyrightLine: "© 2024 TK Olymp Olomouc, z. s.",
   favicon: '',
   enableHome: true,
-  enableArticles: true,
   enableRegistration: true,
   enableStarletImport: false,
   useTrainerInitials: false,

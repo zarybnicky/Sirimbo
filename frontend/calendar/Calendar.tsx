@@ -22,8 +22,8 @@ import { Spinner } from '@/ui/Spinner';
 import { useTenant } from '@/ui/useTenant';
 import { z } from 'zod';
 import { EventForm } from '@/ui/event-form/types';
-import { tenantConfig } from '@/tenant/config';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
+import { tenantConfigAtom } from '@/ui/state/auth';
 
 const Views: { [key: string]: (props: ViewProps) => React.ReactNode } = {
   month: Month,
@@ -110,6 +110,7 @@ function prepareVariables(range: Date[], trainerIds: string[]): EventInstanceRan
 export function Calendar() {
   const auth = useAuth();
   const client = useClient();
+  const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
   const [view, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
   const [onlyMine, setOnlyMine] = useQueryParam('my', withDefault(BooleanParam, false));
 
@@ -276,7 +277,7 @@ export function Calendar() {
         trainers: [],
       }],
       isVisible: true,
-      isLocked: tenantConfig.lockEventsByDefault,
+      isLocked: lockEventsByDefault,
       type: 'LESSON',
       capacity: 2,
       locationId: 'none',

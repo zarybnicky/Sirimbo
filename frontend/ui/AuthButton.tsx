@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { useAuth } from '@/ui/use-auth';
-import { memberMenu } from '@/lib/use-menu';
+import { useMemberMenu } from '@/lib/use-menu';
 import { User as Account } from 'lucide-react';
 import React from 'react';
 import { useSetAtom } from 'jotai';
@@ -19,6 +19,7 @@ import Link from 'next/link';
 export function AuthButton() {
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
+  const memberMenu = useMemberMenu();
 
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {

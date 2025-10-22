@@ -2,12 +2,13 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { GoogleAnalytics } from 'nextjs-google-analytics';
 import type { init, pageView } from 'react-facebook-pixel';
-import { tenantConfig } from '@/tenant/config.js';
+import { useAtomValue } from 'jotai';
+import { tenantConfigAtom } from './state/auth';
 
 export const Tracking = React.memo(function Tracking() {
   const router = useRouter();
   const lastTrackedPath = React.useRef<string>();
-  const facebookPixelId = tenantConfig.facebookPixelId;
+  const { facebookPixelId } = useAtomValue(tenantConfigAtom);
   const facebookRef = React.useRef<{
     init: typeof init;
     pageView: typeof pageView;
