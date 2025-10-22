@@ -1,6 +1,6 @@
 import type { GraphCacheConfig } from '@/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
-import { storeRef, tokenAtom } from '@/ui/state/auth';
+import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
 import { print } from '@0no-co/graphql.web';
 import { authExchange } from '@urql/exchange-auth';
 import { cacheExchange } from '@urql/exchange-graphcache';
@@ -24,13 +24,14 @@ export async function fetchGql<TResult, TVariables>(
   server: string = origin
 ): Promise<TResult> {
   const token = storeRef.current.get(tokenAtom);
+  const tenantId = storeRef.current.get(tenantIdAtom);
   const response = await fetch(server + '/graphql', {
     method: 'POST',
     credentials: 'include',
     headers: {
       'content-type': 'application/json',
-      ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
-        'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
+      ...(tenantId ? {
+        'x-tenant-id': tenantId,
       } : {}),
       ...(token ? {
         Authorization: `Bearer ${token}`,
@@ -154,13 +155,16 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
     appAuthExchange,
     fetchExchange,
   ]),
-  fetchOptions: {
-    credentials: 'include',
-    headers: {
-      ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
-        'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
-      } : {}),
-    },
+  fetchOptions: () => {
+    const tenantId = storeRef.current.get(tenantIdAtom);
+    return {
+      credentials: 'include',
+      headers: {
+        ...(tenantId ? {
+          'x-tenant-id': tenantId,
+        } : {}),
+      },
+    };
   },
 });
 
@@ -257,8 +261,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       createUserProxy(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.userProxy.personId});
       },
-      createTenantLocation(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Tenant', id: args.input.tenantLocation.tenantId});
+      createTenantLocation(result, _args, cache, _info) {
+        const tenantId = result.createTenantLocation?.tenantLocation?.tenantId;
+        if (tenantId)
+          cache.invalidate({ __typename: 'Tenant', id: tenantId});
       },
 
       deleteCouple(_result, args, cache, _info) {

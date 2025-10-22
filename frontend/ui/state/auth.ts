@@ -3,6 +3,8 @@ import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import deepEqual from 'fast-deep-equal';
+import { tenancyCatalog } from '@/tenant/catalog';
+import type { TenantConfig } from '@/tenant/types';
 
 interface AuthState {
   user: null | {
@@ -52,7 +54,26 @@ const storage = {
   }
 };
 
-export const tenantIdAtom = atom<string>('1');
+const emptyConfig: TenantConfig = {
+  shortName: '',
+  copyrightLine: '',
+  favicon: '',
+  enableHome: true,
+  enableArticles: true,
+  enableRegistration: true,
+  enableStarletImport: false,
+  useTrainerInitials: false,
+  lockEventsByDefault: false,
+};
+export const baseTenantIdAtom = atom<string>('');
+export const baseTenantConfigAtom = atom<TenantConfig>(emptyConfig);
+export const tenantIdAtom = atom<string, [string], void>(
+  (get) => get(baseTenantIdAtom),
+  (_get, set, nextValue) => {
+    set(baseTenantIdAtom, nextValue);
+    set(baseTenantConfigAtom, tenancyCatalog.find(x => x.id === Number.parseInt(nextValue))?.config ?? emptyConfig);
+  },
+);
 
 export const authLoadingAtom = atom(true);
 

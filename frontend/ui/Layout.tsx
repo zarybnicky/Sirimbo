@@ -5,13 +5,11 @@ import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { CallToAction } from '@/ui/CallToAction';
 import { useRouter } from 'next/router';
-import React from 'react';
-import dynamic from 'next/dynamic';
+import React, { useMemo } from 'react';
 import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
-
-const TenantSeo = dynamic(() => getTenantUi('TenantSeo'));
-const Footer = dynamic(() => getTenantUi('Footer'), { ssr: false });
+import { tenantIdAtom } from './state/auth';
+import { useAtomValue } from 'jotai';
 
 type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;
@@ -42,6 +40,9 @@ export const Layout = React.memo(function Layout({
   const [isOpen, setIsOpen] = React.useState(false);
   const auth = useAuth();
   const authLoading = useAuthLoading();
+  const tenantId = useAtomValue(tenantIdAtom);
+  const TenantSeo = useMemo(() => getTenantUi(tenantId, 'TenantSeo'), [tenantId]);
+  const Footer = useMemo(() => getTenantUi(tenantId, 'Footer'), [tenantId]);
 
   showTopMenu = showTopMenu && tenantConfig.enableHome;
   if (hideTopMenuIfLoggedIn) {

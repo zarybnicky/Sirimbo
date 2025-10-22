@@ -1,16 +1,18 @@
 import { Layout } from '@/ui/Layout';
 import { TenantSettingsDocument } from '@/graphql/CurrentUser';
-import { tenantConfig, tenantId } from '@/tenant/config';
+import { tenantConfig } from '@/tenant/config';
 import { TitleBar } from '@/ui/TitleBar';
 import React, { useEffect } from 'react';
 import { useQuery } from 'urql';
 import { starletSettingsAtom, starletTokenAtom } from '@/ui/starlet-importer/state';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { StarletImporter } from '@/ui/starlet-importer';
 import { useRouter } from 'next/router';
+import { tenantIdAtom } from '@/ui/state/auth';
 
 export default function StarletImportPage() {
   const router = useRouter();
+  const tenantId = useAtomValue(tenantIdAtom);
   const isEnabled = Boolean(tenantConfig.enableStarletImport);
   const [{ data: settingsQuery }] = useQuery({
     query: TenantSettingsDocument,

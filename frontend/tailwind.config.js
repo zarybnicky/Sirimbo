@@ -24,6 +24,9 @@ module.exports = {
     require('tailwindcss-opentype'),
     require('tailwind-scrollbar'),
   ],
+  safelist: [
+    ...Array({ length: 10 }).keys().map(i => `tenant-${i}`),
+  ],
   theme: {
     container: {
       center: true,

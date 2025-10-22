@@ -1,4 +1,4 @@
-export type Config = {
+export type TenantConfig = {
   shortName: string;
   copyrightLine: string;
   favicon: string;

@@ -3,15 +3,12 @@ import { type MenuLink, type MenuStructItem, getHrefs, memberMenu, topMenu } fro
 import { tenantConfig } from '@/tenant/config.js';
 import { getTenantUi } from '@/tenant/catalog';
 import { cn } from '@/ui/cn';
-import { authAtom, storeRef } from '@/ui/state/auth';
+import { authAtom, storeRef, tenantIdAtom } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
-import dynamic from 'next/dynamic';
-
-const SidebarLogo = dynamic(() => getTenantUi('SidebarLogo'), { ssr: false });
+import React, { useMemo } from 'react';
 
 type SidebarProps = {
   isOpen: boolean;
@@ -23,6 +20,8 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const router = useRouter();
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
+  const tenantId = useAtomValue(tenantIdAtom);
+  const SidebarLogo = useMemo(() => getTenantUi(tenantId, 'SidebarLogo'), [tenantId],);
 
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {

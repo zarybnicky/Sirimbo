@@ -34,18 +34,6 @@ export function TenantSeo() {
   />
 }
 
-export function SocialIcons() {
-  return <></>;
-}
-
-export function Sponsors() {
-  return <></>;
-}
-
-export function DesktopLogo() {
-  return <></>;
-}
-
 export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
@@ -69,8 +57,4 @@ export function MobileLogo() {
       priority
     />
   );
-}
-
-export function Footer() {
-  return <></>;
 }

@@ -13,12 +13,9 @@ import { useAuth } from '@/ui/use-auth';
 import { User as Account, ChevronDown, Menu as MenuIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
-import dynamic from 'next/dynamic';
-
-const DesktopLogo = dynamic(() => getTenantUi('DesktopLogo'), { ssr: false });
-const MobileLogo = dynamic(() => getTenantUi('MobileLogo'), { ssr: false });
-const SocialIcons = dynamic(() => getTenantUi('SocialIcons'), { ssr: false });
+import React, { useMemo } from 'react';
+import { useAtomValue } from 'jotai';
+import { tenantIdAtom } from './state/auth';
 
 type Props = {
   isOpen: boolean;
@@ -28,7 +25,13 @@ type Props = {
 
 export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
   const auth = useAuth();
+  const tenantId = useAtomValue(tenantIdAtom);
   const [isMounted, setIsMounted] = React.useState(false);
+
+  const DesktopLogo = useMemo(() => getTenantUi(tenantId, 'DesktopLogo'), [tenantId],);
+  const MobileLogo = useMemo(() => getTenantUi(tenantId, 'MobileLogo'), [tenantId],);
+  const SocialIcons = useMemo(() => getTenantUi(tenantId, 'SocialIcons'), [tenantId],);
+
   React.useEffect(() => {
     setIsMounted(true);
   }, []);

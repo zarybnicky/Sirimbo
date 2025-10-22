@@ -1,110 +1,93 @@
-import type { StaticImageData } from 'next/image';
-import type { Config } from './types';
+import type { TenantConfig } from './types';
 
 import kometaConfig from './kometa/config.js';
 import olympConfig from './olymp/config.js';
 import starletConfig from './starlet/config.js';
-
-import kometaLogo from './kometa/logo.webp';
-import kometaLogoOnDark from './kometa/logo-white.webp';
-import olympLogo from './olymp/logo.webp';
-import starletIcon from './starlet/logo-white-no-text.png';
-import starletLogo from './starlet/starlet-logo.svg';
-
-type TenantUiModule =
-  typeof import('./olymp/ui') &
-  typeof import('./starlet/ui') &
-  typeof import('./kometa/ui');
-
-type TenantLogos = {
-  primary: StaticImageData | string;
-  onDark?: StaticImageData | string;
-  icon?: StaticImageData | string;
-};
+import dynamic from 'next/dynamic';
 
 type TenancyCatalogEntry = {
   id: number;
   name: string;
   hosts: string[];
-  config: Config;
-  logos: TenantLogos;
-  loadUiModule: () => Promise<TenantUiModule>;
+  config: TenantConfig;
+  ui: {
+    DesktopLogo: React.ComponentType;
+    MobileLogo: React.ComponentType;
+    SidebarLogo: React.ComponentType;
+    SocialIcons: React.ComponentType;
+    Footer: React.ComponentType;
+    Sponsors: React.ComponentType;
+    TenantSeo: React.ComponentType;
+  };
 };
 
-const tenancyCatalog: TenancyCatalogEntry[] = [
+export const tenancyCatalog: [TenancyCatalogEntry, ...TenancyCatalogEntry[]] = [
   {
     id: 1,
     name: olympConfig.shortName,
     hosts: ['olymp.rozpisovnik.cz', 'tkolymp.cz'],
     config: olympConfig,
-    logos: {
-      primary: olympLogo,
-      icon: olympLogo,
+    ui: {
+      DesktopLogo: dynamic(() => import('./olymp/ui').then(x => x.DesktopLogo), { ssr: false }),
+      MobileLogo: dynamic(() => import('./olymp/ui').then(x => x.MobileLogo), { ssr: false }),
+      SidebarLogo: dynamic(() => import('./olymp/ui').then(x => x.SidebarLogo), { ssr: false }),
+      SocialIcons: dynamic(() => import('./olymp/ui').then(x => x.SocialIcons), { ssr: false }),
+      Sponsors: dynamic(() => import('./olymp/ui').then(x => x.Sponsors), { ssr: false }),
+      Footer: dynamic(() => import('./olymp/ui').then(x => x.Footer), { ssr: false }),
+      TenantSeo: dynamic(() => import('./olymp/ui').then(x => x.TenantSeo), { ssr: false }),
     },
-    loadUiModule: () => import('./olymp/ui'),
   },
   {
     id: 2,
     name: kometaConfig.shortName,
     hosts: ['dspkometa.rozpisovnik.cz'],
     config: kometaConfig,
-    logos: {
-      primary: kometaLogo,
-      onDark: kometaLogoOnDark,
+    ui: {
+      MobileLogo: dynamic(() => import('./kometa/ui').then(x => x.MobileLogo), { ssr: false }),
+      SidebarLogo: dynamic(() => import('./kometa/ui').then(x => x.SidebarLogo), { ssr: false }),
+      TenantSeo: dynamic(() => import('./kometa/ui').then(x => x.TenantSeo), { ssr: false }),
+      DesktopLogo: () => null,
+      SocialIcons: () => null,
+      Sponsors: () => null,
+      Footer: () => null,
     },
-    loadUiModule: () => import('./kometa/ui'),
   },
   {
     id: 3,
     name: starletConfig.shortName,
     hosts: ['tkstarlet.rozpisovnik.cz'],
     config: starletConfig,
-    logos: {
-      primary: starletLogo,
-      icon: starletIcon,
+    ui: {
+      MobileLogo: dynamic(() => import('./starlet/ui').then(x => x.MobileLogo), { ssr: false }),
+      SidebarLogo: dynamic(() => import('./starlet/ui').then(x => x.SidebarLogo), { ssr: false }),
+      TenantSeo: dynamic(() => import('./starlet/ui').then(x => x.TenantSeo), { ssr: false }),
+      DesktopLogo: () => null,
+      SocialIcons: () => null,
+      Sponsors: () => null,
+      Footer: () => null,
     },
-    loadUiModule: () => import('./starlet/ui'),
   },
   {
     id: 4,
     name: kometaConfig.shortName,
     hosts: ['dspkometa2.rozpisovnik.cz'],
     config: kometaConfig,
-    logos: {
-      primary: kometaLogo,
-      onDark: kometaLogoOnDark,
+    ui: {
+      MobileLogo: dynamic(() => import('./kometa/ui').then(x => x.MobileLogo), { ssr: false }),
+      SidebarLogo: dynamic(() => import('./kometa/ui').then(x => x.SidebarLogo), { ssr: false }),
+      TenantSeo: dynamic(() => import('./kometa/ui').then(x => x.TenantSeo), { ssr: false }),
+      DesktopLogo: () => null,
+      SocialIcons: () => null,
+      Sponsors: () => null,
+      Footer: () => null,
     },
-    loadUiModule: () => import('./kometa/ui'),
   },
 ];
 
-const tenancyById = new Map<number, TenancyCatalogEntry>();
-const tenancyByHost = new Map<string, TenancyCatalogEntry>();
-
-for (const entry of tenancyCatalog) {
-  tenancyById.set(entry.id, entry);
-  for (const host of entry.hosts) {
-    tenancyByHost.set(host.toLowerCase(), entry);
-  }
-}
-
-const runtimeTenantId = Number.parseInt(process.env.NEXT_PUBLIC_TENANT_ID ?? '1', 10);
-
-async function fetchTenantUi(): Promise<TenantUiModule> {
-  const entry = tenancyById.get(runtimeTenantId);
-  if (!entry) {
-    return await tenancyCatalog[0]!.loadUiModule();
-  }
-  return entry.loadUiModule();
-}
-
-export async function getTenantUi<K extends keyof TenantUiModule>(
+export function getTenantUi<K extends keyof TenancyCatalogEntry['ui']>(
+  tenantId: string,
   key: K,
-): Promise<{ default: TenantUiModule[K] }> {
-  const ui = await fetchTenantUi();
-  const component = ui[key];
-  if (typeof component !== 'function') {
-    throw new TypeError(`Tenant UI module is missing component: ${String(key)}`);
-  }
-  return { default: component as TenantUiModule[K] };
+): React.ComponentType {
+  const entry = tenancyCatalog.find(x => x.id === Number.parseInt(tenantId)) || tenancyCatalog[0];
+  return entry.ui[key];
 }

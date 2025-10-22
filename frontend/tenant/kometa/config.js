@@ -1,5 +1,5 @@
  /**
- * @type {import("../types").Config}
+ * @type {import("../types").TenantConfig}
  */
 module.exports = {
   shortName: "DSP Kometa",

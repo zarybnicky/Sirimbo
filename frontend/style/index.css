@@ -2,78 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  .content > * {
-    grid-column: content;
-  }
-
-  .prose p:empty {
-    display: none;
-  }
-
-  html, body, #__next {
-    @apply bg-neutral-1 text-accent-12;
-    min-height: 100%;
-    max-width: 100vw;
-  }
-
-  :root {
-    --green-1: 136deg 50% 98.9%;
-    --green-2: 138deg 62.5% 96.9%;
-    --green-3: 139deg 55.2% 94.5%;
-    --green-4: 140deg 48.7% 91%;
-    --green-5: 141deg 43.7% 86%;
-    --green-6: 143deg 40.3% 79%;
-    --green-7: 146deg 38.5% 69%;
-    --green-8: 151deg 40.2% 54.1%;
-    --green-9: 151deg 55% 41.5%;
-    --green-10: 152deg 57.5% 37.6%;
-    --green-11: 153deg 67% 28.5%;
-    --green-12: 155deg 40% 14%;
-
-    --neutral-1: 0deg 0% 99%;
-    --neutral-2: 0deg 0% 97.3%;
-    --neutral-3: 0deg 0% 95.1%;
-    --neutral-4: 0deg 0% 93%;
-    --neutral-5: 0deg 0% 90.9%;
-    --neutral-6: 0deg 0% 88.7%;
-    --neutral-7: 0deg 0% 85.8%;
-    --neutral-8: 0deg 0% 78%;
-    --neutral-9: 0deg 0% 56.1%;
-    --neutral-10: 0deg 0% 52.3%;
-    --neutral-11: 0deg 0% 43.5%;
-    --neutral-12: 0deg 0% 9%;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --green-1: 146deg 30% 7.4%;
-      --green-2: 155deg 44.2% 8.4%;
-      --green-3: 155deg 46.7% 10.9%;
-      --green-4: 154deg 48.4% 12.9%;
-      --green-5: 154deg 49.7% 14.9%;
-      --green-6: 154deg 50.9% 17.6%;
-      --green-7: 153deg 51.8% 21.8%;
-      --green-8: 151deg 51.7% 28.4%;
-      --green-9: 151deg 55% 41.5%;
-      --green-10: 151deg 49.3% 46.5%;
-      --green-11: 151deg 50% 53.2%;
-      --green-12: 137deg 72% 94%;
-
-      --neutral-1: 0deg 0% 8.5%;
-      --neutral-2: 0deg 0% 11%;
-      --neutral-3: 0deg 0% 13.6%;
-      --neutral-4: 0deg 0% 15.8%;
-      --neutral-5: 0deg 0% 17.9%;
-      --neutral-6: 0deg 0% 20.5%;
-      --neutral-7: 0deg 0% 24.3%;
-      --neutral-8: 0deg 0% 31.2%;
-      --neutral-9: 0deg 0% 43.9%;
-      --neutral-10: 0deg 0% 49.4%;
-      --neutral-11: 0deg 0% 62.8%;
-      --neutral-12: 0deg 0% 93%;
-    }
-  }
-
   .tenant-1 {
     --accent-1: 0deg 100% 99%;
     --accent-2: 7deg 100% 98%;
@@ -164,6 +92,78 @@
       --accent-10: 40deg 67% 53%;
       --accent-11: 39deg 78% 61%;
       --accent-12: 38deg 78% 85%;
+    }
+  }
+
+@layer base {
+  .content > * {
+    grid-column: content;
+  }
+
+  .prose p:empty {
+    display: none;
+  }
+
+  html, body, #__next {
+    @apply bg-neutral-1 text-accent-12;
+    min-height: 100%;
+    max-width: 100vw;
+  }
+
+  :root {
+    --green-1: 136deg 50% 98.9%;
+    --green-2: 138deg 62.5% 96.9%;
+    --green-3: 139deg 55.2% 94.5%;
+    --green-4: 140deg 48.7% 91%;
+    --green-5: 141deg 43.7% 86%;
+    --green-6: 143deg 40.3% 79%;
+    --green-7: 146deg 38.5% 69%;
+    --green-8: 151deg 40.2% 54.1%;
+    --green-9: 151deg 55% 41.5%;
+    --green-10: 152deg 57.5% 37.6%;
+    --green-11: 153deg 67% 28.5%;
+    --green-12: 155deg 40% 14%;
+
+    --neutral-1: 0deg 0% 99%;
+    --neutral-2: 0deg 0% 97.3%;
+    --neutral-3: 0deg 0% 95.1%;
+    --neutral-4: 0deg 0% 93%;
+    --neutral-5: 0deg 0% 90.9%;
+    --neutral-6: 0deg 0% 88.7%;
+    --neutral-7: 0deg 0% 85.8%;
+    --neutral-8: 0deg 0% 78%;
+    --neutral-9: 0deg 0% 56.1%;
+    --neutral-10: 0deg 0% 52.3%;
+    --neutral-11: 0deg 0% 43.5%;
+    --neutral-12: 0deg 0% 9%;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --green-1: 146deg 30% 7.4%;
+      --green-2: 155deg 44.2% 8.4%;
+      --green-3: 155deg 46.7% 10.9%;
+      --green-4: 154deg 48.4% 12.9%;
+      --green-5: 154deg 49.7% 14.9%;
+      --green-6: 154deg 50.9% 17.6%;
+      --green-7: 153deg 51.8% 21.8%;
+      --green-8: 151deg 51.7% 28.4%;
+      --green-9: 151deg 55% 41.5%;
+      --green-10: 151deg 49.3% 46.5%;
+      --green-11: 151deg 50% 53.2%;
+      --green-12: 137deg 72% 94%;
+
+      --neutral-1: 0deg 0% 8.5%;
+      --neutral-2: 0deg 0% 11%;
+      --neutral-3: 0deg 0% 13.6%;
+      --neutral-4: 0deg 0% 15.8%;
+      --neutral-5: 0deg 0% 17.9%;
+      --neutral-6: 0deg 0% 20.5%;
+      --neutral-7: 0deg 0% 24.3%;
+      --neutral-8: 0deg 0% 31.2%;
+      --neutral-9: 0deg 0% 43.9%;
+      --neutral-10: 0deg 0% 49.4%;
+      --neutral-11: 0deg 0% 62.8%;
+      --neutral-12: 0deg 0% 93%;
     }
   }
 }
