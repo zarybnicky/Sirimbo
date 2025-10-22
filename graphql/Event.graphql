@@ -347,7 +347,6 @@ fragment EventExternalRegistration on EventExternalRegistration {
   prefixTitle
   suffixTitle
   taxIdentificationNumber
-  tenantId
   updatedAt
   createdAt
   email
