@@ -73,3 +73,7 @@ export function MobileLogo() {
     />
   );
 }
+
+export function Footer() {
+  return <></>;
+}

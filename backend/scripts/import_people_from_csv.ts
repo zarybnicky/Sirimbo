@@ -691,7 +691,9 @@ async function main() {
   const csvPath = path.resolve(args.file);
   let fileContent: string;
   try {
-    fileContent = await readFile(csvPath, 'utf8');
+    fileContent = await readFile(csvPath, {
+      encoding: 'utf8'
+    }) as any as string;
   } catch (error) {
     console.error(`Unable to read ${csvPath}:`, (error as Error).message);
     process.exitCode = 1;

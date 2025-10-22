@@ -7,11 +7,11 @@ import { CallToAction } from '@/components/CallToAction';
 import { useRouter } from 'next/router';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import Footer from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
 const TenantSeo = dynamic(() => getTenantUi('TenantSeo'));
+const Footer = dynamic(() => getTenantUi('Footer'), { ssr: false });
 
 type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;
