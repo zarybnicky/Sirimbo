@@ -3,12 +3,12 @@ import { getTenantUi } from '@/tenant/catalog';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
-import { CallToAction } from '@/components/CallToAction';
+import { CallToAction } from '@/ui/CallToAction';
 import { useRouter } from 'next/router';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Header } from './Header';
-import { Sidebar } from './Sidebar';
+import { Header } from '@/ui/Header';
+import { Sidebar } from '@/ui/Sidebar';
 
 const TenantSeo = dynamic(() => getTenantUi('TenantSeo'));
 const Footer = dynamic(() => getTenantUi('Footer'), { ssr: false });

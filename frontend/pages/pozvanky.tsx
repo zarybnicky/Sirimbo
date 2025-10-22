@@ -1,4 +1,4 @@
-import { Layout } from "@/components/layout/Layout";
+import { Layout } from "@/ui/Layout";
 import { CreateInvitationDocument, PeopleWithAnotherAccountDocument, PeopleWithInvitationDocument, PeopleWithoutInvitationDocument } from "@/graphql/Invitation";
 import { fullDateFormatter } from "@/ui/format";
 import { SubmitButton } from "@/ui/submit";

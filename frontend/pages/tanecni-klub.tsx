@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';

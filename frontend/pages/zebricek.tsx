@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { TitleBar } from '@/ui/TitleBar';
 import { ScoreboardPeriodSelector } from '@/scoreboard/ScoreboardPeriodSelector';
 import { computeRange, PeriodPreset } from '@/scoreboard/periods';

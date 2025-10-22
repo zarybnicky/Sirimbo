@@ -1,12 +1,7 @@
-const radixColors = require("@radix-ui/colors");
-const { toRadixVars } = require("windy-radix-palette/vars");
-const { tenantConfig: tenant } = require('./tenant/config.js');
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './calendar/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
     './lib/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
     './scoreboard/**/*.{js,ts,jsx,tsx}',
@@ -20,16 +15,6 @@ module.exports = {
     aspectRatio: false,
   },
   plugins: [
-    require("windy-radix-palette")({
-      colors: {
-        green: radixColors.green,
-        greenDark: radixColors.greenDark,
-        [tenant.themeNeutral]: tenant.neutralLight || radixColors[tenant.themeNeutral],
-        [`${tenant.themeNeutral}Dark`]: tenant.neutralDark || radixColors[`${tenant.themeNeutral}Dark`],
-        [tenant.themeAccent]: tenant.accentLight || radixColors[tenant.themeAccent],
-        [`${tenant.themeAccent}Dark`]: tenant.accentDark || radixColors[`${tenant.themeAccent}Dark`],
-      },
-    }),
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require("windy-radix-typography")({
@@ -54,10 +39,21 @@ module.exports = {
       transparent: 'transparent',
       black: '#000',
       white: '#fff',
-      primary: tenant.themePrimary,
-      accent: toRadixVars(tenant.themeAccent),
-      neutral: toRadixVars(tenant.themeNeutral),
-      green: toRadixVars('green'),
+      accent: Object.fromEntries(
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
+          (n) => [n, `hsl(var(--accent-${n}) / <alpha-value>)`]
+        ),
+      ),
+      neutral: Object.fromEntries(
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
+          (n) => [n, `hsl(var(--neutral-${n}) / <alpha-value>)`]
+        ),
+      ),
+      green: Object.fromEntries(
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
+          (n) => [n, `hsl(var(--green-${n}) / <alpha-value>)`]
+        ),
+      ),
     },
     extend: {
       width: {

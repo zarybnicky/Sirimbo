@@ -1,5 +1,5 @@
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import * as React from 'react';

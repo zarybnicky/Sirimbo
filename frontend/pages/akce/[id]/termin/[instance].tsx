@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
 import { TitleBar } from '@/ui/TitleBar';

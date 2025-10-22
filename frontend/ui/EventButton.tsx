@@ -117,7 +117,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
                     : 'VOLNO'))}
             </div>
             {hasConflicts && (
-              <div className="flex items-center text-red-11" aria-hidden>
+              <div className="flex items-center text-accent-11" aria-hidden>
                 <AlertTriangle className="size-4" />
               </div>
             )}

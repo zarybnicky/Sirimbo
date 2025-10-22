@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TitleBar } from '@/ui/TitleBar';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 
 export default function OchranaOsobnichUdajuPage() {
   return (

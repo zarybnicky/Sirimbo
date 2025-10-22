@@ -5,7 +5,7 @@ import { fullDateFormatter } from '@/ui/format';
 import { slugify } from '@/ui/slugify';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { z } from 'zod';
 import { useTypedRouter, zRouterString } from '@/ui/useTypedRouter';
 import { useQuery } from 'urql';

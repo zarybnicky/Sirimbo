@@ -135,7 +135,7 @@ export function PersonList() {
             className={cn(
               'relative p-1.5 pl-5 mb-1 mr-1 rounded-lg grid',
               id === item.id
-                ? 'font-semibold bg-primary text-white shadow-md'
+                ? 'font-semibold bg-accent-9 text-white shadow-md'
                 : 'bg-accent-2 border border-accent-5 hover:bg-accent-4',
             )}
           >

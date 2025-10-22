@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { TenantSettingsDocument } from '@/graphql/CurrentUser';
 import { tenantConfig, tenantId } from '@/tenant/config';
 import { TitleBar } from '@/ui/TitleBar';

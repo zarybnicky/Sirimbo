@@ -10,7 +10,7 @@ import { useMutation } from 'urql';
 import { NextSeo } from 'next-seo';
 import { z } from 'zod';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cardCls } from '@/ui/style';

@@ -1,5 +1,5 @@
 import { ErrorPage } from '@/ui/ErrorPage';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 
 export default function InternalErrorPage() {
   return (

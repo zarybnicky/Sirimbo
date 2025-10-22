@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { SubmitButton } from '@/ui/submit';
 import { TextField, TextFieldElement } from '@/ui/fields/text';

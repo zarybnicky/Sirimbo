@@ -1,7 +1,7 @@
 import { TitleBar } from '@/ui/TitleBar';
 import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { CohortList } from '@/ui/lists/CohortList';
 import { RichTextView } from '@/ui/RichTextView';

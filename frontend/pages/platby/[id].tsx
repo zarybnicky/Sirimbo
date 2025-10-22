@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { PaymentDocument } from '@/graphql/Payment';
 import type { PaymentQuery } from '@/graphql/Payment';
 import { moneyFormatter, numericDateFormatter } from '@/ui/format';

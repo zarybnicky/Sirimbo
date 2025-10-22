@@ -16,6 +16,156 @@
     min-height: 100%;
     max-width: 100vw;
   }
+
+  :root {
+    --green-1: 136deg 50% 98.9%;
+    --green-2: 138deg 62.5% 96.9%;
+    --green-3: 139deg 55.2% 94.5%;
+    --green-4: 140deg 48.7% 91%;
+    --green-5: 141deg 43.7% 86%;
+    --green-6: 143deg 40.3% 79%;
+    --green-7: 146deg 38.5% 69%;
+    --green-8: 151deg 40.2% 54.1%;
+    --green-9: 151deg 55% 41.5%;
+    --green-10: 152deg 57.5% 37.6%;
+    --green-11: 153deg 67% 28.5%;
+    --green-12: 155deg 40% 14%;
+
+    --neutral-1: 0deg 0% 99%;
+    --neutral-2: 0deg 0% 97.3%;
+    --neutral-3: 0deg 0% 95.1%;
+    --neutral-4: 0deg 0% 93%;
+    --neutral-5: 0deg 0% 90.9%;
+    --neutral-6: 0deg 0% 88.7%;
+    --neutral-7: 0deg 0% 85.8%;
+    --neutral-8: 0deg 0% 78%;
+    --neutral-9: 0deg 0% 56.1%;
+    --neutral-10: 0deg 0% 52.3%;
+    --neutral-11: 0deg 0% 43.5%;
+    --neutral-12: 0deg 0% 9%;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --green-1: 146deg 30% 7.4%;
+      --green-2: 155deg 44.2% 8.4%;
+      --green-3: 155deg 46.7% 10.9%;
+      --green-4: 154deg 48.4% 12.9%;
+      --green-5: 154deg 49.7% 14.9%;
+      --green-6: 154deg 50.9% 17.6%;
+      --green-7: 153deg 51.8% 21.8%;
+      --green-8: 151deg 51.7% 28.4%;
+      --green-9: 151deg 55% 41.5%;
+      --green-10: 151deg 49.3% 46.5%;
+      --green-11: 151deg 50% 53.2%;
+      --green-12: 137deg 72% 94%;
+
+      --neutral-1: 0deg 0% 8.5%;
+      --neutral-2: 0deg 0% 11%;
+      --neutral-3: 0deg 0% 13.6%;
+      --neutral-4: 0deg 0% 15.8%;
+      --neutral-5: 0deg 0% 17.9%;
+      --neutral-6: 0deg 0% 20.5%;
+      --neutral-7: 0deg 0% 24.3%;
+      --neutral-8: 0deg 0% 31.2%;
+      --neutral-9: 0deg 0% 43.9%;
+      --neutral-10: 0deg 0% 49.4%;
+      --neutral-11: 0deg 0% 62.8%;
+      --neutral-12: 0deg 0% 93%;
+    }
+  }
+
+  .tenant-1 {
+    --accent-1: 0deg 100% 99%;
+    --accent-2: 7deg 100% 98%;
+    --accent-3: 5deg 100% 95%;
+    --accent-4: 6deg 100% 92%;
+    --accent-5: 5deg 100% 89%;
+    --accent-6: 4deg 100% 85%;
+    --accent-7: 3deg 98% 81%;
+    --accent-8: 3deg 88% 74%;
+    --accent-9: 352deg 86% 51%;
+    --accent-10: 350deg 100% 44%;
+    --accent-11: 350deg 100% 43%;
+    --accent-12: 352deg 89% 22%;
+  }
+  @media (prefers-color-scheme: dark) {
+    .tenant-1 {
+      --accent-1: 0deg 26% 7%;
+      --accent-2: 4deg 32% 10%;
+      --accent-3: 359deg 66% 15%;
+      --accent-4: 352deg 100% 17%;
+      --accent-5: 352deg 93% 21%;
+      --accent-6: 356deg 70% 28%;
+      --accent-7: 358deg 59% 37%;
+      --accent-8: 357deg 58% 48%;
+      --accent-9: 352deg 86% 51%;
+      --accent-10: 358deg 56% 51%;
+      --accent-11: 3deg 100% 77%;
+      --accent-12: 5deg 100% 90%;
+    }
+  }
+
+  .tenant-2, .tenant-4 {
+    --accent-1: 50deg 20% 99.1%;
+    --accent-2: 47deg 52.9% 96.7%;
+    --accent-3: 46deg 38.2% 93.7%;
+    --accent-4: 44deg 32.7% 90.1%;
+    --accent-5: 43deg 29.9% 85.7%;
+    --accent-6: 41deg 28.3% 79.8%;
+    --accent-7: 39deg 27.6% 71.9%;
+    --accent-8: 36deg 27.2% 61.8%;
+    --accent-9: 36deg 20% 49.5%;
+    --accent-10: 36deg 19.8% 45.7%;
+    --accent-11: 36deg 20% 39%;
+    --accent-12: 36deg 16% 20%;
+  }
+  @media (prefers-color-scheme: dark) {
+    .tenant-2, .tenant-4 {
+      --accent-1: 44deg 9% 8.3%;
+      --accent-2: 43deg 14.3% 9.6%;
+      --accent-3: 42deg 15.5% 13%;
+      --accent-4: 41deg 16.4% 15.6%;
+      --accent-5: 41deg 16.9% 17.8%;
+      --accent-6: 40deg 17.6% 20.8%;
+      --accent-7: 38deg 18.5% 26.4%;
+      --accent-8: 36deg 19.6% 35.1%;
+      --accent-9: 36deg 20% 49.5%;
+      --accent-10: 36deg 22.3% 54.5%;
+      --accent-11: 35deg 30% 64%;
+      --accent-12: 49deg 52% 93.8%;
+    }
+  }
+
+  .tenant-3 {
+    --accent-1: 45deg 67% 99%;
+    --accent-2: 46deg 100% 96%;
+    --accent-3: 47deg 100% 88%;
+    --accent-4: 45deg 100% 83%;
+    --accent-5: 43deg 100% 77%;
+    --accent-6: 39deg 100% 73%;
+    --accent-7: 39deg 81% 68%;
+    --accent-8: 40deg 70% 56%;
+    --accent-9: 40deg 73% 58%;
+    --accent-10: 40deg 67% 53%;
+    --accent-11: 41deg 100% 31%;
+    --accent-12: 38deg 38% 20%;
+  }
+  @media (prefers-color-scheme: dark) {
+    .tenant-3 {
+      --accent-1: 43deg 23% 6%;
+      --accent-2: 38deg 24% 9%;
+      --accent-3: 39deg 48% 11%;
+      --accent-4: 41deg 87% 12%;
+      --accent-5: 41deg 94% 14%;
+      --accent-6: 41deg 77% 19%;
+      --accent-7: 40deg 69% 24%;
+      --accent-8: 41deg 75% 30%;
+      --accent-9: 40deg 73% 58%;
+      --accent-10: 40deg 67% 53%;
+      --accent-11: 39deg 78% 61%;
+      --accent-12: 38deg 78% 85%;
+    }
+  }
 }
 
 @layer components {
@@ -145,7 +295,7 @@ body {
   height: 9px;
 }
 .glider-dot.active {
-  background-color: theme('colors.primary');
+  background-color: var(--accent-9);;
 }
 .glider-prev,
 .glider-next {

@@ -3,7 +3,7 @@ import { fullDateFormatter } from '@/ui/format';
 import { FormResponsesDocument } from '@/graphql/Crm';
 import { useQuery } from 'urql';
 import { TitleBar } from '@/ui/TitleBar';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';

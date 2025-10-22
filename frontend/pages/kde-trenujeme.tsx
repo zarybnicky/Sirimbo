@@ -2,7 +2,7 @@ import { TitleBar } from '@/ui/TitleBar';
 import { LocationCard } from '@/ui/LocationCard';
 import * as React from 'react';
 import Image from 'next/image';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 
 export default function LocationsPage() {
   return (

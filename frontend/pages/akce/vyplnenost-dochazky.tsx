@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from 'urql';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { TitleBar } from '@/ui/TitleBar';
 import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceReport';
 import { isTruthy } from '@/ui/truthyFilter';

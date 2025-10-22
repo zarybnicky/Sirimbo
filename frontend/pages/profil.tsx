@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { PersonView } from '@/ui/PersonView';

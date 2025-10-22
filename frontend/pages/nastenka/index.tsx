@@ -1,5 +1,5 @@
 import { AnnouncementList } from '@/ui/lists/AnnouncementList';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { NextSeo } from 'next-seo';
 import { WithSidebar } from '@/ui/WithSidebar';
 

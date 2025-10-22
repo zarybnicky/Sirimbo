@@ -88,7 +88,7 @@ export const DropdownMenuLink = React.forwardRef<
       'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] inline-flex gap-3 items-center p-3 relative pl-4',
       'select-none outline-none',
       'data-[disabled]:text-neutral-11 data-[disabled]:pointer-events-none cursor-pointer',
-      'data-[highlighted]:bg-primary data-[highlighted]:text-white data-[highlighted]:font-bold',
+      'data-[highlighted]:bg-accent-9 data-[highlighted]:text-white data-[highlighted]:font-bold',
       className,
     )}
     {...props}
@@ -109,7 +109,7 @@ export const DropdownMenuButton = React.forwardRef<
       'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] inline-flex gap-3 items-center p-3 relative pl-4',
       'select-none outline-none',
       'data-[disabled]:text-neutral-11 data-[disabled]:pointer-events-none cursor-pointer',
-      'data-[highlighted]:bg-primary data-[highlighted]:text-white data-[highlighted]:font-bold',
+      'data-[highlighted]:bg-accent-9 data-[highlighted]:text-white data-[highlighted]:font-bold',
       className,
     )}
     {...props}

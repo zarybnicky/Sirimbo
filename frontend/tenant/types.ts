@@ -8,12 +8,5 @@ export type Config = {
   enableStarletImport?: boolean;
   useTrainerInitials: boolean;
   lockEventsByDefault: boolean;
-  themePrimary: string;
-  themeAccent: string;
-  themeNeutral: string;
   facebookPixelId?: string;
-  accentLight?: Record<string, string>;
-  accentDark?: Record<string, string>;
-  neutralLight?: Record<string, string>;
-  neutralDark?: Record<string, string>;
 }

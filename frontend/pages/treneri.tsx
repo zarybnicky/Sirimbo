@@ -1,5 +1,5 @@
 import { TitleBar } from '@/ui/TitleBar';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import * as React from 'react';
 import { typographyCls } from '@/ui/style';
 import Image from 'next/image';

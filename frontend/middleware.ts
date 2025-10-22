@@ -2,8 +2,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const TENANT_COOKIE_NAME = 'tenant_id';
-
 export const config = {
   matcher: [
     {
@@ -39,13 +37,12 @@ export function middleware(request: NextRequest) {
   const forwardedHost = request.headers.get('x-forwarded-host');
   const hostHeader = forwardedHost ?? request.headers.get('host') ?? request.nextUrl.host;
   const hostname = hostHeader?.split(':')[0]?.toLowerCase() ?? null;
-
   const tenantId = hostToTenantId.get(hostname ?? '') ?? DEFAULT_TENANT_ID;
 
   const response = NextResponse.next();
 
   response.cookies.set({
-    name: TENANT_COOKIE_NAME,
+    name: 'tenant_id',
     value: String(tenantId),
     path: '/',
     sameSite: 'lax',

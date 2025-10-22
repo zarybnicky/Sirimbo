@@ -1,7 +1,7 @@
 import { TitleBar } from '@/ui/TitleBar';
 import Image from 'next/image';
 import * as React from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
 
 export default function SkolniKrouzkyPage() {

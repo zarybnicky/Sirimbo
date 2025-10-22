@@ -2,7 +2,7 @@ import { CohortGroupDocument } from '@/graphql/CohortGroup';
 import { TitleBar } from '@/ui/TitleBar';
 import { RichTextView } from '@/ui/RichTextView';
 import { slugify } from '@/ui/slugify';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import React from 'react';
 import Link from 'next/link';
 import { z } from 'zod';

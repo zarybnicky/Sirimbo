@@ -52,6 +52,8 @@ const storage = {
   }
 };
 
+export const tenantIdAtom = atom<string>('1');
+
 export const authLoadingAtom = atom(true);
 
 const baseTokenAtom: PrimitiveAtom<string | null> = atom(storage.getItem('token'));

@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { EventDocument } from '@/graphql/Event';

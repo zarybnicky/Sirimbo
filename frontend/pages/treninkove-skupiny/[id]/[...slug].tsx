@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { CohortWithMembersDocument, type CohortWithMembersQuery } from '@/graphql/Cohorts';
 import { CohortList } from '@/ui/lists/CohortList';
 import { RichTextView } from '@/ui/RichTextView';

@@ -2,7 +2,7 @@ import { configureUrql } from '@/graphql/query';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
-import { storeRef } from '@/ui/state/auth';
+import { storeRef, tenantIdAtom } from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
@@ -19,6 +19,8 @@ import { ToastContainer } from 'react-toastify';
 import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { cs } from "zod/locales"
+import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
+import { getCookie } from 'cookies-next/client';
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -43,6 +45,14 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   if (typeof window === 'undefined') {
     storeRef.current = createStore();
   }
+
+  useLayoutEffect(() => {
+    const newTenantId = String(getCookie('tenant_id'));
+    storeRef.current.set(tenantIdAtom, newTenantId);
+    const root = document.querySelector('#__next');
+    if (root)
+      root.className = `tenant-${newTenantId}`;
+  }, []);
 
   return (
     <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>

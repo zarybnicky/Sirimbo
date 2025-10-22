@@ -1,6 +1,6 @@
 import React from 'react';
 import { Calendar } from '@/calendar/Calendar';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { NextSeo } from 'next-seo';
 
 export default function CalendarPage() {

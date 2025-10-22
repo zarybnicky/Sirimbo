@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { EditCoupleForm } from '@/ui/forms/EditCoupleForm';
 import { useAuth } from '@/ui/use-auth';
 import { CoupleDocument } from '@/graphql/Memberships';

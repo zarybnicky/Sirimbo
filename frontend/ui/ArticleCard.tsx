@@ -27,10 +27,10 @@ export function ArticleCard(x: Props) {
             />
           )}
         </div>
-        <div className="tracking-wide mt-2 text-lg text-primary font-bold">
+        <div className="tracking-wide mt-2 text-lg text-accent-9 font-bold">
           {x.header}
         </div>
-        <div className="mr-24 mt-1 mb-4 h-1 bg-primary" />
+        <div className="mr-24 mt-1 mb-4 h-1 bg-accent-9" />
 
         <RichTextView className="text-neutral-12 grow" value={x.preview} />
 

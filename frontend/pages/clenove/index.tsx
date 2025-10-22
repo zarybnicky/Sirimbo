@@ -1,6 +1,6 @@
 import { PersonList } from '@/ui/lists/PersonList';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { NextSeo } from 'next-seo';
 
 export default function MembersPage() {

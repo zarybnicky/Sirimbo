@@ -5,7 +5,7 @@ import { useQuery } from 'urql';
 import { TitleBar } from '@/ui/TitleBar';
 import { origin } from '@/graphql/query';
 import { NextSeo } from 'next-seo';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { cardCls } from '@/ui/style';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';

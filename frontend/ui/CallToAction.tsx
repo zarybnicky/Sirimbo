@@ -1,15 +1,16 @@
 import * as React from 'react';
-import Banner1 from './images/TKOLYMP-BANNER-1.png';
-import Banner2 from './images/TKOLYMP-BANNER-2.png';
-import Banner3 from './images/TKOLYMP-BANNER-3.png';
-import Banner4 from './images/TKOLYMP-BANNER-4.png';
 import { ChevronRight } from 'lucide-react';
 import { buttonCls } from '@/ui/style';
 
-const images = [Banner1.src, Banner2.src, Banner3.src, Banner4.src];
+const images = [
+  "https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1761145759656-TKOLYMP-BANNER-1.png",
+  "https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1761145759657-TKOLYMP-BANNER-2.png",
+  "https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1761145759657-TKOLYMP-BANNER-3.png",
+  "https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1761145759657-TKOLYMP-BANNER-4.png",
+];
 
 export function CallToAction({ url }: { url: string }) {
-  const image = images[[...url].map((x) => x.codePointAt(0) || 0).reduce((a,b)=> a + b * 3,0) % 4]!;
+  const image = images[[...url].map((x) => x.codePointAt(0) || 0).reduce((a,b)=> a + b * 3,0) % images.length]!;
 
   return (
     <div

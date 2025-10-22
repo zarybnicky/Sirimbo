@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
 import { useQuery } from 'urql';

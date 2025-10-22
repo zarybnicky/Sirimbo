@@ -17,7 +17,7 @@ export function Pagination({
   return (
     <ReactPaginate
       breakLabel="..."
-      containerClassName="flex flex-wrap gap-1 my-4 text-primary"
+      containerClassName="flex flex-wrap gap-1 my-4 text-accent-9"
       breakClassName="flex mx-1 items-center"
       previousLinkClassName="w-6 h-10 inline-flex items-center justify-center rounded-full"
       nextLinkClassName="w-6 h-10 inline-flex items-center justify-center rounded-full"

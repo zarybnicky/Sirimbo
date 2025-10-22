@@ -1,9 +1,9 @@
 import { TitleBar } from '@/ui/TitleBar';
-import { TrainingPrograms } from '@/components/TrainingPrograms';
+import { TrainingPrograms } from '@/ui/TrainingPrograms';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
 
 export default function TrainingProgramPage() {

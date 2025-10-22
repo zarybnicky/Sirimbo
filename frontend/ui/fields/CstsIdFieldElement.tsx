@@ -48,7 +48,7 @@ export function CstsIdFieldElement<T extends FieldValues>({
             <span className="text-green-9">{query.data.cstsAthlete?.name}</span>
           )
           : (
-            <span className="text-primary">Nenalezeno</span>
+            <span className="text-accent-9">Nenalezeno</span>
           )
         : null}
     </div>

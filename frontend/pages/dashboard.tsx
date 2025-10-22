@@ -5,7 +5,7 @@ import { MyAnnouncements, StickyAnnouncements } from '@/ui/Announcements';
 import { MyEventsList } from '@/ui/lists/MyEventsList';
 import { TabMenu } from '@/ui/TabMenu';
 import { NextSeo } from 'next-seo';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { useQueryParam, withDefault, StringParam } from 'use-query-params';
 
 export default function DashboardPage() {

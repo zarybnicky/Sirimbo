@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError } from '@/ui/form';
@@ -74,7 +74,7 @@ export default function SystemAdminTenantsPage() {
       )}
 
       {error && (
-        <div className="rounded-md border border-red-7 bg-red-3 p-4 text-sm text-red-11">
+        <div className="rounded-md border border-accent-7 bg-accent-3 p-4 text-sm text-accent-11">
           Nepodařilo se načíst seznam klubů: {error.message}
         </div>
       )}

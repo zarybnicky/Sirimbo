@@ -1,5 +1,5 @@
 import { TitleBar } from '@/ui/TitleBar';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import React from 'react';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from '@/ui/TabMenu';

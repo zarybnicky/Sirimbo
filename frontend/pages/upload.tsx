@@ -6,7 +6,7 @@ import { rgbaToThumbHash, thumbHashToDataURL } from 'thumbhash';
 import { AttachmentDirectoriesDocument, AttachmentsDocument, CreateAttachmentDocument } from '@/graphql/Attachment';
 import { useMutation, useQuery } from 'urql';
 import { TextField } from '@/ui/fields/text';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
 
 type Image = {

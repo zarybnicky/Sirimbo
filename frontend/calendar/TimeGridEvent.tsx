@@ -176,7 +176,7 @@ function TimeGridEvent({
       >
         {hasConflicts && (
           <>
-            <div className="absolute right-1 top-1 text-red-11 drop-shadow" aria-hidden>
+            <div className="absolute right-1 top-1 text-accent-11 drop-shadow" aria-hidden>
               <AlertTriangle className="size-4" />
             </div>
             <span className="sr-only">Kolize: {conflictNames}</span>

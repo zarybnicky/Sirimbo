@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import { SubmitButton } from '@/ui/submit';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';

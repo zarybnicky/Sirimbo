@@ -61,7 +61,7 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
 
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
-            href={(auth.user && isMounted) ? '/profil' : '/login'}
+            href={auth.user && isMounted ? '/profil' : '/login'}
           >
             <Account />
           </Link>
@@ -70,7 +70,6 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
     </div>
   );
 }
-
 
 function DesktopMenuItem({ item: x }: { item: MenuStructItem }) {
   const { pathname } = useRouter();

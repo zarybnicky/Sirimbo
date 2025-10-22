@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import * as React from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { Layout } from '@/ui/Layout';
 import RoomStandard from './192eb65c0bde40cec93f2ea69d2809ff.webp';
 import RoomComfort from './fc2dc9c69b477bcfb63f29f6cc98ae38.webp';
 import LogoFloraHotel from './logo flora zelena pantone 7727.svg';

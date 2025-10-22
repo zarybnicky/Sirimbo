@@ -18,7 +18,7 @@ import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 import { useAuth } from '../use-auth';
-import { isTruthy, keyIsNonNull } from '../truthyFilter';
+import { keyIsNonNull } from '../truthyFilter';
 
 export function EventInstanceMenu({
   event,
