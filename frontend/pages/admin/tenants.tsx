@@ -1,17 +1,10 @@
 import { Layout } from '@/ui/Layout';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { TitleBar } from '@/ui/TitleBar';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -26,7 +19,7 @@ import {
 } from '@/graphql/SystemAdmin';
 import { AddressDomain, SystemAdminTenantsRecord } from '@/graphql';
 import { DataTable } from '@/ui/DataTable';
-import { ColumnDef } from '@tanstack/react-table';
+import { CellContext, ColumnDef } from '@tanstack/react-table';
 
 const decimalFormatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
 
@@ -41,9 +34,23 @@ const TenantFormSchema = z.object({
 
 type TenantFormValues = z.infer<typeof TenantFormSchema>;
 
-const columns: ColumnDef<
-  NonNullable<SystemAdminTenantsQuery['systemAdminTenants']>['nodes'][number]
->[] = [
+type TableRow = NonNullable<SystemAdminTenantsQuery['systemAdminTenants']>['nodes'][number];
+const columns: ColumnDef<TableRow>[] = [
+  {
+    id: '__actions',
+    size: 36,
+    enableSorting: false,
+    enableHiding: false,
+    header: () => null,
+    cell: ({ row }: CellContext<TableRow, unknown>) => (
+      <Dialog>
+        <DialogTrigger.Edit text="" size="md" variant="none" className="rounded-sm" />
+        <DialogContent>
+          <TenantEditDialog tenant={row.original} />
+        </DialogContent>
+      </Dialog>
+    ),
+  },
   { accessorKey: 'id', header: 'ID' },
   { accessorKey: 'name', header: 'Jméno' },
   { accessorKey: 'membershipCount', header: 'Členové', sortingFn: 'alphanumeric' },
@@ -59,7 +66,7 @@ const columns: ColumnDef<
 ];
 
 export default function SystemAdminTenantsPage() {
-  const [{ data, fetching, error }, reexecute] = useQuery({
+  const [{ data, fetching, error }] = useQuery({
     query: SystemAdminTenantsDocument,
   });
 
@@ -84,7 +91,9 @@ export default function SystemAdminTenantsPage() {
           <DataTable
             data={data.systemAdminTenants.nodes}
             columns={columns}
-            renderExpanded={(row) => <TenantCard tenant={row} onUpdated={reexecute} />}
+            enableSelection={false}
+            enablePagination={false}
+            renderExpanded={(row) => <TenantCard tenant={row} />}
           />
         )}
         {!fetching && !error && !data?.systemAdminTenants?.nodes?.length && (
@@ -99,18 +108,13 @@ export default function SystemAdminTenantsPage() {
 
 type TenantCardProps = {
   tenant: SystemAdminTenantsRecord;
-  onUpdated: () => void;
 };
 
-function TenantCard({ tenant, onUpdated }: TenantCardProps) {
+function TenantCard({ tenant }: TenantCardProps) {
   const address = formatAddress(tenant.address);
 
   return (
     <div className="space-y-3 rounded-lg border border-neutral-6 bg-neutral-2 p-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <TenantEditDialog tenant={tenant} onUpdated={onUpdated} />
-      </div>
-
       {tenant.description && (
         <p className="whitespace-pre-wrap text-sm text-neutral-12">
           {tenant.description}
@@ -144,23 +148,20 @@ function TenantCard({ tenant, onUpdated }: TenantCardProps) {
 
 type TenantEditDialogProps = {
   tenant: SystemAdminTenantsRecord;
-  onUpdated: () => void;
 };
 
-function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
-  const [open, setOpen] = React.useState(false);
+function TenantEditDialog({ tenant }: TenantEditDialogProps) {
   const defaultValues = React.useMemo(() => createFormState(tenant), [tenant]);
   const { control, handleSubmit, reset } = useForm({
     resolver: zodResolver(TenantFormSchema),
     defaultValues,
   });
   const [, updateTenant] = useMutation(SystemAdminUpdateTenantDocument);
+  const { onSuccess } = useFormResult();
 
   React.useEffect(() => {
-    if (open) {
-      reset(createFormState(tenant));
-    }
-  }, [open, tenant, reset]);
+    reset(createFormState(tenant));
+  }, [tenant, reset]);
 
   const onSubmit = useAsyncCallback(async (values: TenantFormValues) => {
     const result = await updateTenant({
@@ -181,46 +182,34 @@ function TenantEditDialog({ tenant, onUpdated }: TenantEditDialogProps) {
     if (result.error) {
       throw result.error;
     }
-
-    onUpdated();
-    setOpen(false);
+    onSuccess();
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger.Edit text="Upravit" />
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Upravit {tenant.name}</DialogTitle>
-        </DialogHeader>
-        <form className="grid gap-4" onSubmit={handleSubmit(onSubmit.execute)}>
-          <FormError error={onSubmit.error ?? null} />
+    <form className="grid gap-4" onSubmit={handleSubmit(onSubmit.execute)}>
+      <FormError error={onSubmit.error ?? null} />
 
-          <TextFieldElement control={control} name="name" label="Název" required />
-          <TextAreaElement
-            control={control}
-            name="description"
-            label="Popis"
-            className="min-h-24"
-          />
-          <TextFieldElement control={control} name="bankAccount" label="Bankovní účet" />
-          <TextFieldElement
-            control={control}
-            name="origins"
-            label="Domény (oddělené čárkou)"
-            helperText="např. example.cz, www.example.cz"
-          />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <TextFieldElement control={control} name="czIco" label="IČO" />
-            <TextFieldElement control={control} name="czDic" label="DIČ" />
-          </div>
+      <TextFieldElement control={control} name="name" label="Název" required />
+      <TextAreaElement
+        control={control}
+        name="description"
+        label="Popis"
+        className="min-h-24"
+      />
+      <TextFieldElement control={control} name="bankAccount" label="Bankovní účet" />
+      <TextFieldElement
+        control={control}
+        name="origins"
+        label="Domény (oddělené čárkou)"
+        helperText="např. example.cz, www.example.cz"
+      />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextFieldElement control={control} name="czIco" label="IČO" />
+        <TextFieldElement control={control} name="czDic" label="DIČ" />
+      </div>
 
-          <DialogFooter>
-            <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+      <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
+    </form>
   );
 }
 

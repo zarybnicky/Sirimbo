@@ -12,11 +12,11 @@ export const config = {
   ],
 };
 
-const hostToTenantId = new Map<string, number>();
+const hostToTenantId = new Map<string, string>();
 
 for (const entry of Object.values(serverTenantCatalog)) {
   for (const host of entry.hosts) {
-    hostToTenantId.set(host.toLowerCase(), entry.id);
+    hostToTenantId.set(host.toLowerCase(), String(entry.id));
   }
 }
 
@@ -26,11 +26,9 @@ export function middleware(request: NextRequest) {
   const hostname = hostHeader?.split(':')[0]?.toLowerCase() ?? null;
   const tenantId = hostToTenantId.get(hostname ?? '') ?? '1';
 
-  const response = NextResponse.next({
-    headers: {
-      cookie: `tenant_id=${tenantId}`,
-    },
-  });
+  request.cookies.set('tenant_id', tenantId);
+
+  const response = NextResponse.next();
 
   response.cookies.set({
     name: 'tenant_id',

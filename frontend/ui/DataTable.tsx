@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import {
   ColumnDef,
@@ -155,7 +153,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       // selection column
       enableSelection && {
         id: "__select",
-        size: 36,
+        size: 30,
         header: ({ table }: HeaderContext<TData, unknown>) => (
           <RadixCheckbox
             checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}

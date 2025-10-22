@@ -91,18 +91,12 @@ module.exports = nextRoutes()(
           {
             source: '/',
             destination: '/dashboard',
-            missing: [
-              { type: 'host', value: '.*olymp.*' },
-              { type: 'cookie', key: 'tenant_id', value: '1' },
-            ],
+            missing: [{ type: 'cookie', key: 'tenant_id', value: '1' }],
           },
           {
             source: '/clanky/:path*',
             destination: '/dashboard',
-            missing: [
-              { type: 'host', value: '.*olymp.*' },
-              { type: 'cookie', key: 'tenant_id', value: '1' },
-            ],
+            missing: [{ type: 'cookie', key: 'tenant_id', value: '1' },],
           },
         ];
         if (process.env.NODE_ENV !== 'production') {

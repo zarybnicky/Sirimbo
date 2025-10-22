@@ -266,6 +266,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         if (tenantId)
           cache.invalidate({ __typename: 'Tenant', id: tenantId});
       },
+      systemAdminUpdateTenant(_result, args, cache, _info) {
+        if (args.input.tenantId)
+          cache.invalidate({ __typename: 'Tenant', id: args.input.tenantId });
+      },
 
       deleteCouple(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Couple', id: args.input.id});
