@@ -20,6 +20,43 @@ export default function OKlubuPage() {
           Propozice soutěže <a href="https://www.csts.cz/dancesport/kalendar_akci/event/1571/competition/1565/propozice">zde na webu ČSTS</a>
         </p>
 
+        <h2>Program akce</h2>
+        <Image
+          src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1761262829785-Screenshot%20From%202025-10-24%2001-38-15.png"
+          alt=""
+          width={514}
+          height={921}
+        />
+
+        <h2>Vstupenky</h2>
+
+        <table>
+          <tr>
+            <td>Místenková vstupenka: (místo u stolu přímo u tanečního parketu)</td>
+            <td><b>900 Kč</b></td>
+          </tr>
+          <tr>
+            <td>Nemístenková vstupenka na místě:</td>
+            <td><b>700 Kč</b></td>
+          </tr>
+          <tr>
+            <td>Nemístenková vstupenka na galavečer na místě:</td>
+            <td><b>300 Kč</b></td>
+          </tr>
+          <tr>
+            <td>Děti do 15 let:</td>
+            <td><b>100 Kč</b></td>
+          </tr>
+          <tr>
+            <td>Senioři 65+:</td>
+            <td><b>100 Kč</b></td>
+          </tr>
+          <tr>
+            <td>ZTP:</td>
+            <td><b>100 Kč</b></td>
+          </tr>
+        </table>
+
         <h2>Ubytování</h2>
         <p>
           Nabídka ubytování v partnerském hotelu pro účastníky MČR Družstev a jejich
@@ -62,56 +99,6 @@ export default function OKlubuPage() {
           V případě zájmu rezervaci provádějte do 25. 9. 2025. Po tomto termínu již není
           možné zaručit ubytovací kapacitu v hotelu.
         </p>
-
-        <h2>Vstupenky</h2>
-
-        <h3>Předprodej vstupenek</h3>
-
-        <table>
-          <tr>
-            <td>Místenková vstupenka: (místo u stolu přímo u tanečního parketu)</td>
-            <td><b>900 Kč</b></td>
-          </tr>
-          <tr>
-            <td>Nemístenková vstupenka v předprodeji:</td>
-            <td><b>600 Kč</b></td>
-          </tr>
-          <tr>
-            <td>Nemístenková vstupenka na místě:</td>
-            <td><b>700 Kč</b></td>
-          </tr>
-          <tr>
-            <td>Nemístenková vstupenka na galavečer na místě:</td>
-            <td><b>300 Kč</b></td>
-          </tr>
-          <tr>
-            <td>Děti do 15 let:</td>
-            <td><b>100 Kč</b></td>
-          </tr>
-          <tr>
-            <td>Senioři 65+:</td>
-            <td><b>100 Kč</b></td>
-          </tr>
-          <tr>
-            <td>ZTP:</td>
-            <td><b>100 Kč</b></td>
-          </tr>
-        </table>
-
-        <p>
-          Zakoupení místenkových vstupenek ke stolu a nemístenkových vstupenek v předprodeji
-          si můžete zajistit podle připraveného plánku stolů
-          {' '}
-          <a href="https://docs.google.com/spreadsheets/d/1tedgTBZwbzjuRoVfrRkecTlr-2-RRUc5tvTWmH3NC3Y/edit?gid=0#gid=0" target="_blank">ZDE</a>
-          {' '}
-          na emailu: <b>ticketing@tkolymp.cz</b>
-        </p>
-        <p>
-          Kapacita stolů je omezená - zakoupení míst doporučujeme provést co nejdříve.
-        </p>
-
-        <h2>Program akce</h2>
-        <p>Brzy bude upřesněno.</p>
 
         <h2>Partneři akce</h2>
 
