@@ -28,7 +28,7 @@ export const serverTenantCatalog = {
   3: {
     id: 3,
     name: starletConfig.shortName,
-    hosts: ['tkstarlet.rozpisovnik.cz'],
+    hosts: ['tkstarletbrno.rozpisovnik.cz'],
     config: starletConfig,
   },
   4: {
