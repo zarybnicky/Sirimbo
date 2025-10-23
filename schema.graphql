@@ -440,26 +440,6 @@ input AnnouncementAudienceCondition {
   tenantId: BigInt
 }
 
-"""An input for mutations affecting `AnnouncementAudience`"""
-input AnnouncementAudienceInput {
-  announcementId: BigInt!
-  audienceRole: AnnouncementAudienceRole
-  cohortId: BigInt
-  id: BigInt
-  tenantId: BigInt
-}
-
-"""
-Represents an update to a `AnnouncementAudience`. Fields that are set will be updated.
-"""
-input AnnouncementAudiencePatch {
-  announcementId: BigInt
-  audienceRole: AnnouncementAudienceRole
-  cohortId: BigInt
-  id: BigInt
-  tenantId: BigInt
-}
-
 enum AnnouncementAudienceRole {
   ADMINISTRATOR
   MEMBER
@@ -1408,20 +1388,6 @@ input CohortSubscriptionCondition {
   updatedAt: Datetime
 }
 
-"""An input for mutations affecting `CohortSubscription`"""
-input CohortSubscriptionInput {
-  accountId: BigInt!
-  active: Boolean
-  cohortId: BigInt!
-  createdAt: Datetime
-  id: BigInt
-  interval: IntervalInput
-  price: PriceInput!
-  renewsOn: Datetime
-  tenantId: BigInt
-  updatedAt: Datetime
-}
-
 """Methods to use when ordering `CohortSubscription`."""
 enum CohortSubscriptionsOrderBy {
   ACCOUNT_ID_ASC
@@ -1721,56 +1687,6 @@ type CreateAktualityPayload {
   user: User
 }
 
-"""All input for the create `AnnouncementAudience` mutation."""
-input CreateAnnouncementAudienceInput {
-  """The `AnnouncementAudience` to be created by this mutation."""
-  announcementAudience: AnnouncementAudienceInput!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""The output of our create `AnnouncementAudience` mutation."""
-type CreateAnnouncementAudiencePayload {
-  """
-  Reads a single `Announcement` that is related to this `AnnouncementAudience`.
-  """
-  announcement: Announcement
-
-  """The `AnnouncementAudience` that was created by this mutation."""
-  announcementAudience: AnnouncementAudience
-
-  """An edge for our `AnnouncementAudience`. May be used by Relay 1."""
-  announcementAudienceEdge(
-    """The method to use when ordering `AnnouncementAudience`."""
-    orderBy: [AnnouncementAudiencesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AnnouncementAudiencesEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Reads a single `Cohort` that is related to this `AnnouncementAudience`.
-  """
-  cohort: Cohort
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """
-  Reads a single `Tenant` that is related to this `AnnouncementAudience`.
-  """
-  tenant: Tenant
-}
-
 """All input for the create `Announcement` mutation."""
 input CreateAnnouncementInput {
   """The `Announcement` to be created by this mutation."""
@@ -2037,41 +1953,6 @@ type CreateCreditTransactionForPersonPayload {
   ): TransactionsEdge
 }
 
-"""All input for the create `Dokumenty` mutation."""
-input CreateDokumentyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Dokumenty` to be created by this mutation."""
-  dokumenty: DokumentyInput!
-}
-
-"""The output of our create `Dokumenty` mutation."""
-type CreateDokumentyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Dokumenty` that was created by this mutation."""
-  dokumenty: Dokumenty
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `Dokumenty`."""
-  tenant: Tenant
-
-  """Reads a single `User` that is related to this `Dokumenty`."""
-  user: User
-}
-
 """All input for the create `EventExternalRegistration` mutation."""
 input CreateEventExternalRegistrationInput {
   """
@@ -2285,58 +2166,6 @@ type CreateMembershipApplicationPayload {
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
   user: User
-}
-
-"""All input for the `createMissingCohortSubscriptionPayments` mutation."""
-input CreateMissingCohortSubscriptionPaymentsInput {
-  c: CohortSubscriptionInput
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""The output of our `createMissingCohortSubscriptionPayments` mutation."""
-type CreateMissingCohortSubscriptionPaymentsPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  payments: [Payment!]
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `createNextCohortSubscriptionPayment` mutation."""
-input CreateNextCohortSubscriptionPaymentInput {
-  c: CohortSubscriptionInput
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""The output of our `createNextCohortSubscriptionPayment` mutation."""
-type CreateNextCohortSubscriptionPaymentPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  payments: [Payment!]
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `createPerson` mutation."""
@@ -2724,54 +2553,6 @@ type DeleteAktualityPayload {
   user: User
 }
 
-"""All input for the `deleteAnnouncementAudience` mutation."""
-input DeleteAnnouncementAudienceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
-"""The output of our delete `AnnouncementAudience` mutation."""
-type DeleteAnnouncementAudiencePayload {
-  """
-  Reads a single `Announcement` that is related to this `AnnouncementAudience`.
-  """
-  announcement: Announcement
-
-  """The `AnnouncementAudience` that was deleted by this mutation."""
-  announcementAudience: AnnouncementAudience
-
-  """An edge for our `AnnouncementAudience`. May be used by Relay 1."""
-  announcementAudienceEdge(
-    """The method to use when ordering `AnnouncementAudience`."""
-    orderBy: [AnnouncementAudiencesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AnnouncementAudiencesEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Reads a single `Cohort` that is related to this `AnnouncementAudience`.
-  """
-  cohort: Cohort
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """
-  Reads a single `Tenant` that is related to this `AnnouncementAudience`.
-  """
-  tenant: Tenant
-}
-
 """All input for the `deleteAnnouncement` mutation."""
 input DeleteAnnouncementInput {
   """
@@ -2983,39 +2764,6 @@ type DeleteCouplePayload {
 
   """Reads a single `Person` that is related to this `Couple`."""
   woman: Person
-}
-
-"""All input for the `deleteDokumenty` mutation."""
-input DeleteDokumentyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
-"""The output of our delete `Dokumenty` mutation."""
-type DeleteDokumentyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Dokumenty` that was deleted by this mutation."""
-  dokumenty: Dokumenty
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `Dokumenty`."""
-  tenant: Tenant
-
-  """Reads a single `User` that is related to this `Dokumenty`."""
-  user: User
 }
 
 """All input for the `deleteEventExternalRegistration` mutation."""
@@ -3681,36 +3429,6 @@ input DokumentyCondition {
   tenantId: BigInt
 
   """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""An input for mutations affecting `Dokumenty`"""
-input DokumentyInput {
-  createdAt: Datetime
-  dFilename: String!
-  dKategorie: Int!
-  dKdo: BigInt!
-  dName: String!
-  dPath: String!
-  dTimestamp: Datetime
-  id: BigInt
-  tenantId: BigInt
-  updatedAt: Datetime
-}
-
-"""
-Represents an update to a `Dokumenty`. Fields that are set will be updated.
-"""
-input DokumentyPatch {
-  createdAt: Datetime
-  dFilename: String
-  dKategorie: Int
-  dKdo: BigInt
-  dName: String
-  dPath: String
-  dTimestamp: Datetime
-  id: BigInt
-  tenantId: BigInt
   updatedAt: Datetime
 }
 
@@ -4617,18 +4335,6 @@ input EventLessonDemandInput {
   updatedAt: Datetime
 }
 
-"""
-Represents an update to a `EventLessonDemand`. Fields that are set will be updated.
-"""
-input EventLessonDemandPatch {
-  createdAt: Datetime
-  lessonCount: Int
-  registrationId: BigInt
-  tenantId: BigInt
-  trainerId: BigInt
-  updatedAt: Datetime
-}
-
 """A `EventLessonDemand` edge in the connection."""
 type EventLessonDemandsEdge {
   """A cursor for use in pagination."""
@@ -5360,121 +5066,6 @@ enum FormResponsesOrderBy {
   URL_DESC
 }
 
-type GalerieDir {
-  """Reads and enables pagination through a set of `GalerieFoto`."""
-  galerieFotosByGfIdRodic(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GalerieFotoCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `GalerieFoto`."""
-    orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieFotosConnection!
-  gdHidden: Boolean!
-  gdIdRodic: BigInt!
-  gdLevel: Int!
-  gdName: String!
-  gdPath: String!
-  id: BigInt!
-
-  """Reads a single `Tenant` that is related to this `GalerieDir`."""
-  tenant: Tenant
-  tenantId: BigInt!
-}
-
-"""
-A condition to be used against `GalerieDir` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input GalerieDirCondition {
-  """Checks for equality with the object’s `gdHidden` field."""
-  gdHidden: Boolean
-
-  """Checks for equality with the object’s `gdIdRodic` field."""
-  gdIdRodic: BigInt
-
-  """Checks for equality with the object’s `gdLevel` field."""
-  gdLevel: Int
-
-  """Checks for equality with the object’s `gdName` field."""
-  gdName: String
-
-  """Checks for equality with the object’s `gdPath` field."""
-  gdPath: String
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-}
-
-"""A connection to a list of `GalerieDir` values."""
-type GalerieDirsConnection {
-  """
-  A list of edges which contains the `GalerieDir` and cursor to aid in pagination.
-  """
-  edges: [GalerieDirsEdge!]!
-
-  """A list of `GalerieDir` objects."""
-  nodes: [GalerieDir!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `GalerieDir` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `GalerieDir` edge in the connection."""
-type GalerieDirsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `GalerieDir` at the end of the edge."""
-  node: GalerieDir!
-}
-
-"""Methods to use when ordering `GalerieDir`."""
-enum GalerieDirsOrderBy {
-  GD_HIDDEN_ASC
-  GD_HIDDEN_DESC
-  GD_ID_RODIC_ASC
-  GD_ID_RODIC_DESC
-  GD_LEVEL_ASC
-  GD_LEVEL_DESC
-  GD_NAME_ASC
-  GD_NAME_DESC
-  GD_PATH_ASC
-  GD_PATH_DESC
-  ID_ASC
-  ID_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-}
-
 type GalerieFoto {
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualitiesByAtFotoMain(
@@ -5505,9 +5096,6 @@ type GalerieFoto {
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): AktualitiesConnection!
   createdAt: Datetime
-
-  """Reads a single `GalerieDir` that is related to this `GalerieFoto`."""
-  galerieDir: GalerieDir
   gfIdRodic: BigInt!
   gfKdo: BigInt!
   gfName: String!
@@ -5606,40 +5194,6 @@ enum GenderType {
   MAN
   UNSPECIFIED
   WOMAN
-}
-
-"""All input for the `getCurrentUser` mutation."""
-input GetCurrentUserInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  versionId: String
-}
-
-"""The output of our `getCurrentUser` mutation."""
-type GetCurrentUserPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `User`."""
-  tenant: Tenant
-  user: User
-
-  """An edge for our `User`. May be used by Relay 1."""
-  userEdge(
-    """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UsersEdge
 }
 
 """
@@ -6079,14 +5633,6 @@ type Mutation {
     input: CreateAnnouncementInput!
   ): CreateAnnouncementPayload
 
-  """Creates a single `AnnouncementAudience`."""
-  createAnnouncementAudience(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAnnouncementAudienceInput!
-  ): CreateAnnouncementAudiencePayload
-
   """Creates a single `Attachment`."""
   createAttachment(
     """
@@ -6132,14 +5678,6 @@ type Mutation {
     """
     input: CreateCreditTransactionForPersonInput!
   ): CreateCreditTransactionForPersonPayload
-
-  """Creates a single `Dokumenty`."""
-  createDokumenty(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateDokumentyInput!
-  ): CreateDokumentyPayload
   createEvent(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6178,18 +5716,6 @@ type Mutation {
     """
     input: CreateMembershipApplicationInput!
   ): CreateMembershipApplicationPayload
-  createMissingCohortSubscriptionPayments(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateMissingCohortSubscriptionPaymentsInput!
-  ): CreateMissingCohortSubscriptionPaymentsPayload
-  createNextCohortSubscriptionPayment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateNextCohortSubscriptionPaymentInput!
-  ): CreateNextCohortSubscriptionPaymentPayload
   createPerson(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6269,14 +5795,6 @@ type Mutation {
     input: DeleteAnnouncementInput!
   ): DeleteAnnouncementPayload
 
-  """Deletes a single `AnnouncementAudience` using a unique key."""
-  deleteAnnouncementAudience(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAnnouncementAudienceInput!
-  ): DeleteAnnouncementAudiencePayload
-
   """Deletes a single `Attachment` using a unique key."""
   deleteAttachment(
     """
@@ -6316,14 +5834,6 @@ type Mutation {
     """
     input: DeleteCoupleInput!
   ): DeleteCouplePayload
-
-  """Deletes a single `Dokumenty` using a unique key."""
-  deleteDokumenty(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteDokumentyInput!
-  ): DeleteDokumentyPayload
 
   """Deletes a single `Event` using a unique key."""
   deleteEvent(
@@ -6464,12 +5974,6 @@ type Mutation {
     """
     input: EditRegistrationInput!
   ): EditRegistrationPayload
-  getCurrentUser(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: GetCurrentUserInput!
-  ): GetCurrentUserPayload
   logInAs(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6500,12 +6004,6 @@ type Mutation {
     """
     input: PersonAccountInput!
   ): PersonAccountPayload
-  registerToEvent(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: RegisterToEventInput!
-  ): RegisterToEventPayload
   registerToEventMany(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6587,16 +6085,6 @@ type Mutation {
     input: UpdateAnnouncementInput!
   ): UpdateAnnouncementPayload
 
-  """
-  Updates a single `AnnouncementAudience` using a unique key and a patch.
-  """
-  updateAnnouncementAudience(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAnnouncementAudienceInput!
-  ): UpdateAnnouncementAudiencePayload
-
   """Updates a single `Cohort` using a unique key and a patch."""
   updateCohort(
     """
@@ -6628,14 +6116,6 @@ type Mutation {
     """
     input: UpdateCoupleInput!
   ): UpdateCouplePayload
-
-  """Updates a single `Dokumenty` using a unique key and a patch."""
-  updateDokumenty(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateDokumentyInput!
-  ): UpdateDokumentyPayload
 
   """Updates a single `Event` using a unique key and a patch."""
   updateEvent(
@@ -7796,269 +7276,6 @@ type PersonWeeklyAttendanceRecord {
   week: Date
 }
 
-"""A connection to a list of `PlatbyCategory` values."""
-type PlatbyCategoriesConnection {
-  """
-  A list of edges which contains the `PlatbyCategory` and cursor to aid in pagination.
-  """
-  edges: [PlatbyCategoriesEdge!]!
-
-  """A list of `PlatbyCategory` objects."""
-  nodes: [PlatbyCategory!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `PlatbyCategory` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `PlatbyCategory` edge in the connection."""
-type PlatbyCategoriesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `PlatbyCategory` at the end of the edge."""
-  node: PlatbyCategory!
-}
-
-"""Methods to use when ordering `PlatbyCategory`."""
-enum PlatbyCategoriesOrderBy {
-  ID_ASC
-  ID_DESC
-  NATURAL
-  PC_AMOUNT_ASC
-  PC_AMOUNT_DESC
-  PC_ARCHIVE_ASC
-  PC_ARCHIVE_DESC
-  PC_DATE_DUE_ASC
-  PC_DATE_DUE_DESC
-  PC_ID_ASC
-  PC_ID_DESC
-  PC_NAME_ASC
-  PC_NAME_DESC
-  PC_SYMBOL_ASC
-  PC_SYMBOL_DESC
-  PC_USE_BASE_ASC
-  PC_USE_BASE_DESC
-  PC_USE_PREFIX_ASC
-  PC_USE_PREFIX_DESC
-  PC_VALID_FROM_ASC
-  PC_VALID_FROM_DESC
-  PC_VALID_TO_ASC
-  PC_VALID_TO_DESC
-  PC_VISIBLE_ASC
-  PC_VISIBLE_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-}
-
-type PlatbyCategory {
-  id: BigInt!
-  pcAmount: BigFloat!
-  pcArchive: Boolean!
-  pcDateDue: Date!
-  pcId: BigInt!
-  pcName: String!
-  pcSymbol: BigInt!
-  pcUseBase: Boolean!
-  pcUsePrefix: Boolean!
-  pcValidFrom: Date!
-  pcValidTo: Date!
-  pcVisible: Boolean!
-
-  """Reads and enables pagination through a set of `PlatbyItem`."""
-  platbyItemsByPiIdCategory(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyItemCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyItem`."""
-    orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyItemsConnection!
-
-  """Reads a single `Tenant` that is related to this `PlatbyCategory`."""
-  tenant: Tenant
-  tenantId: BigInt!
-}
-
-"""
-A condition to be used against `PlatbyCategory` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input PlatbyCategoryCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `pcAmount` field."""
-  pcAmount: BigFloat
-
-  """Checks for equality with the object’s `pcArchive` field."""
-  pcArchive: Boolean
-
-  """Checks for equality with the object’s `pcDateDue` field."""
-  pcDateDue: Date
-
-  """Checks for equality with the object’s `pcId` field."""
-  pcId: BigInt
-
-  """Checks for equality with the object’s `pcName` field."""
-  pcName: String
-
-  """Checks for equality with the object’s `pcSymbol` field."""
-  pcSymbol: BigInt
-
-  """Checks for equality with the object’s `pcUseBase` field."""
-  pcUseBase: Boolean
-
-  """Checks for equality with the object’s `pcUsePrefix` field."""
-  pcUsePrefix: Boolean
-
-  """Checks for equality with the object’s `pcValidFrom` field."""
-  pcValidFrom: Date
-
-  """Checks for equality with the object’s `pcValidTo` field."""
-  pcValidTo: Date
-
-  """Checks for equality with the object’s `pcVisible` field."""
-  pcVisible: Boolean
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-}
-
-type PlatbyItem {
-  id: BigInt!
-  piAmount: BigFloat!
-  piDate: Date!
-  piId: BigInt!
-  piIdCategory: BigInt!
-  piIdRaw: BigInt
-  piIdUser: BigInt
-  piPrefix: Int!
-
-  """Reads a single `PlatbyCategory` that is related to this `PlatbyItem`."""
-  platbyCategory: PlatbyCategory
-  status: PaymentStatus!
-
-  """Reads a single `Tenant` that is related to this `PlatbyItem`."""
-  tenant: Tenant
-  tenantId: BigInt!
-
-  """Reads a single `User` that is related to this `PlatbyItem`."""
-  user: User
-}
-
-"""
-A condition to be used against `PlatbyItem` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input PlatbyItemCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `piAmount` field."""
-  piAmount: BigFloat
-
-  """Checks for equality with the object’s `piDate` field."""
-  piDate: Date
-
-  """Checks for equality with the object’s `piId` field."""
-  piId: BigInt
-
-  """Checks for equality with the object’s `piIdCategory` field."""
-  piIdCategory: BigInt
-
-  """Checks for equality with the object’s `piIdRaw` field."""
-  piIdRaw: BigInt
-
-  """Checks for equality with the object’s `piIdUser` field."""
-  piIdUser: BigInt
-
-  """Checks for equality with the object’s `piPrefix` field."""
-  piPrefix: Int
-
-  """Checks for equality with the object’s `status` field."""
-  status: PaymentStatus
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-}
-
-"""A connection to a list of `PlatbyItem` values."""
-type PlatbyItemsConnection {
-  """
-  A list of edges which contains the `PlatbyItem` and cursor to aid in pagination.
-  """
-  edges: [PlatbyItemsEdge!]!
-
-  """A list of `PlatbyItem` objects."""
-  nodes: [PlatbyItem!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `PlatbyItem` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `PlatbyItem` edge in the connection."""
-type PlatbyItemsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `PlatbyItem` at the end of the edge."""
-  node: PlatbyItem!
-}
-
-"""Methods to use when ordering `PlatbyItem`."""
-enum PlatbyItemsOrderBy {
-  ID_ASC
-  ID_DESC
-  NATURAL
-  PI_AMOUNT_ASC
-  PI_AMOUNT_DESC
-  PI_DATE_ASC
-  PI_DATE_DESC
-  PI_ID_ASC
-  PI_ID_CATEGORY_ASC
-  PI_ID_CATEGORY_DESC
-  PI_ID_DESC
-  PI_ID_RAW_ASC
-  PI_ID_RAW_DESC
-  PI_ID_USER_ASC
-  PI_ID_USER_DESC
-  PI_PREFIX_ASC
-  PI_PREFIX_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  STATUS_ASC
-  STATUS_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-}
-
 type Posting {
   """Reads a single `Account` that is related to this `Posting`."""
   account: Account
@@ -8785,38 +8002,6 @@ type Query {
     orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
   ): FormResponsesConnection
 
-  """Get a single `GalerieDir`."""
-  galerieDir(id: BigInt!): GalerieDir
-
-  """Reads and enables pagination through a set of `GalerieDir`."""
-  galerieDirs(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GalerieDirCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `GalerieDir`."""
-    orderBy: [GalerieDirsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieDirsConnection
-
   """Get a single `GalerieFoto`."""
   galerieFoto(id: BigInt!): GalerieFoto
 
@@ -9043,76 +8228,6 @@ type Query {
     """The method to use when ordering `PersonInvitation`."""
     orderBy: [PersonInvitationsOrderBy!]
   ): [PersonInvitation!]
-
-  """Reads and enables pagination through a set of `PlatbyCategory`."""
-  platbyCategories(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyCategoryCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyCategory`."""
-    orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoriesConnection
-
-  """Get a single `PlatbyCategory`."""
-  platbyCategory(pcId: BigInt!): PlatbyCategory
-
-  """Get a single `PlatbyCategory`."""
-  platbyCategoryById(id: BigInt!): PlatbyCategory
-
-  """Get a single `PlatbyItem`."""
-  platbyItem(piId: BigInt!): PlatbyItem
-
-  """Get a single `PlatbyItem`."""
-  platbyItemById(id: BigInt!): PlatbyItem
-
-  """Reads and enables pagination through a set of `PlatbyItem`."""
-  platbyItems(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyItemCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyItem`."""
-    orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyItemsConnection
 
   """Get a single `Posting`."""
   posting(id: BigInt!): Posting
@@ -9449,17 +8564,6 @@ type Query {
   wdsfAthlete(min: Int!): JSON
 }
 
-"""All input for the `registerToEvent` mutation."""
-input RegisterToEventInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  lessons: [EventLessonDemandPatch]!
-  registration: EventRegistrationInput!
-}
-
 """All input for the `registerToEventMany` mutation."""
 input RegisterToEventManyInput {
   """
@@ -9483,44 +8587,6 @@ type RegisterToEventManyPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""The output of our `registerToEvent` mutation."""
-type RegisterToEventPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Couple` that is related to this `EventRegistration`."""
-  couple: Couple
-
-  """Reads a single `Event` that is related to this `EventRegistration`."""
-  event: Event
-
-  """An edge for our `EventRegistration`. May be used by Relay 1."""
-  eventRegistrationEdge(
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventRegistrationsEdge
-
-  """Reads a single `Person` that is related to this `EventRegistration`."""
-  person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-  registration: EventRegistration
-
-  """
-  Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
-  """
-  targetCohort: EventTargetCohort
-
-  """Reads a single `Tenant` that is related to this `EventRegistration`."""
-  tenant: Tenant
 }
 
 """An input for mutations affecting `RegisterToEventType`"""
@@ -10481,35 +9547,6 @@ type Tenant {
     orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
   ): FormResponsesConnection!
 
-  """Reads and enables pagination through a set of `GalerieDir`."""
-  galerieDirs(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GalerieDirCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `GalerieDir`."""
-    orderBy: [GalerieDirsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieDirsConnection!
-
   """Reads and enables pagination through a set of `GalerieFoto`."""
   galerieFotos(
     """Read all values in the set after (below) this cursor."""
@@ -10626,64 +9663,6 @@ type Tenant {
     """The method to use when ordering `PersonInvitation`."""
     orderBy: [PersonInvitationsOrderBy!]
   ): [PersonInvitation!]!
-
-  """Reads and enables pagination through a set of `PlatbyCategory`."""
-  platbyCategories(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyCategoryCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyCategory`."""
-    orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyCategoriesConnection!
-
-  """Reads and enables pagination through a set of `PlatbyItem`."""
-  platbyItems(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyItemCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyItem`."""
-    orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyItemsConnection!
 
   """Reads and enables pagination through a set of `Posting`."""
   postingsList(
@@ -11738,59 +10717,6 @@ type UpdateAktualityPayload {
   user: User
 }
 
-"""All input for the `updateAnnouncementAudience` mutation."""
-input UpdateAnnouncementAudienceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `AnnouncementAudience` being updated.
-  """
-  patch: AnnouncementAudiencePatch!
-}
-
-"""The output of our update `AnnouncementAudience` mutation."""
-type UpdateAnnouncementAudiencePayload {
-  """
-  Reads a single `Announcement` that is related to this `AnnouncementAudience`.
-  """
-  announcement: Announcement
-
-  """The `AnnouncementAudience` that was updated by this mutation."""
-  announcementAudience: AnnouncementAudience
-
-  """An edge for our `AnnouncementAudience`. May be used by Relay 1."""
-  announcementAudienceEdge(
-    """The method to use when ordering `AnnouncementAudience`."""
-    orderBy: [AnnouncementAudiencesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AnnouncementAudiencesEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Reads a single `Cohort` that is related to this `AnnouncementAudience`.
-  """
-  cohort: Cohort
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """
-  Reads a single `Tenant` that is related to this `AnnouncementAudience`.
-  """
-  tenant: Tenant
-}
-
 """All input for the `updateAnnouncement` mutation."""
 input UpdateAnnouncementInput {
   """
@@ -11991,44 +10917,6 @@ type UpdateCouplePayload {
 
   """Reads a single `Person` that is related to this `Couple`."""
   woman: Person
-}
-
-"""All input for the `updateDokumenty` mutation."""
-input UpdateDokumentyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Dokumenty` being updated.
-  """
-  patch: DokumentyPatch!
-}
-
-"""The output of our update `Dokumenty` mutation."""
-type UpdateDokumentyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Dokumenty` that was updated by this mutation."""
-  dokumenty: Dokumenty
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `Dokumenty`."""
-  tenant: Tenant
-
-  """Reads a single `User` that is related to this `Dokumenty`."""
-  user: User
 }
 
 """All input for the `updateEventAttendance` mutation."""
@@ -12887,35 +11775,6 @@ type User {
     """The method to use when ordering `MembershipApplication`."""
     orderBy: [MembershipApplicationsOrderBy!]
   ): [MembershipApplication!]!
-
-  """Reads and enables pagination through a set of `PlatbyItem`."""
-  platbyItemsByPiIdUser(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PlatbyItemCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `PlatbyItem`."""
-    orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PlatbyItemsConnection!
 
   """Reads a single `Tenant` that is related to this `User`."""
   tenant: Tenant
