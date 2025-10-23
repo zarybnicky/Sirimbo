@@ -20,7 +20,7 @@ import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { cs } from "zod/locales"
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { getCookie } from 'cookies-next/client';
+import { getCookie, setCookie } from 'cookies-next/client';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import 'glider-js/glider.min.css';
@@ -30,6 +30,7 @@ import '../style/calendar.css';
 import '../style/index.css';
 import '../style/leaflet.css';
 import '../style/lite-youtube-embed.css';
+import { hostToTenantId } from '@/tenant/catalog-server';
 
 NProgress.configure({ template: '<div role="bar" style="display:none"></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>' });
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -48,6 +49,19 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   }
 
   useLayoutEffect(() => {
+    const origin = new URL(window.origin)
+    const tenantId = hostToTenantId.get(origin.host);
+    const existing = String(getCookie('tenant_id'));
+
+    if (tenantId !== existing && tenantId) {
+      setCookie('tenant_id', String(tenantId), {
+        path: '/',
+        sameSite: 'lax',
+        secure: origin.protocol === 'https:',
+        domain: origin.host,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
+      });
+    }
     setNewTenant(String(getCookie('tenant_id')));
   }, []);
 
