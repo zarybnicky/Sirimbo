@@ -53,4 +53,6 @@ begin
 end
 $$;
 
+COMMENT ON FUNCTION public.create_missing_cohort_subscription_payments(c public.cohort_subscription) IS '@omit';
+
 GRANT ALL ON FUNCTION public.create_missing_cohort_subscription_payments(c public.cohort_subscription) TO anonymous;

@@ -17,7 +17,7 @@ ALTER TABLE public.galerie_foto ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.galerie_foto
     ADD CONSTRAINT idx_23791_primary PRIMARY KEY (id);
 ALTER TABLE ONLY public.galerie_foto
-    ADD CONSTRAINT galerie_foto_gf_id_rodic_fkey FOREIGN KEY (gf_id_rodic) REFERENCES public.galerie_dir(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT galerie_foto_gf_id_rodic_fkey FOREIGN KEY (gf_id_rodic) REFERENCES app_private.galerie_dir(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.galerie_foto
     ADD CONSTRAINT galerie_foto_gf_kdo_fkey FOREIGN KEY (gf_kdo) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.galerie_foto

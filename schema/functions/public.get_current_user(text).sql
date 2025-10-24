@@ -18,4 +18,6 @@ CREATE FUNCTION public.get_current_user(version_id text DEFAULT NULL::text) RETU
     and not exists (select 1 from updated_user);
 $$;
 
+COMMENT ON FUNCTION public.get_current_user(version_id text) IS '@omit';
+
 GRANT ALL ON FUNCTION public.get_current_user(version_id text) TO anonymous;
