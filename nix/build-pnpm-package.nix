@@ -51,7 +51,6 @@ stdenv.mkDerivation (finalAttrs: {
   ];
   nativeBuildInputs = [
     nodejs
-    pnpm_9
     pnpm_9.configHook
   ];
   pnpmWorkspaces = [ packageJSON.name ];
