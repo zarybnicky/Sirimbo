@@ -60,6 +60,16 @@ export interface FetchAthletesOptions {
   init?: Parameters<typeof fetch>[1];
 }
 
+export function parseAthletesResponse(payload: unknown): AthletesResponse {
+  try {
+    return athletesResponseSchema.parse(payload);
+  } catch (parseError) {
+    throw new Error('Failed to validate API response ' + JSON.stringify(payload), {
+      cause: parseError,
+    });
+  }
+}
+
 export async function fetchAthletesByIdt(
   idt: number,
   options: FetchAthletesOptions = {},
@@ -81,11 +91,5 @@ export async function fetchAthletesByIdt(
   }
 
   const payload = await response.json();
-  try {
-    return athletesResponseSchema.parse(payload);
-  } catch (parseError) {
-    throw new Error('Failed to validate API response ' + JSON.stringify(payload), {
-      cause: parseError,
-    });
-  }
+  return parseAthletesResponse(payload);
 }
