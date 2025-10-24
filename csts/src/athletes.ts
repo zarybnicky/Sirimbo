@@ -33,7 +33,6 @@ const rankingPointsSchema = z.object({
 const athleteSchema = z.object({
   idt: z.number(),
   name: z.string(),
-  validFor: z.string(),
   age: z.string(),
   sex: z.string(),
   medicalCheckupExpiration: z.string().nullable().optional().prefault(null),
@@ -67,10 +66,7 @@ export function parseAthletesResponse(payload: unknown): AthletesResponse {
   }
 }
 
-export async function fetchAthletesByIdt(
-  idt: number,
-  options: FetchAthletesOptions = {},
-): Promise<AthletesResponse> {
+export async function fetchAthletesByIdt(idt: number, options: FetchAthletesOptions = {}) {
   if (!Number.isInteger(idt)) {
     throw new TypeError('The athlete IDT must be an integer.');
   }
@@ -87,6 +83,5 @@ export async function fetchAthletesByIdt(
     );
   }
 
-  const payload = await response.json();
-  return parseAthletesResponse(payload);
+  return await response.json();
 }

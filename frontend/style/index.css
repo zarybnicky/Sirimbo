@@ -295,7 +295,7 @@ body {
   height: 9px;
 }
 .glider-dot.active {
-  background-color: var(--accent-9);;
+  background-color: hsl(var(--accent-9));
 }
 .glider-prev,
 .glider-next {

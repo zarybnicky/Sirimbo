@@ -13,7 +13,6 @@ create table if not exists csts.ingest (
 create table if not exists csts.athlete (
   idt integer primary key,
   name text not null,
-  valid_for date not null,
   age_category text not null,
   sex text not null,
   medical_checkup_expiration date,
