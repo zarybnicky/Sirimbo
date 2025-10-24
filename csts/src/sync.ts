@@ -1,3 +1,4 @@
+import stringify from 'fast-json-stable-stringify';
 import { createHash } from 'node:crypto';
 import type {
   Athlete,
@@ -17,14 +18,6 @@ export interface SynchronizeAthletesOptions extends FetchAthletesOptions {
 
 const INGEST_TYPE_ATHLETE = 'athlete';
 
-type JsonValue =
-  | null
-  | boolean
-  | number
-  | string
-  | JsonValue[]
-  | { [key: string]: JsonValue };
-
 interface IngestRecordRow {
   hash: string;
   payload: unknown;
@@ -38,39 +31,11 @@ function delay(ms: number): Promise<void> {
   });
 }
 
-function canonicalizeJson(value: unknown): JsonValue {
-  if (
-    value === null ||
-    typeof value === 'boolean' ||
-    typeof value === 'number' ||
-    typeof value === 'string'
-  ) {
-    return value;
-  }
-
-  if (Array.isArray(value)) {
-    return value.map((item) => canonicalizeJson(item));
-  }
-
-  if (typeof value === 'object' && value !== null) {
-    const result: { [key: string]: JsonValue } = {};
-    const entries = Object.entries(value as Record<string, unknown>);
-    entries.sort(([left], [right]) => left.localeCompare(right));
-    for (const [key, entryValue] of entries) {
-      if (typeof entryValue === 'undefined') {
-        continue;
-      }
-      result[key] = canonicalizeJson(entryValue);
-    }
-    return result;
-  }
-
-  return String(value);
-}
-
 function computePayloadHash(payload: unknown): string {
-  const normalized = canonicalizeJson(payload);
-  const serialized = JSON.stringify(normalized);
+  const serialized = stringify(payload);
+  if (typeof serialized !== 'string') {
+    throw new TypeError('Unable to serialize payload for hashing');
+  }
   return createHash('sha256').update(serialized).digest('hex');
 }
 
