@@ -32,7 +32,14 @@ function delay(ms: number): Promise<void> {
 }
 
 function computePayloadHash(payload: unknown): string {
-  const serialized = stringify(payload);
+  const serialized = stringify(payload, {
+    replacer(key, value) {
+      if (key === 'validFor') {
+        return undefined;
+      }
+      return value;
+    },
+  });
   if (typeof serialized !== 'string') {
     throw new TypeError('Unable to serialize payload for hashing');
   }
