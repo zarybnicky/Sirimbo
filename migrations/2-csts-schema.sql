@@ -1,5 +1,15 @@
 create schema if not exists csts;
 
+create table if not exists csts.ingest (
+  type text not null,
+  url text not null,
+  hash text not null,
+  payload jsonb not null,
+  created_at timestamptz not null default now(),
+  checked_at timestamptz not null default now(),
+  primary key (type, url, hash)
+);
+
 create table if not exists csts.athlete (
   idt integer primary key,
   name text not null,
