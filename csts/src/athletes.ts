@@ -4,11 +4,10 @@ import { MAX_IDT, MIN_IDT } from './idts.ts';
 const rankingPointsSchema = z.object({
   rankingPointsAge: z.string(),
   medicalCheckupExpiration: z.string().optional().nullable().prefault(null),
-  personalClass: z.string(),
-  personalPoints: z.number(),
-  personalDomesticFinaleCount: z.number(),
-  personalForeignFinaleCount: z.number(),
-  personalApproved: z.boolean(),
+  personalClass: z.string().optional().prefault('-'),
+  personalPoints: z.number().optional().prefault(0),
+  personalDomesticFinaleCount: z.number().optional().prefault(0),
+  personalForeignFinaleCount: z.number().optional().prefault(0),
   competitorId: z.number(),
   series: z.string(),
   discipline: z.string(),
@@ -40,8 +39,6 @@ const athleteSchema = z.object({
   medicalCheckupExpiration: z.string().nullable().optional().prefault(null),
   barcode: z.string(),
   rankingPoints: z.array(rankingPointsSchema),
-  stt: rankingPointsSchema.optional(),
-  lat: rankingPointsSchema.optional(),
 });
 
 const athletesResponseSchema = z.object({

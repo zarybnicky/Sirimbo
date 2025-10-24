@@ -1,4 +1,4 @@
-import stringify from 'fast-json-stable-stringify';
+import stringify from 'json-stringify-deterministic';
 import { createHash } from 'node:crypto';
 import type {
   Athlete,
@@ -25,26 +25,14 @@ interface IngestRecordRow {
   checked_at: string;
 }
 
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
-function computePayloadHash(payload: unknown): string {
-  const serialized = stringify(payload, {
-    replacer(key, value) {
-      if (key === 'validFor') {
-        return undefined;
-      }
-      return value;
-    },
-  });
-  if (typeof serialized !== 'string') {
-    throw new TypeError('Unable to serialize payload for hashing');
-  }
-  return createHash('sha256').update(serialized).digest('hex');
-}
+const stringifyOptions: Parameters<typeof stringify>[1] = {
+  replacer(key, value) {
+    if (key === 'validFor') {
+      return undefined;
+    }
+    return value;
+  },
+};
 
 async function loadIngestRecord(
   client: Pool,
@@ -65,12 +53,7 @@ async function loadIngestRecord(
   return rows[0] ?? null;
 }
 
-async function touchIngestRecord(
-  client: Pool,
-  type: string,
-  url: string,
-  hash: string,
-): Promise<void> {
+async function touchIngestRecord(client: Pool, type: string, url: string, hash: string) {
   await client.query(
     `
       update csts.ingest
@@ -81,13 +64,7 @@ async function touchIngestRecord(
   );
 }
 
-async function upsertIngestRecord(
-  client: Pool,
-  type: string,
-  url: string,
-  hash: string,
-  payload: unknown,
-): Promise<void> {
+async function upsertIngestRecord(client: Pool, type: string, url: string, hash: string, payload: unknown,) {
   await client.query(
     `
       insert into csts.ingest (type, url, hash, payload)
@@ -134,12 +111,7 @@ export async function synchronizeAthletes(
       try {
         response = parseAthletesResponse(ingestRecord.payload);
         shouldUpdateTables = false;
-        await touchIngestRecord(
-          client,
-          INGEST_TYPE_ATHLETE,
-          url,
-          ingestRecord.hash,
-        );
+        await touchIngestRecord(client, INGEST_TYPE_ATHLETE, url, ingestRecord.hash);
       } catch {
         response = undefined;
         shouldUpdateTables = true;
@@ -147,7 +119,7 @@ export async function synchronizeAthletes(
     }
 
     if (!response) {
-      await delay(250);
+      await new Promise((resolve) => setTimeout(resolve, 250));
       signal?.throwIfAborted?.();
 
       try {
@@ -161,37 +133,16 @@ export async function synchronizeAthletes(
         throw error;
       }
 
-      const payloadHash = computePayloadHash(response);
+      const payloadHash = createHash('sha256').update(stringify(response, stringifyOptions)).digest('hex');
 
       if (!ingestRecord) {
-        await upsertIngestRecord(
-          client,
-          INGEST_TYPE_ATHLETE,
-          url,
-          payloadHash,
-          response,
-        );
+        await upsertIngestRecord(client, INGEST_TYPE_ATHLETE, url, payloadHash, response);
       } else if (ingestRecord.hash === payloadHash) {
         shouldUpdateTables = false;
-        await touchIngestRecord(
-          client,
-          INGEST_TYPE_ATHLETE,
-          url,
-          ingestRecord.hash,
-        );
+        await touchIngestRecord(client, INGEST_TYPE_ATHLETE, url, ingestRecord.hash);
       } else {
-        await upsertIngestRecord(
-          client,
-          INGEST_TYPE_ATHLETE,
-          url,
-          payloadHash,
-          response,
-        );
+        await upsertIngestRecord(client, INGEST_TYPE_ATHLETE, url, payloadHash, response);
       }
-    }
-
-    if (!response) {
-      continue;
     }
 
     if (response.collection.length === 0) {
@@ -296,16 +247,14 @@ async function upsertAthleteRanking(
         personal_class,
         personal_points,
         personal_domestic_finale_count,
-        personal_foreign_finale_count,
-        personal_approved
+        personal_foreign_finale_count
       )
-      values ($1, $2, $3, $4, $5, $6, $7, $8)
+      values ($1, $2, $3, $4, $5, $6, $7)
       on conflict (athlete_id, discipline, series) do update set
         personal_class = excluded.personal_class,
         personal_points = excluded.personal_points,
         personal_domestic_finale_count = excluded.personal_domestic_finale_count,
-        personal_foreign_finale_count = excluded.personal_foreign_finale_count,
-        personal_approved = excluded.personal_approved
+        personal_foreign_finale_count = excluded.personal_foreign_finale_count
     `,
     [
       athlete.idt,
@@ -315,7 +264,6 @@ async function upsertAthleteRanking(
       ranking.personalPoints,
       ranking.personalDomesticFinaleCount,
       ranking.personalForeignFinaleCount,
-      ranking.personalApproved,
     ],
   );
 }
