@@ -1,49 +1,31 @@
-//@ts-check
+import nextRoutes from "nextjs-routes/config";
+import serwistNext from '@serwist/next';
+import bundleAnalyzer from '@next/bundle-analyzer';
+import { withSentryConfig } from '@sentry/nextjs';
 
-/**
- * @typedef {import('next').NextConfig} NextConfig
- * @typedef {(config: NextConfig) => NextConfig} NextPlugin
- */
+type NextConfig = import('next').NextConfig;
+type NextPlugin = (config: NextConfig) => NextConfig;
+type NextRedirect = Awaited<ReturnType<NonNullable<NextConfig['redirects']>>>;
+type NextRewrite = Awaited<ReturnType<NonNullable<NextConfig['rewrite']>>>;
 
-/** @type {any} */
-const nextRoutes = require("nextjs-routes/config");
-
-/** @type {NextPlugin} */
-const withSerwist = require('@serwist/next').default({
-  swSrc: 'serwist/sw.ts',
-  swDest: 'public/sw.js',
-  reloadOnOnline: false,
-  disable: process.env.NODE_ENV !== 'production',
-});
-
-/** @type {NextPlugin} */
-let withBundleAnalyzer = (x) => x;
-if (process.env.ANALYZE === 'true') {
-  withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true });
-}
-
-/** @type {NextPlugin} */
-const withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig(cfg, {
-  tunnelRoute: '/sentry',
-  widenClientFileUpload: true,
-  silent: true,  // Suppresses all logs
-});
-
-/**
- * Compose Next.js plugin wrappers (rightmost runs first).
- * @param {...NextPlugin} plugins
- * @returns {(config: NextConfig) => NextConfig}
- */
-const compose = (...plugins) => (config) =>
+const compose = (...plugins: NextPlugin[]) => (config: NextConfig): NextConfig =>
   plugins.reduceRight((acc, fn) => fn(acc), config);
 
-/** @type {import('next').NextConfig} */
-module.exports = compose([
-  withSerwist,
+export default compose(
+  serwistNext({
+    swSrc: 'serwist/sw.ts',
+    swDest: 'public/sw.js',
+    reloadOnOnline: false,
+    disable: process.env.NODE_ENV !== 'production',
+  }),
   nextRoutes(),
-  withBundleAnalyzer,
-  withSentryConfig,
-])({
+  bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' }),
+  (cfg: NextConfig) => withSentryConfig(cfg, {
+    tunnelRoute: '/sentry',
+    widenClientFileUpload: true,
+    silent: true,  // Suppresses all logs
+  }),
+)({
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: true,
@@ -77,8 +59,7 @@ module.exports = compose([
   },
 
   async redirects() {
-    /** @type {Awaited<ReturnType<NonNullable<NextConfig['redirects']>>>} */
-    const redirects = [
+    const redirects: NextRedirect = [
       { source: '/home', destination: '/', permanent: true },
       { source: '/aktualne', destination: '/clanky', permanent: true },
       { source: '/aktualne/:path*', destination: '/clanky/:path*', permanent: true },
@@ -90,13 +71,12 @@ module.exports = compose([
       { source: '/prijdtancit/deti', destination: 'https://nabor.tkolymp.cz', permanent: true },
       { source: '/prijdtancit/mladez', destination: 'https://nabor.tkolymp.cz', permanent: true },
     ];
-  
-    /** @type {Awaited<ReturnType<NonNullable<NextConfig['redirects']>>>[0]['has']} */
-    const olympSpecificConditions = [
+
+    const olympSpecificConditions: NextRedirect[0]['has'] = [
       { type: 'host', value: '(?<host>.*olymp.*)' },
       { type: 'cookie', key: 'tenant_id', value: '1' },
     ];
-  
+
     for (const condition of olympSpecificConditions) {
       redirects.push(...olympSpecificRedirects.map(x => ({
         ...x,
@@ -107,8 +87,7 @@ module.exports = compose([
   },
 
   async rewrites() {
-    /** @type {Awaited<ReturnType<NonNullable<NextConfig['rewrites']>>>} */
-    const rewrites = [
+    const rewrites: NextRewrite = [
       {
         source: '/',
         destination: '/dashboard',
