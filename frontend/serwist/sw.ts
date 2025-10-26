@@ -77,7 +77,7 @@ self.addEventListener('notificationclick', event => {
 });
 
 self.addEventListener('message', event => {
-  if (!event.data || (event.data as { type?: string } | undefined)?.type === 'SKIP_WAITING') {
+  if ((event.data as { type?: string } | undefined)?.type === 'SKIP_WAITING') {
     void self.skipWaiting();
   }
 });
