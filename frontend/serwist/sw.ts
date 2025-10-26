@@ -2,6 +2,7 @@
 
 import { ExpirationPlugin, NetworkFirst, StaleWhileRevalidate, type PrecacheEntry, type RuntimeCaching } from 'serwist';
 import { installSerwist } from 'serwist/legacy';
+import { defaultCache } from "@serwist/next/worker";
 
 declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: Array<PrecacheEntry | string> | undefined;
@@ -9,58 +10,11 @@ declare const self: ServiceWorkerGlobalScope & {
 
 const precacheEntries = self.__SW_MANIFEST ?? [];
 
-const runtimeCaching: RuntimeCaching[] = [
-  {
-    matcher: ({ request }) => request.mode === 'navigate',
-    handler: new NetworkFirst({
-      cacheName: 'pages',
-      plugins: [
-        new ExpirationPlugin({
-          maxEntries: 40,
-          maxAgeSeconds: 60 * 60 * 24 * 7,
-          purgeOnQuotaError: true,
-        }),
-      ],
-    }),
-  },
-  {
-    matcher: ({ request, url }) =>
-      (request.destination === 'style' || request.destination === 'script' || request.destination === 'font') &&
-      url.origin === self.location.origin,
-    handler: new StaleWhileRevalidate({
-      cacheName: 'assets',
-      plugins: [
-        new ExpirationPlugin({
-          maxEntries: 80,
-          maxAgeSeconds: 60 * 60 * 24 * 7,
-          purgeOnQuotaError: true,
-        }),
-      ],
-    }),
-  },
-  {
-    matcher: ({ request, url }) =>
-      (request.destination === 'image' || request.destination === 'audio' || request.destination === 'video') &&
-      url.origin === self.location.origin,
-    handler: new StaleWhileRevalidate({
-      cacheName: 'media',
-      plugins: [
-        new ExpirationPlugin({
-          maxEntries: 100,
-          maxAgeSeconds: 60 * 60 * 24 * 14,
-          purgeOnQuotaError: true,
-        }),
-      ],
-    }),
-  },
-];
-
 installSerwist({
-  precacheEntries,
+  precacheEntries: self.__SW_MANIFEST!,
   cleanupOutdatedCaches: true,
-  clientsClaim: true,
   skipWaiting: false,
-  runtimeCaching,
+  runtimeCaching: defaultCache,
 });
 
 type PushPayload = {
@@ -123,7 +77,7 @@ self.addEventListener('notificationclick', event => {
 });
 
 self.addEventListener('message', event => {
-  if ((event.data as { type?: string } | undefined)?.type === 'SKIP_WAITING') {
+  if (!event.data || (event.data as { type?: string } | undefined)?.type === 'SKIP_WAITING') {
     void self.skipWaiting();
   }
 });
