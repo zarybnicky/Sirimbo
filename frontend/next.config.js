@@ -5,7 +5,6 @@ const nextRoutes = require("nextjs-routes/config");
 const withSerwist = require('@serwist/next').default({
   swSrc: 'serwist/sw.ts',
   swDest: 'public/sw.js',
-  cacheOnNavigation: true,
   reloadOnOnline: false,
   disable: process.env.NODE_ENV !== 'production',
 });
