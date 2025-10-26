@@ -25,4 +25,9 @@ npm-debug.log*
 .env.test.local
 .env.production.local
 
+frontend/public/sw.js
+frontend/public/sw.js.map
+frontend/public/swe-worker-*.js
+frontend/public/swe-worker-*.js.map
+
 olymp.psql

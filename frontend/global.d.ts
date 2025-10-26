@@ -22,3 +22,11 @@ declare module '*.pdf' {
   const value: string;
   export default value;
 }
+
+export {};
+
+declare global {
+  interface Window {
+    serwist?: import('@serwist/window').Serwist;
+  }
+}

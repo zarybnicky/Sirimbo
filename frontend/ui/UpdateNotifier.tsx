@@ -1,80 +1,74 @@
 import { buildId } from '@/lib/build-id';
+import type { Serwist, SerwistLifecycleEvent, SerwistLifecycleWaitingEvent } from '@serwist/window';
 import { useSetAtom } from 'jotai';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { buildIdAtom } from './state/build-id';
 
-function useInterval<P extends (() => void)>(
-  callback: P,
-  { interval, lead }: { interval: number; lead?: boolean },
-): void {
-  const savedCallback = useRef<P | null>(null);
-  const timerId = useRef<NodeJS.Timeout | null>(null);
+import { Serwist as SerwistWindow } from "@serwist/window";
 
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    const tick = (): void => savedCallback.current?.();
-
-    if (lead) tick();
-
-    timerId.current = setInterval(tick, interval);
-
-    const visibilityCallback = () => {
-      if (document.hidden) {
-        if (timerId.current) {
-          clearInterval(timerId.current);
-          timerId.current = null;
-        }
-      } else {
-        if (!timerId.current) {
-          timerId.current = setInterval(tick, interval);
-        }
-      }
-    };
-
-    document.addEventListener("visibilitychange", visibilityCallback);
-
-    return () => {
-      document.removeEventListener("visibilitychange", visibilityCallback);
-      if (timerId.current)
-        clearInterval(timerId.current);
-    };
-  }, [lead, interval]);
-}
+const CHECK_MS = 5 * 60 * 1000;
 
 export function UpdateNotifier() {
-  const setBuildId = useSetAtom(buildIdAtom);
+  const swwRef = useRef<InstanceType<typeof SerwistWindow> | undefined>();
 
-  const [, setState] = useState<'ok' | 'prompt' | 'ignored'>('ok');
-  useInterval(async () => {
-    const { buildId: newBuildId } = await fetch('/api/build-id').then(x => x.json(), () => ({})) || {};
-    if (!buildId || !newBuildId || buildId === newBuildId) return;
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
 
-    setBuildId(newBuildId);
-    setState(prevState => {
-      if (prevState === 'prompt' || prevState === 'ignored') return prevState;
+    const serwist = new SerwistWindow("/sw.js", { scope: "/", type: "classic" });
+    swwRef.current = serwist;
+
+    const onWaiting = () => {
       toast.warn((
         <>
           <b>Je k dispozici nová verze aplikace.</b>
           {' '}
-          Kliknutím zde ji aktualizujete
+          Kliknutím zde ji aktualizujete.
         </>
       ), {
         autoClose: false,
-        closeOnClick: false,
+        closeOnClick: true,
         onClick() {
-          window.location.reload();
-        },
-        onClose() {
-          setState('ignored');
-          setTimeout(() => setState('ok'), 300_000);
+          swwRef.current?.messageSkipWaiting();
         },
       });
-      return 'prompt';
+    };
+    serwist.addEventListener("waiting", onWaiting);
+
+    const onControlling = () => {
+      window.location.reload();
+    };
+    serwist.addEventListener("controlling", onControlling);
+    navigator.serviceWorker.addEventListener("controllerchange", onControlling);
+
+    void serwist.register().then(() => {
+      const check = async () => (await navigator.serviceWorker.getRegistration())?.update();
+      let t: number | undefined;
+      const start = () => {
+        if (t) return;
+        if (document.visibilityState !== "visible") return;
+        t = window.setInterval(check, CHECK_MS);
+        void check();
+      };
+      const stop = () => { if (t) { clearInterval(t); t = undefined; } };
+
+      start();
+      const onVisible = () => document.visibilityState === "visible" ? start() : stop();
+      document.addEventListener("visibilitychange", onVisible);
+      window.addEventListener("pagehide", stop);
+
+      return () => {
+        stop();
+        document.removeEventListener("visibilitychange", onVisible);
+        window.removeEventListener("pagehide", stop);
+      };
     });
-  }, { interval: 60_000, lead: true });
+
+    return () => {
+      serwist.removeEventListener?.("waiting", onWaiting);
+      serwist.removeEventListener?.("controlling", onControlling);
+      navigator.serviceWorker.removeEventListener("controllerchange", onControlling);
+    };
+  }, []);
+
   return null;
 }
