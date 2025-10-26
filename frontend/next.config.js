@@ -2,6 +2,13 @@
 
 /** @type {any} */
 const nextRoutes = require("nextjs-routes/config");
+const withSerwist = require('@serwist/next').default({
+  swSrc: 'serwist/sw.ts',
+  swDest: 'public/sw.js',
+  cacheOnNavigation: true,
+  reloadOnOnline: false,
+  disable: process.env.NODE_ENV !== 'production',
+});
 
 /** @type {(x: import('next').NextConfig) => import('next').NextConfig} */
 let withBundleAnalyzer = (x) => x;
@@ -17,13 +24,14 @@ const withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig(cfg, 
 });
 
 /** @type {import('next').NextConfig} */
-module.exports = nextRoutes()(
-  withBundleAnalyzer(
-    withSentryConfig({
-      reactStrictMode: true,
-      poweredByHeader: false,
-      productionBrowserSourceMaps: true,
-      devIndicators: false,
+module.exports = withSerwist(
+  nextRoutes()(
+    withBundleAnalyzer(
+      withSentryConfig({
+        reactStrictMode: true,
+        poweredByHeader: false,
+        productionBrowserSourceMaps: true,
+        devIndicators: false,
 
       output: 'standalone',
       experimental: {
@@ -128,6 +136,7 @@ module.exports = nextRoutes()(
         );
         return config;
       },
-    }),
+      }),
+    ),
   ),
 );
