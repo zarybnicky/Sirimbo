@@ -43,7 +43,7 @@ module.exports = compose([
   nextRoutes(),
   withBundleAnalyzer,
   withSentryConfig,
-], {
+])({
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: true,
