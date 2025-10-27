@@ -1,5 +1,5 @@
 {
-  "name": "rozpisovnik-api",
+  "name": "@rozpisovnik/backend",
   "version": "1.0.0",
   "main": "src/index.ts",
   "repository": "https://github.com/zarybnicky/rozpisovnik/",
