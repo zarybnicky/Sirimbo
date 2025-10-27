@@ -9,21 +9,23 @@ import { useQuery } from 'urql';
 import { Layout } from '@/ui/Layout';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import { useAtomValue } from 'jotai';
-import { tenantConfigAtom } from '@/ui/state/auth';
+import { tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { useRouter } from 'next/router';
 
 export default function HomePage() {
   const router = useRouter();
+  const tenantId = useAtomValue(tenantIdAtom)
   const { enableHome } = useAtomValue(tenantConfigAtom)
 
   const [{ data: heroData }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 0 }});
   const [{ data }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 3 }});
 
   useLayoutEffect(() => {
-    if (router.isReady && !enableHome)
+    if (tenantId && !enableHome) {
       router.replace('/dashboard');
-  }, [router, enableHome]);
+    }
+  }, [router, tenantId, enableHome]);
 
   return (
     <Layout hideCta showTopMenu>
