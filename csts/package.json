@@ -7,7 +7,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc"
+    "lint": "tsc"
   },
   "dependencies": {
     "json-stringify-deterministic": "^1.0.12",

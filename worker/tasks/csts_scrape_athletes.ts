@@ -4,8 +4,8 @@ import { synchronizeAthletes } from '@rozpisovnik/csts';
 const task: Task<"csts_scrape_athletes"> = async (payload = {}, workerUtils) => {
   const { startFrom = 0 } = payload;
 
-  const lastIdt = await workerUtils.withPgClient((client) => {
-    return synchronizeAthletes(client, {
+  const lastIdt = await workerUtils.withPgClient(async (client) => {
+    return await synchronizeAthletes(client, {
       onFetchError(idt, error) {
         console.error(idt, error);
       },

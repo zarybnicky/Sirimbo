@@ -4,11 +4,8 @@
   pnpm_9,
   lib,
   packageJSON,
-  workspaceFolder,
-  includeFolders ? [
-    "patches"
-    workspaceFolder
-  ],
+  workspaceFolders,
+  includeFolders ? ["patches"] ++ workspaceFolders,
   includeFiles ? [
     "package.json"
     "pnpm-lock.yaml"
@@ -52,7 +49,7 @@ stdenv.mkDerivation (finalAttrs: {
     nodejs_24
     pnpm_9.configHook
   ];
-  pnpmWorkspaces = [ packageJSON.name ];
+  pnpmWorkspaces = workspaceFolders;
   pnpmDeps = pnpm_9.fetchDeps {
     inherit (finalAttrs)
       pname
@@ -63,19 +60,30 @@ stdenv.mkDerivation (finalAttrs: {
     fetcherVersion = 2;
     hash = pnpmDepsHash;
   };
+
+  doCheck = true;
+  checkPhase = ''
+    runHook preCheck
+    for folder in ${lib.escapeShellArgs workspaceFolders}; do
+      pnpm run -C $folder --if-present lint
+    done
+    runHook postCheck
+  '';
+
   buildPhase = ''
     runHook preBuild
-    pnpm --filter=${packageJSON.name} lint
-    pnpm --filter=${packageJSON.name} build
+    for folder in ${lib.escapeShellArgs workspaceFolders}; do
+      pnpm run -C $folder --if-present build
+    done
     runHook postBuild
   '';
   installPhase = ''
     runHook preInstall
     mkdir -p $out/share $out/bin
 
-    pushd ${workspaceFolder}
-    CI=true pnpm prune --prod
-    popd
+    for folder in ${lib.escapeShellArgs workspaceFolders}; do
+      CI=true pnpm prune -C $folder --prod
+    done
     find -xtype l -delete
 
     mv ./* $out/share
