@@ -27,6 +27,9 @@ export default function HomePage() {
     }
   }, [router, tenantId, enableHome]);
 
+  if (!tenantId || !enableHome)
+    return <Layout hideCta showTopMenu />
+
   return (
     <Layout hideCta showTopMenu>
       <Hero data={heroData?.aktualities?.nodes || []} />
