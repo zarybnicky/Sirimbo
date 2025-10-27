@@ -11,12 +11,14 @@ type NextRewrite = Awaited<ReturnType<NonNullable<NextConfig['rewrite']>>>;
 const compose = (...plugins: NextPlugin[]) => (config: NextConfig): NextConfig =>
   plugins.reduceRight((acc, fn) => fn(acc), config);
 
+// eslint-disable-next-line import/no-unused-modules
 export default compose(
   serwistNext({
-    swSrc: 'serwist/sw.ts',
+    swSrc: 'sw.ts',
     swDest: 'public/sw.js',
     reloadOnOnline: false,
-    disable: process.env.NODE_ENV !== 'production',
+    // disable: process.env.NODE_ENV !== 'production',
+    maximumFileSizeToCacheInBytes: 1_000_000,
   }),
   nextRoutes(),
   bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' }),
@@ -43,6 +45,7 @@ export default compose(
     ],
     minimumCacheTTL: 2_678_400,
     unoptimized: true,
+    qualities: [75, 90],
   },
 
   eslint: {
