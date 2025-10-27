@@ -2,8 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.5
--- Dumped by pg_dump version 17.5
+\restrict RTrjrVUUyY8jSBl2jcFzghqKrx9r7kmR3B4V2CGWBpXNeHOR2Cj42zxBPCB1pX5
+
+-- Dumped from database version 17.6
+-- Dumped by pg_dump version 17.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -5551,6 +5553,87 @@ COMMENT ON COLUMN app_private.system_admin_user.created_by IS 'User that granted
 
 
 --
+-- Name: athlete; Type: TABLE; Schema: csts; Owner: -
+--
+
+CREATE TABLE csts.athlete (
+    idt integer NOT NULL,
+    name text NOT NULL,
+    age_category text NOT NULL,
+    sex text NOT NULL,
+    medical_checkup_expiration date,
+    fetched_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: athlete_ranking; Type: TABLE; Schema: csts; Owner: -
+--
+
+CREATE TABLE csts.athlete_ranking (
+    athlete_id integer NOT NULL,
+    discipline text NOT NULL,
+    series text NOT NULL,
+    personal_class text,
+    personal_points integer,
+    personal_domestic_finale_count integer,
+    personal_foreign_finale_count integer,
+    personal_approved boolean
+);
+
+
+--
+-- Name: competitor_ranking; Type: TABLE; Schema: csts; Owner: -
+--
+
+CREATE TABLE csts.competitor_ranking (
+    competitor_id integer NOT NULL,
+    discipline text NOT NULL,
+    ranking_points_age text NOT NULL,
+    ranking_age text NOT NULL,
+    competitor_age text NOT NULL,
+    series text NOT NULL,
+    competitors text NOT NULL,
+    class text,
+    points integer,
+    domestic_finale_count integer,
+    foreign_finale_count integer,
+    ranklist_ranking integer,
+    ranklist_points integer,
+    athlete_idt integer,
+    couple_id integer,
+    CONSTRAINT competitor_ranking_check CHECK ((((athlete_idt IS NOT NULL) AND (couple_id IS NULL)) OR ((athlete_idt IS NULL) AND (couple_id IS NOT NULL))))
+);
+
+
+--
+-- Name: couple; Type: TABLE; Schema: csts; Owner: -
+--
+
+CREATE TABLE csts.couple (
+    id integer NOT NULL,
+    couple_idt integer NOT NULL,
+    man_idt integer NOT NULL,
+    woman_idt integer NOT NULL,
+    formed_at timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: ingest; Type: TABLE; Schema: csts; Owner: -
+--
+
+CREATE TABLE csts.ingest (
+    type text NOT NULL,
+    url text NOT NULL,
+    hash text NOT NULL,
+    payload jsonb NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    checked_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
 -- Name: account_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -6986,6 +7069,70 @@ ALTER TABLE ONLY app_private.system_admin_user
 
 
 --
+-- Name: athlete athlete_pkey; Type: CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.athlete
+    ADD CONSTRAINT athlete_pkey PRIMARY KEY (idt);
+
+
+--
+-- Name: athlete_ranking athlete_ranking_pkey; Type: CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.athlete_ranking
+    ADD CONSTRAINT athlete_ranking_pkey PRIMARY KEY (athlete_id, discipline, series);
+
+
+--
+-- Name: competitor_ranking competitor_ranking_athlete_idt_discipline_key; Type: CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.competitor_ranking
+    ADD CONSTRAINT competitor_ranking_athlete_idt_discipline_key UNIQUE (athlete_idt, discipline);
+
+
+--
+-- Name: competitor_ranking competitor_ranking_couple_id_discipline_key; Type: CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.competitor_ranking
+    ADD CONSTRAINT competitor_ranking_couple_id_discipline_key UNIQUE (couple_id, discipline);
+
+
+--
+-- Name: competitor_ranking competitor_ranking_pkey; Type: CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.competitor_ranking
+    ADD CONSTRAINT competitor_ranking_pkey PRIMARY KEY (competitor_id, discipline);
+
+
+--
+-- Name: couple couple_couple_idt_key; Type: CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.couple
+    ADD CONSTRAINT couple_couple_idt_key UNIQUE (couple_idt);
+
+
+--
+-- Name: couple couple_pkey; Type: CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.couple
+    ADD CONSTRAINT couple_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ingest ingest_pkey; Type: CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.ingest
+    ADD CONSTRAINT ingest_pkey PRIMARY KEY (type, url, hash);
+
+
+--
 -- Name: account account_tenant_id_person_id_currency_idx; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7507,6 +7654,34 @@ CREATE INDEX platby_item_tenant_id_idx ON app_private.platby_item USING btree (t
 --
 
 CREATE INDEX platby_raw_tenant_id_idx ON app_private.platby_raw USING btree (tenant_id);
+
+
+--
+-- Name: competitor_ranking_athlete_idx; Type: INDEX; Schema: csts; Owner: -
+--
+
+CREATE INDEX competitor_ranking_athlete_idx ON csts.competitor_ranking USING btree (athlete_idt);
+
+
+--
+-- Name: competitor_ranking_couple_idx; Type: INDEX; Schema: csts; Owner: -
+--
+
+CREATE INDEX competitor_ranking_couple_idx ON csts.competitor_ranking USING btree (couple_id);
+
+
+--
+-- Name: couple_man_idx; Type: INDEX; Schema: csts; Owner: -
+--
+
+CREATE INDEX couple_man_idx ON csts.couple USING btree (man_idt);
+
+
+--
+-- Name: couple_woman_idx; Type: INDEX; Schema: csts; Owner: -
+--
+
+CREATE INDEX couple_woman_idx ON csts.couple USING btree (woman_idt);
 
 
 --
@@ -8930,6 +9105,46 @@ ALTER TABLE ONLY app_private.platby_raw
 
 ALTER TABLE ONLY app_private.system_admin_user
     ADD CONSTRAINT system_admin_user_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: athlete_ranking athlete_ranking_athlete_id_fkey; Type: FK CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.athlete_ranking
+    ADD CONSTRAINT athlete_ranking_athlete_id_fkey FOREIGN KEY (athlete_id) REFERENCES csts.athlete(idt) ON DELETE CASCADE;
+
+
+--
+-- Name: competitor_ranking competitor_ranking_athlete_idt_fkey; Type: FK CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.competitor_ranking
+    ADD CONSTRAINT competitor_ranking_athlete_idt_fkey FOREIGN KEY (athlete_idt) REFERENCES csts.athlete(idt) ON DELETE CASCADE;
+
+
+--
+-- Name: competitor_ranking competitor_ranking_couple_id_fkey; Type: FK CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.competitor_ranking
+    ADD CONSTRAINT competitor_ranking_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES csts.couple(id) ON DELETE CASCADE;
+
+
+--
+-- Name: couple couple_man_idt_fkey; Type: FK CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.couple
+    ADD CONSTRAINT couple_man_idt_fkey FOREIGN KEY (man_idt) REFERENCES csts.athlete(idt) ON DELETE CASCADE;
+
+
+--
+-- Name: couple couple_woman_idt_fkey; Type: FK CONSTRAINT; Schema: csts; Owner: -
+--
+
+ALTER TABLE ONLY csts.couple
+    ADD CONSTRAINT couple_woman_idt_fkey FOREIGN KEY (woman_idt) REFERENCES csts.athlete(idt) ON DELETE CASCADE;
 
 
 --
@@ -12438,4 +12653,6 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
+
+\unrestrict RTrjrVUUyY8jSBl2jcFzghqKrx9r7kmR3B4V2CGWBpXNeHOR2Cj42zxBPCB1pX5
 

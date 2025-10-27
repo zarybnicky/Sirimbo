@@ -159,10 +159,7 @@ function BackgroundCells({
             'rbc-day-bg': true,
             'rbc-selected-cell': state.selecting && index >= (state.start ?? -1) && index <= (state.end ?? Number.POSITIVE_INFINITY),
             'rbc-today': eq(date, new Date(), 'day'),
-            'rbc-off-range-bg': (() => {
-              console.log(currentDate, date);
-              return currentDate && neq(currentDate, date, 'month');
-            })(),
+            'rbc-off-range-bg': currentDate && neq(currentDate, date, 'month'),
           })}
         />
       ))}

@@ -3,17 +3,18 @@ import { createHash } from 'node:crypto';
 import type {
   Athlete,
   AthletesResponse,
-  FetchAthletesOptions,
   RankingPoints,
 } from './athletes.ts';
 import { fetchAthletesByIdt, parseAthletesResponse } from './athletes.ts';
 import { iterateAthleteIdts } from './idts.ts';
-import type { Pool } from 'pg';
+import type { PoolClient } from 'pg';
 
-export interface SynchronizeAthletesOptions extends FetchAthletesOptions {
+export interface SynchronizeAthletesOptions {
   signal?: AbortSignal;
   onFetchError?: (idt: number, error: unknown) => void | Promise<void>;
   cacheMaxAgeMs?: number;
+  startFromIdt?: number;
+  maxRequests?: number;
 }
 
 const INGEST_TYPE_ATHLETE = 'athlete';
@@ -35,7 +36,7 @@ const stringifyOptions: Parameters<typeof stringify>[1] = {
 };
 
 async function loadCachedRecord(
-  client: Pool,
+  client: PoolClient,
   type: string,
   url: string,
 ): Promise<IngestRecordRow | null> {
@@ -53,7 +54,7 @@ async function loadCachedRecord(
   return rows[0] ?? null;
 }
 
-async function touchIngestRecord(client: Pool, type: string, url: string, hash: string) {
+async function touchIngestRecord(client: PoolClient, type: string, url: string, hash: string) {
   await client.query(
     `
       update csts.ingest
@@ -64,7 +65,7 @@ async function touchIngestRecord(client: Pool, type: string, url: string, hash: 
   );
 }
 
-async function upsertIngestRecord(client: Pool, type: string, url: string, hash: string, payload: unknown,) {
+async function upsertIngestRecord(client: PoolClient, type: string, url: string, hash: string, payload: unknown,) {
   await client.query(
     `
       insert into csts.ingest (type, url, hash, payload)
@@ -91,16 +92,20 @@ function isRecordFresh(record: IngestRecordRow, maxAgeMs: number): boolean {
 }
 
 export async function synchronizeAthletes(
-  client: Pool,
+  client: PoolClient,
   options: SynchronizeAthletesOptions = {},
-): Promise<void> {
-  const { signal, onFetchError, init, cacheMaxAgeMs = 0 } = options;
+): Promise<number> {
+  const { signal, onFetchError, startFromIdt, maxRequests, cacheMaxAgeMs = 0 } = options;
 
+  let requestsSent = 0;
+  let started = !startFromIdt;
   const notFoundContiguous = new Set<string>();
   let lastFoundUrl: string = '';
 
   for (const idt of iterateAthleteIdts()) {
     signal?.throwIfAborted?.();
+
+    if (!started && idt !== startFromIdt) continue;
 
     const url = `https://www.csts.cz/api/1/athletes/${idt}`;
     const cachedRecord = await loadCachedRecord(client, INGEST_TYPE_ATHLETE, url);
@@ -114,7 +119,8 @@ export async function synchronizeAthletes(
     let parsedResponse: AthletesResponse | undefined;
     try {
       await new Promise((resolve) => setTimeout(resolve, 250));
-      rawResponse = await fetchAthletesByIdt(idt, { init });
+      requestsSent += 1;
+      rawResponse = await fetchAthletesByIdt(idt);
       parsedResponse = parseAthletesResponse(rawResponse);
     } catch (error) {
       if (onFetchError) {
@@ -136,13 +142,13 @@ export async function synchronizeAthletes(
 
     const athlete = parsedResponse.collection[0];
     if (!athlete) {
-      console.log(`${idt} not found`);
+      console.log(`[csts] ${idt} not found`);
       notFoundContiguous.add(url);
       if (notFoundContiguous.size > 100 && idt > 10600000) {
-        console.log("Didn't find 100 in a row, aborting - we might be at the end of assigned IDTs");
-        console.log(`Last found URL: ${lastFoundUrl}`)
+        console.log("[csts] Didn't find 100 in a row, aborting - we might be at the end of assigned IDTs");
+        console.log(`[csts] Last found URL: ${lastFoundUrl}`)
         await deleteByUrls(client, INGEST_TYPE_ATHLETE, notFoundContiguous);
-        break;
+        return 0;
       }
       continue;
     }
@@ -155,7 +161,7 @@ export async function synchronizeAthletes(
 
     await client.query('begin');
     try {
-      console.log(idt);
+      console.log(`[csts] ${idt}`);
       await upsertAthlete(client, athlete);
 
       for (const ranking of athlete.rankingPoints) {
@@ -185,35 +191,38 @@ export async function synchronizeAthletes(
       await client.query('rollback');
       throw error;
     }
+
+    if (maxRequests && requestsSent >= maxRequests)
+      return idt;
   }
+
+  // Shouldn't ever happen
+  return 0;
 }
 
-async function deleteByUrls(client: Pool, type: string, urls: Set<string>) {
+async function deleteByUrls(client: PoolClient, type: string, urls: Set<string>) {
   await client.query('delete from csts.ingest where type = $1 and url = any($2::text[])', [
     type,
     [...urls],
   ]);
 }
 
-async function upsertAthlete(client: Pool, athlete: Athlete) {
+async function upsertAthlete(client: PoolClient, athlete: Athlete) {
   await client.query(
     `
       insert into csts.athlete (
         idt,
         name,
-        valid_for,
         age_category,
         sex,
-        medical_checkup_expiration,
-        barcode_url
+        medical_checkup_expiration
       )
-      values ($1, $2, $3::date, $4, $5, $6::date, $7)
+      values ($1, $2, $3::text, $4, $5::date)
       on conflict (idt) do update set
         name = excluded.name,
         age_category = excluded.age_category,
         sex = excluded.sex,
         medical_checkup_expiration = excluded.medical_checkup_expiration,
-        barcode_url = excluded.barcode_url,
         fetched_at = now()
     `,
     [
@@ -222,13 +231,12 @@ async function upsertAthlete(client: Pool, athlete: Athlete) {
       athlete.age,
       athlete.sex,
       athlete.medicalCheckupExpiration,
-      athlete.barcode,
     ],
   );
 }
 
 async function upsertAthleteRanking(
-  client: Pool,
+  client: PoolClient,
   athlete: Athlete,
   ranking: RankingPoints,
 ): Promise<void> {
@@ -263,7 +271,7 @@ async function upsertAthleteRanking(
 }
 
 async function upsertCompetitorRanking(
-  client: Pool,
+  client: PoolClient,
   ranking: RankingPoints,
   identifiers: { athleteIdt: number | null; coupleId: number | null },
 ): Promise<void> {
@@ -323,7 +331,7 @@ async function upsertCompetitorRanking(
 }
 
 async function upsertCouple(
-  client: Pool,
+  client: PoolClient,
   athlete: Athlete,
   ranking: RankingPoints,
 ): Promise<number | null> {
@@ -351,15 +359,13 @@ async function upsertCouple(
         couple_idt,
         man_idt,
         woman_idt,
-        medical_checkup_expiration,
         formed_at
       )
-      values ($1, $2, $3, $4, $5::date, $6::timestamptz)
+      values ($1, $2, $3, $4, $5::timestamptz)
       on conflict (id) do update set
         couple_idt = excluded.couple_idt,
         man_idt = excluded.man_idt,
         woman_idt = excluded.woman_idt,
-        medical_checkup_expiration = excluded.medical_checkup_expiration,
         formed_at = excluded.formed_at
     `,
     [
@@ -367,7 +373,6 @@ async function upsertCouple(
       ranking.idt,
       participants.manIdt,
       participants.womanIdt,
-      ranking.medicalCheckupExpiration,
       ranking.time,
     ],
   );

@@ -29,12 +29,14 @@ for line in fileinput.input():
 per_table = defaultdict(lambda: defaultdict(lambda: []))
 
 for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
-    match = re.search(r"^(?P<name>[^;]+); Type: (?P<type>[^;]+);", group)
+    match = re.search(r"^(?P<name>[^;]+); Type: (?P<type>[^;]+); Schema: (?P<schema>[^;]+);", group)
     if match is None:
         print(f"Invalid group {group}")
         continue
+
     object_type = match.group("type")
     name = match.group("name")
+    schema = match.group("schema")
     entry = list(map(lambda x: x.strip(), re.split(r"^--", group, flags=re.M)))[1]
 
     if object_type == "MATERIALIZED VIEW":
@@ -51,12 +53,12 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
         continue  # SKIP
 
     if object_type in ("TABLE", "FUNCTION", "VIEW", "ROW SECURITY", "DOMAIN", "TYPE"):
-        per_table[name][object_type].append(entry)
+        per_table[schema + "." + name][object_type].append(entry)
         continue
 
     if object_type in ("CONSTRAINT", "TRIGGER", "FK CONSTRAINT", "POLICY"):
         policy_target, policy_name = name.split(" ", 1)
-        per_table[policy_target][object_type].append(entry)
+        per_table[schema + "." + policy_target][object_type].append(entry)
         continue
 
     if object_type in ("ACL", "COMMENT"):
@@ -69,7 +71,7 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
             continue
 
         if acl_type in ("TABLE", "VIEW"):
-            per_table[acl_target][object_type].append(entry)
+            per_table[schema + "." + acl_target][object_type].append(entry)
             continue
 
         if acl_type == "FUNCTION":
@@ -81,12 +83,12 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
                 if arg.startswith("INOUT "):
                     arg = arg.split(" ", 1)[1]
                 fn_args.append(arg.split(" ", 1)[-1])
-            per_table[f"{fn_name}({', '.join(fn_args)})"][object_type].append(entry)
+            per_table[f"{schema}.{fn_name}({', '.join(fn_args)})"][object_type].append(entry)
             continue
 
         if acl_type == "COLUMN":
             acl_table, acl_column = acl_target.split(".", 1)
-            per_table[acl_table][object_type].append(entry)
+            per_table[f"{schema}.{acl_table}"][object_type].append(entry)
             continue
 
     if object_type == "INDEX":
@@ -96,7 +98,7 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
         if match is None:
             print(f"Invalid group {group}")
             continue
-        per_table[match.group("table")][object_type].append(entry)
+        per_table[schema + "." + match.group("table")][object_type].append(entry)
         continue
 
     print(f"Skipped object with type {match.group('type')}:\t{match.group('name')}")
@@ -148,6 +150,6 @@ for table_name, objects in per_table.items():
         [""],
         objects["INDEX"],
     )
-    filename = f"schema/{object_type}s/{schema}.{table_name}.sql"
+    filename = f"schema/{object_type}s/{table_name}.sql"
     with open(filename, "w") as opf:
         opf.write("\n".join(source).replace("\n\n\n", "\n\n").replace("\n\n\n", "\n\n").rstrip() + "\n")

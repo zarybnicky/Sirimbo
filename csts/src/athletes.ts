@@ -3,7 +3,6 @@ import { MAX_IDT, MIN_IDT } from './idts.ts';
 
 const rankingPointsSchema = z.object({
   rankingPointsAge: z.string(),
-  medicalCheckupExpiration: z.string().optional().nullable().prefault(null),
   personalClass: z.string().optional().prefault('-'),
   personalPoints: z.number().optional().prefault(0),
   personalDomesticFinaleCount: z.number().optional().prefault(0),
@@ -36,7 +35,6 @@ const athleteSchema = z.object({
   age: z.string(),
   sex: z.string(),
   medicalCheckupExpiration: z.string().nullable().optional().prefault(null),
-  barcode: z.string(),
   rankingPoints: z.array(rankingPointsSchema),
 });
 
@@ -52,10 +50,6 @@ export interface AthletesResponse {
   collection: Athlete[];
 }
 
-export interface FetchAthletesOptions {
-  init?: Parameters<typeof fetch>[1];
-}
-
 export function parseAthletesResponse(payload: unknown): AthletesResponse {
   try {
     return athletesResponseSchema.parse(payload);
@@ -66,7 +60,7 @@ export function parseAthletesResponse(payload: unknown): AthletesResponse {
   }
 }
 
-export async function fetchAthletesByIdt(idt: number, options: FetchAthletesOptions = {}) {
+export async function fetchAthletesByIdt(idt: number) {
   if (!Number.isInteger(idt)) {
     throw new TypeError('The athlete IDT must be an integer.');
   }
@@ -75,7 +69,9 @@ export async function fetchAthletesByIdt(idt: number, options: FetchAthletesOpti
     throw new RangeError(`The athlete IDT must be between ${MIN_IDT} and ${MAX_IDT}.`);
   }
 
-  const response = await fetch(`https://www.csts.cz/api/1/athletes/${idt}`, options.init);
+  const response = await fetch(`https://www.csts.cz/api/1/athletes/${idt}`, {
+    referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
+  });
 
   if (!response.ok) {
     throw new Error(

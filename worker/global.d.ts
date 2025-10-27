@@ -1,5 +1,9 @@
 namespace GraphileWorker {
   interface Tasks {
+    csts_scrape_athletes: {
+      startFrom?: number;
+    };
+
     notify_announcement: {
       announcement_id: number;
       user_ids: number[];

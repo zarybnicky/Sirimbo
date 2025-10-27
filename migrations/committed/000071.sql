@@ -1,3 +1,10 @@
+--! Previous: sha1:2411173030e9edc8b55a3f7eb87abd2787ac3add
+--! Hash: sha1:c0184a3febe5cf8de247e05b490a981dc8b2cd1a
+
+--! split: 1-current.sql
+
+
+--! split: 2-csts-schema.sql
 create schema if not exists csts;
 
 create table if not exists csts.ingest (
@@ -16,7 +23,6 @@ create table if not exists csts.athlete (
   age_category text not null,
   sex text not null,
   medical_checkup_expiration date,
-  barcode_url text not null,
   fetched_at timestamptz not null default now()
 );
 
@@ -25,7 +31,6 @@ create table if not exists csts.couple (
   couple_idt integer not null,
   man_idt integer not null references csts.athlete(idt) on delete cascade,
   woman_idt integer not null references csts.athlete(idt) on delete cascade,
-  medical_checkup_expiration date,
   formed_at timestamptz not null,
   unique (couple_idt)
 );
@@ -38,12 +43,12 @@ create table if not exists csts.competitor_ranking (
   competitor_age text not null,
   series text not null,
   competitors text not null,
-  class text not null,
-  points integer not null,
-  domestic_finale_count integer not null,
-  foreign_finale_count integer not null,
-  ranklist_ranking integer not null,
-  ranklist_points integer not null,
+  class text,
+  points integer,
+  domestic_finale_count integer,
+  foreign_finale_count integer,
+  ranklist_ranking integer,
+  ranklist_points integer,
   athlete_idt integer references csts.athlete(idt) on delete cascade,
   couple_id integer references csts.couple(id) on delete cascade,
   primary key (competitor_id, discipline),
@@ -59,11 +64,11 @@ create table if not exists csts.athlete_ranking (
   athlete_id integer not null references csts.athlete(idt) on delete cascade,
   discipline text not null,
   series text not null,
-  personal_class text not null,
-  personal_points integer not null,
-  personal_domestic_finale_count integer not null,
-  personal_foreign_finale_count integer not null,
-  personal_approved boolean not null,
+  personal_class text,
+  personal_points integer,
+  personal_domestic_finale_count integer,
+  personal_foreign_finale_count integer,
+  personal_approved boolean,
   primary key (athlete_id, discipline, series)
 );
 
