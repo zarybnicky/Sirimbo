@@ -1,5 +1,5 @@
 import { defaultCache } from "@serwist/next/worker";
-import { Serwist, type PrecacheEntry } from 'serwist';
+import { Serwist, type PrecacheEntry, Strategy, ExpirationPlugin, NetworkFirst } from 'serwist';
 
 declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: Array<PrecacheEntry | string> | undefined;
@@ -9,7 +9,26 @@ const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST!,
   skipWaiting: false,
   clientsClaim: true,
-  runtimeCaching: defaultCache,
+  runtimeCaching: [
+    {
+      matcher: /\/_vercel\/.+\.js$/i,
+      handler: new NetworkFirst({
+        cacheName: "vercel-static-js-assets",
+        plugins: [
+          new ExpirationPlugin({
+            maxEntries: 64,
+            maxAgeSeconds: 24 * 60 * 60, // 24 hours
+            maxAgeFrom: "last-used",
+          }),
+        ],
+      }),
+    },
+    ...defaultCache.filter(x => {
+      if (!(x.handler instanceof Strategy)) return true;
+      if (x.handler.cacheName === 'cross-origin') return false;
+      return true;
+    }),
+  ],
   precacheOptions: {
     cleanupOutdatedCaches: true,
   },
