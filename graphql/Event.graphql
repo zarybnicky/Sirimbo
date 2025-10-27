@@ -56,6 +56,7 @@ fragment Event on Event {
 }
 
 fragment EventRegistrations on Event {
+  id
   eventRegistrationsList {
     ...EventRegistration
   }
@@ -81,6 +82,7 @@ fragment EventInstanceWithTrainer on EventInstance {
 }
 
 fragment EventAttendanceSummary on Event {
+  id
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstance
     attendanceSummaryList {

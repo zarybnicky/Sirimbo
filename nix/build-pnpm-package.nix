@@ -1,38 +1,37 @@
 {
   stdenv,
-  nodejs,
+  nodejs_24,
   pnpm_9,
   lib,
   packageJSON,
   workspaceFolder,
+  includeFolders ? [
+    "patches"
+    workspaceFolder
+  ],
+  includeFiles ? [
+    "package.json"
+    "pnpm-lock.yaml"
+    "pnpm-workspace.yaml"
+  ],
   postInstall,
   pnpmDepsHash,
   ...
 }:
 let
-  workspaces = [
-    "patches"
-    workspaceFolder
-  ];
-  allowedFiles = [
-    "package.json"
-    "pnpm-lock.yaml"
-    "pnpm-workspace.yaml"
-  ];
-
   inWorkspace =
     path: type:
     let
       rel = lib.removePrefix (toString ./.. + "/") (toString path);
 
       # top-level files to keep
-      isAllowedRootFile = lib.elem rel allowedFiles;
+      isAllowedRootFile = lib.elem rel includeFiles;
 
       # keep a workspace dir, anything inside it, and any of its parents
       withinWs = ws: rel == ws || lib.hasPrefix (ws + "/") rel;
       parentOfWs = ws: type == "directory" && lib.hasPrefix rel (ws + "/");
 
-      inWorkspace = lib.any (ws: withinWs ws || parentOfWs ws) workspaces;
+      inWorkspace = lib.any (ws: withinWs ws || parentOfWs ws) includeFolders;
 
       # always keep the repo root directory itself
       isRepoRootDir = type == "directory" && rel == "";
@@ -47,10 +46,10 @@ stdenv.mkDerivation (finalAttrs: {
     filter = inWorkspace;
   };
   buildInputs = [
-    nodejs
+    nodejs_24
   ];
   nativeBuildInputs = [
-    nodejs
+    nodejs_24
     pnpm_9.configHook
   ];
   pnpmWorkspaces = [ packageJSON.name ];
@@ -66,6 +65,7 @@ stdenv.mkDerivation (finalAttrs: {
   };
   buildPhase = ''
     runHook preBuild
+    pnpm --filter=${packageJSON.name} lint
     pnpm --filter=${packageJSON.name} build
     runHook postBuild
   '';

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const process = require('process');
+import { chdir } from 'node:process';
 
-process.chdir(__dirname);
+chdir(import.meta.dirname);
 
-require('graphile-worker/dist/cli.js');
+await import('graphile-worker/dist/cli.js');

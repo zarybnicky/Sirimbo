@@ -16,7 +16,7 @@ const plugins: GraphileConfig.Plugin[] = [
     `,
     plans: {
       Query: {
-        cstsAthlete(_$parent, args, _info) {
+        cstsAthlete(_$parent: any, args: any) {
           return withPgClient(executor, args.getRaw('idt'), async (client, idt) => {
             const { rows: [response] } = await client.query({
               text: "select content from fetch_with_cache('https://www.csts.cz/api/1/athletes/' || $1, array[http_header('Referrer', 'https://www.csts.cz')])",
@@ -25,7 +25,7 @@ const plugins: GraphileConfig.Plugin[] = [
             return JSON.parse((response as any).content).collection[0];
           });
         },
-        wdsfAthlete(_$parent, args, _info) {
+        wdsfAthlete(_$parent: any, args: any) {
           return withPgClient(executor, args.getRaw('min'), async (client, min) => {
             const url = `https://services.worlddancesport.org/api/1/person/${min}?format=json`;
             const { rows: [response] } = await client.query({
@@ -35,7 +35,7 @@ const plugins: GraphileConfig.Plugin[] = [
             return JSON.parse((response as any).content) as any;
           });
         },
-        evidenceStarlet(_$parent, args, _info) {
+        evidenceStarlet(_$parent: any, args: any) {
           const $args = object({
             url: args.getRaw('url'),
             data: args.getRaw('data'),

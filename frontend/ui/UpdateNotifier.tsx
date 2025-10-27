@@ -1,9 +1,5 @@
-import { buildId } from '@/lib/build-id';
-import type { Serwist, SerwistLifecycleEvent, SerwistLifecycleWaitingEvent } from '@serwist/window';
-import { useSetAtom } from 'jotai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
-
 import { Serwist as SerwistWindow } from "@serwist/window";
 
 const CHECK_MS = 5 * 60 * 1000;
@@ -40,8 +36,8 @@ export function UpdateNotifier() {
     serwist.addEventListener("controlling", onControlling);
     navigator.serviceWorker.addEventListener("controllerchange", onControlling);
 
+    const check = () => navigator.serviceWorker.getRegistration().then(x => x?.update());
     void serwist.register().then(() => {
-      const check = async () => (await navigator.serviceWorker.getRegistration())?.update();
       let t: number | undefined;
       const start = () => {
         if (t) return;

@@ -1,4 +1,4 @@
-import { Pool, PoolClient } from 'pg';
+import { Pool, type PoolClient } from 'pg';
 
 const API_BASE_URL = process.env.API_ADDRESS ?? 'https://services.worlddancesport.org/api/1';
 const API_USERNAME = process.env.API_USERNAME ?? '';

@@ -1,5 +1,6 @@
 query Scoreboard($cohortId: BigInt, $since: Date, $until: Date) {
   getCurrentTenant {
+    id
     cohortsList(condition: { isVisible: true }, orderBy: [NAME_ASC]) {
       id
       name

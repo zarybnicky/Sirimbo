@@ -68,7 +68,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Run the API in development: `pnpm --filter rozpisovnik-api start` (expects `DATABASE_URL`, `JWT_SECRET`, S3 env vars, etc.).
 - For quick development work, use primarily `tsc` to check correctness - the Next build is slow
 - Build and lint the Next.js app after changes: `pnpm --filter rozpisovnik-web lint` / `build`.
-- Queue worker jobs: `pnpm --filter rozpisovnik-worker start` (after building tasks with `pnpm --filter rozpisovnik-worker build` if needed).
+- Run queue workers: `pnpm --filter @rozpisovnik/worker start`
 - Update the split schema after refreshing `schema.sql`: `python schema/split.py < schema.sql`.
 - Create a new migration: write to `migrations/current/`, named like `1-event-attendance.sql`, prefixed by an increasing number, in kebab-case. Ensure scripts are idempotent.
 - Don't add GraphQL documents to code, add them to the root graphql/ folder, and run graphql-codegen, which will generate types and documents in `frontend/graphql/`.

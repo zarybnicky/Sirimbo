@@ -27,7 +27,6 @@ export function StarletImporter() {
       <p>
         {auth ? (
           token ? (
-            // eslint-disable-next-line unicorn/no-nested-ternary
             token.auth_ok ? (
               <>
                 Přihlášen v evidenci jako <b>{token.login}</b>

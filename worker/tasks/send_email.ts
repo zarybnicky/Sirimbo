@@ -3,8 +3,7 @@ import type { Task } from 'graphile-worker';
 import Handlebars from "handlebars";
 import { htmlToText } from "html-to-text";
 import mjml2html from "mjml";
-import * as nodemailer from "nodemailer";
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { createTransport, type Transporter } from "nodemailer";
 
 const fromEmail = "Rozpisovník.cz <info@rozpisovnik.cz>";
 
@@ -36,28 +35,23 @@ const task: Task<"send_email"> = async (payload) => {
   });
 }
 
-let transporterPromise: Promise<nodemailer.Transporter>;
-function getTransport(): Promise<nodemailer.Transporter> {
+let transporterPromise: Promise<Transporter>;
+function getTransport(): Promise<Transporter> {
   if (!transporterPromise) {
-    transporterPromise = (async () => {
-      const options: SMTPTransport.Options = {
-        host: process.env.SMTP_HOST,
-        port: Number.parseInt(process.env.SMTP_PORT || '25', 10),
-        secure: !!process.env.SMTP_TLS,
-        connectionTimeout: 60000,
-        greetingTimeout: 30000,
-        debug: true,
-      };
-      if (process.env.SMTP_AUTH) {
-        options.auth = {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        };
-      }
-      return nodemailer.createTransport(options);
-    })();
+    transporterPromise = (async () => createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number.parseInt(process.env.SMTP_PORT || '25', 10),
+      secure: !!process.env.SMTP_TLS,
+      connectionTimeout: 60000,
+      greetingTimeout: 30000,
+      debug: true,
+      auth: process.env.SMTP_AUTH ? {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      } : undefined,
+    }))();
   }
-  return transporterPromise!;
+  return transporterPromise;
 }
 
 export default task;

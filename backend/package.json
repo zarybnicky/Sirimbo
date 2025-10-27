@@ -9,9 +9,9 @@
   "type": "module",
   "bin": "./dist/index.cjs",
   "scripts": {
-    "build": "node build.cjs",
-    "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node --inspect --experimental-transform-types src/index.ts\"",
-    "import:people": "node --experimental-transform-types ./scripts/import_people_from_csv.ts"
+    "build": "tsc --noEmit && node build.cjs",
+    "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node src/index.ts\"",
+    "import:people": "node ./scripts/import_people_from_csv.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.363.0",
@@ -41,10 +41,11 @@
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.4",
+    "@tsconfig/node24": "^24.0.1",
     "@types/body-parser": "~1.19.6",
     "@types/compression": "~1.8.1",
     "@types/cors": "^2.8.19",
-    "@types/express": "~5.0.3",
+    "@types/express": "~5.0.4",
     "@types/html-to-text": "~9.0.4",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "~1.9.10",

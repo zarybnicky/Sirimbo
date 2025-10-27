@@ -1,17 +1,19 @@
 {
-  "name": "rozpisovnik-worker",
+  "name": "@rozpisovnik/worker",
   "version": "1.0.0",
-  "repository": "https://github.com/zarybnicky/rozpisovnik/",
+  "repository": "https://github.com/zarybnicky/rozpisovnik",
   "author": "Jakub Zárybnický",
   "license": "MIT",
   "private": true,
   "bin": "./rozpisovnik-worker",
+  "type": "module",
   "scripts": {
-    "build": "node build.cjs",
+    "build": "tsc",
     "schema": "graphile-worker --schema-only",
-    "start": "NODE_ENV=development nodemon -e ts --exec \"node build.cjs && graphile-worker\""
+    "start": "NODE_ENV=development nodemon -e ts --exec graphile-worker"
   },
   "dependencies": {
+    "@rozpisovnik/csts": "link:../csts",
     "graphile-config": "^0.0.1-beta.18",
     "graphile-worker": "^0.16.6",
     "handlebars": "^4.7.8",
@@ -23,14 +25,12 @@
     "uglify-js": "^3.19.3"
   },
   "devDependencies": {
-    "@tsconfig/node18": "^18.2.4",
+    "@tsconfig/node24": "^24.0.1",
     "@types/html-to-text": "~9.0.4",
     "@types/mjml": "^4.7.4",
     "@types/node": "^24.9.1",
     "@types/nodemailer": "~6.4.20",
     "@types/pg": "~8.15.5",
-    "esbuild": "^0.25.11",
-    "glob": "^11.0.3",
     "typescript": "~5.9.3"
   }
 }

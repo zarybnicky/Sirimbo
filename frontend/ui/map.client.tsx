@@ -12,7 +12,6 @@ export type MapProps = {
 function Map({ children, ...rest }: MapProps) {
   React.useEffect(() => {
     (function init() {
-      // eslint-disable-next-line
       delete (L.Icon.Default.prototype as any)._getIconUrl;
 
       L.Icon.Default.mergeOptions({

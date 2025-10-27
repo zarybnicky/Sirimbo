@@ -1,15 +1,10 @@
 {
+  "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
-    "lib": ["es2021"],
-    "target": "es2021",
-    "module": "Node16",
-    "moduleResolution": "node16",
     "sourceMap": true,
     "inlineSources": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "downlevelIteration": true,
-    "jsx": "react",
     "strict": true,
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -20,17 +15,11 @@
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
     "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
-  }
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"]
 }
