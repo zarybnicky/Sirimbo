@@ -1,5 +1,5 @@
 {
-  "name": "rozpisovnik-web",
+  "name": "@rozpisovnik/web",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -7,7 +7,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --cache ."
+    "lint": "eslint ."
   },
   "dependencies": {
     "@0no-co/graphql.web": "^1.2.0",

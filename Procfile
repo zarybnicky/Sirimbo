@@ -1,6 +1,8 @@
-backend: pnpm --filter rozpisovnik-api start
-frontend: pnpm --filter rozpisovnik-web dev
+backend: pnpm -C backend run start
+web: pnpm -C frontend run dev
 migrate: graphile-migrate watch
-schema: exec npm run schema
-schema-starlet: exec npm run schema-starlet
-worker: pnpm --filter @rozpisovnik/worker start
+worker: pnpm -C worker run start
+
+schema: exec npm run schema -- --watch
+schema-starlet: exec npm run schema-starlet -- --watch
+sql-csts: pnpm -C csts run sql:generate -- --watch

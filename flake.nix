@@ -24,7 +24,7 @@
       rozpisovnik-worker = final.callPackage ./nix/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./worker/package.json;
         workspaceFolders = [ "worker" "csts" ];
-        pnpmDepsHash = "sha256-ACtT2iUQ0Vt0Cjk5JpqDtc017nEbWiGLWK5CwxmWP4I=";
+        pnpmDepsHash = "sha256-H9LlDxXCWc/Llp1ZLeHJ8pmuou2C1YGaZvfS9cNI+oU=";
         postInstall = "cp -s $out/share/worker/rozpisovnik-worker $out/bin/";
       };
 
@@ -51,7 +51,7 @@
           pkgs.pnpm_9
           pkgs.nodejs_24
           pkgs.postgresql_17
-          pkgs.sqlint
+          pkgs.sqlfluff
           pkgs.pgformatter
           pkgs.tbls
           pkgs.overmind
