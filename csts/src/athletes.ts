@@ -60,7 +60,7 @@ export function parseAthletesResponse(payload: unknown): AthletesResponse {
   }
 }
 
-export async function fetchAthletesByIdt(idt: number) {
+export async function fetchAthletesByIdt(idt: number): Promise<unknown | null> {
   if (!Number.isInteger(idt)) {
     throw new TypeError('The athlete IDT must be an integer.');
   }
@@ -72,6 +72,10 @@ export async function fetchAthletesByIdt(idt: number) {
   const response = await fetch(`https://www.csts.cz/api/1/athletes/${idt}`, {
     referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
   });
+
+  if (response.status === 404) {
+    return null;
+  }
 
   if (!response.ok) {
     throw new Error(

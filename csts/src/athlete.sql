@@ -1,25 +1,75 @@
 /* @name TouchIngestRecord */
-update csts.ingest set checked_at = now()
+update csts.ingest
+set
+  checked_at = now(),
+  checked_without_change = coalesce(checked_without_change, 0) + 1,
+  last_error = null
 where type = :type and url = :url and hash = :hash;
 
 /* @name UpsertIngestRecord */
-insert into csts.ingest (type, url, hash, payload)
-values (:type, :url, :hash, :payload::jsonb)
+insert into csts.ingest (type, url, hash, payload, last_error, checked_without_change)
+values (:type, :url, :hash, :payload::jsonb, null, 0)
 on conflict (type, url, hash)
-do update set payload = excluded.payload, checked_at = now();
+do update set
+  payload = excluded.payload,
+  checked_at = now(),
+  last_error = null,
+  checked_without_change = 0;
 
 /* @name LoadIngestRecord */
-select hash, payload, created_at, checked_at
+select hash, payload, created_at, checked_at, last_error, checked_without_change
 from csts.ingest
 where type = :type and url = :url
 order by checked_at desc, created_at desc
 limit 1;
 
 /*
+@name UpdateLatestIngestError
+*/
+with latest as (
+  select hash
+  from csts.ingest
+  where type = :type and url = :url
+  order by checked_at desc, created_at desc
+  limit 1
+)
+update csts.ingest target
+set last_error = :lastError,
+    checked_at = now()
+from latest
+where target.type = :type
+  and target.url = :url
+  and target.hash = coalesce(:hash, latest.hash);
+
+/*
 @name DeleteIngestByUrls
 @param urls -> (...)
 */
 delete from csts.ingest where type = :type and url in :urls;
+
+/* @name SelectMaxAthleteIdt */
+select idt as max
+from csts.athlete
+order by case
+  when idt between 18000000 and 18092599 then 1
+  when idt between 10600000 and 17999999 then 2
+  when idt between 18095000 and 19999000 then 3
+  else 0
+end desc,
+  idt desc
+limit 1;
+
+/* @name SelectAthletesToRefresh */
+select idt
+from csts.athlete
+where last_checked is null or last_checked < :threshold::timestamptz
+order by last_checked nulls first, idt
+limit :limit;
+
+/* @name UpdateAthleteLastChecked */
+update csts.athlete
+set last_checked = now()
+where idt = :idt;
 
 /* @name UpsertAthlete */
 insert into csts.athlete (
