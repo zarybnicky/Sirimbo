@@ -69,6 +69,6 @@ function parseSettings(settingsString: string) {
       (settings?.['evidenceCourses']?.map((x: any) =>
         typeof x === 'string' ? [x, '?', '?'] : x,
       ) || []) as [string, string, string][]
-    ).sort((x, y) => x[1].localeCompare(y[1])),
+    ).toSorted((x, y) => x[1].localeCompare(y[1])),
   };
 }

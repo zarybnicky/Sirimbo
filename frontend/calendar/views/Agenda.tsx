@@ -44,14 +44,14 @@ function Agenda({ events }: ViewProps): React.ReactNode {
     const list = [...map.entries()].map(([date, itemMap]) => ([
       date,
       {
-        groups: itemMap.groups.sort((x, y) => x.start.getTime() - y.start.getTime()),
+        groups: itemMap.groups.toSorted((x, y) => x.start.getTime() - y.start.getTime()),
         lessons: [...itemMap.lessons.entries()].map(([trainers, items]) => {
           items.sort((x, y) => x.start.getTime() - y.start.getTime());
           return [trainers, items] as const;
-        }).sort((x, y) => x[0].localeCompare(y[0])),
+        }).toSorted((x, y) => x[0].localeCompare(y[0])),
       }
     ] as const));
-    return list.sort((x, y) => x[0].localeCompare(y[0]));
+    return list.toSorted((x, y) => x[0].localeCompare(y[0]));
   }, [events]);
 
   return (

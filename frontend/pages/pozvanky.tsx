@@ -92,7 +92,7 @@ export default function InvitationOverviewPage() {
           <>
             <h2>Osoby bez přístupu do systému - již pozvaní</h2>
             <ul>
-              {withInvitation?.peopleWithoutAccessWithInvitationList?.sort((x, y) => x.createdAt.localeCompare(y.createdAt)).map(x => (
+              {withInvitation?.peopleWithoutAccessWithInvitationList?.toSorted((x, y) => x.createdAt.localeCompare(y.createdAt)).map(x => (
                 <li key={x.id}>
                   <Link href={{ pathname: '/clenove/[id]', query: { id: x.id } }}>
                     {x.name}

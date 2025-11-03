@@ -75,7 +75,7 @@ function EventListPage({ cursor, search, onLoadMore, currentId }: EventListPageP
           query: { id: x.id },
         },
       };
-    }).sort((a, b) => b.date?.localeCompare(a.date));
+    }).toSorted((a, b) => b.date?.localeCompare(a.date));
   }, [data]);
 
   const fuzzy: EventNode[] = useFuzzySearch(nodes, ['id', 'title'], search);

@@ -232,7 +232,7 @@ function TenantTurnover() {
       {orderedAccounts.map((account) => {
         const postings = [...account.postings]
           .filter((posting): posting is TenantPosting & { transaction: TenantTransaction } => Boolean(posting.transaction))
-          .sort((a, b) => (b.transaction.effectiveDate || '').localeCompare(a.transaction.effectiveDate || ''));
+          .toSorted((a, b) => (b.transaction.effectiveDate || '').localeCompare(a.transaction.effectiveDate || ''));
 
         if (postings.length === 0) {
           return (

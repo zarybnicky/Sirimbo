@@ -48,7 +48,7 @@ export function MyEventsList() {
         return [date, sortKey, location, items] as const;
       }),
     );
-    return list.sort((x, y) => x[1].localeCompare(y[1]));
+    return list.toSorted((x, y) => x[1].localeCompare(y[1]));
   }, [data]);
 
   return (

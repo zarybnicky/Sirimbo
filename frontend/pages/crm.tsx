@@ -22,7 +22,7 @@ export default function CrmPage() {
       if (entry.type !== 'Zpětná vazba, web 05/2023')
         types.add(entry.type);
     }
-    return [...types.values()].sort();
+    return [...types.values()].toSorted();
   }, [dataset]);
 
   const [state, setState] = React.useState('');
@@ -38,7 +38,7 @@ export default function CrmPage() {
         columns.add(column);
       }
     }
-    return [...columns.values()].sort();
+    return [...columns.values()].toSorted();
   }, [currentData]);
 
   return (

@@ -26,7 +26,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   const attendanceList = instance.eventAttendancesByInstanceIdList
     .filter((x) => x.status !== 'CANCELLED')
     .filter(keyIsNonNull('person'))
-    .sort((x, y) => `${x.person.lastName}${x.person.firstName}`.localeCompare(`${y.person.lastName}${y.person.firstName}`));
+    .toSorted((x, y) => `${x.person.lastName}${x.person.firstName}`.localeCompare(`${y.person.lastName}${y.person.firstName}`));
 
   return (
     <div className="max-w-full overflow-x-auto">

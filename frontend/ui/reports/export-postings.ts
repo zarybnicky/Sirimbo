@@ -47,7 +47,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
       desc,
       amount: `${Math.round(Number.parseFloat(x.amount || '') * 100) / 100}`,
     };
-  }).sort((a, b) => a.date.localeCompare(b.date));
+  }).toSorted((a, b) => a.date.localeCompare(b.date));
 
   worksheet.addRows(processed);
   worksheet.addRow({});

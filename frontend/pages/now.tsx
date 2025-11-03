@@ -132,11 +132,11 @@ function gatherBuckets(
   const result = [...buckets.values()]
     .map((bucket) => ({
       ...bucket,
-      current: bucket.current.sort((a, b) => a.since.getTime() - b.since.getTime()),
-      upcoming: bucket.upcoming.sort((a, b) => a.since.getTime() - b.since.getTime()),
+      current: bucket.current.toSorted((a, b) => a.since.getTime() - b.since.getTime()),
+      upcoming: bucket.upcoming.toSorted((a, b) => a.since.getTime() - b.since.getTime()),
     }))
     .filter((bucket) => bucket.current.length > 0 || bucket.upcoming.length > 0)
-    .sort((a, b) => a.label.localeCompare(b.label, 'cs'));
+    .toSorted((a, b) => a.label.localeCompare(b.label, 'cs'));
 
   return result;
 }

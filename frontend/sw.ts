@@ -95,5 +95,3 @@ self.addEventListener('message', event => {
     void self.skipWaiting();
   }
 });
-
-export {};

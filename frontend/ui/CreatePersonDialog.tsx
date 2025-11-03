@@ -69,7 +69,7 @@ export function CreatePersonDialog() {
   const personOptions = React.useMemo(() => personQuery.data?.people?.nodes?.map(x => ({
     id: x.id,
     label: x.name || '?',
-  })).sort((x, y) => x.label.localeCompare(y.label)), [personQuery]);
+  })).toSorted((x, y) => x.label.localeCompare(y.label)), [personQuery]);
 
   const { control, handleSubmit, getValues, setValue, reset, watch } = useForm({
     resolver: zodResolver(Form),

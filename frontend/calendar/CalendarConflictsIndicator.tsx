@@ -26,13 +26,13 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
     return (data?.attendeeConflicts ?? [])
       .map((conflict) => normalizeConflict(conflict, 'Neznámý účastník', 'attendee'))
       .filter((conflict): conflict is NormalizedConflict => conflict !== null)
-      .sort(sortByFirstSince);
+      .toSorted(sortByFirstSince);
   }, [data?.attendeeConflicts]);
   const trainerConflicts = React.useMemo(() => {
     return (data?.trainerConflicts ?? [])
       .map((conflict) => normalizeConflict(conflict, 'Neznámý trenér', 'trainer'))
       .filter((conflict): conflict is NormalizedConflict => conflict !== null)
-      .sort(sortByFirstSince);
+      .toSorted(sortByFirstSince);
   }, [data?.trainerConflicts]);
 
   const conflictsByInstance = React.useMemo(() => {

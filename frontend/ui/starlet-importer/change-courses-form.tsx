@@ -114,5 +114,5 @@ async function fetchCoursesByFolders(
       result.push(...JSON.parse(evidenceStarlet).data.courses);
     }
   }
-  return result.sort((x, y) => x.code.localeCompare(y.code));
+  return result.toSorted((x, y) => x.code.localeCompare(y.code));
 }

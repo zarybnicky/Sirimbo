@@ -21,7 +21,7 @@ export function PersonAttendanceView({ id }: Props) {
   const attendanceList = item.eventAttendancesList
     .filter((x) => x.status !== 'CANCELLED')
     .filter((x) => x.instance)
-    .sort((x, y) => `${x.person?.lastName}${x.person?.firstName}`.localeCompare(`${y.person?.lastName}${y.person?.firstName}`));
+    .toSorted((x, y) => `${x.person?.lastName}${x.person?.firstName}`.localeCompare(`${y.person?.lastName}${y.person?.firstName}`));
 
   return (
     <div>

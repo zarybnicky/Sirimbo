@@ -60,8 +60,8 @@ export function ChangeFoldersForm() {
       auth: token.auth_token,
     }).then((x) => {
       const data = JSON.parse(x.evidenceStarlet).data;
-      setFolders(data.folders.sort((x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value));
-      setSeasons(data.seasons.sort((x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value));
+      setFolders(data.folders.toSorted((x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value));
+      setSeasons(data.seasons.toSorted((x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value));
     });
   }, [token]);
 

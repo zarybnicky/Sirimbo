@@ -82,7 +82,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           </Dialog>
         )}
       </div>
-      {item.cohortMembershipsList.sort((x, y) => (x.person?.name || '').localeCompare(y.person?.name || '')).map((item) => (
+      {item.cohortMembershipsList.toSorted((x, y) => (x.person?.name || '').localeCompare(y.person?.name || '')).map((item) => (
         <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
           <CohortMembershipMenu align="start" data={item}>
             <DropdownMenuTrigger.RowDots />
