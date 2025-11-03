@@ -1,0 +1,3 @@
+*/2 * * * * refresh_memberships
+*/2 * * * * refresh_auth_details
+29 21 * * * create_lesson_payments

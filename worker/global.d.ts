@@ -10,6 +10,10 @@ namespace GraphileWorker {
       user_ids: number[];
     };
 
+    create_lesson_payments: never;
+    refresh_memberships: never;
+    refresh_auth_details: never;
+
     send_invitation: {
       id: string;
     };
