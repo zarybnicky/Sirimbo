@@ -21,12 +21,16 @@ export interface ITouchIngestRecordQuery {
   result: ITouchIngestRecordResult;
 }
 
-const touchIngestRecordIR: any = {"usedParamSet":{"type":true,"url":true,"hash":true},"params":[{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":59}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":74}]},{"name":"hash","required":false,"transform":{"type":"scalar"},"locs":[{"a":87,"b":91}]}],"statement":"update csts.ingest set checked_at = now()\nwhere type = :type and url = :url and hash = :hash"};
+const touchIngestRecordIR: any = {"usedParamSet":{"type":true,"url":true,"hash":true},"params":[{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":146,"b":150}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":162,"b":165}]},{"name":"hash","required":false,"transform":{"type":"scalar"},"locs":[{"a":178,"b":182}]}],"statement":"update csts.ingest\nset\n  checked_at = now(),\n  checked_without_change = coalesce(checked_without_change, 0) + 1,\n  last_error = null\nwhere type = :type and url = :url and hash = :hash"};
 
 /**
  * Query generated from SQL:
  * ```
- * update csts.ingest set checked_at = now()
+ * update csts.ingest
+ * set
+ *   checked_at = now(),
+ *   checked_without_change = coalesce(checked_without_change, 0) + 1,
+ *   last_error = null
  * where type = :type and url = :url and hash = :hash
  * ```
  */
@@ -50,15 +54,19 @@ export interface IUpsertIngestRecordQuery {
   result: IUpsertIngestRecordResult;
 }
 
-const upsertIngestRecordIR: any = {"usedParamSet":{"type":true,"url":true,"hash":true,"payload":true},"params":[{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":59,"b":63}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":69}]},{"name":"hash","required":false,"transform":{"type":"scalar"},"locs":[{"a":72,"b":76}]},{"name":"payload","required":false,"transform":{"type":"scalar"},"locs":[{"a":79,"b":86}]}],"statement":"insert into csts.ingest (type, url, hash, payload)\nvalues (:type, :url, :hash, :payload::jsonb)\non conflict (type, url, hash)\ndo update set payload = excluded.payload, checked_at = now()"};
+const upsertIngestRecordIR: any = {"usedParamSet":{"type":true,"url":true,"hash":true,"payload":true},"params":[{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":95,"b":99}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":102,"b":105}]},{"name":"hash","required":false,"transform":{"type":"scalar"},"locs":[{"a":108,"b":112}]},{"name":"payload","required":false,"transform":{"type":"scalar"},"locs":[{"a":115,"b":122}]}],"statement":"insert into csts.ingest (type, url, hash, payload, last_error, checked_without_change)\nvalues (:type, :url, :hash, :payload::jsonb, null, 0)\non conflict (type, url, hash)\ndo update set\n  payload = excluded.payload,\n  checked_at = now(),\n  last_error = null,\n  checked_without_change = 0"};
 
 /**
  * Query generated from SQL:
  * ```
- * insert into csts.ingest (type, url, hash, payload)
- * values (:type, :url, :hash, :payload::jsonb)
+ * insert into csts.ingest (type, url, hash, payload, last_error, checked_without_change)
+ * values (:type, :url, :hash, :payload::jsonb, null, 0)
  * on conflict (type, url, hash)
- * do update set payload = excluded.payload, checked_at = now()
+ * do update set
+ *   payload = excluded.payload,
+ *   checked_at = now(),
+ *   last_error = null,
+ *   checked_without_change = 0
  * ```
  */
 export const upsertIngestRecord = new PreparedQuery<IUpsertIngestRecordParams,IUpsertIngestRecordResult>(upsertIngestRecordIR);
@@ -72,10 +80,12 @@ export interface ILoadIngestRecordParams {
 
 /** 'LoadIngestRecord' return type */
 export interface ILoadIngestRecordResult {
-  checked_at: Date;
-  created_at: Date;
   hash: string;
   payload: Json;
+  created_at: Date;
+  checked_at: Date;
+  last_error: string | null;
+  checked_without_change: number;
 }
 
 /** 'LoadIngestRecord' query type */
@@ -84,19 +94,60 @@ export interface ILoadIngestRecordQuery {
   result: ILoadIngestRecordResult;
 }
 
-const loadIngestRecordIR: any = {"usedParamSet":{"type":true,"url":true},"params":[{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":75,"b":79}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":91,"b":94}]}],"statement":"select hash, payload, created_at, checked_at\nfrom csts.ingest\nwhere type = :type and url = :url\norder by checked_at desc, created_at desc\nlimit 1"};
+const loadIngestRecordIR: any = {"usedParamSet":{"type":true,"url":true},"params":[{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":111,"b":115}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":127,"b":130}]}],"statement":"select hash, payload, created_at, checked_at, last_error, checked_without_change\nfrom csts.ingest\nwhere type = :type and url = :url\norder by checked_at desc, created_at desc\nlimit 1"};
 
 /**
  * Query generated from SQL:
  * ```
- * select hash, payload, created_at, checked_at
- * from csts.ingest
- * where type = :type and url = :url
+ * select hash, payload, created_at, checked_at, last_error, checked_without_change
+* from csts.ingest
+* where type = :type and url = :url
  * order by checked_at desc, created_at desc
  * limit 1
  * ```
  */
 export const loadIngestRecord = new PreparedQuery<ILoadIngestRecordParams,ILoadIngestRecordResult>(loadIngestRecordIR);
+
+
+/** 'UpdateLatestIngestError' parameters type */
+export interface IUpdateLatestIngestErrorParams {
+  hash?: string | null | void;
+  lastError?: string | null | void;
+  type?: string | null | void;
+  url?: string | null | void;
+}
+
+/** 'UpdateLatestIngestError' return type */
+export type IUpdateLatestIngestErrorResult = void;
+
+/** 'UpdateLatestIngestError' query type */
+export interface IUpdateLatestIngestErrorQuery {
+  params: IUpdateLatestIngestErrorParams;
+  result: IUpdateLatestIngestErrorResult;
+}
+
+const updateLatestIngestErrorIR: any = {"usedParamSet":{"type":true,"url":true,"lastError":true,"hash":true},"params":[{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":65,"b":69},{"a":252,"b":256}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":81,"b":84},{"a":277,"b":280}]},{"name":"lastError","required":false,"transform":{"type":"scalar"},"locs":[{"a":185,"b":194}]},{"name":"hash","required":false,"transform":{"type":"scalar"},"locs":[{"a":311,"b":315}]}],"statement":"with latest as (\n  select hash\n  from csts.ingest\n  where type = :type and url = :url\n  order by checked_at desc, created_at desc\n  limit 1\n)\nupdate csts.ingest target\nset last_error = :lastError,\n    checked_at = now()\nfrom latest\nwhere target.type = :type\n  and target.url = :url\n  and target.hash = coalesce(:hash, latest.hash);"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * with latest as (
+ *   select hash
+ *   from csts.ingest
+ *   where type = :type and url = :url
+ *   order by checked_at desc, created_at desc
+ *   limit 1
+ * )
+ * update csts.ingest target
+ * set last_error = :lastError,
+ *     checked_at = now()
+ * from latest
+ * where target.type = :type
+ *   and target.url = :url
+ *   and target.hash = coalesce(:hash, latest.hash);
+ * ```
+ */
+export const updateLatestIngestError = new PreparedQuery<IUpdateLatestIngestErrorParams,IUpdateLatestIngestErrorResult>(updateLatestIngestErrorIR);
 
 
 /** 'DeleteIngestByUrls' parameters type */
@@ -123,6 +174,96 @@ const deleteIngestByUrlsIR: any = {"usedParamSet":{"type":true,"urls":true},"par
  * ```
  */
 export const deleteIngestByUrls = new PreparedQuery<IDeleteIngestByUrlsParams,IDeleteIngestByUrlsResult>(deleteIngestByUrlsIR);
+
+
+/** 'SelectMaxAthleteIdt' return type */
+export interface ISelectMaxAthleteIdtResult {
+  max: number | null;
+}
+
+/** 'SelectMaxAthleteIdt' query type */
+export interface ISelectMaxAthleteIdtQuery {
+  params: void;
+  result: ISelectMaxAthleteIdtResult;
+}
+
+const selectMaxAthleteIdtIR: any = {"usedParamSet":{},"params":[],"statement":"select idt as max\nfrom csts.athlete\norder by case\n  when idt between 18000000 and 18092599 then 1\n  when idt between 10600000 and 17999999 then 2\n  when idt between 18095000 and 19999000 then 3\n  else 0\nend desc,\n  idt desc\nlimit 1"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * select idt as max
+ * from csts.athlete
+ * order by case
+ *   when idt between 18000000 and 18092599 then 1
+ *   when idt between 10600000 and 17999999 then 2
+ *   when idt between 18095000 and 19999000 then 3
+ *   else 0
+ * end desc,
+ *   idt desc
+ * limit 1
+ * ```
+ */
+export const selectMaxAthleteIdt = new PreparedQuery<void,ISelectMaxAthleteIdtResult>(selectMaxAthleteIdtIR);
+
+
+/** 'SelectAthletesToRefresh' parameters type */
+export interface ISelectAthletesToRefreshParams {
+  limit?: number | null | void;
+  threshold?: DateOrString | null | void;
+}
+
+/** 'SelectAthletesToRefresh' return type */
+export interface ISelectAthletesToRefreshResult {
+  idt: number;
+}
+
+/** 'SelectAthletesToRefresh' query type */
+export interface ISelectAthletesToRefreshQuery {
+  params: ISelectAthletesToRefreshParams;
+  result: ISelectAthletesToRefreshResult;
+}
+
+const selectAthletesToRefreshIR: any = {"usedParamSet":{"threshold":true,"limit":true},"params":[{"name":"threshold","required":false,"transform":{"type":"scalar"},"locs":[{"a":74,"b":83}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":143,"b":148}]}],"statement":"select idt\nfrom csts.athlete\nwhere last_checked is null or last_checked < :threshold::timestamptz\norder by last_checked nulls first, idt\nlimit :limit"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * select idt
+ * from csts.athlete
+ * where last_checked is null or last_checked < :threshold::timestamptz
+ * order by last_checked nulls first, idt
+ * limit :limit
+ * ```
+ */
+export const selectAthletesToRefresh = new PreparedQuery<ISelectAthletesToRefreshParams,ISelectAthletesToRefreshResult>(selectAthletesToRefreshIR);
+
+
+/** 'UpdateAthleteLastChecked' parameters type */
+export interface IUpdateAthleteLastCheckedParams {
+  idt?: number | null | void;
+}
+
+/** 'UpdateAthleteLastChecked' return type */
+export type IUpdateAthleteLastCheckedResult = void;
+
+/** 'UpdateAthleteLastChecked' query type */
+export interface IUpdateAthleteLastCheckedQuery {
+  params: IUpdateAthleteLastCheckedParams;
+  result: IUpdateAthleteLastCheckedResult;
+}
+
+const updateAthleteLastCheckedIR: any = {"usedParamSet":{"idt":true},"params":[{"name":"idt","required":false,"transform":{"type":"scalar"},"locs":[{"a":57,"b":60}]}],"statement":"update csts.athlete\nset last_checked = now()\nwhere idt = :idt"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * update csts.athlete
+ * set last_checked = now()
+ * where idt = :idt
+ * ```
+ */
+export const updateAthleteLastChecked = new PreparedQuery<IUpdateAthleteLastCheckedParams,IUpdateAthleteLastCheckedResult>(updateAthleteLastCheckedIR);
 
 
 /** 'UpsertAthlete' parameters type */

@@ -2,30 +2,28 @@ import stringify from 'json-stringify-deterministic';
 import { createHash } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import {
-  deleteIngestByUrls,
   loadIngestRecord,
+  selectAthletesToRefresh,
   touchIngestRecord,
+  updateAthleteLastChecked,
+  updateLatestIngestError,
   upsertAthlete,
   upsertAthleteRanking,
   upsertCompetitorRanking,
   upsertCouple,
   upsertIngestRecord,
+  type ILoadIngestRecordResult,
 } from './athlete.queries.ts';
 import {
   fetchAthletesByIdt,
   parseAthletesResponse,
-  type AthletesResponse,
+  type Athlete,
 } from './athletes.ts';
-import { iterateAthleteIdts } from './idts.ts';
 
-export interface SynchronizeAthletesOptions {
-  signal?: AbortSignal;
-  onFetchError?: (idt: number, error: unknown) => void | Promise<void>;
-  cacheMaxAgeMs?: number;
-  maxRequests?: number;
-  lastFoundIdt?: number;
-  lastCheckedIdt?: number;
-}
+export const INGEST_TYPE = 'athlete';
+const REQUEST_DELAY_MS = 250;
+const DEFAULT_CACHE_MAX_AGE_MS = 1000 * 60 * 60 * 24;
+export const ATHLETE_API_BASE_URL = 'https://www.csts.cz/api/1/athletes/';
 
 const stringifyOptions: Parameters<typeof stringify>[1] = {
   replacer(key, value) {
@@ -33,136 +31,170 @@ const stringifyOptions: Parameters<typeof stringify>[1] = {
   },
 };
 
-export async function synchronizeAthletes(
-  client: PoolClient,
-  options: SynchronizeAthletesOptions = {},
-): Promise<{
-  lastFoundIdt?: number;
-  lastCheckedIdt?: number;
-}> {
-  let { lastFoundIdt, lastCheckedIdt } = options;
-  const { signal, onFetchError, maxRequests, cacheMaxAgeMs = 0 } = options;
+export interface BaseSyncOptions {
+  signal?: AbortSignal;
+  onFetchError?: (idt: number, error: unknown) => void | Promise<void>;
+  maxRequests?: number;
+}
 
-  let requestsSent = 0;
-  let started = !lastCheckedIdt;
-  const notFoundContiguous = new Set<string>();
+export interface RefreshAthletesOptions extends BaseSyncOptions {
+  cacheMaxAgeMs?: number;
+}
 
-  for (const idt of iterateAthleteIdts()) {
-    signal?.throwIfAborted?.();
+export interface RefreshAthletesResult {
+  refreshed: number;
+}
 
-    const url = `https://www.csts.cz/api/1/athletes/${idt}`;
+interface SyncContext {
+  client: PoolClient;
+  idt: number;
+  signal?: AbortSignal;
+}
 
-    if (!started) {
-      if (idt !== lastCheckedIdt) {
-        continue;
+interface SyncOutcome {
+  status: 'updated' | 'unchanged' | 'not_found';
+  athlete: Athlete | null;
+}
+
+export function formatError(error: unknown): string {
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}`;
+  }
+  return String(error);
+}
+
+async function persistAthleteData(client: PoolClient, athlete: Athlete): Promise<void> {
+  await client.query('begin');
+  try {
+    await upsertAthlete.run(athlete, client);
+
+    for (const ranking of athlete.rankingPoints) {
+      await upsertAthleteRanking.run({ ...ranking, athleteId: athlete.idt }, client);
+
+      if (!ranking.id || !ranking.competitorId) continue;
+
+      if (ranking.competitors === 'Couple') {
+        const coupleId = await upsertCouple
+          .run({ ...ranking, athleteIdt: athlete.idt }, client)
+          .then((x) => x[0]?.id ?? null);
+        if (coupleId !== null) {
+          await upsertCompetitorRanking.run({ ...ranking, coupleId }, client);
+        }
       } else {
-        started = true;
+        await upsertCompetitorRanking.run(
+          { ...ranking, athleteIdt: athlete.idt },
+          client,
+        );
       }
     }
 
-    const cachedRecord = await loadIngestRecord
-      .run({ url }, client)
-      .then((x) => x[0] ?? null);
+    await client.query('commit');
+  } catch (error) {
+    await client.query('rollback');
+    throw error;
+  }
+}
 
-    const checkedAt = cachedRecord?.checked_at?.getTime();
-    if (
-      cacheMaxAgeMs > 0 &&
-      Number.isFinite(checkedAt) &&
-      Date.now() - checkedAt <= cacheMaxAgeMs
-    ) {
-      notFoundContiguous.clear();
-      continue;
-    }
+export async function syncAthlete(
+  context: SyncContext,
+  cachedRecord: ILoadIngestRecordResult | null,
+): Promise<SyncOutcome> {
+  const { client, idt, signal } = context;
+  const url = `${ATHLETE_API_BASE_URL}${idt}`;
 
-    let rawResponse: unknown;
-    let parsedResponse: AthletesResponse | undefined;
+  signal?.throwIfAborted?.();
+
+  await new Promise((resolve) => setTimeout(resolve, REQUEST_DELAY_MS));
+
+  signal?.throwIfAborted?.();
+
+  const rawResponse = await fetchAthletesByIdt(idt);
+
+  if (rawResponse === null) {
+    return { status: 'not_found', athlete: null };
+  }
+
+  const parsedResponse = parseAthletesResponse(rawResponse);
+  const athlete = parsedResponse.collection[0] ?? null;
+
+  if (!athlete) {
+    return { status: 'not_found', athlete: null };
+  }
+
+  const payloadHash = createHash('sha256')
+    .update(stringify(rawResponse, stringifyOptions))
+    .digest('hex');
+
+  if (cachedRecord?.hash === payloadHash) {
+    await touchIngestRecord.run({ type: INGEST_TYPE, url, hash: payloadHash }, client);
+    await updateAthleteLastChecked.run({ idt }, client);
+    return { status: 'unchanged', athlete };
+  }
+
+  await upsertIngestRecord.run(
+    {
+      type: INGEST_TYPE,
+      url,
+      hash: payloadHash,
+      payload: rawResponse as any,
+    },
+    client,
+  );
+  await persistAthleteData(client, athlete);
+  await updateAthleteLastChecked.run({ idt }, client);
+
+  return { status: 'updated', athlete };
+}
+
+export async function refreshAthletes(
+  client: PoolClient,
+  options: RefreshAthletesOptions = {},
+): Promise<RefreshAthletesResult> {
+  const { cacheMaxAgeMs = DEFAULT_CACHE_MAX_AGE_MS, signal, onFetchError, maxRequests } = options;
+  const threshold = new Date(Date.now() - cacheMaxAgeMs);
+  const limit = maxRequests ?? 100;
+
+  const rows = await selectAthletesToRefresh.run(
+    { threshold, limit },
+    client,
+  );
+
+  let refreshed = 0;
+
+  for (const row of rows) {
+    const idt = row.idt;
+    const url = `${ATHLETE_API_BASE_URL}${idt}`;
+    const cachedRows = await loadIngestRecord.run({ type: INGEST_TYPE, url }, client);
+    const cachedRecord = cachedRows[0] ?? null;
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 250));
-      requestsSent += 1;
-      lastCheckedIdt = idt;
-      rawResponse = await fetchAthletesByIdt(idt);
-      parsedResponse = parseAthletesResponse(rawResponse);
+      const result = await syncAthlete({ client, idt, signal }, cachedRecord);
+
+      if (result.status === 'not_found') {
+        await updateAthleteLastChecked.run({ idt }, client);
+        continue;
+      }
+
+      refreshed += 1;
     } catch (error) {
+      if (cachedRecord) {
+        await updateLatestIngestError.run(
+          {
+            type: INGEST_TYPE,
+            url,
+            hash: cachedRecord.hash,
+            lastError: formatError(error),
+          },
+          client,
+        );
+      }
       if (onFetchError) {
         await onFetchError(idt, error);
-        continue;
+      } else {
+        throw error;
       }
-      throw error;
-    }
-    const payloadHash = createHash('sha256')
-      .update(stringify(rawResponse, stringifyOptions))
-      .digest('hex');
-
-    let shouldSkipProcessing = false;
-    if (cachedRecord?.hash === payloadHash) {
-      shouldSkipProcessing = true;
-      await touchIngestRecord.run({ url, hash: payloadHash }, client);
-    } else {
-      await upsertIngestRecord.run(
-        { url, hash: payloadHash, payload: rawResponse as any },
-        client,
-      );
-    }
-
-    const athlete = parsedResponse.collection[0];
-    if (!athlete) {
-      console.log(`[csts] ${idt} not found`);
-      notFoundContiguous.add(url);
-      if (notFoundContiguous.size > 100 && idt > 10600000) {
-        console.log(
-          "[csts] Didn't find 100 in a row, aborting - we might be at the end of assigned IDTs",
-        );
-        console.log(`[csts] Last found IDT: ${lastFoundIdt}`);
-        await deleteIngestByUrls.run({ urls: [...notFoundContiguous] }, client);
-        return {};
-      }
-      continue;
-    }
-
-    if (shouldSkipProcessing) continue;
-
-    lastFoundIdt = idt;
-    notFoundContiguous.clear();
-
-    await client.query('begin');
-    try {
-      console.log(`[csts] ${idt}`);
-      await upsertAthlete.run(athlete, client);
-
-      for (const ranking of athlete.rankingPoints) {
-        await upsertAthleteRanking.run({ ...ranking, athleteId: athlete.idt }, client);
-
-        if (!ranking.id || !ranking.competitorId) continue;
-
-        if (ranking.competitors === 'Couple') {
-          const coupleId = await upsertCouple
-            .run({ ...ranking, athleteIdt: athlete.idt }, client)
-            .then((x) => x[0]?.id);
-          if (coupleId !== null) {
-            await upsertCompetitorRanking.run({ ...ranking, coupleId }, client);
-          }
-        } else {
-          await upsertCompetitorRanking.run(
-            { ...ranking, athleteIdt: athlete.idt },
-            client,
-          );
-        }
-      }
-
-      await client.query('commit');
-    } catch (error) {
-      await client.query('rollback');
-      throw error;
-    }
-
-    if (maxRequests && requestsSent >= maxRequests) {
-      return {
-        lastCheckedIdt,
-        lastFoundIdt,
-      };
     }
   }
 
-  // Shouldn't ever happen
-  return {};
+  return { refreshed };
 }

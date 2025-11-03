@@ -1,12 +1,19 @@
-import { synchronizeAthletes } from './index.ts'
+import { discoverAthletes, refreshAthletes } from './index.ts';
 import { Pool } from 'pg';
 
 const pool = new Pool();
-pool.connect().then((client) => {
-  synchronizeAthletes(client, {
+pool.connect().then(async (client) => {
+  await discoverAthletes(client, {
     onFetchError(idt, error) {
-      console.error(idt, error);
+      console.error('[discover]', idt, error);
     },
-    cacheMaxAgeMs: 1000 * 60 * 60 * 24 // 1 day
+    maxRequests: 10,
+  });
+
+  await refreshAthletes(client, {
+    onFetchError(idt, error) {
+      console.error('[refresh]', idt, error);
+    },
+    maxRequests: 10,
   });
 });
