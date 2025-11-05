@@ -6,6 +6,7 @@ const CHECK_MS = 5 * 60 * 1000;
 
 export function UpdateNotifier() {
   const swwRef = useRef<InstanceType<typeof SerwistWindow> | undefined>();
+  const toastRef = useRef<string | number | undefined>();
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -13,8 +14,9 @@ export function UpdateNotifier() {
     const serwist = new SerwistWindow("/sw.js", { scope: "/", type: "classic" });
     swwRef.current = serwist;
 
-    const onWaiting = () => {
-      toast.warn((
+    const onControlling = () => {
+      if (toastRef.current) return;
+      toastRef.current = toast.warn((
         <>
           <b>Je k dispozici nová verze aplikace.</b>
           {' '}
@@ -24,14 +26,12 @@ export function UpdateNotifier() {
         autoClose: false,
         closeOnClick: true,
         onClick() {
-          swwRef.current?.messageSkipWaiting();
+          window.location.reload();
+        },
+        onClose() {
+          toastRef.current = undefined;
         },
       });
-    };
-    serwist.addEventListener("waiting", onWaiting);
-
-    const onControlling = () => {
-      window.location.reload();
     };
     serwist.addEventListener("controlling", onControlling);
     navigator.serviceWorker.addEventListener("controllerchange", onControlling);
@@ -60,7 +60,6 @@ export function UpdateNotifier() {
     });
 
     return () => {
-      serwist.removeEventListener?.("waiting", onWaiting);
       serwist.removeEventListener?.("controlling", onControlling);
       navigator.serviceWorker.removeEventListener("controllerchange", onControlling);
     };
