@@ -1,16 +1,25 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true
-		}
-	},
+	"$schema": "https://biomejs.dev/schemas/2.3.3/schema.json",
+	"assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
   "files": {
-    "ignore": [".next/", "graphql/"]
+    "includes": [
+      "**",
+      "!.next",
+      "!public/sw.js",
+      "!graphql"
+    ]
   },
   "javascript": {
     "jsxRuntime": "reactClassic"

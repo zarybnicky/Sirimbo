@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line import/no-anonymous-default-export, import/no-unused-modules
 export default {
   content: [
     './calendar/**/*.{js,ts,jsx,tsx}',

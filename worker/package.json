@@ -14,13 +14,13 @@
   },
   "dependencies": {
     "@rozpisovnik/csts": "link:../csts",
-    "graphile-config": "^0.0.1-beta.18",
+    "graphile-config": "1.0.0-rc.1",
     "graphile-worker": "^0.16.6",
     "handlebars": "^4.7.8",
     "helmet": "~8.1.0",
     "html-to-text": "~9.0.5",
     "mjml": "^4.16.1",
-    "nodemailer": "~6.9.16",
+    "nodemailer": "~7.0.10",
     "pg": "8.16.3",
     "uglify-js": "^3.19.3"
   },
@@ -28,9 +28,9 @@
     "@tsconfig/node24": "^24.0.1",
     "@types/html-to-text": "~9.0.4",
     "@types/mjml": "^4.7.4",
-    "@types/node": "^24.9.1",
-    "@types/nodemailer": "~6.4.20",
-    "@types/pg": "~8.15.5",
+    "@types/node": "^24.10.0",
+    "@types/nodemailer": "~7.0.3",
+    "@types/pg": "~8.15.6",
     "typescript": "~5.9.3"
   }
 }

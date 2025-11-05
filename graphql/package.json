@@ -5,11 +5,11 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@eslint/js": "^9.38.0",
+    "@eslint/js": "^9.39.1",
     "@graphql-eslint/eslint-plugin": "^4.4.0",
-    "eslint": "^9.38.0"
+    "eslint": "^9.39.1"
   },
   "dependencies": {
-    "graphql": "^16.11.0"
+    "graphql": "^16.12.0"
   }
 }

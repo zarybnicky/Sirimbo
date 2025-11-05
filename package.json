@@ -16,12 +16,12 @@
     "@parcel/watcher": "^2.5.1",
     "@urql/exchange-graphcache": "^7.2.4",
     "graphile-migrate": "^1.4.1",
-    "graphql": "^16.11.0",
+    "graphql": "^16.12.0",
     "graphql-tag": "^2.12.6",
     "prettier": "3.6.2",
     "prop-types": "^15.8.1",
     "typescript": "~5.9.3",
-    "typescript-language-server": "^5.0.1"
+    "typescript-language-server": "^5.1.0"
   },
   "scripts": {
     "schema": "graphql-codegen --config graphql.config.yml",

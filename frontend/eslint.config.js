@@ -7,6 +7,7 @@ import deMorgan from 'eslint-plugin-de-morgan';
 import { fixupPluginRules } from '@eslint/compat';
 import reactHookForm from 'eslint-plugin-react-hook-form';
 
+// eslint-disable-next-line import/no-unused-modules
 export default defineConfig([
   ...nextVitals,
   ...nextTs,
@@ -27,7 +28,7 @@ export default defineConfig([
     settings: {
       tailwindcss: {
         callees: ["classNames", "ctl", "cn"],
-        cssFilesRefreshRate: 5000000,
+        cssFilesRefreshRate: 5_000_000,
       },
     },
     rules: {
@@ -85,6 +86,7 @@ export default defineConfig([
 
   globalIgnores([
     "public/sw.js",
+    "graphql/index.ts",
     '.next/**',
     'out/**',
     'build/**',
