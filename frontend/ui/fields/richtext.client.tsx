@@ -105,6 +105,16 @@ export default function Editor(props: EditorProps) {
           "indent",
           "sourceEditing",
         ],
+        htmlSupport: {
+          allow: [
+            {
+              name: 'a',
+              styles: true,
+              classes: true,
+              attributes: true,
+            }
+          ],
+        },
       }}
       data={realInitial}
       onChange={cb}

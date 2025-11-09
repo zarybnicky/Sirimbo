@@ -68,6 +68,7 @@ export default compose(
       { source: '/aktualne/:path*', destination: '/clanky/:path*', permanent: true },
     ];
     const olympSpecificRedirects = [
+      { source: '/tancirna', destination: '/clanky/470/olymp-dance-night-2026', permanent: false },
       { source: '/camp', destination: '/clanky/468/letni-soustredeni-mohelnice', permanent: false },
       { source: '/mistrovstvi', destination: 'https://mistrovstvi.tkolymp.cz', permanent: true },
       { source: '/prijdtancit', destination: 'https://nabor.tkolymp.cz', permanent: true },
