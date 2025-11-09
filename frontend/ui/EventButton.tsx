@@ -121,7 +121,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
                 <AlertTriangle className="size-4" />
               </div>
             )}
-            {duration < 120 && <div className="text-neutral-11">{duration}&apos;</div>}
+            {duration < 210 && <div className="text-neutral-11">{duration}&apos;</div>}
             {hasConflicts && (
               <span className="sr-only">Kolize: {conflictNames}</span>
             )}

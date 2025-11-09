@@ -54,9 +54,6 @@ function ArticlePage() {
     );
   }
 
-  const galleryPath = item.galerieFoto?.gfPath;
-  const imageUrl = item.titlePhotoUrl ?? (galleryPath ? `/galerie/${galleryPath}` : '');
-
   return (
     <Layout showTopMenu>
       <TitleBar title={item.atJmeno} />
@@ -66,13 +63,13 @@ function ArticlePage() {
           type: 'article',
           title: item.atJmeno,
           url: `https://tkolymp.cz/clanky/${item.id}/${slugify(item.atJmeno)}`,
-          images: imageUrl
+          images: item.titlePhotoUrl
             ? [
                 {
                   url:
                     '/_next/image?' +
                     new URLSearchParams({
-                      url: imageUrl,
+                      url: item.titlePhotoUrl,
                       w: '256',
                       q: '75',
                     }).toString(),

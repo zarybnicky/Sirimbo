@@ -1,5 +1,5 @@
 import { defaultCache } from "@serwist/next/worker";
-import { Serwist, type PrecacheEntry, Strategy, ExpirationPlugin, NetworkFirst } from 'serwist';
+import { disableDevLogs, Serwist, type PrecacheEntry, Strategy, ExpirationPlugin, NetworkFirst } from 'serwist';
 
 declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: Array<PrecacheEntry | string> | undefined;
@@ -34,6 +34,8 @@ const serwist = new Serwist({
   },
 });
 serwist.addEventListeners();
+
+disableDevLogs();
 
 type PushPayload = {
   title?: string;

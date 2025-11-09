@@ -1,7 +1,31 @@
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import type { PluginFunctionConstructor } from '@ckeditor/ckeditor5-core/src/plugin';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import {
+  type PluginFunctionConstructor,
+  Autoformat,
+  SourceEditing,
+  ClassicEditor,
+  Essentials,
+  Bold,
+  Italic,
+  Heading,
+  Image,
+  ImageCaption,
+  ImageStyle,
+  ImageToolbar,
+  Indent,
+  Link,
+  List,
+  Paragraph,
+  PasteFromOffice,
+  Table,
+  TableToolbar,
+  TextTransformation,
+  AutoImage,
+  ImageInsert,
+} from 'ckeditor5';
 import React from 'react';
+
+import 'ckeditor5/ckeditor5.css';
 
 export type EditorProps = {
   name: string;
@@ -37,7 +61,51 @@ export default function Editor(props: EditorProps) {
     <input type="hidden" name={name} value={value} />
     <CKEditor
       editor={ClassicEditor}
-      config={{ extraPlugins: [EditorClassPlugin as PluginFunctionConstructor] }}
+      config={{
+        licenseKey: 'GPL',
+        plugins: [
+          Essentials,
+          AutoImage,
+          Autoformat,
+          Bold,
+          Italic,
+          Heading,
+          Image,
+          ImageCaption,
+          ImageInsert,
+          ImageStyle,
+          ImageToolbar,
+          Indent,
+          Link,
+          List,
+          Paragraph,
+          PasteFromOffice,
+          Table,
+          TableToolbar,
+          TextTransformation,
+          SourceEditing,
+          EditorClassPlugin as PluginFunctionConstructor,
+        ],
+        toolbar: [
+          "undo",
+          "redo",
+          "|",
+          "heading",
+          "|",
+          "bold",
+          "italic",
+          "|",
+          "link",
+          "insertImageViaUrl",
+          "insertTable",
+          "|",
+          "bulletedList",
+          "numberedList",
+          "outdent",
+          "indent",
+          "sourceEditing",
+        ],
+      }}
       data={realInitial}
       onChange={cb}
       onReady={setEditor}
@@ -57,11 +125,13 @@ function EditorClassPlugin(editor: ClassicEditor) {
     editor.ui.view.body.bodyCollectionContainer?.classList.add('prose', 'prose-accent', '!bg-accent-1');
 
     if (editor.ui.view.element) {
-      editor.ui.view.element.classList.add('prose', 'prose-accent', '!bg-accent-1');
+      editor.ui.view.element.parentElement?.classList.add('prose', 'prose-accent', '!bg-accent-1');
     }
   });
 
   editor.editing.view.change(writer => {
-    writer.addClass('prose prose-accent !bg-accent-1', editor.editing.view.document.getRoot()!);
+    const root = editor.editing.view.document?.getRoot()?.parent;
+    if (root)
+      writer.addClass('prose prose-accent !bg-accent-1', root as any);
   });
 }

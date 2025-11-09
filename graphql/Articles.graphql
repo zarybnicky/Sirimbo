@@ -8,10 +8,6 @@ fragment Article on Aktuality {
   createdAt
   updatedAt
   titlePhotoUrl
-  galerieFoto {
-    id
-    gfPath
-  }
 }
 
 query Article($id: BigInt!) {

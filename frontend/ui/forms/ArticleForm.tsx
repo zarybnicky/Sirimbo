@@ -25,6 +25,10 @@ const Form = z.object({
   atJmeno: z.string().min(1, 'Zadejte název článku'),
   atPreview: z.string().optional().prefault(''),
   atText: z.string().optional().prefault(''),
+  titlePhotoUrl: z.preprocess(
+    (val) => val === "" ? null : val,
+    z.string().nullable().default(null),
+  ),
 });
 
 type FormValues = z.infer<typeof Form>;
@@ -48,10 +52,12 @@ export function ArticleForm({ id = '' }: { id?: string }) {
       atJmeno: data?.atJmeno ?? '',
       atPreview: data?.atPreview ?? '',
       atText: data?.atText ?? '',
+      titlePhotoUrl: data?.titlePhotoUrl ?? '',
     });
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormValues) => {
+
     if (id) {
       await update({ id, patch });
     } else {
@@ -96,6 +102,8 @@ export function ArticleForm({ id = '' }: { id?: string }) {
 
       <FormError error={onSubmit.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
+      <TextFieldElement control={control} name="titlePhotoUrl" label="URL hlavní fotky" />
+
       <RichTextEditor
         control={control}
         initialState={data?.atPreview}
