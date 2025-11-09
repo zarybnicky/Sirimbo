@@ -22,6 +22,7 @@ import {
   TextTransformation,
   AutoImage,
   ImageInsert,
+  GeneralHtmlSupport,
 } from 'ckeditor5';
 import React from 'react';
 
@@ -69,6 +70,7 @@ export default function Editor(props: EditorProps) {
           Autoformat,
           Bold,
           Italic,
+          GeneralHtmlSupport,
           Heading,
           Image,
           ImageCaption,
