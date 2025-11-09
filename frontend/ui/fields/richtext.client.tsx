@@ -108,7 +108,7 @@ export default function Editor(props: EditorProps) {
         htmlSupport: {
           allow: [
             {
-              name: 'a',
+              name: /.*/,
               styles: true,
               classes: true,
               attributes: true,
