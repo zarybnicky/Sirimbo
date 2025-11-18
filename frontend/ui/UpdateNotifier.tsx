@@ -57,6 +57,8 @@ export function UpdateNotifier() {
         document.removeEventListener("visibilitychange", onVisible);
         window.removeEventListener("pagehide", stop);
       };
+    }, () => {
+      // Ignore failed SW registration
     });
 
     return () => {
