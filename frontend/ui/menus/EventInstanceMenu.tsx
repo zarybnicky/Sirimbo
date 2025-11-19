@@ -3,6 +3,8 @@ import {
   EventDocument,
   EventFragment,
   EventInstanceFragment,
+  EventInstanceWithAttendanceDocument,
+  UpdateAttendanceDocument,
   UpdateEventInstanceDocument,
   UpsertEventDocument,
 } from '@/graphql/Event';
@@ -19,6 +21,7 @@ import { exportEventParticipants } from '@/ui/reports/export-event-participants'
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 import { useAuth } from '../use-auth';
 import { keyIsNonNull } from '../truthyFilter';
+import { fetchGql } from '@/graphql/query';
 
 export function EventInstanceMenu({
   event,
@@ -29,6 +32,7 @@ export function EventInstanceMenu({
   const confirm = useConfirm();
   const client = useClient();
   const upsertEvent = useMutation(UpsertEventDocument)[1];
+  const updateAttendance = useMutation(UpdateAttendanceDocument)[1];
   const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
   const deleteMutation = useMutation(DeleteEventInstanceDocument)[1];
   const auth = useAuth();
@@ -77,11 +81,10 @@ export function EventInstanceMenu({
           lessonsOffered: x.lessonsOffered,
         })),
         cohorts: event.eventTargetCohortsList.filter(keyIsNonNull('cohort')).map((x) => ({ cohortId: x.cohort.id })),
-        registrations: [],
+        registrations: event.eventRegistrations.nodes.map((x) => ({ coupleId: x.coupleId, personId: x.personId })),
         instances: [],
       },
     });
-
     if (upsertResult.error) {
       throw upsertResult.error;
     }
@@ -93,10 +96,11 @@ export function EventInstanceMenu({
       id: instance.id,
       patch: { eventId: newEventId },
     });
-
     if (updateResult.error) {
       throw updateResult.error;
     }
+
+    // Re-assign attendance records
 
     await client.query(EventDocument, { id: event.id }).toPromise();
     await client.query(EventDocument, { id: newEventId }).toPromise();

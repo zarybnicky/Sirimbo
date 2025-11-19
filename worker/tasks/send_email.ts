@@ -17,7 +17,7 @@ const task: Task<"send_email"> = async (payload) => {
     if (!template.match(/^[a-zA-Z0-9_.-]+$/)) {
       throw new Error(`Disallowed template name '${template}'`);
     }
-    const templateSrc = await promises.readFile(`${__dirname}/../templates/${template}`, "utf8");
+    const templateSrc = await promises.readFile(`${import.meta.dirname}/../templates/${template}`, "utf8");
     const mjmlResult = mjml2html(templateSrc, {
       preprocessors: [
         (src) => Handlebars.compile(src)(variables)
