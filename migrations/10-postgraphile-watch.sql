@@ -1,3 +1,5 @@
+create schema if not exists postgraphile_watch;
+
 create or replace function postgraphile_watch.notify_watchers_ddl() returns event_trigger as $$
 declare
   ddl_commands json;
