@@ -23,7 +23,7 @@
 
       rozpisovnik-worker = final.callPackage ./nix/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./worker/package.json;
-        workspaceFolders = [ "worker" "csts" ];
+        workspaceFolders = [ "worker" ];
         pnpmDepsHash = "sha256-hWp+vDP2LLXFZTlznIy8s82NMM1/OvghzupZMs4I4B4=";
         postInstall = "cp -s $out/share/worker/rozpisovnik-worker $out/bin/";
       };

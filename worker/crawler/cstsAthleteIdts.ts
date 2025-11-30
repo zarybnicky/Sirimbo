@@ -12,16 +12,20 @@ const IDT_RANGES: readonly IdtRange[] = [
   { start: 18_095_000, end: 19_999_000 },
 ];
 
-export const MIN_IDT = IDT_RANGES.reduce(
-  (min, range) => Math.min(min, range.start),
-  Number.POSITIVE_INFINITY,
-);
-export const MAX_IDT = IDT_RANGES.reduce(
-  (max, range) => Math.max(max, range.end),
-  Number.NEGATIVE_INFINITY,
-);
+export const getNextIdt = (idt: number) => {
+  const currentBlockIdx = IDT_RANGES.findIndex(
+    ({ start, end }) => idt >= start && idt <= end,
+  );
+  if (currentBlockIdx === -1) return null;
 
-function* iterateRange({ start, end }: IdtRange): Generator<number> {
+  const nextBase = Math.floor(idt / 10) + 1;
+  const nextIdt = nextBase * 10 + computeEan8CheckDigit(nextBase);
+
+  if (nextIdt <= IDT_RANGES[currentBlockIdx].end) return nextIdt;
+  return IDT_RANGES[currentBlockIdx + 1]?.start ?? null;
+};
+
+export function* iterateRange({ start, end }: IdtRange): Generator<number> {
   const baseStart = Math.floor(start / 10);
   const baseEnd = Math.floor(end / 10);
 
@@ -42,13 +46,13 @@ function toDigits(value: number, length: number): number[] {
   return digits.map((digit) => {
     const parsed = Number.parseInt(digit, 10);
     if (Number.isNaN(parsed)) {
-      throw new TypeError(`Invalid digit \"${digit}\" in value ${value}`);
+      throw new TypeError(`Invalid digit "${digit}" in value ${value}`);
     }
     return parsed;
   });
 }
 
-export function computeEan8CheckDigit(base: number): number {
+function computeEan8CheckDigit(base: number): number {
   if (!Number.isInteger(base)) {
     throw new TypeError('The EAN-8 base must be an integer.');
   }
@@ -63,10 +67,4 @@ export function computeEan8CheckDigit(base: number): number {
 
   const remainder = weightedSum % 10;
   return remainder === 0 ? 0 : 10 - remainder;
-}
-
-export function* iterateAthleteIdts(): Generator<number> {
-  for (const range of IDT_RANGES) {
-    yield* iterateRange(range);
-  }
 }

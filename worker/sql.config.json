@@ -2,11 +2,11 @@
   "transforms": [
     {
       "mode": "sql",
-      "include": "**/*.sql",
+      "include": "crawler/**/*.sql",
       "emitTemplate": "{{dir}}/{{name}}.queries.ts"
     }
   ],
-  "srcDir": "./src/",
+  "srcDir": ".",
   "failOnError": false,
   "camelCaseColumnNames": false
 }

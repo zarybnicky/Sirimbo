@@ -5,4 +5,4 @@ worker: pnpm -C worker run start
 
 schema: exec npm run schema -- --watch
 schema-starlet: exec npm run schema-starlet -- --watch
-sql-csts: pnpm -C csts run sql:generate -- --watch
+sql-worker: pnpm -C worker run sql:generate -- --watch

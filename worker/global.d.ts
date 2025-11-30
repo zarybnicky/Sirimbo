@@ -1,9 +1,9 @@
 namespace GraphileWorker {
   interface Tasks {
-    csts_scrape_athletes: {
-      lastFoundIdt?: number;
-      lastCheckedIdt?: number;
+    fetch_frontier: {
+      frontierId: number;
     };
+    discover_csts_athletes: {};
 
     notify_announcement: {
       announcement_id: number;

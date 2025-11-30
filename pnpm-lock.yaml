@@ -198,37 +198,6 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
 
-  csts:
-    dependencies:
-      '@pgtyped/runtime':
-        specifier: ^2.4.2
-        version: 2.4.2
-      json-stringify-deterministic:
-        specifier: ^1.0.12
-        version: 1.0.12
-      pg:
-        specifier: ^8.16.3
-        version: 8.16.3
-      zod:
-        specifier: ^4.1.12
-        version: 4.1.12
-    devDependencies:
-      '@pgtyped/cli':
-        specifier: ^2.4.3
-        version: 2.4.3(typescript@5.9.3)
-      '@tsconfig/node24':
-        specifier: ^24.0.1
-        version: 24.0.1
-      '@types/node':
-        specifier: ^24.10.0
-        version: 24.10.0
-      '@types/pg':
-        specifier: ^8.15.6
-        version: 8.15.6
-      typescript:
-        specifier: ~5.9.3
-        version: 5.9.3
-
   frontend:
     dependencies:
       '@0no-co/graphql.web':
@@ -645,9 +614,9 @@ importers:
 
   worker:
     dependencies:
-      '@rozpisovnik/csts':
-        specifier: link:../csts
-        version: link:../csts
+      '@pgtyped/runtime':
+        specifier: ^2.4.2
+        version: 2.4.2
       graphile-config:
         specifier: 1.0.0-rc.1
         version: 1.0.0-rc.1
@@ -675,7 +644,13 @@ importers:
       uglify-js:
         specifier: ^3.19.3
         version: 3.19.3
+      zod:
+        specifier: ^4.1.13
+        version: 4.1.13
     devDependencies:
+      '@pgtyped/cli':
+        specifier: ^2.4.3
+        version: 2.4.3(typescript@5.9.3)
       '@tsconfig/node24':
         specifier: ^24.0.1
         version: 24.0.1
@@ -6885,10 +6860,6 @@ packages:
   json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
 
-  json-stringify-deterministic@1.0.12:
-    resolution: {integrity: sha512-q3PN0lbUdv0pmurkBNdJH3pfFvOTL/Zp0lquqpvcjfKzt6Y0j49EPHAmVHCAS4Ceq/Y+PejWTzyiVpoY71+D6g==}
-    engines: {node: '>= 4'}
-
   json-to-pretty-yaml@1.2.2:
     resolution: {integrity: sha512-rvm6hunfCcqegwYaG5T4yKJWxc9FXFgBVrcTZ4XfSVRwa5HA/Xs+vB/Eo9treYYHCeNM0nrSUr82V/M31Urc7A==}
     engines: {node: '>= 0.2.0'}
@@ -9229,6 +9200,9 @@ packages:
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
+  zod@4.1.13:
+    resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
+
   zod@4.1.5:
     resolution: {integrity: sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg==}
 
@@ -10893,6 +10867,8 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.2.0
       '@ckeditor/ckeditor5-upload': 47.2.0
       ckeditor5: 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-alignment@47.2.0':
     dependencies:
@@ -10901,6 +10877,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.2.0
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-autoformat@47.2.0':
     dependencies:
@@ -10954,6 +10932,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       '@ckeditor/ckeditor5-widget': 47.2.0
       ckeditor5: 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-ckbox@47.2.0':
     dependencies:
@@ -10979,6 +10959,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.2.0
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-clipboard@47.2.0':
     dependencies:
@@ -10988,12 +10970,16 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       '@ckeditor/ckeditor5-widget': 47.2.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-cloud-services@47.2.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 47.2.0
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-code-block@47.2.0':
     dependencies:
@@ -11036,6 +11022,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-editor-classic@47.2.0':
     dependencies:
@@ -11045,6 +11033,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-editor-decoupled@47.2.0':
     dependencies:
@@ -11054,6 +11044,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-editor-inline@47.2.0':
     dependencies:
@@ -11063,6 +11055,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-editor-multi-root@47.2.0':
     dependencies:
@@ -11101,6 +11095,8 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.2.0
       '@ckeditor/ckeditor5-engine': 47.2.0
       '@ckeditor/ckeditor5-utils': 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-essentials@47.2.0':
     dependencies:
@@ -11123,6 +11119,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-font@47.2.0':
     dependencies:
@@ -11156,6 +11154,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.2.0
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-highlight@47.2.0':
     dependencies:
@@ -11175,6 +11175,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       '@ckeditor/ckeditor5-widget': 47.2.0
       ckeditor5: 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-html-embed@47.2.0':
     dependencies:
@@ -11201,6 +11203,8 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 47.2.0
       ckeditor5: 47.2.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-icons@47.2.0': {}
 
@@ -11218,6 +11222,8 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 47.2.0
       ckeditor5: 47.2.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-indent@47.2.0':
     dependencies:
@@ -11229,6 +11235,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.2.0
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-integrations-common@2.2.3(ckeditor5@47.2.0)':
     dependencies:
@@ -11240,6 +11248,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.2.0
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-link@47.2.0':
     dependencies:
@@ -11319,6 +11329,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-minimap@47.2.0':
     dependencies:
@@ -11348,6 +11360,8 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.2.0
       '@ckeditor/ckeditor5-ui': 47.2.0
       '@ckeditor/ckeditor5-utils': 47.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-paste-from-office@47.2.0':
     dependencies:
@@ -11511,8 +11525,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.2.0
       ckeditor5: 47.2.0
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@dataplan/json@1.0.0-rc.1(grafast@1.0.0-rc.1(@envelop/core@5.3.2)(graphql@16.12.0))':
     dependencies:
@@ -17801,8 +17813,6 @@ snapshots:
 
   json-stable-stringify-without-jsonify@1.0.1: {}
 
-  json-stringify-deterministic@1.0.12: {}
-
   json-to-pretty-yaml@1.2.2:
     dependencies:
       remedial: 1.0.8
@@ -20677,6 +20687,8 @@ snapshots:
       zod: 4.1.12
 
   zod@4.1.12: {}
+
+  zod@4.1.13: {}
 
   zod@4.1.5: {}
 
