@@ -1,6 +1,10 @@
-CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_instance) RETURNS TABLE(amount numeric, currency text)
-    LANGUAGE plpgsql STABLE
-    AS $$
+--! Previous: sha1:c0184a3febe5cf8de247e05b490a981dc8b2cd1a
+--! Hash: sha1:904018b6905db4c244d6f25f48099ee9b6f2354e
+
+--! split: 1-current.sql
+drop function if exists public.event_instance_approx_price;
+
+create or replace function public.event_instance_approx_price(v_instance event_instance) returns table (amount numeric(19, 4), currency text) language plpgsql stable as $$
 declare
   num_participants bigint;
   duration numeric;
@@ -28,6 +32,30 @@ begin
 end;
 $$;
 
-COMMENT ON FUNCTION public.event_instance_approx_price(v_instance public.event_instance) IS '@simpleCollections only';
+select verify_function('event_instance_approx_price');
 
-GRANT ALL ON FUNCTION public.event_instance_approx_price(v_instance public.event_instance) TO anonymous;
+grant all on function event_instance_approx_price to anonymous;
+
+COMMENT ON FUNCTION event_instance_approx_price IS '@simpleCollections only';
+
+
+CREATE OR REPLACE FUNCTION on_update_author_aktuality() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+   NEW.at_kdo = current_user_id();
+   RETURN NEW;
+END;
+$$;
+
+BEGIN;
+ALTER TABLE aktuality DISABLE TRIGGER ALL;
+
+UPDATE aktuality SET at_foto = null WHERE at_foto = 0;
+UPDATE aktuality SET at_foto = null WHERE at_foto_main = 0 OR at_foto_main IS null;
+
+update aktuality set title_photo_url = '/galerie/' || (select gf_path from galerie_foto where id = at_foto_main)
+where title_photo_url is null and at_foto_main is not null;
+
+ALTER TABLE aktuality ENABLE TRIGGER ALL;
+COMMIT;

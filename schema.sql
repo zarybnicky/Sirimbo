@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict RTrjrVUUyY8jSBl2jcFzghqKrx9r7kmR3B4V2CGWBpXNeHOR2Cj42zxBPCB1pX5
+\restrict obefg4N871BDeQWAEXQhgRpgGe6wup3kWhN0uttEH2ksa2wFTNL7sbHR7ZS9EdO
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 17.6
@@ -2722,7 +2722,7 @@ begin
   if exists (select 1 from event_instance_trainer where instance_id = v_instance.id) then
     return query
     select
-      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4), 'NaN') as amount,
+      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / nullif(num_participants, 0))::numeric(19,4), 'NaN') as amount,
       coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
     from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id
     where active and event_instance_trainer.instance_id=v_instance.id and tenant_trainer.tenant_id = event_instance_trainer.tenant_id
@@ -2730,7 +2730,7 @@ begin
   else
     return query
     select
-      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / num_participants)::numeric(19,4), 'NaN') as amount,
+      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / nullif(num_participants, 0))::numeric(19,4), 'NaN') as amount,
       coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
     from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id
     where active and event_trainer.event_id=v_instance.event_id and tenant_trainer.tenant_id = event_trainer.tenant_id
@@ -3575,7 +3575,6 @@ CREATE FUNCTION public.on_update_author_aktuality() RETURNS trigger
     AS $$
 BEGIN
    NEW.at_kdo = current_user_id();
-   NEW.at_timestamp = now();
    RETURN NEW;
 END;
 $$;
@@ -12654,5 +12653,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict RTrjrVUUyY8jSBl2jcFzghqKrx9r7kmR3B4V2CGWBpXNeHOR2Cj42zxBPCB1pX5
+\unrestrict obefg4N871BDeQWAEXQhgRpgGe6wup3kWhN0uttEH2ksa2wFTNL7sbHR7ZS9EdO
 
