@@ -174,7 +174,7 @@ export const rescheduleFrontier = new PreparedQuery<IRescheduleFrontierParams,IR
 
 /** 'InsertHtmlResponse' parameters type */
 export interface IInsertHtmlResponseParams {
-  content?: string | null | void;
+  content?: Json | null | void;
   error?: string | null | void;
   frontierId?: NumberOrString | null | void;
   httpStatus?: number | null | void;
@@ -190,13 +190,30 @@ export interface IInsertHtmlResponseQuery {
   result: IInsertHtmlResponseResult;
 }
 
-const insertHtmlResponseIR: any = {"usedParamSet":{"frontierId":true,"url":true,"httpStatus":true,"error":true,"content":true},"params":[{"name":"frontierId","required":false,"transform":{"type":"scalar"},"locs":[{"a":90,"b":100}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":103,"b":106}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":109,"b":119}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":122,"b":127}]},{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":130,"b":137}]}],"statement":"INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content)\nVALUES (:frontierId, :url, :httpStatus, :error, :content)"};
+const insertHtmlResponseIR: any = {"usedParamSet":{"content":true,"frontierId":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":31,"b":38},{"a":73,"b":80},{"a":119,"b":126}]},{"name":"frontierId","required":false,"transform":{"type":"scalar"},"locs":[{"a":446,"b":456}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":461,"b":464}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":469,"b":479}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":484,"b":489}]}],"statement":"WITH payload AS (\n  SELECT\n    :content::jsonb AS content,\n    case when :content IS NULL then NULL else encode(sha256(:content::TEXT::BYTEA), 'hex') end AS content_hash\n), ins_cache AS (\n  INSERT INTO crawler.html_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)\nSELECT\n  :frontierId,\n  :url,\n  :httpStatus,\n  :error,\n  content_hash\nFROM payload"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content)
- * VALUES (:frontierId, :url, :httpStatus, :error, :content)
+ * WITH payload AS (
+ *   SELECT
+ *     :content::jsonb AS content,
+ *     case when :content IS NULL then NULL else encode(sha256(:content::TEXT::BYTEA), 'hex') end AS content_hash
+ * ), ins_cache AS (
+ *   INSERT INTO crawler.html_response_cache (content)
+ *     SELECT content
+ *     FROM payload
+ *     WHERE content IS NOT NULL
+ *     ON CONFLICT (content_hash) DO NOTHING
+ * )
+ * INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)
+ * SELECT
+ *   :frontierId,
+ *   :url,
+ *   :httpStatus,
+ *   :error,
+ *   content_hash
+ * FROM payload
  * ```
  */
 export const insertHtmlResponse = new PreparedQuery<IInsertHtmlResponseParams,IInsertHtmlResponseResult>(insertHtmlResponseIR);
@@ -220,13 +237,30 @@ export interface IInsertJsonResponseQuery {
   result: IInsertJsonResponseResult;
 }
 
-const insertJsonResponseIR: any = {"usedParamSet":{"frontierId":true,"url":true,"httpStatus":true,"error":true,"content":true},"params":[{"name":"frontierId","required":false,"transform":{"type":"scalar"},"locs":[{"a":90,"b":100}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":103,"b":106}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":109,"b":119}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":122,"b":127}]},{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":130,"b":137}]}],"statement":"INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content)\nVALUES (:frontierId, :url, :httpStatus, :error, :content::jsonb)"};
+const insertJsonResponseIR: any = {"usedParamSet":{"content":true,"frontierId":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":31,"b":38},{"a":73,"b":80},{"a":119,"b":126}]},{"name":"frontierId","required":false,"transform":{"type":"scalar"},"locs":[{"a":446,"b":456}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":461,"b":464}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":469,"b":479}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":484,"b":489}]}],"statement":"WITH payload AS (\n  SELECT\n    :content::jsonb AS content,\n    case when :content IS NULL then NULL else encode(sha256(:content::TEXT::BYTEA), 'hex') end AS content_hash\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\nSELECT\n  :frontierId,\n  :url,\n  :httpStatus,\n  :error,\n  content_hash\nFROM payload"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content)
- * VALUES (:frontierId, :url, :httpStatus, :error, :content::jsonb)
+ * WITH payload AS (
+ *   SELECT
+ *     :content::jsonb AS content,
+ *     case when :content IS NULL then NULL else encode(sha256(:content::TEXT::BYTEA), 'hex') end AS content_hash
+ * ), ins_cache AS (
+ *   INSERT INTO crawler.json_response_cache (content)
+ *     SELECT content
+ *     FROM payload
+ *     WHERE content IS NOT NULL
+ *     ON CONFLICT (content_hash) DO NOTHING
+ * )
+ * INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
+ * SELECT
+ *   :frontierId,
+ *   :url,
+ *   :httpStatus,
+ *   :error,
+ *   content_hash
+ * FROM payload
  * ```
  */
 export const insertJsonResponse = new PreparedQuery<IInsertJsonResponseParams,IInsertJsonResponseResult>(insertJsonResponseIR);

@@ -10,20 +10,37 @@ select
 from csts.ingest
 where payload <> '{"collection": []}';
 
-insert into crawler.json_response
-  (frontier_id, url, http_status, content)
-select
-  (select id from crawler.frontier where federation = 'csts' and kind = 'member' and key = substring(url from '[0-9]+$')),
-  url,
-  200,
-  payload
-from csts.ingest
-where payload <> '{"collection": []}';
+INSERT INTO crawler.json_response_cache (content)
+SELECT DISTINCT payload::jsonb
+FROM csts.ingest
+WHERE payload::jsonb <> '{"collection": []}'::jsonb
+ON CONFLICT (content_hash) DO NOTHING;
+
+WITH src AS (
+  SELECT
+    i.url,
+    i.payload::jsonb AS content,
+    encode(sha256(i.payload::TEXT::BYTEA), 'hex') AS content_hash,
+    substring(i.url from '[0-9]+$') AS key
+  FROM csts.ingest i
+  WHERE i.payload::jsonb <> '{"collection": []}'::jsonb
+)
+INSERT INTO crawler.json_response (frontier_id, url, http_status, content_hash)
+SELECT
+  f.id AS frontier_id,
+  s.url,
+  200 AS http_status,
+  s.content_hash
+FROM src s
+JOIN crawler.frontier f
+  ON f.federation = 'csts' AND f.kind = 'member' AND f.key = s.key;
+
 
 with max_idt as (
-  select substring(url from '[0-9]+$')::integer as idt
+  select idt from
+  (select substring(url from '[0-9]+$')::integer as idt
   from csts.ingest
-  where payload <> '{"collection": []}'
+  where payload <> '{"collection": []}') i
   order by case
     when idt between 18000000 and 18092599 then 1
     when idt between 10600000 and 17999999 then 2

@@ -67,7 +67,9 @@ export const cstsAthlete: JsonLoader<Athlete, Response> = {
     return defaultMapResponseToStatus(args);
   },
   transformResponse(url, parsed) {
-    return athleteSchema.strip().parse(parsed.collection[0]);
+    const data = parsed.collection[0];
+    delete (data as any)['validFor'];
+    return data;
   },
   revalidatePeriod: '1 day',
   async load(client, url, data) {

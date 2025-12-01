@@ -42,6 +42,13 @@ CREATE TABLE crawler.incremental_ranges (
 INSERT INTO crawler.incremental_ranges (federation, kind)
 VALUES ('csts', 'member_id');
 
+
+CREATE TABLE crawler.html_response_cache (
+  content_hash text GENERATED ALWAYS AS (encode(sha256(content::TEXT::BYTEA), 'hex')) STORED,
+  content      jsonb,
+  PRIMARY KEY (content_hash)
+);
+
 CREATE TABLE crawler.html_response (
   id           bigserial PRIMARY KEY,
   frontier_id  bigint NOT NULL REFERENCES crawler.frontier(id) ON DELETE CASCADE,
@@ -49,8 +56,13 @@ CREATE TABLE crawler.html_response (
   fetched_at   timestamptz NOT NULL DEFAULT now(),
   http_status  integer,
   error        text,
-  content      text,
-  content_hash text GENERATED ALWAYS AS (encode(sha256(content::TEXT::BYTEA), 'hex')) STORED
+  content_hash text REFERENCES crawler.html_response_cache (content_hash)
+);
+
+CREATE TABLE crawler.json_response_cache (
+  content_hash text GENERATED ALWAYS AS (encode(sha256(content::TEXT::BYTEA), 'hex')) STORED,
+  content      jsonb,
+  PRIMARY KEY (content_hash)
 );
 
 CREATE TABLE crawler.json_response (
@@ -60,8 +72,7 @@ CREATE TABLE crawler.json_response (
   fetched_at   timestamptz NOT NULL DEFAULT now(),
   http_status  integer,
   error        text,
-  content      jsonb,
-  content_hash text GENERATED ALWAYS AS (encode(sha256(content::TEXT::BYTEA), 'hex')) STORED
+  content_hash text REFERENCES crawler.json_response_cache (content_hash)
 );
 
 CREATE TABLE crawler.rate_limit_rule (

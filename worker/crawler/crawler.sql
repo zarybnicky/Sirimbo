@@ -30,12 +30,46 @@ SET next_fetch_at = :nextRetryAt
 WHERE id = :id::bigint;
 
 /* @name InsertHtmlResponse */
-INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content)
-VALUES (:frontierId, :url, :httpStatus, :error, :content);
+WITH payload AS (
+  SELECT
+    :content::jsonb AS content,
+    case when :content IS NULL then NULL else encode(sha256(:content::TEXT::BYTEA), 'hex') end AS content_hash
+), ins_cache AS (
+  INSERT INTO crawler.html_response_cache (content)
+    SELECT content
+    FROM payload
+    WHERE content IS NOT NULL
+    ON CONFLICT (content_hash) DO NOTHING
+)
+INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)
+SELECT
+  :frontierId,
+  :url,
+  :httpStatus,
+  :error,
+  content_hash
+FROM payload;
 
 /* @name InsertJsonResponse */
-INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content)
-VALUES (:frontierId, :url, :httpStatus, :error, :content::jsonb);
+WITH payload AS (
+  SELECT
+    :content::jsonb AS content,
+    case when :content IS NULL then NULL else encode(sha256(:content::TEXT::BYTEA), 'hex') end AS content_hash
+), ins_cache AS (
+  INSERT INTO crawler.json_response_cache (content)
+    SELECT content
+    FROM payload
+    WHERE content IS NOT NULL
+    ON CONFLICT (content_hash) DO NOTHING
+)
+INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
+SELECT
+  :frontierId,
+  :url,
+  :httpStatus,
+  :error,
+  content_hash
+FROM payload;
 
 /* @name InsertDiscoveredCstsMember */
 with frontier as (
