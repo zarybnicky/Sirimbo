@@ -1,7 +1,46 @@
 /* @name GetFrontierForUpdate */
 SELECT id, federation, kind, key, fetch_status, error_count, meta
 FROM crawler.frontier
-WHERE id = :id::bigint FOR UPDATE;
+WHERE id = :id::bigint
+FOR UPDATE SKIP LOCKED;
+
+/* @name GetFrontierJsonResponseForUpdate */
+SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
+FROM crawler.frontier f
+JOIN crawler.json_response jr on f.id = jr.frontier_id
+JOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash
+WHERE f.id = :id::bigint
+FOR UPDATE SKIP LOCKED;
+
+/* @name GetFrontierHtmlResponseForUpdate */
+SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
+FROM crawler.frontier f
+JOIN crawler.html_response jr on f.id = jr.frontier_id
+JOIN crawler.html_response_cache jrc on jr.content_hash = jrc.content_hash
+WHERE f.id = :id::bigint
+FOR UPDATE SKIP LOCKED;
+
+/* @name GetJobCountForTask */
+SELECT count(*)::int AS count
+FROM graphile_worker.jobs
+WHERE task_identifier = :task::text;
+
+/* @name GetPendingFetch */
+SELECT id
+FROM crawler.frontier
+WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
+  AND (fetch_status = 'pending'
+         OR (fetch_status = 'ok' AND process_status = 'ok'))
+ORDER BY discovered_at
+LIMIT :limit;
+
+/* @name GetPendingProcess */
+SELECT id
+FROM crawler.frontier
+WHERE process_status = 'pending'
+  AND fetch_status IN ('ok', 'gone')
+ORDER BY last_fetched_at NULLS FIRST, discovered_at
+LIMIT :limit;
 
 /* @name ReserveRequest */
 SELECT granted, allowed_at
@@ -19,9 +58,19 @@ WHERE id = :id::bigint;
 UPDATE crawler.frontier
 SET last_fetched_at = now(),
     fetch_status = :fetchStatus,
-    process_status = :processStatus,
+    process_status = 'pending',
     error_count = 0,
     next_fetch_at = now() + :revalidatePeriod::interval
+WHERE id = :id::bigint;
+
+/* @name MarkFrontierProcessSuccess */
+UPDATE crawler.frontier
+SET process_status = 'ok'
+WHERE id = :id::bigint;
+
+/* @name MarkFrontierProcessError */
+UPDATE crawler.frontier
+SET process_status = 'error'
 WHERE id = :id::bigint;
 
 /* @name RescheduleFrontier */
@@ -31,9 +80,7 @@ WHERE id = :id::bigint;
 
 /* @name InsertHtmlResponse */
 WITH payload AS (
-  SELECT
-    :content::jsonb AS content,
-    case when :content IS NULL then NULL else encode(sha256(:content::TEXT::BYTEA), 'hex') end AS content_hash
+  SELECT :content AS content
 ), ins_cache AS (
   INSERT INTO crawler.html_response_cache (content)
     SELECT content
@@ -42,19 +89,13 @@ WITH payload AS (
     ON CONFLICT (content_hash) DO NOTHING
 )
 INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)
-SELECT
-  :frontierId,
-  :url,
-  :httpStatus,
-  :error,
-  content_hash
+SELECT :id, :url,:httpStatus, :error,
+  case when content IS NULL then NULL else encode(sha256(content::TEXT::BYTEA), 'hex') end AS content_hash
 FROM payload;
 
 /* @name InsertJsonResponse */
 WITH payload AS (
-  SELECT
-    :content::jsonb AS content,
-    case when :content IS NULL then NULL else encode(sha256(:content::TEXT::BYTEA), 'hex') end AS content_hash
+  SELECT :content::jsonb AS content
 ), ins_cache AS (
   INSERT INTO crawler.json_response_cache (content)
     SELECT content
@@ -63,12 +104,8 @@ WITH payload AS (
     ON CONFLICT (content_hash) DO NOTHING
 )
 INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
-SELECT
-  :frontierId,
-  :url,
-  :httpStatus,
-  :error,
-  content_hash
+SELECT :id, :url, :httpStatus, :error,
+       case when content IS NULL then NULL else encode(sha256(content::TEXT::BYTEA), 'hex') end AS content_hash
 FROM payload;
 
 /* @name InsertDiscoveredCstsMember */
@@ -82,137 +119,3 @@ UPDATE crawler.incremental_ranges
 SET last_known = GREATEST(last_known, (SELECT key::bigint FROM frontier))
 FROM frontier
 WHERE federation = 'csts' AND kind = 'member_id';
-
-/* @name UpsertFederationAthlete */
-WITH existing AS (
-  SELECT fa.athlete_id
-  FROM federated.federation_athlete fa
-  WHERE fa.federation = :federation
-    AND fa.external_id = :externalId::text
-  FOR UPDATE
-), person_ins AS (
-  INSERT INTO federated.person (canonical_name, gender)
-    SELECT :canonicalName, :gender::federated.gender
-    WHERE NOT EXISTS (SELECT 1 FROM existing)
-    RETURNING id
-), athlete_ins AS (
-  INSERT INTO federated.athlete (person_id)
-    SELECT id
-    FROM person_ins
-    WHERE NOT EXISTS (SELECT 1 FROM existing)
-    RETURNING id AS athlete_id
-), athlete_final AS (
-  SELECT athlete_id FROM existing
-  UNION ALL
-  SELECT athlete_id FROM athlete_ins
-)
-INSERT INTO federated.federation_athlete (federation, external_id, athlete_id)
-SELECT :federation, :externalId, athlete_id
-FROM athlete_final
-ON CONFLICT (federation, external_id)
-  DO UPDATE SET athlete_id = EXCLUDED.athlete_id;
-
-/* @name UpsertCategory */
-INSERT INTO federated.category (
-  series,
-  discipline,
-  age_group,
-  gender_group,
-  class,
-  name
-)
-VALUES (
-  :series,
-  :discipline,
-  :ageGroup,
-  :genderGroup,
-  :class,
-  :series || ' ' || :discipline || ' ' || :ageGroup || ' ' || :class
-)
-ON CONFLICT (series, discipline, age_group, gender_group, class)
-  DO UPDATE SET name = EXCLUDED.name
-RETURNING id;
-
-/* @name UpsertFederationCouple */
-WITH fc_existing AS (
-  SELECT competitor_id
-  FROM federated.federation_competitor
-  WHERE federation = :federation
-    AND external_id = :externalCompetitorId::text
-    FOR UPDATE
-), fc_ins AS (
-  INSERT INTO federated.federation_competitor (federation, external_id)
-    SELECT :federation, :externalCompetitorId::text
-    WHERE NOT EXISTS (SELECT 1 FROM fc_existing)
-    RETURNING competitor_id
-), comp_seed AS (
-  SELECT competitor_id FROM fc_existing
-  UNION ALL
-  SELECT competitor_id FROM fc_ins
-), comp_ins AS (
-  INSERT INTO federated.competitor (competitor_type, name)
-    SELECT 'couple', :competitorLabel
-    FROM comp_seed
-    WHERE competitor_id IS NULL
-    RETURNING id AS competitor_id
-), comp_update AS (
-  UPDATE federated.competitor
-    SET name = :competitorLabel
-    FROM comp_seed
-    WHERE federated.competitor.id = comp_seed.competitor_id
-      AND comp_seed.competitor_id IS NOT NULL
-    RETURNING federated.competitor.id AS competitor_id
-), comp_final AS (
-  SELECT competitor_id FROM comp_update
-  UNION ALL
-  SELECT competitor_id FROM comp_ins
-), comp_link AS (
-  UPDATE federated.federation_competitor f
-    SET competitor_id = c.competitor_id
-    FROM comp_final c
-    WHERE f.federation = :federation
-      AND f.external_id = :externalCompetitorId::text
-    RETURNING c.competitor_id
-), ids AS (
-  SELECT competitor_id FROM comp_link LIMIT 1
-), comp_lead AS (
-  INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)
-    SELECT
-      ids.competitor_id,
-      :externalLeadId::bigint,
-      'lead'::federated.competitor_role
-    FROM ids
-    ON CONFLICT (competitor_id, athlete_id) DO UPDATE SET role = EXCLUDED.role
-), comp_follow AS (
-  INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)
-    SELECT
-      ids.competitor_id,
-      :externalFollowerId::bigint,
-      'follow'::federated.competitor_role
-    FROM ids
-    ON CONFLICT (competitor_id, athlete_id) DO UPDATE SET role = EXCLUDED.role
-)
-SELECT competitor_id FROM ids;
-
-/* @name UpsertFederationCoupleProgress */
-INSERT INTO federated.competitor_category_progress (
-  federation,
-  competitor_id,
-  category_id,
-  points,
-  domestic_finale,
-  foreign_finale
-)
-VALUES (
-  :federation,
-  :federatedCompetitorId,
-  :categoryId,
-  :points::numeric(10, 3),
-  :domesticFinale::int,
-  :foreignFinale::int
-)
-ON CONFLICT (federation, competitor_id, category_id)
-  DO UPDATE
-  SET points          = EXCLUDED.points,
-      domestic_finale = EXCLUDED.domestic_finale,
-      foreign_finale  = EXCLUDED.foreign_finale;

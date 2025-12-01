@@ -1,27 +1,19 @@
 import { z } from 'zod';
+import type { IGetFrontierForUpdateResult } from './crawler.queries.ts';
 import type { PoolClient } from 'pg';
 
 export type FetchStatus = 'pending' | 'ok' | 'gone' | 'error';
 
-export interface FrontierRow {
-  id: string;
-  federation: string;
-  kind: string;
-  key: string;
-  fetch_status: FetchStatus;
-  error_count: number;
-  meta: any;
-}
-
-export interface FetchRequestSpec {
-  url: string;
-  init?: RequestInit;
-}
+export type FrontierRow = IGetFrontierForUpdateResult;
 
 export interface JsonLoader<TStored = any, TParsed = TStored> {
   mode: 'json';
-  schema: z.ZodType<TParsed>;
-  buildRequest: (frontier: FrontierRow) => FetchRequestSpec;
+  responseSchema: z.ZodType<TParsed>;
+  storedSchema: z.ZodType<TStored>;
+  buildRequest: (frontier: FrontierRow) => {
+    url: string;
+    init?: RequestInit;
+  };
   mapResponseToStatus?: (args: {
     httpStatus: number | null;
     parsed: TParsed | null;
@@ -34,20 +26,23 @@ export interface JsonLoader<TStored = any, TParsed = TStored> {
     rawJson: unknown,
   ) => Promise<TStored> | TStored;
   revalidatePeriod: string;
-  load: (client: PoolClient, url: string, parsed: TStored) => Promise<void>;
+  load: (client: PoolClient, frontier: FrontierRow, parsed: TStored) => Promise<void>;
 }
 
-export interface HtmlLoader<TStored = any> {
+export interface HtmlLoader {
   mode: 'text';
-  buildRequest: (frontier: FrontierRow) => FetchRequestSpec;
+  buildRequest: (frontier: FrontierRow) => {
+    url: string;
+    init?: RequestInit;
+  };
   mapResponseToStatus?: (args: {
     httpStatus: number | null;
     body: string | null;
     error?: unknown;
   }) => FetchStatus;
-  transformResponse?: (url: string, body: string) => Promise<TStored> | TStored;
+  transformResponse?: (url: string, body: string) => Promise<string> | string;
   revalidatePeriod: string;
-  load: (client: PoolClient, url: string, parsed: TStored) => Promise<void>;
+  load: (client: PoolClient, frontier: FrontierRow, body: string) => Promise<void>;
 }
 
 export const defaultMapResponseToStatus: NonNullable<

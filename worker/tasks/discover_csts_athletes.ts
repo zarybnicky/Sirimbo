@@ -3,6 +3,7 @@ import { getNextIdt } from '../crawler/cstsAthleteIdts.ts';
 import { cstsAthlete } from '../crawler/cstsAthlete.ts';
 import type { FrontierRow } from '../crawler/types.ts';
 import { insertDiscoveredCstsMember } from '../crawler/crawler.queries.ts';
+import { getReservation } from '../crawler/getReservation.ts';
 
 const MAX_PROBES_PER_RUN = 200;
 const HOLE_LIMIT = 200;
@@ -11,11 +12,12 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
   _payload,
   helpers,
 ) => {
+  const { logger } = helpers;
   const { rows } = await helpers.query(
     `SELECT last_known FROM crawler.incremental_ranges WHERE federation = 'csts' AND kind = 'member_id'`,
   );
   if (rows.length === 0) {
-    helpers.logger.warn(`[IDT probe] No incremental range found for csts/member_id`);
+    logger.warn(`[IDT probe] No incremental range found for csts/member_id`);
     return;
   }
 
@@ -25,18 +27,29 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
 
   while (probes < MAX_PROBES_PER_RUN) {
     const candidateId = getNextIdt(newLastChecked);
-    if (candidateId == null) {
-      helpers.logger.warn(`[IDT probe] No more IDTs to probe`);
+    if (!candidateId) {
+      logger.warn(`[IDT probe] No more IDTs to probe, last IDT: ${newLastChecked}`);
       break;
     }
 
     probes += 1;
     newLastChecked = candidateId;
 
-    const request = cstsAthlete.buildRequest({
+    const { url, init } = cstsAthlete.buildRequest({
       key: candidateId.toString(),
     } as FrontierRow);
-    const response = await fetch(request.url, request.init);
+
+    while (true) {
+      const reservation = await helpers.withPgClient(async (client) => {
+        return getReservation(url, client);
+      });
+      if (reservation.proceed) break;
+      await new Promise((resolve) =>
+        setTimeout(resolve, reservation.runAt.getTime() - Date.now()),
+      );
+    }
+
+    const response = await fetch(url, init);
 
     let exists = true;
     if (!response.ok) exists = false;
@@ -51,29 +64,23 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
       exists = false;
 
     if (exists) {
-      helpers.logger.info(
-        `[IDT probe] Found ${candidateId} (${probes}/${MAX_PROBES_PER_RUN})`,
-      );
+      logger.info(`[IDT probe] Found ${candidateId} (${probes}/${MAX_PROBES_PER_RUN})`);
       await helpers.withPgClient(async (client) => {
         await insertDiscoveredCstsMember.run({ id: candidateId.toString() }, client);
       });
-
       holeCount = 0; // reset hole streak
     } else {
-      helpers.logger.info(
-        `[IDT probe] Missed ${candidateId} (${probes}/${MAX_PROBES_PER_RUN})`,
-      );
+      logger.info(`[IDT probe] Missed ${candidateId} (${probes}/${MAX_PROBES_PER_RUN})`);
       holeCount += 1;
       if (holeCount >= HOLE_LIMIT) {
-        // assume we've hit a long gap; stop early
-        helpers.logger.warn(`[IDT probe] Hit hole limit at IDT ${candidateId}`);
+        logger.warn(`[IDT probe] Hit hole limit at IDT ${candidateId}`);
         break;
       }
     }
   }
 
   await helpers.query(
-    `UPDATE crawler.incremental_ranges SET last_checked = $2 WHERE federation = 'csts' AND kind = 'member_id'`,
+    `UPDATE crawler.incremental_ranges SET last_checked = $1 WHERE federation = 'csts' AND kind = 'member_id'`,
     [newLastChecked],
   );
 };

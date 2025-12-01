@@ -2,11 +2,8 @@ import { z } from 'zod';
 import { cstsAthlete } from './cstsAthlete.ts';
 import type { HtmlLoader, JsonLoader } from './types.ts';
 
-const wdsfEvent: JsonLoader = {
-  mode: 'json',
-  schema: z.object({
-    /* ... */
-  }),
+const wdsfEvent: HtmlLoader = {
+  mode: 'text',
   buildRequest: ({ key }) => ({
     url: `https://services.worlddancesport.com/api/1/events/${key}`,
   }),

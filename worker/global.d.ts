@@ -1,8 +1,8 @@
 namespace GraphileWorker {
   interface Tasks {
-    fetch_frontier: {
-      frontierId: number;
-    };
+    frontier_fetch: { id: string };
+    frontier_process: { id: string };
+    frontier_schedule: {};
     discover_csts_athletes: {};
 
     notify_announcement: {

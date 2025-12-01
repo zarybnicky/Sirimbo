@@ -11,19 +11,19 @@ from csts.ingest
 where payload <> '{"collection": []}';
 
 INSERT INTO crawler.json_response_cache (content)
-SELECT DISTINCT payload::jsonb
+SELECT DISTINCT payload->'collection'->0
 FROM csts.ingest
-WHERE payload::jsonb <> '{"collection": []}'::jsonb
+WHERE payload->'collection'->0 is not null
 ON CONFLICT (content_hash) DO NOTHING;
 
 WITH src AS (
   SELECT
     i.url,
     i.payload::jsonb AS content,
-    encode(sha256(i.payload::TEXT::BYTEA), 'hex') AS content_hash,
+    encode(sha256((i.payload->'collection'->0)::TEXT::BYTEA), 'hex') AS content_hash,
     substring(i.url from '[0-9]+$') AS key
   FROM csts.ingest i
-  WHERE i.payload::jsonb <> '{"collection": []}'::jsonb
+  WHERE payload->'collection'->0 is not null
 )
 INSERT INTO crawler.json_response (frontier_id, url, http_status, content_hash)
 SELECT

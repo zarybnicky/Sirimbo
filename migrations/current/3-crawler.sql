@@ -45,7 +45,7 @@ VALUES ('csts', 'member_id');
 
 CREATE TABLE crawler.html_response_cache (
   content_hash text GENERATED ALWAYS AS (encode(sha256(content::TEXT::BYTEA), 'hex')) STORED,
-  content      jsonb,
+  content      text,
   PRIMARY KEY (content_hash)
 );
 
@@ -100,17 +100,15 @@ CREATE INDEX ON crawler.rate_limit_event (rule_id, occurred_at);
 
 CREATE OR REPLACE FUNCTION crawler.reserve_request(
   in_host       text,
-  in_prefixes   text[]
-)
-RETURNS TABLE (
-  granted    boolean,
-  allowed_at timestamptz
+  in_prefixes   text[],
+  OUT granted    boolean,
+  OUT allowed_at timestamptz
 )
 LANGUAGE plpgsql AS $$
 DECLARE
   r                crawler.rate_limit_rule;
   window_start     timestamptz;
-  req_count        integer;
+  req_count        bigint;
   oldest_in_window timestamptz;
 BEGIN
   -- FOR UPDATE for serialized write access to rate_limit_event table
@@ -152,8 +150,9 @@ BEGIN
   ELSE
     -- Not allowed now; just compute a hint
     granted := false;
-    allowed_at := oldest_in_window + r.per_interval;
+    allowed_at := oldest_in_window + r.per_interval + '1 millisecond'::interval;
     RETURN;
   END IF;
 END;
 $$;
+select verify_function('crawler.reserve_request');

@@ -5,7 +5,7 @@ import {
   upsertFederationAthlete,
   upsertFederationCouple,
   upsertFederationCoupleProgress,
-} from './crawler.queries.ts';
+} from './federated.queries.ts';
 
 const rankingPointsSchema = z.object({
   rankingPointsAge: z.string(),
@@ -43,7 +43,7 @@ const athleteSchema = z.object({
     .transform((x) => (x === 'M' ? 'male' : x === 'F' ? 'female' : 'unknown'))
     .optional(),
   medicalCheckupExpiration: z.string().nullable().optional().prefault(null),
-  rankingPoints: z.array(rankingPointsSchema),
+  rankingPoints: z.array(rankingPointsSchema).optional().prefault([]),
 });
 
 const athletesResponseSchema = z.object({
@@ -55,8 +55,9 @@ type Athlete = Response['collection'][0];
 
 export const cstsAthlete: JsonLoader<Athlete, Response> = {
   mode: 'json',
-  schema: athletesResponseSchema,
-  buildRequest: ({ key }: { key: string }) => ({
+  responseSchema: athletesResponseSchema,
+  storedSchema: athleteSchema,
+  buildRequest: ({ key }) => ({
     url: `https://www.csts.cz/api/1/athletes/${key}`,
     init: {
       referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
@@ -72,11 +73,11 @@ export const cstsAthlete: JsonLoader<Athlete, Response> = {
     return data;
   },
   revalidatePeriod: '1 day',
-  async load(client, url, data) {
-    await upsertFederationAthlete.run(
+  async load(client, frontier, data) {
+    const [{ athlete_id: mainAthleteId }] = await upsertFederationAthlete.run(
       {
         federation: 'csts',
-        externalId: data.idt.toString(),
+        externalId: String(data.idt),
         canonicalName: data.name,
         gender: data.sex,
       },
@@ -88,14 +89,14 @@ export const cstsAthlete: JsonLoader<Athlete, Response> = {
         SET age_group = $2, medical_checkup_expiration = $3
         WHERE federation = 'csts' AND external_id = $1
       `,
-      [data.idt.toString(), data.age, data.medicalCheckupExpiration],
+      [String(data.idt), data.age, data.medicalCheckupExpiration],
     );
 
     for (const rp of data.rankingPoints) {
       if (rp.competitors !== 'Couple' || !rp.partnerIdt) continue;
 
-      const partnerIdt = rp.partnerIdt.toString();
-      await upsertFederationAthlete.run(
+      const partnerIdt = String(rp.partnerIdt);
+      const [{ athlete_id: partnerAthleteId }] = await upsertFederationAthlete.run(
         {
           federation: 'csts',
           externalId: partnerIdt,
@@ -120,8 +121,8 @@ export const cstsAthlete: JsonLoader<Athlete, Response> = {
         {
           federation: 'csts',
           externalCompetitorId: rp.competitorId.toString(),
-          externalLeadId: data.sex === 'male' ? data.idt.toString() : partnerIdt,
-          externalFollowerId: data.sex === 'male' ? partnerIdt : data.idt.toString(),
+          federatedLeadId: data.sex === 'male' ? mainAthleteId : partnerAthleteId,
+          federatedFollowerId: data.sex === 'male' ? partnerAthleteId : mainAthleteId,
           competitorLabel:
             data.sex === 'male'
               ? `${data.name} - ${rp.partner}`
@@ -133,7 +134,7 @@ export const cstsAthlete: JsonLoader<Athlete, Response> = {
         {
           federation: 'csts',
           federatedCompetitorId,
-          categoryId: categoryId.toString(),
+          categoryId,
           points: rp.points,
           domesticFinale: rp.domesticFinaleCount,
           foreignFinale: rp.foreignFinaleCount,
