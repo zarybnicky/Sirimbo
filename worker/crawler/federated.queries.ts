@@ -1,7 +1,13 @@
 /** Types generated for queries found in "crawler/federated.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
+export type competitor_type = 'couple' | 'duo' | 'formation' | 'solo' | 'team';
+
 export type gender = 'female' | 'male' | 'other' | 'unknown';
+
+export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
+
+export type JsonArray = (Json)[];
 
 export type NumberOrString = number | string;
 
@@ -112,108 +118,63 @@ const upsertCategoryIR: any = {"usedParamSet":{"series":true,"discipline":true,"
 export const upsertCategory = new PreparedQuery<IUpsertCategoryParams,IUpsertCategoryResult>(upsertCategoryIR);
 
 
-/** 'UpsertFederationCouple' parameters type */
-export interface IUpsertFederationCoupleParams {
-  competitorLabel?: string | null | void;
-  externalCompetitorId?: string | null | void;
-  federatedFollowerId?: NumberOrString | null | void;
-  federatedLeadId?: NumberOrString | null | void;
+/** 'UpsertCompetitor' parameters type */
+export interface IUpsertCompetitorParams {
+  components?: JsonArray | null | void;
   federation?: string | null | void;
+  federationCompetitorId?: string | null | void;
+  label?: string | null | void;
+  type?: competitor_type | null | void;
 }
 
-/** 'UpsertFederationCouple' return type */
-export interface IUpsertFederationCoupleResult {
+/** 'UpsertCompetitor' return type */
+export interface IUpsertCompetitorResult {
   competitor_id: string | null;
 }
 
-/** 'UpsertFederationCouple' query type */
-export interface IUpsertFederationCoupleQuery {
-  params: IUpsertFederationCoupleParams;
-  result: IUpsertFederationCoupleResult;
+/** 'UpsertCompetitor' query type */
+export interface IUpsertCompetitorQuery {
+  params: IUpsertCompetitorParams;
+  result: IUpsertCompetitorResult;
 }
 
-const upsertFederationCoupleIR: any = {"usedParamSet":{"federation":true,"externalCompetitorId":true,"competitorLabel":true,"federatedLeadId":true,"federatedFollowerId":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":183,"b":193},{"a":1035,"b":1045}]},{"name":"externalCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":196,"b":216},{"a":1073,"b":1093}]},{"name":"competitorLabel","required":false,"transform":{"type":"scalar"},"locs":[{"a":520,"b":535},{"a":1219,"b":1234}]},{"name":"federatedLeadId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1429,"b":1444}]},{"name":"federatedFollowerId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1741,"b":1760}]}],"statement":"WITH fc AS (\n  -- Ensure federation_competitor row exists, get current competitor_id (may be NULL)\n  INSERT INTO federated.federation_competitor (federation, external_id)\n    VALUES (:federation, :externalCompetitorId::text)\n    ON CONFLICT (federation, external_id)\n      DO UPDATE SET external_id = EXCLUDED.external_id\n    RETURNING competitor_id\n), comp_ins AS (\n  -- If there's no competitor yet, create one\n  INSERT INTO federated.competitor (competitor_type, name)\n    SELECT 'couple'::federated.competitor_type, :competitorLabel\n    WHERE (SELECT competitor_id FROM fc) IS NULL\n    RETURNING id AS competitor_id\n), comp_final AS (\n  -- Final competitor_id: existing or newly inserted\n  SELECT COALESCE(\n           (SELECT competitor_id FROM fc),\n           (SELECT competitor_id FROM comp_ins)\n         ) AS competitor_id\n), comp_link AS (\n  -- Link federation_competitor to the final competitor\n  UPDATE federated.federation_competitor f\n    SET competitor_id = c.competitor_id\n    FROM comp_final c\n    WHERE f.federation  = :federation\n      AND f.external_id = :externalCompetitorId::text\n), comp_name AS (\n  -- Keep competitor name in sync with latest label\n  UPDATE federated.competitor co\n    SET name = :competitorLabel\n    FROM comp_final c\n    WHERE co.id = c.competitor_id\n), comp_lead AS (\n  INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)\n    SELECT\n      c.competitor_id,\n      :federatedLeadId::bigint,\n      'lead'::federated.competitor_role\n    FROM comp_final c\n    ON CONFLICT (competitor_id, athlete_id)\n      DO UPDATE SET role = EXCLUDED.role\n), comp_follow AS (\n  INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)\n    SELECT\n      c.competitor_id,\n      :federatedFollowerId::bigint,\n      'follow'::federated.competitor_role\n    FROM comp_final c\n    ON CONFLICT (competitor_id, athlete_id)\n      DO UPDATE SET role = EXCLUDED.role\n)\nSELECT competitor_id FROM comp_final"};
+const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"federationCompetitorId":true,"type":true,"label":true,"components":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":65}]},{"name":"federationCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":110}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":130}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":174,"b":179}]},{"name":"components","required":false,"transform":{"type":"scalar"},"locs":[{"a":309,"b":319}]}],"statement":"SELECT federated.upsert_competitor(\n  in_federation => :federation,\n  in_external_id => :federationCompetitorId,\n  in_type => :type::federated.competitor_type,\n  in_label => :label,\n  in_components => (select array_agg(x) from json_populate_recordset(null::federated.competitor_component_input, array_to_json(:components::json[])) x)\n) as competitor_id"};
 
 /**
  * Query generated from SQL:
  * ```
- * WITH fc AS (
- *   -- Ensure federation_competitor row exists, get current competitor_id (may be NULL)
- *   INSERT INTO federated.federation_competitor (federation, external_id)
- *     VALUES (:federation, :externalCompetitorId::text)
- *     ON CONFLICT (federation, external_id)
- *       DO UPDATE SET external_id = EXCLUDED.external_id
- *     RETURNING competitor_id
- * ), comp_ins AS (
- *   -- If there's no competitor yet, create one
- *   INSERT INTO federated.competitor (competitor_type, name)
- *     SELECT 'couple'::federated.competitor_type, :competitorLabel
- *     WHERE (SELECT competitor_id FROM fc) IS NULL
- *     RETURNING id AS competitor_id
- * ), comp_final AS (
- *   -- Final competitor_id: existing or newly inserted
- *   SELECT COALESCE(
- *            (SELECT competitor_id FROM fc),
- *            (SELECT competitor_id FROM comp_ins)
- *          ) AS competitor_id
- * ), comp_link AS (
- *   -- Link federation_competitor to the final competitor
- *   UPDATE federated.federation_competitor f
- *     SET competitor_id = c.competitor_id
- *     FROM comp_final c
- *     WHERE f.federation  = :federation
- *       AND f.external_id = :externalCompetitorId::text
- * ), comp_name AS (
- *   -- Keep competitor name in sync with latest label
- *   UPDATE federated.competitor co
- *     SET name = :competitorLabel
- *     FROM comp_final c
- *     WHERE co.id = c.competitor_id
- * ), comp_lead AS (
- *   INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)
- *     SELECT
- *       c.competitor_id,
- *       :federatedLeadId::bigint,
- *       'lead'::federated.competitor_role
- *     FROM comp_final c
- *     ON CONFLICT (competitor_id, athlete_id)
- *       DO UPDATE SET role = EXCLUDED.role
- * ), comp_follow AS (
- *   INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)
- *     SELECT
- *       c.competitor_id,
- *       :federatedFollowerId::bigint,
- *       'follow'::federated.competitor_role
- *     FROM comp_final c
- *     ON CONFLICT (competitor_id, athlete_id)
- *       DO UPDATE SET role = EXCLUDED.role
- * )
- * SELECT competitor_id FROM comp_final
+ * SELECT federated.upsert_competitor(
+ *   in_federation => :federation,
+ *   in_external_id => :federationCompetitorId,
+ *   in_type => :type::federated.competitor_type,
+ *   in_label => :label,
+ *   in_components => (select array_agg(x) from json_populate_recordset(null::federated.competitor_component_input, array_to_json(:components::json[])) x)
+ * ) as competitor_id
  * ```
  */
-export const upsertFederationCouple = new PreparedQuery<IUpsertFederationCoupleParams,IUpsertFederationCoupleResult>(upsertFederationCoupleIR);
+export const upsertCompetitor = new PreparedQuery<IUpsertCompetitorParams,IUpsertCompetitorResult>(upsertCompetitorIR);
 
 
-/** 'UpsertFederationCoupleProgress' parameters type */
-export interface IUpsertFederationCoupleProgressParams {
+/** 'UpsertCompetitorProgress' parameters type */
+export interface IUpsertCompetitorProgressParams {
   categoryId?: NumberOrString | null | void;
+  competitorId?: NumberOrString | null | void;
   domesticFinale?: number | null | void;
-  federatedCompetitorId?: NumberOrString | null | void;
   federation?: string | null | void;
   foreignFinale?: number | null | void;
   points?: NumberOrString | null | void;
 }
 
-/** 'UpsertFederationCoupleProgress' return type */
-export type IUpsertFederationCoupleProgressResult = void;
+/** 'UpsertCompetitorProgress' return type */
+export type IUpsertCompetitorProgressResult = void;
 
-/** 'UpsertFederationCoupleProgress' query type */
-export interface IUpsertFederationCoupleProgressQuery {
-  params: IUpsertFederationCoupleProgressParams;
-  result: IUpsertFederationCoupleProgressResult;
+/** 'UpsertCompetitorProgress' query type */
+export interface IUpsertCompetitorProgressQuery {
+  params: IUpsertCompetitorProgressParams;
+  result: IUpsertCompetitorProgressResult;
 }
 
-const upsertFederationCoupleProgressIR: any = {"usedParamSet":{"federation":true,"federatedCompetitorId":true,"categoryId":true,"points":true,"domesticFinale":true,"foreignFinale":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":165,"b":175}]},{"name":"federatedCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":187,"b":208}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":220,"b":230}]},{"name":"points","required":false,"transform":{"type":"scalar"},"locs":[{"a":242,"b":248}]},{"name":"domesticFinale","required":false,"transform":{"type":"scalar"},"locs":[{"a":276,"b":290}]},{"name":"foreignFinale","required":false,"transform":{"type":"scalar"},"locs":[{"a":307,"b":320}]}],"statement":"INSERT INTO federated.competitor_category_progress (\n  federation,\n  competitor_id,\n  category_id,\n  points,\n  domestic_finale,\n  foreign_finale\n)\nVALUES (\n         :federation,\n         :federatedCompetitorId,\n         :categoryId,\n         :points::numeric(10, 3),\n         :domesticFinale::int,\n         :foreignFinale::int\n       )\nON CONFLICT (federation, competitor_id, category_id)\n  DO UPDATE\n  SET points          = EXCLUDED.points,\n      domestic_finale = EXCLUDED.domestic_finale,\n      foreign_finale  = EXCLUDED.foreign_finale"};
+const upsertCompetitorProgressIR: any = {"usedParamSet":{"federation":true,"competitorId":true,"categoryId":true,"points":true,"domesticFinale":true,"foreignFinale":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":158,"b":168}]},{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":173,"b":185}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":190,"b":200}]},{"name":"points","required":false,"transform":{"type":"scalar"},"locs":[{"a":205,"b":211}]},{"name":"domesticFinale","required":false,"transform":{"type":"scalar"},"locs":[{"a":232,"b":246}]},{"name":"foreignFinale","required":false,"transform":{"type":"scalar"},"locs":[{"a":256,"b":269}]}],"statement":"INSERT INTO federated.competitor_category_progress (\n  federation,\n  competitor_id,\n  category_id,\n  points,\n  domestic_finale,\n  foreign_finale\n)\nVALUES (\n  :federation,\n  :competitorId,\n  :categoryId,\n  :points::numeric(10, 3),\n  :domesticFinale::int,\n  :foreignFinale::int\n)\nON CONFLICT (federation, competitor_id, category_id)\n  DO UPDATE\n  SET points          = EXCLUDED.points,\n      domestic_finale = EXCLUDED.domestic_finale,\n      foreign_finale  = EXCLUDED.foreign_finale"};
 
 /**
  * Query generated from SQL:
@@ -227,13 +188,13 @@ const upsertFederationCoupleProgressIR: any = {"usedParamSet":{"federation":true
  *   foreign_finale
  * )
  * VALUES (
- *          :federation,
- *          :federatedCompetitorId,
- *          :categoryId,
- *          :points::numeric(10, 3),
- *          :domesticFinale::int,
- *          :foreignFinale::int
- *        )
+ *   :federation,
+ *   :competitorId,
+ *   :categoryId,
+ *   :points::numeric(10, 3),
+ *   :domesticFinale::int,
+ *   :foreignFinale::int
+ * )
  * ON CONFLICT (federation, competitor_id, category_id)
  *   DO UPDATE
  *   SET points          = EXCLUDED.points,
@@ -241,6 +202,6 @@ const upsertFederationCoupleProgressIR: any = {"usedParamSet":{"federation":true
  *       foreign_finale  = EXCLUDED.foreign_finale
  * ```
  */
-export const upsertFederationCoupleProgress = new PreparedQuery<IUpsertFederationCoupleProgressParams,IUpsertFederationCoupleProgressResult>(upsertFederationCoupleProgressIR);
+export const upsertCompetitorProgress = new PreparedQuery<IUpsertCompetitorProgressParams,IUpsertCompetitorProgressResult>(upsertCompetitorProgressIR);
 
 

@@ -51,61 +51,16 @@ ON CONFLICT (series, discipline, age_group, gender_group, class)
   DO UPDATE SET name = EXCLUDED.name
 RETURNING id;
 
-/* @name UpsertFederationCouple */
-WITH fc AS (
-  -- Ensure federation_competitor row exists, get current competitor_id (may be NULL)
-  INSERT INTO federated.federation_competitor (federation, external_id)
-    VALUES (:federation, :externalCompetitorId::text)
-    ON CONFLICT (federation, external_id)
-      DO UPDATE SET external_id = EXCLUDED.external_id
-    RETURNING competitor_id
-), comp_ins AS (
-  -- If there's no competitor yet, create one
-  INSERT INTO federated.competitor (competitor_type, name)
-    SELECT 'couple'::federated.competitor_type, :competitorLabel
-    WHERE (SELECT competitor_id FROM fc) IS NULL
-    RETURNING id AS competitor_id
-), comp_final AS (
-  -- Final competitor_id: existing or newly inserted
-  SELECT COALESCE(
-           (SELECT competitor_id FROM fc),
-           (SELECT competitor_id FROM comp_ins)
-         ) AS competitor_id
-), comp_link AS (
-  -- Link federation_competitor to the final competitor
-  UPDATE federated.federation_competitor f
-    SET competitor_id = c.competitor_id
-    FROM comp_final c
-    WHERE f.federation  = :federation
-      AND f.external_id = :externalCompetitorId::text
-), comp_name AS (
-  -- Keep competitor name in sync with latest label
-  UPDATE federated.competitor co
-    SET name = :competitorLabel
-    FROM comp_final c
-    WHERE co.id = c.competitor_id
-), comp_lead AS (
-  INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)
-    SELECT
-      c.competitor_id,
-      :federatedLeadId::bigint,
-      'lead'::federated.competitor_role
-    FROM comp_final c
-    ON CONFLICT (competitor_id, athlete_id)
-      DO UPDATE SET role = EXCLUDED.role
-), comp_follow AS (
-  INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)
-    SELECT
-      c.competitor_id,
-      :federatedFollowerId::bigint,
-      'follow'::federated.competitor_role
-    FROM comp_final c
-    ON CONFLICT (competitor_id, athlete_id)
-      DO UPDATE SET role = EXCLUDED.role
-)
-SELECT competitor_id FROM comp_final;
+/* @name UpsertCompetitor */
+SELECT federated.upsert_competitor(
+  in_federation => :federation,
+  in_external_id => :federationCompetitorId,
+  in_type => :type::federated.competitor_type,
+  in_label => :label,
+  in_components => (select array_agg(x) from json_populate_recordset(null::federated.competitor_component_input, array_to_json(:components::json[])) x)
+) as competitor_id;
 
-/* @name UpsertFederationCoupleProgress */
+/* @name UpsertCompetitorProgress */
 INSERT INTO federated.competitor_category_progress (
   federation,
   competitor_id,
@@ -115,13 +70,13 @@ INSERT INTO federated.competitor_category_progress (
   foreign_finale
 )
 VALUES (
-         :federation,
-         :federatedCompetitorId,
-         :categoryId,
-         :points::numeric(10, 3),
-         :domesticFinale::int,
-         :foreignFinale::int
-       )
+  :federation,
+  :competitorId,
+  :categoryId,
+  :points::numeric(10, 3),
+  :domesticFinale::int,
+  :foreignFinale::int
+)
 ON CONFLICT (federation, competitor_id, category_id)
   DO UPDATE
   SET points          = EXCLUDED.points,

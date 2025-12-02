@@ -115,8 +115,8 @@ async function fetchFrontier(
     const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
     fetchStatus = mapper({ httpStatus, parsed, rawJson, error });
     if (parsed != null) {
-      content = handler.transformResponse
-        ? await handler.transformResponse(url, parsed, rawJson)
+      content = handler.cleanResponse
+        ? await handler.cleanResponse(url, parsed, rawJson)
         : parsed;
     } else if (rawJson != null) {
       content = rawJson;
@@ -125,8 +125,8 @@ async function fetchFrontier(
     const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
     fetchStatus = mapper({ httpStatus, body, error });
     if (body != null) {
-      content = handler.transformResponse
-        ? await handler.transformResponse(url, body)
+      content = handler.cleanResponse
+        ? await handler.cleanResponse(url, body)
         : body;
     }
   }

@@ -19,7 +19,7 @@ export interface JsonLoader<T = any> {
     rawJson: unknown | null;
     error?: unknown;
   }) => FetchStatus;
-  transformResponse?: (url: string, parsed: T, rawJson: unknown,) => Promise<T> | T;
+  cleanResponse?: (url: string, parsed: T, rawJson: unknown,) => Promise<T> | T;
   revalidatePeriod: string;
   load: (client: PoolClient, frontier: FrontierRow, parsed: T) => Promise<void>;
 }
@@ -35,7 +35,7 @@ export interface HtmlLoader {
     body: string | null;
     error?: unknown;
   }) => FetchStatus;
-  transformResponse?: (url: string, body: string) => Promise<string> | string;
+  cleanResponse?: (url: string, body: string) => Promise<string> | string;
   revalidatePeriod: string;
   load: (client: PoolClient, frontier: FrontierRow, body: string) => Promise<void>;
 }
@@ -47,4 +47,9 @@ export const defaultMapResponseToStatus: NonNullable<
   if (httpStatus === 404) return 'gone';
   if (httpStatus && httpStatus >= 200 && httpStatus < 300) return 'ok';
   return 'error';
+};
+
+export type CompetitorComponentInput = {
+  athlete_id: string;
+  role: 'lead' | 'follow' | 'member' | 'substitute';
 };

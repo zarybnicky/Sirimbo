@@ -18,7 +18,11 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
 
     const pendingIds = await getPendingFetch.run({ limit: capacity }, client);
     for (const { id } of pendingIds) {
-      await addJob('frontier_fetch', { id }, { jobKey: `fetch:${id}` });
+      await addJob(
+        'frontier_fetch',
+        { id },
+        { jobKey: `fetch:${id}`, jobKeyMode: 'preserve_run_at' },
+      );
     }
     logger.info(`${pendingIds.length} new fetch jobs, outstanding ${outstanding}`);
   });
@@ -31,7 +35,11 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
 
     const pendingIds = await getPendingProcess.run({ limit: capacity }, client);
     for (const { id } of pendingIds) {
-      await addJob('frontier_process', { id }, { jobKey: `process:${id}` });
+      await addJob(
+        'frontier_process',
+        { id },
+        { jobKey: `process:${id}`, jobKeyMode: 'preserve_run_at' },
+      );
     }
     logger.info(`${pendingIds.length} new process jobs, outstanding ${outstanding}`);
   });
