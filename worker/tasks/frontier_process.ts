@@ -35,7 +35,7 @@ export const frontier_process: Task<'frontier_process'> = async ({ id }, helpers
     try {
       const content =
         handler.mode === 'json'
-          ? handler.storedSchema.parse(contentRow.content)
+          ? handler.schema.parse(contentRow.content)
           : contentRow.content;
       await handler.load(client, frontier, content);
       await markFrontierProcessSuccess.run({ id }, client);

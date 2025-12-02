@@ -47,6 +47,42 @@ const getFrontierForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name
 export const getFrontierForUpdate = new PreparedQuery<IGetFrontierForUpdateParams,IGetFrontierForUpdateResult>(getFrontierForUpdateIR);
 
 
+/** 'GetLatestFrontierJsonResponse' parameters type */
+export interface IGetLatestFrontierJsonResponseParams {
+  federation?: string | null | void;
+  kind?: string | null | void;
+}
+
+/** 'GetLatestFrontierJsonResponse' return type */
+export interface IGetLatestFrontierJsonResponseResult {
+  content: Json | null;
+  error: string | null;
+  http_status: number | null;
+  id: string;
+  url: string;
+}
+
+/** 'GetLatestFrontierJsonResponse' query type */
+export interface IGetLatestFrontierJsonResponseQuery {
+  params: IGetLatestFrontierJsonResponseParams;
+  result: IGetLatestFrontierJsonResponseResult;
+}
+
+const getLatestFrontierJsonResponseIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":234,"b":244}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":263}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN crawler.json_response jr on f.id = jr.frontier_id\nJOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation AND f.kind = :kind"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
+ * FROM crawler.frontier f
+ * JOIN crawler.json_response jr on f.id = jr.frontier_id
+ * JOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash
+ * WHERE f.federation = :federation AND f.kind = :kind
+ * ```
+ */
+export const getLatestFrontierJsonResponse = new PreparedQuery<IGetLatestFrontierJsonResponseParams,IGetLatestFrontierJsonResponseResult>(getLatestFrontierJsonResponseIR);
+
+
 /** 'GetFrontierJsonResponseForUpdate' parameters type */
 export interface IGetFrontierJsonResponseForUpdateParams {
   id?: NumberOrString | null | void;

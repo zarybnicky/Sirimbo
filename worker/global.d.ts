@@ -3,6 +3,7 @@ namespace GraphileWorker {
     frontier_fetch: { id: string };
     frontier_process: { id: string };
     frontier_schedule: {};
+    frontier_validate: { federation: string; kind: string; };
     discover_csts_athletes: {};
 
     notify_announcement: {

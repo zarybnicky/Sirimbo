@@ -6,27 +6,22 @@ export type FetchStatus = 'pending' | 'ok' | 'gone' | 'error';
 
 export type FrontierRow = IGetFrontierForUpdateResult;
 
-export interface JsonLoader<TStored = any, TParsed = TStored> {
+export interface JsonLoader<T = any> {
   mode: 'json';
-  responseSchema: z.ZodType<TParsed>;
-  storedSchema: z.ZodType<TStored>;
+  schema: z.ZodType<T>;
   buildRequest: (frontier: FrontierRow) => {
     url: string;
     init?: RequestInit;
   };
   mapResponseToStatus?: (args: {
     httpStatus: number | null;
-    parsed: TParsed | null;
+    parsed: T | null;
     rawJson: unknown | null;
     error?: unknown;
   }) => FetchStatus;
-  transformResponse?: (
-    url: string,
-    parsed: TParsed,
-    rawJson: unknown,
-  ) => Promise<TStored> | TStored;
+  transformResponse?: (url: string, parsed: T, rawJson: unknown,) => Promise<T> | T;
   revalidatePeriod: string;
-  load: (client: PoolClient, frontier: FrontierRow, parsed: TStored) => Promise<void>;
+  load: (client: PoolClient, frontier: FrontierRow, parsed: T) => Promise<void>;
 }
 
 export interface HtmlLoader {

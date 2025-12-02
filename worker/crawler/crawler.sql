@@ -4,6 +4,13 @@ FROM crawler.frontier
 WHERE id = :id::bigint
 FOR UPDATE SKIP LOCKED;
 
+/* @name GetLatestFrontierJsonResponse */
+SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
+FROM crawler.frontier f
+JOIN crawler.json_response jr on f.id = jr.frontier_id
+JOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash
+WHERE f.federation = :federation AND f.kind = :kind;
+
 /* @name GetFrontierJsonResponseForUpdate */
 SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
 FROM crawler.frontier f

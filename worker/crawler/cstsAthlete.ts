@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { defaultMapResponseToStatus, type JsonLoader } from './types.ts';
 import {
+  type gender,
   upsertCategory,
   upsertFederationAthlete,
   upsertFederationCouple,
@@ -8,23 +9,6 @@ import {
 } from './federated.queries.ts';
 
 const rankingPointsSchema = z.object({
-  rankingPointsAge: z.string(),
-  personalClass: z.string().optional().prefault('-'),
-  personalPoints: z.number().optional().prefault(0),
-  personalDomesticFinaleCount: z.number().optional().prefault(0),
-  personalForeignFinaleCount: z.number().optional().prefault(0),
-  competitorId: z.number(),
-  series: z.string(),
-  discipline: z.string(),
-  rankingAge: z.string(),
-  competitors: z.string(),
-
-  domesticFinaleCount: z.number().optional(),
-  foreignFinaleCount: z.number().optional(),
-
-  ranklistRanking: z.number().optional(),
-  ranklistPoints: z.number().optional(),
-
   id: z.number().optional(),
   idt: z.number().optional(),
   age: z.string().optional(),
@@ -32,6 +16,27 @@ const rankingPointsSchema = z.object({
   points: z.number().optional(),
   partner: z.string().optional(),
   partnerIdt: z.number().optional(),
+  series: z.string(),
+  discipline: z.string(),
+  competitors: z.string(),
+  competitorId: z.number(),
+  time: z.iso.datetime({ offset: true }).optional(),
+
+  personalApproved: z.boolean().optional(),
+  personalClass: z.string().optional().prefault('-'),
+  personalPoints: z.number().optional().prefault(0),
+  personalDomesticFinaleCount: z.number().optional().prefault(0),
+  personalForeignFinaleCount: z.number().optional().prefault(0),
+  medicalCheckupExpiration: z.iso.date().nullable().optional().prefault(null),
+
+  domesticFinaleCount: z.number().optional(),
+  foreignFinaleCount: z.number().optional(),
+
+  rankingAge: z.string(),
+  rankingPointsAge: z.string(),
+
+  ranklistPoints: z.number().optional(),
+  ranklistRanking: z.number().optional(),
 });
 
 const athleteSchema = z.object({
@@ -39,11 +44,22 @@ const athleteSchema = z.object({
   name: z.string(),
   age: z.string(),
   sex: z
-    .enum(['M', 'F'])
-    .transform((x) => (x === 'M' ? 'male' : x === 'F' ? 'female' : 'unknown'))
+    .enum(['M', 'F', 'male', 'female'])
+    .transform((x): gender => ({
+      M: 'male',
+      F: 'female',
+      male: 'male',
+      female: 'female'
+    }[x] ?? 'unknown') as gender)
     .optional(),
-  medicalCheckupExpiration: z.string().nullable().optional().prefault(null),
+  medicalCheckupExpiration: z.iso.date().nullable().optional().prefault(null),
   rankingPoints: z.array(rankingPointsSchema).optional().prefault([]),
+  lat: rankingPointsSchema.optional(),
+  stt: rankingPointsSchema.optional(),
+
+  validFor: z.iso.date().optional(),
+  barcode: z.string().optional(),
+  avatar: z.string().optional(),
 });
 
 const athletesResponseSchema = z.object({
@@ -51,12 +67,10 @@ const athletesResponseSchema = z.object({
 });
 
 type Response = z.infer<typeof athletesResponseSchema>;
-type Athlete = Response['collection'][0];
 
-export const cstsAthlete: JsonLoader<Athlete, Response> = {
+export const cstsAthlete: JsonLoader<Response> = {
   mode: 'json',
-  responseSchema: athletesResponseSchema,
-  storedSchema: athleteSchema,
+  schema: athletesResponseSchema,
   buildRequest: ({ key }) => ({
     url: `https://www.csts.cz/api/1/athletes/${key}`,
     init: {
@@ -68,12 +82,12 @@ export const cstsAthlete: JsonLoader<Athlete, Response> = {
     return defaultMapResponseToStatus(args);
   },
   transformResponse(url, parsed) {
-    const data = parsed.collection[0];
-    delete (data as any)['validFor'];
-    return data;
+    delete (parsed.collection[0] as any)['validFor'];
+    return parsed;
   },
   revalidatePeriod: '1 day',
-  async load(client, frontier, data) {
+  async load(client, frontier, parsed) {
+    const data = parsed.collection[0];
     const [{ athlete_id: mainAthleteId }] = await upsertFederationAthlete.run(
       {
         federation: 'csts',
@@ -95,11 +109,10 @@ export const cstsAthlete: JsonLoader<Athlete, Response> = {
     for (const rp of data.rankingPoints) {
       if (rp.competitors !== 'Couple' || !rp.partnerIdt) continue;
 
-      const partnerIdt = String(rp.partnerIdt);
       const [{ athlete_id: partnerAthleteId }] = await upsertFederationAthlete.run(
         {
           federation: 'csts',
-          externalId: partnerIdt,
+          externalId: String(rp.partnerIdt),
           canonicalName: rp.partner,
           gender: data.sex === 'male' ? 'female' : 'male',
         },

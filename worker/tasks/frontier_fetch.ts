@@ -94,7 +94,7 @@ async function fetchFrontier(
     body = await resp.text();
     if (handler.mode === 'json' && body.trim().length > 0) {
       rawJson = JSON.parse(body);
-      const parsedRes = handler.responseSchema.safeParse(rawJson);
+      const parsedRes = handler.schema.safeParse(rawJson);
       if (parsedRes.success) {
         parsed = parsedRes.data;
       } else {

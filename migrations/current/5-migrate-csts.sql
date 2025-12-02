@@ -8,10 +8,10 @@ select
   'ok',
   'pending'
 from csts.ingest
-where payload <> '{"collection": []}';
+where payload->'collection'->0 is not null;
 
 INSERT INTO crawler.json_response_cache (content)
-SELECT DISTINCT payload->'collection'->0
+SELECT DISTINCT payload
 FROM csts.ingest
 WHERE payload->'collection'->0 is not null
 ON CONFLICT (content_hash) DO NOTHING;
@@ -20,7 +20,7 @@ WITH src AS (
   SELECT
     i.url,
     i.payload::jsonb AS content,
-    encode(sha256((i.payload->'collection'->0)::TEXT::BYTEA), 'hex') AS content_hash,
+    encode(sha256((i.payload)::TEXT::BYTEA), 'hex') AS content_hash,
     substring(i.url from '[0-9]+$') AS key
   FROM csts.ingest i
   WHERE payload->'collection'->0 is not null
@@ -40,7 +40,7 @@ with max_idt as (
   select idt from
   (select substring(url from '[0-9]+$')::integer as idt
   from csts.ingest
-  where payload <> '{"collection": []}') i
+  where payload->'collection'->0 is not null) i
   order by case
     when idt between 18000000 and 18092599 then 1
     when idt between 10600000 and 17999999 then 2
