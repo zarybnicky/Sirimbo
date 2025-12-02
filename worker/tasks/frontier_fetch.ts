@@ -32,8 +32,10 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 
     const reservation = await getReservation(url, client);
     if (!reservation.proceed) {
-      await rescheduleFrontier.run({ id, nextRetryAt: reservation.runAt }, client);
+      const { runAt } = reservation;
+      await rescheduleFrontier.run({ id, nextRetryAt: runAt }, client);
       await client.query('COMMIT');
+      await helpers.addJob('frontier_fetch', { id }, { jobKey: `fetch:${id}`, runAt });
       return;
     }
     await client.query('COMMIT');
