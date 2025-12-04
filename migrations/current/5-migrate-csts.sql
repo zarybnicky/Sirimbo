@@ -1,14 +1,17 @@
 insert into crawler.frontier
- (federation, kind, key, last_fetched_at, fetch_status, process_status)
+ (federation, kind, key, discovered_at, last_fetched_at, next_fetch_at, fetch_status, process_status)
 select
   'csts',
   'member',
   substring(url from '[0-9]+$'),
   checked_at,
+  checked_at,
+  now() + interval '1 day' + random() * interval '1 hour',
   'ok',
   'pending'
 from csts.ingest
-where payload->'collection'->0 is not null;
+where payload->'collection'->0 is not null
+ON CONFLICT (federation, kind, key) DO NOTHING;
 
 INSERT INTO crawler.json_response_cache (content)
 SELECT DISTINCT payload
@@ -33,8 +36,10 @@ SELECT
   s.content_hash
 FROM src s
 JOIN crawler.frontier f
-  ON f.federation = 'csts' AND f.kind = 'member' AND f.key = s.key;
-
+  ON f.federation = 'csts' AND f.kind = 'member' AND f.key = s.key
+WHERE NOT EXISTS (
+  select 1 FROM crawler.json_response ex WHERE ex.frontier_id = f.id AND ex.content_hash = s.content_hash
+);
 
 with max_idt as (
   select idt from

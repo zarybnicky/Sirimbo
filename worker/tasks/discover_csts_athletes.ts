@@ -1,9 +1,10 @@
 import type { Task } from 'graphile-worker';
 import { getNextIdt } from '../crawler/cstsAthleteIdts.ts';
 import { cstsAthlete } from '../crawler/cstsAthlete.ts';
-import type { FrontierRow } from '../crawler/types.ts';
-import { insertDiscoveredCstsMember } from '../crawler/crawler.queries.ts';
-import { getReservation } from '../crawler/getReservation.ts';
+import {
+  insertDiscoveredCstsMember,
+  reserveRequest,
+} from '../crawler/crawler.queries.ts';
 
 const MAX_PROBES_PER_RUN = 200;
 const HOLE_LIMIT = 200;
@@ -35,18 +36,20 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
     probes += 1;
     newLastChecked = candidateId;
 
-    const { url, init } = cstsAthlete.buildRequest({
-      key: candidateId.toString(),
-    } as FrontierRow);
-
+    const { url, init } = cstsAthlete.buildRequest(candidateId.toString());
+    const { host } = url;
     while (true) {
-      const reservation = await helpers.withPgClient(async (client) => {
-        return getReservation(url, client);
+      const [{ granted, allowed_at }] = await helpers.withPgClient(async (client) => {
+        return reserveRequest.run({ host }, client);
       });
-      if (reservation.proceed) break;
-      await new Promise((resolve) =>
-        setTimeout(resolve, reservation.runAt.getTime() - Date.now()),
-      );
+      if (granted) break;
+      const waitTime = allowed_at!.getTime() - Date.now();
+      // if (waitTime > 45_000)
+      //   break countProbes;
+      await new Promise((resolve) => {
+        logger.info(`[IDT probe] Waiting ${waitTime}ms`);
+        setTimeout(resolve, waitTime);
+      });
     }
 
     const response = await fetch(url, init);

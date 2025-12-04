@@ -78,8 +78,8 @@ export const cstsAthlete: JsonLoader<Response> = {
   mode: 'json',
   schema: athletesResponseSchema,
   revalidatePeriod: '1 day',
-  buildRequest: ({ key }) => ({
-    url: `https://www.csts.cz/api/1/athletes/${key}`,
+  buildRequest: (key) => ({
+    url: new URL(`https://www.csts.cz/api/1/athletes/${key}`),
     init: {
       referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
     },
@@ -128,7 +128,7 @@ async function loadCstsAthlete(
       {
         class: rp.class ?? '',
         ageGroup: rp.rankingAge,
-        genderGroup: 'mixed',  // ČSTS distinguishes this only in competitions
+        genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
         discipline: rp.discipline,
         series: rp.series,
       },

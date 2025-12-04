@@ -1,10 +1,12 @@
 import type { Logger, Task } from 'graphile-worker';
 import {
+  getJobCountForTask,
   insertHtmlResponse,
   insertJsonResponse,
   markFrontierFetchError,
   markFrontierFetchSuccess,
   rescheduleFrontier,
+  reserveRequest,
 } from '../crawler/crawler.queries.ts';
 import {
   defaultMapResponseToStatus,
@@ -13,7 +15,6 @@ import {
   type HtmlLoader,
   type JsonLoader,
 } from '../crawler/types.ts';
-import { getReservation } from '../crawler/getReservation.ts';
 import { getFrontierHandler } from '../crawler/getFrontierHandler.ts';
 
 export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) => {
@@ -28,23 +29,25 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
       return;
     }
     const { frontier, handler } = withHandler;
-    const { url, init } = handler.buildRequest(frontier);
-
-    const reservation = await getReservation(url, client);
-    if (!reservation.proceed) {
-      const { runAt } = reservation;
-      await rescheduleFrontier.run({ id, nextRetryAt: runAt }, client);
+    const { url, init } = handler.buildRequest(frontier.key);
+    const { host } = url;
+    const [{ granted, allowed_at }] = await reserveRequest.run({ host }, client);
+    if (!granted) {
+      logger.info(`Over-scheduled for host ${host}, rescheduling in ${allowed_at!.getTime() - Date.now()} ms`);
+      await rescheduleFrontier.run({ id, nextRetryAt: allowed_at }, client);
       await client.query('COMMIT');
-      await helpers.addJob('frontier_fetch', { id }, { jobKey: `fetch:${id}`, runAt });
+      await helpers.addJob(
+        'frontier_fetch',
+        { id },
+        { jobKey: `fetch:${host}:${id}`, runAt: allowed_at! },
+      );
       return;
     }
     await client.query('COMMIT');
 
     return { frontier, handler, url, init };
   });
-  if (!result) {
-    return;
-  }
+  if (!result) return;
   const { frontier, handler, url, init } = result;
   const { httpStatus, error, content, fetchStatus } = await fetchFrontier(
     frontier,
@@ -57,9 +60,15 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
   await withPgClient(async (client) => {
     await client.query('BEGIN');
     if (handler.mode === 'json') {
-      await insertJsonResponse.run({ id, url, httpStatus, error, content }, client);
+      await insertJsonResponse.run(
+        { id, url: url.toString(), httpStatus, error, content },
+        client,
+      );
     } else {
-      await insertHtmlResponse.run({ id, url, httpStatus, error, content }, client);
+      await insertHtmlResponse.run(
+        { id, url: url.toString(), httpStatus, error, content },
+        client,
+      );
     }
 
     if (fetchStatus === 'error') {
@@ -68,6 +77,12 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
       const { revalidatePeriod } = handler;
       await markFrontierFetchSuccess.run({ id, fetchStatus, revalidatePeriod }, client);
     }
+
+    const jobs = await getJobCountForTask.run({ task: 'frontier_fetch' }, client);
+    if ((jobs[0].count ?? 0) <= 1) { // Count the current job too!
+      helpers.addJob('frontier_schedule', {});
+    }
+
     await client.query('COMMIT');
   });
 };
@@ -75,7 +90,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 async function fetchFrontier(
   frontier: FrontierRow,
   handler: JsonLoader | HtmlLoader,
-  url: string,
+  url: URL,
   init: RequestInit | undefined,
   logger: Logger,
 ) {
@@ -125,9 +140,7 @@ async function fetchFrontier(
     const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
     fetchStatus = mapper({ httpStatus, body, error });
     if (body != null) {
-      content = handler.cleanResponse
-        ? await handler.cleanResponse(url, body)
-        : body;
+      content = handler.cleanResponse ? await handler.cleanResponse(url, body) : body;
     }
   }
 

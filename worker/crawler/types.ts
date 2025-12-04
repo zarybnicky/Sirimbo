@@ -9,8 +9,8 @@ export type FrontierRow = IGetFrontierForUpdateResult;
 export interface JsonLoader<T = any> {
   mode: 'json';
   schema: z.ZodType<T>;
-  buildRequest: (frontier: FrontierRow) => {
-    url: string;
+  buildRequest: (key: string) => {
+    url: URL;
     init?: RequestInit;
   };
   mapResponseToStatus?: (args: {
@@ -19,15 +19,15 @@ export interface JsonLoader<T = any> {
     rawJson: unknown | null;
     error?: unknown;
   }) => FetchStatus;
-  cleanResponse?: (url: string, parsed: T, rawJson: unknown,) => Promise<T> | T;
+  cleanResponse?: (url: URL, parsed: T, rawJson: unknown) => Promise<T> | T;
   revalidatePeriod: string;
   load: (client: PoolClient, frontier: FrontierRow, parsed: T) => Promise<void>;
 }
 
 export interface HtmlLoader {
   mode: 'text';
-  buildRequest: (frontier: FrontierRow) => {
-    url: string;
+  buildRequest: (key: string) => {
+    url: URL;
     init?: RequestInit;
   };
   mapResponseToStatus?: (args: {
@@ -35,7 +35,7 @@ export interface HtmlLoader {
     body: string | null;
     error?: unknown;
   }) => FetchStatus;
-  cleanResponse?: (url: string, body: string) => Promise<string> | string;
+  cleanResponse?: (url: URL, body: string) => Promise<string> | string;
   revalidatePeriod: string;
   load: (client: PoolClient, frontier: FrontierRow, body: string) => Promise<void>;
 }

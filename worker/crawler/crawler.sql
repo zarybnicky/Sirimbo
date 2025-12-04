@@ -32,8 +32,29 @@ SELECT count(*)::int AS count
 FROM graphile_worker.jobs
 WHERE task_identifier = :task::text;
 
+/* @name GetFetchScheduleRules */
+WITH job_stats AS (
+  SELECT
+    split_part(key, ':', 2) AS host,
+    count(*)                AS queued,
+    max(run_at)             AS last_run_at
+  FROM graphile_worker.jobs
+  WHERE task_identifier = 'frontier_fetch'
+    AND key LIKE 'fetch:%'
+    AND run_at >= now()
+    AND locked_at IS NULL
+  GROUP BY split_part(key, ':', 2)
+)
+SELECT
+  COALESCE(r.host, js.host) AS host,
+  (extract(epoch from r.spacing) * 1000)::int as spacing,
+  COALESCE(js.queued, 0)::int AS queued,
+  GREATEST(js.last_run_at, now()) AS last_run_at
+FROM crawler.rate_limit_rule r
+FULL JOIN job_stats js USING (host);
+
 /* @name GetPendingFetch */
-SELECT id
+SELECT id, federation, kind, key
 FROM crawler.frontier
 WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
   AND (fetch_status = 'pending'
@@ -51,7 +72,7 @@ LIMIT :limit;
 
 /* @name ReserveRequest */
 SELECT granted, allowed_at
-FROM crawler.reserve_request(:host::text, :prefixes::text[]);
+  FROM crawler.reserve_request(:host::text);
 
 /* @name MarkFrontierFetchError */
 UPDATE crawler.frontier

@@ -33,7 +33,6 @@ export const LOADERS: Record<string, Record<string, JsonLoader | HtmlLoader>> = 
 
     // Dlouhodobé hostování
     // https://www.csts.cz/api/1/loans?filter=memberIdt=18038132
-    // https://www.csts.cz/api/1/loans/1098
 
     // Přestupy
     // https://www.csts.cz/api/evidence/clenove/prestupy/seznam-clena/14384?%24count=true&%24skip=0&%24top=20&%24orderby=DatPorizeni%20desc
@@ -56,18 +55,66 @@ export const LOADERS: Record<string, Record<string, JsonLoader | HtmlLoader>> = 
   },
   szts: {
     // soutěže https://szts.ksis.eu/menu.php?akcia=KS
-    // přihlášení https://szts.ksis.eu/zoznam_prihl.php?id_prop=2296
-    // propozice https://szts.ksis.eu/prop.php?id_prop=2296
+    competitionIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=KS') }),
+      async load() {},
+    },
     // clenove https://szts.ksis.eu/menu.php?akcia=CZ
+    memberIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZ') }),
+      async load() {},
+    },
     // trenéři https://szts.ksis.eu/menu.php?akcia=CZT
+    trainerIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZT') }),
+      async load() {},
+    },
     // funkcionáři https://szts.ksis.eu/menu.php?akcia=CZS
+    officialIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZS') }),
+      async load() {},
+    },
     // porotci https://szts.ksis.eu/menu.php?akcia=CZR
-    // soutěže porotce https://szts.ksis.eu/rozhodca.php?meno=R%C3%B3bert%20Pavl%C3%ADk&mesto=Adamovsk%C3%A9%20Kochanovce
+    judgeIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZR') }),
+      async load() {},
+    },
     // kluby https://szts.ksis.eu/menu.php?akcia=CZK
+    clubIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZK') }),
+      async load() {},
+    },
     // solo https://szts.ksis.eu/menu.php?akcia=CZSD
+    soloIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZSD') }),
+      async load() {},
+    },
     // páry https://szts.ksis.eu/menu.php?akcia=CZP
+    coupleIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZP') }),
+      async load() {},
+    },
+    // soutěže porotce https://szts.ksis.eu/rozhodca.php?meno=R%C3%B3bert%20Pavl%C3%ADk&mesto=Adamovsk%C3%A9%20Kochanovce
     // detail https://szts.ksis.eu/detail_paru.php?cp=12278
     // seznam výsledků https://szts.ksis.eu/menu.php?akcia=S&rok=2024
+    // přihlášení https://szts.ksis.eu/zoznam_prihl.php?id_prop=2296
+    // propozice https://szts.ksis.eu/prop.php?id_prop=2296
     // https://szts.ksis.eu/sutaz.php?sutaz_id=10532
     // https://szts.ksis.eu/hodnot_sut.php?sutaz_id=10525
     // => kategorie věkové/výkonnostní/licence = odvozené

@@ -9,8 +9,6 @@ export type Json = null | boolean | number | string | Json[] | { [key: string]: 
 
 export type NumberOrString = number | string;
 
-export type stringArray = (string)[];
-
 /** 'GetFrontierForUpdate' parameters type */
 export interface IGetFrontierForUpdateParams {
   id?: NumberOrString | null | void;
@@ -184,6 +182,52 @@ const getJobCountForTaskIR: any = {"usedParamSet":{"task":true},"params":[{"name
 export const getJobCountForTask = new PreparedQuery<IGetJobCountForTaskParams,IGetJobCountForTaskResult>(getJobCountForTaskIR);
 
 
+/** 'GetFetchScheduleRules' parameters type */
+export type IGetFetchScheduleRulesParams = void;
+
+/** 'GetFetchScheduleRules' return type */
+export interface IGetFetchScheduleRulesResult {
+  host: string | null;
+  last_run_at: Date | null;
+  queued: number | null;
+  spacing: number | null;
+}
+
+/** 'GetFetchScheduleRules' query type */
+export interface IGetFetchScheduleRulesQuery {
+  params: IGetFetchScheduleRulesParams;
+  result: IGetFetchScheduleRulesResult;
+}
+
+const getFetchScheduleRulesIR: any = {"usedParamSet":{},"params":[],"statement":"WITH job_stats AS (\n  SELECT\n    split_part(key, ':', 2) AS host,\n    count(*)                AS queued,\n    max(run_at)             AS last_run_at\n  FROM graphile_worker.jobs\n  WHERE task_identifier = 'frontier_fetch'\n    AND key LIKE 'fetch:%'\n    AND run_at >= now()\n    AND locked_at IS NULL\n  GROUP BY split_part(key, ':', 2)\n)\nSELECT\n  COALESCE(r.host, js.host) AS host,\n  (extract(epoch from r.spacing) * 1000)::int as spacing,\n  COALESCE(js.queued, 0)::int AS queued,\n  GREATEST(js.last_run_at, now()) AS last_run_at\nFROM crawler.rate_limit_rule r\nFULL JOIN job_stats js USING (host)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH job_stats AS (
+ *   SELECT
+ *     split_part(key, ':', 2) AS host,
+ *     count(*)                AS queued,
+ *     max(run_at)             AS last_run_at
+ *   FROM graphile_worker.jobs
+ *   WHERE task_identifier = 'frontier_fetch'
+ *     AND key LIKE 'fetch:%'
+ *     AND run_at >= now()
+ *     AND locked_at IS NULL
+ *   GROUP BY split_part(key, ':', 2)
+ * )
+ * SELECT
+ *   COALESCE(r.host, js.host) AS host,
+ *   (extract(epoch from r.spacing) * 1000)::int as spacing,
+ *   COALESCE(js.queued, 0)::int AS queued,
+ *   GREATEST(js.last_run_at, now()) AS last_run_at
+ * FROM crawler.rate_limit_rule r
+ * FULL JOIN job_stats js USING (host)
+ * ```
+ */
+export const getFetchScheduleRules = new PreparedQuery<IGetFetchScheduleRulesParams,IGetFetchScheduleRulesResult>(getFetchScheduleRulesIR);
+
+
 /** 'GetPendingFetch' parameters type */
 export interface IGetPendingFetchParams {
   limit?: NumberOrString | null | void;
@@ -191,7 +235,10 @@ export interface IGetPendingFetchParams {
 
 /** 'GetPendingFetch' return type */
 export interface IGetPendingFetchResult {
+  federation: string;
   id: string;
+  key: string;
+  kind: string;
 }
 
 /** 'GetPendingFetch' query type */
@@ -200,12 +247,12 @@ export interface IGetPendingFetchQuery {
   result: IGetPendingFetchResult;
 }
 
-const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":210,"b":215}]}],"statement":"SELECT id\nFROM crawler.frontier\nWHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n  AND (fetch_status = 'pending'\n         OR (fetch_status = 'ok' AND process_status = 'ok'))\nORDER BY discovered_at\nLIMIT :limit"};
+const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":233,"b":238}]}],"statement":"SELECT id, federation, kind, key\nFROM crawler.frontier\nWHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n  AND (fetch_status = 'pending'\n         OR (fetch_status = 'ok' AND process_status = 'ok'))\nORDER BY discovered_at\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT id
+ * SELECT id, federation, kind, key
  * FROM crawler.frontier
  * WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
  *   AND (fetch_status = 'pending'
@@ -252,7 +299,6 @@ export const getPendingProcess = new PreparedQuery<IGetPendingProcessParams,IGet
 /** 'ReserveRequest' parameters type */
 export interface IReserveRequestParams {
   host?: string | null | void;
-  prefixes?: stringArray | null | void;
 }
 
 /** 'ReserveRequest' return type */
@@ -267,13 +313,13 @@ export interface IReserveRequestQuery {
   result: IReserveRequestResult;
 }
 
-const reserveRequestIR: any = {"usedParamSet":{"host":true,"prefixes":true},"params":[{"name":"host","required":false,"transform":{"type":"scalar"},"locs":[{"a":56,"b":60}]},{"name":"prefixes","required":false,"transform":{"type":"scalar"},"locs":[{"a":69,"b":77}]}],"statement":"SELECT granted, allowed_at\nFROM crawler.reserve_request(:host::text, :prefixes::text[])"};
+const reserveRequestIR: any = {"usedParamSet":{"host":true},"params":[{"name":"host","required":false,"transform":{"type":"scalar"},"locs":[{"a":58,"b":62}]}],"statement":"SELECT granted, allowed_at\n  FROM crawler.reserve_request(:host::text)"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT granted, allowed_at
- * FROM crawler.reserve_request(:host::text, :prefixes::text[])
+ *   FROM crawler.reserve_request(:host::text)
  * ```
  */
 export const reserveRequest = new PreparedQuery<IReserveRequestParams,IReserveRequestResult>(reserveRequestIR);
