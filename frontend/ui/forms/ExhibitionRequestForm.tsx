@@ -37,7 +37,7 @@ export function ExhibitionRequestForm() {
       fbq('track', 'SubmitApplication');
     }
     const url = window.location.toString();
-    await submit({ type: 'Zájemce o vystoupení', data, url });
+    await submit({ type: 'Zájemce o vystoupení', data: JSON.stringify(data), url });
     toast.success('Brzy se vám ozveme!');
   });
 
