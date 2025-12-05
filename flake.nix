@@ -1,5 +1,5 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
 
   outputs = { self, nixpkgs, ... }: let
     allSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ];
@@ -24,7 +24,7 @@
       rozpisovnik-worker = final.callPackage ./nix/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./worker/package.json;
         workspaceFolders = [ "worker" ];
-        pnpmDepsHash = "sha256-hWp+vDP2LLXFZTlznIy8s82NMM1/OvghzupZMs4I4B4=";
+        pnpmDepsHash = "sha256-zR27ZywY31OAn9cUOSbFeD0cDX7Ye6HF0mJIwgxUmto=";
         postInstall = "cp -s $out/share/worker/rozpisovnik-worker $out/bin/";
       };
 

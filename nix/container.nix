@@ -1,5 +1,6 @@
 { pkgs, ... }: {
   boot.isContainer = true;
+  boot.isNspawnContainer = true;
   system.stateVersion = "23.05";
   networking.useDHCP = false;
   networking.firewall.allowedTCPPorts = [ 80 3000 3306 5432 8025 1025 9000 ];
