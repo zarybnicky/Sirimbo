@@ -1,6 +1,98 @@
-CREATE FUNCTION public.upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) RETURNS public.event
-    LANGUAGE plpgsql
-    AS $$
+--! Previous: sha1:904018b6905db4c244d6f25f48099ee9b6f2354e
+--! Hash: sha1:0d3b9d30051eecd578d3179a2292a39aa89fc576
+
+--! split: 1-current.sql
+DROP EXTENSION IF EXISTS plpgsql_check;
+CREATE EXTENSION plpgsql_check;
+
+DELETE FROM event_instance_trainer AS et1
+WHERE EXISTS (
+  SELECT 1
+  FROM event_instance_trainer AS et2
+  WHERE (et1.instance_id, et1.person_id) = (et2.instance_id, et2.person_id)
+    AND et1.id < et2.id);
+
+ALTER TABLE public.event_instance_trainer
+  DROP CONSTRAINT IF EXISTS event_instance_trainer_trainer_id_key,
+  ADD CONSTRAINT event_instance_trainer_trainer_id_key UNIQUE (instance_id, person_id);
+
+DELETE FROM event_target_cohort AS et1
+WHERE EXISTS (
+  SELECT 1
+  FROM event_target_cohort AS et2
+  WHERE (et1.event_id, et1.cohort_id) = (et2.event_id, et2.event_id)
+    AND et1.id < et2.id);
+
+ALTER TABLE public.event_target_cohort
+  DROP CONSTRAINT IF EXISTS event_target_cohort_cohort_id_key,
+  ADD CONSTRAINT event_target_cohort_cohort_id_key UNIQUE (event_id, cohort_id);
+
+drop function if exists upsert_event(info event, instances event_instance[], trainers event_trainer[], cohorts event_target_cohort[], registrations event_registration[]);
+drop function if exists upsert_event(info event_type_input, instances event_instance_type_input[], trainers event_trainer_type_input[], cohorts event_target_cohort_type_input[], registrations event_registration_type_input[]);
+
+drop type if exists event_type_input;
+drop type if exists event_instance_type_input;
+drop type if exists event_instance_trainer_type_input;
+drop type if exists event_trainer_type_input;
+drop type if exists event_target_cohort_type_input;
+drop type if exists event_registration_type_input;
+
+CREATE TYPE public.event_type_input AS (
+  id bigint,
+  name text,
+  summary text,
+  description text,
+  description_member text,
+  type public.event_type,
+  location_id bigint,
+  location_text text,
+  capacity integer,
+  is_visible boolean,
+  is_public boolean,
+  is_locked boolean,
+  enable_notes boolean,
+  payment_type event_payment_type,
+  member_price public.price,
+  guest_price public.price
+);
+
+CREATE TYPE public.event_instance_trainer_type_input AS (
+  id bigint,
+  person_id bigint
+);
+
+CREATE TYPE public.event_instance_type_input AS (
+  id bigint,
+  since timestamp with time zone,
+  until timestamp with time zone,
+  is_cancelled boolean,
+  trainers event_instance_trainer_type_input[]
+);
+
+CREATE TYPE public.event_trainer_type_input AS (
+  id bigint,
+  person_id bigint,
+  lessons_offered integer
+);
+
+CREATE TYPE public.event_target_cohort_type_input AS (
+  id bigint,
+  cohort_id bigint
+);
+
+CREATE TYPE public.event_registration_type_input AS (
+  id bigint,
+  person_id bigint,
+  couple_id bigint
+);
+
+CREATE OR REPLACE FUNCTION upsert_event(
+  info event_type_input,
+  instances event_instance_type_input[],
+  trainers event_trainer_type_input[],
+  cohorts event_target_cohort_type_input[],
+  registrations event_registration_type_input[]
+) RETURNS event LANGUAGE plpgsql AS $$
 declare
   instance event_instance_type_input;
   trainer event_trainer_type_input;
@@ -146,4 +238,7 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) TO anonymous;
+select verify_function('public.upsert_event');
+
+COMMENT ON FUNCTION public.upsert_event is null;
+GRANT ALL ON FUNCTION public.upsert_event TO anonymous;

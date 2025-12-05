@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict obefg4N871BDeQWAEXQhgRpgGe6wup3kWhN0uttEH2ksa2wFTNL7sbHR7ZS9EdO
+\restrict YqQ7h3zjTOv37AMXkfNftgzURfKdDKQ9xbcXrtnbV7Wyye5s9GbjfjkgChyAWsy
 
--- Dumped from database version 17.6
--- Dumped by pg_dump version 17.6
+-- Dumped from database version 17.7
+-- Dumped by pg_dump version 17.7
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -5133,7 +5133,8 @@ begin
           end if;
         else
           insert into event_instance_trainer (instance_id, person_id)
-          values (v_instance.id, instance_trainer.person_id);
+          values (v_instance.id, instance_trainer.person_id)
+          on conflict (instance_id, person_id) do nothing;
         end if;
       end loop;
     end if;
@@ -5161,7 +5162,8 @@ begin
       end if;
     else
       insert into event_target_cohort (event_id, cohort_id)
-      values (v_event.id, cohort.cohort_id);
+      values (v_event.id, cohort.cohort_id)
+      on conflict (event_id, cohort_id) do nothing;
     end if;
   end loop;
 
@@ -5176,7 +5178,8 @@ begin
       end if;
     else
       insert into event_registration (event_id, person_id, couple_id)
-      values (v_event.id, registration.person_id, registration.couple_id);
+      values (v_event.id, registration.person_id, registration.couple_id)
+      on conflict (event_id, person_id, couple_id) do nothing;
     end if;
   end loop;
 
@@ -7260,6 +7263,14 @@ ALTER TABLE ONLY public.event_instance_trainer
 
 
 --
+-- Name: event_instance_trainer event_instance_trainer_trainer_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_trainer
+    ADD CONSTRAINT event_instance_trainer_trainer_id_key UNIQUE (instance_id, person_id);
+
+
+--
 -- Name: event_lesson_demand event_lesson_demand_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7281,6 +7292,14 @@ ALTER TABLE ONLY public.event_registration
 
 ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_unique_event_person_couple_key UNIQUE NULLS NOT DISTINCT (event_id, person_id, couple_id);
+
+
+--
+-- Name: event_target_cohort event_target_cohort_cohort_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_target_cohort
+    ADD CONSTRAINT event_target_cohort_cohort_id_key UNIQUE (event_id, cohort_id);
 
 
 --
@@ -12653,5 +12672,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict obefg4N871BDeQWAEXQhgRpgGe6wup3kWhN0uttEH2ksa2wFTNL7sbHR7ZS9EdO
+\unrestrict YqQ7h3zjTOv37AMXkfNftgzURfKdDKQ9xbcXrtnbV7Wyye5s9GbjfjkgChyAWsy
 

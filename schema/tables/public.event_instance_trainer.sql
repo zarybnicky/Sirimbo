@@ -17,6 +17,8 @@ ALTER TABLE public.event_instance_trainer ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.event_instance_trainer
     ADD CONSTRAINT event_instance_trainer_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.event_instance_trainer
+    ADD CONSTRAINT event_instance_trainer_trainer_id_key UNIQUE (instance_id, person_id);
+ALTER TABLE ONLY public.event_instance_trainer
     ADD CONSTRAINT event_instance_trainer_instance_id_fkey FOREIGN KEY (instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_instance_trainer
     ADD CONSTRAINT event_instance_trainer_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
