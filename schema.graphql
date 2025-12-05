@@ -7746,6 +7746,9 @@ type Query {
   """Get a single `EventInstanceTrainer`."""
   eventInstanceTrainer(id: BigInt!): EventInstanceTrainer
 
+  """Get a single `EventInstanceTrainer`."""
+  eventInstanceTrainerByInstanceIdAndPersonId(instanceId: BigInt!, personId: BigInt!): EventInstanceTrainer
+
   """Reads a set of `EventInstanceTrainer`."""
   eventInstanceTrainersList(
     """
@@ -7888,6 +7891,9 @@ type Query {
 
   """Get a single `EventTargetCohort`."""
   eventTargetCohort(id: BigInt!): EventTargetCohort
+
+  """Get a single `EventTargetCohort`."""
+  eventTargetCohortByEventIdAndCohortId(cohortId: BigInt!, eventId: BigInt!): EventTargetCohort
 
   """Reads a set of `EventTargetCohort`."""
   eventTargetCohortsList(

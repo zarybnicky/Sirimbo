@@ -15245,6 +15245,36 @@
             ]
           },
           {
+            "name": "eventInstanceTrainerByInstanceIdAndPersonId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstanceTrainer",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "instanceId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "personId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "eventInstanceTrainersList",
             "type": {
               "kind": "LIST",
@@ -15785,6 +15815,36 @@
             "args": [
               {
                 "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventTargetCohortByEventIdAndCohortId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventTargetCohort",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "cohortId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "eventId",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {

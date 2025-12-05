@@ -17,7 +17,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       inset: false,
       img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837164-0016-DSC_0009%201.jpg',
     },
-   ...data.filter(x => x.id !== '467').map((x) => ({
+    ...data.filter(x => x.id !== '467' && x.id !== '468').map((x) => ({
       id: x.id,
       href: {
         pathname: '/clanky/[id]/[...slug]',

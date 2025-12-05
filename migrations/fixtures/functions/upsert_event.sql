@@ -155,7 +155,8 @@ begin
           end if;
         else
           insert into event_instance_trainer (instance_id, person_id)
-          values (v_instance.id, instance_trainer.person_id);
+          values (v_instance.id, instance_trainer.person_id)
+          on conflict (instance_id, person_id) do nothing;
         end if;
       end loop;
     end if;
@@ -183,7 +184,8 @@ begin
       end if;
     else
       insert into event_target_cohort (event_id, cohort_id)
-      values (v_event.id, cohort.cohort_id);
+      values (v_event.id, cohort.cohort_id)
+      on conflict (event_id, cohort_id) do nothing;
     end if;
   end loop;
 
@@ -198,7 +200,8 @@ begin
       end if;
     else
       insert into event_registration (event_id, person_id, couple_id)
-      values (v_event.id, registration.person_id, registration.couple_id);
+      values (v_event.id, registration.person_id, registration.couple_id)
+      on conflict (event_id, person_id, couple_id) do nothing;
     end if;
   end loop;
 

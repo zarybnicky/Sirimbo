@@ -6288,6 +6288,8 @@ export type Query = {
   eventInstance: Maybe<EventInstance>;
   /** Get a single `EventInstanceTrainer`. */
   eventInstanceTrainer: Maybe<EventInstanceTrainer>;
+  /** Get a single `EventInstanceTrainer`. */
+  eventInstanceTrainerByInstanceIdAndPersonId: Maybe<EventInstanceTrainer>;
   /** Reads a set of `EventInstanceTrainer`. */
   eventInstanceTrainersList: Maybe<Array<EventInstanceTrainer>>;
   eventInstancesForRangeList: Maybe<Array<EventInstance>>;
@@ -6311,6 +6313,8 @@ export type Query = {
   eventRegistrationsList: Maybe<Array<EventRegistration>>;
   /** Get a single `EventTargetCohort`. */
   eventTargetCohort: Maybe<EventTargetCohort>;
+  /** Get a single `EventTargetCohort`. */
+  eventTargetCohortByEventIdAndCohortId: Maybe<EventTargetCohort>;
   /** Reads a set of `EventTargetCohort`. */
   eventTargetCohortsList: Maybe<Array<EventTargetCohort>>;
   /** Get a single `EventTrainer`. */
@@ -6700,6 +6704,13 @@ export type QueryEventInstanceTrainerArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryEventInstanceTrainerByInstanceIdAndPersonIdArgs = {
+  instanceId: Scalars['BigInt']['input'];
+  personId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryEventInstanceTrainersListArgs = {
   condition?: InputMaybe<EventInstanceTrainerCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -6807,6 +6818,13 @@ export type QueryEventRegistrationsListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryEventTargetCohortArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventTargetCohortByEventIdAndCohortIdArgs = {
+  cohortId: Scalars['BigInt']['input'];
+  eventId: Scalars['BigInt']['input'];
 };
 
 
@@ -10144,6 +10162,7 @@ export type GraphCacheResolvers = {
     eventExternalRegistrationsList?: GraphCacheResolver<WithTypename<Query>, QueryEventExternalRegistrationsListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     eventInstance?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceArgs, WithTypename<EventInstance> | string>,
     eventInstanceTrainer?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceTrainerArgs, WithTypename<EventInstanceTrainer> | string>,
+    eventInstanceTrainerByInstanceIdAndPersonId?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceTrainerByInstanceIdAndPersonIdArgs, WithTypename<EventInstanceTrainer> | string>,
     eventInstanceTrainersList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceTrainersListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     eventInstancesForRangeList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstancesForRangeListArgs, Array<WithTypename<EventInstance> | string>>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
@@ -10157,6 +10176,7 @@ export type GraphCacheResolvers = {
     eventRegistrations?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationsArgs, WithTypename<EventRegistrationsConnection> | string>,
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
     eventTargetCohort?: GraphCacheResolver<WithTypename<Query>, QueryEventTargetCohortArgs, WithTypename<EventTargetCohort> | string>,
+    eventTargetCohortByEventIdAndCohortId?: GraphCacheResolver<WithTypename<Query>, QueryEventTargetCohortByEventIdAndCohortIdArgs, WithTypename<EventTargetCohort> | string>,
     eventTargetCohortsList?: GraphCacheResolver<WithTypename<Query>, QueryEventTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
     eventTrainer?: GraphCacheResolver<WithTypename<Query>, QueryEventTrainerArgs, WithTypename<EventTrainer> | string>,
     eventTrainerByEventIdAndPersonId?: GraphCacheResolver<WithTypename<Query>, QueryEventTrainerByEventIdAndPersonIdArgs, WithTypename<EventTrainer> | string>,
@@ -11964,6 +11984,7 @@ export type GraphCacheUpdaters = {
     eventExternalRegistrationsList?: GraphCacheUpdateResolver<{ eventExternalRegistrationsList: Maybe<Array<WithTypename<EventExternalRegistration>>> }, QueryEventExternalRegistrationsListArgs>,
     eventInstance?: GraphCacheUpdateResolver<{ eventInstance: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceArgs>,
     eventInstanceTrainer?: GraphCacheUpdateResolver<{ eventInstanceTrainer: Maybe<WithTypename<EventInstanceTrainer>> }, QueryEventInstanceTrainerArgs>,
+    eventInstanceTrainerByInstanceIdAndPersonId?: GraphCacheUpdateResolver<{ eventInstanceTrainerByInstanceIdAndPersonId: Maybe<WithTypename<EventInstanceTrainer>> }, QueryEventInstanceTrainerByInstanceIdAndPersonIdArgs>,
     eventInstanceTrainersList?: GraphCacheUpdateResolver<{ eventInstanceTrainersList: Maybe<Array<WithTypename<EventInstanceTrainer>>> }, QueryEventInstanceTrainersListArgs>,
     eventInstancesForRangeList?: GraphCacheUpdateResolver<{ eventInstancesForRangeList: Maybe<Array<WithTypename<EventInstance>>> }, QueryEventInstancesForRangeListArgs>,
     eventInstancesList?: GraphCacheUpdateResolver<{ eventInstancesList: Maybe<Array<WithTypename<EventInstance>>> }, QueryEventInstancesListArgs>,
@@ -11977,6 +11998,7 @@ export type GraphCacheUpdaters = {
     eventRegistrations?: GraphCacheUpdateResolver<{ eventRegistrations: Maybe<WithTypename<EventRegistrationsConnection>> }, QueryEventRegistrationsArgs>,
     eventRegistrationsList?: GraphCacheUpdateResolver<{ eventRegistrationsList: Maybe<Array<WithTypename<EventRegistration>>> }, QueryEventRegistrationsListArgs>,
     eventTargetCohort?: GraphCacheUpdateResolver<{ eventTargetCohort: Maybe<WithTypename<EventTargetCohort>> }, QueryEventTargetCohortArgs>,
+    eventTargetCohortByEventIdAndCohortId?: GraphCacheUpdateResolver<{ eventTargetCohortByEventIdAndCohortId: Maybe<WithTypename<EventTargetCohort>> }, QueryEventTargetCohortByEventIdAndCohortIdArgs>,
     eventTargetCohortsList?: GraphCacheUpdateResolver<{ eventTargetCohortsList: Maybe<Array<WithTypename<EventTargetCohort>>> }, QueryEventTargetCohortsListArgs>,
     eventTrainer?: GraphCacheUpdateResolver<{ eventTrainer: Maybe<WithTypename<EventTrainer>> }, QueryEventTrainerArgs>,
     eventTrainerByEventIdAndPersonId?: GraphCacheUpdateResolver<{ eventTrainerByEventIdAndPersonId: Maybe<WithTypename<EventTrainer>> }, QueryEventTrainerByEventIdAndPersonIdArgs>,

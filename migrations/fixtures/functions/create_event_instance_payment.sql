@@ -28,7 +28,7 @@ begin
   returning * into payment;
 
   insert into payment_recipient (payment_id, account_id, amount)
-  select payment.id, account.id, (price).amount
+  select distinct on (account.id) payment.id, account.id, (price).amount
   from event_instance_trainer
   join tenant_trainer on event_instance_trainer.person_id = tenant_trainer.person_id and tenant_trainer.tenant_id=current_tenant_id() and tenant_trainer.active_range @> now()
   join lateral coalesce(event_instance_trainer.lesson_price, ((tenant_trainer.member_price_45min).amount / 45 * duration, (tenant_trainer.member_price_45min).currency)::price) price on true
@@ -38,7 +38,7 @@ begin
   get diagnostics counter = row_count;
   if counter <= 0 then
     insert into payment_recipient (payment_id, account_id, amount)
-    select payment.id, account.id, (price).amount
+    select distinct on (account.id) payment.id, account.id, (price).amount
     from event_trainer
     join tenant_trainer on event_trainer.person_id = tenant_trainer.person_id and tenant_trainer.tenant_id=current_tenant_id() and tenant_trainer.active_range @> now()
     join lateral coalesce(event_trainer.lesson_price, ((tenant_trainer.member_price_45min).amount / 45 * duration, (tenant_trainer.member_price_45min).currency)::price) price on true
