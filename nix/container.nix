@@ -102,7 +102,7 @@
     };
     script = ''
       set -e
-      mc --config-dir . config host add minio http://localhost:9000 "00000000" "000000000000"
+      mc --config-dir . alias set minio http://localhost:9000 "00000000" "000000000000"
       mc --config-dir . mb --ignore-existing minio/private
       mc --config-dir . mb --ignore-existing minio/public
       mc --config-dir . policy set download minio/public

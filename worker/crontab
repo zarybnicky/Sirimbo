@@ -1,7 +1,6 @@
-*/2 * * * * refresh_memberships
 */2 * * * * refresh_auth_details
 
 29 21 * * * create_lesson_payments
 
 * * * * * frontier_schedule
-*/10 * * * * discover_csts_athletes
+8 * * * * * discover_csts_athletes
