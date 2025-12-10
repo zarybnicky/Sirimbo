@@ -1,5 +1,8 @@
 drop schema if exists federated cascade;
 
+update crawler.frontier set process_status = 'pending'
+where fetch_status in ('ok', 'pending');
+
 create schema federated;
 
 CREATE EXTENSION IF NOT EXISTS unaccent;
