@@ -23,7 +23,7 @@ WITH src AS (
   SELECT
     i.url,
     i.payload::jsonb AS content,
-    encode(sha256((i.payload)::TEXT::BYTEA), 'hex') AS content_hash,
+    encode(digest((i.payload)::TEXT, 'sha256'), 'hex') AS content_hash,
     substring(i.url from '[0-9]+$') AS key
   FROM csts.ingest i
   WHERE payload->'collection'->0 is not null
@@ -58,4 +58,4 @@ with max_idt as (
 update crawler.incremental_ranges
 set last_known = (select idt from max_idt),
     last_checked = (select idt from max_idt)
-where federation = 'csts' and kind = 'member';
+where federation = 'csts' and kind = 'member_id';

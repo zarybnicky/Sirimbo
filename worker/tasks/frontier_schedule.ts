@@ -5,7 +5,7 @@ import {
   getPendingFetch,
   getPendingProcess,
 } from '../crawler/crawler.queries.ts';
-import { LOADERS } from '../crawler/handlers.ts';
+import { LOADER_MAP } from '../crawler/handlers.ts';
 
 const MAX_OUTSTANDING_FETCH = 200;
 const MAX_OUTSTANDING_PROCESS = 10;
@@ -36,10 +36,10 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
 
     const pendingIds = await getPendingFetch.run({ limit: capacity }, client);
     for (const { id, federation, kind, key } of pendingIds) {
-      const { url } = LOADERS[federation][kind].buildRequest(key);
+      const { url } = LOADER_MAP[federation][kind].buildRequest(key);
       const { host } = url;
 
-      const rule = byHost.get(host)!;
+      const rule = byHost.get(host) ?? byHost.set(host, { spacingMs: 50, queued: 0, lastRunAt: new Date() }).get(host)!;
       const runAt = new Date(rule.lastRunAt.getTime() + rule.spacingMs);
       rule.lastRunAt = runAt;
       rule.queued += 1;

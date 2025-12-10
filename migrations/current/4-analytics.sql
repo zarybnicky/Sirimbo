@@ -396,7 +396,6 @@ CREATE INDEX ON federated.competition_result (competitor_id);
 CREATE INDEX ON federated.competition_result (competition_id, ranking);
 
 
-
 CREATE TABLE federated.ranklist (
   id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   federation  text NOT NULL REFERENCES federated.federation(code),
@@ -430,6 +429,87 @@ CREATE TYPE federated.competitor_component_input AS (
   role federated.competitor_role
 );
 
+
+CREATE OR REPLACE FUNCTION federated.upsert_category(
+  in_series       text,
+  in_discipline   text,
+  in_age_group    text,
+  in_gender_group text,
+  in_class        text,
+  in_name         text DEFAULT NULL
+)
+  RETURNS bigint
+  LANGUAGE sql
+  SET SEARCH_PATH = federated, pg_temp
+AS $$
+  INSERT INTO federated.category (
+    series,
+    discipline,
+    age_group,
+    gender_group,
+    class,
+    name
+  )
+  VALUES (
+    in_series,
+    in_discipline,
+    in_age_group,
+    in_gender_group,
+    in_class,
+    COALESCE(
+      in_name,
+      concat_ws(' ', in_series, in_discipline, in_age_group, in_class)
+    )
+  )
+  ON CONFLICT (series, discipline, age_group, gender_group, class)
+    DO UPDATE SET name = EXCLUDED.name
+RETURNING id;
+$$;
+
+CREATE OR REPLACE FUNCTION federated.upsert_athlete(
+  in_federation     text,
+  in_external_id    text,
+  in_canonical_name text,
+  in_gender         federated.gender
+)
+  RETURNS bigint
+  LANGUAGE plpgsql
+  SET SEARCH_PATH = federated, pg_temp
+AS $$
+DECLARE
+  v_person_id  bigint;
+  v_athlete_id bigint;
+BEGIN
+  -- Try to find existing mapping and lock it
+  SELECT fa.athlete_id
+  INTO v_athlete_id
+  FROM federation_athlete fa
+  WHERE fa.federation = in_federation
+    AND fa.external_id = in_external_id
+    FOR UPDATE;
+
+  -- If no mapping, create person + athlete
+  IF v_athlete_id IS NULL THEN
+    INSERT INTO person (canonical_name, gender)
+    VALUES (in_canonical_name, in_gender)
+    RETURNING id INTO v_person_id;
+
+    INSERT INTO athlete (person_id)
+    VALUES (v_person_id)
+    RETURNING id INTO v_athlete_id;
+  END IF;
+
+  -- Ensure mapping row exists / is updated
+  INSERT INTO federation_athlete (federation, external_id, athlete_id)
+  VALUES (in_federation, in_external_id, v_athlete_id)
+  ON CONFLICT (federation, external_id)
+    DO UPDATE SET athlete_id = EXCLUDED.athlete_id;
+
+  RETURN v_athlete_id;
+END;
+$$;
+SELECT verify_function('federated.upsert_athlete');
+
 CREATE OR REPLACE FUNCTION federated.upsert_competitor(
   in_federation     text,
   in_external_id    text,
@@ -439,6 +519,7 @@ CREATE OR REPLACE FUNCTION federated.upsert_competitor(
 )
   RETURNS bigint
   LANGUAGE plpgsql
+  SET SEARCH_PATH = federated, pg_temp
 AS $$
 DECLARE
   v_competitor_id bigint;
@@ -447,7 +528,7 @@ BEGIN
   IF in_external_id IS NOT NULL THEN
     SELECT competitor_id
     INTO v_competitor_id
-    FROM federated.federation_competitor
+    FROM federation_competitor
     WHERE federation = in_federation
       AND external_id = in_external_id
       FOR UPDATE;
@@ -455,12 +536,12 @@ BEGIN
     -- If competitor already mapped, we just reuse it and fix components below
     IF v_competitor_id IS NOT NULL THEN
       -- keep name in sync
-      UPDATE federated.competitor
+      UPDATE competitor
       SET name = in_label
       WHERE id = v_competitor_id;
 
       -- upsert components
-      INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)
+      INSERT INTO competitor_component (competitor_id, athlete_id, role)
       SELECT v_competitor_id, (c).athlete_id, (c).role
       FROM unnest(in_components) AS c
       ON CONFLICT (competitor_id, athlete_id)
@@ -476,7 +557,7 @@ BEGIN
     FROM unnest(in_components) AS c
   ), candidates AS (
     SELECT cc.competitor_id
-    FROM federated.competitor_component cc
+    FROM competitor_component cc
     GROUP BY cc.competitor_id
     HAVING count(*) = (SELECT count(*) FROM input)
        AND bool_and(EXISTS(SELECT 1 FROM input i WHERE i.athlete_id = cc.athlete_id AND i.role = cc.role))
@@ -488,18 +569,18 @@ BEGIN
 
   -- 3) If no competitor found, create one
   IF v_competitor_id IS NULL THEN
-    INSERT INTO federated.competitor (competitor_type, name)
+    INSERT INTO competitor (competitor_type, name)
     VALUES (in_type, in_label)
     RETURNING id INTO v_competitor_id;
 
-    INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)
+    INSERT INTO competitor_component (competitor_id, athlete_id, role)
     SELECT v_competitor_id, (c).athlete_id, (c).role
     FROM unnest(in_components) AS c;
   END IF;
 
   -- 4) Link federation_competitor if external_id present
   IF in_external_id IS NOT NULL THEN
-    INSERT INTO federated.federation_competitor (federation, external_id, competitor_id)
+    INSERT INTO federation_competitor (federation, external_id, competitor_id)
     VALUES (in_federation, in_external_id, v_competitor_id)
     ON CONFLICT (federation, external_id)
       DO UPDATE SET competitor_id = EXCLUDED.competitor_id;
@@ -509,3 +590,38 @@ BEGIN
 END;
 $$;
 SELECT verify_function('federated.upsert_competitor');
+
+CREATE OR REPLACE FUNCTION federated.upsert_competitor_category_progress(
+  in_federation      text,
+  in_competitor_id   bigint,
+  in_category_id     bigint,
+  in_points          numeric(10,3),
+  in_domestic_finale integer,
+  in_foreign_finale  integer
+)
+  RETURNS void
+  LANGUAGE sql
+  SET SEARCH_PATH = federated, pg_temp
+AS $$
+  INSERT INTO federated.competitor_category_progress (
+    federation,
+    competitor_id,
+    category_id,
+    points,
+    domestic_finale,
+    foreign_finale
+  )
+  VALUES (
+    in_federation,
+    in_competitor_id,
+    in_category_id,
+    in_points,
+    in_domestic_finale,
+    in_foreign_finale
+  )
+  ON CONFLICT (federation, competitor_id, category_id)
+    DO UPDATE
+    SET points          = EXCLUDED.points,
+        domestic_finale = EXCLUDED.domestic_finale,
+        foreign_finale  = EXCLUDED.foreign_finale;
+$$;

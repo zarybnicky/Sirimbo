@@ -45,6 +45,34 @@ const getFrontierForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name
 export const getFrontierForUpdate = new PreparedQuery<IGetFrontierForUpdateParams,IGetFrontierForUpdateResult>(getFrontierForUpdateIR);
 
 
+/** 'GetDistinctFrontierKinds' parameters type */
+export type IGetDistinctFrontierKindsParams = void;
+
+/** 'GetDistinctFrontierKinds' return type */
+export interface IGetDistinctFrontierKindsResult {
+  federation: string;
+  kind: string;
+}
+
+/** 'GetDistinctFrontierKinds' query type */
+export interface IGetDistinctFrontierKindsQuery {
+  params: IGetDistinctFrontierKindsParams;
+  result: IGetDistinctFrontierKindsResult;
+}
+
+const getDistinctFrontierKindsIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT federation, kind\nFROM crawler.frontier\nGROUP BY federation, kind"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT federation, kind
+ * FROM crawler.frontier
+ * GROUP BY federation, kind
+ * ```
+ */
+export const getDistinctFrontierKinds = new PreparedQuery<IGetDistinctFrontierKindsParams,IGetDistinctFrontierKindsResult>(getDistinctFrontierKindsIR);
+
+
 /** 'GetLatestFrontierJsonResponse' parameters type */
 export interface IGetLatestFrontierJsonResponseParams {
   federation?: string | null | void;
@@ -247,7 +275,7 @@ export interface IGetPendingFetchQuery {
   result: IGetPendingFetchResult;
 }
 
-const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":233,"b":238}]}],"statement":"SELECT id, federation, kind, key\nFROM crawler.frontier\nWHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n  AND (fetch_status = 'pending'\n         OR (fetch_status = 'ok' AND process_status = 'ok'))\nORDER BY discovered_at\nLIMIT :limit"};
+const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":294,"b":299}]}],"statement":"SELECT id, federation, kind, key\nFROM crawler.frontier\nWHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n  AND (fetch_status = 'pending'\n         OR (fetch_status = 'ok' AND process_status = 'ok'))\nORDER BY CASE frontier.fetch_status WHEN 'pending' THEN 0 ELSE 1 END, discovered_at\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -257,7 +285,7 @@ const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":
  * WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
  *   AND (fetch_status = 'pending'
  *          OR (fetch_status = 'ok' AND process_status = 'ok'))
- * ORDER BY discovered_at
+ * ORDER BY CASE frontier.fetch_status WHEN 'pending' THEN 0 ELSE 1 END, discovered_at
  * LIMIT :limit
  * ```
  */
@@ -402,14 +430,12 @@ export interface IMarkFrontierProcessSuccessQuery {
   result: IMarkFrontierProcessSuccessResult;
 }
 
-const markFrontierProcessSuccessIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":61,"b":63}]}],"statement":"UPDATE crawler.frontier\nSET process_status = 'ok'\nWHERE id = :id::bigint"};
+const markFrontierProcessSuccessIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":61,"b":63}]}],"statement":"UPDATE crawler.frontier SET process_status = 'ok' WHERE id = :id::bigint"};
 
 /**
  * Query generated from SQL:
  * ```
- * UPDATE crawler.frontier
- * SET process_status = 'ok'
- * WHERE id = :id::bigint
+ * UPDATE crawler.frontier SET process_status = 'ok' WHERE id = :id::bigint
  * ```
  */
 export const markFrontierProcessSuccess = new PreparedQuery<IMarkFrontierProcessSuccessParams,IMarkFrontierProcessSuccessResult>(markFrontierProcessSuccessIR);
@@ -429,14 +455,12 @@ export interface IMarkFrontierProcessErrorQuery {
   result: IMarkFrontierProcessErrorResult;
 }
 
-const markFrontierProcessErrorIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":64,"b":66}]}],"statement":"UPDATE crawler.frontier\nSET process_status = 'error'\nWHERE id = :id::bigint"};
+const markFrontierProcessErrorIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":64,"b":66}]}],"statement":"UPDATE crawler.frontier SET process_status = 'error' WHERE id = :id::bigint"};
 
 /**
  * Query generated from SQL:
  * ```
- * UPDATE crawler.frontier
- * SET process_status = 'error'
- * WHERE id = :id::bigint
+ * UPDATE crawler.frontier SET process_status = 'error' WHERE id = :id::bigint
  * ```
  */
 export const markFrontierProcessError = new PreparedQuery<IMarkFrontierProcessErrorParams,IMarkFrontierProcessErrorResult>(markFrontierProcessErrorIR);
@@ -457,14 +481,12 @@ export interface IRescheduleFrontierQuery {
   result: IRescheduleFrontierResult;
 }
 
-const rescheduleFrontierIR: any = {"usedParamSet":{"nextRetryAt":true,"id":true},"params":[{"name":"nextRetryAt","required":false,"transform":{"type":"scalar"},"locs":[{"a":44,"b":55}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":68,"b":70}]}],"statement":"UPDATE crawler.frontier\nSET next_fetch_at = :nextRetryAt\nWHERE id = :id::bigint"};
+const rescheduleFrontierIR: any = {"usedParamSet":{"nextRetryAt":true,"id":true},"params":[{"name":"nextRetryAt","required":false,"transform":{"type":"scalar"},"locs":[{"a":44,"b":55}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":68,"b":70}]}],"statement":"UPDATE crawler.frontier SET next_fetch_at = :nextRetryAt WHERE id = :id::bigint"};
 
 /**
  * Query generated from SQL:
  * ```
- * UPDATE crawler.frontier
- * SET next_fetch_at = :nextRetryAt
- * WHERE id = :id::bigint
+ * UPDATE crawler.frontier SET next_fetch_at = :nextRetryAt WHERE id = :id::bigint
  * ```
  */
 export const rescheduleFrontier = new PreparedQuery<IRescheduleFrontierParams,IRescheduleFrontierResult>(rescheduleFrontierIR);
@@ -488,7 +510,7 @@ export interface IInsertHtmlResponseQuery {
   result: IInsertHtmlResponseResult;
 }
 
-const insertHtmlResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":321,"b":323}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":326,"b":329}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":331,"b":341}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":344,"b":349}]}],"statement":"WITH payload AS (\n  SELECT :content AS content\n), ins_cache AS (\n  INSERT INTO crawler.html_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url,:httpStatus, :error,\n  case when content IS NULL then NULL else encode(sha256(content::TEXT::BYTEA), 'hex') end AS content_hash\nFROM payload"};
+const insertHtmlResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":321,"b":323}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":326,"b":329}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":331,"b":341}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":344,"b":349}]}],"statement":"WITH payload AS (\n  SELECT :content AS content\n), ins_cache AS (\n  INSERT INTO crawler.html_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url,:httpStatus, :error,\n  case when content IS NULL then NULL else encode(digest(content, 'sha256'), 'hex') end AS content_hash\nFROM payload"};
 
 /**
  * Query generated from SQL:
@@ -504,7 +526,7 @@ const insertHtmlResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url
  * )
  * INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)
  * SELECT :id, :url,:httpStatus, :error,
- *   case when content IS NULL then NULL else encode(sha256(content::TEXT::BYTEA), 'hex') end AS content_hash
+ *   case when content IS NULL then NULL else encode(digest(content, 'sha256'), 'hex') end AS content_hash
  * FROM payload
  * ```
  */
@@ -529,7 +551,7 @@ export interface IInsertJsonResponseQuery {
   result: IInsertJsonResponseResult;
 }
 
-const insertJsonResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":328,"b":330}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":333,"b":336}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":339,"b":349}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":352,"b":357}]}],"statement":"WITH payload AS (\n  SELECT :content::jsonb AS content\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url, :httpStatus, :error,\n       case when content IS NULL then NULL else encode(sha256(content::TEXT::BYTEA), 'hex') end AS content_hash\nFROM payload"};
+const insertJsonResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":328,"b":330}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":333,"b":336}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":339,"b":349}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":352,"b":357}]}],"statement":"WITH payload AS (\n  SELECT :content::jsonb AS content\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url, :httpStatus, :error,\n       case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash\nFROM payload"};
 
 /**
  * Query generated from SQL:
@@ -545,44 +567,39 @@ const insertJsonResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url
  * )
  * INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
  * SELECT :id, :url, :httpStatus, :error,
- *        case when content IS NULL then NULL else encode(sha256(content::TEXT::BYTEA), 'hex') end AS content_hash
+ *        case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash
  * FROM payload
  * ```
  */
 export const insertJsonResponse = new PreparedQuery<IInsertJsonResponseParams,IInsertJsonResponseResult>(insertJsonResponseIR);
 
 
-/** 'InsertDiscoveredCstsMember' parameters type */
-export interface IInsertDiscoveredCstsMemberParams {
-  id?: string | null | void;
+/** 'UpsertFrontier' parameters type */
+export interface IUpsertFrontierParams {
+  federation?: string | null | void;
+  key?: string | null | void;
+  kind?: string | null | void;
 }
 
-/** 'InsertDiscoveredCstsMember' return type */
-export type IInsertDiscoveredCstsMemberResult = void;
+/** 'UpsertFrontier' return type */
+export type IUpsertFrontierResult = void;
 
-/** 'InsertDiscoveredCstsMember' query type */
-export interface IInsertDiscoveredCstsMemberQuery {
-  params: IInsertDiscoveredCstsMemberParams;
-  result: IInsertDiscoveredCstsMemberResult;
+/** 'UpsertFrontier' query type */
+export interface IUpsertFrontierQuery {
+  params: IUpsertFrontierParams;
+  result: IUpsertFrontierResult;
 }
 
-const insertDiscoveredCstsMemberIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":103,"b":105}]}],"statement":"with frontier as (\n  INSERT INTO crawler.frontier (federation, kind, key)\n    VALUES ('csts','member', :id)\n    ON CONFLICT (federation, kind, key) DO NOTHING\n    RETURNING key\n)\nUPDATE crawler.incremental_ranges\nSET last_known = GREATEST(last_known, (SELECT key::bigint FROM frontier))\nFROM frontier\nWHERE federation = 'csts' AND kind = 'member_id'"};
+const upsertFrontierIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":61,"b":71}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":74,"b":78}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":81,"b":84}]}],"statement":"INSERT INTO crawler.frontier (federation, kind, key)\nVALUES (:federation, :kind, :key)\nON CONFLICT (federation, kind, key) DO NOTHING"};
 
 /**
  * Query generated from SQL:
  * ```
- * with frontier as (
- *   INSERT INTO crawler.frontier (federation, kind, key)
- *     VALUES ('csts','member', :id)
- *     ON CONFLICT (federation, kind, key) DO NOTHING
- *     RETURNING key
- * )
- * UPDATE crawler.incremental_ranges
- * SET last_known = GREATEST(last_known, (SELECT key::bigint FROM frontier))
- * FROM frontier
- * WHERE federation = 'csts' AND kind = 'member_id'
+ * INSERT INTO crawler.frontier (federation, kind, key)
+ * VALUES (:federation, :kind, :key)
+ * ON CONFLICT (federation, kind, key) DO NOTHING
  * ```
  */
-export const insertDiscoveredCstsMember = new PreparedQuery<IInsertDiscoveredCstsMemberParams,IInsertDiscoveredCstsMemberResult>(insertDiscoveredCstsMemberIR);
+export const upsertFrontier = new PreparedQuery<IUpsertFrontierParams,IUpsertFrontierResult>(upsertFrontierIR);
 
 

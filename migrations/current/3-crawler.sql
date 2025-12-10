@@ -1,5 +1,3 @@
-drop schema if exists crawler cascade;
-
 create schema IF NOT EXISTS crawler;
 
 DO $$
@@ -38,11 +36,11 @@ CREATE TABLE IF NOT EXISTS crawler.frontier (
   process_status  crawler.process_status NOT NULL DEFAULT 'pending',
   error_count     integer NOT NULL DEFAULT 0,
   next_fetch_at   timestamptz,
-  meta            jsonb NOT NULL DEFAULT '{}'::jsonb,  -- depth, referrer, date range, etc.
-  UNIQUE (federation, kind, key)
+  meta            jsonb NOT NULL DEFAULT '{}'::jsonb  -- depth, referrer, date range, etc.
 );
-CREATE INDEX ON crawler.frontier (federation, kind);
-CREATE INDEX ON crawler.frontier (federation, kind, next_fetch_at)
+CREATE UNIQUE INDEX IF NOT EXISTS frontier_federation_kind_key_idx ON crawler.frontier (federation, kind, key);
+CREATE INDEX IF NOT EXISTS frontier_federation_kind_idx ON crawler.frontier (federation, kind);
+CREATE INDEX IF NOT EXISTS frontier_federation_kind_next_fetch_at_idx ON crawler.frontier (federation, kind, next_fetch_at)
   WHERE fetch_status = 'pending';
 
 CREATE TABLE IF NOT EXISTS crawler.incremental_ranges (
@@ -59,7 +57,7 @@ ON CONFLICT (federation, kind) DO NOTHING;
 
 
 CREATE TABLE IF NOT EXISTS crawler.html_response_cache (
-  content_hash text GENERATED ALWAYS AS (encode(sha256(content::TEXT::BYTEA), 'hex')) STORED,
+  content_hash text GENERATED ALWAYS AS (encode(digest(content, 'sha256'), 'hex')) STORED,
   content      text,
   PRIMARY KEY (content_hash)
 );
@@ -75,7 +73,7 @@ CREATE TABLE IF NOT EXISTS crawler.html_response (
 );
 
 CREATE TABLE IF NOT EXISTS crawler.json_response_cache (
-  content_hash text GENERATED ALWAYS AS (encode(sha256(content::TEXT::BYTEA), 'hex')) STORED,
+  content_hash text GENERATED ALWAYS AS (encode(digest(content::text, 'sha256'), 'hex')) STORED,
   content      jsonb,
   PRIMARY KEY (content_hash)
 );
@@ -138,7 +136,7 @@ BEGIN
   ELSE
     granted := false;
     allowed_at := (
-      SELECT GREATEST(r.next_available_at, COALESCE(MAX(run_at), now())) + r.spacing
+      SELECT GREATEST(r.next_available_at, COALESCE(MAX(run_at), now()) + r.spacing)
       FROM graphile_worker.jobs
       WHERE key LIKE 'fetch:' || r.host || ':%'
     );

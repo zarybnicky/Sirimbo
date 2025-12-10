@@ -1,13 +1,13 @@
 import type { Task } from 'graphile-worker';
 import { getLatestFrontierJsonResponse } from '../crawler/crawler.queries.ts';
-import { LOADERS } from '../crawler/handlers.ts';
+import { LOADER_MAP } from '../crawler/handlers.ts';
 import { zx } from '@traversable/zod';
 import Cursor from 'pg-cursor';
 
 export const frontier_validate: Task<'frontier_validate'> = async ({ federation, kind }, helpers) => {
   const { withPgClient, logger } = helpers;
 
-  const handler = LOADERS[federation]?.[kind];
+  const handler = LOADER_MAP[federation]?.[kind];
   if (!handler) {
     logger.error(`Handler for ${federation}/${kind} not found`);
     return;

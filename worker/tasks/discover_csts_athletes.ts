@@ -1,10 +1,7 @@
 import type { Task } from 'graphile-worker';
 import { getNextIdt } from '../crawler/cstsAthleteIdts.ts';
-import { cstsAthlete } from '../crawler/cstsAthlete.ts';
-import {
-  insertDiscoveredCstsMember,
-  reserveRequest,
-} from '../crawler/crawler.queries.ts';
+import { reserveRequest, upsertFrontier } from '../crawler/crawler.queries.ts';
+import { LOADER_MAP } from '../crawler/handlers.ts';
 
 const MAX_PROBES_PER_RUN = 200;
 const HOLE_LIMIT = 200;
@@ -36,7 +33,7 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
     probes += 1;
     newLastChecked = candidateId;
 
-    const { url, init } = cstsAthlete.buildRequest(candidateId.toString());
+    const { url, init } = LOADER_MAP.csts.member.buildRequest(candidateId.toString());
     const { host } = url;
     while (true) {
       const [{ granted, allowed_at }] = await helpers.withPgClient(async (client) => {
@@ -69,7 +66,11 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
     if (exists) {
       logger.info(`[IDT probe] Found ${candidateId} (${probes}/${MAX_PROBES_PER_RUN})`);
       await helpers.withPgClient(async (client) => {
-        await insertDiscoveredCstsMember.run({ id: candidateId.toString() }, client);
+        await upsertFrontier.run({ federation: 'csts', kind: 'member', key: candidateId.toString() }, client);
+        await client.query(
+          `UPDATE crawler.incremental_ranges SET last_known = $1 WHERE federation = 'csts' AND kind = 'member_id'`,
+          [candidateId],
+        );
       });
       holeCount = 0; // reset hole streak
     } else {

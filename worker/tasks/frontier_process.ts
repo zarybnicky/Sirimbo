@@ -17,6 +17,7 @@ export const frontier_process: Task<'frontier_process'> = async ({ ids }, helper
     await withPgClient(async (client) => {
       try {
         await client.query('BEGIN');
+        // await client.query('SET LOCAL SEARCH_PATH = federated, pg_temp');
         await processSingle(id, client, logger);
         await client.query('COMMIT');
       } catch (e) {

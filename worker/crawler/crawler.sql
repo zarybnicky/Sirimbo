@@ -4,6 +4,11 @@ FROM crawler.frontier
 WHERE id = :id::bigint
 FOR UPDATE SKIP LOCKED;
 
+/* @name GetDistinctFrontierKinds */
+SELECT federation, kind
+FROM crawler.frontier
+GROUP BY federation, kind;
+
 /* @name GetLatestFrontierJsonResponse */
 SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
 FROM crawler.frontier f
@@ -59,7 +64,7 @@ FROM crawler.frontier
 WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
   AND (fetch_status = 'pending'
          OR (fetch_status = 'ok' AND process_status = 'ok'))
-ORDER BY discovered_at
+ORDER BY CASE frontier.fetch_status WHEN 'pending' THEN 0 ELSE 1 END, discovered_at
 LIMIT :limit;
 
 /* @name GetPendingProcess */
@@ -92,19 +97,13 @@ SET last_fetched_at = now(),
 WHERE id = :id::bigint;
 
 /* @name MarkFrontierProcessSuccess */
-UPDATE crawler.frontier
-SET process_status = 'ok'
-WHERE id = :id::bigint;
+UPDATE crawler.frontier SET process_status = 'ok' WHERE id = :id::bigint;
 
 /* @name MarkFrontierProcessError */
-UPDATE crawler.frontier
-SET process_status = 'error'
-WHERE id = :id::bigint;
+UPDATE crawler.frontier SET process_status = 'error' WHERE id = :id::bigint;
 
 /* @name RescheduleFrontier */
-UPDATE crawler.frontier
-SET next_fetch_at = :nextRetryAt
-WHERE id = :id::bigint;
+UPDATE crawler.frontier SET next_fetch_at = :nextRetryAt WHERE id = :id::bigint;
 
 /* @name InsertHtmlResponse */
 WITH payload AS (
@@ -118,7 +117,7 @@ WITH payload AS (
 )
 INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)
 SELECT :id, :url,:httpStatus, :error,
-  case when content IS NULL then NULL else encode(sha256(content::TEXT::BYTEA), 'hex') end AS content_hash
+  case when content IS NULL then NULL else encode(digest(content, 'sha256'), 'hex') end AS content_hash
 FROM payload;
 
 /* @name InsertJsonResponse */
@@ -133,17 +132,10 @@ WITH payload AS (
 )
 INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
 SELECT :id, :url, :httpStatus, :error,
-       case when content IS NULL then NULL else encode(sha256(content::TEXT::BYTEA), 'hex') end AS content_hash
+       case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash
 FROM payload;
 
-/* @name InsertDiscoveredCstsMember */
-with frontier as (
-  INSERT INTO crawler.frontier (federation, kind, key)
-    VALUES ('csts','member', :id)
-    ON CONFLICT (federation, kind, key) DO NOTHING
-    RETURNING key
-)
-UPDATE crawler.incremental_ranges
-SET last_known = GREATEST(last_known, (SELECT key::bigint FROM frontier))
-FROM frontier
-WHERE federation = 'csts' AND kind = 'member_id';
+/* @name UpsertFrontier */
+INSERT INTO crawler.frontier (federation, kind, key)
+VALUES (:federation, :kind, :key)
+ON CONFLICT (federation, kind, key) DO NOTHING;

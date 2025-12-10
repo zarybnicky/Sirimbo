@@ -1,7 +1,9 @@
 import { cstsAthlete } from './cstsAthlete.ts';
 import type { HtmlLoader, JsonLoader } from './types.ts';
+import { z } from 'zod';
+import { cstsRanklistIndex } from './cstsRanklistIndex.ts';
 
-export const LOADERS: Record<string, Record<string, JsonLoader | HtmlLoader>> = {
+export const LOADERS = {
   wdsf: {
     // modifiedsince, worldranking
     // computed merging of competitions into events, by location + same/adjacent date???
@@ -51,65 +53,98 @@ export const LOADERS: Record<string, Record<string, JsonLoader | HtmlLoader>> = 
 
     // Ranklisty
     // https://www.csts.cz/api/1/ranklist
+    ranklistIndex: cstsRanklistIndex,
+
     // https://www.csts.cz/api/1/ranklist/6733
+
+    clubIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Kluby') }),
+      async load() {},
+    } satisfies HtmlLoader,
+    divisionIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Divize') }),
+      async load() {},
+    } satisfies HtmlLoader,
+    trainerIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Evidence/SeznamTreneru') }),
+      async load() {},
+    } satisfies HtmlLoader,
+    judgeIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Evidence/SeznamPorotcu') }),
+      async load() {},
+    } satisfies HtmlLoader,
+    officialIndex: {
+      mode: 'text',
+      revalidatePeriod: '1 day',
+      buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Evidence/SeznamFunkcionaru') }),
+      async load() {},
+    } satisfies HtmlLoader,
   },
   szts: {
     // soutěže https://szts.ksis.eu/menu.php?akcia=KS
     competitionIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=KS') }),
+      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=KS') }),
       async load() {},
-    },
+    } satisfies HtmlLoader,
     // clenove https://szts.ksis.eu/menu.php?akcia=CZ
     memberIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZ') }),
+      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZ') }),
       async load() {},
-    },
+    } satisfies HtmlLoader,
     // trenéři https://szts.ksis.eu/menu.php?akcia=CZT
     trainerIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZT') }),
+      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZT') }),
       async load() {},
-    },
+    } satisfies HtmlLoader,
     // funkcionáři https://szts.ksis.eu/menu.php?akcia=CZS
     officialIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZS') }),
+      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZS') }),
       async load() {},
-    },
+    } satisfies HtmlLoader,
     // porotci https://szts.ksis.eu/menu.php?akcia=CZR
     judgeIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZR') }),
+      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZR') }),
       async load() {},
-    },
+    } satisfies HtmlLoader,
     // kluby https://szts.ksis.eu/menu.php?akcia=CZK
     clubIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZK') }),
+      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZK') }),
       async load() {},
-    },
+    } satisfies HtmlLoader,
     // solo https://szts.ksis.eu/menu.php?akcia=CZSD
     soloIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZSD') }),
+      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZSD') }),
       async load() {},
-    },
+    } satisfies HtmlLoader,
     // páry https://szts.ksis.eu/menu.php?akcia=CZP
     coupleIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: ()=>  ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZP') }),
+      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZP') }),
       async load() {},
-    },
+    } satisfies HtmlLoader,
     // soutěže porotce https://szts.ksis.eu/rozhodca.php?meno=R%C3%B3bert%20Pavl%C3%ADk&mesto=Adamovsk%C3%A9%20Kochanovce
     // detail https://szts.ksis.eu/detail_paru.php?cp=12278
     // seznam výsledků https://szts.ksis.eu/menu.php?akcia=S&rok=2024
@@ -128,3 +163,15 @@ export const LOADERS: Record<string, Record<string, JsonLoader | HtmlLoader>> = 
     // https://baza.taniec-nowoczesny.pl/reg/LIVE/2025/20251108_Elblag_ZTN/PZST_category_60001159.json?_cb=1764631931521
   },
 };
+
+export const LOADER_MAP: Record<
+  string,
+  Record<string, JsonLoader | HtmlLoader>
+> = LOADERS;
+
+export type LoaderIds = {
+  [F in keyof typeof LOADERS]: {
+    federation: F;
+    kind: keyof (typeof LOADERS)[F];
+  };
+}[keyof typeof LOADERS];

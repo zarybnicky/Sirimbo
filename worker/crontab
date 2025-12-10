@@ -2,5 +2,6 @@
 
 29 21 * * * create_lesson_payments
 
+12 * * * * frontier_seed
 * * * * * frontier_schedule
-8 * * * * * discover_csts_athletes
+8 * * * * discover_csts_athletes

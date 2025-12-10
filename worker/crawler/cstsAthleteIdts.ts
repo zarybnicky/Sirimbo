@@ -13,6 +13,9 @@ const IDT_RANGES: readonly IdtRange[] = [
 ];
 
 export const getNextIdt = (idt: number) => {
+  if (idt === 0)
+    return IDT_RANGES[0].start;
+
   const currentBlockIdx = IDT_RANGES.findIndex(
     ({ start, end }) => idt >= start && idt <= end,
   );

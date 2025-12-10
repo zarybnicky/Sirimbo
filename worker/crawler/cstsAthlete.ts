@@ -1,9 +1,5 @@
 import { z } from 'zod';
-import {
-  defaultMapResponseToStatus,
-  type FrontierRow,
-  type JsonLoader,
-} from './types.ts';
+import { defaultMapResponseToStatus, type JsonLoader } from './types.ts';
 import {
   type gender,
   upsertCategory,
@@ -94,15 +90,14 @@ export const cstsAthlete: JsonLoader<Response> = {
     }
     return parsed;
   },
-  load: loadCstsAthlete,
+  async load(client, frontier, parsed) {
+    for (const athlete of parsed.collection) {
+      await loadCstsAthlete(client, athlete);
+    }
+  },
 };
 
-async function loadCstsAthlete(
-  client: PoolClient,
-  frontier: FrontierRow,
-  parsed: Response,
-) {
-  const data = parsed.collection[0];
+async function loadCstsAthlete(client: PoolClient, data: Athlete) {
   const [{ athlete_id: mainAthleteId }] = await upsertFederationAthlete.run(
     {
       federation: 'csts',

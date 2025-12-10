@@ -1,7 +1,7 @@
 import type { PoolClient } from 'pg';
 import type { Logger } from 'graphile-worker';
 import { getFrontierForUpdate, markFrontierFetchError } from './crawler.queries.ts';
-import { LOADERS } from './handlers.ts';
+import { LOADER_MAP } from './handlers.ts';
 
 export async function getFrontierHandler(id: string, client: PoolClient, logger: Logger) {
   const [frontier] = await getFrontierForUpdate.run({ id }, client);
@@ -11,7 +11,7 @@ export async function getFrontierHandler(id: string, client: PoolClient, logger:
   }
   const { federation, kind } = frontier;
 
-  const handler = LOADERS[federation]?.[kind];
+  const handler = LOADER_MAP[federation]?.[kind];
   if (!handler) {
     await markFrontierFetchError.run({ id }, client);
     logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
