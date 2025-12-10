@@ -1,1 +1,1 @@
---!include functions/tg_event_instance__delete_payment_on_cancellation.sql
+

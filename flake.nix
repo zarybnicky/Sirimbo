@@ -31,7 +31,7 @@
       rozpisovnik-api = final.callPackage ./nix/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./backend/package.json;
         workspaceFolders = [ "backend" ];
-        pnpmDepsHash = "sha256-sqDUQzFvbW8koTihbE83/Xsa2tx0XmggUzKjankvg9c=";
+        pnpmDepsHash = "sha256-KobH3gd5JHeOYV1bsxYi8HdCaywQePlJQ7xbvOwj2AY=";
         postInstall = "cp -s $out/share/backend/dist/index.cjs $out/bin/rozpisovnik-api";
       };
 

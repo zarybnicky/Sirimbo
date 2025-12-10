@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict YqQ7h3zjTOv37AMXkfNftgzURfKdDKQ9xbcXrtnbV7Wyye5s9GbjfjkgChyAWsy
+\restrict QwSDUhd9H0aY15S7vMHzv4kJo5SKPpgm7J67h9kaORejCSQzEEuQAfDYd5vmFtt
 
 -- Dumped from database version 17.7
 -- Dumped by pg_dump version 17.7
@@ -24,6 +24,13 @@ SET row_security = off;
 --
 
 CREATE SCHEMA app_private;
+
+
+--
+-- Name: crawler; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA crawler;
 
 
 --
@@ -115,6 +122,29 @@ CREATE EXTENSION IF NOT EXISTS plpgsql_check WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION plpgsql_check IS 'extended check for plpgsql functions';
+
+
+--
+-- Name: fetch_status; Type: TYPE; Schema: crawler; Owner: -
+--
+
+CREATE TYPE crawler.fetch_status AS ENUM (
+    'pending',
+    'ok',
+    'gone',
+    'error'
+);
+
+
+--
+-- Name: process_status; Type: TYPE; Schema: crawler; Owner: -
+--
+
+CREATE TYPE crawler.process_status AS ENUM (
+    'pending',
+    'ok',
+    'error'
+);
 
 
 --
@@ -1540,7 +1570,6 @@ $$;
 
 CREATE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   payment_id bigint;
@@ -1755,6 +1784,49 @@ begin
   NEW.u_login := trim(NEW.u_login);
   return NEW;
 end;
+$$;
+
+
+--
+-- Name: reserve_request(text); Type: FUNCTION; Schema: crawler; Owner: -
+--
+
+CREATE FUNCTION crawler.reserve_request(in_host text, OUT granted boolean, OUT allowed_at timestamp with time zone) RETURNS record
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  r crawler.rate_limit_rule;
+BEGIN
+  SELECT *
+  INTO r
+  FROM crawler.rate_limit_rule
+  WHERE host = in_host
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    granted := true;
+    allowed_at := now();
+    RETURN;
+  END IF;
+
+  IF r.next_available_at <= now() THEN
+    UPDATE crawler.rate_limit_rule
+       SET next_available_at = now() + r.spacing
+     WHERE host = in_host;
+
+    granted := true;
+    allowed_at := now();
+    RETURN;
+  ELSE
+    granted := false;
+    allowed_at := (
+      SELECT GREATEST(r.next_available_at, COALESCE(MAX(run_at), now()) + r.spacing)
+      FROM graphile_worker.jobs
+      WHERE key LIKE 'fetch:' || r.host || ':%'
+    );
+    RETURN;
+  END IF;
+END;
 $$;
 
 
@@ -5555,6 +5627,159 @@ COMMENT ON COLUMN app_private.system_admin_user.created_by IS 'User that granted
 
 
 --
+-- Name: frontier; Type: TABLE; Schema: crawler; Owner: -
+--
+
+CREATE TABLE crawler.frontier (
+    id bigint NOT NULL,
+    federation text NOT NULL,
+    kind text NOT NULL,
+    key text NOT NULL,
+    discovered_at timestamp with time zone DEFAULT now() NOT NULL,
+    last_fetched_at timestamp with time zone,
+    fetch_status crawler.fetch_status DEFAULT 'pending'::crawler.fetch_status NOT NULL,
+    process_status crawler.process_status DEFAULT 'pending'::crawler.process_status NOT NULL,
+    error_count integer DEFAULT 0 NOT NULL,
+    next_fetch_at timestamp with time zone,
+    meta jsonb DEFAULT '{}'::jsonb NOT NULL
+);
+
+
+--
+-- Name: frontier_id_seq; Type: SEQUENCE; Schema: crawler; Owner: -
+--
+
+CREATE SEQUENCE crawler.frontier_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: frontier_id_seq; Type: SEQUENCE OWNED BY; Schema: crawler; Owner: -
+--
+
+ALTER SEQUENCE crawler.frontier_id_seq OWNED BY crawler.frontier.id;
+
+
+--
+-- Name: html_response; Type: TABLE; Schema: crawler; Owner: -
+--
+
+CREATE TABLE crawler.html_response (
+    id bigint NOT NULL,
+    frontier_id bigint NOT NULL,
+    url text NOT NULL,
+    fetched_at timestamp with time zone DEFAULT now() NOT NULL,
+    http_status integer,
+    error text,
+    content_hash text
+);
+
+
+--
+-- Name: html_response_cache; Type: TABLE; Schema: crawler; Owner: -
+--
+
+CREATE TABLE crawler.html_response_cache (
+    content_hash text GENERATED ALWAYS AS (encode(public.digest(content, 'sha256'::text), 'hex'::text)) STORED NOT NULL,
+    content text
+);
+
+
+--
+-- Name: html_response_id_seq; Type: SEQUENCE; Schema: crawler; Owner: -
+--
+
+CREATE SEQUENCE crawler.html_response_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: html_response_id_seq; Type: SEQUENCE OWNED BY; Schema: crawler; Owner: -
+--
+
+ALTER SEQUENCE crawler.html_response_id_seq OWNED BY crawler.html_response.id;
+
+
+--
+-- Name: incremental_ranges; Type: TABLE; Schema: crawler; Owner: -
+--
+
+CREATE TABLE crawler.incremental_ranges (
+    federation text NOT NULL,
+    kind text NOT NULL,
+    last_known integer DEFAULT 0 NOT NULL,
+    last_checked integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: json_response; Type: TABLE; Schema: crawler; Owner: -
+--
+
+CREATE TABLE crawler.json_response (
+    id bigint NOT NULL,
+    frontier_id bigint NOT NULL,
+    url text NOT NULL,
+    fetched_at timestamp with time zone DEFAULT now() NOT NULL,
+    http_status integer,
+    error text,
+    content_hash text
+);
+
+
+--
+-- Name: json_response_cache; Type: TABLE; Schema: crawler; Owner: -
+--
+
+CREATE TABLE crawler.json_response_cache (
+    content_hash text GENERATED ALWAYS AS (encode(public.digest((content)::text, 'sha256'::text), 'hex'::text)) STORED NOT NULL,
+    content jsonb
+);
+
+
+--
+-- Name: json_response_id_seq; Type: SEQUENCE; Schema: crawler; Owner: -
+--
+
+CREATE SEQUENCE crawler.json_response_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: json_response_id_seq; Type: SEQUENCE OWNED BY; Schema: crawler; Owner: -
+--
+
+ALTER SEQUENCE crawler.json_response_id_seq OWNED BY crawler.json_response.id;
+
+
+--
+-- Name: rate_limit_rule; Type: TABLE; Schema: crawler; Owner: -
+--
+
+CREATE TABLE crawler.rate_limit_rule (
+    host text NOT NULL,
+    max_requests integer NOT NULL,
+    per_interval interval NOT NULL,
+    spacing interval GENERATED ALWAYS AS (((per_interval / (max_requests)::double precision) + '00:00:00.02'::interval)) STORED NOT NULL,
+    next_available_at timestamp with time zone DEFAULT '1970-01-01 00:00:00+00'::timestamp with time zone NOT NULL,
+    CONSTRAINT rate_limit_rule_max_requests_check CHECK ((max_requests > 0)),
+    CONSTRAINT rate_limit_rule_per_interval_check CHECK ((per_interval > '00:00:00'::interval))
+);
+
+
+--
 -- Name: athlete; Type: TABLE; Schema: csts; Owner: -
 --
 
@@ -6900,6 +7125,27 @@ ALTER TABLE ONLY app_private.platby_raw ALTER COLUMN pr_id SET DEFAULT nextval('
 
 
 --
+-- Name: frontier id; Type: DEFAULT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.frontier ALTER COLUMN id SET DEFAULT nextval('crawler.frontier_id_seq'::regclass);
+
+
+--
+-- Name: html_response id; Type: DEFAULT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.html_response ALTER COLUMN id SET DEFAULT nextval('crawler.html_response_id_seq'::regclass);
+
+
+--
+-- Name: json_response id; Type: DEFAULT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.json_response ALTER COLUMN id SET DEFAULT nextval('crawler.json_response_id_seq'::regclass);
+
+
+--
 -- Name: aktuality id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7068,6 +7314,70 @@ ALTER TABLE ONLY app_private.platby_raw
 
 ALTER TABLE ONLY app_private.system_admin_user
     ADD CONSTRAINT system_admin_user_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: frontier frontier_federation_kind_key_key; Type: CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.frontier
+    ADD CONSTRAINT frontier_federation_kind_key_key UNIQUE (federation, kind, key);
+
+
+--
+-- Name: frontier frontier_pkey; Type: CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.frontier
+    ADD CONSTRAINT frontier_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: html_response_cache html_response_cache_pkey; Type: CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.html_response_cache
+    ADD CONSTRAINT html_response_cache_pkey PRIMARY KEY (content_hash);
+
+
+--
+-- Name: html_response html_response_pkey; Type: CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.html_response
+    ADD CONSTRAINT html_response_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: incremental_ranges incremental_ranges_pkey; Type: CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.incremental_ranges
+    ADD CONSTRAINT incremental_ranges_pkey PRIMARY KEY (federation, kind);
+
+
+--
+-- Name: json_response_cache json_response_cache_pkey; Type: CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.json_response_cache
+    ADD CONSTRAINT json_response_cache_pkey PRIMARY KEY (content_hash);
+
+
+--
+-- Name: json_response json_response_pkey; Type: CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.json_response
+    ADD CONSTRAINT json_response_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rate_limit_rule rate_limit_rule_pkey; Type: CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.rate_limit_rule
+    ADD CONSTRAINT rate_limit_rule_pkey PRIMARY KEY (host);
 
 
 --
@@ -7672,6 +7982,20 @@ CREATE INDEX platby_item_tenant_id_idx ON app_private.platby_item USING btree (t
 --
 
 CREATE INDEX platby_raw_tenant_id_idx ON app_private.platby_raw USING btree (tenant_id);
+
+
+--
+-- Name: frontier_federation_kind_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE INDEX frontier_federation_kind_idx ON crawler.frontier USING btree (federation, kind);
+
+
+--
+-- Name: frontier_federation_kind_next_fetch_at_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE INDEX frontier_federation_kind_next_fetch_at_idx ON crawler.frontier USING btree (federation, kind, next_fetch_at) WHERE (fetch_status = 'pending'::crawler.fetch_status);
 
 
 --
@@ -8952,7 +9276,7 @@ CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_registration 
 -- Name: event_instance _500_delete_on_cancellation; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE ON public.event_instance FOR EACH ROW WHEN ((old.is_cancelled IS DISTINCT FROM new.is_cancelled)) EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
+CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 
 
 --
@@ -9123,6 +9447,38 @@ ALTER TABLE ONLY app_private.platby_raw
 
 ALTER TABLE ONLY app_private.system_admin_user
     ADD CONSTRAINT system_admin_user_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: html_response html_response_content_hash_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.html_response
+    ADD CONSTRAINT html_response_content_hash_fkey FOREIGN KEY (content_hash) REFERENCES crawler.html_response_cache(content_hash);
+
+
+--
+-- Name: html_response html_response_frontier_id_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.html_response
+    ADD CONSTRAINT html_response_frontier_id_fkey FOREIGN KEY (frontier_id) REFERENCES crawler.frontier(id) ON DELETE CASCADE;
+
+
+--
+-- Name: json_response json_response_content_hash_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.json_response
+    ADD CONSTRAINT json_response_content_hash_fkey FOREIGN KEY (content_hash) REFERENCES crawler.json_response_cache(content_hash);
+
+
+--
+-- Name: json_response json_response_frontier_id_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.json_response
+    ADD CONSTRAINT json_response_frontier_id_fkey FOREIGN KEY (frontier_id) REFERENCES crawler.frontier(id) ON DELETE CASCADE;
 
 
 --
@@ -12672,5 +13028,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict YqQ7h3zjTOv37AMXkfNftgzURfKdDKQ9xbcXrtnbV7Wyye5s9GbjfjkgChyAWsy
+\unrestrict QwSDUhd9H0aY15S7vMHzv4kJo5SKPpgm7J67h9kaORejCSQzEEuQAfDYd5vmFtt
 
