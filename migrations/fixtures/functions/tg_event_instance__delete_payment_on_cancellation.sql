@@ -31,5 +31,4 @@ DROP TRIGGER IF EXISTS _500_delete_on_cancellation on public.event_instance;
 CREATE TRIGGER _500_delete_on_cancellation
   AFTER UPDATE ON public.event_instance
   FOR EACH ROW
-  WHEN (OLD.is_cancelled IS DISTINCT FROM NEW.is_cancelled)
   EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
