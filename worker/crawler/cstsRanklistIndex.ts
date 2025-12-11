@@ -1,7 +1,25 @@
 import z from 'zod';
 import type { JsonLoader } from './types.ts';
 
-export const cstsRanklistIndex: JsonLoader = {
+const responseSchema = z.object({
+  collection: z.array(
+    z.object({
+      id: z.number(),
+      state: z.number(),
+      competitorType: z.number(),
+      series: z.number(),
+      date: z.string(),
+      type: z.number(),
+      age: z.number(),
+      discipline: z.number(),
+      coefChampionship: z.number(),
+      coefLeague: z.number(),
+      coefWdsf: z.number(),
+    }),
+  ),
+});
+
+export const cstsRanklistIndex: JsonLoader<z.output<typeof responseSchema>> = {
   mode: 'json',
   revalidatePeriod: '5 day',
   buildRequest: () => ({
@@ -12,26 +30,9 @@ export const cstsRanklistIndex: JsonLoader = {
       },
     },
   }),
-  schema: z.object({
-    collection: z.array(
-      z.object({
-        id: z.number(),
-        state: z.number(),
-        competitorType: z.number(),
-        series: z.number(),
-        date: z.string(),
-        type: z.number(),
-        age: z.number(),
-        discipline: z.number(),
-        coefChampionship: z.number(),
-        coefLeague: z.number(),
-        coefWdsf: z.number(),
-      }),
-    ),
-  }),
+  schema: responseSchema,
   async load(client, frontier, parsed) {
-    for (const ranklist of parsed) {
-
+    for (const ranklist of parsed.collection) {
     }
   },
 };
