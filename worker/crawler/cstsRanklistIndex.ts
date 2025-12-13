@@ -1,5 +1,6 @@
 import z from 'zod';
 import type { JsonLoader } from './types.ts';
+import { upsertFrontier } from './crawler.queries.ts';
 
 const responseSchema = z.object({
   collection: z.array(
@@ -33,6 +34,10 @@ export const cstsRanklistIndex: JsonLoader<z.output<typeof responseSchema>> = {
   schema: responseSchema,
   async load(client, frontier, parsed) {
     for (const ranklist of parsed.collection) {
+      await upsertFrontier.run(
+        { federation: 'csts', kind: 'ranklist', key: ranklist.id.toString() },
+        client,
+      );
     }
   },
 };
