@@ -14,6 +14,11 @@ interface CompetitionResponse {
 }
 
 interface ParticipantSummary {
+  link: {
+    href: string;
+    rel: string;
+    type: string;
+  }[];
   id: number;
   status?: string;
 }
@@ -66,7 +71,6 @@ interface NormalizedResult {
   coupleId: number;
   rank: number;
   competitionId: number;
-  details: string;
 }
 
 interface NormalizedCouple {
@@ -197,36 +201,16 @@ function parseCompetition(raw: CompetitionResponse): NormalizedCompetition | nul
   };
 }
 
-function buildResultDetails(data: ParticipantDetails): string {
-  const finalRound = data.rounds?.find((round) => round.name === 'F');
-  if (!finalRound || !Array.isArray(finalRound.dances)) {
-    return '';
-  }
-
-  return finalRound.dances
-    .map((dance) => {
-      const danceName = sanitizeText(dance.name ?? 'Unknown');
-      const groupFlag = dance.isGroupDance ? 'True' : 'False';
-      const scoreParts: string[] = [];
-
-      for (const score of dance.scores ?? []) {
-        for (const [key, value] of Object.entries(score)) {
-          if (key === 'link') {
-            continue;
-          }
-          scoreParts.push(`${key} : ${String(value)}`);
-        }
-      }
-
-      const scoreStr = scoreParts.map((part) => `${part} ;`).join(' ');
-      return `name : ${danceName} | isGroupDance : ${groupFlag} | score : ${scoreStr}`.trim();
-    })
-    .join(' ');
-}
-
 async function ensureTables(client: PoolClient): Promise<void> {
-  await client.query(
-    "CREATE TABLE IF NOT EXISTS wdsf.competitions (id INT PRIMARY KEY, name TEXT, city TEXT, country TEXT, date DATE, discipline VARCHAR(8));",
+  await client.query(`
+CREATE TABLE IF NOT EXISTS wdsf.competitions (
+  id INT PRIMARY KEY,
+  name TEXT,
+  city TEXT,
+  country TEXT,
+  date DATE,
+  discipline VARCHAR(8)
+);`,
   );
   await client.query(
     "CREATE TABLE IF NOT EXISTS wdsf.competitors (id INT PRIMARY KEY, first_name TEXT, second_name TEXT, sex TEXT, nationality TEXT, country TEXT, year_of_birth INT);",
@@ -239,31 +223,13 @@ async function ensureTables(client: PoolClient): Promise<void> {
   );
 }
 
-async function determineStartDate(client: PoolClient): Promise<string> {
-  const { rows } = await client.query<{ date: Date | string | null }>(
-    'SELECT date FROM wdsf.competitions ORDER BY date DESC LIMIT 1',
-  );
-
-  if (rows.length === 0 || !rows[0].date) {
-    return '2024/01/01';
-  }
-
-  const latest = new Date(rows[0].date);
-  if (Number.isNaN(latest.getTime())) {
-    return '2024/01/01';
-  }
-
-  latest.setUTCDate(latest.getUTCDate() + 1);
-  return formatDateForApi(latest);
-}
-
 async function main(): Promise<void> {
   const client = await pool.connect();
 
   try {
     await ensureTables(client);
 
-    const startDate = await determineStartDate(client);
+    const startDate = '2024/01/01';
     const presentDate = formatDateForApi(new Date());
     console.log(`Fetching competitions from ${startDate} to ${presentDate}.`);
 
@@ -289,7 +255,7 @@ async function main(): Promise<void> {
     console.log(`Competitions data collected (${competitions.length}).`);
 
     const results: NormalizedResult[] = [];
-    const rawCoupleIds = new Set<string>();
+    const coupleIds = new Set<number>();
 
     for (const competition of competitions) {
       const resultResponse = await makeRequest<unknown>(`/participant?competitionID=${competition.id}&format=json`);
@@ -309,24 +275,20 @@ async function main(): Promise<void> {
         }
 
         rank += 1;
-        const participantDetails = await makeRequest<ParticipantDetails>(`/participant/${participantId}?format=json`,);
-        if (!participantDetails.coupleId) {
-          continue;
-        }
-        const coupleIdNumber = Number(participantDetails.coupleId.replace(/^rls-/, ''));
-        if (!Number.isFinite(coupleIdNumber)) {
-          continue;
-        }
 
+        const coupleLink = participant.link
+          .find(link => link.rel === 'application/vnd.worlddancesport.couple+json');
+        const coupleId = Number(coupleLink?.href?.match(/rls-(\d+)/)?.[1]);
+        if (!Number.isFinite(coupleId)) {
+          continue;
+        }
         results.push({
           id: participantId,
-          coupleId: coupleIdNumber,
+          coupleId,
           rank,
           competitionId: competition.id,
-          details: buildResultDetails(participantDetails),
         });
-
-        rawCoupleIds.add(participantDetails.coupleId);
+        coupleIds.add(coupleId);
       }
     }
 
@@ -335,14 +297,8 @@ async function main(): Promise<void> {
     const couples: NormalizedCouple[] = [];
     const competitorIds = new Set<number>();
 
-    for (const rawCoupleId of rawCoupleIds) {
-      const coupleDetails = await makeRequest<CoupleDetails>(`/couple/${rawCoupleId}?format=json`);
-
-      const normalisedCoupleId = rawCoupleId.replace(/^rls-/, '');
-      const coupleIdNumber = Number(normalisedCoupleId);
-      if (!Number.isFinite(coupleIdNumber)) {
-        continue;
-      }
+    for (const coupleId of coupleIds) {
+      const coupleDetails = await makeRequest<CoupleDetails>(`/couple/rls-${coupleId}?format=json`);
 
       const maleId = Number(coupleDetails.man);
       const femaleId = Number(coupleDetails.woman);
@@ -350,13 +306,12 @@ async function main(): Promise<void> {
         continue;
       }
       couples.push({
-        id: coupleIdNumber,
+        id: coupleId,
         name: sanitizeText(coupleDetails.name ?? ''),
         country: sanitizeCountry(coupleDetails.country),
         maleId,
         femaleId,
       });
-
       competitorIds.add(maleId);
       competitorIds.add(femaleId);
     }
@@ -440,14 +395,13 @@ async function main(): Promise<void> {
 
       for (const result of results) {
         await client.query(
-          `INSERT INTO wdsf.results (id, couple_id, rank, competition_id, details)
-           VALUES ($1, $2, $3, $4, $5)
+          `INSERT INTO wdsf.results (id, couple_id, rank, competition_id)
+           VALUES ($1, $2, $3, $4)
            ON CONFLICT (id) DO UPDATE SET
              couple_id = EXCLUDED.couple_id,
              rank = EXCLUDED.rank,
-             competition_id = EXCLUDED.competition_id,
-             details = EXCLUDED.details`,
-          [result.id, result.coupleId, result.rank, result.competitionId, result.details],
+             competition_id = EXCLUDED.competition_id`,
+          [result.id, result.coupleId, result.rank, result.competitionId],
         );
       }
 
