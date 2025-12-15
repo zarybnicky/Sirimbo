@@ -246,7 +246,7 @@ in {
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
-          ExecStart = "${pkgs.rozpisovnik-worker}/bin/rozpisovnik-worker";
+          ExecStart = "${pkgs.rozpisovnik-worker}/bin/rozpisovnik-worker -j 5";
           Restart = "always";
           RestartSec = "10s";
         };
