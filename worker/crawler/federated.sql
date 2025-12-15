@@ -22,13 +22,10 @@ SELECT federated.upsert_competitor(
   in_external_id => :federationCompetitorId,
   in_type => :type::federated.competitor_type,
   in_label => :label,
-  in_components => (
-    select array_agg(x)
-    from json_populate_recordset(
-      null::federated.competitor_component_input,
-      array_to_json(:components::json[])
-    ) x
-  )
+  in_components => (SELECT array_agg(x::federated.competitor_component_input) FROM jsonb_to_recordset(COALESCE(:components::text::jsonb, '[]'::jsonb)) as x(
+    athlete_id bigint,
+    role federated.competitor_role
+  ))
 ) as competitor_id;
 
 /* @name UpsertCompetitorProgress */
@@ -40,3 +37,13 @@ SELECT federated.upsert_competitor_category_progress(
   in_domestic_finale => :domesticFinale::int,
   in_foreign_finale  => :foreignFinale::int
 );
+
+/* @name UpsertRanklistSnapshot */
+SELECT federated.upsert_ranklist_snapshot(
+  in_federation     => :federation,
+  in_category_id    => :categoryId,
+  in_ranklist_name  => :ranklistName,
+  in_as_of_date     => :asOfDate::date,
+  in_kind           => COALESCE(:kind, 'default'),
+  in_entries        => :entries::text::jsonb
+) AS snapshot_id;

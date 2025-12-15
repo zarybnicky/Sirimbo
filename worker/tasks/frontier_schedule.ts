@@ -7,7 +7,7 @@ import {
 } from '../crawler/crawler.queries.ts';
 import { LOADER_MAP } from '../crawler/handlers.ts';
 
-const MAX_OUTSTANDING_FETCH = 200;
+const MAX_OUTSTANDING_FETCH = 100;
 const MAX_OUTSTANDING_PROCESS = 10;
 const SINGLE_PROCESS_LIMIT = 100;
 

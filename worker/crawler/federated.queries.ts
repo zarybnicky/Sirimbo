@@ -5,9 +5,7 @@ export type competitor_type = 'couple' | 'duo' | 'formation' | 'solo' | 'team';
 
 export type gender = 'female' | 'male' | 'other' | 'unknown';
 
-export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
-
-export type JsonArray = (Json)[];
+export type DateOrString = Date | string;
 
 export type NumberOrString = number | string;
 
@@ -85,7 +83,7 @@ export const upsertCategory = new PreparedQuery<IUpsertCategoryParams,IUpsertCat
 
 /** 'UpsertCompetitor' parameters type */
 export interface IUpsertCompetitorParams {
-  components?: JsonArray | null | void;
+  components?: string | null | void;
   federation?: string | null | void;
   federationCompetitorId?: string | null | void;
   label?: string | null | void;
@@ -103,7 +101,7 @@ export interface IUpsertCompetitorQuery {
   result: IUpsertCompetitorResult;
 }
 
-const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"federationCompetitorId":true,"type":true,"label":true,"components":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":65}]},{"name":"federationCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":110}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":130}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":174,"b":179}]},{"name":"components","required":false,"transform":{"type":"scalar"},"locs":[{"a":331,"b":341}]}],"statement":"SELECT federated.upsert_competitor(\n  in_federation => :federation,\n  in_external_id => :federationCompetitorId,\n  in_type => :type::federated.competitor_type,\n  in_label => :label,\n  in_components => (\n    select array_agg(x)\n    from json_populate_recordset(\n      null::federated.competitor_component_input,\n      array_to_json(:components::json[])\n    ) x\n  )\n) as competitor_id"};
+const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"federationCompetitorId":true,"type":true,"label":true,"components":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":65}]},{"name":"federationCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":110}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":130}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":174,"b":179}]},{"name":"components","required":false,"transform":{"type":"scalar"},"locs":[{"a":293,"b":303}]}],"statement":"SELECT federated.upsert_competitor(\n  in_federation => :federation,\n  in_external_id => :federationCompetitorId,\n  in_type => :type::federated.competitor_type,\n  in_label => :label,\n  in_components => (SELECT array_agg(x::federated.competitor_component_input) FROM jsonb_to_recordset(COALESCE(:components::text::jsonb, '[]'::jsonb)) as x(\n    athlete_id bigint,\n    role federated.competitor_role\n  ))\n) as competitor_id"};
 
 /**
  * Query generated from SQL:
@@ -113,13 +111,10 @@ const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"federationCo
  *   in_external_id => :federationCompetitorId,
  *   in_type => :type::federated.competitor_type,
  *   in_label => :label,
- *   in_components => (
- *     select array_agg(x)
- *     from json_populate_recordset(
- *       null::federated.competitor_component_input,
- *       array_to_json(:components::json[])
- *     ) x
- *   )
+ *   in_components => (SELECT array_agg(x::federated.competitor_component_input) FROM jsonb_to_recordset(COALESCE(:components::text::jsonb, '[]'::jsonb)) as x(
+ *     athlete_id bigint,
+ *     role federated.competitor_role
+ *   ))
  * ) as competitor_id
  * ```
  */
@@ -163,5 +158,44 @@ const upsertCompetitorProgressIR: any = {"usedParamSet":{"federation":true,"comp
  * ```
  */
 export const upsertCompetitorProgress = new PreparedQuery<IUpsertCompetitorProgressParams,IUpsertCompetitorProgressResult>(upsertCompetitorProgressIR);
+
+
+/** 'UpsertRanklistSnapshot' parameters type */
+export interface IUpsertRanklistSnapshotParams {
+  asOfDate?: DateOrString | null | void;
+  categoryId?: NumberOrString | null | void;
+  entries?: string | null | void;
+  federation?: string | null | void;
+  kind?: string | null | void;
+  ranklistName?: string | null | void;
+}
+
+/** 'UpsertRanklistSnapshot' return type */
+export interface IUpsertRanklistSnapshotResult {
+  snapshot_id: string | null;
+}
+
+/** 'UpsertRanklistSnapshot' query type */
+export interface IUpsertRanklistSnapshotQuery {
+  params: IUpsertRanklistSnapshotParams;
+  result: IUpsertRanklistSnapshotResult;
+}
+
+const upsertRanklistSnapshotIR: any = {"usedParamSet":{"federation":true,"categoryId":true,"ranklistName":true,"asOfDate":true,"kind":true,"entries":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":76}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":102,"b":112}]},{"name":"ranklistName","required":false,"transform":{"type":"scalar"},"locs":[{"a":138,"b":150}]},{"name":"asOfDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":176,"b":184}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":225,"b":229}]},{"name":"entries","required":false,"transform":{"type":"scalar"},"locs":[{"a":267,"b":274}]}],"statement":"SELECT federated.upsert_ranklist_snapshot(\n  in_federation     => :federation,\n  in_category_id    => :categoryId,\n  in_ranklist_name  => :ranklistName,\n  in_as_of_date     => :asOfDate::date,\n  in_kind           => COALESCE(:kind, 'default'),\n  in_entries        => :entries::text::jsonb\n) AS snapshot_id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT federated.upsert_ranklist_snapshot(
+ *   in_federation     => :federation,
+ *   in_category_id    => :categoryId,
+ *   in_ranklist_name  => :ranklistName,
+ *   in_as_of_date     => :asOfDate::date,
+ *   in_kind           => COALESCE(:kind, 'default'),
+ *   in_entries        => :entries::text::jsonb
+ * ) AS snapshot_id
+ * ```
+ */
+export const upsertRanklistSnapshot = new PreparedQuery<IUpsertRanklistSnapshotParams,IUpsertRanklistSnapshotResult>(upsertRanklistSnapshotIR);
 
 

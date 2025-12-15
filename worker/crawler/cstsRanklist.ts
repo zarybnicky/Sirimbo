@@ -1,7 +1,21 @@
 import z from 'zod';
 import type { JsonLoader } from './types.ts';
-import { upsertFrontier } from './crawler.queries.ts';
-import { upsertCategory } from './federated.queries.ts';
+import {
+  type competitor_type,
+  upsertCategory,
+  upsertCompetitor,
+  upsertFederationAthlete,
+  upsertRanklistSnapshot,
+} from './federated.queries.ts';
+
+const numberAsEnum = <T extends string>(enumDict: { [key in T]: number }) => z.union([
+  z.number()
+    .refine((x) => Object.values(enumDict).includes(x as any))
+    .transform((x) => Object.entries(enumDict).find(([_, n]) => x === n)?.[0]! as T),
+  z.string()
+    .refine((x) => Object.keys(enumDict).includes(x))
+    .transform(x => x as T),
+]);
 
 type RanklistCompetitorPointsType =
   | 'NationalChampionship'
@@ -48,6 +62,47 @@ const competitorType: { [key in CompetitorType]: number } = {
   SmallTeam: 8,
   BigTeam: 9,
 };
+
+type DisciplineType =
+  | 'Unknown'
+  | 'Standard'
+  | 'Latin'
+  | 'Standard_Latin'
+  | 'Breaking'
+  | 'SingleDance'
+  | 'FreeStyle'
+  | 'Other'
+  | 'ShowdanceStandard'
+  | 'ShowdanceLatin'
+  | 'TenDance'
+  | 'Bachata'
+  | 'Merengue'
+  | 'Salsa'
+  | 'ShowdanceBachata'
+  | 'ShowdanceMerengue'
+  | 'ShowdanceSalsa'
+  | 'Caribbean';
+
+const disciplineType: { [key in DisciplineType]: number } = {
+  Unknown: 0,
+  Standard: 1,
+  Latin: 2,
+  Standard_Latin: 3,
+  Breaking: 4,
+  SingleDance: 5,
+  FreeStyle: 6,
+  Other: 7,
+  ShowdanceStandard: 8,
+  ShowdanceLatin: 9,
+  TenDance: 10,
+  Bachata: 11,
+  Merengue: 12,
+  Salsa: 13,
+  ShowdanceBachata: 14,
+  ShowdanceMerengue: 15,
+  ShowdanceSalsa: 16,
+  Caribbean: 17,
+}
 
 type SeriesType = 'Unknown' | 'DanceForAll' | 'Professional' | 'DanceSport' | 'Caribbean';
 
@@ -167,15 +222,7 @@ const ranklistEntrySchema = z.object({
   events: z.array(
     z.object({
       date: z.string(),
-      type: z
-        .number()
-        .refine((x) => Object.values(ranklistCompetitorPointsType).includes(x as any))
-        .transform(
-          (x) =>
-            Object.entries(ranklistCompetitorPointsType).find(
-              ([_, n]) => x === n,
-            )?.[0]! as RanklistCompetitorPointsType,
-        ),
+      type: numberAsEnum(ranklistCompetitorPointsType),
       name: z.string(),
       points: z.number(),
       used: z.boolean(),
@@ -186,17 +233,12 @@ const ranklistEntrySchema = z.object({
 const ranklistSnapshotSchema = z.object({
   id: z.number(),
   state: z.number(),
-  competitorType: z.number(),
-  series: z.number(),
+  competitorType: numberAsEnum(competitorType),
+  series: numberAsEnum(seriesType),
   date: z.string(),
-  type: z
-    .number()
-    .refine((x) => Object.values(ranklistType).includes(x as any))
-    .transform(
-      (x) => Object.entries(ranklistType).find(([_, n]) => x === n)?.[0]! as RanklistType,
-    ),
-  age: z.number(),
-  discipline: z.number(),
+  type: numberAsEnum(ranklistType),
+  age: numberAsEnum(ageGroup),
+  discipline: numberAsEnum(disciplineType),
   coefChampionship: z.number(),
   coefLeague: z.number(),
   coefWdsf: z.number(),
@@ -222,7 +264,7 @@ export const cstsRanklist: JsonLoader<z.output<typeof responseSchema>> = {
   async load(client, frontier, { entity }) {
     const [{ id: categoryId }] = await upsertCategory.run(
       {
-        class: entity.class ?? '',
+        class: '',
         ageGroup: entity.age,
         genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
         discipline: entity.discipline,
@@ -231,6 +273,62 @@ export const cstsRanklist: JsonLoader<z.output<typeof responseSchema>> = {
       client,
     );
 
-    parsed.entity.competitors.forEach((competitor) => {});
+    let competitorType: competitor_type = 'couple';
+    switch (entity.competitorType) {
+      case 'Duo':
+        competitorType = 'duo';
+        break;
+      case 'SoloDancer':
+        competitorType = 'solo';
+        break;
+      case 'Formation':
+        competitorType = 'formation';
+        break;
+      case 'Group':
+      case 'SmallTeam':
+      case 'Team':
+      case 'BigTeam':
+        competitorType = 'team';
+        break;
+      case 'ProAm':
+      case 'Couple':
+      default:
+        competitorType = 'couple';
+    }
+
+    const ranklistComponents: {
+      competitor_id: string,
+      ranking: number,
+      ranking_to: number,
+      points: number;
+    }[] = [];
+    new Map<number, string>();
+
+    for (const competitor of entity.competitors) {
+      const [{ competitor_id }] = await upsertCompetitor.run({
+        type: competitorType,
+        label: competitor.competitorName,
+        federation: 'csts',
+        federationCompetitorId: competitor.competitorId.toString(),
+        components: JSON.stringify([]),
+      }, client);
+      if (competitor_id) {
+        ranklistComponents.push({
+          competitor_id,
+          ranking: competitor.ranking,
+          ranking_to: competitor.rankingTo,
+          points: competitor.points + competitor.pointsWdsf + competitor.pointsLeague + competitor.pointsWdsf,
+        });
+      }
+    }
+
+    await upsertRanklistSnapshot.run({
+      federation: 'csts',
+      categoryId,
+      ranklistName: [entity.series, entity.discipline, entity.age].join(' '),
+      asOfDate: entity.date,
+      kind: entity.type,
+      entries: JSON.stringify(ranklistComponents),
+    }, client);
   },
 };

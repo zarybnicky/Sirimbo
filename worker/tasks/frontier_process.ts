@@ -59,7 +59,9 @@ const processSingle = async (id: string, client: PoolClient, logger: Logger) => 
 
   const content =
     handler.mode === 'json'
-      ? handler.schema.parse(contentRow.content)
+      ? handler.schema.parse(contentRow.content, {
+        reportInput: true
+      })
       : contentRow.content;
   await handler.load(client, frontier, content);
   await markFrontierProcessSuccess.run({ id }, client);

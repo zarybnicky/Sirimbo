@@ -2,6 +2,7 @@ import { cstsAthlete } from './cstsAthlete.ts';
 import type { HtmlLoader, JsonLoader } from './types.ts';
 import { z } from 'zod';
 import { cstsRanklistIndex } from './cstsRanklistIndex.ts';
+import { cstsRanklist } from './cstsRanklist.ts';
 
 export const LOADERS = {
   wdsf: {
@@ -54,6 +55,7 @@ export const LOADERS = {
     // Ranklisty
     // https://www.csts.cz/api/1/ranklist
     ranklistIndex: cstsRanklistIndex,
+    ranklist: cstsRanklist,
 
     // https://www.csts.cz/api/1/ranklist/6733
 

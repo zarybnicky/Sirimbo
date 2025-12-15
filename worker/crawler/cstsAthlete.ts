@@ -169,7 +169,7 @@ async function loadCstsSolo(
       federationCompetitorId: rp.competitorId.toString(),
       label: data.name,
       type: 'solo',
-      components: [{ athlete_id: mainAthleteId, role: 'member' }],
+      components: JSON.stringify([{ athlete_id: mainAthleteId, role: 'member' }]),
     },
     client,
   );
@@ -202,10 +202,10 @@ async function loadCstsDuo(
           ? `${data.name} - ${rp.partner}`
           : `${rp.partner} - ${data.name}`,
       type: 'duo',
-      components: [
+      components: JSON.stringify([
         { athlete_id: mainAthleteId, role: 'member' },
         { athlete_id: partnerAthleteId, role: 'member' },
-      ],
+      ]),
     },
     client,
   );
@@ -239,7 +239,7 @@ async function loadCstsCouple(
           ? `${data.name} - ${rp.partner}`
           : `${rp.partner} - ${data.name}`,
       type: 'couple',
-      components: [
+      components: JSON.stringify([
         {
           athlete_id: data.sex === 'male' ? mainAthleteId : partnerAthleteId,
           role: 'lead',
@@ -248,7 +248,7 @@ async function loadCstsCouple(
           athlete_id: data.sex === 'male' ? partnerAthleteId : mainAthleteId,
           role: 'follow',
         },
-      ],
+      ]),
     },
     client,
   );
