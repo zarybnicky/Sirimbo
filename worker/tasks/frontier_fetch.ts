@@ -1,4 +1,4 @@
-import type { Logger, Task } from 'graphile-worker';
+import type { Task } from 'graphile-worker';
 import {
   getJobCountForTask,
   insertHtmlResponse,
@@ -8,13 +8,7 @@ import {
   rescheduleFrontier,
   reserveRequest,
 } from '../crawler/crawler.queries.ts';
-import {
-  defaultMapResponseToStatus,
-  type FetchStatus,
-  type FrontierRow,
-  type HtmlLoader,
-  type JsonLoader,
-} from '../crawler/types.ts';
+import { defaultMapResponseToStatus, type HtmlLoader, type JsonLoader } from '../crawler/types.ts';
 import { getFrontierHandler } from '../crawler/getFrontierHandler.ts';
 
 export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) => {
@@ -36,26 +30,24 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
       logger.info(`Over-scheduled for host ${host}, rescheduling in ${allowed_at!.getTime() - Date.now()} ms`);
       await rescheduleFrontier.run({ id, nextRetryAt: allowed_at }, client);
       await client.query('COMMIT');
-      await helpers.addJob(
-        'frontier_fetch',
-        { id },
-        { jobKey: `fetch:${host}:${id}`, runAt: allowed_at! },
-      );
+      const jobKey = `fetch:${host}:${id}`;
+      await helpers.addJob('frontier_fetch', { id }, { jobKey, runAt: allowed_at! });
       return;
     }
     await client.query('COMMIT');
 
-    return { frontier, handler, url, init };
+    return { frontier, handler, url, init: init || {} };
   });
   if (!result) return;
   const { frontier, handler, url, init } = result;
-  const { httpStatus, error, content, fetchStatus } = await fetchFrontier(
-    frontier,
-    handler,
-    url,
-    init,
-    logger,
-  );
+
+  const { httpStatus, error, content, fetchStatus } = handler.mode === 'json'
+    ? await fetchFrontierJson(handler, url, init)
+    : await fetchFrontierHtml(handler, url, init);
+
+  if (error) {
+    logger.warn(`Fetch error in ${frontier.id}, URL ${url} (${error})`);
+  }
 
   await withPgClient(async (client) => {
     await client.query('BEGIN');
@@ -80,22 +72,15 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 
     const jobs = await getJobCountForTask.run({ task: 'frontier_fetch' }, client);
     if ((jobs[0].count ?? 0) <= 1) { // Count the current job too!
-      helpers.addJob('frontier_schedule', {});
+      await helpers.addJob('frontier_schedule', {});
     }
 
     await client.query('COMMIT');
   });
 };
 
-async function fetchFrontier(
-  frontier: FrontierRow,
-  handler: JsonLoader | HtmlLoader,
-  url: URL,
-  init: RequestInit | undefined,
-  logger: Logger,
-) {
+async function fetchFrontierJson(handler: JsonLoader, url: URL, init: RequestInit) {
   let httpStatus: number | null = null;
-  let body: string | null = null;
   let rawJson: unknown | null = null;
   let parsed: any | null = null;
   let error: string | null = null;
@@ -106,45 +91,56 @@ async function fetchFrontier(
     const resp = await fetch(url, { ...init, signal: controller.signal });
     httpStatus = resp.status;
 
-    body = await resp.text();
-    if (handler.mode === 'json' && body.trim().length > 0) {
-      rawJson = JSON.parse(body);
-      const parsedRes = handler.schema.safeParse(rawJson);
-      if (parsedRes.success) {
-        parsed = parsedRes.data;
-      } else {
-        error = parsedRes.error.toString();
-        logger.warn(`Parse error in ${frontier.id}, URL ${url} (${error})`);
-      }
+    rawJson = await resp.json();
+    const parsedRes = handler.schema.safeParse(rawJson);
+    if (parsedRes.success) {
+      parsed = parsedRes.data;
+    } else {
+      error = parsedRes.error.toString();
     }
   } catch (e) {
     error = e instanceof Error ? e.message : String(e);
-    logger.warn(`Fetch error in ${frontier.id}, URL ${url} (${error})`);
   } finally {
     clearTimeout(timeoutId);
   }
 
-  let fetchStatus: FetchStatus;
+  const mapperArgs = { httpStatus, parsed, rawJson, error };
+  const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
+  const fetchStatus = mapper(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs);
+
   let content: any = null;
-  if (handler.mode === 'json') {
-    const mapperArgs = { httpStatus, parsed, rawJson, error };
-    const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
-    fetchStatus = mapper(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs);
-    if (parsed != null) {
-      content = handler.cleanResponse
-        ? await handler.cleanResponse(url, parsed, rawJson)
-        : parsed;
-    } else if (rawJson != null) {
-      content = rawJson;
-    }
-  } else {
-    const mapperArgs = { httpStatus, body, error };
-    const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
-    fetchStatus = mapper(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs);
-    if (body != null) {
-      content = handler.cleanResponse ? await handler.cleanResponse(url, body) : body;
-    }
+  if (parsed != null) {
+    content = handler.cleanResponse
+      ? await handler.cleanResponse(url, parsed, rawJson)
+      : parsed;
+  } else if (rawJson != null) {
+    content = rawJson;
   }
+
+  return { httpStatus, error, content, fetchStatus };
+}
+
+async function fetchFrontierHtml(handler: HtmlLoader, url: URL, init: RequestInit) {
+  let httpStatus: number | null = null;
+  let body: string | null = null;
+  let error: string | null = null;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30_000); // 30s timeout
+  try {
+    const resp = await fetch(url, { ...init, signal: controller.signal });
+    httpStatus = resp.status;
+    body = await resp.text();
+  } catch (e) {
+    error = e instanceof Error ? e.message : String(e);
+  } finally {
+    clearTimeout(timeoutId);
+  }
+
+  const mapperArgs = { httpStatus, body, error };
+  const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
+  const fetchStatus = mapper(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs);
+  const content = handler.cleanResponse ? await handler.cleanResponse(url, body) : body;
 
   return { httpStatus, error, content, fetchStatus };
 }

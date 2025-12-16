@@ -35,7 +35,7 @@ export interface HtmlLoader {
     body: string | null;
     error?: unknown;
   }) => FetchStatus | undefined;
-  cleanResponse?: (url: URL, body: string) => Promise<string> | string;
+  cleanResponse?: (url: URL, body: string | null) => Promise<string> | string;
   revalidatePeriod: string;
   load: (client: PoolClient, frontier: FrontierRow, body: string) => Promise<void>;
 }

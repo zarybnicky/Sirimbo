@@ -54,10 +54,9 @@ export const LOADERS = {
 
     // Ranklisty
     // https://www.csts.cz/api/1/ranklist
+    // https://www.csts.cz/api/1/ranklist/6733
     ranklistIndex: cstsRanklistIndex,
     ranklist: cstsRanklist,
-
-    // https://www.csts.cz/api/1/ranklist/6733
 
     clubIndex: {
       mode: 'text',
