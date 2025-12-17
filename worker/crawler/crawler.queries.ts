@@ -275,7 +275,7 @@ export interface IGetPendingFetchQuery {
   result: IGetPendingFetchResult;
 }
 
-const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":294,"b":299}]}],"statement":"SELECT id, federation, kind, key\nFROM crawler.frontier\nWHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n  AND (fetch_status = 'pending'\n         OR (fetch_status = 'ok' AND process_status = 'ok'))\nORDER BY CASE frontier.fetch_status WHEN 'pending' THEN 0 ELSE 1 END, discovered_at\nLIMIT :limit"};
+const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":262,"b":267}]}],"statement":"SELECT id, federation, kind, key\nFROM crawler.frontier\nWHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n  AND (fetch_status = 'pending'\n         OR (fetch_status = 'ok' AND process_status = 'ok'))\nORDER BY last_fetched_at NULLS FIRST, discovered_at\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -285,7 +285,7 @@ const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":
  * WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
  *   AND (fetch_status = 'pending'
  *          OR (fetch_status = 'ok' AND process_status = 'ok'))
- * ORDER BY CASE frontier.fetch_status WHEN 'pending' THEN 0 ELSE 1 END, discovered_at
+ * ORDER BY last_fetched_at NULLS FIRST, discovered_at
  * LIMIT :limit
  * ```
  */

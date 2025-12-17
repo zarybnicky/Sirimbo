@@ -64,7 +64,7 @@ FROM crawler.frontier
 WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
   AND (fetch_status = 'pending'
          OR (fetch_status = 'ok' AND process_status = 'ok'))
-ORDER BY CASE frontier.fetch_status WHEN 'pending' THEN 0 ELSE 1 END, discovered_at
+ORDER BY last_fetched_at NULLS FIRST, discovered_at
 LIMIT :limit;
 
 /* @name GetPendingProcess */
