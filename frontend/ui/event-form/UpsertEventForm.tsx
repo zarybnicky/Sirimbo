@@ -85,6 +85,10 @@ export function UpsertEventForm({ initialValue = {}, event }: {
             personId: y.personId
           })),
         })),
+      }, {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
       });
     }
   }, [reset, eventData]);

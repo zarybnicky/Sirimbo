@@ -39,7 +39,11 @@ export function CohortForm({ id = '' }: { id?: string }) {
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
-    reset(Form.partial().optional().parse(data));
+    reset(Form.partial().optional().parse(data), {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    });
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (patch: z.infer<typeof Form>) => {

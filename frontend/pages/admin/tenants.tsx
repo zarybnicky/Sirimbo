@@ -160,7 +160,11 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
   const { onSuccess } = useFormResult();
 
   React.useEffect(() => {
-    reset(createFormState(tenant));
+    reset(createFormState(tenant), {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    });
   }, [tenant, reset]);
 
   const onSubmit = useAsyncCallback(async (values: TenantFormValues) => {

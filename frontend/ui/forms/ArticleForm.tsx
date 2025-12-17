@@ -53,6 +53,10 @@ export function ArticleForm({ id = '' }: { id?: string }) {
       atPreview: data?.atPreview ?? '',
       atText: data?.atText ?? '',
       titlePhotoUrl: data?.titlePhotoUrl ?? '',
+    }, {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
     });
   }, [data, reset]);
 

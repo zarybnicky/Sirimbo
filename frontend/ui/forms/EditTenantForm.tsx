@@ -26,7 +26,11 @@ export function EditTenantForm() {
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
-    reset(Form.partial().optional().parse(data));
+    reset(Form.partial().optional().parse(data), {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    });
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {

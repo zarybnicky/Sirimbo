@@ -80,9 +80,12 @@ export function AnnouncementForm({ id, data, onSuccess }: {
       scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
       audienceRoles: data?.announcementAudiences.nodes.map(x => x.audienceRole).filter(isTruthy) ?? [],
       cohortIds: data?.announcementAudiences.nodes.map(x => x.cohortId).filter(isTruthy) ?? [],
+    }, {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
     });
   }, [data, reset]);
-
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const oldAudiences = [...data?.announcementAudiences.nodes || []];

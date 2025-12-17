@@ -110,7 +110,11 @@ export function CreatePersonDialog() {
 
   React.useEffect(() => {
     if (open) {
-      reset();
+      reset({}, {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      });
       setValue('isMember', true);
       setValue('sendInvitation', false);
       setValue('nationality', "203");

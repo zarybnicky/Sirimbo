@@ -8,7 +8,7 @@ import {
 import { LOADER_MAP } from '../crawler/handlers.ts';
 
 const MAX_OUTSTANDING_FETCH = 100;
-const MAX_OUTSTANDING_PROCESS = 10;
+const MAX_OUTSTANDING_PROCESS = 1;
 const SINGLE_PROCESS_LIMIT = 100;
 
 export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, helpers) => {

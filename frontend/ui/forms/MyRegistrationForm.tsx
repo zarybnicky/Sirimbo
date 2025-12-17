@@ -37,6 +37,10 @@ export function MyRegistrationForm({ event, registration }: {
   React.useEffect(() => {
     reset({
       note: registration?.note || '',
+    }, {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
     });
   }, [reset, registration]);
 

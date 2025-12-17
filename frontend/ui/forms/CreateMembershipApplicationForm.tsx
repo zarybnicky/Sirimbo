@@ -59,7 +59,11 @@ export function CreateMembershipApplicationForm({ data }: {
 
   React.useEffect(() => {
     if (data) {
-      reset(Form.partial().optional().parse(data));
+      reset(Form.partial().optional().parse(data), {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      });
     }
   }, [reset, data]);
 
