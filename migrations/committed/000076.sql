@@ -1,0 +1,695 @@
+--! Previous: sha1:97f273c2122fd8278cd2840c7d220ce199df2f9e
+--! Hash: sha1:d2aad9aaa111c8ed6088b873b5149575c9e828dd
+
+--! split: 1-current.sql
+drop schema if exists csts cascade;
+
+drop schema if exists federated cascade;
+
+update crawler.frontier set process_status = 'pending'
+where fetch_status in ('ok', 'pending');
+
+create schema federated;
+
+CREATE EXTENSION IF NOT EXISTS unaccent;
+CREATE OR REPLACE FUNCTION federated.unaccent(text) RETURNS text
+AS $$
+SELECT lower(public.unaccent('public.unaccent', $1));
+$$ LANGUAGE sql IMMUTABLE PARALLEL SAFE STRICT;
+
+CREATE TABLE federated.federation (
+  code text NOT NULL,
+  name text NOT NULL,
+  PRIMARY KEY (code)
+);
+
+INSERT INTO federated.federation (code, name)
+VALUES ('wdsf', 'World DanceSport Federation'),
+       ('csts', 'Český svaz tanečního sportu'),
+       ('szts', 'Slovenský zväz tanečných športov');
+
+
+CREATE TABLE federated.dance (
+  code       text PRIMARY KEY,
+  name       text NOT NULL,
+  discipline text NOT NULL
+);
+
+INSERT INTO federated.dance (code, name, discipline) VALUES
+  ('SW',  'Waltz',            'standard'),
+  ('TG',  'Tango',            'standard'),
+  ('VW',  'Viennese Waltz',   'standard'),
+  ('SF',  'Slow Foxtrot',     'standard'),
+  ('QS',  'Quickstep',        'standard'),
+  ('SA',  'Samba',            'latin'),
+  ('CH',  'Cha Cha',          'latin'),
+  ('RU',  'Rumba',            'latin'),
+  ('PD',  'Paso Doble',       'latin'),
+  ('JI',  'Jive',             'latin');
+
+
+CREATE TABLE federated.dance_program (
+  id          bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  code        text UNIQUE,                     -- 'STD5','LAT5','LAT3_ENTRY',...
+  name        text NOT NULL,                  -- human label
+  discipline  text,                           -- optional: 'standard','latin',...
+  is_default  boolean NOT NULL DEFAULT false,
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE federated.dance_program_dance (
+  program_id  bigint NOT NULL REFERENCES federated.dance_program(id) ON DELETE CASCADE,
+  dance_code  text NOT NULL REFERENCES federated.dance(code),
+  dance_order integer NOT NULL,                 -- 1..N within program
+  PRIMARY KEY (program_id, dance_code),
+  UNIQUE (program_id, dance_order)
+);
+
+CREATE INDEX ON federated.dance_program_dance (program_id);
+CREATE INDEX ON federated.dance_program_dance (dance_code);
+
+-- single cross-federation category
+CREATE TABLE federated.category (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name          text NOT NULL,
+  series        text NOT NULL,       -- TPV, Amateur, Professional
+  discipline    text NOT NULL,       -- standard, latin, 10-dance, etc.
+  age_group     text NOT NULL,       -- junior, youth, adult, senior...
+  gender_group  text NOT NULL DEFAULT 'mixed',       -- male, female, same-sex, mixed
+  class         text NOT NULL,       -- A,B,C,Open,...
+  base_dance_program_id bigint REFERENCES federated.dance_program(id),
+  UNIQUE (series, discipline, age_group, gender_group, class)
+);
+
+CREATE TABLE federated.federation_category (
+  federation  text NOT NULL REFERENCES federated.federation(code),
+  external_id text,
+  category_id bigint NULL REFERENCES federated.category(id),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (federation, category_id),
+  UNIQUE (federation, external_id)
+);
+CREATE INDEX ON federated.federation_category (category_id);
+
+CREATE TYPE federated.gender AS ENUM (
+  'male',
+  'female',
+  'other',
+  'unknown'
+);
+
+CREATE TABLE federated.person (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  canonical_name text,
+  first_name     text,
+  last_name      text,
+  search_name    text GENERATED ALWAYS AS (
+    federated.unaccent(coalesce(canonical_name, (first_name || ' ' || last_name)))
+  ) STORED,
+  gender         federated.gender,
+  dob            date,
+  nationality    text,
+  created_at     timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE federated.judge (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  person_id bigint NOT NULL REFERENCES federated.person(id),
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (person_id)
+);
+
+CREATE TABLE federated.federation_judge (
+  federation   text NOT NULL REFERENCES federated.federation(code),
+  external_id  text NOT NULL,
+  judge_id   bigint NULL REFERENCES federated.judge(id),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (federation, external_id)
+);
+CREATE INDEX ON federated.federation_judge (judge_id);
+CREATE UNIQUE INDEX ON federated.federation_judge (federation, judge_id)
+  WHERE judge_id IS NOT NULL;
+
+
+CREATE TABLE federated.athlete (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  person_id bigint NOT NULL REFERENCES federated.person(id),
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (person_id)
+);
+
+CREATE TABLE federated.federation_athlete (
+  federation   text NOT NULL REFERENCES federated.federation(code),
+  external_id  text NOT NULL,
+  athlete_id   bigint NULL REFERENCES federated.athlete(id),
+  age_group    text,
+  medical_checkup_expiration date,
+  medical_checkup_type text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (federation, external_id)
+);
+CREATE INDEX ON federated.federation_athlete (athlete_id);
+CREATE UNIQUE INDEX ON federated.federation_athlete (federation, athlete_id)
+  WHERE athlete_id IS NOT NULL;
+
+CREATE TYPE federated.competitor_type AS ENUM (
+  'couple',
+  'solo',
+  'duo',
+  'formation',
+  'team'
+);
+
+CREATE TYPE federated.competitor_role AS ENUM (
+  'lead',
+  'follow',
+  'member',
+  'substitute'
+);
+
+
+-- immutable, federations create a new competitor entry if the composition changes
+CREATE TABLE federated.competitor (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  competitor_type federated.competitor_type NOT NULL,
+  name            text,         -- team name, couple label, or derived
+  created_at      timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE federated.competitor_component (
+  competitor_id   bigint NOT NULL REFERENCES federated.competitor(id),
+  athlete_id      bigint NOT NULL REFERENCES federated.athlete(id),
+  role            federated.competitor_role NOT NULL,
+  PRIMARY KEY (competitor_id, athlete_id)
+);
+
+CREATE INDEX ON federated.competitor_component (athlete_id);
+
+CREATE TABLE federated.federation_competitor (
+  federation      text NOT NULL REFERENCES federated.federation(code),
+  external_id     text NOT NULL,
+  competitor_id   bigint NULL REFERENCES federated.competitor(id),
+  age_group       text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (federation, external_id),
+  UNIQUE (federation, competitor_id)
+);
+
+CREATE TABLE federated.competitor_category_progress (
+  federation      text NOT NULL REFERENCES federated.federation(code),
+  competitor_id   bigint NOT NULL REFERENCES federated.competitor(id),
+  category_id     bigint NOT NULL REFERENCES federated.category(id),
+  points          numeric(10, 3) NOT NULL DEFAULT 0,
+  domestic_finale int NOT NULL DEFAULT 0,
+  foreign_finale  int NOT NULL DEFAULT 0,
+  PRIMARY KEY (federation, competitor_id, category_id)
+);
+CREATE INDEX ON federated.competitor_category_progress (competitor_id);
+
+CREATE TABLE federated.federation_club (
+  id          bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  federation  text NOT NULL REFERENCES federated.federation(code),
+  external_id text NOT NULL,
+  name        text NOT NULL,
+  city        text,
+  country     text,
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (federation, external_id)
+);
+
+CREATE TABLE federated.athlete_club_membership (
+  athlete_id bigint NOT NULL REFERENCES federated.athlete(id),
+  club_id    bigint NOT NULL REFERENCES federated.federation_club(id),
+  valid_from date NOT NULL,
+  valid_to   date,
+  PRIMARY KEY (athlete_id, club_id, valid_from),
+  CHECK (valid_to IS NULL OR valid_to >= valid_from),
+  EXCLUDE USING gist (
+    athlete_id WITH =,
+    club_id    WITH =,
+    daterange(valid_from, COALESCE(valid_to, 'infinity'::date), '[]') WITH &&
+  )
+);
+
+CREATE INDEX ON federated.athlete_club_membership (athlete_id, valid_from, valid_to);
+CREATE INDEX ON federated.athlete_club_membership (club_id, valid_from, valid_to);
+
+CREATE TABLE federated.competitor_club_affiliation (
+  competitor_id bigint NOT NULL REFERENCES federated.competitor(id),
+  club_id       bigint NOT NULL REFERENCES federated.federation_club(id),
+  valid_from    date NOT NULL,
+  valid_to      date,
+  PRIMARY KEY (competitor_id, club_id, valid_from),
+  CHECK (valid_to IS NULL OR valid_to >= valid_from),
+  EXCLUDE USING gist (
+    competitor_id WITH =,
+    club_id       WITH =,
+    daterange(valid_from, COALESCE(valid_to, 'infinity'::date), '[]') WITH &&
+  )
+);
+CREATE INDEX ON federated.competitor_club_affiliation (club_id, valid_from, valid_to);
+
+
+CREATE TABLE federated.event (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  federation  text NOT NULL REFERENCES federated.federation(code),
+  external_id text NOT NULL,
+  name        text,
+  start_date  date NOT NULL,
+  end_date    date,
+  location    text,
+  country     text,
+  organizing_club_id bigint NULL REFERENCES federated.federation_club(id),
+  range       daterange GENERATED ALWAYS AS (
+    CASE
+      WHEN end_date   IS NULL THEN daterange(start_date, start_date, '[]')
+      ELSE daterange(start_date, end_date, '[]')
+    END
+  ) STORED,
+  UNIQUE (federation, external_id),
+  CHECK (end_date IS NULL OR end_date >= start_date)
+);
+CREATE INDEX ON federated.event (federation, start_date);
+CREATE INDEX ON federated.event USING gist (range);
+
+CREATE TABLE federated.competition (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  federation    text NOT NULL REFERENCES federated.federation(code),
+  external_id   text NOT NULL,
+  event_id      bigint not null references federated.event(id),
+  category_id   bigint not null references federated.category(id),
+  start_date    date,
+  end_date      date,
+  UNIQUE (federation, external_id),
+  CHECK (end_date IS NULL OR end_date >= start_date)
+);
+CREATE INDEX ON federated.competition (event_id);
+CREATE INDEX ON federated.competition (category_id);
+
+CREATE TYPE federated.scoring_method AS ENUM (
+  'skating_marks',
+  'skating_places',
+  'ajs-3.0'
+);
+
+CREATE TABLE federated.competition_round (
+  id             bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  competition_id bigint NOT NULL REFERENCES federated.competition(id),
+  round_index    integer NOT NULL,           -- 1,2,3,... within competition
+  round_type     text,                       -- '1st round','QF','SF','Final',...
+  dance_program_id bigint NOT NULL REFERENCES federated.dance_program(id),
+  scoring_method federated.scoring_method NOT NULL,
+  created_at     timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (competition_id, round_index)
+);
+CREATE INDEX ON federated.competition_round (competition_id, round_index);
+CREATE INDEX ON federated.competition_round (dance_program_id);
+
+
+CREATE TABLE federated.round_dance (
+  id         bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  round_id   bigint NOT NULL REFERENCES federated.competition_round(id),
+  dance_code text NOT NULL REFERENCES federated.dance(code),
+  UNIQUE (round_id, dance_code)
+);
+CREATE INDEX ON federated.round_dance (round_id);
+
+CREATE FUNCTION federated.tg_round_dance__dance_program() RETURNS TRIGGER LANGUAGE plpgsql AS $$
+begin
+  IF NOT EXISTS (
+    SELECT 1
+    FROM federated.competition_round cr
+    JOIN federated.dance_program_dance dpd ON dpd.program_id = cr.dance_program_id
+    WHERE cr.id = NEW.round_id AND dpd.dance_code = NEW.dance_code
+  ) THEN
+    RAISE EXCEPTION 'Round dance % not in round dance program %', NEW.dance_code, NEW.round_id;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+create trigger _100_round_dance__dance_program before insert on federated.round_dance
+  for each row execute function federated.tg_round_dance__dance_program();
+
+
+CREATE TABLE federated.round_judge (
+  round_id bigint NOT NULL REFERENCES federated.competition_round(id),
+  judge_id bigint NOT NULL REFERENCES federated.judge(id),
+  is_shadow boolean NOT NULL DEFAULT false,
+  PRIMARY KEY (round_id, judge_id)
+);
+CREATE INDEX ON federated.round_judge (judge_id);
+
+CREATE TABLE federated.competition_entry (
+  competition_id  bigint NOT NULL REFERENCES federated.competition(id),
+  competitor_id   bigint NOT NULL REFERENCES federated.competitor(id),
+  cancelled       boolean NOT NULL DEFAULT false,
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (competition_id, competitor_id)
+);
+CREATE INDEX ON federated.competition_entry (competitor_id);
+
+-- Result per competitor per round (aggregated per round)
+CREATE TABLE federated.competition_round_result (
+  round_id          bigint NOT NULL REFERENCES federated.competition_round(id),
+  competitor_id     bigint NOT NULL REFERENCES federated.competitor(id),
+  overall_ranking   integer NOT NULL,       -- place in round (if defined)
+  overall_ranking_to integer,      -- ties
+  qualified_next    boolean,       -- progressed to next round?
+  overall_score     numeric(10,3), -- aggregate across dances, if provided/derived
+  PRIMARY KEY (round_id, competitor_id),
+  CHECK (overall_ranking_to IS NULL OR overall_ranking_to >= overall_ranking)
+);
+CREATE INDEX ON federated.competition_round_result (competitor_id);
+CREATE INDEX ON federated.competition_round_result (round_id, overall_ranking);
+
+
+CREATE TYPE federated.score_component AS ENUM (
+  'mark',         -- simple yes/no
+  'places',       -- 1..6 etc.
+  'ajs_tq',
+  'ajs_mm',
+  'ajs_ps',
+  'ajs_cp'
+);
+
+-- Judge scores per dance (round × dance × judge × competitor × component)
+CREATE TABLE federated.judge_score (
+  round_dance_id bigint NOT NULL REFERENCES federated.round_dance(id),
+  judge_id       bigint NOT NULL REFERENCES federated.judge(id),
+  competitor_id  bigint NOT NULL REFERENCES federated.competitor(id),
+  component      federated.score_component NOT NULL,
+  score          numeric(10,3) NOT NULL,   -- 0/1, 1..6, AJS values, numeric scores...
+  raw_score      text,                     -- original symbol/string
+  created_at     timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (round_dance_id, judge_id, competitor_id, component)
+);
+
+CREATE INDEX ON federated.judge_score (round_dance_id);
+CREATE INDEX ON federated.judge_score (competitor_id);
+CREATE INDEX ON federated.judge_score (judge_id);
+
+CREATE TABLE federated.competition_result (
+  competition_id bigint NOT NULL REFERENCES federated.competition(id),
+  competitor_id  bigint NOT NULL REFERENCES federated.competitor(id),
+  start_number   text,
+  ranking        integer NOT NULL,
+  ranking_to     integer,
+  point_gain     numeric(10,3),
+  final_gain     numeric(10,3),
+  PRIMARY KEY (competition_id, competitor_id),
+  UNIQUE (competition_id, start_number),
+  CHECK (ranking_to IS NULL OR ranking_to >= ranking)
+);
+
+CREATE INDEX ON federated.competition_result (competitor_id);
+CREATE INDEX ON federated.competition_result (competition_id, ranking);
+
+
+CREATE TABLE federated.ranklist (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  federation  text NOT NULL REFERENCES federated.federation(code),
+  category_id bigint NOT NULL REFERENCES federated.category(id),
+  name        text NOT NULL,
+  UNIQUE (federation, category_id)
+);
+
+CREATE TABLE federated.ranklist_snapshot (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  ranklist_id bigint NOT NULL REFERENCES federated.ranklist(id),
+  kind        text NOT NULL DEFAULT 'default',
+  as_of_date  date NOT NULL,
+  UNIQUE (ranklist_id, as_of_date, kind)
+);
+
+CREATE TABLE federated.ranklist_entry (
+  snapshot_id   bigint NOT NULL REFERENCES federated.ranklist_snapshot(id),
+  competitor_id bigint NOT NULL REFERENCES federated.competitor(id),
+  ranking       integer NOT NULL,
+  ranking_to    integer,
+  points        numeric(10, 3),
+  UNIQUE (snapshot_id, competitor_id),
+  CHECK (ranking_to IS NULL OR ranking_to >= ranking)
+);
+CREATE INDEX ON federated.ranklist_entry (competitor_id);
+CREATE INDEX ON federated.ranklist_entry (snapshot_id, ranking);
+
+CREATE TYPE federated.competitor_component_input AS (
+  athlete_id bigint,
+  role federated.competitor_role
+);
+
+
+CREATE OR REPLACE FUNCTION federated.upsert_category(
+  in_series       text,
+  in_discipline   text,
+  in_age_group    text,
+  in_gender_group text,
+  in_class        text,
+  in_name         text DEFAULT NULL
+)
+  RETURNS bigint
+  LANGUAGE sql
+  SET SEARCH_PATH = federated, pg_temp
+AS $$
+  INSERT INTO federated.category (
+    series,
+    discipline,
+    age_group,
+    gender_group,
+    class,
+    name
+  )
+  VALUES (
+    in_series,
+    in_discipline,
+    in_age_group,
+    in_gender_group,
+    in_class,
+    COALESCE(
+      in_name,
+      concat_ws(' ', in_series, in_discipline, in_age_group, in_class)
+    )
+  )
+  ON CONFLICT (series, discipline, age_group, gender_group, class)
+    DO UPDATE SET name = EXCLUDED.name
+RETURNING id;
+$$;
+
+CREATE OR REPLACE FUNCTION federated.upsert_athlete(
+  in_federation     text,
+  in_external_id    text,
+  in_canonical_name text,
+  in_gender         federated.gender
+)
+  RETURNS bigint
+  LANGUAGE plpgsql
+  SET SEARCH_PATH = federated, pg_temp
+AS $$
+DECLARE
+  v_person_id  bigint;
+  v_athlete_id bigint;
+BEGIN
+  -- Try to find existing mapping and lock it
+  SELECT fa.athlete_id
+  INTO v_athlete_id
+  FROM federation_athlete fa
+  WHERE fa.federation = in_federation
+    AND fa.external_id = in_external_id
+    FOR UPDATE;
+
+  -- If no mapping, create person + athlete
+  IF v_athlete_id IS NULL THEN
+    INSERT INTO person (canonical_name, gender)
+    VALUES (in_canonical_name, in_gender)
+    RETURNING id INTO v_person_id;
+
+    INSERT INTO athlete (person_id)
+    VALUES (v_person_id)
+    RETURNING id INTO v_athlete_id;
+  END IF;
+
+  -- Ensure mapping row exists / is updated
+  INSERT INTO federation_athlete (federation, external_id, athlete_id)
+  VALUES (in_federation, in_external_id, v_athlete_id)
+  ON CONFLICT (federation, external_id)
+    DO UPDATE SET athlete_id = EXCLUDED.athlete_id;
+
+  RETURN v_athlete_id;
+END;
+$$;
+SELECT verify_function('federated.upsert_athlete');
+
+CREATE OR REPLACE FUNCTION federated.upsert_competitor(
+  in_federation     text,
+  in_external_id    text,
+  in_type           federated.competitor_type,
+  in_label          text,
+  in_components     federated.competitor_component_input[]
+)
+  RETURNS bigint
+  LANGUAGE plpgsql
+  SET SEARCH_PATH = federated, pg_temp
+AS $$
+DECLARE
+  v_competitor_id bigint;
+BEGIN
+  -- 1) Try existing mapping by federation + external_id
+  IF in_external_id IS NOT NULL THEN
+    SELECT competitor_id
+    INTO v_competitor_id
+    FROM federation_competitor
+    WHERE federation = in_federation
+      AND external_id = in_external_id
+      FOR UPDATE;
+
+    -- If competitor already mapped, we just reuse it and fix components below
+    IF v_competitor_id IS NOT NULL THEN
+      -- keep name in sync
+      UPDATE competitor
+      SET name = in_label
+      WHERE id = v_competitor_id;
+
+      -- upsert components
+      INSERT INTO competitor_component (competitor_id, athlete_id, role)
+      SELECT v_competitor_id, (c).athlete_id, (c).role
+      FROM unnest(in_components) AS c
+      ON CONFLICT (competitor_id, athlete_id)
+        DO UPDATE SET role = EXCLUDED.role;
+
+      RETURN v_competitor_id;
+    END IF;
+  END IF;
+
+  -- 2) Try to find competitor by exact component set
+  WITH input AS (
+    SELECT (c).athlete_id AS athlete_id, (c).role AS role
+    FROM unnest(in_components) AS c
+  ), candidates AS (
+    SELECT cc.competitor_id
+    FROM competitor_component cc
+    GROUP BY cc.competitor_id
+    HAVING count(*) = (SELECT count(*) FROM input)
+       AND bool_and(EXISTS(SELECT 1 FROM input i WHERE i.athlete_id = cc.athlete_id AND i.role = cc.role))
+  )
+  SELECT competitor_id
+  INTO v_competitor_id
+  FROM candidates
+  LIMIT 1;
+
+  -- 3) If no competitor found, create one
+  IF v_competitor_id IS NULL THEN
+    INSERT INTO competitor (competitor_type, name)
+    VALUES (in_type, in_label)
+    RETURNING id INTO v_competitor_id;
+
+    INSERT INTO competitor_component (competitor_id, athlete_id, role)
+    SELECT v_competitor_id, (c).athlete_id, (c).role
+    FROM unnest(in_components) AS c;
+  END IF;
+
+  -- 4) Link federation_competitor if external_id present
+  IF in_external_id IS NOT NULL THEN
+    INSERT INTO federation_competitor (federation, external_id, competitor_id)
+    VALUES (in_federation, in_external_id, v_competitor_id)
+    ON CONFLICT (federation, external_id)
+      DO UPDATE SET competitor_id = EXCLUDED.competitor_id;
+  END IF;
+
+  RETURN v_competitor_id;
+END;
+$$;
+SELECT verify_function('federated.upsert_competitor');
+
+CREATE OR REPLACE FUNCTION federated.upsert_competitor_category_progress(
+  in_federation      text,
+  in_competitor_id   bigint,
+  in_category_id     bigint,
+  in_points          numeric(10,3),
+  in_domestic_finale integer,
+  in_foreign_finale  integer
+)
+  RETURNS void
+  LANGUAGE sql
+  SET SEARCH_PATH = federated, pg_temp
+AS $$
+  INSERT INTO federated.competitor_category_progress (
+    federation,
+    competitor_id,
+    category_id,
+    points,
+    domestic_finale,
+    foreign_finale
+  )
+  VALUES (
+    in_federation,
+    in_competitor_id,
+    in_category_id,
+    in_points,
+    in_domestic_finale,
+    in_foreign_finale
+  )
+  ON CONFLICT (federation, competitor_id, category_id)
+    DO UPDATE
+    SET points          = EXCLUDED.points,
+        domestic_finale = EXCLUDED.domestic_finale,
+        foreign_finale  = EXCLUDED.foreign_finale;
+$$;
+
+
+CREATE OR REPLACE FUNCTION federated.upsert_ranklist_snapshot(
+  in_federation  text,
+  in_category_id bigint,
+  in_ranklist_name text,
+  in_as_of_date  date,
+  in_kind        text DEFAULT 'default',
+  in_entries     jsonb DEFAULT '[]'::jsonb
+)
+  RETURNS bigint
+  LANGUAGE plpgsql
+  SET SEARCH_PATH = federated, pg_temp
+AS $$
+DECLARE
+  v_ranklist_id  bigint;
+  v_snapshot_id  bigint;
+BEGIN
+  INSERT INTO federated.ranklist (federation, category_id, name)
+  VALUES (in_federation, in_category_id, in_ranklist_name)
+  ON CONFLICT (federation, category_id)
+    DO UPDATE SET name = EXCLUDED.name
+  RETURNING id INTO v_ranklist_id;
+
+  -- 2) upsert snapshot
+  INSERT INTO federated.ranklist_snapshot (ranklist_id, as_of_date, kind)
+  VALUES (v_ranklist_id, in_as_of_date, COALESCE(in_kind, 'default'))
+  ON CONFLICT (ranklist_id, as_of_date, kind)
+    DO UPDATE SET kind = EXCLUDED.kind
+  RETURNING id INTO v_snapshot_id;
+
+  -- 3) replace entries for this snapshot (so removals are reflected too)
+  DELETE FROM federated.ranklist_entry
+  WHERE snapshot_id = v_snapshot_id;
+
+  INSERT INTO federated.ranklist_entry (
+    snapshot_id,
+    competitor_id,
+    ranking,
+    ranking_to,
+    points
+  )
+  SELECT
+    v_snapshot_id,
+    e.competitor_id,
+    e.ranking,
+    e.ranking_to,
+    e.points
+  FROM jsonb_to_recordset(COALESCE(in_entries, '[]'::jsonb)) AS e(
+    competitor_id bigint,
+    ranking integer,
+    ranking_to integer,
+    points numeric(10,3)
+  );
+
+  RETURN v_snapshot_id;
+END;
+$$;
+SELECT verify_function('federated.upsert_ranklist_snapshot');
