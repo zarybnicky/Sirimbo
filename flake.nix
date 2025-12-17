@@ -24,14 +24,14 @@
       rozpisovnik-worker = final.callPackage ./nix/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./worker/package.json;
         workspaceFolders = [ "worker" ];
-        pnpmDepsHash = "sha256-j4RpBfFbNhqLok/HanN5fhEGVbr6sXhPZVIy60qFeOA=";
+        pnpmDepsHash = "sha256-TF7t8z6aDk1m36XV6imUKht8Ci6zPVzZllXawdiGmc8=";
         postInstall = "cp -s $out/share/worker/rozpisovnik-worker $out/bin/";
       };
 
       rozpisovnik-api = final.callPackage ./nix/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./backend/package.json;
         workspaceFolders = [ "backend" ];
-        pnpmDepsHash = "sha256-KobH3gd5JHeOYV1bsxYi8HdCaywQePlJQ7xbvOwj2AY=";
+        pnpmDepsHash = "sha256-8qkx/3caWtETOlBrWedq+rA6Uw3NtF3TG1VqNmL3IN4=";
         postInstall = "cp -s $out/share/backend/dist/index.cjs $out/bin/rozpisovnik-api";
       };
 
