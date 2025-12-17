@@ -73,7 +73,7 @@ type RankingPoints = z.infer<typeof rankingPointsSchema>;
 export const cstsAthlete: JsonLoader<Response> = {
   mode: 'json',
   schema: athletesResponseSchema,
-  revalidatePeriod: '1 day',
+  revalidatePeriod: '3 day',
   buildRequest: (key) => ({
     url: new URL(`https://www.csts.cz/api/1/athletes/${key}`),
     init: {

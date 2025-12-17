@@ -22,7 +22,7 @@ const responseSchema = z.object({
 
 export const cstsRanklistIndex: JsonLoader<z.output<typeof responseSchema>> = {
   mode: 'json',
-  revalidatePeriod: '5 day',
+  revalidatePeriod: '1 day',
   buildRequest: () => ({
     url: new URL('https://www.csts.cz/api/1/ranklist'),
     init: {
