@@ -26,6 +26,7 @@ export function UpsertEventForm({ initialValue = {}, event }: {
   initialValue?: Partial<z.infer<typeof EventForm>>;
   event?: EventFragment;
 }) {
+  const initializedRef = React.useRef(false);
   const { onSuccess } = useFormResult();
   const upsert = useMutation(UpsertEventDocument)[1];
   const id = event?.id ?? '';
@@ -49,14 +50,15 @@ export function UpsertEventForm({ initialValue = {}, event }: {
   }, [tenant]);
 
   React.useEffect(() => {
-    if (event) {
+    if (event && !initializedRef.current) {
       fetchEvent();
     };
-  }, []);
+  }, [event, fetchEvent]);
 
   React.useEffect(() => {
     const event = eventData?.event;
-    if (event) {
+    if (event && !initializedRef.current) {
+      initializedRef.current = true;
       reset({
         ...event,
         locationId: event.locationText ? 'other' : event.location?.id ?? 'none',
