@@ -152,9 +152,33 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
     createByName.set(t, create);
   }
 
+  const schemaOf = (qn: string) => (qn.includes('.') ? qn.split('.')[0] : '');
+  const localNameOf = (qn: string) =>
+    qn.includes('.') ? qn.split('.').slice(1).join('.') : qn;
+
   const pos = new Map(names.map((n, i) => [n, i] as const));
   const indeg = new Map<string, number>(names.map((n) => [n, 0]));
   const adj = new Map<string, Set<string>>(names.map((n) => [n, new Set()]));
+
+  const schemaRank = new Map<string, number>();
+  for (const n of names) {
+    const s = schemaOf(n);
+    if (!schemaRank.has(s)) schemaRank.set(s, schemaRank.size);
+  }
+
+  const cmp = (a: string, b: string) => {
+    const sa = schemaRank.get(schemaOf(a)) ?? 1e9;
+    const sb = schemaRank.get(schemaOf(b)) ?? 1e9;
+    if (sa !== sb) return sa - sb;
+
+    // within schema, keep it deterministic
+    const na = localNameOf(a);
+    const nb = localNameOf(b);
+    if (na !== nb) return na.localeCompare(nb);
+
+    // final fallback: original order
+    return pos.get(a)! - pos.get(b)!;
+  };
 
   for (const t of names) {
     const create = createByName.get(t)!;
@@ -196,7 +220,7 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
   const outNames: string[] = [];
   const seen = new Set<string>();
 
-  queue.sort((a, b) => pos.get(a)! - pos.get(b)!);
+  queue.sort(cmp);
 
   while (queue.length) {
     const n = queue.shift()!;
@@ -209,7 +233,7 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
       indeg.set(m, k);
       if (k === 0) {
         queue.push(m);
-        queue.sort((a, b) => pos.get(a)! - pos.get(b)!);
+        queue.sort(cmp);
       }
     }
   }
@@ -223,7 +247,6 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
   // Build: type name -> RawStmt (and stable order + short-name resolution)
   const typeByFull = new Map<string, RawStmt>();
   const shortToFull = new Map<string, string | null>(); // null = ambiguous
-  const typePos = new Map<string, number>();
   const unkeyedTypes: RawStmt[] = [];
 
   const fullTypeNameOf = (raw: RawStmt): string | undefined => {
@@ -246,7 +269,6 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
       continue;
     }
     typeByFull.set(full, raw);
-    typePos.set(full, typePos.size);
 
     const short = full.split('.').at(-1)!;
     const prev = shortToFull.get(short);
@@ -310,8 +332,7 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
         if (k) used.add(k);
       }
     }
-    // stable order (as in dump)
-    return [...used].sort((a, b) => typePos.get(a)! - typePos.get(b)!);
+    return [...used].sort(cmp);
   };
 
   const emitted = new Set<string>();
@@ -341,9 +362,7 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
   }
 
   // Unused types (and any unkeyed ones) at the end
-  const allTypes = [...typeByFull.keys()].sort(
-    (a, b) => typePos.get(a)! - typePos.get(b)!,
-  );
+  const allTypes = [...typeByFull.keys()].sort(cmp);
   for (const t of allTypes) emitType(t);
   outStmts.push(...unkeyedTypes);
 

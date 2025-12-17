@@ -61,6 +61,26 @@ CREATE TABLE public.couple (
   active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
 );
 
+CREATE TABLE public.pghero_query_stats (
+  id bigint NOT NULL PRIMARY KEY,
+  database text,
+  "user" text,
+  query text,
+  query_hash bigint,
+  total_time double precision,
+  calls bigint,
+  captured_at timestamp
+);
+
+CREATE TABLE public.pghero_space_stats (
+  id bigint NOT NULL PRIMARY KEY,
+  database text,
+  schema text,
+  relation text,
+  size bigint,
+  captured_at timestamp
+);
+
 CREATE TABLE public.response_cache (
   id bigint NOT NULL PRIMARY KEY,
   url text NOT NULL UNIQUE,
@@ -79,6 +99,476 @@ CREATE TABLE public.tenant (
   address public.address_domain,
   description text DEFAULT ''::text NOT NULL,
   bank_account text DEFAULT ''::text NOT NULL
+);
+
+CREATE TABLE public.account (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  person_id bigint REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  opening_balance numeric(19, 4) DEFAULT 0.0 NOT NULL,
+  currency public.citext DEFAULT CAST('CZK' AS public.citext) NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  UNIQUE NULLS NOT DISTINCT (tenant_id, person_id, currency)
+);
+
+CREATE TABLE public.accounting_period (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  name text DEFAULT ''::text NOT NULL,
+  since timestamp with time zone NOT NULL,
+  until timestamp with time zone NOT NULL,
+  range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE public.cohort_group (
+  id bigint NOT NULL PRIMARY KEY,
+  name text NOT NULL,
+  description text DEFAULT ''::text NOT NULL,
+  ordering int DEFAULT 1 NOT NULL,
+  is_public boolean DEFAULT true NOT NULL,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE public.cohort (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  cohort_group_id bigint REFERENCES public.cohort_group (id)
+    ON DELETE SET NULL,
+  name text NOT NULL,
+  description text DEFAULT ''::text NOT NULL,
+  color_rgb text NOT NULL,
+  location text DEFAULT ''::text NOT NULL,
+  is_visible boolean DEFAULT true NOT NULL,
+  ordering int DEFAULT 1 NOT NULL,
+  external_ids text[]
+);
+
+CREATE TABLE public.cohort_membership (
+  cohort_id bigint NOT NULL REFERENCES public.cohort (id),
+  person_id bigint NOT NULL REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  since timestamp with time zone DEFAULT now() NOT NULL,
+  until timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+);
+
+CREATE TYPE public.price_type AS (amount numeric(19, 4), currency text);
+
+CREATE DOMAIN public.price AS public.price_type CONSTRAINT price_check
+  CHECK (
+  value IS NULL
+    OR ((value).currency IS NOT NULL
+    AND (value).amount IS NOT NULL
+    AND length((value).currency) = 3
+    AND (value).currency = upper((value).currency))
+);
+
+CREATE TABLE public.cohort_subscription (
+  id bigint NOT NULL PRIMARY KEY,
+  cohort_id bigint NOT NULL REFERENCES public.cohort (id),
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  account_id bigint NOT NULL REFERENCES public.account (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  price public.price NOT NULL,
+  active boolean DEFAULT true NOT NULL,
+  renews_on timestamp with time zone,
+  interval interval DEFAULT '1 mon'::interval NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE public.form_responses (
+  id bigint NOT NULL PRIMARY KEY,
+  type text NOT NULL,
+  data jsonb NOT NULL,
+  url text NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE public.person_invitation (
+  id bigint NOT NULL PRIMARY KEY,
+  access_token uuid DEFAULT gen_random_uuid() NOT NULL UNIQUE,
+  person_id bigint REFERENCES public.person (id)
+    ON DELETE CASCADE,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  used_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  email public.citext NOT NULL
+);
+
+CREATE TABLE public.scoreboard_manual_adjustment (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id),
+  person_id bigint NOT NULL REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  cohort_id bigint REFERENCES public.cohort (id),
+  points int NOT NULL,
+  reason text,
+  awarded_at date DEFAULT CURRENT_DATE NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE public.tenant_administrator (
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  person_id bigint NOT NULL REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  since timestamp with time zone DEFAULT now() NOT NULL,
+  until timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  id bigint NOT NULL PRIMARY KEY,
+  is_visible boolean DEFAULT true NOT NULL,
+  description text DEFAULT ''::text NOT NULL,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+);
+
+CREATE TABLE public.tenant_location (
+  id bigint NOT NULL PRIMARY KEY,
+  name text NOT NULL,
+  description text DEFAULT ''::text NOT NULL,
+  address public.address_domain,
+  is_public boolean DEFAULT true,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id),
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TYPE public.event_payment_type AS ENUM ('upfront', 'after_instance', 'none');
+
+CREATE TYPE public.event_type AS ENUM ('camp', 'lesson', 'reservation', 'holiday', 'group');
+
+CREATE TABLE public.event (
+  id bigint NOT NULL PRIMARY KEY,
+  name text NOT NULL,
+  location_text text NOT NULL,
+  description text NOT NULL,
+  since date,
+  until date,
+  capacity int DEFAULT CAST('0' AS bigint) NOT NULL,
+  files_legacy text DEFAULT ''::text NOT NULL,
+  updated_at timestamp with time zone,
+  is_locked boolean DEFAULT false NOT NULL,
+  is_visible boolean DEFAULT false NOT NULL,
+  summary text DEFAULT ''::text NOT NULL,
+  is_public boolean DEFAULT false NOT NULL,
+  enable_notes boolean DEFAULT false NOT NULL,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  description_member text DEFAULT ''::text NOT NULL,
+  title_image_legacy text,
+  type public.event_type DEFAULT CAST('camp' AS public.event_type) NOT NULL,
+  location_id bigint REFERENCES public.tenant_location (id),
+  payment_type public.event_payment_type DEFAULT CAST('none' AS public.event_payment_type) NOT NULL,
+  is_paid_by_tenant boolean DEFAULT true NOT NULL,
+  member_price public.price DEFAULT CAST(NULL AS public.price_type),
+  guest_price public.price DEFAULT CAST(NULL AS public.price_type),
+  payment_recipient_id bigint REFERENCES public.account (id),
+  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE public.event_instance (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  event_id bigint NOT NULL REFERENCES public.event (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  since timestamp with time zone NOT NULL,
+  until timestamp with time zone NOT NULL,
+  location_id bigint REFERENCES public.tenant_location (id),
+  is_cancelled boolean DEFAULT false,
+  range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL
+);
+
+CREATE TABLE public.event_instance_trainer (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  instance_id bigint NOT NULL REFERENCES public.event_instance (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  person_id bigint NOT NULL REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  lesson_price public.price DEFAULT CAST(NULL AS public.price_type),
+  UNIQUE (instance_id, person_id)
+);
+
+CREATE TABLE public.event_target_cohort (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  event_id bigint NOT NULL REFERENCES public.event (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  cohort_id bigint NOT NULL REFERENCES public.cohort (id),
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  UNIQUE (event_id, cohort_id)
+);
+
+CREATE TABLE public.event_registration (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  event_id bigint NOT NULL REFERENCES public.event (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  target_cohort_id bigint REFERENCES public.event_target_cohort (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  couple_id bigint REFERENCES public.couple (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  person_id bigint REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  note text,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  CHECK (
+    (couple_id IS NOT NULL
+      AND person_id IS NULL)
+      OR (couple_id IS NULL
+      AND person_id IS NOT NULL)
+  ),
+  UNIQUE NULLS NOT DISTINCT (event_id, person_id, couple_id)
+);
+
+CREATE TYPE public.attendance_type AS ENUM ('unknown', 'attended', 'not-excused', 'cancelled');
+
+CREATE TABLE public.event_attendance (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  instance_id bigint NOT NULL REFERENCES public.event_instance (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  person_id bigint NOT NULL REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  status public.attendance_type DEFAULT CAST('unknown' AS public.attendance_type) NOT NULL,
+  note text,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  registration_id bigint NOT NULL REFERENCES public.event_registration (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  UNIQUE (registration_id, instance_id, person_id)
+);
+
+CREATE TABLE public.event_trainer (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  event_id bigint NOT NULL REFERENCES public.event (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  person_id bigint NOT NULL REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  lessons_offered int DEFAULT 0 NOT NULL,
+  lesson_price public.price DEFAULT CAST(NULL AS public.price_type),
+  UNIQUE (event_id, person_id)
+);
+
+CREATE TABLE public.event_lesson_demand (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  trainer_id bigint NOT NULL REFERENCES public.event_trainer (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  registration_id bigint NOT NULL REFERENCES public.event_registration (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  lesson_count int NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  CHECK (lesson_count > 0),
+  UNIQUE (registration_id, trainer_id)
+);
+
+CREATE TYPE public.payment_status AS ENUM ('tentative', 'unpaid', 'paid');
+
+CREATE TABLE public.payment (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  accounting_period_id bigint NOT NULL REFERENCES public.accounting_period (id),
+  cohort_subscription_id bigint REFERENCES public.cohort_subscription (id)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL,
+  event_registration_id bigint REFERENCES public.event_registration (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  event_instance_id bigint REFERENCES public.event_instance (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  status public.payment_status NOT NULL,
+  variable_symbol text,
+  specific_symbol text,
+  is_auto_credit_allowed boolean DEFAULT true NOT NULL,
+  tags text[] DEFAULT CAST(ARRAY[] AS text[]) NOT NULL,
+  due_at timestamp with time zone,
+  paid_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE public.payment_debtor (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  payment_id bigint NOT NULL REFERENCES public.payment (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  person_id bigint NOT NULL REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+);
+
+CREATE TABLE public.payment_recipient (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  payment_id bigint NOT NULL REFERENCES public.payment (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  account_id bigint NOT NULL REFERENCES public.account (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  amount numeric(19, 4) NOT NULL
+);
+
+CREATE TABLE public.tenant_membership (
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  person_id bigint NOT NULL REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  since timestamp with time zone DEFAULT now() NOT NULL,
+  until timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  id bigint NOT NULL PRIMARY KEY,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+);
+
+CREATE TABLE public.tenant_settings (
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL PRIMARY KEY REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  settings jsonb NOT NULL
+);
+
+CREATE TABLE public.tenant_trainer (
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  person_id bigint NOT NULL REFERENCES public.person (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  since timestamp with time zone DEFAULT now() NOT NULL,
+  until timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  id bigint NOT NULL PRIMARY KEY,
+  is_visible boolean DEFAULT true,
+  description text DEFAULT ''::text NOT NULL,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  member_price_45min public.price DEFAULT CAST(NULL AS public.price_type),
+  member_payout_45min public.price DEFAULT CAST(NULL AS public.price_type),
+  guest_price_45min public.price DEFAULT CAST(NULL AS public.price_type),
+  guest_payout_45min public.price DEFAULT CAST(NULL AS public.price_type),
+  create_payout_payments boolean DEFAULT true NOT NULL,
+  status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+);
+
+CREATE TYPE public.transaction_source AS ENUM ('auto-bank', 'auto-credit', 'manual-bank', 'manual-credit', 'manual-cash');
+
+CREATE TABLE public.transaction (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  accounting_period_id bigint NOT NULL REFERENCES public.accounting_period (id),
+  payment_id bigint REFERENCES public.payment (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  source public.transaction_source NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  description text,
+  effective_date timestamp with time zone NOT NULL
+);
+
+CREATE TABLE public.posting (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  transaction_id bigint NOT NULL REFERENCES public.transaction (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  account_id bigint NOT NULL REFERENCES public.account (id),
+  original_account_id bigint REFERENCES public.account (id),
+  amount numeric(19, 4),
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 CREATE TABLE public.users (
@@ -100,21 +590,6 @@ CREATE TABLE public.users (
   last_version text
 );
 
-CREATE TABLE public.account (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  person_id bigint REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  opening_balance numeric(19, 4) DEFAULT 0.0 NOT NULL,
-  currency public.citext DEFAULT CAST('CZK' AS public.citext) NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  UNIQUE NULLS NOT DISTINCT (tenant_id, person_id, currency)
-);
-
 CREATE TABLE public.announcement (
   id bigint NOT NULL PRIMARY KEY,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
@@ -133,6 +608,20 @@ CREATE TABLE public.announcement (
   scheduled_until timestamp with time zone
 );
 
+CREATE TYPE public.announcement_audience_role AS ENUM ('member', 'trainer', 'administrator');
+
+CREATE TABLE public.announcement_audience (
+  id bigint NOT NULL PRIMARY KEY,
+  announcement_id bigint NOT NULL REFERENCES public.announcement (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  cohort_id bigint REFERENCES public.cohort (id),
+  audience_role public.announcement_audience_role,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  CHECK ((cohort_id IS NULL) <> (audience_role IS NULL))
+);
+
 CREATE TABLE public.attachment (
   object_name text NOT NULL PRIMARY KEY,
   preview_object_name text,
@@ -142,6 +631,45 @@ CREATE TABLE public.attachment (
   thumbhash text,
   width int,
   height int
+);
+
+CREATE TABLE public.dokumenty (
+  id bigint NOT NULL PRIMARY KEY,
+  d_path text NOT NULL,
+  d_name text NOT NULL,
+  d_filename text NOT NULL,
+  d_kategorie smallint NOT NULL,
+  d_kdo bigint NOT NULL REFERENCES public.users (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+  d_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
+);
+
+CREATE TABLE public.event_external_registration (
+  id bigint NOT NULL PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  event_id bigint NOT NULL REFERENCES public.event (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  first_name text NOT NULL,
+  last_name text NOT NULL,
+  prefix_title text DEFAULT ''::text NOT NULL,
+  suffix_title text DEFAULT ''::text NOT NULL,
+  nationality text NOT NULL,
+  birth_date date,
+  tax_identification_number text,
+  email public.citext NOT NULL,
+  phone text NOT NULL,
+  note text,
+  created_by bigint DEFAULT public.current_user_id() REFERENCES public.users (id),
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 CREATE TYPE public.application_form_status AS ENUM ('new', 'sent', 'approved', 'rejected');
@@ -175,27 +703,34 @@ CREATE TABLE public.membership_application (
   updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-CREATE TABLE public.tenant_membership (
+CREATE TABLE public.otp_token (
+  id bigint NOT NULL PRIMARY KEY,
+  access_token uuid DEFAULT gen_random_uuid() NOT NULL UNIQUE,
+  user_id bigint REFERENCES public.users (id)
+    ON DELETE CASCADE,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  expires_at timestamp with time zone DEFAULT now() + '24:00:00'::interval NOT NULL,
+  used_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE public.user_proxy (
+  user_id bigint NOT NULL REFERENCES public.users (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   person_id bigint NOT NULL REFERENCES public.person (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
+  since timestamp with time zone,
+  until timestamp with time zone,
   active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
   active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
-);
-
-CREATE TABLE public.tenant_settings (
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL PRIMARY KEY REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  settings jsonb NOT NULL
 );
 
 CREATE TABLE app_private.galerie_dir (
@@ -207,6 +742,42 @@ CREATE TABLE app_private.galerie_dir (
   gd_hidden boolean DEFAULT true NOT NULL,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
     ON DELETE CASCADE
+);
+
+CREATE TABLE public.galerie_foto (
+  id bigint NOT NULL PRIMARY KEY,
+  gf_id_rodic bigint NOT NULL REFERENCES app_private.galerie_dir (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  gf_name text NOT NULL,
+  gf_path text NOT NULL,
+  gf_kdo bigint NOT NULL REFERENCES public.users (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  updated_at timestamp with time zone,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE public.aktuality (
+  id bigint NOT NULL PRIMARY KEY,
+  at_kdo bigint REFERENCES public.users (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  at_kat text DEFAULT '1'::text NOT NULL,
+  at_jmeno text NOT NULL,
+  at_text text NOT NULL,
+  at_preview text NOT NULL,
+  at_foto bigint,
+  at_foto_main bigint REFERENCES public.galerie_foto (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  updated_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  title_photo_url text
 );
 
 CREATE TABLE app_private.platby_category (
@@ -237,6 +808,30 @@ CREATE TABLE app_private.platby_group (
     ON DELETE CASCADE
 );
 
+CREATE TABLE public.platby_category_group (
+  pcg_id bigint NOT NULL PRIMARY KEY,
+  pcg_id_group bigint NOT NULL REFERENCES app_private.platby_group (pg_id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  pcg_id_category bigint NOT NULL REFERENCES app_private.platby_category (pc_id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  id bigint GENERATED ALWAYS AS (pcg_id) STORED NOT NULL UNIQUE,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE public.platby_group_skupina (
+  pgs_id bigint NOT NULL PRIMARY KEY,
+  pgs_id_skupina bigint NOT NULL REFERENCES public.cohort (id),
+  pgs_id_group bigint NOT NULL REFERENCES app_private.platby_group (pg_id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  id bigint GENERATED ALWAYS AS (pgs_id) STORED NOT NULL UNIQUE,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
 CREATE TABLE app_private.platby_raw (
   pr_id bigint NOT NULL PRIMARY KEY,
   pr_raw bytea NOT NULL,
@@ -247,8 +842,6 @@ CREATE TABLE app_private.platby_raw (
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
     ON DELETE CASCADE
 );
-
-CREATE TYPE public.payment_status AS ENUM ('tentative', 'unpaid', 'paid');
 
 CREATE TABLE app_private.platby_item (
   pi_id bigint NOT NULL PRIMARY KEY,
@@ -730,601 +1323,6 @@ CREATE TABLE federated.round_judge (
   PRIMARY KEY (round_id, judge_id)
 );
 
-CREATE TABLE public.accounting_period (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  name text DEFAULT ''::text NOT NULL,
-  since timestamp with time zone NOT NULL,
-  until timestamp with time zone NOT NULL,
-  range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE public.tenant_administrator (
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  id bigint NOT NULL PRIMARY KEY,
-  is_visible boolean DEFAULT true NOT NULL,
-  description text DEFAULT ''::text NOT NULL,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-  status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
-);
-
-CREATE TYPE public.price_type AS (amount numeric(19, 4), currency text);
-
-CREATE DOMAIN public.price AS public.price_type CONSTRAINT price_check
-  CHECK (
-  value IS NULL
-    OR ((value).currency IS NOT NULL
-    AND (value).amount IS NOT NULL
-    AND length((value).currency) = 3
-    AND (value).currency = upper((value).currency))
-);
-
-CREATE TABLE public.tenant_trainer (
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  id bigint NOT NULL PRIMARY KEY,
-  is_visible boolean DEFAULT true,
-  description text DEFAULT ''::text NOT NULL,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-  member_price_45min public.price DEFAULT CAST(NULL AS public.price_type),
-  member_payout_45min public.price DEFAULT CAST(NULL AS public.price_type),
-  guest_price_45min public.price DEFAULT CAST(NULL AS public.price_type),
-  guest_payout_45min public.price DEFAULT CAST(NULL AS public.price_type),
-  create_payout_payments boolean DEFAULT true NOT NULL,
-  status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
-);
-
-CREATE TABLE public.cohort_group (
-  id bigint NOT NULL PRIMARY KEY,
-  name text NOT NULL,
-  description text DEFAULT ''::text NOT NULL,
-  ordering int DEFAULT 1 NOT NULL,
-  is_public boolean DEFAULT true NOT NULL,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE public.cohort (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  cohort_group_id bigint REFERENCES public.cohort_group (id)
-    ON DELETE SET NULL,
-  name text NOT NULL,
-  description text DEFAULT ''::text NOT NULL,
-  color_rgb text NOT NULL,
-  location text DEFAULT ''::text NOT NULL,
-  is_visible boolean DEFAULT true NOT NULL,
-  ordering int DEFAULT 1 NOT NULL,
-  external_ids text[]
-);
-
-CREATE TABLE public.cohort_membership (
-  cohort_id bigint NOT NULL REFERENCES public.cohort (id),
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-  status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
-);
-
-CREATE TABLE public.cohort_subscription (
-  id bigint NOT NULL PRIMARY KEY,
-  cohort_id bigint NOT NULL REFERENCES public.cohort (id),
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  account_id bigint NOT NULL REFERENCES public.account (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  price public.price NOT NULL,
-  active boolean DEFAULT true NOT NULL,
-  renews_on timestamp with time zone,
-  interval interval DEFAULT '1 mon'::interval NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TYPE public.announcement_audience_role AS ENUM ('member', 'trainer', 'administrator');
-
-CREATE TABLE public.announcement_audience (
-  id bigint NOT NULL PRIMARY KEY,
-  announcement_id bigint NOT NULL REFERENCES public.announcement (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  cohort_id bigint REFERENCES public.cohort (id),
-  audience_role public.announcement_audience_role,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  CHECK ((cohort_id IS NULL) <> (audience_role IS NULL))
-);
-
-CREATE TABLE public.dokumenty (
-  id bigint NOT NULL PRIMARY KEY,
-  d_path text NOT NULL,
-  d_name text NOT NULL,
-  d_filename text NOT NULL,
-  d_kategorie smallint NOT NULL,
-  d_kdo bigint NOT NULL REFERENCES public.users (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-  d_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
-);
-
-CREATE TABLE public.form_responses (
-  id bigint NOT NULL PRIMARY KEY,
-  type text NOT NULL,
-  data jsonb NOT NULL,
-  url text NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE public.galerie_foto (
-  id bigint NOT NULL PRIMARY KEY,
-  gf_id_rodic bigint NOT NULL REFERENCES app_private.galerie_dir (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  gf_name text NOT NULL,
-  gf_path text NOT NULL,
-  gf_kdo bigint NOT NULL REFERENCES public.users (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  updated_at timestamp with time zone,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE public.aktuality (
-  id bigint NOT NULL PRIMARY KEY,
-  at_kdo bigint REFERENCES public.users (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  at_kat text DEFAULT '1'::text NOT NULL,
-  at_jmeno text NOT NULL,
-  at_text text NOT NULL,
-  at_preview text NOT NULL,
-  at_foto bigint,
-  at_foto_main bigint REFERENCES public.galerie_foto (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  updated_at timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now(),
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  title_photo_url text
-);
-
-CREATE TABLE public.otp_token (
-  id bigint NOT NULL PRIMARY KEY,
-  access_token uuid DEFAULT gen_random_uuid() NOT NULL UNIQUE,
-  user_id bigint REFERENCES public.users (id)
-    ON DELETE CASCADE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  expires_at timestamp with time zone DEFAULT now() + '24:00:00'::interval NOT NULL,
-  used_at timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE public.person_invitation (
-  id bigint NOT NULL PRIMARY KEY,
-  access_token uuid DEFAULT gen_random_uuid() NOT NULL UNIQUE,
-  person_id bigint REFERENCES public.person (id)
-    ON DELETE CASCADE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  used_at timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  email public.citext NOT NULL
-);
-
-CREATE TABLE public.pghero_query_stats (
-  id bigint NOT NULL PRIMARY KEY,
-  database text,
-  "user" text,
-  query text,
-  query_hash bigint,
-  total_time double precision,
-  calls bigint,
-  captured_at timestamp
-);
-
-CREATE TABLE public.pghero_space_stats (
-  id bigint NOT NULL PRIMARY KEY,
-  database text,
-  schema text,
-  relation text,
-  size bigint,
-  captured_at timestamp
-);
-
-CREATE TABLE public.platby_category_group (
-  pcg_id bigint NOT NULL PRIMARY KEY,
-  pcg_id_group bigint NOT NULL REFERENCES app_private.platby_group (pg_id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  pcg_id_category bigint NOT NULL REFERENCES app_private.platby_category (pc_id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  id bigint GENERATED ALWAYS AS (pcg_id) STORED NOT NULL UNIQUE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE public.platby_group_skupina (
-  pgs_id bigint NOT NULL PRIMARY KEY,
-  pgs_id_skupina bigint NOT NULL REFERENCES public.cohort (id),
-  pgs_id_group bigint NOT NULL REFERENCES app_private.platby_group (pg_id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  id bigint GENERATED ALWAYS AS (pgs_id) STORED NOT NULL UNIQUE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE public.scoreboard_manual_adjustment (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id),
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  cohort_id bigint REFERENCES public.cohort (id),
-  points int NOT NULL,
-  reason text,
-  awarded_at date DEFAULT CURRENT_DATE NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE public.tenant_location (
-  id bigint NOT NULL PRIMARY KEY,
-  name text NOT NULL,
-  description text DEFAULT ''::text NOT NULL,
-  address public.address_domain,
-  is_public boolean DEFAULT true,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id),
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TYPE public.event_payment_type AS ENUM ('upfront', 'after_instance', 'none');
-
-CREATE TYPE public.event_type AS ENUM ('camp', 'lesson', 'reservation', 'holiday', 'group');
-
-CREATE TABLE public.event (
-  id bigint NOT NULL PRIMARY KEY,
-  name text NOT NULL,
-  location_text text NOT NULL,
-  description text NOT NULL,
-  since date,
-  until date,
-  capacity int DEFAULT CAST('0' AS bigint) NOT NULL,
-  files_legacy text DEFAULT ''::text NOT NULL,
-  updated_at timestamp with time zone,
-  is_locked boolean DEFAULT false NOT NULL,
-  is_visible boolean DEFAULT false NOT NULL,
-  summary text DEFAULT ''::text NOT NULL,
-  is_public boolean DEFAULT false NOT NULL,
-  enable_notes boolean DEFAULT false NOT NULL,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  description_member text DEFAULT ''::text NOT NULL,
-  title_image_legacy text,
-  type public.event_type DEFAULT CAST('camp' AS public.event_type) NOT NULL,
-  location_id bigint REFERENCES public.tenant_location (id),
-  payment_type public.event_payment_type DEFAULT CAST('none' AS public.event_payment_type) NOT NULL,
-  is_paid_by_tenant boolean DEFAULT true NOT NULL,
-  member_price public.price DEFAULT CAST(NULL AS public.price_type),
-  guest_price public.price DEFAULT CAST(NULL AS public.price_type),
-  payment_recipient_id bigint REFERENCES public.account (id),
-  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE public.event_instance (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  event_id bigint NOT NULL REFERENCES public.event (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  since timestamp with time zone NOT NULL,
-  until timestamp with time zone NOT NULL,
-  location_id bigint REFERENCES public.tenant_location (id),
-  is_cancelled boolean DEFAULT false,
-  range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL
-);
-
-CREATE TABLE public.event_target_cohort (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  event_id bigint NOT NULL REFERENCES public.event (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  cohort_id bigint NOT NULL REFERENCES public.cohort (id),
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  UNIQUE (event_id, cohort_id)
-);
-
-CREATE TABLE public.event_registration (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  event_id bigint NOT NULL REFERENCES public.event (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  target_cohort_id bigint REFERENCES public.event_target_cohort (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  couple_id bigint REFERENCES public.couple (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  person_id bigint REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  note text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  CHECK (
-    (couple_id IS NOT NULL
-      AND person_id IS NULL)
-      OR (couple_id IS NULL
-      AND person_id IS NOT NULL)
-  ),
-  UNIQUE NULLS NOT DISTINCT (event_id, person_id, couple_id)
-);
-
-CREATE TABLE public.payment (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  accounting_period_id bigint NOT NULL REFERENCES public.accounting_period (id),
-  cohort_subscription_id bigint REFERENCES public.cohort_subscription (id)
-    ON UPDATE CASCADE
-    ON DELETE SET NULL,
-  event_registration_id bigint REFERENCES public.event_registration (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  event_instance_id bigint REFERENCES public.event_instance (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  status public.payment_status NOT NULL,
-  variable_symbol text,
-  specific_symbol text,
-  is_auto_credit_allowed boolean DEFAULT true NOT NULL,
-  tags text[] DEFAULT CAST(ARRAY[] AS text[]) NOT NULL,
-  due_at timestamp with time zone,
-  paid_at timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TYPE public.transaction_source AS ENUM ('auto-bank', 'auto-credit', 'manual-bank', 'manual-credit', 'manual-cash');
-
-CREATE TABLE public.transaction (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  accounting_period_id bigint NOT NULL REFERENCES public.accounting_period (id),
-  payment_id bigint REFERENCES public.payment (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  source public.transaction_source NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  description text,
-  effective_date timestamp with time zone NOT NULL
-);
-
-CREATE TABLE public.posting (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  transaction_id bigint NOT NULL REFERENCES public.transaction (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  account_id bigint NOT NULL REFERENCES public.account (id),
-  original_account_id bigint REFERENCES public.account (id),
-  amount numeric(19, 4),
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE public.event_trainer (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  event_id bigint NOT NULL REFERENCES public.event (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  lessons_offered int DEFAULT 0 NOT NULL,
-  lesson_price public.price DEFAULT CAST(NULL AS public.price_type),
-  UNIQUE (event_id, person_id)
-);
-
-CREATE TABLE public.event_lesson_demand (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  trainer_id bigint NOT NULL REFERENCES public.event_trainer (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  registration_id bigint NOT NULL REFERENCES public.event_registration (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  lesson_count int NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  CHECK (lesson_count > 0),
-  UNIQUE (registration_id, trainer_id)
-);
-
-CREATE TABLE public.event_instance_trainer (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  instance_id bigint NOT NULL REFERENCES public.event_instance (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  lesson_price public.price DEFAULT CAST(NULL AS public.price_type),
-  UNIQUE (instance_id, person_id)
-);
-
-CREATE TABLE public.payment_debtor (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  payment_id bigint NOT NULL REFERENCES public.payment (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-);
-
-CREATE TYPE public.attendance_type AS ENUM ('unknown', 'attended', 'not-excused', 'cancelled');
-
-CREATE TABLE public.event_attendance (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  instance_id bigint NOT NULL REFERENCES public.event_instance (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  status public.attendance_type DEFAULT CAST('unknown' AS public.attendance_type) NOT NULL,
-  note text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  registration_id bigint NOT NULL REFERENCES public.event_registration (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  UNIQUE (registration_id, instance_id, person_id)
-);
-
-CREATE TABLE public.event_external_registration (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  event_id bigint NOT NULL REFERENCES public.event (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  first_name text NOT NULL,
-  last_name text NOT NULL,
-  prefix_title text DEFAULT ''::text NOT NULL,
-  suffix_title text DEFAULT ''::text NOT NULL,
-  nationality text NOT NULL,
-  birth_date date,
-  tax_identification_number text,
-  email public.citext NOT NULL,
-  phone text NOT NULL,
-  note text,
-  created_by bigint DEFAULT public.current_user_id() REFERENCES public.users (id),
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE public.payment_recipient (
-  id bigint NOT NULL PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  payment_id bigint NOT NULL REFERENCES public.payment (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  account_id bigint NOT NULL REFERENCES public.account (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  amount numeric(19, 4) NOT NULL
-);
-
-CREATE TABLE public.user_proxy (
-  user_id bigint NOT NULL REFERENCES public.users (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  id bigint NOT NULL PRIMARY KEY,
-  since timestamp with time zone,
-  until timestamp with time zone,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-  status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
-);
-
-CREATE TYPE federated.competitor_component_input AS (athlete_id bigint, role federated.competitor_role);
-
 CREATE TYPE public.announcement_audience_type_input AS (id bigint, cohort_id bigint, audience_role public.announcement_audience_role);
 
 CREATE TYPE public.announcement_type_input AS (id bigint, title text, body text, is_locked boolean, is_visible boolean, is_sticky boolean, scheduled_since timestamp with time zone, scheduled_until timestamp with time zone);
@@ -1352,3 +1350,5 @@ CREATE TYPE public.register_to_event_type AS (event_id bigint, person_id bigint,
 CREATE TYPE public.scoreboard_record AS (person_id bigint, cohort_id bigint, lesson_total_score bigint, group_total_score bigint, event_total_score bigint, manual_total_score bigint, total_score bigint, ranking bigint);
 
 CREATE TYPE public.trainer_group_attendance_completion AS (person_id int, total_instances int, filled_instances int, partially_filled_instances int, unfilled_instances int, filled_ratio double precision, total_attendances int, pending_attendances int);
+
+CREATE TYPE federated.competitor_component_input AS (athlete_id bigint, role federated.competitor_role);
