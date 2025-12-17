@@ -1,7 +1,7 @@
-*/2 * * * * refresh_auth_details
+*/2 * * * * refresh_auth_details ?jobKey=refresh_auth_details
 
-29 21 * * * create_lesson_payments
+29 21 * * * create_lesson_payments ?jobKey=create_lesson_payments
+08 21 * * * discover_csts_athletes ?jobKey=discover_csts_athletes
 
-12 * * * * frontier_seed
-* * * * * frontier_schedule
-8 * * * * discover_csts_athletes
+12 * * * * frontier_seed ?jobKey=frontier_seed
+* * * * * frontier_schedule ?jobKey=frontier_schedule
