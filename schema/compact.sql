@@ -1,3 +1,5 @@
+CREATE TYPE public.gender_type AS ENUM ('man', 'woman', 'unspecified');
+
 CREATE TYPE public.address_type AS (street text, conscription_number text, orientation_number text, district text, city text, region text, postal_code text);
 
 CREATE DOMAIN public.address_domain AS public.address_type CONSTRAINT address_domain_check
@@ -10,8 +12,6 @@ CREATE DOMAIN public.address_domain AS public.address_type CONSTRAINT address_do
     AND (value).region IS NOT NULL
     AND (value).postal_code IS NOT NULL)
 );
-
-CREATE TYPE public.gender_type AS ENUM ('man', 'woman', 'unspecified');
 
 CREATE TABLE public.person (
   id bigint NOT NULL PRIMARY KEY,
@@ -267,9 +267,9 @@ CREATE TABLE public.tenant_location (
   updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-CREATE TYPE public.event_payment_type AS ENUM ('upfront', 'after_instance', 'none');
-
 CREATE TYPE public.event_type AS ENUM ('camp', 'lesson', 'reservation', 'holiday', 'group');
+
+CREATE TYPE public.event_payment_type AS ENUM ('upfront', 'after_instance', 'none');
 
 CREATE TABLE public.event (
   id bigint NOT NULL PRIMARY KEY,
@@ -1252,6 +1252,8 @@ CREATE TABLE federated.round_judge (
   PRIMARY KEY (round_id, judge_id)
 );
 
+CREATE TYPE federated.competitor_component_input AS (athlete_id bigint, role federated.competitor_role);
+
 CREATE TYPE public.announcement_audience_type_input AS (id bigint, cohort_id bigint, audience_role public.announcement_audience_role);
 
 CREATE TYPE public.announcement_type_input AS (id bigint, title text, body text, is_locked boolean, is_visible boolean, is_sticky boolean, scheduled_since timestamp with time zone, scheduled_until timestamp with time zone);
@@ -1279,5 +1281,3 @@ CREATE TYPE public.register_to_event_type AS (event_id bigint, person_id bigint,
 CREATE TYPE public.scoreboard_record AS (person_id bigint, cohort_id bigint, lesson_total_score bigint, group_total_score bigint, event_total_score bigint, manual_total_score bigint, total_score bigint, ranking bigint);
 
 CREATE TYPE public.trainer_group_attendance_completion AS (person_id int, total_instances int, filled_instances int, partially_filled_instances int, unfilled_instances int, filled_ratio double precision, total_attendances int, pending_attendances int);
-
-CREATE TYPE federated.competitor_component_input AS (athlete_id bigint, role federated.competitor_role);

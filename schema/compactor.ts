@@ -1,4 +1,5 @@
 import process from 'node:process';
+import { parse } from '@pgsql/parser/v17';
 import { deparse } from 'pgsql-parser';
 import type {
   ColumnDef,
@@ -7,34 +8,42 @@ import type {
   Node,
   RangeVar,
   RawStmt,
+  TypeName,
 } from '@pgsql/types';
 
 const qname = (rangeVar: RangeVar): string =>
   (rangeVar?.schemaname ? `${rangeVar.schemaname}.` : '') + rangeVar.relname;
 
-const identList = (xs: unknown): string[] =>
-  Array.isArray(xs)
-    ? xs.map((n: any) => n?.String?.sval ?? n?.String?.str ?? n?.String?.val ?? String(n))
-    : [];
+const sval = (n: Node): string | undefined =>
+  'String' in n ? n.String?.sval : undefined;
 
-const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
+const identList = (xs: Node[]): string[] =>
+  Array.isArray(xs) ? (xs.map(sval).filter(Boolean) as string[]) : [];
+
+const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[]) => {
+  const r: any = { ...o };
+  for (const k of ks) delete r[k];
+  return r as Omit<T, K>;
+};
 
 (async () => {
   let input = '';
   for await (const chunk of process.stdin) input += chunk.toString();
+
+  // psql meta-commands pgsql parser won't accept
   input = input.replace(/\\(un)?restrict [a-zA-Z0-9]+/g, '');
 
-  const { parse } = await import('@pgsql/parser/v17');
   const ast = await parse(input);
   const stmts: RawStmt[] = ast.stmts ?? [];
 
-  const keep: RawStmt[] = [];
+  const typeNodes: Node[] = [];
   const creates: CreateStmt[] = [];
   const extraByTable = new Map<string, Constraint[]>();
 
-  // 1) collect type/domain + create table + ALTER ADD CONSTRAINT
+  // 1) collect: types/domains + CREATE TABLE + ALTER TABLE ADD CONSTRAINT
   for (const raw of stmts) {
-    const stmt = raw.stmt!;
+    const stmt = raw.stmt;
+    if (!stmt) continue;
 
     if (
       'CreateDomainStmt' in stmt ||
@@ -42,7 +51,7 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
       'CreateEnumStmt' in stmt ||
       'CreateRangeStmt' in stmt
     ) {
-      keep.push(raw);
+      typeNodes.push(stmt);
       continue;
     }
 
@@ -55,45 +64,42 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
       const alt = stmt.AlterTableStmt;
       const t = qname(alt.relation!);
 
-      for (const wrap of alt.cmds ?? []) {
-        if (!('AlterTableCmd' in wrap)) continue;
-        const cmd = wrap.AlterTableCmd;
-        const subtype = String(cmd.subtype ?? '');
+      for (const w of alt.cmds ?? []) {
+        if (!('AlterTableCmd' in w)) continue;
+        const cmd = w.AlterTableCmd;
 
+        const subtype = String(cmd.subtype ?? '');
         if (subtype.includes('UsingIndex')) continue;
         if (subtype !== 'AT_AddConstraint' && subtype !== 'AT_AddConstraintRecurse')
           continue;
 
-        if (cmd.def && 'Constraint' in cmd.def) {
-          const cons = cmd.def.Constraint;
-          const arr = extraByTable.get(t) ?? [];
-          arr.push(cons);
-          extraByTable.set(t, arr);
-        }
+        if (!('Constraint' in cmd.def)) continue;
+        const cons: Constraint = cmd.def.Constraint;
+
+        const arr = extraByTable.get(t);
+        if (arr) arr.push(cons);
+        else extraByTable.set(t, [cons]);
       }
     }
-
-    // ignore everything else (indexes, grants, comments, extensions, etc.)
   }
 
-  // 2) compact each CREATE TABLE by merging single-col PK/UNIQUE/FK into ColumnDef
+  // 2) compact: merge single-col PK/UNIQUE/FK into ColumnDef constraints
   for (const create of creates) {
     const t = qname(create.relation!);
 
     const cols: ColumnDef[] = [];
-    const other: Node[] = [];
+    const otherElts: Node[] = [];
     const tableCons: Constraint[] = [];
-
-    const colMap = new Map<string, ColumnDef>();
+    const colByName = new Map<string, ColumnDef>();
 
     for (const e of create.tableElts ?? []) {
       if ('ColumnDef' in e) {
         cols.push(e.ColumnDef);
-        colMap.set(String(e.ColumnDef.colname), e.ColumnDef);
+        colByName.set(String(e.ColumnDef.colname), e.ColumnDef);
       } else if ('Constraint' in e) {
         tableCons.push(e.Constraint);
       } else {
-        other.push(e);
+        otherElts.push(e);
       }
     }
 
@@ -101,65 +107,61 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
     const remaining: Constraint[] = [];
 
     for (const c0 of allCons) {
-      const c = clone(c0);
-      delete c.conname;
-
+      const c = strip(c0, 'conname');
       const contype = String(c.contype ?? '');
 
       if (contype === 'CONSTR_PRIMARY' || contype === 'CONSTR_UNIQUE') {
         const keys = identList(c.keys);
-        if (keys.length === 1 && colMap.has(keys[0])) {
-          const col = colMap.get(keys[0])!;
-          col.constraints ??= [];
-          const colC = clone(c);
-          delete colC.keys;
-          col.constraints.push({ Constraint: colC });
-        } else {
-          remaining.push(c);
+        if (keys.length === 1) {
+          const col = colByName.get(keys[0]);
+          if (col) {
+            col.constraints ??= [];
+            col.constraints.push({ Constraint: strip(c, 'keys') });
+            continue;
+          }
         }
+        remaining.push(c);
         continue;
       }
 
       if (contype === 'CONSTR_FOREIGN') {
         const fk = identList(c.fk_attrs);
-        if (fk.length === 1 && colMap.has(fk[0])) {
-          const col = colMap.get(fk[0])!;
-          col.constraints ??= [];
-          const colC = clone(c);
-          delete colC.fk_attrs;
-          col.constraints.push({ Constraint: colC });
-        } else {
-          remaining.push(c);
+        if (fk.length === 1) {
+          const col = colByName.get(fk[0]);
+          if (col) {
+            col.constraints ??= [];
+            col.constraints.push({ Constraint: strip(c, 'fk_attrs') });
+            continue;
+          }
         }
+        remaining.push(c);
         continue;
       }
 
-      remaining.push(c); // CHECK / others stay table-level
+      remaining.push(c);
     }
 
     create.tableElts = [
       ...cols.map((x) => ({ ColumnDef: x })),
-      ...other,
-      ...remaining.map((c) => ({ Constraint: c })),
+      ...otherElts,
+      ...remaining.map((x) => ({ Constraint: x })),
     ];
   }
-  // 3) topo-sort CREATE TABLEs by FK dependencies (referenced table first)
+
+  // 3) topo-sort tables by FK deps
   const createByName = new Map<string, CreateStmt>();
   const names: string[] = [];
-  for (const create of creates) {
-    const t = qname(create.relation!);
+  for (const c of creates) {
+    const t = qname(c.relation!);
     names.push(t);
-    createByName.set(t, create);
+    createByName.set(t, c);
   }
 
   const schemaOf = (qn: string) => (qn.includes('.') ? qn.split('.')[0] : '');
-  const localNameOf = (qn: string) =>
+  const localOf = (qn: string) =>
     qn.includes('.') ? qn.split('.').slice(1).join('.') : qn;
 
   const pos = new Map(names.map((n, i) => [n, i] as const));
-  const indeg = new Map<string, number>(names.map((n) => [n, 0]));
-  const adj = new Map<string, Set<string>>(names.map((n) => [n, new Set()]));
-
   const schemaRank = new Map<string, number>();
   for (const n of names) {
     const s = schemaOf(n);
@@ -170,45 +172,40 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
     const sa = schemaRank.get(schemaOf(a)) ?? 1e9;
     const sb = schemaRank.get(schemaOf(b)) ?? 1e9;
     if (sa !== sb) return sa - sb;
-
-    // within schema, keep it deterministic
-    const na = localNameOf(a);
-    const nb = localNameOf(b);
-    if (na !== nb) return na.localeCompare(nb);
-
-    // final fallback: original order
-    return pos.get(a)! - pos.get(b)!;
+    const la = localOf(a);
+    const lb = localOf(b);
+    if (la !== lb) return la.localeCompare(lb);
+    return (pos.get(a) ?? 0) - (pos.get(b) ?? 0);
   };
 
-  for (const t of names) {
-    const create = createByName.get(t)!;
+  const fkDepsOf = (create: CreateStmt): Set<string> => {
     const deps = new Set<string>();
+    const add = (cons: Constraint | undefined) => {
+      if (!cons) return;
+      if (String(cons.contype ?? '') !== 'CONSTR_FOREIGN') return;
+      if (!cons.pktable) return;
+      deps.add(qname(cons.pktable));
+    };
 
     for (const e of create.tableElts ?? []) {
-      // column constraints
       if ('ColumnDef' in e) {
-        const c = e.ColumnDef;
-        for (const w of c.constraints ?? []) {
-          if (!('Constraint' in w)) continue;
-          const cons = w.Constraint;
-          if (String(cons.contype ?? '') !== 'CONSTR_FOREIGN') continue;
-          if (!cons.pktable) continue;
-          deps.add(qname(cons.pktable));
-        }
-        continue;
-      }
-      // table constraints
-      if ('Constraint' in e) {
-        const cons = e.Constraint;
-        if (String(cons.contype ?? '') !== 'CONSTR_FOREIGN') continue;
-        if (!cons.pktable) continue;
-        deps.add(qname(cons.pktable));
+        for (const w of e.ColumnDef.constraints ?? [])
+          if ('Constraint' in w) add(w.Constraint);
+      } else if ('Constraint' in e) {
+        add(e.Constraint);
       }
     }
+    return deps;
+  };
 
+  const indeg = new Map<string, number>(names.map((n) => [n, 0]));
+  const adj = new Map<string, Set<string>>(names.map((n) => [n, new Set()]));
+
+  for (const t of names) {
+    const deps = fkDepsOf(createByName.get(t)!);
     for (const d of deps) {
       if (d === t) continue;
-      if (!createByName.has(d)) continue; // ignore external refs
+      if (!createByName.has(d)) continue;
       if (!adj.get(d)!.has(t)) {
         adj.get(d)!.add(t);
         indeg.set(t, (indeg.get(t) ?? 0) + 1);
@@ -216,11 +213,17 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
     }
   }
 
-  const queue = names.filter((n) => (indeg.get(n) ?? 0) === 0);
+  const pushSorted = (q: string[], x: string) => {
+    let i = 0;
+    while (i < q.length && cmp(q[i], x) <= 0) i++;
+    q.splice(i, 0, x);
+  };
+
+  const queue: string[] = [];
+  for (const n of names) if ((indeg.get(n) ?? 0) === 0) pushSorted(queue, n);
+
   const outNames: string[] = [];
   const seen = new Set<string>();
-
-  queue.sort(cmp);
 
   while (queue.length) {
     const n = queue.shift()!;
@@ -231,26 +234,19 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
     for (const m of adj.get(n) ?? []) {
       const k = (indeg.get(m) ?? 0) - 1;
       indeg.set(m, k);
-      if (k === 0) {
-        queue.push(m);
-        queue.sort(cmp);
-      }
+      if (k === 0) pushSorted(queue, m);
     }
   }
 
-  // cycles / leftovers: keep original relative order
   for (const n of names) if (!seen.has(n)) outNames.push(n);
-
   const sortedCreates = outNames.map((n) => createByName.get(n)!);
 
-  // 4) interleave types into the topo-ordered table stream (emit just before first use)
-  // Build: type name -> RawStmt (and stable order + short-name resolution)
-  const typeByFull = new Map<string, RawStmt>();
-  const shortToFull = new Map<string, string | null>(); // null = ambiguous
-  const unkeyedTypes: RawStmt[] = [];
+  // 4) interleave types (just before first use)
+  const typeByFull = new Map<string, Node>();
+  const shortToFull = new Map<string, string | null>();
+  const unkeyedTypes: Node[] = [];
 
-  const fullTypeNameOf = (raw: RawStmt): string | undefined => {
-    const stmt = raw.stmt!;
+  const fullTypeNameOf = (stmt: Node): string | undefined => {
     if ('CreateEnumStmt' in stmt)
       return identList(stmt.CreateEnumStmt.typeName).join('.');
     if ('CreateDomainStmt' in stmt)
@@ -261,14 +257,13 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
     return undefined;
   };
 
-  // Register types from `keep` (your collected enum/domain/composite/range statements)
-  for (const raw of keep) {
-    const full = fullTypeNameOf(raw);
+  for (const s of typeNodes) {
+    const full = fullTypeNameOf(s);
     if (!full) {
-      unkeyedTypes.push(raw);
+      unkeyedTypes.push(s);
       continue;
     }
-    typeByFull.set(full, raw);
+    typeByFull.set(full, s);
 
     const short = full.split('.').at(-1)!;
     const prev = shortToFull.get(short);
@@ -276,13 +271,8 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
     else if (prev !== full) shortToFull.set(short, null);
   }
 
-  const resolveTypeRef = (typeNameNode: any): string | undefined => {
-    const tn =
-      typeNameNode && typeof typeNameNode === 'object' && 'TypeName' in typeNameNode
-        ? typeNameNode.TypeName
-        : typeNameNode;
-
-    const names = identList(tn?.names);
+  const resolveTypeRef = (typeNameNode: TypeName): string | undefined => {
+    const names = identList(typeNameNode.names);
     if (!names.length) return undefined;
 
     const full = names.join('.');
@@ -290,33 +280,28 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
 
     const short = names.at(-1)!;
     const mapped = shortToFull.get(short);
-    if (mapped && typeByFull.has(mapped)) return mapped;
-
-    return undefined;
+    return mapped && typeByFull.has(mapped) ? mapped : undefined;
   };
 
-  // Type deps: domain -> base type, composite -> attr types, range -> subtype
   const typeDeps = new Map<string, Set<string>>();
-  for (const [full, raw] of typeByFull) {
+  for (const [full, stmt] of typeByFull) {
     const deps = new Set<string>();
-    const stmt = raw.stmt!;
 
     if ('CreateDomainStmt' in stmt) {
-      const base = resolveTypeRef((stmt as any).CreateDomainStmt.typeName);
+      const base = resolveTypeRef(stmt.CreateDomainStmt.typeName);
       if (base) deps.add(base);
     } else if ('CompositeTypeStmt' in stmt) {
-      for (const n of (stmt as any).CompositeTypeStmt.coldeflist ?? []) {
-        if ('ColumnDef' in n) {
-          const k = resolveTypeRef((n as any).ColumnDef.typeName);
-          if (k) deps.add(k);
-        }
+      for (const n of stmt.CompositeTypeStmt.coldeflist ?? []) {
+        if (!('ColumnDef' in n)) continue;
+        const k = resolveTypeRef(n.ColumnDef?.typeName);
+        if (k) deps.add(k);
       }
     } else if ('CreateRangeStmt' in stmt) {
-      // best-effort: find DefElem(defname='subtype') with arg.TypeName
-      for (const p of (stmt as any).CreateRangeStmt.params ?? []) {
-        const de = p && 'DefElem' in p ? (p as any).DefElem : undefined;
+      for (const p of stmt.CreateRangeStmt.params ?? []) {
+        if (!('DefElem' in p)) continue;
+        const de = p.DefElem;
         if (!de || de.defname !== 'subtype') continue;
-        const k = resolveTypeRef(de.arg);
+        const k = 'TypeName' in de.arg ? resolveTypeRef(de.arg.TypeName) : undefined;
         if (k) deps.add(k);
       }
     }
@@ -327,48 +312,44 @@ const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
   const usedTypesInTable = (create: CreateStmt): string[] => {
     const used = new Set<string>();
     for (const e of create.tableElts ?? []) {
-      if ('ColumnDef' in e) {
-        const k = resolveTypeRef(e.ColumnDef.typeName as any);
-        if (k) used.add(k);
-      }
+      if (!('ColumnDef' in e)) continue;
+      const k = resolveTypeRef(e.ColumnDef.typeName);
+      if (k) used.add(k);
     }
-    return [...used].sort(cmp);
+    return [...used];
   };
 
   const emitted = new Set<string>();
   const visiting = new Set<string>();
-  const outStmts: RawStmt[] = [];
+  const outNodes: Node[] = [];
 
   const emitType = (full: string) => {
-    if (emitted.has(full)) return;
-    if (visiting.has(full)) return; // break cycles
-    const raw = typeByFull.get(full);
-    if (!raw) return;
+    if (emitted.has(full) || visiting.has(full)) return;
+    const stmt = typeByFull.get(full);
+    if (!stmt) return;
 
     visiting.add(full);
     for (const d of typeDeps.get(full) ?? []) emitType(d);
     visiting.delete(full);
 
     if (!emitted.has(full)) {
-      outStmts.push(raw);
+      outNodes.push(stmt);
       emitted.add(full);
     }
   };
 
-  // Interleave: types (first use) + table
   for (const create of sortedCreates) {
     for (const tname of usedTypesInTable(create)) emitType(tname);
-    outStmts.push({ stmt_len: 1, stmt: { CreateStmt: create } });
+    outNodes.push({ CreateStmt: create });
   }
 
-  // Unused types (and any unkeyed ones) at the end
-  const allTypes = [...typeByFull.keys()].sort(cmp);
-  for (const t of allTypes) emitType(t);
-  outStmts.push(...unkeyedTypes);
+  for (const t of [...typeByFull.keys()]) emitType(t);
+  outNodes.push(...unkeyedTypes);
 
+  // stmt_len: 1, so that deparse emits semicolons between statements
   const outSql = await deparse({
     version: ast.version,
-    stmts: outStmts,
+    stmts: outNodes.map((stmt: Node): RawStmt => ({ stmt_len: 1, stmt })),
   });
 
   process.stdout.write(
