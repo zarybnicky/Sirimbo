@@ -9,6 +9,8 @@ CREATE TABLE federated.category (
     base_dance_program_id bigint
 );
 
+GRANT SELECT ON TABLE federated.category TO anonymous;
+
 ALTER TABLE ONLY federated.category
     ADD CONSTRAINT category_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY federated.category

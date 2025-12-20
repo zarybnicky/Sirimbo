@@ -4,5 +4,7 @@ CREATE TABLE federated.dance (
     discipline text NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.dance TO anonymous;
+
 ALTER TABLE ONLY federated.dance
     ADD CONSTRAINT dance_pkey PRIMARY KEY (code);

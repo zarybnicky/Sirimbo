@@ -861,6 +861,17 @@ type CancelRegistrationPayload {
   query: Query
 }
 
+type Category {
+  ageGroup: String!
+  baseDanceProgramId: BigInt
+  class: String!
+  discipline: String!
+  genderGroup: String!
+  id: BigInt!
+  name: String!
+  series: String!
+}
+
 """All input for the `changePassword` mutation."""
 input ChangePasswordInput {
   """
@@ -6767,6 +6778,13 @@ type Person {
   ): [Couple!]!
   createdAt: Datetime!
   cstsId: String
+  cstsProgressList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [PersonCstsProgressRecord!]
   email: String
 
   """Reads and enables pagination through a set of `EventAttendance`."""
@@ -7140,6 +7158,13 @@ input PersonCondition {
 
   """Checks for equality with the object’s `wdsfId` field."""
   wdsfId: String
+}
+
+type PersonCstsProgressRecord {
+  category: Category
+  competitorName: String
+  finals: Int
+  points: BigFloat
 }
 
 """An input for mutations affecting `Person`"""
@@ -7672,7 +7697,7 @@ type Query {
     """The method to use when ordering `Couple`."""
     orderBy: [CouplesOrderBy!]
   ): [Couple!]
-  cstsAthlete(idt: Int!): JSON
+  cstsAthlete(idt: Int): String
 
   """Reads a set of `Dokumenty`."""
   dokumentiesList(
@@ -8567,7 +8592,7 @@ type Query {
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersConnection
-  wdsfAthlete(min: Int!): JSON
+  wdsfAthlete(min: Int): String
 }
 
 """All input for the `registerToEventMany` mutation."""

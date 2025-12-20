@@ -7,6 +7,8 @@ CREATE TABLE federated.competitor_category_progress (
     foreign_finale integer DEFAULT 0 NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.competitor_category_progress TO anonymous;
+
 ALTER TABLE ONLY federated.competitor_category_progress
     ADD CONSTRAINT competitor_category_progress_pkey PRIMARY KEY (federation, competitor_id, category_id);
 ALTER TABLE ONLY federated.competitor_category_progress

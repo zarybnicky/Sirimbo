@@ -5,6 +5,8 @@ CREATE TABLE federated.ranklist (
     name text NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.ranklist TO anonymous;
+
 ALTER TABLE ONLY federated.ranklist
     ADD CONSTRAINT ranklist_federation_category_id_key UNIQUE (federation, category_id);
 ALTER TABLE ONLY federated.ranklist

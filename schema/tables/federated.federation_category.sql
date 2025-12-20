@@ -5,6 +5,8 @@ CREATE TABLE federated.federation_category (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.federation_category TO anonymous;
+
 ALTER TABLE ONLY federated.federation_category
     ADD CONSTRAINT federation_category_federation_external_id_key UNIQUE (federation, external_id);
 ALTER TABLE ONLY federated.federation_category

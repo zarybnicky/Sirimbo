@@ -6,6 +6,8 @@ CREATE TABLE federated.federation_competitor (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.federation_competitor TO anonymous;
+
 ALTER TABLE ONLY federated.federation_competitor
     ADD CONSTRAINT federation_competitor_federation_competitor_id_key UNIQUE (federation, competitor_id);
 ALTER TABLE ONLY federated.federation_competitor

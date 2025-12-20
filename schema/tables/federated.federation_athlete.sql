@@ -8,6 +8,8 @@ CREATE TABLE federated.federation_athlete (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.federation_athlete TO anonymous;
+
 ALTER TABLE ONLY federated.federation_athlete
     ADD CONSTRAINT federation_athlete_pkey PRIMARY KEY (federation, external_id);
 ALTER TABLE ONLY federated.federation_athlete

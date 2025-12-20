@@ -764,6 +764,18 @@ export type CancelRegistrationPayload = {
   query: Maybe<Query>;
 };
 
+export type Category = {
+  __typename?: 'Category';
+  ageGroup: Scalars['String']['output'];
+  baseDanceProgramId: Maybe<Scalars['BigInt']['output']>;
+  class: Scalars['String']['output'];
+  discipline: Scalars['String']['output'];
+  genderGroup: Scalars['String']['output'];
+  id: Scalars['BigInt']['output'];
+  name: Scalars['String']['output'];
+  series: Scalars['String']['output'];
+};
+
 /** All input for the `changePassword` mutation. */
 export type ChangePasswordInput = {
   /**
@@ -5722,6 +5734,7 @@ export type Person = {
   couplesByWomanIdList: Array<Couple>;
   createdAt: Scalars['Datetime']['output'];
   cstsId: Maybe<Scalars['String']['output']>;
+  cstsProgressList: Maybe<Array<PersonCstsProgressRecord>>;
   email: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EventAttendance`. */
   eventAttendancesList: Array<EventAttendance>;
@@ -5813,6 +5826,12 @@ export type PersonCouplesByWomanIdListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouplesOrderBy>>;
+};
+
+
+export type PersonCstsProgressListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6012,6 +6031,14 @@ export type PersonCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `wdsfId` field. */
   wdsfId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PersonCstsProgressRecord = {
+  __typename?: 'PersonCstsProgressRecord';
+  category: Maybe<Category>;
+  competitorName: Maybe<Scalars['String']['output']>;
+  finals: Maybe<Scalars['Int']['output']>;
+  points: Maybe<Scalars['BigFloat']['output']>;
 };
 
 /** An input for mutations affecting `Person` */
@@ -6267,7 +6294,7 @@ export type Query = {
   couple: Maybe<Couple>;
   /** Reads a set of `Couple`. */
   couplesList: Maybe<Array<Couple>>;
-  cstsAthlete: Maybe<Scalars['JSON']['output']>;
+  cstsAthlete: Maybe<Scalars['String']['output']>;
   /** Reads a set of `Dokumenty`. */
   dokumentiesList: Maybe<Array<Dokumenty>>;
   /** Get a single `Dokumenty`. */
@@ -6429,7 +6456,7 @@ export type Query = {
   userProxy: Maybe<UserProxy>;
   /** Reads and enables pagination through a set of `User`. */
   users: Maybe<UsersConnection>;
-  wdsfAthlete: Maybe<Scalars['JSON']['output']>;
+  wdsfAthlete: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -6628,7 +6655,7 @@ export type QueryCouplesListArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCstsAthleteArgs = {
-  idt: Scalars['Int']['input'];
+  idt?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -7309,7 +7336,7 @@ export type QueryUsersArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryWdsfAthleteArgs = {
-  min: Scalars['Int']['input'];
+  min?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** All input for the `registerToEventMany` mutation. */
@@ -9962,6 +9989,7 @@ export type GraphCacheKeysConfig = {
   AttachmentsConnection?: (data: WithTypename<AttachmentsConnection>) => null | string,
   AttachmentsEdge?: (data: WithTypename<AttachmentsEdge>) => null | string,
   CancelRegistrationPayload?: (data: WithTypename<CancelRegistrationPayload>) => null | string,
+  Category?: (data: WithTypename<Category>) => null | string,
   ChangePasswordPayload?: (data: WithTypename<ChangePasswordPayload>) => null | string,
   Cohort?: (data: WithTypename<Cohort>) => null | string,
   CohortGroup?: (data: WithTypename<CohortGroup>) => null | string,
@@ -10062,6 +10090,7 @@ export type GraphCacheKeysConfig = {
   PeopleEdge?: (data: WithTypename<PeopleEdge>) => null | string,
   Person?: (data: WithTypename<Person>) => null | string,
   PersonAccountPayload?: (data: WithTypename<PersonAccountPayload>) => null | string,
+  PersonCstsProgressRecord?: (data: WithTypename<PersonCstsProgressRecord>) => null | string,
   PersonInvitation?: (data: WithTypename<PersonInvitation>) => null | string,
   PersonWeeklyAttendanceRecord?: (data: WithTypename<PersonWeeklyAttendanceRecord>) => null | string,
   Posting?: (data: WithTypename<Posting>) => null | string,
@@ -10151,7 +10180,7 @@ export type GraphCacheResolvers = {
     cohortsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortsListArgs, Array<WithTypename<Cohort> | string>>,
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
     couplesList?: GraphCacheResolver<WithTypename<Query>, QueryCouplesListArgs, Array<WithTypename<Couple> | string>>,
-    cstsAthlete?: GraphCacheResolver<WithTypename<Query>, QueryCstsAthleteArgs, Scalars['JSON'] | string>,
+    cstsAthlete?: GraphCacheResolver<WithTypename<Query>, QueryCstsAthleteArgs, Scalars['String'] | string>,
     dokumentiesList?: GraphCacheResolver<WithTypename<Query>, QueryDokumentiesListArgs, Array<WithTypename<Dokumenty> | string>>,
     dokumenty?: GraphCacheResolver<WithTypename<Query>, QueryDokumentyArgs, WithTypename<Dokumenty> | string>,
     event?: GraphCacheResolver<WithTypename<Query>, QueryEventArgs, WithTypename<Event> | string>,
@@ -10239,7 +10268,7 @@ export type GraphCacheResolvers = {
     userProxiesList?: GraphCacheResolver<WithTypename<Query>, QueryUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
     userProxy?: GraphCacheResolver<WithTypename<Query>, QueryUserProxyArgs, WithTypename<UserProxy> | string>,
     users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>,
-    wdsfAthlete?: GraphCacheResolver<WithTypename<Query>, QueryWdsfAthleteArgs, Scalars['JSON'] | string>
+    wdsfAthlete?: GraphCacheResolver<WithTypename<Query>, QueryWdsfAthleteArgs, Scalars['String'] | string>
   },
   Account?: {
     assets?: GraphCacheResolver<WithTypename<Account>, AccountAssetsArgs, Scalars['BigFloat'] | string>,
@@ -10392,6 +10421,16 @@ export type GraphCacheResolvers = {
   CancelRegistrationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CancelRegistrationPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<CancelRegistrationPayload>, Record<string, never>, WithTypename<Query> | string>
+  },
+  Category?: {
+    ageGroup?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>,
+    baseDanceProgramId?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['BigInt'] | string>,
+    class?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>,
+    discipline?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>,
+    genderGroup?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>,
+    id?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['BigInt'] | string>,
+    name?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>,
+    series?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>
   },
   ChangePasswordPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ChangePasswordPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -11271,6 +11310,7 @@ export type GraphCacheResolvers = {
     couplesByWomanIdList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByWomanIdListArgs, Array<WithTypename<Couple> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime'] | string>,
     cstsId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
+    cstsProgressList?: GraphCacheResolver<WithTypename<Person>, PersonCstsProgressListArgs, Array<WithTypename<PersonCstsProgressRecord> | string>>,
     email?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     eventAttendancesList?: GraphCacheResolver<WithTypename<Person>, PersonEventAttendancesListArgs, Array<WithTypename<EventAttendance> | string>>,
     eventInstanceTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceTrainersListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
@@ -11313,6 +11353,12 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<PersonAccountPayload>, Record<string, never>, WithTypename<Person> | string>,
     query?: GraphCacheResolver<WithTypename<PersonAccountPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<PersonAccountPayload>, Record<string, never>, WithTypename<Tenant> | string>
+  },
+  PersonCstsProgressRecord?: {
+    category?: GraphCacheResolver<WithTypename<PersonCstsProgressRecord>, Record<string, never>, WithTypename<Category> | string>,
+    competitorName?: GraphCacheResolver<WithTypename<PersonCstsProgressRecord>, Record<string, never>, Scalars['String'] | string>,
+    finals?: GraphCacheResolver<WithTypename<PersonCstsProgressRecord>, Record<string, never>, Scalars['Int'] | string>,
+    points?: GraphCacheResolver<WithTypename<PersonCstsProgressRecord>, Record<string, never>, Scalars['BigFloat'] | string>
   },
   PersonInvitation?: {
     accessToken?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['UUID'] | string>,
@@ -11973,7 +12019,7 @@ export type GraphCacheUpdaters = {
     cohortsList?: GraphCacheUpdateResolver<{ cohortsList: Maybe<Array<WithTypename<Cohort>>> }, QueryCohortsListArgs>,
     couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
     couplesList?: GraphCacheUpdateResolver<{ couplesList: Maybe<Array<WithTypename<Couple>>> }, QueryCouplesListArgs>,
-    cstsAthlete?: GraphCacheUpdateResolver<{ cstsAthlete: Maybe<Scalars['JSON']> }, QueryCstsAthleteArgs>,
+    cstsAthlete?: GraphCacheUpdateResolver<{ cstsAthlete: Maybe<Scalars['String']> }, QueryCstsAthleteArgs>,
     dokumentiesList?: GraphCacheUpdateResolver<{ dokumentiesList: Maybe<Array<WithTypename<Dokumenty>>> }, QueryDokumentiesListArgs>,
     dokumenty?: GraphCacheUpdateResolver<{ dokumenty: Maybe<WithTypename<Dokumenty>> }, QueryDokumentyArgs>,
     event?: GraphCacheUpdateResolver<{ event: Maybe<WithTypename<Event>> }, QueryEventArgs>,
@@ -12061,7 +12107,7 @@ export type GraphCacheUpdaters = {
     userProxiesList?: GraphCacheUpdateResolver<{ userProxiesList: Maybe<Array<WithTypename<UserProxy>>> }, QueryUserProxiesListArgs>,
     userProxy?: GraphCacheUpdateResolver<{ userProxy: Maybe<WithTypename<UserProxy>> }, QueryUserProxyArgs>,
     users?: GraphCacheUpdateResolver<{ users: Maybe<WithTypename<UsersConnection>> }, QueryUsersArgs>,
-    wdsfAthlete?: GraphCacheUpdateResolver<{ wdsfAthlete: Maybe<Scalars['JSON']> }, QueryWdsfAthleteArgs>
+    wdsfAthlete?: GraphCacheUpdateResolver<{ wdsfAthlete: Maybe<Scalars['String']> }, QueryWdsfAthleteArgs>
   },
   Mutation?: {
     archiveCohort?: GraphCacheUpdateResolver<{ archiveCohort: Maybe<WithTypename<ArchiveCohortPayload>> }, MutationArchiveCohortArgs>,
@@ -12305,6 +12351,16 @@ export type GraphCacheUpdaters = {
   CancelRegistrationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CancelRegistrationPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CancelRegistrationPayload>>, Record<string, never>>
+  },
+  Category?: {
+    ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    baseDanceProgramId?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    class?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    discipline?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    genderGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    series?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>
   },
   ChangePasswordPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ChangePasswordPayload>>, Record<string, never>>,
@@ -13184,6 +13240,7 @@ export type GraphCacheUpdaters = {
     couplesByWomanIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByWomanIdListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     cstsId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    cstsProgressList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCstsProgressListArgs>,
     email?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     eventAttendancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventAttendancesListArgs>,
     eventInstanceTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventInstanceTrainersListArgs>,
@@ -13226,6 +13283,12 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonAccountPayload>>, Record<string, never>>
+  },
+  PersonCstsProgressRecord?: {
+    category?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonCstsProgressRecord>>, Record<string, never>>,
+    competitorName?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonCstsProgressRecord>>, Record<string, never>>,
+    finals?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonCstsProgressRecord>>, Record<string, never>>,
+    points?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonCstsProgressRecord>>, Record<string, never>>
   },
   PersonInvitation?: {
     accessToken?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,

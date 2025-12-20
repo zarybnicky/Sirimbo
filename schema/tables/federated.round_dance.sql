@@ -4,6 +4,8 @@ CREATE TABLE federated.round_dance (
     dance_code text NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.round_dance TO anonymous;
+
 ALTER TABLE ONLY federated.round_dance
     ADD CONSTRAINT round_dance_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY federated.round_dance

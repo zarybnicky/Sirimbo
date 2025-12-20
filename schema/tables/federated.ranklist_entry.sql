@@ -7,6 +7,8 @@ CREATE TABLE federated.ranklist_entry (
     CONSTRAINT ranklist_entry_check CHECK (((ranking_to IS NULL) OR (ranking_to >= ranking)))
 );
 
+GRANT SELECT ON TABLE federated.ranklist_entry TO anonymous;
+
 ALTER TABLE ONLY federated.ranklist_entry
     ADD CONSTRAINT ranklist_entry_snapshot_id_competitor_id_key UNIQUE (snapshot_id, competitor_id);
 ALTER TABLE ONLY federated.ranklist_entry

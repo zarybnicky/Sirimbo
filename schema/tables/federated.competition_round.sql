@@ -8,6 +8,8 @@ CREATE TABLE federated.competition_round (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.competition_round TO anonymous;
+
 ALTER TABLE ONLY federated.competition_round
     ADD CONSTRAINT competition_round_competition_id_round_index_key UNIQUE (competition_id, round_index);
 ALTER TABLE ONLY federated.competition_round

@@ -9,6 +9,8 @@ CREATE TABLE federated.competition (
     CONSTRAINT competition_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 
+GRANT SELECT ON TABLE federated.competition TO anonymous;
+
 ALTER TABLE ONLY federated.competition
     ADD CONSTRAINT competition_federation_external_id_key UNIQUE (federation, external_id);
 ALTER TABLE ONLY federated.competition

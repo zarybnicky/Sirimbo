@@ -65,14 +65,14 @@ export type CstsPersonQueryVariables = Types.Exact<{
 }>;
 
 
-export type CstsPersonQuery = { __typename?: 'Query', cstsAthlete: any | null };
+export type CstsPersonQuery = { __typename?: 'Query', cstsAthlete: string | null };
 
 export type WdsfPersonQueryVariables = Types.Exact<{
   min: Types.Scalars['Int']['input'];
 }>;
 
 
-export type WdsfPersonQuery = { __typename?: 'Query', wdsfAthlete: any | null };
+export type WdsfPersonQuery = { __typename?: 'Query', wdsfAthlete: string | null };
 
 export type CreatePersonMutationVariables = Types.Exact<{
   input: Types.CreatePersonInput;

@@ -9,6 +9,8 @@ CREATE TABLE federated.competition_result (
     CONSTRAINT competition_result_check CHECK (((ranking_to IS NULL) OR (ranking_to >= ranking)))
 );
 
+GRANT SELECT ON TABLE federated.competition_result TO anonymous;
+
 ALTER TABLE ONLY federated.competition_result
     ADD CONSTRAINT competition_result_competition_id_start_number_key UNIQUE (competition_id, start_number);
 ALTER TABLE ONLY federated.competition_result

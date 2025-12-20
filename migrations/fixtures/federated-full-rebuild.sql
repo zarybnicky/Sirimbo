@@ -5,6 +5,10 @@ where fetch_status in ('ok', 'pending');
 
 create schema federated;
 
+grant usage on schema federated to anonymous;
+GRANT SELECT ON ALL TABLES IN SCHEMA federated TO anonymous;
+ALTER DEFAULT PRIVILEGES IN SCHEMA federated GRANT SELECT ON TABLES TO anonymous;
+
 CREATE EXTENSION IF NOT EXISTS unaccent;
 CREATE OR REPLACE FUNCTION federated.unaccent(text) RETURNS text
 AS $$

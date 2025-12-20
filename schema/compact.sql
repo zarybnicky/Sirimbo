@@ -61,35 +61,6 @@ CREATE TABLE public.couple (
   active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
 );
 
-CREATE TABLE public.pghero_query_stats (
-  id bigint NOT NULL PRIMARY KEY,
-  database text,
-  "user" text,
-  query text,
-  query_hash bigint,
-  total_time double precision,
-  calls bigint,
-  captured_at timestamp
-);
-
-CREATE TABLE public.pghero_space_stats (
-  id bigint NOT NULL PRIMARY KEY,
-  database text,
-  schema text,
-  relation text,
-  size bigint,
-  captured_at timestamp
-);
-
-CREATE TABLE public.response_cache (
-  id bigint NOT NULL PRIMARY KEY,
-  url text NOT NULL UNIQUE,
-  status int NOT NULL,
-  content text NOT NULL,
-  content_type text NOT NULL,
-  cached_at timestamp DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE public.tenant (
   id bigint NOT NULL PRIMARY KEY,
   name text NOT NULL,
@@ -733,212 +704,6 @@ CREATE TABLE public.user_proxy (
   active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
 );
 
-CREATE TABLE app_private.galerie_dir (
-  id bigint NOT NULL PRIMARY KEY,
-  gd_id_rodic bigint NOT NULL,
-  gd_name text NOT NULL,
-  gd_level smallint DEFAULT CAST('1' AS smallint) NOT NULL,
-  gd_path text NOT NULL,
-  gd_hidden boolean DEFAULT true NOT NULL,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE public.galerie_foto (
-  id bigint NOT NULL PRIMARY KEY,
-  gf_id_rodic bigint NOT NULL REFERENCES app_private.galerie_dir (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  gf_name text NOT NULL,
-  gf_path text NOT NULL,
-  gf_kdo bigint NOT NULL REFERENCES public.users (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  updated_at timestamp with time zone,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE public.aktuality (
-  id bigint NOT NULL PRIMARY KEY,
-  at_kdo bigint REFERENCES public.users (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  at_kat text DEFAULT '1'::text NOT NULL,
-  at_jmeno text NOT NULL,
-  at_text text NOT NULL,
-  at_preview text NOT NULL,
-  at_foto bigint,
-  at_foto_main bigint REFERENCES public.galerie_foto (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  updated_at timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now(),
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  title_photo_url text
-);
-
-CREATE TABLE app_private.platby_category (
-  pc_id bigint NOT NULL PRIMARY KEY,
-  pc_name text NOT NULL,
-  pc_symbol bigint NOT NULL,
-  pc_amount numeric(10, 2) NOT NULL,
-  pc_date_due date NOT NULL,
-  pc_valid_from date NOT NULL,
-  pc_valid_to date NOT NULL,
-  pc_use_base boolean DEFAULT false NOT NULL,
-  pc_use_prefix boolean DEFAULT false NOT NULL,
-  pc_archive boolean DEFAULT false NOT NULL,
-  pc_visible boolean DEFAULT true NOT NULL,
-  id bigint GENERATED ALWAYS AS (pc_id) STORED NOT NULL UNIQUE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE app_private.platby_group (
-  pg_id bigint NOT NULL PRIMARY KEY,
-  pg_type numeric DEFAULT '1'::numeric NOT NULL,
-  pg_name text NOT NULL,
-  pg_description text NOT NULL,
-  pg_base bigint DEFAULT CAST('0' AS bigint) NOT NULL,
-  id bigint GENERATED ALWAYS AS (pg_id) STORED NOT NULL UNIQUE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE public.platby_category_group (
-  pcg_id bigint NOT NULL PRIMARY KEY,
-  pcg_id_group bigint NOT NULL REFERENCES app_private.platby_group (pg_id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  pcg_id_category bigint NOT NULL REFERENCES app_private.platby_category (pc_id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  id bigint GENERATED ALWAYS AS (pcg_id) STORED NOT NULL UNIQUE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE public.platby_group_skupina (
-  pgs_id bigint NOT NULL PRIMARY KEY,
-  pgs_id_skupina bigint NOT NULL REFERENCES public.cohort (id),
-  pgs_id_group bigint NOT NULL REFERENCES app_private.platby_group (pg_id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  id bigint GENERATED ALWAYS AS (pgs_id) STORED NOT NULL UNIQUE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE app_private.platby_raw (
-  pr_id bigint NOT NULL PRIMARY KEY,
-  pr_raw bytea NOT NULL,
-  pr_hash text NOT NULL,
-  pr_sorted boolean DEFAULT true NOT NULL,
-  pr_discarded boolean DEFAULT true NOT NULL,
-  id bigint GENERATED ALWAYS AS (pr_id) STORED NOT NULL UNIQUE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE app_private.platby_item (
-  pi_id bigint NOT NULL PRIMARY KEY,
-  pi_id_user bigint REFERENCES public.users (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  pi_id_category bigint NOT NULL REFERENCES app_private.platby_category (pc_id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  pi_id_raw bigint REFERENCES app_private.platby_raw (pr_id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  pi_amount numeric(10, 2) NOT NULL,
-  pi_date date NOT NULL,
-  pi_prefix int DEFAULT 2000 NOT NULL,
-  id bigint GENERATED ALWAYS AS (pi_id) STORED NOT NULL UNIQUE,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  status public.payment_status DEFAULT CAST('paid' AS public.payment_status) NOT NULL
-);
-
-CREATE TABLE app_private.system_admin_user (
-  user_id bigint NOT NULL PRIMARY KEY REFERENCES public.users (id)
-    ON DELETE CASCADE,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  created_by bigint DEFAULT public.current_user_id() NOT NULL
-);
-
-CREATE TYPE crawler.fetch_status AS ENUM ('pending', 'ok', 'gone', 'error');
-
-CREATE TYPE crawler.process_status AS ENUM ('pending', 'ok', 'error');
-
-CREATE TABLE crawler.frontier (
-  id bigint NOT NULL PRIMARY KEY,
-  federation text NOT NULL,
-  kind text NOT NULL,
-  key text NOT NULL,
-  discovered_at timestamp with time zone DEFAULT now() NOT NULL,
-  last_fetched_at timestamp with time zone,
-  fetch_status crawler.fetch_status DEFAULT CAST('pending' AS crawler.fetch_status) NOT NULL,
-  process_status crawler.process_status DEFAULT CAST('pending' AS crawler.process_status) NOT NULL,
-  error_count int DEFAULT 0 NOT NULL,
-  next_fetch_at timestamp with time zone,
-  meta jsonb DEFAULT '{}'::jsonb NOT NULL,
-  UNIQUE (federation, kind, key)
-);
-
-CREATE TABLE crawler.html_response_cache (
-  content_hash text GENERATED ALWAYS AS (encode(public.digest(content, 'sha256'::text), 'hex'::text)) STORED NOT NULL PRIMARY KEY,
-  content text
-);
-
-CREATE TABLE crawler.html_response (
-  id bigint NOT NULL PRIMARY KEY,
-  frontier_id bigint NOT NULL REFERENCES crawler.frontier (id)
-    ON DELETE CASCADE,
-  url text NOT NULL,
-  fetched_at timestamp with time zone DEFAULT now() NOT NULL,
-  http_status int,
-  error text,
-  content_hash text REFERENCES crawler.html_response_cache (content_hash)
-);
-
-CREATE TABLE crawler.incremental_ranges (
-  federation text NOT NULL,
-  kind text NOT NULL,
-  last_known int DEFAULT 0 NOT NULL,
-  last_checked int DEFAULT 0 NOT NULL,
-  PRIMARY KEY (federation, kind)
-);
-
-CREATE TABLE crawler.json_response_cache (
-  content_hash text GENERATED ALWAYS AS (encode(public.digest(content::text, 'sha256'::text), 'hex'::text)) STORED NOT NULL PRIMARY KEY,
-  content jsonb
-);
-
-CREATE TABLE crawler.json_response (
-  id bigint NOT NULL PRIMARY KEY,
-  frontier_id bigint NOT NULL REFERENCES crawler.frontier (id)
-    ON DELETE CASCADE,
-  url text NOT NULL,
-  fetched_at timestamp with time zone DEFAULT now() NOT NULL,
-  http_status int,
-  error text,
-  content_hash text REFERENCES crawler.json_response_cache (content_hash)
-);
-
-CREATE TABLE crawler.rate_limit_rule (
-  host text NOT NULL PRIMARY KEY,
-  max_requests int NOT NULL,
-  per_interval interval NOT NULL,
-  spacing interval GENERATED ALWAYS AS ((per_interval / CAST(max_requests AS double precision)) + '00:00:00.02'::interval) STORED NOT NULL,
-  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+00' AS timestamp with time zone) NOT NULL,
-  CHECK (max_requests > 0),
-  CHECK (per_interval > '00:00:00'::interval)
-);
-
 CREATE TYPE federated.competitor_type AS ENUM ('couple', 'solo', 'duo', 'formation', 'team');
 
 CREATE TABLE federated.competitor (
@@ -1252,6 +1017,212 @@ CREATE TABLE federated.round_judge (
   PRIMARY KEY (round_id, judge_id)
 );
 
+CREATE TABLE app_private.galerie_dir (
+  id bigint NOT NULL PRIMARY KEY,
+  gd_id_rodic bigint NOT NULL,
+  gd_name text NOT NULL,
+  gd_level smallint DEFAULT CAST('1' AS smallint) NOT NULL,
+  gd_path text NOT NULL,
+  gd_hidden boolean DEFAULT true NOT NULL,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE public.galerie_foto (
+  id bigint NOT NULL PRIMARY KEY,
+  gf_id_rodic bigint NOT NULL REFERENCES app_private.galerie_dir (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  gf_name text NOT NULL,
+  gf_path text NOT NULL,
+  gf_kdo bigint NOT NULL REFERENCES public.users (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  updated_at timestamp with time zone,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE public.aktuality (
+  id bigint NOT NULL PRIMARY KEY,
+  at_kdo bigint REFERENCES public.users (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  at_kat text DEFAULT '1'::text NOT NULL,
+  at_jmeno text NOT NULL,
+  at_text text NOT NULL,
+  at_preview text NOT NULL,
+  at_foto bigint,
+  at_foto_main bigint REFERENCES public.galerie_foto (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  updated_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  title_photo_url text
+);
+
+CREATE TABLE app_private.platby_category (
+  pc_id bigint NOT NULL PRIMARY KEY,
+  pc_name text NOT NULL,
+  pc_symbol bigint NOT NULL,
+  pc_amount numeric(10, 2) NOT NULL,
+  pc_date_due date NOT NULL,
+  pc_valid_from date NOT NULL,
+  pc_valid_to date NOT NULL,
+  pc_use_base boolean DEFAULT false NOT NULL,
+  pc_use_prefix boolean DEFAULT false NOT NULL,
+  pc_archive boolean DEFAULT false NOT NULL,
+  pc_visible boolean DEFAULT true NOT NULL,
+  id bigint GENERATED ALWAYS AS (pc_id) STORED NOT NULL UNIQUE,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE app_private.platby_group (
+  pg_id bigint NOT NULL PRIMARY KEY,
+  pg_type numeric DEFAULT '1'::numeric NOT NULL,
+  pg_name text NOT NULL,
+  pg_description text NOT NULL,
+  pg_base bigint DEFAULT CAST('0' AS bigint) NOT NULL,
+  id bigint GENERATED ALWAYS AS (pg_id) STORED NOT NULL UNIQUE,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE app_private.platby_category_group (
+  pcg_id bigint NOT NULL PRIMARY KEY,
+  pcg_id_group bigint NOT NULL REFERENCES app_private.platby_group (pg_id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  pcg_id_category bigint NOT NULL REFERENCES app_private.platby_category (pc_id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  id bigint GENERATED ALWAYS AS (pcg_id) STORED NOT NULL UNIQUE,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE app_private.platby_group_skupina (
+  pgs_id bigint NOT NULL PRIMARY KEY,
+  pgs_id_skupina bigint NOT NULL REFERENCES public.cohort (id),
+  pgs_id_group bigint NOT NULL REFERENCES app_private.platby_group (pg_id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  id bigint GENERATED ALWAYS AS (pgs_id) STORED NOT NULL UNIQUE,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE app_private.platby_raw (
+  pr_id bigint NOT NULL PRIMARY KEY,
+  pr_raw bytea NOT NULL,
+  pr_hash text NOT NULL,
+  pr_sorted boolean DEFAULT true NOT NULL,
+  pr_discarded boolean DEFAULT true NOT NULL,
+  id bigint GENERATED ALWAYS AS (pr_id) STORED NOT NULL UNIQUE,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE app_private.platby_item (
+  pi_id bigint NOT NULL PRIMARY KEY,
+  pi_id_user bigint REFERENCES public.users (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  pi_id_category bigint NOT NULL REFERENCES app_private.platby_category (pc_id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  pi_id_raw bigint REFERENCES app_private.platby_raw (pr_id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  pi_amount numeric(10, 2) NOT NULL,
+  pi_date date NOT NULL,
+  pi_prefix int DEFAULT 2000 NOT NULL,
+  id bigint GENERATED ALWAYS AS (pi_id) STORED NOT NULL UNIQUE,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  status public.payment_status DEFAULT CAST('paid' AS public.payment_status) NOT NULL
+);
+
+CREATE TABLE app_private.system_admin_user (
+  user_id bigint NOT NULL PRIMARY KEY REFERENCES public.users (id)
+    ON DELETE CASCADE,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  created_by bigint DEFAULT public.current_user_id() NOT NULL
+);
+
+CREATE TYPE crawler.fetch_status AS ENUM ('pending', 'ok', 'gone', 'error');
+
+CREATE TYPE crawler.process_status AS ENUM ('pending', 'ok', 'error');
+
+CREATE TABLE crawler.frontier (
+  id bigint NOT NULL PRIMARY KEY,
+  federation text NOT NULL,
+  kind text NOT NULL,
+  key text NOT NULL,
+  discovered_at timestamp with time zone DEFAULT now() NOT NULL,
+  last_fetched_at timestamp with time zone,
+  fetch_status crawler.fetch_status DEFAULT CAST('pending' AS crawler.fetch_status) NOT NULL,
+  process_status crawler.process_status DEFAULT CAST('pending' AS crawler.process_status) NOT NULL,
+  error_count int DEFAULT 0 NOT NULL,
+  next_fetch_at timestamp with time zone,
+  meta jsonb DEFAULT '{}'::jsonb NOT NULL,
+  UNIQUE (federation, kind, key)
+);
+
+CREATE TABLE crawler.html_response_cache (
+  content_hash text GENERATED ALWAYS AS (encode(public.digest(content, 'sha256'::text), 'hex'::text)) STORED NOT NULL PRIMARY KEY,
+  content text
+);
+
+CREATE TABLE crawler.html_response (
+  id bigint NOT NULL PRIMARY KEY,
+  frontier_id bigint NOT NULL REFERENCES crawler.frontier (id)
+    ON DELETE CASCADE,
+  url text NOT NULL,
+  fetched_at timestamp with time zone DEFAULT now() NOT NULL,
+  http_status int,
+  error text,
+  content_hash text REFERENCES crawler.html_response_cache (content_hash)
+);
+
+CREATE TABLE crawler.incremental_ranges (
+  federation text NOT NULL,
+  kind text NOT NULL,
+  last_known int DEFAULT 0 NOT NULL,
+  last_checked int DEFAULT 0 NOT NULL,
+  PRIMARY KEY (federation, kind)
+);
+
+CREATE TABLE crawler.json_response_cache (
+  content_hash text GENERATED ALWAYS AS (encode(public.digest(content::text, 'sha256'::text), 'hex'::text)) STORED NOT NULL PRIMARY KEY,
+  content jsonb
+);
+
+CREATE TABLE crawler.json_response (
+  id bigint NOT NULL PRIMARY KEY,
+  frontier_id bigint NOT NULL REFERENCES crawler.frontier (id)
+    ON DELETE CASCADE,
+  url text NOT NULL,
+  fetched_at timestamp with time zone DEFAULT now() NOT NULL,
+  http_status int,
+  error text,
+  content_hash text REFERENCES crawler.json_response_cache (content_hash)
+);
+
+CREATE TABLE crawler.rate_limit_rule (
+  host text NOT NULL PRIMARY KEY,
+  max_requests int NOT NULL,
+  per_interval interval NOT NULL,
+  spacing interval GENERATED ALWAYS AS ((per_interval / CAST(max_requests AS double precision)) + '00:00:00.02'::interval) STORED NOT NULL,
+  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+00' AS timestamp with time zone) NOT NULL,
+  CHECK (max_requests > 0),
+  CHECK (per_interval > '00:00:00'::interval)
+);
+
 CREATE TYPE federated.competitor_component_input AS (athlete_id bigint, role federated.competitor_role);
 
 CREATE TYPE public.announcement_audience_type_input AS (id bigint, cohort_id bigint, audience_role public.announcement_audience_role);
@@ -1273,8 +1244,6 @@ CREATE TYPE public.event_trainer_type_input AS (id bigint, person_id bigint, les
 CREATE TYPE public.event_type_input AS (id bigint, name text, summary text, description text, description_member text, type public.event_type, location_id bigint, location_text text, capacity int, is_visible boolean, is_public boolean, is_locked boolean, enable_notes boolean, payment_type public.event_payment_type, member_price public.price, guest_price public.price);
 
 CREATE TYPE public.jwt_token AS (exp int, user_id bigint, tenant_id bigint, username text, email text, my_person_ids pg_catalog.json, my_tenant_ids pg_catalog.json, my_cohort_ids pg_catalog.json, my_couple_ids pg_catalog.json, is_member boolean, is_trainer boolean, is_admin boolean, is_system_admin boolean);
-
-CREATE TYPE public.prospect_data AS (name text, surname text, email text, phone text, yearofbirth text);
 
 CREATE TYPE public.register_to_event_type AS (event_id bigint, person_id bigint, couple_id bigint, note text, lessons public.event_lesson_demand[]);
 

@@ -8,6 +8,8 @@ CREATE TABLE federated.competition_round_result (
     CONSTRAINT competition_round_result_check CHECK (((overall_ranking_to IS NULL) OR (overall_ranking_to >= overall_ranking)))
 );
 
+GRANT SELECT ON TABLE federated.competition_round_result TO anonymous;
+
 ALTER TABLE ONLY federated.competition_round_result
     ADD CONSTRAINT competition_round_result_pkey PRIMARY KEY (round_id, competitor_id);
 ALTER TABLE ONLY federated.competition_round_result

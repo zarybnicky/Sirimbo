@@ -6,6 +6,8 @@ CREATE TABLE federated.athlete_club_membership (
     CONSTRAINT athlete_club_membership_check CHECK (((valid_to IS NULL) OR (valid_to >= valid_from)))
 );
 
+GRANT SELECT ON TABLE federated.athlete_club_membership TO anonymous;
+
 ALTER TABLE ONLY federated.athlete_club_membership
     ADD CONSTRAINT athlete_club_membership_athlete_id_club_id_daterange_excl EXCLUDE USING gist (athlete_id WITH =, club_id WITH =, daterange(valid_from, COALESCE(valid_to, 'infinity'::date), '[]'::text) WITH &&);
 ALTER TABLE ONLY federated.athlete_club_membership

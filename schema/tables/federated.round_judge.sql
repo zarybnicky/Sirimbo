@@ -4,6 +4,8 @@ CREATE TABLE federated.round_judge (
     is_shadow boolean DEFAULT false NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.round_judge TO anonymous;
+
 ALTER TABLE ONLY federated.round_judge
     ADD CONSTRAINT round_judge_pkey PRIMARY KEY (round_id, judge_id);
 ALTER TABLE ONLY federated.round_judge

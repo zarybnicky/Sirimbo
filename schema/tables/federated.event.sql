@@ -16,6 +16,8 @@ END) STORED,
     CONSTRAINT event_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 
+GRANT SELECT ON TABLE federated.event TO anonymous;
+
 ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_federation_external_id_key UNIQUE (federation, external_id);
 ALTER TABLE ONLY federated.event

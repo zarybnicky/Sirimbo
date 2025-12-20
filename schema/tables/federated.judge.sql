@@ -4,6 +4,8 @@ CREATE TABLE federated.judge (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.judge TO anonymous;
+
 ALTER TABLE ONLY federated.judge
     ADD CONSTRAINT judge_person_id_key UNIQUE (person_id);
 ALTER TABLE ONLY federated.judge

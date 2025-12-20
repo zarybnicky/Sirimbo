@@ -5,6 +5,8 @@ CREATE TABLE federated.competition_entry (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.competition_entry TO anonymous;
+
 ALTER TABLE ONLY federated.competition_entry
     ADD CONSTRAINT competition_entry_pkey PRIMARY KEY (competition_id, competitor_id);
 ALTER TABLE ONLY federated.competition_entry

@@ -7,6 +7,8 @@ CREATE TABLE federated.dance_program (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.dance_program TO anonymous;
+
 ALTER TABLE ONLY federated.dance_program
     ADD CONSTRAINT dance_program_code_key UNIQUE (code);
 ALTER TABLE ONLY federated.dance_program

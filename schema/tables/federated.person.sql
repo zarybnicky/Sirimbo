@@ -10,5 +10,7 @@ CREATE TABLE federated.person (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.person TO anonymous;
+
 ALTER TABLE ONLY federated.person
     ADD CONSTRAINT person_pkey PRIMARY KEY (id);

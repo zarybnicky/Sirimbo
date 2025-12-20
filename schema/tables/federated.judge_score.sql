@@ -8,6 +8,8 @@ CREATE TABLE federated.judge_score (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.judge_score TO anonymous;
+
 ALTER TABLE ONLY federated.judge_score
     ADD CONSTRAINT judge_score_pkey PRIMARY KEY (round_dance_id, judge_id, competitor_id, component);
 ALTER TABLE ONLY federated.judge_score

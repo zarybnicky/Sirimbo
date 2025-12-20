@@ -5,6 +5,8 @@ CREATE TABLE federated.federation_judge (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.federation_judge TO anonymous;
+
 ALTER TABLE ONLY federated.federation_judge
     ADD CONSTRAINT federation_judge_pkey PRIMARY KEY (federation, external_id);
 ALTER TABLE ONLY federated.federation_judge

@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict PHMTbrDlzSDfYDYjRd3K0hkKy6VpSzoFd1kEWD6csH8qPxX3jBCiOGqqpQE1dDW
+\restrict UZGFdpX6N0qsanUbJROncQLUfkKtwu4PkitGDtMEGb0PDBaPZGZBShzDPCajCY7
 
 -- Dumped from database version 17.7
 -- Dumped by pg_dump version 17.7
@@ -514,19 +514,6 @@ CREATE TYPE public.payment_status AS ENUM (
     'tentative',
     'unpaid',
     'paid'
-);
-
-
---
--- Name: prospect_data; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.prospect_data AS (
-	name text,
-	surname text,
-	email text,
-	phone text,
-	yearofbirth text
 );
 
 
@@ -3047,6 +3034,21 @@ $$;
 
 
 --
+-- Name: csts_athlete(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.csts_athlete(idt integer) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select canonical_name
+  from federated.person
+  join federated.athlete on person.id = athlete.person_id
+  join federated.federation_athlete on athlete.id = federation_athlete.athlete_id
+  where federation = 'csts' and external_id = idt::text;
+$$;
+
+
+--
 -- Name: current_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3561,62 +3563,6 @@ CREATE FUNCTION public.event_trainer_name(t public.event_trainer) RETURNS text
     FROM public.person
    WHERE ((event_trainer_name.t).person_id = person.id);
 END;
-
-
---
--- Name: response_cache; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.response_cache (
-    id bigint NOT NULL,
-    url text NOT NULL,
-    status integer NOT NULL,
-    content text NOT NULL,
-    content_type text NOT NULL,
-    cached_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
-);
-
-
---
--- Name: TABLE response_cache; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.response_cache IS '@omit';
-
-
---
--- Name: fetch_with_cache(text, public.http_header[]); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.fetch_with_cache(input_url text, headers public.http_header[] DEFAULT NULL::public.http_header[]) RETURNS public.response_cache
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-  new_response record;
-  cached_response response_cache;
-BEGIN
-  SELECT * INTO cached_response FROM response_cache WHERE url = input_url;
-
-  IF NOT FOUND THEN
-    SELECT * INTO new_response FROM http(('GET', input_url, headers, NULL, NULL));
-
-    INSERT INTO response_cache (url, status, content, content_type)
-    VALUES (input_url, new_response.status, new_response.content, new_response.content_type)
-    ON CONFLICT (url) DO UPDATE
-    SET status = EXCLUDED.status, content = EXCLUDED.content, content_type = EXCLUDED.content_type, cached_at = NOW()
-    RETURNING * INTO cached_response;
-  END IF;
-
-  RETURN cached_response;
-END;
-$$;
-
-
---
--- Name: FUNCTION fetch_with_cache(input_url text, headers public.http_header[]); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.fetch_with_cache(input_url text, headers public.http_header[]) IS '@omit';
 
 
 --
@@ -4304,6 +4250,51 @@ $$;
 
 
 --
+-- Name: category; Type: TABLE; Schema: federated; Owner: -
+--
+
+CREATE TABLE federated.category (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    series text NOT NULL,
+    discipline text NOT NULL,
+    age_group text NOT NULL,
+    gender_group text DEFAULT 'mixed'::text NOT NULL,
+    class text NOT NULL,
+    base_dance_program_id bigint
+);
+
+
+--
+-- Name: person_csts_progress(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_csts_progress(in_person public.person) RETURNS TABLE(competitor_name text, category federated.category, points numeric, finals integer)
+    LANGUAGE sql STABLE
+    AS $$
+  select
+    competitor.name as competitor_name,
+    row(category.*) as category,
+    ccp.points,
+    ccp.domestic_finale + ccp.foreign_finale as finals
+  from federated.federation_athlete fa
+  join federated.athlete on athlete.id = fa.athlete_id
+  join federated.competitor_component cp on cp.athlete_id = athlete.id
+  join federated.competitor on competitor.id = cp.competitor_id
+  join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id and fa.federation = ccp.federation
+  join federated.category on ccp.category_id = category.id
+  where fa.federation = 'csts' and fa.external_id = in_person.csts_id;
+$$;
+
+
+--
+-- Name: FUNCTION person_csts_progress(in_person public.person); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.person_csts_progress(in_person public.person) IS '@simpleCollections only';
+
+
+--
 -- Name: person_has_access(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4433,30 +4424,6 @@ $$;
 --
 
 COMMENT ON FUNCTION public.person_weekly_attendance(p public.person) IS '@simpleCollections only';
-
-
---
--- Name: post_without_cache(text, jsonb, public.http_header[]); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.post_without_cache(input_url text, data jsonb, headers public.http_header[] DEFAULT NULL::public.http_header[]) RETURNS public.http_response
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-  new_response http_response;
-BEGIN
-  SELECT * INTO new_response FROM http(('POST', input_url, headers, 'application/json', data::text));
-
-  RETURN new_response;
-END;
-$$;
-
-
---
--- Name: FUNCTION post_without_cache(input_url text, data jsonb, headers public.http_header[]); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.post_without_cache(input_url text, data jsonb, headers public.http_header[]) IS '@omit';
 
 
 --
@@ -5652,6 +5619,21 @@ COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@omit'
 
 
 --
+-- Name: wdsf_athlete(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.wdsf_athlete(min integer) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select canonical_name
+  from federated.person
+  join federated.athlete on person.id = athlete.person_id
+  join federated.federation_athlete on athlete.id = federation_athlete.athlete_id
+  where federation = 'wdsf' and external_id = min::text;
+$$;
+
+
+--
 -- Name: array_accum(anycompatiblearray); Type: AGGREGATE; Schema: app_private; Owner: -
 --
 
@@ -5800,6 +5782,45 @@ COMMENT ON TABLE app_private.platby_category IS '@omit create,update,delete';
 
 
 --
+-- Name: platby_category_group; Type: TABLE; Schema: app_private; Owner: -
+--
+
+CREATE TABLE app_private.platby_category_group (
+    pcg_id bigint NOT NULL,
+    pcg_id_group bigint NOT NULL,
+    pcg_id_category bigint NOT NULL,
+    id bigint GENERATED ALWAYS AS (pcg_id) STORED NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE platby_category_group; Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON TABLE app_private.platby_category_group IS '@omit';
+
+
+--
+-- Name: platby_category_group_pcg_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
+--
+
+CREATE SEQUENCE app_private.platby_category_group_pcg_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: platby_category_group_pcg_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
+--
+
+ALTER SEQUENCE app_private.platby_category_group_pcg_id_seq OWNED BY app_private.platby_category_group.pcg_id;
+
+
+--
 -- Name: platby_category_pc_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
 --
 
@@ -5857,6 +5878,45 @@ CREATE SEQUENCE app_private.platby_group_pg_id_seq
 --
 
 ALTER SEQUENCE app_private.platby_group_pg_id_seq OWNED BY app_private.platby_group.pg_id;
+
+
+--
+-- Name: platby_group_skupina; Type: TABLE; Schema: app_private; Owner: -
+--
+
+CREATE TABLE app_private.platby_group_skupina (
+    pgs_id bigint NOT NULL,
+    pgs_id_skupina bigint NOT NULL,
+    pgs_id_group bigint NOT NULL,
+    id bigint GENERATED ALWAYS AS (pgs_id) STORED NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+);
+
+
+--
+-- Name: TABLE platby_group_skupina; Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON TABLE app_private.platby_group_skupina IS '@omit';
+
+
+--
+-- Name: platby_group_skupina_pgs_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
+--
+
+CREATE SEQUENCE app_private.platby_group_skupina_pgs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: platby_group_skupina_pgs_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
+--
+
+ALTER SEQUENCE app_private.platby_group_skupina_pgs_id_seq OWNED BY app_private.platby_group_skupina.pgs_id;
 
 
 --
@@ -6171,22 +6231,6 @@ ALTER TABLE federated.athlete ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     NO MINVALUE
     NO MAXVALUE
     CACHE 1
-);
-
-
---
--- Name: category; Type: TABLE; Schema: federated; Owner: -
---
-
-CREATE TABLE federated.category (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    series text NOT NULL,
-    discipline text NOT NULL,
-    age_group text NOT NULL,
-    gender_group text DEFAULT 'mixed'::text NOT NULL,
-    class text NOT NULL,
-    base_dance_program_id bigint
 );
 
 
@@ -7523,185 +7567,11 @@ ALTER TABLE public.person_invitation ALTER COLUMN id ADD GENERATED ALWAYS AS IDE
 
 
 --
--- Name: pghero_query_stats; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pghero_query_stats (
-    id bigint NOT NULL,
-    database text,
-    "user" text,
-    query text,
-    query_hash bigint,
-    total_time double precision,
-    calls bigint,
-    captured_at timestamp without time zone
-);
-
-
---
--- Name: TABLE pghero_query_stats; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.pghero_query_stats IS '@omit';
-
-
---
--- Name: pghero_query_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pghero_query_stats_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pghero_query_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
-
-
---
--- Name: pghero_space_stats; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pghero_space_stats (
-    id bigint NOT NULL,
-    database text,
-    schema text,
-    relation text,
-    size bigint,
-    captured_at timestamp without time zone
-);
-
-
---
--- Name: TABLE pghero_space_stats; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.pghero_space_stats IS '@omit';
-
-
---
--- Name: pghero_space_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pghero_space_stats_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pghero_space_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pghero_space_stats_id_seq OWNED BY public.pghero_space_stats.id;
-
-
---
--- Name: platby_category_group; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.platby_category_group (
-    pcg_id bigint NOT NULL,
-    pcg_id_group bigint NOT NULL,
-    pcg_id_category bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pcg_id) STORED NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE platby_category_group; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.platby_category_group IS '@omit';
-
-
---
--- Name: platby_category_group_pcg_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.platby_category_group_pcg_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: platby_category_group_pcg_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.platby_category_group_pcg_id_seq OWNED BY public.platby_category_group.pcg_id;
-
-
---
--- Name: platby_group_skupina; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.platby_group_skupina (
-    pgs_id bigint NOT NULL,
-    pgs_id_skupina bigint NOT NULL,
-    pgs_id_group bigint NOT NULL,
-    id bigint GENERATED ALWAYS AS (pgs_id) STORED NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
-);
-
-
---
--- Name: TABLE platby_group_skupina; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.platby_group_skupina IS '@omit';
-
-
---
--- Name: platby_group_skupina_pgs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.platby_group_skupina_pgs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: platby_group_skupina_pgs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.platby_group_skupina_pgs_id_seq OWNED BY public.platby_group_skupina.pgs_id;
-
-
---
 -- Name: posting_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.posting ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.posting_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: response_cache_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.response_cache ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.response_cache_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7965,10 +7835,24 @@ ALTER TABLE ONLY app_private.platby_category ALTER COLUMN pc_id SET DEFAULT next
 
 
 --
+-- Name: platby_category_group pcg_id; Type: DEFAULT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_category_group ALTER COLUMN pcg_id SET DEFAULT nextval('app_private.platby_category_group_pcg_id_seq'::regclass);
+
+
+--
 -- Name: platby_group pg_id; Type: DEFAULT; Schema: app_private; Owner: -
 --
 
 ALTER TABLE ONLY app_private.platby_group ALTER COLUMN pg_id SET DEFAULT nextval('app_private.platby_group_pg_id_seq'::regclass);
+
+
+--
+-- Name: platby_group_skupina pgs_id; Type: DEFAULT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_group_skupina ALTER COLUMN pgs_id SET DEFAULT nextval('app_private.platby_group_skupina_pgs_id_seq'::regclass);
 
 
 --
@@ -8025,34 +7909,6 @@ ALTER TABLE ONLY public.dokumenty ALTER COLUMN id SET DEFAULT nextval('public.do
 --
 
 ALTER TABLE ONLY public.galerie_foto ALTER COLUMN id SET DEFAULT nextval('public.galerie_foto_gf_id_seq'::regclass);
-
-
---
--- Name: pghero_query_stats id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_query_stats_id_seq'::regclass);
-
-
---
--- Name: pghero_space_stats id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_space_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_space_stats_id_seq'::regclass);
-
-
---
--- Name: platby_category_group pcg_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_category_group ALTER COLUMN pcg_id SET DEFAULT nextval('public.platby_category_group_pcg_id_seq'::regclass);
-
-
---
--- Name: platby_group_skupina pgs_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_group_skupina ALTER COLUMN pgs_id SET DEFAULT nextval('public.platby_group_skupina_pgs_id_seq'::regclass);
 
 
 --
@@ -8114,11 +7970,27 @@ ALTER TABLE ONLY app_private.platby_category
 
 
 --
+-- Name: platby_category_group idx_23868_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_category_group
+    ADD CONSTRAINT idx_23868_primary PRIMARY KEY (pcg_id);
+
+
+--
 -- Name: platby_group idx_23874_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
 ALTER TABLE ONLY app_private.platby_group
     ADD CONSTRAINT idx_23874_primary PRIMARY KEY (pg_id);
+
+
+--
+-- Name: platby_group_skupina idx_23885_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_group_skupina
+    ADD CONSTRAINT idx_23885_primary PRIMARY KEY (pgs_id);
 
 
 --
@@ -8138,11 +8010,27 @@ ALTER TABLE ONLY app_private.platby_raw
 
 
 --
+-- Name: platby_category_group platby_category_group_unique_id; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_category_group
+    ADD CONSTRAINT platby_category_group_unique_id UNIQUE (id);
+
+
+--
 -- Name: platby_category platby_category_unique_id; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
 ALTER TABLE ONLY app_private.platby_category
     ADD CONSTRAINT platby_category_unique_id UNIQUE (id);
+
+
+--
+-- Name: platby_group_skupina platby_group_skupina_unique_id; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_group_skupina
+    ADD CONSTRAINT platby_group_skupina_unique_id UNIQUE (id);
 
 
 --
@@ -8850,22 +8738,6 @@ ALTER TABLE ONLY public.galerie_foto
 
 
 --
--- Name: platby_category_group idx_23868_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_category_group
-    ADD CONSTRAINT idx_23868_primary PRIMARY KEY (pcg_id);
-
-
---
--- Name: platby_group_skupina idx_23885_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_group_skupina
-    ADD CONSTRAINT idx_23885_primary PRIMARY KEY (pgs_id);
-
-
---
 -- Name: users idx_23964_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8946,59 +8818,11 @@ ALTER TABLE ONLY public.person
 
 
 --
--- Name: pghero_query_stats pghero_query_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_query_stats
-    ADD CONSTRAINT pghero_query_stats_pkey PRIMARY KEY (id);
-
-
---
--- Name: pghero_space_stats pghero_space_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_space_stats
-    ADD CONSTRAINT pghero_space_stats_pkey PRIMARY KEY (id);
-
-
---
--- Name: platby_category_group platby_category_group_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_category_group
-    ADD CONSTRAINT platby_category_group_unique_id UNIQUE (id);
-
-
---
--- Name: platby_group_skupina platby_group_skupina_unique_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_group_skupina
-    ADD CONSTRAINT platby_group_skupina_unique_id UNIQUE (id);
-
-
---
 -- Name: posting posting_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.posting
     ADD CONSTRAINT posting_pkey PRIMARY KEY (id);
-
-
---
--- Name: response_cache response_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.response_cache
-    ADD CONSTRAINT response_cache_pkey PRIMARY KEY (id);
-
-
---
--- Name: response_cache response_cache_url_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.response_cache
-    ADD CONSTRAINT response_cache_url_key UNIQUE (url);
 
 
 --
@@ -9095,6 +8919,41 @@ CREATE UNIQUE INDEX idx_23855_pc_symbol ON app_private.platby_category USING btr
 
 
 --
+-- Name: idx_23868_pcg_id_group; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_23868_pcg_id_group ON app_private.platby_category_group USING btree (pcg_id_group, pcg_id_category);
+
+
+--
+-- Name: idx_23868_platby_category_group_pcg_id_category_fkey; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE INDEX idx_23868_platby_category_group_pcg_id_category_fkey ON app_private.platby_category_group USING btree (pcg_id_category);
+
+
+--
+-- Name: idx_23885_pgs_id_skupina; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_23885_pgs_id_skupina ON app_private.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
+
+
+--
+-- Name: idx_23885_platby_group_skupina_pgs_id_group_fkey; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE INDEX idx_23885_platby_group_skupina_pgs_id_group_fkey ON app_private.platby_group_skupina USING btree (pgs_id_group);
+
+
+--
+-- Name: idx_23886_pgs_id_skupina; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_23886_pgs_id_skupina ON app_private.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
+
+
+--
 -- Name: idx_23891_pi_id_raw; Type: INDEX; Schema: app_private; Owner: -
 --
 
@@ -9123,10 +8982,38 @@ CREATE UNIQUE INDEX idx_23898_pr_hash ON app_private.platby_raw USING btree (pr_
 
 
 --
+-- Name: platby_category_group_pcg_id_category_idx; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE INDEX platby_category_group_pcg_id_category_idx ON app_private.platby_category_group USING btree (pcg_id_category);
+
+
+--
+-- Name: platby_category_group_tenant_id_idx; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE INDEX platby_category_group_tenant_id_idx ON app_private.platby_category_group USING btree (tenant_id);
+
+
+--
 -- Name: platby_category_tenant_id_idx; Type: INDEX; Schema: app_private; Owner: -
 --
 
 CREATE INDEX platby_category_tenant_id_idx ON app_private.platby_category USING btree (tenant_id);
+
+
+--
+-- Name: platby_group_skupina_pgs_id_group_idx; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE INDEX platby_group_skupina_pgs_id_group_idx ON app_private.platby_group_skupina USING btree (pgs_id_group);
+
+
+--
+-- Name: platby_group_skupina_tenant_id_idx; Type: INDEX; Schema: app_private; Owner: -
+--
+
+CREATE INDEX platby_group_skupina_tenant_id_idx ON app_private.platby_group_skupina USING btree (tenant_id);
 
 
 --
@@ -9872,41 +9759,6 @@ CREATE INDEX idx_23791_gf_id_rodic ON public.galerie_foto USING btree (gf_id_rod
 
 
 --
--- Name: idx_23868_pcg_id_group; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23868_pcg_id_group ON public.platby_category_group USING btree (pcg_id_group, pcg_id_category);
-
-
---
--- Name: idx_23868_platby_category_group_pcg_id_category_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23868_platby_category_group_pcg_id_category_fkey ON public.platby_category_group USING btree (pcg_id_category);
-
-
---
--- Name: idx_23885_pgs_id_skupina; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23885_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
-
-
---
--- Name: idx_23885_platby_group_skupina_pgs_id_group_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23885_platby_group_skupina_pgs_id_group_fkey ON public.platby_group_skupina USING btree (pgs_id_group);
-
-
---
--- Name: idx_23886_pgs_id_skupina; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23886_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
-
-
---
 -- Name: idx_cm_tenant; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10051,48 +9903,6 @@ CREATE INDEX person_invitation_person_id_idx ON public.person_invitation USING b
 --
 
 CREATE INDEX person_invitation_tenant_id_idx ON public.person_invitation USING btree (tenant_id);
-
-
---
--- Name: pghero_query_stats_database_captured_at_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX pghero_query_stats_database_captured_at_idx ON public.pghero_query_stats USING btree (database, captured_at);
-
-
---
--- Name: pghero_space_stats_database_captured_at_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX pghero_space_stats_database_captured_at_idx ON public.pghero_space_stats USING btree (database, captured_at);
-
-
---
--- Name: platby_category_group_pcg_id_category_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX platby_category_group_pcg_id_category_idx ON public.platby_category_group USING btree (pcg_id_category);
-
-
---
--- Name: platby_category_group_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX platby_category_group_tenant_id_idx ON public.platby_category_group USING btree (tenant_id);
-
-
---
--- Name: platby_group_skupina_pgs_id_group_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX platby_group_skupina_pgs_id_group_idx ON public.platby_group_skupina USING btree (pgs_id_group);
-
-
---
--- Name: platby_group_skupina_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX platby_group_skupina_tenant_id_idx ON public.platby_group_skupina USING btree (tenant_id);
 
 
 --
@@ -10748,11 +10558,59 @@ ALTER TABLE ONLY app_private.galerie_dir
 
 
 --
+-- Name: platby_category_group platby_category_group_pcg_id_category_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_category_group
+    ADD CONSTRAINT platby_category_group_pcg_id_category_fkey FOREIGN KEY (pcg_id_category) REFERENCES app_private.platby_category(pc_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: platby_category_group platby_category_group_pcg_id_group_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_category_group
+    ADD CONSTRAINT platby_category_group_pcg_id_group_fkey FOREIGN KEY (pcg_id_group) REFERENCES app_private.platby_group(pg_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: platby_category_group platby_category_group_tenant_id_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_category_group
+    ADD CONSTRAINT platby_category_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
 -- Name: platby_category platby_category_tenant_id_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
 --
 
 ALTER TABLE ONLY app_private.platby_category
     ADD CONSTRAINT platby_category_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
+-- Name: platby_group_skupina platby_group_skupina_pgs_id_group_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_group_skupina
+    ADD CONSTRAINT platby_group_skupina_pgs_id_group_fkey FOREIGN KEY (pgs_id_group) REFERENCES app_private.platby_group(pg_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: platby_group_skupina platby_group_skupina_pgs_id_skupina_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_group_skupina
+    ADD CONSTRAINT platby_group_skupina_pgs_id_skupina_fkey FOREIGN KEY (pgs_id_skupina) REFERENCES public.cohort(id);
+
+
+--
+-- Name: platby_group_skupina platby_group_skupina_tenant_id_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.platby_group_skupina
+    ADD CONSTRAINT platby_group_skupina_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 
 --
@@ -11836,54 +11694,6 @@ ALTER TABLE ONLY public.person_invitation
 
 
 --
--- Name: platby_category_group platby_category_group_pcg_id_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_category_group
-    ADD CONSTRAINT platby_category_group_pcg_id_category_fkey FOREIGN KEY (pcg_id_category) REFERENCES app_private.platby_category(pc_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: platby_category_group platby_category_group_pcg_id_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_category_group
-    ADD CONSTRAINT platby_category_group_pcg_id_group_fkey FOREIGN KEY (pcg_id_group) REFERENCES app_private.platby_group(pg_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: platby_category_group platby_category_group_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_category_group
-    ADD CONSTRAINT platby_category_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
-
-
---
--- Name: platby_group_skupina platby_group_skupina_pgs_id_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_group_skupina
-    ADD CONSTRAINT platby_group_skupina_pgs_id_group_fkey FOREIGN KEY (pgs_id_group) REFERENCES app_private.platby_group(pg_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: platby_group_skupina platby_group_skupina_pgs_id_skupina_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_group_skupina
-    ADD CONSTRAINT platby_group_skupina_pgs_id_skupina_fkey FOREIGN KEY (pgs_id_skupina) REFERENCES public.cohort(id);
-
-
---
--- Name: platby_group_skupina platby_group_skupina_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_group_skupina
-    ADD CONSTRAINT platby_group_skupina_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
-
-
---
 -- Name: posting posting_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12066,10 +11876,24 @@ CREATE POLICY admin_all ON app_private.platby_category TO administrator USING (t
 
 
 --
+-- Name: platby_category_group admin_all; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY admin_all ON app_private.platby_category_group TO administrator USING (true);
+
+
+--
 -- Name: platby_group admin_all; Type: POLICY; Schema: app_private; Owner: -
 --
 
 CREATE POLICY admin_all ON app_private.platby_group TO administrator USING (true);
+
+
+--
+-- Name: platby_group_skupina admin_all; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY admin_all ON app_private.platby_group_skupina TO administrator USING (true);
 
 
 --
@@ -12101,10 +11925,24 @@ CREATE POLICY current_tenant ON app_private.platby_category AS RESTRICTIVE USING
 
 
 --
+-- Name: platby_category_group current_tenant; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY current_tenant ON app_private.platby_category_group AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
 -- Name: platby_group current_tenant; Type: POLICY; Schema: app_private; Owner: -
 --
 
 CREATE POLICY current_tenant ON app_private.platby_group AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: platby_group_skupina current_tenant; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY current_tenant ON app_private.platby_group_skupina AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -12135,10 +11973,24 @@ CREATE POLICY member_view ON app_private.platby_category FOR SELECT TO member US
 
 
 --
+-- Name: platby_category_group member_view; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY member_view ON app_private.platby_category_group FOR SELECT TO member USING (true);
+
+
+--
 -- Name: platby_group member_view; Type: POLICY; Schema: app_private; Owner: -
 --
 
 CREATE POLICY member_view ON app_private.platby_group FOR SELECT TO member USING (true);
+
+
+--
+-- Name: platby_group_skupina member_view; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY member_view ON app_private.platby_group_skupina FOR SELECT TO member USING (true);
 
 
 --
@@ -12157,10 +12009,22 @@ CREATE POLICY member_view ON app_private.platby_raw FOR SELECT TO member USING (
 ALTER TABLE app_private.platby_category ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: platby_category_group; Type: ROW SECURITY; Schema: app_private; Owner: -
+--
+
+ALTER TABLE app_private.platby_category_group ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: platby_group; Type: ROW SECURITY; Schema: app_private; Owner: -
 --
 
 ALTER TABLE app_private.platby_group ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: platby_group_skupina; Type: ROW SECURITY; Schema: app_private; Owner: -
+--
+
+ALTER TABLE app_private.platby_group_skupina ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: platby_item; Type: ROW SECURITY; Schema: app_private; Owner: -
@@ -12331,20 +12195,6 @@ CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true);
 --
 
 CREATE POLICY admin_all ON public.person TO administrator USING (true);
-
-
---
--- Name: platby_category_group admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.platby_category_group TO administrator USING (true);
-
-
---
--- Name: platby_group_skupina admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.platby_group_skupina TO administrator USING (true);
 
 
 --
@@ -12743,20 +12593,6 @@ CREATE POLICY current_tenant ON public.person_invitation AS RESTRICTIVE USING ((
 
 
 --
--- Name: platby_category_group current_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY current_tenant ON public.platby_category_group AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
--- Name: platby_group_skupina current_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY current_tenant ON public.platby_group_skupina AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
 -- Name: posting current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -12985,20 +12821,6 @@ CREATE POLICY member_view ON public.payment_recipient FOR SELECT TO member USING
 
 
 --
--- Name: platby_category_group member_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY member_view ON public.platby_category_group FOR SELECT TO member USING (true);
-
-
---
--- Name: platby_group_skupina member_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY member_view ON public.platby_group_skupina FOR SELECT TO member USING (true);
-
-
---
 -- Name: posting member_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -13053,18 +12875,6 @@ ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.person_invitation ENABLE ROW LEVEL SECURITY;
-
---
--- Name: platby_category_group; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.platby_category_group ENABLE ROW LEVEL SECURITY;
-
---
--- Name: platby_group_skupina; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.platby_group_skupina ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: posting; Type: ROW SECURITY; Schema: public; Owner: -
@@ -13360,6 +13170,13 @@ CREATE POLICY view_visible_person ON public.tenant_membership FOR SELECT USING (
 --
 
 GRANT ALL ON SCHEMA app_private TO postgres;
+
+
+--
+-- Name: SCHEMA federated; Type: ACL; Schema: -; Owner: -
+--
+
+GRANT USAGE ON SCHEMA federated TO anonymous;
 
 
 --
@@ -13687,6 +13504,13 @@ GRANT ALL ON FUNCTION public.create_person(person_id bigint, INOUT p public.pers
 
 
 --
+-- Name: FUNCTION csts_athlete(idt integer); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.csts_athlete(idt integer) TO anonymous;
+
+
+--
 -- Name: FUNCTION current_couple_ids(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -13824,20 +13648,6 @@ GRANT ALL ON FUNCTION public.event_trainer_lessons_remaining(e public.event_trai
 --
 
 GRANT ALL ON FUNCTION public.event_trainer_name(t public.event_trainer) TO anonymous;
-
-
---
--- Name: TABLE response_cache; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.response_cache TO anonymous;
-
-
---
--- Name: FUNCTION fetch_with_cache(input_url text, headers public.http_header[]); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.fetch_with_cache(input_url text, headers public.http_header[]) TO trainer;
 
 
 --
@@ -14023,6 +13833,20 @@ GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
 
 
 --
+-- Name: TABLE category; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.category TO anonymous;
+
+
+--
+-- Name: FUNCTION person_csts_progress(in_person public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_csts_progress(in_person public.person) TO anonymous;
+
+
+--
 -- Name: FUNCTION person_has_access(p public.person); Type: ACL; Schema: public; Owner: -
 --
 
@@ -14076,13 +13900,6 @@ GRANT ALL ON FUNCTION public.person_recent_attendance(p public.person) TO anonym
 --
 
 GRANT ALL ON FUNCTION public.person_weekly_attendance(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION post_without_cache(input_url text, data jsonb, headers public.http_header[]); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.post_without_cache(input_url text, data jsonb, headers public.http_header[]) TO administrator;
 
 
 --
@@ -14353,6 +14170,13 @@ GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, instance
 
 
 --
+-- Name: FUNCTION wdsf_athlete(min integer); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.wdsf_athlete(min integer) TO anonymous;
+
+
+--
 -- Name: TABLE galerie_dir; Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -14374,6 +14198,20 @@ GRANT ALL ON TABLE app_private.platby_category TO anonymous;
 
 
 --
+-- Name: TABLE platby_category_group; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON TABLE app_private.platby_category_group TO anonymous;
+
+
+--
+-- Name: SEQUENCE platby_category_group_pcg_id_seq; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_private.platby_category_group_pcg_id_seq TO anonymous;
+
+
+--
 -- Name: SEQUENCE platby_category_pc_id_seq; Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -14392,6 +14230,20 @@ GRANT ALL ON TABLE app_private.platby_group TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE app_private.platby_group_pg_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE platby_group_skupina; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON TABLE app_private.platby_group_skupina TO anonymous;
+
+
+--
+-- Name: SEQUENCE platby_group_skupina_pgs_id_seq; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_private.platby_group_skupina_pgs_id_seq TO anonymous;
 
 
 --
@@ -14420,6 +14272,209 @@ GRANT ALL ON TABLE app_private.platby_raw TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE app_private.platby_raw_pr_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE athlete; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.athlete TO anonymous;
+
+
+--
+-- Name: TABLE athlete_club_membership; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.athlete_club_membership TO anonymous;
+
+
+--
+-- Name: TABLE competition; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competition TO anonymous;
+
+
+--
+-- Name: TABLE competition_entry; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competition_entry TO anonymous;
+
+
+--
+-- Name: TABLE competition_result; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competition_result TO anonymous;
+
+
+--
+-- Name: TABLE competition_round; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competition_round TO anonymous;
+
+
+--
+-- Name: TABLE competition_round_result; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competition_round_result TO anonymous;
+
+
+--
+-- Name: TABLE competitor; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competitor TO anonymous;
+
+
+--
+-- Name: TABLE competitor_category_progress; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competitor_category_progress TO anonymous;
+
+
+--
+-- Name: TABLE competitor_club_affiliation; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competitor_club_affiliation TO anonymous;
+
+
+--
+-- Name: TABLE competitor_component; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competitor_component TO anonymous;
+
+
+--
+-- Name: TABLE dance; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.dance TO anonymous;
+
+
+--
+-- Name: TABLE dance_program; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.dance_program TO anonymous;
+
+
+--
+-- Name: TABLE dance_program_dance; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.dance_program_dance TO anonymous;
+
+
+--
+-- Name: TABLE event; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.event TO anonymous;
+
+
+--
+-- Name: TABLE federation; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.federation TO anonymous;
+
+
+--
+-- Name: TABLE federation_athlete; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.federation_athlete TO anonymous;
+
+
+--
+-- Name: TABLE federation_category; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.federation_category TO anonymous;
+
+
+--
+-- Name: TABLE federation_club; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.federation_club TO anonymous;
+
+
+--
+-- Name: TABLE federation_competitor; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.federation_competitor TO anonymous;
+
+
+--
+-- Name: TABLE federation_judge; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.federation_judge TO anonymous;
+
+
+--
+-- Name: TABLE judge; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.judge TO anonymous;
+
+
+--
+-- Name: TABLE judge_score; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.judge_score TO anonymous;
+
+
+--
+-- Name: TABLE person; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.person TO anonymous;
+
+
+--
+-- Name: TABLE ranklist; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.ranklist TO anonymous;
+
+
+--
+-- Name: TABLE ranklist_entry; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.ranklist_entry TO anonymous;
+
+
+--
+-- Name: TABLE ranklist_snapshot; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.ranklist_snapshot TO anonymous;
+
+
+--
+-- Name: TABLE round_dance; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.round_dance TO anonymous;
+
+
+--
+-- Name: TABLE round_judge; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.round_judge TO anonymous;
 
 
 --
@@ -14626,34 +14681,6 @@ GRANT ALL ON TABLE public.person_invitation TO anonymous;
 
 
 --
--- Name: TABLE platby_category_group; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.platby_category_group TO anonymous;
-
-
---
--- Name: SEQUENCE platby_category_group_pcg_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.platby_category_group_pcg_id_seq TO anonymous;
-
-
---
--- Name: TABLE platby_group_skupina; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.platby_group_skupina TO anonymous;
-
-
---
--- Name: SEQUENCE platby_group_skupina_pgs_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.platby_group_skupina_pgs_id_seq TO anonymous;
-
-
---
 -- Name: TABLE scoreboard; Type: ACL; Schema: public; Owner: -
 --
 
@@ -14703,6 +14730,13 @@ GRANT ALL ON TABLE public.account_balances TO anonymous;
 
 
 --
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: federated; Owner: -
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE olymp IN SCHEMA federated GRANT SELECT ON TABLES TO anonymous;
+
+
+--
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
@@ -14727,5 +14761,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict PHMTbrDlzSDfYDYjRd3K0hkKy6VpSzoFd1kEWD6csH8qPxX3jBCiOGqqpQE1dDW
+\unrestrict UZGFdpX6N0qsanUbJROncQLUfkKtwu4PkitGDtMEGb0PDBaPZGZBShzDPCajCY7
 

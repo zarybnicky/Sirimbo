@@ -4,6 +4,8 @@ CREATE TABLE federated.competitor_component (
     role federated.competitor_role NOT NULL
 );
 
+GRANT SELECT ON TABLE federated.competitor_component TO anonymous;
+
 ALTER TABLE ONLY federated.competitor_component
     ADD CONSTRAINT competitor_component_pkey PRIMARY KEY (competitor_id, athlete_id);
 ALTER TABLE ONLY federated.competitor_component
