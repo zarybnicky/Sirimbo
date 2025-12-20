@@ -45,7 +45,7 @@ export function CstsIdFieldElement<T extends FieldValues>({
       {query.data
         ? query.data.cstsAthlete
           ? (
-            <span className="text-green-9">{query.data.cstsAthlete?.name}</span>
+            <span className="text-green-9">{query.data.cstsAthlete}</span>
           )
           : (
             <span className="text-accent-9">Nenalezeno</span>
