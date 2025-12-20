@@ -3,19 +3,22 @@ import type { JsonLoader } from './types.ts';
 import {
   type competitor_type,
   upsertCategory,
-  upsertCompetitor,
-  upsertFederationAthlete,
+  upsertManyCompetitors,
   upsertRanklistSnapshot,
 } from './federated.queries.ts';
+import type { PoolClient } from 'pg';
 
-const numberAsEnum = <T extends string>(enumDict: { [key in T]: number }) => z.union([
-  z.number()
-    .refine((x) => Object.values(enumDict).includes(x as any))
-    .transform((x) => Object.entries(enumDict).find(([_, n]) => x === n)?.[0]! as T),
-  z.string()
-    .refine((x) => Object.keys(enumDict).includes(x))
-    .transform(x => x as T),
-]);
+const numberAsEnum = <T extends string>(enumDict: { [key in T]: number }) =>
+  z.union([
+    z
+      .number()
+      .refine((x) => Object.values(enumDict).includes(x as any))
+      .transform((x) => Object.entries(enumDict).find(([_, n]) => x === n)?.[0]! as T),
+    z
+      .string()
+      .refine((x) => Object.keys(enumDict).includes(x))
+      .transform((x) => x as T),
+  ]);
 
 type RanklistCompetitorPointsType =
   | 'NationalChampionship'
@@ -63,6 +66,26 @@ const competitorType: { [key in CompetitorType]: number } = {
   BigTeam: 9,
 };
 
+const mapCompetitorType = (type: CompetitorType): competitor_type => {
+  switch (type) {
+    case 'Duo':
+      return 'duo';
+    case 'SoloDancer':
+      return 'solo';
+    case 'Formation':
+      return 'formation';
+    case 'Group':
+    case 'SmallTeam':
+    case 'Team':
+    case 'BigTeam':
+      return 'team';
+    case 'ProAm':
+    case 'Couple':
+    default:
+      return 'couple';
+  }
+};
+
 type DisciplineType =
   | 'Unknown'
   | 'Standard'
@@ -102,7 +125,7 @@ const disciplineType: { [key in DisciplineType]: number } = {
   ShowdanceMerengue: 15,
   ShowdanceSalsa: 16,
   Caribbean: 17,
-}
+};
 
 type SeriesType = 'Unknown' | 'DanceForAll' | 'Professional' | 'DanceSport' | 'Caribbean';
 
@@ -249,7 +272,10 @@ const responseSchema = z.object({
   entity: ranklistSnapshotSchema,
 });
 
-export const cstsRanklist: JsonLoader<z.output<typeof responseSchema>> = {
+type Response = z.infer<typeof responseSchema>;
+type Ranklist = z.infer<typeof ranklistSnapshotSchema>;
+
+export const cstsRanklist: JsonLoader<Response> = {
   mode: 'json',
   revalidatePeriod: '5 day',
   buildRequest: (key) => ({
@@ -261,74 +287,67 @@ export const cstsRanklist: JsonLoader<z.output<typeof responseSchema>> = {
     },
   }),
   schema: responseSchema,
-  async load(client, frontier, { entity }) {
-    const [{ id: categoryId }] = await upsertCategory.run(
-      {
-        class: '',
-        ageGroup: entity.age,
-        genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
-        discipline: entity.discipline,
-        series: entity.series,
-      },
-      client,
-    );
+  async load(client, frontier, parsed) {
+    await loadCstsRanklist(client, parsed.entity);
+  },
+};
 
-    let competitorType: competitor_type = 'couple';
-    switch (entity.competitorType) {
-      case 'Duo':
-        competitorType = 'duo';
-        break;
-      case 'SoloDancer':
-        competitorType = 'solo';
-        break;
-      case 'Formation':
-        competitorType = 'formation';
-        break;
-      case 'Group':
-      case 'SmallTeam':
-      case 'Team':
-      case 'BigTeam':
-        competitorType = 'team';
-        break;
-      case 'ProAm':
-      case 'Couple':
-      default:
-        competitorType = 'couple';
+async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
+  const [{ id: categoryId }] = await upsertCategory.run(
+    {
+      class: '',
+      ageGroup: entity.age,
+      genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
+      discipline: entity.discipline,
+      series: entity.series,
+    },
+    client,
+  );
+
+  const competitors = entity.competitors.map((competitor) => ({
+    type: mapCompetitorType(entity.competitorType),
+    label: competitor.competitorName,
+    federation: 'csts',
+    federationCompetitorId: competitor.competitorId.toString(),
+  }));
+  const competitorIds =
+    competitors.length > 0
+      ? await upsertManyCompetitors.run({ competitors }, client)
+      : [];
+  const idMap = new Map(competitorIds.map((x) => [x.federation_id, x.federated_id]));
+
+  const ranklistComponents: {
+    competitor_id: string;
+    ranking: number;
+    ranking_to: number;
+    points: number;
+  }[] = [];
+
+  for (const competitor of entity.competitors) {
+    const federatedId = idMap.get(competitor.competitorId.toString());
+    if (federatedId) {
+      ranklistComponents.push({
+        competitor_id: federatedId,
+        ranking: competitor.ranking,
+        ranking_to: competitor.rankingTo,
+        points:
+          competitor.points +
+          competitor.pointsWdsf +
+          competitor.pointsLeague +
+          competitor.pointsWdsf,
+      });
     }
+  }
 
-    const ranklistComponents: {
-      competitor_id: string,
-      ranking: number,
-      ranking_to: number,
-      points: number;
-    }[] = [];
-    new Map<number, string>();
-
-    for (const competitor of entity.competitors) {
-      const [{ competitor_id }] = await upsertCompetitor.run({
-        type: competitorType,
-        label: competitor.competitorName,
-        federation: 'csts',
-        federationCompetitorId: competitor.competitorId.toString(),
-        components: JSON.stringify([]),
-      }, client);
-      if (competitor_id) {
-        ranklistComponents.push({
-          competitor_id,
-          ranking: competitor.ranking,
-          ranking_to: competitor.rankingTo,
-          points: competitor.points + competitor.pointsWdsf + competitor.pointsLeague + competitor.pointsWdsf,
-        });
-      }
-    }
-
-    await upsertRanklistSnapshot.run({
+  await upsertRanklistSnapshot.run(
+    {
       federation: 'csts',
       categoryId,
       ranklistName: [entity.series, entity.discipline, entity.age].join(' '),
       asOfDate: entity.date,
       kind: entity.type,
       entries: JSON.stringify(ranklistComponents),
-    }, client);
-  },
-};
+    },
+    client,
+  );
+}

@@ -121,6 +121,48 @@ const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"federationCo
 export const upsertCompetitor = new PreparedQuery<IUpsertCompetitorParams,IUpsertCompetitorResult>(upsertCompetitorIR);
 
 
+/** 'UpsertManyCompetitors' parameters type */
+export interface IUpsertManyCompetitorsParams {
+  competitors: readonly ({
+    federation: string | null | void,
+    federationCompetitorId: string | null | void,
+    type: string | null | void,
+    label: string | null | void
+  })[];
+}
+
+/** 'UpsertManyCompetitors' return type */
+export interface IUpsertManyCompetitorsResult {
+  federated_id: string | null;
+  federation_id: string | null;
+}
+
+/** 'UpsertManyCompetitors' query type */
+export interface IUpsertManyCompetitorsQuery {
+  params: IUpsertManyCompetitorsParams;
+  result: IUpsertManyCompetitorsResult;
+}
+
+const upsertManyCompetitorsIR: any = {"usedParamSet":{"competitors":true},"params":[{"name":"competitors","required":false,"transform":{"type":"pick_array_spread","keys":[{"name":"federation","required":false},{"name":"federationCompetitorId","required":false},{"name":"type","required":false},{"name":"label","required":false}]},"locs":[{"a":295,"b":306}]}],"statement":"SELECT\n  federation_id,\n  federated.upsert_competitor(\n    in_federation => federation,\n    in_external_id => federation_id,\n    in_type => type::federated.competitor_type,\n    in_label => label,\n    in_components => '{}'::federated.competitor_component_input[]\n  ) as federated_id\nFROM (VALUES :competitors) as t(federation, federation_id, type, label)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *   federation_id,
+ *   federated.upsert_competitor(
+ *     in_federation => federation,
+ *     in_external_id => federation_id,
+ *     in_type => type::federated.competitor_type,
+ *     in_label => label,
+ *     in_components => '{}'::federated.competitor_component_input[]
+ *   ) as federated_id
+ * FROM (VALUES :competitors) as t(federation, federation_id, type, label)
+ * ```
+ */
+export const upsertManyCompetitors = new PreparedQuery<IUpsertManyCompetitorsParams,IUpsertManyCompetitorsResult>(upsertManyCompetitorsIR);
+
+
 /** 'UpsertCompetitorProgress' parameters type */
 export interface IUpsertCompetitorProgressParams {
   categoryId?: NumberOrString | null | void;

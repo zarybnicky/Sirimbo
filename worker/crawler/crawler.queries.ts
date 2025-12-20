@@ -3,6 +3,8 @@ import { PreparedQuery } from '@pgtyped/runtime';
 
 export type fetch_status = 'error' | 'gone' | 'ok' | 'pending';
 
+export type process_status = 'error' | 'ok' | 'pending';
+
 export type DateOrString = Date | string;
 
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
@@ -292,36 +294,73 @@ const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":
 export const getPendingFetch = new PreparedQuery<IGetPendingFetchParams,IGetPendingFetchResult>(getPendingFetchIR);
 
 
-/** 'GetPendingProcess' parameters type */
-export interface IGetPendingProcessParams {
-  limit?: NumberOrString | null | void;
-}
+/** 'GetNextPendingProcess' parameters type */
+export type IGetNextPendingProcessParams = void;
 
-/** 'GetPendingProcess' return type */
-export interface IGetPendingProcessResult {
+/** 'GetNextPendingProcess' return type */
+export interface IGetNextPendingProcessResult {
+  discovered_at: Date;
+  error_count: number;
+  federation: string;
+  fetch_status: fetch_status;
   id: string;
+  key: string;
+  kind: string;
+  last_fetched_at: Date | null;
+  meta: Json;
+  next_fetch_at: Date | null;
+  process_status: process_status;
 }
 
-/** 'GetPendingProcess' query type */
-export interface IGetPendingProcessQuery {
-  params: IGetPendingProcessParams;
-  result: IGetPendingProcessResult;
+/** 'GetNextPendingProcess' query type */
+export interface IGetNextPendingProcessQuery {
+  params: IGetNextPendingProcessParams;
+  result: IGetNextPendingProcessResult;
 }
 
-const getPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":160,"b":165}]}],"statement":"SELECT id\nFROM crawler.frontier\nWHERE process_status = 'pending'\n  AND fetch_status IN ('ok', 'gone')\nORDER BY last_fetched_at NULLS FIRST, discovered_at\nLIMIT :limit"};
+const getNextPendingProcessIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT *\nFROM crawler.frontier\nWHERE process_status = 'pending'\n  AND fetch_status IN ('ok', 'gone')\nORDER BY last_fetched_at NULLS FIRST, discovered_at\nFOR UPDATE SKIP LOCKED\nLIMIT 1"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT id
+ * SELECT *
  * FROM crawler.frontier
  * WHERE process_status = 'pending'
  *   AND fetch_status IN ('ok', 'gone')
  * ORDER BY last_fetched_at NULLS FIRST, discovered_at
- * LIMIT :limit
+ * FOR UPDATE SKIP LOCKED
+ * LIMIT 1
  * ```
  */
-export const getPendingProcess = new PreparedQuery<IGetPendingProcessParams,IGetPendingProcessResult>(getPendingProcessIR);
+export const getNextPendingProcess = new PreparedQuery<IGetNextPendingProcessParams,IGetNextPendingProcessResult>(getNextPendingProcessIR);
+
+
+/** 'CountPendingProcess' parameters type */
+export type ICountPendingProcessParams = void;
+
+/** 'CountPendingProcess' return type */
+export interface ICountPendingProcessResult {
+  count: number | null;
+}
+
+/** 'CountPendingProcess' query type */
+export interface ICountPendingProcessQuery {
+  params: ICountPendingProcessParams;
+  result: ICountPendingProcessResult;
+}
+
+const countPendingProcessIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT count(*)::int\nFROM crawler.frontier\nWHERE process_status = 'pending'\n  AND fetch_status IN ('ok', 'gone')"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT count(*)::int
+ * FROM crawler.frontier
+ * WHERE process_status = 'pending'
+ *   AND fetch_status IN ('ok', 'gone')
+ * ```
+ */
+export const countPendingProcess = new PreparedQuery<ICountPendingProcessParams,ICountPendingProcessResult>(countPendingProcessIR);
 
 
 /** 'ReserveRequest' parameters type */

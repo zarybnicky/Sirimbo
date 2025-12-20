@@ -67,13 +67,20 @@ WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
 ORDER BY last_fetched_at NULLS FIRST, discovered_at
 LIMIT :limit;
 
-/* @name GetPendingProcess */
-SELECT id
+/* @name GetNextPendingProcess */
+SELECT *
 FROM crawler.frontier
 WHERE process_status = 'pending'
   AND fetch_status IN ('ok', 'gone')
 ORDER BY last_fetched_at NULLS FIRST, discovered_at
-LIMIT :limit;
+FOR UPDATE SKIP LOCKED
+LIMIT 1;
+
+/* @name CountPendingProcess */
+SELECT count(*)::int
+FROM crawler.frontier
+WHERE process_status = 'pending'
+  AND fetch_status IN ('ok', 'gone');
 
 /* @name ReserveRequest */
 SELECT granted, allowed_at

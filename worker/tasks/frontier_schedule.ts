@@ -3,13 +3,11 @@ import {
   getFetchScheduleRules,
   getJobCountForTask,
   getPendingFetch,
-  getPendingProcess,
+  countPendingProcess,
 } from '../crawler/crawler.queries.ts';
 import { LOADER_MAP } from '../crawler/handlers.ts';
 
 const MAX_OUTSTANDING_FETCH = 100;
-const MAX_OUTSTANDING_PROCESS = 1;
-const SINGLE_PROCESS_LIMIT = 100;
 
 export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, helpers) => {
   const { withPgClient, addJob, logger } = helpers;
@@ -39,7 +37,9 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
       const { url } = LOADER_MAP[federation][kind].buildRequest(key);
       const { host } = url;
 
-      const rule = byHost.get(host) ?? byHost.set(host, { spacingMs: 50, queued: 0, lastRunAt: new Date() }).get(host)!;
+      const rule =
+        byHost.get(host) ??
+        byHost.set(host, { spacingMs: 50, queued: 0, lastRunAt: new Date() }).get(host)!;
       const runAt = new Date(rule.lastRunAt.getTime() + rule.spacingMs);
       rule.lastRunAt = runAt;
       rule.queued += 1;
@@ -56,24 +56,16 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
   });
 
   await withPgClient(async (client) => {
-    const countRows = await getJobCountForTask.run({ task: 'frontier_process' }, client);
-    const outstanding = countRows[0]?.count ?? 0;
-    const capacity = MAX_OUTSTANDING_PROCESS - outstanding;
-    if (outstanding >= MAX_OUTSTANDING_PROCESS || capacity <= 0) return;
+    const [workers] = await getJobCountForTask.run({ task: 'frontier_process' }, client);
+    const outstandingWorkers = workers?.count ?? 0;
+    if (outstandingWorkers > 0) return;
 
-    const pendingIds = await getPendingProcess.run(
-      { limit: capacity * SINGLE_PROCESS_LIMIT },
-      client,
-    );
-    let reallyAdded = 0;
-    for (let i = 0; i < pendingIds.length; i += SINGLE_PROCESS_LIMIT) {
-      reallyAdded += 1;
-      await addJob('frontier_process', {
-        ids: pendingIds.slice(i, i + SINGLE_PROCESS_LIMIT).map((x) => x.id),
-      });
-    }
-    if (reallyAdded > 0 || outstanding > 0)
-      logger.info(`${reallyAdded} new process jobs, outstanding ${outstanding}`);
+    const [countItems] = await countPendingProcess.run(undefined, client);
+    const pendingItems = countItems?.count ?? 0;
+    if (pendingItems <= 0) return;
+
+    await addJob('frontier_process', {});
+    logger.info(`Scheduled 1 process task, pending ${pendingItems} items`);
   });
 };
 

@@ -28,6 +28,21 @@ SELECT federated.upsert_competitor(
   ))
 ) as competitor_id;
 
+/*
+ @name UpsertManyCompetitors
+ @param competitors -> ((federation, federationCompetitorId, type, label)...)
+*/
+SELECT
+  federation_id,
+  federated.upsert_competitor(
+    in_federation => federation,
+    in_external_id => federation_id,
+    in_type => type::federated.competitor_type,
+    in_label => label,
+    in_components => '{}'::federated.competitor_component_input[]
+  ) as federated_id
+FROM (VALUES :competitors) as t(federation, federation_id, type, label);
+
 /* @name UpsertCompetitorProgress */
 SELECT federated.upsert_competitor_category_progress(
   in_federation      => :federation,
