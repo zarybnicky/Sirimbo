@@ -11,7 +11,6 @@
     package = pkgs.postgresql_17;
     extensions = with pkgs.postgresql_17.pkgs; [
       plpgsql_check
-      pg_cron
       hypopg
       pgsql-http
     ];
@@ -21,14 +20,8 @@
     }];
     authentication = "host all all all trust";
     settings = {
-      shared_preload_libraries = "pg_stat_statements,pg_cron,auto_explain";
-      # shared_preload_libraries = "pg_stat_statements,pg_cron,auto_explain";
+      shared_preload_libraries = "pg_stat_statements,auto_explain";
       "pg_stat_statements.track" = "all";
-      "cron.database_name" = "olymp";
-      "cron.use_background_workers" = "on";
-      # "auto_explain.log_min_duration" = "100ms";
-      # "auto_explain.log_analyze" = "on";
-      # "auto_explain.log_nested_statements" = "on";
       max_worker_processes = "20";
     };
   };

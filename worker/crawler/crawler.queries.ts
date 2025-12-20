@@ -574,7 +574,7 @@ export const insertHtmlResponse = new PreparedQuery<IInsertHtmlResponseParams,II
 
 /** 'InsertJsonResponse' parameters type */
 export interface IInsertJsonResponseParams {
-  content?: Json | null | void;
+  content?: string | null | void;
   error?: string | null | void;
   httpStatus?: number | null | void;
   id?: NumberOrString | null | void;
@@ -590,13 +590,13 @@ export interface IInsertJsonResponseQuery {
   result: IInsertJsonResponseResult;
 }
 
-const insertJsonResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":328,"b":330}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":333,"b":336}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":339,"b":349}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":352,"b":357}]}],"statement":"WITH payload AS (\n  SELECT :content::jsonb AS content\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url, :httpStatus, :error,\n       case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash\nFROM payload"};
+const insertJsonResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":334,"b":336}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":339,"b":342}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":345,"b":355}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":358,"b":363}]}],"statement":"WITH payload AS (\n  SELECT :content::text::jsonb AS content\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url, :httpStatus, :error,\n       case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash\nFROM payload"};
 
 /**
  * Query generated from SQL:
  * ```
  * WITH payload AS (
- *   SELECT :content::jsonb AS content
+ *   SELECT :content::text::jsonb AS content
  * ), ins_cache AS (
  *   INSERT INTO crawler.json_response_cache (content)
  *     SELECT content

@@ -7,6 +7,8 @@ import {
 import { type LoaderIds } from '../crawler/handlers.ts';
 
 const toSeed: LoaderIds[] = [
+  { federation: 'wdsf', kind: 'memberIndex' },
+
   { federation: 'csts', kind: 'ranklistIndex' },
   { federation: 'csts', kind: 'clubIndex' },
   { federation: 'csts', kind: 'divisionIndex' },

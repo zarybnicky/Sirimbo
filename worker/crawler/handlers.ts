@@ -3,9 +3,19 @@ import type { HtmlLoader, JsonLoader } from './types.ts';
 import { z } from 'zod';
 import { cstsRanklistIndex } from './cstsRanklistIndex.ts';
 import { cstsRanklist } from './cstsRanklist.ts';
+import { upsertFrontier } from './crawler.queries.ts';
+import { upsertFederationAthlete } from './federated.queries.ts';
+import { wdsfMember } from './wdsfMember.ts';
+import { wdsfMemberIndex } from './wdsfMemberIndex.ts';
 
 export const LOADERS = {
   wdsf: {
+    // https://services.worlddancesport.org/api/1/person
+    memberIndex: wdsfMemberIndex,
+
+    // https://services.worlddancesport.org/api/1/person/10116109
+    member: wdsfMember,
+
     // modifiedsince, worldranking
     // computed merging of competitions into events, by location + same/adjacent date???
     // scraping by week, maybe?, or maybe from HTML
@@ -14,8 +24,6 @@ export const LOADERS = {
     // https://services.worlddancesport.org/api/1/competition/64306
     // https://services.worlddancesport.org/api/1/participant?competitionId=64306
     // https://services.worlddancesport.org/api/1/official?competitionId=64306 - includes letters of judges
-    // https://services.worlddancesport.org/api/1/person
-    // https://services.worlddancesport.org/api/1/person/10116109
     // https://services.worlddancesport.org/api/1/couple
     // https://services.worlddancesport.org/api/1/participant?coupleId=rls-1912
     // https://services.worlddancesport.org/api/1/participant/2313241?format=json = results!
@@ -27,6 +35,12 @@ export const LOADERS = {
     // Soutěžní údaje, modrý web
     // https://www.csts.cz/api/1/athletes/18038132
     member: cstsAthlete,
+
+    // Ranklisty
+    // https://www.csts.cz/api/1/ranklist
+    // https://www.csts.cz/api/1/ranklist/6733
+    ranklistIndex: cstsRanklistIndex,
+    ranklist: cstsRanklist,
 
     // Osobní údaje, žlutý JS
     // https://www.csts.cz/api/evidence/clenove/detail-clena/osobni-udaje/18038132
@@ -52,40 +66,44 @@ export const LOADERS = {
     // https://www.csts.cz/api/1/competition_events/1262
     // https://www.csts.cz/api/1/competitions/32329/result
 
-    // Ranklisty
-    // https://www.csts.cz/api/1/ranklist
-    // https://www.csts.cz/api/1/ranklist/6733
-    ranklistIndex: cstsRanklistIndex,
-    ranklist: cstsRanklist,
-
     clubIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
       buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Kluby') }),
       async load() {},
     } satisfies HtmlLoader,
+
     divisionIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
       buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Divize') }),
       async load() {},
     } satisfies HtmlLoader,
+
     trainerIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Evidence/SeznamTreneru') }),
+      buildRequest: () => ({
+        url: new URL('https://www.csts.cz/cs/Evidence/SeznamTreneru'),
+      }),
       async load() {},
     } satisfies HtmlLoader,
+
     judgeIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Evidence/SeznamPorotcu') }),
+      buildRequest: () => ({
+        url: new URL('https://www.csts.cz/cs/Evidence/SeznamPorotcu'),
+      }),
       async load() {},
     } satisfies HtmlLoader,
+
     officialIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Evidence/SeznamFunkcionaru') }),
+      buildRequest: () => ({
+        url: new URL('https://www.csts.cz/cs/Evidence/SeznamFunkcionaru'),
+      }),
       async load() {},
     } satisfies HtmlLoader,
   },
@@ -97,6 +115,7 @@ export const LOADERS = {
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=KS') }),
       async load() {},
     } satisfies HtmlLoader,
+
     // clenove https://szts.ksis.eu/menu.php?akcia=CZ
     memberIndex: {
       mode: 'text',
@@ -104,6 +123,7 @@ export const LOADERS = {
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZ') }),
       async load() {},
     } satisfies HtmlLoader,
+
     // trenéři https://szts.ksis.eu/menu.php?akcia=CZT
     trainerIndex: {
       mode: 'text',
@@ -111,6 +131,7 @@ export const LOADERS = {
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZT') }),
       async load() {},
     } satisfies HtmlLoader,
+
     // funkcionáři https://szts.ksis.eu/menu.php?akcia=CZS
     officialIndex: {
       mode: 'text',
@@ -118,6 +139,7 @@ export const LOADERS = {
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZS') }),
       async load() {},
     } satisfies HtmlLoader,
+
     // porotci https://szts.ksis.eu/menu.php?akcia=CZR
     judgeIndex: {
       mode: 'text',
@@ -125,6 +147,7 @@ export const LOADERS = {
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZR') }),
       async load() {},
     } satisfies HtmlLoader,
+
     // kluby https://szts.ksis.eu/menu.php?akcia=CZK
     clubIndex: {
       mode: 'text',
@@ -132,6 +155,7 @@ export const LOADERS = {
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZK') }),
       async load() {},
     } satisfies HtmlLoader,
+
     // solo https://szts.ksis.eu/menu.php?akcia=CZSD
     soloIndex: {
       mode: 'text',
@@ -139,6 +163,7 @@ export const LOADERS = {
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZSD') }),
       async load() {},
     } satisfies HtmlLoader,
+
     // páry https://szts.ksis.eu/menu.php?akcia=CZP
     coupleIndex: {
       mode: 'text',
@@ -146,6 +171,7 @@ export const LOADERS = {
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZP') }),
       async load() {},
     } satisfies HtmlLoader,
+
     // soutěže porotce https://szts.ksis.eu/rozhodca.php?meno=R%C3%B3bert%20Pavl%C3%ADk&mesto=Adamovsk%C3%A9%20Kochanovce
     // detail https://szts.ksis.eu/detail_paru.php?cp=12278
     // seznam výsledků https://szts.ksis.eu/menu.php?akcia=S&rok=2024

@@ -50,6 +50,11 @@ in {
       };
     };
 
+    wdsfAuth = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} WDSF Auth, usually 'Basic xxx'";
+    };
+
     smtp = {
       auth = lib.mkEnableOption "${pkgName} SMTP auth";
       tls = lib.mkEnableOption "${pkgName} SMTP TLS";
@@ -241,6 +246,7 @@ in {
           SMTP_PORT = toString cfg.smtp.port;
           SMTP_USER = cfg.smtp.user;
           SMTP_PASS = cfg.smtp.pass;
+          WDSF_AUTH = cfg.wdsfAuth;
         };
 
         serviceConfig = {

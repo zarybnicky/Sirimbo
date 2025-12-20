@@ -34,7 +34,9 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
 
     const pendingIds = await getPendingFetch.run({ limit: capacity }, client);
     for (const { id, federation, kind, key } of pendingIds) {
-      const { url } = LOADER_MAP[federation][kind].buildRequest(key);
+      const handler = LOADER_MAP[federation]?.[kind];
+      if (!handler) continue;
+      const { url } = handler.buildRequest(key);
       const { host } = url;
 
       const rule =

@@ -8,7 +8,11 @@ import {
   rescheduleFrontier,
   reserveRequest,
 } from '../crawler/crawler.queries.ts';
-import { defaultMapResponseToStatus, type HtmlLoader, type JsonLoader } from '../crawler/types.ts';
+import {
+  defaultMapResponseToStatus,
+  type HtmlLoader,
+  type JsonLoader,
+} from '../crawler/types.ts';
 import { getFrontierHandler } from '../crawler/getFrontierHandler.ts';
 
 export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) => {
@@ -27,7 +31,9 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     const { host } = url;
     const [{ granted, allowed_at }] = await reserveRequest.run({ host }, client);
     if (!granted) {
-      logger.info(`Over-scheduled for host ${host}, rescheduling in ${allowed_at!.getTime() - Date.now()} ms`);
+      logger.info(
+        `Over-scheduled for host ${host}, rescheduling in ${allowed_at!.getTime() - Date.now()} ms`,
+      );
       await rescheduleFrontier.run({ id, nextRetryAt: allowed_at }, client);
       await client.query('COMMIT');
       const jobKey = `fetch:${host}:${id}`;
@@ -41,9 +47,10 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
   if (!result) return;
   const { frontier, handler, url, init } = result;
 
-  const { httpStatus, error, content, fetchStatus } = handler.mode === 'json'
-    ? await fetchFrontierJson(handler, url, init)
-    : await fetchFrontierHtml(handler, url, init);
+  const { httpStatus, error, content, fetchStatus } =
+    handler.mode === 'json'
+      ? await fetchFrontierJson(handler, url, init)
+      : await fetchFrontierHtml(handler, url, init);
 
   if (error) {
     logger.warn(`Fetch error in ${frontier.id}, URL ${url} (${error})`);
@@ -53,7 +60,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     await client.query('BEGIN');
     if (handler.mode === 'json') {
       await insertJsonResponse.run(
-        { id, url: url.toString(), httpStatus, error, content },
+        { id, url: url.toString(), httpStatus, error, content: JSON.stringify(content) },
         client,
       );
     } else {
@@ -71,7 +78,8 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     }
 
     const jobs = await getJobCountForTask.run({ task: 'frontier_fetch' }, client);
-    if ((jobs[0].count ?? 0) <= 1) { // Count the current job too!
+    if ((jobs[0].count ?? 0) <= 1) {
+      // Count the current job too!
       await helpers.addJob('frontier_schedule', {});
     }
 
@@ -92,7 +100,9 @@ async function fetchFrontierJson(handler: JsonLoader, url: URL, init: RequestIni
     httpStatus = resp.status;
 
     rawJson = await resp.json();
-    const parsedRes = handler.schema.safeParse(rawJson);
+    const parsedRes = handler.schema.safeParse(rawJson, {
+      reportInput: true,
+    });
     if (parsedRes.success) {
       parsed = parsedRes.data;
     } else {
@@ -108,7 +118,7 @@ async function fetchFrontierJson(handler: JsonLoader, url: URL, init: RequestIni
   const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
   const fetchStatus = mapper(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs);
 
-  let content: any = null;
+  let content: any = '';
   if (parsed != null) {
     content = handler.cleanResponse
       ? await handler.cleanResponse(url, parsed, rawJson)

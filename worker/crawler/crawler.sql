@@ -129,7 +129,7 @@ FROM payload;
 
 /* @name InsertJsonResponse */
 WITH payload AS (
-  SELECT :content::jsonb AS content
+  SELECT :content::text::jsonb AS content
 ), ins_cache AS (
   INSERT INTO crawler.json_response_cache (content)
     SELECT content
