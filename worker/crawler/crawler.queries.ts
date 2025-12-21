@@ -96,15 +96,21 @@ export interface IGetLatestFrontierJsonResponseQuery {
   result: IGetLatestFrontierJsonResponseResult;
 }
 
-const getLatestFrontierJsonResponseIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":234,"b":244}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":263}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN crawler.json_response jr on f.id = jr.frontier_id\nJOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation AND f.kind = :kind"};
+const getLatestFrontierJsonResponseIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":325,"b":335}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":350,"b":354}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n  ) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation AND f.kind = :kind"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
  * FROM crawler.frontier f
- * JOIN crawler.json_response jr on f.id = jr.frontier_id
- * JOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash
+ * JOIN LATERAL (
+ *   SELECT jr.*
+ *   FROM crawler.json_response jr
+ *   WHERE jr.frontier_id = f.id
+ *   ORDER BY jr.fetched_at DESC
+ *   LIMIT 1
+ *   ) jr ON true
+ * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
  * WHERE f.federation = :federation AND f.kind = :kind
  * ```
  */
@@ -131,17 +137,22 @@ export interface IGetFrontierJsonResponseForUpdateQuery {
   result: IGetFrontierJsonResponseForUpdateResult;
 }
 
-const getFrontierJsonResponseForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":226,"b":228}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN crawler.json_response jr on f.id = jr.frontier_id\nJOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint\nFOR UPDATE SKIP LOCKED"};
+const getFrontierJsonResponseForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":317}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
  * FROM crawler.frontier f
- * JOIN crawler.json_response jr on f.id = jr.frontier_id
- * JOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash
+ * JOIN LATERAL (
+ *   SELECT jr.*
+ *   FROM crawler.json_response jr
+ *   WHERE jr.frontier_id = f.id
+ *   ORDER BY jr.fetched_at DESC
+ *   LIMIT 1
+ * ) jr ON true
+ * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
  * WHERE f.id = :id::bigint
- * FOR UPDATE SKIP LOCKED
  * ```
  */
 export const getFrontierJsonResponseForUpdate = new PreparedQuery<IGetFrontierJsonResponseForUpdateParams,IGetFrontierJsonResponseForUpdateResult>(getFrontierJsonResponseForUpdateIR);
@@ -167,17 +178,22 @@ export interface IGetFrontierHtmlResponseForUpdateQuery {
   result: IGetFrontierHtmlResponseForUpdateResult;
 }
 
-const getFrontierHtmlResponseForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":226,"b":228}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN crawler.html_response jr on f.id = jr.frontier_id\nJOIN crawler.html_response_cache jrc on jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint\nFOR UPDATE SKIP LOCKED"};
+const getFrontierHtmlResponseForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":317}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.html_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.html_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
  * FROM crawler.frontier f
- * JOIN crawler.html_response jr on f.id = jr.frontier_id
- * JOIN crawler.html_response_cache jrc on jr.content_hash = jrc.content_hash
+ * JOIN LATERAL (
+ *   SELECT jr.*
+ *   FROM crawler.html_response jr
+ *   WHERE jr.frontier_id = f.id
+ *   ORDER BY jr.fetched_at DESC
+ *   LIMIT 1
+ * ) jr ON true
+ * JOIN crawler.html_response_cache jrc ON jr.content_hash = jrc.content_hash
  * WHERE f.id = :id::bigint
- * FOR UPDATE SKIP LOCKED
  * ```
  */
 export const getFrontierHtmlResponseForUpdate = new PreparedQuery<IGetFrontierHtmlResponseForUpdateParams,IGetFrontierHtmlResponseForUpdateResult>(getFrontierHtmlResponseForUpdateIR);

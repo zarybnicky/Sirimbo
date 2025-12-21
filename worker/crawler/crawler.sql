@@ -12,25 +12,41 @@ GROUP BY federation, kind;
 /* @name GetLatestFrontierJsonResponse */
 SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
 FROM crawler.frontier f
-JOIN crawler.json_response jr on f.id = jr.frontier_id
-JOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash
+JOIN LATERAL (
+  SELECT jr.*
+  FROM crawler.json_response jr
+  WHERE jr.frontier_id = f.id
+  ORDER BY jr.fetched_at DESC
+  LIMIT 1
+  ) jr ON true
+JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE f.federation = :federation AND f.kind = :kind;
 
 /* @name GetFrontierJsonResponseForUpdate */
 SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
 FROM crawler.frontier f
-JOIN crawler.json_response jr on f.id = jr.frontier_id
-JOIN crawler.json_response_cache jrc on jr.content_hash = jrc.content_hash
-WHERE f.id = :id::bigint
-FOR UPDATE SKIP LOCKED;
+JOIN LATERAL (
+  SELECT jr.*
+  FROM crawler.json_response jr
+  WHERE jr.frontier_id = f.id
+  ORDER BY jr.fetched_at DESC
+  LIMIT 1
+) jr ON true
+JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
+WHERE f.id = :id::bigint;
 
 /* @name GetFrontierHtmlResponseForUpdate */
 SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
 FROM crawler.frontier f
-JOIN crawler.html_response jr on f.id = jr.frontier_id
-JOIN crawler.html_response_cache jrc on jr.content_hash = jrc.content_hash
-WHERE f.id = :id::bigint
-FOR UPDATE SKIP LOCKED;
+JOIN LATERAL (
+  SELECT jr.*
+  FROM crawler.html_response jr
+  WHERE jr.frontier_id = f.id
+  ORDER BY jr.fetched_at DESC
+  LIMIT 1
+) jr ON true
+JOIN crawler.html_response_cache jrc ON jr.content_hash = jrc.content_hash
+WHERE f.id = :id::bigint;
 
 /* @name GetJobCountForTask */
 SELECT count(*)::int AS count
