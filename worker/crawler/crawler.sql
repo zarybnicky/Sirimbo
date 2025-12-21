@@ -60,24 +60,23 @@ FULL JOIN job_stats js USING (host);
 
 /* @name GetPendingFetch */
 WITH eligible AS (
-  SELECT id, federation, kind, key, last_fetched_at, discovered_at
+  SELECT id, federation, kind, key, last_fetched_at
   FROM crawler.frontier
   WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
     AND (fetch_status = 'pending'
        OR (fetch_status = 'ok' AND process_status = 'ok'))
 ), ranked AS (
   SELECT
-    id, federation, kind, key,
-    last_fetched_at, discovered_at,
+    id, federation, kind, key, last_fetched_at,
     row_number() OVER (
       PARTITION BY federation, kind
-      ORDER BY last_fetched_at NULLS FIRST, discovered_at
+      ORDER BY last_fetched_at NULLS FIRST
     ) AS rn
   FROM eligible
 )
 SELECT id, federation, kind, key
 FROM ranked
-ORDER BY rn, last_fetched_at NULLS FIRST, discovered_at
+ORDER BY rn, last_fetched_at NULLS FIRST
 LIMIT :limit;
 
 /* @name GetNextPendingProcess */
