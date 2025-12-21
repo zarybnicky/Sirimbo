@@ -119,6 +119,8 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
   );
 
   for (const rp of data.rankingPoints) {
+    if (!rp.competitorId) continue;
+
     const [{ id: categoryId }] = await upsertCategory.run(
       {
         class: rp.class ?? '',

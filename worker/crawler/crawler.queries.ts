@@ -277,30 +277,29 @@ export interface IGetPendingFetchQuery {
   result: IGetPendingFetchResult;
 }
 
-const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":607,"b":612}]}],"statement":"WITH eligible AS (\n  SELECT id, federation, kind, key, last_fetched_at, discovered_at\n  FROM crawler.frontier\n  WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n    AND (fetch_status = 'pending'\n       OR (fetch_status = 'ok' AND process_status = 'ok'))\n), ranked AS (\n  SELECT\n    id, federation, kind, key,\n    last_fetched_at, discovered_at,\n    row_number() OVER (\n      PARTITION BY federation, kind\n      ORDER BY last_fetched_at NULLS FIRST, discovered_at\n    ) AS rn\n  FROM eligible\n)\nSELECT id, federation, kind, key\nFROM ranked\nORDER BY rn, last_fetched_at NULLS FIRST, discovered_at\nLIMIT :limit"};
+const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":543,"b":548}]}],"statement":"WITH eligible AS (\n  SELECT id, federation, kind, key, last_fetched_at\n  FROM crawler.frontier\n  WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n    AND (fetch_status = 'pending'\n       OR (fetch_status = 'ok' AND process_status = 'ok'))\n), ranked AS (\n  SELECT\n    id, federation, kind, key, last_fetched_at,\n    row_number() OVER (\n      PARTITION BY federation, kind\n      ORDER BY last_fetched_at NULLS FIRST\n    ) AS rn\n  FROM eligible\n)\nSELECT id, federation, kind, key\nFROM ranked\nORDER BY rn, last_fetched_at NULLS FIRST\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
  * ```
  * WITH eligible AS (
- *   SELECT id, federation, kind, key, last_fetched_at, discovered_at
+ *   SELECT id, federation, kind, key, last_fetched_at
  *   FROM crawler.frontier
  *   WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
  *     AND (fetch_status = 'pending'
  *        OR (fetch_status = 'ok' AND process_status = 'ok'))
  * ), ranked AS (
  *   SELECT
- *     id, federation, kind, key,
- *     last_fetched_at, discovered_at,
+ *     id, federation, kind, key, last_fetched_at,
  *     row_number() OVER (
  *       PARTITION BY federation, kind
- *       ORDER BY last_fetched_at NULLS FIRST, discovered_at
+ *       ORDER BY last_fetched_at NULLS FIRST
  *     ) AS rn
  *   FROM eligible
  * )
  * SELECT id, federation, kind, key
  * FROM ranked
- * ORDER BY rn, last_fetched_at NULLS FIRST, discovered_at
+ * ORDER BY rn, last_fetched_at NULLS FIRST
  * LIMIT :limit
  * ```
  */
