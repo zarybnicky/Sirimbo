@@ -277,17 +277,30 @@ export interface IGetPendingFetchQuery {
   result: IGetPendingFetchResult;
 }
 
-const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":262,"b":267}]}],"statement":"SELECT id, federation, kind, key\nFROM crawler.frontier\nWHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n  AND (fetch_status = 'pending'\n         OR (fetch_status = 'ok' AND process_status = 'ok'))\nORDER BY last_fetched_at NULLS FIRST, discovered_at\nLIMIT :limit"};
+const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":607,"b":612}]}],"statement":"WITH eligible AS (\n  SELECT id, federation, kind, key, last_fetched_at, discovered_at\n  FROM crawler.frontier\n  WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n    AND (fetch_status = 'pending'\n       OR (fetch_status = 'ok' AND process_status = 'ok'))\n), ranked AS (\n  SELECT\n    id, federation, kind, key,\n    last_fetched_at, discovered_at,\n    row_number() OVER (\n      PARTITION BY federation, kind\n      ORDER BY last_fetched_at NULLS FIRST, discovered_at\n    ) AS rn\n  FROM eligible\n)\nSELECT id, federation, kind, key\nFROM ranked\nORDER BY rn, last_fetched_at NULLS FIRST, discovered_at\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
  * ```
+ * WITH eligible AS (
+ *   SELECT id, federation, kind, key, last_fetched_at, discovered_at
+ *   FROM crawler.frontier
+ *   WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
+ *     AND (fetch_status = 'pending'
+ *        OR (fetch_status = 'ok' AND process_status = 'ok'))
+ * ), ranked AS (
+ *   SELECT
+ *     id, federation, kind, key,
+ *     last_fetched_at, discovered_at,
+ *     row_number() OVER (
+ *       PARTITION BY federation, kind
+ *       ORDER BY last_fetched_at NULLS FIRST, discovered_at
+ *     ) AS rn
+ *   FROM eligible
+ * )
  * SELECT id, federation, kind, key
- * FROM crawler.frontier
- * WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
- *   AND (fetch_status = 'pending'
- *          OR (fetch_status = 'ok' AND process_status = 'ok'))
- * ORDER BY last_fetched_at NULLS FIRST, discovered_at
+ * FROM ranked
+ * ORDER BY rn, last_fetched_at NULLS FIRST, discovered_at
  * LIMIT :limit
  * ```
  */
