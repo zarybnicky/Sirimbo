@@ -564,7 +564,7 @@ BEGIN
   END IF;
 
   -- 2) Try to find competitor by exact component set
-  if in_components is not null and length(in_components) > 0 then
+  if in_components is not null and cardinality(in_components) > 0 then
     WITH input AS (
       SELECT (c).athlete_id AS athlete_id, (c).role AS role
       FROM unnest(in_components) AS c
