@@ -346,7 +346,7 @@ export interface IGetNextPendingProcessQuery {
   result: IGetNextPendingProcessResult;
 }
 
-const getNextPendingProcessIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT *\nFROM crawler.frontier\nWHERE process_status = 'pending'\n  AND fetch_status IN ('ok', 'gone')\nORDER BY last_fetched_at NULLS FIRST, discovered_at\nFOR UPDATE SKIP LOCKED\nLIMIT 1"};
+const getNextPendingProcessIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT *\nFROM crawler.frontier\nWHERE process_status = 'pending'\n  AND fetch_status IN ('ok', 'gone')\nORDER BY last_fetched_at, discovered_at\nFOR UPDATE SKIP LOCKED\nLIMIT 1"};
 
 /**
  * Query generated from SQL:
@@ -355,7 +355,7 @@ const getNextPendingProcessIR: any = {"usedParamSet":{},"params":[],"statement":
  * FROM crawler.frontier
  * WHERE process_status = 'pending'
  *   AND fetch_status IN ('ok', 'gone')
- * ORDER BY last_fetched_at NULLS FIRST, discovered_at
+ * ORDER BY last_fetched_at, discovered_at
  * FOR UPDATE SKIP LOCKED
  * LIMIT 1
  * ```

@@ -100,7 +100,7 @@ SELECT *
 FROM crawler.frontier
 WHERE process_status = 'pending'
   AND fetch_status IN ('ok', 'gone')
-ORDER BY last_fetched_at NULLS FIRST, discovered_at
+ORDER BY last_fetched_at, discovered_at
 FOR UPDATE SKIP LOCKED
 LIMIT 1;
 
