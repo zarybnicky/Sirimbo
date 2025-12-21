@@ -22,7 +22,7 @@ export const wdsfMember: JsonLoader = {
     nickname: z.string().nullable(),
     name: z.string(),
     surname: z.string().nullable(),
-    sex: z.enum(['Male', 'Female']),
+    sex: z.enum(['Male', 'Female', 'NotSupplied']),
     nationality: z.string().nullable(),
     country: z.string().nullable(),
     ageGroup: z.string().nullable(),
@@ -30,8 +30,8 @@ export const wdsfMember: JsonLoader = {
     nationalReference: z.string().nullable(),
     licenses: z.array(
       z.object({
-        type: z.enum(['Athlete', 'Adjudicator', 'HeadJudge']),
-        status: z.enum(['Active', 'Expired', 'Retired', 'Aspiring']),
+        type: z.string(), // z.enum(['Athlete', 'Adjudicator', 'HeadJudge']),
+        status: z.string(), // z.enum(['Active', 'Expired', 'Retired', 'Aspiring']),
         division: z.string(), // to be made more strict: z.enum(['Breaking', 'HipHop']),
         disciplines: z.array(z.string()),
         grade: z.string().optional(),
