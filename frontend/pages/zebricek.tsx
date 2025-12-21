@@ -11,7 +11,7 @@ import { fullDateFormatter } from '@/ui/format';
 
 export default function ScoreboardPage() {
   const [selectedCohortId, setSelectedCohortId] = React.useState<string | null | undefined>(null);
-  const [preset, setPreset] = React.useState<PeriodPreset>('schoolYear');
+  const [preset, setPreset] = React.useState<PeriodPreset>('schoolyear');
   const [referenceDate, setReferenceDate] = React.useState(() => new Date());
   const [customRange, setCustomRange] = React.useState<{ since: Date | null; until: Date | null }>({ since: null, until: null });
 
@@ -89,7 +89,7 @@ export default function ScoreboardPage() {
         </section>
 
         <section className="not-prose rounded-lg border border-neutral-6 p-4 space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="flex gap-4 flex-wrap">
             <Combobox
               label="Skupina"
               value={selectedCohortId}
@@ -106,9 +106,9 @@ export default function ScoreboardPage() {
 
             <ScoreboardPeriodSelector
               preset={preset}
-              onPresetChange={(value) => setPreset(value)}
+              onPresetChange={setPreset}
               referenceDate={referenceDate}
-              onReferenceDateChange={(value) => setReferenceDate(value)}
+              onReferenceDateChange={setReferenceDate}
               customSince={customRange.since}
               onCustomSinceChange={(value) => setCustomRange((prev) => ({ ...prev, since: value }))}
               customUntil={customRange.until}
@@ -179,7 +179,7 @@ export default function ScoreboardPage() {
                                 pathname: '/clenove/[id]',
                                 query: { id: entry.person.id },
                               }}
-                              className="hover:underline"
+                              className="hover:underline text-inherit"
                             >
                               {entry.person.name}
                             </Link>

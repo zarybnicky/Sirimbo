@@ -40,7 +40,6 @@ export function ScoreboardPeriodSelector({
   >(
     (value) => {
       const nextValue = typeof value === 'function' ? value(preset) : value;
-
       if (typeof nextValue === 'string') {
         onPresetChange(nextValue as PeriodPreset);
       }
@@ -61,7 +60,6 @@ export function ScoreboardPeriodSelector({
       {preset === 'custom' ? (
         <>
           <TextField
-            className="space-y-1"
             label="Od"
             name="scoreboard-custom-since"
             type="date"
@@ -69,7 +67,6 @@ export function ScoreboardPeriodSelector({
             onChange={(event) => onCustomSinceChange(event.currentTarget.value ? new Date(event.currentTarget.value) : null)}
           />
           <TextField
-            className="space-y-1"
             label="Do"
             name="scoreboard-custom-until"
             type="date"
@@ -84,7 +81,6 @@ export function ScoreboardPeriodSelector({
         </>
       ) : (
         <TextField
-          className="space-y-1"
           label="Referenční datum"
           name="scoreboard-reference-date"
           type="date"

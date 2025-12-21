@@ -15,7 +15,7 @@ const percentFormatter = new Intl.NumberFormat('cs-CZ', {
 
 export default function TrainerAttendanceReportPage() {
   const period = React.useMemo(() => {
-    const period = computeRange('schoolYear', new Date(), null, null);
+    const period = computeRange('schoolyear', new Date(), null, null);
     if (period.until)
       period.until = (new Date(period.until).getTime() > Date.now()) ? new Date().toISOString() : period.until;
     return period;

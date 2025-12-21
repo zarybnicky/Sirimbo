@@ -1,6 +1,6 @@
 import { add } from "date-arithmetic";
 
-export type PeriodPreset = 'schoolYear' | 'semester' | 'quarter' | 'month' | 'custom';
+export type PeriodPreset = 'schoolyear' | 'semester' | 'quarter' | 'month' | 'custom';
 
 type PeriodRange = {
   since: string | null;
@@ -10,7 +10,7 @@ type PeriodRange = {
 };
 
 export const periodLabels: Record<PeriodPreset, string> = {
-  schoolYear: 'Školní rok',
+  schoolyear: 'Školní rok',
   semester: 'Pololetí',
   quarter: 'Čtvrtletí',
   month: 'Měsíc',
@@ -55,7 +55,7 @@ export const computeRange = (
 
   const schoolYearStart = startOfSchoolYear(reference);
 
-  if (preset === 'schoolYear') {
+  if (preset === 'schoolyear') {
     const untilDate = add(schoolYearStart, 12, 'month');
     return {
       since: formatDate(schoolYearStart),

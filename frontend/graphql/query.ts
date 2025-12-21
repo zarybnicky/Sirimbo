@@ -178,6 +178,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     PersonWeeklyAttendanceRecord: () => null,
     Price: () => null,
     Scoreboard: (x) => x.personId || null,
+    ScoreboardRecord: (x) => x.personId || null,
     TenantSetting: (x) => x.tenantId || null,
   },
   updates: {
