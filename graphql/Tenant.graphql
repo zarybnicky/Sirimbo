@@ -3,10 +3,10 @@ fragment Tenant on Tenant {
   name
   bankAccount
   description
-  tenantAdministratorsList(condition: { active: true }, orderBy: SINCE_ASC) {
+  tenantAdministratorsList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
     ...TenantAdministrator
   }
-  tenantTrainersList(condition: { active: true }, orderBy: SINCE_ASC) {
+  tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
     ...TenantTrainer
   }
   tenantLocationsList {
@@ -16,7 +16,7 @@ fragment Tenant on Tenant {
     id
     name
   }
-  tenantMembershipsList(condition: { active: true }) {
+  tenantMembershipsList(condition: { status: ACTIVE }) {
     ...TenantMembership
   }
   couplesList {
