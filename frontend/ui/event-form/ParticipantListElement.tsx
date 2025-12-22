@@ -18,12 +18,12 @@ export function ParticipantListElement({ name, control }: {
   const { fields, append, remove, update } = useFieldArray({ name, control });
   const { data: tenant } = useTenant();
 
-  const possibleCouples = React.useMemo(() => (tenant?.couplesList || []).filter(x => x.active).map((c) => ({
+  const possibleCouples = React.useMemo(() => (tenant?.couplesList || []).filter(x => x.status === 'ACTIVE').map((c) => ({
     id: c.id,
     label: formatLongCoupleName(c),
   })), [tenant]);
 
-  const possiblePeople = (tenant?.tenantMembershipsList || []).filter(x => x.active).map((p) => ({
+  const possiblePeople = (tenant?.tenantMembershipsList || []).filter(x => x.status === 'ACTIVE').map((p) => ({
     id: p.person?.id ?? '',
     label: p.person?.name || '?',
   }));

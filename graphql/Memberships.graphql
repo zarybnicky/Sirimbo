@@ -1,6 +1,6 @@
 fragment Couple on Couple {
   id
-  active
+  status
   since
   until
   woman {
@@ -21,7 +21,7 @@ fragment TenantTrainer on TenantTrainer {
   id
   since
   until
-  active
+  status
   guestPrice45Min {
     amount
     currency
@@ -53,7 +53,7 @@ fragment TenantMembership on TenantMembership {
   id
   since
   until
-  active
+  status
   tenant {
     id
     name
@@ -68,7 +68,7 @@ fragment TenantAdministrator on TenantAdministrator {
   id
   since
   until
-  active
+  status
   tenant {
     id
     name
@@ -83,7 +83,7 @@ fragment CohortMembership on CohortMembership {
   id
   since
   until
-  active
+  status
   cohort {
     id
     name
@@ -103,7 +103,7 @@ fragment UserProxy on UserProxy {
   id
   since
   until
-  active
+  status
   person {
     id
     name

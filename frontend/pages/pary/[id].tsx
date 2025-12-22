@@ -69,7 +69,7 @@ function CouplePage() {
             )}
           </div>
           <div>{formatOpenDateRange(item)}</div>
-          <div>{item.active ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
+          <div>{item.status === 'ACTIVE' ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
         </div>
 
         <h2>Poslední události</h2>

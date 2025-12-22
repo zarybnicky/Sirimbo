@@ -424,7 +424,7 @@ function TrainerFilter() {
         <FilterIcon className="my-0.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {tenant?.tenantTrainersList?.filter(x => x.active).map(x => (
+        {tenant?.tenantTrainersList?.filter(x => x.status === 'ACTIVE').map(x => (
           <DropdownMenuButton key={x.person?.id} onSelect={(e) => {
             e.preventDefault();
             const { person } = x

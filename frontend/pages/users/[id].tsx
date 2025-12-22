@@ -121,7 +121,7 @@ function UserPage() {
                           <p className="text-xs text-neutral-10">Status: {proxy.status.toLowerCase()}</p>
                         </div>
                         <div className="text-xs text-neutral-10 mt-2 sm:mt-0">
-                          {proxy.active ? 'Aktivní' : 'Neaktivní'}
+                          {proxy.status === 'ACTIVE' ? 'Aktivní' : 'Neaktivní'}
                         </div>
                       </div>
                       <div className="mt-2 text-xs text-neutral-10 space-y-1">

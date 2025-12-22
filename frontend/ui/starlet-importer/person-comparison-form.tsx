@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
 import { CreateCoupleDocument, UpdateCoupleDocument, UpdateTenantMembershipDocument } from '@/graphql/Memberships';
 import { tenantIdAtom } from '../state/auth';
+import { RelationshipStatus } from '@/graphql';
 
 type QueriedStudent = Pick<
   Student,
@@ -85,7 +86,6 @@ type Person = {
   isAdmin: boolean | null;
   activeCouplesList: {
     id: string;
-    active: boolean;
     man: {
       id: string;
     } | null;

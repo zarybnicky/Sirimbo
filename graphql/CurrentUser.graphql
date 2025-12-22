@@ -46,7 +46,6 @@ query UserDetail($id: BigInt!) {
       id
       since
       until
-      active
       status
       person {
         id

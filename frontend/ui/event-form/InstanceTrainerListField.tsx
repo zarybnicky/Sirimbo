@@ -21,7 +21,7 @@ export function InstanceTrainerListElement({ index, control }: {
 
   const { data: tenant } = useTenant();
   const trainerOptions = React.useMemo(
-    () => (tenant?.tenantTrainersList || []).filter(x => x.active).map(trainer => ({
+    () => (tenant?.tenantTrainersList || []).filter(x => x.status === 'ACTIVE').map(trainer => ({
       id: trainer.person?.id || '',
       label: trainer.person?.name || '?',
     })),

@@ -2465,17 +2465,6 @@
         "name": "CohortMembership",
         "fields": [
           {
-            "name": "active",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "cohort",
             "type": {
               "kind": "OBJECT",
@@ -2887,17 +2876,6 @@
         "kind": "OBJECT",
         "name": "Couple",
         "fields": [
-          {
-            "name": "active",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
           {
             "name": "createdAt",
             "type": {
@@ -21479,17 +21457,6 @@
         "name": "TenantAdministrator",
         "fields": [
           {
-            "name": "active",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "createdAt",
             "type": {
               "kind": "NON_NULL",
@@ -21842,17 +21809,6 @@
         "name": "TenantMembership",
         "fields": [
           {
-            "name": "active",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "createdAt",
             "type": {
               "kind": "NON_NULL",
@@ -22027,17 +21983,6 @@
         "kind": "OBJECT",
         "name": "TenantTrainer",
         "fields": [
-          {
-            "name": "active",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
           {
             "name": "createPayoutPayments",
             "type": {
@@ -24621,17 +24566,6 @@
         "kind": "OBJECT",
         "name": "UserProxy",
         "fields": [
-          {
-            "name": "active",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
           {
             "name": "createdAt",
             "type": {

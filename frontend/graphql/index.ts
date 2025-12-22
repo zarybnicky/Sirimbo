@@ -1019,7 +1019,6 @@ export type CohortInput = {
 
 export type CohortMembership = {
   __typename?: 'CohortMembership';
-  active: Scalars['Boolean']['output'];
   /** Reads a single `Cohort` that is related to this `CohortMembership`. */
   cohort: Maybe<Cohort>;
   cohortId: Scalars['BigInt']['output'];
@@ -1042,8 +1041,6 @@ export type CohortMembership = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type CohortMembershipCondition = {
-  /** Checks for equality with the object’s `active` field. */
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `cohortId` field. */
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -1066,7 +1063,6 @@ export type CohortMembershipCondition = {
 
 /** An input for mutations affecting `CohortMembership` */
 export type CohortMembershipInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   cohortId: Scalars['BigInt']['input'];
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId: Scalars['BigInt']['input'];
@@ -1079,7 +1075,6 @@ export type CohortMembershipInput = {
 
 /** Represents an update to a `CohortMembership`. Fields that are set will be updated. */
 export type CohortMembershipPatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -1092,8 +1087,6 @@ export type CohortMembershipPatch = {
 
 /** Methods to use when ordering `CohortMembership`. */
 export type CohortMembershipsOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
   | 'CREATED_AT_ASC'
@@ -1278,7 +1271,6 @@ export type ConfirmMembershipApplicationPayloadPersonEdgeArgs = {
 
 export type Couple = {
   __typename?: 'Couple';
-  active: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
   eventInstancesList: Maybe<Array<EventInstance>>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
@@ -1327,8 +1319,6 @@ export type CoupleEventRegistrationsListArgs = {
 
 /** A condition to be used against `Couple` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type CoupleCondition = {
-  /** Checks for equality with the object’s `active` field. */
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -1349,7 +1339,6 @@ export type CoupleCondition = {
 
 /** An input for mutations affecting `Couple` */
 export type CoupleInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   manId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -1361,7 +1350,6 @@ export type CoupleInput = {
 
 /** Represents an update to a `Couple`. Fields that are set will be updated. */
 export type CouplePatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   manId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -1373,8 +1361,6 @@ export type CouplePatch = {
 
 /** Methods to use when ordering `Couple`. */
 export type CouplesOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'ID_ASC'
@@ -8265,7 +8251,6 @@ export type TenantAccountPayloadAccountEdgeArgs = {
 
 export type TenantAdministrator = {
   __typename?: 'TenantAdministrator';
-  active: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
   description: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
@@ -8287,8 +8272,6 @@ export type TenantAdministrator = {
  * are tested for equality and combined with a logical ‘and.’
  */
 export type TenantAdministratorCondition = {
-  /** Checks for equality with the object’s `active` field. */
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `description` field. */
@@ -8313,7 +8296,6 @@ export type TenantAdministratorCondition = {
 
 /** An input for mutations affecting `TenantAdministrator` */
 export type TenantAdministratorInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
@@ -8327,7 +8309,6 @@ export type TenantAdministratorInput = {
 
 /** Represents an update to a `TenantAdministrator`. Fields that are set will be updated. */
 export type TenantAdministratorPatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
@@ -8341,8 +8322,6 @@ export type TenantAdministratorPatch = {
 
 /** Methods to use when ordering `TenantAdministrator`. */
 export type TenantAdministratorsOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'DESCRIPTION_ASC'
@@ -8493,7 +8472,6 @@ export type TenantLocationsOrderBy =
 
 export type TenantMembership = {
   __typename?: 'TenantMembership';
-  active: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `TenantMembership`. */
@@ -8513,8 +8491,6 @@ export type TenantMembership = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type TenantMembershipCondition = {
-  /** Checks for equality with the object’s `active` field. */
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -8535,7 +8511,6 @@ export type TenantMembershipCondition = {
 
 /** An input for mutations affecting `TenantMembership` */
 export type TenantMembershipInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8547,7 +8522,6 @@ export type TenantMembershipInput = {
 
 /** Represents an update to a `TenantMembership`. Fields that are set will be updated. */
 export type TenantMembershipPatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8559,8 +8533,6 @@ export type TenantMembershipPatch = {
 
 /** Methods to use when ordering `TenantMembership`. */
 export type TenantMembershipsOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'ID_ASC'
@@ -8639,7 +8611,6 @@ export type TenantSettingsOrderBy =
 
 export type TenantTrainer = {
   __typename?: 'TenantTrainer';
-  active: Scalars['Boolean']['output'];
   createPayoutPayments: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
   description: Scalars['String']['output'];
@@ -8666,8 +8637,6 @@ export type TenantTrainer = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type TenantTrainerCondition = {
-  /** Checks for equality with the object’s `active` field. */
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `createPayoutPayments` field. */
   createPayoutPayments?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -8702,7 +8671,6 @@ export type TenantTrainerCondition = {
 
 /** An input for mutations affecting `TenantTrainer` */
 export type TenantTrainerInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createPayoutPayments?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -8721,7 +8689,6 @@ export type TenantTrainerInput = {
 
 /** Represents an update to a `TenantTrainer`. Fields that are set will be updated. */
 export type TenantTrainerPatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createPayoutPayments?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -8740,8 +8707,6 @@ export type TenantTrainerPatch = {
 
 /** Methods to use when ordering `TenantTrainer`. */
 export type TenantTrainersOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'CREATE_PAYOUT_PAYMENTS_ASC'
@@ -9827,8 +9792,6 @@ export type UserCondition = {
 
 /** Methods to use when ordering `UserProxy`. */
 export type UserProxiesOrderBy =
-  | 'ACTIVE_ASC'
-  | 'ACTIVE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'ID_ASC'
@@ -9851,7 +9814,6 @@ export type UserProxiesOrderBy =
 
 export type UserProxy = {
   __typename?: 'UserProxy';
-  active: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `UserProxy`. */
@@ -9871,8 +9833,6 @@ export type UserProxy = {
  * for equality and combined with a logical ‘and.’
  */
 export type UserProxyCondition = {
-  /** Checks for equality with the object’s `active` field. */
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -9893,7 +9853,6 @@ export type UserProxyCondition = {
 
 /** An input for mutations affecting `UserProxy` */
 export type UserProxyInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -9905,7 +9864,6 @@ export type UserProxyInput = {
 
 /** Represents an update to a `UserProxy`. Fields that are set will be updated. */
 export type UserProxyPatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
@@ -10477,7 +10435,6 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<CohortGroupsEdge>, Record<string, never>, WithTypename<CohortGroup> | string>
   },
   CohortMembership?: {
-    active?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Boolean'] | string>,
     cohort?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortId?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -10518,7 +10475,6 @@ export type GraphCacheResolvers = {
     query?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, WithTypename<Query> | string>
   },
   Couple?: {
-    active?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Boolean'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime'] | string>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventRegistrations?: GraphCacheResolver<WithTypename<Couple>, CoupleEventRegistrationsArgs, WithTypename<EventRegistrationsConnection> | string>,
@@ -11575,7 +11531,6 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<TenantAccountPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
   TenantAdministrator?: {
-    active?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Boolean'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Datetime'] | string>,
     description?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -11603,7 +11558,6 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Datetime'] | string>
   },
   TenantMembership?: {
-    active?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Boolean'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['BigInt'] | string>,
     person?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, WithTypename<Person> | string>,
@@ -11625,7 +11579,6 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<TenantSettingsEdge>, Record<string, never>, WithTypename<TenantSetting> | string>
   },
   TenantTrainer?: {
-    active?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean'] | string>,
     createPayoutPayments?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>,
     description?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['String'] | string>,
@@ -11879,7 +11832,6 @@ export type GraphCacheResolvers = {
     userProxiesList?: GraphCacheResolver<WithTypename<User>, UserUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>
   },
   UserProxy?: {
-    active?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Boolean'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['BigInt'] | string>,
     person?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, WithTypename<Person> | string>,
@@ -12407,7 +12359,6 @@ export type GraphCacheUpdaters = {
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsEdge>>, Record<string, never>>
   },
   CohortMembership?: {
-    active?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
@@ -12448,7 +12399,6 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, Record<string, never>>
   },
   Couple?: {
-    active?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstancesListArgs>,
     eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventRegistrationsArgs>,
@@ -13505,7 +13455,6 @@ export type GraphCacheUpdaters = {
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAccountPayload>>, Record<string, never>>
   },
   TenantAdministrator?: {
-    active?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
@@ -13533,7 +13482,6 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>
   },
   TenantMembership?: {
-    active?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
@@ -13555,7 +13503,6 @@ export type GraphCacheUpdaters = {
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSettingsEdge>>, Record<string, never>>
   },
   TenantTrainer?: {
-    active?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     createPayoutPayments?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
@@ -13809,7 +13756,6 @@ export type GraphCacheUpdaters = {
     userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserUserProxiesListArgs>
   },
   UserProxy?: {
-    active?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,

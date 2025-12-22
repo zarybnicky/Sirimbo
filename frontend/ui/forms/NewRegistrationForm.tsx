@@ -82,7 +82,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
 
     if (!event.capacity || (event.remainingPersonSpots ?? 0) > 1) {
       for (const c of auth.couples || []) {
-        if (fieldsAddedRef.current.couples.has(c.id) || !c.active) continue;
+        if (fieldsAddedRef.current.couples.has(c.id) || c.status !== 'ACTIVE') continue;
         newRegistrations.push({
           coupleId: c.id,
           personId: null,

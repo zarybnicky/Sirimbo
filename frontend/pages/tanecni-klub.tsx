@@ -43,7 +43,7 @@ export default function ClubPage() {
       <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Trenéři
       </h2>
-      {tenant.tenantTrainersList.filter(x => x.active).map((data) => (
+      {tenant.tenantTrainersList.filter(x => x.status === 'ACTIVE').map((data) => (
         <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
           <TenantTrainerMenu align="start" data={data}>
             <DropdownMenuTrigger.RowDots />
