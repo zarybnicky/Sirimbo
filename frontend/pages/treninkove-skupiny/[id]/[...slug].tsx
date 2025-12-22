@@ -107,48 +107,80 @@ function TrainingCohortPage() {
         <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
           Členové ({members.length})
         </h3>
-        {members.map((membership) => (
-          <div key={membership.id} className="flex gap-3 mb-1 align-baseline">
-            {auth.isAdmin && (
-              <CohortMembershipMenu data={membership}>
-                <DropdownMenuTrigger.RowDots />
-              </CohortMembershipMenu>
-            )}
-            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              {membership.person ? (
-                <Link
-                  className="underline font-bold"
-                  href={{
-                    pathname: '/clenove/[id]',
-                    query: { id: membership.person.id },
-                  }}
-                >
-                  {membership.person.name}
-                </Link>
-              ) : (
-                '?'
-              )}
-              <div className="flex gap-1">
-                {(membership.person?.cstsProgressList ?? []).map(
-                  ({ category, points, finals }, i) => (
-                    <div key={i}>
-                      {category
-                        ? `${
-                            category.discipline === 'Standard'
-                              ? 'STT'
-                              : category.discipline === 'Latin'
-                                ? 'LAT'
-                                : category.discipline
-                          } ${category.class} ${Number.parseFloat(points ?? '0')}/${finals}F`
-                        : ''}
-                    </div>
-                  ),
+        <div className="grid grid-cols-2 gap-x-2 gap-y-3 lg:grid-cols-[1fr_fit-content(30%)_fit-content(30%)_1fr]">
+          <div className="col-span-full grid-cols-subgrid gap-2 text-sm hidden lg:grid">
+            <div></div>
+            <div>STT</div>
+            <div>LAT</div>
+            <div></div>
+          </div>
+          {members.map((membership) => (
+            <div
+              key={membership.id}
+              className="grid col-span-full grid-cols-subgrid gap-2 text-sm items-center"
+            >
+              <div className="flex align-baseline gap-2">
+                {auth.isAdmin && (
+                  <CohortMembershipMenu data={membership}>
+                    <DropdownMenuTrigger.RowDots />
+                  </CohortMembershipMenu>
+                )}
+                {membership.person ? (
+                  <Link
+                    className="underline font-bold"
+                    href={{
+                      pathname: '/clenove/[id]',
+                      query: { id: membership.person.id },
+                    }}
+                  >
+                    {membership.person.name}
+                  </Link>
+                ) : (
+                  '?'
                 )}
               </div>
-              <span>{formatOpenDateRange(membership)}</span>
+              <div className="flex lg:flex-col order-3 lg:order-2 gap-1">
+                {(membership.person?.cstsProgressList ?? []).filter(
+                  (x) => x.category?.discipline === 'Standard',
+                ).length > 0 ? (
+                  <div className="lg:hidden">STT:</div>
+                ) : (
+                  <></>
+                )}
+                {(membership.person?.cstsProgressList ?? [])
+                  .filter((x) => x.category?.discipline === 'Standard')
+                  .map(({ category, points, finals }, i) => (
+                    <div key={i}>
+                      {category
+                        ? `${category.class === 'S' ? 'M' : category.class} ${Number.parseFloat(points ?? '0')}/${finals}F`
+                        : ''}
+                    </div>
+                  ))}
+              </div>
+              <div className="flex lg:flex-col order-4 lg:order-3 gap-1">
+                {(membership.person?.cstsProgressList ?? []).filter(
+                  (x) => x.category?.discipline === 'Latin',
+                ).length > 0 ? (
+                  <div className="lg:hidden">LAT:</div>
+                ) : (
+                  <></>
+                )}
+                {(membership.person?.cstsProgressList ?? [])
+                  .filter((x) => x.category?.discipline === 'Latin')
+                  .map(({ category, points, finals }, i) => (
+                    <div key={i}>
+                      {category
+                        ? `${category.class === 'S' ? 'M' : category.class} ${Number.parseFloat(points ?? '0')}/${finals}F`
+                        : ''}
+                    </div>
+                  ))}
+              </div>
+              <div className="order-2 lg:order-4 text-right">
+                {formatOpenDateRange(membership)}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </WithSidebar>
     </Layout>
   );
