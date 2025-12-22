@@ -1,5 +1,8 @@
 import { Layout } from '@/ui/Layout';
-import { CohortWithMembersDocument, type CohortWithMembersQuery } from '@/graphql/Cohorts';
+import {
+  CohortWithMembersDocument,
+  type CohortWithMembersQuery,
+} from '@/graphql/Cohorts';
 import { CohortList } from '@/ui/lists/CohortList';
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
@@ -18,10 +21,7 @@ import { exportCohort } from '@/ui/reports/export-cohort';
 import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { CohortMembershipMenu } from '@/ui/menus/CohortMembershipMenu';
 import Link from 'next/link';
-import { formatLongCoupleName, formatOpenDateRange } from '@/ui/format';
-import { TabMenu } from '@/ui/TabMenu';
-import { useTenant } from '@/ui/useTenant';
-import type { CoupleFragment } from '@/graphql/Memberships';
+import { formatOpenDateRange } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 
 const QueryParams = z.object({
@@ -29,24 +29,8 @@ const QueryParams = z.object({
   slug: zRouterString,
 });
 
-type CohortMembership = NonNullable<
-  NonNullable<CohortWithMembersQuery['entity']>['cohortMembershipsList']
->[number];
-
-type CoupleWithMemberships = {
-  couple: CoupleFragment;
-  manMembership: CohortMembership;
-  womanMembership: CohortMembership;
-};
-
-type CouplesAndSolos = {
-  couples: CoupleWithMemberships[];
-  solos: CohortMembership[];
-};
-
 function TrainingCohortPage() {
   const auth = useAuth();
-  const { data: tenant } = useTenant();
   const router = useTypedRouter(QueryParams);
   const idParam = router.query.id || router.query.slug;
   const [{ data: cohortQuery, fetching: fetchingCohort }] = useQuery({
@@ -55,7 +39,6 @@ function TrainingCohortPage() {
     pause: !router.isReady || !idParam,
   });
   const cohort = cohortQuery?.entity;
-  const cohortId = cohort?.id;
   const members = React.useMemo(
     () => cohort?.cohortMembershipsList ?? [],
     [cohort?.cohortMembershipsList],
@@ -63,12 +46,6 @@ function TrainingCohortPage() {
   const description = React.useMemo(
     () => cohort?.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', ''),
     [cohort?.description],
-  );
-  const [tab, setTab] = React.useState<string>('overview');
-
-  const { couples, solos } = React.useMemo<CouplesAndSolos>(
-    () => getCouplesAndSolos(members, tenant?.couplesList ?? []),
-    [members, tenant?.couplesList],
   );
 
   React.useEffect(() => {
@@ -84,39 +61,10 @@ function TrainingCohortPage() {
         query: {
           id: cohort.id,
           slug: [expectedSlug],
-        }
+        },
       });
     }
   }, [cohort, fetchingCohort, idParam, router]);
-
-  const tabs = React.useMemo(
-    () => [
-      {
-        id: 'overview',
-        title: 'Přehled',
-        contents: () => (
-          <OverviewTabContent
-            location={cohort?.location}
-            description={description}
-            members={members}
-            canManageMemberships={auth.isAdmin}
-          />
-        ),
-      },
-      {
-        id: 'pairs',
-        title: 'Páry a sólisté',
-        contents: () => (
-          <CouplesAndSolosTabContent
-            couples={couples}
-            solos={solos}
-            canManageMemberships={auth.isAdmin}
-          />
-        ),
-      },
-    ],
-    [auth.isAdmin, couples, cohort?.location, description, members, solos],
-  );
 
   if (!cohort) {
     return (
@@ -134,211 +82,76 @@ function TrainingCohortPage() {
     <Layout hideTopMenuIfLoggedIn>
       <WithSidebar sidebar={<CohortList />}>
         <TitleBar title={cohort?.name}>
-          {auth.isTrainerOrAdmin && cohortId && (
+          {auth.isTrainerOrAdmin && cohort.id && (
             <button
               type="button"
               className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() => exportCohort([cohortId], cohort?.name)}
+              onClick={() => exportCohort([cohort.id], cohort.name)}
             >
               Export členů
             </button>
           )}
-          {auth.isAdmin && cohortId && (
+          {auth.isAdmin && cohort.id && (
             <Dialog>
               <DialogTrigger.Edit size="sm" />
               <DialogContent>
-                <CohortForm id={cohortId} />
+                <CohortForm id={cohort.id} />
               </DialogContent>
             </Dialog>
           )}
         </TitleBar>
-        <div className="mt-6">
-          <TabMenu selected={tab} onSelect={setTab} options={tabs} />
-        </div>
-      </WithSidebar>
-    </Layout>
-  );
-};
 
-export default TrainingCohortPage;
+        <h6 className="font-bold mb-2">{cohort.location}</h6>
+        <RichTextView value={description} />
 
-function getCouplesAndSolos(
-  members: CohortMembership[],
-  tenantCouples: (CoupleFragment | null | undefined)[],
-): CouplesAndSolos {
-  const membershipByPerson = new Map<string, CohortMembership>();
-  for (const membership of members) {
-    const personId = membership.person?.id;
-    if (personId) {
-      membershipByPerson.set(personId, membership);
-    }
-  }
-
-  const usedPersonIds = new Set<string>();
-  const couplesWithMemberships: CoupleWithMemberships[] = [];
-
-  for (const couple of tenantCouples) {
-    if (!couple || !couple.active) continue;
-    const manId = couple.man?.id;
-    const womanId = couple.woman?.id;
-    if (!manId || !womanId) continue;
-
-    const manMembership = membershipByPerson.get(manId);
-    const womanMembership = membershipByPerson.get(womanId);
-
-    if (manMembership && womanMembership) {
-      usedPersonIds.add(manId);
-      usedPersonIds.add(womanId);
-      couplesWithMemberships.push({ couple, manMembership, womanMembership });
-    }
-  }
-
-  couplesWithMemberships.sort((a, b) =>
-    formatLongCoupleName(a.couple).localeCompare(formatLongCoupleName(b.couple), 'cs'),
-  );
-
-  const soloMembers = members
-      .filter((x) => x.person?.id && !usedPersonIds.has(x.person?.id))
-      .toSorted((a, b) => (a.person?.name || '').localeCompare(b.person?.name || '', 'cs'));
-
-  return { couples: couplesWithMemberships, solos: soloMembers };
-}
-
-type MemberRowProps = {
-  membership: CohortMembership;
-  canManageMemberships: boolean;
-};
-
-function FullMemberRow({ membership, canManageMemberships }: MemberRowProps) {
-  return (
-    <div className="flex gap-3 mb-1 align-baseline">
-      {canManageMemberships && (
-        <CohortMembershipMenu data={membership}>
-          <DropdownMenuTrigger.RowDots />
-        </CohortMembershipMenu>
-      )}
-      <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-        {membership.person ? (
-          <Link
-            className="underline font-bold"
-            href={{
-              pathname: '/clenove/[id]',
-              query: { id: membership.person?.id },
-            }}
-          >
-            {membership.person?.name}
-          </Link>
-        ) : (
-          '?'
-        )}
-        <span>{formatOpenDateRange(membership)}</span>
-      </div>
-    </div>
-  );
-}
-
-type OverviewTabContentProps = {
-  location?: string | null;
-  description?: string | null;
-  members: CohortMembership[];
-  canManageMemberships: boolean;
-};
-
-function OverviewTabContent({
-  location,
-  description,
-  members,
-  canManageMemberships,
-}: OverviewTabContentProps) {
-  return (
-    <>
-      <h6 className="font-bold mb-2">{location}</h6>
-      <RichTextView value={description} />
-
-      {members.length > 0 && (
         <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
           Členové ({members.length})
         </h3>
-      )}
-      {members.map((membership) => (
-        <FullMemberRow
-          key={membership.id}
-          membership={membership}
-          canManageMemberships={canManageMemberships}
-        />
-      ))}
-    </>
+        {members.map((membership) => (
+          <div key={membership.id} className="flex gap-3 mb-1 align-baseline">
+            {auth.isAdmin && (
+              <CohortMembershipMenu data={membership}>
+                <DropdownMenuTrigger.RowDots />
+              </CohortMembershipMenu>
+            )}
+            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+              {membership.person ? (
+                <Link
+                  className="underline font-bold"
+                  href={{
+                    pathname: '/clenove/[id]',
+                    query: { id: membership.person.id },
+                  }}
+                >
+                  {membership.person.name}
+                </Link>
+              ) : (
+                '?'
+              )}
+              <div className="flex gap-1">
+                {(membership.person?.cstsProgressList ?? []).map(
+                  ({ category, points, finals }, i) => (
+                    <div key={i}>
+                      {category
+                        ? `${
+                            category.discipline === 'Standard'
+                              ? 'STT'
+                              : category.discipline === 'Latin'
+                                ? 'LAT'
+                                : category.discipline
+                          } ${category.class} ${Number.parseFloat(points ?? '0')}/${finals}F`
+                        : ''}
+                    </div>
+                  ),
+                )}
+              </div>
+              <span>{formatOpenDateRange(membership)}</span>
+            </div>
+          </div>
+        ))}
+      </WithSidebar>
+    </Layout>
   );
 }
 
-type CouplesAndSolosTabContentProps = {
-  couples: CoupleWithMemberships[];
-  solos: CohortMembership[];
-  canManageMemberships: boolean;
-};
-
-function CouplesAndSolosTabContent({
-  couples,
-  solos,
-  canManageMemberships,
-}: CouplesAndSolosTabContentProps) {
-  const renderQuickMember = (membership: CohortMembership) => (
-    <div className="flex items-center gap-2 text-sm">
-      {canManageMemberships && (
-        <CohortMembershipMenu data={membership}>
-          <DropdownMenuTrigger.RowDots />
-        </CohortMembershipMenu>
-      )}
-      {membership.person ? (
-        <Link
-          className="underline"
-          href={{
-            pathname: '/clenove/[id]',
-            query: { id: membership.person?.id },
-          }}
-        >
-          {membership.person?.name}
-        </Link>
-      ) : (
-        <span>?</span>
-      )}
-    </div>
-  );
-
-  return (
-    <div className="space-y-6">
-      <section>
-        <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
-          Páry ({couples.length})
-        </h3>
-        {couples.length === 0 ? (
-          <p className="text-sm text-neutral-11">Žádné páry v této skupině zatím nejsou.</p>
-        ) : (
-          <ul className="grid gap-3 text-sm text-neutral-12">
-            {couples.map(({ couple, manMembership, womanMembership }) => (
-              <li key={couple.id} className="grid grid-cols-2 items-center gap-3">
-                {renderQuickMember(manMembership)}
-                {renderQuickMember(womanMembership)}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section>
-        <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
-          Sólisté ({solos.length})
-        </h3>
-        {solos.length === 0 ? (
-          <p className="text-sm text-neutral-11">Žádní sólisté.</p>
-        ) : (
-          <ul className="space-y-2 text-sm text-neutral-12">
-            {solos.map((membership) => (
-              <li key={membership.id}>{renderQuickMember(membership)}</li>
-            ))}
-          </ul>
-        )}
-      </section>
-    </div>
-  );
-}
+export default TrainingCohortPage;

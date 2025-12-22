@@ -30,6 +30,22 @@ query CohortWithMembers($id: BigInt!) {
     ...Cohort
     cohortMembershipsList(condition: {active: true}) {
       ...CohortMembership
+      person {
+        id
+        cstsProgressList {
+          competitorName
+          category {
+            id
+            name
+            discipline
+            series
+            ageGroup
+            class
+          }
+          points
+          finals
+        }
+      }
     }
   }
 }
