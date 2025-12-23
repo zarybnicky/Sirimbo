@@ -5,7 +5,12 @@ import {
 } from '@/graphql/Memberships';
 import type { PersonWithLinksFragment } from '@/graphql/Person';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
 import { formatLongCoupleName, formatOpenDateRange, moneyFormatter } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
@@ -30,9 +35,18 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
 
-  const addAsMember = React.useCallback(() => createTenantMember({ input: { tenantMembership: { personId: item.id } } }), [createTenantMember, item.id]);
-  const addAsTrainer = React.useCallback(() => createTenantTrainer({ input: { tenantTrainer: { personId: item.id } } }), [createTenantTrainer, item.id]);
-  const addAsAdmin = React.useCallback(() => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id } } }), [createTenantAdmin, item.id]);
+  const addAsMember = React.useCallback(
+    () => createTenantMember({ input: { tenantMembership: { personId: item.id } } }),
+    [createTenantMember, item.id],
+  );
+  const addAsTrainer = React.useCallback(
+    () => createTenantTrainer({ input: { tenantTrainer: { personId: item.id } } }),
+    [createTenantTrainer, item.id],
+  );
+  const addAsAdmin = React.useCallback(
+    () => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id } } }),
+    [createTenantAdmin, item.id],
+  );
 
   return (
     <div key="info" className="prose prose-accent mb-2">
@@ -49,26 +63,28 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         )}
       </div>
 
-      {item.allCouplesList?.map((item) => (
-        <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-          <CoupleMenu align="start" data={item}>
-            <DropdownMenuTrigger.RowDots />
-          </CoupleMenu>
+      {item.allCouplesList
+        ?.sort((a, b) => a.since.localeCompare(b.since))
+        ?.map((item) => (
+          <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
+            <CoupleMenu align="start" data={item}>
+              <DropdownMenuTrigger.RowDots />
+            </CoupleMenu>
 
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <Link
-              className="underline font-bold"
-              href={{
-                pathname: '/pary/[id]',
-                query: { id: item.id }
-              }}
-            >
-              {formatLongCoupleName(item)}
-            </Link>
-            <span>{formatOpenDateRange(item)}</span>
+            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+              <Link
+                className="underline font-bold"
+                href={{
+                  pathname: '/pary/[id]',
+                  query: { id: item.id },
+                }}
+              >
+                {formatLongCoupleName(item)}
+              </Link>
+              <span>{formatOpenDateRange(item)}</span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3>Tréninkové skupiny</h3>
@@ -82,38 +98,44 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           </Dialog>
         )}
       </div>
-      {item.cohortMembershipsList.toSorted((x, y) => (x.person?.name || '').localeCompare(y.person?.name || '')).map((item) => (
-        <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-          <CohortMembershipMenu align="start" data={item}>
-            <DropdownMenuTrigger.RowDots />
-          </CohortMembershipMenu>
+      {item.cohortMembershipsList
+        .toSorted((x, y) => (x.person?.name || '').localeCompare(y.person?.name || ''))
+        .map((item) => (
+          <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
+            <CohortMembershipMenu align="start" data={item}>
+              <DropdownMenuTrigger.RowDots />
+            </CohortMembershipMenu>
 
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <b>
-              Člen skupiny{' '}
-              {!item.cohort ? '?' : (
-                <Link
-                  className="underline font-bold"
-                  href={{
-                    pathname: '/treninkove-skupiny/[id]',
-                    query: { id: item.cohort?.id }
-                  }}
-                >
-                  {item.cohort?.name}
-                </Link>
-              )}
-            </b>
-            <span>{formatOpenDateRange(item)}</span>
+            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+              <b>
+                Člen skupiny{' '}
+                {!item.cohort ? (
+                  '?'
+                ) : (
+                  <Link
+                    className="underline font-bold"
+                    href={{
+                      pathname: '/treninkove-skupiny/[id]',
+                      query: { id: item.cohort?.id },
+                    }}
+                  >
+                    {item.cohort?.name}
+                  </Link>
+                )}
+              </b>
+              <span>{formatOpenDateRange(item)}</span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3>Členství</h3>
 
         {auth.isAdmin && (
           <DropdownMenu>
-            <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
+            <DropdownMenuTrigger
+              className={buttonCls({ variant: 'outline', size: 'sm' })}
+            >
               <Plus />
               Přidat
             </DropdownMenuTrigger>
@@ -126,54 +148,57 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         )}
       </div>
 
-      {item.tenantAdministratorsList.filter(x => x.tenant?.id === tenantId).map((item) => (
-        <div className="flex gap-3 mb-1" key={item.id}>
-          <TenantAdministratorMenu align="start" data={item}>
-            <DropdownMenuTrigger.RowDots />
-          </TenantAdministratorMenu>
+      {item.tenantAdministratorsList
+        .filter((x) => x.tenant?.id === tenantId)
+        .map((item) => (
+          <div className="flex gap-3 mb-1" key={item.id}>
+            <TenantAdministratorMenu align="start" data={item}>
+              <DropdownMenuTrigger.RowDots />
+            </TenantAdministratorMenu>
 
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <b>Správce klubu {item.tenant?.name}</b>
+            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+              <b>Správce klubu {item.tenant?.name}</b>
+            </div>
+            {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
-          {auth.isAdmin && (
-            <span>{formatOpenDateRange(item)}</span>
-          )}
-        </div>
-      ))}
-    
-      {item.tenantTrainersList.filter(x => x.tenant?.id === tenantId && x.status === 'ACTIVE').map((item) => (
-        <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-          <TenantTrainerMenu align="start" data={item}>
-            <DropdownMenuTrigger.RowDots />
-          </TenantTrainerMenu>
+        ))}
 
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <b>Trenér v klubu {item.tenant?.name}</b>
-            {auth.isAdmin && (
-              <div>
-                {moneyFormatter.format(item.memberPrice45Min, '-')}
-                {' '}
-                {item.guestPrice45Min?.amount ? (`(${moneyFormatter.format(item.guestPrice45Min)})`) : ''}
-                {' / 45min'}
-              </div>
-            )}
-          </div>
-        </div>
-      ))}
-      {item.tenantMembershipsList.filter(x => x.tenant?.id === tenantId).map((item) => (
-        <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-          <TenantMembershipMenu align="start" data={item}>
-            <DropdownMenuTrigger.RowDots />
-          </TenantMembershipMenu>
+      {item.tenantTrainersList
+        .filter((x) => x.tenant?.id === tenantId && x.status === 'ACTIVE')
+        .map((item) => (
+          <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
+            <TenantTrainerMenu align="start" data={item}>
+              <DropdownMenuTrigger.RowDots />
+            </TenantTrainerMenu>
 
-          <div className="grow align-baseline text-sm font-bold py-1">
-            Člen klubu {item.tenant?.name}
+            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+              <b>Trenér v klubu {item.tenant?.name}</b>
+              {auth.isAdmin && (
+                <div>
+                  {moneyFormatter.format(item.memberPrice45Min, '-')}{' '}
+                  {item.guestPrice45Min?.amount
+                    ? `(${moneyFormatter.format(item.guestPrice45Min)})`
+                    : ''}
+                  {' / 45min'}
+                </div>
+              )}
+            </div>
           </div>
-          {auth.isAdmin && (
-            <span>{formatOpenDateRange(item)}</span>
-          )}
-        </div>
-      ))}
+        ))}
+      {item.tenantMembershipsList
+        .filter((x) => x.tenant?.id === tenantId)
+        .map((item) => (
+          <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
+            <TenantMembershipMenu align="start" data={item}>
+              <DropdownMenuTrigger.RowDots />
+            </TenantMembershipMenu>
+
+            <div className="grow align-baseline text-sm font-bold py-1">
+              Člen klubu {item.tenant?.name}
+            </div>
+            {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
+          </div>
+        ))}
     </div>
   );
 }
