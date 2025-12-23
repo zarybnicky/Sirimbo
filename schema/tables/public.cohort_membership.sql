@@ -7,9 +7,8 @@ CREATE TABLE public.cohort_membership (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
 );
 
 COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
@@ -18,6 +17,8 @@ COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
 GRANT ALL ON TABLE public.cohort_membership TO anonymous;
 ALTER TABLE public.cohort_membership ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE ONLY public.cohort_membership
+    ADD CONSTRAINT cohort_membership_no_overlap EXCLUDE USING gist (cohort_id WITH =, person_id WITH =, active_range WITH &&);
 ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.cohort_membership
@@ -34,7 +35,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.cohort_membersh
 CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 CREATE TRIGGER _500_on_status AFTER INSERT OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_cohort_membership__on_status();
 
-CREATE INDEX cohort_membership_active_idx ON public.cohort_membership USING btree (active);
 CREATE INDEX cohort_membership_cohort_id_idx ON public.cohort_membership USING btree (cohort_id);
 CREATE INDEX cohort_membership_person_id_idx ON public.cohort_membership USING btree (person_id);
 CREATE INDEX cohort_membership_range_idx ON public.cohort_membership USING gist (active_range, tenant_id, person_id);

@@ -8,14 +8,13 @@ CREATE TABLE public.tenant_trainer (
     id bigint NOT NULL,
     is_visible boolean DEFAULT true,
     description text DEFAULT ''::text NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     member_price_45min public.price DEFAULT NULL::public.price_type,
     member_payout_45min public.price DEFAULT NULL::public.price_type,
     guest_price_45min public.price DEFAULT NULL::public.price_type,
     guest_payout_45min public.price DEFAULT NULL::public.price_type,
     create_payout_payments boolean DEFAULT true NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
 );
 
 COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';
@@ -24,6 +23,8 @@ COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
 GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
 ALTER TABLE public.tenant_trainer ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE ONLY public.tenant_trainer
+    ADD CONSTRAINT tenant_trainer_no_overlap EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&);
 ALTER TABLE ONLY public.tenant_trainer
     ADD CONSTRAINT tenant_trainer_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.tenant_trainer

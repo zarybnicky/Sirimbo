@@ -1008,23 +1008,6 @@ type Cohort {
     orderBy: [ScoreboardManualAdjustmentsOrderBy!]
   ): [ScoreboardManualAdjustment!]!
 
-  """Reads and enables pagination through a set of `Scoreboard`."""
-  scoreboardsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ScoreboardCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Scoreboard`."""
-    orderBy: [ScoreboardsOrderBy!]
-  ): [Scoreboard!]!
-
   """Reads a single `Tenant` that is related to this `Cohort`."""
   tenant: Tenant
   tenantId: BigInt!
@@ -6940,23 +6923,6 @@ type Person {
     """The method to use when ordering `ScoreboardManualAdjustment`."""
     orderBy: [ScoreboardManualAdjustmentsOrderBy!]
   ): [ScoreboardManualAdjustment!]!
-
-  """Reads and enables pagination through a set of `Scoreboard`."""
-  scoreboardsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ScoreboardCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Scoreboard`."""
-    orderBy: [ScoreboardsOrderBy!]
-  ): [Scoreboard!]!
   suffixTitle: String!
   taxIdentificationNumber: String
 
@@ -8301,23 +8267,6 @@ type Query {
     orderBy: [ScoreboardManualAdjustmentsOrderBy!]
   ): [ScoreboardManualAdjustment!]
 
-  """Reads a set of `Scoreboard`."""
-  scoreboardsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ScoreboardCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Scoreboard`."""
-    orderBy: [ScoreboardsOrderBy!]
-  ): [Scoreboard!]
-
   """Reads and enables pagination through a set of `Announcement`."""
   stickyAnnouncements(
     """Read all values in the set after (below) this cursor."""
@@ -8746,52 +8695,6 @@ type ResetPasswordPayload {
   query: Query
 }
 
-type Scoreboard {
-  """Reads a single `Cohort` that is related to this `Scoreboard`."""
-  cohort: Cohort
-  cohortId: BigInt
-  eventTotalScore: BigInt
-  groupTotalScore: BigInt
-  lessonTotalScore: BigInt
-  manualTotalScore: BigInt
-
-  """Reads a single `Person` that is related to this `Scoreboard`."""
-  person: Person
-  personId: BigInt
-  ranking: BigInt
-  totalScore: BigInt
-}
-
-"""
-A condition to be used against `Scoreboard` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input ScoreboardCondition {
-  """Checks for equality with the object’s `cohortId` field."""
-  cohortId: BigInt
-
-  """Checks for equality with the object’s `eventTotalScore` field."""
-  eventTotalScore: BigInt
-
-  """Checks for equality with the object’s `groupTotalScore` field."""
-  groupTotalScore: BigInt
-
-  """Checks for equality with the object’s `lessonTotalScore` field."""
-  lessonTotalScore: BigInt
-
-  """Checks for equality with the object’s `manualTotalScore` field."""
-  manualTotalScore: BigInt
-
-  """Checks for equality with the object’s `personId` field."""
-  personId: BigInt
-
-  """Checks for equality with the object’s `ranking` field."""
-  ranking: BigInt
-
-  """Checks for equality with the object’s `totalScore` field."""
-  totalScore: BigInt
-}
-
 type ScoreboardManualAdjustment {
   awardedAt: Date!
 
@@ -8919,27 +8822,6 @@ type ScoreboardRecord {
   personId: BigInt
   ranking: BigInt
   totalScore: BigInt
-}
-
-"""Methods to use when ordering `Scoreboard`."""
-enum ScoreboardsOrderBy {
-  COHORT_ID_ASC
-  COHORT_ID_DESC
-  EVENT_TOTAL_SCORE_ASC
-  EVENT_TOTAL_SCORE_DESC
-  GROUP_TOTAL_SCORE_ASC
-  GROUP_TOTAL_SCORE_DESC
-  LESSON_TOTAL_SCORE_ASC
-  LESSON_TOTAL_SCORE_DESC
-  MANUAL_TOTAL_SCORE_ASC
-  MANUAL_TOTAL_SCORE_DESC
-  NATURAL
-  PERSON_ID_ASC
-  PERSON_ID_DESC
-  RANKING_ASC
-  RANKING_DESC
-  TOTAL_SCORE_ASC
-  TOTAL_SCORE_DESC
 }
 
 """All input for the `setLessonDemand` mutation."""

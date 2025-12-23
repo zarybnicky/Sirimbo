@@ -11,14 +11,8 @@ declare
   v_until timestamptz;
   v_user_ids bigint[];
 begin
-  select tenant_id,
-         coalesce(is_visible, false),
-         scheduled_since,
-         scheduled_until
-  into v_tenant_id,
-    v_is_visible,
-    v_since,
-    v_until
+  select tenant_id, is_visible, scheduled_since, scheduled_until
+  into v_tenant_id, v_is_visible, v_since, v_until
   from announcement
   where id = in_announcement_id;
 
@@ -56,7 +50,7 @@ begin
   role_users as (
     select distinct u.id as user_id
     from role_people rp
-    join user_proxy up on up.person_id = rp.person_id and up.active
+    join user_proxy up on up.person_id = rp.person_id and up.status = 'active'
     join users u on u.id = up.user_id
     where u.tenant_id = v_tenant_id
   ),
@@ -65,8 +59,8 @@ begin
     from announcement_audience aa
     join cohort_membership cm
       on cm.cohort_id = aa.cohort_id
-     and cm.active
-    join user_proxy up on up.person_id = cm.person_id and up.active
+     and cm.status = 'active'
+    join user_proxy up on up.person_id = cm.person_id and up.status = 'active'
     join users u on u.id = up.user_id
     where aa.announcement_id = in_announcement_id
       and aa.cohort_id is not null

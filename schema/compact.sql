@@ -56,9 +56,9 @@ CREATE TABLE public.couple (
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   legacy_pary_id bigint,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+  EXCLUDE USING gist (man_id WITH =, woman_id WITH =, active_range WITH &&)
 );
 
 CREATE TABLE public.tenant (
@@ -95,9 +95,10 @@ CREATE TABLE public.accounting_period (
   name text DEFAULT ''::text NOT NULL,
   since timestamp with time zone NOT NULL,
   until timestamp with time zone NOT NULL,
-  range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  EXCLUDE USING gist (tenant_id WITH =, range WITH &&)
 );
 
 CREATE TABLE public.cohort_group (
@@ -137,9 +138,9 @@ CREATE TABLE public.cohort_membership (
   id bigint NOT NULL PRIMARY KEY,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
     ON DELETE CASCADE,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+  EXCLUDE USING gist (cohort_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
 CREATE TYPE public.price_type AS (amount numeric(19, 4), currency text);
@@ -222,9 +223,9 @@ CREATE TABLE public.tenant_administrator (
   id bigint NOT NULL PRIMARY KEY,
   is_visible boolean DEFAULT true NOT NULL,
   description text DEFAULT ''::text NOT NULL,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+  EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
 CREATE TABLE public.tenant_location (
@@ -474,9 +475,9 @@ CREATE TABLE public.tenant_membership (
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+  EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
 CREATE TABLE public.tenant_settings (
@@ -499,14 +500,14 @@ CREATE TABLE public.tenant_trainer (
   id bigint NOT NULL PRIMARY KEY,
   is_visible boolean DEFAULT true,
   description text DEFAULT ''::text NOT NULL,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   member_price_45min public.price DEFAULT CAST(NULL AS public.price_type),
   member_payout_45min public.price DEFAULT CAST(NULL AS public.price_type),
   guest_price_45min public.price DEFAULT CAST(NULL AS public.price_type),
   guest_payout_45min public.price DEFAULT CAST(NULL AS public.price_type),
   create_payout_payments boolean DEFAULT true NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+  EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
 CREATE TYPE public.transaction_source AS ENUM ('auto-bank', 'auto-credit', 'manual-bank', 'manual-credit', 'manual-cash');
@@ -699,9 +700,9 @@ CREATE TABLE public.user_proxy (
   id bigint NOT NULL PRIMARY KEY,
   since timestamp with time zone,
   until timestamp with time zone,
-  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+  active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
-  active boolean GENERATED ALWAYS AS (status = CAST('active' AS public.relationship_status)) STORED NOT NULL
+  EXCLUDE USING gist (user_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
 CREATE TYPE federated.competitor_type AS ENUM ('couple', 'solo', 'duo', 'formation', 'team');

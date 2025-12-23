@@ -5,41 +5,41 @@ import { Layout } from '@/ui/Layout';
 import { TitleBar } from '@/ui/TitleBar';
 import { ScoreboardPeriodSelector } from '@/scoreboard/ScoreboardPeriodSelector';
 import { computeRange, PeriodPreset } from '@/scoreboard/periods';
-import { ScoreboardDocument, ScoreboardQueryVariables } from '@/graphql/Scoreboard';
+import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import { Combobox } from '@/ui/fields/Combobox';
 import { fullDateFormatter } from '@/ui/format';
 
 export default function ScoreboardPage() {
-  const [selectedCohortId, setSelectedCohortId] = React.useState<string | null | undefined>(null);
+  const [selectedCohortId, setSelectedCohortId] = React.useState<
+    string | null | undefined
+  >(null);
   const [preset, setPreset] = React.useState<PeriodPreset>('schoolyear');
   const [referenceDate, setReferenceDate] = React.useState(() => new Date());
-  const [customRange, setCustomRange] = React.useState<{ since: Date | null; until: Date | null }>({ since: null, until: null });
+  const [customRange, setCustomRange] = React.useState<{
+    since: Date | null;
+    until: Date | null;
+  }>({ since: null, until: null });
 
   const period = React.useMemo(
     () => computeRange(preset, referenceDate, customRange.since, customRange.until),
     [preset, referenceDate, customRange],
   );
 
-  const variables = React.useMemo<ScoreboardQueryVariables>(
-    () => ({
-      cohortId: selectedCohortId,
-      since: period.since ?? undefined,
-      until: period.until ?? undefined,
-    }),
-    [selectedCohortId, period.since, period.until],
-  );
-
-  const shouldPause = !period.since || !period.until;
-
   const [{ data, fetching, error }] = useQuery({
     query: ScoreboardDocument,
-    variables,
-    pause: shouldPause,
+    variables: {
+      cohortId: selectedCohortId,
+      since: period.since,
+      until: period.until,
+    },
+    pause: !period.since || !period.until,
   });
 
   const cohorts = data?.getCurrentTenant?.cohortsList ?? [];
   const scoreboard = data?.scoreboardEntriesList ?? [];
-  const activeCohort = selectedCohortId ? cohorts.find((item) => item.id === selectedCohortId) ?? null : null;
+  const activeCohort = selectedCohortId
+    ? (cohorts.find((item) => item.id === selectedCohortId) ?? null)
+    : null;
 
   return (
     <Layout requireMember>
@@ -96,10 +96,10 @@ export default function ScoreboardPage() {
               onChange={setSelectedCohortId}
               options={[
                 { id: '', label: 'Všechny skupiny' },
-                ...cohorts.map(cohort => ({
+                ...cohorts.map((cohort) => ({
                   id: cohort.id,
-                  label: cohort.name
-                }))
+                  label: cohort.name,
+                })),
               ]}
               placeholder="Všechny skupiny"
             />
@@ -110,14 +110,20 @@ export default function ScoreboardPage() {
               referenceDate={referenceDate}
               onReferenceDateChange={setReferenceDate}
               customSince={customRange.since}
-              onCustomSinceChange={(value) => setCustomRange((prev) => ({ ...prev, since: value }))}
+              onCustomSinceChange={(value) =>
+                setCustomRange((prev) => ({ ...prev, since: value }))
+              }
               customUntil={customRange.until}
-              onCustomUntilChange={(value) => setCustomRange((prev) => ({ ...prev, until: value }))}
-              showCustomRangeWarning={preset === 'custom' && shouldPause}
+              onCustomUntilChange={(value) =>
+                setCustomRange((prev) => ({ ...prev, until: value }))
+              }
+              showCustomRangeWarning={
+                preset === 'custom' && (!period.since || !period.until)
+              }
             />
           </div>
 
-          {(period.displaySince && period.displayUntil) ? (
+          {period.displaySince && period.displayUntil ? (
             <p className="text-sm text-neutral-10">
               {'Zobrazené období: '}
               <span className="font-medium text-neutral-12">
@@ -171,7 +177,9 @@ export default function ScoreboardPage() {
 
                     return (
                       <tr key={key} className={highlightClass}>
-                        <td className="py-1 pr-2 font-bold">{entry.ranking ? `${entry.ranking}.` : '–'}</td>
+                        <td className="py-1 pr-2 font-bold">
+                          {entry.ranking ? `${entry.ranking}.` : '–'}
+                        </td>
                         <td className="py-1 pr-4">
                           {entry.person ? (
                             <Link
@@ -187,11 +195,21 @@ export default function ScoreboardPage() {
                             '—'
                           )}
                         </td>
-                        <td className="py-1 px-2 text-center">{entry.lessonTotalScore ?? '0'}</td>
-                        <td className="py-1 px-2 text-center">{entry.groupTotalScore ?? '0'}</td>
-                        <td className="py-1 px-2 text-center">{entry.eventTotalScore ?? '0'}</td>
-                        <td className="py-1 px-2 text-center">{entry.manualTotalScore ?? '0'}</td>
-                        <td className="py-1 pl-2 text-center font-bold">{entry.totalScore ?? '0'}</td>
+                        <td className="py-1 px-2 text-center">
+                          {entry.lessonTotalScore ?? '0'}
+                        </td>
+                        <td className="py-1 px-2 text-center">
+                          {entry.groupTotalScore ?? '0'}
+                        </td>
+                        <td className="py-1 px-2 text-center">
+                          {entry.eventTotalScore ?? '0'}
+                        </td>
+                        <td className="py-1 px-2 text-center">
+                          {entry.manualTotalScore ?? '0'}
+                        </td>
+                        <td className="py-1 pl-2 text-center font-bold">
+                          {entry.totalScore ?? '0'}
+                        </td>
                       </tr>
                     );
                   })}

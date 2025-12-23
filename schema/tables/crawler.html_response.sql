@@ -14,3 +14,5 @@ ALTER TABLE ONLY crawler.html_response
     ADD CONSTRAINT html_response_content_hash_fkey FOREIGN KEY (content_hash) REFERENCES crawler.html_response_cache(content_hash);
 ALTER TABLE ONLY crawler.html_response
     ADD CONSTRAINT html_response_frontier_id_fkey FOREIGN KEY (frontier_id) REFERENCES crawler.frontier(id) ON DELETE CASCADE;
+
+CREATE INDEX html_response_frontier_fetched_desc_idx ON crawler.html_response USING btree (frontier_id, fetched_at DESC);

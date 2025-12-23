@@ -60,8 +60,8 @@ importers:
         specifier: ^7.2.4
         version: 7.2.4(@urql/core@5.2.0(graphql@16.12.0))(graphql@16.12.0)
       graphile-migrate:
-        specifier: ^1.4.1
-        version: 1.4.1
+        specifier: 2.0.0-rc.2
+        version: 2.0.0-rc.2
       graphql:
         specifier: ^16.12.0
         version: 16.12.0
@@ -4453,8 +4453,9 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/json5@0.0.30':
-    resolution: {integrity: sha512-sqm9g7mHlPY/43fcSNrCYfOeX9zkTTK+euO5E6+CVijSMm5tTjkVdwdqRkY3ljjIAf8679vps5jKUoJBCLsMDA==}
+  '@types/json5@2.2.0':
+    resolution: {integrity: sha512-NrVug5woqbvNZ0WX+Gv4R+L4TGddtmFek2u8RtccAgFZWtS9QXF2xCXY22/M4nzkaKF0q9Fc6M/5rxLDhfwc/A==}
+    deprecated: This is a stub types definition. json5 provides its own type definitions, so you do not need this installed.
 
   '@types/jsonwebtoken@9.0.10':
     resolution: {integrity: sha512-asx5hIG9Qmf/1oStypjanR7iKTv0gXQ1Ov/jfrX6kS/EO0OFni8orbmGCn0672NHR3kXHwpAwR+B368ZGN/2rA==}
@@ -5244,10 +5245,6 @@ packages:
 
   chainsaw@0.1.0:
     resolution: {integrity: sha512-75kWfWt6MEKNC8xYXIdRpDehRYY/tNSgwKaJq+dbbDcxORuVrrQ+SEHoWsniVn9XPYfP4gmdWIeDk/4YNp1rNQ==}
-
-  chalk@3.0.0:
-    resolution: {integrity: sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg==}
-    engines: {node: '>=8'}
 
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
@@ -6334,8 +6331,8 @@ packages:
     resolution: {integrity: sha512-s7e+gWPJ+S+vI1E7A3H9ku/CswGNL3UQ6qvdbfukGNHVPhg+LvZyojSX1zjpvdMYQ9mNxJMwL+7J4F2VtRhTKg==}
     engines: {node: '>=16'}
 
-  graphile-migrate@1.4.1:
-    resolution: {integrity: sha512-yupLO7kPC8tPu9QjZbbd740bKvKjziZROhpsSVOBmIM4KKXpir9j1uOpekj6WzxQ+L1VlL3r/C6VgjYPP6QnqA==}
+  graphile-migrate@2.0.0-rc.2:
+    resolution: {integrity: sha512-1WJhcXM+fZV5CBiJq0RcqeCvBoW9dfffAwfDHrohutshcXt1EVY6FLEFA2r5IvSIEA4nMTRNoqizig0+PO+Irg==}
     hasBin: true
 
   graphile-utils@5.0.0-rc.1:
@@ -14881,7 +14878,9 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/json5@0.0.30': {}
+  '@types/json5@2.2.0':
+    dependencies:
+      json5: 2.2.3
 
   '@types/jsonwebtoken@9.0.10':
     dependencies:
@@ -14969,7 +14968,7 @@ snapshots:
 
   '@types/pg-pool@2.0.6':
     dependencies:
-      '@types/pg': 8.15.5
+      '@types/pg': 8.15.6
 
   '@types/pg@8.15.5':
     dependencies:
@@ -15753,11 +15752,6 @@ snapshots:
   chainsaw@0.1.0:
     dependencies:
       traverse: 0.3.9
-
-  chalk@3.0.0:
-    dependencies:
-      ansi-styles: 4.3.0
-      supports-color: 7.2.0
 
   chalk@4.1.2:
     dependencies:
@@ -17203,20 +17197,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  graphile-migrate@1.4.1:
+  graphile-migrate@2.0.0-rc.2:
     dependencies:
       '@graphile/logger': 0.2.0
-      '@types/json5': 0.0.30
-      '@types/node': 14.18.63
-      '@types/pg': 8.15.5
-      chalk: 3.0.0
+      '@types/json5': 2.2.0
+      '@types/node': 18.19.130
+      '@types/pg': 8.15.6
+      chalk: 4.1.2
       chokidar: 3.6.0
       json5: 2.2.3
       pg: 8.16.3
       pg-connection-string: 2.9.1
       pg-minify: 1.8.0
-      tslib: 1.14.1
-      yargs: 15.4.1
+      tslib: 2.8.1
+      yargs: 17.7.2
     transitivePeerDependencies:
       - pg-native
 

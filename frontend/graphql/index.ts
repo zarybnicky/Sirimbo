@@ -821,8 +821,6 @@ export type Cohort = {
   ordering: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `ScoreboardManualAdjustment`. */
   scoreboardManualAdjustmentsList: Array<ScoreboardManualAdjustment>;
-  /** Reads and enables pagination through a set of `Scoreboard`. */
-  scoreboardsList: Array<Scoreboard>;
   /** Reads a single `Tenant` that is related to this `Cohort`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -869,14 +867,6 @@ export type CohortScoreboardManualAdjustmentsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ScoreboardManualAdjustmentsOrderBy>>;
-};
-
-
-export type CohortScoreboardsListArgs = {
-  condition?: InputMaybe<ScoreboardCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ScoreboardsOrderBy>>;
 };
 
 /** A condition to be used against `Cohort` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -5753,8 +5743,6 @@ export type Person = {
   recentAttendanceList: Maybe<Array<EventAttendance>>;
   /** Reads and enables pagination through a set of `ScoreboardManualAdjustment`. */
   scoreboardManualAdjustmentsList: Array<ScoreboardManualAdjustment>;
-  /** Reads and enables pagination through a set of `Scoreboard`. */
-  scoreboardsList: Array<Scoreboard>;
   suffixTitle: Scalars['String']['output'];
   taxIdentificationNumber: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
@@ -5891,14 +5879,6 @@ export type PersonScoreboardManualAdjustmentsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ScoreboardManualAdjustmentsOrderBy>>;
-};
-
-
-export type PersonScoreboardsListArgs = {
-  condition?: InputMaybe<ScoreboardCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ScoreboardsOrderBy>>;
 };
 
 
@@ -6399,8 +6379,6 @@ export type Query = {
   scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
   /** Reads a set of `ScoreboardManualAdjustment`. */
   scoreboardManualAdjustmentsList: Maybe<Array<ScoreboardManualAdjustment>>;
-  /** Reads a set of `Scoreboard`. */
-  scoreboardsList: Maybe<Array<Scoreboard>>;
   /** Reads and enables pagination through a set of `Announcement`. */
   stickyAnnouncements: Maybe<AnnouncementsConnection>;
   /** Lists tenants with aggregate membership, staffing, and recent session statistics for system administrators. */
@@ -7141,15 +7119,6 @@ export type QueryScoreboardManualAdjustmentsListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryScoreboardsListArgs = {
-  condition?: InputMaybe<ScoreboardCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ScoreboardsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryStickyAnnouncementsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -7481,45 +7450,6 @@ export type ResetPasswordPayload = {
   query: Maybe<Query>;
 };
 
-export type Scoreboard = {
-  __typename?: 'Scoreboard';
-  /** Reads a single `Cohort` that is related to this `Scoreboard`. */
-  cohort: Maybe<Cohort>;
-  cohortId: Maybe<Scalars['BigInt']['output']>;
-  eventTotalScore: Maybe<Scalars['BigInt']['output']>;
-  groupTotalScore: Maybe<Scalars['BigInt']['output']>;
-  lessonTotalScore: Maybe<Scalars['BigInt']['output']>;
-  manualTotalScore: Maybe<Scalars['BigInt']['output']>;
-  /** Reads a single `Person` that is related to this `Scoreboard`. */
-  person: Maybe<Person>;
-  personId: Maybe<Scalars['BigInt']['output']>;
-  ranking: Maybe<Scalars['BigInt']['output']>;
-  totalScore: Maybe<Scalars['BigInt']['output']>;
-};
-
-/**
- * A condition to be used against `Scoreboard` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type ScoreboardCondition = {
-  /** Checks for equality with the object’s `cohortId` field. */
-  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `eventTotalScore` field. */
-  eventTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `groupTotalScore` field. */
-  groupTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `lessonTotalScore` field. */
-  lessonTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `manualTotalScore` field. */
-  manualTotalScore?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `personId` field. */
-  personId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `ranking` field. */
-  ranking?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `totalScore` field. */
-  totalScore?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
 export type ScoreboardManualAdjustment = {
   __typename?: 'ScoreboardManualAdjustment';
   awardedAt: Scalars['Date']['output'];
@@ -7629,26 +7559,6 @@ export type ScoreboardRecord = {
   ranking: Maybe<Scalars['BigInt']['output']>;
   totalScore: Maybe<Scalars['BigInt']['output']>;
 };
-
-/** Methods to use when ordering `Scoreboard`. */
-export type ScoreboardsOrderBy =
-  | 'COHORT_ID_ASC'
-  | 'COHORT_ID_DESC'
-  | 'EVENT_TOTAL_SCORE_ASC'
-  | 'EVENT_TOTAL_SCORE_DESC'
-  | 'GROUP_TOTAL_SCORE_ASC'
-  | 'GROUP_TOTAL_SCORE_DESC'
-  | 'LESSON_TOTAL_SCORE_ASC'
-  | 'LESSON_TOTAL_SCORE_DESC'
-  | 'MANUAL_TOTAL_SCORE_ASC'
-  | 'MANUAL_TOTAL_SCORE_DESC'
-  | 'NATURAL'
-  | 'PERSON_ID_ASC'
-  | 'PERSON_ID_DESC'
-  | 'RANKING_ASC'
-  | 'RANKING_DESC'
-  | 'TOTAL_SCORE_ASC'
-  | 'TOTAL_SCORE_DESC';
 
 /** All input for the `setLessonDemand` mutation. */
 export type SetLessonDemandInput = {
@@ -10061,7 +9971,6 @@ export type GraphCacheKeysConfig = {
   RegisterWithoutInvitationRecord?: (data: WithTypename<RegisterWithoutInvitationRecord>) => null | string,
   RejectMembershipApplicationPayload?: (data: WithTypename<RejectMembershipApplicationPayload>) => null | string,
   ResetPasswordPayload?: (data: WithTypename<ResetPasswordPayload>) => null | string,
-  Scoreboard?: (data: WithTypename<Scoreboard>) => null | string,
   ScoreboardManualAdjustment?: (data: WithTypename<ScoreboardManualAdjustment>) => null | string,
   ScoreboardRecord?: (data: WithTypename<ScoreboardRecord>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
@@ -10204,7 +10113,6 @@ export type GraphCacheResolvers = {
     scoreboardEntriesList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardEntriesListArgs, Array<WithTypename<ScoreboardRecord> | string>>,
     scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardManualAdjustmentArgs, WithTypename<ScoreboardManualAdjustment> | string>,
     scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
-    scoreboardsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     stickyAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     systemAdminTenants?: GraphCacheResolver<WithTypename<Query>, QuerySystemAdminTenantsArgs, WithTypename<SystemAdminTenantsConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<Query>, QueryTenantArgs, WithTypename<Tenant> | string>,
@@ -10410,7 +10318,6 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String'] | string>,
     ordering?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['Int'] | string>,
     scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Cohort>, CohortScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
-    scoreboardsList?: GraphCacheResolver<WithTypename<Cohort>, CohortScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     tenant?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt'] | string>
   },
@@ -11291,7 +11198,6 @@ export type GraphCacheResolvers = {
     prefixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     recentAttendanceList?: GraphCacheResolver<WithTypename<Person>, PersonRecentAttendanceListArgs, Array<WithTypename<EventAttendance> | string>>,
     scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
-    scoreboardsList?: GraphCacheResolver<WithTypename<Person>, PersonScoreboardsListArgs, Array<WithTypename<Scoreboard> | string>>,
     suffixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     taxIdentificationNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
@@ -11388,18 +11294,6 @@ export type GraphCacheResolvers = {
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, WithTypename<Query> | string>
-  },
-  Scoreboard?: {
-    cohort?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, WithTypename<Cohort> | string>,
-    cohortId?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
-    eventTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
-    groupTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
-    lessonTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
-    manualTotalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
-    person?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, WithTypename<Person> | string>,
-    personId?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
-    ranking?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>,
-    totalScore?: GraphCacheResolver<WithTypename<Scoreboard>, Record<string, never>, Scalars['BigInt'] | string>
   },
   ScoreboardManualAdjustment?: {
     awardedAt?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Date'] | string>,
@@ -12037,7 +11931,6 @@ export type GraphCacheUpdaters = {
     scoreboardEntriesList?: GraphCacheUpdateResolver<{ scoreboardEntriesList: Maybe<Array<WithTypename<ScoreboardRecord>>> }, QueryScoreboardEntriesListArgs>,
     scoreboardManualAdjustment?: GraphCacheUpdateResolver<{ scoreboardManualAdjustment: Maybe<WithTypename<ScoreboardManualAdjustment>> }, QueryScoreboardManualAdjustmentArgs>,
     scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<{ scoreboardManualAdjustmentsList: Maybe<Array<WithTypename<ScoreboardManualAdjustment>>> }, QueryScoreboardManualAdjustmentsListArgs>,
-    scoreboardsList?: GraphCacheUpdateResolver<{ scoreboardsList: Maybe<Array<WithTypename<Scoreboard>>> }, QueryScoreboardsListArgs>,
     stickyAnnouncements?: GraphCacheUpdateResolver<{ stickyAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryStickyAnnouncementsArgs>,
     systemAdminTenants?: GraphCacheUpdateResolver<{ systemAdminTenants: Maybe<WithTypename<SystemAdminTenantsConnection>> }, QuerySystemAdminTenantsArgs>,
     tenant?: GraphCacheUpdateResolver<{ tenant: Maybe<WithTypename<Tenant>> }, QueryTenantArgs>,
@@ -12334,7 +12227,6 @@ export type GraphCacheUpdaters = {
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     ordering?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortScoreboardManualAdjustmentsListArgs>,
-    scoreboardsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortScoreboardsListArgs>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>
   },
@@ -13215,7 +13107,6 @@ export type GraphCacheUpdaters = {
     prefixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     recentAttendanceList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonRecentAttendanceListArgs>,
     scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonScoreboardManualAdjustmentsListArgs>,
-    scoreboardsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonScoreboardsListArgs>,
     suffixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     taxIdentificationNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     tenantAdministratorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantAdministratorsListArgs>,
@@ -13312,18 +13203,6 @@ export type GraphCacheUpdaters = {
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>
-  },
-  Scoreboard?: {
-    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
-    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
-    eventTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
-    groupTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
-    lessonTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
-    manualTotalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
-    person?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
-    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
-    ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>,
-    totalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<Scoreboard>>, Record<string, never>>
   },
   ScoreboardManualAdjustment?: {
     awardedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,

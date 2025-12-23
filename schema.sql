@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict UZGFdpX6N0qsanUbJROncQLUfkKtwu4PkitGDtMEGb0PDBaPZGZBShzDPCajCY7
+\restrict BxenTIyFqBfIwLtsoMhorW0vNL295ofxJb6PuyrOYoXdnvzcOlBizPcJHYMeuKT
 
 -- Dumped from database version 17.7
 -- Dumped by pg_dump version 17.7
@@ -1385,9 +1385,8 @@ CREATE TABLE public.cohort_membership (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
 );
 
 
@@ -2557,9 +2556,8 @@ CREATE TABLE public.couple (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     legacy_pary_id bigint,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
 );
 
 
@@ -4182,22 +4180,12 @@ $$;
 
 CREATE FUNCTION public.person_active_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
-    BEGIN ATOMIC
- SELECT couple.id,
-     couple.man_id,
-     couple.woman_id,
-     couple.since,
-     couple.until,
-     couple.created_at,
-     couple.updated_at,
-     couple.legacy_pary_id,
-     couple.active_range,
-     couple.status,
-     couple.active
-    FROM public.couple
-   WHERE (((couple.man_id = (person_active_couples.p).id) OR (couple.woman_id = (person_active_couples.p).id)) AND couple.active)
-   ORDER BY couple.active_range;
-END;
+    AS $$
+  select *
+  from couple
+  where (man_id = p.id or woman_id = p.id) and status = 'active'
+  order by active_range;
+$$;
 
 
 --
@@ -4213,22 +4201,12 @@ COMMENT ON FUNCTION public.person_active_couples(p public.person) IS '@simpleCol
 
 CREATE FUNCTION public.person_all_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
-    BEGIN ATOMIC
- SELECT couple.id,
-     couple.man_id,
-     couple.woman_id,
-     couple.since,
-     couple.until,
-     couple.created_at,
-     couple.updated_at,
-     couple.legacy_pary_id,
-     couple.active_range,
-     couple.status,
-     couple.active
-    FROM public.couple
-   WHERE ((couple.man_id = (person_all_couples.p).id) OR (couple.woman_id = (person_all_couples.p).id))
-   ORDER BY couple.active_range;
-END;
+    AS $$
+  select *
+  from couple
+  where (man_id = p.id or woman_id = p.id)
+  order by active_range;
+$$;
 
 
 --
@@ -4697,39 +4675,25 @@ COMMENT ON FUNCTION public.resolve_payment_with_credit(p public.payment) IS '@om
 
 
 --
--- Name: scoreboard_entries(bigint, date, date); Type: FUNCTION; Schema: public; Owner: -
+-- Name: scoreboard_entries(date, date, bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.scoreboard_entries(cohort_id bigint DEFAULT NULL::bigint, since date DEFAULT NULL::date, until date DEFAULT NULL::date) RETURNS SETOF public.scoreboard_record
+CREATE FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigint DEFAULT NULL::bigint) RETURNS SETOF public.scoreboard_record
     LANGUAGE sql STABLE
     AS $$
-  with params as (
-    select
-      cohort_id as cohort_id,
-      coalesce(
-        since,
-        make_date(
-          (date_part('year', now())::int - case when date_part('month', now())::int < 9 then 1 else 0 end),
-          9,
-          1
-        )
-      ) as since,
-      coalesce(until, (date_trunc('day', now()) + interval '1 day')::date) as until
-  ),
-  membership as (
+  with membership as (
     select
       cm.person_id,
       cm.cohort_id
     from cohort_membership cm
-    join params p on true
     where cm.tenant_id = current_tenant_id()
-      and cm.active
-      and (p.cohort_id is null or cm.cohort_id = p.cohort_id)
+      and cm.status = 'active'
+      and (cm.cohort_id = scoreboard_entries.cohort_id or scoreboard_entries.cohort_id is null)
   ),
   attendance as (
     select
       ea.person_id,
-      case when p.cohort_id is null then null else matched_membership.cohort_id end as cohort_id,
+      case when scoreboard_entries.cohort_id is null then null else matched_membership.cohort_id end as cohort_id,
       case when e.type = 'lesson' then 1 else 0 end as lesson_score,
       case when e.type = 'group' then floor((extract(epoch from (i.until - i.since)) / 60)::numeric / 45::numeric) else 0 end as group_score,
       case when e.type = 'camp' then 3 + 2 * ((extract(epoch from (i.until - i.since)) > 86400)::int) else 0 end as event_score,
@@ -4738,21 +4702,20 @@ CREATE FUNCTION public.scoreboard_entries(cohort_id bigint DEFAULT NULL::bigint,
     join event_registration er on er.id = ea.registration_id
     join event e on e.id = er.event_id
     join event_instance i on i.id = ea.instance_id
-    join params p on true
     left join event_target_cohort tc on tc.id = er.target_cohort_id
     join lateral (
       select m.cohort_id
       from membership m
       where m.person_id = ea.person_id
-        and (p.cohort_id is null or m.cohort_id = p.cohort_id)
+        and (scoreboard_entries.cohort_id is null or m.cohort_id = scoreboard_entries.cohort_id)
         and (tc.cohort_id is null or tc.cohort_id = m.cohort_id)
       limit 1
     ) matched_membership on true
     where (ea.status = 'attended' or e.type = 'lesson')
       and e.type <> 'reservation'
       and not i.is_cancelled
-      and i.since >= p.since::timestamptz
-      and i.until < p.until::timestamptz
+      and i.since >= scoreboard_entries.since::timestamptz
+      and i.until < scoreboard_entries.until::timestamptz
   ),
   per_day as (
     select
@@ -4778,27 +4741,26 @@ CREATE FUNCTION public.scoreboard_entries(cohort_id bigint DEFAULT NULL::bigint,
     select
       sma.person_id,
       case
-        when p.cohort_id is null then null
-        else coalesce(sma.cohort_id, p.cohort_id)
+        when scoreboard_entries.cohort_id is null then null
+        else coalesce(sma.cohort_id, scoreboard_entries.cohort_id)
       end as cohort_id,
       sum(sma.points)::bigint as manual_total_score
     from scoreboard_manual_adjustment sma
-    join params p on true
     where sma.tenant_id = current_tenant_id()
-      and sma.awarded_at >= p.since
-      and sma.awarded_at < p.until
+      and sma.awarded_at >= scoreboard_entries.since
+      and sma.awarded_at < scoreboard_entries.until
       and (
-        p.cohort_id is null or
+        scoreboard_entries.cohort_id is null or
         sma.cohort_id is null or
-        sma.cohort_id = p.cohort_id
+        sma.cohort_id = scoreboard_entries.cohort_id
       )
       and exists (
         select 1
         from membership mem
         where mem.person_id = sma.person_id
           and (
-            (p.cohort_id is null and sma.cohort_id is null)
-            or mem.cohort_id is not distinct from coalesce(sma.cohort_id, p.cohort_id)
+            (scoreboard_entries.cohort_id is null and sma.cohort_id is null)
+            or mem.cohort_id is not distinct from coalesce(sma.cohort_id, scoreboard_entries.cohort_id)
           )
       )
     group by 1, 2
@@ -4835,10 +4797,10 @@ $$;
 
 
 --
--- Name: FUNCTION scoreboard_entries(cohort_id bigint, since date, until date); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION scoreboard_entries(since date, until date, cohort_id bigint); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.scoreboard_entries(cohort_id bigint, since date, until date) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigint) IS '@simpleCollections only';
 
 
 --
@@ -5003,17 +4965,17 @@ begin
   from public.tenant t
   cross join lateral (
     select
-      count(*) filter (where tm.active) as membership_count
+      count(*) filter (where tm.status = 'active') as membership_count
     from public.tenant_membership tm
     where tm.tenant_id = t.id
   ) as membership_counts
   cross join lateral (
-    select count(*) filter (where tt.active) as trainer_count
+    select count(*) filter (where tt.status = 'active') as trainer_count
     from public.tenant_trainer tt
     where tt.tenant_id = t.id
   ) as staffing
   cross join lateral (
-    select count(*) filter (where ta.active) as administrator_count
+    select count(*) filter (where ta.status = 'active') as administrator_count
     from public.tenant_administrator ta
     where ta.tenant_id = t.id
   ) as administrators
@@ -5108,60 +5070,18 @@ $$;
 
 
 --
--- Name: tenant_membership; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tenant_membership (
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
-);
-
-
---
--- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.tenant_membership IS '@simpleCollections only';
-
-
---
--- Name: COLUMN tenant_membership.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.tenant_membership.active_range IS '@omit';
-
-
---
 -- Name: tenant_couples(public.tenant); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.tenant_couples(t public.tenant) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
-    BEGIN ATOMIC
- SELECT DISTINCT couple.id,
-     couple.man_id,
-     couple.woman_id,
-     couple.since,
-     couple.until,
-     couple.created_at,
-     couple.updated_at,
-     couple.legacy_pary_id,
-     couple.active_range,
-     couple.status,
-     couple.active
-    FROM (public.couple
-      JOIN public.tenant_membership ON (((couple.man_id = tenant_membership.person_id) OR (couple.woman_id = tenant_membership.person_id))))
-   WHERE (couple.active AND tenant_membership.active AND (tenant_membership.tenant_id = (tenant_couples.t).id))
-   ORDER BY couple.active_range;
-END;
+    AS $$
+  select distinct couple.*
+  from couple
+  join tenant_membership on man_id = person_id or woman_id = person_id
+  where couple.status = 'active' and tenant_membership.status = 'active' and tenant_id = t.id
+  order by couple.active_range asc;
+$$;
 
 
 --
@@ -6789,7 +6709,7 @@ CREATE TABLE public.accounting_period (
     name text DEFAULT ''::text NOT NULL,
     since timestamp with time zone NOT NULL,
     until timestamp with time zone NOT NULL,
-    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -6925,9 +6845,8 @@ CREATE TABLE public.tenant_administrator (
     id bigint NOT NULL,
     is_visible boolean DEFAULT true NOT NULL,
     description text DEFAULT ''::text NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
 );
 
 
@@ -6946,6 +6865,37 @@ COMMENT ON COLUMN public.tenant_administrator.active_range IS '@omit';
 
 
 --
+-- Name: tenant_membership; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_membership (
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
+);
+
+
+--
+-- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_membership IS '@simpleCollections only';
+
+
+--
+-- Name: COLUMN tenant_membership.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_membership.active_range IS '@omit';
+
+
+--
 -- Name: tenant_trainer; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6959,14 +6909,13 @@ CREATE TABLE public.tenant_trainer (
     id bigint NOT NULL,
     is_visible boolean DEFAULT true,
     description text DEFAULT ''::text NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     member_price_45min public.price DEFAULT NULL::public.price_type,
     member_payout_45min public.price DEFAULT NULL::public.price_type,
     guest_price_45min public.price DEFAULT NULL::public.price_type,
     guest_payout_45min public.price DEFAULT NULL::public.price_type,
     create_payout_payments boolean DEFAULT true NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
 );
 
 
@@ -7581,31 +7530,6 @@ ALTER TABLE public.posting ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY 
 
 
 --
--- Name: scoreboard; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.scoreboard AS
- SELECT person_id,
-    cohort_id,
-    lesson_total_score,
-    group_total_score,
-    event_total_score,
-    manual_total_score,
-    total_score,
-    ranking
-   FROM public.scoreboard_entries() scoreboard_entries(person_id, cohort_id, lesson_total_score, group_total_score, event_total_score, manual_total_score, total_score, ranking);
-
-
---
--- Name: VIEW scoreboard; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON VIEW public.scoreboard IS '@foreignKey (person_id) references person (id)
-@foreignKey (cohort_id) references cohort (id)
-@simpleCollections only';
-
-
---
 -- Name: scoreboard_manual_adjustment; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7767,9 +7691,8 @@ CREATE TABLE public.user_proxy (
     id bigint NOT NULL,
     since timestamp with time zone,
     until timestamp with time zone,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
 );
 
 
@@ -8514,6 +8437,14 @@ ALTER TABLE ONLY public.account
 
 
 --
+-- Name: accounting_period accounting_period_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period_no_overlap EXCLUDE USING gist (tenant_id WITH =, range WITH &&);
+
+
+--
 -- Name: accounting_period accounting_period_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8554,6 +8485,14 @@ ALTER TABLE ONLY public.cohort_group
 
 
 --
+-- Name: cohort_membership cohort_membership_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort_membership
+    ADD CONSTRAINT cohort_membership_no_overlap EXCLUDE USING gist (cohort_id WITH =, person_id WITH =, active_range WITH &&);
+
+
+--
 -- Name: cohort_membership cohort_membership_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8575,6 +8514,14 @@ ALTER TABLE ONLY public.cohort
 
 ALTER TABLE ONLY public.cohort_subscription
     ADD CONSTRAINT cohort_subscription_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: couple couple_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.couple
+    ADD CONSTRAINT couple_no_overlap EXCLUDE USING gist (man_id WITH =, woman_id WITH =, active_range WITH &&);
 
 
 --
@@ -8834,6 +8781,14 @@ ALTER TABLE ONLY public.scoreboard_manual_adjustment
 
 
 --
+-- Name: tenant_administrator tenant_administrator_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_administrator
+    ADD CONSTRAINT tenant_administrator_no_overlap EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&);
+
+
+--
 -- Name: tenant_administrator tenant_administrator_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8847,6 +8802,14 @@ ALTER TABLE ONLY public.tenant_administrator
 
 ALTER TABLE ONLY public.tenant_location
     ADD CONSTRAINT tenant_location_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_membership tenant_membership_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_membership
+    ADD CONSTRAINT tenant_membership_no_overlap EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&);
 
 
 --
@@ -8874,6 +8837,14 @@ ALTER TABLE ONLY public.tenant_settings
 
 
 --
+-- Name: tenant_trainer tenant_trainer_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_trainer
+    ADD CONSTRAINT tenant_trainer_no_overlap EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&);
+
+
+--
 -- Name: tenant_trainer tenant_trainer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8887,6 +8858,14 @@ ALTER TABLE ONLY public.tenant_trainer
 
 ALTER TABLE ONLY public.transaction
     ADD CONSTRAINT transaction_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_proxy user_proxy_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_proxy
+    ADD CONSTRAINT user_proxy_no_overlap EXCLUDE USING gist (user_id WITH =, person_id WITH =, active_range WITH &&);
 
 
 --
@@ -9056,6 +9035,27 @@ CREATE INDEX frontier_federation_kind_idx ON crawler.frontier USING btree (feder
 --
 
 CREATE INDEX frontier_federation_kind_next_fetch_at_idx ON crawler.frontier USING btree (federation, kind, next_fetch_at) WHERE (fetch_status = 'pending'::crawler.fetch_status);
+
+
+--
+-- Name: frontier_process_pending_ok_gone_pick_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE INDEX frontier_process_pending_ok_gone_pick_idx ON crawler.frontier USING btree (last_fetched_at, discovered_at, id) WHERE ((process_status = 'pending'::crawler.process_status) AND (fetch_status = ANY (ARRAY['ok'::crawler.fetch_status, 'gone'::crawler.fetch_status])));
+
+
+--
+-- Name: html_response_frontier_fetched_desc_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE INDEX html_response_frontier_fetched_desc_idx ON crawler.html_response USING btree (frontier_id, fetched_at DESC);
+
+
+--
+-- Name: json_response_frontier_fetched_desc_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE INDEX json_response_frontier_fetched_desc_idx ON crawler.json_response USING btree (frontier_id, fetched_at DESC);
 
 
 --
@@ -9374,13 +9374,6 @@ CREATE INDEX cohort_group_tenant_id_idx ON public.cohort_group USING btree (tena
 
 
 --
--- Name: cohort_membership_active_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX cohort_membership_active_idx ON public.cohort_membership USING btree (active);
-
-
---
 -- Name: cohort_membership_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9434,13 +9427,6 @@ CREATE INDEX cohort_subscription_tenant_id_idx ON public.cohort_subscription USI
 --
 
 CREATE INDEX cohort_tenant_id_idx ON public.cohort USING btree (tenant_id);
-
-
---
--- Name: couple_active_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX couple_active_idx ON public.couple USING btree (active);
 
 
 --
@@ -9994,13 +9980,6 @@ CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);
 --
 
 CREATE INDEX tenant_location_tenant_id_idx ON public.tenant_location USING btree (tenant_id);
-
-
---
--- Name: tenant_membership_active_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tenant_membership_active_idx ON public.tenant_membership USING btree (active);
 
 
 --
@@ -14058,10 +14037,10 @@ GRANT ALL ON FUNCTION public.resolve_payment_with_credit(p public.payment) TO an
 
 
 --
--- Name: FUNCTION scoreboard_entries(cohort_id bigint, since date, until date); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION scoreboard_entries(since date, until date, cohort_id bigint); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.scoreboard_entries(cohort_id bigint, since date, until date) TO anonymous;
+GRANT ALL ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigint) TO anonymous;
 
 
 --
@@ -14111,13 +14090,6 @@ GRANT ALL ON FUNCTION public.system_admin_update_tenant(tenant_id bigint, name t
 --
 
 GRANT ALL ON FUNCTION public.tenant_account(c text, OUT acc public.account) TO anonymous;
-
-
---
--- Name: TABLE tenant_membership; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_membership TO anonymous;
 
 
 --
@@ -14513,6 +14485,13 @@ GRANT ALL ON TABLE public.tenant_administrator TO anonymous;
 
 
 --
+-- Name: TABLE tenant_membership; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_membership TO anonymous;
+
+
+--
 -- Name: TABLE tenant_trainer; Type: ACL; Schema: public; Owner: -
 --
 
@@ -14681,13 +14660,6 @@ GRANT ALL ON TABLE public.person_invitation TO anonymous;
 
 
 --
--- Name: TABLE scoreboard; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.scoreboard TO anonymous;
-
-
---
 -- Name: TABLE scoreboard_manual_adjustment; Type: ACL; Schema: public; Owner: -
 --
 
@@ -14761,5 +14733,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict UZGFdpX6N0qsanUbJROncQLUfkKtwu4PkitGDtMEGb0PDBaPZGZBShzDPCajCY7
+\unrestrict BxenTIyFqBfIwLtsoMhorW0vNL295ofxJb6PuyrOYoXdnvzcOlBizPcJHYMeuKT
 

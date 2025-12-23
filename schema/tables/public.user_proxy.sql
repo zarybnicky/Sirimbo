@@ -6,9 +6,8 @@ CREATE TABLE public.user_proxy (
     id bigint NOT NULL,
     since timestamp with time zone,
     until timestamp with time zone,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
 );
 
 COMMENT ON TABLE public.user_proxy IS '@simpleCollections only';
@@ -17,6 +16,8 @@ COMMENT ON COLUMN public.user_proxy.active_range IS '@omit';
 GRANT ALL ON TABLE public.user_proxy TO anonymous;
 ALTER TABLE public.user_proxy ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE ONLY public.user_proxy
+    ADD CONSTRAINT user_proxy_no_overlap EXCLUDE USING gist (user_id WITH =, person_id WITH =, active_range WITH &&);
 ALTER TABLE ONLY public.user_proxy
     ADD CONSTRAINT user_proxy_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.user_proxy

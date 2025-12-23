@@ -43,17 +43,17 @@ begin
   from public.tenant t
   cross join lateral (
     select
-      count(*) filter (where tm.active) as membership_count
+      count(*) filter (where tm.status = 'active') as membership_count
     from public.tenant_membership tm
     where tm.tenant_id = t.id
   ) as membership_counts
   cross join lateral (
-    select count(*) filter (where tt.active) as trainer_count
+    select count(*) filter (where tt.status = 'active') as trainer_count
     from public.tenant_trainer tt
     where tt.tenant_id = t.id
   ) as staffing
   cross join lateral (
-    select count(*) filter (where ta.active) as administrator_count
+    select count(*) filter (where ta.status = 'active') as administrator_count
     from public.tenant_administrator ta
     where ta.tenant_id = t.id
   ) as administrators

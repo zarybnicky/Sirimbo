@@ -1,41 +1,28 @@
 drop view if exists scoreboard;
 drop function if exists scoreboard_entries;
+
 create or replace function scoreboard_entries(
-  cohort_id bigint default null,
-  since date default null,
-  until date default null
+  since date,
+  until date,
+  cohort_id bigint default null
 )
 returns setof scoreboard_record
 language sql
 stable
 as $$
-  with params as (
-    select
-      cohort_id as cohort_id,
-      coalesce(
-        since,
-        make_date(
-          (date_part('year', now())::int - case when date_part('month', now())::int < 9 then 1 else 0 end),
-          9,
-          1
-        )
-      ) as since,
-      coalesce(until, (date_trunc('day', now()) + interval '1 day')::date) as until
-  ),
-  membership as (
+  with membership as (
     select
       cm.person_id,
       cm.cohort_id
     from cohort_membership cm
-    join params p on true
     where cm.tenant_id = current_tenant_id()
-      and cm.active
-      and (p.cohort_id is null or cm.cohort_id = p.cohort_id)
+      and cm.status = 'active'
+      and (cm.cohort_id = scoreboard_entries.cohort_id or scoreboard_entries.cohort_id is null)
   ),
   attendance as (
     select
       ea.person_id,
-      case when p.cohort_id is null then null else matched_membership.cohort_id end as cohort_id,
+      case when scoreboard_entries.cohort_id is null then null else matched_membership.cohort_id end as cohort_id,
       case when e.type = 'lesson' then 1 else 0 end as lesson_score,
       case when e.type = 'group' then floor((extract(epoch from (i.until - i.since)) / 60)::numeric / 45::numeric) else 0 end as group_score,
       case when e.type = 'camp' then 3 + 2 * ((extract(epoch from (i.until - i.since)) > 86400)::int) else 0 end as event_score,
@@ -44,21 +31,20 @@ as $$
     join event_registration er on er.id = ea.registration_id
     join event e on e.id = er.event_id
     join event_instance i on i.id = ea.instance_id
-    join params p on true
     left join event_target_cohort tc on tc.id = er.target_cohort_id
     join lateral (
       select m.cohort_id
       from membership m
       where m.person_id = ea.person_id
-        and (p.cohort_id is null or m.cohort_id = p.cohort_id)
+        and (scoreboard_entries.cohort_id is null or m.cohort_id = scoreboard_entries.cohort_id)
         and (tc.cohort_id is null or tc.cohort_id = m.cohort_id)
       limit 1
     ) matched_membership on true
     where (ea.status = 'attended' or e.type = 'lesson')
       and e.type <> 'reservation'
       and not i.is_cancelled
-      and i.since >= p.since::timestamptz
-      and i.until < p.until::timestamptz
+      and i.since >= scoreboard_entries.since::timestamptz
+      and i.until < scoreboard_entries.until::timestamptz
   ),
   per_day as (
     select
@@ -84,27 +70,26 @@ as $$
     select
       sma.person_id,
       case
-        when p.cohort_id is null then null
-        else coalesce(sma.cohort_id, p.cohort_id)
+        when scoreboard_entries.cohort_id is null then null
+        else coalesce(sma.cohort_id, scoreboard_entries.cohort_id)
       end as cohort_id,
       sum(sma.points)::bigint as manual_total_score
     from scoreboard_manual_adjustment sma
-    join params p on true
     where sma.tenant_id = current_tenant_id()
-      and sma.awarded_at >= p.since
-      and sma.awarded_at < p.until
+      and sma.awarded_at >= scoreboard_entries.since
+      and sma.awarded_at < scoreboard_entries.until
       and (
-        p.cohort_id is null or
+        scoreboard_entries.cohort_id is null or
         sma.cohort_id is null or
-        sma.cohort_id = p.cohort_id
+        sma.cohort_id = scoreboard_entries.cohort_id
       )
       and exists (
         select 1
         from membership mem
         where mem.person_id = sma.person_id
           and (
-            (p.cohort_id is null and sma.cohort_id is null)
-            or mem.cohort_id is not distinct from coalesce(sma.cohort_id, p.cohort_id)
+            (scoreboard_entries.cohort_id is null and sma.cohort_id is null)
+            or mem.cohort_id is not distinct from coalesce(sma.cohort_id, scoreboard_entries.cohort_id)
           )
       )
     group by 1, 2
@@ -142,22 +127,3 @@ $$;
 comment on function scoreboard_entries is '@simpleCollections only';
 
 grant all on function scoreboard_entries to anonymous;
-
-drop view if exists scoreboard;
-create or replace view scoreboard as
-select
-  person_id,
-  cohort_id,
-  lesson_total_score,
-  group_total_score,
-  event_total_score,
-  manual_total_score,
-  total_score,
-  ranking
-from scoreboard_entries();
-
-comment on view scoreboard is '@foreignKey (person_id) references person (id)
-@foreignKey (cohort_id) references cohort (id)
-@simpleCollections only';
-
-grant all on table scoreboard to anonymous;

@@ -4,7 +4,7 @@ CREATE TABLE public.accounting_period (
     name text DEFAULT ''::text NOT NULL,
     since timestamp with time zone NOT NULL,
     until timestamp with time zone NOT NULL,
-    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -14,6 +14,8 @@ COMMENT ON TABLE public.accounting_period IS '@omit';
 GRANT ALL ON TABLE public.accounting_period TO anonymous;
 ALTER TABLE public.accounting_period ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period_no_overlap EXCLUDE USING gist (tenant_id WITH =, range WITH &&);
 ALTER TABLE ONLY public.accounting_period
     ADD CONSTRAINT accounting_period_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.accounting_period

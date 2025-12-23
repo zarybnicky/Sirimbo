@@ -7,9 +7,8 @@ CREATE TABLE public.couple (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     legacy_pary_id bigint,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[]'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    active boolean GENERATED ALWAYS AS ((status = 'active'::public.relationship_status)) STORED NOT NULL
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
 );
 
 COMMENT ON TABLE public.couple IS '@simpleCollections only';
@@ -19,6 +18,8 @@ COMMENT ON COLUMN public.couple.active_range IS '@omit';
 GRANT ALL ON TABLE public.couple TO anonymous;
 ALTER TABLE public.couple ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE ONLY public.couple
+    ADD CONSTRAINT couple_no_overlap EXCLUDE USING gist (man_id WITH =, woman_id WITH =, active_range WITH &&);
 ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.couple
@@ -34,7 +35,6 @@ CREATE POLICY view_visible_person ON public.couple FOR SELECT USING ((EXISTS ( S
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 
-CREATE INDEX couple_active_idx ON public.couple USING btree (active);
 CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
 CREATE INDEX couple_range_idx ON public.couple USING gist (active_range, man_id, woman_id);
 CREATE INDEX couple_woman_id_idx ON public.couple USING btree (woman_id);
