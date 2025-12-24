@@ -25,7 +25,10 @@ export async function exportCohort(ids: string[], name?: string) {
     column.alignment = { horizontal: 'center' };
   }
 
-  for (const x of data.filteredPeopleList || []) {
+  const people = (data.filteredPeopleList || []).sort((a, b) =>
+    `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+  );
+  for (const x of people) {
     worksheet.addRow({
       firstName: x.firstName,
       lastName: x.lastName,
@@ -33,10 +36,10 @@ export async function exportCohort(ids: string[], name?: string) {
       birthDate: x.birthDate ? fullDateFormatter.format(new Date(x.birthDate)) : '',
       phone: x.phone,
       email: x.email,
-      cohorts: x.cohortMembershipsList.map(x => x.cohort?.name).join(', '),
+      cohorts: x.cohortMembershipsList.map((x) => x.cohort?.name).join(', '),
     });
   }
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), `${name || 'Všechny skupiny'}.xlsx`);
-};
+}

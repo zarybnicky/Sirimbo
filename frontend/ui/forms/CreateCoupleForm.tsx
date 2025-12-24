@@ -23,9 +23,13 @@ export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment })
     () =>
       (data?.filteredPeopleList || [])
         .filter((x) => x.gender === 'MAN')
+        .sort((a, b) =>
+          `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+        )
         .map((x) => ({
           id: x.id,
-          label: x.name + (x.birthDate ? ` (${new Date(x.birthDate).getFullYear()})` : ''),
+          label:
+            x.name + (x.birthDate ? ` (${new Date(x.birthDate).getFullYear()})` : ''),
         })),
     [data],
   );
@@ -33,9 +37,13 @@ export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment })
     () =>
       (data?.filteredPeopleList || [])
         .filter((x) => x.gender === 'WOMAN')
+        .sort((a, b) =>
+          `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+        )
         .map((x) => ({
           id: x.id,
-          label: x.name + (x.birthDate ? ` (${new Date(x.birthDate).getFullYear()})` : ''),
+          label:
+            x.name + (x.birthDate ? ` (${new Date(x.birthDate).getFullYear()})` : ''),
         })),
     [data],
   );
@@ -50,7 +58,6 @@ export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment })
       reset({ woman: initial.id });
     }
   }, [initial, reset]);
-
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const res = await doCreate({

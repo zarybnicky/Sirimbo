@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
 import { useAuth } from '@/ui/use-auth';
 import { buttonCls } from '@/ui/style';
-import { useSessionStorage } from "@/lib/use-local-storage";
+import { useSessionStorage } from '@/lib/use-local-storage';
 import { cn } from '@/ui/cn';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
@@ -28,40 +28,51 @@ export function PersonList() {
   const [cohort, setCohort] = useSessionStorage('personfilter-cohort');
   const [isTrainer, setIsTrainer] = useSessionStorage('personfilter-trainer');
   const [isAdmin, setIsAdmin] = useSessionStorage('personfilter-admin');
-  const [includeFormer, setIncludeFormer] = useSessionStorage('personfilter-include-former');
+  const [includeFormer, setIncludeFormer] = useSessionStorage(
+    'personfilter-include-former',
+  );
   const [search, setSearch] = useSessionStorage('personfilter-search', '');
 
   const { data: cohorts } = useCohorts();
-  const cohortOptions = React.useMemo(() => [
-    {id: 'none', label: 'Bez skupiny'},
-    ...cohorts.map((x) => ({ id: x.id, label: x.name }))
-  ], [cohorts]);
+  const cohortOptions = React.useMemo(
+    () => [
+      { id: 'none', label: 'Bez skupiny' },
+      ...cohorts.map((x) => ({ id: x.id, label: x.name })),
+    ],
+    [cohorts],
+  );
   const [tab] = useQueryParam('tab', StringParam);
 
   const [{ data }] = useQuery({
     query: PersonListDocument,
     variables: {
-      inCohorts: cohort === 'none' ? []  : (cohort ? [cohort] : null),
+      inCohorts: cohort === 'none' ? [] : cohort ? [cohort] : null,
       isAdmin: !!isAdmin || null,
       isTrainer: !!isTrainer || null,
       membershipState: includeFormer ? 'former' : 'current',
     },
   });
   const nodes = React.useMemo(() => {
-    return (data?.filteredPeopleList || []).map((item) => {
-      const cohort = cohorts.find((x) => (item.cohortIds || []).includes(x.id));
-      return {
-        yearOfBirth: item.birthDate ? new Date(item.birthDate).getFullYear() : undefined,
-        cohort: cohort?.name,
-        cohortColor: cohort?.colorRgb,
-        ...item,
-      };
-    });
+    return (data?.filteredPeopleList || [])
+      .sort((a, b) =>
+        `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+      )
+      .map((item) => {
+        const cohort = cohorts.find((x) => (item.cohortIds || []).includes(x.id));
+        return {
+          yearOfBirth: item.birthDate
+            ? new Date(item.birthDate).getFullYear()
+            : undefined,
+          cohort: cohort?.name,
+          cohortColor: cohort?.colorRgb,
+          ...item,
+        };
+      });
   }, [data, cohorts]);
 
   const fuzzy = useFuzzySearch(
     nodes,
-    ['id', 'name', 'cohort', "phone", "email", 'yearOfBirth'],
+    ['id', 'name', 'cohort', 'phone', 'email', 'yearOfBirth'],
     search || '',
   );
 
@@ -79,9 +90,7 @@ export function PersonList() {
               NSA export
             </button>
           )}
-          {auth.isAdmin && (
-            <CreatePersonDialog />
-          )}
+          {auth.isAdmin && <CreatePersonDialog />}
         </div>
 
         <div className="mt-2 w-full flex gap-2 justify-end">
@@ -94,22 +103,31 @@ export function PersonList() {
 
           <button
             type="button"
-            className={buttonCls({ size: 'sm', variant: includeFormer ? 'primary' : 'outline' })}
-            onClick={() => setIncludeFormer(x => x ? null : '1')}
+            className={buttonCls({
+              size: 'sm',
+              variant: includeFormer ? 'primary' : 'outline',
+            })}
+            onClick={() => setIncludeFormer((x) => (x ? null : '1'))}
           >
             Zobrazit bývalé
           </button>
           <button
             type="button"
-            className={buttonCls({ size: 'sm', variant: isTrainer ? 'primary' : 'outline' })}
-            onClick={() => setIsTrainer(x => x ? null : '1')}
+            className={buttonCls({
+              size: 'sm',
+              variant: isTrainer ? 'primary' : 'outline',
+            })}
+            onClick={() => setIsTrainer((x) => (x ? null : '1'))}
           >
             Jen trenéři
           </button>
           <button
             type="button"
-            className={buttonCls({ size: 'sm', variant: isAdmin ? 'primary' : 'outline' })}
-            onClick={() => setIsAdmin(x => x ? null : '1')}
+            className={buttonCls({
+              size: 'sm',
+              variant: isAdmin ? 'primary' : 'outline',
+            })}
+            onClick={() => setIsAdmin((x) => (x ? null : '1'))}
           >
             Jen správci
           </button>
@@ -125,7 +143,7 @@ export function PersonList() {
       </div>
 
       <div className="grow h-full overflow-y-auto scrollbar">
-        {fuzzy.map(item => (
+        {fuzzy.map((item) => (
           <Link
             key={item.id}
             href={{
@@ -141,20 +159,21 @@ export function PersonList() {
           >
             <div>{item.name}</div>
             <div
-              className={cn(
-                'text-sm',
-                id === item.id ? 'text-white' : 'text-neutral-11',
-              )}
+              className={cn('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}
             >
               {[
                 item.yearOfBirth,
                 item.isAdmin ? 'Správce' : '',
                 item.isTrainer ? 'Trenér' : '',
                 item.isMember ? 'Člen' : '',
-                ...(item.activeCouplesList ?? []).flatMap(x => [x.man, x.woman]
-                  .filter(x => x?.id !== item.id)
-                  .map(x => `tančí s ${x?.name}`)),
-              ].filter(Boolean).join(', ')}
+                ...(item.activeCouplesList ?? []).flatMap((x) =>
+                  [x.man, x.woman]
+                    .filter((x) => x?.id !== item.id)
+                    .map((x) => `tančí s ${x?.name}`),
+                ),
+              ]
+                .filter(Boolean)
+                .join(', ')}
             </div>
             <div
               className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-sm inset-y-0 left-0"
@@ -167,4 +186,4 @@ export function PersonList() {
       </div>
     </div>
   );
-};
+}

@@ -12,7 +12,12 @@ import {
 } from '@/graphql/Payment';
 import { PersonAccountsDocument, UnpaidPaymentsDocument } from '@/graphql/Person';
 import { describePosting, moneyFormatter, numericDateFormatter } from '@/ui/format';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
 import { MarkAsPaidDocument } from '@/graphql/Payment';
 import { buttonCls } from '@/ui/style';
 import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
@@ -24,7 +29,9 @@ import { isTruthy } from '@/ui/truthyFilter';
 
 type TenantAccountPage = NonNullable<TenantTurnoverPageQuery['accountsList']>[number];
 type TenantPosting = TenantAccountPage['postingsList'][number];
-type TenantAccount = Omit<TenantAccountPage, 'postingsList'> & { postings: TenantPosting[] };
+type TenantAccount = Omit<TenantAccountPage, 'postingsList'> & {
+  postings: TenantPosting[];
+};
 type TenantTransaction = NonNullable<TenantPosting['transaction']>;
 type ManualCreditTransaction = NonNullable<
   NonNullable<
@@ -36,7 +43,7 @@ const TURNOVER_PAGE_SIZE = 50;
 const DEPOSIT_PAGE_SIZE = 50;
 
 const paymentDetailHref = (id: string): LinkProps['href'] =>
-  ({ pathname: '/platby/[id]', query: { id } } as unknown as LinkProps['href']);
+  ({ pathname: '/platby/[id]', query: { id } }) as unknown as LinkProps['href'];
 
 export default function PaymentsPage() {
   const [tab, setTab] = useQueryParam('tab', StringParam);
@@ -70,25 +77,37 @@ export default function PaymentsPage() {
       <TabMenu selected={tab} onSelect={setTab} options={tabs} />
     </Layout>
   );
-};
+}
 
 function AccountOverview() {
   const [{ data }] = useQuery({ query: PersonAccountsDocument });
 
-  return <>
-    <button type="button" className={buttonCls()} onClick={exportBalanceSheet}>
-      Přehled plateb 2023
-    </button>
-    {data?.filteredPeopleList?.map(x => (
-      <div key={x.id} className="flex flex-wrap gap-2 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b">
-        <span>{x.name}</span>
-        <span>
-          {moneyFormatter.format({ amount: x.accountsList.find(Boolean)?.balance ?? '0', currency: 'CZK' })}
-        </span>
-      </div>
-    ))}
-  </>;
-};
+  return (
+    <>
+      <button type="button" className={buttonCls()} onClick={exportBalanceSheet}>
+        Přehled plateb 2023
+      </button>
+      {(data?.filteredPeopleList || [])
+        .sort((a, b) =>
+          `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+        )
+        .map((x) => (
+          <div
+            key={x.id}
+            className="flex flex-wrap gap-2 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b"
+          >
+            <span>{x.name}</span>
+            <span>
+              {moneyFormatter.format({
+                amount: x.accountsList.find(Boolean)?.balance ?? '0',
+                currency: 'CZK',
+              })}
+            </span>
+          </div>
+        ))}
+    </>
+  );
+}
 
 function UnpaidPayments() {
   const [{ data }] = useQuery({ query: UnpaidPaymentsDocument });
@@ -145,7 +164,10 @@ function TenantTurnover() {
     async (offset: number) => {
       setLoading(true);
       const result = await client
-        .query(TenantTurnoverPageDocument, { offset, postingsLimit: TURNOVER_PAGE_SIZE + 1 })
+        .query(TenantTurnoverPageDocument, {
+          offset,
+          postingsLimit: TURNOVER_PAGE_SIZE + 1,
+        })
         .toPromise();
 
       if (result.error) {
@@ -191,7 +213,9 @@ function TenantTurnover() {
         return order;
       });
 
-      const more = pageAccounts.some((account) => account.postingsList.length > TURNOVER_PAGE_SIZE);
+      const more = pageAccounts.some(
+        (account) => account.postingsList.length > TURNOVER_PAGE_SIZE,
+      );
       setHasMore(more);
       setNextOffset(offset + TURNOVER_PAGE_SIZE);
       setInitialized(true);
@@ -231,8 +255,15 @@ function TenantTurnover() {
     <div className="flex flex-col gap-6">
       {orderedAccounts.map((account) => {
         const postings = [...account.postings]
-          .filter((posting): posting is TenantPosting & { transaction: TenantTransaction } => Boolean(posting.transaction))
-          .toSorted((a, b) => (b.transaction.effectiveDate || '').localeCompare(a.transaction.effectiveDate || ''));
+          .filter(
+            (posting): posting is TenantPosting & { transaction: TenantTransaction } =>
+              Boolean(posting.transaction),
+          )
+          .toSorted((a, b) =>
+            (b.transaction.effectiveDate || '').localeCompare(
+              a.transaction.effectiveDate || '',
+            ),
+          );
 
         if (postings.length === 0) {
           return (
@@ -240,7 +271,11 @@ function TenantTurnover() {
               <header className="flex flex-wrap items-baseline justify-between gap-2">
                 <h3 className="text-lg font-semibold">Účet {account.currency}</h3>
                 <span className="text-sm text-neutral-10">
-                  Zůstatek: {moneyFormatter.format({ amount: account.balance ?? '0', currency: account.currency })}
+                  Zůstatek:{' '}
+                  {moneyFormatter.format({
+                    amount: account.balance ?? '0',
+                    currency: account.currency,
+                  })}
                 </span>
               </header>
               <p className="text-sm text-neutral-10">Žádné zaúčtované pohyby.</p>
@@ -253,7 +288,11 @@ function TenantTurnover() {
             <header className="flex flex-wrap items-baseline justify-between gap-2">
               <h3 className="text-lg font-semibold">Účet {account.currency}</h3>
               <span className="text-sm text-neutral-10">
-                Zůstatek: {moneyFormatter.format({ amount: account.balance ?? '0', currency: account.currency })}
+                Zůstatek:{' '}
+                {moneyFormatter.format({
+                  amount: account.balance ?? '0',
+                  currency: account.currency,
+                })}
               </span>
             </header>
 
@@ -264,7 +303,8 @@ function TenantTurnover() {
                 const displayDate = transaction.effectiveDate
                   ? numericDateFormatter.format(new Date(transaction.effectiveDate))
                   : '';
-                const description = transaction.description || describePosting(payment, posting);
+                const description =
+                  transaction.description || describePosting(payment, posting);
                 const variableSymbol = payment?.variableSymbol;
                 const specificSymbol = payment?.specificSymbol;
 
@@ -273,7 +313,9 @@ function TenantTurnover() {
                     key={posting.id}
                     className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2"
                   >
-                    <span className="text-sm text-neutral-11 min-w-20">{displayDate}</span>
+                    <span className="text-sm text-neutral-11 min-w-20">
+                      {displayDate}
+                    </span>
                     <div className="flex min-w-48 flex-1 flex-col gap-1">
                       <span>{description}</span>
                       {(variableSymbol || specificSymbol) && (
@@ -293,7 +335,10 @@ function TenantTurnover() {
                       )}
                     </div>
                     <span className="font-medium">
-                      {moneyFormatter.format({ amount: posting.amount ?? '0', currency: account.currency })}
+                      {moneyFormatter.format({
+                        amount: posting.amount ?? '0',
+                        currency: account.currency,
+                      })}
                     </span>
                   </div>
                 );
@@ -373,7 +418,9 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
   if (error) {
     return (
       <div className="px-3 py-2 text-sm text-accent-11">
-        {cursor ? 'Nepodařilo se načíst další vklady.' : `Nepodařilo se načíst vklady: ${error.message}`}
+        {cursor
+          ? 'Nepodařilo se načíst další vklady.'
+          : `Nepodařilo se načíst vklady: ${error.message}`}
       </div>
     );
   }
@@ -385,7 +432,11 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
   return (
     <>
       {nodes.map((transaction) => (
-        <DepositRow key={transaction.id} transaction={transaction} showDebug={auth.isAdmin} />
+        <DepositRow
+          key={transaction.id}
+          transaction={transaction}
+          showDebug={auth.isAdmin}
+        />
       ))}
       {hasMore && onLoadMore && endCursor && (
         <div className="flex justify-center py-3">
@@ -403,12 +454,20 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
   );
 }
 
-function DepositRow({ transaction, showDebug }: { transaction: ManualCreditTransaction; showDebug: boolean }) {
+function DepositRow({
+  transaction,
+  showDebug,
+}: {
+  transaction: ManualCreditTransaction;
+  showDebug: boolean;
+}) {
   const effectiveDate = transaction.effectiveDate
     ? numericDateFormatter.format(new Date(transaction.effectiveDate))
     : '';
 
-  const personPosting = transaction.postingsList.find((posting) => posting.account?.person);
+  const personPosting = transaction.postingsList.find(
+    (posting) => posting.account?.person,
+  );
   const accountPosting = personPosting ?? transaction.postingsList[0];
   const personName = personPosting?.account?.person?.name ?? '—';
   const amount = accountPosting?.amount ?? '0';
@@ -421,7 +480,9 @@ function DepositRow({ transaction, showDebug }: { transaction: ManualCreditTrans
       <span className="text-sm text-neutral-11 min-w-20">{effectiveDate}</span>
       <div className="flex min-w-48 flex-1 flex-col gap-1">
         <span className="font-medium">{personName}</span>
-        <span className="text-sm text-neutral-11">{transaction.description || 'Dobití kreditu'}</span>
+        <span className="text-sm text-neutral-11">
+          {transaction.description || 'Dobití kreditu'}
+        </span>
         {(variableSymbol || specificSymbol) && (
           <span className="text-xs text-neutral-10">
             {variableSymbol && <>VS: {variableSymbol}</>}
