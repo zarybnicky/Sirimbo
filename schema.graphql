@@ -257,9 +257,6 @@ type Aktuality {
   atPreview: String!
   atText: String!
   createdAt: Datetime
-
-  """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFoto: GalerieFoto
   id: BigInt!
 
   """Reads a single `Tenant` that is related to this `Aktuality`."""
@@ -1649,9 +1646,6 @@ type CreateAktualityPayload {
   """
   clientMutationId: String
 
-  """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFoto: GalerieFoto
-
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -2514,9 +2508,6 @@ type DeleteAktualityPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFoto: GalerieFoto
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -5041,130 +5032,6 @@ enum FormResponsesOrderBy {
   UPDATED_AT_DESC
   URL_ASC
   URL_DESC
-}
-
-type GalerieFoto {
-  """Reads and enables pagination through a set of `Aktuality`."""
-  aktualitiesByAtFotoMain(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AktualityCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Aktuality`."""
-    orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AktualitiesConnection!
-  createdAt: Datetime
-  gfIdRodic: BigInt!
-  gfKdo: BigInt!
-  gfName: String!
-  gfPath: String!
-  id: BigInt!
-
-  """Reads a single `Tenant` that is related to this `GalerieFoto`."""
-  tenant: Tenant
-  tenantId: BigInt!
-  updatedAt: Datetime
-
-  """Reads a single `User` that is related to this `GalerieFoto`."""
-  user: User
-}
-
-"""
-A condition to be used against `GalerieFoto` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input GalerieFotoCondition {
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `gfIdRodic` field."""
-  gfIdRodic: BigInt
-
-  """Checks for equality with the object’s `gfKdo` field."""
-  gfKdo: BigInt
-
-  """Checks for equality with the object’s `gfName` field."""
-  gfName: String
-
-  """Checks for equality with the object’s `gfPath` field."""
-  gfPath: String
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""A connection to a list of `GalerieFoto` values."""
-type GalerieFotosConnection {
-  """
-  A list of edges which contains the `GalerieFoto` and cursor to aid in pagination.
-  """
-  edges: [GalerieFotosEdge!]!
-
-  """A list of `GalerieFoto` objects."""
-  nodes: [GalerieFoto!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `GalerieFoto` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `GalerieFoto` edge in the connection."""
-type GalerieFotosEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `GalerieFoto` at the end of the edge."""
-  node: GalerieFoto!
-}
-
-"""Methods to use when ordering `GalerieFoto`."""
-enum GalerieFotosOrderBy {
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  GF_ID_RODIC_ASC
-  GF_ID_RODIC_DESC
-  GF_KDO_ASC
-  GF_KDO_DESC
-  GF_NAME_ASC
-  GF_NAME_DESC
-  GF_PATH_ASC
-  GF_PATH_DESC
-  ID_ASC
-  ID_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 enum GenderType {
@@ -7981,38 +7848,6 @@ type Query {
     """The method to use when ordering `FormResponse`."""
     orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
   ): FormResponsesConnection
-
-  """Get a single `GalerieFoto`."""
-  galerieFoto(id: BigInt!): GalerieFoto
-
-  """Reads and enables pagination through a set of `GalerieFoto`."""
-  galerieFotos(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GalerieFotoCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `GalerieFoto`."""
-    orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieFotosConnection
   getCurrentTenant: Tenant
   getCurrentUser(versionId: String): User
   invitationInfo(token: UUID): String
@@ -9442,35 +9277,6 @@ type Tenant {
     """The method to use when ordering `FormResponse`."""
     orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
   ): FormResponsesConnection!
-
-  """Reads and enables pagination through a set of `GalerieFoto`."""
-  galerieFotos(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GalerieFotoCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `GalerieFoto`."""
-    orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieFotosConnection!
   id: BigInt!
 
   """Reads and enables pagination through a set of `MembershipApplication`."""
@@ -10574,9 +10380,6 @@ type UpdateAktualityPayload {
   """
   clientMutationId: String
 
-  """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
-  galerieFoto: GalerieFoto
-
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -11597,35 +11400,6 @@ type User {
     """The method to use when ordering `EventExternalRegistration`."""
     orderBy: [EventExternalRegistrationsOrderBy!]
   ): [EventExternalRegistration!]!
-
-  """Reads and enables pagination through a set of `GalerieFoto`."""
-  galerieFotosByGfKdo(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GalerieFotoCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `GalerieFoto`."""
-    orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GalerieFotosConnection!
   id: BigInt!
   lastActiveAt: Datetime
   lastLogin: Datetime

@@ -36,16 +36,15 @@ begin
       and audience_role is not null
   ),
   role_people as (
-    select distinct ad.person_id
-    from auth_details ad
-    join role_flags rf on rf.has_member or rf.has_trainer or rf.has_administrator
-    where (
-      rf.has_member and v_tenant_id = any (coalesce(ad.tenant_memberships, '{}'::bigint[]))
-    ) or (
-      rf.has_trainer and v_tenant_id = any (coalesce(ad.tenant_trainers, '{}'::bigint[]))
-    ) or (
-      rf.has_administrator and v_tenant_id = any (coalesce(ad.tenant_administrators, '{}'::bigint[]))
-    )
+    select distinct x.person_id
+    from role_flags rf
+    join lateral (
+      select tm.person_id from tenant_membership tm where rf.has_member and tm.status = 'active' and tm.tenant_id = v_tenant_id
+      union all
+      select tt.person_id from tenant_trainer tt where rf.has_trainer and tt.status = 'active' and tt.tenant_id = v_tenant_id
+      union all
+      select ta.person_id from tenant_administrator ta where rf.has_administrator and ta.status = 'active' and ta.tenant_id = v_tenant_id
+    ) x on true
   ),
   role_users as (
     select distinct u.id as user_id
