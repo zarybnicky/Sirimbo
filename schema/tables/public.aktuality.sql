@@ -21,7 +21,7 @@ ALTER TABLE public.aktuality ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT idx_23753_primary PRIMARY KEY (id);
 ALTER TABLE ONLY public.aktuality
-    ADD CONSTRAINT aktuality_at_foto_main_fkey FOREIGN KEY (at_foto_main) REFERENCES public.galerie_foto(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT aktuality_at_foto_main_fkey FOREIGN KEY (at_foto_main) REFERENCES app_private.galerie_foto(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT aktuality_at_kdo_fkey FOREIGN KEY (at_kdo) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.aktuality

@@ -1,34 +1,53 @@
 CREATE FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[] DEFAULT NULL::bigint[], membership_state text DEFAULT 'current'::text) RETURNS SETOF public.person
-    LANGUAGE plpgsql STABLE
+    LANGUAGE sql STABLE
     AS $$
-begin
-  if lower(coalesce(membership_state, 'current')) = 'former' then
-    return query
-      select *
-      from public.former_filtered_people(is_trainer, is_admin, in_cohorts);
-  end if;
-
-  return query
-    select person.*
-    from person
-    join auth_details on auth_details.person_id = person.id
-    where
-      current_tenant_id() = any (auth_details.allowed_tenants)
-      and case
-        when in_cohorts is null then true
-        else in_cohorts = auth_details.cohort_memberships
-          or in_cohorts && auth_details.cohort_memberships
-      end
-      and case
-        when is_trainer is null then true
-        else is_trainer = (current_tenant_id() = any (auth_details.tenant_trainers))
-      end
-      and case
-        when is_admin is null then true
-        else is_admin = (current_tenant_id() = any (auth_details.tenant_administrators))
-      end
-    order by last_name, first_name;
-end;
+  select p.* from (
+    select tm.person_id from tenant_membership tm
+    where lower(coalesce(membership_state,'current')) = 'former' and tm.tenant_id = (select current_tenant_id()) and tm.status = 'expired'
+      and not exists(select 1 from tenant_membership a where a.person_id = tm.person_id and a.tenant_id = tm.tenant_id and a.status = 'active')
+    union
+    select tm.person_id from tenant_membership tm
+    where lower(coalesce(membership_state,'current')) = 'current' and tm.tenant_id = (select current_tenant_id()) and tm.status = 'active'
+    union
+    select tt.person_id from tenant_trainer tt
+    where lower(coalesce(membership_state,'current')) = 'current' and tt.tenant_id = (select current_tenant_id()) and tt.status = 'active'
+    union
+    select ta.person_id from tenant_administrator ta
+    where lower(coalesce(membership_state,'current')) = 'current' and ta.tenant_id = (select current_tenant_id()) and ta.status = 'active'
+  ) vis
+  join person p on p.id=vis.person_id
+  where (
+    lower(coalesce(membership_state,'current')) = 'former' and (
+      in_cohorts is null or (
+        cardinality(in_cohorts) = 0 and not exists(
+          select 1 from cohort_membership cm where cm.person_id = p.id and cm.tenant_id = (select current_tenant_id()) and cm.status = 'expired')
+      ) or (
+        cardinality(in_cohorts) > 0 and exists(
+          select 1 from cohort_membership cm where cm.person_id = p.id and cm.tenant_id = (select current_tenant_id()) and cm.status = 'expired' and cm.cohort_id = any(in_cohorts))
+      )
+    ) and (
+      is_trainer is null or is_trainer = exists(
+        select 1 from tenant_trainer tt where tt.person_id = p.id and tt.tenant_id = (select current_tenant_id()) and tt.status = 'expired')
+    ) and (
+      is_admin is null or is_admin = exists(
+        select 1 from tenant_administrator ta where ta.person_id = p.id and ta.tenant_id = (select current_tenant_id()) and ta.status = 'expired')
+    )
+  ) or (
+    lower(coalesce(membership_state,'current')) = 'current' and (
+      in_cohorts is null or (
+        cardinality(in_cohorts) = 0 and not exists(
+          select 1 from cohort_membership cm where cm.person_id = p.id and cm.tenant_id = (select current_tenant_id()) and cm.status = 'active')
+      ) or (
+        cardinality(in_cohorts) > 0 and exists(
+          select 1 from cohort_membership cm where cm.person_id = p.id and cm.tenant_id = (select current_tenant_id()) and cm.status = 'active' and cm.cohort_id = any(in_cohorts))
+      )
+    ) and (
+      is_trainer is null or is_trainer = exists(
+        select 1 from tenant_trainer tt where tt.person_id = p.id and tt.tenant_id = (select current_tenant_id()) and tt.status = 'active')
+    ) and (
+      is_admin is null or is_admin = exists(
+        select 1 from tenant_administrator ta where ta.person_id = p.id and ta.tenant_id = (select current_tenant_id()) and ta.status = 'active'))
+    );
 $$;
 
 COMMENT ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[], membership_state text) IS '@simpleCollections only';

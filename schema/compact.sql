@@ -1029,7 +1029,7 @@ CREATE TABLE app_private.galerie_dir (
     ON DELETE CASCADE
 );
 
-CREATE TABLE public.galerie_foto (
+CREATE TABLE app_private.galerie_foto (
   id bigint NOT NULL PRIMARY KEY,
   gf_id_rodic bigint NOT NULL REFERENCES app_private.galerie_dir (id)
     ON UPDATE RESTRICT
@@ -1055,7 +1055,7 @@ CREATE TABLE public.aktuality (
   at_text text NOT NULL,
   at_preview text NOT NULL,
   at_foto bigint,
-  at_foto_main bigint REFERENCES public.galerie_foto (id)
+  at_foto_main bigint REFERENCES app_private.galerie_foto (id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT,
   updated_at timestamp with time zone,

@@ -37,8 +37,7 @@ ALTER TABLE ONLY public.person
 
 CREATE POLICY admin_all ON public.person TO administrator USING (true);
 CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id = ANY (public.current_person_ids())));
-CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING (( SELECT ((( SELECT public.current_tenant_id() AS current_tenant_id) = ANY (auth_details.allowed_tenants)) AND ((( SELECT public.current_tenant_id() AS current_tenant_id) IN ( SELECT public.my_tenant_ids() AS my_tenant_ids)) OR (( SELECT public.current_tenant_id() AS current_tenant_id) = ANY (auth_details.tenant_trainers)) OR (( SELECT public.current_tenant_id() AS current_tenant_id) = ANY (auth_details.tenant_administrators))))
-   FROM public.auth_details
-  WHERE (auth_details.person_id = person.id)));
+CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((id IN ( SELECT v.person_id
+   FROM app_private.visible_person_ids() v(person_id))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();

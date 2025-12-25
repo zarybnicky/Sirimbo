@@ -35,8 +35,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.cohort_membersh
 CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 CREATE TRIGGER _500_on_status AFTER INSERT OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_cohort_membership__on_status();
 
-CREATE INDEX cohort_membership_cohort_id_idx ON public.cohort_membership USING btree (cohort_id);
-CREATE INDEX cohort_membership_person_id_idx ON public.cohort_membership USING btree (person_id);
-CREATE INDEX cohort_membership_range_idx ON public.cohort_membership USING gist (active_range, tenant_id, person_id);
-CREATE INDEX cohort_membership_status_idx ON public.cohort_membership USING btree (status);
-CREATE INDEX idx_cm_tenant ON public.cohort_membership USING btree (tenant_id);
+CREATE INDEX cohort_membership_active_by_person ON public.cohort_membership USING btree (person_id) INCLUDE (cohort_id) WHERE (status = 'active'::public.relationship_status);
+CREATE INDEX cohort_membership_person_id_id_idx ON public.cohort_membership USING btree (person_id, id) INCLUDE (cohort_id);
+CREATE INDEX cohort_membership_tenant_status_person_idx ON public.cohort_membership USING btree (tenant_id, status, person_id, cohort_id);

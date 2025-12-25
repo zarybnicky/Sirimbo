@@ -28,13 +28,16 @@ ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_woman_id_fkey FOREIGN KEY (woman_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.couple TO administrator USING (true);
-CREATE POLICY view_visible_person ON public.couple FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.person
-  WHERE ((couple.man_id = person.id) OR (couple.woman_id = person.id)))));
+CREATE POLICY view_visible_person ON public.couple FOR SELECT USING (((man_id IN ( SELECT v.person_id
+   FROM app_private.visible_person_ids() v(person_id))) OR (woman_id IN ( SELECT v.person_id
+   FROM app_private.visible_person_ids() v(person_id)))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 
+CREATE INDEX couple_man_active_idx ON public.couple USING btree (man_id) INCLUDE (id) WHERE (status = 'active'::public.relationship_status);
+CREATE INDEX couple_man_active_lookup ON public.couple USING btree (man_id, since, until, id) INCLUDE (woman_id, status) WHERE (status = 'active'::public.relationship_status);
 CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
-CREATE INDEX couple_range_idx ON public.couple USING gist (active_range, man_id, woman_id);
+CREATE INDEX couple_woman_active_idx ON public.couple USING btree (woman_id) INCLUDE (id) WHERE (status = 'active'::public.relationship_status);
+CREATE INDEX couple_woman_active_lookup ON public.couple USING btree (woman_id, since, until, id) INCLUDE (man_id, status) WHERE (status = 'active'::public.relationship_status);
 CREATE INDEX couple_woman_id_idx ON public.couple USING btree (woman_id);

@@ -32,7 +32,9 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_membersh
 CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 CREATE TRIGGER _500_on_status AFTER UPDATE ON public.tenant_membership FOR EACH ROW WHEN ((old.status IS DISTINCT FROM new.status)) EXECUTE FUNCTION app_private.tg_tenant_membership__on_status();
 
+CREATE INDEX tenant_membership_active_by_person ON public.tenant_membership USING btree (person_id) INCLUDE (tenant_id) WHERE (status = 'active'::public.relationship_status);
+CREATE INDEX tenant_membership_active_by_tenant ON public.tenant_membership USING btree (tenant_id) INCLUDE (person_id) WHERE (status = 'active'::public.relationship_status);
 CREATE INDEX tenant_membership_person_id_idx ON public.tenant_membership USING btree (person_id);
-CREATE INDEX tenant_membership_range_idx ON public.tenant_membership USING gist (active_range, tenant_id, person_id);
-CREATE INDEX tenant_membership_status_idx ON public.tenant_membership USING btree (status);
 CREATE INDEX tenant_membership_tenant_id_idx ON public.tenant_membership USING btree (tenant_id);
+CREATE INDEX tenant_membership_tenant_person_active_idx ON public.tenant_membership USING btree (tenant_id, person_id) WHERE (status = 'active'::public.relationship_status);
+CREATE INDEX tenant_membership_tenant_status_person_idx ON public.tenant_membership USING btree (tenant_id, status, person_id);

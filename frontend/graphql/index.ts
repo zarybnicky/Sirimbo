@@ -263,8 +263,6 @@ export type Aktuality = {
   atPreview: Scalars['String']['output'];
   atText: Scalars['String']['output'];
   createdAt: Maybe<Scalars['Datetime']['output']>;
-  /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
-  galerieFoto: Maybe<GalerieFoto>;
   id: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `Aktuality`. */
   tenant: Maybe<Tenant>;
@@ -1394,8 +1392,6 @@ export type CreateAktualityPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
-  galerieFoto: Maybe<GalerieFoto>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `Aktuality`. */
@@ -2120,8 +2116,6 @@ export type DeleteAktualityPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
-  galerieFoto: Maybe<GalerieFoto>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `Aktuality`. */
@@ -4220,102 +4214,6 @@ export type FormResponsesOrderBy =
   | 'URL_ASC'
   | 'URL_DESC';
 
-export type GalerieFoto = {
-  __typename?: 'GalerieFoto';
-  /** Reads and enables pagination through a set of `Aktuality`. */
-  aktualitiesByAtFotoMain: AktualitiesConnection;
-  createdAt: Maybe<Scalars['Datetime']['output']>;
-  gfIdRodic: Scalars['BigInt']['output'];
-  gfKdo: Scalars['BigInt']['output'];
-  gfName: Scalars['String']['output'];
-  gfPath: Scalars['String']['output'];
-  id: Scalars['BigInt']['output'];
-  /** Reads a single `Tenant` that is related to this `GalerieFoto`. */
-  tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt']['output'];
-  updatedAt: Maybe<Scalars['Datetime']['output']>;
-  /** Reads a single `User` that is related to this `GalerieFoto`. */
-  user: Maybe<User>;
-};
-
-
-export type GalerieFotoAktualitiesByAtFotoMainArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<AktualityCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
-};
-
-/**
- * A condition to be used against `GalerieFoto` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type GalerieFotoCondition = {
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `gfIdRodic` field. */
-  gfIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `gfKdo` field. */
-  gfKdo?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `gfName` field. */
-  gfName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `gfPath` field. */
-  gfPath?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** A connection to a list of `GalerieFoto` values. */
-export type GalerieFotosConnection = {
-  __typename?: 'GalerieFotosConnection';
-  /** A list of edges which contains the `GalerieFoto` and cursor to aid in pagination. */
-  edges: Array<GalerieFotosEdge>;
-  /** A list of `GalerieFoto` objects. */
-  nodes: Array<GalerieFoto>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `GalerieFoto` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `GalerieFoto` edge in the connection. */
-export type GalerieFotosEdge = {
-  __typename?: 'GalerieFotosEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `GalerieFoto` at the end of the edge. */
-  node: GalerieFoto;
-};
-
-/** Methods to use when ordering `GalerieFoto`. */
-export type GalerieFotosOrderBy =
-  | 'CREATED_AT_ASC'
-  | 'CREATED_AT_DESC'
-  | 'GF_ID_RODIC_ASC'
-  | 'GF_ID_RODIC_DESC'
-  | 'GF_KDO_ASC'
-  | 'GF_KDO_DESC'
-  | 'GF_NAME_ASC'
-  | 'GF_NAME_DESC'
-  | 'GF_PATH_ASC'
-  | 'GF_PATH_DESC'
-  | 'ID_ASC'
-  | 'ID_DESC'
-  | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC'
-  | 'UPDATED_AT_ASC'
-  | 'UPDATED_AT_DESC';
-
 export type GenderType =
   | 'MAN'
   | 'UNSPECIFIED'
@@ -6324,10 +6222,6 @@ export type Query = {
   formResponse: Maybe<FormResponse>;
   /** Reads and enables pagination through a set of `FormResponse`. */
   formResponses: Maybe<FormResponsesConnection>;
-  /** Get a single `GalerieFoto`. */
-  galerieFoto: Maybe<GalerieFoto>;
-  /** Reads and enables pagination through a set of `GalerieFoto`. */
-  galerieFotos: Maybe<GalerieFotosConnection>;
   getCurrentTenant: Maybe<Tenant>;
   getCurrentUser: Maybe<User>;
   invitationInfo: Maybe<Scalars['String']['output']>;
@@ -6896,24 +6790,6 @@ export type QueryFormResponsesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryGalerieFotoArgs = {
-  id: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryGalerieFotosArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<GalerieFotoCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
 };
 
 
@@ -7771,8 +7647,6 @@ export type Tenant = {
   events: EventsConnection;
   /** Reads and enables pagination through a set of `FormResponse`. */
   formResponses: FormResponsesConnection;
-  /** Reads and enables pagination through a set of `GalerieFoto`. */
-  galerieFotos: GalerieFotosConnection;
   id: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `MembershipApplication`. */
   membershipApplicationsList: Array<MembershipApplication>;
@@ -7993,17 +7867,6 @@ export type TenantFormResponsesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
-};
-
-
-export type TenantGalerieFotosArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<GalerieFotoCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
 };
 
 
@@ -8823,8 +8686,6 @@ export type UpdateAktualityPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
-  galerieFoto: Maybe<GalerieFoto>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `Aktuality`. */
@@ -9575,8 +9436,6 @@ export type User = {
   dokumentiesByDKdoList: Array<Dokumenty>;
   /** Reads and enables pagination through a set of `EventExternalRegistration`. */
   eventExternalRegistrationsByCreatedByList: Array<EventExternalRegistration>;
-  /** Reads and enables pagination through a set of `GalerieFoto`. */
-  galerieFotosByGfKdo: GalerieFotosConnection;
   id: Scalars['BigInt']['output'];
   lastActiveAt: Maybe<Scalars['Datetime']['output']>;
   lastLogin: Maybe<Scalars['Datetime']['output']>;
@@ -9643,17 +9502,6 @@ export type UserEventExternalRegistrationsByCreatedByListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventExternalRegistrationsOrderBy>>;
-};
-
-
-export type UserGalerieFotosByGfKdoArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<GalerieFotoCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
 };
 
 
@@ -9937,9 +9785,6 @@ export type GraphCacheKeysConfig = {
   FormResponse?: (data: WithTypename<FormResponse>) => null | string,
   FormResponsesConnection?: (data: WithTypename<FormResponsesConnection>) => null | string,
   FormResponsesEdge?: (data: WithTypename<FormResponsesEdge>) => null | string,
-  GalerieFoto?: (data: WithTypename<GalerieFoto>) => null | string,
-  GalerieFotosConnection?: (data: WithTypename<GalerieFotosConnection>) => null | string,
-  GalerieFotosEdge?: (data: WithTypename<GalerieFotosEdge>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
   LogInAsPayload?: (data: WithTypename<LogInAsPayload>) => null | string,
   LogInAsRecord?: (data: WithTypename<LogInAsRecord>) => null | string,
@@ -10082,8 +9927,6 @@ export type GraphCacheResolvers = {
     filteredPeopleList?: GraphCacheResolver<WithTypename<Query>, QueryFilteredPeopleListArgs, Array<WithTypename<Person> | string>>,
     formResponse?: GraphCacheResolver<WithTypename<Query>, QueryFormResponseArgs, WithTypename<FormResponse> | string>,
     formResponses?: GraphCacheResolver<WithTypename<Query>, QueryFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
-    galerieFoto?: GraphCacheResolver<WithTypename<Query>, QueryGalerieFotoArgs, WithTypename<GalerieFoto> | string>,
-    galerieFotos?: GraphCacheResolver<WithTypename<Query>, QueryGalerieFotosArgs, WithTypename<GalerieFotosConnection> | string>,
     getCurrentTenant?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Tenant> | string>,
     getCurrentUser?: GraphCacheResolver<WithTypename<Query>, QueryGetCurrentUserArgs, WithTypename<User> | string>,
     invitationInfo?: GraphCacheResolver<WithTypename<Query>, QueryInvitationInfoArgs, Scalars['String'] | string>,
@@ -10187,7 +10030,6 @@ export type GraphCacheResolvers = {
     atPreview?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
     atText?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
-    galerieFoto?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     id?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
     tenant?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -10400,7 +10242,6 @@ export type GraphCacheResolvers = {
     aktuality?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<Aktuality> | string>,
     aktualityEdge?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, CreateAktualityPayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, Scalars['String'] | string>,
-    galerieFoto?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     query?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     user?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
@@ -10566,7 +10407,6 @@ export type GraphCacheResolvers = {
     aktuality?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<Aktuality> | string>,
     aktualityEdge?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, DeleteAktualityPayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, Scalars['String'] | string>,
-    galerieFoto?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     user?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<User> | string>
@@ -11002,29 +10842,6 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<FormResponsesEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<FormResponsesEdge>, Record<string, never>, WithTypename<FormResponse> | string>
   },
-  GalerieFoto?: {
-    aktualitiesByAtFotoMain?: GraphCacheResolver<WithTypename<GalerieFoto>, GalerieFotoAktualitiesByAtFotoMainArgs, WithTypename<AktualitiesConnection> | string>,
-    createdAt?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['Datetime'] | string>,
-    gfIdRodic?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
-    gfKdo?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
-    gfName?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['String'] | string>,
-    gfPath?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['String'] | string>,
-    id?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, WithTypename<Tenant> | string>,
-    tenantId?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
-    updatedAt?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['Datetime'] | string>,
-    user?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, WithTypename<User> | string>
-  },
-  GalerieFotosConnection?: {
-    edges?: GraphCacheResolver<WithTypename<GalerieFotosConnection>, Record<string, never>, Array<WithTypename<GalerieFotosEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<GalerieFotosConnection>, Record<string, never>, Array<WithTypename<GalerieFoto> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<GalerieFotosConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<GalerieFotosConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  GalerieFotosEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<GalerieFotosEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<GalerieFotosEdge>, Record<string, never>, WithTypename<GalerieFoto> | string>
-  },
   Interval?: {
     days?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int'] | string>,
     hours?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int'] | string>,
@@ -11396,7 +11213,6 @@ export type GraphCacheResolvers = {
     eventTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventTrainersListArgs, Array<WithTypename<EventTrainer> | string>>,
     events?: GraphCacheResolver<WithTypename<Tenant>, TenantEventsArgs, WithTypename<EventsConnection> | string>,
     formResponses?: GraphCacheResolver<WithTypename<Tenant>, TenantFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
-    galerieFotos?: GraphCacheResolver<WithTypename<Tenant>, TenantGalerieFotosArgs, WithTypename<GalerieFotosConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['BigInt'] | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     name?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
@@ -11534,7 +11350,6 @@ export type GraphCacheResolvers = {
     aktuality?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<Aktuality> | string>,
     aktualityEdge?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, UpdateAktualityPayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, Scalars['String'] | string>,
-    galerieFoto?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     user?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
@@ -11709,7 +11524,6 @@ export type GraphCacheResolvers = {
     createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     dokumentiesByDKdoList?: GraphCacheResolver<WithTypename<User>, UserDokumentiesByDKdoListArgs, Array<WithTypename<Dokumenty> | string>>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserEventExternalRegistrationsByCreatedByListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
-    galerieFotosByGfKdo?: GraphCacheResolver<WithTypename<User>, UserGalerieFotosByGfKdoArgs, WithTypename<GalerieFotosConnection> | string>,
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
     lastActiveAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     lastLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -11900,8 +11714,6 @@ export type GraphCacheUpdaters = {
     filteredPeopleList?: GraphCacheUpdateResolver<{ filteredPeopleList: Maybe<Array<WithTypename<Person>>> }, QueryFilteredPeopleListArgs>,
     formResponse?: GraphCacheUpdateResolver<{ formResponse: Maybe<WithTypename<FormResponse>> }, QueryFormResponseArgs>,
     formResponses?: GraphCacheUpdateResolver<{ formResponses: Maybe<WithTypename<FormResponsesConnection>> }, QueryFormResponsesArgs>,
-    galerieFoto?: GraphCacheUpdateResolver<{ galerieFoto: Maybe<WithTypename<GalerieFoto>> }, QueryGalerieFotoArgs>,
-    galerieFotos?: GraphCacheUpdateResolver<{ galerieFotos: Maybe<WithTypename<GalerieFotosConnection>> }, QueryGalerieFotosArgs>,
     getCurrentTenant?: GraphCacheUpdateResolver<{ getCurrentTenant: Maybe<WithTypename<Tenant>> }, Record<string, never>>,
     getCurrentUser?: GraphCacheUpdateResolver<{ getCurrentUser: Maybe<WithTypename<User>> }, QueryGetCurrentUserArgs>,
     invitationInfo?: GraphCacheUpdateResolver<{ invitationInfo: Maybe<Scalars['String']> }, QueryInvitationInfoArgs>,
@@ -12096,7 +11908,6 @@ export type GraphCacheUpdaters = {
     atPreview?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atText?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
-    galerieFoto?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
@@ -12309,7 +12120,6 @@ export type GraphCacheUpdaters = {
     aktuality?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
     aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, CreateAktualityPayloadAktualityEdgeArgs>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
-    galerieFoto?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>
@@ -12475,7 +12285,6 @@ export type GraphCacheUpdaters = {
     aktuality?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
     aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, DeleteAktualityPayloadAktualityEdgeArgs>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
-    galerieFoto?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAktualityPayload>>, Record<string, never>>
@@ -12911,29 +12720,6 @@ export type GraphCacheUpdaters = {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesEdge>>, Record<string, never>>
   },
-  GalerieFoto?: {
-    aktualitiesByAtFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, GalerieFotoAktualitiesByAtFotoMainArgs>,
-    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
-    gfIdRodic?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
-    gfKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
-    gfName?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
-    gfPath?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
-    id?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
-    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
-    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>,
-    user?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFoto>>, Record<string, never>>
-  },
-  GalerieFotosConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosConnection>>, Record<string, never>>
-  },
-  GalerieFotosEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<GalerieFotosEdge>>, Record<string, never>>
-  },
   Interval?: {
     days?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
     hours?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
@@ -13305,7 +13091,6 @@ export type GraphCacheUpdaters = {
     eventTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventTrainersListArgs>,
     events?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventsArgs>,
     formResponses?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantFormResponsesArgs>,
-    galerieFotos?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantGalerieFotosArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     membershipApplicationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantMembershipApplicationsListArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
@@ -13443,7 +13228,6 @@ export type GraphCacheUpdaters = {
     aktuality?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
     aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, UpdateAktualityPayloadAktualityEdgeArgs>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
-    galerieFoto?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>
@@ -13618,7 +13402,6 @@ export type GraphCacheUpdaters = {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     dokumentiesByDKdoList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserDokumentiesByDKdoListArgs>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserEventExternalRegistrationsByCreatedByListArgs>,
-    galerieFotosByGfKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserGalerieFotosByGfKdoArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     lastActiveAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     lastLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
