@@ -50,7 +50,7 @@
           pkgs.graphile-migrate
           pkgs.pnpm_9
           pkgs.nodejs_24
-          pkgs.postgresql_17
+          pkgs.postgresql_18
           pkgs.sqlfluff
           pkgs.pgformatter
           pkgs.tbls

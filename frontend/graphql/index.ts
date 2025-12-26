@@ -5819,12 +5819,12 @@ export type PersonWeeklyAttendanceListArgs = {
 
 /** All input for the `personAccount` mutation. */
 export type PersonAccountInput = {
-  c?: InputMaybe<Scalars['String']['input']>;
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  inCurrency?: InputMaybe<Scalars['String']['input']>;
   pId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
@@ -6232,6 +6232,7 @@ export type Query = {
   membershipApplicationsList: Maybe<Array<MembershipApplication>>;
   /** Reads and enables pagination through a set of `Announcement`. */
   myAnnouncements: Maybe<AnnouncementsConnection>;
+  /** @deprecated   */
   myEventInstancesForRangeList: Maybe<Array<EventInstance>>;
   /** Get a single `Payment`. */
   payment: Maybe<Payment>;
@@ -6843,9 +6844,9 @@ export type QueryMyEventInstancesForRangeListArgs = {
   endRange?: InputMaybe<Scalars['Datetime']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   onlyType?: InputMaybe<EventType>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
+  trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
 };
 
 
@@ -7989,12 +7990,12 @@ export type TenantUsersArgs = {
 
 /** All input for the `tenantAccount` mutation. */
 export type TenantAccountInput = {
-  c?: InputMaybe<Scalars['String']['input']>;
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  inCurrency?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our `tenantAccount` mutation. */

@@ -243,34 +243,19 @@ query EventList($first: Int, $cursor: Cursor) {
   }
 }
 
-query MyEventInstanceRange(
-  $start: Datetime!
-  $end: Datetime
-  $type: EventType
-) {
-  list: myEventInstancesForRangeList(
-    startRange: $start
-    endRange: $end
-    onlyType: $type
-  ) {
-    ...EventInstanceWithTrainer
-    event {
-      ...Event
-    }
-  }
-}
-
 query EventInstanceRange(
   $start: Datetime!
   $end: Datetime
   $type: EventType
   $trainerIds: [BigInt]
+  $onlyMine: Boolean
 ) {
   list: eventInstancesForRangeList(
     startRange: $start
     endRange: $end
     onlyType: $type,
-    trainerIds: $trainerIds
+    trainerIds: $trainerIds,
+    onlyMine: $onlyMine
   ) {
     ...EventInstanceWithTrainer
     event {

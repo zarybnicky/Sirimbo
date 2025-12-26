@@ -1,18 +1,17 @@
-CREATE FUNCTION public.tenant_account(c text, OUT acc public.account) RETURNS public.account
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+CREATE FUNCTION public.tenant_account(in_currency text, OUT acc public.account) RETURNS public.account
+    LANGUAGE sql SECURITY DEFINER
     AS $$
-begin
-  select * into acc from account
-  where person_id is null and currency=c and tenant_id=current_tenant_id();
-
-  if not found then
-    insert into account (tenant_id, person_id, currency)
-    values (current_tenant_id(), null, coalesce(c, 'CZK'))
-    on conflict on constraint account_tenant_id_person_id_currency_idx do nothing
-    returning * into acc;
-  end if;
-end;
+  WITH ins AS (
+    INSERT INTO account (tenant_id, person_id, currency)
+      VALUES ((select current_tenant_id()), NULL::bigint, COALESCE(in_currency, 'CZK'))
+      ON CONFLICT ON CONSTRAINT account_tenant_id_person_id_currency_idx DO NOTHING
+      RETURNING *
+  )
+  SELECT * FROM ins
+  UNION ALL
+  SELECT account.* FROM account
+    WHERE tenant_id = (select current_tenant_id()) AND person_id IS NULL AND currency = COALESCE(in_currency, 'CZK')
+  LIMIT 1;
 $$;
 
-GRANT ALL ON FUNCTION public.tenant_account(c text, OUT acc public.account) TO anonymous;
+GRANT ALL ON FUNCTION public.tenant_account(in_currency text, OUT acc public.account) TO anonymous;

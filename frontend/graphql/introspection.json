@@ -16211,13 +16211,6 @@
                 }
               },
               {
-                "name": "onlyMine",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
                 "name": "onlyType",
                 "type": {
                   "kind": "SCALAR",
@@ -16229,6 +16222,16 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
+                }
+              },
+              {
+                "name": "trainerIds",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
                 }
               }
             ]

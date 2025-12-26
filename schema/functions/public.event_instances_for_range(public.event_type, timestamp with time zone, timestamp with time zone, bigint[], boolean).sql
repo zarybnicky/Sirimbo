@@ -1,10 +1,6 @@
-CREATE or replace FUNCTION public.event_instances_for_range(
-  only_type public.event_type,
-  start_range timestamp with time zone,
-  end_range timestamp with time zone DEFAULT NULL::timestamp with time zone,
-  trainer_ids bigint[] = null,
-  only_mine boolean = false
-) RETURNS SETOF event_instance as $$
+CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[], only_mine boolean DEFAULT false) RETURNS SETOF public.event_instance
+    LANGUAGE sql STABLE
+    AS $$
   select i.*
   from event_instance i
   join event on event_id=event.id
@@ -21,6 +17,8 @@ CREATE or replace FUNCTION public.event_instances_for_range(
         SELECT et2.event_id FROM event_trainer et2 WHERE et2.person_id = ANY (current_person_ids()))
       OR i.id IN (
         SELECT eit2.instance_id FROM event_instance_trainer eit2 WHERE eit2.person_id = ANY (current_person_ids())));
-$$ stable language sql;
-COMMENT ON FUNCTION public.event_instances_for_range IS '@simpleCollections only';
-GRANT ALL ON FUNCTION public.event_instances_for_range TO anonymous;
+$$;
+
+COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], only_mine boolean) IS '@simpleCollections only';
+
+GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], only_mine boolean) TO anonymous;

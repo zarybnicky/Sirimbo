@@ -98,12 +98,17 @@ const navigateView = (view: string, date: Date, action: Navigate) => {
     }
   }
   return date;
-}
-function prepareVariables(range: Date[], trainerIds: string[]): EventInstanceRangeQueryVariables {
+};
+function prepareVariables(
+  range: Date[],
+  trainerIds: string[],
+  onlyMine: boolean,
+): EventInstanceRangeQueryVariables {
   return {
     start: startOf(range[0]!, 'day').toISOString(),
     end: endOf(range.at(-1)!, 'day').toISOString(),
     trainerIds: trainerIds.length > 0 ? trainerIds : null,
+    onlyMine,
   };
 }
 
@@ -129,9 +134,9 @@ export function Calendar() {
     const range = getViewRange(view, date);
     return {
       range,
-      variables: prepareVariables(range, trainerIds),
+      variables: prepareVariables(range, trainerIds, onlyMine),
     };
-  }, [view, date, trainerIds]);
+  }, [view, date, trainerIds, onlyMine]);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -139,10 +144,20 @@ export function Calendar() {
       const nextDate = navigateView(view, date, Navigate.NEXT);
       const prevRange = getViewRange(view, prevDate);
       const nextRange = getViewRange(view, nextDate);
-      client.query(EventInstanceRangeDocument, prepareVariables(prevRange, trainerIds)).toPromise();
-      client.query(EventInstanceRangeDocument, prepareVariables(nextRange, trainerIds)).toPromise();
+      client
+        .query(
+          EventInstanceRangeDocument,
+          prepareVariables(prevRange, trainerIds, onlyMine),
+        )
+        .toPromise();
+      client
+        .query(
+          EventInstanceRangeDocument,
+          prepareVariables(nextRange, trainerIds, onlyMine),
+        )
+        .toPromise();
     }, 100);
-  }, [client, view, date, trainerIds]);
+  }, [client, view, date, trainerIds, onlyMine]);
 
   const [{ data, fetching }] = useQuery({ query: EventInstanceRangeDocument, variables });
 
@@ -153,10 +168,8 @@ export function Calendar() {
     for (const instance of data?.list || []) {
       const { event } = instance;
       if (!event) continue;
-      const trainers = instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList;
-      if (onlyMine && !event.myRegistrationsList?.length && !trainers.some(x => auth.personIds.includes(x.personId))) {
-        continue;
-      }
+      const trainers =
+        instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList;
 
       const start = new Date(instance.since)
       const end = new Date(instance.until);

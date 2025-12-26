@@ -50,7 +50,9 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event FOR EACH 
 
 CREATE INDEX event_location_id_idx ON public.event USING btree (location_id);
 CREATE INDEX event_payment_recipient_id_idx ON public.event USING btree (payment_recipient_id);
+CREATE INDEX event_tenant_visible_public_idx ON public.event USING btree (tenant_id, is_public, is_visible);
 CREATE INDEX event_type_idx ON public.event USING btree (type);
+CREATE INDEX event_visible_public_tenant_idx ON public.event USING btree (is_public, is_visible, tenant_id);
 CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);
 CREATE INDEX idx_event_tenant ON public.event USING btree (tenant_id, is_visible);
 CREATE INDEX is_visible ON public.event USING btree (is_visible);

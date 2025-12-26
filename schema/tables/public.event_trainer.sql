@@ -36,3 +36,4 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_trainer F
 CREATE INDEX event_trainer_event_idx ON public.event_trainer USING btree (event_id, person_id);
 CREATE INDEX event_trainer_person_id_idx ON public.event_trainer USING btree (person_id);
 CREATE INDEX event_trainer_tenant_event_idx ON public.event_trainer USING btree (tenant_id, event_id);
+CREATE INDEX event_trainer_tenant_person_event_idx ON public.event_trainer USING btree (tenant_id, person_id, event_id);

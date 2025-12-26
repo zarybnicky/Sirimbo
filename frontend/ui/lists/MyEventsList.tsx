@@ -1,7 +1,7 @@
 import {
   EventFragment,
+  EventInstanceRangeDocument,
   EventInstanceWithTrainerFragment,
-  MyEventInstanceRangeDocument,
 } from '@/graphql/Event';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
@@ -13,17 +13,18 @@ import { buttonCls, cardCls } from '../style';
 import { useAuth } from '../use-auth';
 import Link from 'next/link';
 
-type EventPair = { event: EventFragment; instance: EventInstanceWithTrainerFragment; };
+type EventPair = { event: EventFragment; instance: EventInstanceWithTrainerFragment };
 
 export function MyEventsList() {
   const auth = useAuth();
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data, fetching }] = useQuery({
-    query: MyEventInstanceRangeDocument,
+    query: EventInstanceRangeDocument,
     variables: {
       start: startDate.toISOString(),
       end: add(startDate, 1, 'week').toISOString(),
+      onlyMine: true,
     },
   });
 

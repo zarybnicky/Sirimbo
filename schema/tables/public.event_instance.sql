@@ -42,3 +42,4 @@ CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (e
 CREATE INDEX event_instance_location_id_idx ON public.event_instance USING btree (location_id);
 CREATE INDEX event_instance_range_idx ON public.event_instance USING btree (tenant_id, since, until);
 CREATE INDEX event_instance_since_idx ON public.event_instance USING btree (since);
+CREATE INDEX event_instance_tenant_range_gist ON public.event_instance USING gist (tenant_id, range);
