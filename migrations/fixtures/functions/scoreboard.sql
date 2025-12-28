@@ -11,13 +11,9 @@ language sql
 stable
 as $$
   with membership as (
-    select
-      cm.person_id,
-      cm.cohort_id
-    from cohort_membership cm
-    where cm.tenant_id = current_tenant_id()
-      and cm.status = 'active'
-      and (cm.cohort_id = scoreboard_entries.cohort_id or scoreboard_entries.cohort_id is null)
+    select cm.person_id, cm.cohort_id
+    from current_cohort_membership cm
+    where (cm.cohort_id = scoreboard_entries.cohort_id or scoreboard_entries.cohort_id is null)
   ),
   attendance as (
     select

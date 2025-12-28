@@ -38,18 +38,14 @@ CREATE or replace FUNCTION public.filtered_people(
   ) or (
     lower(coalesce(membership_state,'current')) = 'current' and (
       in_cohorts is null or (
-        cardinality(in_cohorts) = 0 and not exists(
-          select 1 from current_cohort_membership cm where cm.person_id = p.id)
+        cardinality(in_cohorts) = 0 and not exists(select 1 from current_cohort_membership cm where cm.person_id = p.id)
       ) or (
-        cardinality(in_cohorts) > 0 and exists(
-          select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = any(in_cohorts))
+        cardinality(in_cohorts) > 0 and exists(select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = any(in_cohorts))
       )
     ) and (
-      is_trainer is null or is_trainer = exists(
-        select 1 from current_tenant_trainer tt where tt.person_id = p.id)
+      is_trainer is null or is_trainer = exists(select 1 from current_tenant_trainer tt where tt.person_id = p.id)
     ) and (
-      is_admin is null or is_admin = exists(
-        select 1 from current_tenant_administrator ta where ta.person_id = p.id))
+      is_admin is null or is_admin = exists(select 1 from current_tenant_administrator ta where ta.person_id = p.id))
     );
 $$;
 COMMENT ON FUNCTION public.filtered_people IS '@simpleCollections only';
