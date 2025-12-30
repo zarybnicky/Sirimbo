@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import { upsertFrontier } from './crawler.queries.ts';
 

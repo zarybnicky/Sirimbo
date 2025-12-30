@@ -1,10 +1,13 @@
 import type { Task } from 'graphile-worker';
-import { getLatestFrontierJsonResponse } from '../crawler/crawler.queries.ts';
+import { getLatestFrontierJsonResponses } from '../crawler/crawler.queries.ts';
 import { LOADER_MAP } from '../crawler/handlers.ts';
 import { zx } from '@traversable/zod';
 import Cursor from 'pg-cursor';
 
-export const frontier_validate: Task<'frontier_validate'> = async ({ federation, kind }, helpers) => {
+export const frontier_validate: Task<'frontier_validate'> = async (
+  { federation, kind },
+  helpers,
+) => {
   const { withPgClient, logger } = helpers;
 
   const handler = LOADER_MAP[federation]?.[kind];
@@ -15,13 +18,16 @@ export const frontier_validate: Task<'frontier_validate'> = async ({ federation,
   if (handler.mode !== 'json') {
     return;
   }
-  const strictSchema = zx.deepStrict(handler.schema)
+  const strictSchema = zx.deepStrict(handler.schema);
 
   await withPgClient(async (client) => {
-    const cursor = getLatestFrontierJsonResponse.stream({ federation, kind }, {
-      query: client.query,
-      stream: (query, bindings) => client.query(new Cursor(query, bindings)),
-    });
+    const cursor = getLatestFrontierJsonResponses.stream(
+      { federation, kind },
+      {
+        query: client.query,
+        stream: (query, bindings) => client.query(new Cursor(query, bindings)),
+      },
+    );
 
     let count = 0;
 
@@ -32,7 +38,7 @@ export const frontier_validate: Task<'frontier_validate'> = async ({ federation,
       for (const row of rows) {
         try {
           strictSchema.parse(row.content, {
-            reportInput: true
+            reportInput: true,
           });
           count++;
         } catch (e) {

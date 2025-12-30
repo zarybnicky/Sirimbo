@@ -66,7 +66,10 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
     if (exists) {
       logger.info(`[IDT probe] Found ${candidateId} (${probes}/${MAX_PROBES_PER_RUN})`);
       await helpers.withPgClient(async (client) => {
-        await upsertFrontier.run({ federation: 'csts', kind: 'member', key: candidateId.toString() }, client);
+        await upsertFrontier.run(
+          { federation: 'csts', kind: 'member', key: candidateId.toString() },
+          client,
+        );
         await client.query(
           `UPDATE crawler.incremental_ranges SET last_known = $1 WHERE federation = 'csts' AND kind = 'member_id'`,
           [candidateId],

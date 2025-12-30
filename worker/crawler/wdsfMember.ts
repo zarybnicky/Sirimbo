@@ -1,6 +1,6 @@
 import type { JsonLoader } from './types.ts';
 import { upsertFederationAthlete } from './federated.queries.ts';
-import z from 'zod';
+import { z } from 'zod';
 
 export const wdsfMember: JsonLoader = {
   mode: 'json',

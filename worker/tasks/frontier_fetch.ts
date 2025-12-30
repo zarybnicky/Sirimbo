@@ -1,5 +1,6 @@
 import type { Task } from 'graphile-worker';
 import {
+  getFrontierForUpdate,
   getJobCountForTask,
   insertHtmlResponse,
   insertJsonResponse,
@@ -13,7 +14,7 @@ import {
   type HtmlLoader,
   type JsonLoader,
 } from '../crawler/types.ts';
-import { getFrontierHandler } from '../crawler/getFrontierHandler.ts';
+import { LOADER_MAP } from '../crawler/handlers.ts';
 
 export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) => {
   const { withPgClient, logger } = helpers;
@@ -21,12 +22,22 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
   const result = await withPgClient(async (client) => {
     await client.query('BEGIN');
 
-    const withHandler = await getFrontierHandler(id, client, logger);
-    if (!withHandler) {
+    const [frontier] = await getFrontierForUpdate.run({ id }, client);
+    if (!frontier) {
+      logger.info(`Frontier ${id} not found`);
       await client.query('COMMIT');
       return;
     }
-    const { frontier, handler } = withHandler;
+    const { federation, kind } = frontier;
+
+    const handler = LOADER_MAP[federation]?.[kind];
+    if (!handler) {
+      await markFrontierFetchError.run({ id }, client);
+      logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
+      await client.query('COMMIT');
+      return;
+    }
+
     const { url, init } = handler.buildRequest(frontier.key);
     const { host } = url;
     const [{ granted, allowed_at }] = await reserveRequest.run({ host }, client);

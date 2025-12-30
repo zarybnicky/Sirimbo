@@ -26,7 +26,7 @@ const toSeed: LoaderIds[] = [
   { federation: 'szts', kind: 'coupleIndex' },
 ];
 
-export const frontier_seed: Task<'frontier_seed'> = async ({}, helpers) => {
+export const frontier_seed: Task<'frontier_seed'> = async (_args, helpers) => {
   const { withPgClient, logger } = helpers;
 
   await withPgClient(async (client) => {

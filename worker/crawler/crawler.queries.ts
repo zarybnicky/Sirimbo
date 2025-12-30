@@ -33,7 +33,7 @@ export interface IGetFrontierForUpdateQuery {
   result: IGetFrontierForUpdateResult;
 }
 
-const getFrontierForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":99,"b":101}]}],"statement":"SELECT id, federation, kind, key, fetch_status, error_count, meta\nFROM crawler.frontier\nWHERE id = :id::bigint\nFOR UPDATE SKIP LOCKED"};
+const getFrontierForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":99,"b":101}]}],"statement":"SELECT id, federation, kind, key, fetch_status, error_count, meta\nFROM crawler.frontier\nWHERE id = :id::bigint\nFOR UPDATE"};
 
 /**
  * Query generated from SQL:
@@ -41,7 +41,7 @@ const getFrontierForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name
  * SELECT id, federation, kind, key, fetch_status, error_count, meta
  * FROM crawler.frontier
  * WHERE id = :id::bigint
- * FOR UPDATE SKIP LOCKED
+ * FOR UPDATE
  * ```
  */
 export const getFrontierForUpdate = new PreparedQuery<IGetFrontierForUpdateParams,IGetFrontierForUpdateResult>(getFrontierForUpdateIR);
@@ -75,14 +75,14 @@ const getDistinctFrontierKindsIR: any = {"usedParamSet":{},"params":[],"statemen
 export const getDistinctFrontierKinds = new PreparedQuery<IGetDistinctFrontierKindsParams,IGetDistinctFrontierKindsResult>(getDistinctFrontierKindsIR);
 
 
-/** 'GetLatestFrontierJsonResponse' parameters type */
-export interface IGetLatestFrontierJsonResponseParams {
+/** 'GetLatestFrontierJsonResponses' parameters type */
+export interface IGetLatestFrontierJsonResponsesParams {
   federation?: string | null | void;
   kind?: string | null | void;
 }
 
-/** 'GetLatestFrontierJsonResponse' return type */
-export interface IGetLatestFrontierJsonResponseResult {
+/** 'GetLatestFrontierJsonResponses' return type */
+export interface IGetLatestFrontierJsonResponsesResult {
   content: Json | null;
   error: string | null;
   http_status: number | null;
@@ -90,13 +90,13 @@ export interface IGetLatestFrontierJsonResponseResult {
   url: string;
 }
 
-/** 'GetLatestFrontierJsonResponse' query type */
-export interface IGetLatestFrontierJsonResponseQuery {
-  params: IGetLatestFrontierJsonResponseParams;
-  result: IGetLatestFrontierJsonResponseResult;
+/** 'GetLatestFrontierJsonResponses' query type */
+export interface IGetLatestFrontierJsonResponsesQuery {
+  params: IGetLatestFrontierJsonResponsesParams;
+  result: IGetLatestFrontierJsonResponsesResult;
 }
 
-const getLatestFrontierJsonResponseIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":325,"b":335}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":350,"b":354}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n  ) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation AND f.kind = :kind"};
+const getLatestFrontierJsonResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":325,"b":335}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":350,"b":354}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n  ) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation AND f.kind = :kind"};
 
 /**
  * Query generated from SQL:
@@ -114,16 +114,16 @@ const getLatestFrontierJsonResponseIR: any = {"usedParamSet":{"federation":true,
  * WHERE f.federation = :federation AND f.kind = :kind
  * ```
  */
-export const getLatestFrontierJsonResponse = new PreparedQuery<IGetLatestFrontierJsonResponseParams,IGetLatestFrontierJsonResponseResult>(getLatestFrontierJsonResponseIR);
+export const getLatestFrontierJsonResponses = new PreparedQuery<IGetLatestFrontierJsonResponsesParams,IGetLatestFrontierJsonResponsesResult>(getLatestFrontierJsonResponsesIR);
 
 
-/** 'GetFrontierJsonResponseForUpdate' parameters type */
-export interface IGetFrontierJsonResponseForUpdateParams {
+/** 'GetFrontierJsonResponse' parameters type */
+export interface IGetFrontierJsonResponseParams {
   id?: NumberOrString | null | void;
 }
 
-/** 'GetFrontierJsonResponseForUpdate' return type */
-export interface IGetFrontierJsonResponseForUpdateResult {
+/** 'GetFrontierJsonResponse' return type */
+export interface IGetFrontierJsonResponseResult {
   content: Json | null;
   error: string | null;
   http_status: number | null;
@@ -131,13 +131,13 @@ export interface IGetFrontierJsonResponseForUpdateResult {
   url: string;
 }
 
-/** 'GetFrontierJsonResponseForUpdate' query type */
-export interface IGetFrontierJsonResponseForUpdateQuery {
-  params: IGetFrontierJsonResponseForUpdateParams;
-  result: IGetFrontierJsonResponseForUpdateResult;
+/** 'GetFrontierJsonResponse' query type */
+export interface IGetFrontierJsonResponseQuery {
+  params: IGetFrontierJsonResponseParams;
+  result: IGetFrontierJsonResponseResult;
 }
 
-const getFrontierJsonResponseForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":317}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint"};
+const getFrontierJsonResponseIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":317}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint"};
 
 /**
  * Query generated from SQL:
@@ -155,16 +155,16 @@ const getFrontierJsonResponseForUpdateIR: any = {"usedParamSet":{"id":true},"par
  * WHERE f.id = :id::bigint
  * ```
  */
-export const getFrontierJsonResponseForUpdate = new PreparedQuery<IGetFrontierJsonResponseForUpdateParams,IGetFrontierJsonResponseForUpdateResult>(getFrontierJsonResponseForUpdateIR);
+export const getFrontierJsonResponse = new PreparedQuery<IGetFrontierJsonResponseParams,IGetFrontierJsonResponseResult>(getFrontierJsonResponseIR);
 
 
-/** 'GetFrontierHtmlResponseForUpdate' parameters type */
-export interface IGetFrontierHtmlResponseForUpdateParams {
+/** 'GetFrontierHtmlResponse' parameters type */
+export interface IGetFrontierHtmlResponseParams {
   id?: NumberOrString | null | void;
 }
 
-/** 'GetFrontierHtmlResponseForUpdate' return type */
-export interface IGetFrontierHtmlResponseForUpdateResult {
+/** 'GetFrontierHtmlResponse' return type */
+export interface IGetFrontierHtmlResponseResult {
   content: string | null;
   error: string | null;
   http_status: number | null;
@@ -172,13 +172,13 @@ export interface IGetFrontierHtmlResponseForUpdateResult {
   url: string;
 }
 
-/** 'GetFrontierHtmlResponseForUpdate' query type */
-export interface IGetFrontierHtmlResponseForUpdateQuery {
-  params: IGetFrontierHtmlResponseForUpdateParams;
-  result: IGetFrontierHtmlResponseForUpdateResult;
+/** 'GetFrontierHtmlResponse' query type */
+export interface IGetFrontierHtmlResponseQuery {
+  params: IGetFrontierHtmlResponseParams;
+  result: IGetFrontierHtmlResponseResult;
 }
 
-const getFrontierHtmlResponseForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":317}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.html_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.html_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint"};
+const getFrontierHtmlResponseIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":317}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.html_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.html_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint"};
 
 /**
  * Query generated from SQL:
@@ -196,7 +196,7 @@ const getFrontierHtmlResponseForUpdateIR: any = {"usedParamSet":{"id":true},"par
  * WHERE f.id = :id::bigint
  * ```
  */
-export const getFrontierHtmlResponseForUpdate = new PreparedQuery<IGetFrontierHtmlResponseForUpdateParams,IGetFrontierHtmlResponseForUpdateResult>(getFrontierHtmlResponseForUpdateIR);
+export const getFrontierHtmlResponse = new PreparedQuery<IGetFrontierHtmlResponseParams,IGetFrontierHtmlResponseResult>(getFrontierHtmlResponseIR);
 
 
 /** 'GetJobCountForTask' parameters type */
@@ -434,7 +434,7 @@ export interface IMarkFrontierFetchErrorQuery {
   result: IMarkFrontierFetchErrorResult;
 }
 
-const markFrontierFetchErrorIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":239,"b":241}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status    = 'error',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(interval '5 minutes', (2 ^ (error_count + 1)) * interval '5 second')\nWHERE id = :id::bigint"};
+const markFrontierFetchErrorIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":274,"b":276}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status    = 'error',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      interval '5 minutes',\n      (power(2::numeric, error_count + 1) * 5) * interval '1 second'\n    )\nWHERE id = :id::bigint"};
 
 /**
  * Query generated from SQL:
@@ -443,7 +443,10 @@ const markFrontierFetchErrorIR: any = {"usedParamSet":{"id":true},"params":[{"na
  * SET last_fetched_at = now(),
  *     fetch_status    = 'error',
  *     error_count     = error_count + 1,
- *     next_fetch_at   = now() + least(interval '5 minutes', (2 ^ (error_count + 1)) * interval '5 second')
+ *     next_fetch_at   = now() + least(
+ *       interval '5 minutes',
+ *       (power(2::numeric, error_count + 1) * 5) * interval '1 second'
+ *     )
  * WHERE id = :id::bigint
  * ```
  */

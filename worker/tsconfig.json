@@ -2,11 +2,13 @@
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
+    "allowJs": true,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
     "forceConsistentCasingInFileNames": true,
     "erasableSyntaxOnly": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
   }
 }

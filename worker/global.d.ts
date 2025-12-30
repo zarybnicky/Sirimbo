@@ -1,11 +1,11 @@
 namespace GraphileWorker {
   interface Tasks {
     frontier_fetch: { id: string };
-    frontier_process: {};
-    frontier_schedule: {};
-    frontier_seed: {};
+    frontier_process: unknown;
+    frontier_schedule: unknown;
+    frontier_seed: unknown;
     frontier_validate: { federation: string; kind: string };
-    discover_csts_athletes: {};
+    discover_csts_athletes: unknown;
 
     notify_announcement: {
       announcement_id: number;

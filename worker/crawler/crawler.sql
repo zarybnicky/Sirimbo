@@ -2,14 +2,14 @@
 SELECT id, federation, kind, key, fetch_status, error_count, meta
 FROM crawler.frontier
 WHERE id = :id::bigint
-FOR UPDATE SKIP LOCKED;
+FOR UPDATE;
 
 /* @name GetDistinctFrontierKinds */
 SELECT federation, kind
 FROM crawler.frontier
 GROUP BY federation, kind;
 
-/* @name GetLatestFrontierJsonResponse */
+/* @name GetLatestFrontierJsonResponses */
 SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
 FROM crawler.frontier f
 JOIN LATERAL (
@@ -22,7 +22,7 @@ JOIN LATERAL (
 JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE f.federation = :federation AND f.kind = :kind;
 
-/* @name GetFrontierJsonResponseForUpdate */
+/* @name GetFrontierJsonResponse */
 SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
 FROM crawler.frontier f
 JOIN LATERAL (
@@ -35,7 +35,7 @@ JOIN LATERAL (
 JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE f.id = :id::bigint;
 
-/* @name GetFrontierHtmlResponseForUpdate */
+/* @name GetFrontierHtmlResponse */
 SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
 FROM crawler.frontier f
 JOIN LATERAL (
@@ -119,7 +119,10 @@ UPDATE crawler.frontier
 SET last_fetched_at = now(),
     fetch_status    = 'error',
     error_count     = error_count + 1,
-    next_fetch_at   = now() + least(interval '5 minutes', (2 ^ (error_count + 1)) * interval '5 second')
+    next_fetch_at   = now() + least(
+      interval '5 minutes',
+      (power(2::numeric, error_count + 1) * 5) * interval '1 second'
+    )
 WHERE id = :id::bigint;
 
 /* @name MarkFrontierFetchSuccess */

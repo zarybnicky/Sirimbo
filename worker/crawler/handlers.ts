@@ -1,10 +1,7 @@
 import { cstsAthlete } from './cstsAthlete.ts';
 import type { HtmlLoader, JsonLoader } from './types.ts';
-import { z } from 'zod';
 import { cstsRanklistIndex } from './cstsRanklistIndex.ts';
 import { cstsRanklist } from './cstsRanklist.ts';
-import { upsertFrontier } from './crawler.queries.ts';
-import { upsertFederationAthlete } from './federated.queries.ts';
 import { wdsfMember } from './wdsfMember.ts';
 import { wdsfMemberIndex } from './wdsfMemberIndex.ts';
 
