@@ -9,5 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true
-  }
+  },
+  "exclude": ["node_modules", "frontend", "backend", "worker"]
 }

@@ -12,7 +12,7 @@ import type {
 } from '@pgsql/types';
 
 const qname = (rangeVar: RangeVar): string =>
-  (rangeVar?.schemaname ? `${rangeVar.schemaname}.` : '') + rangeVar.relname;
+  (rangeVar.schemaname ? `${rangeVar.schemaname}.` : '') + rangeVar.relname;
 
 const sval = (n: Node): string | undefined =>
   'String' in n ? n.String?.sval : undefined;
@@ -73,7 +73,7 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
         if (subtype !== 'AT_AddConstraint' && subtype !== 'AT_AddConstraintRecurse')
           continue;
 
-        if (!('Constraint' in cmd.def)) continue;
+        if (!cmd.def || !('Constraint' in cmd.def)) continue;
         const cons: Constraint = cmd.def.Constraint;
 
         const arr = extraByTable.get(t);
@@ -111,7 +111,7 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
       const contype = String(c.contype ?? '');
 
       if (contype === 'CONSTR_PRIMARY' || contype === 'CONSTR_UNIQUE') {
-        const keys = identList(c.keys);
+        const keys = identList(c.keys || []);
         if (keys.length === 1) {
           const col = colByName.get(keys[0]);
           if (col) {
@@ -125,7 +125,7 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
       }
 
       if (contype === 'CONSTR_FOREIGN') {
-        const fk = identList(c.fk_attrs);
+        const fk = identList(c.fk_attrs || []);
         if (fk.length === 1) {
           const col = colByName.get(fk[0]);
           if (col) {
@@ -248,12 +248,12 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
 
   const fullTypeNameOf = (stmt: Node): string | undefined => {
     if ('CreateEnumStmt' in stmt)
-      return identList(stmt.CreateEnumStmt.typeName).join('.');
+      return identList(stmt.CreateEnumStmt.typeName || []).join('.');
     if ('CreateDomainStmt' in stmt)
-      return identList(stmt.CreateDomainStmt.domainname).join('.');
+      return identList(stmt.CreateDomainStmt.domainname || []).join('.');
     if ('CreateRangeStmt' in stmt)
-      return identList(stmt.CreateRangeStmt.typeName).join('.');
-    if ('CompositeTypeStmt' in stmt) return qname(stmt.CompositeTypeStmt.typevar);
+      return identList(stmt.CreateRangeStmt.typeName || []).join('.');
+    if ('CompositeTypeStmt' in stmt) return qname(stmt.CompositeTypeStmt.typevar!);
     return undefined;
   };
 
@@ -272,7 +272,7 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
   }
 
   const resolveTypeRef = (typeNameNode: TypeName): string | undefined => {
-    const names = identList(typeNameNode.names);
+    const names = identList(typeNameNode.names || []);
     if (!names.length) return undefined;
 
     const full = names.join('.');
@@ -288,19 +288,19 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
     const deps = new Set<string>();
 
     if ('CreateDomainStmt' in stmt) {
-      const base = resolveTypeRef(stmt.CreateDomainStmt.typeName);
+      const base = resolveTypeRef(stmt.CreateDomainStmt.typeName!);
       if (base) deps.add(base);
     } else if ('CompositeTypeStmt' in stmt) {
       for (const n of stmt.CompositeTypeStmt.coldeflist ?? []) {
-        if (!('ColumnDef' in n)) continue;
-        const k = resolveTypeRef(n.ColumnDef?.typeName);
+        if (!('ColumnDef' in n) || !n.ColumnDef.typeName) continue;
+        const k = resolveTypeRef(n.ColumnDef.typeName);
         if (k) deps.add(k);
       }
     } else if ('CreateRangeStmt' in stmt) {
       for (const p of stmt.CreateRangeStmt.params ?? []) {
         if (!('DefElem' in p)) continue;
         const de = p.DefElem;
-        if (!de || de.defname !== 'subtype') continue;
+        if (!de?.arg || de.defname !== 'subtype') continue;
         const k = 'TypeName' in de.arg ? resolveTypeRef(de.arg.TypeName) : undefined;
         if (k) deps.add(k);
       }
@@ -313,7 +313,7 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
     const used = new Set<string>();
     for (const e of create.tableElts ?? []) {
       if (!('ColumnDef' in e)) continue;
-      const k = resolveTypeRef(e.ColumnDef.typeName);
+      const k = resolveTypeRef(e.ColumnDef.typeName!);
       if (k) used.add(k);
     }
     return [...used];
