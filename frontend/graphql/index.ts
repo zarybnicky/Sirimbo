@@ -226,8 +226,6 @@ export type AktualitiesEdge = {
 export type AktualitiesOrderBy =
   | 'AT_FOTO_ASC'
   | 'AT_FOTO_DESC'
-  | 'AT_FOTO_MAIN_ASC'
-  | 'AT_FOTO_MAIN_DESC'
   | 'AT_JMENO_ASC'
   | 'AT_JMENO_DESC'
   | 'AT_KAT_ASC'
@@ -255,7 +253,6 @@ export type AktualitiesOrderBy =
 export type Aktuality = {
   __typename?: 'Aktuality';
   atFoto: Maybe<Scalars['BigInt']['output']>;
-  atFotoMain: Maybe<Scalars['BigInt']['output']>;
   atJmeno: Scalars['String']['output'];
   /** @deprecated true */
   atKat: Scalars['String']['output'];
@@ -280,8 +277,6 @@ export type Aktuality = {
 export type AktualityCondition = {
   /** Checks for equality with the object’s `atFoto` field. */
   atFoto?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `atFotoMain` field. */
-  atFotoMain?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `atJmeno` field. */
   atJmeno?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `atKat` field. */
@@ -307,7 +302,6 @@ export type AktualityCondition = {
 /** An input for mutations affecting `Aktuality` */
 export type AktualityInput = {
   atFoto?: InputMaybe<Scalars['BigInt']['input']>;
-  atFotoMain?: InputMaybe<Scalars['BigInt']['input']>;
   atJmeno: Scalars['String']['input'];
   atKat?: InputMaybe<Scalars['String']['input']>;
   atKdo?: InputMaybe<Scalars['BigInt']['input']>;
@@ -323,7 +317,6 @@ export type AktualityInput = {
 /** Represents an update to a `Aktuality`. Fields that are set will be updated. */
 export type AktualityPatch = {
   atFoto?: InputMaybe<Scalars['BigInt']['input']>;
-  atFotoMain?: InputMaybe<Scalars['BigInt']['input']>;
   atJmeno?: InputMaybe<Scalars['String']['input']>;
   atKat?: InputMaybe<Scalars['String']['input']>;
   atKdo?: InputMaybe<Scalars['BigInt']['input']>;
@@ -1020,7 +1013,7 @@ export type CohortMembership = {
   /** Reads a single `Tenant` that is related to this `CohortMembership`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  until: Maybe<Scalars['Datetime']['output']>;
+  until: Scalars['Datetime']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
 
@@ -1271,7 +1264,7 @@ export type Couple = {
   manId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
   status: RelationshipStatus;
-  until: Maybe<Scalars['Datetime']['output']>;
+  until: Scalars['Datetime']['output'];
   updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `Person` that is related to this `Couple`. */
   woman: Maybe<Person>;
@@ -6034,7 +6027,7 @@ export type Posting = {
   /** Reads a single `Account` that is related to this `Posting`. */
   account: Maybe<Account>;
   accountId: Scalars['BigInt']['output'];
-  amount: Maybe<Scalars['BigFloat']['output']>;
+  amount: Scalars['BigFloat']['output'];
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   /** Reads a single `Account` that is related to this `Posting`. */
@@ -8037,7 +8030,7 @@ export type TenantAdministrator = {
   /** Reads a single `Tenant` that is related to this `TenantAdministrator`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  until: Maybe<Scalars['Datetime']['output']>;
+  until: Scalars['Datetime']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
 
@@ -8150,7 +8143,7 @@ export type TenantLocation = {
   /** Reads and enables pagination through a set of `Event`. */
   eventsByLocationId: EventsConnection;
   id: Scalars['BigInt']['output'];
-  isPublic: Maybe<Scalars['Boolean']['output']>;
+  isPublic: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   /** Reads a single `Tenant` that is related to this `TenantLocation`. */
   tenant: Maybe<Tenant>;
@@ -8256,7 +8249,7 @@ export type TenantMembership = {
   /** Reads a single `Tenant` that is related to this `TenantMembership`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  until: Maybe<Scalars['Datetime']['output']>;
+  until: Scalars['Datetime']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
 
@@ -8402,7 +8395,7 @@ export type TenantTrainer = {
   /** Reads a single `Tenant` that is related to this `TenantTrainer`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  until: Maybe<Scalars['Datetime']['output']>;
+  until: Scalars['Datetime']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
 
@@ -9578,9 +9571,9 @@ export type UserProxy = {
   /** Reads a single `Person` that is related to this `UserProxy`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
-  since: Maybe<Scalars['Datetime']['output']>;
+  since: Scalars['Datetime']['output'];
   status: RelationshipStatus;
-  until: Maybe<Scalars['Datetime']['output']>;
+  until: Scalars['Datetime']['output'];
   updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `User` that is related to this `UserProxy`. */
   user: Maybe<User>;
@@ -10024,7 +10017,6 @@ export type GraphCacheResolvers = {
   },
   Aktuality?: {
     atFoto?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
-    atFotoMain?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
     atJmeno?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
     atKat?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
     atKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -11902,7 +11894,6 @@ export type GraphCacheUpdaters = {
   },
   Aktuality?: {
     atFoto?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
-    atFotoMain?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atJmeno?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atKat?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,

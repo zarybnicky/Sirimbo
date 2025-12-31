@@ -52,12 +52,13 @@ CREATE TABLE public.couple (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone,
+  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   legacy_pary_id bigint,
   active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  CHECK (until > since),
   EXCLUDE USING gist (man_id WITH =, woman_id WITH =, active_range WITH &&)
 );
 
@@ -132,7 +133,7 @@ CREATE TABLE public.cohort_membership (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone,
+  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
@@ -140,6 +141,7 @@ CREATE TABLE public.cohort_membership (
     ON DELETE CASCADE,
   active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  CHECK (until > since),
   EXCLUDE USING gist (cohort_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
@@ -217,7 +219,7 @@ CREATE TABLE public.tenant_administrator (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone,
+  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
@@ -225,6 +227,7 @@ CREATE TABLE public.tenant_administrator (
   description text DEFAULT ''::text NOT NULL,
   active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  CHECK (until > since),
   EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
@@ -233,7 +236,7 @@ CREATE TABLE public.tenant_location (
   name text NOT NULL,
   description text DEFAULT ''::text NOT NULL,
   address public.address_domain,
-  is_public boolean DEFAULT true,
+  is_public boolean DEFAULT true NOT NULL,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id),
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL
@@ -250,7 +253,7 @@ CREATE TABLE public.event (
   description text NOT NULL,
   since date,
   until date,
-  capacity int DEFAULT CAST('0' AS bigint) NOT NULL,
+  capacity int DEFAULT 0 NOT NULL,
   files_legacy text DEFAULT ''::text NOT NULL,
   updated_at timestamp with time zone,
   is_locked boolean DEFAULT false NOT NULL,
@@ -471,12 +474,13 @@ CREATE TABLE public.tenant_membership (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone,
+  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
   active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  CHECK (until > since),
   EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
@@ -494,7 +498,7 @@ CREATE TABLE public.tenant_trainer (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone,
+  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
@@ -507,6 +511,7 @@ CREATE TABLE public.tenant_trainer (
   guest_payout_45min public.price DEFAULT CAST(NULL AS public.price_type),
   create_payout_payments boolean DEFAULT true NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  CHECK (until > since),
   EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
@@ -538,7 +543,7 @@ CREATE TABLE public.posting (
     ON DELETE CASCADE,
   account_id bigint NOT NULL REFERENCES public.account (id),
   original_account_id bigint REFERENCES public.account (id),
-  amount numeric(19, 4),
+  amount numeric(19, 4) NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -551,7 +556,6 @@ CREATE TABLE public.users (
   u_prijmeni text,
   u_email public.citext NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  u_ban boolean DEFAULT true NOT NULL,
   u_confirmed boolean DEFAULT false NOT NULL,
   u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
@@ -560,6 +564,23 @@ CREATE TABLE public.users (
   created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
   last_active_at timestamp with time zone,
   last_version text
+);
+
+CREATE TABLE public.aktuality (
+  id bigint NOT NULL PRIMARY KEY,
+  at_kdo bigint REFERENCES public.users (id)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+  at_kat text DEFAULT '1'::text NOT NULL,
+  at_jmeno text NOT NULL,
+  at_text text NOT NULL,
+  at_preview text NOT NULL,
+  at_foto bigint,
+  updated_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  title_photo_url text
 );
 
 CREATE TABLE public.announcement (
@@ -698,10 +719,11 @@ CREATE TABLE public.user_proxy (
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
-  since timestamp with time zone,
-  until timestamp with time zone,
+  since timestamp with time zone DEFAULT now() NOT NULL,
+  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
   active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  CHECK (until > since),
   EXCLUDE USING gist (user_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
@@ -1018,53 +1040,6 @@ CREATE TABLE federated.round_judge (
   PRIMARY KEY (round_id, judge_id)
 );
 
-CREATE TABLE app_private.galerie_dir (
-  id bigint NOT NULL PRIMARY KEY,
-  gd_id_rodic bigint NOT NULL,
-  gd_name text NOT NULL,
-  gd_level smallint DEFAULT CAST('1' AS smallint) NOT NULL,
-  gd_path text NOT NULL,
-  gd_hidden boolean DEFAULT true NOT NULL,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE app_private.galerie_foto (
-  id bigint NOT NULL PRIMARY KEY,
-  gf_id_rodic bigint NOT NULL REFERENCES app_private.galerie_dir (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  gf_name text NOT NULL,
-  gf_path text NOT NULL,
-  gf_kdo bigint NOT NULL REFERENCES public.users (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  updated_at timestamp with time zone,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE public.aktuality (
-  id bigint NOT NULL PRIMARY KEY,
-  at_kdo bigint REFERENCES public.users (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  at_kat text DEFAULT '1'::text NOT NULL,
-  at_jmeno text NOT NULL,
-  at_text text NOT NULL,
-  at_preview text NOT NULL,
-  at_foto bigint,
-  at_foto_main bigint REFERENCES app_private.galerie_foto (id)
-    ON UPDATE RESTRICT
-    ON DELETE RESTRICT,
-  updated_at timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now(),
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON DELETE CASCADE,
-  title_photo_url text
-);
-
 CREATE TABLE app_private.platby_category (
   pc_id bigint NOT NULL PRIMARY KEY,
   pc_name text NOT NULL,
@@ -1176,7 +1151,7 @@ CREATE TABLE crawler.frontier (
 
 CREATE TABLE crawler.html_response_cache (
   content_hash text GENERATED ALWAYS AS (encode(public.digest(content, 'sha256'::text), 'hex'::text)) STORED NOT NULL PRIMARY KEY,
-  content text
+  content text NOT NULL
 );
 
 CREATE TABLE crawler.html_response (
@@ -1200,7 +1175,7 @@ CREATE TABLE crawler.incremental_ranges (
 
 CREATE TABLE crawler.json_response_cache (
   content_hash text GENERATED ALWAYS AS (encode(public.digest(content::text, 'sha256'::text), 'hex'::text)) STORED NOT NULL PRIMARY KEY,
-  content jsonb
+  content jsonb NOT NULL
 );
 
 CREATE TABLE crawler.json_response (

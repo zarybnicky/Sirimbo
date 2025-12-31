@@ -1,6 +1,6 @@
 CREATE TABLE crawler.json_response_cache (
     content_hash text GENERATED ALWAYS AS (encode(public.digest((content)::text, 'sha256'::text), 'hex'::text)) STORED NOT NULL,
-    content jsonb
+    content jsonb NOT NULL
 );
 
 ALTER TABLE ONLY crawler.json_response_cache

@@ -5,7 +5,7 @@ CREATE TABLE public.event (
     description text NOT NULL,
     since date,
     until date,
-    capacity integer DEFAULT '0'::bigint NOT NULL,
+    capacity integer DEFAULT 0 NOT NULL,
     files_legacy text DEFAULT ''::text NOT NULL,
     updated_at timestamp with time zone,
     is_locked boolean DEFAULT false NOT NULL,

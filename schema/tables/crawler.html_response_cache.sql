@@ -1,6 +1,6 @@
 CREATE TABLE crawler.html_response_cache (
     content_hash text GENERATED ALWAYS AS (encode(public.digest(content, 'sha256'::text), 'hex'::text)) STORED NOT NULL,
-    content text
+    content text NOT NULL
 );
 
 ALTER TABLE ONLY crawler.html_response_cache

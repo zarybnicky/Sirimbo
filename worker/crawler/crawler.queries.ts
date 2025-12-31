@@ -83,7 +83,7 @@ export interface IGetLatestFrontierJsonResponsesParams {
 
 /** 'GetLatestFrontierJsonResponses' return type */
 export interface IGetLatestFrontierJsonResponsesResult {
-  content: Json | null;
+  content: Json;
   error: string | null;
   http_status: number | null;
   id: string;
@@ -124,7 +124,7 @@ export interface IGetFrontierJsonResponseParams {
 
 /** 'GetFrontierJsonResponse' return type */
 export interface IGetFrontierJsonResponseResult {
-  content: Json | null;
+  content: Json;
   error: string | null;
   http_status: number | null;
   id: string;
@@ -165,7 +165,7 @@ export interface IGetFrontierHtmlResponseParams {
 
 /** 'GetFrontierHtmlResponse' return type */
 export interface IGetFrontierHtmlResponseResult {
-  content: string | null;
+  content: string;
   error: string | null;
   http_status: number | null;
   id: string;

@@ -4,7 +4,7 @@ CREATE TABLE public.posting (
     transaction_id bigint NOT NULL,
     account_id bigint NOT NULL,
     original_account_id bigint,
-    amount numeric(19,4),
+    amount numeric(19,4) NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );

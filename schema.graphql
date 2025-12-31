@@ -221,8 +221,6 @@ type AktualitiesEdge {
 enum AktualitiesOrderBy {
   AT_FOTO_ASC
   AT_FOTO_DESC
-  AT_FOTO_MAIN_ASC
-  AT_FOTO_MAIN_DESC
   AT_JMENO_ASC
   AT_JMENO_DESC
   AT_KAT_ASC
@@ -250,7 +248,6 @@ enum AktualitiesOrderBy {
 
 type Aktuality {
   atFoto: BigInt
-  atFotoMain: BigInt
   atJmeno: String!
   atKat: String! @deprecated(reason: "true")
   atKdo: BigInt
@@ -276,9 +273,6 @@ for equality and combined with a logical ‘and.’
 input AktualityCondition {
   """Checks for equality with the object’s `atFoto` field."""
   atFoto: BigInt
-
-  """Checks for equality with the object’s `atFotoMain` field."""
-  atFotoMain: BigInt
 
   """Checks for equality with the object’s `atJmeno` field."""
   atJmeno: String
@@ -314,7 +308,6 @@ input AktualityCondition {
 """An input for mutations affecting `Aktuality`"""
 input AktualityInput {
   atFoto: BigInt
-  atFotoMain: BigInt
   atJmeno: String!
   atKat: String
   atKdo: BigInt
@@ -332,7 +325,6 @@ Represents an update to a `Aktuality`. Fields that are set will be updated.
 """
 input AktualityPatch {
   atFoto: BigInt
-  atFotoMain: BigInt
   atJmeno: String
   atKat: String
   atKdo: BigInt
@@ -1193,7 +1185,7 @@ type CohortMembership {
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
   tenant: Tenant
   tenantId: BigInt!
-  until: Datetime
+  until: Datetime!
   updatedAt: Datetime!
 }
 
@@ -1533,7 +1525,7 @@ type Couple {
   manId: BigInt!
   since: Datetime!
   status: RelationshipStatus!
-  until: Datetime
+  until: Datetime!
   updatedAt: Datetime!
 
   """Reads a single `Person` that is related to this `Couple`."""
@@ -7120,7 +7112,7 @@ type Posting {
   """Reads a single `Account` that is related to this `Posting`."""
   account: Account
   accountId: BigInt!
-  amount: BigFloat
+  amount: BigFloat!
   createdAt: Datetime!
   id: BigInt!
 
@@ -9601,7 +9593,7 @@ type TenantAdministrator {
   """Reads a single `Tenant` that is related to this `TenantAdministrator`."""
   tenant: Tenant
   tenantId: BigInt!
-  until: Datetime
+  until: Datetime!
   updatedAt: Datetime!
 }
 
@@ -9776,7 +9768,7 @@ type TenantLocation {
     orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventsConnection!
   id: BigInt!
-  isPublic: Boolean
+  isPublic: Boolean!
   name: String!
 
   """Reads a single `Tenant` that is related to this `TenantLocation`."""
@@ -9875,7 +9867,7 @@ type TenantMembership {
   """Reads a single `Tenant` that is related to this `TenantMembership`."""
   tenant: Tenant
   tenantId: BigInt!
-  until: Datetime
+  until: Datetime!
   updatedAt: Datetime!
 }
 
@@ -10038,7 +10030,7 @@ type TenantTrainer {
   """Reads a single `Tenant` that is related to this `TenantTrainer`."""
   tenant: Tenant
   tenantId: BigInt!
-  until: Datetime
+  until: Datetime!
   updatedAt: Datetime!
 }
 
@@ -11519,9 +11511,9 @@ type UserProxy {
   """Reads a single `Person` that is related to this `UserProxy`."""
   person: Person
   personId: BigInt!
-  since: Datetime
+  since: Datetime!
   status: RelationshipStatus!
-  until: Datetime
+  until: Datetime!
   updatedAt: Datetime!
 
   """Reads a single `User` that is related to this `UserProxy`."""

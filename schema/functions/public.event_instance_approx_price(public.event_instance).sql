@@ -13,16 +13,16 @@ begin
     select
       coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / nullif(num_participants, 0))::numeric(19,4), 'NaN') as amount,
       coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
-    from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id
-    where active and event_instance_trainer.instance_id=v_instance.id and tenant_trainer.tenant_id = event_instance_trainer.tenant_id
+    from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id and status='active'
+    where event_instance_trainer.instance_id=v_instance.id and tenant_trainer.tenant_id = event_instance_trainer.tenant_id
     group by (tenant_trainer.member_price_45min).currency;
   else
     return query
     select
       coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / nullif(num_participants, 0))::numeric(19,4), 'NaN') as amount,
       coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
-    from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id
-    where active and event_trainer.event_id=v_instance.event_id and tenant_trainer.tenant_id = event_trainer.tenant_id
+    from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id and status='active'
+    where event_trainer.event_id=v_instance.event_id and tenant_trainer.tenant_id = event_trainer.tenant_id
     group by (tenant_trainer.member_price_45min).currency;
   end if;
 end;

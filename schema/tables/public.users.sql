@@ -6,7 +6,6 @@ CREATE TABLE public.users (
     u_prijmeni text,
     u_email public.citext NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    u_ban boolean DEFAULT true NOT NULL,
     u_confirmed boolean DEFAULT false NOT NULL,
     u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
@@ -18,7 +17,6 @@ CREATE TABLE public.users (
 
 COMMENT ON TABLE public.users IS '@omit create,update,delete';
 COMMENT ON COLUMN public.users.u_pass IS '@omit';
-COMMENT ON COLUMN public.users.u_ban IS '@omit';
 COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
 
 GRANT ALL ON TABLE public.users TO anonymous;
@@ -43,7 +41,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.users FOR EACH 
 CREATE TRIGGER _200_encrypt_password BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__encrypt_password();
 CREATE TRIGGER _300_trim_login BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__trim_login();
 
-CREATE INDEX u_ban ON public.users USING btree (u_ban);
 CREATE INDEX u_confirmed ON public.users USING btree (u_confirmed);
 CREATE INDEX u_jmeno ON public.users USING btree (u_jmeno);
 CREATE INDEX u_prijmeni ON public.users USING btree (u_prijmeni);

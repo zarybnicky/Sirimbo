@@ -1,6 +1,5 @@
 CREATE FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   event event;
@@ -26,9 +25,11 @@ begin
     values (registration.event_id, registration.person_id, registration.couple_id, registration.note)
     returning * into created;
     created_ids := created_ids || created.id;
-    foreach demand in array registration.lessons loop
-      perform set_lesson_demand(created.id, demand.trainer_id, demand.lesson_count);
-    end loop;
+    if registration.lessons is not null then
+      foreach demand in array registration.lessons loop
+        perform set_lesson_demand(created.id, demand.trainer_id, demand.lesson_count);
+      end loop;
+    end if;
   end loop;
   return query select * from event_registration where id = any (created_ids);
 end;

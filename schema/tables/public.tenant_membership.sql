@@ -2,12 +2,13 @@ CREATE TABLE public.tenant_membership (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     person_id bigint NOT NULL,
     since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
+    until timestamp with time zone DEFAULT 'infinity'::timestamp with time zone NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    CONSTRAINT tenant_membership_until_gt_since CHECK ((until > since))
 );
 
 COMMENT ON TABLE public.tenant_membership IS '@simpleCollections only';

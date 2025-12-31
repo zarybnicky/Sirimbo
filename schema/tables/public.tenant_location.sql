@@ -3,7 +3,7 @@ CREATE TABLE public.tenant_location (
     name text NOT NULL,
     description text DEFAULT ''::text NOT NULL,
     address public.address_domain,
-    is_public boolean DEFAULT true,
+    is_public boolean DEFAULT true NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
