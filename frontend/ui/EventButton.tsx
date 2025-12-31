@@ -35,11 +35,17 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
   const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
 
-  const conflictsAtom = React.useMemo(() => calendarConflictsFor(instance.id), [instance.id]);
+  const conflictsAtom = React.useMemo(
+    () => calendarConflictsFor(instance.id),
+    [instance.id],
+  );
   const conflicts = useAtomValue(conflictsAtom);
   const hasConflicts = conflicts.length > 0;
   const conflictNames = React.useMemo(
-    () => conflicts.map((conflict) => conflict.personName ?? conflict.fallbackName).join(', '),
+    () =>
+      conflicts
+        .map((conflict) => conflict.personName ?? conflict.fallbackName)
+        .join(', '),
     [conflicts],
   );
   const conflictSummary = React.useMemo(() => {
@@ -47,27 +53,29 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
     return conflicts
       .map((conflict) => {
         const person = conflict.personName ?? conflict.fallbackName;
-        const otherSince = shortTimeFormatter.format(new Date(conflict.otherSince));
-        const otherUntil = shortTimeFormatter.format(new Date(conflict.otherUntil));
-        return `${person}: ${conflict.otherEventName} (${otherSince}–${otherUntil})`;
+        const range = shortTimeFormatter.formatRange(
+          new Date(conflict.otherSince),
+          new Date(conflict.otherUntil),
+        );
+        return `${person}: ${conflict.otherEventName} (${range})`;
       })
       .join(' • ');
   }, [conflicts, hasConflicts]);
 
   const trainerIds = [
     ...event.eventTrainersList.map((x) => x.personId),
-    ...instance.trainers.map((x) => x.personId)
+    ...instance.trainers.map((x) => x.personId),
   ];
   const instanceTrainers =
     instance.trainers.length > 0
-      ? instance.trainers.map(x => x.name).join(', ')
-      : event.eventTrainersList.map(x => x.name).join(', ');
+      ? instance.trainers.map((x) => x.name).join(', ')
+      : event.eventTrainersList.map((x) => x.name).join(', ');
   const showTrainer =
     viewer === 'couple'
       ? true
-      : (viewer === 'trainer'
+      : viewer === 'trainer'
         ? false
-        : trainerIds.filter((id) => auth.personIds.includes(id)).length === 0);
+        : trainerIds.filter((id) => auth.personIds.includes(id)).length === 0;
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
@@ -103,18 +111,20 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
             </div>
             <div className={cn('grow', instance.isCancelled ? 'line-through' : '')}>
               {event.name ||
-                (showTrainer
-                  ? `${formatEventType(event)}: ${instanceTrainers}`
-                  : (isNonEmpty(registrations)
-                  ? <>
-                      {registrations.slice(0, 2).map((x, i) => (
-                        <div key={x.id}>
-                          {formatRegistrant(x)}
-                          {(registrations.length > 2 && i === 1) ? ', ...' : ''}
-                        </div>
-                      ))}
-                    </>
-                    : 'VOLNO'))}
+                (showTrainer ? (
+                  `${formatEventType(event)}: ${instanceTrainers}`
+                ) : isNonEmpty(registrations) ? (
+                  <>
+                    {registrations.slice(0, 2).map((x, i) => (
+                      <div key={x.id}>
+                        {formatRegistrant(x)}
+                        {registrations.length > 2 && i === 1 ? ', ...' : ''}
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  'VOLNO'
+                ))}
             </div>
             {hasConflicts && (
               <div className="flex items-center text-accent-11" aria-hidden>
@@ -122,9 +132,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
               </div>
             )}
             {duration < 210 && <div className="text-neutral-11">{duration}&apos;</div>}
-            {hasConflicts && (
-              <span className="sr-only">Kolize: {conflictNames}</span>
-            )}
+            {hasConflicts && <span className="sr-only">Kolize: {conflictNames}</span>}
           </div>
         </PopoverTrigger>
 

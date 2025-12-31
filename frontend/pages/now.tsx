@@ -44,7 +44,8 @@ function formatStartsIn(now: Date, start: Date) {
 }
 
 function trainerGroups(instance: Instance, event: NonNullable<Instance['event']>) {
-  const trainers = instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList;
+  const trainers =
+    instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList;
 
   const groups = trainers
     .map((trainer) => {
@@ -129,7 +130,7 @@ function gatherBuckets(
     }
   }
 
-  const result = [...buckets.values()]
+  return [...buckets.values()]
     .map((bucket) => ({
       ...bucket,
       current: bucket.current.toSorted((a, b) => a.since.getTime() - b.since.getTime()),
@@ -137,17 +138,13 @@ function gatherBuckets(
     }))
     .filter((bucket) => bucket.current.length > 0 || bucket.upcoming.length > 0)
     .toSorted((a, b) => a.label.localeCompare(b.label, 'cs'));
-
-  return result;
 }
 
 function formatTrainers(instance: Instance, event: NonNullable<Instance['event']>) {
-  return (
-    (instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList)
-      .map((x) => x.name)
-      .filter(isTruthy)
-      .join(', ')
-  );
+  return (instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList)
+    .map((x) => x.name)
+    .filter(isTruthy)
+    .join(', ');
 }
 
 export default function NowPage() {
@@ -297,12 +294,16 @@ export default function NowPage() {
                           {bucket.upcoming.map(({ event, since, until, instance }) => {
                             const trainers = formatTrainers(instance, event);
                             return (
-                              <article key={`${instance.id}:${since.toISOString()}`} className="rounded-xl border border-accent-6 bg-accent-2/60 p-3">
+                              <article
+                                key={`${instance.id}:${since.toISOString()}`}
+                                className="rounded-xl border border-accent-6 bg-accent-2/60 p-3"
+                              >
                                 <p className="text-sm font-medium text-accent-12">
                                   {formatDefaultEventName(event)}
                                 </p>
                                 <p className="text-sm text-neutral-9">
-                                  {shortTimeFormatter.format(since)} – {shortTimeFormatter.format(until)}
+                                  {shortTimeFormatter.format(since)} –{' '}
+                                  {shortTimeFormatter.format(until)}
                                   {' · '}
                                   {formatStartsIn(reference, since)}
                                 </p>
