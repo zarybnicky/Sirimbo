@@ -1,33 +1,22 @@
-create or replace function public.event_instance_approx_price(v_instance event_instance) returns table (amount numeric(19, 4), currency text) language plpgsql stable as $$
-declare
-  num_participants bigint;
-  duration numeric;
-begin
-  num_participants := (select count(*) from event join lateral event_registrants(event.*) on true where event.id=v_instance.event_id);
-  duration = extract(epoch from (v_instance.until - v_instance.since)) / 60;
-
-  if exists (select 1 from event_instance_trainer where instance_id = v_instance.id) then
-    return query
+create or replace function public.event_instance_approx_price(v_instance event_instance)
+  returns table (amount numeric(19,4), currency text)
+  language sql stable
+as $$
+  with stats as (
     select
-      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / nullif(num_participants, 0))::numeric(19,4), 'NaN') as amount,
-      coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
-    from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id and status='active'
-    where event_instance_trainer.instance_id=v_instance.id and tenant_trainer.tenant_id = event_instance_trainer.tenant_id
-    group by (tenant_trainer.member_price_45min).currency;
-  else
-    return query
-    select
-      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / nullif(num_participants, 0))::numeric(19,4), 'NaN') as amount,
-      coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
-    from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id and status='active'
-    where event_trainer.event_id=v_instance.event_id and tenant_trainer.tenant_id = event_trainer.tenant_id
-    group by (tenant_trainer.member_price_45min).currency;
-  end if;
-end;
+      (select count(*)
+       from event e
+       join lateral event_registrants(e.*) r on true
+       where e.id = v_instance.event_id)::bigint as num_participants,
+      extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
+  )
+  select
+    coalesce(sum((tt.member_price_45min).amount * s.duration / 45 / nullif(s.num_participants, 0)), 'NaN') as amount,
+    coalesce((tt.member_price_45min).currency, 'CZK') as currency
+  from stats s
+  join lateral public.event_instance_trainers(v_instance) tt on true
+  group by (tt.member_price_45min).currency;
 $$;
 
-select verify_function('event_instance_approx_price');
-
 grant all on function event_instance_approx_price to anonymous;
-
 COMMENT ON FUNCTION event_instance_approx_price IS '@simpleCollections only';

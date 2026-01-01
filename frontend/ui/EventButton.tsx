@@ -62,14 +62,9 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
       .join(' • ');
   }, [conflicts, hasConflicts]);
 
-  const trainerIds = [
-    ...event.eventTrainersList.map((x) => x.personId),
-    ...instance.trainers.map((x) => x.personId),
-  ];
+  const trainerIds = instance.trainersList?.map((x) => x.personId) ?? [];
   const instanceTrainers =
-    instance.trainers.length > 0
-      ? instance.trainers.map((x) => x.name).join(', ')
-      : event.eventTrainersList.map((x) => x.name).join(', ');
+    instance.trainersList?.map((x) => x.person?.name).join(', ') ?? '';
   const showTrainer =
     viewer === 'couple'
       ? true

@@ -2501,11 +2501,8 @@
           {
             "name": "until",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -3047,11 +3044,8 @@
           {
             "name": "until",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -7368,8 +7362,11 @@
           {
             "name": "isCancelled",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -7485,6 +7482,36 @@
               }
             },
             "args": []
+          },
+          {
+            "name": "trainersList",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TenantTrainer",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
           },
           {
             "name": "until",
@@ -9119,31 +9146,7 @@
             "name": "result",
             "type": {
               "kind": "OBJECT",
-              "name": "LogInAsRecord",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "LogInAsRecord",
-        "fields": [
-          {
-            "name": "jwt",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "usr",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
+              "name": "Result",
               "ofType": null
             },
             "args": []
@@ -9176,31 +9179,7 @@
             "name": "result",
             "type": {
               "kind": "OBJECT",
-              "name": "LoginRecord",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "LoginRecord",
-        "fields": [
-          {
-            "name": "jwt",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "usr",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
+              "name": "Result",
               "ofType": null
             },
             "args": []
@@ -11347,31 +11326,7 @@
             "name": "result",
             "type": {
               "kind": "OBJECT",
-              "name": "OtpLoginRecord",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "OtpLoginRecord",
-        "fields": [
-          {
-            "name": "jwt",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "usr",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
+              "name": "Result",
               "ofType": null
             },
             "args": []
@@ -14116,51 +14071,6 @@
             ]
           },
           {
-            "name": "archivedAnnouncements",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AnnouncementsConnection",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
-          },
-          {
             "name": "attachment",
             "type": {
               "kind": "OBJECT",
@@ -16173,6 +16083,13 @@
                   "kind": "SCALAR",
                   "name": "Any"
                 }
+              },
+              {
+                "name": "sticky",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
               }
             ]
           },
@@ -17807,31 +17724,7 @@
             "name": "result",
             "type": {
               "kind": "OBJECT",
-              "name": "RegisterUsingInvitationRecord",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "RegisterUsingInvitationRecord",
-        "fields": [
-          {
-            "name": "jwt",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "usr",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
+              "name": "Result",
               "ofType": null
             },
             "args": []
@@ -17864,31 +17757,7 @@
             "name": "result",
             "type": {
               "kind": "OBJECT",
-              "name": "RegisterWithoutInvitationRecord",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "RegisterWithoutInvitationRecord",
-        "fields": [
-          {
-            "name": "jwt",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "usr",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
+              "name": "Result",
               "ofType": null
             },
             "args": []
@@ -17990,6 +17859,30 @@
             "type": {
               "kind": "OBJECT",
               "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Result",
+        "fields": [
+          {
+            "name": "jwt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "usr",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
               "ofType": null
             },
             "args": []
@@ -20876,11 +20769,8 @@
           {
             "name": "until",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -21212,11 +21102,8 @@
           {
             "name": "until",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -21456,11 +21343,8 @@
           {
             "name": "until",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -23857,11 +23741,8 @@
           {
             "name": "since",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -23879,11 +23760,8 @@
           {
             "name": "until",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },

@@ -72,12 +72,6 @@ mutation UpdateCohort($id: BigInt!, $patch: CohortPatch!) {
   }
 }
 
-mutation DeleteCohort($id: BigInt!) {
-  deleteCohort(input: {id: $id}) {
-    __typename
-  }
-}
-
 mutation ArchiveCohort($id: BigInt!) {
   archiveCohort(input: {cohortId: $id}) {
     __typename

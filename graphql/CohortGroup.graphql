@@ -23,25 +23,3 @@ query CohortGroup($id: BigInt!) {
     ...CohortGroup
   }
 }
-
-mutation CreateCohortGroup($input: CohortGroupInput!) {
-  createCohortGroup(input: {cohortGroup: $input}) {
-    cohortGroup {
-      ...CohortGroup
-    }
-  }
-}
-
-mutation UpdateCohortGroup($id: BigInt!, $patch: CohortGroupPatch!) {
-  updateCohortGroup(input: {id: $id, patch: $patch}) {
-    cohortGroup {
-      ...CohortGroup
-    }
-  }
-}
-
-mutation DeleteCohortGroup($id: BigInt!) {
-  deleteCohortGroup(input: {id: $id}) {
-    __typename
-  }
-}

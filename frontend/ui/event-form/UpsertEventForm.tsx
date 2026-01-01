@@ -1,5 +1,8 @@
 import { EventDocument, type EventFragment, UpsertEventDocument } from '@/graphql/Event';
-import { RadioButtonGroupElement, type RadioButtonGroupItem } from '@/ui/fields/RadioButtonGroupElement';
+import {
+  RadioButtonGroupElement,
+  type RadioButtonGroupItem,
+} from '@/ui/fields/RadioButtonGroupElement';
 import { CohortListElement } from '@/ui/event-form/CohortListElement';
 import { InstanceListElement } from '@/ui/event-form/InstanceListElement';
 import { ParticipantListElement } from '@/ui/event-form/ParticipantListElement';
@@ -7,7 +10,11 @@ import { TrainerListElement } from '@/ui/event-form/TrainerListField';
 import { EventForm } from '@/ui/event-form/types';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextFieldElement } from '@/ui/fields/text';
-import { datetimeRangeToTimeRange, moneyFormatter, timeRangeToDatetimeRange } from '@/ui/format';
+import {
+  datetimeRangeToTimeRange,
+  moneyFormatter,
+  timeRangeToDatetimeRange,
+} from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { useTenant } from '@/ui/useTenant';
 import { diff } from 'date-arithmetic';
@@ -16,13 +23,17 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useFormResult } from '@/ui/form';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 type NonEmptyArray<T> = [T, ...T[]];
-const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyArray<T> => !!array?.length;
+const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyArray<T> =>
+  !!array?.length;
 
-export function UpsertEventForm({ initialValue = {}, event }: {
+export function UpsertEventForm({
+  initialValue = {},
+  event,
+}: {
   initialValue?: Partial<z.infer<typeof EventForm>>;
   event?: EventFragment;
 }) {
@@ -30,10 +41,18 @@ export function UpsertEventForm({ initialValue = {}, event }: {
   const { onSuccess } = useFormResult();
   const upsert = useMutation(UpsertEventDocument)[1];
   const id = event?.id ?? '';
-  const [{ data: eventData }, fetchEvent] = useQuery({ query: EventDocument, variables: { id }, pause: true });
+  const [{ data: eventData }, fetchEvent] = useQuery({
+    query: EventDocument,
+    variables: { id },
+    pause: true,
+  });
   const { data: tenant } = useTenant();
 
-  const { reset, control, handleSubmit, watch, setValue, getValues } = useForm<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>({
+  const { reset, control, handleSubmit, watch, setValue, getValues } = useForm<
+    z.input<typeof EventForm>,
+    unknown,
+    z.infer<typeof EventForm>
+  >({
     resolver: zodResolver(EventForm),
     defaultValues: initialValue,
   });
@@ -41,75 +60,81 @@ export function UpsertEventForm({ initialValue = {}, event }: {
   const locationOptions = React.useMemo(() => {
     return [
       { id: 'none', label: 'Žádné' } as RadioButtonGroupItem,
-      ...(tenant?.tenantLocationsList || []).map(x => ({
+      ...(tenant?.tenantLocationsList || []).map((x) => ({
         id: x.id,
         label: x.name,
       })),
-      { id: 'other', label: 'Jiné...' }
+      { id: 'other', label: 'Jiné...' },
     ];
   }, [tenant]);
 
   React.useEffect(() => {
     if (event && !initializedRef.current) {
       fetchEvent();
-    };
+    }
   }, [event, fetchEvent]);
 
   React.useEffect(() => {
     const event = eventData?.event;
     if (event && !initializedRef.current) {
       initializedRef.current = true;
-      reset({
-        ...event,
-        locationId: event.locationText ? 'other' : event.location?.id ?? 'none',
-        trainers: event.eventTrainersList.map(x => ({
-          itemId: x.id,
-          personId: x.personId,
-          lessonsOffered: x.lessonsOffered,
-        })),
-        cohorts: event.eventTargetCohortsList.map(x => ({
-          itemId: x.id,
-          cohortId: x.cohort?.id ?? '',
-        })),
-        registrations: event.eventRegistrationsList.map(x => ({
-          itemId: x.id,
-          coupleId: x.coupleId,
-          personId: x.personId,
-        })),
-        instances: event.eventInstancesList.map(x => ({
-          itemId: x.id,
-          ...datetimeRangeToTimeRange(new Date(x.since), new Date(x.until)),
-          isCancelled: x.isCancelled,
-          trainers: x.trainers.map(y => ({
-            itemId: y.id,
-            personId: y.personId
+      reset(
+        {
+          ...event,
+          locationId: event.locationText ? 'other' : (event.location?.id ?? 'none'),
+          trainers: event.eventTrainersList.map((x) => ({
+            itemId: x.id,
+            personId: x.personId,
+            lessonsOffered: x.lessonsOffered,
           })),
-        })),
-      }, {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      });
+          cohorts: event.eventTargetCohortsList.map((x) => ({
+            itemId: x.id,
+            cohortId: x.cohort?.id ?? '',
+          })),
+          registrations: event.eventRegistrationsList.map((x) => ({
+            itemId: x.id,
+            coupleId: x.coupleId,
+            personId: x.personId,
+          })),
+          instances: event.eventInstancesList.map((x) => ({
+            itemId: x.id,
+            ...datetimeRangeToTimeRange(new Date(x.since), new Date(x.until)),
+            isCancelled: x.isCancelled,
+            trainers: x.eventInstanceTrainersByInstanceIdList.map((y) => ({
+              itemId: y.id,
+              personId: y.personId,
+            })),
+          })),
+        },
+        {
+          keepDirtyValues: true,
+          keepTouched: true,
+          keepErrors: true,
+        },
+      );
     }
   }, [reset, eventData]);
 
-  const type = watch('type') ?? 'LESSON';
+  const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
   const trainers = watch('trainers');
   const instances = watch('instances');
   const registrations = watch('registrations');
   const locationId = watch('locationId');
-  const registrantCount = (registrations || []).reduce((n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0), 0);
+  const registrantCount = (registrations || []).reduce(
+    (n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0),
+    0,
+  );
 
   const memberPrice = React.useMemo(() => {
     let memberPrice = 0;
     for (const x of trainers || []) {
-      const trainer = tenant?.tenantTrainersList.find(p => p.person?.id === x.personId);
+      const trainer = tenant?.tenantTrainersList.find((p) => p.person?.id === x.personId);
       const numericMember = Number.parseFloat(trainer?.memberPrice45Min?.amount || '');
       memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
     }
 
     let multiplier = 0;
-    let range: { since: Date, until:Date } | null = null;
+    let range: { since: Date; until: Date } | null = null;
     if (isNonEmpty(instances)) {
       const { date } = instances[0];
       range = date ? timeRangeToDatetimeRange(date, instances[0]) : null;
@@ -120,7 +145,7 @@ export function UpsertEventForm({ initialValue = {}, event }: {
       multiplier = 1;
     }
 
-    memberPrice = Number.isNaN(memberPrice) ? 0 : (memberPrice * multiplier);
+    memberPrice = Number.isNaN(memberPrice) ? 0 : memberPrice * multiplier;
     return Math.floor(memberPrice / 10) * 10;
   }, [instances, trainers, tenant?.tenantTrainersList]);
 
@@ -144,7 +169,10 @@ export function UpsertEventForm({ initialValue = {}, event }: {
           description: values.description,
           descriptionMember: values.descriptionMember,
           type: values.type,
-          locationId: (!values.locationId || ['none', 'other'].includes(values.locationId)) ? null : values.locationId,
+          locationId:
+            !values.locationId || ['none', 'other'].includes(values.locationId)
+              ? null
+              : values.locationId,
           locationText: values.locationId === 'none' ? '' : values.locationText,
           capacity: values.capacity,
           isVisible: values.isVisible,
@@ -155,29 +183,29 @@ export function UpsertEventForm({ initialValue = {}, event }: {
           guestPrice: null,
           memberPrice: null,
         },
-        trainers: values.trainers.map(x => ({
+        trainers: values.trainers.map((x) => ({
           ...x,
           id: x.itemId,
           itemId: undefined,
         })),
-        cohorts: values.cohorts.map(x => ({
+        cohorts: values.cohorts.map((x) => ({
           ...x,
           id: x.itemId,
           itemId: undefined,
         })),
-        registrations: values.registrations.map(x => ({
+        registrations: values.registrations.map((x) => ({
           ...x,
           id: x.itemId,
           itemId: undefined,
         })),
-        instances: values.instances.map(x => {
+        instances: values.instances.map((x) => {
           const y = x.date ? timeRangeToDatetimeRange(x.date, x) : null;
           return {
             id: x.itemId,
             since: y?.since?.toISOString() || null,
             until: y?.until?.toISOString() || null,
             isCancelled: x.isCancelled,
-            trainers: x.trainers.map(y => ({
+            trainers: x.trainers.map((y) => ({
               ...y,
               id: y.itemId,
               itemId: undefined,
@@ -206,12 +234,26 @@ export function UpsertEventForm({ initialValue = {}, event }: {
       />
 
       <TextFieldElement control={control} name="name" label="Název (nepovinný)" />
-      <RadioButtonGroupElement control={control} name="locationId" options={locationOptions} label="Místo konání" />
+      <RadioButtonGroupElement
+        control={control}
+        name="locationId"
+        options={locationOptions}
+        label="Místo konání"
+      />
       {locationId === 'other' && (
-        <TextFieldElement control={control} name="locationText" placeholder="Místo konání" />
+        <TextFieldElement
+          control={control}
+          name="locationText"
+          placeholder="Místo konání"
+        />
       )}
       {type !== 'LESSON' && (
-        <TextFieldElement control={control} type="number" name="capacity" label="Maximální počet účastníků (nepovinný)" />
+        <TextFieldElement
+          control={control}
+          type="number"
+          name="capacity"
+          label="Maximální počet účastníků (nepovinný)"
+        />
       )}
 
       <InstanceListElement control={control} name="instances" type={type} />
@@ -224,7 +266,10 @@ export function UpsertEventForm({ initialValue = {}, event }: {
           {registrantCount > 0 && (
             <>
               {', na účastníka '}
-              {moneyFormatter.format({ amount: Math.floor(memberPrice/registrantCount).toString(), currency: 'CZK' })}
+              {moneyFormatter.format({
+                amount: Math.floor(memberPrice / registrantCount).toString(),
+                currency: 'CZK',
+              })}
             </>
           )}
         </div>
@@ -257,15 +302,35 @@ export function UpsertEventForm({ initialValue = {}, event }: {
       /> */}
 
       <div className="flex gap-x-1 flex-wrap items-baseline justify-between">
-        <CheckboxElement control={control} name="isVisible" value="1" label="Viditelná pro členy" />
-        <CheckboxElement control={control} name="isLocked" value="1" label="Zakázat přihlašování/odhlašování" />
-        <CheckboxElement control={control} name="isPublic" value="1" label="Viditelná pro veřejnost" />
+        <CheckboxElement
+          control={control}
+          name="isVisible"
+          value="1"
+          label="Viditelná pro členy"
+        />
+        <CheckboxElement
+          control={control}
+          name="isLocked"
+          value="1"
+          label="Zakázat přihlašování/odhlašování"
+        />
+        <CheckboxElement
+          control={control}
+          name="isPublic"
+          value="1"
+          label="Viditelná pro veřejnost"
+        />
         {(type === 'RESERVATION' || type === 'CAMP') && (
-          <CheckboxElement control={control} name="enableNotes" value="1" label="Povolit poznámky k přihlášce" />
+          <CheckboxElement
+            control={control}
+            name="enableNotes"
+            value="1"
+            label="Povolit poznámky k přihlášce"
+          />
         )}
       </div>
 
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );
-};
+}

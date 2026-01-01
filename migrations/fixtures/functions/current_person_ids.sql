@@ -11,3 +11,4 @@ CREATE or replace FUNCTION my_tenants_array() RETURNS bigint[] LANGUAGE sql STAB
 $$;
 COMMENT ON FUNCTION my_tenants_array() IS '@omit';
 GRANT ALL ON FUNCTION my_tenants_array() TO anonymous;
+

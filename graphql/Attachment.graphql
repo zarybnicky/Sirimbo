@@ -23,12 +23,6 @@ query Attachments($directory: String) {
   }
 }
 
-query Attachment($objectName: String!) {
-  attachment(objectName: $objectName) {
-    ...Attachment
-  }
-}
-
 query AttachmentDirectories {
   attachmentDirectories {
     nodes

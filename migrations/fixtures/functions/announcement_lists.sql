@@ -1,13 +1,3 @@
-CREATE or replace FUNCTION archived_announcements() RETURNS SETOF announcement
-    LANGUAGE sql STABLE
-    AS $$
-  select announcement.* from announcement
-  where is_visible = false
-    or (scheduled_until is null or scheduled_until >= now())
-  order by created_at desc;
-$$;
-GRANT ALL ON FUNCTION archived_announcements TO anonymous;
-
 CREATE or replace FUNCTION sticky_announcements(
   order_by_updated boolean default false
 ) RETURNS SETOF announcement

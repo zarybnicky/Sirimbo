@@ -76,15 +76,10 @@ export function EventSummary({
         </div>
       )}
 
-      {instance.trainers.length > 0 ? (
+      {instance.trainersList?.length ? (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-5 text-accent-11 shrink-0" />
-          {instance.trainers.map((x) => x.name).join(', ')}
-        </div>
-      ) : event.eventTrainersList.length > 0 ? (
-        <div className="flex items-center gap-2" key="trainers">
-          <User className="size-5 text-accent-11 shrink-0" />
-          {event.eventTrainersList.map((x) => x.name).join(', ')}
+          {instance.trainersList.map((x) => x.person?.name).join(', ')}
         </div>
       ) : null}
 

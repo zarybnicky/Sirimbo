@@ -16,20 +16,31 @@ const QueryParams = z.object({
 export default function PaymentPage() {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
-  const [{ data, fetching, error }] = useQuery({ query: PaymentDocument, variables: { id }, pause: !id });
+  const [{ data, fetching, error }] = useQuery({
+    query: PaymentDocument,
+    variables: { id },
+    pause: !id,
+  });
   const payment = data?.payment ?? null;
 
   return (
     <Layout requireAdmin>
       <TitleBar title={`Detail platby ${id ?? ''}`}>
-        <Link href="/platby" className="text-sm font-medium text-accent-11 hover:underline">
+        <Link
+          href="/platby"
+          className="text-sm font-medium text-accent-11 hover:underline"
+        >
           Přehled plateb
         </Link>
       </TitleBar>
       <div className="space-y-6">
         {fetching && <p>Načítám…</p>}
         {error && <p className="text-accent-11">Nepodařilo se načíst platbu.</p>}
-        {payment ? <PaymentTree payment={payment} /> : !fetching && !error && <p>Platba nebyla nalezena.</p>}
+        {payment ? (
+          <PaymentTree payment={payment} />
+        ) : (
+          !fetching && !error && <p>Platba nebyla nalezena.</p>
+        )}
       </div>
     </Layout>
   );
@@ -73,7 +84,10 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
           <Info label="Vytvořeno" value={formatDate(payment.createdAt)} />
           <Info label="Variabilní symbol" value={payment.variableSymbol} />
           <Info label="Specifický symbol" value={payment.specificSymbol} />
-          <Info label="Automatické přiřazení" value={payment.isAutoCreditAllowed ? 'povoleno' : 'zakázáno'} />
+          <Info
+            label="Automatické přiřazení"
+            value={payment.isAutoCreditAllowed ? 'povoleno' : 'zakázáno'}
+          />
         </dl>
         <div className="mt-4 space-y-2 text-sm text-neutral-11">
           {payment.cohortSubscription && (
@@ -83,7 +97,10 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
                 <span>#{payment.cohortSubscription.id}</span>
                 {payment.cohortSubscription.cohort && (
                   <Link
-                    href={{ pathname: '/treninkove-skupiny/[id]', query: { id: payment.cohortSubscription.cohort.id } }}
+                    href={{
+                      pathname: '/treninkove-skupiny/[id]',
+                      query: { id: payment.cohortSubscription.cohort.id },
+                    }}
                     className="text-sm font-medium text-accent-11 hover:underline"
                   >
                     {payment.cohortSubscription.cohort.name}
@@ -97,21 +114,25 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
               <h3 className="font-medium text-neutral-12">Termín události</h3>
               <p className="flex flex-wrap items-center gap-2">
                 <span>
-                  #{payment.eventInstance.id} – {numericDateFormatter.format(new Date(payment.eventInstance.since))}
+                  #{payment.eventInstance.id} –{' '}
+                  {numericDateFormatter.format(new Date(payment.eventInstance.since))}
                 </span>
                 {payment.eventInstance.event && (
                   <Link
-                    href={{ pathname: '/akce/[id]', query: { id: payment.eventInstance.event.id } }}
+                    href={{
+                      pathname: '/akce/[id]',
+                      query: { id: payment.eventInstance.event.id },
+                    }}
                     className="text-sm font-medium text-accent-11 hover:underline"
                   >
                     {payment.eventInstance.event.name}
                   </Link>
                 )}
               </p>
-              {payment.eventInstance.trainers.length > 0 && (
+              {!!payment.eventInstance.trainersList?.length && (
                 <ul className="ml-4 list-disc">
-                  {payment.eventInstance.trainers.map((trainer) => (
-                    <li key={trainer.id}>{trainer.name}</li>
+                  {payment.eventInstance.trainersList.map((trainer) => (
+                    <li key={trainer.id}>{trainer.person?.name}</li>
                   ))}
                 </ul>
               )}
@@ -124,7 +145,10 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
                 <span>#{payment.eventRegistration.id}</span>
                 {payment.eventRegistration.event && (
                   <Link
-                    href={{ pathname: '/akce/[id]', query: { id: payment.eventRegistration.event.id } }}
+                    href={{
+                      pathname: '/akce/[id]',
+                      query: { id: payment.eventRegistration.event.id },
+                    }}
                     className="text-sm font-medium text-accent-11 hover:underline"
                   >
                     {payment.eventRegistration.event.name}
@@ -144,9 +168,13 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
               if (!transaction) return null;
 
               return (
-                <article key={transaction.id} className="rounded-md border border-neutral-6 bg-neutral-1 p-3 shadow-sm">
+                <article
+                  key={transaction.id}
+                  className="rounded-md border border-neutral-6 bg-neutral-1 p-3 shadow-sm"
+                >
                   <h3 className="font-medium text-neutral-12">
-                    #{transaction.id} – {numericDateFormatter.format(new Date(transaction.effectiveDate))}
+                    #{transaction.id} –{' '}
+                    {numericDateFormatter.format(new Date(transaction.effectiveDate))}
                   </h3>
                   <p className="text-sm text-neutral-11">{transaction.description}</p>
                   <div className="mt-3 space-y-2">
@@ -154,10 +182,18 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
                       if (!posting) return null;
 
                       return (
-                        <div key={posting.id} className="rounded border border-dashed border-neutral-6 p-2">
+                        <div
+                          key={posting.id}
+                          className="rounded border border-dashed border-neutral-6 p-2"
+                        >
                           <div className="flex flex-wrap justify-between text-sm text-neutral-12">
                             <span className="font-medium">Zápis #{posting.id}</span>
-                            <span>{moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}</span>
+                            <span>
+                              {moneyFormatter.format({
+                                amount: posting.amount,
+                                currency: 'CZK',
+                              })}
+                            </span>
                           </div>
                           <AccountSummary account={posting.account} className="mt-2" />
                         </div>
@@ -177,7 +213,9 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
         <h2 className="text-lg font-semibold text-neutral-12">Cílové účty</h2>
         <div className="mt-3 space-y-2">
           {targetAccounts.length > 0 ? (
-            targetAccounts.map((account) => <AccountSummary key={account.id} account={account} />)
+            targetAccounts.map((account) => (
+              <AccountSummary key={account.id} account={account} />
+            ))
           ) : (
             <p className="text-sm text-neutral-11">Žádné cílové účty.</p>
           )}
@@ -215,7 +253,8 @@ type AccountSummaryProps = {
 };
 
 function AccountSummary({ account, className }: AccountSummaryProps) {
-  const baseClass = 'rounded border border-neutral-6 bg-neutral-2 p-2 text-xs text-neutral-11';
+  const baseClass =
+    'rounded border border-neutral-6 bg-neutral-2 p-2 text-xs text-neutral-11';
   const classes = className ? `${baseClass} ${className}` : baseClass;
   return (
     <div className={classes}>

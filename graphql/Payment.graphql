@@ -36,9 +36,13 @@ fragment Payment on Payment {
   eventInstance {
     id
     since
-    trainers: eventInstanceTrainersByInstanceIdList {
+    trainersList {
       id
-      name
+      personId
+      person {
+        id
+        name
+      }
     }
     event {
       ...Event
@@ -129,17 +133,6 @@ mutation MarkAsPaid($id: BigInt!) {
     payment {
       id
       status
-    }
-  }
-}
-
-query TenantTurnover {
-  accountsList(condition: { personId: null }) {
-    id
-    currency
-    balance
-    postingsList {
-      ...Posting
     }
   }
 }

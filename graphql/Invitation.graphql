@@ -38,19 +38,3 @@ query PeopleWithInvitation {
     }
   }
 }
-
-query PendingInvitations {
-  personInvitationsList(condition:  {
-     usedAt: null
-  }) {
-    id
-    createdAt
-    person {
-      id
-      firstName
-      lastName
-      hasAccess
-      createdAt
-    }
-  }
-}

@@ -44,7 +44,9 @@ export function MyEventsList() {
     const list = [...map.entries()].flatMap(([date, itemMap]) =>
       [...itemMap.entries()].map(([location, items]) => {
         items.sort((x, y) => x.instance.since.localeCompare(y.instance.since));
-        const minTime = Math.min(...items.map(x => new Date(x.instance.since).getTime()));
+        const minTime = Math.min(
+          ...items.map((x) => new Date(x.instance.since).getTime()),
+        );
         const sortKey = `${date}T${minTime}`;
         return [date, sortKey, location, items] as const;
       }),
@@ -58,15 +60,17 @@ export function MyEventsList() {
 
       {fetching ? (
         <div className="text-neutral-11">Načítám...</div>
-      ) : (data?.list?.length ? null : (
+      ) : data?.list?.length ? null : (
         <div className="text-neutral-11">Žádné nadcházející akce</div>
-      ))}
+      )}
 
       <div className="flex flex-wrap flex-col gap-x-2">
         {eventsPerDay.map(([date, _, location, eventInstances]) => (
           <div
             key={`${date}_${location}`}
-            className={cardCls({ className: 'rounded-lg border-neutral-6 border px-1 py-3' })}
+            className={cardCls({
+              className: 'rounded-lg border-neutral-6 border px-1 py-3',
+            })}
           >
             <h6 className="ml-3">
               <div className="font-bold mb-1">{formatWeekDay(new Date(date))}</div>
@@ -75,20 +79,28 @@ export function MyEventsList() {
             {eventInstances.map(({ event, instance }) => (
               <React.Fragment key={instance.id}>
                 <EventButton event={event} instance={instance} viewer="auto" />
-                {event.type === 'GROUP' && (auth.isAdmin || auth.personIds.find(id => event.eventTrainersList.find(t => t.personId === id) || instance.trainers.find(t => t.personId === id))) && (
-                  <Link
-                    className={buttonCls({ size: 'sm', variant: 'outline', className: "ml-6" })}
-                    href={{
-                      pathname: '/akce/[id]/termin/[instance]',
-                      query: {
-                        id: event.id,
-                        instance: instance.id,
-                      }
-                    }}
-                  >
-                     Vyplnit docházku
-                  </Link>
-                )}
+                {event.type === 'GROUP' &&
+                  (auth.isAdmin ||
+                    auth.personIds.find((id) =>
+                      instance.trainersList?.find((t) => t.personId === id),
+                    )) && (
+                    <Link
+                      className={buttonCls({
+                        size: 'sm',
+                        variant: 'outline',
+                        className: 'ml-6',
+                      })}
+                      href={{
+                        pathname: '/akce/[id]/termin/[instance]',
+                        query: {
+                          id: event.id,
+                          instance: instance.id,
+                        },
+                      }}
+                    >
+                      Vyplnit docházku
+                    </Link>
+                  )}
               </React.Fragment>
             ))}
           </div>

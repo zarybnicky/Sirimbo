@@ -1,12 +1,14 @@
-drop function if exists register_using_invitation(email text, login text, passwd text, token uuid);
-drop function if exists register_using_invitation(email text, passwd text, token uuid, login text);
+drop function if exists register_using_invitation;
 
-CREATE or replace FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text default null, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
-    LANGUAGE plpgsql SECURITY DEFINER
-    AS $$
+CREATE or replace FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text default null)
+  RETURNS login_result
+  LANGUAGE plpgsql SECURITY DEFINER
+  AS $$
 declare
   invitation person_invitation;
   v_salt text;
+  usr users;
+  jwt jwt_token;
 begin
   select * into invitation from person_invitation where access_token=token;
 
@@ -30,7 +32,9 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  return (usr, jwt);
 end
 $$;
 
+select verify_function('register_using_invitation');
 GRANT ALL ON FUNCTION public.register_using_invitation TO anonymous;

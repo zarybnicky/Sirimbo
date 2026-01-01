@@ -119,21 +119,30 @@ function TimeGridEvent({
       label += shortTimeIntl.format(event.start);
     }
 
-    const trainers = event.instance.trainers.length > 0
-      ? event.instance.trainers
-      : event.event?.eventTrainersList ?? [];
+    const trainers = event.instance.trainersList ?? [];
     for (const trainer of trainers) {
-      const trainerLabel = formatTrainerLabel(trainer.name ?? '', useTrainerInitials);
+      const trainerLabel = formatTrainerLabel(
+        trainer.person?.name ?? '',
+        useTrainerInitials,
+      );
       if (!trainerLabel) continue;
       label += `, ${trainerLabel}`;
     }
 
     const location = event.event.location?.name || event.event.locationText || '';
-    if (location)
-      label += `, ${location}`;
+    if (location) label += `, ${location}`;
 
     return label;
-  }, [event.end, event.event?.eventTrainersList, event.event.location?.name, event.event.locationText, event.instance.trainers, event.start, startsAfterDay, startsBeforeDay, useTrainerInitials]);
+  }, [
+    event.end,
+    event.event.location?.name,
+    event.event.locationText,
+    event.instance.trainersList,
+    event.start,
+    startsAfterDay,
+    startsBeforeDay,
+    useTrainerInitials,
+  ]);
 
   const triggerTitle = React.useMemo(() => {
     const parts = [label, title];

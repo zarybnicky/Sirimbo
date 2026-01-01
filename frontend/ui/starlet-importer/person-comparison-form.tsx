@@ -6,7 +6,12 @@ import { capitalize } from '@/ui/format';
 import { slugify } from '@/ui/slugify';
 import { print } from '@0no-co/graphql.web';
 import React, { useEffect, useMemo, useState } from 'react';
-import { CreatePersonDocument, PersonListDocument, PersonMembershipsDocument, UpdatePersonDocument } from '@/graphql/Person';
+import {
+  CreatePersonDocument,
+  PersonListDocument,
+  PersonMembershipsDocument,
+  UpdatePersonDocument,
+} from '@/graphql/Person';
 import { useMutation, useQuery } from 'urql';
 import { SubmitButton } from '../submit';
 import { useAtomValue } from 'jotai';
@@ -15,9 +20,12 @@ import { isTruthy } from '../truthyFilter';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
-import { CreateCoupleDocument, UpdateCoupleDocument, UpdateTenantMembershipDocument } from '@/graphql/Memberships';
+import {
+  CreateCoupleDocument,
+  UpdateCoupleDocument,
+  UpdateTenantMembershipDocument,
+} from '@/graphql/Memberships';
 import { tenantIdAtom } from '../state/auth';
-import { RelationshipStatus } from '@/graphql';
 
 type QueriedStudent = Pick<
   Student,
@@ -77,22 +85,24 @@ type Person = {
     region: string | null;
     street: string | null;
     district: string | null;
-    postalCode: string | null
+    postalCode: string | null;
     orientationNumber: string | null;
     conscriptionNumber: string | null;
   } | null;
   externalIds: (string | null)[] | null;
   isTrainer: boolean | null;
   isAdmin: boolean | null;
-  activeCouplesList: {
-    id: string;
-    man: {
-      id: string;
-    } | null;
-    woman: {
-      id: string;
-    } | null;
-  }[] | null;
+  activeCouplesList:
+    | {
+        id: string;
+        man: {
+          id: string;
+        } | null;
+        woman: {
+          id: string;
+        } | null;
+      }[]
+    | null;
 };
 
 export function PersonComparisonForm() {
@@ -108,12 +118,20 @@ export function PersonComparisonForm() {
   const authToken = token?.auth_ok ? token?.auth_token : '';
   useEffect(() => {
     if (!token?.auth_ok) return;
-    fetchCoursesWithStudents(authToken, courses.map((x) => x[0])).then(setCoursesWithStudents);
+    fetchCoursesWithStudents(
+      authToken,
+      courses.map((x) => x[0]),
+    ).then(setCoursesWithStudents);
   }, [token?.auth_ok, authToken, courses]);
 
-  const [students, problematic] = useMemo(() => deduplicateStudents(coursesWithStudents), [coursesWithStudents]);
-  const [tasks, views, couplesToCreate, couplesToDelete] = useMemo(() =>
-    compare(persons || [], students, cohorts || []), [persons, students, cohorts]);
+  const [students, problematic] = useMemo(
+    () => deduplicateStudents(coursesWithStudents),
+    [coursesWithStudents],
+  );
+  const [tasks, views, couplesToCreate, couplesToDelete] = useMemo(
+    () => compare(persons || [], students, cohorts || []),
+    [persons, students, cohorts],
+  );
 
   const create = useMutation(CreatePersonDocument)[1];
   const update = useMutation(UpdatePersonDocument)[1];
@@ -203,7 +221,9 @@ export function PersonComparisonForm() {
           },
         });
         const memberships = await fetchGql(PersonMembershipsDocument, { id: person!.id });
-        const currentMembership = memberships.person?.tenantMembershipsList.find(x => x.tenant?.id === tenantId);
+        const currentMembership = memberships.person?.tenantMembershipsList.find(
+          (x) => x.tenant?.id === tenantId,
+        );
         if (currentMembership) {
           await updateMembership({
             input: {
@@ -211,8 +231,8 @@ export function PersonComparisonForm() {
               patch: {
                 status: 'EXPIRED',
                 until: new Date().toISOString(),
-              }
-            }
+              },
+            },
           });
         }
         await update({
@@ -221,7 +241,7 @@ export function PersonComparisonForm() {
             patch: {
               externalIds: [],
             },
-          }
+          },
         });
       }
     }
@@ -230,16 +250,24 @@ export function PersonComparisonForm() {
   const onSubmitCouples = useAsyncCallback(async () => {
     for (const [manId, womenIds] of couplesToCreate) {
       for (const womanId of womenIds) {
-        await createCouple({ input: { couple: {  manId, womanId, since: new Date().toISOString(), status: 'ACTIVE' } } })
+        await createCouple({
+          input: {
+            couple: { manId, womanId, since: new Date().toISOString(), status: 'ACTIVE' },
+          },
+        });
       }
     }
     for (const coupleId of couplesToDelete) {
-      await updateCouple({ input: { id: coupleId, patch: { until: new Date().toISOString(), status: 'EXPIRED' } } });
+      await updateCouple({
+        input: {
+          id: coupleId,
+          patch: { until: new Date().toISOString(), status: 'EXPIRED' },
+        },
+      });
     }
   });
 
-  if (coursesWithStudents.length === 0)
-    return null;
+  if (coursesWithStudents.length === 0) return null;
 
   return (
     <>
@@ -267,7 +295,7 @@ export function PersonComparisonForm() {
             {candidates.length > 0 && (
               <>
                 {' - objeven v '}
-                {candidates.map(x => x.course_name).join(', ')}
+                {candidates.map((x) => x.course_name).join(', ')}
                 <ul>
                   {Object.entries(
                     diffObjectsList(candidates as any as Record<string, string>[]),
@@ -281,24 +309,40 @@ export function PersonComparisonForm() {
             )}
           </li>
         ))}
-        {problematic.every(x => x[1].length === 0) && (
+        {problematic.every((x) => x[1].length === 0) && (
           <li>✅ Všechno v pořádku, nikomu nechybí přístup</li>
         )}
       </ul>
 
       <h3>Osoby bez údajů</h3>
       <ul>
-        {students.filter(x => !x.email).map(x => <li key={x.keys.join(',')}>{x.normal_name} ({x.course_names.join(', ')}): chybí e-mail</li>)}
-        {students.filter(x => !x.phone).map(x => <li key={x.keys.join(',')}>{x.normal_name} ({x.course_names.join(', ')}): chybí telefon</li>)}
-        {students.filter(x => !x.year).map(x => <li key={x.keys.join(',')}>{x.normal_name} ({x.course_names.join(', ')}): chybí rok narození</li>)}
+        {students
+          .filter((x) => !x.email)
+          .map((x) => (
+            <li key={x.keys.join(',')}>
+              {x.normal_name} ({x.course_names.join(', ')}): chybí e-mail
+            </li>
+          ))}
+        {students
+          .filter((x) => !x.phone)
+          .map((x) => (
+            <li key={x.keys.join(',')}>
+              {x.normal_name} ({x.course_names.join(', ')}): chybí telefon
+            </li>
+          ))}
+        {students
+          .filter((x) => !x.year)
+          .map((x) => (
+            <li key={x.keys.join(',')}>
+              {x.normal_name} ({x.course_names.join(', ')}): chybí rok narození
+            </li>
+          ))}
       </ul>
 
       <h3>Výsledné změny k synchronizaci</h3>
       <ul>
         {views}
-        {views.length === 0 && (
-          <li>✅ Žádné úpravy nejsou potřeba</li>
-        )}
+        {views.length === 0 && <li>✅ Žádné úpravy nejsou potřeba</li>}
       </ul>
 
       {tasks.length > 0 && (
@@ -314,12 +358,8 @@ export function PersonComparisonForm() {
       <h3>5. Páry</h3>
 
       <ul>
-        {couplesToCreate.size > 0 && (
-          <li>{couplesToCreate.size} párů k vytvoření</li>
-        )}
-        {couplesToDelete.length > 0 && (
-          <li>{couplesToDelete.length} párů k archivaci</li>
-        )}
+        {couplesToCreate.size > 0 && <li>{couplesToCreate.size} párů k vytvoření</li>}
+        {couplesToDelete.length > 0 && <li>{couplesToDelete.length} párů k archivaci</li>}
         {couplesToCreate.size === 0 && couplesToDelete.length === 0 && (
           <li>✅ Žádné úpravy nejsou potřeba</li>
         )}
@@ -349,7 +389,12 @@ function compare(
   }[],
 ) {
   const views: JSX.Element[] = [];
-  const tasks: ['create' | 'update' | 'archive', DeduplicatedStudent | null, Person | null, string[]][] = [];
+  const tasks: [
+    'create' | 'update' | 'archive',
+    DeduplicatedStudent | null,
+    Person | null,
+    string[],
+  ][] = [];
 
   const peopleByNormalName = new Map<string, Person[]>();
   for (const person of people) {
@@ -361,12 +406,17 @@ function compare(
   const studentToPerson = new Map<string, Person>();
   const processedPeople = new Set<string>();
   for (const student of students) {
-    const candidates = (peopleByNormalName.get(student.normal_name) || []).filter(x => !processedPeople.has(x.id));
+    const candidates = (peopleByNormalName.get(student.normal_name) || []).filter(
+      (x) => !processedPeople.has(x.id),
+    );
 
-    const person = candidates.length > 0 ? disambiguateCandidates(student, candidates) : undefined;
+    const person =
+      candidates.length > 0 ? disambiguateCandidates(student, candidates) : undefined;
 
     if (!person) {
-      const cohortIds = cohorts.filter(x => student.course_names.includes(x.name)).map(x => x.id);
+      const cohortIds = cohorts
+        .filter((x) => student.course_names.includes(x.name))
+        .map((x) => x.id);
       tasks.push(['create', student, null, cohortIds]);
       // include cohort memberships, map course_names to cohortIds
 
@@ -380,18 +430,29 @@ function compare(
       );
       continue;
     }
-    for (const refKey of student.ref_keys)
-      studentToPerson.set(refKey, person);
+    for (const refKey of student.ref_keys) studentToPerson.set(refKey, person);
     processedPeople.add(person.id);
 
     const birthYear = person.birthDate ? new Date(person.birthDate).getFullYear() : null;
     const courseList = new Set(student.course_names);
-    const cohortList = new Set(cohorts.filter(x => (person.cohortIds || []).includes(x.id)).map(x => x.name));
+    const cohortList = new Set(
+      cohorts.filter((x) => (person.cohortIds || []).includes(x.id)).map((x) => x.name),
+    );
 
     let willUpdate = false;
-    if (new Set(person.externalIds || []).symmetricDifference(new Set(student.ref_keys)).size > 0 || person.email !== student.email || person.phone !== student.phone || person.gender !== student.gender || birthYear !== student.year || cohortList.symmetricDifference(courseList).size > 0) {
+    if (
+      new Set(person.externalIds || []).symmetricDifference(new Set(student.ref_keys))
+        .size > 0 ||
+      person.email !== student.email ||
+      person.phone !== student.phone ||
+      person.gender !== student.gender ||
+      birthYear !== student.year ||
+      cohortList.symmetricDifference(courseList).size > 0
+    ) {
       willUpdate = true;
-      const cohortIds = cohorts.filter(x => student.course_names.includes(x.name)).map(x => x.id);
+      const cohortIds = cohorts
+        .filter((x) => student.course_names.includes(x.name))
+        .map((x) => x.id);
       tasks.push(['update', student, person, cohortIds]);
     }
     if (willUpdate) {
@@ -412,8 +473,7 @@ function compare(
     }
   }
   for (const person of people) {
-    if (processedPeople.has(person.id) || person.isAdmin || person.isTrainer)
-      continue;
+    if (processedPeople.has(person.id) || person.isAdmin || person.isTrainer) continue;
     const birthYear = new Date(person.birthDate || '1900-01-01').getFullYear();
 
     tasks.push(['archive', null, person, []]);
@@ -438,12 +498,16 @@ function compare(
       studentsByRefKey.set(refKey, student);
     }
   }
-  const couplesToCreate = new Map<string, Set<string>>;
+  const couplesToCreate = new Map<string, Set<string>>();
   const couplesToDelete: string[] = [];
   studentLoop: for (const student of students) {
     const person = studentToPerson.get(student.ref_keys[0]!);
     if (!person) continue;
-    const partnerIds = (person.gender === 'MAN' ? person.activeCouplesList?.map(c => c.woman?.id) ?? [] : person.activeCouplesList?.map(c => c.man?.id) ?? []).filter(isTruthy);
+    const partnerIds = (
+      person.gender === 'MAN'
+        ? (person.activeCouplesList?.map((c) => c.woman?.id) ?? [])
+        : (person.activeCouplesList?.map((c) => c.man?.id) ?? [])
+    ).filter(isTruthy);
 
     const processedPartnerIds = new Set();
     for (const partnerRefKey of student.partner_ref_keys) {
@@ -452,18 +516,20 @@ function compare(
 
       processedPartnerIds.add(partner.id);
 
-      if (partnerIds.includes(partner.id))
-        continue;
+      if (partnerIds.includes(partner.id)) continue;
 
-      const [manId, womanId] = person.gender === 'MAN' ? [person.id, partner.id] : [partner.id, person.id];
+      const [manId, womanId] =
+        person.gender === 'MAN' ? [person.id, partner.id] : [partner.id, person.id];
       const partners = couplesToCreate.get(manId) || new Set();
       partners.add(womanId);
       couplesToCreate.set(manId, partners);
     }
-    for (const partnerId of partnerIds.filter(x => !processedPartnerIds.has(x))) {
-      const coupleId = person.gender === 'MAN' ? person.activeCouplesList?.find(c => c.woman?.id === partnerId)?.id : person.activeCouplesList?.find(c => c.man?.id === partnerId)?.id;
-      if (coupleId)
-        couplesToDelete.push(coupleId);
+    for (const partnerId of partnerIds.filter((x) => !processedPartnerIds.has(x))) {
+      const coupleId =
+        person.gender === 'MAN'
+          ? person.activeCouplesList?.find((c) => c.woman?.id === partnerId)?.id
+          : person.activeCouplesList?.find((c) => c.man?.id === partnerId)?.id;
+      if (coupleId) couplesToDelete.push(coupleId);
     }
   }
 
@@ -471,12 +537,18 @@ function compare(
 }
 
 function disambiguateCandidates(student: DeduplicatedStudent, candidates: Person[]) {
-  const byBirthYears = candidates.map(person => [new Date(person.birthDate || '1900-01-01').getFullYear(), person] as const);
+  const byBirthYears = candidates.map(
+    (person) =>
+      [new Date(person.birthDate || '1900-01-01').getFullYear(), person] as const,
+  );
   return [
-    student.year ? byBirthYears.find(x => x[0] === student.year) : undefined,
-    byBirthYears.find(x => x[0] === 1900),
+    student.year ? byBirthYears.find((x) => x[0] === student.year) : undefined,
+    byBirthYears.find((x) => x[0] === 1900),
     !student.year ? byBirthYears.find(Boolean) : undefined,
-  ].filter(isTruthy).map(x => x[1]).find(Boolean);
+  ]
+    .filter(isTruthy)
+    .map((x) => x[1])
+    .find(Boolean);
 }
 
 async function fetchCoursesWithStudents(auth_token: string, courses: string[]) {
@@ -545,12 +617,11 @@ function deduplicateStudents(courses: CleanedCourse[]) {
   const problematic: [string, QueriedStudent[]][] = [];
 
   for (const [normalName, candidates] of studentMap.entries()) {
-    if (candidates.length === 0)
-      continue;
+    if (candidates.length === 0) continue;
 
-    const birthYears = new Set(candidates.map(x => x.year).filter(isTruthy));
-    const phones = new Set(candidates.map(x => x.phone).filter(isTruthy));
-    const emails = new Set(candidates.map(x => x.email).filter(isTruthy));
+    const birthYears = new Set(candidates.map((x) => x.year).filter(isTruthy));
+    const phones = new Set(candidates.map((x) => x.phone).filter(isTruthy));
+    const emails = new Set(candidates.map((x) => x.email).filter(isTruthy));
 
     if (birthYears.size < 2) {
       if (phones.size < 2 && emails.size < 2) {
@@ -559,55 +630,65 @@ function deduplicateStudents(courses: CleanedCourse[]) {
         if (candidates.length > 1)
           problematic.push([`${normalName}: více přihlášek studenta sloučeno`, []]);
       } else {
-        problematic.push(['Stejný rok narození ale jiné kontaktní údaje, nemůžu sloučit', candidates]);
+        problematic.push([
+          'Stejný rok narození ale jiné kontaktní údaje, nemůžu sloučit',
+          candidates,
+        ]);
         continue;
       }
     } else if (birthYears.size >= phones.size && birthYears.size >= emails.size) {
-      if (candidates.map(x => x.year).some(x => !x)) {
+      if (candidates.map((x) => x.year).some((x) => !x)) {
         // some birth year is falsy, bail
-        problematic.push(['Podle roku narození jiní lidé, ale některým rok narození chybí, nemůžu rozdělit', candidates]);
+        problematic.push([
+          'Podle roku narození jiní lidé, ale některým rok narození chybí, nemůžu rozdělit',
+          candidates,
+        ]);
         continue;
       }
       for (const discriminant of birthYears) {
-        deduplicated.push(mergeCandidates(candidates.filter(x => x.year === discriminant)));
+        deduplicated.push(
+          mergeCandidates(candidates.filter((x) => x.year === discriminant)),
+        );
       }
       if (birthYears.size > 1)
-        problematic.push([`${normalName}: konflikt vyřešen rozdělením podle roků narození (${[...birthYears].join(', ')})`, []]);
+        problematic.push([
+          `${normalName}: konflikt vyřešen rozdělením podle roků narození (${[...birthYears].join(', ')})`,
+          [],
+        ]);
     }
   }
 
-  deduplicated.sort((x, y) => `${x.surname}, ${x.name}`.localeCompare(`${y.surname}, ${y.name}`));
+  deduplicated.sort((x, y) =>
+    `${x.surname}, ${x.name}`.localeCompare(`${y.surname}, ${y.name}`),
+  );
 
   return [deduplicated, problematic] as const;
 }
 
 function mergeCandidates(candidates: QueriedStudent[]): DeduplicatedStudent {
-  const sex = candidates.map(x => x.sex).find(isTruthy);
+  const sex = candidates.map((x) => x.sex).find(isTruthy);
   return {
-    normal_name: candidates.map(x => x.normal_name).find(isTruthy)!,
-    name: candidates.map(x => x.name).find(isTruthy) || '?',
-    surname: candidates.map(x => x.surname).find(isTruthy) || '?',
+    normal_name: candidates.map((x) => x.normal_name).find(isTruthy)!,
+    name: candidates.map((x) => x.name).find(isTruthy) || '?',
+    surname: candidates.map((x) => x.surname).find(isTruthy) || '?',
     gender: sex === 'FEMALE' ? 'WOMAN' : 'MAN',
-    email: candidates.map(x => x.email).find(isTruthy) || null,
-    phone: candidates.map(x => x.phone).find(isTruthy) || null,
-    year: candidates.map(x => x.year).find(isTruthy) || null,
-    street: candidates.map(x => x.street).find(isTruthy) || null,
-    street_no: candidates.map(x => x.street_no).find(isTruthy) || null,
-    city: candidates.map(x => x.city).find(isTruthy) || null,
-    post_code: candidates.map(x => x.post_code).find(isTruthy) || null,
-    keys: candidates.map(x => x.key).filter(isTruthy),
-    course_names: candidates.map(x => x.course_name).filter(isTruthy),
-    course_keys: candidates.map(x => x.course_key).filter(isTruthy),
-    ref_keys: candidates.map(x => x.ref_key).filter(isTruthy),
-    partner_names: candidates.map(x => x.partner_name).filter(isTruthy),
-    partner_ref_keys: candidates.map(x => x.partner_ref_key).filter(isTruthy),
+    email: candidates.map((x) => x.email).find(isTruthy) || null,
+    phone: candidates.map((x) => x.phone).find(isTruthy) || null,
+    year: candidates.map((x) => x.year).find(isTruthy) || null,
+    street: candidates.map((x) => x.street).find(isTruthy) || null,
+    street_no: candidates.map((x) => x.street_no).find(isTruthy) || null,
+    city: candidates.map((x) => x.city).find(isTruthy) || null,
+    post_code: candidates.map((x) => x.post_code).find(isTruthy) || null,
+    keys: candidates.map((x) => x.key).filter(isTruthy),
+    course_names: candidates.map((x) => x.course_name).filter(isTruthy),
+    course_keys: candidates.map((x) => x.course_key).filter(isTruthy),
+    ref_keys: candidates.map((x) => x.ref_key).filter(isTruthy),
+    partner_names: candidates.map((x) => x.partner_name).filter(isTruthy),
+    partner_ref_keys: candidates.map((x) => x.partner_ref_key).filter(isTruthy),
   };
 }
 
-function getNormalizedName(
-  name: string | null,
-  surname: string | null,
-): string {
+function getNormalizedName(name: string | null, surname: string | null): string {
   return `${capitalize(slugify(name || '').trim())} ${capitalize(slugify(surname || '').trim())}`;
 }
 

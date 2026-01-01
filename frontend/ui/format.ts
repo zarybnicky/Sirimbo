@@ -1,16 +1,22 @@
-import type { EventType, Price, PriceType } from "@/graphql";
-import type { EventRegistrationFragment } from "@/graphql/Event";
-import type { PaymentFragment } from "@/graphql/Payment";
+import type { EventType, Price, PriceType } from '@/graphql';
+import type { EventRegistrationFragment } from '@/graphql/Event';
+import type { PaymentFragment } from '@/graphql/Payment';
 
-type MaybePerson = { name?: string | null; firstName: string; lastName: string } | null | undefined
-type MaybeCouple = { man: MaybePerson; woman: MaybePerson; } | null | undefined;
-type MaybeRegistration = { person: MaybePerson; couple: MaybeCouple | null | undefined; }
+type MaybePerson =
+  | { name?: string | null; firstName: string; lastName: string }
+  | null
+  | undefined;
+type MaybeCouple = { man: MaybePerson; woman: MaybePerson } | null | undefined;
+type MaybeRegistration = { person: MaybePerson; couple: MaybeCouple | null | undefined };
 
-export const formatCoupleName = (couple: MaybeCouple) => !couple ? '' : `${couple.man?.lastName || ''} - ${couple.woman?.lastName || ''}`;
+export const formatCoupleName = (couple: MaybeCouple) =>
+  !couple ? '' : `${couple.man?.lastName || ''} - ${couple.woman?.lastName || ''}`;
 
-export const formatLongCoupleName = (couple: MaybeCouple) => !couple ? '' : `${couple.man?.name || ''} - ${couple.woman?.name || ''}`;
+export const formatLongCoupleName = (couple: MaybeCouple) =>
+  !couple ? '' : `${couple.man?.name || ''} - ${couple.woman?.name || ''}`;
 
-export const formatRegistrant = ({ person, couple }: MaybeRegistration) => person?.name || formatCoupleName(couple);
+export const formatRegistrant = ({ person, couple }: MaybeRegistration) =>
+  person?.name || formatCoupleName(couple);
 
 const names: { [type in EventType]: string } = {
   LESSON: 'Lekce',
@@ -18,11 +24,12 @@ const names: { [type in EventType]: string } = {
   HOLIDAY: 'Prázdniny',
   RESERVATION: 'Nabídka',
   GROUP: 'Společná',
-}
-export const formatEventType = (event: { type: EventType; } | null | undefined) => event?.type ? names[event.type] : '';
+};
+export const formatEventType = (event: { type: EventType } | null | undefined) =>
+  event?.type ? names[event.type] : '';
 
 export const formatDefaultEventName = (event: {
-  __typename?: "Event" | undefined;
+  __typename?: 'Event' | undefined;
   name: string;
   type: EventType;
   eventRegistrations: {
@@ -32,14 +39,21 @@ export const formatDefaultEventName = (event: {
     name?: string | null;
   }[];
 }) => {
-  return event.name || (
-    event.type === 'CAMP' ? 'Soustředění' :
-    event.type === 'GROUP' ? 'Společná' :
-    event.type === 'LESSON' ? (event.eventRegistrations.nodes.length > 0 ? event.eventRegistrations.nodes.map(formatRegistrant).join(', ') : 'VOLNO') :
-    event.type === 'RESERVATION' ? `Nabídka: ${event.eventTrainersList.map(x => x.name).join(', ')}` :
-    'Prázdniny'
+  return (
+    event.name ||
+    (event.type === 'CAMP'
+      ? 'Soustředění'
+      : event.type === 'GROUP'
+        ? 'Společná'
+        : event.type === 'LESSON'
+          ? event.eventRegistrations.nodes.length > 0
+            ? event.eventRegistrations.nodes.map(formatRegistrant).join(', ')
+            : 'VOLNO'
+          : event.type === 'RESERVATION'
+            ? `Nabídka: ${event.eventTrainersList.map((x) => x.name).join(', ')}`
+            : 'Prázdniny')
   );
-}
+};
 
 const weekDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
   weekday: 'long',
@@ -71,20 +85,22 @@ export const numericDateWithYearFormatter = new Intl.DateTimeFormat('cs-CZ', {
   year: 'numeric',
 });
 
-export const numericFullFormatter = new Intl.DateTimeFormat("cs-CZ", {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
+export const numericFullFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
   hour12: false,
 });
 
 export const moneyFormatter = {
-  format(price: Pick<PriceType & Price, 'amount' | 'currency'> | null, defaultString = '') {
-    if (!price || price.amount === null)
-      return defaultString;
+  format(
+    price: Pick<PriceType & Price, 'amount' | 'currency'> | null,
+    defaultString = '',
+  ) {
+    if (!price || price.amount === null) return defaultString;
     const formatter = new Intl.NumberFormat('cs-CZ', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
@@ -102,14 +118,17 @@ export function capitalize(x: string | undefined | null) {
   return x.slice(0, 1).toUpperCase() + x.slice(1);
 }
 
-export const formatOpenDateRange = (item: { since: string | null, until: string | null }) =>
+export const formatOpenDateRange = (item: {
+  since: string | null;
+  until: string | null;
+}) =>
   item.until && item.since
-  ? fullDateFormatter.formatRange(new Date(item.since), new Date(item.until))
-  : item.since
-  ? `od ${fullDateFormatter.format(new Date(item.since))}`
-  : item.until
-  ? `do ${fullDateFormatter.format(new Date(item.until))}`
-  : 'neomezeně';
+    ? fullDateFormatter.formatRange(new Date(item.since), new Date(item.until))
+    : item.since
+      ? `od ${fullDateFormatter.format(new Date(item.since))}`
+      : item.until
+        ? `do ${fullDateFormatter.format(new Date(item.until))}`
+        : 'neomezeně';
 
 export const timeRangeToDatetimeRange = (
   startDate: string,
@@ -118,7 +137,7 @@ export const timeRangeToDatetimeRange = (
     endTime: string;
     endDate?: string | null | undefined;
   },
-): { since: Date, until: Date; } => {
+): { since: Date; until: Date } => {
   const endDate = x.endDate || startDate;
   return {
     since: new Date(`${startDate}T${x.startTime}`),
@@ -126,16 +145,25 @@ export const timeRangeToDatetimeRange = (
   };
 };
 
-export const datetimeRangeToTimeRange = (start: Date, end: Date): {
+export const datetimeRangeToTimeRange = (
+  start: Date,
+  end: Date,
+): {
   date: string;
   endDate: string;
   startTime: string;
   endTime: string;
 } => {
   const startParts = numericFullFormatter.formatToParts(start);
-  const startDict: Record<string, string> = Object.assign({}, ...startParts.map((x) => ({ [x.type]: x.value })));
+  const startDict: Record<string, string> = Object.assign(
+    {},
+    ...startParts.map((x) => ({ [x.type]: x.value })),
+  );
   const endParts = numericFullFormatter.formatToParts(end);
-  const endDict: Record<string, string> = Object.assign({}, ...endParts.map((x) => ({ [x.type]: x.value })));
+  const endDict: Record<string, string> = Object.assign(
+    {},
+    ...endParts.map((x) => ({ [x.type]: x.value })),
+  );
   return {
     date: `${startDict.year}-${startDict.month}-${startDict.day}`,
     endDate: `${endDict.year}-${endDict.month}-${endDict.day}`,
@@ -146,14 +174,15 @@ export const datetimeRangeToTimeRange = (start: Date, end: Date): {
 
 export function formatAgeGroup(birthDate: string | null | undefined) {
   if (!birthDate) return;
-  const birthYear = new Date(birthDate).getFullYear()
+  const birthYear = new Date(birthDate).getFullYear();
   const diff = new Date().getFullYear() - birthYear;
   if (diff < 8) {
     return 'Do 8 let';
   }
   if (diff < 10) {
     return 'Děti I';
-  }if (10 <= diff && diff < 12) {
+  }
+  if (10 <= diff && diff < 12) {
     return 'Děti II';
   }
   if (12 <= diff && diff < 14) {
@@ -170,7 +199,8 @@ export function formatAgeGroup(birthDate: string | null | undefined) {
   }
   if (21 <= diff && diff < 35) {
     return 'Dospělí';
-  }if (35 <= diff && diff < 45) {
+  }
+  if (35 <= diff && diff < 45) {
     return 'Senioři I';
   }
   if (45 <= diff && diff < 55) {
@@ -182,7 +212,10 @@ export function formatAgeGroup(birthDate: string | null | undefined) {
   return 'Senioři IV';
 }
 
-export function describePosting(payment?: PaymentFragment | null | undefined, posting?: { amount: string | null }) {
+export function describePosting(
+  payment?: PaymentFragment | null | undefined,
+  posting?: { amount: string | null },
+) {
   if (!payment) return '';
   if (payment.cohortSubscription) {
     return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;
@@ -192,10 +225,11 @@ export function describePosting(payment?: PaymentFragment | null | undefined, po
     return '';
   }
   if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
-    const trainers = (payment.eventInstance && payment.eventInstance.trainers.length > 0)
-     ? payment.eventInstance.trainers
-     : event.eventTrainersList
-    return `${formatEventType(event)}: ${trainers.map(x => x.name).join(', ')}`;
+    const trainers =
+      payment.eventInstance?.trainersList?.map((x) => x.person?.name) ??
+      payment.eventRegistration?.event?.eventTrainersList?.map((x) => x.name) ??
+      [];
+    return `${formatEventType(event)}: ${trainers.join(', ')}`;
   }
   return formatDefaultEventName(event);
 }

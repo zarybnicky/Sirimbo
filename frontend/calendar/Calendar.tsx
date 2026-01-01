@@ -168,21 +168,19 @@ export function Calendar() {
     for (const instance of data?.list || []) {
       const { event } = instance;
       if (!event) continue;
-      const trainers =
-        instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList;
 
-      const start = new Date(instance.since)
+      const start = new Date(instance.since);
       const end = new Date(instance.until);
       const resourceIds =
-        (onlyMine || groupBy === 'none')
+        onlyMine || groupBy === 'none'
           ? []
           : groupBy === 'trainer'
-          ? trainers.map(x => x.personId)
+            ? (instance.trainersList ?? []).map((x) => x.personId)
             : groupBy === 'room'
               ? [
-                ...(event.location ? [event.location.id] : []),
-                ...(event.locationText ? [event.locationText] : []),
-              ]
+                  ...(event.location ? [event.location.id] : []),
+                  ...(event.locationText ? [event.locationText] : []),
+                ]
               : [];
 
       events.push({
@@ -194,30 +192,37 @@ export function Calendar() {
       });
 
       if (!onlyMine) {
-        if (groupBy !== 'none' && !resourceIds && !resources.some(x => x.resourceId === '')) {
+        if (
+          groupBy !== 'none' &&
+          !resourceIds &&
+          !resources.some((x) => x.resourceId === '')
+        ) {
           resources.push({ resourceId: '', resourceType: '', resourceTitle: '-' });
         }
         if (groupBy === 'trainer') {
-          for (const trainer of trainers) {
+          for (const trainer of instance.trainersList ?? []) {
             const id = trainer.personId;
             if (id && !resources.some((y) => y.resourceId === id)) {
               resources.push({
                 resourceId: id,
                 resourceType: 'person',
-                resourceTitle: trainer.name || '',
+                resourceTitle: trainer.person?.name || '',
               });
             }
           }
         } else if (groupBy === 'room') {
           const location = event?.location;
-          if (location && !resources.some(x => x.resourceId === location.id)) {
+          if (location && !resources.some((x) => x.resourceId === location.id)) {
             resources.push({
               resourceId: location.id,
               resourceType: 'location',
               resourceTitle: location.name,
             });
           }
-          if (event?.locationText && !resources.some(x => x.resourceTitle === event.locationText)) {
+          if (
+            event?.locationText &&
+            !resources.some((x) => x.resourceTitle === event.locationText)
+          ) {
             resources.push({
               resourceId: event.locationText,
               resourceType: 'locationText',
@@ -233,109 +238,128 @@ export function Calendar() {
     return [events, resources];
   }, [groupBy, auth, data, onlyMine]);
 
-  const onMove = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
-    let trainerPersonId: string | null = null;
-    let locationId: string | null = null;
-    let locationText: string | null = null;
+  const onMove = React.useCallback(
+    async (event: CalendarEvent, info: InteractionInfo) => {
+      let trainerPersonId: string | null = null;
+      let locationId: string | null = null;
+      let locationText: string | null = null;
 
-    const { resourceType, resourceId } = info.resource || {};
-    if (resourceType === 'person' && resourceId) {
-      trainerPersonId = resourceId;
-    }
-    if (resourceType === 'location' && resourceId) {
-      locationId = resourceId;
-    }
-    if (resourceType === 'locationText' && resourceId) {
-      locationText = resourceId;
-    }
-    await moveEvent({
-      input: {
-        id: event.instance.id,
-        since: info.start.toISOString(),
-        until: info.end.toISOString(),
-        trainerPersonId,
-        locationId,
-        locationText,
-      },
-    });
-  }, [moveEvent]);
-
-  const onResize = React.useCallback(async (event: CalendarEvent, info: InteractionInfo) => {
-    let trainerPersonId: string | null = null;
-    const { resourceType, resourceId } = info.resource || {};
-    if (resourceType === 'person' && resourceId) {
-      trainerPersonId = resourceId;
-    }
-    await moveEvent({
-      input: {
-        id: event.instance.id,
-        since: info.start.toISOString(),
-        until: info.end.toISOString(),
-        trainerPersonId,
-      },
-    });
-  }, [moveEvent]);
-
-  const [creating, setCreating] = React.useState<undefined | Partial<z.infer<typeof EventForm>>>();
-
-  const onSelectSlot = React.useCallback((slot: SlotInfo) => {
-    if (slot.action === 'click') {
-      slot.end = add(slot.start, 45, 'minutes');
-    }
-
-    const def: Partial<z.infer<typeof EventForm>> = {
-      instances: [{
-        ...datetimeRangeToTimeRange(slot.start, slot.end),
-        isCancelled: false,
-        trainers: [],
-      }],
-      isVisible: true,
-      isLocked: lockEventsByDefault,
-      type: 'LESSON',
-      capacity: 2,
-      locationId: 'none',
-    };
-
-    const { resourceType, resourceId } = slot.resource || {};
-    if (resourceType === 'person' && resourceId) {
-      def.trainers = [{ itemId: null, personId: resourceId, lessonsOffered: 0 }];
-    } else if (onlyMine && !slot.resource) {
-      const trainer = auth.persons.find(x => x.isTrainer);
-      if (trainer) {
-        def.trainers = [{ itemId: null, personId: trainer.id, lessonsOffered: 0 }];
+      const { resourceType, resourceId } = info.resource || {};
+      if (resourceType === 'person' && resourceId) {
+        trainerPersonId = resourceId;
       }
-    }
+      if (resourceType === 'location' && resourceId) {
+        locationId = resourceId;
+      }
+      if (resourceType === 'locationText' && resourceId) {
+        locationText = resourceId;
+      }
+      await moveEvent({
+        input: {
+          id: event.instance.id,
+          since: info.start.toISOString(),
+          until: info.end.toISOString(),
+          trainerPersonId,
+          locationId,
+          locationText,
+        },
+      });
+    },
+    [moveEvent],
+  );
 
-    if (resourceType === 'location' && resourceId) {
-      def.locationId = resourceId;
-    }
-    if (resourceType === 'locationText' && resourceId) {
-      def.locationId = 'other';
-      def.locationText = resourceId;
-    }
-    if (def.trainers && def.trainers.length > 0 && def.locationId && def.locationId === 'none') {
-      const thisTrainer = def.trainers[0]?.personId!;
-      let closestPrev: CalendarEvent | undefined;
-      const thisInstance = def.instances?.[0]!;
-      for (const event of events) {
-        if (!event.instance.since.startsWith(thisInstance.date!)) continue;
-        if (!event.instance.trainers.some(x => x.personId === thisTrainer) && !event.event.eventTrainersList.some(x => x.personId === thisTrainer)) continue;
-        if (event.instance.until.slice(11, 19) > thisInstance.startTime) continue;
-        if (!closestPrev || closestPrev.start < event.start) {
-          closestPrev = event;
+  const onResize = React.useCallback(
+    async (event: CalendarEvent, info: InteractionInfo) => {
+      let trainerPersonId: string | null = null;
+      const { resourceType, resourceId } = info.resource || {};
+      if (resourceType === 'person' && resourceId) {
+        trainerPersonId = resourceId;
+      }
+      await moveEvent({
+        input: {
+          id: event.instance.id,
+          since: info.start.toISOString(),
+          until: info.end.toISOString(),
+          trainerPersonId,
+        },
+      });
+    },
+    [moveEvent],
+  );
+
+  const [creating, setCreating] = React.useState<
+    undefined | Partial<z.infer<typeof EventForm>>
+  >();
+
+  const onSelectSlot = React.useCallback(
+    (slot: SlotInfo) => {
+      if (slot.action === 'click') {
+        slot.end = add(slot.start, 45, 'minutes');
+      }
+
+      const def: Partial<z.infer<typeof EventForm>> = {
+        instances: [
+          {
+            ...datetimeRangeToTimeRange(slot.start, slot.end),
+            isCancelled: false,
+            trainers: [],
+          },
+        ],
+        isVisible: true,
+        isLocked: lockEventsByDefault,
+        type: 'LESSON',
+        capacity: 2,
+        locationId: 'none',
+      };
+
+      const { resourceType, resourceId } = slot.resource || {};
+      if (resourceType === 'person' && resourceId) {
+        def.trainers = [{ itemId: null, personId: resourceId, lessonsOffered: 0 }];
+      } else if (onlyMine && !slot.resource) {
+        const trainer = auth.persons.find((x) => x.isTrainer);
+        if (trainer) {
+          def.trainers = [{ itemId: null, personId: trainer.id, lessonsOffered: 0 }];
         }
       }
-      if (closestPrev?.event?.locationText) {
-        def.locationId = 'other';
-        def.locationText = closestPrev.event.locationText;
-      }
-      if (closestPrev?.event?.location?.id) {
-        def.locationId = closestPrev.event.location.id;
-      }
-    }
 
-    setTimeout(() => setCreating(prev => prev || def));
-  }, [lockEventsByDefault, onlyMine, auth.persons, events]);
+      if (resourceType === 'location' && resourceId) {
+        def.locationId = resourceId;
+      }
+      if (resourceType === 'locationText' && resourceId) {
+        def.locationId = 'other';
+        def.locationText = resourceId;
+      }
+      if (
+        def.trainers &&
+        def.trainers.length > 0 &&
+        def.locationId &&
+        def.locationId === 'none'
+      ) {
+        const thisTrainer = def.trainers[0]?.personId!;
+        let closestPrev: CalendarEvent | undefined;
+        const thisInstance = def.instances?.[0]!;
+        for (const event of events) {
+          if (!event.instance.since.startsWith(thisInstance.date!)) continue;
+          if (!event.instance.trainersList?.some((x) => x.personId === thisTrainer))
+            continue;
+          if (event.instance.until.slice(11, 19) > thisInstance.startTime) continue;
+          if (!closestPrev || closestPrev.start < event.start) {
+            closestPrev = event;
+          }
+        }
+        if (closestPrev?.event?.locationText) {
+          def.locationId = 'other';
+          def.locationText = closestPrev.event.locationText;
+        }
+        if (closestPrev?.event?.location?.id) {
+          def.locationId = closestPrev.event.location.id;
+        }
+      }
+
+      setTimeout(() => setCreating((prev) => prev || def));
+    },
+    [lockEventsByDefault, onlyMine, auth.persons, events],
+  );
 
   React.useEffect(() => {
     setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });

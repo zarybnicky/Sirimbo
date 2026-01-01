@@ -1185,7 +1185,7 @@ type CohortMembership {
   """Reads a single `Tenant` that is related to this `CohortMembership`."""
   tenant: Tenant
   tenantId: BigInt!
-  until: Datetime!
+  until: Datetime
   updatedAt: Datetime!
 }
 
@@ -1525,7 +1525,7 @@ type Couple {
   manId: BigInt!
   since: Datetime!
   status: RelationshipStatus!
-  until: Datetime!
+  until: Datetime
   updatedAt: Datetime!
 
   """Reads a single `Person` that is related to this `Couple`."""
@@ -4016,7 +4016,7 @@ type EventInstance {
     orderBy: [EventInstanceTrainersOrderBy!]
   ): [EventInstanceTrainer!]!
   id: BigInt!
-  isCancelled: Boolean
+  isCancelled: Boolean!
 
   """
   Reads a single `TenantLocation` that is related to this `EventInstance`.
@@ -4046,6 +4046,13 @@ type EventInstance {
   """Reads a single `Tenant` that is related to this `EventInstance`."""
   tenant: Tenant
   tenantId: BigInt!
+  trainersList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [TenantTrainer!]
   until: Datetime!
   updatedAt: Datetime!
 }
@@ -5119,12 +5126,7 @@ type LogInAsPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-  result: LogInAsRecord
-}
-
-type LogInAsRecord {
-  jwt: JwtToken
-  usr: User
+  result: Result
 }
 
 """All input for the `login` mutation."""
@@ -5134,8 +5136,8 @@ input LoginInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  login: String!
-  passwd: String!
+  login: String
+  passwd: String
 }
 
 """The output of our `login` mutation."""
@@ -5150,12 +5152,7 @@ type LoginPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-  result: LoginRecord
-}
-
-type LoginRecord {
-  jwt: JwtToken
-  usr: User
+  result: Result
 }
 
 type MembershipApplication {
@@ -6108,12 +6105,7 @@ type OtpLoginPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-  result: OtpLoginRecord
-}
-
-type OtpLoginRecord {
-  jwt: JwtToken
-  usr: User
+  result: Result
 }
 
 """Information about pagination in a connection."""
@@ -7319,27 +7311,6 @@ type Query {
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementsConnection
 
-  """Reads and enables pagination through a set of `Announcement`."""
-  archivedAnnouncements(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-  ): AnnouncementsConnection
-
   """Get a single `Attachment`."""
   attachment(objectName: String!): Attachment
 
@@ -7885,6 +7856,7 @@ type Query {
     """
     offset: Int
     orderByUpdated: Boolean
+    sticky: Boolean
   ): AnnouncementsConnection
   myEventInstancesForRangeList(
     endRange: Datetime
@@ -8412,12 +8384,7 @@ type RegisterUsingInvitationPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-  result: RegisterUsingInvitationRecord
-}
-
-type RegisterUsingInvitationRecord {
-  jwt: JwtToken
-  usr: User
+  result: Result
 }
 
 """All input for the `registerWithoutInvitation` mutation."""
@@ -8443,12 +8410,7 @@ type RegisterWithoutInvitationPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-  result: RegisterWithoutInvitationRecord
-}
-
-type RegisterWithoutInvitationRecord {
-  jwt: JwtToken
-  usr: User
+  result: Result
 }
 
 """All input for the `rejectMembershipApplication` mutation."""
@@ -8519,6 +8481,11 @@ type ResetPasswordPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+}
+
+type Result {
+  jwt: JwtToken
+  usr: User
 }
 
 type ScoreboardManualAdjustment {
@@ -9593,7 +9560,7 @@ type TenantAdministrator {
   """Reads a single `Tenant` that is related to this `TenantAdministrator`."""
   tenant: Tenant
   tenantId: BigInt!
-  until: Datetime!
+  until: Datetime
   updatedAt: Datetime!
 }
 
@@ -9867,7 +9834,7 @@ type TenantMembership {
   """Reads a single `Tenant` that is related to this `TenantMembership`."""
   tenant: Tenant
   tenantId: BigInt!
-  until: Datetime!
+  until: Datetime
   updatedAt: Datetime!
 }
 
@@ -10030,7 +9997,7 @@ type TenantTrainer {
   """Reads a single `Tenant` that is related to this `TenantTrainer`."""
   tenant: Tenant
   tenantId: BigInt!
-  until: Datetime!
+  until: Datetime
   updatedAt: Datetime!
 }
 
@@ -11511,9 +11478,9 @@ type UserProxy {
   """Reads a single `Person` that is related to this `UserProxy`."""
   person: Person
   personId: BigInt!
-  since: Datetime!
+  since: Datetime
   status: RelationshipStatus!
-  until: Datetime!
+  until: Datetime
   updatedAt: Datetime!
 
   """Reads a single `User` that is related to this `UserProxy`."""

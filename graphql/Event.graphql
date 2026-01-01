@@ -74,10 +74,13 @@ fragment EventInstance on EventInstance {
 
 fragment EventInstanceWithTrainer on EventInstance {
   ...EventInstance
-  trainers: eventInstanceTrainersByInstanceIdList {
+  trainersList {
     id
-    name
     personId
+    person {
+      id
+      name
+    }
   }
 }
 
@@ -141,6 +144,10 @@ fragment EventFull on Event {
   ...EventAttendanceSummary
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstanceWithTrainer
+    eventInstanceTrainersByInstanceIdList {
+      id
+      personId
+    }
   }
 }
 
@@ -264,14 +271,6 @@ query EventInstanceRange(
   }
 }
 
-mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
-  updateEvent(input: { id: $id, patch: { isVisible: $visible } }) {
-    event {
-      ...Event
-    }
-  }
-}
-
 mutation UpsertEvent($input: UpsertEventInput!) {
   upsertEvent(input: $input) {
     event {
@@ -296,12 +295,6 @@ mutation UpdateEventInstance($id: BigInt!, $patch: EventInstancePatch!) {
     eventInstance {
       ...EventInstance
     }
-  }
-}
-
-mutation DeleteEvent($id: BigInt!) {
-  deleteEvent(input: { id: $id }) {
-    __typename
   }
 }
 

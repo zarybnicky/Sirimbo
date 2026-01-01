@@ -1,10 +1,10 @@
 import type { AttendanceType } from '@/graphql';
 import {
+  DeleteEventExternalRegistrationDocument,
   type EventAttendanceSummaryFragment,
+  type EventFragment,
   type EventFullFragment,
   EventPaymentsDocument,
-  DeleteEventExternalRegistrationDocument,
-  type EventFragment,
   type EventRegistrationsFragment,
 } from '@/graphql/Event';
 import { DeletePaymentDocument } from '@/graphql/Payment';
@@ -27,13 +27,7 @@ import {
 } from '@/ui/format';
 import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';
-import {
-  Check,
-  HelpCircle,
-  type LucideIcon,
-  OctagonMinus,
-  X,
-} from 'lucide-react';
+import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
@@ -86,15 +80,18 @@ export function EventView({ event }: { event: EventFullFragment }) {
     }
 
     if (auth.isTrainerOrAdmin) {
-      tabs.push({
-        id: 'payments',
-        title: 'Platby',
-        contents: () => <Payments event={event} />,
-      }, {
-        id: 'instances',
-        title: 'Termíny',
-        contents: () => <EventInstances event={event} />,
-      });
+      tabs.push(
+        {
+          id: 'payments',
+          title: 'Platby',
+          contents: () => <Payments event={event} />,
+        },
+        {
+          id: 'instances',
+          title: 'Termíny',
+          contents: () => <EventInstances event={event} />,
+        },
+      );
     }
     return tabs;
   }, [auth.isTrainerOrAdmin, auth.user?.id, event]);
@@ -186,17 +183,16 @@ function EventInstances({ event }: { event: EventFullFragment }) {
       <table className="w-full">
         <thead>
           <tr>
-            <th scope="col" className="text-left">Termín</th>
-            <th scope="col" className="text-left">Trenéři</th>
+            <th scope="col" className="text-left">
+              Termín
+            </th>
+            <th scope="col" className="text-left">
+              Trenéři
+            </th>
           </tr>
         </thead>
         <tbody>
           {event.eventInstancesList.map((instance) => {
-            let trainerNames = instance.trainers?.map(x => x.name).filter(isTruthy);
-
-            if (trainerNames.length === 0)
-              trainerNames = event.eventTrainersList?.map(x => x.name).filter(isTruthy);
-
             return (
               <tr key={instance.id}>
                 <td>
@@ -212,7 +208,12 @@ function EventInstances({ event }: { event: EventFullFragment }) {
                     <div className="text-sm text-neutral-10">Zrušeno</div>
                   )}
                 </td>
-                <td>{trainerNames?.length ? trainerNames.join(', ') : '—'}</td>
+                <td>
+                  {instance.trainersList
+                    ?.map((x) => x.person?.name)
+                    .filter(isTruthy)
+                    .join(', ') ?? '—'}
+                </td>
               </tr>
             );
           })}
@@ -279,7 +280,13 @@ function EventExternalRegistrationMenu({
   );
 }
 
-export function PaymentMenu({ id, children }: { id: string; children?: React.ReactNode }) {
+export function PaymentMenu({
+  id,
+  children,
+}: {
+  id: string;
+  children?: React.ReactNode;
+}) {
   const doDelete = useMutation(DeletePaymentDocument)[1];
   const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
   const auth = useAuth();
@@ -312,7 +319,7 @@ function Payments({ event }: { event: EventFragment }) {
               <div key={transaction.id}>
                 <div className="flex gap-2 items-center">
                   <PaymentMenu id={payment.id}>
-                     Za lekci {fullDateFormatter.format(new Date(reg.since))}
+                    Za lekci {fullDateFormatter.format(new Date(reg.since))}
                   </PaymentMenu>
                 </div>
                 <ul>

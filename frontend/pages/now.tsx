@@ -43,9 +43,8 @@ function formatStartsIn(now: Date, start: Date) {
   return `za ${hours} h ${minutes} min`;
 }
 
-function trainerGroups(instance: Instance, event: NonNullable<Instance['event']>) {
-  const trainers =
-    instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList;
+function trainerGroups(instance: Instance) {
+  const trainers = instance.trainersList ?? [];
 
   const groups = trainers
     .map((trainer) => {
@@ -53,13 +52,11 @@ function trainerGroups(instance: Instance, event: NonNullable<Instance['event']>
         ? `person:${trainer.personId}`
         : trainer.id
           ? `trainer:${trainer.id}`
-          : trainer.name
-            ? `name:${trainer.name}`
-            : undefined;
+          : undefined;
 
       if (!key) return null;
 
-      const label = trainer.name?.trim() ?? 'Neznámý trenér';
+      const label = trainer.person?.name.trim() ?? 'Neznámý trenér';
 
       return { key, label };
     })
@@ -106,7 +103,7 @@ function gatherBuckets(
 
     const groups =
       mode === 'trainer'
-        ? trainerGroups(instance, event)
+        ? trainerGroups(instance)
         : [{ key: locationKey, label: locationName }];
 
     const enriched: EnrichedInstance = { instance, event, since, until };
@@ -140,9 +137,9 @@ function gatherBuckets(
     .toSorted((a, b) => a.label.localeCompare(b.label, 'cs'));
 }
 
-function formatTrainers(instance: Instance, event: NonNullable<Instance['event']>) {
-  return (instance.trainers.length > 0 ? instance.trainers : event.eventTrainersList)
-    .map((x) => x.name)
+function formatTrainers(instance: Instance) {
+  return (instance.trainersList ?? [])
+    .map((x) => x.person?.name)
     .filter(isTruthy)
     .join(', ');
 }
@@ -256,7 +253,7 @@ export default function NowPage() {
 
                     <div className="flex flex-col gap-3">
                       {bucket.current.map(({ event, since, until, instance }) => {
-                        const trainers = formatTrainers(instance, event);
+                        const trainers = formatTrainers(instance);
                         return (
                           <article
                             key={instance.id}
@@ -269,8 +266,7 @@ export default function NowPage() {
                               {formatDefaultEventName(event)}
                             </h3>
                             <p className="mt-2 text-lg text-accent-10">
-                              {shortTimeFormatter.format(since)} –{' '}
-                              {shortTimeFormatter.format(until)}
+                              {shortTimeFormatter.formatRange(since, until)}
                             </p>
                             {trainers && grouping === 'location' ? (
                               <p className="mt-2 text-sm text-accent-9">{`Trenéři: ${trainers}`}</p>
@@ -292,7 +288,7 @@ export default function NowPage() {
                       {bucket.upcoming.length > 0 ? (
                         <div className="mt-3 flex flex-col gap-3">
                           {bucket.upcoming.map(({ event, since, until, instance }) => {
-                            const trainers = formatTrainers(instance, event);
+                            const trainers = formatTrainers(instance);
                             return (
                               <article
                                 key={`${instance.id}:${since.toISOString()}`}
@@ -302,8 +298,7 @@ export default function NowPage() {
                                   {formatDefaultEventName(event)}
                                 </p>
                                 <p className="text-sm text-neutral-9">
-                                  {shortTimeFormatter.format(since)} –{' '}
-                                  {shortTimeFormatter.format(until)}
+                                  {shortTimeFormatter.formatRange(since, until)}
                                   {' · '}
                                   {formatStartsIn(reference, since)}
                                 </p>

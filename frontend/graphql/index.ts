@@ -1013,7 +1013,7 @@ export type CohortMembership = {
   /** Reads a single `Tenant` that is related to this `CohortMembership`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  until: Scalars['Datetime']['output'];
+  until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
 };
 
@@ -1264,7 +1264,7 @@ export type Couple = {
   manId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
   status: RelationshipStatus;
-  until: Scalars['Datetime']['output'];
+  until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `Person` that is related to this `Couple`. */
   woman: Maybe<Person>;
@@ -3331,7 +3331,7 @@ export type EventInstance = {
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
   eventInstanceTrainersByInstanceIdList: Array<EventInstanceTrainer>;
   id: Scalars['BigInt']['output'];
-  isCancelled: Maybe<Scalars['Boolean']['output']>;
+  isCancelled: Scalars['Boolean']['output'];
   /** Reads a single `TenantLocation` that is related to this `EventInstance`. */
   location: Maybe<TenantLocation>;
   locationId: Maybe<Scalars['BigInt']['output']>;
@@ -3342,6 +3342,7 @@ export type EventInstance = {
   /** Reads a single `Tenant` that is related to this `EventInstance`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
+  trainersList: Maybe<Array<TenantTrainer>>;
   until: Scalars['Datetime']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
@@ -3380,6 +3381,12 @@ export type EventInstancePaymentsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
+};
+
+
+export type EventInstanceTrainersListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type EventInstanceApproxPriceRecord = {
@@ -4273,13 +4280,7 @@ export type LogInAsPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-  result: Maybe<LogInAsRecord>;
-};
-
-export type LogInAsRecord = {
-  __typename?: 'LogInAsRecord';
-  jwt: Maybe<Scalars['JwtToken']['output']>;
-  usr: Maybe<User>;
+  result: Maybe<Result>;
 };
 
 /** All input for the `login` mutation. */
@@ -4289,8 +4290,8 @@ export type LoginInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  login: Scalars['String']['input'];
-  passwd: Scalars['String']['input'];
+  login?: InputMaybe<Scalars['String']['input']>;
+  passwd?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our `login` mutation. */
@@ -4303,13 +4304,7 @@ export type LoginPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-  result: Maybe<LoginRecord>;
-};
-
-export type LoginRecord = {
-  __typename?: 'LoginRecord';
-  jwt: Maybe<Scalars['JwtToken']['output']>;
-  usr: Maybe<User>;
+  result: Maybe<Result>;
 };
 
 export type MembershipApplication = {
@@ -5248,13 +5243,7 @@ export type OtpLoginPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-  result: Maybe<OtpLoginRecord>;
-};
-
-export type OtpLoginRecord = {
-  __typename?: 'OtpLoginRecord';
-  jwt: Maybe<Scalars['JwtToken']['output']>;
-  usr: Maybe<User>;
+  result: Maybe<Result>;
 };
 
 /** Information about pagination in a connection. */
@@ -6123,8 +6112,6 @@ export type Query = {
   announcementAudiences: Maybe<AnnouncementAudiencesConnection>;
   /** Reads and enables pagination through a set of `Announcement`. */
   announcements: Maybe<AnnouncementsConnection>;
-  /** Reads and enables pagination through a set of `Announcement`. */
-  archivedAnnouncements: Maybe<AnnouncementsConnection>;
   /** Get a single `Attachment`. */
   attachment: Maybe<Attachment>;
   /** Reads and enables pagination through a set of `Text`. */
@@ -6386,16 +6373,6 @@ export type QueryAnnouncementsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryArchivedAnnouncementsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6829,6 +6806,7 @@ export type QueryMyAnnouncementsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderByUpdated?: InputMaybe<Scalars['Boolean']['input']>;
+  sticky?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -7219,13 +7197,7 @@ export type RegisterUsingInvitationPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-  result: Maybe<RegisterUsingInvitationRecord>;
-};
-
-export type RegisterUsingInvitationRecord = {
-  __typename?: 'RegisterUsingInvitationRecord';
-  jwt: Maybe<Scalars['JwtToken']['output']>;
-  usr: Maybe<User>;
+  result: Maybe<Result>;
 };
 
 /** All input for the `registerWithoutInvitation` mutation. */
@@ -7249,13 +7221,7 @@ export type RegisterWithoutInvitationPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-  result: Maybe<RegisterWithoutInvitationRecord>;
-};
-
-export type RegisterWithoutInvitationRecord = {
-  __typename?: 'RegisterWithoutInvitationRecord';
-  jwt: Maybe<Scalars['JwtToken']['output']>;
-  usr: Maybe<User>;
+  result: Maybe<Result>;
 };
 
 /** All input for the `rejectMembershipApplication` mutation. */
@@ -7318,6 +7284,12 @@ export type ResetPasswordPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+};
+
+export type Result = {
+  __typename?: 'Result';
+  jwt: Maybe<Scalars['JwtToken']['output']>;
+  usr: Maybe<User>;
 };
 
 export type ScoreboardManualAdjustment = {
@@ -8030,7 +8002,7 @@ export type TenantAdministrator = {
   /** Reads a single `Tenant` that is related to this `TenantAdministrator`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  until: Scalars['Datetime']['output'];
+  until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
 };
 
@@ -8249,7 +8221,7 @@ export type TenantMembership = {
   /** Reads a single `Tenant` that is related to this `TenantMembership`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  until: Scalars['Datetime']['output'];
+  until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
 };
 
@@ -8395,7 +8367,7 @@ export type TenantTrainer = {
   /** Reads a single `Tenant` that is related to this `TenantTrainer`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  until: Scalars['Datetime']['output'];
+  until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
 };
 
@@ -9571,9 +9543,9 @@ export type UserProxy = {
   /** Reads a single `Person` that is related to this `UserProxy`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
-  since: Scalars['Datetime']['output'];
+  since: Maybe<Scalars['Datetime']['output']>;
   status: RelationshipStatus;
-  until: Scalars['Datetime']['output'];
+  until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `User` that is related to this `UserProxy`. */
   user: Maybe<User>;
@@ -9781,14 +9753,11 @@ export type GraphCacheKeysConfig = {
   FormResponsesEdge?: (data: WithTypename<FormResponsesEdge>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
   LogInAsPayload?: (data: WithTypename<LogInAsPayload>) => null | string,
-  LogInAsRecord?: (data: WithTypename<LogInAsRecord>) => null | string,
   LoginPayload?: (data: WithTypename<LoginPayload>) => null | string,
-  LoginRecord?: (data: WithTypename<LoginRecord>) => null | string,
   MembershipApplication?: (data: WithTypename<MembershipApplication>) => null | string,
   MembershipApplicationsEdge?: (data: WithTypename<MembershipApplicationsEdge>) => null | string,
   MoveEventInstancePayload?: (data: WithTypename<MoveEventInstancePayload>) => null | string,
   OtpLoginPayload?: (data: WithTypename<OtpLoginPayload>) => null | string,
-  OtpLoginRecord?: (data: WithTypename<OtpLoginRecord>) => null | string,
   PageInfo?: (data: WithTypename<PageInfo>) => null | string,
   Payment?: (data: WithTypename<Payment>) => null | string,
   PaymentDebtor?: (data: WithTypename<PaymentDebtor>) => null | string,
@@ -9805,11 +9774,10 @@ export type GraphCacheKeysConfig = {
   PriceType?: (data: WithTypename<PriceType>) => null | string,
   RegisterToEventManyPayload?: (data: WithTypename<RegisterToEventManyPayload>) => null | string,
   RegisterUsingInvitationPayload?: (data: WithTypename<RegisterUsingInvitationPayload>) => null | string,
-  RegisterUsingInvitationRecord?: (data: WithTypename<RegisterUsingInvitationRecord>) => null | string,
   RegisterWithoutInvitationPayload?: (data: WithTypename<RegisterWithoutInvitationPayload>) => null | string,
-  RegisterWithoutInvitationRecord?: (data: WithTypename<RegisterWithoutInvitationRecord>) => null | string,
   RejectMembershipApplicationPayload?: (data: WithTypename<RejectMembershipApplicationPayload>) => null | string,
   ResetPasswordPayload?: (data: WithTypename<ResetPasswordPayload>) => null | string,
+  Result?: (data: WithTypename<Result>) => null | string,
   ScoreboardManualAdjustment?: (data: WithTypename<ScoreboardManualAdjustment>) => null | string,
   ScoreboardRecord?: (data: WithTypename<ScoreboardRecord>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
@@ -9872,7 +9840,6 @@ export type GraphCacheResolvers = {
     announcementAudience?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementAudienceArgs, WithTypename<AnnouncementAudience> | string>,
     announcementAudiences?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementAudiencesArgs, WithTypename<AnnouncementAudiencesConnection> | string>,
     announcements?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
-    archivedAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryArchivedAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     attachment?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentArgs, WithTypename<Attachment> | string>,
     attachmentDirectories?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentDirectoriesArgs, WithTypename<AttachmentDirectoriesConnection> | string>,
     attachments?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentsArgs, WithTypename<AttachmentsConnection> | string>,
@@ -10687,6 +10654,7 @@ export type GraphCacheResolvers = {
     since?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>,
     tenant?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
+    trainersList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     until?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>
   },
@@ -10846,20 +10814,12 @@ export type GraphCacheResolvers = {
   LogInAsPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, WithTypename<Query> | string>,
-    result?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, WithTypename<LogInAsRecord> | string>
-  },
-  LogInAsRecord?: {
-    jwt?: GraphCacheResolver<WithTypename<LogInAsRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
-    usr?: GraphCacheResolver<WithTypename<LogInAsRecord>, Record<string, never>, WithTypename<User> | string>
+    result?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, WithTypename<Result> | string>
   },
   LoginPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<LoginPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<LoginPayload>, Record<string, never>, WithTypename<Query> | string>,
-    result?: GraphCacheResolver<WithTypename<LoginPayload>, Record<string, never>, WithTypename<LoginRecord> | string>
-  },
-  LoginRecord?: {
-    jwt?: GraphCacheResolver<WithTypename<LoginRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
-    usr?: GraphCacheResolver<WithTypename<LoginRecord>, Record<string, never>, WithTypename<User> | string>
+    result?: GraphCacheResolver<WithTypename<LoginPayload>, Record<string, never>, WithTypename<Result> | string>
   },
   MembershipApplication?: {
     bio?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
@@ -10903,11 +10863,7 @@ export type GraphCacheResolvers = {
   OtpLoginPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<OtpLoginPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<OtpLoginPayload>, Record<string, never>, WithTypename<Query> | string>,
-    result?: GraphCacheResolver<WithTypename<OtpLoginPayload>, Record<string, never>, WithTypename<OtpLoginRecord> | string>
-  },
-  OtpLoginRecord?: {
-    jwt?: GraphCacheResolver<WithTypename<OtpLoginRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
-    usr?: GraphCacheResolver<WithTypename<OtpLoginRecord>, Record<string, never>, WithTypename<User> | string>
+    result?: GraphCacheResolver<WithTypename<OtpLoginPayload>, Record<string, never>, WithTypename<Result> | string>
   },
   PageInfo?: {
     endCursor?: GraphCacheResolver<WithTypename<PageInfo>, Record<string, never>, Scalars['Cursor'] | string>,
@@ -11078,20 +11034,12 @@ export type GraphCacheResolvers = {
   RegisterUsingInvitationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RegisterUsingInvitationPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<RegisterUsingInvitationPayload>, Record<string, never>, WithTypename<Query> | string>,
-    result?: GraphCacheResolver<WithTypename<RegisterUsingInvitationPayload>, Record<string, never>, WithTypename<RegisterUsingInvitationRecord> | string>
-  },
-  RegisterUsingInvitationRecord?: {
-    jwt?: GraphCacheResolver<WithTypename<RegisterUsingInvitationRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
-    usr?: GraphCacheResolver<WithTypename<RegisterUsingInvitationRecord>, Record<string, never>, WithTypename<User> | string>
+    result?: GraphCacheResolver<WithTypename<RegisterUsingInvitationPayload>, Record<string, never>, WithTypename<Result> | string>
   },
   RegisterWithoutInvitationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RegisterWithoutInvitationPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<RegisterWithoutInvitationPayload>, Record<string, never>, WithTypename<Query> | string>,
-    result?: GraphCacheResolver<WithTypename<RegisterWithoutInvitationPayload>, Record<string, never>, WithTypename<RegisterWithoutInvitationRecord> | string>
-  },
-  RegisterWithoutInvitationRecord?: {
-    jwt?: GraphCacheResolver<WithTypename<RegisterWithoutInvitationRecord>, Record<string, never>, Scalars['JwtToken'] | string>,
-    usr?: GraphCacheResolver<WithTypename<RegisterWithoutInvitationRecord>, Record<string, never>, WithTypename<User> | string>
+    result?: GraphCacheResolver<WithTypename<RegisterWithoutInvitationPayload>, Record<string, never>, WithTypename<Result> | string>
   },
   RejectMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -11104,6 +11052,10 @@ export type GraphCacheResolvers = {
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, WithTypename<Query> | string>
+  },
+  Result?: {
+    jwt?: GraphCacheResolver<WithTypename<Result>, Record<string, never>, Scalars['JwtToken'] | string>,
+    usr?: GraphCacheResolver<WithTypename<Result>, Record<string, never>, WithTypename<User> | string>
   },
   ScoreboardManualAdjustment?: {
     awardedAt?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Date'] | string>,
@@ -11658,7 +11610,6 @@ export type GraphCacheUpdaters = {
     announcementAudience?: GraphCacheUpdateResolver<{ announcementAudience: Maybe<WithTypename<AnnouncementAudience>> }, QueryAnnouncementAudienceArgs>,
     announcementAudiences?: GraphCacheUpdateResolver<{ announcementAudiences: Maybe<WithTypename<AnnouncementAudiencesConnection>> }, QueryAnnouncementAudiencesArgs>,
     announcements?: GraphCacheUpdateResolver<{ announcements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryAnnouncementsArgs>,
-    archivedAnnouncements?: GraphCacheUpdateResolver<{ archivedAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryArchivedAnnouncementsArgs>,
     attachment?: GraphCacheUpdateResolver<{ attachment: Maybe<WithTypename<Attachment>> }, QueryAttachmentArgs>,
     attachmentDirectories?: GraphCacheUpdateResolver<{ attachmentDirectories: Maybe<WithTypename<AttachmentDirectoriesConnection>> }, QueryAttachmentDirectoriesArgs>,
     attachments?: GraphCacheUpdateResolver<{ attachments: Maybe<WithTypename<AttachmentsConnection>> }, QueryAttachmentsArgs>,
@@ -12564,6 +12515,7 @@ export type GraphCacheUpdaters = {
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    trainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceTrainersListArgs>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>
   },
@@ -12725,18 +12677,10 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsPayload>>, Record<string, never>>,
     result?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsPayload>>, Record<string, never>>
   },
-  LogInAsRecord?: {
-    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsRecord>>, Record<string, never>>,
-    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsRecord>>, Record<string, never>>
-  },
   LoginPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginPayload>>, Record<string, never>>,
     result?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginPayload>>, Record<string, never>>
-  },
-  LoginRecord?: {
-    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginRecord>>, Record<string, never>>,
-    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<LoginRecord>>, Record<string, never>>
   },
   MembershipApplication?: {
     bio?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
@@ -12781,10 +12725,6 @@ export type GraphCacheUpdaters = {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginPayload>>, Record<string, never>>,
     result?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginPayload>>, Record<string, never>>
-  },
-  OtpLoginRecord?: {
-    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginRecord>>, Record<string, never>>,
-    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<OtpLoginRecord>>, Record<string, never>>
   },
   PageInfo?: {
     endCursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PageInfo>>, Record<string, never>>,
@@ -12957,18 +12897,10 @@ export type GraphCacheUpdaters = {
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationPayload>>, Record<string, never>>,
     result?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationPayload>>, Record<string, never>>
   },
-  RegisterUsingInvitationRecord?: {
-    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationRecord>>, Record<string, never>>,
-    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationRecord>>, Record<string, never>>
-  },
   RegisterWithoutInvitationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterWithoutInvitationPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterWithoutInvitationPayload>>, Record<string, never>>,
     result?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterWithoutInvitationPayload>>, Record<string, never>>
-  },
-  RegisterWithoutInvitationRecord?: {
-    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterWithoutInvitationRecord>>, Record<string, never>>,
-    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterWithoutInvitationRecord>>, Record<string, never>>
   },
   RejectMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>,
@@ -12981,6 +12913,10 @@ export type GraphCacheUpdaters = {
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>
+  },
+  Result?: {
+    jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<Result>>, Record<string, never>>,
+    usr?: GraphCacheUpdateResolver<Maybe<WithTypename<Result>>, Record<string, never>>
   },
   ScoreboardManualAdjustment?: {
     awardedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,
