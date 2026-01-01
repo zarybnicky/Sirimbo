@@ -7,8 +7,9 @@ CREATE TABLE public.event_instance (
     since timestamp with time zone NOT NULL,
     until timestamp with time zone NOT NULL,
     location_id bigint,
-    is_cancelled boolean DEFAULT false,
-    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL
+    is_cancelled boolean DEFAULT false NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    CONSTRAINT event_instance_until_gt_since CHECK ((until > since))
 );
 
 COMMENT ON TABLE public.event_instance IS '@omit create,delete

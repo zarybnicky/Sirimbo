@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict Z9MEInjtwgm56MynHxINspkLDrthvZvYLGydqeaje7xTZ5umMTVqEeECZkrvsSy
+\restrict v6zbP09MJ343AgBVzDefXWTee8vOZghH4LTkau2EzCbLBZFhBYL0aqK88tcoect
 
 -- Dumped from database version 17.7
 -- Dumped by pg_dump version 18.1
@@ -507,17 +507,6 @@ COMMENT ON TYPE public.jwt_token IS '@jwt';
 
 
 --
--- Name: payment_status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.payment_status AS ENUM (
-    'tentative',
-    'unpaid',
-    'paid'
-);
-
-
---
 -- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -538,6 +527,77 @@ COMMENT ON FUNCTION public.current_tenant_id() IS '@omit';
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    u_login public.citext,
+    u_pass character(40) NOT NULL,
+    u_jmeno text,
+    u_prijmeni text,
+    u_email public.citext NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    u_confirmed boolean DEFAULT false NOT NULL,
+    u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    last_login timestamp with time zone,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    last_active_at timestamp with time zone,
+    last_version text
+);
+
+
+--
+-- Name: TABLE users; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.users IS '@omit create,update,delete';
+
+
+--
+-- Name: COLUMN users.u_pass; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_pass IS '@omit';
+
+
+--
+-- Name: COLUMN users.u_confirmed; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
+
+
+--
+-- Name: login_result; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.login_result AS (
+	usr public.users,
+	jwt public.jwt_token
+);
+
+
+--
+-- Name: TYPE login_result; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TYPE public.login_result IS '@name result';
+
+
+--
+-- Name: payment_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.payment_status AS ENUM (
+    'tentative',
+    'unpaid',
+    'paid'
+);
+
 
 --
 -- Name: event_lesson_demand; Type: TABLE; Schema: public; Owner: -
@@ -667,8 +727,9 @@ CREATE TABLE public.event_instance (
     since timestamp with time zone NOT NULL,
     until timestamp with time zone NOT NULL,
     location_id bigint,
-    is_cancelled boolean DEFAULT false,
-    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL
+    is_cancelled boolean DEFAULT false NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    CONSTRAINT event_instance_until_gt_since CHECK ((until > since))
 );
 
 
@@ -797,49 +858,6 @@ CREATE FUNCTION app_private.can_trainer_edit_event(eid bigint) RETURNS boolean
     select 1 from event_trainer where eid = event_id
   );
 $$;
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    id bigint NOT NULL,
-    u_login public.citext,
-    u_pass character(40) NOT NULL,
-    u_jmeno text,
-    u_prijmeni text,
-    u_email public.citext NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    u_confirmed boolean DEFAULT false NOT NULL,
-    u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    last_login timestamp with time zone,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    last_active_at timestamp with time zone,
-    last_version text
-);
-
-
---
--- Name: TABLE users; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.users IS '@omit create,update,delete';
-
-
---
--- Name: COLUMN users.u_pass; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_pass IS '@omit';
-
-
---
--- Name: COLUMN users.u_confirmed; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
 
 
 --
@@ -992,6 +1010,71 @@ begin
      execute 'drop policy "' || rec.policyname || '" on ' || tbl;
    end loop;
 end;
+$$;
+
+
+--
+-- Name: tenant_trainer; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_trainer (
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    is_visible boolean DEFAULT true,
+    description text DEFAULT ''::text NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    member_price_45min public.price DEFAULT NULL::public.price_type,
+    member_payout_45min public.price DEFAULT NULL::public.price_type,
+    guest_price_45min public.price DEFAULT NULL::public.price_type,
+    guest_payout_45min public.price DEFAULT NULL::public.price_type,
+    create_payout_payments boolean DEFAULT true NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';
+
+
+--
+-- Name: COLUMN tenant_trainer.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
+
+
+--
+-- Name: event_instance_trainers_at(public.event_instance, timestamp with time zone); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.event_instance_trainers_at(v_instance public.event_instance, v_at timestamp with time zone) RETURNS SETOF public.tenant_trainer
+    LANGUAGE sql STABLE
+    AS $$
+select distinct on (tt.tenant_id, tt.person_id) tt.*
+from (
+  select eit.tenant_id, eit.person_id
+  from event_instance_trainer eit
+  where eit.instance_id = v_instance.id
+
+  union all
+
+  select et.tenant_id, et.person_id
+  from event_trainer et
+  where et.event_id = v_instance.event_id
+    and not exists (select 1 from event_instance_trainer eit2 where eit2.instance_id = v_instance.id)
+) k
+join tenant_trainer tt on tt.tenant_id = k.tenant_id and tt.person_id = k.person_id
+where tt.active_range @> v_at
+order by tt.tenant_id, tt.person_id, lower(tt.active_range) desc;
 $$;
 
 
@@ -1223,21 +1306,6 @@ COMMENT ON FUNCTION app_private.is_system_admin(bigint) IS 'Returns true when th
 
 
 --
--- Name: log_in_as(public.users); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.log_in_as(u public.users) RETURNS TABLE(key text, value text)
-    LANGUAGE sql
-    AS $$
-  select 'jwt.claims.' || kv.key, set_config('jwt.claims.' || kv.key, kv.value, false)
-  from app_private.create_jwt_token(u) j join lateral jsonb_each_text(to_jsonb(j)) kv on true
-  union
-  select 'role', set_config('role', case when is_admin then 'administrator' when is_trainer then 'trainer' when is_member then 'member' else 'anonymous' end, false)
-  from app_private.create_jwt_token(u) j
-$$;
-
-
---
 -- Name: merge_couples(bigint, bigint); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -1367,7 +1435,7 @@ CREATE TABLE public.cohort_membership (
     cohort_id bigint NOT NULL,
     person_id bigint NOT NULL,
     since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone DEFAULT 'infinity'::timestamp with time zone NOT NULL,
+    until timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
@@ -2311,41 +2379,6 @@ $_$;
 
 
 --
--- Name: announcement; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.announcement (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    author_id bigint,
-    title text NOT NULL,
-    body text NOT NULL,
-    is_locked boolean DEFAULT false NOT NULL,
-    is_visible boolean DEFAULT true NOT NULL,
-    is_sticky boolean DEFAULT false NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp with time zone,
-    scheduled_since timestamp with time zone,
-    scheduled_until timestamp with time zone
-);
-
-
---
--- Name: archived_announcements(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.archived_announcements() RETURNS SETOF public.announcement
-    LANGUAGE sql STABLE
-    AS $$
-  select announcement.*
-  from public.announcement
-  where is_visible = false
-     or (scheduled_until is null or scheduled_until >= now())
-  order by created_at desc;
-$$;
-
-
---
 -- Name: attachment_directories(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2555,7 +2588,7 @@ CREATE TABLE public.couple (
     man_id bigint NOT NULL,
     woman_id bigint NOT NULL,
     since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone DEFAULT 'infinity'::timestamp with time zone NOT NULL,
+    until timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     legacy_pary_id bigint,
@@ -3143,33 +3176,22 @@ $_$;
 --
 
 CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_instance) RETURNS TABLE(amount numeric, currency text)
-    LANGUAGE plpgsql STABLE
+    LANGUAGE sql STABLE
     AS $$
-declare
-  num_participants bigint;
-  duration numeric;
-begin
-  num_participants := (select count(*) from event join lateral event_registrants(event.*) on true where event.id=v_instance.event_id);
-  duration = extract(epoch from (v_instance.until - v_instance.since)) / 60;
-
-  if exists (select 1 from event_instance_trainer where instance_id = v_instance.id) then
-    return query
+  with stats as (
     select
-      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / nullif(num_participants, 0))::numeric(19,4), 'NaN') as amount,
-      coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
-    from event_instance_trainer join tenant_trainer on event_instance_trainer.person_id=tenant_trainer.person_id and status='active'
-    where event_instance_trainer.instance_id=v_instance.id and tenant_trainer.tenant_id = event_instance_trainer.tenant_id
-    group by (tenant_trainer.member_price_45min).currency;
-  else
-    return query
-    select
-      coalesce(sum((tenant_trainer.member_price_45min).amount * duration / 45 / nullif(num_participants, 0))::numeric(19,4), 'NaN') as amount,
-      coalesce((tenant_trainer.member_price_45min).currency, 'CZK') as currency
-    from event_trainer join tenant_trainer on event_trainer.person_id=tenant_trainer.person_id and status='active'
-    where event_trainer.event_id=v_instance.event_id and tenant_trainer.tenant_id = event_trainer.tenant_id
-    group by (tenant_trainer.member_price_45min).currency;
-  end if;
-end;
+      (select count(*)
+       from event e
+       join lateral event_registrants(e.*) r on true
+       where e.id = v_instance.event_id)::bigint as num_participants,
+      extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
+  )
+  select
+    coalesce(sum((tt.member_price_45min).amount * s.duration / 45 / nullif(s.num_participants, 0)), 'NaN') as amount,
+    coalesce((tt.member_price_45min).currency, 'CZK') as currency
+  from stats s
+  join lateral public.event_instance_trainers(v_instance) tt on true
+  group by (tt.member_price_45min).currency;
 $$;
 
 
@@ -3236,6 +3258,24 @@ CREATE FUNCTION public.event_instance_trainer_name(t public.event_instance_train
     FROM public.person
    WHERE ((event_instance_trainer_name.t).person_id = person.id);
 END;
+
+
+--
+-- Name: event_instance_trainers(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instance_trainers(v_instance public.event_instance) RETURNS SETOF public.tenant_trainer
+    LANGUAGE sql STABLE
+    AS $$
+select * from app_private.event_instance_trainers_at(v_instance, v_instance.since);
+$$;
+
+
+--
+-- Name: FUNCTION event_instance_trainers(v_instance public.event_instance); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_instance_trainers(v_instance public.event_instance) IS '@simpleCollections only';
 
 
 --
@@ -3728,34 +3768,36 @@ $$;
 -- Name: log_in_as(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.log_in_as(id bigint, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
+CREATE FUNCTION public.log_in_as(id bigint) RETURNS public.login_result
+    LANGUAGE sql STRICT SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $_$
-begin
-  select users.* into usr from users where users.id=$1;
-  jwt := app_private.create_jwt_token(usr);
-end
+  select (
+    (select (users.*)::users from users where users.id = $1),
+    (select app_private.create_jwt_token(users.*) from users where users.id = $1)
+  );
 $_$;
 
 
 --
--- Name: login(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
+-- Name: login(text, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
+CREATE FUNCTION public.login(login text, passwd text) RETURNS public.login_result
+    LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
-  v_salt varchar;
+  v_salt text;
+  usr users;
+  jwt jwt_token;
 begin
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
-  login := trim(login);
-  select users.* into usr from users where lower(u_login) = lower(login) and u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') limit 1;
-  if usr is null then
-    select users.* into usr from users where lower(u_email) = lower(login) and u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') limit 1;
-  end if;
+
+  select u.* into usr
+  from users u
+  where (lower(u.u_login) = lower(trim(login)) or lower(u.u_email) = lower(trim(login)))
+    and u.u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex');
 
   if usr is null then
     raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
@@ -3768,6 +3810,7 @@ begin
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
   update users set last_login = now() where id = usr.id;
+  return (usr, jwt);
 end;
 $$;
 
@@ -3807,47 +3850,65 @@ $$;
 
 
 --
--- Name: my_announcements(boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
+-- Name: announcement; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.my_announcements(archive boolean DEFAULT false, order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
+CREATE TABLE public.announcement (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    author_id bigint,
+    title text NOT NULL,
+    body text NOT NULL,
+    is_locked boolean DEFAULT false NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    is_sticky boolean DEFAULT false NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone,
+    scheduled_since timestamp with time zone,
+    scheduled_until timestamp with time zone
+);
+
+
+--
+-- Name: my_announcements(boolean, boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_announcements(sticky boolean DEFAULT false, archive boolean DEFAULT false, order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
     LANGUAGE sql STABLE
     AS $$
-  with audience_claims as (
-    select
-      translate(coalesce(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '[]'), '[]', '{}')::bigint[] as cohort_ids,
-      coalesce(nullif(current_setting('jwt.claims.is_member', true), '')::boolean, false) as is_member,
-      coalesce(nullif(current_setting('jwt.claims.is_trainer', true), '')::boolean, false) as is_trainer,
-      coalesce(nullif(current_setting('jwt.claims.is_admin', true), '')::boolean, false) as is_admin
-  )
-  select announcement.*
-  from announcement
-  cross join audience_claims ac
-  where is_visible = not archive
-    and is_sticky = false
-    and (scheduled_since is null or scheduled_since <= now())
-    and (scheduled_until is null or scheduled_until >= now())
-    and (
-      not exists (
-        select 1
-        from announcement_audience aa_all
-        where aa_all.announcement_id = announcement.id
+with audience_claims as (
+  select
+    (select array_agg(cohort_id) from current_cohort_membership cm where cm.person_id = any (current_person_ids())) as cohort_ids,
+    (exists (select 1 from current_tenant_membership where person_id = any (current_person_ids()))) as is_member,
+    (exists (select 1 from current_tenant_trainer where person_id = any (current_person_ids()))) as is_trainer,
+    (exists (select 1 from current_tenant_administrator where person_id = any (current_person_ids()))) as is_admin
+)
+select a.*
+from announcement a
+cross join audience_claims ac
+where a.is_sticky = sticky
+  and a.is_visible = case when sticky then true else not archive end
+  and (archive or (a.scheduled_since is null or a.scheduled_since <= now()))
+  and (archive or (a.scheduled_until is null or a.scheduled_until >= now()))
+  and (
+    exists (
+      select 1
+      from announcement_audience aa
+      where aa.announcement_id = a.id and (
+        (aa.cohort_id is not null and aa.cohort_id = any (ac.cohort_ids))
+          or (aa.audience_role = 'member' and ac.is_member)
+          or (aa.audience_role = 'trainer' and ac.is_trainer)
+          or (aa.audience_role = 'administrator' and ac.is_admin)
       )
-      or exists (
-        select 1
-        from announcement_audience aa
-        where aa.announcement_id = announcement.id
-          and (
-            (aa.cohort_id is not null and aa.cohort_id = any (ac.cohort_ids))
-            or (aa.audience_role = 'member' and ac.is_member)
-            or (aa.audience_role = 'trainer' and ac.is_trainer)
-            or (aa.audience_role = 'administrator' and ac.is_admin)
-          )
-      )
+    ) or not exists (
+      select 1
+      from announcement_audience aa_all
+      where aa_all.announcement_id = a.id
     )
-  order by
-    case when order_by_updated then updated_at else created_at end desc,
-    created_at desc;
+  )
+order by
+  case when order_by_updated then a.updated_at else a.created_at end desc,
+  a.created_at desc;
 $$;
 
 
@@ -3973,12 +4034,13 @@ $$;
 -- Name: otp_login(uuid); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+CREATE FUNCTION public.otp_login(token uuid) RETURNS public.login_result
     LANGUAGE plpgsql STRICT SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_token otp_token;
+  usr users;
+  jwt jwt_token;
 begin
   select * into v_token from otp_token where access_token = token and used_at is null and expires_at > now();
   if not found then
@@ -3995,6 +4057,7 @@ begin
 
   update users set last_login = now() where id = usr.id;
   update otp_token set used_at = now() where id = v_token.id;
+  return (usr, jwt);
 end;
 $$;
 
@@ -4447,13 +4510,14 @@ $$;
 -- Name: register_using_invitation(text, text, uuid, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text DEFAULT NULL::text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+CREATE FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text DEFAULT NULL::text) RETURNS public.login_result
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   invitation person_invitation;
   v_salt text;
+  usr users;
+  jwt jwt_token;
 begin
   select * into invitation from person_invitation where access_token=token;
 
@@ -4477,6 +4541,7 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  return (usr, jwt);
 end
 $$;
 
@@ -4485,12 +4550,13 @@ $$;
 -- Name: register_without_invitation(text, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.register_without_invitation(email text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+CREATE FUNCTION public.register_without_invitation(email text, passwd text) RETURNS public.login_result
     LANGUAGE plpgsql STRICT SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_salt text;
+  usr users;
+  jwt jwt_token;
 begin
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
   insert into users (u_email, u_pass) values (email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
@@ -4500,6 +4566,7 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  return (usr, jwt);
 end
 $$;
 
@@ -4794,31 +4861,35 @@ COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id 
 CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_demand
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
-#variable_conflict use_variable
+    AS $_$
 declare
-  event event;
+  v_event event;
   registration event_registration;
-  current_lessons int;
   lesson_demand event_lesson_demand;
 begin
-  select * into registration from event_registration where id = registration_id;
-  select * into event from event where id = registration.event_id;
-  select sum(lesson_count)::int into current_lessons from event_lesson_demand eld where eld.registration_id = registration_id;
+  select * into registration from event_registration where id = $1;
+  select * into v_event from event where id = registration.event_id;
 
-  if lesson_count = 0 then
-    delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = trainer_id;
+  if v_event is null then
+    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
+  end if;
+  if v_event.is_locked = true then
+    raise exception 'NOT_ALLOWED' using errcode = '28000';
+  end if;
+
+  if $3 = 0 then
+    delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = $2;
     return null;
   end if;
 
   INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
-  values (registration.id, trainer_id, lesson_count)
-  on conflict on constraint eld_unique_registration_trainer_key do update set lesson_count = lesson_count
+  values ($1, $2, $3)
+  on conflict on constraint eld_unique_registration_trainer_key do update set lesson_count = $3
   returning * into lesson_demand;
 
   return lesson_demand;
 end;
-$$;
+$_$;
 
 
 --
@@ -6890,7 +6961,7 @@ CREATE TABLE public.tenant_administrator (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     person_id bigint NOT NULL,
     since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone DEFAULT 'infinity'::timestamp with time zone NOT NULL,
+    until timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
@@ -6951,7 +7022,7 @@ CREATE TABLE public.tenant_membership (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     person_id bigint NOT NULL,
     since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone DEFAULT 'infinity'::timestamp with time zone NOT NULL,
+    until timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
@@ -6998,45 +7069,6 @@ CREATE VIEW public.current_tenant_membership AS
 --
 
 COMMENT ON VIEW public.current_tenant_membership IS '@omit';
-
-
---
--- Name: tenant_trainer; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tenant_trainer (
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone DEFAULT 'infinity'::timestamp with time zone NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    is_visible boolean DEFAULT true,
-    description text DEFAULT ''::text NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    member_price_45min public.price DEFAULT NULL::public.price_type,
-    member_payout_45min public.price DEFAULT NULL::public.price_type,
-    guest_price_45min public.price DEFAULT NULL::public.price_type,
-    guest_payout_45min public.price DEFAULT NULL::public.price_type,
-    create_payout_payments boolean DEFAULT true NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
-);
-
-
---
--- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';
-
-
---
--- Name: COLUMN tenant_trainer.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
 
 
 --
@@ -7650,8 +7682,8 @@ CREATE TABLE public.user_proxy (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone DEFAULT 'infinity'::timestamp with time zone NOT NULL,
+    since timestamp with time zone DEFAULT now(),
+    until timestamp with time zone,
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
     CONSTRAINT user_proxy_until_gt_since CHECK ((until > since))
@@ -13047,41 +13079,6 @@ GRANT ALL ON FUNCTION public.current_tenant_id() TO anonymous;
 
 
 --
--- Name: TABLE event_lesson_demand; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
-
-
---
--- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_instance TO anonymous;
-
-
---
--- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_registration TO anonymous;
-
-
---
--- Name: TABLE payment; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.payment TO anonymous;
-
-
---
--- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.transaction TO anonymous;
-
-
---
 -- Name: TABLE users; Type: ACL; Schema: public; Owner: -
 --
 
@@ -13128,6 +13125,55 @@ GRANT INSERT(u_prijmeni) ON TABLE public.users TO anonymous;
 --
 
 GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
+
+
+--
+-- Name: TABLE event_lesson_demand; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
+
+
+--
+-- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_instance TO anonymous;
+
+
+--
+-- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_registration TO anonymous;
+
+
+--
+-- Name: TABLE payment; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.payment TO anonymous;
+
+
+--
+-- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.transaction TO anonymous;
+
+
+--
+-- Name: TABLE tenant_trainer; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
+
+
+--
+-- Name: FUNCTION event_instance_trainers_at(v_instance public.event_instance, v_at timestamp with time zone); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.event_instance_trainers_at(v_instance public.event_instance, v_at timestamp with time zone) TO anonymous;
 
 
 --
@@ -13198,20 +13244,6 @@ GRANT ALL ON TABLE public.cohort TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.archive_cohort(cohort_id bigint) TO administrator;
-
-
---
--- Name: TABLE announcement; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.announcement TO anonymous;
-
-
---
--- Name: FUNCTION archived_announcements(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.archived_announcements() TO anonymous;
 
 
 --
@@ -13432,6 +13464,13 @@ GRANT ALL ON FUNCTION public.event_instance_trainer_name(t public.event_instance
 
 
 --
+-- Name: FUNCTION event_instance_trainers(v_instance public.event_instance); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_instance_trainers(v_instance public.event_instance) TO anonymous;
+
+
+--
 -- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], only_mine boolean); Type: ACL; Schema: public; Owner: -
 --
 
@@ -13565,17 +13604,17 @@ GRANT ALL ON FUNCTION public.invitation_name(token uuid) TO anonymous;
 
 
 --
--- Name: FUNCTION log_in_as(id bigint, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION log_in_as(id bigint); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.log_in_as(id bigint, OUT usr public.users, OUT jwt public.jwt_token) TO administrator;
+GRANT ALL ON FUNCTION public.log_in_as(id bigint) TO administrator;
 
 
 --
--- Name: FUNCTION login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION login(login text, passwd text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.login(login text, passwd text) TO anonymous;
 
 
 --
@@ -13586,10 +13625,17 @@ GRANT ALL ON FUNCTION public.move_event_instance(id bigint, since timestamp with
 
 
 --
--- Name: FUNCTION my_announcements(archive boolean, order_by_updated boolean); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE announcement; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.my_announcements(archive boolean, order_by_updated boolean) TO anonymous;
+GRANT ALL ON TABLE public.announcement TO anonymous;
+
+
+--
+-- Name: FUNCTION my_announcements(sticky boolean, archive boolean, order_by_updated boolean); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_announcements(sticky boolean, archive boolean, order_by_updated boolean) TO anonymous;
 
 
 --
@@ -13614,10 +13660,10 @@ GRANT ALL ON FUNCTION public.my_tenants_array() TO anonymous;
 
 
 --
--- Name: FUNCTION otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION otp_login(token uuid); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.otp_login(token uuid) TO anonymous;
 
 
 --
@@ -13775,17 +13821,17 @@ GRANT ALL ON FUNCTION public.register_to_event_many(registrations public.registe
 
 
 --
--- Name: FUNCTION register_using_invitation(email text, passwd text, token uuid, login text, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION register_using_invitation(email text, passwd text, token uuid, login text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text) TO anonymous;
 
 
 --
--- Name: FUNCTION register_without_invitation(email text, passwd text, OUT usr public.users, OUT jwt public.jwt_token); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION register_without_invitation(email text, passwd text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.register_without_invitation(email text, passwd text, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.register_without_invitation(email text, passwd text) TO anonymous;
 
 
 --
@@ -14385,13 +14431,6 @@ GRANT SELECT ON TABLE public.current_tenant_membership TO anonymous;
 
 
 --
--- Name: TABLE tenant_trainer; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
-
-
---
 -- Name: TABLE current_tenant_trainer; Type: ACL; Schema: public; Owner: -
 --
 
@@ -14598,5 +14637,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Z9MEInjtwgm56MynHxINspkLDrthvZvYLGydqeaje7xTZ5umMTVqEeECZkrvsSy
+\unrestrict v6zbP09MJ343AgBVzDefXWTee8vOZghH4LTkau2EzCbLBZFhBYL0aqK88tcoect
 

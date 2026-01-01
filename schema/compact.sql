@@ -52,7 +52,7 @@ CREATE TABLE public.couple (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
+  until timestamp with time zone,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   legacy_pary_id bigint,
@@ -133,7 +133,7 @@ CREATE TABLE public.cohort_membership (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
+  until timestamp with time zone,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
@@ -219,7 +219,7 @@ CREATE TABLE public.tenant_administrator (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
+  until timestamp with time zone,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
@@ -288,8 +288,9 @@ CREATE TABLE public.event_instance (
   since timestamp with time zone NOT NULL,
   until timestamp with time zone NOT NULL,
   location_id bigint REFERENCES public.tenant_location (id),
-  is_cancelled boolean DEFAULT false,
-  range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL
+  is_cancelled boolean DEFAULT false NOT NULL,
+  range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+  CHECK (until > since)
 );
 
 CREATE TABLE public.event_instance_trainer (
@@ -474,7 +475,7 @@ CREATE TABLE public.tenant_membership (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
+  until timestamp with time zone,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
@@ -498,7 +499,7 @@ CREATE TABLE public.tenant_trainer (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
+  until timestamp with time zone,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
@@ -719,8 +720,8 @@ CREATE TABLE public.user_proxy (
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL PRIMARY KEY,
-  since timestamp with time zone DEFAULT now() NOT NULL,
-  until timestamp with time zone DEFAULT CAST('infinity' AS timestamp with time zone) NOT NULL,
+  since timestamp with time zone DEFAULT now(),
+  until timestamp with time zone,
   active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
   CHECK (until > since),
@@ -1220,6 +1221,8 @@ CREATE TYPE public.event_trainer_type_input AS (id bigint, person_id bigint, les
 CREATE TYPE public.event_type_input AS (id bigint, name text, summary text, description text, description_member text, type public.event_type, location_id bigint, location_text text, capacity int, is_visible boolean, is_public boolean, is_locked boolean, enable_notes boolean, payment_type public.event_payment_type, member_price public.price, guest_price public.price);
 
 CREATE TYPE public.jwt_token AS (exp int, user_id bigint, tenant_id bigint, username text, email text, my_person_ids pg_catalog.json, my_tenant_ids pg_catalog.json, my_cohort_ids pg_catalog.json, my_couple_ids pg_catalog.json, is_member boolean, is_trainer boolean, is_admin boolean, is_system_admin boolean);
+
+CREATE TYPE public.login_result AS (usr public.users, jwt public.jwt_token);
 
 CREATE TYPE public.register_to_event_type AS (event_id bigint, person_id bigint, couple_id bigint, note text, lessons public.event_lesson_demand[]);
 

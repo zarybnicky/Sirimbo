@@ -1,0 +1,39 @@
+CREATE FUNCTION public.my_announcements(sticky boolean DEFAULT false, archive boolean DEFAULT false, order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
+    LANGUAGE sql STABLE
+    AS $$
+with audience_claims as (
+  select
+    (select array_agg(cohort_id) from current_cohort_membership cm where cm.person_id = any (current_person_ids())) as cohort_ids,
+    (exists (select 1 from current_tenant_membership where person_id = any (current_person_ids()))) as is_member,
+    (exists (select 1 from current_tenant_trainer where person_id = any (current_person_ids()))) as is_trainer,
+    (exists (select 1 from current_tenant_administrator where person_id = any (current_person_ids()))) as is_admin
+)
+select a.*
+from announcement a
+cross join audience_claims ac
+where a.is_sticky = sticky
+  and a.is_visible = case when sticky then true else not archive end
+  and (archive or (a.scheduled_since is null or a.scheduled_since <= now()))
+  and (archive or (a.scheduled_until is null or a.scheduled_until >= now()))
+  and (
+    exists (
+      select 1
+      from announcement_audience aa
+      where aa.announcement_id = a.id and (
+        (aa.cohort_id is not null and aa.cohort_id = any (ac.cohort_ids))
+          or (aa.audience_role = 'member' and ac.is_member)
+          or (aa.audience_role = 'trainer' and ac.is_trainer)
+          or (aa.audience_role = 'administrator' and ac.is_admin)
+      )
+    ) or not exists (
+      select 1
+      from announcement_audience aa_all
+      where aa_all.announcement_id = a.id
+    )
+  )
+order by
+  case when order_by_updated then a.updated_at else a.created_at end desc,
+  a.created_at desc;
+$$;
+
+GRANT ALL ON FUNCTION public.my_announcements(sticky boolean, archive boolean, order_by_updated boolean) TO anonymous;

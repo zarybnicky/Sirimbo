@@ -1,16 +1,18 @@
-CREATE FUNCTION public.login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
+CREATE FUNCTION public.login(login text, passwd text) RETURNS public.login_result
+    LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
-  v_salt varchar;
+  v_salt text;
+  usr users;
+  jwt jwt_token;
 begin
   select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
-  login := trim(login);
-  select users.* into usr from users where lower(u_login) = lower(login) and u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') limit 1;
-  if usr is null then
-    select users.* into usr from users where lower(u_email) = lower(login) and u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') limit 1;
-  end if;
+
+  select u.* into usr
+  from users u
+  where (lower(u.u_login) = lower(trim(login)) or lower(u.u_email) = lower(trim(login)))
+    and u.u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex');
 
   if usr is null then
     raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
@@ -23,7 +25,8 @@ begin
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
   update users set last_login = now() where id = usr.id;
+  return (usr, jwt);
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.login(login character varying, passwd character varying, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.login(login text, passwd text) TO anonymous;

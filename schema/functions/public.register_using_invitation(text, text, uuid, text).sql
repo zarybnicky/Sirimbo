@@ -1,10 +1,11 @@
-CREATE FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text DEFAULT NULL::text, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+CREATE FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text DEFAULT NULL::text) RETURNS public.login_result
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   invitation person_invitation;
   v_salt text;
+  usr users;
+  jwt jwt_token;
 begin
   select * into invitation from person_invitation where access_token=token;
 
@@ -28,7 +29,8 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  return (usr, jwt);
 end
 $$;
 
-GRANT ALL ON FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text) TO anonymous;

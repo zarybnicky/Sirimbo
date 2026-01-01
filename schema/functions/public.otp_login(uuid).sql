@@ -1,9 +1,10 @@
-CREATE FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) RETURNS record
+CREATE FUNCTION public.otp_login(token uuid) RETURNS public.login_result
     LANGUAGE plpgsql STRICT SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_token otp_token;
+  usr users;
+  jwt jwt_token;
 begin
   select * into v_token from otp_token where access_token = token and used_at is null and expires_at > now();
   if not found then
@@ -20,7 +21,8 @@ begin
 
   update users set last_login = now() where id = usr.id;
   update otp_token set used_at = now() where id = v_token.id;
+  return (usr, jwt);
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.otp_login(token uuid, OUT usr public.users, OUT jwt public.jwt_token) TO anonymous;
+GRANT ALL ON FUNCTION public.otp_login(token uuid) TO anonymous;

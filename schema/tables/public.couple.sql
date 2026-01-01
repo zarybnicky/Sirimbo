@@ -3,7 +3,7 @@ CREATE TABLE public.couple (
     man_id bigint NOT NULL,
     woman_id bigint NOT NULL,
     since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone DEFAULT 'infinity'::timestamp with time zone NOT NULL,
+    until timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     legacy_pary_id bigint,

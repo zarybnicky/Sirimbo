@@ -4,8 +4,8 @@ CREATE TABLE public.user_proxy (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone DEFAULT 'infinity'::timestamp with time zone NOT NULL,
+    since timestamp with time zone DEFAULT now(),
+    until timestamp with time zone,
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
     CONSTRAINT user_proxy_until_gt_since CHECK ((until > since))
