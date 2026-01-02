@@ -228,13 +228,8 @@ query EventInstanceWithAttendance($id: BigInt!) {
   }
 }
 
-query EventList($first: Int, $cursor: Cursor) {
-  events(
-    first: $first
-    after: $cursor
-    orderBy: [SINCE_DESC]
-    condition: { type: CAMP }
-  ) {
+query EventList {
+  events(condition: { type: CAMP }) {
     totalCount
     edges {
       cursor

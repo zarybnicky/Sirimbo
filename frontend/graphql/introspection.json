@@ -6707,14 +6707,6 @@
             "args": []
           },
           {
-            "name": "since",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "summary",
             "type": {
               "kind": "NON_NULL",
@@ -6761,14 +6753,6 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
-            },
-            "args": []
-          },
-          {
-            "name": "until",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },

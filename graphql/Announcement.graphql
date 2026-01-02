@@ -31,7 +31,7 @@ fragment Announcement on Announcement {
 }
 
 query StickyAnnouncements($orderByUpdated: Boolean) {
-  myAnnouncements(sticky: true, orderByUpdated: $orderByUpdated) {
+  stickyAnnouncements: myAnnouncements(sticky: true, orderByUpdated: $orderByUpdated) {
     totalCount
     nodes {
       ...Announcement

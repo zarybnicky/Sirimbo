@@ -2960,14 +2960,12 @@ export type Event = {
   registrantsList: Maybe<Array<Person>>;
   remainingLessons: Maybe<Scalars['Int']['output']>;
   remainingPersonSpots: Maybe<Scalars['Int']['output']>;
-  since: Maybe<Scalars['Date']['output']>;
   summary: Scalars['String']['output'];
   /** Reads a single `Tenant` that is related to this `Event`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
   titleImageLegacy: Maybe<Scalars['String']['output']>;
   type: EventType;
-  until: Maybe<Scalars['Date']['output']>;
   updatedAt: Maybe<Scalars['Datetime']['output']>;
 };
 
@@ -3151,8 +3149,6 @@ export type EventCondition = {
   paymentRecipientId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `paymentType` field. */
   paymentType?: InputMaybe<EventPaymentType>;
-  /** Checks for equality with the object’s `since` field. */
-  since?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `summary` field. */
   summary?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -3161,8 +3157,6 @@ export type EventCondition = {
   titleImageLegacy?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<EventType>;
-  /** Checks for equality with the object’s `until` field. */
-  until?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -3309,12 +3303,10 @@ export type EventInput = {
   name: Scalars['String']['input'];
   paymentRecipientId?: InputMaybe<Scalars['BigInt']['input']>;
   paymentType?: InputMaybe<EventPaymentType>;
-  since?: InputMaybe<Scalars['Date']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   titleImageLegacy?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<EventType>;
-  until?: InputMaybe<Scalars['Date']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -3664,12 +3656,10 @@ export type EventPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   paymentRecipientId?: InputMaybe<Scalars['BigInt']['input']>;
   paymentType?: InputMaybe<EventPaymentType>;
-  since?: InputMaybe<Scalars['Date']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   titleImageLegacy?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<EventType>;
-  until?: InputMaybe<Scalars['Date']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -4112,8 +4102,6 @@ export type EventsOrderBy =
   | 'PAYMENT_TYPE_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'SINCE_ASC'
-  | 'SINCE_DESC'
   | 'SUMMARY_ASC'
   | 'SUMMARY_DESC'
   | 'TENANT_ID_ASC'
@@ -4122,8 +4110,6 @@ export type EventsOrderBy =
   | 'TITLE_IMAGE_LEGACY_DESC'
   | 'TYPE_ASC'
   | 'TYPE_DESC'
-  | 'UNTIL_ASC'
-  | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
@@ -10588,13 +10574,11 @@ export type GraphCacheResolvers = {
     registrantsList?: GraphCacheResolver<WithTypename<Event>, EventRegistrantsListArgs, Array<WithTypename<Person> | string>>,
     remainingLessons?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
     remainingPersonSpots?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
-    since?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Date'] | string>,
     summary?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     tenant?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     titleImageLegacy?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     type?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, EventType | string>,
-    until?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Date'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Datetime'] | string>
   },
   EventAttendance?: {
@@ -12449,13 +12433,11 @@ export type GraphCacheUpdaters = {
     registrantsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventRegistrantsListArgs>,
     remainingLessons?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     remainingPersonSpots?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
-    since?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     summary?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     titleImageLegacy?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     type?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
-    until?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>
   },
   EventAttendance?: {
