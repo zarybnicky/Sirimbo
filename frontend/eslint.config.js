@@ -71,7 +71,7 @@ export default defineConfig([
         {
           unusedExports: true,
           ignoreExports: ['pages/**'],
-          ignoreUnusedTypeExports: false,
+          ignoreUnusedTypeExports: true,
         },
       ],
 
