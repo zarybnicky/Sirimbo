@@ -119,7 +119,6 @@ fragment EventRegistration on EventRegistration {
   note
   eventId
   personId
-  lastAttended
   person {
     id
     name

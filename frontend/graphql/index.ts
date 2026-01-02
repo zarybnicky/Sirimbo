@@ -6240,8 +6240,6 @@ export type Query = {
   scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
   /** Reads a set of `ScoreboardManualAdjustment`. */
   scoreboardManualAdjustmentsList: Maybe<Array<ScoreboardManualAdjustment>>;
-  /** Reads and enables pagination through a set of `Announcement`. */
-  stickyAnnouncements: Maybe<AnnouncementsConnection>;
   /** Lists tenants with aggregate membership, staffing, and recent session statistics for system administrators. */
   systemAdminTenants: Maybe<SystemAdminTenantsConnection>;
   /** Get a single `Tenant`. */
@@ -6949,17 +6947,6 @@ export type QueryScoreboardManualAdjustmentsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ScoreboardManualAdjustmentsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryStickyAnnouncementsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderByUpdated?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -9903,7 +9890,6 @@ export type GraphCacheResolvers = {
     scoreboardEntriesList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardEntriesListArgs, Array<WithTypename<ScoreboardRecord> | string>>,
     scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardManualAdjustmentArgs, WithTypename<ScoreboardManualAdjustment> | string>,
     scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
-    stickyAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     systemAdminTenants?: GraphCacheResolver<WithTypename<Query>, QuerySystemAdminTenantsArgs, WithTypename<SystemAdminTenantsConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<Query>, QueryTenantArgs, WithTypename<Tenant> | string>,
     tenantAdministrator?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorArgs, WithTypename<TenantAdministrator> | string>,
@@ -11671,7 +11657,6 @@ export type GraphCacheUpdaters = {
     scoreboardEntriesList?: GraphCacheUpdateResolver<{ scoreboardEntriesList: Maybe<Array<WithTypename<ScoreboardRecord>>> }, QueryScoreboardEntriesListArgs>,
     scoreboardManualAdjustment?: GraphCacheUpdateResolver<{ scoreboardManualAdjustment: Maybe<WithTypename<ScoreboardManualAdjustment>> }, QueryScoreboardManualAdjustmentArgs>,
     scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<{ scoreboardManualAdjustmentsList: Maybe<Array<WithTypename<ScoreboardManualAdjustment>>> }, QueryScoreboardManualAdjustmentsListArgs>,
-    stickyAnnouncements?: GraphCacheUpdateResolver<{ stickyAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryStickyAnnouncementsArgs>,
     systemAdminTenants?: GraphCacheUpdateResolver<{ systemAdminTenants: Maybe<WithTypename<SystemAdminTenantsConnection>> }, QuerySystemAdminTenantsArgs>,
     tenant?: GraphCacheUpdateResolver<{ tenant: Maybe<WithTypename<Tenant>> }, QueryTenantArgs>,
     tenantAdministrator?: GraphCacheUpdateResolver<{ tenantAdministrator: Maybe<WithTypename<TenantAdministrator>> }, QueryTenantAdministratorArgs>,
