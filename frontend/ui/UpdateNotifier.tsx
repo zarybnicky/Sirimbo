@@ -1,71 +1,80 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
-import { Serwist as SerwistWindow } from "@serwist/window";
+import { Serwist, SerwistLifecycleEvent } from '@serwist/window';
 
 const CHECK_MS = 5 * 60 * 1000;
 
-export function UpdateNotifier() {
-  const swwRef = useRef<InstanceType<typeof SerwistWindow> | undefined>();
+export const UpdateNotifier = React.memo(function UpdateNotifier() {
   const toastRef = useRef<string | number | undefined>();
 
   useEffect(() => {
-    if (!("serviceWorker" in navigator)) return;
+    if (!('serviceWorker' in navigator)) return;
 
-    const serwist = new SerwistWindow("/sw.js", { scope: "/", type: "classic" });
-    swwRef.current = serwist;
+    const serwist = new Serwist('/sw.js', { scope: '/', type: 'classic' });
 
-    const onControlling = () => {
+    const showToast = () => {
       if (toastRef.current) return;
-      toastRef.current = toast.warn((
+
+      toastRef.current = toast.warn(
         <>
-          <b>Je k dispozici nová verze aplikace.</b>
-          {' '}
-          Kliknutím zde ji aktualizujete.
-        </>
-      ), {
-        autoClose: false,
-        closeOnClick: true,
-        onClick() {
-          window.location.reload();
+          <b>Je k dispozici nová verze aplikace.</b> Kliknutím zde ji aktualizujete.
+        </>,
+        {
+          autoClose: false,
+          closeOnClick: true,
+          onClick: () => window.location.reload(),
+          onClose: () => {
+            toastRef.current = undefined;
+          },
         },
-        onClose() {
-          toastRef.current = undefined;
-        },
-      });
+      );
     };
-    serwist.addEventListener("controlling", onControlling);
-    navigator.serviceWorker.addEventListener("controllerchange", onControlling);
 
-    const check = () => navigator.serviceWorker.getRegistration().then(x => x?.update());
-    void serwist.register().then(() => {
-      let t: number | undefined;
-      const start = () => {
-        if (t) return;
-        if (document.visibilityState !== "visible") return;
-        t = window.setInterval(check, CHECK_MS);
-        void check();
-      };
-      const stop = () => { if (t) { clearInterval(t); t = undefined; } };
+    const onInstalled = (event: SerwistLifecycleEvent) => {
+      if (event?.isUpdate) showToast();
+    };
+    serwist.addEventListener('installed', onInstalled);
 
-      start();
-      const onVisible = () => document.visibilityState === "visible" ? start() : stop();
-      document.addEventListener("visibilitychange", onVisible);
-      window.addEventListener("pagehide", stop);
+    let interval: number | undefined;
+    const start = () => {
+      if (interval) return;
 
-      return () => {
-        stop();
-        document.removeEventListener("visibilitychange", onVisible);
-        window.removeEventListener("pagehide", stop);
-      };
-    }, () => {
-      // Ignore failed SW registration
-    });
+      const check = () =>
+        navigator.serviceWorker
+          .getRegistration('/')
+          .then((r) => r?.update())
+          .catch(() => {});
+
+      if (document.visibilityState !== 'visible') return;
+      interval = window.setInterval(check, CHECK_MS);
+      void check();
+    };
+
+    const stop = () => {
+      if (!interval) return;
+      clearInterval(interval);
+      interval = undefined;
+    };
+
+    const onVisibility = () =>
+      document.visibilityState === 'visible' ? start() : stop();
+
+    void serwist
+      .register()
+      .then(() => {
+        start();
+        document.addEventListener('visibilitychange', onVisibility);
+        window.addEventListener('pagehide', stop);
+      })
+      .catch(() => {});
 
     return () => {
-      serwist.removeEventListener?.("controlling", onControlling);
-      navigator.serviceWorker.removeEventListener("controllerchange", onControlling);
+      stop();
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', stop);
+      serwist.removeEventListener('installed', onInstalled);
     };
   }, []);
 
   return null;
-}
+});

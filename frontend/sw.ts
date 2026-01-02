@@ -1,32 +1,38 @@
-import { defaultCache } from "@serwist/next/worker";
-import { disableDevLogs, Serwist, type PrecacheEntry, Strategy, ExpirationPlugin, NetworkFirst } from 'serwist';
+import { defaultCache } from '@serwist/next/worker';
+import {
+  disableDevLogs,
+  Serwist,
+  type PrecacheEntry,
+  Strategy,
+  ExpirationPlugin,
+  NetworkFirst,
+} from 'serwist';
 
 declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: Array<PrecacheEntry | string> | undefined;
 };
 
 const serwist = new Serwist({
-  precacheEntries: self.__SW_MANIFEST!,
+  precacheEntries: self.__SW_MANIFEST ?? [],
   skipWaiting: true,
-  clientsClaim: true,
+  clientsClaim: false,
   runtimeCaching: [
     {
       matcher: /\/_vercel\/.+\.js$/i,
       handler: new NetworkFirst({
-        cacheName: "vercel-static-js-assets",
+        cacheName: 'vercel-static-js-assets',
         plugins: [
           new ExpirationPlugin({
             maxEntries: 64,
             maxAgeSeconds: 24 * 60 * 60, // 24 hours
-            maxAgeFrom: "last-used",
+            maxAgeFrom: 'last-used',
           }),
         ],
       }),
     },
-    ...defaultCache.filter(x => {
+    ...defaultCache.filter((x) => {
       if (!(x.handler instanceof Strategy)) return true;
-      if (x.handler.cacheName === 'cross-origin') return false;
-      return true;
+      return x.handler.cacheName !== 'cross-origin';
     }),
   ],
   precacheOptions: {
@@ -48,10 +54,10 @@ type PushPayload = {
   requireInteraction?: boolean;
 };
 
-self.addEventListener('push', event => {
+self.addEventListener('push', (event) => {
   let payload: PushPayload = {};
   try {
-    payload = event.data?.json() as PushPayload || {};
+    payload = (event.data?.json() as PushPayload) || {};
   } catch (error) {
     console.warn('service-worker: failed to parse push payload as JSON', error);
     payload = { body: event.data?.text() };
@@ -69,13 +75,16 @@ self.addEventListener('push', event => {
   event.waitUntil(self.registration.showNotification(title, notificationOptions));
 });
 
-self.addEventListener('notificationclick', event => {
+self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const targetUrl = (event.notification.data as { url?: string } | undefined)?.url;
 
   event.waitUntil(
     (async () => {
-      const allClients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      const allClients = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true,
+      });
       for (const client of allClients) {
         if ('focus' in client) {
           if (targetUrl && 'navigate' in client && client.url !== targetUrl) {
