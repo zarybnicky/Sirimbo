@@ -5,7 +5,12 @@ import type { CalendarEvent, DragDirection, Resource } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { type DragSubject, calendarConflictsFor, dragSubjectAtom, isDraggingAtom } from './state';
+import {
+  calendarConflictsFor,
+  type DragSubject,
+  dragSubjectAtom,
+  isDraggingAtom,
+} from './state';
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
@@ -57,27 +62,38 @@ function TimeGridEvent({
   const { useTrainerInitials } = useAtomValue(tenantConfigAtom);
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
-  const getCurrentEvent = useCallback((v: DragSubject) => v?.event === event ? v : null, [event]);
+  const getCurrentEvent = useCallback(
+    (v: DragSubject) => (v?.event === event ? v : null),
+    [event],
+  );
   const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
 
-  const conflictsAtom = React.useMemo(() => calendarConflictsFor(event.instance.id), [event.instance.id]);
+  const conflictsAtom = React.useMemo(
+    () => calendarConflictsFor(event.instance.id),
+    [event.instance.id],
+  );
   const conflicts = useAtomValue(conflictsAtom);
-  const hasConflicts = conflicts.length > 0;
   const conflictNames = React.useMemo(
-    () => conflicts.map((conflict) => conflict.personName ?? conflict.fallbackName).join(', '),
+    () =>
+      conflicts
+        .map((conflict) => conflict.personName ?? conflict.fallbackName)
+        .join(', '),
     [conflicts],
   );
-  const conflictSummary = React.useMemo(() => {
-    if (!hasConflicts) return '';
-    return conflicts
-      .map((conflict) => {
-        const person = conflict.personName ?? conflict.fallbackName;
-        const otherSince = shortTimeIntl.format(new Date(conflict.otherSince));
-        const otherUntil = shortTimeIntl.format(new Date(conflict.otherUntil));
-        return `${person}: ${conflict.otherEventName} (${otherSince}–${otherUntil})`;
-      })
-      .join(' • ');
-  }, [conflicts, hasConflicts]);
+  const conflictSummary = React.useMemo(
+    () =>
+      conflicts
+        .map((conflict) => {
+          const person = conflict.personName ?? conflict.fallbackName;
+          const range = shortTimeIntl.formatRange(
+            new Date(conflict.otherSince),
+            new Date(conflict.otherUntil),
+          );
+          return `${person}: ${conflict.otherEventName} (${range})`;
+        })
+        .join(' • '),
+    [conflicts],
+  );
 
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
@@ -97,7 +113,11 @@ function TimeGridEvent({
       }
       const resizeDirection = (e.target as HTMLElement).dataset.resize;
       if (isResizable && resizeDirection) {
-        setDragSubject({ action: 'resize', event, direction: resizeDirection as DragDirection });
+        setDragSubject({
+          action: 'resize',
+          event,
+          direction: resizeDirection as DragDirection,
+        });
       } else if (isDraggable) {
         event.sourceResource = resource;
         setDragSubject({ action: 'move', event });
@@ -181,12 +201,15 @@ function TimeGridEvent({
           'rounded-b-none': continuesAfter,
           'rbc-dragged-event': isDragging && currentDragSubject,
           'pl-3': event.event.eventTargetCohortsList.length > 0,
-          'relative': true,
+          relative: true,
         })}
       >
-        {hasConflicts && (
+        {conflicts.length > 0 && (
           <>
-            <div className="absolute right-1 top-1 text-accent-11 drop-shadow" aria-hidden>
+            <div
+              className="absolute right-1 top-1 text-accent-11 drop-shadow"
+              aria-hidden
+            >
               <AlertTriangle className="size-4" />
             </div>
             <span className="sr-only">Kolize: {conflictNames}</span>
@@ -194,9 +217,16 @@ function TimeGridEvent({
         )}
         {event.event.eventTargetCohortsList.length > 0 && (
           <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-sm inset-y-0 left-0 flex flex-col">
-            {event.event.eventTargetCohortsList.map(x => x.cohort?.colorRgb).filter(isTruthy).map(color => (
-              <div key={color} className="flex-1 w-2" style={{ backgroundColor: color }} />
-            ))}
+            {event.event.eventTargetCohortsList
+              .map((x) => x.cohort?.colorRgb)
+              .filter(isTruthy)
+              .map((color) => (
+                <div
+                  key={color}
+                  className="flex-1 w-2"
+                  style={{ backgroundColor: color }}
+                />
+              ))}
           </div>
         )}
         {!continuesPrior && isResizable && (
@@ -206,7 +236,9 @@ function TimeGridEvent({
           />
         )}
 
-        <div className={`rbc-event-content${event.instance.isCancelled ? ' line-through' : ''}`}>
+        <div
+          className={`rbc-event-content${event.instance.isCancelled ? ' line-through' : ''}`}
+        >
           {title}
         </div>
         <div className="rbc-event-label">{label}</div>

@@ -6,7 +6,7 @@ import {
   formatWeekDay,
   shortTimeFormatter,
 } from '@/ui/format';
-import { startOf } from 'date-arithmetic';
+import { add, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
 import type { CalendarEvent, ViewProps } from '../types';
@@ -14,7 +14,6 @@ import { cn } from '@/ui/cn';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { useAuth } from '@/ui/use-auth';
-import { add } from 'date-arithmetic';
 import { cardCls } from '@/ui/style';
 import { z } from 'zod';
 import { EventForm } from '@/ui/event-form/types';
@@ -83,7 +82,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
             {formatWeekDay(new Date(date))}
           </div>
 
-          <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-accent-10">
+          <div className="flex justify-start flex-wrap gap-2">
             {dateEntry.groups.map((calendarEvent) => (
               <GroupLesson
                 key={calendarEvent.instance.id}
@@ -107,7 +106,6 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
     [instance.id],
   );
   const conflicts = useAtomValue(conflictsAtom);
-  const hasConflicts = conflicts.length > 0;
   const conflictNames = React.useMemo(
     () =>
       conflicts
@@ -115,27 +113,30 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
         .join(', '),
     [conflicts],
   );
-  const conflictSummary = React.useMemo(() => {
-    if (!hasConflicts) return '';
-    return conflicts
-      .map((conflict) => {
-        const person = conflict.personName ?? conflict.fallbackName;
-        const otherSince = shortTimeFormatter.format(new Date(conflict.otherSince));
-        const otherUntil = shortTimeFormatter.format(new Date(conflict.otherUntil));
-        return `${person}: ${conflict.otherEventName} (${otherSince}–${otherUntil})`;
-      })
-      .join(' • ');
-  }, [conflicts, hasConflicts]);
+  const conflictSummary = React.useMemo(
+    () =>
+      conflicts
+        .map((conflict) => {
+          const person = conflict.personName ?? conflict.fallbackName;
+          const range = shortTimeFormatter.formatRange(
+            new Date(conflict.otherSince),
+            new Date(conflict.otherUntil),
+          );
+          return `${person}: ${conflict.otherEventName} (${range})`;
+        })
+        .join(' • '),
+    [conflicts],
+  );
   return (
     <div
       className={cardCls({
         className:
           'group min-w-[200px] w-72 rounded-lg border-accent-7 border' +
-          (event.eventTargetCohortsList.length > 0 ? ' pl-6' : ' pl-3'),
+          (event.eventTargetCohortsList.length > 0 ? ' pl-5' : ' pl-3'),
       })}
       title={conflictSummary ? `Kolize – ${conflictSummary}` : undefined}
     >
-      {hasConflicts && (
+      {conflicts.length > 0 && (
         <>
           <div className="absolute right-8 top-3 text-accent-11" aria-hidden>
             <AlertTriangle className="size-4" />
@@ -208,7 +209,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
   return (
     <div
       className={cardCls({
-        className: 'group min-w-[200px] w-72 pl-1 rounded-lg border-accent-7 border',
+        className: 'group min-w-[200px] w-72 p-1 pt-3 rounded-lg border-accent-7 border',
       })}
     >
       {auth.isTrainerOrAdmin && (
@@ -225,8 +226,8 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
         </Dialog>
       )}
 
-      <div className="ml-3 text-sm text-accent-11">{location}</div>
-      <div className="ml-3 text-xl mb-1">
+      <div className="ml-2 text-sm text-accent-11">{location}</div>
+      <div className="ml-2 text-xl mb-1">
         {(items[0]?.instance.trainersList ?? []).map((x) => x.person?.name).join(', ')}
       </div>
       {items.map((item) => (

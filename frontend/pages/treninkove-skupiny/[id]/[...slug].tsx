@@ -1,8 +1,5 @@
 import { Layout } from '@/ui/Layout';
-import {
-  CohortWithMembersDocument,
-  type CohortWithMembersQuery,
-} from '@/graphql/Cohorts';
+import { CohortWithMembersDocument } from '@/graphql/Cohorts';
 import { CohortList } from '@/ui/lists/CohortList';
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
@@ -140,9 +137,9 @@ function TrainingCohortPage() {
                 )}
               </div>
               <div className="flex lg:flex-col order-3 lg:order-2 gap-1">
-                {(membership.person?.cstsProgressList ?? []).filter(
+                {(membership.person?.cstsProgressList ?? []).some(
                   (x) => x.category?.discipline === 'Standard',
-                ).length > 0 ? (
+                ) ? (
                   <div className="lg:hidden">STT:</div>
                 ) : (
                   <></>
@@ -158,9 +155,9 @@ function TrainingCohortPage() {
                   ))}
               </div>
               <div className="flex lg:flex-col order-4 lg:order-3 gap-1">
-                {(membership.person?.cstsProgressList ?? []).filter(
+                {(membership.person?.cstsProgressList ?? []).some(
                   (x) => x.category?.discipline === 'Latin',
-                ).length > 0 ? (
+                ) ? (
                   <div className="lg:hidden">LAT:</div>
                 ) : (
                   <></>

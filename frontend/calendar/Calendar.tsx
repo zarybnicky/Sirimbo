@@ -1,21 +1,49 @@
-import { EventInstanceRangeDocument, EventInstanceRangeQueryVariables, MoveEventInstanceDocument } from '@/graphql/Event';
+import {
+  EventInstanceRangeDocument,
+  EventInstanceRangeQueryVariables,
+  MoveEventInstanceDocument,
+} from '@/graphql/Event';
 import { cn } from '@/ui/cn';
 import { Dialog, DialogContent } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { datetimeRangeToTimeRange, fullDateFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { add, endOf, startOf } from 'date-arithmetic';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { CheckCircle2Icon, ChevronDown, MoveLeft, MoveRight, CircleIcon, FilterIcon } from 'lucide-react';
+import {
+  CheckCircle2Icon,
+  ChevronDown,
+  MoveLeft,
+  MoveRight,
+  CircleIcon,
+  FilterIcon,
+} from 'lucide-react';
 import React from 'react';
 import { useClient, useMutation, useQuery } from 'urql';
 import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params';
 import TimeGrid from './TimeGrid';
 import { format, range, startOfWeek } from './localizer';
-import { dragListenersAtom, groupByAtom, isDraggingAtom, trainerIdsFilterAtom } from './state';
-import { type CalendarEvent, type InteractionInfo, Navigate, type Resource, type SlotInfo, type ViewProps } from './types';
+import {
+  dragListenersAtom,
+  groupByAtom,
+  isDraggingAtom,
+  trainerIdsFilterAtom,
+} from './state';
+import {
+  type CalendarEvent,
+  type InteractionInfo,
+  Navigate,
+  type Resource,
+  type SlotInfo,
+  type ViewProps,
+} from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { Spinner } from '@/ui/Spinner';
@@ -43,58 +71,62 @@ const getViewRange = (view: string, date: Date): Date[] => {
     return range(startOf(date, 'week', 1), endOf(date, 'week', 1));
   }
   if (view === 'work_week') {
-    return range(startOf(date, 'week', 1), endOf(date, 'week', 1)).filter((d) => ![6, 0].includes(d.getDay()));
+    return range(startOf(date, 'week', 1), endOf(date, 'week', 1)).filter(
+      (d) => ![6, 0].includes(d.getDay()),
+    );
   }
   if (view === 'month') {
-    const firstVisibleDay = (date: Date) => startOf(startOf(date, 'month'), 'week', startOfWeek)
-    const lastVisibleDay = (date: Date) => endOf(endOf(date, 'month'), 'week', startOfWeek);
+    const firstVisibleDay = (date: Date) =>
+      startOf(startOf(date, 'month'), 'week', startOfWeek);
+    const lastVisibleDay = (date: Date) =>
+      endOf(endOf(date, 'month'), 'week', startOfWeek);
     return range(firstVisibleDay(date), lastVisibleDay(date), 'day');
   }
   if (view === 'day') {
     return [startOf(date, 'day')];
   }
-  return [date]
-}
+  return [date];
+};
 
 const navigateView = (view: string, date: Date, action: Navigate) => {
   if (['week', 'work_week'].includes(view)) {
     switch (action) {
       case Navigate.PREVIOUS:
-        return add(date, -1, 'week')
+        return add(date, -1, 'week');
       case Navigate.NEXT:
-        return add(date, 1, 'week')
+        return add(date, 1, 'week');
       default:
-        return date
+        return date;
     }
   }
   if (view === 'day') {
     switch (action) {
       case Navigate.PREVIOUS:
-        return add(date, -1, 'day')
+        return add(date, -1, 'day');
       case Navigate.NEXT:
-        return add(date, 1, 'day')
+        return add(date, 1, 'day');
       default:
-        return date
+        return date;
     }
   }
   if (view === 'month') {
     switch (action) {
       case Navigate.PREVIOUS:
-        return add(date, -1, 'month')
+        return add(date, -1, 'month');
       case Navigate.NEXT:
-        return add(date, 1, 'month')
+        return add(date, 1, 'month');
       default:
-        return date
+        return date;
     }
   }
   if (view === 'agenda') {
     switch (action) {
       case Navigate.PREVIOUS:
-        return add(date, -7, 'day')
+        return add(date, -7, 'day');
       case Navigate.NEXT:
-        return add(date, 7, 'day')
+        return add(date, 7, 'day');
       default:
-        return date
+        return date;
     }
   }
   return date;
@@ -162,7 +194,7 @@ export function Calendar() {
   const [{ data, fetching }] = useQuery({ query: EventInstanceRangeDocument, variables });
 
   const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
-    const events: CalendarEvent[] = []
+    const events: CalendarEvent[] = [];
     const resources: Resource[] = [];
 
     for (const instance of data?.list || []) {
@@ -236,7 +268,7 @@ export function Calendar() {
     resources.sort((x, y) => x.resourceId.localeCompare(y.resourceId));
 
     return [events, resources];
-  }, [groupBy, auth, data, onlyMine]);
+  }, [groupBy, data, onlyMine]);
 
   const onMove = React.useCallback(
     async (event: CalendarEvent, info: InteractionInfo) => {
@@ -363,7 +395,13 @@ export function Calendar() {
 
   React.useEffect(() => {
     setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });
-    return () => setDragListeners({ onMove() {}, onResize() {}, onSelectSlot() {}, onDrillDown() {} });
+    return () =>
+      setDragListeners({
+        onMove() {},
+        onResize() {},
+        onSelectSlot() {},
+        onDrillDown() {},
+      });
   }, [onMove, onResize, onSelectSlot, setDate, setDragListeners]);
 
   const label = React.useMemo(() => {
@@ -374,7 +412,9 @@ export function Calendar() {
       return format(date, 'cccc dd. MM. yyyy');
     }
     if (view === 'agenda') {
-      return fullDateFormatter.formatRange(date, add(date, 6, 'day')).replace(' – ', ' – ');
+      return fullDateFormatter
+        .formatRange(date, add(date, 6, 'day'))
+        .replace(' – ', ' – ');
     }
     const start = startOf(date, 'week', startOfWeek);
     const end = endOf(date, 'week', startOfWeek);
@@ -382,7 +422,12 @@ export function Calendar() {
   }, [view, date]);
 
   return (
-    <div className={cn('overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
+    <div
+      className={cn(
+        'overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full overflow-hidden',
+        isDragging && 'rbc-is-dragging',
+      )}
+    >
       <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
         <div className="flex gap-2 flex-wrap items-start">
           <div className={buttonGroupCls()}>
@@ -414,14 +459,12 @@ export function Calendar() {
           <button
             type="button"
             className={buttonCls({ variant: onlyMine ? 'primary' : 'outline' })}
-            onClick={() => setOnlyMine(x => !x)}
+            onClick={() => setOnlyMine((x) => !x)}
           >
             Pouze moje
           </button>
 
-          {!onlyMine && ['day', 'week', 'work_week'].includes(view) && (
-            <GroupByPicker />
-          )}
+          {!onlyMine && ['day', 'week', 'work_week'].includes(view) && <GroupByPicker />}
 
           <TrainerFilter />
 
@@ -439,17 +482,24 @@ export function Calendar() {
         resources={resources}
       />
 
-      <CalendarConflictsIndicator start={variables.start} end={variables.end ?? undefined} />
+      <CalendarConflictsIndicator
+        start={variables.start}
+        end={variables.end ?? undefined}
+      />
 
       {auth.isTrainerOrAdmin && (
-        <Dialog open={!!creating} onOpenChange={() => setTimeout(() => setCreating(undefined))} modal={false}>
+        <Dialog
+          open={!!creating}
+          onOpenChange={() => setTimeout(() => setCreating(undefined))}
+          modal={false}
+        >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
             <UpsertEventForm initialValue={creating} />
           </DialogContent>
         </Dialog>
       )}
     </div>
-  )
+  );
 }
 
 function TrainerFilter() {
@@ -461,17 +511,30 @@ function TrainerFilter() {
         <FilterIcon className="my-0.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {tenant?.tenantTrainersList?.filter(x => x.status === 'ACTIVE').map(x => (
-          <DropdownMenuButton key={x.person?.id} onSelect={(e) => {
-            e.preventDefault();
-            const { person } = x
-            if (person)
-              setTrainerIds(xs => xs.includes(person.id) ? xs.filter(y => y !== person.id) : [...xs, person.id]);
-          }}>
-            {trainerIds.includes(x.person?.id || '') ? <CheckCircle2Icon /> : <CircleIcon />}
-            {x.person?.name}
-          </DropdownMenuButton>
-        ))}
+        {tenant?.tenantTrainersList
+          ?.filter((x) => x.status === 'ACTIVE')
+          .map((x) => (
+            <DropdownMenuButton
+              key={x.person?.id}
+              onSelect={(e) => {
+                e.preventDefault();
+                const { person } = x;
+                if (person)
+                  setTrainerIds((xs) =>
+                    xs.includes(person.id)
+                      ? xs.filter((y) => y !== person.id)
+                      : [...xs, person.id],
+                  );
+              }}
+            >
+              {trainerIds.includes(x.person?.id || '') ? (
+                <CheckCircle2Icon />
+              ) : (
+                <CircleIcon />
+              )}
+              {x.person?.name}
+            </DropdownMenuButton>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -482,8 +545,11 @@ function GroupByPicker() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
-        {groupBy === 'room' ? 'Seskupit podle místa' :
-         groupBy === 'trainer' ? 'Seskupit podle trenéra' : 'Neseskupovat'}
+        {groupBy === 'room'
+          ? 'Seskupit podle místa'
+          : groupBy === 'trainer'
+            ? 'Seskupit podle trenéra'
+            : 'Neseskupovat'}
         <ChevronDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -501,26 +567,36 @@ function GroupByPicker() {
   );
 }
 
-function ViewPicker({ view, setView }: {
+function ViewPicker({
+  view,
+  setView,
+}: {
   view: string;
   setView: React.Dispatch<React.SetStateAction<string | null | undefined>>;
 }) {
   view = Views[view] ? view : 'agenda';
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={buttonCls({ variant: 'outline'})}>
-        {view === 'month' ? 'Měsíc' :
-         view === 'day' ? 'Den' :
-         view === 'week' ? 'Týden' :
-         view === 'work_week' ? 'Pracovní dny' :
-         view === 'agenda' ? 'Agenda' :
-         ''}
+      <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
+        {view === 'month'
+          ? 'Měsíc'
+          : view === 'day'
+            ? 'Den'
+            : view === 'week'
+              ? 'Týden'
+              : view === 'work_week'
+                ? 'Pracovní dny'
+                : view === 'agenda'
+                  ? 'Agenda'
+                  : ''}
         <ChevronDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuButton onSelect={() => setView('month')}>Měsíc</DropdownMenuButton>
         <DropdownMenuButton onSelect={() => setView('week')}>Týden</DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setView('work_week')}>Pracovní dny</DropdownMenuButton>
+        <DropdownMenuButton onSelect={() => setView('work_week')}>
+          Pracovní dny
+        </DropdownMenuButton>
         <DropdownMenuButton onSelect={() => setView('day')}>Den</DropdownMenuButton>
         <DropdownMenuButton onSelect={() => setView('agenda')}>Agenda</DropdownMenuButton>
       </DropdownMenuContent>

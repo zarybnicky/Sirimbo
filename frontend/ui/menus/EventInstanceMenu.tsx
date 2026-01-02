@@ -3,13 +3,18 @@ import {
   EventDocument,
   EventFragment,
   EventInstanceFragment,
-  EventInstanceWithAttendanceDocument,
-  UpdateAttendanceDocument,
   UpdateEventInstanceDocument,
   UpsertEventDocument,
 } from '@/graphql/Event';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
-import { CheckSquare, GitBranch, NotebookPen, Pencil, Square, Trash2 } from 'lucide-react';
+import {
+  CheckSquare,
+  GitBranch,
+  NotebookPen,
+  Pencil,
+  Square,
+  Trash2,
+} from 'lucide-react';
 import { useConfirm } from '@/ui/Confirm';
 import { useClient, useMutation } from 'urql';
 import React from 'react';
@@ -21,7 +26,6 @@ import { exportEventParticipants } from '@/ui/reports/export-event-participants'
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 import { useAuth } from '../use-auth';
 import { keyIsNonNull } from '../truthyFilter';
-import { fetchGql } from '@/graphql/query';
 
 export function EventInstanceMenu({
   event,
@@ -32,7 +36,6 @@ export function EventInstanceMenu({
   const confirm = useConfirm();
   const client = useClient();
   const upsertEvent = useMutation(UpsertEventDocument)[1];
-  const updateAttendance = useMutation(UpdateAttendanceDocument)[1];
   const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
   const deleteMutation = useMutation(DeleteEventInstanceDocument)[1];
   const auth = useAuth();
@@ -80,8 +83,13 @@ export function EventInstanceMenu({
           personId: x.personId,
           lessonsOffered: x.lessonsOffered,
         })),
-        cohorts: event.eventTargetCohortsList.filter(keyIsNonNull('cohort')).map((x) => ({ cohortId: x.cohort.id })),
-        registrations: event.eventRegistrations.nodes.map((x) => ({ coupleId: x.coupleId, personId: x.personId })),
+        cohorts: event.eventTargetCohortsList
+          .filter(keyIsNonNull('cohort'))
+          .map((x) => ({ cohortId: x.cohort.id })),
+        registrations: event.eventRegistrations.nodes.map((x) => ({
+          coupleId: x.coupleId,
+          personId: x.personId,
+        })),
         instances: [],
       },
     });
@@ -104,14 +112,7 @@ export function EventInstanceMenu({
 
     await client.query(EventDocument, { id: event.id }).toPromise();
     await client.query(EventDocument, { id: newEventId }).toPromise();
-  }, [
-    client,
-    confirm,
-    event,
-    instance.id,
-    upsertEvent,
-    updateInstance,
-  ]);
+  }, [client, confirm, event, instance.id, upsertEvent, updateInstance]);
 
   const deleteInstance = React.useCallback(async () => {
     if ((event?.eventInstancesList.length ?? 0) < 2) {
@@ -128,7 +129,12 @@ export function EventInstanceMenu({
     await deleteMutation({ id: instance.id });
   }, [event?.eventInstancesList.length, deleteMutation, instance.id, confirm]);
 
-  if (!auth.isAdmin && (!auth.isTrainer || !event.eventTrainersList.some(x => auth.personIds.includes(x.personId)))) return null;
+  if (
+    !auth.isAdmin &&
+    (!auth.isTrainer ||
+      !event.eventTrainersList.some((x) => auth.personIds.includes(x.personId)))
+  )
+    return null;
 
   return (
     <DropdownMenu>
@@ -153,7 +159,7 @@ export function EventInstanceMenu({
           {instance.isCancelled ? 'Zrušeno' : 'Zrušit termín'}
         </DropdownMenuButton>
 
-        <DropdownMenuButton onSelect={() => { void detachInstance(); }}>
+        <DropdownMenuButton onSelect={detachInstance}>
           <GitBranch className="size-4" />
           Oddělit termín
         </DropdownMenuButton>

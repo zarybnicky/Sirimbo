@@ -1,4 +1,7 @@
-import { EventOverlapsReportDocument, type EventOverlapsReportQuery } from '@/graphql/EventOverlaps';
+import {
+  EventOverlapsReportDocument,
+  type EventOverlapsReportQuery,
+} from '@/graphql/EventOverlaps';
 import { dateTimeFormatter } from '@/ui/format';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
@@ -13,13 +16,19 @@ type CalendarConflictsIndicatorProps = {
   end?: string | null;
 };
 
-export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndicatorProps) {
+export function CalendarConflictsIndicator({
+  start,
+  end,
+}: CalendarConflictsIndicatorProps) {
   const [open, setOpen] = React.useState(false);
   const variables = React.useMemo(
     () => ({ since: start, until: end ?? null }),
     [start, end],
   );
-  const [{ data, fetching }] = useQuery({ query: EventOverlapsReportDocument, variables });
+  const [{ data, fetching }] = useQuery({
+    query: EventOverlapsReportDocument,
+    variables,
+  });
   const setInstanceConflicts = useSetAtom(calendarConflictsAtom);
 
   const attendeeConflicts = React.useMemo(() => {
@@ -37,7 +46,10 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
 
   const conflictsByInstance = React.useMemo(() => {
     const map: Record<string, CalendarInstanceConflict[]> = {};
-    const addConflict = (instanceId: string | null | undefined, conflict: CalendarInstanceConflict) => {
+    const addConflict = (
+      instanceId: string | null | undefined,
+      conflict: CalendarInstanceConflict,
+    ) => {
       if (!instanceId) {
         return;
       }
@@ -45,11 +57,12 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
     };
 
     const pushConflicts = (conflict: NormalizedConflict) => {
-      const base: Pick<CalendarInstanceConflict, 'role' | 'personName' | 'fallbackName'> = {
-        role: conflict.role,
-        personName: conflict.personName,
-        fallbackName: conflict.fallbackName,
-      };
+      const base: Pick<CalendarInstanceConflict, 'role' | 'personName' | 'fallbackName'> =
+        {
+          role: conflict.role,
+          personName: conflict.personName,
+          fallbackName: conflict.fallbackName,
+        };
 
       if (conflict.firstInstanceId) {
         addConflict(conflict.firstInstanceId, {
@@ -121,11 +134,18 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
             <div className="space-y-8">
               {attendeeConflicts.length > 0 && (
                 <section>
-                  <h3 className="font-semibold">Účastníci ({attendeeConflicts.length})</h3>
+                  <h3 className="font-semibold">
+                    Účastníci ({attendeeConflicts.length})
+                  </h3>
                   <ul className="mt-3 space-y-4">
                     {attendeeConflicts.map((conflict) => (
-                      <li key={conflict.id} className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 shadow-sm">
-                        <p className="text-sm font-semibold text-neutral-12">{conflict.personName ?? conflict.fallbackName}</p>
+                      <li
+                        key={conflict.id}
+                        className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 shadow-sm"
+                      >
+                        <p className="text-sm font-semibold text-neutral-12">
+                          {conflict.personName ?? conflict.fallbackName}
+                        </p>
                         <ConflictEventsSummary
                           firstName={conflict.firstName}
                           firstSince={conflict.firstSince}
@@ -145,8 +165,13 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
                   <h3 className="font-semibold">Trenéři ({trainerConflicts.length})</h3>
                   <ul className="mt-3 space-y-4">
                     {trainerConflicts.map((conflict) => (
-                      <li key={conflict.id} className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 shadow-sm">
-                        <p className="text-sm font-semibold text-neutral-12">{conflict.personName ?? conflict.fallbackName}</p>
+                      <li
+                        key={conflict.id}
+                        className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 shadow-sm"
+                      >
+                        <p className="text-sm font-semibold text-neutral-12">
+                          {conflict.personName ?? conflict.fallbackName}
+                        </p>
                         <ConflictEventsSummary
                           firstName={conflict.firstName}
                           firstSince={conflict.firstSince}
@@ -168,8 +193,12 @@ export function CalendarConflictsIndicator({ start, end }: CalendarConflictsIndi
   );
 }
 
-type RawAttendeeConflict = NonNullable<EventOverlapsReportQuery['attendeeConflicts']>[number];
-type RawTrainerConflict = NonNullable<EventOverlapsReportQuery['trainerConflicts']>[number];
+type RawAttendeeConflict = NonNullable<
+  EventOverlapsReportQuery['attendeeConflicts']
+>[number];
+type RawTrainerConflict = NonNullable<
+  EventOverlapsReportQuery['trainerConflicts']
+>[number];
 
 type ConflictRole = CalendarInstanceConflict['role'];
 
@@ -209,10 +238,14 @@ function normalizeConflict(
 
   const firstName = conflict.firstEventName ?? 'Bez názvu';
   const secondName = conflict.secondEventName ?? 'Bez názvu';
-  const firstInstanceKey = conflict.firstInstanceId ?? conflict.firstEventId ?? conflict.firstSince;
-  const secondInstanceKey = conflict.secondInstanceId ?? conflict.secondEventId ?? conflict.secondSince;
+  const firstInstanceKey =
+    conflict.firstInstanceId ?? conflict.firstEventId ?? conflict.firstSince;
+  const secondInstanceKey =
+    conflict.secondInstanceId ?? conflict.secondEventId ?? conflict.secondSince;
 
-  const id = [conflict.personId ?? 'unknown', firstInstanceKey, secondInstanceKey].join(':');
+  const id = [conflict.personId ?? 'unknown', firstInstanceKey, secondInstanceKey].join(
+    ':',
+  );
 
   return {
     id,
@@ -251,25 +284,16 @@ function ConflictEventsSummary({
   secondSince,
   secondUntil,
 }: ConflictEventsSummaryProps) {
-  const overlap = React.useMemo(() =>
-    calculateOverlap(firstSince, firstUntil, secondSince, secondUntil),
-  [firstSince, firstUntil, secondSince, secondUntil]);
+  const overlap = React.useMemo(
+    () => calculateOverlap(firstSince, firstUntil, secondSince, secondUntil),
+    [firstSince, firstUntil, secondSince, secondUntil],
+  );
 
   return (
     <div className="mt-2 space-y-3 text-sm text-neutral-11">
-      <EventRange
-        title={firstName}
-        since={firstSince}
-        until={firstUntil}
-      />
-      <EventRange
-        title={secondName}
-        since={secondSince}
-        until={secondUntil}
-      />
-      {overlap && (
-        <p className="text-xs text-accent-10">Překryv: {overlap}</p>
-      )}
+      <EventRange title={firstName} since={firstSince} until={firstUntil} />
+      <EventRange title={secondName} since={secondSince} until={secondUntil} />
+      {overlap && <p className="text-xs text-accent-10">Překryv: {overlap}</p>}
     </div>
   );
 }
@@ -285,20 +309,12 @@ function EventRange({ title, since, until }: EventRangeProps) {
     <div>
       <p className="font-medium text-neutral-12">{title}</p>
       <p className="text-xs uppercase tracking-wide text-neutral-9">
-        {formatRange(since, until)}
+        {dateTimeFormatter
+          .formatRange(new Date(since), new Date(until))
+          .replace(' – ', ' – ')}
       </p>
     </div>
   );
-}
-
-function formatRange(since: string, until: string) {
-  const start = new Date(since);
-  const end = new Date(until);
-  try {
-    return dateTimeFormatter.formatRange(start, end).replace(' – ', ' – ');
-  } catch {
-    return `${dateTimeFormatter.format(start)} – ${dateTimeFormatter.format(end)}`;
-  }
 }
 
 function calculateOverlap(
@@ -307,11 +323,16 @@ function calculateOverlap(
   secondSince: string,
   secondUntil: string,
 ) {
-  const start = new Date(Math.max(new Date(firstSince).getTime(), new Date(secondSince).getTime()));
-  const end = new Date(Math.min(new Date(firstUntil).getTime(), new Date(secondUntil).getTime()));
+  const start = new Date(
+    Math.max(new Date(firstSince).getTime(), new Date(secondSince).getTime()),
+  );
+  const end = new Date(
+    Math.min(new Date(firstUntil).getTime(), new Date(secondUntil).getTime()),
+  );
   if (!(start < end)) {
     return null;
   }
-  return formatRange(start.toISOString(), end.toISOString());
+  return dateTimeFormatter
+    .formatRange(new Date(start.toISOString()), new Date(end.toISOString()))
+    .replace(' – ', ' – ');
 }
-

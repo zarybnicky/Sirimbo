@@ -1,4 +1,4 @@
-import { ComboboxElement } from '@/ui/fields/Combobox';
+import { Combobox } from '@/ui/fields/Combobox';
 import { FileListDocument } from '@/graphql/Documents';
 import { fullDateFormatter } from '@/ui/format';
 import { useQuery } from 'urql';
@@ -7,13 +7,7 @@ import { origin } from '@/graphql/query';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/ui/Layout';
 import { cardCls } from '@/ui/style';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-const Form = z.object({
-  category: z.string().nullable().optional(),
-});
+import React from 'react';
 
 const categories = [
   { id: '1', label: 'Schůze,\u{00A0}rady' },
@@ -23,10 +17,7 @@ const categories = [
 ];
 
 export default function DocumentsPage() {
-  const { control, watch } = useForm({
-    resolver: zodResolver(Form),
-  });
-  const category = watch('category');
+  const [category, setCategory] = React.useState<string | null | undefined>();
 
   const [{ data }] = useQuery({
     query: FileListDocument,
@@ -37,39 +28,41 @@ export default function DocumentsPage() {
 
   return (
     <Layout requireMember>
-    <div className="col-feature py-4 lg:pb-8">
-      <NextSeo title="Dokumenty" />
-      <TitleBar title="Dokumenty">
-        <ComboboxElement
-          align="end"
-          control={control}
-          name="category"
-          placeholder="všechny dokumenty"
-          options={categories}
-        />
-      </TitleBar>
+      <div className="col-feature py-4 lg:pb-8">
+        <NextSeo title="Dokumenty" />
+        <TitleBar title="Dokumenty">
+          <Combobox
+            value={category}
+            align="end"
+            placeholder="všechny dokumenty"
+            options={categories}
+            onChange={setCategory}
+          />
+        </TitleBar>
 
-      {data?.dokumentiesList?.map((row, i) => (
-        <div key={i} className={cardCls()}>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={`${origin}/member/download?id=${row.id}`}
-            className="flex justify-between"
-          >
-            <span>{row.dName}</span>
-            <div className="flex gap-4">
-              <span>
-                {row.dTimestamp ? fullDateFormatter.format(new Date(row.dTimestamp)) : ''}
-              </span>
-              <span>
-                {categories.find((x) => x.id === row.dKategorie.toString())?.label}
-              </span>
-            </div>
-          </a>
-        </div>
-      ))}
-    </div>
+        {data?.dokumentiesList?.map((row, i) => (
+          <div key={i} className={cardCls()}>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={`${origin}/member/download?id=${row.id}`}
+              className="flex justify-between"
+            >
+              <span>{row.dName}</span>
+              <div className="flex gap-4">
+                <span>
+                  {row.dTimestamp
+                    ? fullDateFormatter.format(new Date(row.dTimestamp))
+                    : ''}
+                </span>
+                <span>
+                  {categories.find((x) => x.id === row.dKategorie.toString())?.label}
+                </span>
+              </div>
+            </a>
+          </div>
+        ))}
+      </div>
     </Layout>
   );
-};
+}
