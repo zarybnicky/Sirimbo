@@ -24,23 +24,20 @@ const plugins: GraphileConfig.Plugin[] = [
               executor,
               $args,
               async function (client, { url, auth, data }: any) {
-                if (auth) {
-                  const {
-                    rows: [response],
-                  } = await client.query({
-                    text: "select content from http('POST', $1, array[http_header('Cookie', 'auth=' || $2)], 'application/json', $3::text)",
-                    values: [url, auth, data],
-                  });
-                  return JSON.parse((response as any).content) as any;
-                } else {
-                  const {
-                    rows: [response],
-                  } = await client.query({
-                    text: "select content from http('POST', $1, array[]::http_header[], 'application/json', $2::text)",
-                    values: [url, data],
-                  });
-                  return JSON.parse((response as any).content) as any;
+                const res = await fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    ...(auth ? { Cookie: `auth=${auth}` } : {}),
+                  },
+                  body: JSON.stringify(data),
+                });
+                if (!res.ok) {
+                  const text = await res.text().catch(() => "");
+                  throw new Error(`POST ${url} failed: ${res.status} ${res.statusText}${text ? ` — ${text}` : ""}`);
                 }
+
+                return await res.json();
               },
             );
           },
