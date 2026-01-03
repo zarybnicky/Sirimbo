@@ -9,7 +9,6 @@ function getMaxIdxDFS(node, maxIdx, visited) {
   for (let i = 0; i < node.friends.length; ++i) {
     if (visited.includes(node.friends[i])) continue;
     maxIdx = Math.max(maxIdx, node.friends[i].idx);
-    // TODO : trace it by not object but kinda index or something for performance
     visited.push(node.friends[i]);
     const newIdx = getMaxIdxDFS(node.friends[i], maxIdx, visited);
     maxIdx = Math.max(maxIdx, newIdx);
@@ -76,20 +75,21 @@ export default function getStyledEvents(
   }
 
   for (const e of styledEvents) {
+    const baseSize = e.size;
+
     // stretch to maximum
     let maxIdx = 0;
     for (let j = 0; j < e.friends.length; ++j) {
       const idx = e.friends[j].idx;
-      maxIdx = Math.max(maxIdx, idx);
+      if (typeof idx === 'number') maxIdx = Math.max(maxIdx, idx);
     }
-    if (maxIdx <= e.idx) e.size = 100 - e.idx * e.size;
+    const leftPct = e.idx * baseSize;
+    const widthPct = maxIdx <= e.idx ? 100 - leftPct : baseSize;
 
-    // padding between events
-    // for this feature, `width` is not percentage based unit anymore
-    // it will be used with calc()
     const padding = e.idx === 0 ? 0 : 3;
-    e.style.left = e.idx * e.size;
-    e.style.width = `calc(${e.size}% - ${padding}px)`;
+    e.size = widthPct;
+    e.style.left = leftPct;
+    e.style.width = `calc(${widthPct}% - ${padding}px)`;
     e.style.height = `calc(${e.style.height}% - 2px)`;
     e.style.xOffset = `calc(${e.style.left}% + ${padding}px)`;
   }
