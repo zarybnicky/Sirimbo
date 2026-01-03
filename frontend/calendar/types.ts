@@ -1,4 +1,4 @@
-import type { EventFragment, EventInstanceWithTrainerFragment } from "@/graphql/Event";
+import type { EventFragment, EventInstanceWithTrainerFragment } from '@/graphql/Event';
 
 export enum Navigate {
   PREVIOUS = 'PREV',
@@ -12,7 +12,7 @@ export interface CalendarEvent {
   instance: EventInstanceWithTrainerFragment;
   start: Date;
   end: Date;
-  resourceIds: string[];
+  resourceIds: readonly string[];
   isDraggable?: boolean;
   isResizable?: boolean;
   __isPreview?: boolean;
@@ -21,16 +21,15 @@ export interface CalendarEvent {
 
 export interface Resource {
   resourceId: string;
-  resourceType: 'person' | 'location' | 'locationText' | '';
-  resourceTitle: React.ReactNode;
+  resourceTitle: string;
 }
 
 export type ViewProps = {
   date: Date;
   range: Date[];
-  events: CalendarEvent[];
-  backgroundEvents: CalendarEvent[];
-  resources: Resource[];
+  events: readonly CalendarEvent[];
+  backgroundEvents: readonly CalendarEvent[];
+  resources: readonly Resource[];
 };
 
 export type SlotInfo = {
@@ -56,7 +55,7 @@ export type SlotInfo = {
     clientX?: number;
     clientY?: number;
   };
-}
+};
 
 export type DragAction = 'resize' | 'move';
 

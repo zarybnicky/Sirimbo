@@ -12,18 +12,13 @@ import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './
 import type { CalendarEvent, Resource } from './types';
 
 interface TimeGridProps {
-  events: CalendarEvent[];
-  backgroundEvents: CalendarEvent[];
-  resources: Resource[];
-  range: Date[];
+  events: readonly CalendarEvent[];
+  backgroundEvents: readonly CalendarEvent[];
+  resources: readonly Resource[];
+  range: readonly Date[];
 }
 
-function TimeGrid({
-  events,
-  backgroundEvents,
-  range,
-  resources,
-}: TimeGridProps) {
+function TimeGrid({ events, backgroundEvents, range, resources }: TimeGridProps) {
   const today = new Date();
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
@@ -44,7 +39,9 @@ function TimeGrid({
       setGutterWidth(width);
     }
     const content = contentRef.current!;
-    const isOverflowing = content.scrollHeight > content.clientHeight && content.offsetWidth !== content.clientWidth;
+    const isOverflowing =
+      content.scrollHeight > content.clientHeight &&
+      content.offsetWidth !== content.clientWidth;
     if (scrollbarMargin !== isOverflowing) {
       setScrollbarMargin(isOverflowing);
     }
@@ -53,17 +50,19 @@ function TimeGrid({
   useLayoutEffect(() => {
     const diffMillis = diff(merge(focusedTime, minTime), focusedTime, 'milliseconds');
     const totalMillis = diff(minTime, maxTime, 'milliseconds');
-    const _scrollRatio = diffMillis / totalMillis;
     const content = contentRef.current;
-    if (content) {
-      content.scrollTop = content.scrollHeight * _scrollRatio;
+    if (content && totalMillis > 0) {
+      const ratio = Math.max(0, Math.min(1, diffMillis / totalMillis));
+      content.scrollTop = content.scrollHeight * ratio;
     }
   }, [focusedTime, minTime, maxTime]);
 
   const { grouper, groupedEvents, groupedBackgroundEvents } = React.useMemo(() => {
     const dateRange = { start: range[0]!, end: range.at(-1)! };
     const rangeEvents = events.filter((event) => inEventRange(event, dateRange));
-    const rangeBackgroundEvents = backgroundEvents.filter((event) => inEventRange(event, dateRange));
+    const rangeBackgroundEvents = backgroundEvents.filter((event) =>
+      inEventRange(event, dateRange),
+    );
 
     const grouper = makeGrouper(resources);
     return {
@@ -76,7 +75,10 @@ function TimeGrid({
   return (
     <div
       ref={containerRef}
-      className={cn('rbc-time-view overscroll-contain', resources && 'rbc-time-view-resources')}
+      className={cn(
+        'rbc-time-view overscroll-contain',
+        resources.length > 0 && 'rbc-time-view-resources',
+      )}
     >
       <div
         ref={scrollRef}
@@ -91,19 +93,25 @@ function TimeGrid({
         {grouper.map(([resource], i) => (
           <div className="rbc-time-header-content" key={i + (resource?.resourceId ?? '')}>
             {resource && (
-              <div className="rbc-row rbc-row-resource" key={`resource_${resource.resourceId}`}>
+              <div
+                className="rbc-row rbc-row-resource"
+                key={`resource_${resource.resourceId}`}
+              >
                 <div className="rbc-header">{resource.resourceTitle}</div>
               </div>
             )}
             <div className={cn('rbc-row', range.length <= 1 && 'hidden')}>
               {range.map((date, i) => (
-                <div key={i} className={cn('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
+                <div
+                  key={i}
+                  className={cn('rbc-header', eq(date, today, 'day') && 'rbc-today')}
+                >
                   <button
                     type="button"
                     className="rbc-button-link"
                     onClick={(e) => {
                       e.preventDefault();
-                      onDrillDown(date);
+                      onDrillDown?.(date);
                     }}
                   >
                     <span role="columnheader" aria-sort="none">
@@ -151,32 +159,31 @@ function TimeGrid({
 
 export default React.memo(TimeGrid);
 
-function makeGrouper(resources: Resource[]) {
+function makeGrouper(resources: readonly Resource[]) {
   return {
     map<T>(fn: (x: [Resource | undefined, string], ix: number) => T): T[] {
-      if (!resources?.length) return [fn([undefined, ''], 0)]
-      return resources.map((resource, idx) => fn([resource, resource.resourceId], idx))
+      if (!resources?.length) return [fn([undefined, ''], 0)];
+      return resources.map((resource, idx) => fn([resource, resource.resourceId], idx));
     },
 
-    groupEvents(events: CalendarEvent[]): Map<string|undefined, CalendarEvent[]> {
-      const eventsByResource = new Map()
+    groupEvents(events: CalendarEvent[]): Map<string | undefined, CalendarEvent[]> {
+      const eventsByResource = new Map();
 
       if (!resources?.length) {
         // Return all events if resources are not provided
-        eventsByResource.set('', events)
-        return eventsByResource
+        eventsByResource.set('', events);
+        return eventsByResource;
       }
 
       for (const event of events) {
-        for (const id of (event.resourceIds || [''])) {
-          if (!resources.some(x => x.resourceId === id))
-            continue;
-          const resourceEvents = eventsByResource.get(id) || []
-          resourceEvents.push(event)
-          eventsByResource.set(id, resourceEvents)
+        for (const id of event.resourceIds) {
+          if (!resources.some((x) => x.resourceId === id)) continue;
+          const resourceEvents = eventsByResource.get(id) || [];
+          resourceEvents.push(event);
+          eventsByResource.set(id, resourceEvents);
         }
       }
-      return eventsByResource
+      return eventsByResource;
     },
-  }
+  };
 }

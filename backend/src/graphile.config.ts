@@ -1,13 +1,13 @@
 import express from 'express';
-import "graphile-config";
+import 'graphile-config';
 import jwt from 'jsonwebtoken';
 import path from 'path';
-import * as adaptor from "postgraphile/@dataplan/pg/adaptors/pg";
-import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
-import { makeV4Preset } from "postgraphile/presets/v4";
+import * as adaptor from 'postgraphile/@dataplan/pg/adaptors/pg';
+import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
+import { makeV4Preset } from 'postgraphile/presets/v4';
 import { pool, poolGraphqlContext } from './db.ts';
-import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
-import "postgraphile/grafserv/express/v4";
+import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
+import 'postgraphile/grafserv/express/v4';
 
 import proxyPlugin from './plugins/proxy.ts';
 import filePlugin from './plugins/file.ts';
@@ -20,7 +20,9 @@ async function findTenantId(req: express.Request): Promise<string> {
     return req.headersDistinct['x-tenant-id'][0];
   }
 
-  const { rows: [host] } = await pool.query(
+  const {
+    rows: [host],
+  } = await pool.query(
     'select id from tenant where $1 = any (origins) or $2 = any (origins)',
     [req.headers.host, req.headers.origin],
   );
@@ -40,21 +42,29 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
     'jwt.claims.my_tenant_ids': '[]',
     'jwt.claims.my_cohort_ids': '[]',
     'jwt.claims.my_couple_ids': '[]',
-    'internal.wdsf_auth': process.env.WDSF_AUTH || '',
   };
 
   const authorization = req.get('authorization');
   if (authorization?.toLowerCase().startsWith('bearer ')) {
-    const token = authorization.substring(7)
+    const token = authorization.substring(7);
     const claims = jwt.verify(token, process.env.JWT_SECRET || '', {
-      ignoreExpiration: true
+      ignoreExpiration: true,
     }) as jwt.JwtPayload;
-    settings.role = claims.is_admin ? 'administrator' : claims.is_trainer ? 'trainer' : claims.is_member ? 'member' : 'anonymous';
+    settings.role = claims.is_system_admin
+      ? 'system_admin'
+      : claims.is_admin
+        ? 'administrator'
+        : claims.is_trainer
+          ? 'trainer'
+          : claims.is_member
+            ? 'member'
+            : 'anonymous';
 
     for (const key in claims) {
-      if (['exp', 'aud', 'iat', 'iss'].includes(key)) continue
+      if (['exp', 'aud', 'iat', 'iss'].includes(key)) continue;
       if (Array.isArray(claims[key])) {
-        settings[`jwt.claims.${key}`] = '[' + claims[key].map((x: string) => `${x}`).join(',') + ']';
+        settings[`jwt.claims.${key}`] =
+          '[' + claims[key].map((x: string) => `${x}`).join(',') + ']';
       } else {
         settings[`jwt.claims.${key}`] = claims[key];
       }
@@ -67,7 +77,6 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
   return settings;
 }
 
-
 const preset: GraphileConfig.Preset = {
   extends: [
     PostGraphileAmberPreset,
@@ -78,12 +87,8 @@ const preset: GraphileConfig.Preset = {
     }),
   ],
 
-  disablePlugins: ["NodePlugin"],
-  plugins: [
-    ...proxyPlugin,
-    ...filePlugin,
-    currentUserPlugin,
-  ],
+  disablePlugins: ['NodePlugin'],
+  plugins: [...proxyPlugin, ...filePlugin, currentUserPlugin],
 
   grafast: {
     async context(ctx) {
@@ -113,11 +118,11 @@ const preset: GraphileConfig.Preset = {
 
   pgServices: [
     {
-      name: "main",
-      schemas: ["public"],
-      pgSettingsKey: "pgSettings",
-      pgSubscriberKey: "pgSubscriber" as any as undefined,
-      withPgClientKey: "withPgClient",
+      name: 'main',
+      schemas: ['public'],
+      pgSettingsKey: 'pgSettings',
+      pgSubscriberKey: 'pgSubscriber' as any as undefined,
+      withPgClientKey: 'withPgClient',
       adaptor,
       adaptorSettings: {
         pool,

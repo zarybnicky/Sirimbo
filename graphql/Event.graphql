@@ -246,7 +246,7 @@ query EventList {
 
 query EventInstanceRange(
   $start: Datetime!
-  $end: Datetime
+  $end: Datetime!
   $type: EventType
   $trainerIds: [BigInt]
   $onlyMine: Boolean

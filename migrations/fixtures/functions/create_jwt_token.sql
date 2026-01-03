@@ -13,6 +13,8 @@ with
   ),
   tenant_admins as (
     select distinct ta.tenant_id from tenant_administrator ta join person_ids p on p.person_id = ta.person_id where ta.status = 'active'
+    union
+    select id from tenant where app_private.is_system_admin(u.id)
   ),
   tenant_ids as (
     select tenant_id from tenant_memberships

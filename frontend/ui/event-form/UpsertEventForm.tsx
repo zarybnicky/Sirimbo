@@ -34,7 +34,7 @@ export function UpsertEventForm({
   initialValue = {},
   event,
 }: {
-  initialValue?: Partial<z.infer<typeof EventForm>>;
+  initialValue?: Partial<z.input<typeof EventForm>>;
   event?: EventFragment;
 }) {
   const initializedRef = React.useRef(false);
@@ -256,7 +256,7 @@ export function UpsertEventForm({
         />
       )}
 
-      <InstanceListElement control={control} name="instances" type={type} />
+      <InstanceListElement control={control} name="instances" />
       <TrainerListElement control={control} name="trainers" />
 
       {!!memberPrice && type === 'LESSON' && (

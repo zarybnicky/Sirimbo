@@ -1,6 +1,7 @@
 import {
   EventInstanceRangeDocument,
-  EventInstanceRangeQueryVariables,
+  type EventInstanceRangeQueryVariables,
+  type EventInstanceRangeQuery,
   MoveEventInstanceDocument,
 } from '@/graphql/Event';
 import { cn } from '@/ui/cn';
@@ -20,137 +21,187 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   CheckCircle2Icon,
   ChevronDown,
-  MoveLeft,
-  MoveRight,
   CircleIcon,
   FilterIcon,
+  MoveLeft,
+  MoveRight,
 } from 'lucide-react';
 import React from 'react';
 import { useClient, useMutation, useQuery } from 'urql';
 import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params';
 import TimeGrid from './TimeGrid';
-import { format, range, startOfWeek } from './localizer';
+import { format, range } from './localizer';
 import {
   dragListenersAtom,
   groupByAtom,
   isDraggingAtom,
   trainerIdsFilterAtom,
 } from './state';
-import {
-  type CalendarEvent,
-  type InteractionInfo,
-  Navigate,
-  type Resource,
-  type SlotInfo,
-  type ViewProps,
+import type {
+  CalendarEvent,
+  InteractionInfo,
+  Resource,
+  SlotInfo,
+  ViewProps,
 } from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { Spinner } from '@/ui/Spinner';
 import { useTenant } from '@/ui/useTenant';
-import { z } from 'zod';
-import { EventForm } from '@/ui/event-form/types';
+import { EventFormType } from '@/ui/event-form/types';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
 import { tenantConfigAtom } from '@/ui/state/auth';
 
-const Views: { [key: string]: (props: ViewProps) => React.ReactNode } = {
-  month: Month,
-  week: TimeGrid,
-  work_week: TimeGrid,
-  day: TimeGrid,
-  agenda: Agenda,
+type View = {
+  component: React.ComponentType<ViewProps>;
+  range: (d: Date) => Date[];
+  nav: (d: Date, dir: -1 | 1) => Date;
+  label: (d: Date) => string;
+  supportsGrouping: boolean;
 };
 
-const emptyArray: CalendarEvent[] = [];
+const Views = {
+  month: {
+    component: Month,
+    range: (d: Date) => {
+      const first = startOf(startOf(d, 'month'), 'week', 1);
+      const last = endOf(endOf(d, 'month'), 'week', 1);
+      return range(first, last, 'day');
+    },
+    nav: (d: Date, dir: -1 | 1) => add(d, dir, 'month'),
+    label: (d: Date) => format(d, 'MMMM yyyy'),
+    supportsGrouping: false,
+  },
+  week: {
+    component: TimeGrid,
+    range: (d: Date) => range(startOf(d, 'week', 1), endOf(d, 'week', 1)),
+    nav: (d: Date, dir: -1 | 1) => add(d, dir, 'week'),
+    label: (d: Date) => {
+      const s = startOf(d, 'week', 1);
+      const e = endOf(d, 'week', 1);
+      return fullDateFormatter.formatRange(s, e).replace(' – ', ' – ');
+    },
+    supportsGrouping: true,
+  },
+  work_week: {
+    component: TimeGrid,
+    range: (d: Date) =>
+      range(startOf(d, 'week', 1), endOf(d, 'week', 1)).filter(
+        (x) => ![0, 6].includes(x.getDay()),
+      ),
+    nav: (d: Date, dir: -1 | 1) => add(d, dir, 'week'),
+    label: (d: Date) => {
+      const s = startOf(d, 'week', 1);
+      const e = endOf(d, 'week', 1);
+      return fullDateFormatter.formatRange(s, e).replace(' – ', ' – ');
+    },
+    supportsGrouping: true,
+  },
+  day: {
+    component: TimeGrid,
+    range: (d: Date) => [startOf(d, 'day')],
+    nav: (d: Date, dir: -1 | 1) => add(d, dir, 'day'),
+    label: (d: Date) => format(d, 'cccc dd. MM. yyyy'),
+    supportsGrouping: true,
+  },
+  agenda: {
+    component: Agenda,
+    range: (d: Date) => range(d, add(d, 6, 'day'), 'day'),
+    nav: (d: Date, dir: -1 | 1) => add(d, 7 * dir, 'day'),
+    label: (d: Date) =>
+      fullDateFormatter.formatRange(d, add(d, 6, 'day')).replace(' – ', ' – '),
+    supportsGrouping: false,
+  },
+} as const satisfies Record<string, View>;
 
-const getViewRange = (view: string, date: Date): Date[] => {
-  if (view === 'agenda') {
-    return range(date, add(date, 6, 'day'), 'day');
-  }
-  if (view === 'week') {
-    return range(startOf(date, 'week', 1), endOf(date, 'week', 1));
-  }
-  if (view === 'work_week') {
-    return range(startOf(date, 'week', 1), endOf(date, 'week', 1)).filter(
-      (d) => ![6, 0].includes(d.getDay()),
-    );
-  }
-  if (view === 'month') {
-    const firstVisibleDay = (date: Date) =>
-      startOf(startOf(date, 'month'), 'week', startOfWeek);
-    const lastVisibleDay = (date: Date) =>
-      endOf(endOf(date, 'month'), 'week', startOfWeek);
-    return range(firstVisibleDay(date), lastVisibleDay(date), 'day');
-  }
-  if (view === 'day') {
-    return [startOf(date, 'day')];
-  }
-  return [date];
-};
+type ViewKey = keyof typeof Views;
 
-const navigateView = (view: string, date: Date, action: Navigate) => {
-  if (['week', 'work_week'].includes(view)) {
-    switch (action) {
-      case Navigate.PREVIOUS:
-        return add(date, -1, 'week');
-      case Navigate.NEXT:
-        return add(date, 1, 'week');
-      default:
-        return date;
-    }
-  }
-  if (view === 'day') {
-    switch (action) {
-      case Navigate.PREVIOUS:
-        return add(date, -1, 'day');
-      case Navigate.NEXT:
-        return add(date, 1, 'day');
-      default:
-        return date;
-    }
-  }
-  if (view === 'month') {
-    switch (action) {
-      case Navigate.PREVIOUS:
-        return add(date, -1, 'month');
-      case Navigate.NEXT:
-        return add(date, 1, 'month');
-      default:
-        return date;
-    }
-  }
-  if (view === 'agenda') {
-    switch (action) {
-      case Navigate.PREVIOUS:
-        return add(date, -7, 'day');
-      case Navigate.NEXT:
-        return add(date, 7, 'day');
-      default:
-        return date;
-    }
-  }
-  return date;
-};
+const emptyArray: readonly [] = [];
+const preventDefault = (e: Event) => e.preventDefault();
+
 function prepareVariables(
-  range: Date[],
+  range: readonly Date[],
   trainerIds: string[],
   onlyMine: boolean,
 ): EventInstanceRangeQueryVariables {
   return {
     start: startOf(range[0]!, 'day').toISOString(),
-    end: endOf(range.at(-1)!, 'day').toISOString(),
-    trainerIds: trainerIds.length > 0 ? trainerIds : null,
+    end: add(startOf(range.at(-1)!, 'day'), 1, 'day').toISOString(),
+    trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
     onlyMine,
   };
+}
+
+const getResourceKey = (type: string, id: string) => `${type}:${id}`;
+function parseResourceKey(key: string | undefined) {
+  const pos = key?.indexOf(':') ?? -1;
+  if (!key || pos === -1) return ['', ''] as const;
+  return [key.slice(0, pos), key.slice(pos + 1)] as const;
+}
+
+function mapInstancesToCalendar(
+  list: EventInstanceRangeQuery['list'],
+  groupBy: 'none' | 'trainer' | 'room',
+): { events: CalendarEvent[]; resources: Resource[] } {
+  const events: CalendarEvent[] = [];
+  const resourceMap = new Map<string, Resource>();
+  const put = (r: Resource) => resourceMap.set(r.resourceId, r);
+
+  for (const instance of list ?? []) {
+    const { event } = instance ?? {};
+    if (!event) continue;
+
+    const start = new Date(instance.since);
+    const end = new Date(instance.until);
+
+    const resourceIds: string[] = [];
+
+    if (groupBy === 'trainer') {
+      for (const trainer of instance.trainersList ?? []) {
+        const id = trainer.personId;
+        if (!id) continue;
+        resourceIds.push(getResourceKey('person', id));
+        put({
+          resourceId: getResourceKey('person', id),
+          resourceTitle: trainer.person?.name || '',
+        });
+      }
+    } else if (groupBy === 'room') {
+      if (event.location?.id) {
+        resourceIds.push(getResourceKey('location', event.location.id));
+        put({
+          resourceId: getResourceKey('location', event.location.id),
+          resourceTitle: event.location.name,
+        });
+      } else if (event.locationText) {
+        resourceIds.push(getResourceKey('locationText', event.locationText));
+        put({
+          resourceId: getResourceKey('locationText', event.locationText),
+          resourceTitle: event.locationText,
+        });
+      }
+    }
+    if (groupBy !== 'none' && resourceIds.length === 0) {
+      resourceIds.push('');
+      put({ resourceId: '', resourceTitle: '-' });
+    }
+    events.push({ event, instance, resourceIds, start, end });
+  }
+
+  const resources = [...resourceMap.values()].toSorted((a, b) =>
+    a.resourceTitle.localeCompare(b.resourceTitle),
+  );
+
+  return { events, resources };
 }
 
 export function Calendar() {
   const auth = useAuth();
   const client = useClient();
   const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
-  const [view, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
   const [onlyMine, setOnlyMine] = useQueryParam('my', withDefault(BooleanParam, false));
-
+  const [viewInput, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
+  const view = Views[(viewInput as ViewKey) ?? ''] ?? Views.agenda;
   const [date, setDate] = React.useState(new Date());
 
   const isDragging = useAtomValue(isDraggingAtom);
@@ -158,142 +209,56 @@ export function Calendar() {
   const groupBy = useAtomValue(groupByAtom);
   const trainerIds = useAtomValue(trainerIdsFilterAtom);
 
-  const moveEvent = useMutation(MoveEventInstanceDocument)[1];
-
-  const ViewComponent = Views[view] || Views.agenda!;
-
-  const { range, variables } = React.useMemo(() => {
-    const range = getViewRange(view, date);
+  const { range, vars } = React.useMemo(() => {
+    const range = view.range(date);
+    const prev = view.range(view.nav(date, -1));
+    const next = view.range(view.nav(date, 1));
     return {
       range,
-      variables: prepareVariables(range, trainerIds, onlyMine),
+      vars: {
+        current: prepareVariables(range, trainerIds, onlyMine),
+        prev: prepareVariables(prev, trainerIds, onlyMine),
+        next: prepareVariables(next, trainerIds, onlyMine),
+      },
     };
   }, [view, date, trainerIds, onlyMine]);
 
   React.useEffect(() => {
-    setTimeout(() => {
-      const prevDate = navigateView(view, date, Navigate.PREVIOUS);
-      const nextDate = navigateView(view, date, Navigate.NEXT);
-      const prevRange = getViewRange(view, prevDate);
-      const nextRange = getViewRange(view, nextDate);
+    const t = setTimeout(() => {
       client
-        .query(
-          EventInstanceRangeDocument,
-          prepareVariables(prevRange, trainerIds, onlyMine),
-        )
+        .query(EventInstanceRangeDocument, vars.prev, { requestPolicy: 'cache-first' })
         .toPromise();
       client
-        .query(
-          EventInstanceRangeDocument,
-          prepareVariables(nextRange, trainerIds, onlyMine),
-        )
+        .query(EventInstanceRangeDocument, vars.next, { requestPolicy: 'cache-first' })
         .toPromise();
     }, 100);
-  }, [client, view, date, trainerIds, onlyMine]);
+    return () => clearTimeout(t);
+  }, [client, vars.prev, vars.next]);
 
-  const [{ data, fetching }] = useQuery({ query: EventInstanceRangeDocument, variables });
+  const [{ data, fetching }] = useQuery({
+    query: EventInstanceRangeDocument,
+    variables: vars.current,
+    requestPolicy: 'cache-and-network',
+  });
+  const list = data?.list ?? null;
 
-  const [events, resources] = React.useMemo<[CalendarEvent[], Resource[]]>(() => {
-    const events: CalendarEvent[] = [];
-    const resources: Resource[] = [];
+  const { events, resources } = React.useMemo(() => {
+    return mapInstancesToCalendar(list, onlyMine ? 'none' : groupBy);
+  }, [groupBy, list, onlyMine]);
 
-    for (const instance of data?.list || []) {
-      const { event } = instance;
-      if (!event) continue;
-
-      const start = new Date(instance.since);
-      const end = new Date(instance.until);
-      const resourceIds =
-        onlyMine || groupBy === 'none'
-          ? []
-          : groupBy === 'trainer'
-            ? (instance.trainersList ?? []).map((x) => x.personId)
-            : groupBy === 'room'
-              ? [
-                  ...(event.location ? [event.location.id] : []),
-                  ...(event.locationText ? [event.locationText] : []),
-                ]
-              : [];
-
-      events.push({
-        event,
-        instance,
-        resourceIds,
-        start,
-        end,
-      });
-
-      if (!onlyMine) {
-        if (
-          groupBy !== 'none' &&
-          !resourceIds &&
-          !resources.some((x) => x.resourceId === '')
-        ) {
-          resources.push({ resourceId: '', resourceType: '', resourceTitle: '-' });
-        }
-        if (groupBy === 'trainer') {
-          for (const trainer of instance.trainersList ?? []) {
-            const id = trainer.personId;
-            if (id && !resources.some((y) => y.resourceId === id)) {
-              resources.push({
-                resourceId: id,
-                resourceType: 'person',
-                resourceTitle: trainer.person?.name || '',
-              });
-            }
-          }
-        } else if (groupBy === 'room') {
-          const location = event?.location;
-          if (location && !resources.some((x) => x.resourceId === location.id)) {
-            resources.push({
-              resourceId: location.id,
-              resourceType: 'location',
-              resourceTitle: location.name,
-            });
-          }
-          if (
-            event?.locationText &&
-            !resources.some((x) => x.resourceTitle === event.locationText)
-          ) {
-            resources.push({
-              resourceId: event.locationText,
-              resourceType: 'locationText',
-              resourceTitle: event.locationText,
-            });
-          }
-        }
-      }
-    }
-
-    resources.sort((x, y) => x.resourceId.localeCompare(y.resourceId));
-
-    return [events, resources];
-  }, [groupBy, data, onlyMine]);
-
+  const [, moveEvent] = useMutation(MoveEventInstanceDocument);
   const onMove = React.useCallback(
-    async (event: CalendarEvent, info: InteractionInfo) => {
-      let trainerPersonId: string | null = null;
-      let locationId: string | null = null;
-      let locationText: string | null = null;
+    async ({ instance }: CalendarEvent, info: InteractionInfo) => {
+      const [type, resourceId] = parseResourceKey(info.resource?.resourceId);
 
-      const { resourceType, resourceId } = info.resource || {};
-      if (resourceType === 'person' && resourceId) {
-        trainerPersonId = resourceId;
-      }
-      if (resourceType === 'location' && resourceId) {
-        locationId = resourceId;
-      }
-      if (resourceType === 'locationText' && resourceId) {
-        locationText = resourceId;
-      }
       await moveEvent({
         input: {
-          id: event.instance.id,
+          id: instance.id,
           since: info.start.toISOString(),
           until: info.end.toISOString(),
-          trainerPersonId,
-          locationId,
-          locationText,
+          trainerPersonId: type === 'person' && resourceId ? resourceId : null,
+          locationId: type === 'location' && resourceId ? resourceId : null,
+          locationText: type === 'locationText' && resourceId ? resourceId : null,
         },
       });
     },
@@ -301,38 +266,29 @@ export function Calendar() {
   );
 
   const onResize = React.useCallback(
-    async (event: CalendarEvent, info: InteractionInfo) => {
-      let trainerPersonId: string | null = null;
-      const { resourceType, resourceId } = info.resource || {};
-      if (resourceType === 'person' && resourceId) {
-        trainerPersonId = resourceId;
-      }
+    async ({ instance }: CalendarEvent, { start, end }: InteractionInfo) => {
       await moveEvent({
         input: {
-          id: event.instance.id,
-          since: info.start.toISOString(),
-          until: info.end.toISOString(),
-          trainerPersonId,
+          id: instance.id,
+          since: start.toISOString(),
+          until: end.toISOString(),
         },
       });
     },
     [moveEvent],
   );
 
-  const [creating, setCreating] = React.useState<
-    undefined | Partial<z.infer<typeof EventForm>>
-  >();
+  const [creating, setCreating] = React.useState<undefined | Partial<EventFormType>>();
 
   const onSelectSlot = React.useCallback(
     (slot: SlotInfo) => {
-      if (slot.action === 'click') {
-        slot.end = add(slot.start, 45, 'minutes');
-      }
+      const end = slot.action === 'click' ? add(slot.start, 45, 'minutes') : slot.end;
 
-      const def: Partial<z.infer<typeof EventForm>> = {
+      const def: Partial<EventFormType> = {
         instances: [
           {
-            ...datetimeRangeToTimeRange(slot.start, slot.end),
+            itemId: null,
+            ...datetimeRangeToTimeRange(slot.start, end),
             isCancelled: false,
             trainers: [],
           },
@@ -344,8 +300,8 @@ export function Calendar() {
         locationId: 'none',
       };
 
-      const { resourceType, resourceId } = slot.resource || {};
-      if (resourceType === 'person' && resourceId) {
+      const [type, resourceId] = parseResourceKey(slot.resource?.resourceId);
+      if (type === 'person' && resourceId) {
         def.trainers = [{ itemId: null, personId: resourceId, lessonsOffered: 0 }];
       } else if (onlyMine && !slot.resource) {
         const trainer = auth.persons.find((x) => x.isTrainer);
@@ -354,20 +310,15 @@ export function Calendar() {
         }
       }
 
-      if (resourceType === 'location' && resourceId) {
+      if (type === 'location' && resourceId) {
         def.locationId = resourceId;
       }
-      if (resourceType === 'locationText' && resourceId) {
+      if (type === 'locationText' && resourceId) {
         def.locationId = 'other';
         def.locationText = resourceId;
       }
-      if (
-        def.trainers &&
-        def.trainers.length > 0 &&
-        def.locationId &&
-        def.locationId === 'none'
-      ) {
-        const thisTrainer = def.trainers[0]?.personId!;
+      if (def.trainers?.[0] && def.locationId === 'none') {
+        const thisTrainer = def.trainers[0].personId!;
         let closestPrev: CalendarEvent | undefined;
         const thisInstance = def.instances?.[0]!;
         for (const event of events) {
@@ -395,31 +346,10 @@ export function Calendar() {
 
   React.useEffect(() => {
     setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });
-    return () =>
-      setDragListeners({
-        onMove() {},
-        onResize() {},
-        onSelectSlot() {},
-        onDrillDown() {},
-      });
+    return () => setDragListeners({});
   }, [onMove, onResize, onSelectSlot, setDate, setDragListeners]);
 
-  const label = React.useMemo(() => {
-    if (view === 'month') {
-      return format(date, 'MMMM yyyy');
-    }
-    if (view === 'day') {
-      return format(date, 'cccc dd. MM. yyyy');
-    }
-    if (view === 'agenda') {
-      return fullDateFormatter
-        .formatRange(date, add(date, 6, 'day'))
-        .replace(' – ', ' – ');
-    }
-    const start = startOf(date, 'week', startOfWeek);
-    const end = endOf(date, 'week', startOfWeek);
-    return fullDateFormatter.formatRange(start, end).replace(' – ', ' – ');
-  }, [view, date]);
+  const label = React.useMemo(() => view.label(date), [view, date]);
 
   return (
     <div
@@ -434,7 +364,7 @@ export function Calendar() {
             <button
               type="button"
               className={buttonCls({ variant: 'outline', className: 'py-0' })}
-              onClick={() => setDate(navigateView(view, date, Navigate.PREVIOUS))}
+              onClick={() => setDate(view.nav(date, -1))}
             >
               <MoveLeft className="!size-6 mx-1" />
             </button>
@@ -448,13 +378,13 @@ export function Calendar() {
             <button
               type="button"
               className={buttonCls({ variant: 'outline', className: 'py-0' })}
-              onClick={() => setDate(navigateView(view, date, Navigate.NEXT))}
+              onClick={() => setDate(view.nav(date, +1))}
             >
               <MoveRight className="!size-6 mx-1" />
             </button>
           </div>
 
-          <ViewPicker view={view} setView={setView} />
+          <ViewPicker view={viewInput} setView={setView} />
 
           <button
             type="button"
@@ -464,7 +394,7 @@ export function Calendar() {
             Pouze moje
           </button>
 
-          {!onlyMine && ['day', 'week', 'work_week'].includes(view) && <GroupByPicker />}
+          {!onlyMine && view.supportsGrouping && <GroupByPicker />}
 
           <TrainerFilter />
 
@@ -474,7 +404,7 @@ export function Calendar() {
         <span className="grow px-3 text-right">{label}</span>
       </div>
 
-      <ViewComponent
+      <view.component
         date={date}
         range={range}
         events={events}
@@ -482,15 +412,14 @@ export function Calendar() {
         resources={resources}
       />
 
-      <CalendarConflictsIndicator
-        start={variables.start}
-        end={variables.end ?? undefined}
-      />
+      <CalendarConflictsIndicator start={vars.current.start} end={vars.current.end} />
 
       {auth.isTrainerOrAdmin && (
         <Dialog
           open={!!creating}
-          onOpenChange={() => setTimeout(() => setCreating(undefined))}
+          onOpenChange={(open) => {
+            if (!open) setTimeout(() => setCreating(undefined));
+          }}
           modal={false}
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
@@ -515,7 +444,7 @@ function TrainerFilter() {
           ?.filter((x) => x.status === 'ACTIVE')
           .map((x) => (
             <DropdownMenuButton
-              key={x.person?.id}
+              key={x.id}
               onSelect={(e) => {
                 e.preventDefault();
                 const { person } = x;
@@ -572,9 +501,8 @@ function ViewPicker({
   setView,
 }: {
   view: string;
-  setView: React.Dispatch<React.SetStateAction<string | null | undefined>>;
+  setView: React.Dispatch<ViewKey>;
 }) {
-  view = Views[view] ? view : 'agenda';
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
@@ -603,5 +531,3 @@ function ViewPicker({
     </DropdownMenu>
   );
 }
-
-const preventDefault = (e: Event) => e.preventDefault();

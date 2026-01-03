@@ -6,7 +6,15 @@ import { authExchange } from '@urql/exchange-auth';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { TypedEventTarget } from 'typescript-event-target';
-import type { ClientOptions, CombinedError, Exchange, ExecutionResult, Operation, SSRExchange, TypedDocumentNode } from 'urql';
+import type {
+  ClientOptions,
+  CombinedError,
+  Exchange,
+  ExecutionResult,
+  Operation,
+  SSRExchange,
+  TypedDocumentNode,
+} from 'urql';
 import { fetchExchange, mapExchange } from 'urql';
 import { pipe, tap } from 'wonka';
 import schema from './introspection.json';
@@ -15,13 +23,13 @@ import { tracingExchange } from './tracing';
 
 export const origin =
   typeof window === 'undefined'
-  ? (process.env.GRAPHQL_BACKEND ?? `http://localhost:${process.env.PORT || 3000}`)
-  : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? window.origin);
+    ? (process.env.GRAPHQL_BACKEND ?? `http://localhost:${process.env.PORT || 3000}`)
+    : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? window.origin);
 
 export async function fetchGql<TResult, TVariables>(
   document: TypedDocumentNode<TResult, TVariables>,
   variables: TVariables,
-  server: string = origin
+  server: string = origin,
 ): Promise<TResult> {
   const token = storeRef.current.get(tokenAtom);
   const tenantId = storeRef.current.get(tenantIdAtom);
@@ -30,12 +38,16 @@ export async function fetchGql<TResult, TVariables>(
     credentials: 'include',
     headers: {
       'content-type': 'application/json',
-      ...(tenantId ? {
-        'x-tenant-id': tenantId,
-      } : {}),
-      ...(token ? {
-        Authorization: `Bearer ${token}`,
-      } : {}),
+      ...(tenantId
+        ? {
+            'x-tenant-id': tenantId,
+          }
+        : {}),
+      ...(token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : {}),
     },
     body: JSON.stringify({
       query: print(document),
@@ -64,43 +76,49 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 type ErrorEventTarget = TypedEventTarget<{ error: CustomEvent<CombinedError> }>;
-const errorEmitter = (errorTarget: ErrorEventTarget) => mapExchange({
-  onError(error) {
-    errorTarget.dispatchTypedEvent('error', new CustomEvent('error', { detail: error }))
-  },
-});
-
-const noopExchange: Exchange = ({ forward }) => forward;
-const refocusReloadExchange: Exchange = ({ client, forward }) => ops$ => {
-  const watchedOperations = new Map<number, Operation>();
-  const observedOperations = new Set<number>();
-
-  window.addEventListener('focus', () => {
-    if (typeof document !== 'object' || document.visibilityState === 'visible') {
-      for (const [_, op] of watchedOperations) {
-        client.reexecuteOperation(
-          client.createRequestOperation('query', op, {
-            ...op.context,
-            requestPolicy: 'cache-and-network',
-          })
-        );
-      }
-    }
+const errorEmitter = (errorTarget: ErrorEventTarget) =>
+  mapExchange({
+    onError(error) {
+      errorTarget.dispatchTypedEvent(
+        'error',
+        new CustomEvent('error', { detail: error }),
+      );
+    },
   });
 
-  const processIncomingOperation = (op: Operation) => {
-    if (op.kind === 'query' && !observedOperations.has(op.key)) {
-      observedOperations.add(op.key);
-      watchedOperations.set(op.key, op);
-    }
-    if (op.kind === 'teardown' && observedOperations.has(op.key)) {
-      observedOperations.delete(op.key);
-      watchedOperations.delete(op.key);
-    }
-  };
+const noopExchange: Exchange = ({ forward }) => forward;
+const refocusReloadExchange: Exchange =
+  ({ client, forward }) =>
+  (ops$) => {
+    const watchedOperations = new Map<number, Operation>();
+    const observedOperations = new Set<number>();
 
-  return forward(pipe<Operation, Operation>(ops$, tap(processIncomingOperation)));
-};
+    window.addEventListener('focus', () => {
+      if (typeof document !== 'object' || document.visibilityState === 'visible') {
+        for (const [_, op] of watchedOperations) {
+          client.reexecuteOperation(
+            client.createRequestOperation('query', op, {
+              ...op.context,
+              requestPolicy: 'cache-and-network',
+            }),
+          );
+        }
+      }
+    });
+
+    const processIncomingOperation = (op: Operation) => {
+      if (op.kind === 'query' && !observedOperations.has(op.key)) {
+        observedOperations.add(op.key);
+        watchedOperations.set(op.key, op);
+      }
+      if (op.kind === 'teardown' && observedOperations.has(op.key)) {
+        observedOperations.delete(op.key);
+        watchedOperations.delete(op.key);
+      }
+    };
+
+    return forward(pipe<Operation, Operation>(ops$, tap(processIncomingOperation)));
+  };
 
 const appAuthExchange = authExchange(async (utils) => ({
   didAuthError() {
@@ -121,48 +139,49 @@ const shouldTrace = false;
 export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
-  exchanges: shouldTrace ? [
-    errorEmitter(errorTarget),
-    tracingExchange,
-    appAuthExchange,
-    fetchExchange,
-  ] : (typeof window === 'undefined' ? [
-    devToolsExchange,
-    errorEmitter(errorTarget),
-    ssrExchange ?? noopExchange,
-    appAuthExchange,
-    fetchExchange,
-  ] : [
-    devToolsExchange,
-    errorEmitter(errorTarget),
-    refocusReloadExchange,
-    cacheExchange({
-      schema,
-      // storage: makeDefaultStorage({
-      //   idbName: 'graphcache-v4',
-      //   maxAge: 7,
-      // }),
-      ...cacheConfig,
-    }),
-    retryExchange({
-      initialDelayMs: 1000,
-      maxDelayMs: 15_000,
-      randomDelay: true,
-      maxNumberAttempts: 2,
-      retryIf: (err) => !!err && !!err.networkError,
-    }),
-    ssrExchange ?? noopExchange,
-    appAuthExchange,
-    fetchExchange,
-  ]),
+  exchanges: shouldTrace
+    ? [errorEmitter(errorTarget), tracingExchange, appAuthExchange, fetchExchange]
+    : typeof window === 'undefined'
+      ? [
+          devToolsExchange,
+          errorEmitter(errorTarget),
+          ssrExchange ?? noopExchange,
+          appAuthExchange,
+          fetchExchange,
+        ]
+      : [
+          devToolsExchange,
+          errorEmitter(errorTarget),
+          refocusReloadExchange,
+          cacheExchange({
+            schema,
+            // storage: makeDefaultStorage({
+            //   idbName: 'graphcache-v4',
+            //   maxAge: 7,
+            // }),
+            ...cacheConfig,
+          }),
+          retryExchange({
+            initialDelayMs: 1000,
+            maxDelayMs: 15_000,
+            randomDelay: true,
+            maxNumberAttempts: 2,
+            retryIf: (err) => !!err && !!err.networkError,
+          }),
+          ssrExchange ?? noopExchange,
+          appAuthExchange,
+          fetchExchange,
+        ],
   fetchOptions: () => {
     const tenantId = storeRef.current.get(tenantIdAtom);
     return {
       credentials: 'include',
       headers: {
-        ...(tenantId ? {
-          'x-tenant-id': tenantId,
-        } : {}),
+        ...(tenantId
+          ? {
+              'x-tenant-id': tenantId,
+            }
+          : {}),
       },
     };
   },
@@ -172,9 +191,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {
     Attachment: (x) => x.objectName || null,
     AddressDomain: () => null,
-    DatetimeRangeBound: () => null,
-    EventInstanceAttendanceSummaryRecord: () => null,
     DatetimeRange: () => null,
+    DatetimeRangeBound: () => null,
+    EventInstanceApproxPriceRecord: () => null,
+    EventInstanceAttendanceSummaryRecord: () => null,
+    EventOverlapsConflict: () => null,
     PersonWeeklyAttendanceRecord: () => null,
     Price: () => null,
     ScoreboardRecord: (x) => x.personId || null,
@@ -186,7 +207,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate('Query', 'membershipApplicationsList');
       },
       confirmMembershipApplication(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'MembershipApplication', id: args.input.applicationId! });
+        cache.invalidate({
+          __typename: 'MembershipApplication',
+          id: args.input.applicationId!,
+        });
       },
       deleteMembershipApplication(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'MembershipApplication', id: args.input.id });
@@ -198,73 +222,90 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       updateCohort(_result, args, cache, _info) {
         if (args.input.patch.cohortGroupId) {
-          cache.invalidate({ __typename: 'CohortGroup', id: args.input.patch.cohortGroupId});
+          cache.invalidate({
+            __typename: 'CohortGroup',
+            id: args.input.patch.cohortGroupId,
+          });
         }
       },
 
       deletePerson(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Person', id: args.input.id});
+        cache.invalidate({ __typename: 'Person', id: args.input.id });
       },
 
       deleteCohort(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Cohort', id: args.input.id});
+        cache.invalidate({ __typename: 'Cohort', id: args.input.id });
       },
 
       archiveCohort(_result, args, cache, _info) {
         if (args.input.cohortId)
-          cache.invalidate({ __typename: 'Cohort', id: args.input.cohortId});
+          cache.invalidate({ __typename: 'Cohort', id: args.input.cohortId });
       },
 
       deleteAnnouncement(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Announcement', id: args.input.id});
+        cache.invalidate({ __typename: 'Announcement', id: args.input.id });
       },
 
       deleteEvent(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Event', id: args.input.id});
+        cache.invalidate({ __typename: 'Event', id: args.input.id });
       },
 
       registerToEventMany(result, _args, cache, _info) {
         for (const registration of result.registerToEventMany?.eventRegistrations || []) {
-          cache.invalidate({ __typename: 'Event', id: registration.eventId});
+          cache.invalidate({ __typename: 'Event', id: registration.eventId });
         }
       },
 
       setLessonDemand(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'EventRegistration', id: args.input.registrationId});
+        cache.invalidate({
+          __typename: 'EventRegistration',
+          id: args.input.registrationId,
+        });
       },
 
       cancelRegistration(_result, args, cache, _info) {
         if (args.input.registrationId)
-          cache.invalidate({ __typename: 'EventRegistration', id: args.input.registrationId});
+          cache.invalidate({
+            __typename: 'EventRegistration',
+            id: args.input.registrationId,
+          });
       },
 
       deleteCohortGroup(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'CohortGroup', id: args.input.id});
+        cache.invalidate({ __typename: 'CohortGroup', id: args.input.id });
       },
 
       createCouple(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Person', id: args.input.couple.manId});
-        cache.invalidate({ __typename: 'Person', id: args.input.couple.womanId});
+        cache.invalidate({ __typename: 'Person', id: args.input.couple.manId });
+        cache.invalidate({ __typename: 'Person', id: args.input.couple.womanId });
       },
       createCohortMembership(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Person', id: args.input.cohortMembership.personId});
+        cache.invalidate({
+          __typename: 'Person',
+          id: args.input.cohortMembership.personId,
+        });
       },
       createTenantMembership(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Person', id: args.input.tenantMembership.personId});
+        cache.invalidate({
+          __typename: 'Person',
+          id: args.input.tenantMembership.personId,
+        });
       },
       createTenantTrainer(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Person', id: args.input.tenantTrainer.personId});
+        cache.invalidate({ __typename: 'Person', id: args.input.tenantTrainer.personId });
       },
       createTenantAdministrator(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Person', id: args.input.tenantAdministrator.personId});
+        cache.invalidate({
+          __typename: 'Person',
+          id: args.input.tenantAdministrator.personId,
+        });
       },
       createUserProxy(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Person', id: args.input.userProxy.personId});
+        cache.invalidate({ __typename: 'Person', id: args.input.userProxy.personId });
       },
       createTenantLocation(result, _args, cache, _info) {
         const tenantId = result.createTenantLocation?.tenantLocation?.tenantId;
-        if (tenantId)
-          cache.invalidate({ __typename: 'Tenant', id: tenantId});
+        if (tenantId) cache.invalidate({ __typename: 'Tenant', id: tenantId });
       },
       systemAdminUpdateTenant(_result, args, cache, _info) {
         if (args.input.tenantId)
@@ -272,22 +313,22 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       deleteCouple(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Couple', id: args.input.id});
+        cache.invalidate({ __typename: 'Couple', id: args.input.id });
       },
       deleteCohortMembership(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'CohortMembership', id: args.input.id});
+        cache.invalidate({ __typename: 'CohortMembership', id: args.input.id });
       },
       deleteTenantMembership(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'TenantMembership', id: args.input.id});
+        cache.invalidate({ __typename: 'TenantMembership', id: args.input.id });
       },
       deleteTenantTrainer(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'TenantTrainer', id: args.input.id});
+        cache.invalidate({ __typename: 'TenantTrainer', id: args.input.id });
       },
       deleteTenantAdministrator(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'TenantAdministrator', id: args.input.id});
+        cache.invalidate({ __typename: 'TenantAdministrator', id: args.input.id });
       },
       deleteUserProxy(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'UserProxy', id: args.input.id});
+        cache.invalidate({ __typename: 'UserProxy', id: args.input.id });
       },
 
       deleteEventInstance(_result, args, cache, _info) {
@@ -300,22 +341,19 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         }
         for (const field of cache
           .inspectFields('Query')
-          .filter(field => field.fieldName.includes('eventInstances'))
-        ) {
+          .filter((field) => field.fieldName.includes('eventInstances'))) {
           cache.invalidate('Query', field.fieldName, field.arguments);
         }
         for (const field of cache
           .inspectFields('Query')
-          .filter(field => field.fieldName.includes('eventOverlaps'))
-        ) {
+          .filter((field) => field.fieldName.includes('eventOverlaps'))) {
           cache.invalidate('Query', field.fieldName, field.arguments);
         }
       },
       moveEventInstance(_result, _args, cache, _info) {
         for (const field of cache
           .inspectFields('Query')
-          .filter(field => field.fieldName.includes('eventOverlaps'))
-        ) {
+          .filter((field) => field.fieldName.includes('eventOverlaps'))) {
           cache.invalidate('Query', field.fieldName, field.arguments);
         }
       },
@@ -326,16 +364,14 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       createAttachment(_result, _args, cache, _info) {
         for (const field of cache
           .inspectFields('Query')
-          .filter(field => ['attachments'].includes(field.fieldName))
-        )
+          .filter((field) => ['attachments'].includes(field.fieldName)))
           cache.invalidate('Query', field.fieldName, field.arguments);
       },
 
       createPerson(_result, _args, cache, _info) {
         for (const field of cache
           .inspectFields('Query')
-          .filter(field => field.fieldName.includes('filteredPeopleList'))
-        )
+          .filter((field) => field.fieldName.includes('filteredPeopleList')))
           cache.invalidate('Query', field.fieldKey);
       },
 
@@ -351,19 +387,20 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         if (!args.input.info?.id) {
           for (const field of cache
             .inspectFields('Query')
-            .filter(field => field.fieldName.includes('eventInstances'))
-          )
+            .filter((field) => field.fieldName.includes('eventInstances')))
             cache.invalidate('Query', field.fieldName, field.arguments);
         }
         for (const field of cache
           .inspectFields('Query')
-          .filter(field => field.fieldName.includes('eventOverlaps'))
-        )
+          .filter((field) => field.fieldName.includes('eventOverlaps')))
           cache.invalidate('Query', field.fieldName, field.arguments);
       },
 
       createPersonInvitation(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Person', id: args.input.personInvitation.personId! });
+        cache.invalidate({
+          __typename: 'Person',
+          id: args.input.personInvitation.personId!,
+        });
       },
 
       createCreditTransactionForPerson(_result, args, cache, _info) {
@@ -373,15 +410,15 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       updateAnnouncement(_result, _args, cache) {
         for (const field of cache
           .inspectFields('Query')
-          .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
-        )
+          .filter((field) =>
+            ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName),
+          ))
           cache.invalidate('Query', field.fieldName, field.arguments);
       },
       updatePayment(_result, _args, cache) {
         for (const field of cache
           .inspectFields('Query')
-          .filter(field => field.fieldName.includes('paymentDebtorsList'))
-        )
+          .filter((field) => field.fieldName.includes('paymentDebtorsList')))
           cache.invalidate('Query', field.fieldName, field.arguments);
       },
 
@@ -391,7 +428,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
+          return usr
+            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            : old;
         });
       },
       otpLogin(result, _args, cache, _info) {
@@ -400,7 +439,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
+          return usr
+            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            : old;
         });
       },
       logInAs(result, _args, cache, _info) {
@@ -409,7 +450,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
+          return usr
+            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            : old;
         });
       },
 
@@ -419,7 +462,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
+          return usr
+            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            : old;
         });
       },
 
@@ -429,7 +474,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? ({getCurrentUser: usr, refreshJwt: jwt} as CurrentUserQuery) : old;
+          return usr
+            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            : old;
         });
       },
     },

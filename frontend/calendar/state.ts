@@ -1,6 +1,12 @@
-import { atom } from 'jotai'
-import { selectAtom } from 'jotai/utils'
-import type { CalendarEvent, DragAction, DragDirection, InteractionInfo, SlotInfo } from './types';
+import { atom } from 'jotai';
+import { selectAtom } from 'jotai/utils';
+import type {
+  CalendarEvent,
+  DragAction,
+  DragDirection,
+  InteractionInfo,
+  SlotInfo,
+} from './types';
 
 export type CalendarInstanceConflict = {
   id: string;
@@ -24,14 +30,14 @@ export type DragSubject = null | {
   action: DragAction;
   event?: CalendarEvent | null;
   direction?: DragDirection | null;
-}
+};
 export const dragSubjectAtom = atom<DragSubject>(null);
-export const dragListenersAtom = atom({
-  onMove: (_e: CalendarEvent, _info: InteractionInfo) => {},
-  onResize: (_e: CalendarEvent, _info: InteractionInfo) => {},
-  onSelectSlot: (_slot: SlotInfo) => {},
-  onDrillDown: (_date: Date) => {},
-});
+export const dragListenersAtom = atom<{
+  onMove?: (event: CalendarEvent, info: InteractionInfo) => void;
+  onResize?: (event: CalendarEvent, info: InteractionInfo) => void;
+  onSelectSlot?: (slot: SlotInfo) => void;
+  onDrillDown?: (date: Date) => void;
+}>({});
 
 export const calendarConflictsAtom = atom<Record<string, CalendarInstanceConflict[]>>({});
 
@@ -65,11 +71,13 @@ const storage = {
     } else {
       localStorage.removeItem(key);
     }
-  }
+  },
 };
 
 export const trainerIdsFilterAtom = atom<string[]>([]);
-const baseGroupByAtom = atom((storage.getItem('groupBy') as any || 'trainer') as 'none' | 'trainer' | 'room');
+const baseGroupByAtom = atom(
+  ((storage.getItem('groupBy') as any) || 'trainer') as 'none' | 'trainer' | 'room',
+);
 
 export const groupByAtom = atom(
   (get) => get(baseGroupByAtom),

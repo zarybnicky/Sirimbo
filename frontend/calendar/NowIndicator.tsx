@@ -8,9 +8,12 @@ import { useAtomValue } from 'jotai';
 type Props = {
   date: Date;
   slotMetrics: TimeSlotMetrics;
-}
+};
 
-export const NowIndicator = React.memo(function NowIndicator({date, slotMetrics}: Props) {
+export const NowIndicator = React.memo(function NowIndicator({
+  date,
+  slotMetrics,
+}: Props) {
   const [top, setTop] = React.useState('');
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
@@ -20,22 +23,25 @@ export const NowIndicator = React.memo(function NowIndicator({date, slotMetrics}
     const maxDate = merge(date, maxTime);
 
     const update = () => {
-      const now = new Date()
+      const now = new Date();
       if (now >= minDate && now <= maxDate) {
-        const top = slotMetrics.getCurrentTimePosition(now)
+        const top = slotMetrics.getCurrentTimePosition(now);
         setTop(`${top}%`);
       } else {
         setTop('');
       }
-    }
+    };
 
     update();
     const interval = setInterval(update, 60_000);
     return () => clearInterval(interval);
   }, [date, minTime, maxTime, slotMetrics]);
 
-  if (!top) return null
+  if (!top) return null;
   return (
-    <div className="absolute z-[3] inset-x-0 h-px pointer-events-none bg-green-9" style={{ top }} />
+    <div
+      className="absolute z-[3] inset-x-0 h-px pointer-events-none bg-green-9"
+      style={{ top }}
+    />
   );
 });

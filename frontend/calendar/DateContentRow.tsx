@@ -7,7 +7,7 @@ import { getSlotMetrics } from './DateSlotMetrics';
 import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
-import { type Segment, eventSegments } from './common';
+import { eventSegments, type Segment } from './common';
 import { diff, format, merge } from './localizer';
 import type { CalendarEvent, Resource } from './types';
 import { useAuth } from '@/ui/use-auth';
@@ -45,7 +45,7 @@ function DateContentRow({
   const [segment, setSegment] = React.useState<Segment | null>(null);
   const [maxRows, setMaxRows] = React.useState(5);
   const [previousDate, setPreviousDate] = React.useState(range[0]!);
-  const [renderForMeasure, setRenderForMeasure] = React.useState(!!true);
+  const [renderForMeasure, setRenderForMeasure] = React.useState(true);
 
   React.useEffect(() => {
     const update = () => setRenderForMeasure(true);
@@ -64,9 +64,9 @@ function DateContentRow({
       validContainers: [],
       shouldSelect() {
         const action = store.get(dragSubjectAtom)?.action;
-        return action === 'move' || action  === 'resize';
+        return action === 'move' || action === 'resize';
       },
-    })
+    });
 
     /* FIXME: selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
      *   const bounds = getBoundsForNode(containerRef.current!)
@@ -98,100 +98,125 @@ function DateContentRow({
 
     selector.addEventListener('selecting', ({ detail: point }) => {
       const { action, event, direction } = store.get(dragSubjectAtom) || {};
-      const bounds = getBoundsForNode(containerRef.current!)
-      const date = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
+      const bounds = getBoundsForNode(containerRef.current!);
+      const date = slotMetrics.getDateForSlot(
+        getSlotAtX(bounds, point.x, slotMetrics.slots),
+      );
 
       setSegment((segment) => {
         if (!event) {
           return null;
         }
-        let { start, end } = event
+        let { start, end } = event;
         if (action === 'move') {
           if (!pointInBox(bounds, point)) {
             return null;
           }
           start = merge(date, event.start);
-          end = add(start, diff(event.start, event.end, 'milliseconds'), 'milliseconds')
+          end = add(start, diff(event.start, event.end, 'milliseconds'), 'milliseconds');
         }
         if (action === 'resize') {
-          const cursorInRow = pointInBox(bounds, point)
+          const cursorInRow = pointInBox(bounds, point);
 
           if (direction === 'RIGHT') {
             if (cursorInRow) {
               if (slotMetrics.last < start) {
-                return null
+                return null;
               }
-              end = eq(startOf(end, 'day'), end) ? add(date, 1, 'day') : date
-            } else if (inRange(start, slotMetrics.first, slotMetrics.last) || (bounds.bottom < point.y && +slotMetrics.first > +start)) {
-              end = add(slotMetrics.last, 1, 'milliseconds')
+              end = eq(startOf(end, 'day'), end) ? add(date, 1, 'day') : date;
+            } else if (
+              inRange(start, slotMetrics.first, slotMetrics.last) ||
+              (bounds.bottom < point.y && +slotMetrics.first > +start)
+            ) {
+              end = add(slotMetrics.last, 1, 'milliseconds');
             } else {
               return null;
             }
-            end = merge(end, event.end)
+            end = merge(end, event.end);
             if (lt(end, start)) {
-              end = event.end
+              end = event.end;
             }
           } else if (direction === 'LEFT') {
             if (cursorInRow) {
               if (slotMetrics.first > end) {
-                return null
+                return null;
               }
-              start = date
-            } else if (inRange(end, slotMetrics.first, slotMetrics.last) || (bounds.top > point.y && lt(slotMetrics.last, end))) {
-              start = add(slotMetrics.first, -1, 'milliseconds')
+              start = date;
+            } else if (
+              inRange(end, slotMetrics.first, slotMetrics.last) ||
+              (bounds.top > point.y && lt(slotMetrics.last, end))
+            ) {
+              start = add(slotMetrics.first, -1, 'milliseconds');
             } else {
               return null;
             }
-            start = merge(start, event.start)
+            start = merge(start, event.start);
             if (gt(start, end)) {
-              start = event.start
+              start = event.start;
             }
           }
         }
-        const newSegment = eventSegments({ ...event, end, start, __isPreview: true }, slotMetrics.range)
-        if (segment && segment.span === newSegment.span && segment.left === newSegment.left && segment.right === newSegment.right) {
+        const newSegment = eventSegments(
+          { ...event, end, start, __isPreview: true },
+          slotMetrics.range,
+        );
+        if (
+          segment &&
+          segment.span === newSegment.span &&
+          segment.left === newSegment.left &&
+          segment.right === newSegment.right
+        ) {
           return segment;
         }
         return newSegment;
-      })
-    })
+      });
+    });
 
-    selector.addEventListener('selecting', () => setIsDragging(true))
+    selector.addEventListener('selecting', () => setIsDragging(true));
 
-    selector.addEventListener('select', ({detail:point}) => {
-      const bounds = getBoundsForNode(containerRef.current!)
+    selector.addEventListener('select', ({ detail: point }) => {
+      const bounds = getBoundsForNode(containerRef.current!);
       setSegment((segment) => {
         if (segment && pointInBox(bounds, point)) {
           const { event, action } = store.get(dragSubjectAtom) || {};
           setIsDragging(false);
           setDragSubject(null);
           if (event) {
-            const interactionInfo = { start: event.start, end: event.end, resource };
             if (action === 'move') {
-              onMove(event, interactionInfo);
+              onMove?.(event, { start: event.start, end: event.end, resource });
             } else if (action === 'resize') {
-              onResize(event, interactionInfo);
+              onResize?.(event, { start: event.start, end: event.end, resource });
             }
           }
         }
         return null;
-      })
-    })
+      });
+    });
 
     selector.addEventListener('click', () => {
       setIsDragging(false);
       setDragSubject(null);
       setSegment(null);
-    })
+    });
 
     selector.addEventListener('reset', () => {
       setIsDragging(false);
       setDragSubject(null);
       setSegment(null);
-    })
+    });
 
-    return () => selector.teardown()
-  }, [setIsDragging, setDragSubject, containerRef, resource, slotMetrics, onMove, onResize, store, auth.isTrainerOrAdmin]);
+    return () => selector.teardown();
+  }, [
+    setIsDragging,
+    setDragSubject,
+    containerRef,
+    resource,
+    slotMetrics,
+    onMove,
+    onResize,
+    store,
+    auth.isTrainerOrAdmin,
+  ]);
 
   React.useEffect(() => {
     if (range[0]?.getMonth() !== previousDate.getMonth()) {
@@ -226,19 +251,19 @@ function DateContentRow({
         <div className="rbc-row" ref={headingRowRef}>
           {range.map((date, index) => (
             <div
-            key={`header_${index}`}
+              key={`header_${index}`}
               className={cn('rbc-date-cell', {
-              'rbc-now': eq(date, new Date(), 'day'),
+                'rbc-now': eq(date, new Date(), 'day'),
                 'rbc-off-range': neq(date, currentDate, 'month'),
-                'rbc-current': eq(date, currentDate, 'day')
+                'rbc-current': eq(date, currentDate, 'day'),
               })}
             >
               <button
                 type="button"
                 className="rbc-button-link"
                 onClick={(e) => {
-                  e.preventDefault()
-                  onDrillDown(date)
+                  e.preventDefault();
+                  onDrillDown?.(date);
                 }}
               >
                 {format(date, 'dd')}

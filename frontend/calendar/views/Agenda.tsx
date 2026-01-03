@@ -15,8 +15,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { useAuth } from '@/ui/use-auth';
 import { cardCls } from '@/ui/style';
-import { z } from 'zod';
-import { EventForm } from '@/ui/event-form/types';
+import { EventFormType } from '@/ui/event-form/types';
 import { isTruthy } from '@/ui/truthyFilter';
 import { useAtomValue } from 'jotai';
 import { calendarConflictsFor } from '../state';
@@ -27,6 +26,8 @@ type MapItem = {
   lessons: Map<string, CalendarEvent[]>;
   groups: CalendarEvent[];
 };
+
+const preventDefault = (e: Event) => e.preventDefault();
 
 function Agenda({ events }: ViewProps): React.ReactNode {
   const dataByDay = React.useMemo(() => {
@@ -57,10 +58,13 @@ function Agenda({ events }: ViewProps): React.ReactNode {
               (x, y) => x.start.getTime() - y.start.getTime(),
             ),
             lessons: [...itemMap.lessons.entries()]
-              .map(([trainers, items]) => {
-                items.sort((x, y) => x.start.getTime() - y.start.getTime());
-                return [trainers, items] as const;
-              })
+              .map(
+                ([trainers, items]) =>
+                  [
+                    trainers,
+                    items.toSorted((x, y) => x.start.getTime() - y.start.getTime()),
+                  ] as const,
+              )
               .toSorted((x, y) => x[0].localeCompare(y[0])),
           },
         ] as const,
@@ -76,8 +80,8 @@ function Agenda({ events }: ViewProps): React.ReactNode {
         </div>
       )}
 
-      {dataByDay.map(([date, dateEntry], i) => (
-        <React.Fragment key={i}>
+      {dataByDay.map(([date, dateEntry]) => (
+        <React.Fragment key={date}>
           <div className="text-2xl tracking-wide mt-8 mb-2">
             {formatWeekDay(new Date(date))}
           </div>
@@ -131,7 +135,7 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
     <div
       className={cardCls({
         className:
-          'group min-w-[200px] w-72 rounded-lg border-accent-7 border' +
+          'relative group min-w-[200px] w-72 rounded-lg border-accent-7 border' +
           (event.eventTargetCohortsList.length > 0 ? ' pl-5' : ' pl-3'),
       })}
       title={conflictSummary ? `Kolize – ${conflictSummary}` : undefined}
@@ -185,12 +189,13 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
     return withLocation?.event?.location?.name || withLocation?.event?.locationText;
   }, [items]);
 
-  const nextEvent: Partial<z.infer<typeof EventForm>> = React.useMemo(() => {
+  const nextEvent: Partial<EventFormType> = React.useMemo(() => {
     const lastEnd = items.at(-1)?.end ?? new Date();
-    const trainer = items[0]?.event?.eventTrainersList[0]?.personId;
+    const trainer = items[0]?.instance.trainersList?.[0]?.personId;
     return {
       instances: [
         {
+          itemId: null,
           ...datetimeRangeToTimeRange(lastEnd, add(lastEnd, 45, 'minutes')),
           isCancelled: false,
           trainers: [],
@@ -209,7 +214,8 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
   return (
     <div
       className={cardCls({
-        className: 'group min-w-[200px] w-72 p-1 pt-3 rounded-lg border-accent-7 border',
+        className:
+          'relative group min-w-[200px] w-72 p-1 pt-3 rounded-lg border-accent-7 border',
       })}
     >
       {auth.isTrainerOrAdmin && (
@@ -228,7 +234,8 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
 
       <div className="ml-2 text-sm text-accent-11">{location}</div>
       <div className="ml-2 text-xl mb-1">
-        {(items[0]?.instance.trainersList ?? []).map((x) => x.person?.name).join(', ')}
+        {(items[0]?.instance.trainersList ?? []).map((x) => x.person?.name).join(', ') ||
+          '-'}
       </div>
       {items.map((item) => (
         <EventButton
@@ -243,5 +250,3 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
 }
 
 export default Agenda;
-
-const preventDefault = (e: Event) => e.preventDefault();

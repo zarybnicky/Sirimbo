@@ -1,46 +1,56 @@
-import range from 'lodash.range'
-import React from 'react'
-import { eventLevels, type Segment } from './common'
-import type { DateSlotMetrics } from './DateSlotMetrics'
-import EventCell from './EventCell'
-import { useAtomValue } from 'jotai'
-import { dragListenersAtom } from './state'
-import type { Resource } from './types'
+import range from 'lodash.range';
+import React from 'react';
+import { eventLevels, type Segment } from './common';
+import type { DateSlotMetrics } from './DateSlotMetrics';
+import EventCell from './EventCell';
+import { useAtomValue } from 'jotai';
+import { dragListenersAtom } from './state';
+import type { Resource } from './types';
 
-const isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
-const eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length
+const isSegmentInSlot = (seg: Segment, slot: number) =>
+  seg.left <= slot && seg.right >= slot;
+const eventsInSlot = (segments: Segment[], s: number) =>
+  segments.filter((seg) => isSegmentInSlot(seg, s)).length;
 
-function EventEndingRow({ segments, slotMetrics, resource }: {
+function EventEndingRow({
+  segments,
+  slotMetrics,
+  resource,
+}: {
   segments: Segment[];
-  slotMetrics: DateSlotMetrics,
+  slotMetrics: DateSlotMetrics;
   resource?: Resource;
 }) {
   const { onDrillDown } = useAtomValue(dragListenersAtom);
   const { slots } = slotMetrics;
-  const rowSegments = eventLevels(segments).levels[0]!
+  const rowSegments = eventLevels(segments).levels[0]!;
   const row: JSX.Element[] = [];
 
   let current = 1;
   let lastEnd = 1;
 
   while (current <= slots) {
-    const segment = rowSegments.find((s) => isSegmentInSlot(s, current))
+    const segment = rowSegments.find((s) => isSegmentInSlot(s, current));
     if (!segment?.event) {
-      current++
-      continue
+      current++;
+      continue;
     }
 
-    const key = `_lvl_${current}`
-    const gap = Math.max(0, segment.left - lastEnd)
+    const key = `_lvl_${current}`;
+    const gap = Math.max(0, segment.left - lastEnd);
 
-    const exactlyOneEvent = range(segment.left, segment.left + segment.span).every((s) => eventsInSlot(segments, s) === 1)
+    const exactlyOneEvent = range(segment.left, segment.left + segment.span).every(
+      (s) => eventsInSlot(segments, s) === 1,
+    );
     if (!exactlyOneEvent) {
       const closureCurrent = current;
       if (gap) {
         const flexBasis = `${(Math.abs(gap) / slots) * 100}%`;
-        row.push(<div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis }} />);
+        row.push(
+          <div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis }} />,
+        );
       }
-      const count = eventsInSlot(segments, current)
+      const count = eventsInSlot(segments, current);
       const flexBasis = `${(Math.abs(segment.span) / slots) * 100}%`;
       row.push(
         <div key={key} className="rbc-row-segment" style={{ flexBasis }}>
@@ -50,23 +60,25 @@ function EventEndingRow({ segments, slotMetrics, resource }: {
               key={`sm_${current}`}
               className="rbc-button-link rbc-show-more"
               onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                onDrillDown(slotMetrics.getDateForSlot(closureCurrent - 1))
+                e.preventDefault();
+                e.stopPropagation();
+                onDrillDown?.(slotMetrics.getDateForSlot(closureCurrent - 1));
               }}
             >
               {`+${count} dalších`}
             </button>
           )}
-        </div>
-      )
-      lastEnd = current = current + 1
-      continue
+        </div>,
+      );
+      lastEnd = current = current + 1;
+      continue;
     }
 
     if (gap) {
       const flexBasis = `${(Math.abs(gap) / slots) * 100}%`;
-      row.push(<div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis }} />);
+      row.push(
+        <div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis }} />,
+      );
     }
     const flexBasis = `${(Math.abs(segment.span) / slots) * 100}%`;
     row.push(
@@ -77,12 +89,12 @@ function EventEndingRow({ segments, slotMetrics, resource }: {
           continuesAfter={slotMetrics.continuesAfter(segment.event)}
           resource={resource}
         />
-      </div>
-    )
-    lastEnd = current = segment.right + 1
+      </div>,
+    );
+    lastEnd = current = segment.right + 1;
   }
 
-  return <div className="rbc-row">{row}</div>
+  return <div className="rbc-row">{row}</div>;
 }
 
-export default EventEndingRow
+export default EventEndingRow;
