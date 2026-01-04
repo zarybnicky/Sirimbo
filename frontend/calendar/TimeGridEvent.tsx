@@ -41,7 +41,7 @@ type TimeGridEventProps = {
     top: number | string;
     width: number | string;
     height: number | string;
-    xOffset: number;
+    xOffset: number | string;
     left?: number;
   };
   className?: string;
@@ -119,8 +119,7 @@ function TimeGridEvent({
           direction: resizeDirection as DragDirection,
         });
       } else if (isDraggable) {
-        event.sourceResource = resource;
-        setDragSubject({ action: 'move', event });
+        setDragSubject({ action: 'move', event: { ...event, sourceResource: resource } });
       }
     },
     [setDragSubject, event, isDraggable, isResizable, resource],
@@ -192,8 +191,8 @@ function TimeGridEvent({
         className={cn(className, {
           'rbc-event group transition-opacity': true,
           'rbc-resizable': isResizable,
-          'empty-event': event.event?.eventRegistrations.totalCount === 0,
-          'is-group': event.event?.type === 'GROUP',
+          'empty-event': event.event.eventRegistrations.totalCount === 0,
+          'is-group': event.event.type === 'GROUP',
           // TODO: 'rbc-selected': selected,
           'opacity-75': isBackgroundEvent,
           'rbc-drag-preview': event.__isPreview,

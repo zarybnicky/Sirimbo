@@ -1,6 +1,6 @@
 import { cn } from '@/ui/cn';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { eq, inRange } from 'date-arithmetic';
+import { add, eq, startOf } from 'date-arithmetic';
 import scrollbarSize from 'dom-helpers/scrollbarSize';
 import getWidth from 'dom-helpers/width';
 import { useAtomValue } from 'jotai';
@@ -11,19 +11,34 @@ import { diff, format, inEventRange, merge } from './localizer';
 import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
 import type { CalendarEvent, Resource } from './types';
 
+type PrimaryGrouping = 'resource' | 'day';
+
 interface TimeGridProps {
   events: readonly CalendarEvent[];
   backgroundEvents: readonly CalendarEvent[];
   resources: readonly Resource[];
   range: readonly Date[];
+  primary?: PrimaryGrouping;
 }
 
-function TimeGrid({ events, backgroundEvents, range, resources }: TimeGridProps) {
+type Grid = {
+  days: readonly Date[];
+  resources: readonly (Resource | undefined)[];
+  events: CalendarEvent[][][]; // [r][d]
+  bg: CalendarEvent[][][]; // [r][d]
+};
+
+export default React.memo(function TimeGrid({
+  events,
+  backgroundEvents,
+  range,
+  resources,
+  primary = 'resource',
+}: TimeGridProps) {
   const today = new Date();
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
   const focusedTime = useAtomValue(focusedTimeAtom);
-  const { onDrillDown } = useAtomValue(dragListenersAtom);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -34,11 +49,13 @@ function TimeGrid({ events, backgroundEvents, range, resources }: TimeGridProps)
   const [scrollbarMargin, setScrollbarMargin] = React.useState(false);
 
   useLayoutEffect(() => {
-    const width = gutterRef?.current ? getWidth(gutterRef.current) : undefined;
+    if (!gutterRef?.current) return;
+    const width = getWidth(gutterRef.current);
     if (width && gutterWidth !== width) {
       setGutterWidth(width);
     }
-    const content = contentRef.current!;
+    const content = contentRef.current;
+    if (!content) return;
     const isOverflowing =
       content.scrollHeight > content.clientHeight &&
       content.offsetWidth !== content.clientWidth;
@@ -48,29 +65,20 @@ function TimeGrid({ events, backgroundEvents, range, resources }: TimeGridProps)
   }, [gutterWidth, scrollbarMargin]);
 
   useLayoutEffect(() => {
-    const diffMillis = diff(merge(focusedTime, minTime), focusedTime, 'milliseconds');
-    const totalMillis = diff(minTime, maxTime, 'milliseconds');
     const content = contentRef.current;
-    if (content && totalMillis > 0) {
-      const ratio = Math.max(0, Math.min(1, diffMillis / totalMillis));
-      content.scrollTop = content.scrollHeight * ratio;
-    }
+    if (!content) return;
+    const totalMillis = diff(minTime, maxTime, 'milliseconds');
+    if (totalMillis <= 0) return;
+
+    const diffMillis = diff(merge(focusedTime, minTime), focusedTime, 'milliseconds');
+    const ratio = Math.min(1, Math.max(0, diffMillis / totalMillis));
+    content.scrollTop = (content.scrollHeight - content.clientHeight) * ratio;
   }, [focusedTime, minTime, maxTime]);
 
-  const { grouper, groupedEvents, groupedBackgroundEvents } = React.useMemo(() => {
-    const dateRange = { start: range[0]!, end: range.at(-1)! };
-    const rangeEvents = events.filter((event) => inEventRange(event, dateRange));
-    const rangeBackgroundEvents = backgroundEvents.filter((event) =>
-      inEventRange(event, dateRange),
-    );
-
-    const grouper = makeGrouper(resources);
-    return {
-      grouper,
-      groupedEvents: grouper.groupEvents(rangeEvents),
-      groupedBackgroundEvents: grouper.groupEvents(rangeBackgroundEvents),
-    };
-  }, [range, events, backgroundEvents, resources]);
+  const grid = React.useMemo(
+    () => buildGrid(range, resources, events, backgroundEvents),
+    [range, resources, events, backgroundEvents],
+  );
 
   return (
     <div
@@ -89,40 +97,41 @@ function TimeGrid({ events, backgroundEvents, range, resources }: TimeGridProps)
           className="px-1 rbc-time-header-gutter"
           style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }}
         />
-
-        {grouper.map(([resource], i) => (
-          <div className="rbc-time-header-content" key={i + (resource?.resourceId ?? '')}>
-            {resource && (
+        {primary === 'resource'
+          ? grid.resources.map((resource) => (
               <div
-                className="rbc-row rbc-row-resource"
-                key={`resource_${resource.resourceId}`}
+                className="rbc-time-header-content"
+                key={resource?.resourceId ?? '__nothing__'}
               >
-                <div className="rbc-header">{resource.resourceTitle}</div>
-              </div>
-            )}
-            <div className={cn('rbc-row', range.length <= 1 && 'hidden')}>
-              {range.map((date, i) => (
-                <div
-                  key={i}
-                  className={cn('rbc-header', eq(date, today, 'day') && 'rbc-today')}
-                >
-                  <button
-                    type="button"
-                    className="rbc-button-link"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onDrillDown?.(date);
-                    }}
-                  >
-                    <span role="columnheader" aria-sort="none">
-                      {format(date, 'dd eee')}
-                    </span>
-                  </button>
+                {resource && (
+                  <div className="rbc-row">
+                    <div className="rbc-header">{resource.resourceTitle}</div>
+                  </div>
+                )}
+                <div className={cn('rbc-row', grid.days.length <= 1 && 'hidden')}>
+                  {grid.days.map((date) => (
+                    <DayButton key={+date} today={today} date={date} />
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
+              </div>
+            ))
+          : grid.days.map((date) => (
+              <div className="rbc-time-header-content" key={+date}>
+                <div className="rbc-row">
+                  <DayButton today={today} date={date} />
+                </div>
+                <div className={cn('rbc-row', grid.resources.length <= 1 && 'hidden')}>
+                  {grid.resources.map((resource) => (
+                    <div
+                      key={resource?.resourceId ?? '__nothing__'}
+                      className="rbc-header"
+                    >
+                      {resource?.resourceTitle ?? ''}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
       </div>
 
       <div
@@ -134,56 +143,118 @@ function TimeGrid({ events, backgroundEvents, range, resources }: TimeGridProps)
           }
         }}
       >
-        <TimeGutter className="rbc-time-gutter" gutterRef={gutterRef} date={range[0]!} />
+        <TimeGutter
+          className="rbc-time-gutter"
+          gutterRef={gutterRef}
+          date={grid.days[0]!}
+        />
 
-        {grouper.map(([resource, id], i) =>
-          range.map((date, jj) => (
-            <DayColumn
-              gridRef={containerRef}
-              resource={resource}
-              key={`${i}-${jj}`}
-              date={date}
-              events={(groupedEvents.get(id) || []).filter((event) =>
-                inRange(date, event.start, event.end, 'day'),
-              )}
-              backgroundEvents={(groupedBackgroundEvents.get(id) || []).filter((event) =>
-                inRange(date, event.start, event.end, 'day'),
-              )}
-            />
-          )),
-        )}
+        {primary === 'resource'
+          ? grid.resources.flatMap((resource, rIdx) =>
+              grid.days.map((date, dIdx) => (
+                <DayColumn
+                  gridRef={containerRef}
+                  resource={resource}
+                  key={`${resource?.resourceId ?? '__nothing__'}-${+date}`}
+                  date={date}
+                  events={grid.events[rIdx]![dIdx]!}
+                  backgroundEvents={grid.bg[rIdx]![dIdx]!}
+                />
+              )),
+            )
+          : grid.days.flatMap((date, dIdx) =>
+              grid.resources.map((resource, rIdx) => (
+                <DayColumn
+                  gridRef={containerRef}
+                  resource={resource}
+                  key={`${+date}-${resource?.resourceId ?? '__nothing__'}`}
+                  date={date}
+                  events={grid.events[rIdx]![dIdx]!}
+                  backgroundEvents={grid.bg[rIdx]![dIdx]!}
+                />
+              )),
+            )}
       </div>
     </div>
   );
-}
+});
 
-export default React.memo(TimeGrid);
+function buildGrid(
+  range: readonly Date[],
+  resources: readonly Resource[],
+  events: readonly CalendarEvent[],
+  bgEvents: readonly CalendarEvent[],
+): Grid {
+  const days = range.map((d) => startOf(d, 'day'));
+  const viewStart = days[0]!;
+  const viewEnd = days.at(-1)!;
 
-function makeGrouper(resources: readonly Resource[]) {
-  return {
-    map<T>(fn: (x: [Resource | undefined, string], ix: number) => T): T[] {
-      if (!resources?.length) return [fn([undefined, ''], 0)];
-      return resources.map((resource, idx) => fn([resource, resource.resourceId], idx));
-    },
+  const hasResources = resources.length > 0;
+  const resourceList: (Resource | undefined)[] = hasResources
+    ? [...resources]
+    : [undefined];
 
-    groupEvents(events: CalendarEvent[]): Map<string | undefined, CalendarEvent[]> {
-      const eventsByResource = new Map();
+  const resourceIdx = new Map<string, number>();
+  if (hasResources)
+    for (let i = 0; i < resources.length; i++)
+      resourceIdx.set(resources[i]!.resourceId, i);
 
-      if (!resources?.length) {
-        // Return all events if resources are not provided
-        eventsByResource.set('', events);
-        return eventsByResource;
-      }
+  const dayIdx = new Map<number, number>();
+  for (let i = 0; i < days.length; i++) dayIdx.set(+days[i]!, i);
 
-      for (const event of events) {
-        for (const id of event.resourceIds) {
-          if (!resources.some((x) => x.resourceId === id)) continue;
-          const resourceEvents = eventsByResource.get(id) || [];
-          resourceEvents.push(event);
-          eventsByResource.set(id, resourceEvents);
+  const init = () =>
+    Array.from({ length: resourceList.length }, () =>
+      Array.from({ length: days.length }, () => [] as CalendarEvent[]),
+    );
+
+  const gridEvents = init();
+  const gridBg = init();
+
+  const dateRange = { start: viewStart, end: viewEnd };
+
+  const distribute = (src: readonly CalendarEvent[], out: CalendarEvent[][][]) => {
+    for (const ev of src) {
+      if (!inEventRange(ev, dateRange)) continue;
+
+      const evStart = startOf(ev.start < viewStart ? viewStart : ev.start, 'day');
+      const evEnd = startOf(ev.end > viewEnd ? viewEnd : ev.end, 'day');
+
+      const ids = hasResources ? ev.resourceIds : ['__nothing__'];
+      for (const rid of ids) {
+        const r = hasResources ? resourceIdx.get(rid) : 0;
+        if (r === undefined) continue;
+
+        for (let d = evStart; +d <= +evEnd; d = add(d, 1, 'day')) {
+          const di = dayIdx.get(+d);
+          if (di === undefined) continue;
+          out[r]![di]!.push(ev);
         }
       }
-      return eventsByResource;
-    },
+    }
   };
+
+  distribute(events, gridEvents);
+  distribute(bgEvents, gridBg);
+
+  return { days, resources: resourceList, events: gridEvents, bg: gridBg };
+}
+
+function DayButton({ today, date }: { today: Date; date: Date }) {
+  const { onDrillDown } = useAtomValue(dragListenersAtom);
+  return (
+    <div className={cn('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
+      <button
+        type="button"
+        className="rbc-button-link"
+        onClick={(e) => {
+          e.preventDefault();
+          onDrillDown?.(date);
+        }}
+      >
+        <span role="columnheader" aria-sort="none">
+          {format(date, 'dd eee')}
+        </span>
+      </button>
+    </div>
+  );
 }

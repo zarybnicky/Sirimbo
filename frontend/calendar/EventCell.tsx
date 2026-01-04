@@ -77,8 +77,7 @@ function EventCell({
           direction: resizeDirection as DragDirection,
         });
       } else if (isDraggable) {
-        event.sourceResource = resource;
-        setDragSubject({ action: 'move', event });
+        setDragSubject({ action: 'move', event: { ...event, sourceResource: resource } });
       }
     },
     [setDragSubject, event, isDraggable, isResizable, resource],

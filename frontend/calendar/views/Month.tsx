@@ -1,8 +1,9 @@
 import chunk from 'lodash.chunk';
 import React from 'react';
 import DateContentRow from '../DateContentRow';
-import { format, inEventRange, range, sortEvents } from '../localizer';
+import { ceil, diff, format, inEventRange, range } from '../localizer';
 import type { ViewProps } from '../types';
+import { startOf } from 'date-arithmetic';
 
 function MonthView({ date, range: days, events }: ViewProps) {
   const weeks = chunk(days, 7);
@@ -45,3 +46,16 @@ function MonthView({ date, range: days, events }: ViewProps) {
 }
 
 export default MonthView;
+
+function sortEvents(a: { start: Date; end: Date }, b: { start: Date; end: Date }) {
+  const startSort = +startOf(a.start, 'day') - +startOf(b.start, 'day');
+  const durA = diff(a.start, ceil(a.end, 'day'), 'day');
+  const durB = diff(b.start, ceil(b.end, 'day'), 'day');
+
+  return (
+    startSort || // sort by start Day first
+    Math.max(durB, 1) - Math.max(durA, 1) || // events spanning multiple days go first
+    +a.start - +b.start || // then sort by start time
+    +a.end - +b.end // then sort by end time
+  );
+}

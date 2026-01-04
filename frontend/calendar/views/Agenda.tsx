@@ -43,7 +43,9 @@ function Agenda({ events }: ViewProps): React.ReactNode {
           trainers.map((x) => x.personId).join(',') +
           event.location?.id +
           event.locationText;
-        mapItem.lessons.set(key, [...(mapItem.lessons.get(key) ?? []), calendarEvent]);
+        const arr = mapItem.lessons.get(key);
+        if (arr) arr.push(calendarEvent);
+        else mapItem.lessons.set(key, [calendarEvent]);
       } else {
         mapItem.groups.push(calendarEvent);
       }

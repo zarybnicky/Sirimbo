@@ -501,7 +501,7 @@ function ViewPicker({
   setView,
 }: {
   view: string;
-  setView: React.Dispatch<ViewKey>;
+  setView: (view: ViewKey) => void;
 }) {
   return (
     <DropdownMenu>
