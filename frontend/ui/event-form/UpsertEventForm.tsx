@@ -60,9 +60,7 @@ export function UpsertEventForm({
     defaultValues: {
       ...initialValue,
       isLocked:
-        typeof initialValue.isLocked !== 'undefined'
-          ? initialValue.isLocked
-          : lockEventsByDefault,
+        initialValue.isLocked !== undefined ? initialValue.isLocked : lockEventsByDefault,
     },
   });
 

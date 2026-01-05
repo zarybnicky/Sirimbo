@@ -23,7 +23,7 @@ export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment })
     () =>
       (data?.filteredPeopleList || [])
         .filter((x) => x.gender === 'MAN')
-        .sort((a, b) =>
+        .toSorted((a, b) =>
           `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
         )
         .map((x) => ({
@@ -37,7 +37,7 @@ export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment })
     () =>
       (data?.filteredPeopleList || [])
         .filter((x) => x.gender === 'WOMAN')
-        .sort((a, b) =>
+        .toSorted((a, b) =>
           `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
         )
         .map((x) => ({

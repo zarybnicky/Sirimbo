@@ -35,16 +35,15 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
     };
     serwist.addEventListener('installed', onInstalled);
 
+    const check = () =>
+      navigator.serviceWorker
+        .getRegistration('/')
+        .then((r) => r?.update())
+        .catch(() => {});
+
     let interval: number | undefined;
     const start = () => {
       if (interval) return;
-
-      const check = () =>
-        navigator.serviceWorker
-          .getRegistration('/')
-          .then((r) => r?.update())
-          .catch(() => {});
-
       if (document.visibilityState !== 'visible') return;
       interval = window.setInterval(check, CHECK_MS);
       void check();

@@ -54,7 +54,7 @@ export function PersonList() {
   });
   const nodes = React.useMemo(() => {
     return (data?.filteredPeopleList || [])
-      .sort((a, b) =>
+      .toSorted((a, b) =>
         `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
       )
       .map((item) => {

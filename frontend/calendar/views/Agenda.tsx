@@ -20,7 +20,6 @@ import { isTruthy } from '@/ui/truthyFilter';
 import { useAtomValue } from 'jotai';
 import { calendarConflictsFor } from '../state';
 import { AlertTriangle } from 'lucide-react';
-import { tenantConfigAtom } from '@/ui/state/auth';
 
 type MapItem = {
   lessons: Map<string, CalendarEvent[]>;

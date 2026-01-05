@@ -56,7 +56,11 @@ const Form = z.object({
   cohortIds: z.array(z.string()).prefault([]),
 });
 
-export function AnnouncementForm({ id, data, onSuccess }: {
+export function AnnouncementForm({
+  id,
+  data,
+  onSuccess,
+}: {
   id?: string;
   data?: AnnouncementFragment | null;
   onSuccess?: (id: string | undefined) => void;
@@ -71,42 +75,48 @@ export function AnnouncementForm({ id, data, onSuccess }: {
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
-    reset({
-      title: data?.title ?? '',
-      body: data?.body ?? '',
-      isVisible: data ? data.isVisible : true,
-      isSticky: data?.isSticky ?? false,
-      scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
-      scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
-      audienceRoles: data?.announcementAudiences.nodes.map(x => x.audienceRole).filter(isTruthy) ?? [],
-      cohortIds: data?.announcementAudiences.nodes.map(x => x.cohortId).filter(isTruthy) ?? [],
-    }, {
-      keepDirtyValues: true,
-      keepTouched: true,
-      keepErrors: true,
-    });
+    reset(
+      {
+        title: data?.title ?? '',
+        body: data?.body ?? '',
+        isVisible: data ? data.isVisible : true,
+        isSticky: data?.isSticky ?? false,
+        scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
+        scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
+        audienceRoles:
+          data?.announcementAudiences.nodes.map((x) => x.audienceRole).filter(isTruthy) ??
+          [],
+        cohortIds:
+          data?.announcementAudiences.nodes.map((x) => x.cohortId).filter(isTruthy) ?? [],
+      },
+      {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      },
+    );
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    const oldAudiences = [...data?.announcementAudiences.nodes || []];
+    const oldAudiences = [...(data?.announcementAudiences.nodes || [])];
     const newAudiences: UpsertAnnouncementInput['audiences'] = [];
 
     for (const cohortId of values.cohortIds) {
-      const existing = oldAudiences.findIndex(x => x.cohortId === cohortId);
+      const existing = oldAudiences.findIndex((x) => x.cohortId === cohortId);
       if (existing !== -1) {
         newAudiences.push({ cohortId, id: oldAudiences[existing]!.id });
         delete oldAudiences[existing];
       } else {
-        newAudiences.push({ cohortId })
+        newAudiences.push({ cohortId });
       }
     }
     for (const audienceRole of values.audienceRoles) {
-      const existing = oldAudiences.findIndex(x => x.audienceRole === audienceRole);
+      const existing = oldAudiences.findIndex((x) => x.audienceRole === audienceRole);
       if (existing !== -1) {
         newAudiences.push({ audienceRole, id: oldAudiences[existing]!.id });
         delete oldAudiences[existing];
       } else {
-        newAudiences.push({ audienceRole })
+        newAudiences.push({ audienceRole });
       }
     }
     // Remaining = unselected & to be deleted
@@ -126,7 +136,7 @@ export function AnnouncementForm({ id, data, onSuccess }: {
           scheduledUntil: values.scheduledUntil?.toISOString(),
         },
         audiences: newAudiences,
-      }
+      },
     });
     const newId = res.data?.upsertAnnouncement?.announcement?.id;
     if (!id && newId) {
@@ -140,11 +150,29 @@ export function AnnouncementForm({ id, data, onSuccess }: {
       <FormError error={onSubmit.error} />
 
       <TextFieldElement control={control} name="title" label="Nadpis" required />
-      <RichTextEditor initialState={data?.body} control={control} name="body" label="Text" />
+      <RichTextEditor
+        initialState={data?.body}
+        control={control}
+        name="body"
+        label="Text"
+      />
       <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
-      <CheckboxElement control={control} name="isSticky" value="1" label="Připnout na stálou nástěnku" />
-      <DatePickerElement control={control} name="scheduledSince" label="Odložit zveřejnění na den" />
-      <DatePickerElement control={control} name="scheduledUntil" label="Skrýt příspěvek dne" />
+      <CheckboxElement
+        control={control}
+        name="isSticky"
+        value="1"
+        label="Připnout na stálou nástěnku"
+      />
+      <DatePickerElement
+        control={control}
+        name="scheduledSince"
+        label="Odložit zveřejnění na den"
+      />
+      <DatePickerElement
+        control={control}
+        name="scheduledUntil"
+        label="Skrýt příspěvek dne"
+      />
       <AnnouncementAudienceEditor control={control} />
 
       <SubmitButton loading={onSubmit.loading} />
@@ -152,15 +180,27 @@ export function AnnouncementForm({ id, data, onSuccess }: {
   );
 }
 
-function AnnouncementAudienceEditor({ control }: {
+function AnnouncementAudienceEditor({
+  control,
+}: {
   control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
 }) {
   const { audienceRoles = [], cohortIds = [] } = useWatch({ control });
   const { data: cohorts, fetching: cohortsLoading } = useCohorts({ visible: true });
 
   const audiences: AnnouncementAudienceFragment[] = [
-    ...audienceRoles.map(x => ({ id: '', cohortId: null, cohort: null, audienceRole: x })),
-    ...cohortIds.map(x => ({ id: '', cohortId: x, cohort: cohorts.find(c => c.id === x) || null, audienceRole: null })),
+    ...audienceRoles.map((x) => ({
+      id: '',
+      cohortId: null,
+      cohort: null,
+      audienceRole: x,
+    })),
+    ...cohortIds.map((x) => ({
+      id: '',
+      cohortId: x,
+      cohort: cohorts.find((c) => c.id === x) || null,
+      audienceRole: null,
+    })),
   ];
 
   const showWarning = audienceRoles.length === 0 && cohortIds.length === 0;
@@ -175,17 +215,27 @@ function AnnouncementAudienceEditor({ control }: {
       </div>
 
       <section className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">Role</h4>
+        <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
+          Role
+        </h4>
         <AudienceRoleCheckboxes control={control} />
       </section>
 
       <section className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">Skupiny</h4>
-        <AudienceCohortCheckboxes control={control} cohorts={cohorts} loading={cohortsLoading} />
+        <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
+          Skupiny
+        </h4>
+        <AudienceCohortCheckboxes
+          control={control}
+          cohorts={cohorts}
+          loading={cohortsLoading}
+        />
       </section>
 
       <div className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">Shrnutí</h4>
+        <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
+          Shrnutí
+        </h4>
         <AnnouncementAudienceBadges audiences={audiences} />
         {showWarning ? (
           <div className="rounded-md border border-accent-7 bg-accent-3 px-3 py-2 text-xs text-accent-12">
@@ -197,14 +247,16 @@ function AnnouncementAudienceEditor({ control }: {
   );
 }
 
-function AudienceRoleCheckboxes({ control }: {
-  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>
+function AudienceRoleCheckboxes({
+  control,
+}: {
+  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
 }) {
   const { field } = useController({ control, name: 'audienceRoles' });
 
   const toggle = React.useCallback(
     (role: AnnouncementAudienceRole) => {
-      const next = new Set(field.value ?? []);
+      const next = new Set(field.value);
       if (next.has(role)) {
         next.delete(role);
       } else {
@@ -240,7 +292,7 @@ function AudienceCohortCheckboxes({
   cohorts,
   loading,
 }: {
-  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>
+  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
   cohorts: { id: string; name?: string | null; colorRgb?: string | null }[];
   loading?: boolean;
 }) {
@@ -264,7 +316,9 @@ function AudienceCohortCheckboxes({
   }
 
   if (cohorts.length === 0) {
-    return <div className="text-xs text-neutral-11">Žádné skupiny nejsou k dispozici.</div>;
+    return (
+      <div className="text-xs text-neutral-11">Žádné skupiny nejsou k dispozici.</div>
+    );
   }
 
   return (

@@ -1,5 +1,5 @@
 import { type Control, useFieldArray } from 'react-hook-form';
-import { EventForm, EventFormType } from '@/ui/event-form/types';
+import { EventForm } from '@/ui/event-form/types';
 import React from 'react';
 import { buttonCls } from '@/ui/style';
 import { Popover, PopoverTrigger } from '@/ui/popover';

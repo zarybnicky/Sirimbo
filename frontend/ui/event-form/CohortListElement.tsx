@@ -1,4 +1,4 @@
-import { EventForm, EventFormType } from '@/ui/event-form/types';
+import { EventForm } from '@/ui/event-form/types';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';

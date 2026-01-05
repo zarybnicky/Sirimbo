@@ -6,7 +6,7 @@ import { setNewTenant, storeRef } from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from '@vercel/analytics/react';
 import { Provider, createStore } from 'jotai';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
@@ -18,10 +18,13 @@ import * as React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
-import { cs } from "zod/locales"
+import { cs } from 'zod/locales';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { getCookie, setCookie } from 'cookies-next/client';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+
+import 'core-js/actual/array/to-reversed';
+import 'core-js/actual/array/to-sorted';
 
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
@@ -32,14 +35,21 @@ import '../style/leaflet.css';
 import '../style/lite-youtube-embed.css';
 import { hostToTenantId } from '@/tenant/catalog-server';
 
-NProgress.configure({ template: '<div role="bar" style="display:none"></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>' });
+NProgress.configure({
+  template:
+    '<div role="bar" style="display:none"></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>',
+});
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
 z.config(cs());
 
-function App({ Component, pageProps, resetUrqlClient }: AppProps & {
+function App({
+  Component,
+  pageProps,
+  resetUrqlClient,
+}: AppProps & {
   resetUrqlClient: () => void;
 }) {
   storeRef.resetUrqlClient = resetUrqlClient;
@@ -49,7 +59,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   }
 
   useLayoutEffect(() => {
-    const origin = new URL(window.origin)
+    const origin = new URL(window.origin);
     const tenantId = hostToTenantId.get(origin.host);
     const existing = String(getCookie('tenant_id'));
 
@@ -66,7 +76,10 @@ function App({ Component, pageProps, resetUrqlClient }: AppProps & {
   }, []);
 
   return (
-    <QueryParamProvider adapter={NextAdapterPages} options={{ removeDefaultsFromUrl: true }}>
+    <QueryParamProvider
+      adapter={NextAdapterPages}
+      options={{ removeDefaultsFromUrl: true }}
+    >
       <Provider store={storeRef.current}>
         <ConfirmProvider>
           <Tracking />

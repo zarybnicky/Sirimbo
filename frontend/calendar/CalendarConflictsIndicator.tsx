@@ -35,13 +35,13 @@ export function CalendarConflictsIndicator({
     return (data?.attendeeConflicts ?? [])
       .map((conflict) => normalizeConflict(conflict, 'Neznámý účastník', 'attendee'))
       .filter((conflict): conflict is NormalizedConflict => conflict !== null)
-      .toSorted(sortByFirstSince);
+      .toSorted((a, b) => a.firstSince.localeCompare(b.firstSince));
   }, [data?.attendeeConflicts]);
   const trainerConflicts = React.useMemo(() => {
     return (data?.trainerConflicts ?? [])
       .map((conflict) => normalizeConflict(conflict, 'Neznámý trenér', 'trainer'))
       .filter((conflict): conflict is NormalizedConflict => conflict !== null)
-      .toSorted(sortByFirstSince);
+      .toSorted((a, b) => a.firstSince.localeCompare(b.firstSince));
   }, [data?.trainerConflicts]);
 
   const conflictsByInstance = React.useMemo(() => {
@@ -50,10 +50,9 @@ export function CalendarConflictsIndicator({
       instanceId: string | null | undefined,
       conflict: CalendarInstanceConflict,
     ) => {
-      if (!instanceId) {
-        return;
+      if (instanceId) {
+        (map[instanceId] ??= []).push(conflict);
       }
-      map[instanceId] = [...(map[instanceId] ?? []), conflict];
     };
 
     const pushConflicts = (conflict: NormalizedConflict) => {
@@ -98,8 +97,8 @@ export function CalendarConflictsIndicator({
   React.useEffect(() => {
     setInstanceConflicts(conflictsByInstance);
   }, [conflictsByInstance, setInstanceConflicts]);
-
   React.useEffect(() => () => setInstanceConflicts({}), [setInstanceConflicts]);
+
   const totalConflicts = attendeeConflicts.length + trainerConflicts.length;
 
   if (!data || totalConflicts === 0) {
@@ -243,9 +242,12 @@ function normalizeConflict(
   const secondInstanceKey =
     conflict.secondInstanceId ?? conflict.secondEventId ?? conflict.secondSince;
 
-  const id = [conflict.personId ?? 'unknown', firstInstanceKey, secondInstanceKey].join(
-    ':',
-  );
+  const id = [
+    role,
+    conflict.personId ?? 'unknown',
+    firstInstanceKey,
+    secondInstanceKey,
+  ].join(':');
 
   return {
     id,
@@ -261,10 +263,6 @@ function normalizeConflict(
     secondSince: conflict.secondSince,
     secondUntil: conflict.secondUntil,
   };
-}
-
-function sortByFirstSince<T extends { firstSince: string }>(a: T, b: T) {
-  return new Date(a.firstSince).getTime() - new Date(b.firstSince).getTime();
 }
 
 type ConflictEventsSummaryProps = {
@@ -291,28 +289,19 @@ function ConflictEventsSummary({
 
   return (
     <div className="mt-2 space-y-3 text-sm text-neutral-11">
-      <EventRange title={firstName} since={firstSince} until={firstUntil} />
-      <EventRange title={secondName} since={secondSince} until={secondUntil} />
+      <div>
+        <p className="font-medium text-neutral-12">{firstName}</p>
+        <p className="text-xs uppercase tracking-wide text-neutral-9">
+          {dateTimeFormatter.formatRange(new Date(firstSince), new Date(firstUntil))}
+        </p>
+      </div>
+      <div>
+        <p className="font-medium text-neutral-12">{secondName}</p>
+        <p className="text-xs uppercase tracking-wide text-neutral-9">
+          {dateTimeFormatter.formatRange(new Date(secondSince), new Date(secondUntil))}
+        </p>
+      </div>
       {overlap && <p className="text-xs text-accent-10">Překryv: {overlap}</p>}
-    </div>
-  );
-}
-
-type EventRangeProps = {
-  title: string;
-  since: string;
-  until: string;
-};
-
-function EventRange({ title, since, until }: EventRangeProps) {
-  return (
-    <div>
-      <p className="font-medium text-neutral-12">{title}</p>
-      <p className="text-xs uppercase tracking-wide text-neutral-9">
-        {dateTimeFormatter
-          .formatRange(new Date(since), new Date(until))
-          .replace(' – ', ' – ')}
-      </p>
     </div>
   );
 }
@@ -332,7 +321,5 @@ function calculateOverlap(
   if (!(start < end)) {
     return null;
   }
-  return dateTimeFormatter
-    .formatRange(new Date(start.toISOString()), new Date(end.toISOString()))
-    .replace(' – ', ' – ');
+  return dateTimeFormatter.formatRange(start, end);
 }

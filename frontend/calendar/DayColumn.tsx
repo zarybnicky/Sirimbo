@@ -352,11 +352,10 @@ function DayColumn({
 
   const backgroundEventsInRange = React.useMemo(() => {
     return layoutEvents(backgroundEvents, slotMetrics, 5);
-  }, [step, timeslots, backgroundEvents, slotMetrics]);
-
+  }, [backgroundEvents, slotMetrics]);
   const eventsInRange = React.useMemo(() => {
     return layoutEvents(events, slotMetrics, 5); // allow 5 minute overlaps
-  }, [step, timeslots, events, slotMetrics]);
+  }, [events, slotMetrics]);
 
   return (
     <div

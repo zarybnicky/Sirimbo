@@ -1,5 +1,5 @@
 import { cn } from '@/ui/cn';
-import { EventForm, EventFormType } from '@/ui/event-form/types';
+import { EventForm } from '@/ui/event-form/types';
 import { TextFieldElement } from '@/ui/fields/text';
 import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
