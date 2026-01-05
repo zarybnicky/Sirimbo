@@ -50,7 +50,6 @@ import { Spinner } from '@/ui/Spinner';
 import { useTenant } from '@/ui/useTenant';
 import { EventFormType } from '@/ui/event-form/types';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
-import { tenantConfigAtom } from '@/ui/state/auth';
 
 type View = {
   component: React.ComponentType<ViewProps>;
@@ -195,10 +194,72 @@ function mapInstancesToCalendar(
   return { events, resources };
 }
 
+function slotToEventForm(
+  slot: SlotInfo,
+  events: CalendarEvent[],
+  persons: { id: string; isTrainer: boolean | null }[],
+  onlyMine: null | boolean,
+) {
+  const end = slot.action === 'click' ? add(slot.start, 45, 'minutes') : slot.end;
+
+  const def: Partial<EventFormType> = {
+    instances: [
+      {
+        itemId: null,
+        ...datetimeRangeToTimeRange(slot.start, end),
+        isCancelled: false,
+        trainers: [],
+      },
+    ],
+    isVisible: true,
+    type: 'LESSON',
+    capacity: 2,
+    locationId: 'none',
+  };
+
+  const [type, resourceId] = parseResourceKey(slot.resource?.resourceId);
+  if (type === 'person' && resourceId) {
+    def.trainers = [{ itemId: null, personId: resourceId, lessonsOffered: 0 }];
+  } else if (onlyMine && !slot.resource) {
+    const trainer = persons.find((x) => x.isTrainer);
+    if (trainer) {
+      def.trainers = [{ itemId: null, personId: trainer.id, lessonsOffered: 0 }];
+    }
+  }
+
+  if (type === 'location' && resourceId) {
+    def.locationId = resourceId;
+  }
+  if (type === 'locationText' && resourceId) {
+    def.locationId = 'other';
+    def.locationText = resourceId;
+  }
+  if (def.trainers?.[0] && def.locationId === 'none') {
+    const thisTrainer = def.trainers[0].personId!;
+    let closestPrev: CalendarEvent | undefined;
+    const thisInstance = def.instances?.[0]!;
+    for (const event of events) {
+      if (!event.instance.since.startsWith(thisInstance.date!)) continue;
+      if (!event.instance.trainersList?.some((x) => x.personId === thisTrainer)) continue;
+      if (event.instance.until.slice(11, 19) > thisInstance.startTime) continue;
+      if (!closestPrev || closestPrev.start < event.start) {
+        closestPrev = event;
+      }
+    }
+    if (closestPrev?.event?.locationText) {
+      def.locationId = 'other';
+      def.locationText = closestPrev.event.locationText;
+    }
+    if (closestPrev?.event?.location?.id) {
+      def.locationId = closestPrev.event.location.id;
+    }
+  }
+  return def;
+}
+
 export function Calendar() {
   const auth = useAuth();
   const client = useClient();
-  const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
   const [onlyMine, setOnlyMine] = useQueryParam('my', withDefault(BooleanParam, false));
   const [viewInput, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
   const view = Views[(viewInput as ViewKey) ?? ''] ?? Views.agenda;
@@ -282,74 +343,16 @@ export function Calendar() {
 
   const onSelectSlot = React.useCallback(
     (slot: SlotInfo) => {
-      const end = slot.action === 'click' ? add(slot.start, 45, 'minutes') : slot.end;
-
-      const def: Partial<EventFormType> = {
-        instances: [
-          {
-            itemId: null,
-            ...datetimeRangeToTimeRange(slot.start, end),
-            isCancelled: false,
-            trainers: [],
-          },
-        ],
-        isVisible: true,
-        isLocked: lockEventsByDefault,
-        type: 'LESSON',
-        capacity: 2,
-        locationId: 'none',
-      };
-
-      const [type, resourceId] = parseResourceKey(slot.resource?.resourceId);
-      if (type === 'person' && resourceId) {
-        def.trainers = [{ itemId: null, personId: resourceId, lessonsOffered: 0 }];
-      } else if (onlyMine && !slot.resource) {
-        const trainer = auth.persons.find((x) => x.isTrainer);
-        if (trainer) {
-          def.trainers = [{ itemId: null, personId: trainer.id, lessonsOffered: 0 }];
-        }
-      }
-
-      if (type === 'location' && resourceId) {
-        def.locationId = resourceId;
-      }
-      if (type === 'locationText' && resourceId) {
-        def.locationId = 'other';
-        def.locationText = resourceId;
-      }
-      if (def.trainers?.[0] && def.locationId === 'none') {
-        const thisTrainer = def.trainers[0].personId!;
-        let closestPrev: CalendarEvent | undefined;
-        const thisInstance = def.instances?.[0]!;
-        for (const event of events) {
-          if (!event.instance.since.startsWith(thisInstance.date!)) continue;
-          if (!event.instance.trainersList?.some((x) => x.personId === thisTrainer))
-            continue;
-          if (event.instance.until.slice(11, 19) > thisInstance.startTime) continue;
-          if (!closestPrev || closestPrev.start < event.start) {
-            closestPrev = event;
-          }
-        }
-        if (closestPrev?.event?.locationText) {
-          def.locationId = 'other';
-          def.locationText = closestPrev.event.locationText;
-        }
-        if (closestPrev?.event?.location?.id) {
-          def.locationId = closestPrev.event.location.id;
-        }
-      }
-
+      const def = slotToEventForm(slot, events, auth.persons, onlyMine);
       setTimeout(() => setCreating((prev) => prev || def));
     },
-    [lockEventsByDefault, onlyMine, auth.persons, events],
+    [onlyMine, auth.persons, events],
   );
 
   React.useEffect(() => {
     setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });
     return () => setDragListeners({});
   }, [onMove, onResize, onSelectSlot, setDate, setDragListeners]);
-
-  const label = React.useMemo(() => view.label(date), [view, date]);
 
   return (
     <div
@@ -401,7 +404,7 @@ export function Calendar() {
           {fetching && <Spinner />}
         </div>
 
-        <span className="grow px-3 text-right">{label}</span>
+        <span className="grow px-3 text-right">{view.label(date)}</span>
       </div>
 
       <view.component
@@ -440,30 +443,28 @@ function TrainerFilter() {
         <FilterIcon className="my-0.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {tenant?.tenantTrainersList
-          ?.filter((x) => x.status === 'ACTIVE')
-          .map((x) => (
-            <DropdownMenuButton
-              key={x.id}
-              onSelect={(e) => {
-                e.preventDefault();
-                const { person } = x;
-                if (person)
-                  setTrainerIds((xs) =>
-                    xs.includes(person.id)
-                      ? xs.filter((y) => y !== person.id)
-                      : [...xs, person.id],
-                  );
-              }}
-            >
-              {trainerIds.includes(x.person?.id || '') ? (
-                <CheckCircle2Icon />
-              ) : (
-                <CircleIcon />
-              )}
-              {x.person?.name}
-            </DropdownMenuButton>
-          ))}
+        {tenant?.tenantTrainersList?.map((x) => (
+          <DropdownMenuButton
+            key={x.id}
+            onSelect={(e) => {
+              e.preventDefault();
+              const { person } = x;
+              if (person)
+                setTrainerIds((xs) =>
+                  xs.includes(person.id)
+                    ? xs.filter((y) => y !== person.id)
+                    : [...xs, person.id],
+                );
+            }}
+          >
+            {trainerIds.includes(x.person?.id || '') ? (
+              <CheckCircle2Icon />
+            ) : (
+              <CircleIcon />
+            )}
+            {x.person?.name}
+          </DropdownMenuButton>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

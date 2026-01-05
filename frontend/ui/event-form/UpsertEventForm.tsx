@@ -25,6 +25,8 @@ import { z } from 'zod';
 import { useFormResult } from '@/ui/form';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAtomValue } from 'jotai';
+import { tenantConfigAtom } from '@/ui/state/auth';
 
 type NonEmptyArray<T> = [T, ...T[]];
 const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyArray<T> =>
@@ -37,6 +39,7 @@ export function UpsertEventForm({
   initialValue?: Partial<z.input<typeof EventForm>>;
   event?: EventFragment;
 }) {
+  const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
   const initializedRef = React.useRef(false);
   const { onSuccess } = useFormResult();
   const upsert = useMutation(UpsertEventDocument)[1];
@@ -54,7 +57,13 @@ export function UpsertEventForm({
     z.infer<typeof EventForm>
   >({
     resolver: zodResolver(EventForm),
-    defaultValues: initialValue,
+    defaultValues: {
+      ...initialValue,
+      isLocked:
+        typeof initialValue.isLocked !== 'undefined'
+          ? initialValue.isLocked
+          : lockEventsByDefault,
+    },
   });
 
   const locationOptions = React.useMemo(() => {
@@ -179,7 +188,7 @@ export function UpsertEventForm({
           isPublic: values.isPublic,
           isLocked: values.isLocked,
           enableNotes: values.enableNotes,
-          paymentType: type === 'LESSON' ? 'AFTER_INSTANCE' : 'NONE',
+          paymentType: values.type === 'LESSON' ? 'AFTER_INSTANCE' : 'NONE',
           guestPrice: null,
           memberPrice: null,
         },

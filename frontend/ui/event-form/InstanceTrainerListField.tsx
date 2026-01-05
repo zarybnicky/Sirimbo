@@ -26,12 +26,10 @@ export function InstanceTrainerListElement({
   const { data: tenant } = useTenant();
   const trainerOptions = React.useMemo(
     () =>
-      (tenant?.tenantTrainersList || [])
-        .filter((x) => x.status === 'ACTIVE')
-        .map((trainer) => ({
-          id: trainer.person?.id || '',
-          label: trainer.person?.name || '?',
-        })),
+      (tenant?.tenantTrainersList || []).map((trainer) => ({
+        id: trainer.person?.id || '',
+        label: trainer.person?.name || '?',
+      })),
     [tenant],
   );
 

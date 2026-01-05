@@ -43,19 +43,21 @@ export default function ClubPage() {
       <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Trenéři
       </h2>
-      {tenant.tenantTrainersList.filter(x => x.status === 'ACTIVE').map((data) => (
+      {tenant.tenantTrainersList.map((data) => (
         <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
           <TenantTrainerMenu align="start" data={data}>
             <DropdownMenuTrigger.RowDots />
           </TenantTrainerMenu>
 
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            {!data.person ? '?' : (
+            {!data.person ? (
+              '?'
+            ) : (
               <Link
                 className="underline font-bold"
                 href={{
                   pathname: '/clenove/[id]',
-                  query: { id: data.person?.id }
+                  query: { id: data.person?.id },
                 }}
               >
                 {data.person?.name}
@@ -64,9 +66,10 @@ export default function ClubPage() {
             {auth.isAdmin && (
               <div className="flex flex-wrap gap-4">
                 <span>
-                  {moneyFormatter.format(data.memberPrice45Min, '-')}
-                  {' '}
-                  {data.guestPrice45Min?.amount ? (`(${moneyFormatter.format(data.guestPrice45Min)})`) : ''}
+                  {moneyFormatter.format(data.memberPrice45Min, '-')}{' '}
+                  {data.guestPrice45Min?.amount
+                    ? `(${moneyFormatter.format(data.guestPrice45Min)})`
+                    : ''}
                   {' / 45min'}
                 </span>
               </div>
@@ -85,12 +88,14 @@ export default function ClubPage() {
           </TenantAdministratorMenu>
 
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            {!data.person ? '?' : (
+            {!data.person ? (
+              '?'
+            ) : (
               <Link
                 className="underline font-bold"
                 href={{
                   pathname: '/clenove/[id]',
-                  query: { id: data.person?.id }
+                  query: { id: data.person?.id },
                 }}
               >
                 {data.person?.name}
@@ -100,7 +105,7 @@ export default function ClubPage() {
         </div>
       ))}
 
-      <TitleBar title="Lokality/sály" variant='section' className="mt-3">
+      <TitleBar title="Lokality/sály" variant="section" className="mt-3">
         {auth.isAdmin && (
           <Dialog>
             <DialogTrigger.Add size="sm" />
@@ -116,19 +121,17 @@ export default function ClubPage() {
           <TenantLocationMenu id={item.id} align="start">
             <DropdownMenuTrigger.RowDots />
           </TenantLocationMenu>
-          <div className="grow gap-2 flex text-sm font-bold py-1">
-            {item.name}
-          </div>
+          <div className="grow gap-2 flex text-sm font-bold py-1">{item.name}</div>
         </div>
       ))}
 
-      {(auth.isAdmin && !!applications?.membershipApplicationsList?.length) && (
+      {auth.isAdmin && !!applications?.membershipApplicationsList?.length && (
         <>
           <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
             Žádosti o členství
           </h2>
 
-          {applications.membershipApplicationsList.map(x => (
+          {applications.membershipApplicationsList.map((x) => (
             <Dialog key={x.id}>
               <DialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
               <DialogContent>
@@ -140,4 +143,4 @@ export default function ClubPage() {
       )}
     </Layout>
   );
-};
+}

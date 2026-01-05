@@ -114,12 +114,10 @@ export function EventList() {
     query: { id: currentId },
   } = useTypedRouter(QueryParams);
   const auth = useAuth();
-  const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
 
   const emptyEvent = React.useMemo(() => {
     const day = startOf(endOf(new Date(), 'week', 1), 'day');
     return {
-      isLocked: lockEventsByDefault,
       instances: [
         {
           ...datetimeRangeToTimeRange(add(day, 9, 'hours'), add(day, 17, 'hours')),
@@ -128,7 +126,7 @@ export function EventList() {
         },
       ],
     };
-  }, [lockEventsByDefault]);
+  }, []);
 
   return (
     <div className="flex flex-col h-full">

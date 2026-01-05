@@ -182,7 +182,6 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
 
 function LessonGroup({ items }: { items: CalendarEvent[] }) {
   const auth = useAuth();
-  const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
 
   const location = React.useMemo(() => {
     const withLocation = items.find(
@@ -193,7 +192,6 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
 
   const nextEvent: Partial<EventFormType> = React.useMemo(() => {
     const lastEnd = items.at(-1)?.end ?? new Date();
-    const trainer = items[0]?.instance.trainersList?.[0]?.personId;
     return {
       instances: [
         {
@@ -204,14 +202,18 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
         },
       ],
       isVisible: true,
-      isLocked: lockEventsByDefault,
       type: 'LESSON',
       capacity: 2,
       locationId: items[0]?.event?.location?.id,
       locationText: items[0]?.event?.locationText,
-      trainers: trainer ? [{ itemId: null, personId: trainer, lessonsOffered: 0 }] : [],
+      trainers:
+        items[0]?.instance.trainersList?.map(({ personId }) => ({
+          itemId: null,
+          personId,
+          lessonsOffered: 0,
+        })) || [],
     };
-  }, [items, lockEventsByDefault]);
+  }, [items]);
 
   return (
     <div

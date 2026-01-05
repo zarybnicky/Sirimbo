@@ -2,7 +2,7 @@ import {
   DeleteEventInstanceDocument,
   EventDocument,
   EventFragment,
-  EventInstanceFragment,
+  EventInstanceWithTrainerFragment,
   UpdateEventInstanceDocument,
   UpsertEventDocument,
 } from '@/graphql/Event';
@@ -32,7 +32,10 @@ export function EventInstanceMenu({
   instance,
   children,
   ...props
-}: { event: EventFragment; instance: EventInstanceFragment } & DropdownMenuContentProps) {
+}: {
+  event: EventFragment;
+  instance: EventInstanceWithTrainerFragment;
+} & DropdownMenuContentProps) {
   const confirm = useConfirm();
   const client = useClient();
   const upsertEvent = useMutation(UpsertEventDocument)[1];
@@ -132,7 +135,7 @@ export function EventInstanceMenu({
   if (
     !auth.isAdmin &&
     (!auth.isTrainer ||
-      !event.eventTrainersList.some((x) => auth.personIds.includes(x.personId)))
+      !(instance.trainersList || []).some((x) => auth.personIds.includes(x.personId)))
   )
     return null;
 
