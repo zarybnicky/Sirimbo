@@ -6,29 +6,15 @@ import {
 } from '@/graphql/Event';
 import { cn } from '@/ui/cn';
 import { Dialog, DialogContent } from '@/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { datetimeRangeToTimeRange, fullDateFormatter } from '@/ui/format';
-import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { add, endOf, startOf } from 'date-arithmetic';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import {
-  CheckCircle2Icon,
-  ChevronDown,
-  CircleIcon,
-  FilterIcon,
-  MoveLeft,
-  MoveRight,
-} from 'lucide-react';
+import { useAtomValue, useSetAtom } from 'jotai';
 import React from 'react';
 import { useClient, useMutation, useQuery } from 'urql';
 import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { CalendarToolbar, type CalendarViewKey } from './CalendarToolbar';
 import TimeGrid from './TimeGrid';
 import { format, range } from './localizer';
 import {
@@ -46,8 +32,6 @@ import type {
 } from './types';
 import Agenda from './views/Agenda';
 import Month from './views/Month';
-import { Spinner } from '@/ui/Spinner';
-import { useTenant } from '@/ui/useTenant';
 import { EventFormType } from '@/ui/event-form/types';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
 
@@ -112,8 +96,6 @@ const Views = {
     supportsGrouping: false,
   },
 } as const satisfies Record<string, View>;
-
-type ViewKey = keyof typeof Views;
 
 const emptyArray: readonly [] = [];
 const preventDefault = (e: Event) => e.preventDefault();
@@ -262,7 +244,7 @@ export function Calendar() {
   const client = useClient();
   const [onlyMine, setOnlyMine] = useQueryParam('my', withDefault(BooleanParam, false));
   const [viewInput, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
-  const view = Views[(viewInput as ViewKey) ?? ''] ?? Views.agenda;
+  const view = Views[(viewInput as CalendarViewKey) ?? ''] ?? Views.agenda;
   const [date, setDate] = React.useState(new Date());
 
   const isDragging = useAtomValue(isDraggingAtom);
@@ -361,51 +343,17 @@ export function Calendar() {
         isDragging && 'rbc-is-dragging',
       )}
     >
-      <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
-        <div className="flex gap-2 flex-wrap items-start">
-          <div className={buttonGroupCls()}>
-            <button
-              type="button"
-              className={buttonCls({ variant: 'outline', className: 'py-0' })}
-              onClick={() => setDate(view.nav(date, -1))}
-            >
-              <MoveLeft className="!size-6 mx-1" />
-            </button>
-            <button
-              type="button"
-              className={buttonCls({ variant: 'outline' })}
-              onClick={() => setDate(new Date())}
-            >
-              Dnes
-            </button>
-            <button
-              type="button"
-              className={buttonCls({ variant: 'outline', className: 'py-0' })}
-              onClick={() => setDate(view.nav(date, +1))}
-            >
-              <MoveRight className="!size-6 mx-1" />
-            </button>
-          </div>
-
-          <ViewPicker view={viewInput} setView={setView} />
-
-          <button
-            type="button"
-            className={buttonCls({ variant: onlyMine ? 'primary' : 'outline' })}
-            onClick={() => setOnlyMine((x) => !x)}
-          >
-            Pouze moje
-          </button>
-
-          {!onlyMine && view.supportsGrouping && <GroupByPicker />}
-
-          <TrainerFilter />
-
-          {fetching && <Spinner />}
-        </div>
-
-        <span className="grow px-3 text-right">{view.label(date)}</span>
-      </div>
+      <CalendarToolbar
+        label={view.label(date)}
+        view={viewInput as CalendarViewKey}
+        onViewChange={(nextView) => setView(nextView)}
+        onNavigate={(direction) => setDate(view.nav(date, direction))}
+        onToday={() => setDate(new Date())}
+        onlyMine={onlyMine}
+        onToggleOnlyMine={() => setOnlyMine((x) => !x)}
+        supportsGrouping={view.supportsGrouping}
+        isFetching={fetching}
+      />
 
       <view.component
         date={date}
@@ -431,104 +379,5 @@ export function Calendar() {
         </Dialog>
       )}
     </div>
-  );
-}
-
-function TrainerFilter() {
-  const [trainerIds, setTrainerIds] = useAtom(trainerIdsFilterAtom);
-  const { data: tenant } = useTenant();
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
-        <FilterIcon className="my-0.5" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {tenant?.tenantTrainersList?.map((x) => (
-          <DropdownMenuButton
-            key={x.id}
-            onSelect={(e) => {
-              e.preventDefault();
-              const { person } = x;
-              if (person)
-                setTrainerIds((xs) =>
-                  xs.includes(person.id)
-                    ? xs.filter((y) => y !== person.id)
-                    : [...xs, person.id],
-                );
-            }}
-          >
-            {trainerIds.includes(x.person?.id || '') ? (
-              <CheckCircle2Icon />
-            ) : (
-              <CircleIcon />
-            )}
-            {x.person?.name}
-          </DropdownMenuButton>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function GroupByPicker() {
-  const [groupBy, setGroupBy] = useAtom(groupByAtom);
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
-        {groupBy === 'room'
-          ? 'Seskupit podle místa'
-          : groupBy === 'trainer'
-            ? 'Seskupit podle trenéra'
-            : 'Neseskupovat'}
-        <ChevronDown />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuButton onSelect={() => setGroupBy('none')}>
-          Neseskupovat
-        </DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setGroupBy('trainer')}>
-          Seskupit podle trenérů
-        </DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setGroupBy('room')}>
-          Seskupit podle místa
-        </DropdownMenuButton>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function ViewPicker({
-  view,
-  setView,
-}: {
-  view: string;
-  setView: (view: ViewKey) => void;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
-        {view === 'month'
-          ? 'Měsíc'
-          : view === 'day'
-            ? 'Den'
-            : view === 'week'
-              ? 'Týden'
-              : view === 'work_week'
-                ? 'Pracovní dny'
-                : view === 'agenda'
-                  ? 'Agenda'
-                  : ''}
-        <ChevronDown />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuButton onSelect={() => setView('month')}>Měsíc</DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setView('week')}>Týden</DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setView('work_week')}>
-          Pracovní dny
-        </DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setView('day')}>Den</DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setView('agenda')}>Agenda</DropdownMenuButton>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
