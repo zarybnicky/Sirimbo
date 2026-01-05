@@ -12,7 +12,6 @@ import Selection, {
 } from './Selection';
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
-import getStyledEvents from './layout-algorithms/no-overlap';
 import { diff, format, range } from './localizer';
 import type { CalendarEvent, Resource } from './types';
 import { useAuth } from '@/ui/use-auth';
@@ -27,6 +26,7 @@ import {
 } from './state';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { cn } from '@/ui/cn';
+import { layoutEvents } from '@/calendar/layout';
 
 const EMPTY = {};
 
@@ -351,13 +351,11 @@ function DayColumn({
   ]);
 
   const backgroundEventsInRange = React.useMemo(() => {
-    const minimumStartDifference = Math.ceil((step * timeslots) / 2);
-    return getStyledEvents(backgroundEvents, slotMetrics, minimumStartDifference);
+    return layoutEvents(backgroundEvents, slotMetrics, 5);
   }, [step, timeslots, backgroundEvents, slotMetrics]);
 
   const eventsInRange = React.useMemo(() => {
-    const minimumStartDifference = Math.ceil((step * timeslots) / 2);
-    return getStyledEvents(events, slotMetrics, minimumStartDifference);
+    return layoutEvents(events, slotMetrics, 5); // allow 5 minute overlaps
   }, [step, timeslots, events, slotMetrics]);
 
   return (

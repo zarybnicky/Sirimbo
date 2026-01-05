@@ -32,17 +32,12 @@ function formatTrainerLabel(name: string, useInitials: boolean): string {
   return sanitized || name;
 }
 
-function stringifyPercent(v: string | number) {
-  return typeof v === 'string' ? v : `${v}%`;
-}
-
 type TimeGridEventProps = {
   style: {
-    top: number | string;
-    width: number | string;
-    height: number | string;
-    xOffset: number | string;
-    left?: number;
+    top: number;
+    width: number;
+    height: number;
+    xOffset: number;
   };
   className?: string;
   event: CalendarEvent;
@@ -158,8 +153,7 @@ function TimeGridEvent({
     event.event.locationText,
     event.instance.trainersList,
     event.start,
-    startsAfterDay,
-    startsBeforeDay,
+    slotMetrics,
     useTrainerInitials,
   ]);
 
@@ -177,15 +171,10 @@ function TimeGridEvent({
         onMouseDown={onTouchOrMouse}
         onTouchStart={onTouchOrMouse}
         style={{
-          top: stringifyPercent(style.top),
-          width: isBackgroundEvent
-            ? `calc(${style.width} + 10px)`
-            : stringifyPercent(style.width),
-          height: stringifyPercent(style.height),
-          left:
-            typeof style.xOffset === 'string'
-              ? style.xOffset
-              : stringifyPercent(Math.max(0, style.xOffset)),
+          top: `${style.top}%`,
+          width: `${style.width}%`,
+          height: `${style.height}%`,
+          left: `${style.xOffset}%`,
         }}
         title={triggerTitle}
         className={cn(className, {

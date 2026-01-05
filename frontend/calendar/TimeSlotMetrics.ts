@@ -1,23 +1,8 @@
-import { startOf, add, lt, gt, min, inRange, diff, max, eq } from 'date-arithmetic';
 import { merge } from './localizer';
 
-function getDstOffset(start: Date, end: Date) {
-  return start.getTimezoneOffset() - end.getTimezoneOffset();
-}
-
-function getSlotDate(dt: Date, minutesFromMidnight: number, offset: number) {
-  return new Date(
-    dt.getFullYear(),
-    dt.getMonth(),
-    dt.getDate(),
-    0,
-    minutesFromMidnight + offset,
-    0,
-    0,
-  );
-}
-
 export type TimeSlotMetrics = ReturnType<typeof getSlotMetrics>;
+
+const MIN = 60_000;
 
 export function getSlotMetrics({
   date,
@@ -32,131 +17,120 @@ export function getSlotMetrics({
   step: number;
   timeslots: number;
 }) {
-  const start = merge(date, minTime);
-  const end = merge(date, maxTime);
+  const visibleStart = merge(date, minTime);
+  const visibleEnd = merge(date, maxTime);
 
-  // DST differences are handled inside the localizer
-  const totalMin = 1 + diff(start, end, 'minutes') + getDstOffset(start, end);
-  const dayStart = startOf(start, 'day');
-  const minutesFromMidnight =
-    diff(dayStart, start, 'minutes') + getDstOffset(dayStart, start);
-  const numGroups = Math.ceil((totalMin - 1) / (step * timeslots));
+  const startMs = +visibleStart;
+  const endMs = +visibleEnd;
+  const rangeMs = Math.max(1, endMs - startMs);
+  const stepMs = step * MIN;
+
+  const clampMs = (t: number) => Math.min(endMs, Math.max(startMs, t));
+  const topPctFromMs = (t: number) => ((clampMs(t) - startMs) / rangeMs) * 100;
+
+  // Pad to whole groups (keeps old “groups + slots” behavior)
+  const rawSlots = Math.ceil(rangeMs / stepMs);
+  const numGroups = Math.ceil(rawSlots / timeslots);
   const numSlots = numGroups * timeslots;
 
-  const groups: Date[][] = Array.from({ length: numGroups });
-  const slots: Date[] = Array.from({ length: numSlots });
-  // Each slot date is created from "zero", instead of adding `step` to
-  // the previous one, in order to avoid DST oddities
-  for (let grp = 0; grp < numGroups; grp++) {
-    groups[grp] = Array.from({ length: timeslots });
+  const slotAt = (slotIdx: number) => new Date(startMs + slotIdx * stepMs);
 
-    for (let slot = 0; slot < timeslots; slot++) {
-      const slotIdx = grp * timeslots + slot;
-      const minFromStart = slotIdx * step;
-      // A date with total minutes calculated from the start of the day
-      slots[slotIdx] = groups[grp]![slot] = getSlotDate(
-        start,
-        minutesFromMidnight,
-        minFromStart,
-      );
-    }
-  }
+  const groups: Date[][] = Array.from({ length: numGroups }, (_, g) =>
+    Array.from({ length: timeslots }, (_, s) => slotAt(g * timeslots + s)),
+  );
 
-  // Necessary to be able to select up until the last timeslot in a day
-  const lastSlotMinFromStart = slots.length * step;
-  slots.push(getSlotDate(start, minutesFromMidnight, lastSlotMinFromStart));
-
-  function positionFromDate(date: Date) {
-    return Math.min(diff(start, date, 'minutes') + getDstOffset(start, date), totalMin);
-  }
+  // includes “one extra”, selectable to end
+  const slots: Date[] = Array.from({ length: numSlots + 1 }, (_, i) => slotAt(i));
 
   return {
     groups,
 
-    dateIsInGroup(date: Date, groupIndex: number) {
-      const nextGroup = groups[groupIndex + 1];
-      return inRange(
-        date,
-        groups[groupIndex]?.[0]!,
-        nextGroup ? nextGroup[0]! : end,
-        'minutes',
-      );
+    dateIsInGroup(date: Date, groupIndex: number): boolean {
+      const g = groups[groupIndex];
+      if (!g) return false;
+      const next = groups[groupIndex + 1]?.[0] ?? visibleEnd;
+      return +date >= +g[0]! && +date < +next;
     },
 
-    nextSlot(slot: Date) {
-      const next = slots[Math.min(slots.indexOf(slot) + 1, slots.length - 1)];
-      // in the case of the last slot we won't a long enough range so manually get it
-      return next === slot ? add(slot, step, 'minutes') : (next as Date);
+    nextSlot(slot: Date): Date {
+      const t = clampMs(+slot);
+      const base = Math.floor((t - startMs) / stepMs);
+      const idx = Math.min(slots.length - 1, base + 1);
+      return slots[idx]!;
     },
 
-    closestSlotToPosition(percent: number) {
-      const slot = Math.min(
-        slots.length - 1,
-        Math.max(0, Math.floor(percent * numSlots)),
-      );
-      return slots[slot]!;
+    closestSlotToPosition(percent: number): Date {
+      const p = Math.min(1, Math.max(0, percent));
+      const idx = Math.min(slots.length - 1, Math.max(0, Math.floor(p * numSlots)));
+      return slots[idx]!;
     },
 
     closestSlotFromPoint(
       point: { x: number; y: number },
       boundaryRect: { top: number; bottom: number },
-    ) {
-      const range = Math.abs(boundaryRect.top - boundaryRect.bottom);
-      return this.closestSlotToPosition((point.y - boundaryRect.top) / range);
+    ): Date {
+      const rangePx = Math.abs(boundaryRect.top - boundaryRect.bottom) || 1;
+      return this.closestSlotToPosition((point.y - boundaryRect.top) / rangePx);
     },
 
-    closestSlotFromDate(date: Date, offset = 0) {
-      if (lt(date, start, 'minutes')) return slots[0]!;
-      if (gt(date, end, 'minutes')) return slots.at(-1)!;
+    closestSlotFromDate(date: Date, offset = 0): Date {
+      if (+date <= startMs) return slots[0]!;
+      if (+date >= endMs) return slots.at(-1)!;
 
-      const diffMins = diff(start, date, 'minutes');
-      return slots[(diffMins - (diffMins % step)) / step + offset]!;
+      const t = clampMs(+date);
+      const base = Math.floor((t - startMs) / stepMs);
+      const idx = Math.min(slots.length - 1, Math.max(0, base + offset));
+      return slots[idx]!;
     },
 
-    startsBeforeDay(date: Date) {
-      return lt(date, start, 'day');
+    startsBeforeDay(d: Date): boolean {
+      const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+      return +d < +dayStart;
+    },
+    startsAfterDay(d: Date): boolean {
+      const dayEnd = new Date(
+        d.getFullYear(),
+        d.getMonth(),
+        d.getDate(),
+        23,
+        59,
+        59,
+        999,
+      );
+      return +d > +dayEnd;
     },
 
-    startsAfterDay(date: Date) {
-      return gt(date, end, 'day');
+    startsBefore(date: Date): boolean {
+      return +merge(visibleStart, date) < startMs;
     },
-
-    startsBefore(date: Date) {
-      return lt(merge(start, date), start, 'minutes');
-    },
-
-    startsAfter(date: Date) {
-      return gt(merge(end, date), end, 'minutes');
+    startsAfter(date: Date): boolean {
+      return +merge(visibleEnd, date) > endMs;
     },
 
     getRange(rangeStart: Date, rangeEnd: Date, ignoreMin = false, ignoreMax = false) {
-      ({ rangeStart, rangeEnd } = {
-        rangeStart: min(rangeStart, rangeEnd),
-        rangeEnd: max(rangeStart, rangeEnd),
-      });
-      if (!ignoreMin) rangeStart = min(end, max(start, rangeStart));
-      if (!ignoreMax) rangeEnd = min(end, max(start, rangeEnd));
+      let a = +rangeStart;
+      let b = +rangeEnd;
+      if (b < a) [a, b] = [b, a];
 
-      const rangeStartMin = positionFromDate(rangeStart);
-      const rangeEndMin = positionFromDate(rangeEnd);
-      const top =
-        rangeEndMin > step * numSlots && !eq(end, rangeEnd)
-          ? ((rangeStartMin - step) / (step * numSlots)) * 100
-          : (rangeStartMin / (step * numSlots)) * 100;
+      if (!ignoreMin) a = Math.max(startMs, Math.min(endMs, a));
+      if (!ignoreMax) b = Math.max(startMs, Math.min(endMs, b));
+
+      const top = topPctFromMs(a);
+      const endTop = topPctFromMs(b);
+      const height = Math.max(0, endTop - top);
 
       return {
         top,
-        height: (rangeEndMin / (step * numSlots)) * 100 - top,
-        start: rangeStartMin,
-        startDate: rangeStart,
-        end: rangeEndMin,
-        endDate: rangeEnd,
+        height,
+        start: (a - startMs) / MIN,
+        startDate: new Date(a),
+        end: (b - startMs) / MIN,
+        endDate: new Date(b),
       };
     },
 
-    getCurrentTimePosition(rangeStart: Date) {
-      const rangeStartMin = positionFromDate(rangeStart);
-      return (rangeStartMin / (step * numSlots)) * 100;
+    getCurrentTimePosition(rangeStart: Date): number {
+      return topPctFromMs(+rangeStart);
     },
   };
 }

@@ -13,8 +13,6 @@ import { UpsertEventForm } from '../event-form/UpsertEventForm';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
-import { tenantConfigAtom } from '../state/auth';
-import { useAtomValue } from 'jotai';
 
 const QueryParams = z.object({
   id: zRouterId,
