@@ -37,7 +37,7 @@ query UserDetail($id: BigInt!) {
     uLogin
     uJmeno
     uPrijmeni
-    uCreatedAt
+    createdAt
     lastActiveAt
     lastLogin
     lastVersion

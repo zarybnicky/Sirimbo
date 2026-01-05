@@ -25,11 +25,13 @@ function formatDate(value?: string | null) {
 function UserPage() {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
-  const [{ data, fetching, error }] = useQuery<UserDetailQuery, UserDetailQueryVariables>({
-    query: UserDetailDocument,
-    variables: { id },
-    pause: !id,
-  });
+  const [{ data, fetching, error }] = useQuery<UserDetailQuery, UserDetailQueryVariables>(
+    {
+      query: UserDetailDocument,
+      variables: { id },
+      pause: !id,
+    },
+  );
 
   const user = data?.user;
 
@@ -45,9 +47,7 @@ function UserPage() {
 
         <header className="space-y-1">
           <h1 className="text-2xl font-semibold">Uživatel {user?.uEmail ?? id}</h1>
-          <p className="text-neutral-10 text-sm">
-            Login: {user?.uLogin ?? '—'}
-          </p>
+          <p className="text-neutral-10 text-sm">Login: {user?.uLogin ?? '—'}</p>
         </header>
 
         {fetching && <p>Načítám...</p>}
@@ -79,7 +79,7 @@ function UserPage() {
                 </div>
                 <div>
                   <dt className="text-sm text-neutral-10">Vytvořen</dt>
-                  <dd className="text-sm font-medium">{formatDate(user.uCreatedAt)}</dd>
+                  <dd className="text-sm font-medium">{formatDate(user.createdAt)}</dd>
                 </div>
                 <div>
                   <dt className="text-sm text-neutral-10">Poslední přihlášení</dt>
@@ -109,7 +109,10 @@ function UserPage() {
                           <p className="font-medium">
                             {proxy.person ? (
                               <Link
-                                href={{ pathname: '/clenove/[id]', query: { id: proxy.person.id } }}
+                                href={{
+                                  pathname: '/clenove/[id]',
+                                  query: { id: proxy.person.id },
+                                }}
                                 className="underline"
                               >
                                 {proxy.person.name}
@@ -118,7 +121,9 @@ function UserPage() {
                               '—'
                             )}
                           </p>
-                          <p className="text-xs text-neutral-10">Status: {proxy.status.toLowerCase()}</p>
+                          <p className="text-xs text-neutral-10">
+                            Status: {proxy.status.toLowerCase()}
+                          </p>
                         </div>
                         <div className="text-xs text-neutral-10 mt-2 sm:mt-0">
                           {proxy.status === 'ACTIVE' ? 'Aktivní' : 'Neaktivní'}

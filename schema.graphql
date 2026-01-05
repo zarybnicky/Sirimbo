@@ -11282,7 +11282,7 @@ type User {
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementsConnection!
-  createdAt: Datetime
+  createdAt: Datetime!
 
   """Reads and enables pagination through a set of `Dokumenty`."""
   dokumentiesByDKdoList(
@@ -11344,7 +11344,6 @@ type User {
   """Reads a single `Tenant` that is related to this `User`."""
   tenant: Tenant
   tenantId: BigInt!
-  uCreatedAt: Datetime!
   uEmail: String!
   uJmeno: String
   uLogin: String
@@ -11390,9 +11389,6 @@ input UserCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
-
-  """Checks for equality with the object’s `uCreatedAt` field."""
-  uCreatedAt: Datetime
 
   """Checks for equality with the object’s `uEmail` field."""
   uEmail: String
@@ -11549,8 +11545,6 @@ enum UsersOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  U_CREATED_AT_ASC
-  U_CREATED_AT_DESC
   U_EMAIL_ASC
   U_EMAIL_DESC
   U_JMENO_ASC

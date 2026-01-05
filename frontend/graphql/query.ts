@@ -70,11 +70,6 @@ export async function fetchGql<TResult, TVariables>(
   return result.data! as TResult;
 }
 
-let devToolsExchange: Exchange = ({ forward }) => forward;
-if (process.env.NODE_ENV === 'development') {
-  devToolsExchange = require('@urql/devtools').devtoolsExchange;
-}
-
 type ErrorEventTarget = TypedEventTarget<{ error: CustomEvent<CombinedError> }>;
 const errorEmitter = (errorTarget: ErrorEventTarget) =>
   mapExchange({
@@ -143,14 +138,12 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
     ? [errorEmitter(errorTarget), tracingExchange, appAuthExchange, fetchExchange]
     : typeof window === 'undefined'
       ? [
-          devToolsExchange,
           errorEmitter(errorTarget),
           ssrExchange ?? noopExchange,
           appAuthExchange,
           fetchExchange,
         ]
       : [
-          devToolsExchange,
           errorEmitter(errorTarget),
           refocusReloadExchange,
           cacheExchange({

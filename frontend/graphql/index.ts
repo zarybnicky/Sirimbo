@@ -9370,7 +9370,7 @@ export type User = {
   attachmentsByUploadedBy: AttachmentsConnection;
   /** Reads and enables pagination through a set of `Announcement`. */
   authoredAnnouncements: AnnouncementsConnection;
-  createdAt: Maybe<Scalars['Datetime']['output']>;
+  createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `Dokumenty`. */
   dokumentiesByDKdoList: Array<Dokumenty>;
   /** Reads and enables pagination through a set of `EventExternalRegistration`. */
@@ -9384,7 +9384,6 @@ export type User = {
   /** Reads a single `Tenant` that is related to this `User`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
-  uCreatedAt: Scalars['Datetime']['output'];
   uEmail: Scalars['String']['output'];
   uJmeno: Maybe<Scalars['String']['output']>;
   uLogin: Maybe<Scalars['String']['output']>;
@@ -9473,8 +9472,6 @@ export type UserCondition = {
   lastVersion?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `uCreatedAt` field. */
-  uCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `uEmail` field. */
   uEmail?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uJmeno` field. */
@@ -9611,8 +9608,6 @@ export type UsersOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC'
-  | 'U_CREATED_AT_ASC'
-  | 'U_CREATED_AT_DESC'
   | 'U_EMAIL_ASC'
   | 'U_EMAIL_DESC'
   | 'U_JMENO_ASC'
@@ -11446,7 +11441,6 @@ export type GraphCacheResolvers = {
     membershipApplicationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserMembershipApplicationsByCreatedByListArgs, Array<WithTypename<MembershipApplication> | string>>,
     tenant?: GraphCacheResolver<WithTypename<User>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
-    uCreatedAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     uEmail?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uJmeno?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
@@ -13304,7 +13298,6 @@ export type GraphCacheUpdaters = {
     membershipApplicationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserMembershipApplicationsByCreatedByListArgs>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
-    uCreatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uEmail?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uJmeno?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,

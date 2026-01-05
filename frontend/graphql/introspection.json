@@ -23292,8 +23292,11 @@
           {
             "name": "createdAt",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -23502,17 +23505,6 @@
           },
           {
             "name": "tenantId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "uCreatedAt",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
