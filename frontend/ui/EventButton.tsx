@@ -11,9 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { useAuth } from '@/ui/use-auth';
 import { diff } from 'date-arithmetic';
 import React from 'react';
-import { useAtomValue } from 'jotai';
-import { calendarConflictsFor } from '@/calendar/state';
-import { AlertTriangle } from 'lucide-react';
+import { CalendarConflicts } from '@/calendar/CalendarConflicts';
 
 type Props = {
   event: EventFragment;
@@ -34,33 +32,6 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
   const start = new Date(instance.since);
   const end = new Date(instance.until);
   const duration = diff(start, end, 'minutes');
-
-  const conflictsAtom = React.useMemo(
-    () => calendarConflictsFor(instance.id),
-    [instance.id],
-  );
-  const conflicts = useAtomValue(conflictsAtom);
-  const hasConflicts = conflicts.length > 0;
-  const conflictNames = React.useMemo(
-    () =>
-      conflicts
-        .map((conflict) => conflict.personName ?? conflict.fallbackName)
-        .join(', '),
-    [conflicts],
-  );
-  const conflictSummary = React.useMemo(() => {
-    if (!hasConflicts) return '';
-    return conflicts
-      .map((conflict) => {
-        const person = conflict.personName ?? conflict.fallbackName;
-        const range = shortTimeFormatter.formatRange(
-          new Date(conflict.otherSince),
-          new Date(conflict.otherUntil),
-        );
-        return `${person}: ${conflict.otherEventName} (${range})`;
-      })
-      .join(' • ');
-  }, [conflicts, hasConflicts]);
 
   const trainerIds = instance.trainersList?.map((x) => x.personId) ?? [];
   const instanceTrainers =
@@ -99,7 +70,6 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}
-            title={conflictSummary ? `Kolize – ${conflictSummary}` : undefined}
           >
             <div className="text-neutral-11">
               {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
@@ -121,13 +91,12 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
                   'VOLNO'
                 ))}
             </div>
-            {hasConflicts && (
-              <div className="flex items-center text-accent-11" aria-hidden>
-                <AlertTriangle className="size-4" />
-              </div>
-            )}
+            <CalendarConflicts
+              instanceId={instance.id}
+              formatRange={shortTimeFormatter.formatRange}
+              className="text-accent-11"
+            />
             {duration < 210 && <div className="text-neutral-11">{duration}&apos;</div>}
-            {hasConflicts && <span className="sr-only">Kolize: {conflictNames}</span>}
           </div>
         </PopoverTrigger>
 

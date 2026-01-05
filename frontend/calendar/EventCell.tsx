@@ -3,13 +3,13 @@ import type { CalendarEvent, DragDirection, Resource } from './types';
 import { shortTimeIntl } from './localizer';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { calendarConflictsFor, type DragSubject, dragSubjectAtom } from './state';
+import { useAtom, useSetAtom } from 'jotai';
+import { type DragSubject, dragSubjectAtom } from './state';
 import { cn } from '@/ui/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 import { isTruthy } from '@/ui/truthyFilter';
-import { AlertTriangle } from 'lucide-react';
+import { CalendarConflicts } from './CalendarConflicts';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -38,32 +38,6 @@ function EventCell({
   );
   const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
 
-  const conflictsAtom = React.useMemo(
-    () => calendarConflictsFor(event.instance.id),
-    [event.instance.id],
-  );
-  const conflicts = useAtomValue(conflictsAtom);
-  const conflictNames = React.useMemo(
-    () =>
-      conflicts
-        .map((conflict) => conflict.personName ?? conflict.fallbackName)
-        .join(', '),
-    [conflicts],
-  );
-  const conflictSummary = React.useMemo(
-    () =>
-      conflicts
-        .map((conflict) => {
-          const person = conflict.personName ?? conflict.fallbackName;
-          const range = shortTimeIntl.formatRange(
-            new Date(conflict.otherSince),
-            new Date(conflict.otherUntil),
-          );
-          return `${person}: ${conflict.otherEventName} (${range})`;
-        })
-        .join(' • '),
-    [conflicts],
-  );
   const onTouchOrMouse = React.useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
       if ((e as React.MouseEvent).button) {
@@ -103,19 +77,12 @@ function EventCell({
             'pl-3': event.event.eventTargetCohortsList.length > 0,
             relative: true,
           })}
-          title={conflictSummary ? `Kolize – ${conflictSummary}` : undefined}
         >
-          {conflicts.length > 0 && (
-            <>
-              <div
-                className="absolute right-1 top-1 text-accent-11 drop-shadow"
-                aria-hidden
-              >
-                <AlertTriangle className="size-4" />
-              </div>
-              <span className="sr-only">Kolize: {conflictNames}</span>
-            </>
-          )}
+          <CalendarConflicts
+            instanceId={event.instance.id}
+            formatRange={shortTimeIntl.formatRange}
+            className="absolute right-1 top-1 text-accent-11 drop-shadow"
+          />
           {event.event.eventTargetCohortsList.length > 0 && (
             <div className="absolute rounded-l-lg overflow-hidden border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
               {event.event.eventTargetCohortsList
