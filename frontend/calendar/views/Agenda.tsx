@@ -1,6 +1,6 @@
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
-import { datetimeRangeToTimeRange, formatEventType, formatWeekDay } from '@/ui/format';
+import { formatEventType, formatWeekDay } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
@@ -158,7 +158,8 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
       instances: [
         {
           itemId: null,
-          ...datetimeRangeToTimeRange(lastEnd, add(lastEnd, 45, 'minutes')),
+          since: lastEnd.toISOString(),
+          until: add(lastEnd, 45, 'minutes').toISOString(),
           isCancelled: false,
           trainers: [],
         },

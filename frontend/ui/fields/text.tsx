@@ -1,7 +1,7 @@
 import { cn } from '@/ui/cn';
 import { FieldHelper, type FieldHelperProps, FieldLabel } from '@/ui/form';
 import { AlertCircle as ReportProblemIcon } from 'lucide-react';
-import React from 'react';
+import React, { InputHTMLAttributes } from 'react';
 import {
   type Control,
   type FieldValues,
@@ -35,7 +35,7 @@ export function TextField({
   ...props
 }: FieldHelperProps &
   Extras &
-  Omit<React.HTMLProps<HTMLInputElement>, 'label' | 'prefix'>) {
+  Omit<React.InputHTMLAttributes<HTMLInputElement>, 'label' | 'prefix'>) {
   return (
     <div className={className || ''}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>

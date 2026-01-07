@@ -1,15 +1,21 @@
 import { cn } from '@/ui/cn';
 import { EventForm } from '@/ui/event-form/types';
-import { TextFieldElement } from '@/ui/fields/text';
-import { datetimeRangeToTimeRange, timeRangeToDatetimeRange } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { add } from 'date-arithmetic';
 import { ChevronRightIcon, CircleAlertIcon, Plus, X } from 'lucide-react';
 import React from 'react';
-import { type Control, useFieldArray, useWatch } from 'react-hook-form';
+import {
+  type Control,
+  FieldValues,
+  Path,
+  useController,
+  useFieldArray,
+  useWatch,
+} from 'react-hook-form';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { InstanceTrainerListElement } from './InstanceTrainerListField';
 import { z } from 'zod';
+import { TextField } from '@/ui/fields/text';
 
 export function InstanceListElement({
   name,
@@ -19,34 +25,47 @@ export function InstanceListElement({
   name: 'instances';
 }) {
   const { fields, append, remove, update } = useFieldArray({ name, control });
+  const instances = useWatch({ control, name: 'instances' });
   const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
   const isCamp = type === 'CAMP';
 
   const addInstancePlusWeek = React.useCallback(() => {
-    const lastInstance = (fields || []).findLast((x) => !!x.date);
-    if (!lastInstance) return datetimeRangeToTimeRange(new Date(), new Date());
-    const { date } = lastInstance;
-    if (!date) return datetimeRangeToTimeRange(new Date(), new Date());
-    const { since, until } = timeRangeToDatetimeRange(date, lastInstance);
-    append({
-      ...datetimeRangeToTimeRange(add(since, 1, 'week'), add(until, 1, 'week')),
-      isCancelled: false,
-      trainers: [],
-    });
-  }, [append, fields]);
+    const { since, until } = (instances || []).findLast((x) => !!x.since) ?? {};
+    if (!since || !until) {
+      append({
+        since: new Date().toISOString(),
+        until: add(new Date(), 45, 'minutes').toISOString(),
+        isCancelled: false,
+        trainers: [],
+      });
+    } else {
+      append({
+        since: add(new Date(since), 1, 'week').toISOString(),
+        until: add(new Date(until), 1, 'week').toISOString(),
+        isCancelled: false,
+        trainers: [],
+      });
+    }
+  }, [append, instances]);
 
   const addInstancePlus2Weeks = React.useCallback(() => {
-    const lastInstance = (fields || []).findLast((x) => !!x.date);
-    if (!lastInstance) return datetimeRangeToTimeRange(new Date(), new Date());
-    const { date } = lastInstance;
-    if (!date) return datetimeRangeToTimeRange(new Date(), new Date());
-    const { since, until } = timeRangeToDatetimeRange(date, lastInstance);
-    append({
-      ...datetimeRangeToTimeRange(add(since, 2, 'week'), add(until, 2, 'week')),
-      isCancelled: false,
-      trainers: [],
-    });
-  }, [append, fields]);
+    const { since, until } = (instances || []).findLast((x) => !!x.since) ?? {};
+    if (!since || !until) {
+      append({
+        since: new Date().toISOString(),
+        until: add(new Date(), 45, 'minutes').toISOString(),
+        isCancelled: false,
+        trainers: [],
+      });
+    } else {
+      append({
+        since: add(new Date(since), 2, 'week').toISOString(),
+        until: add(new Date(until), 2, 'week').toISOString(),
+        isCancelled: false,
+        trainers: [],
+      });
+    }
+  }, [append, instances]);
 
   return (
     <>
@@ -75,10 +94,10 @@ export function InstanceListElement({
       </div>
 
       {fields.map((instance, index) => {
-        if (!instance.date) return <React.Fragment key={instance.id} />;
+        if (!instance.since) return <React.Fragment key={instance.id} />;
         return (
           <Collapsible.Root asChild key={instance.id || index}>
-            <div className="flex flex-col gap-2" key={instance.id || instance.date}>
+            <div className="flex flex-col gap-2">
               <div className="flex flex-wrap items-start gap-2">
                 <div className="relative pt-2">
                   {instance.trainers && instance.trainers.length > 0 && (
@@ -93,58 +112,12 @@ export function InstanceListElement({
                   </Collapsible.Trigger>
                 </div>
 
-                <div
-                  className={cn(
-                    'flex min-w-0 flex-1 gap-2',
-                    isCamp ? 'flex-col' : 'flex-wrap items-baseline',
-                  )}
-                >
-                  <div className="flex flex-wrap items-baseline gap-2">
-                    <TextFieldElement
-                      control={control}
-                      name={`instances.${index}.date`}
-                      type="date"
-                      className="grow"
-                      aria-label={isCamp ? 'Začátek (datum)' : undefined}
-                    />
-                    <TextFieldElement
-                      control={control}
-                      name={`instances.${index}.startTime`}
-                      type="time"
-                      required
-                      aria-label="Začátek"
-                    />
-                    {!isCamp && (
-                      <TextFieldElement
-                        control={control}
-                        name={`instances.${index}.endTime`}
-                        type="time"
-                        required
-                        aria-label="Konec"
-                      />
-                    )}
-                  </div>
-
-                  {isCamp && (
-                    <div className="flex flex-wrap items-baseline gap-2">
-                      <TextFieldElement
-                        control={control}
-                        name={`instances.${index}.endDate`}
-                        type="date"
-                        className="grow"
-                        required
-                        aria-label="Konec (datum)"
-                      />
-                      <TextFieldElement
-                        control={control}
-                        name={`instances.${index}.endTime`}
-                        type="time"
-                        required
-                        aria-label="Konec"
-                      />
-                    </div>
-                  )}
-                </div>
+                <DateTimeRangeController
+                  control={control}
+                  nameSince={`instances.${index}.since`}
+                  nameUntil={`instances.${index}.until`}
+                  isCamp={isCamp}
+                />
 
                 <button
                   type="button"
@@ -152,10 +125,10 @@ export function InstanceListElement({
                     buttonCls({ size: 'sm', variant: 'outline' }),
                     'self-start',
                   )}
-                  disabled={fields.filter((x) => !!x.date).length <= 1}
+                  disabled={fields.filter((x) => !!x.since).length <= 1}
                   onClick={() =>
                     instance.itemId
-                      ? update(index, { ...instance, date: null, endDate: null })
+                      ? update(index, { ...instance, since: null, until: null })
                       : remove(index)
                   }
                 >
@@ -177,5 +150,150 @@ export function InstanceListElement({
         );
       })}
     </>
+  );
+}
+
+function pad2(n: number) {
+  return String(n).padStart(2, '0');
+}
+function toDateValue(d: Date) {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+function toTimeValue(d: Date) {
+  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+function parseTime(t: string) {
+  const [hh = '0', mm = '0', ss = '0'] = t.split(':');
+  return { h: Number(hh), m: Number(mm), s: Number(ss) };
+}
+function fromLocalParts(date: string, time: string) {
+  const [y, mo, da] = date.split('-').map(Number);
+  const { h, m, s } = parseTime(time);
+  return new Date(y!, (mo ?? 1) - 1, da ?? 1, h ?? 0, m ?? 0, s ?? 0, 0);
+}
+function isSameDay(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+function DateTimeRangeController<T extends FieldValues>({
+  control,
+  nameSince,
+  nameUntil,
+  isCamp,
+  className,
+}: {
+  control: Control<T>;
+  nameSince: Path<T>;
+  nameUntil: Path<T>;
+  isCamp: boolean;
+  className?: string;
+}) {
+  const since = useController({ control, name: nameSince });
+  const until = useController({ control, name: nameUntil });
+
+  const sinceDate = React.useMemo(() => {
+    const v = since.field.value as string | null | undefined;
+    return v ? new Date(v) : new Date();
+  }, [since.field.value]);
+
+  const untilDate = React.useMemo(() => {
+    const v = until.field.value as string | null | undefined;
+    return v ? new Date(v) : new Date(sinceDate.getTime() + 60 * 60 * 1000);
+  }, [until.field.value, sinceDate]);
+
+  const spansDays = !isSameDay(sinceDate, untilDate);
+  const showEndDate = isCamp || spansDays;
+
+  const startDate = toDateValue(sinceDate);
+  const startTime = toTimeValue(sinceDate);
+  const endDate = toDateValue(untilDate);
+  const endTime = toTimeValue(untilDate);
+
+  const invalidRange = untilDate.getTime() < sinceDate.getTime();
+
+  // Editing start shifts end by the same duration
+  const setSince = React.useCallback(
+    (nextSince: Date) => {
+      const dur = Math.max(0, untilDate.getTime() - sinceDate.getTime());
+      const nextUntil = new Date(nextSince.getTime() + dur);
+      since.field.onChange(nextSince.toISOString());
+      until.field.onChange(nextUntil.toISOString());
+    },
+    [since.field, until.field, sinceDate, untilDate],
+  );
+
+  const setUntil = React.useCallback(
+    (nextUntil: Date) => {
+      until.field.onChange(nextUntil.toISOString());
+    },
+    [until.field],
+  );
+
+  return (
+    <div
+      className={cn(
+        'flex min-w-0 flex-1 gap-2',
+        isCamp ? 'flex-col' : 'flex-wrap items-baseline',
+        className,
+      )}
+    >
+      <div className="flex flex-wrap items-baseline gap-2">
+        <TextField
+          type="date"
+          value={startDate}
+          aria-label={isCamp ? 'Začátek (datum)' : 'Datum'}
+          onChange={(e) => setSince(fromLocalParts(e.target.value, startTime))}
+        />
+
+        <TextField
+          type="time"
+          step={60}
+          value={startTime}
+          required
+          aria-label="Začátek"
+          onChange={(e) => setSince(fromLocalParts(startDate, e.target.value))}
+          error={
+            invalidRange
+              ? { type: '', message: 'Konec události je dřiv než začátek' }
+              : undefined
+          }
+        />
+
+        {!showEndDate && (
+          <TextField
+            type="time"
+            step={60}
+            value={endTime}
+            required
+            aria-label="Konec"
+            onChange={(e) => setUntil(fromLocalParts(startDate, e.target.value))}
+          />
+        )}
+      </div>
+
+      {(isCamp || showEndDate) && (
+        <div className="flex flex-wrap items-baseline gap-2">
+          <TextField
+            type="date"
+            value={endDate}
+            required={isCamp}
+            aria-label="Konec (datum)"
+            onChange={(e) => setUntil(fromLocalParts(e.target.value, endTime))}
+          />
+          <TextField
+            type="time"
+            step={60}
+            value={endTime}
+            required
+            aria-label="Konec"
+            onChange={(e) => setUntil(fromLocalParts(endDate, e.target.value))}
+          />
+        </div>
+      )}
+    </div>
   );
 }

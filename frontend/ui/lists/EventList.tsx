@@ -1,7 +1,7 @@
 import { EventListDocument } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
-import { datetimeRangeToTimeRange, fullDateFormatter } from '@/ui/format';
+import { fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
@@ -13,6 +13,7 @@ import { UpsertEventForm } from '../event-form/UpsertEventForm';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/ui/cn';
+import { EventForm } from '@/ui/event-form/types';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -116,14 +117,17 @@ export function EventList() {
   const emptyEvent = React.useMemo(() => {
     const day = startOf(endOf(new Date(), 'week', 1), 'day');
     return {
+      type: 'CAMP',
+      isVisible: true,
       instances: [
         {
-          ...datetimeRangeToTimeRange(add(day, 9, 'hours'), add(day, 17, 'hours')),
+          since: add(day, 9, 'hours').toISOString(),
+          until: add(day, 17, 'hours').toISOString(),
           isCancelled: false,
           trainers: [],
         },
       ],
-    };
+    } satisfies Partial<z.input<typeof EventForm>>;
   }, []);
 
   return (

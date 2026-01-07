@@ -130,48 +130,6 @@ export const formatOpenDateRange = (item: {
         ? `do ${fullDateFormatter.format(new Date(item.until))}`
         : 'neomezeně';
 
-export const timeRangeToDatetimeRange = (
-  startDate: string,
-  x: {
-    startTime: string;
-    endTime: string;
-    endDate?: string | null | undefined;
-  },
-): { since: Date; until: Date } => {
-  const endDate = x.endDate || startDate;
-  return {
-    since: new Date(`${startDate}T${x.startTime}`),
-    until: new Date(`${endDate}T${x.endTime}`),
-  };
-};
-
-export const datetimeRangeToTimeRange = (
-  start: Date,
-  end: Date,
-): {
-  date: string;
-  endDate: string;
-  startTime: string;
-  endTime: string;
-} => {
-  const startParts = numericFullFormatter.formatToParts(start);
-  const startDict: Record<string, string> = Object.assign(
-    {},
-    ...startParts.map((x) => ({ [x.type]: x.value })),
-  );
-  const endParts = numericFullFormatter.formatToParts(end);
-  const endDict: Record<string, string> = Object.assign(
-    {},
-    ...endParts.map((x) => ({ [x.type]: x.value })),
-  );
-  return {
-    date: `${startDict.year}-${startDict.month}-${startDict.day}`,
-    endDate: `${endDict.year}-${endDict.month}-${endDict.day}`,
-    startTime: `${startDict.hour}:${startDict.minute}:${startDict.second}`,
-    endTime: `${endDict.hour}:${endDict.minute}:${endDict.second}`,
-  };
-};
-
 export function formatAgeGroup(birthDate: string | null | undefined) {
   if (!birthDate) return;
   const birthYear = new Date(birthDate).getFullYear();

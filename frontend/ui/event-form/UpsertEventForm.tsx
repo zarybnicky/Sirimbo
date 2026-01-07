@@ -10,11 +10,7 @@ import { TrainerListElement } from '@/ui/event-form/TrainerListField';
 import { EventForm } from '@/ui/event-form/types';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextFieldElement } from '@/ui/fields/text';
-import {
-  datetimeRangeToTimeRange,
-  moneyFormatter,
-  timeRangeToDatetimeRange,
-} from '@/ui/format';
+import { moneyFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { useTenant } from '@/ui/useTenant';
 import { diff } from 'date-arithmetic';
@@ -105,7 +101,8 @@ export function UpsertEventForm({
           })),
           instances: event.eventInstancesList.map((x) => ({
             itemId: x.id,
-            ...datetimeRangeToTimeRange(new Date(x.since), new Date(x.until)),
+            since: x.since,
+            until: x.until,
             isCancelled: x.isCancelled,
             trainers: x.eventInstanceTrainersByInstanceIdList.map((y) => ({
               itemId: y.id,
@@ -140,14 +137,10 @@ export function UpsertEventForm({
       memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
     }
 
-    let multiplier = 0;
-    let range: { since: Date; until: Date } | null = null;
-    if (isNonEmpty(instances)) {
-      const { date } = instances[0];
-      range = date ? timeRangeToDatetimeRange(date, instances[0]) : null;
-    }
-    if (range?.since && range.until) {
-      multiplier = diff(range.since, range.until, 'minutes') / 45;
+    let multiplier: number;
+    if (isNonEmpty(instances) && instances[0].since && instances[0].until) {
+      const { since, until } = instances[0];
+      multiplier = diff(new Date(since), new Date(until), 'minutes') / 45;
     } else {
       multiplier = 1;
     }
@@ -205,20 +198,17 @@ export function UpsertEventForm({
           id: x.itemId,
           itemId: undefined,
         })),
-        instances: values.instances.map((x) => {
-          const y = x.date ? timeRangeToDatetimeRange(x.date, x) : null;
-          return {
-            id: x.itemId,
-            since: y?.since?.toISOString() || null,
-            until: y?.until?.toISOString() || null,
-            isCancelled: x.isCancelled,
-            trainers: x.trainers.map((y) => ({
-              ...y,
-              id: y.itemId,
-              itemId: undefined,
-            })),
-          };
-        }),
+        instances: values.instances.map((x) => ({
+          id: x.itemId,
+          since: x.since,
+          until: x.until,
+          isCancelled: x.isCancelled,
+          trainers: x.trainers.map((y) => ({
+            ...y,
+            id: y.itemId,
+            itemId: undefined,
+          })),
+        })),
       },
     });
     if (result.data?.upsertEvent?.event?.id) {

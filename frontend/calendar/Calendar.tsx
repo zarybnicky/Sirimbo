@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
-import { datetimeRangeToTimeRange, fullDateFormatter } from '@/ui/format';
+import { fullDateFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { add, endOf, startOf } from 'date-arithmetic';
@@ -206,7 +206,8 @@ function slotToEventForm(
     instances: [
       {
         itemId: null,
-        ...datetimeRangeToTimeRange(slot.start, end),
+        since: slot.start.toISOString(),
+        until: end.toISOString(),
         isCancelled: false,
         trainers: [],
       },
@@ -237,13 +238,17 @@ function slotToEventForm(
   if (def.trainers?.[0] && def.locationId === 'none') {
     const thisTrainer = def.trainers[0].personId!;
     let closestPrev: CalendarEvent | undefined;
-    const thisInstance = def.instances?.[0]!;
-    for (const event of events) {
-      if (!event.instance.since.startsWith(thisInstance.date!)) continue;
-      if (!event.instance.trainersList?.some((x) => x.personId === thisTrainer)) continue;
-      if (event.instance.until.slice(11, 19) > thisInstance.startTime) continue;
-      if (!closestPrev || closestPrev.start < event.start) {
-        closestPrev = event;
+    const thisInstance = def.instances?.[0];
+    if (thisInstance?.since && thisInstance.until) {
+      for (const event of events) {
+        if (!event.instance.since.startsWith(thisInstance.since.slice(0, 10))) continue;
+        if (!event.instance.trainersList?.some((x) => x.personId === thisTrainer))
+          continue;
+        if (event.instance.until.slice(11, 19) > thisInstance.since.slice(11, 19))
+          continue;
+        if (!closestPrev || closestPrev.start < event.start) {
+          closestPrev = event;
+        }
       }
     }
     if (closestPrev?.event?.locationText) {

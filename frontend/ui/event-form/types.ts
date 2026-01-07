@@ -19,10 +19,8 @@ export const EventForm = z.object({
   instances: z.array(
     z.object({
       itemId: z.string().nullish().prefault(null),
-      date: z.string().nullish().prefault(null),
-      endDate: z.string().nullish().prefault(null),
-      startTime: z.string(),
-      endTime: z.string(),
+      since: z.string().nullish().prefault(null),
+      until: z.string().nullish().prefault(null),
       isCancelled: z.boolean().nullish().prefault(false),
       trainers: z
         .array(
