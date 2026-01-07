@@ -1,6 +1,6 @@
 import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from '@/graphql/Crm';
-import { fetchGql } from '@/graphql/query';
+import { fetchGql } from '@/lib/query';
 
 export async function exportFormResponses() {
   const data = await fetchGql(FormResponsesDocument, {});
@@ -27,8 +27,7 @@ export async function exportFormResponses() {
   }
 
   for (const x of nodes) {
-    if (x.type === 'Zpětná vazba, web 05/2023')
-      continue;
+    if (x.type === 'Zpětná vazba, web 05/2023') continue;
     worksheet.addRow({
       name: x.data.name,
       surname: x.data.surname,

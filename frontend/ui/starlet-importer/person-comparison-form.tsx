@@ -1,5 +1,5 @@
 import { EvidenceStarletDocument } from '@/graphql/CurrentUser';
-import { fetchGql } from '@/graphql/query';
+import { fetchGql } from '@/lib/query';
 import { Course, Student } from '@/starlet/graphql';
 import { CourseDocument, CourseQuery } from '@/starlet/graphql/Query';
 import { capitalize } from '@/ui/format';

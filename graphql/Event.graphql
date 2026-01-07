@@ -17,14 +17,6 @@ fragment Event on Event {
   isVisible
   isPublic
   enableNotes
-  guestPrice {
-    amount
-    currency
-  }
-  memberPrice {
-    amount
-    currency
-  }
   paymentType
   eventTrainersList {
     id

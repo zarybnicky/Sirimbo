@@ -1,5 +1,5 @@
 import { PersonListDocument } from '@/graphql/Person';
-import { fetchGql } from '@/graphql/query';
+import { fetchGql } from '@/lib/query';
 import { fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 

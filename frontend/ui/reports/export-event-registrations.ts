@@ -1,5 +1,5 @@
 import { EventDocument } from '@/graphql/Event';
-import { fetchGql } from '@/graphql/query';
+import { fetchGql } from '@/lib/query';
 import { fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 
@@ -19,7 +19,7 @@ export async function exportEventRegistrations(id: string) {
     columns.push({
       header: trainer.name || '?',
       key: trainer.id,
-    })
+    });
   }
   worksheet.columns = columns;
 
@@ -51,9 +51,9 @@ export async function exportEventRegistrations(id: string) {
     };
     rows.push(row);
   }
-  rows.sort((a, b) => (a.man as string).localeCompare(b.man as string))
+  rows.sort((a, b) => (a.man as string).localeCompare(b.man as string));
   worksheet.addRows(rows);
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), `${data.event?.name || 'export-akce'}.xlsx`);
-};
+}

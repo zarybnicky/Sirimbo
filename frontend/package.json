@@ -32,7 +32,6 @@
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.12",
     "@urql/core": "^5.2.0",
-    "@urql/exchange-auth": "^2.2.1",
     "@urql/exchange-graphcache": "^7.2.4",
     "@urql/exchange-refocus": "^1.1.1",
     "@urql/exchange-retry": "^1.3.2",

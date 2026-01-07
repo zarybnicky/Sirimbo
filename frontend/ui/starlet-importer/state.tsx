@@ -1,5 +1,5 @@
 import { EvidenceStarletDocument } from '@/graphql/CurrentUser';
-import { fetchGql } from '@/graphql/query';
+import { fetchGql } from '@/lib/query';
 import { UserRole } from '@/starlet/graphql';
 import { atom } from 'jotai';
 

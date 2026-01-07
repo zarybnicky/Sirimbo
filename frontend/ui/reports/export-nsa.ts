@@ -1,5 +1,5 @@
 import { PersonWithLinksListDocument } from '@/graphql/Person';
-import { fetchGql } from '@/graphql/query';
+import { fetchGql } from '@/lib/query';
 import { saveAs } from 'file-saver';
 import { stringify } from 'csv-stringify/sync';
 

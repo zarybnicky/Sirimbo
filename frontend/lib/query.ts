@@ -2,7 +2,6 @@ import type { GraphCacheConfig } from '@/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
 import { print } from '@0no-co/graphql.web';
-import { authExchange } from '@urql/exchange-auth';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { TypedEventTarget } from 'typescript-event-target';
@@ -17,9 +16,9 @@ import type {
 } from 'urql';
 import { fetchExchange, mapExchange } from 'urql';
 import { pipe, tap } from 'wonka';
-import schema from './introspection.json';
+import schema from '@/graphql/introspection.json';
 import { errorTarget } from '@/ui/ErrorNotifier';
-import { tracingExchange } from './tracing';
+import { tracingExchange } from '@/graphql/tracing';
 
 export const origin =
   typeof window === 'undefined'
@@ -115,34 +114,15 @@ const refocusReloadExchange: Exchange =
     return forward(pipe<Operation, Operation>(ops$, tap(processIncomingOperation)));
   };
 
-const appAuthExchange = authExchange(async (utils) => ({
-  didAuthError() {
-    return false;
-  },
-  async refreshAuth() {},
-  addAuthToOperation(operation) {
-    const token = storeRef.current.get(tokenAtom);
-    if (!token) return operation;
-    return utils.appendHeaders(operation, {
-      Authorization: `Bearer ${token}`,
-    });
-  },
-}));
-
 const shouldTrace = false;
 
 export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
   exchanges: shouldTrace
-    ? [errorEmitter(errorTarget), tracingExchange, appAuthExchange, fetchExchange]
+    ? [errorEmitter(errorTarget), tracingExchange, fetchExchange]
     : typeof window === 'undefined'
-      ? [
-          errorEmitter(errorTarget),
-          ssrExchange ?? noopExchange,
-          appAuthExchange,
-          fetchExchange,
-        ]
+      ? [errorEmitter(errorTarget), ssrExchange ?? noopExchange, fetchExchange]
       : [
           errorEmitter(errorTarget),
           refocusReloadExchange,
@@ -162,14 +142,19 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
             retryIf: (err) => !!err && !!err.networkError,
           }),
           ssrExchange ?? noopExchange,
-          appAuthExchange,
           fetchExchange,
         ],
   fetchOptions: () => {
     const tenantId = storeRef.current.get(tenantIdAtom);
+    const token = storeRef.current.get(tokenAtom);
     return {
       credentials: 'include',
       headers: {
+        ...(token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {}),
         ...(tenantId
           ? {
               'x-tenant-id': tenantId,

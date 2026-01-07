@@ -2,7 +2,7 @@ import {
   EvidenceStarletDocument,
   UpdateTenantSettingsDocument,
 } from '@/graphql/CurrentUser';
-import { fetchGql } from '@/graphql/query';
+import { fetchGql } from '@/lib/query';
 import { FoldersAndSeasonsDocument } from '@/starlet/graphql/Query';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { useFormResult } from '@/ui/form';

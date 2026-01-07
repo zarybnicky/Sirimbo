@@ -1,6 +1,6 @@
 import { BalanceSheetDocument } from '@/graphql/Payment';
 import { saveAs } from 'file-saver';
-import { fetchGql } from '@/graphql/query';
+import { fetchGql } from '@/lib/query';
 
 export async function exportBalanceSheet() {
   const { Workbook } = await import('exceljs');
@@ -23,8 +23,12 @@ export async function exportBalanceSheet() {
   }
 
   const accounts = (data?.accountsList || [])
-    .filter(x => x.person?.name)
-    .toSorted((a, b) => `${a.person?.lastName}${a.person?.firstName}`.localeCompare(`${b.person?.lastName}${b.person?.firstName}`));
+    .filter((x) => x.person?.name)
+    .toSorted((a, b) =>
+      `${a.person?.lastName}${a.person?.firstName}`.localeCompare(
+        `${b.person?.lastName}${b.person?.firstName}`,
+      ),
+    );
 
   for (const x of accounts) {
     const assets = 100 * Math.round(Number.parseFloat(x.assets || '') / 100);

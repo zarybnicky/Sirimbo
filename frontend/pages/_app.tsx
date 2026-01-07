@@ -1,4 +1,4 @@
-import { configureUrql } from '@/graphql/query';
+import { configureUrql } from '@/lib/query';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';

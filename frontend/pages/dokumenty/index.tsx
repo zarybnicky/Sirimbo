@@ -3,7 +3,7 @@ import { FileListDocument } from '@/graphql/Documents';
 import { fullDateFormatter } from '@/ui/format';
 import { useQuery } from 'urql';
 import { TitleBar } from '@/ui/TitleBar';
-import { origin } from '@/graphql/query';
+import { origin } from '@/lib/query';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/ui/Layout';
 import { cardCls } from '@/ui/style';
