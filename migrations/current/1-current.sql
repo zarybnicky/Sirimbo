@@ -31,3 +31,4 @@ grant administrator to system_admin;
 
 --!include functions/event_instance_approx_price.sql
 --!include functions/create_jwt_token.sql
+--!include functions/cron_update_memberships.sql
