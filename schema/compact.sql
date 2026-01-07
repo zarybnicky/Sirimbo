@@ -251,8 +251,6 @@ CREATE TABLE public.event (
   name text NOT NULL,
   location_text text NOT NULL,
   description text NOT NULL,
-  since date,
-  until date,
   capacity int DEFAULT 0 NOT NULL,
   files_legacy text DEFAULT ''::text NOT NULL,
   updated_at timestamp with time zone,
@@ -557,12 +555,10 @@ CREATE TABLE public.users (
   u_prijmeni text,
   u_email public.citext NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  u_confirmed boolean DEFAULT false NOT NULL,
-  u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
     ON DELETE CASCADE,
   last_login timestamp with time zone,
-  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
   last_active_at timestamp with time zone,
   last_version text
 );

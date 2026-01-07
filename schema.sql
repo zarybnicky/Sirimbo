@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict v6zbP09MJ343AgBVzDefXWTee8vOZghH4LTkau2EzCbLBZFhBYL0aqK88tcoect
+\restrict bARoX1ANBeoevpLb8y2nvOdx2dg5q3tIiiSXIU7yZ3nb7kMCMJgLpknPvF4Sddq
 
 -- Dumped from database version 17.7
 -- Dumped by pg_dump version 18.1
@@ -540,11 +540,9 @@ CREATE TABLE public.users (
     u_prijmeni text,
     u_email public.citext NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    u_confirmed boolean DEFAULT false NOT NULL,
-    u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     last_login timestamp with time zone,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     last_active_at timestamp with time zone,
     last_version text
 );
@@ -562,13 +560,6 @@ COMMENT ON TABLE public.users IS '@omit create,update,delete';
 --
 
 COMMENT ON COLUMN public.users.u_pass IS '@omit';
-
-
---
--- Name: COLUMN users.u_confirmed; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.users.u_confirmed IS '@omit';
 
 
 --
@@ -879,6 +870,8 @@ with
   ),
   tenant_admins as (
     select distinct ta.tenant_id from tenant_administrator ta join person_ids p on p.person_id = ta.person_id where ta.status = 'active'
+    union
+    select id from tenant where app_private.is_system_admin(u.id)
   ),
   tenant_ids as (
     select tenant_id from tenant_memberships
@@ -967,29 +960,23 @@ $$;
 CREATE FUNCTION app_private.cron_update_memberships() RETURNS void
     LANGUAGE sql
     AS $$
-  update user_proxy set status = 'active' where now() <@ active_range and status <> 'active';
-  update user_proxy set status = 'pending' where now() < since and status <> 'pending';
-  update user_proxy set status = 'expired' where now() > until and status <> 'expired';
+  UPDATE public.user_proxy SET status = app_private.relationship_status_next(now(), active_range, status)
+  WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  update couple set status = 'active' where now() <@ active_range and status <> 'active';
-  update couple set status = 'pending' where now() < since and status <> 'pending';
-  update couple set status = 'expired' where now() > until and status <> 'expired';
+  UPDATE public.couple SET status = app_private.relationship_status_next(now(), active_range, status)
+  WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  update cohort_membership set status = 'active' where now() <@ active_range and status <> 'active';
-  update cohort_membership set status = 'pending' where now() < since and status <> 'pending';
-  update cohort_membership set status = 'expired' where now() > until and status <> 'expired';
+  UPDATE public.cohort_membership SET status = app_private.relationship_status_next(now(), active_range, status)
+  WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  update tenant_membership set status = 'active' where now() <@ active_range and status <> 'active';
-  update tenant_membership set status = 'pending' where now() < since and status <> 'pending';
-  update tenant_membership set status = 'expired' where now() > until and status <> 'expired';
+  UPDATE public.tenant_membership SET status = app_private.relationship_status_next(now(), active_range, status)
+  WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  update tenant_trainer set status = 'active' where now() <@ active_range and status <> 'active';
-  update tenant_trainer set status = 'pending' where now() < since and status <> 'pending';
-  update tenant_trainer set status = 'expired' where now() > until and status <> 'expired';
+  UPDATE public.tenant_trainer SET status = app_private.relationship_status_next(now(), active_range, status)
+  WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  update tenant_administrator set status = 'active' where now() <@ active_range and status <> 'active';
-  update tenant_administrator set status = 'pending' where now() < since and status <> 'pending';
-  update tenant_administrator set status = 'expired' where now() > until and status <> 'expired';
+  UPDATE public.tenant_administrator SET status = app_private.relationship_status_next(now(), active_range, status)
+  WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 $$;
 
 
@@ -1483,6 +1470,22 @@ $$;
 
 
 --
+-- Name: relationship_status_next(timestamp with time zone, tstzrange, public.relationship_status); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.relationship_status_next(ts timestamp with time zone, range tstzrange, current public.relationship_status) RETURNS public.relationship_status
+    LANGUAGE sql IMMUTABLE
+    AS $$
+  SELECT CASE
+    WHEN ts < lower(range) THEN 'pending'
+    WHEN NOT upper_inf(range) AND ts >= upper(range) THEN 'expired'
+    WHEN range @> ts THEN 'active'
+    ELSE current
+  END
+$$;
+
+
+--
 -- Name: tg__timestamps(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -1719,34 +1722,6 @@ begin
   end if;
 
   return OLD;
-end;
-$$;
-
-
---
--- Name: tg_event_instance__update_parent_range(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.tg_event_instance__update_parent_range() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
-begin
-  IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    UPDATE event
-    SET since = (SELECT min(since) FROM event_instance WHERE event_id = NEW.event_id),
-        until = (SELECT max(until) FROM event_instance WHERE event_id = NEW.event_id)
-    WHERE id = NEW.event_id;
-  END IF;
-
-  IF TG_OP = 'UPDATE' OR TG_OP = 'DELETE' THEN
-    UPDATE event
-    SET since = (SELECT min(since) FROM event_instance WHERE event_id = OLD.event_id),
-        until = (SELECT max(until) FROM event_instance where event_id = OLD.event_id)
-    WHERE id = OLD.event_id;
-  END IF;
-
-  RETURN NULL;
 end;
 $$;
 
@@ -2667,8 +2642,6 @@ CREATE TABLE public.event (
     name text NOT NULL,
     location_text text NOT NULL,
     description text NOT NULL,
-    since date,
-    until date,
     capacity integer DEFAULT 0 NOT NULL,
     files_legacy text DEFAULT ''::text NOT NULL,
     updated_at timestamp with time zone,
@@ -3187,10 +3160,16 @@ CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_insta
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
   )
   select
-    coalesce(sum((tt.member_price_45min).amount * s.duration / 45 / nullif(s.num_participants, 0)), 'NaN') as amount,
-    coalesce((tt.member_price_45min).currency, 'CZK') as currency
+    sum((tt.member_price_45min).amount * s.duration / 45 / s.num_participants) as amount,
+    (tt.member_price_45min).currency as currency
   from stats s
   join lateral public.event_instance_trainers(v_instance) tt on true
+  where
+    s.num_participants > 0
+    and s.duration > 0
+    and tt.member_price_45min is not null
+    and (tt.member_price_45min).amount is not null
+    and (tt.member_price_45min).currency is not null
   group by (tt.member_price_45min).currency;
 $$;
 
@@ -4890,51 +4869,6 @@ begin
   return lesson_demand;
 end;
 $_$;
-
-
---
--- Name: sticky_announcements(boolean); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.sticky_announcements(order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
-    LANGUAGE sql STABLE
-    AS $$
-  with audience_claims as (
-    select
-      translate(coalesce(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '[]'), '[]', '{}')::bigint[] as cohort_ids,
-      coalesce(nullif(current_setting('jwt.claims.is_member', true), '')::boolean, false) as is_member,
-      coalesce(nullif(current_setting('jwt.claims.is_trainer', true), '')::boolean, false) as is_trainer,
-      coalesce(nullif(current_setting('jwt.claims.is_admin', true), '')::boolean, false) as is_admin
-  )
-  select announcement.*
-  from announcement
-  cross join audience_claims ac
-  where is_visible = true
-    and is_sticky = true
-    and (scheduled_since is null or scheduled_since <= now())
-    and (scheduled_until is null or scheduled_until >= now())
-    and (
-      not exists (
-        select 1
-        from announcement_audience aa_all
-        where aa_all.announcement_id = announcement.id
-      )
-      or exists (
-        select 1
-        from announcement_audience aa
-        where aa.announcement_id = announcement.id
-          and (
-            (aa.cohort_id is not null and aa.cohort_id = any (ac.cohort_ids))
-            or (aa.audience_role = 'member' and ac.is_member)
-            or (aa.audience_role = 'trainer' and ac.is_trainer)
-            or (aa.audience_role = 'administrator' and ac.is_admin)
-          )
-      )
-    )
-  order by
-    case when order_by_updated then updated_at else created_at end desc,
-    created_at desc;
-$$;
 
 
 --
@@ -9898,13 +9832,6 @@ CREATE INDEX scoreboard_manual_adjustment_tenant_id_idx ON public.scoreboard_man
 
 
 --
--- Name: since; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX since ON public.event USING btree (since);
-
-
---
 -- Name: tenant_administrator_active_by_person; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10063,27 +9990,6 @@ CREATE INDEX transaction_payment_id_idx ON public.transaction USING btree (payme
 --
 
 CREATE INDEX transaction_tenant_id_idx ON public.transaction USING btree (tenant_id);
-
-
---
--- Name: u_confirmed; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX u_confirmed ON public.users USING btree (u_confirmed);
-
-
---
--- Name: u_jmeno; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX u_jmeno ON public.users USING btree (u_jmeno);
-
-
---
--- Name: u_prijmeni; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX u_prijmeni ON public.users USING btree (u_prijmeni);
 
 
 --
@@ -10455,13 +10361,6 @@ CREATE TRIGGER _500_send AFTER INSERT ON public.person_invitation FOR EACH ROW E
 --
 
 CREATE TRIGGER _500_unregister_members AFTER DELETE ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_target_cohort__unregister_members();
-
-
---
--- Name: event_instance _500_update_parent_range; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _500_update_parent_range AFTER INSERT OR DELETE OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 
 
 --
@@ -13046,6 +12945,7 @@ CREATE POLICY view_visible_person ON public.tenant_membership FOR SELECT USING (
 --
 
 GRANT ALL ON SCHEMA app_private TO postgres;
+GRANT USAGE ON SCHEMA app_private TO anonymous;
 
 
 --
@@ -13976,13 +13876,6 @@ GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_i
 
 
 --
--- Name: FUNCTION sticky_announcements(order_by_updated boolean); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.sticky_announcements(order_by_updated boolean) TO anonymous;
-
-
---
 -- Name: FUNCTION submit_form(type text, data jsonb, url text); Type: ACL; Schema: public; Owner: -
 --
 
@@ -14637,5 +14530,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict v6zbP09MJ343AgBVzDefXWTee8vOZghH4LTkau2EzCbLBZFhBYL0aqK88tcoect
+\unrestrict bARoX1ANBeoevpLb8y2nvOdx2dg5q3tIiiSXIU7yZ3nb7kMCMJgLpknPvF4Sddq
 

@@ -3,8 +3,6 @@ CREATE TABLE public.event (
     name text NOT NULL,
     location_text text NOT NULL,
     description text NOT NULL,
-    since date,
-    until date,
     capacity integer DEFAULT 0 NOT NULL,
     files_legacy text DEFAULT ''::text NOT NULL,
     updated_at timestamp with time zone,
@@ -56,4 +54,3 @@ CREATE INDEX event_visible_public_tenant_idx ON public.event USING btree (is_pub
 CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);
 CREATE INDEX idx_event_tenant ON public.event USING btree (tenant_id, is_visible);
 CREATE INDEX is_visible ON public.event USING btree (is_visible);
-CREATE INDEX since ON public.event USING btree (since);
