@@ -276,7 +276,8 @@ export const getFetchScheduleRules = new PreparedQuery<IGetFetchScheduleRulesPar
 
 /** 'GetPendingFetch' parameters type */
 export interface IGetPendingFetchParams {
-  limit?: NumberOrString | null | void;
+  allowRefetch?: boolean | null | void;
+  capacity?: NumberOrString | null | void;
 }
 
 /** 'GetPendingFetch' return type */
@@ -293,7 +294,7 @@ export interface IGetPendingFetchQuery {
   result: IGetPendingFetchResult;
 }
 
-const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":543,"b":548}]}],"statement":"WITH eligible AS (\n  SELECT id, federation, kind, key, last_fetched_at\n  FROM crawler.frontier\n  WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n    AND (fetch_status = 'pending'\n       OR (fetch_status = 'ok' AND process_status = 'ok'))\n), ranked AS (\n  SELECT\n    id, federation, kind, key, last_fetched_at,\n    row_number() OVER (\n      PARTITION BY federation, kind\n      ORDER BY last_fetched_at NULLS FIRST\n    ) AS rn\n  FROM eligible\n)\nSELECT id, federation, kind, key\nFROM ranked\nORDER BY rn, last_fetched_at NULLS FIRST\nLIMIT :limit"};
+const getPendingFetchIR: any = {"usedParamSet":{"allowRefetch":true,"capacity":true},"params":[{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":210}]},{"name":"capacity","required":false,"transform":{"type":"scalar"},"locs":[{"a":561,"b":569}]}],"statement":"WITH eligible AS (\n  SELECT id, federation, kind, key, last_fetched_at\n  FROM crawler.frontier\n  WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n    AND (fetch_status = 'pending'\n       OR (:allowRefetch AND fetch_status = 'ok' AND process_status = 'ok'))\n), ranked AS (\n  SELECT\n    id, federation, kind, key, last_fetched_at,\n    row_number() OVER (\n      PARTITION BY federation, kind\n      ORDER BY last_fetched_at NULLS FIRST\n    ) AS rn\n  FROM eligible\n)\nSELECT id, federation, kind, key\nFROM ranked\nORDER BY rn, last_fetched_at NULLS FIRST\nLIMIT :capacity"};
 
 /**
  * Query generated from SQL:
@@ -303,7 +304,7 @@ const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":
  *   FROM crawler.frontier
  *   WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
  *     AND (fetch_status = 'pending'
- *        OR (fetch_status = 'ok' AND process_status = 'ok'))
+ *        OR (:allowRefetch AND fetch_status = 'ok' AND process_status = 'ok'))
  * ), ranked AS (
  *   SELECT
  *     id, federation, kind, key, last_fetched_at,
@@ -316,7 +317,7 @@ const getPendingFetchIR: any = {"usedParamSet":{"limit":true},"params":[{"name":
  * SELECT id, federation, kind, key
  * FROM ranked
  * ORDER BY rn, last_fetched_at NULLS FIRST
- * LIMIT :limit
+ * LIMIT :capacity
  * ```
  */
 export const getPendingFetch = new PreparedQuery<IGetPendingFetchParams,IGetPendingFetchResult>(getPendingFetchIR);

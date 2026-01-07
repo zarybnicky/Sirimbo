@@ -12,6 +12,8 @@ const MAX_OUTSTANDING_FETCH = 100;
 export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, helpers) => {
   const { withPgClient, addJob, logger } = helpers;
 
+  const allowRefetch = process.env.DISABLE_REFETCH !== 'true';
+
   await withPgClient(async (client) => {
     const scheduleRows = await getFetchScheduleRules.run(undefined, client);
     const byHost = new Map<
@@ -29,10 +31,11 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
     }
 
     const outstanding = scheduleRows.reduce((acc, rule) => acc + (rule.queued ?? 0), 0);
-    const capacity = MAX_OUTSTANDING_FETCH - outstanding;
-    if (outstanding >= MAX_OUTSTANDING_FETCH || capacity <= 0) return;
+    if (outstanding >= MAX_OUTSTANDING_FETCH) return;
 
-    const pendingIds = await getPendingFetch.run({ limit: capacity }, client);
+    const capacity = MAX_OUTSTANDING_FETCH - outstanding;
+
+    const pendingIds = await getPendingFetch.run({ capacity, allowRefetch }, client);
     for (const { id, federation, kind, key } of pendingIds) {
       const handler = LOADER_MAP[federation]?.[kind];
       if (!handler) continue;

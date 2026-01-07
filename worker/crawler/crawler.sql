@@ -80,7 +80,7 @@ WITH eligible AS (
   FROM crawler.frontier
   WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
     AND (fetch_status = 'pending'
-       OR (fetch_status = 'ok' AND process_status = 'ok'))
+       OR (:allowRefetch AND fetch_status = 'ok' AND process_status = 'ok'))
 ), ranked AS (
   SELECT
     id, federation, kind, key, last_fetched_at,
@@ -93,7 +93,7 @@ WITH eligible AS (
 SELECT id, federation, kind, key
 FROM ranked
 ORDER BY rn, last_fetched_at NULLS FIRST
-LIMIT :limit;
+LIMIT :capacity;
 
 /* @name GetNextPendingProcess */
 SELECT *
