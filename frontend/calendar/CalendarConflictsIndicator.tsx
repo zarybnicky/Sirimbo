@@ -3,7 +3,13 @@ import {
   type EventOverlapsReportQuery,
 } from '@/graphql/EventOverlaps';
 import { dateTimeFormatter } from '@/ui/format';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
 import { AlertTriangle } from 'lucide-react';
 import React from 'react';
@@ -11,18 +17,14 @@ import { useQuery } from 'urql';
 import { useSetAtom } from 'jotai';
 import { calendarConflictsAtom, type CalendarInstanceConflict } from './state';
 
-type CalendarConflictsIndicatorProps = {
+type Props = {
   start: string;
   end?: string | null;
 };
 
-export function CalendarConflictsIndicator({
-  start,
-  end,
-}: CalendarConflictsIndicatorProps) {
-  const [open, setOpen] = React.useState(false);
+export function CalendarConflictsIndicator({ start, end }: Props) {
   const variables = React.useMemo(
-    () => ({ since: start, until: end ?? null }),
+    () => ({ since: start, until: end ?? null }) as const,
     [start, end],
   );
   const [{ data, fetching }] = useQuery({
@@ -31,57 +33,39 @@ export function CalendarConflictsIndicator({
   });
   const setInstanceConflicts = useSetAtom(calendarConflictsAtom);
 
-  const attendeeConflicts = React.useMemo(() => {
-    return (data?.attendeeConflicts ?? [])
-      .map((conflict) => normalizeConflict(conflict, 'Neznámý účastník', 'attendee'))
-      .filter((conflict): conflict is NormalizedConflict => conflict !== null)
-      .toSorted((a, b) => a.firstSince.localeCompare(b.firstSince));
-  }, [data?.attendeeConflicts]);
-  const trainerConflicts = React.useMemo(() => {
-    return (data?.trainerConflicts ?? [])
-      .map((conflict) => normalizeConflict(conflict, 'Neznámý trenér', 'trainer'))
-      .filter((conflict): conflict is NormalizedConflict => conflict !== null)
-      .toSorted((a, b) => a.firstSince.localeCompare(b.firstSince));
-  }, [data?.trainerConflicts]);
+  const { attendeeConflicts, trainerConflicts } = React.useMemo(() => {
+    return {
+      attendeeConflicts: (data?.attendeeConflicts ?? [])
+        .map((conflict) => normalizeConflict(conflict, 'attendee'))
+        .filter((conflict): conflict is NormalizedConflict => conflict !== null)
+        .toSorted((a, b) => a.firstSince.localeCompare(b.firstSince)),
+      trainerConflicts: (data?.trainerConflicts ?? [])
+        .map((conflict) => normalizeConflict(conflict, 'trainer'))
+        .filter((conflict): conflict is NormalizedConflict => conflict !== null)
+        .toSorted((a, b) => a.firstSince.localeCompare(b.firstSince)),
+    } as const;
+  }, [data?.attendeeConflicts, data?.trainerConflicts]);
 
   const conflictsByInstance = React.useMemo(() => {
     const map: Record<string, CalendarInstanceConflict[]> = {};
-    const addConflict = (
-      instanceId: string | null | undefined,
-      conflict: CalendarInstanceConflict,
-    ) => {
-      if (instanceId) {
-        (map[instanceId] ??= []).push(conflict);
-      }
-    };
 
     const pushConflicts = (conflict: NormalizedConflict) => {
-      const base: Pick<CalendarInstanceConflict, 'role' | 'personName' | 'fallbackName'> =
-        {
-          role: conflict.role,
-          personName: conflict.personName,
-          fallbackName: conflict.fallbackName,
-        };
-
-      if (conflict.firstInstanceId) {
-        addConflict(conflict.firstInstanceId, {
-          id: `${conflict.id}:first`,
-          ...base,
-          otherEventName: conflict.secondName,
-          otherSince: conflict.secondSince,
-          otherUntil: conflict.secondUntil,
-        });
-      }
-
-      if (conflict.secondInstanceId) {
-        addConflict(conflict.secondInstanceId, {
-          id: `${conflict.id}:second`,
-          ...base,
-          otherEventName: conflict.firstName,
-          otherSince: conflict.firstSince,
-          otherUntil: conflict.firstUntil,
-        });
-      }
+      (map[conflict.firstInstanceId] ??= []).push({
+        id: `${conflict.id}:first`,
+        role: conflict.role,
+        personName: conflict.personName,
+        otherEventName: conflict.secondName,
+        otherSince: conflict.secondSince,
+        otherUntil: conflict.secondUntil,
+      });
+      (map[conflict.secondInstanceId] ??= []).push({
+        id: `${conflict.id}:second`,
+        role: conflict.role,
+        personName: conflict.personName,
+        otherEventName: conflict.firstName,
+        otherSince: conflict.firstSince,
+        otherUntil: conflict.firstUntil,
+      });
     };
 
     for (const conflict of attendeeConflicts) {
@@ -90,7 +74,6 @@ export function CalendarConflictsIndicator({
     for (const conflict of trainerConflicts) {
       pushConflicts(conflict);
     }
-
     return map;
   }, [attendeeConflicts, trainerConflicts]);
 
@@ -106,89 +89,32 @@ export function CalendarConflictsIndicator({
   }
 
   return (
-    <>
-      <button
-        type="button"
+    <Dialog>
+      <DialogTrigger.Plain
         className="fixed bottom-6 right-6 z-30 flex h-12 min-w-12 items-center justify-center gap-1 rounded-full bg-accent-9 px-4 text-white shadow-lg transition-colors hover:bg-accent-10 focus:outline-none focus:ring-2 focus:ring-accent-3 focus:ring-offset-2"
-        onClick={() => setOpen(true)}
         aria-label={`Zobrazit ${totalConflicts} konfliktů v kalendáři`}
       >
         <AlertTriangle className="size-5" />
         <span className="font-semibold">{totalConflicts}</span>
-      </button>
+      </DialogTrigger.Plain>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Kolize v kalendáři</DialogTitle>
-          </DialogHeader>
+      <DialogContent className="sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Konflikty v kalendáři</DialogTitle>
+        </DialogHeader>
 
-          {fetching && (
-            <div className="flex justify-center py-6">
-              <Spinner />
-            </div>
-          )}
-
-          {!fetching && (
-            <div className="space-y-8">
-              {attendeeConflicts.length > 0 && (
-                <section>
-                  <h3 className="font-semibold">
-                    Účastníci ({attendeeConflicts.length})
-                  </h3>
-                  <ul className="mt-3 space-y-4">
-                    {attendeeConflicts.map((conflict) => (
-                      <li
-                        key={conflict.id}
-                        className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 shadow-sm"
-                      >
-                        <p className="text-sm font-semibold text-neutral-12">
-                          {conflict.personName ?? conflict.fallbackName}
-                        </p>
-                        <ConflictEventsSummary
-                          firstName={conflict.firstName}
-                          firstSince={conflict.firstSince}
-                          firstUntil={conflict.firstUntil}
-                          secondName={conflict.secondName}
-                          secondSince={conflict.secondSince}
-                          secondUntil={conflict.secondUntil}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-
-              {trainerConflicts.length > 0 && (
-                <section>
-                  <h3 className="font-semibold">Trenéři ({trainerConflicts.length})</h3>
-                  <ul className="mt-3 space-y-4">
-                    {trainerConflicts.map((conflict) => (
-                      <li
-                        key={conflict.id}
-                        className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 shadow-sm"
-                      >
-                        <p className="text-sm font-semibold text-neutral-12">
-                          {conflict.personName ?? conflict.fallbackName}
-                        </p>
-                        <ConflictEventsSummary
-                          firstName={conflict.firstName}
-                          firstSince={conflict.firstSince}
-                          firstUntil={conflict.firstUntil}
-                          secondName={conflict.secondName}
-                          secondSince={conflict.secondSince}
-                          secondUntil={conflict.secondUntil}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
+        {fetching ? (
+          <div className="flex justify-center py-6">
+            <Spinner />
+          </div>
+        ) : (
+          <div className="space-y-8">
+            <ConflictSection title="Účastníci" conflicts={attendeeConflicts} />
+            <ConflictSection title="Trenéři" conflicts={trainerConflicts} />
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -201,94 +127,101 @@ type RawTrainerConflict = NonNullable<
 
 type ConflictRole = CalendarInstanceConflict['role'];
 
-type NormalizedConflictBase = {
+type NormalizedConflict = {
   id: string;
   role: ConflictRole;
-  firstInstanceId: string | null;
+  personName: string;
+  firstInstanceId: string;
   firstName: string;
   firstSince: string;
   firstUntil: string;
-  secondInstanceId: string | null;
+  secondInstanceId: string;
   secondName: string;
   secondSince: string;
   secondUntil: string;
 };
 
-type NormalizedConflict = NormalizedConflictBase & {
-  personName: string | null;
-  fallbackName: string;
-};
-
-type RawConflict = RawAttendeeConflict | RawTrainerConflict;
+type RawConflict = RawAttendeeConflict & RawTrainerConflict;
 
 function normalizeConflict(
   conflict: RawConflict | null | undefined,
-  fallbackName: string,
   role: ConflictRole,
 ): NormalizedConflict | null {
   if (
     !conflict?.firstSince ||
     !conflict.firstUntil ||
     !conflict.secondSince ||
-    !conflict.secondUntil
+    !conflict.secondUntil ||
+    !conflict.firstInstanceId ||
+    !conflict.secondInstanceId ||
+    !conflict.personName
   ) {
     return null;
   }
 
-  const firstName = conflict.firstEventName ?? 'Bez názvu';
-  const secondName = conflict.secondEventName ?? 'Bez názvu';
-  const firstInstanceKey =
-    conflict.firstInstanceId ?? conflict.firstEventId ?? conflict.firstSince;
-  const secondInstanceKey =
-    conflict.secondInstanceId ?? conflict.secondEventId ?? conflict.secondSince;
-
   const id = [
     role,
-    conflict.personId ?? 'unknown',
-    firstInstanceKey,
-    secondInstanceKey,
+    conflict.personId,
+    conflict.firstInstanceId,
+    conflict.secondInstanceId,
   ].join(':');
 
   return {
     id,
     role,
-    personName: conflict.personName ?? null,
-    fallbackName,
-    firstInstanceId: conflict.firstInstanceId ?? null,
-    firstName,
+    personName: conflict.personName,
+    firstInstanceId: conflict.firstInstanceId,
+    firstName: conflict.firstEventName ?? '',
     firstSince: conflict.firstSince,
     firstUntil: conflict.firstUntil,
-    secondInstanceId: conflict.secondInstanceId ?? null,
-    secondName,
+    secondInstanceId: conflict.secondInstanceId,
+    secondName: conflict.secondEventName ?? '',
     secondSince: conflict.secondSince,
     secondUntil: conflict.secondUntil,
   };
 }
 
-type ConflictEventsSummaryProps = {
-  firstName: string;
-  firstSince: string;
-  firstUntil: string;
-  secondName: string;
-  secondSince: string;
-  secondUntil: string;
-};
-
-function ConflictEventsSummary({
-  firstName,
-  firstSince,
-  firstUntil,
-  secondName,
-  secondSince,
-  secondUntil,
-}: ConflictEventsSummaryProps) {
-  const overlap = React.useMemo(
-    () => calculateOverlap(firstSince, firstUntil, secondSince, secondUntil),
-    [firstSince, firstUntil, secondSince, secondUntil],
+function ConflictSection({
+  title,
+  conflicts,
+}: {
+  title: string;
+  conflicts: readonly NormalizedConflict[];
+}) {
+  if (conflicts.length === 0) return null;
+  return (
+    <section>
+      <h3 className="font-semibold">
+        {title} ({conflicts.length})
+      </h3>
+      <ul className="mt-3 space-y-2">
+        {conflicts.map((conflict) => (
+          <li
+            key={conflict.id}
+            className="rounded-lg border border-neutral-6 p-3 shadow-sm"
+          >
+            <ConflictEventsSummary conflict={conflict} />
+          </li>
+        ))}
+      </ul>
+    </section>
   );
+}
+
+function ConflictEventsSummary({ conflict }: { conflict: NormalizedConflict }) {
+  const { firstName, firstSince, firstUntil, secondName, secondSince, secondUntil } =
+    conflict;
+  const start = new Date(
+    Math.max(new Date(firstSince).getTime(), new Date(secondSince).getTime()),
+  );
+  const end = new Date(
+    Math.min(new Date(firstUntil).getTime(), new Date(secondUntil).getTime()),
+  );
+  const overlap = !(start < end) ? null : dateTimeFormatter.formatRange(start, end);
 
   return (
-    <div className="mt-2 space-y-3 text-sm text-neutral-11">
+    <div className="space-y-3 text-sm text-neutral-11">
+      <p className="text-sm font-semibold text-neutral-12">{conflict.personName}</p>
       <div>
         <p className="font-medium text-neutral-12">{firstName}</p>
         <p className="text-xs uppercase tracking-wide text-neutral-9">
@@ -304,22 +237,4 @@ function ConflictEventsSummary({
       {overlap && <p className="text-xs text-accent-10">Překryv: {overlap}</p>}
     </div>
   );
-}
-
-function calculateOverlap(
-  firstSince: string,
-  firstUntil: string,
-  secondSince: string,
-  secondUntil: string,
-) {
-  const start = new Date(
-    Math.max(new Date(firstSince).getTime(), new Date(secondSince).getTime()),
-  );
-  const end = new Date(
-    Math.min(new Date(firstUntil).getTime(), new Date(secondUntil).getTime()),
-  );
-  if (!(start < end)) {
-    return null;
-  }
-  return dateTimeFormatter.formatRange(start, end);
 }

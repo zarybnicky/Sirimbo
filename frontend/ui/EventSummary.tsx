@@ -33,6 +33,7 @@ export function EventSummary({
   const myRegistrations = event.myRegistrationsList || [];
   const start = new Date(instance.since);
   const end = new Date(instance.until);
+  const locationLabel = event.location?.name ?? event.locationText;
 
   const instancesBefore = event.eventInstancesList.filter(
     (e) => e.since < instance.since,
@@ -63,23 +64,20 @@ export function EventSummary({
         {shortTimeFormatter.formatRange(start, end)}
       </div>
 
-      {event.location && (
+      {locationLabel && (
         <div className="flex items-center gap-2">
           <MapPin className="size-5 text-accent-11" />
-          {event.location.name}
-        </div>
-      )}
-      {event.locationText && (
-        <div className="flex items-center gap-2">
-          <MapPin className="size-5 text-accent-11" />
-          {event.locationText}
+          {locationLabel}
         </div>
       )}
 
       {instance.trainersList?.length ? (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-5 text-accent-11 shrink-0" />
-          {instance.trainersList.map((x) => x.person?.name).join(', ')}
+          {instance.trainersList
+            .map((x) => x.person?.name)
+            .filter(Boolean)
+            .join(', ')}
         </div>
       ) : null}
 
@@ -87,7 +85,7 @@ export function EventSummary({
 
       <div className="flex items-center gap-2">
         <Users className="size-5 text-accent-11" />
-        <span>
+        <div>
           {event.eventTargetCohortsList.length > 0 ? (
             event.eventTargetCohortsList.map((x) => x.cohort?.name).join(', ')
           ) : registrationCount === 0 ? (
@@ -112,7 +110,7 @@ export function EventSummary({
           ) : (
             `${registrationCount} účastníků`
           )}
-        </span>
+        </div>
       </div>
 
       <MyRegistrationsDialog event={event} />

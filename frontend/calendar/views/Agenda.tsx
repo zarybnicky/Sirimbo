@@ -1,11 +1,6 @@
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
-import {
-  datetimeRangeToTimeRange,
-  formatEventType,
-  formatWeekDay,
-  shortTimeFormatter,
-} from '@/ui/format';
+import { datetimeRangeToTimeRange, formatEventType, formatWeekDay } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
@@ -17,9 +12,7 @@ import { useAuth } from '@/ui/use-auth';
 import { cardCls } from '@/ui/style';
 import { EventFormType } from '@/ui/event-form/types';
 import { isTruthy } from '@/ui/truthyFilter';
-import { useAtomValue } from 'jotai';
-import { calendarConflictsFor } from '../state';
-import { AlertTriangle } from 'lucide-react';
+import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 
 type MapItem = {
   lessons: Map<string, CalendarEvent[]>;
@@ -106,32 +99,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
 
 function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
   const { event, instance } = calendarEvent;
-  const conflictsAtom = React.useMemo(
-    () => calendarConflictsFor(instance.id),
-    [instance.id],
-  );
-  const conflicts = useAtomValue(conflictsAtom);
-  const conflictNames = React.useMemo(
-    () =>
-      conflicts
-        .map((conflict) => conflict.personName ?? conflict.fallbackName)
-        .join(', '),
-    [conflicts],
-  );
-  const conflictSummary = React.useMemo(
-    () =>
-      conflicts
-        .map((conflict) => {
-          const person = conflict.personName ?? conflict.fallbackName;
-          const range = shortTimeFormatter.formatRange(
-            new Date(conflict.otherSince),
-            new Date(conflict.otherUntil),
-          );
-          return `${person}: ${conflict.otherEventName} (${range})`;
-        })
-        .join(' • '),
-    [conflicts],
-  );
+
   return (
     <div
       className={cardCls({
@@ -139,16 +107,11 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
           'relative group min-w-[200px] w-72 rounded-lg border-accent-7 border' +
           (event.eventTargetCohortsList.length > 0 ? ' pl-5' : ' pl-3'),
       })}
-      title={conflictSummary ? `Kolize – ${conflictSummary}` : undefined}
     >
-      {conflicts.length > 0 && (
-        <>
-          <div className="absolute right-8 top-3 text-accent-11" aria-hidden>
-            <AlertTriangle className="size-4" />
-          </div>
-          <span className="sr-only">Kolize: {conflictNames}</span>
-        </>
-      )}
+      <ConflictsInstanceBadge
+        instanceId={instance.id}
+        className="absolute right-8 top-3 text-accent-11"
+      />
       {event.eventTargetCohortsList.length > 0 && (
         <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
           {event.eventTargetCohortsList

@@ -12,7 +12,6 @@ export type CalendarInstanceConflict = {
   id: string;
   role: 'attendee' | 'trainer';
   personName: string | null;
-  fallbackName: string;
   otherEventName: string;
   otherSince: string;
   otherUntil: string;
@@ -44,14 +43,10 @@ export const calendarConflictsAtom = atom<Record<string, CalendarInstanceConflic
 const emptyConflicts: CalendarInstanceConflict[] = [];
 
 export const calendarConflictsFor = (instanceId: string | null | undefined) =>
-  selectAtom(
-    calendarConflictsAtom,
-    (conflicts) => {
-      if (!instanceId) return emptyConflicts;
-      return conflicts[instanceId] ?? emptyConflicts;
-    },
-    (a, b) => a.length === b.length && a.every((value, index) => value === b[index]),
-  );
+  selectAtom(calendarConflictsAtom, (conflicts) => {
+    if (!instanceId) return emptyConflicts;
+    return conflicts[instanceId] ?? emptyConflicts;
+  });
 
 // declare function onDropFromOutside(info: {
 //   start: Date;

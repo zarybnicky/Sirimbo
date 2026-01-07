@@ -74,9 +74,9 @@ export function InstanceListElement({
         </div>
       </div>
 
-      {fields
-        .filter((x) => x.date)
-        .map((instance, index) => (
+      {fields.map((instance, index) => {
+        if (!instance.date) return <React.Fragment key={instance.id} />;
+        return (
           <Collapsible.Root asChild key={instance.id || index}>
             <div className="flex flex-col gap-2" key={instance.id || instance.date}>
               <div className="flex flex-wrap items-start gap-2">
@@ -174,7 +174,8 @@ export function InstanceListElement({
               </Collapsible.Content>
             </div>
           </Collapsible.Root>
-        ))}
+        );
+      })}
     </>
   );
 }

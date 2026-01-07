@@ -3,12 +3,10 @@ query EventOverlapsReport($since: Datetime!, $until: Datetime) {
     personId
     personName
     firstInstanceId
-    firstEventId
     firstEventName
     firstSince
     firstUntil
     secondInstanceId
-    secondEventId
     secondEventName
     secondSince
     secondUntil
@@ -17,12 +15,10 @@ query EventOverlapsReport($since: Datetime!, $until: Datetime) {
     personId
     personName
     firstInstanceId
-    firstEventId
     firstEventName
     firstSince
     firstUntil
     secondInstanceId
-    secondEventId
     secondEventName
     secondSince
     secondUntil
