@@ -36,13 +36,14 @@ export function ChangeFoldersForm() {
   const update = useMutation(UpdateTenantSettingsDocument)[1];
   const token = useAtomValue(starletTokenAtom);
 
-  const { folders: prevFolders, seasons: prevSeasons } = useAtomValue(starletSettingsAtom);
+  const { folders: prevFolders, seasons: prevSeasons } =
+    useAtomValue(starletSettingsAtom);
   useEffect(() => {
     reset({
-      folders: Object.fromEntries(prevFolders.map(x => [x[0], true] as const)),
-      seasons: Object.fromEntries(prevSeasons.map(x => [x[0], true] as const)),
+      folders: Object.fromEntries(prevFolders.map((x) => [x[0], true] as const)),
+      seasons: Object.fromEntries(prevSeasons.map((x) => [x[0], true] as const)),
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [folders, setFolders] = useState<FolderOrSeason[]>([]);
@@ -60,8 +61,16 @@ export function ChangeFoldersForm() {
       auth: token.auth_token,
     }).then((x) => {
       const data = JSON.parse(x.evidenceStarlet).data;
-      setFolders(data.folders.toSorted((x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value));
-      setSeasons(data.seasons.toSorted((x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value));
+      setFolders(
+        data.folders.toSorted(
+          (x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value,
+        ),
+      );
+      setSeasons(
+        data.seasons.toSorted(
+          (x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value,
+        ),
+      );
     });
   }, [token]);
 
@@ -72,10 +81,7 @@ export function ChangeFoldersForm() {
         newValue: JSON.stringify(
           Object.entries(values.folders)
             .filter((x) => x[1])
-            .map((x) => [
-              x[0],
-              folders.find((y) => y.key === x[0])?.name ?? '?',
-            ]),
+            .map((x) => [x[0], folders.find((y) => y.key === x[0])?.name ?? '?']),
         ),
       },
     });
@@ -85,10 +91,7 @@ export function ChangeFoldersForm() {
         newValue: JSON.stringify(
           Object.entries(values.seasons)
             .filter((x) => x[1])
-            .map((x) => [
-              x[0],
-              seasons.find((y) => y.key === x[0])?.name ?? '?',
-            ]),
+            .map((x) => [x[0], seasons.find((y) => y.key === x[0])?.name ?? '?']),
         ),
       },
     });

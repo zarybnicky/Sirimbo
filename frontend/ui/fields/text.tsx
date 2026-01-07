@@ -2,7 +2,12 @@ import { cn } from '@/ui/cn';
 import { FieldHelper, type FieldHelperProps, FieldLabel } from '@/ui/form';
 import { AlertCircle as ReportProblemIcon } from 'lucide-react';
 import React from 'react';
-import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
+import {
+  type Control,
+  type FieldValues,
+  type Path,
+  useController,
+} from 'react-hook-form';
 
 type Extras = {
   className?: string;
@@ -28,7 +33,9 @@ export function TextField({
   helperText,
   prefix,
   ...props
-}: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label' | 'prefix'>) {
+}: FieldHelperProps &
+  Extras &
+  Omit<React.HTMLProps<HTMLInputElement>, 'label' | 'prefix'>) {
   return (
     <div className={className || ''}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
@@ -40,11 +47,11 @@ export function TextField({
           type={type}
           {...props}
           className={cn(
-            "block w-full sm:text-sm rounded-md",
-            "bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7",
-            "disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9",
-            "read-only:bg-neutral-2 read-only:border-neutral-7 read-only:text-neutral-11 read-only:placeholder:text-neutral-9",
-            "focus:outline-none focus:ring-accent-7 focus:border-accent-8",
+            'block w-full sm:text-sm rounded-md',
+            'bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7',
+            'disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9',
+            'read-only:bg-neutral-2 read-only:border-neutral-7 read-only:text-neutral-11 read-only:placeholder:text-neutral-9',
+            'focus:outline-none focus:ring-accent-7 focus:border-accent-8',
           )}
         />
         {error && (
@@ -63,7 +70,12 @@ export function TextFieldElement<T extends FieldValues>({
   control,
   ...props
 }: TextFieldElementProps<T>) {
-  const { onBlur: onBlurProp, onChange: onChangeProp, type = 'text', ...restProps } = props;
+  const {
+    onBlur: onBlurProp,
+    onChange: onChangeProp,
+    type = 'text',
+    ...restProps
+  } = props;
   const valueAsNumber = type === 'number';
   const { field, fieldState } = useController<T>({ name, control });
 

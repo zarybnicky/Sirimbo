@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   DropdownMenu,
@@ -62,13 +62,20 @@ export function AuthButton() {
           ) : (
             <React.Fragment key={item.title}>
               <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
-              {item.children.filter((item) => (!item.requireTrainer || auth.isTrainerOrAdmin) && (!item.requireAdmin || auth.isAdmin)).map((item) => (
-                <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
-                  {item.title}
-                </DropdownMenuLink>
-              ))}
+              {item.children
+                .filter(
+                  (item) =>
+                    (!item.requireTrainer || auth.isTrainerOrAdmin) &&
+                    (!item.requireAdmin || auth.isAdmin),
+                )
+                .map((item) => (
+                  <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
+                    {item.title}
+                  </DropdownMenuLink>
+                ))}
             </React.Fragment>
-          ))}
+          ),
+        )}
         <DropdownMenuButton onClick={signOut}>Odhlásit se</DropdownMenuButton>
       </DropdownMenuContent>
     </DropdownMenu>

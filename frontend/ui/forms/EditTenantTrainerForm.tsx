@@ -1,4 +1,7 @@
-import { TenantTrainerDocument, UpdateTenantTrainerDocument } from '@/graphql/Memberships';
+import {
+  TenantTrainerDocument,
+  UpdateTenantTrainerDocument,
+} from '@/graphql/Memberships';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -26,10 +29,14 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
   const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
-  const [query] = useQuery({ query: TenantTrainerDocument, variables: { id }, pause: !id });
+  const [query] = useQuery({
+    query: TenantTrainerDocument,
+    variables: { id },
+    pause: !id,
+  });
   const update = useMutation(UpdateTenantTrainerDocument)[1];
 
-  const item = query.data?.tenantTrainer
+  const item = query.data?.tenantTrainer;
 
   React.useEffect(() => {
     if (item) {
@@ -52,10 +59,18 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
         patch: {
           since: values.since ? values.since.toISOString() : null,
           until: values.until ? values.until.toISOString() : null,
-          memberPrice45Min: values.memberPrice ? {amount: values.memberPrice.toString(), currency: 'CZK'} : null,
-          guestPrice45Min: values.guestPrice ? {amount: values.guestPrice.toString(), currency: 'CZK'} : null,
-          memberPayout45Min: values.memberPayout ? {amount: values.memberPayout.toString(), currency: 'CZK'} : null,
-          guestPayout45Min: values.guestPayout ? {amount: values.guestPayout.toString(), currency: 'CZK'} : null,
+          memberPrice45Min: values.memberPrice
+            ? { amount: values.memberPrice.toString(), currency: 'CZK' }
+            : null,
+          guestPrice45Min: values.guestPrice
+            ? { amount: values.guestPrice.toString(), currency: 'CZK' }
+            : null,
+          memberPayout45Min: values.memberPayout
+            ? { amount: values.memberPayout.toString(), currency: 'CZK' }
+            : null,
+          guestPayout45Min: values.guestPayout
+            ? { amount: values.guestPayout.toString(), currency: 'CZK' }
+            : null,
           createPayoutPayments: values.createPayoutPayments,
         },
       },
@@ -68,19 +83,45 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
       <FormError error={onSubmit.error} />
 
       <div className="prose prose-accent">
-        <h4>Trenér {item?.person?.name} v klubu {item?.tenant?.name}</h4>
+        <h4>
+          Trenér {item?.person?.name} v klubu {item?.tenant?.name}
+        </h4>
       </div>
 
       <DatePickerElement control={control} name="since" label="Trenér od" />
       <DatePickerElement control={control} name="until" label="Trenér do" />
       <div className="grid lg:grid-cols-2 gap-2">
-        <TextFieldElement control={control} type="number" name="memberPrice" label="Cena pro členy (Kč/45min)" />
-        <TextFieldElement control={control} type="number" name="guestPrice" label="Cena pro hosty (Kč/45min)" />
+        <TextFieldElement
+          control={control}
+          type="number"
+          name="memberPrice"
+          label="Cena pro členy (Kč/45min)"
+        />
+        <TextFieldElement
+          control={control}
+          type="number"
+          name="guestPrice"
+          label="Cena pro hosty (Kč/45min)"
+        />
       </div>
-      <CheckboxElement control={control} name="createPayoutPayments" label="Vyplácet na kreditní účet člena" />
+      <CheckboxElement
+        control={control}
+        name="createPayoutPayments"
+        label="Vyplácet na kreditní účet člena"
+      />
       <div className="grid lg:grid-cols-2 gap-2">
-        <TextFieldElement control={control} type="number" name="memberPayout" label="Vypláceno (členové, Kč/45min)" />
-        <TextFieldElement control={control} type="number" name="guestPayout" label="Vypláceno (hosté, Kč/45min)" />
+        <TextFieldElement
+          control={control}
+          type="number"
+          name="memberPayout"
+          label="Vypláceno (členové, Kč/45min)"
+        />
+        <TextFieldElement
+          control={control}
+          type="number"
+          name="guestPayout"
+          label="Vypláceno (hosté, Kč/45min)"
+        />
       </div>
 
       <div className="flex flex-wrap gap-4">

@@ -39,25 +39,12 @@ export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
       <Link href="/dashboard" className="h-28 pt-3 pl-2 pr-4 mx-auto">
-        <Image
-          alt=""
-          src={LogoIcon}
-          priority
-          sizes="100vw"
-        />
+        <Image alt="" src={LogoIcon} priority sizes="100vw" />
       </Link>
     </div>
   );
 }
 
 export function MobileLogo() {
-  return (
-    <Image
-      className="pb-1 pr-4 -mt-1"
-      alt=""
-      src={LogoIcon}
-      height="65"
-      priority
-    />
-  );
+  return <Image className="pb-1 pr-4 -mt-1" alt="" src={LogoIcon} height="65" priority />;
 }

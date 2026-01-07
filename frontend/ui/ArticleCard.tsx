@@ -15,7 +15,7 @@ interface Props {
 export function ArticleCard(x: Props) {
   return (
     <Link href={x.href}>
-      <div className={cardCls({ className: "h-full flex flex-col group" })}>
+      <div className={cardCls({ className: 'h-full flex flex-col group' })}>
         <div className="relative -m-3 mb-2 overflow-hidden h-[240px]">
           {x.img && (
             <Image
@@ -43,4 +43,4 @@ export function ArticleCard(x: Props) {
       </div>
     </Link>
   );
-};
+}

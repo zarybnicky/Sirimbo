@@ -9,7 +9,12 @@ import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from '@/ui/TabMenu';
 import { useConfirm } from '@/ui/Confirm';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
 import { useRouter } from 'next/router';
 import { UserCheck2, UserX2 } from 'lucide-react';
 import { PersonAccessView } from '@/ui/PersonAccessView';
@@ -22,7 +27,11 @@ export function PersonView({ id }: { id: string }) {
   const confirm = useConfirm();
 
   const router = useRouter();
-  const [{ data }] = useQuery({ query: PersonMembershipsDocument, variables: { id }, pause: !id });
+  const [{ data }] = useQuery({
+    query: PersonMembershipsDocument,
+    variables: { id },
+    pause: !id,
+  });
   const [tab, setTab] = useQueryParam('tab', StringParam);
 
   const isAdminOrCurrentPerson = auth.isAdmin || auth.personIds.includes(id);
@@ -30,9 +39,11 @@ export function PersonView({ id }: { id: string }) {
 
   const doRemove = useMutation(DeletePersonDocument)[1];
   const remove = React.useCallback(async () => {
-    await confirm({ description: `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!` });
-    await doRemove({ id })
-    router.replace('/clenove')
+    await confirm({
+      description: `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!`,
+    });
+    await doRemove({ id });
+    router.replace('/clenove');
   }, [id, router, item, confirm, doRemove]);
 
   const tabs = React.useMemo(() => {
@@ -43,35 +54,44 @@ export function PersonView({ id }: { id: string }) {
         id: 'info',
         title: <>Členství</>,
         contents: () => <PersonMembershipView key="memberships" item={item} />,
-      }
+      },
     ];
     if (isAdminOrCurrentPerson) {
-      tabs.push({
-        id: 'events',
-        title: <>Účasti</>,
-        contents: () => <PersonAttendanceView id={id} />,
-      }, {
-        id: 'payment',
-        title: <>Platby</>,
-        contents: () => <PersonPaymentsView key="payments" id={id} />,
-      }, {
-        id: 'access',
-        title: <>Přístupy {item.userProxiesList.length > 0 ? <UserCheck2 /> : <UserX2 />}</>,
-        contents: () => <PersonAccessView key="access" item={item} />,
-      });
+      tabs.push(
+        {
+          id: 'events',
+          title: <>Účasti</>,
+          contents: () => <PersonAttendanceView id={id} />,
+        },
+        {
+          id: 'payment',
+          title: <>Platby</>,
+          contents: () => <PersonPaymentsView key="payments" id={id} />,
+        },
+        {
+          id: 'access',
+          title: (
+            <>Přístupy {item.userProxiesList.length > 0 ? <UserCheck2 /> : <UserX2 />}</>
+          ),
+          contents: () => <PersonAccessView key="access" item={item} />,
+        },
+      );
     }
     return tabs;
   }, [id, item, isAdminOrCurrentPerson]);
 
-  if (!item) return null
+  if (!item) return null;
 
   return (
     <>
-      <TitleBar title={item.name} spacing='default' className="mt-4">
+      <TitleBar title={item.name} spacing="default" className="mt-4">
         {isAdminOrCurrentPerson && (auth.isAdmin || !item.externalIds) && (
           <Dialog>
             <DialogTrigger.Edit size="sm" />
-            <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
+            <DialogContent
+              className="sm:max-w-2xl"
+              onPointerDownOutside={(e) => e.preventDefault()}
+            >
               <EditPersonForm data={item} />
             </DialogContent>
           </Dialog>
@@ -81,9 +101,7 @@ export function PersonView({ id }: { id: string }) {
           <DropdownMenu>
             <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />
             <DropdownMenuContent align="end">
-              <DropdownMenuButton onClick={remove}>
-                Smazat
-              </DropdownMenuButton>
+              <DropdownMenuButton onClick={remove}>Smazat</DropdownMenuButton>
             </DropdownMenuContent>
           </DropdownMenu>
         )}

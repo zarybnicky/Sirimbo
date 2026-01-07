@@ -16,7 +16,9 @@ const QueryParams = z.object({
 });
 
 export function CohortList() {
-  const { query: { id: currentId } } = useTypedRouter(QueryParams);
+  const {
+    query: { id: currentId },
+  } = useTypedRouter(QueryParams);
   const auth = useAuth();
   const [isArchive, setIsArchive] = React.useState(false);
 
@@ -55,8 +57,11 @@ export function CohortList() {
           <div className="mt-2 w-full flex gap-2 justify-end">
             <button
               type="button"
-              className={buttonCls({ size: 'sm', variant: isArchive ? 'primary' : 'outline' })}
-              onClick={() => setIsArchive(x => !x)}
+              className={buttonCls({
+                size: 'sm',
+                variant: isArchive ? 'primary' : 'outline',
+              })}
+              onClick={() => setIsArchive((x) => !x)}
             >
               Zobrazit archivované
             </button>
@@ -77,10 +82,19 @@ export function CohortList() {
           <Link
             key={item.id}
             href={item.href}
-            className={buttonCls({ variant: currentId === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
+            className={buttonCls({
+              variant: currentId === item.id ? 'primary' : 'outline',
+              display: 'none',
+              className: 'pl-5 m-1 mt-0 grid',
+            })}
           >
             <div>{item.title}</div>
-            <div className={cn('text-sm', currentId === item.id ? 'text-white' : 'text-neutral-11')}>
+            <div
+              className={cn(
+                'text-sm',
+                currentId === item.id ? 'text-white' : 'text-neutral-11',
+              )}
+            >
               {item.subtitle}
             </div>
             <div

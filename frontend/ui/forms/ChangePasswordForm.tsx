@@ -17,8 +17,8 @@ const Form = z
   })
   .refine((data) => data.newPass === data.checkPass, {
     path: ['checkPass'],
-      error: 'Nová hesla se neshodují'
-});
+    error: 'Nová hesla se neshodují',
+  });
 
 export function ChangePasswordForm() {
   const { onSuccess } = useFormResult();
@@ -56,4 +56,4 @@ export function ChangePasswordForm() {
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );
-};
+}

@@ -30,7 +30,11 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
   const values = getValues();
 
   React.useEffect(() => {
-    if (!getValues('summary') && !getValues('description') && !getValues('descriptionMember')) {
+    if (
+      !getValues('summary') &&
+      !getValues('description') &&
+      !getValues('descriptionMember')
+    ) {
       reset({
         summary: event.summary,
         description: event.description,
@@ -44,7 +48,11 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
     onSuccess();
   });
 
-  const tabs: NonEmptyArray<{ id: string; title: React.ReactNode, contents: () => React.ReactNode; }> = [
+  const tabs: NonEmptyArray<{
+    id: string;
+    title: React.ReactNode;
+    contents: () => React.ReactNode;
+  }> = [
     {
       id: 'summary',
       title: 'Shrnutí',

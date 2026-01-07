@@ -4,19 +4,19 @@ import { RichTextView } from '@/ui/RichTextView';
 import { formatEventType, formatOpenDateRange } from '@/ui/format';
 import * as React from 'react';
 
-export function BasicEventInfo({ event }: { event: EventFragment; }) {
+export function BasicEventInfo({ event }: { event: EventFragment }) {
   return (
     <dl className="not-prose gap-2 mb-6">
       <dd>{formatEventType(event)}</dd>
       <dt>Termíny</dt>
-      <dd>
-        {event.eventInstancesList.map(formatOpenDateRange).join(', ')}
-      </dd>
+      <dd>{event.eventInstancesList.map(formatOpenDateRange).join(', ')}</dd>
 
       {event.capacity > 0 && (
         <>
           <dt>Kapacita</dt>
-          <dd>Zbývá {event.remainingPersonSpots} míst z {event.capacity}</dd>
+          <dd>
+            Zbývá {event.remainingPersonSpots} míst z {event.capacity}
+          </dd>
         </>
       )}
 

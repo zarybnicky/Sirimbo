@@ -1,13 +1,18 @@
 import {
-    ArticleDocument,
-    CreateArticleDocument,
-    DeleteArticleDocument,
-    UpdateArticleDocument,
+  ArticleDocument,
+  CreateArticleDocument,
+  DeleteArticleDocument,
+  UpdateArticleDocument,
 } from '@/graphql/Articles';
 import { useConfirm } from '@/ui/Confirm';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { TitleBar } from '@/ui/TitleBar';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
@@ -26,7 +31,7 @@ const Form = z.object({
   atPreview: z.string().optional().prefault(''),
   atText: z.string().optional().prefault(''),
   titlePhotoUrl: z.preprocess(
-    (val) => val === "" ? null : val,
+    (val) => (val === '' ? null : val),
     z.string().nullable().default(null),
   ),
 });
@@ -48,20 +53,22 @@ export function ArticleForm({ id = '' }: { id?: string }) {
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
-    reset({
-      atJmeno: data?.atJmeno ?? '',
-      atPreview: data?.atPreview ?? '',
-      atText: data?.atText ?? '',
-      titlePhotoUrl: data?.titlePhotoUrl ?? '',
-    }, {
-      keepDirtyValues: true,
-      keepTouched: true,
-      keepErrors: true,
-    });
+    reset(
+      {
+        atJmeno: data?.atJmeno ?? '',
+        atPreview: data?.atPreview ?? '',
+        atText: data?.atText ?? '',
+        titlePhotoUrl: data?.titlePhotoUrl ?? '',
+      },
+      {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      },
+    );
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormValues) => {
-
     if (id) {
       await update({ id, patch });
     } else {
@@ -81,8 +88,8 @@ export function ArticleForm({ id = '' }: { id?: string }) {
 
   const remove = React.useCallback(async () => {
     await confirm({ description: `Opravdu chcete smazat příspěvek "${data?.atJmeno}"?` });
-    await deleteMutation({ id })
-    router.replace('/aktuality')
+    await deleteMutation({ id });
+    router.replace('/aktuality');
   }, [router, confirm, deleteMutation, id, data?.atJmeno]);
 
   if (query.data && query.data.aktuality === null) {
@@ -96,9 +103,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
           <DropdownMenu>
             <DropdownMenuTrigger.CornerDots />
             <DropdownMenuContent align="end">
-              <DropdownMenuButton onClick={remove}>
-                Smazat
-              </DropdownMenuButton>
+              <DropdownMenuButton onClick={remove}>Smazat</DropdownMenuButton>
             </DropdownMenuContent>
           </DropdownMenu>
         )}

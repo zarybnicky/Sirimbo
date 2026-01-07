@@ -90,7 +90,6 @@ export const ConfirmProvider = React.memo(function ConfirmProvider({
               {options.confirmationText}
             </DialogClose>
           </div>
-
         </DialogContent>
       </Dialog>
     </React.Fragment>

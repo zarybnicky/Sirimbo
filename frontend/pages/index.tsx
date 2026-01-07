@@ -15,11 +15,17 @@ import { useRouter } from 'next/router';
 
 export default function HomePage() {
   const router = useRouter();
-  const tenantId = useAtomValue(tenantIdAtom)
-  const { enableHome } = useAtomValue(tenantConfigAtom)
+  const tenantId = useAtomValue(tenantIdAtom);
+  const { enableHome } = useAtomValue(tenantConfigAtom);
 
-  const [{ data: heroData }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 0 }});
-  const [{ data }] = useQuery({query: ArticlesDocument, variables: { first: 3, offset: 3 }});
+  const [{ data: heroData }] = useQuery({
+    query: ArticlesDocument,
+    variables: { first: 3, offset: 0 },
+  });
+  const [{ data }] = useQuery({
+    query: ArticlesDocument,
+    variables: { first: 3, offset: 3 },
+  });
 
   useLayoutEffect(() => {
     if (tenantId && !enableHome) {
@@ -27,8 +33,7 @@ export default function HomePage() {
     }
   }, [router, tenantId, enableHome]);
 
-  if (!tenantId || !enableHome)
-    return <Layout hideCta showTopMenu />
+  if (!tenantId || !enableHome) return <Layout hideCta showTopMenu />;
 
   return (
     <Layout hideCta showTopMenu>
@@ -40,7 +45,13 @@ export default function HomePage() {
 
       <div className="my-8">
         <h4 className="text-3xl font-bold text-accent-9 mb-2">Představujeme klub</h4>
-        <LiteYouTubeEmbed id="WR9ZVW-tezc" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+        <LiteYouTubeEmbed
+          id="WR9ZVW-tezc"
+          adNetwork={true}
+          params="modestbranding=1"
+          poster="hqdefault"
+          title="YouTube Embed"
+        />
       </div>
 
       <div className="col-feature my-12">
@@ -56,8 +67,8 @@ export default function HomePage() {
                 pathname: '/clanky/[id]/[...slug]',
                 query: {
                   id: x.id,
-                  slug: [slugify(x.atJmeno)]
-                }
+                  slug: [slugify(x.atJmeno)],
+                },
               }}
             />
           ))}
@@ -65,4 +76,4 @@ export default function HomePage() {
       </div>
     </Layout>
   );
-};
+}

@@ -19,10 +19,12 @@ const Form = z.object({
   description: z.string().nullish().prefault(null),
 });
 
-export function CreateCreditTransactionForm({ person }: {
+export function CreateCreditTransactionForm({
+  person,
+}: {
   person: {
     id: string;
-    accountsList: { balance: string | null; }[];
+    accountsList: { balance: string | null }[];
   };
 }) {
   const { onSuccess } = useFormResult();
@@ -44,7 +46,8 @@ export function CreateCreditTransactionForm({ person }: {
         vPersonId: person.id,
         vCurrency: 'CZK',
         vAmount: (isDeposit ? values.amount : -values.amount).toString(),
-        vDescription: values.description || (isDeposit ? 'Vklad kreditu' : 'Vyplacení kreditu'),
+        vDescription:
+          values.description || (isDeposit ? 'Vklad kreditu' : 'Vyplacení kreditu'),
       },
     });
     onSuccess();
@@ -54,7 +57,12 @@ export function CreateCreditTransactionForm({ person }: {
   const amount = watch('amount') || 0;
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <DatePickerElement label="Datum" control={control} name="date" className="min-w-16" />
+      <DatePickerElement
+        label="Datum"
+        control={control}
+        name="date"
+        className="min-w-16"
+      />
       <TextFieldElement control={control} name="description" label="Popis transakce" />
 
       <div className="flex flex-wrap gap-2 justify-between">
@@ -97,7 +105,10 @@ export function CreateCreditTransactionForm({ person }: {
             {moneyFormatter.format({ amount: amount.toString(), currency: 'CZK' })}
           </div>
           <div className="border-t">
-            {moneyFormatter.format({ amount: (balance + (isDeposit ? +amount : -amount)).toString(), currency: 'CZK' })}
+            {moneyFormatter.format({
+              amount: (balance + (isDeposit ? +amount : -amount)).toString(),
+              currency: 'CZK',
+            })}
           </div>
         </div>
       </div>

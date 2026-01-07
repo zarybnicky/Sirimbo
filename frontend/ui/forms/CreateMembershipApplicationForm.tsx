@@ -1,4 +1,10 @@
-import { ConfirmMembershipApplicationDocument, CreateMembershipApplicationDocument, DeleteMembershipApplicationDocument, type MembershipApplicationFragment, UpdateMembershipApplicationDocument } from '@/graphql/CurrentUser';
+import {
+  ConfirmMembershipApplicationDocument,
+  CreateMembershipApplicationDocument,
+  DeleteMembershipApplicationDocument,
+  type MembershipApplicationFragment,
+  UpdateMembershipApplicationDocument,
+} from '@/graphql/CurrentUser';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -41,7 +47,9 @@ const Form = z.object({
   bio: z.string().prefault(''),
 });
 
-export function CreateMembershipApplicationForm({ data }: {
+export function CreateMembershipApplicationForm({
+  data,
+}: {
   disabled?: boolean;
   data?: MembershipApplicationFragment;
 }) {
@@ -71,7 +79,9 @@ export function CreateMembershipApplicationForm({ data }: {
     if (data) {
       await update({ input: { id: data.id, patch: values } });
     } else {
-      await create({ input: { membershipApplication: { ...values, createdBy: auth.user?.id! } }});
+      await create({
+        input: { membershipApplication: { ...values, createdBy: auth.user?.id! } },
+      });
     }
     onSuccess();
   });
@@ -81,19 +91,44 @@ export function CreateMembershipApplicationForm({ data }: {
       <fieldset className="grid lg:grid-cols-2 gap-2" disabled={disabled}>
         <FormError error={onSubmit.error} />
 
-        <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
+        <TextFieldElement
+          control={control}
+          name="prefixTitle"
+          label="Titul před jménem"
+        />
         <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
-        <TextFieldElement control={control} name="firstName" label="Jméno" required autoFocus />
+        <TextFieldElement
+          control={control}
+          name="firstName"
+          label="Jméno"
+          required
+          autoFocus
+        />
         <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
         <TextFieldElement control={control} name="email" type="email" label="E-mail" />
         <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
 
-        <TextFieldElement type="date" control={control} label="Datum narození" name="birthDate" />
-        <TextFieldElement control={control} name="taxIdentificationNumber" label="Rodné číslo" placeholder="1111119999" />
+        <TextFieldElement
+          type="date"
+          control={control}
+          label="Datum narození"
+          name="birthDate"
+        />
+        <TextFieldElement
+          control={control}
+          name="taxIdentificationNumber"
+          label="Rodné číslo"
+          placeholder="1111119999"
+        />
 
         <CstsIdFieldElement control={control} name="cstsId" />
-        <TextFieldElement control={control} name="wdsfId" label="WDSF MIN" placeholder="10000000" />
+        <TextFieldElement
+          control={control}
+          name="wdsfId"
+          label="WDSF MIN"
+          placeholder="10000000"
+        />
 
         <div className="col-full">
           <RadioButtonGroupElement
@@ -118,20 +153,28 @@ export function CreateMembershipApplicationForm({ data }: {
       </fieldset>
 
       <div className="col-full flex justify-between">
-        {(data && auth.isAdmin) ? (
+        {data && auth.isAdmin ? (
           <>
-            <button className={buttonCls()} type="button" onClick={async () => {
-              await confirm({ input: { applicationId: data.id } })
-              onSuccess();
-            }}>
+            <button
+              className={buttonCls()}
+              type="button"
+              onClick={async () => {
+                await confirm({ input: { applicationId: data.id } });
+                onSuccess();
+              }}
+            >
               <Check />
               Potvrdit jako člena
             </button>
 
-            <button className={buttonCls({ variant: 'outline' })} type="button" onClick={async () => {
-              await del({ input: { id: data.id } })
-              onSuccess();
-            }}>
+            <button
+              className={buttonCls({ variant: 'outline' })}
+              type="button"
+              onClick={async () => {
+                await del({ input: { id: data.id } });
+                onSuccess();
+              }}
+            >
               <Trash2 />
               Smazat přihlášku
             </button>
@@ -139,7 +182,11 @@ export function CreateMembershipApplicationForm({ data }: {
         ) : (
           <>
             {data && (
-              <button type="button" onClick={() => del({ input: { id: data.id } })} className={buttonCls({ variant: 'outline' })}>
+              <button
+                type="button"
+                onClick={() => del({ input: { id: data.id } })}
+                className={buttonCls({ variant: 'outline' })}
+              >
                 <Trash2 />
                 Smazat přihlášku
               </button>

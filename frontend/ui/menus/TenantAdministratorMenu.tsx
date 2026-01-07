@@ -35,7 +35,8 @@ export function TenantAdministratorMenu({
 
   const remove = React.useCallback(async () => {
     await confirm({
-      description: 'Opravdu chcete vztah správce NENÁVRATNĚ smazat? Spíše použij variantu ukončení, ať zůstanou zachována historická data.',
+      description:
+        'Opravdu chcete vztah správce NENÁVRATNĚ smazat? Spíše použij variantu ukončení, ať zůstanou zachována historická data.',
     });
     await doRemove({ id: data.id });
     toast.success('Odstraněno');

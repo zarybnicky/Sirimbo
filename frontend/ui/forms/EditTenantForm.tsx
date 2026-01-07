@@ -41,13 +41,8 @@ export function EditTenantForm() {
 
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error}/>
-      <TextFieldElement
-        control={control}
-        name="name"
-        label="Název organizace"
-        required
-      />
+      <FormError error={onSubmit.error} />
+      <TextFieldElement control={control} name="name" label="Název organizace" required />
       <TextFieldElement
         control={control}
         name="bankAccount"
@@ -60,7 +55,7 @@ export function EditTenantForm() {
         name="description"
         label="Základní informace"
       />
-      <SubmitButton loading={onSubmit.loading}/>
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 }

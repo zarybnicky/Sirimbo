@@ -1,5 +1,9 @@
 import { CohortGroupListDocument } from '@/graphql/CohortGroup';
-import { CohortDocument, CreateCohortDocument, UpdateCohortDocument } from '@/graphql/Cohorts';
+import {
+  CohortDocument,
+  CreateCohortDocument,
+  UpdateCohortDocument,
+} from '@/graphql/Cohorts';
 import { ColorPicker } from '@/ui/fields/ColorPicker';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
@@ -64,8 +68,11 @@ export function CohortForm({ id = '' }: { id?: string }) {
   });
 
   const programOptions = [
-    ...(cohortGroups?.cohortGroups?.nodes || []).map((x) => ({ id: x.id || null, label: x.name })),
-    { id: null, label: 'Žádný' }
+    ...(cohortGroups?.cohortGroups?.nodes || []).map((x) => ({
+      id: x.id || null,
+      label: x.name,
+    })),
+    { id: null, label: 'Žádný' },
   ];
 
   return (

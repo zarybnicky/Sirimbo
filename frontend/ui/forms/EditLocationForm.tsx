@@ -1,4 +1,8 @@
-import { CreateTenantLocationDocument, TenantLocationDocument, UpdateTenantLocationDocument } from '@/graphql/Tenant';
+import {
+  CreateTenantLocationDocument,
+  TenantLocationDocument,
+  UpdateTenantLocationDocument,
+} from '@/graphql/Tenant';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
@@ -14,15 +18,17 @@ const Form = z.object({
   name: z.string(),
   description: z.string().nullish(),
   isPublic: z.boolean().prefault(false),
-  address: z.object({
-    city: z.string().nullish(),
-    conscriptionNumber: z.string().nullish(),
-    district: z.string().nullish(),
-    orientationNumber: z.string().nullish(),
-    postalCode: z.string().nullish(),
-    region: z.string().nullish(),
-    street: z.string().nullish(),
-  }).nullish(),
+  address: z
+    .object({
+      city: z.string().nullish(),
+      conscriptionNumber: z.string().nullish(),
+      district: z.string().nullish(),
+      orientationNumber: z.string().nullish(),
+      postalCode: z.string().nullish(),
+      region: z.string().nullish(),
+      street: z.string().nullish(),
+    })
+    .nullish(),
 });
 
 export function EditTenantLocationForm({ id = '' }: { id?: string }) {
@@ -30,7 +36,11 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
   const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
-  const [query] = useQuery({ query: TenantLocationDocument, variables: { id }, pause: !id });
+  const [query] = useQuery({
+    query: TenantLocationDocument,
+    variables: { id },
+    pause: !id,
+  });
   const create = useMutation(CreateTenantLocationDocument)[1];
   const update = useMutation(UpdateTenantLocationDocument)[1];
 
@@ -61,7 +71,9 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
     }
     await (id
       ? update({ input: { id, patch: { ...values, isPublic: !!values.isPublic } } })
-      : create({ input: { tenantLocation: { ...values, isPublic: !!values.isPublic } } }));
+      : create({
+          input: { tenantLocation: { ...values, isPublic: !!values.isPublic } },
+        }));
     onSuccess();
   });
 
@@ -74,8 +86,16 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
 
       <div className="grid gap-2 md:grid-cols-[2fr_1fr_1fr]">
         <TextFieldElement control={control} name="address.street" label="Ulice" />
-        <TextFieldElement control={control} name="address.conscriptionNumber" label="Č. popisné" />
-        <TextFieldElement control={control} name="address.orientationNumber" label="Č. orientační" />
+        <TextFieldElement
+          control={control}
+          name="address.conscriptionNumber"
+          label="Č. popisné"
+        />
+        <TextFieldElement
+          control={control}
+          name="address.orientationNumber"
+          label="Č. orientační"
+        />
       </div>
 
       <div className="grid gap-2 md:grid-cols-[1fr_1fr]">

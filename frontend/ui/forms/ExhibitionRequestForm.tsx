@@ -23,7 +23,7 @@ const Form = z.object({
   phone: z.string(),
   email: z.email(),
   notes: z.string().nullish(),
-  op: z.boolean().refine(x => x),
+  op: z.boolean().refine((x) => x),
 });
 
 export function ExhibitionRequestForm() {
@@ -74,7 +74,12 @@ export function ExhibitionRequestForm() {
               required
             />
             <TextFieldElement control={control} name="location" label="Místo" required />
-            <TextFieldElement control={control} name="event" label="Název akce" required />
+            <TextFieldElement
+              control={control}
+              name="event"
+              label="Název akce"
+              required
+            />
             <TextFieldElement
               control={control}
               name="phone"
@@ -118,7 +123,9 @@ export function ExhibitionRequestForm() {
           }
         />
 
-        <p className="py-2 prose prose-accent">Ozveme se Vám co nejdříve. V případě potřeby volejte 737 545 525.</p>
+        <p className="py-2 prose prose-accent">
+          Ozveme se Vám co nejdříve. V případě potřeby volejte 737 545 525.
+        </p>
 
         <FormError error={onSubmit.error} />
         <SubmitButton loading={onSubmit.loading}>Odeslat</SubmitButton>

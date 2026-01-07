@@ -10,17 +10,19 @@ import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
 
 export default function CrmPage() {
-  const [{ data }] = useQuery({query: FormResponsesDocument});
+  const [{ data }] = useQuery({ query: FormResponsesDocument });
 
   const dataset = React.useMemo(() => {
-    return (data?.formResponses?.nodes || []).map(x => ({ ...x, data: JSON.parse(x.data as any) }));
+    return (data?.formResponses?.nodes || []).map((x) => ({
+      ...x,
+      data: JSON.parse(x.data as any),
+    }));
   }, [data?.formResponses?.nodes]);
 
   const types = React.useMemo(() => {
     const types = new Set<string>();
     for (const entry of dataset) {
-      if (entry.type !== 'Zpětná vazba, web 05/2023')
-        types.add(entry.type);
+      if (entry.type !== 'Zpětná vazba, web 05/2023') types.add(entry.type);
     }
     return [...types.values()].toSorted();
   }, [dataset]);
@@ -28,7 +30,7 @@ export default function CrmPage() {
   const [state, setState] = React.useState('');
   const currentData = React.useMemo(() => {
     const selected = state || types[0];
-    return dataset.filter(x => x.type === selected);
+    return dataset.filter((x) => x.type === selected);
   }, [types, state, dataset]);
 
   const columns = React.useMemo(() => {
@@ -45,13 +47,22 @@ export default function CrmPage() {
     <Layout requireAdmin>
       <div className="container col-feature">
         <TitleBar title="Odeslané formuláře">
-          <button type="button" className={buttonCls({ variant: 'outline' })} onClick={exportFormResponses}>
+          <button
+            type="button"
+            className={buttonCls({ variant: 'outline' })}
+            onClick={exportFormResponses}
+          >
             Export všech
           </button>
         </TitleBar>
 
-        <ToggleGroupPrimitive.Root value={state || types[0]} onValueChange={setState} type="single" className="grow">
-          {types.map(type => (
+        <ToggleGroupPrimitive.Root
+          value={state || types[0]}
+          onValueChange={setState}
+          type="single"
+          className="grow"
+        >
+          {types.map((type) => (
             <ToggleGroupPrimitive.Item
               key={`group-item-${type}`}
               value={type}
@@ -70,16 +81,20 @@ export default function CrmPage() {
         <table className="w-full text-sm text-left text-neutral-12 mt-3">
           <thead>
             <tr>
-              {columns.map(x => <th key={x}>{x}</th>)}
+              {columns.map((x) => (
+                <th key={x}>{x}</th>
+              ))}
               <th className="text-right">Vytvořeno</th>
             </tr>
           </thead>
           <tbody>
             {currentData.map((row, i) => (
               <tr key={i} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
-                {columns.map(x => (
+                {columns.map((x) => (
                   <td key={x}>
-                    {x === 'date' ? fullDateFormatter.format(new Date(row.data[x] as string)) : row.data[x]}
+                    {x === 'date'
+                      ? fullDateFormatter.format(new Date(row.data[x] as string))
+                      : row.data[x]}
                   </td>
                 ))}
                 <td className="text-right">

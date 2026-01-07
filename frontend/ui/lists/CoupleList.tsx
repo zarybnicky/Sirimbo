@@ -9,8 +9,8 @@ import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
-import Link from "next/link";
-import { buttonCls } from "@/ui/style";
+import Link from 'next/link';
+import { buttonCls } from '@/ui/style';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -65,7 +65,11 @@ export function CoupleList() {
           <Link
             key={item.id}
             href={item.href}
-            className={buttonCls({ variant: currentId === item.id ? 'primary' : 'outline', display: 'none', className: 'pl-5 m-1 mt-0 grid' })}
+            className={buttonCls({
+              variant: currentId === item.id ? 'primary' : 'outline',
+              display: 'none',
+              className: 'pl-5 m-1 mt-0 grid',
+            })}
           >
             <div>{item.title}</div>
           </Link>

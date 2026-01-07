@@ -21,7 +21,7 @@ type FormValues = z.infer<typeof Form>;
 
 type LoginFormProps = {
   onSuccess?: (result: UserAuthFragment | null) => void;
-}
+};
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const { enableRegistration } = useAtomValue(tenantConfigAtom);

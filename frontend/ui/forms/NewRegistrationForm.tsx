@@ -38,7 +38,7 @@ const Form = z.object({
 type FormValues = z.infer<typeof Form>;
 type FormRegistration = FormValues['registrations'][number];
 
-export function NewRegistrationForm({ event }: { event: EventFragment; }) {
+export function NewRegistrationForm({ event }: { event: EventFragment }) {
   const { onSuccess } = useFormResult();
   const create = useMutation(RegisterToEventDocument)[1];
   const auth = useAuth();
@@ -50,12 +50,15 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
   const { watch, register, control, handleSubmit, setValue } = useForm({
     resolver: zodResolver(Form),
   });
-  const { fields: fieldsInitial, append } = useFieldArray({ control, name: "registrations" });
-  const watchFieldArray = watch("registrations");
+  const { fields: fieldsInitial, append } = useFieldArray({
+    control,
+    name: 'registrations',
+  });
+  const watchFieldArray = watch('registrations');
   const fields = fieldsInitial.map((field, index) => {
     return {
       ...field,
-      ...watchFieldArray?.[index]
+      ...watchFieldArray?.[index],
     };
   });
 
@@ -75,7 +78,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
         note: '',
         lessons: [],
         label: `${p.firstName} ${p.lastName}`,
-        disabled: !event.myRegistrationsList?.find(r => r.personId === p.id),
+        disabled: !event.myRegistrationsList?.find((r) => r.personId === p.id),
       });
       fieldsAddedRef.current.persons.add(p.id);
     }
@@ -90,7 +93,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
           note: '',
           lessons: [],
           label: formatCoupleName(c),
-          disabled: !event.myRegistrationsList?.find(r => r.coupleId === c.id),
+          disabled: !event.myRegistrationsList?.find((r) => r.coupleId === c.id),
         });
         fieldsAddedRef.current.couples.add(c.id);
       }
@@ -104,28 +107,32 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
   const onSubmit = useAsyncCallback(async ({ registrations }: FormValues) => {
     const res = await create({
       input: {
-        registrations: registrations.filter(x => x.selected).map((x) => {
-          const lessons = x.lessons
-            .map((lesson, trainerIdx) => ({
-              lessonCount: lesson.lessonCount,
-              trainerId: event.eventTrainersList[trainerIdx]!.id,
-            }))
-            .filter(
-              (lesson): lesson is { lessonCount: number; trainerId: string } =>
-                typeof lesson.lessonCount === 'number' && lesson.lessonCount > 0,
-            );
+        registrations: registrations
+          .filter((x) => x.selected)
+          .map((x) => {
+            const lessons = x.lessons
+              .map((lesson, trainerIdx) => ({
+                lessonCount: lesson.lessonCount,
+                trainerId: event.eventTrainersList[trainerIdx]!.id,
+              }))
+              .filter(
+                (lesson): lesson is { lessonCount: number; trainerId: string } =>
+                  typeof lesson.lessonCount === 'number' && lesson.lessonCount > 0,
+              );
 
-          return {
-            eventId: event.id,
-            coupleId: x.coupleId,
-            personId: x.personId,
-            note: x.note,
-            lessons,
-          };
-        }),
+            return {
+              eventId: event.id,
+              coupleId: x.coupleId,
+              personId: x.personId,
+              note: x.note,
+              lessons,
+            };
+          }),
       },
     });
-    const ids = res.data?.registerToEventMany?.eventRegistrations?.map(x => x.id)?.filter(Boolean);
+    const ids = res.data?.registerToEventMany?.eventRegistrations
+      ?.map((x) => x.id)
+      ?.filter(Boolean);
     if (ids?.length) {
       toast.success('Přihlášení na akci proběhlo úspěšně.');
       onSuccess();
@@ -136,20 +143,24 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
     <form onSubmit={handleSubmit(onSubmit.execute)} className="space-y-2">
       <FormError error={onSubmit.error} />
       <div className="relative">
-        {fields.map(({ id, selected, label }, index) => (
-          event.type === "LESSON" ? (
+        {fields.map(({ id, selected, label }, index) =>
+          event.type === 'LESSON' ? (
             <button
               type="button"
               key={id}
               data-state={selected ? 'on' : ''}
-              onClick={() => setValue(`registrations.${index}.selected`, !selected, { shouldTouch: true })}
+              onClick={() =>
+                setValue(`registrations.${index}.selected`, !selected, {
+                  shouldTouch: true,
+                })
+              }
               className={cn(
                 'flex gap-2 items-center appearance-none',
                 'group w-full data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-accent-11',
                 'px-2.5 py-2 text-sm first:rounded-t-xl border last:rounded-b-xl',
                 'border-y border-l last:border-r border-accent-7 data-[state=on]:border-accent-10',
                 'disabled:border-neutral-6 disabled:data-[state=on]:border-neutral-10 disabled:data-[state=on]:bg-neutral-9 disabled:text-neutral-11 disabled:data-[state=on]:text-white',
-                'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10'
+                'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10',
               )}
             >
               <div className="flex gap-2 items-center">
@@ -169,7 +180,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
                 'group w-full bg-neutral-1',
                 'px-2.5 py-2 text-sm first:rounded-t-xl border last:rounded-b-xl',
                 'border-y border-l last:border-r border-accent-7 disabled:border-neutral-6',
-                'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10'
+                'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10',
               )}
             >
               <input
@@ -179,39 +190,45 @@ export function NewRegistrationForm({ event }: { event: EventFragment; }) {
                 className="grow-0 focus:ring-accent-9 size-4 bg-accent-2 text-accent-10 border-accent-9 border-2 rounded"
               />
               <div className="grow flex flex-col gap-2">
-                <label className="text-accent-11" htmlFor={`registrations.${index}.selected`}>
+                <label
+                  className="text-accent-11"
+                  htmlFor={`registrations.${index}.selected`}
+                >
                   {label}
                 </label>
-                {selected && <>
-                  {event.enableNotes && (
-                    <TextAreaElement
-                      autoFocus
-                      control={control}
-                      label="Poznámky k registraci, požadavky na stravu apod."
-                      name={`registrations.${index}.note`}
-                    />
-                  )}
-                  <fieldset>
-                    <legend className="text-neutral-11">Požadavky na lekce</legend>
-                    {event.eventTrainersList.map((trainer, trainerIndex) => (
-                      <div key={trainer.id} className="flex items-center flex-wrap gap-2">
-                        <div className="grow">
-                          {trainer.name}
+                {selected && (
+                  <>
+                    {event.enableNotes && (
+                      <TextAreaElement
+                        autoFocus
+                        control={control}
+                        label="Poznámky k registraci, požadavky na stravu apod."
+                        name={`registrations.${index}.note`}
+                      />
+                    )}
+                    <fieldset>
+                      <legend className="text-neutral-11">Požadavky na lekce</legend>
+                      {event.eventTrainersList.map((trainer, trainerIndex) => (
+                        <div
+                          key={trainer.id}
+                          className="flex items-center flex-wrap gap-2"
+                        >
+                          <div className="grow">{trainer.name}</div>
+                          <NumberFieldElement
+                            control={control}
+                            name={`registrations.${index}.lessons.${trainerIndex}.lessonCount`}
+                            min={0}
+                            max={trainer.lessonsRemaining ?? Number.MAX_SAFE_INTEGER}
+                          />
                         </div>
-                        <NumberFieldElement
-                          control={control}
-                          name={`registrations.${index}.lessons.${trainerIndex}.lessonCount`}
-                          min={0}
-                          max={trainer.lessonsRemaining ?? Number.MAX_SAFE_INTEGER}
-                        />
-                      </div>
-                    ))}
-                  </fieldset>
-                </>}
+                      ))}
+                    </fieldset>
+                  </>
+                )}
               </div>
             </div>
-          )
-        ))}
+          ),
+        )}
       </div>
       <SubmitButton loading={onSubmit.loading}>Přihlásit</SubmitButton>
     </form>

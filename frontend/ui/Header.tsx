@@ -28,9 +28,9 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
   const tenantId = useAtomValue(tenantIdAtom);
   const [isMounted, setIsMounted] = React.useState(false);
 
-  const DesktopLogo = useMemo(() => getTenantUi(tenantId, 'DesktopLogo'), [tenantId],);
-  const MobileLogo = useMemo(() => getTenantUi(tenantId, 'MobileLogo'), [tenantId],);
-  const SocialIcons = useMemo(() => getTenantUi(tenantId, 'SocialIcons'), [tenantId],);
+  const DesktopLogo = useMemo(() => getTenantUi(tenantId, 'DesktopLogo'), [tenantId]);
+  const MobileLogo = useMemo(() => getTenantUi(tenantId, 'MobileLogo'), [tenantId]);
+  const SocialIcons = useMemo(() => getTenantUi(tenantId, 'SocialIcons'), [tenantId]);
 
   React.useEffect(() => {
     setIsMounted(true);

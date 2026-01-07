@@ -23,7 +23,10 @@ const Form = z.object({
 
 type FormValues = z.infer<typeof Form>;
 
-export function MyRegistrationForm({ event, registration }: {
+export function MyRegistrationForm({
+  event,
+  registration,
+}: {
   event: EventFragment;
   registration: EventRegistrationFragment;
 }) {
@@ -35,13 +38,16 @@ export function MyRegistrationForm({ event, registration }: {
   const [{ fetching }, setMutation] = useMutation(SetLessonDemandDocument);
 
   React.useEffect(() => {
-    reset({
-      note: registration?.note || '',
-    }, {
-      keepDirtyValues: true,
-      keepTouched: true,
-      keepErrors: true,
-    });
+    reset(
+      {
+        note: registration?.note || '',
+      },
+      {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      },
+    );
   }, [reset, registration]);
 
   const myLessons = React.useMemo(() => {
@@ -53,18 +59,18 @@ export function MyRegistrationForm({ event, registration }: {
   }, [registration]);
 
   const changeLessonCount = React.useCallback(
-    async (diff: number, trainer: { id: string; lessonsRemaining: number | null; }) => {
+    async (diff: number, trainer: { id: string; lessonsRemaining: number | null }) => {
       let lessonCount = (myLessons[trainer.id] ?? 0) + diff;
       lessonCount = Math.min(
         lessonCount,
-        (myLessons[trainer.id] ?? 0) + (trainer.lessonsRemaining ?? 0)
+        (myLessons[trainer.id] ?? 0) + (trainer.lessonsRemaining ?? 0),
       );
       lessonCount = Math.max(lessonCount, 0);
       await setMutation({
         input: { registrationId: registration.id, trainerId: trainer.id, lessonCount },
       });
     },
-    [setMutation, registration, myLessons]
+    [setMutation, registration, myLessons],
   );
 
   const onSubmit = useAsyncCallback(async ({ note }: FormValues) => {
@@ -84,10 +90,9 @@ export function MyRegistrationForm({ event, registration }: {
             autoFocus
             control={control}
             label="Poznámky k registraci, požadavky na stravu apod."
-            name="note" />
-          <SubmitButton loading={onSubmit.loading}>
-            Upravit poznámky
-          </SubmitButton>
+            name="note"
+          />
+          <SubmitButton loading={onSubmit.loading}>Upravit poznámky</SubmitButton>
         </>
       )}
 
@@ -112,9 +117,7 @@ export function MyRegistrationForm({ event, registration }: {
             >
               <Plus className="size-5" />
             </button>
-            <div className="grow">
-              {trainer.name}
-            </div>
+            <div className="grow">{trainer.name}</div>
           </div>
         ))}
       </fieldset>

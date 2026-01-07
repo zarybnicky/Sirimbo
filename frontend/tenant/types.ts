@@ -8,4 +8,4 @@ export type TenantConfig = {
   useTrainerInitials: boolean;
   lockEventsByDefault: boolean;
   facebookPixelId?: string;
-}
+};

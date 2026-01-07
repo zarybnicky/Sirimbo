@@ -34,7 +34,9 @@ const TenantFormSchema = z.object({
 
 type TenantFormValues = z.infer<typeof TenantFormSchema>;
 
-type TableRow = NonNullable<SystemAdminTenantsQuery['systemAdminTenants']>['nodes'][number];
+type TableRow = NonNullable<
+  SystemAdminTenantsQuery['systemAdminTenants']
+>['nodes'][number];
 const columns: ColumnDef<TableRow>[] = [
   {
     id: '__actions',
@@ -56,7 +58,11 @@ const columns: ColumnDef<TableRow>[] = [
   { accessorKey: 'membershipCount', header: 'Členové', sortingFn: 'alphanumeric' },
   { accessorKey: 'trainerCount', header: 'Trenéři', sortingFn: 'alphanumeric' },
   { accessorKey: 'administratorCount', header: 'Správci', sortingFn: 'alphanumeric' },
-  { accessorKey: 'sessionCountLast30Days', header: 'Lekce / 30 dní', sortingFn: 'alphanumeric' },
+  {
+    accessorKey: 'sessionCountLast30Days',
+    header: 'Lekce / 30 dní',
+    sortingFn: 'alphanumeric',
+  },
   {
     accessorKey: 'sessionCountPerTrainerLast30Days',
     header: 'Lekce / trenér / 30 dní',

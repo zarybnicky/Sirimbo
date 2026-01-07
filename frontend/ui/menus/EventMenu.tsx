@@ -19,7 +19,12 @@ export function EventMenu({
   const [longEditOpen, setLongEditOpen] = React.useState(false);
   const auth = useAuth();
 
-  if (!auth.isAdmin && (!auth.isTrainer || !data.eventTrainersList.some(x => auth.personIds.includes(x.personId)))) return null;
+  if (
+    !auth.isAdmin &&
+    (!auth.isTrainer ||
+      !data.eventTrainersList.some((x) => auth.personIds.includes(x.personId)))
+  )
+    return null;
 
   return (
     <DropdownMenu>

@@ -7,7 +7,12 @@ import cs from 'date-fns/locale/cs';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import * as React from 'react';
 import { DayPicker } from 'react-day-picker';
-import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
+import {
+  type Control,
+  type FieldValues,
+  type Path,
+  useController,
+} from 'react-hook-form';
 
 function Calendar({
   className,
@@ -38,7 +43,8 @@ function Calendar({
         day_today: 'bg-accent-4 text-accent-11',
         day_outside: 'text-neutral-11 opacity-50',
         day_disabled: 'text-neutral-11 opacity-50',
-        day_range_middle: 'aria-selected:bg-accent-8 aria-selected:text-accent-1 aria-selected:font-normal',
+        day_range_middle:
+          'aria-selected:bg-accent-8 aria-selected:text-accent-1 aria-selected:font-normal',
         day_hidden: 'invisible',
         ...classNames,
       }}
@@ -82,7 +88,7 @@ export function DatePickerElement<T extends FieldValues>({
 
   React.useEffect(() => {
     const newInput = field.value ? toDatetimeLocal(new Date(field.value)) : '';
-    setInput(old => old !== newInput ? newInput : old);
+    setInput((old) => (old !== newInput ? newInput : old));
   }, [field.value]);
 
   return (

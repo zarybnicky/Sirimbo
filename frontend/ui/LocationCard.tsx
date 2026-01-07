@@ -51,4 +51,4 @@ export function LocationCard(x: Props) {
       </div>
     </div>
   );
-};
+}

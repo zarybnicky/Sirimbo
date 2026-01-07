@@ -6,7 +6,9 @@ const setLocalStorageItem = (key: string, value: string | null | undefined) => {
   } else {
     localStorage.removeItem(key);
   }
-  globalThis.dispatchEvent(new StorageEvent('storage', { key, newValue: value, storageArea: localStorage }));
+  globalThis.dispatchEvent(
+    new StorageEvent('storage', { key, newValue: value, storageArea: localStorage }),
+  );
 };
 
 const useLocalStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
@@ -51,14 +53,15 @@ export function useLocalStorage(key: string, initialValue: string | null | undef
   return [store || initialValue, setState] as const;
 }
 
-
 const setSessionStorageItem = (key: string, value: string | null | undefined) => {
   if (value) {
     sessionStorage.setItem(key, value);
   } else {
     sessionStorage.removeItem(key);
   }
-  globalThis.dispatchEvent(new StorageEvent('storage', { key, newValue: value, storageArea: sessionStorage }));
+  globalThis.dispatchEvent(
+    new StorageEvent('storage', { key, newValue: value, storageArea: sessionStorage }),
+  );
 };
 
 const useSessionStorageSubscribe = (callback: (ev: StorageEvent) => void) => {

@@ -1,4 +1,7 @@
-import { TenantAdministratorDocument, UpdateTenantAdministratorDocument } from '@/graphql/Memberships';
+import {
+  TenantAdministratorDocument,
+  UpdateTenantAdministratorDocument,
+} from '@/graphql/Memberships';
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
@@ -19,10 +22,14 @@ export function EditTenantAdministratorForm({ id }: { id: string }) {
   const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
-  const [query] = useQuery({ query: TenantAdministratorDocument, variables: { id }, pause: !id });
+  const [query] = useQuery({
+    query: TenantAdministratorDocument,
+    variables: { id },
+    pause: !id,
+  });
   const update = useMutation(UpdateTenantAdministratorDocument)[1];
 
-  const item = query.data?.tenantAdministrator
+  const item = query.data?.tenantAdministrator;
 
   React.useEffect(() => {
     if (item) {
@@ -51,7 +58,9 @@ export function EditTenantAdministratorForm({ id }: { id: string }) {
       <FormError error={onSubmit.error} />
 
       <div className="prose prose-accent">
-        <h4>Administrátor {item?.person?.name} v klubu {item?.tenant?.name}</h4>
+        <h4>
+          Administrátor {item?.person?.name} v klubu {item?.tenant?.name}
+        </h4>
       </div>
 
       <DatePickerElement control={control} name="since" label="Členství od" />

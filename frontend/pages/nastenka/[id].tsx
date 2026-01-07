@@ -15,8 +15,12 @@ const QueryParams = z.object({
 
 export default function AnnouncementPage() {
   const router = useTypedRouter(QueryParams);
-  const { id } = router.query
-  const [query] = useQuery({ query: AnnouncementDocument, variables: { id }, pause: !id });
+  const { id } = router.query;
+  const [query] = useQuery({
+    query: AnnouncementDocument,
+    variables: { id },
+    pause: !id,
+  });
   const data = query.data?.announcement;
 
   return (

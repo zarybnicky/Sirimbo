@@ -24,12 +24,14 @@ export default function EventPage() {
     <Layout hideTopMenuIfLoggedIn>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       <WithSidebar sidebar={<EventList />}>
-        <div className={auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
-          {data?.event && (
-            <EventView event={data.event} />
-          )}
+        <div
+          className={
+            auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'
+          }
+        >
+          {data?.event && <EventView event={data.event} />}
         </div>
       </WithSidebar>
     </Layout>
   );
-};
+}

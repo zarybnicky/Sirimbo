@@ -1,7 +1,11 @@
 import React from 'react';
 import { cn } from '@/ui/cn';
 
-export const WithSidebar = React.memo(function WithSidebar({ sidebar, children, className }: {
+export const WithSidebar = React.memo(function WithSidebar({
+  sidebar,
+  children,
+  className,
+}: {
   sidebar: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
@@ -19,10 +23,12 @@ export const WithSidebar = React.memo(function WithSidebar({ sidebar, children, 
         {sidebar}
       </div>
 
-      <div className={cn('grow content relative max-w-full content-start', className, {
-        'hidden lg:grid': !children,
-        'min-h-0': children,
-      })}>
+      <div
+        className={cn('grow content relative max-w-full content-start', className, {
+          'hidden lg:grid': !children,
+          'min-h-0': children,
+        })}
+      >
         {children}
       </div>
     </div>

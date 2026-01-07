@@ -17,21 +17,39 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
   1: {
     ...serverTenantCatalog[1],
     ui: {
-      DesktopLogo: dynamic(() => import('./olymp/ui').then(x => x.DesktopLogo), { ssr: false }),
-      MobileLogo: dynamic(() => import('./olymp/ui').then(x => x.MobileLogo), { ssr: false }),
-      SidebarLogo: dynamic(() => import('./olymp/ui').then(x => x.SidebarLogo), { ssr: false }),
-      SocialIcons: dynamic(() => import('./olymp/ui').then(x => x.SocialIcons), { ssr: false }),
-      Sponsors: dynamic(() => import('./olymp/ui').then(x => x.Sponsors), { ssr: false }),
-      Footer: dynamic(() => import('./olymp/ui').then(x => x.Footer), { ssr: false }),
-      TenantSeo: dynamic(() => import('./olymp/ui').then(x => x.TenantSeo), { ssr: false }),
+      DesktopLogo: dynamic(() => import('./olymp/ui').then((x) => x.DesktopLogo), {
+        ssr: false,
+      }),
+      MobileLogo: dynamic(() => import('./olymp/ui').then((x) => x.MobileLogo), {
+        ssr: false,
+      }),
+      SidebarLogo: dynamic(() => import('./olymp/ui').then((x) => x.SidebarLogo), {
+        ssr: false,
+      }),
+      SocialIcons: dynamic(() => import('./olymp/ui').then((x) => x.SocialIcons), {
+        ssr: false,
+      }),
+      Sponsors: dynamic(() => import('./olymp/ui').then((x) => x.Sponsors), {
+        ssr: false,
+      }),
+      Footer: dynamic(() => import('./olymp/ui').then((x) => x.Footer), { ssr: false }),
+      TenantSeo: dynamic(() => import('./olymp/ui').then((x) => x.TenantSeo), {
+        ssr: false,
+      }),
     },
   },
   2: {
     ...serverTenantCatalog[2],
     ui: {
-      MobileLogo: dynamic(() => import('./kometa/ui').then(x => x.MobileLogo), { ssr: false }),
-      SidebarLogo: dynamic(() => import('./kometa/ui').then(x => x.SidebarLogo), { ssr: false }),
-      TenantSeo: dynamic(() => import('./kometa/ui').then(x => x.TenantSeo), { ssr: false }),
+      MobileLogo: dynamic(() => import('./kometa/ui').then((x) => x.MobileLogo), {
+        ssr: false,
+      }),
+      SidebarLogo: dynamic(() => import('./kometa/ui').then((x) => x.SidebarLogo), {
+        ssr: false,
+      }),
+      TenantSeo: dynamic(() => import('./kometa/ui').then((x) => x.TenantSeo), {
+        ssr: false,
+      }),
       DesktopLogo: () => null,
       SocialIcons: () => null,
       Sponsors: () => null,
@@ -41,9 +59,15 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
   3: {
     ...serverTenantCatalog[3],
     ui: {
-      MobileLogo: dynamic(() => import('./starlet/ui').then(x => x.MobileLogo), { ssr: false }),
-      SidebarLogo: dynamic(() => import('./starlet/ui').then(x => x.SidebarLogo), { ssr: false }),
-      TenantSeo: dynamic(() => import('./starlet/ui').then(x => x.TenantSeo), { ssr: false }),
+      MobileLogo: dynamic(() => import('./starlet/ui').then((x) => x.MobileLogo), {
+        ssr: false,
+      }),
+      SidebarLogo: dynamic(() => import('./starlet/ui').then((x) => x.SidebarLogo), {
+        ssr: false,
+      }),
+      TenantSeo: dynamic(() => import('./starlet/ui').then((x) => x.TenantSeo), {
+        ssr: false,
+      }),
       DesktopLogo: () => null,
       SocialIcons: () => null,
       Sponsors: () => null,
@@ -53,9 +77,15 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
   4: {
     ...serverTenantCatalog[4],
     ui: {
-      MobileLogo: dynamic(() => import('./kometa/ui').then(x => x.MobileLogo), { ssr: false }),
-      SidebarLogo: dynamic(() => import('./kometa/ui').then(x => x.SidebarLogo), { ssr: false }),
-      TenantSeo: dynamic(() => import('./kometa/ui').then(x => x.TenantSeo), { ssr: false }),
+      MobileLogo: dynamic(() => import('./kometa/ui').then((x) => x.MobileLogo), {
+        ssr: false,
+      }),
+      SidebarLogo: dynamic(() => import('./kometa/ui').then((x) => x.SidebarLogo), {
+        ssr: false,
+      }),
+      TenantSeo: dynamic(() => import('./kometa/ui').then((x) => x.TenantSeo), {
+        ssr: false,
+      }),
       DesktopLogo: () => null,
       SocialIcons: () => null,
       Sponsors: () => null,

@@ -5,13 +5,16 @@ export const buttonCls = tv({
   variants: {
     display: {
       none: ' ',
-      button: 'inline-flex gap-1 shadow-md uppercase font-medium justify-center items-center',
+      button:
+        'inline-flex gap-1 shadow-md uppercase font-medium justify-center items-center',
       listItem: 'flex flex-col gap-1 shadow-sm font-medium items-start mb-0.5',
     },
     variant: {
       none: ' ',
-      primary: 'bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11',
-      outline: 'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7',
+      primary:
+        'bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11',
+      outline:
+        'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7',
       outlineDark: 'bg-neutral-12 text-neutral-0',
     },
     size: {

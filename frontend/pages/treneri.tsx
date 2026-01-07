@@ -27,16 +27,18 @@ export default function TrainersPage() {
         </TrainerCard>
       ))}
 
-      <h2 className={typographyCls({ variant: 'heading', className: 'mt-12 mb-8' })}>Externí trenéři</h2>
+      <h2 className={typographyCls({ variant: 'heading', className: 'mt-12 mb-8' })}>
+        Externí trenéři
+      </h2>
 
       <div className="mb-12">
         <p className="prose prose-accent">
           V rámci klubu spolupracujeme s významnými odborníky tanečního světa z různých
-          částí republiky, kteří s námi sdílejí své znalosti a dovednosti. Externí odborníci
-          přinášejí nové perspektivy, inovativní přístupy a inspiraci, které nám pomáhají
-          posunout naše tréninkové metody a standardy ještě dále. Spolupráce s těmito
-          významnými osobnostmi je pro náš klub klíčová a umožňuje nám nabídnout našim
-          členům zkušenosti a know-how z nejlepších zdrojů v našem oboru.
+          částí republiky, kteří s námi sdílejí své znalosti a dovednosti. Externí
+          odborníci přinášejí nové perspektivy, inovativní přístupy a inspiraci, které nám
+          pomáhají posunout naše tréninkové metody a standardy ještě dále. Spolupráce s
+          těmito významnými osobnostmi je pro náš klub klíčová a umožňuje nám nabídnout
+          našim členům zkušenosti a know-how z nejlepších zdrojů v našem oboru.
         </p>
       </div>
 
@@ -77,7 +79,8 @@ function TrainerCard(props: TrainerCardProps) {
 
 const mirek: TrainerCardProps = {
   name: 'Mgr. Miroslav Hýža',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20mirek.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20mirek.png',
   children: (
     <ul>
       <li>Předseda, šéftrenér TK Olymp</li>
@@ -92,7 +95,8 @@ const mirek: TrainerCardProps = {
 
 const filip: TrainerCardProps = {
   name: 'Ing. Filip Karásek',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009720-Kopie%20souboru%20filip.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009720-Kopie%20souboru%20filip.png',
   children: (
     <ul>
       <li>Trenér a porotce I. třídy</li>
@@ -110,7 +114,8 @@ const filip: TrainerCardProps = {
 
 const marie: TrainerCardProps = {
   name: 'Mgr. Marie Hýžová',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20marie.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20marie.png',
   children: (
     <ul>
       <li>Trenérka a porotkyně I. třídy</li>
@@ -125,7 +130,8 @@ const marie: TrainerCardProps = {
 
 const grepi: TrainerCardProps = {
   name: 'Mgr. Pavel Grepl',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20pavel.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20pavel.png',
   children: (
     <ul>
       <li>Trenér Národního reprezentačního týmu</li>
@@ -137,8 +143,8 @@ const grepi: TrainerCardProps = {
         fyziologie; od roku 2021)
       </li>
       <li>
-        Absolvent magisterského studia na Fakultě tělesné kultury UP v Olomouci (specializace:
-        Analýza pohybu)
+        Absolvent magisterského studia na Fakultě tělesné kultury UP v Olomouci
+        (specializace: Analýza pohybu)
       </li>
       <li>Trenér atletiky III. třídy a plavání III. třídy</li>
     </ul>
@@ -147,7 +153,8 @@ const grepi: TrainerCardProps = {
 
 const maruska: TrainerCardProps = {
   name: 'Mgr. Marie Hýžová ml.',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20maru%C5%A1ka.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20maru%C5%A1ka.png',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -160,7 +167,8 @@ const maruska: TrainerCardProps = {
 
 const roman: TrainerCardProps = {
   name: 'Ing. Roman Pecha',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20roman.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20roman.png',
   children: (
     <ul>
       <li>Absolvent kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -180,16 +188,17 @@ const roman: TrainerCardProps = {
 
 const hanka: TrainerCardProps = {
   name: 'Bc. Hana Anna Šišková',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20han%C4%8Da.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20han%C4%8Da.png',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
       <li>Tanečnice mezinárodní třídy</li>
       <li>Finalistka mistrovství ČR v hlavní kategorii (deseti tanců)</li>
       <li>
-        4x finalistka mistrovství ČR v kategorii U21 (titul vicemistryně ČR v deseti tancích,
-        titul druhá vicemistryně ČR ve standardních tancích a titul druhá vicemistryně ČR v
-        latinskoamerických tancích)
+        4x finalistka mistrovství ČR v kategorii U21 (titul vicemistryně ČR v deseti
+        tancích, titul druhá vicemistryně ČR ve standardních tancích a titul druhá
+        vicemistryně ČR v latinskoamerických tancích)
       </li>
       <li>
         Studentka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a sport)
@@ -200,7 +209,8 @@ const hanka: TrainerCardProps = {
 
 const nela: TrainerCardProps = {
   name: 'Nela Šírová',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20nel%C4%8Da.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20nel%C4%8Da.png',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -213,7 +223,8 @@ const nela: TrainerCardProps = {
 
 const martin: TrainerCardProps = {
   name: 'Martin Odstrčil',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20martin.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20martin.png',
   children: (
     <ul>
       <li>Prezident DSP Kometa Brno</li>
@@ -230,7 +241,8 @@ const martin: TrainerCardProps = {
 
 const david: TrainerCardProps = {
   name: 'David Odstrčil',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20david.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009721-Kopie%20souboru%20david.png',
   children: (
     <ul>
       <li>Mistr světa v deseti tancích (2022)</li>
@@ -244,7 +256,8 @@ const david: TrainerCardProps = {
 
 const tara: TrainerCardProps = {
   name: 'Tara Bohak',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20tara.png',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1694450009722-Kopie%20souboru%20tara.png',
   children: (
     <ul>
       <li>Mistryně světa v deseti tancích (2022)</li>
@@ -271,7 +284,7 @@ const pavla: TrainerCardProps = {
 
 const jerry: TrainerCardProps = {
   name: 'Ing. Jaroslav Kučera',
-  image: "/images/treneri/jerry.jpg",
+  image: '/images/treneri/jerry.jpg',
   children: (
     <ul>
       <li>Předseda trenérské rady projektu Sportovně talentované mládeže ČSTS</li>

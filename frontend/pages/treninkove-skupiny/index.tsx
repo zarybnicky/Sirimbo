@@ -15,14 +15,22 @@ export default function TrainingGroupsPage() {
   const auth = useAuth();
   const { data } = useCohorts({ visible: true });
 
-  const wrap = (x: React.ReactNode) => <Layout hideTopMenuIfLoggedIn>{auth.user ? <WithSidebar sidebar={<CohortList />}>{x}</WithSidebar> : x}</Layout>;
+  const wrap = (x: React.ReactNode) => (
+    <Layout hideTopMenuIfLoggedIn>
+      {auth.user ? <WithSidebar sidebar={<CohortList />}>{x}</WithSidebar> : x}
+    </Layout>
+  );
 
   return wrap(
     <div className={cn(auth.user ? 'col-full-width p-4' : 'col-popout')}>
       {auth.user && (
         <TitleBar title="Tréninkové skupiny">
           {auth.isTrainerOrAdmin && (
-            <button type="button" className={buttonCls({ size: 'sm', variant: 'outline' })} onClick={() => exportCohort(data.map(x => x.id))}>
+            <button
+              type="button"
+              className={buttonCls({ size: 'sm', variant: 'outline' })}
+              onClick={() => exportCohort(data.map((x) => x.id))}
+            >
               Export všech
             </button>
           )}
@@ -31,12 +39,17 @@ export default function TrainingGroupsPage() {
 
       <div className={cn('pl-8', auth.user ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
         {data.map((item) => (
-          <div key={item.id} className={cardCls({ className: "group break-inside-avoid pl-6" })}>
+          <div
+            key={item.id}
+            className={cardCls({ className: 'group break-inside-avoid pl-6' })}
+          >
             <h5 className="text-xl underline">
-              <Link href={{
-                pathname: '/treninkove-skupiny/[id]',
-                query: { id: item.id },
-              }}>
+              <Link
+                href={{
+                  pathname: '/treninkove-skupiny/[id]',
+                  query: { id: item.id },
+                }}
+              >
                 {item.name}
               </Link>
             </h5>
@@ -51,6 +64,6 @@ export default function TrainingGroupsPage() {
           </div>
         ))}
       </div>
-    </div>
+    </div>,
   );
-};
+}

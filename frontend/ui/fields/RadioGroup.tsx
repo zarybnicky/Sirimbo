@@ -1,4 +1,9 @@
-import { type Control, useController, type FieldValues, type Path } from 'react-hook-form';
+import {
+  type Control,
+  useController,
+  type FieldValues,
+  type Path,
+} from 'react-hook-form';
 import { cn } from '@/ui/cn';
 
 type RadioProps = {
@@ -75,10 +80,7 @@ export function RadioGroup<T extends FieldValues>({
   const { field } = useController<T>({ name, control });
   return (
     <div className={cn('space-y-4 ml-1', { 'opacity-50': isDisabled })}>
-      <label
-        htmlFor={name}
-        className="block text-sm text-neutral-10 mt-1 -mb-1 -ml-1"
-      >
+      <label htmlFor={name} className="block text-sm text-neutral-10 mt-1 -mb-1 -ml-1">
         {label}
       </label>
       {options.map((opt) => (

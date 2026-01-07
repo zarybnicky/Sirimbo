@@ -31,7 +31,7 @@ export default function StarletImportPage() {
 
   useEffect(() => {
     if (!enableStarletImport) return;
-    setSettings(settingsQuery?.tenantSetting?.settings || '{}')
+    setSettings(settingsQuery?.tenantSetting?.settings || '{}');
   }, [enableStarletImport, setSettings, settingsQuery]);
 
   useEffect(() => {
@@ -50,4 +50,4 @@ export default function StarletImportPage() {
       <StarletImporter />
     </Layout>
   );
-};
+}

@@ -1,9 +1,17 @@
 import { AnnouncementItem } from '@/ui/AnnouncementItem';
 import { Pagination } from '@/ui/Pagination';
 import { cn } from '@/ui/cn';
-import { MyAnnouncementsDocument, StickyAnnouncementsDocument } from '@/graphql/Announcement';
+import {
+  MyAnnouncementsDocument,
+  StickyAnnouncementsDocument,
+} from '@/graphql/Announcement';
 import { typographyCls } from '@/ui/style';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
 import { Check, ListFilter } from 'lucide-react';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import * as React from 'react';
@@ -38,7 +46,7 @@ export function AnnouncementSortControls({
           className={cn(
             'inline-flex size-8 items-center justify-center rounded-xl border border-neutral-6 bg-neutral-1 text-neutral-11 shadow-sm transition-colors',
             'hover:bg-neutral-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-7 focus-visible:ring-offset-1 focus-visible:ring-offset-neutral-1',
-            'data-[state=open]:text-accent-12'
+            'data-[state=open]:text-accent-12',
           )}
         >
           <ListFilter className="size-4" />
@@ -54,7 +62,7 @@ export function AnnouncementSortControls({
             <Check
               className={cn(
                 'absolute left-2 size-4 text-accent-9 group-data-[highlighted]:text-accent-1 transition-opacity',
-                sort === value ? 'opacity-100' : 'opacity-0'
+                sort === value ? 'opacity-100' : 'opacity-0',
               )}
               aria-hidden
             />
@@ -88,7 +96,9 @@ export function MyAnnouncements() {
   return (
     <div className="flex flex-col">
       <div className="mb-4 flex gap-6 flex-wrap grow-0 h-min justify-between items-baseline relative">
-        <h1 className={typographyCls({ variant: 'smallHeading', className: 'mt-0 grow' })}>
+        <h1
+          className={typographyCls({ variant: 'smallHeading', className: 'mt-0 grow' })}
+        >
           Aktuality
         </h1>
 
@@ -114,7 +124,6 @@ export function MyAnnouncements() {
         </ToggleGroupPrimitive.Root>
         <AnnouncementSortControls sort={sort} onChange={setSort} className="mb-3" />
       </div>
-
 
       <div className="space-y-2 rounded-lg">
         {(data?.myAnnouncements?.nodes || []).map((a) => (

@@ -1,11 +1,11 @@
-import { add } from "date-arithmetic";
+import { add } from 'date-arithmetic';
 
 export type PeriodPreset = 'schoolyear' | 'semester' | 'quarter' | 'month' | 'custom';
 
 type PeriodRange = {
   since: string | null;
   until: string | null;
-  displaySince: Date | null
+  displaySince: Date | null;
   displayUntil: Date | null;
 };
 
@@ -20,7 +20,8 @@ export const periodLabels: Record<PeriodPreset, string> = {
 const formatDate = (value: Date) => value.toISOString().slice(0, 10);
 
 const startOfSchoolYear = (value: Date) => {
-  const year = value.getUTCMonth() >= 8 ? value.getUTCFullYear() : value.getUTCFullYear() - 1;
+  const year =
+    value.getUTCMonth() >= 8 ? value.getUTCFullYear() : value.getUTCFullYear() - 1;
   return new Date(Date.UTC(year, 8, 1));
 };
 
@@ -71,8 +72,12 @@ export const computeRange = (
 
   if (preset === 'semester') {
     const isSecondSemester = monthsDiff >= 5;
-    const sinceDate = isSecondSemester ? add(schoolYearStart, 5, 'month') : schoolYearStart;
-    const untilDate = isSecondSemester ? add(schoolYearStart, 12, 'month') : add(schoolYearStart, 5, 'month');
+    const sinceDate = isSecondSemester
+      ? add(schoolYearStart, 5, 'month')
+      : schoolYearStart;
+    const untilDate = isSecondSemester
+      ? add(schoolYearStart, 12, 'month')
+      : add(schoolYearStart, 5, 'month');
     return {
       since: formatDate(sinceDate),
       until: formatDate(untilDate),

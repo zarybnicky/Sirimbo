@@ -17,7 +17,10 @@ export default function TrainerAttendanceReportPage() {
   const period = React.useMemo(() => {
     const period = computeRange('schoolyear', new Date(), null, null);
     if (period.until)
-      period.until = (new Date(period.until).getTime() > Date.now()) ? new Date().toISOString() : period.until;
+      period.until =
+        new Date(period.until).getTime() > Date.now()
+          ? new Date().toISOString()
+          : period.until;
     return period;
   }, []);
 
@@ -31,17 +34,15 @@ export default function TrainerAttendanceReportPage() {
 
   const { rows, summary } = React.useMemo(() => {
     const source = data?.trainerGroupAttendanceCompletionList ?? [];
-    const rows = source
-      .filter(isTruthy)
-      .map((row) => ({
-        name: row.person?.name ?? '—',
-        total: row.totalInstances ?? 0,
-        filled: row.filledInstances ?? 0,
-        partial: row.partiallyFilledInstances ?? 0,
-        unfilled: row.unfilledInstances ?? 0,
-        pending: row.pendingAttendances ?? 0,
-        ratio: row.filledRatio,
-      }));
+    const rows = source.filter(isTruthy).map((row) => ({
+      name: row.person?.name ?? '—',
+      total: row.totalInstances ?? 0,
+      filled: row.filledInstances ?? 0,
+      partial: row.partiallyFilledInstances ?? 0,
+      unfilled: row.unfilledInstances ?? 0,
+      pending: row.pendingAttendances ?? 0,
+      ratio: row.filledRatio,
+    }));
 
     rows.sort((a, b) => {
       if (b.unfilled !== a.unfilled) return b.unfilled - a.unfilled;
@@ -76,9 +77,7 @@ export default function TrainerAttendanceReportPage() {
         <TitleBar title="Docházka trenérů – skupinové lekce" />
 
         <section className="space-y-2 text-sm text-neutral-10">
-          <p>
-            Přehled vychází z proběhlých termínů vedených.
-          </p>
+          <p>Přehled vychází z proběhlých termínů vedených.</p>
           {period.displaySince && period.displayUntil ? (
             <p>
               {fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
@@ -92,19 +91,27 @@ export default function TrainerAttendanceReportPage() {
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li>
                 Celkem vedených:{' '}
-                <span className="font-semibold text-neutral-12">{numberFormatter.format(summary.total)}</span>
+                <span className="font-semibold text-neutral-12">
+                  {numberFormatter.format(summary.total)}
+                </span>
               </li>
               <li>
                 Plně vyplněná docházka:{' '}
-                <span className="font-semibold text-neutral-12">{numberFormatter.format(summary.filled)}</span>
+                <span className="font-semibold text-neutral-12">
+                  {numberFormatter.format(summary.filled)}
+                </span>
               </li>
               <li>
                 Částečně vyplněná docházka:{' '}
-                <span className="font-semibold text-neutral-12">{numberFormatter.format(summary.partial)}</span>
+                <span className="font-semibold text-neutral-12">
+                  {numberFormatter.format(summary.partial)}
+                </span>
               </li>
               <li>
                 Nevyplněná docházka:{' '}
-                <span className="font-semibold text-accent-11">{numberFormatter.format(summary.unfilled)}</span>
+                <span className="font-semibold text-accent-11">
+                  {numberFormatter.format(summary.unfilled)}
+                </span>
                 {summary.ratio !== null ? (
                   <span className="text-neutral-10">
                     {` · ${percentFormatter.format(summary.ratio)} alespoň částečně vyplněno`}
@@ -113,7 +120,9 @@ export default function TrainerAttendanceReportPage() {
               </li>
             </ul>
           ) : (
-            <p className="mt-2 text-neutral-10">Z proběhlých vedených zatím nemáme žádná data.</p>
+            <p className="mt-2 text-neutral-10">
+              Z proběhlých vedených zatím nemáme žádná data.
+            </p>
           )}
         </section>
 
@@ -134,21 +143,38 @@ export default function TrainerAttendanceReportPage() {
                     <th className="px-3 py-2 font-medium">Trenér</th>
                     <th className="px-3 py-2 font-medium text-right">Vedených celkem</th>
                     <th className="px-3 py-2 font-medium text-right">Plně vyplněno</th>
-                    <th className="px-3 py-2 font-medium text-right">Částečně vyplněno</th>
+                    <th className="px-3 py-2 font-medium text-right">
+                      Částečně vyplněno
+                    </th>
                     <th className="px-3 py-2 font-medium text-right">Nevyplněno</th>
-                    <th className="px-3 py-2 font-medium text-right">Docházka alespoň částečně</th>
+                    <th className="px-3 py-2 font-medium text-right">
+                      Docházka alespoň částečně
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-6">
                   {rows.map((row) => {
                     const needsAttention = row.pending > 0 || row.unfilled > 0;
                     return (
-                      <tr key={row.name} className={needsAttention ? 'bg-accent-3/30' : undefined}>
-                        <td className="px-3 py-2 font-medium text-neutral-12">{row.name}</td>
-                        <td className="px-3 py-2 text-right text-neutral-12">{numberFormatter.format(row.total)}</td>
-                        <td className="px-3 py-2 text-right text-neutral-12">{numberFormatter.format(row.filled)}</td>
-                        <td className="px-3 py-2 text-right text-neutral-12">{numberFormatter.format(row.partial)}</td>
-                        <td className="px-3 py-2 text-right text-neutral-12">{numberFormatter.format(row.unfilled)}</td>
+                      <tr
+                        key={row.name}
+                        className={needsAttention ? 'bg-accent-3/30' : undefined}
+                      >
+                        <td className="px-3 py-2 font-medium text-neutral-12">
+                          {row.name}
+                        </td>
+                        <td className="px-3 py-2 text-right text-neutral-12">
+                          {numberFormatter.format(row.total)}
+                        </td>
+                        <td className="px-3 py-2 text-right text-neutral-12">
+                          {numberFormatter.format(row.filled)}
+                        </td>
+                        <td className="px-3 py-2 text-right text-neutral-12">
+                          {numberFormatter.format(row.partial)}
+                        </td>
+                        <td className="px-3 py-2 text-right text-neutral-12">
+                          {numberFormatter.format(row.unfilled)}
+                        </td>
                         <td className="px-3 py-2 text-right text-neutral-12">
                           {row.ratio !== null ? percentFormatter.format(row.ratio) : '–'}
                         </td>
@@ -159,7 +185,9 @@ export default function TrainerAttendanceReportPage() {
               </table>
             </div>
           ) : (
-            <p className="text-sm text-neutral-10">Momentálně není k dispozici žádný záznam.</p>
+            <p className="text-sm text-neutral-10">
+              Momentálně není k dispozici žádný záznam.
+            </p>
           )
         ) : null}
       </div>

@@ -29,7 +29,10 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const tenantId = useAtomValue(tenantIdAtom);
   const { enableHome, copyrightLine: newCopyrightLine } = useAtomValue(tenantConfigAtom);
   const memberMenu = useMemberMenu();
-  const SidebarLogo = React.useMemo(() => getTenantUi(tenantId, 'SidebarLogo'), [tenantId]);
+  const SidebarLogo = React.useMemo(
+    () => getTenantUi(tenantId, 'SidebarLogo'),
+    [tenantId],
+  );
 
   const [copyrightLine, setCopyrightLine] = React.useState('');
 

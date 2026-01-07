@@ -86,7 +86,8 @@ const sirovi = {
 
 const selsdon = {
   header: 'Kaiem Selsdon - Viktorie Vágnerová',
-  image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Mistri-Selsdon.jpg',
+  image:
+    'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Mistri-Selsdon.jpg',
   content: (
     <div className="prose prose-accent">
       <p>Mistři ČR Junioři I 2022 – Latinskoamerické tance (Praha)</p>

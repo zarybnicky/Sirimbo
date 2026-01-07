@@ -57,11 +57,14 @@ export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {
 
       {item.personInvitationsList?.map((invitation) => (
         <div key={invitation.id}>
-          {invitation.email}, vytvořena {fullDateFormatter.format(new Date(invitation.createdAt))}
+          {invitation.email}, vytvořena{' '}
+          {fullDateFormatter.format(new Date(invitation.createdAt))}
           {auth.isAdmin && (
             <>
               {', '}
-              <Link href={{ pathname: '/pozvanka', query: { token: invitation.accessToken } }}>
+              <Link
+                href={{ pathname: '/pozvanka', query: { token: invitation.accessToken } }}
+              >
                 link zde
               </Link>
             </>

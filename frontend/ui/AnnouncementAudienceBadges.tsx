@@ -18,14 +18,19 @@ interface Props {
 }
 
 export function AnnouncementAudienceBadges({ audiences, className }: Props) {
-  const derivedCohorts = audiences?.map(x => x.cohort).filter(isTruthy) || [];
-  const derivedRoles = audiences?.map(x => x.audienceRole).filter(isTruthy) || [];
+  const derivedCohorts = audiences?.map((x) => x.cohort).filter(isTruthy) || [];
+  const derivedRoles = audiences?.map((x) => x.audienceRole).filter(isTruthy) || [];
 
   const hasCohorts = derivedCohorts.length > 0;
   const hasRoles = derivedRoles.length > 0;
 
   return (
-    <div className={cn('flex items-center flex-wrap gap-2 text-xs text-neutral-11', className)}>
+    <div
+      className={cn(
+        'flex items-center flex-wrap gap-2 text-xs text-neutral-11',
+        className,
+      )}
+    >
       {hasCohorts ? (
         <div className="flex gap-0.5">
           {derivedCohorts.map((cohort) => (

@@ -13,8 +13,10 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
 
   if (
     event.isLocked ||
-    event.eventInstancesList.every(i => new Date(i.since) < new Date()) ||
-    (event.capacity > 0 && (event.remainingPersonSpots ?? 0) <= 0 && myRegistrations.length === 0)
+    event.eventInstancesList.every((i) => new Date(i.since) < new Date()) ||
+    (event.capacity > 0 &&
+      (event.remainingPersonSpots ?? 0) <= 0 &&
+      myRegistrations.length === 0)
   ) {
     return null;
   }
@@ -29,7 +31,7 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
 
       <DialogContent>
         <DialogTitle>
-          {myRegistrations.length > 0 ? "Moje přihlášky" : "Přihlášení na akci"}
+          {myRegistrations.length > 0 ? 'Moje přihlášky' : 'Přihlášení na akci'}
         </DialogTitle>
 
         {myRegistrations.map((reg) => (
@@ -51,4 +53,4 @@ export function MyRegistrationsDialog({ event }: { event: EventFragment }) {
       </DialogContent>
     </Dialog>
   );
-};
+}

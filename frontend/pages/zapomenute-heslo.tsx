@@ -52,16 +52,13 @@ function ForgottenPasswordForm() {
           autoComplete="email"
           required
         />
-        <FormError
-          error={onSubmit.error}
-          default="Nepodařilo se obnovit heslo."
-        />
+        <FormError error={onSubmit.error} default="Nepodařilo se obnovit heslo." />
       </div>
       <SubmitButton className="w-full" loading={onSubmit.loading}>
         Obnovit heslo
       </SubmitButton>
     </form>
-);
+  );
 }
 
 export default function ForgottenPasswordPage() {
@@ -82,10 +79,10 @@ export default function ForgottenPasswordPage() {
     <Layout className="grow content relative content-stretch">
       <NextSeo title="Zapomenuté heslo" />
       <div className="flex h-[calc(100vh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
-        <div className={cardCls({ className: "p-4 max-w-lg" })}>
+        <div className={cardCls({ className: 'p-4 max-w-lg' })}>
           <ForgottenPasswordForm />
         </div>
       </div>
     </Layout>
   );
-};
+}

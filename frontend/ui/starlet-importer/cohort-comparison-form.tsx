@@ -23,13 +23,16 @@ export function CohortComparisonForm() {
   const [, update] = useMutation(UpdateCohortDocument);
   const [, archive] = useMutation(ArchiveCohortDocument);
 
-  const [tasks, views] = useMemo(() => compare(cohorts || [], courses), [cohorts, courses]);
+  const [tasks, views] = useMemo(
+    () => compare(cohorts || [], courses),
+    [cohorts, courses],
+  );
 
   const onSubmit = useAsyncCallback(async () => {
     for (const task of tasks) {
       if (task[0] === 'create') {
         const [, name, description, id] = task;
-        const hex = Math.floor(Math.random() * 0xFF_FF_FF)
+        const hex = Math.floor(Math.random() * 0xff_ff_ff)
           .toString(16)
           .padStart(6, '0');
         await create({
@@ -93,8 +96,9 @@ function compare(
               >
                 {cohort.name}
               </Link>
-
-              {!cohort.externalIds?.includes(course[0]) ? ' - změnilo se ID kurzu, bude aktualizováno' : ''}
+              {!cohort.externalIds?.includes(course[0])
+                ? ' - změnilo se ID kurzu, bude aktualizováno'
+                : ''}
             </li>
           </ul>
         </li>,

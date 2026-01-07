@@ -52,7 +52,7 @@ const storage = {
     } else {
       localStorage.removeItem(key);
     }
-  }
+  },
 };
 
 const emptyConfig: TenantConfig = {
@@ -65,9 +65,7 @@ const emptyConfig: TenantConfig = {
   useTrainerInitials: false,
   lockEventsByDefault: false,
 };
-const baseTenantIdAtom = atom<string>(
-  getCookie('tenant_id') ?? '',
-);
+const baseTenantIdAtom = atom<string>(getCookie('tenant_id') ?? '');
 export const tenantConfigAtom = atom<TenantConfig>(
   tenantCatalog[Number.parseInt(getCookie('tenant_id') ?? '')]?.config ?? emptyConfig,
 );
@@ -75,14 +73,16 @@ export const tenantIdAtom = atom<string, [string], void>(
   (get) => get(baseTenantIdAtom),
   (_get, set, nextValue) => {
     set(baseTenantIdAtom, nextValue);
-    set(tenantConfigAtom, tenantCatalog[Number.parseInt(nextValue)]?.config ?? emptyConfig);
+    set(
+      tenantConfigAtom,
+      tenantCatalog[Number.parseInt(nextValue)]?.config ?? emptyConfig,
+    );
 
     if (typeof document !== 'undefined') {
       const root = document.querySelector('body');
       if (root) {
         for (const cls of root.classList) {
-          if (cls.includes('tenant-'))
-            root.classList.remove(cls);
+          if (cls.includes('tenant-')) root.classList.remove(cls);
         }
         root.classList.add(`tenant-${nextValue}`);
       }
@@ -98,10 +98,12 @@ export const authLoadingAtom = atom(true);
 
 const baseTokenAtom: PrimitiveAtom<string | null> = atom(storage.getItem('token'));
 
-const baseUserAtom: PrimitiveAtom<AuthState> = atom((() => {
-  const item = storage.getItem('user');
-  return item ? { ...defaultAuthState, ...JSON.parse(item) } : defaultAuthState;
-})());
+const baseUserAtom: PrimitiveAtom<AuthState> = atom(
+  (() => {
+    const item = storage.getItem('user');
+    return item ? { ...defaultAuthState, ...JSON.parse(item) } : defaultAuthState;
+  })(),
+);
 
 export const tokenAtom = atom<string | null, [string | null], void>(
   (get) => get(baseTokenAtom),
@@ -119,11 +121,12 @@ export const authAtom = atom<AuthState, [string | null, UserAuthFragment | null]
     let nextValue = defaultAuthState;
 
     if (user && token) {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url?.replaceAll("-", "+").replaceAll("_", "/");
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
       const jwt = base64 ? JSON.parse(atob(base64)) : {};
 
-      const persons = user.userProxiesList.flatMap(x => x.person ? [x.person] : []) || [];
+      const persons =
+        user.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) || [];
 
       const isSystemAdmin = !!jwt.is_system_admin;
       const isAdmin = !!jwt.is_admin || isSystemAdmin;
@@ -132,8 +135,8 @@ export const authAtom = atom<AuthState, [string | null, UserAuthFragment | null]
       nextValue = {
         user,
         persons,
-        couples: persons.flatMap(x => x.allCouplesList || []),
-        personIds: persons.map(x => x.id),
+        couples: persons.flatMap((x) => x.allCouplesList || []),
+        personIds: persons.map((x) => x.id),
 
         isLoggedIn: !!user?.id,
         isMember: !!jwt.is_member,

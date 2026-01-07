@@ -5,7 +5,6 @@ import { typographyCls } from '@/ui/style';
 
 interface FormResultContext {
   onSuccess: () => void;
-
 }
 export const FormResultContext = React.createContext<FormResultContext>({
   onSuccess() {},
@@ -48,7 +47,10 @@ const errorTranslation: { [key: string]: string } = {
   ACCOUNT_NOT_CONFIRMED: 'Účet ještě nebyl potvrzen',
 };
 
-export function FormError({ error: e, default: def }: {
+export function FormError({
+  error: e,
+  default: def,
+}: {
   error: React.ReactNode | Error;
   default?: React.ReactNode;
 }) {
@@ -77,4 +79,4 @@ export function FormError({ error: e, default: def }: {
       )}
     </div>
   );
-};
+}

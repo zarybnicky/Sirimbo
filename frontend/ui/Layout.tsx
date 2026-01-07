@@ -74,7 +74,7 @@ export const Layout = React.memo(function Layout({
       <div className="flex min-h-[calc(100dvh-52px)] md:min-h-[calc(100dvh-68px)]">
         <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
 
-        <div className={className || "grow content relative content-start"}>
+        <div className={className || 'grow content relative content-start'}>
           {children}
           {showTopMenu && (
             <>

@@ -11,13 +11,20 @@ export interface TabMenuProps {
   children?: React.ReactNode;
 }
 
-export const TabMenu = React.memo(function TabMenu({ options, selected, onSelect }: TabMenuProps) {
+export const TabMenu = React.memo(function TabMenu({
+  options,
+  selected,
+  onSelect,
+}: TabMenuProps) {
   const active = useMemo(() => {
-    return options.find(x => x.id === selected) || options[0] || {
-      id: '',
-      title: '',
-      contents: () => null,
-    };
+    return (
+      options.find((x) => x.id === selected) ||
+      options[0] || {
+        id: '',
+        title: '',
+        contents: () => null,
+      }
+    );
   }, [options, selected]);
 
   return (
@@ -41,7 +48,12 @@ export const TabMenu = React.memo(function TabMenu({ options, selected, onSelect
   );
 });
 
-function TabButton({ id, title, onSelect, selected }: {
+function TabButton({
+  id,
+  title,
+  onSelect,
+  selected,
+}: {
   id: string;
   title: React.ReactNode;
   selected: string;
@@ -55,11 +67,10 @@ function TabButton({ id, title, onSelect, selected }: {
       onClick={onClick}
       aria-current={id === selected ? 'page' : undefined}
       className={`whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm inline-flex gap-1 ${
-                id === selected
-                  ? 'border-accent-9 text-accent-11'
-                  : 'border-transparent text-neutral-11 hover:text-neutral-12 hover:border-neutral-8'
-              }`
-      }
+        id === selected
+          ? 'border-accent-9 text-accent-11'
+          : 'border-transparent text-neutral-11 hover:text-neutral-12 hover:border-neutral-8'
+      }`}
     >
       {title}
     </button>

@@ -30,13 +30,17 @@ function EventInstancePage() {
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       <WithSidebar sidebar={<EventList />}>
         {event && <TitleBar title={event?.name || formatDefaultEventName(event)} />}
-        <div className={auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'}>
+        <div
+          className={
+            auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'
+          }
+        >
           {data?.event && <BasicEventInfo event={data.event} />}
           <InstanceAttendanceView id={router.query.instance} />
         </div>
       </WithSidebar>
     </Layout>
   );
-};
+}
 
 export default EventInstancePage;

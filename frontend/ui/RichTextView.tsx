@@ -25,7 +25,7 @@ export function RichTextView({ value, className, style }: Props) {
         overflowWrap: 'break-word',
         wordWrap: 'break-word',
         wordBreak: 'break-word',
-        ...style
+        ...style,
       }}
     >
       {parse(value, options)}
@@ -57,7 +57,11 @@ const options: HTMLReactParserOptions = {
     if (domNode.name === 'a') {
       const { href, class: className, ...rest } = domNode.attribs;
       return (
-        <Link href={href as any || '#'} className={className} {...attributesToProps(rest)}>
+        <Link
+          href={(href as any) || '#'}
+          className={className}
+          {...attributesToProps(rest)}
+        >
           {domToReact(domNode.children as DOMNode[])}
         </Link>
       );

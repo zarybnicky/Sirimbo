@@ -1,5 +1,10 @@
 import React from 'react';
-import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
+import {
+  type Control,
+  type FieldValues,
+  type Path,
+  useController,
+} from 'react-hook-form';
 import { cn } from '@/ui/cn';
 import { Minus, Plus } from 'lucide-react';
 
@@ -13,21 +18,32 @@ type NumberFieldProps = Omit<
   max: number;
 };
 
-function NumberField({ name, onChange, disabled, value: inValue, min, max, ...props }: NumberFieldProps) {
+function NumberField({
+  name,
+  onChange,
+  disabled,
+  value: inValue,
+  min,
+  max,
+  ...props
+}: NumberFieldProps) {
   const value = inValue || 0;
   const minus = React.useCallback(() => onChange(value - 1), [onChange, value]);
   const plus = React.useCallback(() => onChange(value + 1), [onChange, value]);
 
   const realOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.currentTarget.value)
-      onChange(0);
-    else
-      onChange(Number.parseFloat(e.currentTarget.value));
+    if (!e.currentTarget.value) onChange(0);
+    else onChange(Number.parseFloat(e.currentTarget.value));
   };
 
   return (
     <fieldset disabled={disabled} className="flex gap-2 relative">
-      <button type="button" className="text-accent-9 disabled:text-accent-7" disabled={disabled || value <= min} onClick={minus}>
+      <button
+        type="button"
+        className="text-accent-9 disabled:text-accent-7"
+        disabled={disabled || value <= min}
+        onClick={minus}
+      >
         <Minus className="size-5" />
       </button>
       <input
@@ -38,14 +54,19 @@ function NumberField({ name, onChange, disabled, value: inValue, min, max, ...pr
         value={inValue?.toString()}
         onChange={realOnChange}
         className={cn(
-          "inline-block w-12 h-8 p-2 text-sm rounded-md",
-          "bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7",
-          "disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9",
-          "focus:outline-none focus:ring-accent-7 focus:border-accent-8",
+          'inline-block w-12 h-8 p-2 text-sm rounded-md',
+          'bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7',
+          'disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9',
+          'focus:outline-none focus:ring-accent-7 focus:border-accent-8',
           props.className,
         )}
       />
-      <button type="button" className="text-accent-9 disabled:text-accent-7" disabled={disabled || value >= max} onClick={plus}>
+      <button
+        type="button"
+        className="text-accent-9 disabled:text-accent-7"
+        disabled={disabled || value >= max}
+        onClick={plus}
+      >
         <Plus className="size-5" />
       </button>
     </fieldset>
@@ -62,6 +83,11 @@ export function NumberFieldElement<T extends FieldValues>({
 }) {
   const { field } = useController<T>({ name, control });
   return (
-    <NumberField {...props} name={name} value={field.value} onChange={(e) => field.onChange(e)} />
+    <NumberField
+      {...props}
+      name={name}
+      value={field.value}
+      onChange={(e) => field.onChange(e)}
+    />
   );
 }

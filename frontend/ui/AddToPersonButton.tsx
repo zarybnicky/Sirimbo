@@ -1,34 +1,37 @@
-import { CreateUserProxyDocument } from "@/graphql/Memberships";
-import React from "react";
-import { useMutation, useQuery } from "urql";
-import { UserListDocument } from "@/graphql/CurrentUser";
-import { ComboboxSearchArea } from "@/ui/fields/Combobox";
+import { CreateUserProxyDocument } from '@/graphql/Memberships';
+import React from 'react';
+import { useMutation, useQuery } from 'urql';
+import { UserListDocument } from '@/graphql/CurrentUser';
+import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus } from 'lucide-react';
-import { buttonCls } from "@/ui/style";
-import { useAuth } from "@/ui/use-auth";
-import { isTruthy } from "./truthyFilter";
+import { buttonCls } from '@/ui/style';
+import { useAuth } from '@/ui/use-auth';
+import { isTruthy } from './truthyFilter';
 
-export function AddToPersonButton({ person }: { person: { id: string; } }) {
+export function AddToPersonButton({ person }: { person: { id: string } }) {
   const auth = useAuth();
   const [open, setOpen] = React.useState(false);
   const doCreate = useMutation(CreateUserProxyDocument)[1];
 
   const [userQuery] = useQuery({ query: UserListDocument });
   const userOptions = React.useMemo(() => {
-    return (userQuery.data?.users?.nodes || []).map(x => ({
+    return (userQuery.data?.users?.nodes || []).map((x) => ({
       id: x.id,
       label: [x.uEmail, x.uLogin].filter(isTruthy).join(', '),
     }));
   }, [userQuery]);
 
-  const createUserProxy = React.useCallback((id: string | null | undefined) => {
-    if (id) {
-      doCreate({ input: { userProxy: { personId: person.id, userId: id } } });
-    }
-    setOpen(false);
-  }, [doCreate, person.id]);
+  const createUserProxy = React.useCallback(
+    (id: string | null | undefined) => {
+      if (id) {
+        doCreate({ input: { userProxy: { personId: person.id, userId: id } } });
+      }
+      setOpen(false);
+    },
+    [doCreate, person.id],
+  );
 
   if (!auth.isAdmin) return;
 
@@ -40,7 +43,7 @@ export function AddToPersonButton({ person }: { person: { id: string; } }) {
         </button>
       </PopoverTrigger>
       <PopoverPrimitive.Portal>
-        <PopoverPrimitive.Content className="z-40" align="end" side='top' sideOffset={5}>
+        <PopoverPrimitive.Content className="z-40" align="end" side="top" sideOffset={5}>
           <ComboboxSearchArea onChange={createUserProxy} options={userOptions} />
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>

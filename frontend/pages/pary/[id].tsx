@@ -44,7 +44,9 @@ function CouplePage() {
         <div className="prose prose-accent mb-2">
           <div>
             Partner:{' '}
-            {!item.man ? '?' : (
+            {!item.man ? (
+              '?'
+            ) : (
               <Link
                 href={{
                   pathname: '/clenove/[id]',
@@ -57,7 +59,9 @@ function CouplePage() {
           </div>
           <div>
             Partnerka:{' '}
-            {!item.woman ? '?' : (
+            {!item.woman ? (
+              '?'
+            ) : (
               <Link
                 href={{
                   pathname: '/clenove/[id]',
@@ -74,7 +78,13 @@ function CouplePage() {
 
         <h2>Poslední události</h2>
         {item.eventInstancesList?.map((instance) => (
-          <EventButton key={item.id} event={instance.event!} instance={instance} viewer='couple' showDate />
+          <EventButton
+            key={item.id}
+            event={instance.event!}
+            instance={instance}
+            viewer="couple"
+            showDate
+          />
         ))}
       </WithSidebar>
     </Layout>

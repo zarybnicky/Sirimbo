@@ -22,7 +22,7 @@ export function EditUserProxyForm({ id }: { id: string }) {
   const [query] = useQuery({ query: UserProxyDocument, variables: { id }, pause: !id });
   const update = useMutation(UpdateUserProxyDocument)[1];
 
-  const item = query.data?.userProxy
+  const item = query.data?.userProxy;
 
   React.useEffect(() => {
     if (item) {
@@ -50,8 +50,12 @@ export function EditUserProxyForm({ id }: { id: string }) {
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
 
-      <div>{item?.user?.uEmail}, {item?.user?.uLogin}</div>
-      <div><b>Přístupové údaje pro osobu {item?.person?.name}</b></div>
+      <div>
+        {item?.user?.uEmail}, {item?.user?.uLogin}
+      </div>
+      <div>
+        <b>Přístupové údaje pro osobu {item?.person?.name}</b>
+      </div>
 
       <DatePickerElement control={control} name="since" label="Platné od" />
       <DatePickerElement control={control} name="until" label="Platné do" />

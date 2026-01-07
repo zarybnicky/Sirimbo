@@ -66,17 +66,38 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
 
       <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
       <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
-      <TextFieldElement control={control} name="firstName" label="Jméno" required autoFocus />
+      <TextFieldElement
+        control={control}
+        name="firstName"
+        label="Jméno"
+        required
+        autoFocus
+      />
       <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
       <TextFieldElement control={control} name="email" type="email" label="E-mail" />
       <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
 
-      <TextFieldElement type="date" control={control} label="Datum narození" name="birthDate" />
-      <TextFieldElement control={control} name="taxIdentificationNumber" label="Rodné číslo" placeholder="1111119999" />
+      <TextFieldElement
+        type="date"
+        control={control}
+        label="Datum narození"
+        name="birthDate"
+      />
+      <TextFieldElement
+        control={control}
+        name="taxIdentificationNumber"
+        label="Rodné číslo"
+        placeholder="1111119999"
+      />
 
       <CstsIdFieldElement control={control} name="cstsId" />
-      <TextFieldElement control={control} name="wdsfId" label="WDSF MIN" placeholder="10000000" />
+      <TextFieldElement
+        control={control}
+        name="wdsfId"
+        label="WDSF MIN"
+        placeholder="10000000"
+      />
 
       <div className="col-full">
         <RadioButtonGroupElement
@@ -91,8 +112,16 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
 
       <TextFieldElement control={control} name="address.street" label="Ulice" />
       <div className="grid gap-2 md:grid-cols-2">
-        <TextFieldElement control={control} name="address.conscriptionNumber" label="Č. popisné" />
-        <TextFieldElement control={control} name="address.orientationNumber" label="Č. orientační" />
+        <TextFieldElement
+          control={control}
+          name="address.conscriptionNumber"
+          label="Č. popisné"
+        />
+        <TextFieldElement
+          control={control}
+          name="address.orientationNumber"
+          label="Č. orientační"
+        />
       </div>
 
       <TextFieldElement control={control} name="address.district" label="Část města" />

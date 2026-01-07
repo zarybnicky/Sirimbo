@@ -32,7 +32,11 @@ export function AnnouncementItem({ item, onlyTitle }: Props) {
     : undefined;
 
   const expandedTitle = (
-    <h2 className="text-lg font-bold mb-4 cursor-pointer" onKeyDown={close} onClick={close}>
+    <h2
+      className="text-lg font-bold mb-4 cursor-pointer"
+      onKeyDown={close}
+      onClick={close}
+    >
       {item.title}
     </h2>
   );
@@ -47,13 +51,19 @@ export function AnnouncementItem({ item, onlyTitle }: Props) {
       </AnnouncementMenu>
 
       <div className="flex items-center gap-1 text-neutral-11 text-xs -mt-1">
-        <time dateTime={item.createdAt} title={numericFullFormatter.format(new Date(item.createdAt))}>
+        <time
+          dateTime={item.createdAt}
+          title={numericFullFormatter.format(new Date(item.createdAt))}
+        >
           {numericDateWithYearFormatter.format(new Date(item.createdAt))}
         </time>
         {item.updatedAt !== null && (
           <>
             <span>-</span>
-            <time dateTime={item.updatedAt} title={numericFullFormatter.format(new Date(item.updatedAt))}>
+            <time
+              dateTime={item.updatedAt}
+              title={numericFullFormatter.format(new Date(item.updatedAt))}
+            >
               Upraveno
             </time>
           </>
@@ -66,17 +76,21 @@ export function AnnouncementItem({ item, onlyTitle }: Props) {
         <AnnouncementAudienceBadges audiences={item.announcementAudiences.nodes} />
       </div>
 
-      {onlyTitle ? (expanded ? (
-        <>
-          {expandedTitle}
-          <RichTextView value={item.body} />
-        </>
+      {onlyTitle ? (
+        expanded ? (
+          <>
+            {expandedTitle}
+            <RichTextView value={item.body} />
+          </>
+        ) : (
+          <h2 className="text-lg font-bold">{item.title}</h2>
+        )
       ) : (
-        <h2 className="text-lg font-bold">{item.title}</h2>
-      )) : (
         <>
           <div className="relative">
-            {expanded ? expandedTitle : (
+            {expanded ? (
+              expandedTitle
+            ) : (
               <h2 className="text-lg font-bold mb-4">{item.title}</h2>
             )}
             <RichTextView className={expanded ? '' : 'ClampFade'} value={item.body} />

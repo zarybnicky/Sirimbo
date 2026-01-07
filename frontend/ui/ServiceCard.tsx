@@ -35,9 +35,7 @@ export function ServiceCard(props: ServiceCardProps) {
         <div className="text-2xl text-neutral-11 group-odd:text-accent-11 font-bold mb-2 md:mb-4">
           {props.header}
         </div>
-        <div className="min-h-14">
-          {props.children}
-        </div>
+        <div className="min-h-14">{props.children}</div>
         {props.href && (
           <div>
             <span className={buttonCls({ className: 'mt-4' })}>

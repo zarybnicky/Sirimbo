@@ -1,12 +1,17 @@
 import { ChevronDown, ChevronsDown, Check, Search, XCircle } from 'lucide-react';
 import * as Popover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
-import { useController, type FieldValues, type Path, type Control } from 'react-hook-form';
+import {
+  useController,
+  type FieldValues,
+  type Path,
+  type Control,
+} from 'react-hook-form';
 import React from 'react';
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { cn } from '@/ui/cn';
 import { buttonCls } from '@/ui/style';
-import { rankItem } from "@tanstack/match-sorter-utils"
+import { rankItem } from '@tanstack/match-sorter-utils';
 
 type Item = { id: string | null; label: string };
 type ComboboxProps = {
@@ -35,7 +40,14 @@ export function ComboboxElement<T extends FieldValues>({
   const { field, fieldState } = useController<T>({ name, control });
   return (
     <>
-      <Combobox value={field.value} onChange={field.onChange} options={options} label={label} placeholder={placeholder} {...props} />
+      <Combobox
+        value={field.value}
+        onChange={field.onChange}
+        options={options}
+        label={label}
+        placeholder={placeholder}
+        {...props}
+      />
       <FieldHelper error={fieldState.error} />
     </>
   );
@@ -51,10 +63,13 @@ export function Combobox({
   ...props
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
-  const realOnChange = React.useCallback((x: string | null | undefined) => {
-    onChange(x);
-    setOpen(false);
-  }, [onChange]);
+  const realOnChange = React.useCallback(
+    (x: string | null | undefined) => {
+      onChange(x);
+      setOpen(false);
+    },
+    [onChange],
+  );
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
@@ -75,17 +90,13 @@ export function Combobox({
 
       <Popover.Portal>
         <Popover.Content
-          className={cn("z-40", className)}
+          className={cn('z-40', className)}
           align="start"
-          side='bottom'
+          side="bottom"
           sideOffset={5}
           {...props}
         >
-          <ComboboxSearchArea
-            value={value}
-            onChange={realOnChange}
-            options={options}
-          />
+          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
@@ -101,10 +112,13 @@ export function ComboboxButton({
   ...props
 }: Omit<ComboboxProps, 'label'>) {
   const [open, setOpen] = React.useState(false);
-  const realOnChange = React.useCallback((x: string | null | undefined) => {
-    onChange(x);
-    setOpen(false);
-  }, [onChange]);
+  const realOnChange = React.useCallback(
+    (x: string | null | undefined) => {
+      onChange(x);
+      setOpen(false);
+    },
+    [onChange],
+  );
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
@@ -120,24 +134,24 @@ export function ComboboxButton({
 
       <Popover.Portal>
         <Popover.Content
-          className={cn("z-40", className)}
+          className={cn('z-40', className)}
           align="start"
-          side='bottom'
+          side="bottom"
           sideOffset={5}
           {...props}
         >
-          <ComboboxSearchArea
-            value={value}
-            onChange={realOnChange}
-            options={options}
-          />
+          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
   );
 }
 
-export function ComboboxSearchArea({ value, onChange, options }: {
+export function ComboboxSearchArea({
+  value,
+  onChange,
+  options,
+}: {
   value?: string | null | undefined;
   onChange: (x: string | null | undefined) => void;
   options: Item[];
@@ -171,9 +185,9 @@ export function ComboboxSearchArea({ value, onChange, options }: {
       <Command.Empty>Nic jsme nenašli.</Command.Empty>
       <Command.List
         className={cn(
-          "scrollbar overflow-auto overscroll-contain",
-          "max-h-[calc(var(--radix-popover-content-available-height)-var(--radix-popover-trigger-height)-15px)]",
-          "h-[var(--cmdk-list-height)]",
+          'scrollbar overflow-auto overscroll-contain',
+          'max-h-[calc(var(--radix-popover-content-available-height)-var(--radix-popover-trigger-height)-15px)]',
+          'h-[var(--cmdk-list-height)]',
         )}
       >
         {options.map((item) => (
@@ -187,7 +201,12 @@ export function ComboboxSearchArea({ value, onChange, options }: {
               'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
             )}
           >
-            <Check className={cn('mr-2 size-4', item.id === value ? 'opacity-100' : 'opacity-0')} />
+            <Check
+              className={cn(
+                'mr-2 size-4',
+                item.id === value ? 'opacity-100' : 'opacity-0',
+              )}
+            />
             {item.label}
           </Command.Item>
         ))}

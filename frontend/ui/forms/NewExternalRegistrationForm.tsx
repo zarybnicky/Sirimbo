@@ -29,11 +29,16 @@ const Form = z.object({
   note: z.string().prefault(''),
 });
 
-export function NewExternalRegistrationForm({ event }: { event: EventFragment; }) {
+export function NewExternalRegistrationForm({ event }: { event: EventFragment }) {
   const { onSuccess } = useFormResult();
   const create = useMutation(RegisterToEventExternalDocument)[1];
 
-  const { control, watch, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       nationality: '203',
     },
@@ -58,11 +63,21 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment; }
   return (
     <form onSubmit={handleSubmit(onSubmit.execute)}>
       <fieldset className="grid lg:grid-cols-2 gap-2">
-        <FormError error={errors as any || onSubmit.error} />
+        <FormError error={(errors as any) || onSubmit.error} />
 
-        <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
+        <TextFieldElement
+          control={control}
+          name="prefixTitle"
+          label="Titul před jménem"
+        />
         <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
-        <TextFieldElement control={control} name="firstName" label="Jméno" required autoFocus />
+        <TextFieldElement
+          control={control}
+          name="firstName"
+          label="Jméno"
+          required
+          autoFocus
+        />
         <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
         <TextFieldElement control={control} name="email" type="email" label="E-mail" />
@@ -76,9 +91,19 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment; }
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
         {watch('nationality') === '203' ? (
-          <TextFieldElement control={control} name="taxIdentificationNumber" label="Rodné číslo" placeholder="1111119999" />
+          <TextFieldElement
+            control={control}
+            name="taxIdentificationNumber"
+            label="Rodné číslo"
+            placeholder="1111119999"
+          />
         ) : (
-          <TextFieldElement control={control} name="birthDate" label="Datum narození" type="date" />
+          <TextFieldElement
+            control={control}
+            name="birthDate"
+            label="Datum narození"
+            type="date"
+          />
         )}
 
         <div className="col-full">

@@ -1,4 +1,7 @@
-import { CohortMembershipDocument, UpdateCohortMembershipDocument } from '@/graphql/Memberships';
+import {
+  CohortMembershipDocument,
+  UpdateCohortMembershipDocument,
+} from '@/graphql/Memberships';
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
@@ -19,10 +22,14 @@ export function EditCohortMembershipForm({ id }: { id: string }) {
   const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
-  const [query] = useQuery({ query: CohortMembershipDocument, variables: { id }, pause: !id });
+  const [query] = useQuery({
+    query: CohortMembershipDocument,
+    variables: { id },
+    pause: !id,
+  });
   const update = useMutation(UpdateCohortMembershipDocument)[1];
 
-  const item = query.data?.cohortMembership
+  const item = query.data?.cohortMembership;
 
   React.useEffect(() => {
     if (item) {
@@ -51,7 +58,11 @@ export function EditCohortMembershipForm({ id }: { id: string }) {
       <FormError error={onSubmit.error} />
 
       <div>{item?.tenant?.name}</div>
-      <div><b>{item?.person?.name} ve skupině {item?.cohort?.name}</b></div>
+      <div>
+        <b>
+          {item?.person?.name} ve skupině {item?.cohort?.name}
+        </b>
+      </div>
 
       <DatePickerElement control={control} name="since" label="Členství od" />
       <DatePickerElement control={control} name="until" label="Členství do" />

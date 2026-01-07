@@ -39,7 +39,8 @@ export function UserProxyMenu({
 
   const remove = React.useCallback(async () => {
     await confirm({
-      description: 'Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?',
+      description:
+        'Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?',
     });
     await doRemove({ id: data.id });
     toast.success('Ukončeno');

@@ -29,12 +29,8 @@ export default function OKlubuPage() {
         <p>Působíme v Olomouci a Prostějově. </p>
       </div>
       <div className="col-feature mb-16">
-        <Image
-          alt=""
-          src={ONasImage}
-          sizes="1256px"
-        />
+        <Image alt="" src={ONasImage} sizes="1256px" />
       </div>
     </Layout>
   );
-};
+}

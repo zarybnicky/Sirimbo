@@ -37,8 +37,8 @@ export function FillYourProfileReminder() {
         person.birthDate &&
         person.taxIdentificationNumber
         /* person.address?.street &&
-* person.address?.city &&
-* person.address?.postalCode */
+         * person.address?.city &&
+         * person.address?.postalCode */
       )
         continue;
 

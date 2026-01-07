@@ -12,13 +12,23 @@ export default function DashboardPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const [variant, setVariant] = useQueryParam('tab', withDefault(StringParam, 'myLessons'));
+  const [variant, setVariant] = useQueryParam(
+    'tab',
+    withDefault(StringParam, 'myLessons'),
+  );
 
-  const tabs = React.useMemo(() => ([
-    { id: 'myLessons', title: 'Moje události', contents: () => <MyEventsList /> },
-    { id: 'myAnnouncements', title: 'Aktuality', contents: () => <MyAnnouncements /> },
-    { id: 'stickyAnnouncements', title: 'Stálá nástěnka', contents: () => <StickyAnnouncements /> },
-  ]), []);
+  const tabs = React.useMemo(
+    () => [
+      { id: 'myLessons', title: 'Moje události', contents: () => <MyEventsList /> },
+      { id: 'myAnnouncements', title: 'Aktuality', contents: () => <MyAnnouncements /> },
+      {
+        id: 'stickyAnnouncements',
+        title: 'Stálá nástěnka',
+        contents: () => <StickyAnnouncements />,
+      },
+    ],
+    [],
+  );
 
   if (!authLoading && auth.user && auth.personIds.length === 0) {
     void router.replace('/profil');

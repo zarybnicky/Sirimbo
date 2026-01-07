@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react';
 import {
   ColumnDef,
   flexRender,
@@ -19,12 +19,12 @@ import {
   OnChangeFn,
   HeaderContext,
   CellContext,
-} from "@tanstack/react-table"
-import { useVirtualizer } from "@tanstack/react-virtual"
-import { rankItem } from "@tanstack/match-sorter-utils"
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
-import * as Checkbox from "@radix-ui/react-checkbox"
-import { CheckIcon } from "lucide-react";
+} from '@tanstack/react-table';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { rankItem } from '@tanstack/match-sorter-utils';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import * as Checkbox from '@radix-ui/react-checkbox';
+import { CheckIcon } from 'lucide-react';
 
 /**
  * Minimal-changes DataTable supporting:
@@ -39,29 +39,29 @@ import { CheckIcon } from "lucide-react";
 
 // Fuzzy filter using TanStack match-sorter utils
 const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
-  const itemRank = rankItem(row.getValue(columnId) ?? "", value ?? "")
-  addMeta({ itemRank })
-  return itemRank.passed
-}
+  const itemRank = rankItem(row.getValue(columnId) ?? '', value ?? '');
+  addMeta({ itemRank });
+  return itemRank.passed;
+};
 
 export type DataTableState = {
-  sorting?: SortingState
-  columnFilters?: ColumnFiltersState
-  globalFilter?: string
-  columnVisibility?: VisibilityState
-  rowSelection?: RowSelectionState
-  expanded?: ExpandedState
-  pagination?: PaginationState
-}
+  sorting?: SortingState;
+  columnFilters?: ColumnFiltersState;
+  globalFilter?: string;
+  columnVisibility?: VisibilityState;
+  rowSelection?: RowSelectionState;
+  expanded?: ExpandedState;
+  pagination?: PaginationState;
+};
 
 export type DataTableProps<TData, TValue> = {
-  data: TData[]
-  columns: ColumnDef<TData, TValue>[]
+  data: TData[];
+  columns: ColumnDef<TData, TValue>[];
   /**
    * Optional external/controlled state. Provide any subset; others fall back to internal state.
    * For sidebar vs full, prefer setting `initialColumnVisibility` and differing `estimatedRowHeight`.
    */
-  state?: DataTableState
+  state?: DataTableState;
   // granular external change handlers (fallbacks to internal setState when omitted)
   onSortingChange?: OnChangeFn<SortingState>;
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
@@ -72,16 +72,19 @@ export type DataTableProps<TData, TValue> = {
   onPaginationChange?: OnChangeFn<PaginationState>;
 
   /** initial state seeds for internal mode */
-  initialColumnVisibility?: VisibilityState
-  initialGlobalFilter?: string
+  initialColumnVisibility?: VisibilityState;
+  initialGlobalFilter?: string;
 
   /** layout */
-  estimatedRowHeight?: number // px; override for compact sidebar
-  scrollParentRef?: React.RefObject<HTMLElement> // attached to our scroll container
+  estimatedRowHeight?: number; // px; override for compact sidebar
+  scrollParentRef?: React.RefObject<HTMLElement>; // attached to our scroll container
 
   /** slots */
-  toolbar?: (ctx: { table: TableType<TData> }) => React.ReactNode
-  selectedActions?: (ctx: { selected: TData[]; table: TableType<TData> }) => React.ReactNode
+  toolbar?: (ctx: { table: TableType<TData> }) => React.ReactNode;
+  selectedActions?: (ctx: {
+    selected: TData[];
+    table: TableType<TData>;
+  }) => React.ReactNode;
 
   /** navigation */
   onRowClick?: (row: Row<TData>) => void;
@@ -90,7 +93,7 @@ export type DataTableProps<TData, TValue> = {
   /** feature toggles */
   enableSelection?: boolean;
   enablePagination?: boolean;
-}
+};
 
 export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const {
@@ -118,45 +121,56 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
 
     enableSelection = true,
     enablePagination = true,
-  } = props
+  } = props;
 
   // internal fallbacks
-  const [iSorting, iSetSorting] = React.useState<SortingState>(ext?.sorting ?? [])
-  const [iColFilters, iSetColFilters] = React.useState<ColumnFiltersState>(ext?.columnFilters ?? [])
-  const [iGlobal, iSetGlobal] = React.useState<string>(ext?.globalFilter ?? initialGlobalFilter ?? "")
-  const [iColVis, iSetColVis] = React.useState<VisibilityState>(ext?.columnVisibility ?? initialColumnVisibility ?? {})
-  const [iSelection, iSetSelection] = React.useState<RowSelectionState>(ext?.rowSelection ?? {})
-  const [iExpanded, iSetExpanded] = React.useState<ExpandedState>(ext?.expanded ?? {})
+  const [iSorting, iSetSorting] = React.useState<SortingState>(ext?.sorting ?? []);
+  const [iColFilters, iSetColFilters] = React.useState<ColumnFiltersState>(
+    ext?.columnFilters ?? [],
+  );
+  const [iGlobal, iSetGlobal] = React.useState<string>(
+    ext?.globalFilter ?? initialGlobalFilter ?? '',
+  );
+  const [iColVis, iSetColVis] = React.useState<VisibilityState>(
+    ext?.columnVisibility ?? initialColumnVisibility ?? {},
+  );
+  const [iSelection, iSetSelection] = React.useState<RowSelectionState>(
+    ext?.rowSelection ?? {},
+  );
+  const [iExpanded, iSetExpanded] = React.useState<ExpandedState>(ext?.expanded ?? {});
   const [iPagination, iSetPagination] = React.useState<PaginationState>(
-    ext?.pagination ?? { pageIndex: 0, pageSize: 50 }
-  )
+    ext?.pagination ?? { pageIndex: 0, pageSize: 50 },
+  );
 
-  const sorting = ext?.sorting ?? iSorting
-  const columnFilters = ext?.columnFilters ?? iColFilters
-  const globalFilter = ext?.globalFilter ?? iGlobal
-  const columnVisibility = ext?.columnVisibility ?? iColVis
-  const rowSelection = (enableSelection ? ext?.rowSelection : undefined) ?? iSelection
-  const expanded = ext?.expanded ?? iExpanded
-  const pagination = enablePagination ? ext?.pagination ?? iPagination : undefined
+  const sorting = ext?.sorting ?? iSorting;
+  const columnFilters = ext?.columnFilters ?? iColFilters;
+  const globalFilter = ext?.globalFilter ?? iGlobal;
+  const columnVisibility = ext?.columnVisibility ?? iColVis;
+  const rowSelection = (enableSelection ? ext?.rowSelection : undefined) ?? iSelection;
+  const expanded = ext?.expanded ?? iExpanded;
+  const pagination = enablePagination ? (ext?.pagination ?? iPagination) : undefined;
 
-  const setSorting = extSetSorting ?? iSetSorting
-  const setColFilters = extSetColFilters ?? iSetColFilters
-  const setGlobal = extSetGlobal ?? iSetGlobal
-  const setColVis = extSetColVis ?? iSetColVis
-  const setSelection = extSetSelection ?? iSetSelection
-  const setExpanded = extSetExpanded ?? iSetExpanded
-  const setPagination = extSetPagination ?? iSetPagination
+  const setSorting = extSetSorting ?? iSetSorting;
+  const setColFilters = extSetColFilters ?? iSetColFilters;
+  const setGlobal = extSetGlobal ?? iSetGlobal;
+  const setColVis = extSetColVis ?? iSetColVis;
+  const setSelection = extSetSelection ?? iSetSelection;
+  const setExpanded = extSetExpanded ?? iSetExpanded;
+  const setPagination = extSetPagination ?? iSetPagination;
 
   const table = useReactTable({
     data,
     columns: [
       // selection column
       enableSelection && {
-        id: "__select",
+        id: '__select',
         size: 30,
         header: ({ table }: HeaderContext<TData, unknown>) => (
           <RadixCheckbox
-            checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && 'indeterminate')
+            }
             onCheckedChange={(v) => table.toggleAllPageRowsSelected(!!v)}
             ariaLabel="Select all rows"
           />
@@ -172,15 +186,15 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         enableHiding: false,
       },
       renderExpanded && {
-        id: "__expand",
+        id: '__expand',
         header: () => null,
         cell: ({ row }: CellContext<TData, unknown>) => (
           <button
             onClick={row.getToggleExpandedHandler()}
             className="size-7 rounded-md border border-neutral-6 bg-neutral-1 text-neutral-12 transition-colors hover:border-neutral-7 hover:bg-neutral-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
-            aria-label={row.getIsExpanded() ? "Collapse" : "Expand"}
+            aria-label={row.getIsExpanded() ? 'Collapse' : 'Expand'}
           >
-            {row.getIsExpanded() ? "−" : "+"}
+            {row.getIsExpanded() ? '−' : '+'}
           </button>
         ),
         size: 36,
@@ -215,35 +229,41 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
     globalFilterFn: fuzzyFilter,
     filterFns: { fuzzy: fuzzyFilter },
     enableRowSelection: enableSelection,
-    getRowCanExpand: React.useMemo(() => renderExpanded ? () => true : () => false, [renderExpanded]),
+    getRowCanExpand: React.useMemo(
+      () => (renderExpanded ? () => true : () => false),
+      [renderExpanded],
+    ),
     debugTable: false,
-  })
+  });
 
   // virtualization over filtered/sorted rows
-  const rows = table.getRowModel().rows
-  const internalScrollRef = React.useRef<HTMLDivElement>(null)
-  const scrollRef = scrollParentRef ?? internalScrollRef
+  const rows = table.getRowModel().rows;
+  const internalScrollRef = React.useRef<HTMLDivElement>(null);
+  const scrollRef = scrollParentRef ?? internalScrollRef;
 
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => scrollRef.current,
     estimateSize: () => estimatedRowHeight,
     overscan: 8,
-  })
-  const virtualItems = rowVirtualizer.getVirtualItems()
-  const paddingTop = virtualItems.length > 0 ? virtualItems[0]!.start : 0
-  const paddingBottom = virtualItems.length > 0
-    ? rowVirtualizer.getTotalSize() - virtualItems.at(-1)!.end
-    : 0
+  });
+  const virtualItems = rowVirtualizer.getVirtualItems();
+  const paddingTop = virtualItems.length > 0 ? virtualItems[0]!.start : 0;
+  const paddingBottom =
+    virtualItems.length > 0
+      ? rowVirtualizer.getTotalSize() - virtualItems.at(-1)!.end
+      : 0;
 
-  const selected = enableSelection ? table.getFilteredSelectedRowModel().rows : []
+  const selected = enableSelection ? table.getFilteredSelectedRowModel().rows : [];
 
   return (
     <div className="space-y-4">
       {/* Toolbar / Selected actions */}
       {enableSelection && selected.length > 0 ? (
         selectedActions ? (
-          <div>{selectedActions({ selected: selected.map((r) => r.original), table })}</div>
+          <div>
+            {selectedActions({ selected: selected.map((r) => r.original), table })}
+          </div>
         ) : (
           <div className="flex items-center gap-3 rounded-lg border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm text-neutral-12 shadow-sm">
             <span className="font-medium text-neutral-11">Vybráno {selected.length}</span>
@@ -280,9 +300,9 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
                       >
                         {flexRender(h.column.columnDef.header, h.getContext())}
                         {{
-                          asc: "↑",
-                          desc: "↓",
-                        }[h.column.getIsSorted() as "asc" | "desc"] ?? null}
+                          asc: '↑',
+                          desc: '↓',
+                        }[h.column.getIsSorted() as 'asc' | 'desc'] ?? null}
                       </button>
                     )}
                   </th>
@@ -299,20 +319,19 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
             )}
 
             {virtualItems.map((v) => {
-              const row = rows[v.index]!
+              const row = rows[v.index]!;
               return (
                 <React.Fragment key={row.id}>
                   <tr
-                    data-selected={enableSelection && row.getIsSelected() ? "" : undefined}
+                    data-selected={
+                      enableSelection && row.getIsSelected() ? '' : undefined
+                    }
                     className="cursor-default border-b border-neutral-6 transition-colors data-[selected]:bg-accent-3 hover:bg-neutral-2/60"
                     style={{ height: v.size }}
                     onClick={() => onRowClick?.(row)}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="p-3 text-sm text-neutral-12"
-                      >
+                      <td key={cell.id} className="p-3 text-sm text-neutral-12">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
@@ -326,7 +345,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
                     </tr>
                   )}
                 </React.Fragment>
-              )
+              );
             })}
 
             {paddingBottom > 0 && (
@@ -350,20 +369,20 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
               disabled={!table.getCanPreviousPage()}
               className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition-colors enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
             >
-               Zpět
+              Zpět
             </button>
             <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
               className="rounded-lg border border-neutral-6 bg-neutral-2 px-3 py-1.5 text-sm text-neutral-12 transition-colors enabled:hover:border-neutral-7 enabled:hover:bg-neutral-3 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
             >
-               Další
+              Další
             </button>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function DefaultToolbar<TData>({
@@ -371,14 +390,14 @@ function DefaultToolbar<TData>({
   setGlobalFilter,
   table,
 }: {
-  globalFilter: string
-  setGlobalFilter: (v: string) => void
-  table: TableType<TData>
+  globalFilter: string;
+  setGlobalFilter: (v: string) => void;
+  table: TableType<TData>;
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <input
-        value={globalFilter ?? ""}
+        value={globalFilter ?? ''}
         onChange={(e) => setGlobalFilter(e.target.value)}
         placeholder="Hledat…"
         className="h-9 w-64 rounded-lg border border-neutral-6 bg-neutral-1 px-3 text-sm text-neutral-12 placeholder:text-neutral-11 transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-accent-8"
@@ -409,14 +428,16 @@ function DefaultToolbar<TData>({
                   <CheckIcon />
                 </DropdownMenu.ItemIndicator>
                 <span className="truncate">
-                  {typeof col.columnDef.header === "string" ? col.columnDef.header : col.id}
+                  {typeof col.columnDef.header === 'string'
+                    ? col.columnDef.header
+                    : col.id}
                 </span>
               </DropdownMenu.CheckboxItem>
             ))}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </div>
-  )
+  );
 }
 
 function RadixCheckbox({
@@ -424,9 +445,9 @@ function RadixCheckbox({
   onCheckedChange,
   ariaLabel,
 }: {
-  checked: boolean | "indeterminate"
-  onCheckedChange: (v: boolean | "indeterminate") => void
-  ariaLabel?: string
+  checked: boolean | 'indeterminate';
+  onCheckedChange: (v: boolean | 'indeterminate') => void;
+  ariaLabel?: string;
 }) {
   return (
     <Checkbox.Root
@@ -439,7 +460,7 @@ function RadixCheckbox({
         <CheckIcon width={12} height={12} />
       </Checkbox.Indicator>
     </Checkbox.Root>
-  )
+  );
 }
 
 // type Person = { id: number; name: string; age: number; city: string; note?: string };

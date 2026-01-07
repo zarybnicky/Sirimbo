@@ -15,7 +15,8 @@ function Map({ children, ...rest }: MapProps) {
       delete (L.Icon.Default.prototype as any)._getIconUrl;
 
       L.Icon.Default.mergeOptions({
-        iconRetinaUrl: typeof iconRetinaUrl === 'object' ? iconRetinaUrl['src'] : iconRetinaUrl,
+        iconRetinaUrl:
+          typeof iconRetinaUrl === 'object' ? iconRetinaUrl['src'] : iconRetinaUrl,
         iconUrl: typeof iconUrl === 'object' ? iconUrl['src'] : iconUrl,
         shadowUrl: typeof shadowUrl === 'object' ? shadowUrl['src'] : shadowUrl,
       });
@@ -27,6 +28,6 @@ function Map({ children, ...rest }: MapProps) {
       {children(ReactLeaflet)}
     </ReactLeaflet.MapContainer>
   );
-};
+}
 
 export default Map;

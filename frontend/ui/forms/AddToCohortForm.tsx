@@ -1,13 +1,13 @@
-import { CreateCohortMembershipDocument } from "@/graphql/Memberships";
-import type { PersonFragment } from "@/graphql/Person";
+import { CreateCohortMembershipDocument } from '@/graphql/Memberships';
+import type { PersonFragment } from '@/graphql/Person';
 import { useFormResult } from '@/ui/form';
-import React from "react";
-import { useAsyncCallback } from "react-async-hook";
-import { useMutation } from "urql";
-import { z } from "zod";
-import { VerticalCheckboxButtonGroupElement } from "@/ui/fields/RadioButtonGroupElement";
-import { SubmitButton } from "@/ui/submit";
-import { useCohorts } from "@/ui/useCohorts";
+import React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
+import { useMutation } from 'urql';
+import { z } from 'zod';
+import { VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
+import { SubmitButton } from '@/ui/submit';
+import { useCohorts } from '@/ui/useCohorts';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -23,11 +23,16 @@ export function AddToCohortForm({ person }: { person: PersonFragment }) {
   const createCohortMember = useMutation(CreateCohortMembershipDocument)[1];
 
   const { data: cohorts } = useCohorts({ visible: true });
-  const cohortOptions = React.useMemo(() => cohorts.map(x => ({id: x.id, label: x.name})), [cohorts]);
+  const cohortOptions = React.useMemo(
+    () => cohorts.map((x) => ({ id: x.id, label: x.name })),
+    [cohorts],
+  );
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     for (const cohortId of values.cohortIds) {
-      await createCohortMember({ input: { cohortMembership: { personId: person.id, cohortId } } })
+      await createCohortMember({
+        input: { cohortMembership: { personId: person.id, cohortId } },
+      });
     }
     onSuccess();
   });

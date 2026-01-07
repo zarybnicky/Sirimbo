@@ -2,9 +2,17 @@
 
 import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
 import { SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
-import { RadioButtonGroupElement, VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
+import {
+  RadioButtonGroupElement,
+  VerticalCheckboxButtonGroupElement,
+} from '@/ui/fields/RadioButtonGroupElement';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger } from '@/ui/dropdown';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
@@ -65,23 +73,35 @@ export function CreatePersonDialog() {
   const create = useMutation(CreatePersonDocument)[1];
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
 
-  const [personQuery] = useQuery({ query: FullPersonListDocument, pause: open !== 'existing' });
-  const personOptions = React.useMemo(() => personQuery.data?.people?.nodes?.map(x => ({
-    id: x.id,
-    label: x.name || '?',
-  })).toSorted((x, y) => x.label.localeCompare(y.label)), [personQuery]);
+  const [personQuery] = useQuery({
+    query: FullPersonListDocument,
+    pause: open !== 'existing',
+  });
+  const personOptions = React.useMemo(
+    () =>
+      personQuery.data?.people?.nodes
+        ?.map((x) => ({
+          id: x.id,
+          label: x.name || '?',
+        }))
+        .toSorted((x, y) => x.label.localeCompare(y.label)),
+    [personQuery],
+  );
 
   const { control, handleSubmit, getValues, setValue, reset, watch } = useForm({
     resolver: zodResolver(Form),
   });
   const { data: cohorts } = useCohorts({ visible: true });
-  const cohortOptions = React.useMemo(() => cohorts.map(x => ({ id: x.id, label: x.name })), [cohorts]);
+  const cohortOptions = React.useMemo(
+    () => cohorts.map((x) => ({ id: x.id, label: x.name })),
+    [cohorts],
+  );
 
   const personId = watch('personId');
   const selectedCohortCount = watch('cohortIds')?.length ?? 0;
   const [cohortPickerOpen, setCohortPickerOpen] = React.useState(false);
   React.useEffect(() => {
-    const person = personQuery.data?.people?.nodes.find(x => x.id === personId);
+    const person = personQuery.data?.people?.nodes.find((x) => x.id === personId);
     if (person) {
       setValue('prefixTitle', person.prefixTitle);
       setValue('suffixTitle', person.suffixTitle);
@@ -110,14 +130,17 @@ export function CreatePersonDialog() {
 
   React.useEffect(() => {
     if (open) {
-      reset({}, {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      });
+      reset(
+        {},
+        {
+          keepDirtyValues: true,
+          keepTouched: true,
+          keepErrors: true,
+        },
+      );
       setValue('isMember', true);
       setValue('sendInvitation', false);
-      setValue('nationality', "203");
+      setValue('nationality', '203');
       setValue('joinDate', new Date());
       setValue('cohortIds', []);
       setCohortPickerOpen(false);
@@ -125,7 +148,16 @@ export function CreatePersonDialog() {
   }, [open, reset, setValue, setCohortPickerOpen]);
 
   const onSubmit = useAsyncCallback(async (data: z.infer<typeof Form>) => {
-    const { personId, isAdmin, isMember, isTrainer, joinDate, sendInvitation, cohortIds, ...p } = data;
+    const {
+      personId,
+      isAdmin,
+      isMember,
+      isTrainer,
+      joinDate,
+      sendInvitation,
+      cohortIds,
+      ...p
+    } = data;
     const sanitizedCohortIds = (cohortIds ?? []).filter(isTruthy);
     const res = await create({
       input: {
@@ -163,12 +195,19 @@ export function CreatePersonDialog() {
           Přidat osobu
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuButton onClick={() => setOpen('new')}>Nová osoba</DropdownMenuButton>
-          <DropdownMenuButton onClick={() => setOpen('existing')}>Z jiného klubu</DropdownMenuButton>
+          <DropdownMenuButton onClick={() => setOpen('new')}>
+            Nová osoba
+          </DropdownMenuButton>
+          <DropdownMenuButton onClick={() => setOpen('existing')}>
+            Z jiného klubu
+          </DropdownMenuButton>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
+      <DialogContent
+        className="sm:max-w-2xl"
+        onPointerDownOutside={(e) => e.preventDefault()}
+      >
         <DialogTitle>Nový člen</DialogTitle>
 
         <form onSubmit={handleSubmit(onSubmit.execute)}>
@@ -183,10 +222,29 @@ export function CreatePersonDialog() {
             />
           )}
           <fieldset disabled={open === 'existing'} className="grid lg:grid-cols-2 gap-2">
-            <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
-            <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
-            <TextFieldElement control={control} name="firstName" label="Jméno" required autoFocus />
-            <TextFieldElement control={control} name="lastName" label="Příjmení" required />
+            <TextFieldElement
+              control={control}
+              name="prefixTitle"
+              label="Titul před jménem"
+            />
+            <TextFieldElement
+              control={control}
+              name="suffixTitle"
+              label="Titul za jménem"
+            />
+            <TextFieldElement
+              control={control}
+              name="firstName"
+              label="Jméno"
+              required
+              autoFocus
+            />
+            <TextFieldElement
+              control={control}
+              name="lastName"
+              label="Příjmení"
+              required
+            />
 
             <TextFieldElement
               type="date"
@@ -228,7 +286,12 @@ export function CreatePersonDialog() {
             />
 
             <TextFieldElement control={control} name="phone" label="Telefon" type="tel" />
-            <TextFieldElement control={control} name="email" label="E-mail" type="email" />
+            <TextFieldElement
+              control={control}
+              name="email"
+              label="E-mail"
+              type="email"
+            />
           </fieldset>
 
           <div className="grid lg:grid-cols-2 gap-2">
@@ -236,10 +299,18 @@ export function CreatePersonDialog() {
               <CheckboxElement control={control} name="isMember" label="Člen klubu" />
               <CheckboxElement control={control} name="isTrainer" label="Trenér" />
               <CheckboxElement control={control} name="isAdmin" label="Správce" />
-              <CheckboxElement control={control} name="sendInvitation" label="Poslat pozvánku na e-mail" />
+              <CheckboxElement
+                control={control}
+                name="sendInvitation"
+                label="Poslat pozvánku na e-mail"
+              />
             </div>
 
-            <DatePickerElement control={control} name="joinDate" label="Datum vstupu do klubu" />
+            <DatePickerElement
+              control={control}
+              name="joinDate"
+              label="Datum vstupu do klubu"
+            />
             <Collapsible.Root open={cohortPickerOpen} onOpenChange={setCohortPickerOpen}>
               <div className="flex items-center justify-between gap-2">
                 <FieldLabel htmlFor="cohortIds">Tréninkové skupiny</FieldLabel>
@@ -257,11 +328,16 @@ export function CreatePersonDialog() {
                           ? `Vybráno ${selectedCohortCount}`
                           : 'Zobrazit'}
                     </span>
-                    <ChevronDown className={`transition-transform ${cohortPickerOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown
+                      className={`transition-transform ${cohortPickerOpen ? 'rotate-180' : ''}`}
+                    />
                   </button>
                 </Collapsible.Trigger>
               </div>
-              <Collapsible.Content forceMount className="[&[data-state=closed]>div]:hidden">
+              <Collapsible.Content
+                forceMount
+                className="[&[data-state=closed]>div]:hidden"
+              >
                 <VerticalCheckboxButtonGroupElement
                   control={control}
                   name="cohortIds"
@@ -281,4 +357,4 @@ export function CreatePersonDialog() {
       </DialogContent>
     </Dialog>
   );
-};
+}

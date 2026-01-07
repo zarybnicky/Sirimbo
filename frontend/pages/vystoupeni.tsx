@@ -9,7 +9,13 @@ export default function Vystoupeni() {
       <TitleBar title="Taneční vystoupení" />
 
       <div>
-        <LiteYouTubeEmbed id="VsAgAfc9ZM4" adNetwork={true} params="modestbranding=1" poster="hqdefault" title="YouTube Embed" />
+        <LiteYouTubeEmbed
+          id="VsAgAfc9ZM4"
+          adNetwork={true}
+          params="modestbranding=1"
+          poster="hqdefault"
+          title="YouTube Embed"
+        />
       </div>
 
       <div className="prose prose-accent mt-8">
@@ -28,7 +34,8 @@ export default function Vystoupeni() {
         </ul>
 
         <p>
-          Můžete nás kontaktovat na 737 644 899 nebo nezávazně vyplnit formulář a my se Vám ozveme.
+          Můžete nás kontaktovat na 737 644 899 nebo nezávazně vyplnit formulář a my se
+          Vám ozveme.
         </p>
       </div>
 

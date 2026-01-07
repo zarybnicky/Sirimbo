@@ -1,6 +1,9 @@
 import { TextField } from '@/ui/fields/text';
 import { useAuth } from '@/ui/use-auth';
-import { AnnouncementListDocument, AnnouncementListQueryVariables } from '@/graphql/Announcement';
+import {
+  AnnouncementListDocument,
+  AnnouncementListQueryVariables,
+} from '@/graphql/Announcement';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { buttonCls } from '@/ui/style';
@@ -11,7 +14,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
-import { useFuzzySearch } from "@/ui/use-fuzzy-search";
+import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { AnnouncementSortControls, type SortOption } from '@/ui/Announcements';
 
 const QueryParams = z.object({
@@ -33,7 +36,7 @@ export function AnnouncementList() {
     setPages([undefined]);
   }, [sort]);
   const handleLoadMore = React.useCallback((endCursor: number) => {
-    setPages(xs => [...xs, endCursor]);
+    setPages((xs) => [...xs, endCursor]);
   }, []);
 
   return (
@@ -73,7 +76,7 @@ export function AnnouncementList() {
             currentId={router.query.id}
             search={search}
             orderBy={orderBy}
-            onLoadMore={(index === pages.length - 1) ? handleLoadMore : undefined}
+            onLoadMore={index === pages.length - 1 ? handleLoadMore : undefined}
           />
         ))}
       </div>
@@ -89,7 +92,13 @@ interface AnnouncementListPageProps {
   onLoadMore?: (endCursor: number) => void;
 }
 
-function AnnouncementListPage({ cursor, search, currentId, orderBy, onLoadMore }: AnnouncementListPageProps) {
+function AnnouncementListPage({
+  cursor,
+  search,
+  currentId,
+  orderBy,
+  onLoadMore,
+}: AnnouncementListPageProps) {
   const [{ data, fetching }] = useQuery({
     query: AnnouncementListDocument,
     variables: { first: 50, cursor, orderBy },
@@ -110,7 +119,7 @@ function AnnouncementListPage({ cursor, search, currentId, orderBy, onLoadMore }
         ? [item.author.uJmeno, item.author.uPrijmeni].filter(Boolean).join(' ')
         : undefined;
 
-      return ({
+      return {
         id: item.id,
         title: item.title,
         subtitle: (
@@ -118,13 +127,19 @@ function AnnouncementListPage({ cursor, search, currentId, orderBy, onLoadMore }
             <div className="flex flex-col gap-1">
               {authorName && <div>{authorName}</div>}
               <div className="flex items-center gap-1 text-xs text-neutral-11">
-                <time dateTime={item.createdAt} title={numericFullFormatter.format(new Date(item.createdAt))}>
+                <time
+                  dateTime={item.createdAt}
+                  title={numericFullFormatter.format(new Date(item.createdAt))}
+                >
                   {numericDateWithYearFormatter.format(new Date(item.createdAt))}
                 </time>
                 {item.updatedAt !== null && (
                   <>
                     <span>-</span>
-                    <time dateTime={item.updatedAt} title={numericFullFormatter.format(new Date(item.updatedAt))}>
+                    <time
+                      dateTime={item.updatedAt}
+                      title={numericFullFormatter.format(new Date(item.updatedAt))}
+                    >
                       Upraveno
                     </time>
                   </>
@@ -138,7 +153,7 @@ function AnnouncementListPage({ cursor, search, currentId, orderBy, onLoadMore }
           pathname: '/nastenka/[id]',
           query: { id: item.id },
         },
-      });
+      };
     });
   }, [data]);
 
@@ -157,11 +172,16 @@ function AnnouncementListPage({ cursor, search, currentId, orderBy, onLoadMore }
           className={buttonCls({
             variant: currentId === item.id ? 'primary' : 'outline',
             display: 'none',
-            className: 'pl-5 m-1 mt-0 grid'
+            className: 'pl-5 m-1 mt-0 grid',
           })}
         >
           <div>{item.title}</div>
-          <div className={cn('text-sm', currentId === item.id ? 'text-white' : 'text-neutral-11')}>
+          <div
+            className={cn(
+              'text-sm',
+              currentId === item.id ? 'text-white' : 'text-neutral-11',
+            )}
+          >
             {item.subtitle}
           </div>
         </Link>

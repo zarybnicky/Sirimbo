@@ -74,7 +74,8 @@ export default function InvitationPage() {
             <FormError error={onSubmit.error} />
 
             <p>
-              Než začnete vyplňovat přihlášku nového člena, vytvořte si prosím uživatelský účet v systému.
+              Než začnete vyplňovat přihlášku nového člena, vytvořte si prosím uživatelský
+              účet v systému.
             </p>
 
             <TextFieldElement
@@ -103,4 +104,4 @@ export default function InvitationPage() {
       </div>
     </Layout>
   );
-};
+}

@@ -36,7 +36,7 @@ export type EditorProps = {
 };
 
 export default function Editor(props: EditorProps) {
-  const { name, onChange, onBlur, initialState } = props
+  const { name, onChange, onBlur, initialState } = props;
   const realInitial = React.useMemo(() => {
     return decodeHTML(initialState);
   }, [initialState]);
@@ -47,103 +47,115 @@ export default function Editor(props: EditorProps) {
   React.useEffect(() => {
     if (editor) {
       editor.setData(realInitial);
-      setValue(realInitial)
+      setValue(realInitial);
     }
   }, [editor, realInitial]);
 
-  const cb = React.useCallback((_: unknown, editor: ClassicEditor) => {
-    onChange?.(editor.getData());
-    setValue(editor.getData());
-  }, [onChange]);
+  const cb = React.useCallback(
+    (_: unknown, editor: ClassicEditor) => {
+      onChange?.(editor.getData());
+      setValue(editor.getData());
+    },
+    [onChange],
+  );
 
   // eslint-disable-next-line
   const _ckContent = <div className="ck-content" />; // for tailwind's JIT
-  return <>
-    <input type="hidden" name={name} value={value} />
-    <CKEditor
-      editor={ClassicEditor}
-      config={{
-        licenseKey: 'GPL',
-        plugins: [
-          Essentials,
-          AutoImage,
-          Autoformat,
-          Bold,
-          Italic,
-          GeneralHtmlSupport,
-          Heading,
-          Image,
-          ImageCaption,
-          ImageInsert,
-          ImageStyle,
-          ImageToolbar,
-          Indent,
-          Link,
-          List,
-          Paragraph,
-          PasteFromOffice,
-          Table,
-          TableToolbar,
-          TextTransformation,
-          SourceEditing,
-          EditorClassPlugin as PluginFunctionConstructor,
-        ],
-        toolbar: [
-          "undo",
-          "redo",
-          "|",
-          "heading",
-          "|",
-          "bold",
-          "italic",
-          "|",
-          "link",
-          "insertImageViaUrl",
-          "insertTable",
-          "|",
-          "bulletedList",
-          "numberedList",
-          "outdent",
-          "indent",
-          "sourceEditing",
-        ],
-        htmlSupport: {
-          allow: [
-            {
-              name: /.*/,
-              styles: true,
-              classes: true,
-              attributes: true,
-            }
+  return (
+    <>
+      <input type="hidden" name={name} value={value} />
+      <CKEditor
+        editor={ClassicEditor}
+        config={{
+          licenseKey: 'GPL',
+          plugins: [
+            Essentials,
+            AutoImage,
+            Autoformat,
+            Bold,
+            Italic,
+            GeneralHtmlSupport,
+            Heading,
+            Image,
+            ImageCaption,
+            ImageInsert,
+            ImageStyle,
+            ImageToolbar,
+            Indent,
+            Link,
+            List,
+            Paragraph,
+            PasteFromOffice,
+            Table,
+            TableToolbar,
+            TextTransformation,
+            SourceEditing,
+            EditorClassPlugin as PluginFunctionConstructor,
           ],
-        },
-      }}
-      data={realInitial}
-      onChange={cb}
-      onReady={setEditor}
-      onBlur={onBlur}
-    />
-  </>;
+          toolbar: [
+            'undo',
+            'redo',
+            '|',
+            'heading',
+            '|',
+            'bold',
+            'italic',
+            '|',
+            'link',
+            'insertImageViaUrl',
+            'insertTable',
+            '|',
+            'bulletedList',
+            'numberedList',
+            'outdent',
+            'indent',
+            'sourceEditing',
+          ],
+          htmlSupport: {
+            allow: [
+              {
+                name: /.*/,
+                styles: true,
+                classes: true,
+                attributes: true,
+              },
+            ],
+          },
+        }}
+        data={realInitial}
+        onChange={cb}
+        onReady={setEditor}
+        onBlur={onBlur}
+      />
+    </>
+  );
 }
 
 function decodeHTML(html?: string): string {
-  const el = document.createElement("textarea");
+  const el = document.createElement('textarea');
   el.innerHTML = html || '';
   return el.value;
 }
 
 function EditorClassPlugin(editor: ClassicEditor) {
   editor.ui.on('ready', () => {
-    editor.ui.view.body.bodyCollectionContainer?.classList.add('prose', 'prose-accent', '!bg-accent-1');
+    editor.ui.view.body.bodyCollectionContainer?.classList.add(
+      'prose',
+      'prose-accent',
+      '!bg-accent-1',
+    );
 
     if (editor.ui.view.element) {
-      editor.ui.view.element.parentElement?.classList.add('prose', 'prose-accent', '!bg-accent-1');
+      editor.ui.view.element.parentElement?.classList.add(
+        'prose',
+        'prose-accent',
+        '!bg-accent-1',
+      );
     }
   });
 
-  editor.editing.view.change(writer => {
+  editor.editing.view.change((writer) => {
     const root = editor.editing.view.document?.getRoot()?.parent;
-    if (root)
-      writer.addClass('prose prose-accent !bg-accent-1', root as any);
+    if (root) writer.addClass('prose prose-accent !bg-accent-1', root as any);
   });
 }

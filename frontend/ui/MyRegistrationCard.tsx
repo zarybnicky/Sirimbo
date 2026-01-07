@@ -15,7 +15,10 @@ import { SubmitButton } from './submit';
 import { cardCls } from './style';
 import { useTenant } from './useTenant';
 
-export function MyRegistrationCard({ event, registration }: {
+export function MyRegistrationCard({
+  event,
+  registration,
+}: {
   event: EventFragment;
   registration: EventRegistrationFragment;
 }) {
@@ -23,13 +26,13 @@ export function MyRegistrationCard({ event, registration }: {
   const confirm = useConfirm();
   const cancel = useMutation(CancelRegistrationDocument)[1];
   const onCancel = useAsyncCallback(async () => {
-    await confirm({ description: "Opravdu chcete zrušit přihlášku?" });
+    await confirm({ description: 'Opravdu chcete zrušit přihlášku?' });
     await cancel({ input: { registrationId: registration.id } });
     toast.success('Přihláška zrušena.');
   });
 
   return (
-    <div className={cardCls({ className: "prose prose-accent" })}>
+    <div className={cardCls({ className: 'prose prose-accent' })}>
       <h5>{formatRegistrant(registration)}</h5>
       <div>
         Přihlášeno
@@ -62,10 +65,15 @@ export function MyRegistrationCard({ event, registration }: {
       )}
 
       {tenant?.id === '2' ? null : (
-        <SubmitButton type="button" variant="outline" onClick={onCancel.execute} loading={onCancel.loading}>
+        <SubmitButton
+          type="button"
+          variant="outline"
+          onClick={onCancel.execute}
+          loading={onCancel.loading}
+        >
           Zrušit přihlášku
         </SubmitButton>
       )}
     </div>
   );
-};
+}

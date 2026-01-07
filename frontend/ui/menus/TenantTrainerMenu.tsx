@@ -35,7 +35,8 @@ export function TenantTrainerMenu({
 
   const remove = React.useCallback(async () => {
     await confirm({
-      description: 'Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.',
+      description:
+        'Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.',
     });
     await doRemove({ id: data.id });
     toast.success('Odstraněno');
