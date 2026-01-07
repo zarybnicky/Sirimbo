@@ -2,6 +2,9 @@ alter table event
   drop column if exists since,
   drop column if exists until;
 
+DROP TRIGGER IF EXISTS _500_update_parent_range on public.event_instance;
+drop function if exists app_private.tg_event_instance__update_parent_range;
+
 drop index if exists u_jmeno;
 drop index if exists u_prijmeni;
 drop index if exists u_confirmed;

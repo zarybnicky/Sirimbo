@@ -14,6 +14,7 @@ namespace GraphileWorker {
 
     create_lesson_payments: never;
     refresh_memberships: never;
+    refresh_account_balances: never;
 
     send_invitation: {
       id: string;
