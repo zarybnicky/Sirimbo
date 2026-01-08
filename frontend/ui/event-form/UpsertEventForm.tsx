@@ -55,8 +55,7 @@ export function UpsertEventForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
       ...initialValue,
-      isLocked:
-        initialValue.isLocked !== undefined ? initialValue.isLocked : lockEventsByDefault,
+      isLocked: initialValue.isLocked ?? lockEventsByDefault,
     },
   });
 

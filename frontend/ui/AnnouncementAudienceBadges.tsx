@@ -56,12 +56,6 @@ export function AnnouncementAudienceBadges({ audiences, className }: Props) {
           ))}
         </div>
       ) : null}
-
-      {!hasCohorts && !hasRoles ? (
-        <span className="inline-flex items-center rounded-full border border-dashed border-neutral-7 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-neutral-9">
-          Viditelné pro všechny
-        </span>
-      ) : null}
     </div>
   );
 }
