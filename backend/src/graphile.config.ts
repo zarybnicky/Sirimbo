@@ -5,7 +5,7 @@ import path from 'path';
 import * as adaptor from 'postgraphile/@dataplan/pg/adaptors/pg';
 import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
 import { makeV4Preset } from 'postgraphile/presets/v4';
-import { pool } from './db.ts';
+import { pool, poolGraphqlContext } from './db.ts';
 import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
 import 'postgraphile/grafserv/express/v4';
 
@@ -30,20 +30,7 @@ async function findTenantId(req: express.Request): Promise<string> {
   return host ? host.id : '1';
 }
 
-function extractAuthToken(req: express.Request): string | null {
-  const h = req.headers.authorization;
-  if (typeof h === 'string') {
-    const m = /^Bearer\s+(.+)$/i.exec(h);
-    if (m) return m[1];
-  }
-  // Fallback for file uploads
-  const c = req.cookies?.auth;
-  return typeof c === 'string' && c.length ? c : null;
-}
-
-async function loadUserFromSession(
-  req: express.Request,
-): Promise<Record<string, string>> {
+async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
   const tenantId = await findTenantId(req);
   const settings: Record<string, string> = {
     role: 'anonymous',
@@ -51,14 +38,15 @@ async function loadUserFromSession(
     'jwt.claims.user_id': '',
     'jwt.claims.username': '',
     'jwt.claims.email': '',
-    'jwt.claims.my_person_ids': '{}',
-    'jwt.claims.my_tenant_ids': '{}',
-    'jwt.claims.my_cohort_ids': '{}',
-    'jwt.claims.my_couple_ids': '{}',
+    'jwt.claims.my_person_ids': '[]',
+    'jwt.claims.my_tenant_ids': '[]',
+    'jwt.claims.my_cohort_ids': '[]',
+    'jwt.claims.my_couple_ids': '[]',
   };
 
-  const token = extractAuthToken(req);
-  if (token) {
+  const authorization = req.get('authorization');
+  if (authorization?.toLowerCase().startsWith('bearer ')) {
+    const token = authorization.substring(7);
     const claims = jwt.verify(token, process.env.JWT_SECRET || '', {
       ignoreExpiration: true,
     }) as jwt.JwtPayload;
@@ -75,7 +63,8 @@ async function loadUserFromSession(
     for (const key in claims) {
       if (['exp', 'aud', 'iat', 'iss'].includes(key)) continue;
       if (Array.isArray(claims[key])) {
-        settings[`jwt.claims.${key}`] = '{' + claims[key].map(String).join(',') + '}';
+        settings[`jwt.claims.${key}`] =
+          '[' + claims[key].map((x: string) => `${x}`).join(',') + ']';
       } else {
         settings[`jwt.claims.${key}`] = claims[key];
       }
@@ -106,6 +95,7 @@ const preset: GraphileConfig.Preset = {
       const { req } = ctx.expressv4 ?? {};
       return {
         pgSettings: req ? await loadUserFromSession(req) : {},
+        ...poolGraphqlContext,
       };
     },
     explain: isDevelopment,
@@ -130,11 +120,15 @@ const preset: GraphileConfig.Preset = {
     {
       name: 'main',
       schemas: ['public'],
+      pgSettingsKey: 'pgSettings',
+      pgSubscriberKey: 'pgSubscriber' as any as undefined,
       withPgClientKey: 'withPgClient',
       adaptor,
       adaptorSettings: {
         pool,
+        // superuserConnectionString: process.env.SUPERUSER_DATABASE_URL,
       },
+      pgSubscriber: new adaptor.PgSubscriber(pool),
     },
   ],
 };
