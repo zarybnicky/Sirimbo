@@ -20,9 +20,7 @@ CREATE TYPE public.event_type_input AS (
   is_public boolean,
   is_locked boolean,
   enable_notes boolean,
-  payment_type event_payment_type,
-  member_price public.price,
-  guest_price public.price
+  payment_type event_payment_type
 );
 
 CREATE TYPE public.event_instance_trainer_type_input AS (
@@ -84,9 +82,7 @@ begin
       is_public=info.is_public,
       is_locked=info.is_locked,
       enable_notes=info.enable_notes,
-      payment_type=info.payment_type,
-      guest_price=info.guest_price,
-      member_price=info.member_price
+      payment_type=info.payment_type
     where id=info.id
     returning * into v_event;
   else
@@ -102,9 +98,7 @@ begin
       is_public,
       is_locked,
       enable_notes,
-      payment_type,
-      guest_price,
-      member_price
+      payment_type
     )
     values (
       info.name,
@@ -118,9 +112,7 @@ begin
       info.is_public,
       info.is_locked,
       info.enable_notes,
-      info.payment_type,
-      info.guest_price,
-      info.member_price
+      info.payment_type
     )
     returning * into v_event;
   end if;

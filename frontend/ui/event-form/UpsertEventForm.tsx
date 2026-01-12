@@ -178,8 +178,6 @@ export function UpsertEventForm({
           isLocked: values.isLocked,
           enableNotes: values.enableNotes,
           paymentType: values.type === 'LESSON' ? 'AFTER_INSTANCE' : 'NONE',
-          guestPrice: null,
-          memberPrice: null,
         },
         trainers: values.trainers.map((x) => ({
           ...x,

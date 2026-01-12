@@ -78,8 +78,6 @@ export function EventInstanceMenu({
           isLocked: event.isLocked,
           enableNotes: event.enableNotes,
           paymentType: event.paymentType,
-          guestPrice: null,
-          memberPrice: null,
         },
         trainers: event.eventTrainersList.map((x) => ({
           personId: x.personId,
