@@ -2,6 +2,7 @@ drop function if exists register_without_invitation;
 
 CREATE or replace FUNCTION register_without_invitation(email text, passwd text) RETURNS login_result
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO pg_catalog, public, pg_temp
     AS $$
 declare
   v_salt text;

@@ -1,5 +1,6 @@
 CREATE or replace FUNCTION register_to_event_many(registrations register_to_event_type[]) RETURNS SETOF event_registration
     LANGUAGE plpgsql
+    SET search_path TO pg_catalog, public, pg_temp
     AS $$
 declare
   event event;

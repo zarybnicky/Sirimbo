@@ -18,6 +18,7 @@ drop function if exists otp_login;
 CREATE or replace FUNCTION otp_login(token uuid)
   RETURNS login_result
   LANGUAGE plpgsql STRICT SECURITY DEFINER
+  SET search_path TO pg_catalog, public, pg_temp
   AS $$
 declare
   v_token otp_token;

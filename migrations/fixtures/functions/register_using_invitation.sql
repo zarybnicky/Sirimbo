@@ -3,6 +3,7 @@ drop function if exists register_using_invitation;
 CREATE or replace FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text default null)
   RETURNS login_result
   LANGUAGE plpgsql SECURITY DEFINER
+  SET search_path TO pg_catalog, public, pg_temp
   AS $$
 declare
   invitation person_invitation;

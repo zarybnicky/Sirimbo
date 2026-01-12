@@ -1,5 +1,6 @@
 CREATE or replace FUNCTION public.reset_password(email character varying) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO pg_catalog, public, pg_temp
     AS $$
 declare
   v_tenant tenant;
