@@ -9,7 +9,6 @@ CREATE TABLE public.payment (
     variable_symbol text,
     specific_symbol text,
     is_auto_credit_allowed boolean DEFAULT true NOT NULL,
-    tags text[] DEFAULT ARRAY[]::text[] NOT NULL,
     due_at timestamp with time zone,
     paid_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,

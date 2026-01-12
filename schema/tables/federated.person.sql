@@ -3,7 +3,7 @@ CREATE TABLE federated.person (
     canonical_name text,
     first_name text,
     last_name text,
-    search_name text GENERATED ALWAYS AS (federated.unaccent(COALESCE(canonical_name, ((first_name || ' '::text) || last_name)))) STORED,
+    search_name text GENERATED ALWAYS AS (federated.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED,
     gender federated.gender,
     dob date,
     nationality text,

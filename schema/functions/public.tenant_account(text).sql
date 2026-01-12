@@ -1,5 +1,6 @@
 CREATE FUNCTION public.tenant_account(in_currency text, OUT acc public.account) RETURNS public.account
     LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   WITH ins AS (
     INSERT INTO account (tenant_id, person_id, currency)

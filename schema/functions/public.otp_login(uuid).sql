@@ -1,5 +1,6 @@
 CREATE FUNCTION public.otp_login(token uuid) RETURNS public.login_result
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_token otp_token;

@@ -10,7 +10,7 @@ CREATE TABLE federated.ranklist_entry (
 GRANT SELECT ON TABLE federated.ranklist_entry TO anonymous;
 
 ALTER TABLE ONLY federated.ranklist_entry
-    ADD CONSTRAINT ranklist_entry_snapshot_id_competitor_id_key UNIQUE (snapshot_id, competitor_id);
+    ADD CONSTRAINT ranklist_entry_pkey PRIMARY KEY (snapshot_id, competitor_id);
 ALTER TABLE ONLY federated.ranklist_entry
     ADD CONSTRAINT ranklist_entry_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
 ALTER TABLE ONLY federated.ranklist_entry

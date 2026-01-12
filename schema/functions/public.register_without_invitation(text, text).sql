@@ -1,5 +1,6 @@
 CREATE FUNCTION public.register_without_invitation(email text, passwd text) RETURNS public.login_result
     LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   v_salt text;

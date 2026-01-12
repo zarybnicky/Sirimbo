@@ -112,7 +112,7 @@ const preset: GraphileConfig.Preset = {
   },
   grafserv: {
     port: Number.parseInt(process.env.PORT || '5000', 10),
-    watch: process.env.POSTGRAPHILE_DONT_WATCH ? false : true,
+    watch: !process.env.POSTGRAPHILE_DONT_WATCH,
     graphiql: isDevelopment,
   },
   gather: {

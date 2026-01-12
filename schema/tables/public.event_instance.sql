@@ -6,7 +6,6 @@ CREATE TABLE public.event_instance (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     since timestamp with time zone NOT NULL,
     until timestamp with time zone NOT NULL,
-    location_id bigint,
     is_cancelled boolean DEFAULT false NOT NULL,
     range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     CONSTRAINT event_instance_until_gt_since CHECK ((until > since))
@@ -23,8 +22,6 @@ ALTER TABLE ONLY public.event_instance
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.tenant_location(id);
-ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING (true);
@@ -39,7 +36,6 @@ CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_instance FOR 
 CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 
 CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
-CREATE INDEX event_instance_location_id_idx ON public.event_instance USING btree (location_id);
 CREATE INDEX event_instance_range_idx ON public.event_instance USING btree (tenant_id, since, until);
 CREATE INDEX event_instance_since_idx ON public.event_instance USING btree (since);
 CREATE INDEX event_instance_tenant_range_gist ON public.event_instance USING gist (tenant_id, range);

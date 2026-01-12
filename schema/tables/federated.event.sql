@@ -8,11 +8,7 @@ CREATE TABLE federated.event (
     location text,
     country text,
     organizing_club_id bigint,
-    range daterange GENERATED ALWAYS AS (
-CASE
-    WHEN (end_date IS NULL) THEN daterange(start_date, start_date, '[]'::text)
-    ELSE daterange(start_date, end_date, '[]'::text)
-END) STORED,
+    range daterange GENERATED ALWAYS AS (daterange(start_date, (COALESCE(end_date, start_date) + 1), '[)'::text)) STORED,
     CONSTRAINT event_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 
@@ -21,9 +17,13 @@ GRANT SELECT ON TABLE federated.event TO anonymous;
 ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_federation_external_id_key UNIQUE (federation, external_id);
 ALTER TABLE ONLY federated.event
+    ADD CONSTRAINT event_federation_id_key UNIQUE (federation, id);
+ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+ALTER TABLE ONLY federated.event
+    ADD CONSTRAINT event_federation_organizing_club_id_fkey FOREIGN KEY (federation, organizing_club_id) REFERENCES federated.federation_club(federation, id);
 ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_organizing_club_id_fkey FOREIGN KEY (organizing_club_id) REFERENCES federated.federation_club(id);
 

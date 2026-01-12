@@ -6,12 +6,15 @@ DECLARE
   v_person_id  bigint;
   v_athlete_id bigint;
 BEGIN
-  -- Try to find existing mapping and lock it
-  SELECT fa.athlete_id
+  -- Ensure the mapping row exists and lock it (even if athlete_id is NULL).
+  INSERT INTO federated.federation_athlete (federation, external_id, athlete_id)
+  VALUES (in_federation, in_external_id, NULL)
+  ON CONFLICT (federation, external_id) DO NOTHING;
+
+  SELECT athlete_id
   INTO v_athlete_id
-  FROM federation_athlete fa
-  WHERE fa.federation = in_federation
-    AND fa.external_id = in_external_id
+  FROM federated.federation_athlete
+  WHERE federation=in_federation AND external_id=in_external_id
     FOR UPDATE;
 
   -- If no mapping, create person + athlete
@@ -23,13 +26,12 @@ BEGIN
     INSERT INTO athlete (person_id)
     VALUES (v_person_id)
     RETURNING id INTO v_athlete_id;
-  END IF;
 
-  -- Ensure mapping row exists / is updated
-  INSERT INTO federation_athlete (federation, external_id, athlete_id)
-  VALUES (in_federation, in_external_id, v_athlete_id)
-  ON CONFLICT (federation, external_id)
-    DO UPDATE SET athlete_id = EXCLUDED.athlete_id;
+    UPDATE federated.federation_athlete
+    SET athlete_id = v_athlete_id
+    WHERE federation = in_federation
+      AND external_id = in_external_id;
+  END IF;
 
   RETURN v_athlete_id;
 END;

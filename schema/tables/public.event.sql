@@ -12,14 +12,10 @@ CREATE TABLE public.event (
     is_public boolean DEFAULT false NOT NULL,
     enable_notes boolean DEFAULT false NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    description_member text DEFAULT ''::text NOT NULL,
-    title_image_legacy text,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
     location_id bigint,
     payment_type public.event_payment_type DEFAULT 'none'::public.event_payment_type NOT NULL,
     is_paid_by_tenant boolean DEFAULT true NOT NULL,
-    member_price public.price DEFAULT NULL::public.price_type,
-    guest_price public.price DEFAULT NULL::public.price_type,
     payment_recipient_id bigint,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );

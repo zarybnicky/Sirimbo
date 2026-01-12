@@ -1,5 +1,4 @@
 CREATE TABLE federated.round_dance (
-    id bigint NOT NULL,
     round_id bigint NOT NULL,
     dance_code text NOT NULL
 );
@@ -7,9 +6,7 @@ CREATE TABLE federated.round_dance (
 GRANT SELECT ON TABLE federated.round_dance TO anonymous;
 
 ALTER TABLE ONLY federated.round_dance
-    ADD CONSTRAINT round_dance_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY federated.round_dance
-    ADD CONSTRAINT round_dance_round_id_dance_code_key UNIQUE (round_id, dance_code);
+    ADD CONSTRAINT round_dance_pkey PRIMARY KEY (round_id, dance_code);
 ALTER TABLE ONLY federated.round_dance
     ADD CONSTRAINT round_dance_dance_code_fkey FOREIGN KEY (dance_code) REFERENCES federated.dance(code);
 ALTER TABLE ONLY federated.round_dance
