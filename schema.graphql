@@ -2807,11 +2807,6 @@ type DeleteEventInstancePayload {
   ): EventInstancesEdge
 
   """
-  Reads a single `TenantLocation` that is related to this `EventInstance`.
-  """
-  location: TenantLocation
-
-  """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
@@ -3445,7 +3440,6 @@ type Event {
   capacity: Int!
   createdAt: Datetime
   description: String!
-  descriptionMember: String!
   enableNotes: Boolean!
 
   """
@@ -3564,7 +3558,6 @@ type Event {
     orderBy: [EventTrainersOrderBy!]
   ): [EventTrainer!]!
   filesLegacy: String!
-  guestPrice: Price
   id: BigInt!
   isLocked: Boolean!
   isPaidByTenant: Boolean!
@@ -3576,7 +3569,6 @@ type Event {
   location: TenantLocation
   locationId: BigInt
   locationText: String!
-  memberPrice: Price
   myRegistrationsList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -3604,7 +3596,6 @@ type Event {
   """Reads a single `Tenant` that is related to this `Event`."""
   tenant: Tenant
   tenantId: BigInt!
-  titleImageLegacy: String
   type: EventType!
   updatedAt: Datetime
 }
@@ -3717,17 +3708,11 @@ input EventCondition {
   """Checks for equality with the object’s `description` field."""
   description: String
 
-  """Checks for equality with the object’s `descriptionMember` field."""
-  descriptionMember: String
-
   """Checks for equality with the object’s `enableNotes` field."""
   enableNotes: Boolean
 
   """Checks for equality with the object’s `filesLegacy` field."""
   filesLegacy: String
-
-  """Checks for equality with the object’s `guestPrice` field."""
-  guestPrice: PriceInput
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -3750,9 +3735,6 @@ input EventCondition {
   """Checks for equality with the object’s `locationText` field."""
   locationText: String
 
-  """Checks for equality with the object’s `memberPrice` field."""
-  memberPrice: PriceInput
-
   """Checks for equality with the object’s `name` field."""
   name: String
 
@@ -3767,9 +3749,6 @@ input EventCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
-
-  """Checks for equality with the object’s `titleImageLegacy` field."""
-  titleImageLegacy: String
 
   """Checks for equality with the object’s `type` field."""
   type: EventType
@@ -3929,10 +3908,8 @@ input EventInput {
   capacity: Int
   createdAt: Datetime
   description: String!
-  descriptionMember: String
   enableNotes: Boolean
   filesLegacy: String
-  guestPrice: PriceInput
   id: BigInt
   isLocked: Boolean
   isPaidByTenant: Boolean
@@ -3940,13 +3917,11 @@ input EventInput {
   isVisible: Boolean
   locationId: BigInt
   locationText: String!
-  memberPrice: PriceInput
   name: String!
   paymentRecipientId: BigInt
   paymentType: EventPaymentType
   summary: String
   tenantId: BigInt
-  titleImageLegacy: String
   type: EventType
   updatedAt: Datetime
 }
@@ -4008,12 +3983,6 @@ type EventInstance {
   id: BigInt!
   isCancelled: Boolean!
 
-  """
-  Reads a single `TenantLocation` that is related to this `EventInstance`.
-  """
-  location: TenantLocation
-  locationId: BigInt
-
   """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
     """
@@ -4074,9 +4043,6 @@ input EventInstanceCondition {
   """Checks for equality with the object’s `isCancelled` field."""
   isCancelled: Boolean
 
-  """Checks for equality with the object’s `locationId` field."""
-  locationId: BigInt
-
   """Checks for equality with the object’s `range` field."""
   range: DatetimeRangeInput
 
@@ -4101,7 +4067,6 @@ input EventInstancePatch {
   eventId: BigInt
   id: BigInt
   isCancelled: Boolean
-  locationId: BigInt
   range: DatetimeRangeInput
   since: Datetime
   tenantId: BigInt
@@ -4217,8 +4182,6 @@ enum EventInstancesOrderBy {
   ID_DESC
   IS_CANCELLED_ASC
   IS_CANCELLED_DESC
-  LOCATION_ID_ASC
-  LOCATION_ID_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -4346,10 +4309,8 @@ input EventPatch {
   capacity: Int
   createdAt: Datetime
   description: String
-  descriptionMember: String
   enableNotes: Boolean
   filesLegacy: String
-  guestPrice: PriceInput
   id: BigInt
   isLocked: Boolean
   isPaidByTenant: Boolean
@@ -4357,13 +4318,11 @@ input EventPatch {
   isVisible: Boolean
   locationId: BigInt
   locationText: String
-  memberPrice: PriceInput
   name: String
   paymentRecipientId: BigInt
   paymentType: EventPaymentType
   summary: String
   tenantId: BigInt
-  titleImageLegacy: String
   type: EventType
   updatedAt: Datetime
 }
@@ -4874,14 +4833,10 @@ enum EventsOrderBy {
   CREATED_AT_DESC
   DESCRIPTION_ASC
   DESCRIPTION_DESC
-  DESCRIPTION_MEMBER_ASC
-  DESCRIPTION_MEMBER_DESC
   ENABLE_NOTES_ASC
   ENABLE_NOTES_DESC
   FILES_LEGACY_ASC
   FILES_LEGACY_DESC
-  GUEST_PRICE_ASC
-  GUEST_PRICE_DESC
   ID_ASC
   ID_DESC
   IS_LOCKED_ASC
@@ -4896,8 +4851,6 @@ enum EventsOrderBy {
   LOCATION_ID_DESC
   LOCATION_TEXT_ASC
   LOCATION_TEXT_DESC
-  MEMBER_PRICE_ASC
-  MEMBER_PRICE_DESC
   NAME_ASC
   NAME_DESC
   NATURAL
@@ -4911,8 +4864,6 @@ enum EventsOrderBy {
   SUMMARY_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
-  TITLE_IMAGE_LEGACY_ASC
-  TITLE_IMAGE_LEGACY_DESC
   TYPE_ASC
   TYPE_DESC
   UPDATED_AT_ASC
@@ -5390,11 +5341,6 @@ type MoveEventInstancePayload {
     """The method to use when ordering `EventInstance`."""
     orderBy: [EventInstancesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventInstancesEdge
-
-  """
-  Reads a single `TenantLocation` that is related to this `EventInstance`.
-  """
-  location: TenantLocation
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -6162,7 +6108,6 @@ type Payment {
   ): [PaymentRecipient!]!
   specificSymbol: String
   status: PaymentStatus!
-  tags: [String]!
 
   """Reads a single `Tenant` that is related to this `Payment`."""
   tenant: Tenant
@@ -6236,9 +6181,6 @@ input PaymentCondition {
 
   """Checks for equality with the object’s `status` field."""
   status: PaymentStatus
-
-  """Checks for equality with the object’s `tags` field."""
-  tags: [String]
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
@@ -6319,7 +6261,6 @@ input PaymentPatch {
   paidAt: Datetime
   specificSymbol: String
   status: PaymentStatus
-  tags: [String]
   tenantId: BigInt
   updatedAt: Datetime
   variableSymbol: String
@@ -9651,23 +9592,6 @@ type TenantLocation {
   createdAt: Datetime!
   description: String!
 
-  """Reads and enables pagination through a set of `EventInstance`."""
-  eventInstancesByLocationIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!]
-  ): [EventInstance!]!
-
   """Reads and enables pagination through a set of `Event`."""
   eventsByLocationId(
     """Read all values in the set after (below) this cursor."""
@@ -10606,11 +10530,6 @@ type UpdateEventInstancePayload {
 
   """The `EventInstance` that was updated by this mutation."""
   eventInstance: EventInstance
-
-  """
-  Reads a single `TenantLocation` that is related to this `EventInstance`.
-  """
-  location: TenantLocation
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.

@@ -1,5 +1,4 @@
-drop function if exists upsert_event(info event, instances event_instance[], trainers event_trainer[], cohorts event_target_cohort[], registrations event_registration[]);
-drop function if exists upsert_event(info event_type_input, instances event_instance_type_input[], trainers event_trainer_type_input[], cohorts event_target_cohort_type_input[], registrations event_registration_type_input[]);
+drop function if exists upsert_event;
 
 drop type if exists event_type_input;
 drop type if exists event_instance_type_input;
@@ -13,7 +12,6 @@ CREATE TYPE public.event_type_input AS (
   name text,
   summary text,
   description text,
-  description_member text,
   type public.event_type,
   location_id bigint,
   location_text text,
@@ -78,7 +76,6 @@ begin
       name=info.name,
       summary=info.summary,
       description=info.description,
-      description_member=info.description_member,
       type=info.type,
       location_id=info.location_id,
       location_text=info.location_text,
@@ -97,7 +94,6 @@ begin
       name,
       summary,
       description,
-      description_member,
       type,
       location_id,
       location_text,
@@ -114,7 +110,6 @@ begin
       info.name,
       info.summary,
       info.description,
-      info.description_member,
       info.type,
       info.location_id,
       info.location_text,

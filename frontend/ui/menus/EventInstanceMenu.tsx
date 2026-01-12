@@ -69,7 +69,6 @@ export function EventInstanceMenu({
           name: event.name,
           summary: event.summary,
           description: event.description,
-          descriptionMember: event.descriptionMember,
           type: event.type,
           locationId: event.location?.id ?? null,
           locationText: event.locationText || '',

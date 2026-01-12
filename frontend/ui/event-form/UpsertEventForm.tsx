@@ -166,7 +166,6 @@ export function UpsertEventForm({
           name: values.name,
           summary: values.summary,
           description: values.description,
-          descriptionMember: values.descriptionMember,
           type: values.type,
           locationId:
             !values.locationId || ['none', 'other'].includes(values.locationId)

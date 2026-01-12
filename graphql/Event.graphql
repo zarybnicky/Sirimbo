@@ -3,7 +3,6 @@ fragment Event on Event {
   type
   summary
   description
-  descriptionMember
   name
   capacity
   remainingPersonSpots

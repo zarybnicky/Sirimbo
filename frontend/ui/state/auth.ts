@@ -5,7 +5,7 @@ import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import deepEqual from 'fast-deep-equal';
 import { tenantCatalog } from '@/tenant/catalog';
 import type { TenantConfig } from '@/tenant/types';
-import { getCookie } from 'cookies-next/client';
+import { getCookie, setCookie } from 'cookies-next/client';
 
 interface AuthState {
   user: null | {
@@ -111,6 +111,17 @@ export const tokenAtom = atom<string | null, [string | null], void>(
     if (get(baseTokenAtom) !== nextValue) {
       set(baseTokenAtom, nextValue);
       storage.setItem('token', nextValue);
+
+      // For file uploads, only /f path but allow on subdomains
+      if (typeof window !== 'undefined') {
+        setCookie('auth', nextValue, {
+          path: '/f',
+          sameSite: 'lax',
+          secure: window.location.protocol === 'https:',
+          domain: window.location.hostname,
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+        });
+      }
     }
   },
 );

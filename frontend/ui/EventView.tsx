@@ -53,7 +53,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
     }[] = [];
     if (!event) return [];
 
-    if (event.description || (auth.user?.id && event.descriptionMember)) {
+    if (event.description) {
       tabs.push({
         id: 'info',
         title: 'Informace',
@@ -116,11 +116,9 @@ export function EventView({ event }: { event: EventFullFragment }) {
 }
 
 function EventInfo({ event }: { event: EventFragment }) {
-  const auth = useAuth();
   return (
     <div>
       <RichTextView value={event.description} />
-      {!!auth.user && <RichTextView value={event.descriptionMember} />}
     </div>
   );
 }

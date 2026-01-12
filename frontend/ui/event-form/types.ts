@@ -7,7 +7,6 @@ export const EventForm = z.object({
   type: z.enum(['CAMP', 'LESSON', 'RESERVATION', 'HOLIDAY', 'GROUP']),
   summary: z.string().prefault(''),
   description: z.string().prefault(''),
-  descriptionMember: z.string().prefault(''),
   locationId: z.string().nullish().prefault(null),
   locationText: z.string().prefault(''),
   capacity: z.number().nullish().prefault(0),

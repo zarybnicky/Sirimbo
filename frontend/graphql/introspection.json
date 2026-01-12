@@ -5020,15 +5020,6 @@
             ]
           },
           {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "query",
             "type": {
               "kind": "OBJECT",
@@ -6117,17 +6108,6 @@
             "args": []
           },
           {
-            "name": "descriptionMember",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "enableNotes",
             "type": {
               "kind": "NON_NULL",
@@ -6483,15 +6463,6 @@
             "args": []
           },
           {
-            "name": "guestPrice",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Price",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "id",
             "type": {
               "kind": "NON_NULL",
@@ -6579,15 +6550,6 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
-            },
-            "args": []
-          },
-          {
-            "name": "memberPrice",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Price",
-              "ofType": null
             },
             "args": []
           },
@@ -6734,14 +6696,6 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
-            },
-            "args": []
-          },
-          {
-            "name": "titleImageLegacy",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },
@@ -7351,23 +7305,6 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
-            },
-            "args": []
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "locationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },
@@ -9489,15 +9426,6 @@
             ]
           },
           {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "query",
             "type": {
               "kind": "OBJECT",
@@ -11599,20 +11527,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "tags",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
               }
             },
             "args": []
@@ -20756,59 +20670,6 @@
             "args": []
           },
           {
-            "name": "eventInstancesByLocationIdList",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "EventInstance",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "eventsByLocationId",
             "type": {
               "kind": "NON_NULL",
@@ -22170,15 +22031,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
               "ofType": null
             },
             "args": []

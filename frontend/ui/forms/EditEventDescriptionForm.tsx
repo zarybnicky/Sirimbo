@@ -13,7 +13,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 const Form = z.object({
   summary: z.string(),
   description: z.string(),
-  descriptionMember: z.string(),
 });
 
 type NonEmptyArray<T> = [T, ...T[]];
@@ -30,15 +29,10 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
   const values = getValues();
 
   React.useEffect(() => {
-    if (
-      !getValues('summary') &&
-      !getValues('description') &&
-      !getValues('descriptionMember')
-    ) {
+    if (!getValues('summary') && !getValues('description')) {
       reset({
         summary: event.summary,
         description: event.description,
-        descriptionMember: event.descriptionMember,
       });
     }
   }, [reset, getValues, event]);
@@ -74,18 +68,6 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
           initialState={values.description || event?.description}
           control={control}
           key="description"
-        />
-      ),
-    },
-    {
-      id: 'descriptionMember',
-      title: 'Další info jen pro členy',
-      contents: () => (
-        <RichTextEditor
-          name="descriptionMember"
-          initialState={values.descriptionMember || event?.descriptionMember}
-          control={control}
-          key="descriptionMember"
         />
       ),
     },
