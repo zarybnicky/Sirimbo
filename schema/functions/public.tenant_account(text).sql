@@ -15,4 +15,6 @@ CREATE FUNCTION public.tenant_account(in_currency text, OUT acc public.account) 
   LIMIT 1;
 $$;
 
+COMMENT ON FUNCTION public.tenant_account(in_currency text, OUT acc public.account) IS '@omit';
+
 GRANT ALL ON FUNCTION public.tenant_account(in_currency text, OUT acc public.account) TO anonymous;

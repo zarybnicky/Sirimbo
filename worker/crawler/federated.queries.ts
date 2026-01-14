@@ -1,7 +1,7 @@
 /** Types generated for queries found in "crawler/federated.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
-export type competitor_type = 'couple' | 'duo' | 'formation' | 'solo' | 'team';
+export type competitor_type = 'couple' | 'duo' | 'formation' | 'solo' | 'team' | 'trio';
 
 export type gender = 'female' | 'male' | 'other' | 'unknown';
 

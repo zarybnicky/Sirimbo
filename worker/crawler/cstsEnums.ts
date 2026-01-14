@@ -5,7 +5,7 @@ export const numberAsEnum = <T extends string>(enumDict: { [key in T]: number })
   z.union([
     z
       .number()
-      .refine((x) => Object.values(enumDict).includes(x as any))
+      .refine((x) => Object.values(enumDict).includes(x))
       .transform((x) => Object.entries(enumDict).find(([_, n]) => x === n)?.[0]! as T),
     z
       .string()
@@ -41,32 +41,45 @@ export const ranklistType: { [key in RanklistType]: number } = {
 type CompetitorType =
   | 'Couple'
   | 'SoloDancer'
-  | 'Duo'
+  | 'DuoF'
   | 'Group'
   | 'ProAm'
   | 'Team'
   | 'Formation'
   | 'SmallTeam'
-  | 'BigTeam';
+  | 'BigTeam'
+  | 'SoloM'
+  | 'SoloF'
+  | 'Trio'
+  | 'TrioF';
 
 export const competitorType: { [key in CompetitorType]: number } = {
   Couple: 1,
   SoloDancer: 2,
-  Duo: 3,
+  DuoF: 3,
   Group: 4,
   ProAm: 5,
   Team: 6,
   Formation: 7,
   SmallTeam: 8,
   BigTeam: 9,
+  SoloM: 10,
+  SoloF: 11,
+  Trio: 12,
+  TrioF: 13,
 };
 
 export const mapCompetitorType = (type: CompetitorType): competitor_type => {
   switch (type) {
-    case 'Duo':
+    case 'DuoF':
       return 'duo';
     case 'SoloDancer':
+    case 'SoloM':
+    case 'SoloF':
       return 'solo';
+    case 'Trio':
+    case 'TrioF':
+      return 'trio';
     case 'Formation':
       return 'formation';
     case 'Group':

@@ -19,7 +19,7 @@ const rankingPointsSchema = z.object({
   partnerIdt: z.number().optional(),
   series: z.string(),
   discipline: z.string(),
-  competitors: z.enum(['Couple', 'SoloDancer', 'Duo', 'DuoF', 'DuoM']),
+  competitors: z.enum(['Couple', 'SoloDancer', 'SoloM', 'SoloF', 'DuoF']),
   competitorId: z.number(),
   rankingAge: z.string(),
   rankingPointsAge: z.string(),
@@ -135,11 +135,11 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     const competitorId =
       rp.competitors === 'Couple'
         ? await loadCstsCouple(data, rp, client, mainAthleteId)
-        : rp.competitors === 'Duo' ||
-            rp.competitors === 'DuoF' ||
-            rp.competitors === 'DuoM'
+        : rp.competitors === 'DuoF'
           ? await loadCstsDuo(data, rp, client, mainAthleteId)
-          : rp.competitors === 'SoloDancer'
+          : rp.competitors === 'SoloDancer' ||
+              rp.competitors === 'SoloM' ||
+              rp.competitors === 'SoloF'
             ? await loadCstsSolo(data, rp, client, mainAthleteId)
             : assertUnreachable(rp.competitors);
 
