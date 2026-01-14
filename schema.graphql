@@ -140,15 +140,6 @@ input AccountCondition {
   updatedAt: Datetime
 }
 
-"""A `Account` edge in the connection."""
-type AccountsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Account` at the end of the edge."""
-  node: Account!
-}
-
 """Methods to use when ordering `Account`."""
 enum AccountsOrderBy {
   CREATED_AT_ASC
@@ -5761,12 +5752,6 @@ type Mutation {
     """
     input: OtpLoginInput!
   ): OtpLoginPayload
-  personAccount(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: PersonAccountInput!
-  ): PersonAccountPayload
   registerToEventMany(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5825,12 +5810,6 @@ type Mutation {
     """
     input: SystemAdminUpdateTenantInput!
   ): SystemAdminUpdateTenantPayload
-  tenantAccount(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: TenantAccountInput!
-  ): TenantAccountPayload
 
   """Updates a single `Aktuality` using a unique key and a patch."""
   updateAktuality(
@@ -6778,45 +6757,6 @@ type Person {
     """Skip the first `n` values."""
     offset: Int
   ): [PersonWeeklyAttendanceRecord!]
-}
-
-"""All input for the `personAccount` mutation."""
-input PersonAccountInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  inCurrency: String
-  pId: BigInt
-}
-
-"""The output of our `personAccount` mutation."""
-type PersonAccountPayload {
-  acc: Account
-
-  """An edge for our `Account`. May be used by Relay 1."""
-  accountEdge(
-    """The method to use when ordering `Account`."""
-    orderBy: [AccountsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AccountsEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Person` that is related to this `Account`."""
-  person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `Account`."""
-  tenant: Tenant
 }
 
 """
@@ -9408,44 +9348,6 @@ type Tenant {
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersConnection!
-}
-
-"""All input for the `tenantAccount` mutation."""
-input TenantAccountInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  inCurrency: String
-}
-
-"""The output of our `tenantAccount` mutation."""
-type TenantAccountPayload {
-  acc: Account
-
-  """An edge for our `Account`. May be used by Relay 1."""
-  accountEdge(
-    """The method to use when ordering `Account`."""
-    orderBy: [AccountsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AccountsEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Person` that is related to this `Account`."""
-  person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Tenant` that is related to this `Account`."""
-  tenant: Tenant
 }
 
 type TenantAdministrator {
