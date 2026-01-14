@@ -16,9 +16,8 @@ import currentUserPlugin from './plugins/current-user.ts';
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 async function findTenantId(req: express.Request): Promise<string> {
-  if (req.headersDistinct['x-tenant-id']?.length) {
-    return req.headersDistinct['x-tenant-id'][0];
-  }
+  const tenantId = req.get('x-tenant-id');
+  if (tenantId) return tenantId;
 
   const {
     rows: [host],
@@ -26,8 +25,10 @@ async function findTenantId(req: express.Request): Promise<string> {
     'select id from tenant where $1 = any (origins) or $2 = any (origins)',
     [req.headers.host, req.headers.origin],
   );
-
-  return host ? host.id : '1';
+  if (host) {
+    return host.id;
+  }
+  return '1';
 }
 
 async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
@@ -44,35 +45,42 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
     'jwt.claims.my_couple_ids': '[]',
   };
 
+  let token;
+
   const authorization = req.get('authorization');
   if (authorization?.toLowerCase().startsWith('bearer ')) {
-    const token = authorization.substring(7);
-    const claims = jwt.verify(token, process.env.JWT_SECRET || '', {
-      ignoreExpiration: true,
-    }) as jwt.JwtPayload;
-    settings.role = claims.is_system_admin
-      ? 'system_admin'
-      : claims.is_admin
-        ? 'administrator'
-        : claims.is_trainer
-          ? 'trainer'
-          : claims.is_member
-            ? 'member'
-            : 'anonymous';
-
-    for (const key in claims) {
-      if (['exp', 'aud', 'iat', 'iss'].includes(key)) continue;
-      if (Array.isArray(claims[key])) {
-        settings[`jwt.claims.${key}`] =
-          '[' + claims[key].map((x: string) => `${x}`).join(',') + ']';
-      } else {
-        settings[`jwt.claims.${key}`] = claims[key];
-      }
-    }
-
-    // FIXME: Or verify claims.tenant === request.tenant, otherwise log out?
-    settings['jwt.claims.tenant_id'] = tenantId;
+    token = authorization.substring(7);
   }
+  if (!token && req.cookies.auth) {
+    token = req.cookies.auth;
+  }
+  if (!token) return settings;
+
+  const claims = jwt.verify(token, process.env.JWT_SECRET || '', {
+    ignoreExpiration: true,
+  }) as jwt.JwtPayload;
+
+  settings.role = claims.is_system_admin
+    ? 'system_admin'
+    : claims.is_admin
+      ? 'administrator'
+      : claims.is_trainer
+        ? 'trainer'
+        : claims.is_member
+          ? 'member'
+          : 'anonymous';
+
+  for (const key in claims) {
+    if (['exp', 'aud', 'iat', 'iss'].includes(key)) continue;
+    if (Array.isArray(claims[key])) {
+      settings[`jwt.claims.${key}`] = '{' + claims[key].map(String).join(',') + '}';
+    } else {
+      settings[`jwt.claims.${key}`] = claims[key];
+    }
+  }
+
+  // FIXME: Or verify claims.tenant === request.tenant, otherwise log out?
+  settings['jwt.claims.tenant_id'] = tenantId;
 
   return settings;
 }
