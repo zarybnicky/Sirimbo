@@ -39,6 +39,7 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
   const typeNodes: Node[] = [];
   const creates: CreateStmt[] = [];
   const extraByTable = new Map<string, Constraint[]>();
+  const identityByTableCol = new Map<string, Map<string, Constraint[]>>();
 
   // 1) collect: types/domains + CREATE TABLE + ALTER TABLE ADD CONSTRAINT
   for (const raw of stmts) {
@@ -70,15 +71,35 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
 
         const subtype = String(cmd.subtype ?? '');
         if (subtype.includes('UsingIndex')) continue;
-        if (subtype !== 'AT_AddConstraint' && subtype !== 'AT_AddConstraintRecurse')
-          continue;
 
-        if (!cmd.def || !('Constraint' in cmd.def)) continue;
-        const cons: Constraint = cmd.def.Constraint;
-
-        const arr = extraByTable.get(t);
-        if (arr) arr.push(cons);
-        else extraByTable.set(t, [cons]);
+        if (subtype === 'AT_AddConstraint' || subtype === 'AT_AddConstraintRecurse') {
+          // ALTER TABLE ... ADD CONSTRAINT ...
+          if (!cmd.def || !('Constraint' in cmd.def)) continue;
+          const cons: Constraint = cmd.def.Constraint;
+          const arr = extraByTable.get(t);
+          if (arr) arr.push(cons);
+          else extraByTable.set(t, [cons]);
+        } else if (subtype === 'AT_AddIdentity') {
+          // ALTER TABLE ... ALTER COLUMN <col> ADD GENERATED ... AS IDENTITY ...
+          if (!cmd.name) continue;
+          if (!cmd.def || !('Constraint' in cmd.def)) continue;
+          const cons: Constraint = cmd.def.Constraint;
+          if (String(cons.contype ?? '') === 'CONSTR_IDENTITY') {
+            let byCol = identityByTableCol.get(t);
+            if (!byCol) {
+              byCol = new Map();
+              identityByTableCol.set(t, byCol);
+            }
+            // minimal identity: GENERATED {ALWAYS|BY DEFAULT} AS IDENTITY
+            const minimal: Constraint = {
+              contype: cons.contype,
+              generated_when: cons.generated_when,
+            };
+            const list = byCol.get(cmd.name);
+            if (list) list.push(minimal);
+            else byCol.set(cmd.name, [minimal]);
+          }
+        }
       }
     }
   }
@@ -101,6 +122,20 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
       } else {
         otherElts.push(e);
       }
+    }
+
+    // Fold ALTER COLUMN ... ADD GENERATED ... AS IDENTITY into ColumnDef.constraints
+    for (const [colName, consList] of identityByTableCol.get(t) ?? []) {
+      const col = colByName.get(colName);
+      if (!col) continue;
+      col.constraints ??= [];
+      // remove any existing identity constraint; keep the last applied one
+      col.constraints = col.constraints.filter((w) => {
+        if (!('Constraint' in w)) return true;
+        return String(w.Constraint.contype ?? '') !== 'CONSTR_IDENTITY';
+      });
+      const last = consList.at(-1)!;
+      col.constraints.push({ Constraint: last });
     }
 
     const allCons = [...tableCons, ...(extraByTable.get(t) ?? [])];
