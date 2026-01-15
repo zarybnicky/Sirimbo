@@ -73,10 +73,6 @@ query PersonAttendance($id: BigInt!) {
         }
       }
     }
-    weeklyAttendanceList {
-      week
-      eventCount
-    }
   }
 }
 

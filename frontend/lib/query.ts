@@ -174,7 +174,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     EventInstanceApproxPriceRecord: () => null,
     EventInstanceAttendanceSummaryRecord: () => null,
     EventOverlapsConflict: () => null,
-    PersonWeeklyAttendanceRecord: () => null,
     Price: () => null,
     ScoreboardRecord: (x) => x.personId || null,
     TenantSetting: (x) => x.tenantId || null,

@@ -15,7 +15,11 @@ begin
       FROM event_target_cohort etc
       JOIN event_registration er ON er.event_id = etc.event_id
       WHERE etc.cohort_id = NEW.cohort_id
-        AND er.person_id = NEW.person_id
+        AND (er.person_id = NEW.person_id OR (
+          er.couple_id IS NOT NULL AND EXISTS (
+            SELECT 1 FROM couple c WHERE c.id = er.couple_id AND NEW.person_id IN (c.man_id, c.woman_id))
+          )
+        )
     ),
     future_att AS (
       SELECT ea.id, ea.registration_id
@@ -34,11 +38,11 @@ begin
     ),
     deletable AS (
       -- After the UPDATE, delete registrations where:
-      --   (a) there exists at least one future attendance, and
-      --   (b) all future attendances are cancelled.
+      --   (a) there exists at least one attendance, and
+      --   (b) all attendances are cancelled.
       SELECT fa.registration_id
-      FROM future_att fa
-      JOIN event_attendance ea ON ea.id = fa.id
+      FROM event_attendance ea
+      JOIN affected fa ON ea.registration_id = fa.registration_id
       GROUP BY fa.registration_id
       HAVING count(*) > 0
          AND bool_and(ea.status = 'cancelled')

@@ -15,6 +15,11 @@ CREATE TABLE public.tenant_trainer (
     guest_payout_45min public.price DEFAULT NULL::public.price_type,
     create_payout_payments boolean DEFAULT true NOT NULL,
     status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    member_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((member_price_45min).amount) STORED,
+    member_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((member_payout_45min).amount) STORED,
+    guest_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_price_45min).amount) STORED,
+    guest_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_payout_45min).amount) STORED,
+    currency text GENERATED ALWAYS AS ((member_price_45min).currency) STORED,
     CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
 );
 

@@ -1284,11 +1284,13 @@ type CohortSubscription {
   account: Account
   accountId: BigInt!
   active: Boolean!
+  amount: BigFloat
 
   """Reads a single `Cohort` that is related to this `CohortSubscription`."""
   cohort: Cohort
   cohortId: BigInt!
   createdAt: Datetime!
+  currency: String
   id: BigInt!
   interval: Interval!
 
@@ -1328,11 +1330,17 @@ input CohortSubscriptionCondition {
   """Checks for equality with the object’s `active` field."""
   active: Boolean
 
+  """Checks for equality with the object’s `amount` field."""
+  amount: BigFloat
+
   """Checks for equality with the object’s `cohortId` field."""
   cohortId: BigInt
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
+
+  """Checks for equality with the object’s `currency` field."""
+  currency: String
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -1359,10 +1367,14 @@ enum CohortSubscriptionsOrderBy {
   ACCOUNT_ID_DESC
   ACTIVE_ASC
   ACTIVE_DESC
+  AMOUNT_ASC
+  AMOUNT_DESC
   COHORT_ID_ASC
   COHORT_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  CURRENCY_ASC
+  CURRENCY_DESC
   ID_ASC
   ID_DESC
   INTERVAL_ASC
@@ -4074,7 +4086,6 @@ type EventInstanceTrainer {
   """
   instance: EventInstance
   instanceId: BigInt!
-  lessonPrice: Price
   name: String
 
   """
@@ -4105,9 +4116,6 @@ input EventInstanceTrainerCondition {
   """Checks for equality with the object’s `instanceId` field."""
   instanceId: BigInt
 
-  """Checks for equality with the object’s `lessonPrice` field."""
-  lessonPrice: PriceInput
-
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
@@ -4132,8 +4140,6 @@ enum EventInstanceTrainersOrderBy {
   ID_DESC
   INSTANCE_ID_ASC
   INSTANCE_ID_DESC
-  LESSON_PRICE_ASC
-  LESSON_PRICE_DESC
   NATURAL
   PERSON_ID_ASC
   PERSON_ID_DESC
@@ -4673,7 +4679,6 @@ type EventTrainer {
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]!
   id: BigInt!
-  lessonPrice: Price
   lessonsOffered: Int!
   lessonsRemaining: Int
   name: String
@@ -4702,9 +4707,6 @@ input EventTrainerCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
-  """Checks for equality with the object’s `lessonPrice` field."""
-  lessonPrice: PriceInput
-
   """Checks for equality with the object’s `lessonsOffered` field."""
   lessonsOffered: Int
 
@@ -4725,7 +4727,6 @@ input EventTrainerPatch {
   createdAt: Datetime
   eventId: BigInt
   id: BigInt
-  lessonPrice: PriceInput
   lessonsOffered: Int
   personId: BigInt
   tenantId: BigInt
@@ -4749,8 +4750,6 @@ enum EventTrainersOrderBy {
   ID_DESC
   LESSONS_OFFERED_ASC
   LESSONS_OFFERED_DESC
-  LESSON_PRICE_ASC
-  LESSON_PRICE_DESC
   NATURAL
   PERSON_ID_ASC
   PERSON_ID_DESC
@@ -9768,13 +9767,18 @@ enum TenantSettingsOrderBy {
 type TenantTrainer {
   createPayoutPayments: Boolean!
   createdAt: Datetime!
+  currency: String
   description: String!
   guestPayout45Min: Price
+  guestPayout45MinAmount: BigFloat
   guestPrice45Min: Price
+  guestPrice45MinAmount: BigFloat
   id: BigInt!
   isVisible: Boolean
   memberPayout45Min: Price
+  memberPayout45MinAmount: BigFloat
   memberPrice45Min: Price
+  memberPrice45MinAmount: BigFloat
 
   """Reads a single `Person` that is related to this `TenantTrainer`."""
   person: Person
@@ -9800,14 +9804,23 @@ input TenantTrainerCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
+  """Checks for equality with the object’s `currency` field."""
+  currency: String
+
   """Checks for equality with the object’s `description` field."""
   description: String
 
   """Checks for equality with the object’s `guestPayout45Min` field."""
   guestPayout45Min: PriceInput
 
+  """Checks for equality with the object’s `guestPayout45MinAmount` field."""
+  guestPayout45MinAmount: BigFloat
+
   """Checks for equality with the object’s `guestPrice45Min` field."""
   guestPrice45Min: PriceInput
+
+  """Checks for equality with the object’s `guestPrice45MinAmount` field."""
+  guestPrice45MinAmount: BigFloat
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -9818,8 +9831,14 @@ input TenantTrainerCondition {
   """Checks for equality with the object’s `memberPayout45Min` field."""
   memberPayout45Min: PriceInput
 
+  """Checks for equality with the object’s `memberPayout45MinAmount` field."""
+  memberPayout45MinAmount: BigFloat
+
   """Checks for equality with the object’s `memberPrice45Min` field."""
   memberPrice45Min: PriceInput
+
+  """Checks for equality with the object’s `memberPrice45MinAmount` field."""
+  memberPrice45MinAmount: BigFloat
 
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
@@ -9844,12 +9863,17 @@ input TenantTrainerCondition {
 input TenantTrainerInput {
   createPayoutPayments: Boolean
   createdAt: Datetime
+  currency: String
   description: String
   guestPayout45Min: PriceInput
+  guestPayout45MinAmount: BigFloat
   guestPrice45Min: PriceInput
+  guestPrice45MinAmount: BigFloat
   isVisible: Boolean
   memberPayout45Min: PriceInput
+  memberPayout45MinAmount: BigFloat
   memberPrice45Min: PriceInput
+  memberPrice45MinAmount: BigFloat
   personId: BigInt!
   since: Datetime
   status: RelationshipStatus
@@ -9864,12 +9888,17 @@ Represents an update to a `TenantTrainer`. Fields that are set will be updated.
 input TenantTrainerPatch {
   createPayoutPayments: Boolean
   createdAt: Datetime
+  currency: String
   description: String
   guestPayout45Min: PriceInput
+  guestPayout45MinAmount: BigFloat
   guestPrice45Min: PriceInput
+  guestPrice45MinAmount: BigFloat
   isVisible: Boolean
   memberPayout45Min: PriceInput
+  memberPayout45MinAmount: BigFloat
   memberPrice45Min: PriceInput
+  memberPrice45MinAmount: BigFloat
   personId: BigInt
   since: Datetime
   status: RelationshipStatus
@@ -9884,18 +9913,28 @@ enum TenantTrainersOrderBy {
   CREATED_AT_DESC
   CREATE_PAYOUT_PAYMENTS_ASC
   CREATE_PAYOUT_PAYMENTS_DESC
+  CURRENCY_ASC
+  CURRENCY_DESC
   DESCRIPTION_ASC
   DESCRIPTION_DESC
+  GUEST_PAYOUT_45MIN_AMOUNT_ASC
+  GUEST_PAYOUT_45MIN_AMOUNT_DESC
   GUEST_PAYOUT_45MIN_ASC
   GUEST_PAYOUT_45MIN_DESC
+  GUEST_PRICE_45MIN_AMOUNT_ASC
+  GUEST_PRICE_45MIN_AMOUNT_DESC
   GUEST_PRICE_45MIN_ASC
   GUEST_PRICE_45MIN_DESC
   ID_ASC
   ID_DESC
   IS_VISIBLE_ASC
   IS_VISIBLE_DESC
+  MEMBER_PAYOUT_45MIN_AMOUNT_ASC
+  MEMBER_PAYOUT_45MIN_AMOUNT_DESC
   MEMBER_PAYOUT_45MIN_ASC
   MEMBER_PAYOUT_45MIN_DESC
+  MEMBER_PRICE_45MIN_AMOUNT_ASC
+  MEMBER_PRICE_45MIN_AMOUNT_DESC
   MEMBER_PRICE_45MIN_ASC
   MEMBER_PRICE_45MIN_DESC
   NATURAL

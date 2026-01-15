@@ -32,10 +32,9 @@ CREATE TABLE public.person (
   bio text DEFAULT ''::text NOT NULL,
   email public.citext,
   phone text,
-  name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF (TRIM(BOTH FROM prefix_title), ''::text), NULLIF (TRIM(BOTH FROM first_name), ''::text), NULLIF (TRIM(BOTH FROM last_name), ''::text), CASE
-    WHEN suffix_title IS NULL
-      OR TRIM(BOTH FROM suffix_title) = ''::text THEN NULL::text
-    ELSE public.immutable_concat_ws(' '::text, VARIADIC ARRAY[','::text, TRIM(BOTH FROM suffix_title)])
+  name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF (btrim(prefix_title), ''::text), NULLIF (btrim(first_name), ''::text), NULLIF (btrim(last_name), ''::text), CASE
+    WHEN btrim(suffix_title) = ''::text THEN NULL::text
+    ELSE ', '::text || btrim(suffix_title)
   END])) STORED NOT NULL,
   address public.address_domain,
   external_ids text[]
@@ -170,7 +169,9 @@ CREATE TABLE public.cohort_subscription (
   renews_on timestamp with time zone,
   interval interval DEFAULT '1 mon'::interval NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  amount numeric(19, 4) GENERATED ALWAYS AS ((price).amount) STORED,
+  currency text GENERATED ALWAYS AS ((price).currency) STORED
 );
 
 CREATE TABLE public.form_responses (
@@ -299,7 +300,6 @@ CREATE TABLE public.event_instance_trainer (
     ON DELETE CASCADE,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  lesson_price public.price DEFAULT CAST(NULL AS public.price_type),
   UNIQUE (instance_id, person_id)
 );
 
@@ -383,7 +383,6 @@ CREATE TABLE public.event_trainer (
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   lessons_offered int DEFAULT 0 NOT NULL,
-  lesson_price public.price DEFAULT CAST(NULL AS public.price_type),
   UNIQUE (event_id, person_id)
 );
 
@@ -504,6 +503,11 @@ CREATE TABLE public.tenant_trainer (
   guest_payout_45min public.price DEFAULT CAST(NULL AS public.price_type),
   create_payout_payments boolean DEFAULT true NOT NULL,
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
+  member_price_45min_amount numeric(19, 4) GENERATED ALWAYS AS ((member_price_45min).amount) STORED,
+  member_payout_45min_amount numeric(19, 4) GENERATED ALWAYS AS ((member_payout_45min).amount) STORED,
+  guest_price_45min_amount numeric(19, 4) GENERATED ALWAYS AS ((guest_price_45min).amount) STORED,
+  guest_payout_45min_amount numeric(19, 4) GENERATED ALWAYS AS ((guest_payout_45min).amount) STORED,
+  currency text GENERATED ALWAYS AS ((member_price_45min).currency) STORED,
   CHECK (until > since),
   EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&)
 );

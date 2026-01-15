@@ -2529,6 +2529,14 @@
             "args": []
           },
           {
+            "name": "amount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "cohort",
             "type": {
               "kind": "OBJECT",
@@ -2556,6 +2564,14 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "currency",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -7525,15 +7541,6 @@
             "args": []
           },
           {
-            "name": "lessonPrice",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Price",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "name",
             "type": {
               "kind": "SCALAR",
@@ -8588,15 +8595,6 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
-            },
-            "args": []
-          },
-          {
-            "name": "lessonPrice",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Price",
-              "ofType": null
             },
             "args": []
           },
@@ -20785,6 +20783,14 @@
             "args": []
           },
           {
+            "name": "currency",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "description",
             "type": {
               "kind": "NON_NULL",
@@ -20805,11 +20811,27 @@
             "args": []
           },
           {
+            "name": "guestPayout45MinAmount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "guestPrice45Min",
             "type": {
               "kind": "OBJECT",
               "name": "Price",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "guestPrice45MinAmount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -20842,11 +20864,27 @@
             "args": []
           },
           {
+            "name": "memberPayout45MinAmount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "memberPrice45Min",
             "type": {
               "kind": "OBJECT",
               "name": "Price",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "memberPrice45MinAmount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },

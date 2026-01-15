@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict Rzwi7BOx3RhXCjxGpcm5F1RYdE3Ulqzbw217tk2APlXNRAweVYn69v7jHmOKEpF
+\restrict b9XX3lAuy7igK1VmivhzWpOZstYIMikDUMu2ykaIpKRf5rqkPd2BahOAYT7mJ5h
 
 -- Dumped from database version 17.7
 -- Dumped by pg_dump version 18.1
@@ -80,20 +80,6 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
-
-
---
--- Name: http; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS http WITH SCHEMA public;
-
-
---
--- Name: EXTENSION http; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION http IS 'HTTP client for PostgreSQL, allows web page retrieval inside the database.';
 
 
 --
@@ -1019,6 +1005,11 @@ CREATE TABLE public.tenant_trainer (
     guest_payout_45min public.price DEFAULT NULL::public.price_type,
     create_payout_payments boolean DEFAULT true NOT NULL,
     status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    member_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((member_price_45min).amount) STORED,
+    member_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((member_payout_45min).amount) STORED,
+    guest_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_price_45min).amount) STORED,
+    guest_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_payout_45min).amount) STORED,
+    currency text GENERATED ALWAYS AS ((member_price_45min).currency) STORED,
     CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
 );
 
@@ -1521,6 +1512,20 @@ $$;
 
 
 --
+-- Name: tg_aktuality__author(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_aktuality__author() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  NEW.at_kdo = current_user_id();
+  RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: tg_announcement__after_write(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -1563,6 +1568,22 @@ begin
   end loop;
 
   return null;
+end;
+$$;
+
+
+--
+-- Name: tg_announcement__author(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_announcement__author() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if new.author_id is null then
+    new.author_id = current_user_id();
+  end if;
+  return new;
 end;
 $$;
 
@@ -2622,10 +2643,10 @@ CREATE TABLE public.person (
     bio text DEFAULT ''::text NOT NULL,
     email public.citext,
     phone text,
-    name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF(TRIM(BOTH FROM prefix_title), ''::text), NULLIF(TRIM(BOTH FROM first_name), ''::text), NULLIF(TRIM(BOTH FROM last_name), ''::text),
+    name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF(btrim(prefix_title), ''::text), NULLIF(btrim(first_name), ''::text), NULLIF(btrim(last_name), ''::text),
 CASE
-    WHEN ((suffix_title IS NULL) OR (TRIM(BOTH FROM suffix_title) = ''::text)) THEN NULL::text
-    ELSE public.immutable_concat_ws(' '::text, VARIADIC ARRAY[','::text, TRIM(BOTH FROM suffix_title)])
+    WHEN (btrim(suffix_title) = ''::text) THEN NULL::text
+    ELSE (', '::text || btrim(suffix_title))
 END])) STORED NOT NULL,
     address public.address_domain,
     external_ids text[]
@@ -2821,8 +2842,7 @@ CREATE TABLE public.event_trainer (
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    lessons_offered integer DEFAULT 0 NOT NULL,
-    lesson_price public.price DEFAULT NULL::public.price_type
+    lessons_offered integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2960,7 +2980,9 @@ CREATE TABLE public.cohort_subscription (
     renews_on timestamp with time zone,
     "interval" interval DEFAULT '1 mon'::interval NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    amount numeric(19,4) GENERATED ALWAYS AS ((price).amount) STORED,
+    currency text GENERATED ALWAYS AS ((price).currency) STORED
 );
 
 
@@ -3326,8 +3348,7 @@ CREATE TABLE public.event_instance_trainer (
     instance_id bigint NOT NULL,
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    lesson_price public.price DEFAULT NULL::public.price_type
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -3854,9 +3875,9 @@ CREATE FUNCTION public.invitation_name(token uuid) RETURNS text
     LANGUAGE sql STABLE SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
-  select person_name(person.*)
-  from person_invitation join person on person.id=person_id
-  where access_token=token and used_at is null;
+select person.name
+from person_invitation join person on person.id=person_id
+where access_token=token and used_at is null;
 $$;
 
 
@@ -4061,51 +4082,6 @@ $$;
 --
 
 COMMENT ON FUNCTION public.my_tenants_array() IS '@omit';
-
-
---
--- Name: on_update_author_aktuality(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_author_aktuality() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.at_kdo = current_user_id();
-   RETURN NEW;
-END;
-$$;
-
-
---
--- Name: on_update_author_announcement(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_author_announcement() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  if new.author_id is null then
-    new.author_id = current_user_id();
-  end if;
-  return new;
-end;
-$$;
-
-
---
--- Name: on_update_author_upozorneni(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_author_upozorneni() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.up_kdo = current_user_id();
-   NEW.up_timestamp = now();
-   RETURN NEW;
-END;
-$$;
 
 
 --
@@ -4448,24 +4424,6 @@ CREATE FUNCTION public.person_is_trainer(p public.person) RETURNS boolean
     AS $$
   select exists (select 1 from current_tenant_trainer where person_id = p.id);
 $$;
-
-
---
--- Name: person_name(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_name(p public.person) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select concat_ws(' ', p.prefix_title, p.first_name, p.last_name) || (case p.suffix_title when '' then '' else ', ' || p.suffix_title end);
-$$;
-
-
---
--- Name: FUNCTION person_name(p public.person); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.person_name(p public.person) IS '@omit';
 
 
 --
@@ -5658,17 +5616,6 @@ from federated.person
        join federated.federation_athlete on athlete.id = federation_athlete.athlete_id
 where federation = 'wdsf' and external_id = min::text;
 $$;
-
-
---
--- Name: array_accum(anycompatiblearray); Type: AGGREGATE; Schema: app_private; Owner: -
---
-
-CREATE AGGREGATE app_private.array_accum(anycompatiblearray) (
-    SFUNC = array_cat,
-    STYPE = anycompatiblearray,
-    INITCOND = '{}'
-);
 
 
 --
@@ -10371,6 +10318,20 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.users FOR EACH 
 
 
 --
+-- Name: aktuality _200_author; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_author BEFORE INSERT OR UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg_aktuality__author();
+
+
+--
+-- Name: announcement _200_author; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _200_author BEFORE INSERT OR UPDATE ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg_announcement__author();
+
+
+--
 -- Name: users _200_encrypt_password; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -10536,20 +10497,6 @@ CREATE TRIGGER _900_fix_balance_accounts AFTER INSERT OR DELETE OR UPDATE OF ope
 --
 
 CREATE TRIGGER _900_fix_balance_entries AFTER INSERT OR DELETE OR UPDATE OF amount OR TRUNCATE ON public.posting FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_account_balances__update();
-
-
---
--- Name: aktuality on_update_author; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_author BEFORE UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION public.on_update_author_aktuality();
-
-
---
--- Name: announcement on_update_author_announcement; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_author_announcement BEFORE INSERT OR UPDATE ON public.announcement FOR EACH ROW EXECUTE FUNCTION public.on_update_author_announcement();
 
 
 --
@@ -13688,20 +13635,6 @@ GRANT ALL ON FUNCTION public.get_current_user(version_id text) TO anonymous;
 
 
 --
--- Name: FUNCTION http(request public.http_request); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.http(request public.http_request) TO trainer;
-
-
---
--- Name: FUNCTION http_header(field character varying, value character varying); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.http_header(field character varying, value character varying) TO anonymous;
-
-
---
 -- Name: FUNCTION invitation_info(token uuid); Type: ACL; Schema: public; Owner: -
 --
 
@@ -13881,13 +13814,6 @@ GRANT ALL ON FUNCTION public.person_is_member(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION person_name(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_name(p public.person) TO anonymous;
 
 
 --
@@ -14735,5 +14661,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Rzwi7BOx3RhXCjxGpcm5F1RYdE3Ulqzbw217tk2APlXNRAweVYn69v7jHmOKEpF
+\unrestrict b9XX3lAuy7igK1VmivhzWpOZstYIMikDUMu2ykaIpKRf5rqkPd2BahOAYT7mJ5h
 

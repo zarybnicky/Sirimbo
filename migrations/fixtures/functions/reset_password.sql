@@ -17,7 +17,7 @@ begin
       'email', v_user.u_email,
       'token', v_token.access_token,
       'people', (
-        select jsonb_agg(person_name(person.*))
+        select jsonb_agg(person.name)
         from user_proxy join person on person_id=person.id
         where status = 'active' and user_id = v_user.id
       )

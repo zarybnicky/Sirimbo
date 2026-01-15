@@ -1100,10 +1100,12 @@ export type CohortSubscription = {
   account: Maybe<Account>;
   accountId: Scalars['BigInt']['output'];
   active: Scalars['Boolean']['output'];
+  amount: Maybe<Scalars['BigFloat']['output']>;
   /** Reads a single `Cohort` that is related to this `CohortSubscription`. */
   cohort: Maybe<Cohort>;
   cohortId: Scalars['BigInt']['output'];
   createdAt: Scalars['Datetime']['output'];
+  currency: Maybe<Scalars['String']['output']>;
   id: Scalars['BigInt']['output'];
   interval: Interval;
   /** Reads and enables pagination through a set of `Payment`. */
@@ -1133,10 +1135,14 @@ export type CohortSubscriptionCondition = {
   accountId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `active` field. */
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `amount` field. */
+  amount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `cohortId` field. */
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `currency` field. */
+  currency?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `interval` field. */
@@ -1157,10 +1163,14 @@ export type CohortSubscriptionsOrderBy =
   | 'ACCOUNT_ID_DESC'
   | 'ACTIVE_ASC'
   | 'ACTIVE_DESC'
+  | 'AMOUNT_ASC'
+  | 'AMOUNT_DESC'
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
+  | 'CURRENCY_ASC'
+  | 'CURRENCY_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'INTERVAL_ASC'
@@ -3408,7 +3418,6 @@ export type EventInstanceTrainer = {
   /** Reads a single `EventInstance` that is related to this `EventInstanceTrainer`. */
   instance: Maybe<EventInstance>;
   instanceId: Scalars['BigInt']['output'];
-  lessonPrice: Maybe<Price>;
   name: Maybe<Scalars['String']['output']>;
   /** Reads a single `Person` that is related to this `EventInstanceTrainer`. */
   person: Maybe<Person>;
@@ -3430,8 +3439,6 @@ export type EventInstanceTrainerCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `instanceId` field. */
   instanceId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `lessonPrice` field. */
-  lessonPrice?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -3454,8 +3461,6 @@ export type EventInstanceTrainersOrderBy =
   | 'ID_DESC'
   | 'INSTANCE_ID_ASC'
   | 'INSTANCE_ID_DESC'
-  | 'LESSON_PRICE_ASC'
-  | 'LESSON_PRICE_DESC'
   | 'NATURAL'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
@@ -3888,7 +3893,6 @@ export type EventTrainer = {
   /** Reads and enables pagination through a set of `EventLessonDemand`. */
   eventLessonDemandsByTrainerIdList: Array<EventLessonDemand>;
   id: Scalars['BigInt']['output'];
-  lessonPrice: Maybe<Price>;
   lessonsOffered: Scalars['Int']['output'];
   lessonsRemaining: Maybe<Scalars['Int']['output']>;
   name: Maybe<Scalars['String']['output']>;
@@ -3920,8 +3924,6 @@ export type EventTrainerCondition = {
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `lessonPrice` field. */
-  lessonPrice?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `lessonsOffered` field. */
   lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `personId` field. */
@@ -3937,7 +3939,6 @@ export type EventTrainerPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  lessonPrice?: InputMaybe<PriceInput>;
   lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3961,8 +3962,6 @@ export type EventTrainersOrderBy =
   | 'ID_DESC'
   | 'LESSONS_OFFERED_ASC'
   | 'LESSONS_OFFERED_DESC'
-  | 'LESSON_PRICE_ASC'
-  | 'LESSON_PRICE_DESC'
   | 'NATURAL'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
@@ -8177,13 +8176,18 @@ export type TenantTrainer = {
   __typename?: 'TenantTrainer';
   createPayoutPayments: Scalars['Boolean']['output'];
   createdAt: Scalars['Datetime']['output'];
+  currency: Maybe<Scalars['String']['output']>;
   description: Scalars['String']['output'];
   guestPayout45Min: Maybe<Price>;
+  guestPayout45MinAmount: Maybe<Scalars['BigFloat']['output']>;
   guestPrice45Min: Maybe<Price>;
+  guestPrice45MinAmount: Maybe<Scalars['BigFloat']['output']>;
   id: Scalars['BigInt']['output'];
   isVisible: Maybe<Scalars['Boolean']['output']>;
   memberPayout45Min: Maybe<Price>;
+  memberPayout45MinAmount: Maybe<Scalars['BigFloat']['output']>;
   memberPrice45Min: Maybe<Price>;
+  memberPrice45MinAmount: Maybe<Scalars['BigFloat']['output']>;
   /** Reads a single `Person` that is related to this `TenantTrainer`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
@@ -8205,20 +8209,30 @@ export type TenantTrainerCondition = {
   createPayoutPayments?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `currency` field. */
+  currency?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `guestPayout45Min` field. */
   guestPayout45Min?: InputMaybe<PriceInput>;
+  /** Checks for equality with the object’s `guestPayout45MinAmount` field. */
+  guestPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `guestPrice45Min` field. */
   guestPrice45Min?: InputMaybe<PriceInput>;
+  /** Checks for equality with the object’s `guestPrice45MinAmount` field. */
+  guestPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `memberPayout45Min` field. */
   memberPayout45Min?: InputMaybe<PriceInput>;
+  /** Checks for equality with the object’s `memberPayout45MinAmount` field. */
+  memberPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `memberPrice45Min` field. */
   memberPrice45Min?: InputMaybe<PriceInput>;
+  /** Checks for equality with the object’s `memberPrice45MinAmount` field. */
+  memberPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
@@ -8237,12 +8251,17 @@ export type TenantTrainerCondition = {
 export type TenantTrainerInput = {
   createPayoutPayments?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  currency?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   guestPayout45Min?: InputMaybe<PriceInput>;
+  guestPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   guestPrice45Min?: InputMaybe<PriceInput>;
+  guestPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   memberPayout45Min?: InputMaybe<PriceInput>;
+  memberPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   memberPrice45Min?: InputMaybe<PriceInput>;
+  memberPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<RelationshipStatus>;
@@ -8255,12 +8274,17 @@ export type TenantTrainerInput = {
 export type TenantTrainerPatch = {
   createPayoutPayments?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  currency?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   guestPayout45Min?: InputMaybe<PriceInput>;
+  guestPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   guestPrice45Min?: InputMaybe<PriceInput>;
+  guestPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   memberPayout45Min?: InputMaybe<PriceInput>;
+  memberPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   memberPrice45Min?: InputMaybe<PriceInput>;
+  memberPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<RelationshipStatus>;
@@ -8275,18 +8299,28 @@ export type TenantTrainersOrderBy =
   | 'CREATED_AT_DESC'
   | 'CREATE_PAYOUT_PAYMENTS_ASC'
   | 'CREATE_PAYOUT_PAYMENTS_DESC'
+  | 'CURRENCY_ASC'
+  | 'CURRENCY_DESC'
   | 'DESCRIPTION_ASC'
   | 'DESCRIPTION_DESC'
+  | 'GUEST_PAYOUT_45MIN_AMOUNT_ASC'
+  | 'GUEST_PAYOUT_45MIN_AMOUNT_DESC'
   | 'GUEST_PAYOUT_45MIN_ASC'
   | 'GUEST_PAYOUT_45MIN_DESC'
+  | 'GUEST_PRICE_45MIN_AMOUNT_ASC'
+  | 'GUEST_PRICE_45MIN_AMOUNT_DESC'
   | 'GUEST_PRICE_45MIN_ASC'
   | 'GUEST_PRICE_45MIN_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'IS_VISIBLE_ASC'
   | 'IS_VISIBLE_DESC'
+  | 'MEMBER_PAYOUT_45MIN_AMOUNT_ASC'
+  | 'MEMBER_PAYOUT_45MIN_AMOUNT_DESC'
   | 'MEMBER_PAYOUT_45MIN_ASC'
   | 'MEMBER_PAYOUT_45MIN_DESC'
+  | 'MEMBER_PRICE_45MIN_AMOUNT_ASC'
+  | 'MEMBER_PRICE_45MIN_AMOUNT_DESC'
   | 'MEMBER_PRICE_45MIN_ASC'
   | 'MEMBER_PRICE_45MIN_DESC'
   | 'NATURAL'
@@ -9971,9 +10005,11 @@ export type GraphCacheResolvers = {
     account?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Account> | string>,
     accountId?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt'] | string>,
     active?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Boolean'] | string>,
+    amount?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigFloat'] | string>,
     cohort?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortId?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Datetime'] | string>,
+    currency?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt'] | string>,
     interval?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Interval> | string>,
     paymentsList?: GraphCacheResolver<WithTypename<CohortSubscription>, CohortSubscriptionPaymentsListArgs, Array<WithTypename<Payment> | string>>,
@@ -10472,7 +10508,6 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     instance?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, WithTypename<EventInstance> | string>,
     instanceId?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
-    lessonPrice?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, WithTypename<Price> | string>,
     name?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['String'] | string>,
     person?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -10564,7 +10599,6 @@ export type GraphCacheResolvers = {
     eventId?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     eventLessonDemandsByTrainerIdList?: GraphCacheResolver<WithTypename<EventTrainer>, EventTrainerEventLessonDemandsByTrainerIdListArgs, Array<WithTypename<EventLessonDemand> | string>>,
     id?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
-    lessonPrice?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, WithTypename<Price> | string>,
     lessonsOffered?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['Int'] | string>,
     lessonsRemaining?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['Int'] | string>,
     name?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['String'] | string>,
@@ -11018,13 +11052,18 @@ export type GraphCacheResolvers = {
   TenantTrainer?: {
     createPayoutPayments?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>,
+    currency?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['String'] | string>,
     description?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['String'] | string>,
     guestPayout45Min?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Price> | string>,
+    guestPayout45MinAmount?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigFloat'] | string>,
     guestPrice45Min?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Price> | string>,
+    guestPrice45MinAmount?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigFloat'] | string>,
     id?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean'] | string>,
     memberPayout45Min?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Price> | string>,
+    memberPayout45MinAmount?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigFloat'] | string>,
     memberPrice45Min?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Price> | string>,
+    memberPrice45MinAmount?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigFloat'] | string>,
     person?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     since?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -11793,9 +11832,11 @@ export type GraphCacheUpdaters = {
     account?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     accountId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     active?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    amount?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    currency?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     interval?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, CohortSubscriptionPaymentsListArgs>,
@@ -12294,7 +12335,6 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     instance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     instanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
-    lessonPrice?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
@@ -12386,7 +12426,6 @@ export type GraphCacheUpdaters = {
     eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     eventLessonDemandsByTrainerIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, EventTrainerEventLessonDemandsByTrainerIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
-    lessonPrice?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     lessonsOffered?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     lessonsRemaining?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
@@ -12840,13 +12879,18 @@ export type GraphCacheUpdaters = {
   TenantTrainer?: {
     createPayoutPayments?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    currency?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     guestPayout45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    guestPayout45MinAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     guestPrice45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    guestPrice45MinAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     memberPayout45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    memberPayout45MinAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     memberPrice45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    memberPrice45MinAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,

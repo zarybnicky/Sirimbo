@@ -17,10 +17,10 @@ CREATE TABLE public.person (
     bio text DEFAULT ''::text NOT NULL,
     email public.citext,
     phone text,
-    name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF(TRIM(BOTH FROM prefix_title), ''::text), NULLIF(TRIM(BOTH FROM first_name), ''::text), NULLIF(TRIM(BOTH FROM last_name), ''::text),
+    name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF(btrim(prefix_title), ''::text), NULLIF(btrim(first_name), ''::text), NULLIF(btrim(last_name), ''::text),
 CASE
-    WHEN ((suffix_title IS NULL) OR (TRIM(BOTH FROM suffix_title) = ''::text)) THEN NULL::text
-    ELSE public.immutable_concat_ws(' '::text, VARIADIC ARRAY[','::text, TRIM(BOTH FROM suffix_title)])
+    WHEN (btrim(suffix_title) = ''::text) THEN NULL::text
+    ELSE (', '::text || btrim(suffix_title))
 END])) STORED NOT NULL,
     address public.address_domain,
     external_ids text[]

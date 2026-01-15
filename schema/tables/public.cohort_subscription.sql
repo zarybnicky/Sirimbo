@@ -8,7 +8,9 @@ CREATE TABLE public.cohort_subscription (
     renews_on timestamp with time zone,
     "interval" interval DEFAULT '1 mon'::interval NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    amount numeric(19,4) GENERATED ALWAYS AS ((price).amount) STORED,
+    currency text GENERATED ALWAYS AS ((price).currency) STORED
 );
 
 COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete

@@ -1,4 +1,4 @@
-CREATE FUNCTION public.on_update_author_announcement() RETURNS trigger
+CREATE FUNCTION app_private.tg_announcement__author() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
