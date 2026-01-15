@@ -9,6 +9,10 @@ export type DateOrString = Date | string;
 
 export type NumberOrString = number | string;
 
+export type competitor_typeArray = (competitor_type)[];
+
+export type stringArray = (string)[];
+
 /** 'UpsertFederationAthlete' parameters type */
 export interface IUpsertFederationAthleteParams {
   canonicalName?: string | null | void;
@@ -123,12 +127,10 @@ export const upsertCompetitor = new PreparedQuery<IUpsertCompetitorParams,IUpser
 
 /** 'UpsertManyCompetitors' parameters type */
 export interface IUpsertManyCompetitorsParams {
-  competitors: readonly ({
-    federation: string | null | void,
-    federationCompetitorId: string | null | void,
-    type: string | null | void,
-    label: string | null | void
-  })[];
+  external_ids?: stringArray | null | void;
+  federations?: stringArray | null | void;
+  labels?: stringArray | null | void;
+  types?: competitor_typeArray | null | void;
 }
 
 /** 'UpsertManyCompetitors' return type */
@@ -143,21 +145,29 @@ export interface IUpsertManyCompetitorsQuery {
   result: IUpsertManyCompetitorsResult;
 }
 
-const upsertManyCompetitorsIR: any = {"usedParamSet":{"competitors":true},"params":[{"name":"competitors","required":false,"transform":{"type":"pick_array_spread","keys":[{"name":"federation","required":false},{"name":"federationCompetitorId","required":false},{"name":"type","required":false},{"name":"label","required":false}]},"locs":[{"a":295,"b":306}]}],"statement":"SELECT\n  federation_id,\n  federated.upsert_competitor(\n    in_federation => federation,\n    in_external_id => federation_id,\n    in_type => type::federated.competitor_type,\n    in_label => label,\n    in_components => '{}'::federated.competitor_component_input[]\n  ) as federated_id\nFROM (VALUES :competitors) as t(federation, federation_id, type, label)"};
+const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"external_ids":true,"types":true,"labels":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":44,"b":55}]},{"name":"external_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":70,"b":82}]},{"name":"types","required":false,"transform":{"type":"scalar"},"locs":[{"a":97,"b":102}]},{"name":"labels","required":false,"transform":{"type":"scalar"},"locs":[{"a":138,"b":144}]}],"statement":"WITH input AS (\n  SELECT * FROM unnest(\n    :federations::text[],\n    :external_ids::text[],\n    :types::federated.competitor_type[],\n    :labels::text[]\n  ) AS t(federation, external_id, competitor_type, label)\n)\nSELECT\n  input.external_id AS federation_id,\n  federated.upsert_competitor(\n    in_federation  => input.federation,\n    in_external_id => input.external_id,\n    in_type        => input.competitor_type,\n    in_label       => input.label,\n    in_components  => '{}'::federated.competitor_component_input[]\n  ) AS federated_id\nFROM input"};
 
 /**
  * Query generated from SQL:
  * ```
+ * WITH input AS (
+ *   SELECT * FROM unnest(
+ *     :federations::text[],
+ *     :external_ids::text[],
+ *     :types::federated.competitor_type[],
+ *     :labels::text[]
+ *   ) AS t(federation, external_id, competitor_type, label)
+ * )
  * SELECT
- *   federation_id,
+ *   input.external_id AS federation_id,
  *   federated.upsert_competitor(
- *     in_federation => federation,
- *     in_external_id => federation_id,
- *     in_type => type::federated.competitor_type,
- *     in_label => label,
- *     in_components => '{}'::federated.competitor_component_input[]
- *   ) as federated_id
- * FROM (VALUES :competitors) as t(federation, federation_id, type, label)
+ *     in_federation  => input.federation,
+ *     in_external_id => input.external_id,
+ *     in_type        => input.competitor_type,
+ *     in_label       => input.label,
+ *     in_components  => '{}'::federated.competitor_component_input[]
+ *   ) AS federated_id
+ * FROM input
  * ```
  */
 export const upsertManyCompetitors = new PreparedQuery<IUpsertManyCompetitorsParams,IUpsertManyCompetitorsResult>(upsertManyCompetitorsIR);

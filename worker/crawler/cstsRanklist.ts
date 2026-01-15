@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import {
+  type competitor_type,
   upsertCategory,
   upsertManyCompetitors,
   upsertRanklistSnapshot,
@@ -89,17 +90,19 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
     client,
   );
 
-  const competitors = entity.competitors.map((competitor) => ({
-    type: mapCompetitorType(entity.competitorType),
-    label: competitor.competitorName,
-    federation: 'csts',
-    federationCompetitorId: competitor.competitorId.toString(),
-  }));
-  const competitorIds =
-    competitors.length > 0
-      ? await upsertManyCompetitors.run({ competitors }, client)
-      : [];
-  const idMap = new Map(competitorIds.map((x) => [x.federation_id, x.federated_id]));
+  const idMap = new Map<string | null, string | null>();
+  if (entity.competitors.length > 0) {
+    const resolved = await upsertManyCompetitors.run(
+      {
+        types: entity.competitors.map(() => mapCompetitorType(entity.competitorType)),
+        labels: entity.competitors.map((x) => x.competitorName),
+        federations: entity.competitors.map(() => 'csts'),
+        external_ids: entity.competitors.map((x) => x.competitorId.toString()),
+      },
+      client,
+    );
+    for (const x of resolved) idMap.set(x.federation_id, x.federated_id);
+  }
 
   const ranklistComponents: {
     competitor_id: string;
