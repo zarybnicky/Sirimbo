@@ -118,7 +118,7 @@ begin
     returning * into v_event;
 
     if not found then
-      raise exception 'event % not found', info.id using errcode = 'NO_DATA_FOUND';
+      raise exception 'event % not found', info.id;
     end if;
   end if;
 
