@@ -19,8 +19,7 @@ CREATE TYPE public.event_type_input AS (
   is_visible boolean,
   is_public boolean,
   is_locked boolean,
-  enable_notes boolean,
-  payment_type event_payment_type
+  enable_notes boolean
 );
 
 CREATE TYPE public.event_instance_trainer_type_input AS (

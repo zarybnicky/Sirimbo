@@ -3584,7 +3584,6 @@ type Event {
   """Reads a single `Account` that is related to this `Event`."""
   paymentRecipient: Account
   paymentRecipientId: BigInt
-  paymentType: EventPaymentType!
   registrantsList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -3743,9 +3742,6 @@ input EventCondition {
 
   """Checks for equality with the object’s `paymentRecipientId` field."""
   paymentRecipientId: BigInt
-
-  """Checks for equality with the object’s `paymentType` field."""
-  paymentType: EventPaymentType
 
   """Checks for equality with the object’s `summary` field."""
   summary: String
@@ -3922,7 +3918,6 @@ input EventInput {
   locationText: String!
   name: String!
   paymentRecipientId: BigInt
-  paymentType: EventPaymentType
   summary: String
   tenantId: BigInt
   type: EventType
@@ -4317,17 +4312,10 @@ input EventPatch {
   locationText: String
   name: String
   paymentRecipientId: BigInt
-  paymentType: EventPaymentType
   summary: String
   tenantId: BigInt
   type: EventType
   updatedAt: Datetime
-}
-
-enum EventPaymentType {
-  AFTER_INSTANCE
-  NONE
-  UPFRONT
 }
 
 type EventRegistration {
@@ -4773,18 +4761,14 @@ enum EventType {
 input EventTypeInputRecordInput {
   capacity: Int
   description: String
-  descriptionMember: String
   enableNotes: Boolean
-  guestPrice: PriceInput
   id: BigInt
   isLocked: Boolean
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
   locationText: String
-  memberPrice: PriceInput
   name: String
-  paymentType: EventPaymentType
   summary: String
   type: EventType
 }
@@ -4846,8 +4830,6 @@ enum EventsOrderBy {
   NATURAL
   PAYMENT_RECIPIENT_ID_ASC
   PAYMENT_RECIPIENT_ID_DESC
-  PAYMENT_TYPE_ASC
-  PAYMENT_TYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   SUMMARY_ASC

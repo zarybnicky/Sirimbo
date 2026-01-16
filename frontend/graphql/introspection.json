@@ -6601,17 +6601,6 @@
             "args": []
           },
           {
-            "name": "paymentType",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "registrantsList",
             "type": {
               "kind": "LIST",

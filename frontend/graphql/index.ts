@@ -2952,7 +2952,6 @@ export type Event = {
   /** Reads a single `Account` that is related to this `Event`. */
   paymentRecipient: Maybe<Account>;
   paymentRecipientId: Maybe<Scalars['BigInt']['output']>;
-  paymentType: EventPaymentType;
   registrantsList: Maybe<Array<Person>>;
   remainingLessons: Maybe<Scalars['Int']['output']>;
   remainingPersonSpots: Maybe<Scalars['Int']['output']>;
@@ -3136,8 +3135,6 @@ export type EventCondition = {
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `paymentRecipientId` field. */
   paymentRecipientId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `paymentType` field. */
-  paymentType?: InputMaybe<EventPaymentType>;
   /** Checks for equality with the object’s `summary` field. */
   summary?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -3286,7 +3283,6 @@ export type EventInput = {
   locationText: Scalars['String']['input'];
   name: Scalars['String']['input'];
   paymentRecipientId?: InputMaybe<Scalars['BigInt']['input']>;
-  paymentType?: InputMaybe<EventPaymentType>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   type?: InputMaybe<EventType>;
@@ -3622,17 +3618,11 @@ export type EventPatch = {
   locationText?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentRecipientId?: InputMaybe<Scalars['BigInt']['input']>;
-  paymentType?: InputMaybe<EventPaymentType>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   type?: InputMaybe<EventType>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
-
-export type EventPaymentType =
-  | 'AFTER_INSTANCE'
-  | 'NONE'
-  | 'UPFRONT';
 
 export type EventRegistration = {
   __typename?: 'EventRegistration';
@@ -3983,18 +3973,14 @@ export type EventType =
 export type EventTypeInputRecordInput = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
-  guestPrice?: InputMaybe<PriceInput>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   locationText?: InputMaybe<Scalars['String']['input']>;
-  memberPrice?: InputMaybe<PriceInput>;
   name?: InputMaybe<Scalars['String']['input']>;
-  paymentType?: InputMaybe<EventPaymentType>;
   summary?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<EventType>;
 };
@@ -4052,8 +4038,6 @@ export type EventsOrderBy =
   | 'NATURAL'
   | 'PAYMENT_RECIPIENT_ID_ASC'
   | 'PAYMENT_RECIPIENT_ID_DESC'
-  | 'PAYMENT_TYPE_ASC'
-  | 'PAYMENT_TYPE_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'SUMMARY_ASC'
@@ -10426,7 +10410,6 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     paymentRecipient?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Account> | string>,
     paymentRecipientId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
-    paymentType?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, EventPaymentType | string>,
     registrantsList?: GraphCacheResolver<WithTypename<Event>, EventRegistrantsListArgs, Array<WithTypename<Person> | string>>,
     remainingLessons?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
     remainingPersonSpots?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
@@ -12253,7 +12236,6 @@ export type GraphCacheUpdaters = {
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     paymentRecipientId?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
-    paymentType?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     registrantsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventRegistrantsListArgs>,
     remainingLessons?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     remainingPersonSpots?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
