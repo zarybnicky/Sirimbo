@@ -16,7 +16,6 @@ fragment Event on Event {
   isVisible
   isPublic
   enableNotes
-  paymentType
   eventTrainersList {
     id
     name

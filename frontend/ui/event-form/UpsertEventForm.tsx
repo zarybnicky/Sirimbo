@@ -177,7 +177,6 @@ export function UpsertEventForm({
           isPublic: values.isPublic,
           isLocked: values.isLocked,
           enableNotes: values.enableNotes,
-          paymentType: values.type === 'LESSON' ? 'AFTER_INSTANCE' : 'NONE',
         },
         trainers: values.trainers.map((x) => ({
           ...x,

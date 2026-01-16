@@ -77,7 +77,6 @@ export function EventInstanceMenu({
           isPublic: event.isPublic,
           isLocked: event.isLocked,
           enableNotes: event.enableNotes,
-          paymentType: event.paymentType,
         },
         trainers: event.eventTrainersList.map((x) => ({
           personId: x.personId,

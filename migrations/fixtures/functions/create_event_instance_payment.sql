@@ -17,7 +17,7 @@ begin
   end if;
 
   select * into e from event where id = i.event_id;
-  if e.payment_type <> 'after_instance' or not exists (select * from event_registration where event_id=e.id) then
+  if e.type <> 'lesson' or not exists (select * from event_registration where event_id=e.id) then
     return null;
   end if;
 

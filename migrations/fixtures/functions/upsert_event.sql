@@ -82,8 +82,7 @@ begin
       is_visible,
       is_public,
       is_locked,
-      enable_notes,
-      payment_type
+      enable_notes
     )
     values (
       info.name,
@@ -96,8 +95,7 @@ begin
       info.is_visible,
       info.is_public,
       info.is_locked,
-      info.enable_notes,
-      info.payment_type
+      info.enable_notes
     )
     returning * into v_event;
   else
@@ -112,8 +110,7 @@ begin
       is_visible=info.is_visible,
       is_public=info.is_public,
       is_locked=info.is_locked,
-      enable_notes=info.enable_notes,
-      payment_type=info.payment_type
+      enable_notes=info.enable_notes
     where id=info.id
     returning * into v_event;
 

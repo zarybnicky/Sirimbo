@@ -11,7 +11,6 @@ begin
       and event_instance.id = NEW.id
       and not event_instance.is_cancelled
       and event_instance.since < now()
-      and payment_type = 'after_instance'
       and not exists (
         select * from payment where event_instance_id=event_instance.id
       );
