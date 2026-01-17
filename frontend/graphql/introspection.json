@@ -23137,25 +23137,6 @@
             "args": []
           },
           {
-            "name": "uConfirmed",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "uCreatedAt",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "uEmail",
             "type": {
               "kind": "NON_NULL",

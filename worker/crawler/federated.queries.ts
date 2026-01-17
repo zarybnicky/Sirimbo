@@ -3,7 +3,7 @@ import { PreparedQuery } from '@pgtyped/runtime';
 
 export type competitor_role = 'follow' | 'lead' | 'member' | 'substitute';
 
-export type competitor_type = 'couple' | 'duo' | 'formation' | 'solo' | 'team';
+export type competitor_type = 'couple' | 'duo' | 'formation' | 'solo' | 'team' | 'trio';
 
 export type gender = 'female' | 'male' | 'other' | 'unknown';
 
