@@ -1,13 +1,19 @@
 /** Types generated for queries found in "crawler/federated.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
-export type competitor_type = 'couple' | 'duo' | 'formation' | 'solo' | 'team' | 'trio';
+export type competitor_role = 'follow' | 'lead' | 'member' | 'substitute';
+
+export type competitor_type = 'couple' | 'duo' | 'formation' | 'solo' | 'team';
 
 export type gender = 'female' | 'male' | 'other' | 'unknown';
 
 export type DateOrString = Date | string;
 
 export type NumberOrString = number | string;
+
+export type NumberOrStringArray = (NumberOrString)[];
+
+export type competitor_roleArray = (competitor_role)[];
 
 export type competitor_typeArray = (competitor_type)[];
 
@@ -87,7 +93,8 @@ export const upsertCategory = new PreparedQuery<IUpsertCategoryParams,IUpsertCat
 
 /** 'UpsertCompetitor' parameters type */
 export interface IUpsertCompetitorParams {
-  components?: string | null | void;
+  component_athlete_ids?: NumberOrStringArray | null | void;
+  component_roles?: competitor_roleArray | null | void;
   federation?: string | null | void;
   federationCompetitorId?: string | null | void;
   label?: string | null | void;
@@ -105,7 +112,7 @@ export interface IUpsertCompetitorQuery {
   result: IUpsertCompetitorResult;
 }
 
-const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"federationCompetitorId":true,"type":true,"label":true,"components":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":65}]},{"name":"federationCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":110}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":130}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":174,"b":179}]},{"name":"components","required":false,"transform":{"type":"scalar"},"locs":[{"a":293,"b":303}]}],"statement":"SELECT federated.upsert_competitor(\n  in_federation => :federation,\n  in_external_id => :federationCompetitorId,\n  in_type => :type::federated.competitor_type,\n  in_label => :label,\n  in_components => (SELECT array_agg(x::federated.competitor_component_input) FROM jsonb_to_recordset(COALESCE(:components::text::jsonb, '[]'::jsonb)) as x(\n    athlete_id bigint,\n    role federated.competitor_role\n  ))\n) as competitor_id"};
+const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"federationCompetitorId":true,"type":true,"label":true,"component_athlete_ids":true,"component_roles":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":65}]},{"name":"federationCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":110}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":130}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":174,"b":179}]},{"name":"component_athlete_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":303,"b":324}]},{"name":"component_roles","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":358}]}],"statement":"SELECT federated.upsert_competitor(\n  in_federation => :federation,\n  in_external_id => :federationCompetitorId,\n  in_type => :type::federated.competitor_type,\n  in_label => :label,\n  in_components => ARRAY(\n    SELECT (u.athlete_id, u.role)::federated.competitor_component_input\n    FROM unnest(\n      :component_athlete_ids::bigint[],\n      :component_roles::federated.competitor_role[]\n    ) AS u(athlete_id, role)\n  )\n) as competitor_id"};
 
 /**
  * Query generated from SQL:
@@ -115,10 +122,13 @@ const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"federationCo
  *   in_external_id => :federationCompetitorId,
  *   in_type => :type::federated.competitor_type,
  *   in_label => :label,
- *   in_components => (SELECT array_agg(x::federated.competitor_component_input) FROM jsonb_to_recordset(COALESCE(:components::text::jsonb, '[]'::jsonb)) as x(
- *     athlete_id bigint,
- *     role federated.competitor_role
- *   ))
+ *   in_components => ARRAY(
+ *     SELECT (u.athlete_id, u.role)::federated.competitor_component_input
+ *     FROM unnest(
+ *       :component_athlete_ids::bigint[],
+ *       :component_roles::federated.competitor_role[]
+ *     ) AS u(athlete_id, role)
+ *   )
  * ) as competitor_id
  * ```
  */
@@ -145,19 +155,11 @@ export interface IUpsertManyCompetitorsQuery {
   result: IUpsertManyCompetitorsResult;
 }
 
-const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"external_ids":true,"types":true,"labels":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":44,"b":55}]},{"name":"external_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":70,"b":82}]},{"name":"types","required":false,"transform":{"type":"scalar"},"locs":[{"a":97,"b":102}]},{"name":"labels","required":false,"transform":{"type":"scalar"},"locs":[{"a":138,"b":144}]}],"statement":"WITH input AS (\n  SELECT * FROM unnest(\n    :federations::text[],\n    :external_ids::text[],\n    :types::federated.competitor_type[],\n    :labels::text[]\n  ) AS t(federation, external_id, competitor_type, label)\n)\nSELECT\n  input.external_id AS federation_id,\n  federated.upsert_competitor(\n    in_federation  => input.federation,\n    in_external_id => input.external_id,\n    in_type        => input.competitor_type,\n    in_label       => input.label,\n    in_components  => '{}'::federated.competitor_component_input[]\n  ) AS federated_id\nFROM input"};
+const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"external_ids":true,"types":true,"labels":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":339,"b":350}]},{"name":"external_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":363,"b":375}]},{"name":"types","required":false,"transform":{"type":"scalar"},"locs":[{"a":388,"b":393}]},{"name":"labels","required":false,"transform":{"type":"scalar"},"locs":[{"a":427,"b":433}]}],"statement":"SELECT\n  input.external_id AS federation_id,\n  federated.upsert_competitor(\n    in_federation  => input.federation,\n    in_external_id => input.external_id,\n    in_type        => input.competitor_type,\n    in_label       => input.label,\n    in_components  => '{}'::federated.competitor_component_input[]\n  ) AS federated_id\nFROM unnest(\n  :federations::text[],\n  :external_ids::text[],\n  :types::federated.competitor_type[],\n  :labels::text[]\n) AS input(federation, external_id, competitor_type, label)"};
 
 /**
  * Query generated from SQL:
  * ```
- * WITH input AS (
- *   SELECT * FROM unnest(
- *     :federations::text[],
- *     :external_ids::text[],
- *     :types::federated.competitor_type[],
- *     :labels::text[]
- *   ) AS t(federation, external_id, competitor_type, label)
- * )
  * SELECT
  *   input.external_id AS federation_id,
  *   federated.upsert_competitor(
@@ -167,7 +169,12 @@ const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"extern
  *     in_label       => input.label,
  *     in_components  => '{}'::federated.competitor_component_input[]
  *   ) AS federated_id
- * FROM input
+ * FROM unnest(
+ *   :federations::text[],
+ *   :external_ids::text[],
+ *   :types::federated.competitor_type[],
+ *   :labels::text[]
+ * ) AS input(federation, external_id, competitor_type, label)
  * ```
  */
 export const upsertManyCompetitors = new PreparedQuery<IUpsertManyCompetitorsParams,IUpsertManyCompetitorsResult>(upsertManyCompetitorsIR);

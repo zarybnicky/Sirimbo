@@ -200,7 +200,3 @@ mutation UpdateTenantSettings($input: UpdateTenantSettingsKeyInput!) {
     }
   }
 }
-
-query EvidenceStarlet($url: String!, $data: JSON!, $auth: String) {
-  evidenceStarlet(url: $url, data: $data, auth: $auth)
-}

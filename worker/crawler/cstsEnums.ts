@@ -42,6 +42,7 @@ type CompetitorType =
   | 'Couple'
   | 'SoloDancer'
   | 'DuoF'
+  | 'Duo'
   | 'Group'
   | 'ProAm'
   | 'Team'
@@ -57,6 +58,7 @@ export const competitorType: { [key in CompetitorType]: number } = {
   Couple: 1,
   SoloDancer: 2,
   DuoF: 3,
+  Duo: 3,
   Group: 4,
   ProAm: 5,
   Team: 6,
@@ -72,6 +74,7 @@ export const competitorType: { [key in CompetitorType]: number } = {
 export const mapCompetitorType = (type: CompetitorType): competitor_type => {
   switch (type) {
     case 'DuoF':
+    case 'Duo':
       return 'duo';
     case 'SoloDancer':
     case 'SoloM':

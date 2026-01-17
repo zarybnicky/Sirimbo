@@ -19,7 +19,12 @@ const app = express();
 
 app.use(compression({ threshold: 0 }));
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  }),
+);
 app.use(cookieParser());
 app.use(morgan('tiny'));
 
@@ -47,10 +52,19 @@ app.get('/member/download', async function (req, res) {
 
 app.use(
   '/starlet/graphql',
+  cors({
+    origin: true,
+    credentials: true,
+  }),
   proxy('https://evidence.tsstarlet.com', {
     parseReqBody: true,
-    proxyReqPathResolver: () => '/graphql',
-    proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
+    proxyReqPathResolver(req) {
+      if (req.body && typeof req.body === 'object' && req.body['query'] === '') {
+        return '/spa_auth/login';
+      }
+      return '/graphql';
+    },
+    proxyReqOptDecorator(proxyReqOpts, srcReq) {
       const auth = srcReq.header('authorization') ?? '';
       const token = auth.replace(/^Bearer\s+/i, '').trim();
       delete proxyReqOpts.headers.authorization;
@@ -61,15 +75,14 @@ app.use(
       proxyReqOpts.headers.referer = 'https://evidence.tsstarlet.com';
       return proxyReqOpts;
     },
-    userResHeaderDecorator: (headers) => ({
-      ...headers,
-      'access-control-allow-origin': '*',
-      'access-control-allow-headers': 'content-type, authorization',
-      'access-control-allow-methods': 'GET,POST,OPTIONS',
-    }),
+    proxyReqBodyDecorator(body) {
+      if (body && typeof body === 'object' && body['query'] === '') {
+        return body['variables'];
+      }
+      return body;
+    },
   }),
 );
-app.options('/starlet/graphql', (_req, res) => res.sendStatus(204));
 
 const server = createServer(app);
 server.on('error', (e) => {

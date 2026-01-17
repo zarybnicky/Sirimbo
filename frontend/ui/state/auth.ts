@@ -5,7 +5,7 @@ import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import deepEqual from 'fast-deep-equal';
 import { tenantCatalog } from '@/tenant/catalog';
 import type { TenantConfig } from '@/tenant/types';
-import { getCookie, setCookie } from 'cookies-next/client';
+import { getCookie, setCookie, deleteCookie } from 'cookies-next/client';
 
 interface AuthState {
   user: null | {
@@ -114,13 +114,23 @@ export const tokenAtom = atom<string | null, [string | null], void>(
 
       // For file uploads, only /f path but allow on subdomains
       if (typeof window !== 'undefined') {
-        setCookie('auth', nextValue, {
-          path: '/f',
-          sameSite: 'lax',
-          secure: window.location.protocol === 'https:',
-          domain: window.location.hostname,
-          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-        });
+        const { hostname } = window.location;
+        const domain =
+          hostname === 'localhost' || hostname === '127.0.0.1'
+            ? undefined
+            : hostname.replace(/^www\./, '');
+
+        if (!nextValue) {
+          deleteCookie('rozpisovnik', { path: '/f', domain });
+        } else {
+          setCookie('rozpisovnik', nextValue, {
+            path: '/f',
+            domain,
+            sameSite: 'lax',
+            secure: window.location.protocol === 'https:',
+            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+          });
+        }
       }
     }
   },

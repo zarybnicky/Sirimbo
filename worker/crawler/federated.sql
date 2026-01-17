@@ -22,21 +22,16 @@ SELECT federated.upsert_competitor(
   in_external_id => :federationCompetitorId,
   in_type => :type::federated.competitor_type,
   in_label => :label,
-  in_components => (SELECT array_agg(x::federated.competitor_component_input) FROM jsonb_to_recordset(COALESCE(:components::text::jsonb, '[]'::jsonb)) as x(
-    athlete_id bigint,
-    role federated.competitor_role
-  ))
+  in_components => ARRAY(
+    SELECT (u.athlete_id, u.role)::federated.competitor_component_input
+    FROM unnest(
+      :component_athlete_ids::bigint[],
+      :component_roles::federated.competitor_role[]
+    ) AS u(athlete_id, role)
+  )
 ) as competitor_id;
 
 /* @name UpsertManyCompetitors */
-WITH input AS (
-  SELECT * FROM unnest(
-    :federations::text[],
-    :external_ids::text[],
-    :types::federated.competitor_type[],
-    :labels::text[]
-  ) AS t(federation, external_id, competitor_type, label)
-)
 SELECT
   input.external_id AS federation_id,
   federated.upsert_competitor(
@@ -46,7 +41,12 @@ SELECT
     in_label       => input.label,
     in_components  => '{}'::federated.competitor_component_input[]
   ) AS federated_id
-FROM input;
+FROM unnest(
+  :federations::text[],
+  :external_ids::text[],
+  :types::federated.competitor_type[],
+  :labels::text[]
+) AS input(federation, external_id, competitor_type, label);
 
 /* @name UpsertCompetitorProgress */
 SELECT federated.upsert_competitor_category_progress(

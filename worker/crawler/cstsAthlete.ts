@@ -19,7 +19,7 @@ const rankingPointsSchema = z.object({
   partnerIdt: z.number().optional(),
   series: z.string(),
   discipline: z.string(),
-  competitors: z.enum(['Couple', 'SoloDancer', 'SoloM', 'SoloF', 'DuoF']),
+  competitors: z.enum(['Couple', 'SoloDancer', 'SoloM', 'SoloF', 'Duo', 'DuoF']),
   competitorId: z.number(),
   rankingAge: z.string(),
   rankingPointsAge: z.string(),
@@ -135,7 +135,7 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     const competitorId =
       rp.competitors === 'Couple'
         ? await loadCstsCouple(data, rp, client, mainAthleteId)
-        : rp.competitors === 'DuoF'
+        : rp.competitors === 'DuoF' || rp.competitors === 'Duo'
           ? await loadCstsDuo(data, rp, client, mainAthleteId)
           : rp.competitors === 'SoloDancer' ||
               rp.competitors === 'SoloM' ||
@@ -173,7 +173,8 @@ async function loadCstsSolo(
       federationCompetitorId: rp.competitorId.toString(),
       label: data.name,
       type: 'solo',
-      components: JSON.stringify([{ athlete_id: mainAthleteId, role: 'member' }]),
+      component_athlete_ids: [mainAthleteId],
+      component_roles: ['member'],
     },
     client,
   );
@@ -206,10 +207,8 @@ async function loadCstsDuo(
           ? `${data.name} - ${rp.partner}`
           : `${rp.partner} - ${data.name}`,
       type: 'duo',
-      components: JSON.stringify([
-        { athlete_id: mainAthleteId, role: 'member' },
-        { athlete_id: partnerAthleteId, role: 'member' },
-      ]),
+      component_athlete_ids: [mainAthleteId, partnerAthleteId],
+      component_roles: ['member', 'member'],
     },
     client,
   );
@@ -243,16 +242,11 @@ async function loadCstsCouple(
           ? `${data.name} - ${rp.partner}`
           : `${rp.partner} - ${data.name}`,
       type: 'couple',
-      components: JSON.stringify([
-        {
-          athlete_id: data.sex === 'male' ? mainAthleteId : partnerAthleteId,
-          role: 'lead',
-        },
-        {
-          athlete_id: data.sex === 'male' ? partnerAthleteId : mainAthleteId,
-          role: 'follow',
-        },
-      ]),
+      component_athlete_ids: [
+        data.sex === 'male' ? mainAthleteId : partnerAthleteId,
+        data.sex === 'male' ? partnerAthleteId : mainAthleteId,
+      ],
+      component_roles: ['lead', 'follow'],
     },
     client,
   );

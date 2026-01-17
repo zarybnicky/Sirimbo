@@ -6062,7 +6062,6 @@ export type Query = {
   eventTrainersList: Maybe<Array<EventTrainer>>;
   /** Reads and enables pagination through a set of `Event`. */
   events: Maybe<EventsConnection>;
-  evidenceStarlet: Maybe<Scalars['JSON']['output']>;
   filteredPeopleList: Maybe<Array<Person>>;
   /** Get a single `FormResponse`. */
   formResponse: Maybe<FormResponse>;
@@ -6588,14 +6587,6 @@ export type QueryEventsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryEvidenceStarletArgs = {
-  auth?: InputMaybe<Scalars['String']['input']>;
-  data: Scalars['JSON']['input'];
-  url: Scalars['String']['input'];
 };
 
 
@@ -9252,6 +9243,8 @@ export type User = {
   /** Reads a single `Tenant` that is related to this `User`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
+  uConfirmed: Scalars['Boolean']['output'];
+  uCreatedAt: Maybe<Scalars['Datetime']['output']>;
   uEmail: Scalars['String']['output'];
   uJmeno: Maybe<Scalars['String']['output']>;
   uLogin: Maybe<Scalars['String']['output']>;
@@ -9340,6 +9333,10 @@ export type UserCondition = {
   lastVersion?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `uConfirmed` field. */
+  uConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `uCreatedAt` field. */
+  uCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `uEmail` field. */
   uEmail?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uJmeno` field. */
@@ -9476,6 +9473,10 @@ export type UsersOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC'
+  | 'U_CONFIRMED_ASC'
+  | 'U_CONFIRMED_DESC'
+  | 'U_CREATED_AT_ASC'
+  | 'U_CREATED_AT_DESC'
   | 'U_EMAIL_ASC'
   | 'U_EMAIL_DESC'
   | 'U_JMENO_ASC'
@@ -9717,7 +9718,6 @@ export type GraphCacheResolvers = {
     eventTrainerByEventIdAndPersonId?: GraphCacheResolver<WithTypename<Query>, QueryEventTrainerByEventIdAndPersonIdArgs, WithTypename<EventTrainer> | string>,
     eventTrainersList?: GraphCacheResolver<WithTypename<Query>, QueryEventTrainersListArgs, Array<WithTypename<EventTrainer> | string>>,
     events?: GraphCacheResolver<WithTypename<Query>, QueryEventsArgs, WithTypename<EventsConnection> | string>,
-    evidenceStarlet?: GraphCacheResolver<WithTypename<Query>, QueryEvidenceStarletArgs, Scalars['JSON'] | string>,
     filteredPeopleList?: GraphCacheResolver<WithTypename<Query>, QueryFilteredPeopleListArgs, Array<WithTypename<Person> | string>>,
     formResponse?: GraphCacheResolver<WithTypename<Query>, QueryFormResponseArgs, WithTypename<FormResponse> | string>,
     formResponses?: GraphCacheResolver<WithTypename<Query>, QueryFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
@@ -11279,6 +11279,8 @@ export type GraphCacheResolvers = {
     membershipApplicationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserMembershipApplicationsByCreatedByListArgs, Array<WithTypename<MembershipApplication> | string>>,
     tenant?: GraphCacheResolver<WithTypename<User>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
+    uConfirmed?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
+    uCreatedAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
     uEmail?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uJmeno?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
@@ -11454,7 +11456,6 @@ export type GraphCacheUpdaters = {
     eventTrainerByEventIdAndPersonId?: GraphCacheUpdateResolver<{ eventTrainerByEventIdAndPersonId: Maybe<WithTypename<EventTrainer>> }, QueryEventTrainerByEventIdAndPersonIdArgs>,
     eventTrainersList?: GraphCacheUpdateResolver<{ eventTrainersList: Maybe<Array<WithTypename<EventTrainer>>> }, QueryEventTrainersListArgs>,
     events?: GraphCacheUpdateResolver<{ events: Maybe<WithTypename<EventsConnection>> }, QueryEventsArgs>,
-    evidenceStarlet?: GraphCacheUpdateResolver<{ evidenceStarlet: Maybe<Scalars['JSON']> }, QueryEvidenceStarletArgs>,
     filteredPeopleList?: GraphCacheUpdateResolver<{ filteredPeopleList: Maybe<Array<WithTypename<Person>>> }, QueryFilteredPeopleListArgs>,
     formResponse?: GraphCacheUpdateResolver<{ formResponse: Maybe<WithTypename<FormResponse>> }, QueryFormResponseArgs>,
     formResponses?: GraphCacheUpdateResolver<{ formResponses: Maybe<WithTypename<FormResponsesConnection>> }, QueryFormResponsesArgs>,
@@ -13105,6 +13106,8 @@ export type GraphCacheUpdaters = {
     membershipApplicationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserMembershipApplicationsByCreatedByListArgs>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    uConfirmed?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
+    uCreatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uEmail?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uJmeno?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     uLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,

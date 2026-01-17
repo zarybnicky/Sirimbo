@@ -1,4 +1,4 @@
-import nextRoutes from "nextjs-routes/config";
+import nextRoutes from 'nextjs-routes/config';
 import serwistNext from '@serwist/next';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
@@ -8,8 +8,10 @@ type NextPlugin = (config: NextConfig) => NextConfig;
 type NextRedirect = Awaited<ReturnType<NonNullable<NextConfig['redirects']>>>;
 type NextRewrite = Awaited<ReturnType<NonNullable<NextConfig['rewrite']>>>;
 
-const compose = (...plugins: NextPlugin[]) => (config: NextConfig): NextConfig =>
-  plugins.reduceRight((acc, fn) => fn(acc), config);
+const compose =
+  (...plugins: NextPlugin[]) =>
+  (config: NextConfig): NextConfig =>
+    plugins.reduceRight((acc, fn) => fn(acc), config);
 
 // eslint-disable-next-line import/no-unused-modules
 export default compose(
@@ -22,11 +24,12 @@ export default compose(
   }),
   nextRoutes(),
   bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' }),
-  (cfg: NextConfig) => withSentryConfig(cfg, {
-    tunnelRoute: '/sentry',
-    widenClientFileUpload: true,
-    silent: true,  // Suppresses all logs
-  }),
+  (cfg: NextConfig) =>
+    withSentryConfig(cfg, {
+      tunnelRoute: '/sentry',
+      widenClientFileUpload: true,
+      silent: true, // Suppresses all logs
+    }),
 )({
   reactStrictMode: true,
   poweredByHeader: false,
@@ -50,15 +53,7 @@ export default compose(
 
   eslint: {
     ignoreDuringBuilds: true,
-    dirs: [
-      'pages',
-      'graphql',
-      'calendar',
-      'map',
-      'ui',
-      'editor',
-      'lib',
-    ],
+    dirs: ['pages', 'graphql', 'calendar', 'map', 'ui', 'editor', 'lib'],
   },
 
   async redirects() {
@@ -68,12 +63,36 @@ export default compose(
       { source: '/aktualne/:path*', destination: '/clanky/:path*', permanent: true },
     ];
     const olympSpecificRedirects = [
-      { source: '/tancirna', destination: '/clanky/470/olymp-dance-night-2026', permanent: false },
-      { source: '/camp', destination: '/clanky/468/letni-soustredeni-mohelnice', permanent: false },
-      { source: '/mistrovstvi', destination: 'https://mistrovstvi.tkolymp.cz', permanent: true },
-      { source: '/prijdtancit', destination: 'https://nabor.tkolymp.cz', permanent: true },
-      { source: '/prijdtancit/deti', destination: 'https://nabor.tkolymp.cz', permanent: true },
-      { source: '/prijdtancit/mladez', destination: 'https://nabor.tkolymp.cz', permanent: true },
+      {
+        source: '/tancirna',
+        destination: '/clanky/470/olymp-dance-night-2026',
+        permanent: false,
+      },
+      {
+        source: '/camp',
+        destination: '/clanky/468/letni-soustredeni-mohelnice',
+        permanent: false,
+      },
+      {
+        source: '/mistrovstvi',
+        destination: 'https://mistrovstvi.tkolymp.cz',
+        permanent: true,
+      },
+      {
+        source: '/prijdtancit',
+        destination: 'https://nabor.tkolymp.cz',
+        permanent: true,
+      },
+      {
+        source: '/prijdtancit/deti',
+        destination: 'https://nabor.tkolymp.cz',
+        permanent: true,
+      },
+      {
+        source: '/prijdtancit/mladez',
+        destination: 'https://nabor.tkolymp.cz',
+        permanent: true,
+      },
     ];
 
     const olympSpecificConditions: NextRedirect[0]['has'] = [
@@ -82,16 +101,19 @@ export default compose(
     ];
 
     for (const condition of olympSpecificConditions) {
-      redirects.push(...olympSpecificRedirects.map(x => ({
-        ...x,
-        has: [condition],
-      })))
+      redirects.push(
+        ...olympSpecificRedirects.map((x) => ({
+          ...x,
+          has: [condition],
+        })),
+      );
     }
     return redirects;
   },
 
   async rewrites() {
     const rewrites: NextRewrite = [
+      { source: '/f/:id/:name*', destination: '/api/f/:id/:name*' },
       {
         source: '/',
         destination: '/dashboard',
@@ -100,7 +122,7 @@ export default compose(
       {
         source: '/clanky/:path*',
         destination: '/dashboard',
-        missing: [{ type: 'cookie', key: 'tenant_id', value: '1' },],
+        missing: [{ type: 'cookie', key: 'tenant_id', value: '1' }],
       },
     ];
     if (process.env.NODE_ENV !== 'production') {
@@ -108,14 +130,24 @@ export default compose(
       const externalServer = process.env.EXTERNAL_SERVER_URL || graphqlServer;
       rewrites.push(
         { source: '/member/download', destination: `${graphqlServer}/member/download` },
-        { source: '/galerie/:path*', destination: `${externalServer ?? ''}/galerie/:path*` },
+        {
+          source: '/galerie/:path*',
+          destination: `${externalServer ?? ''}/galerie/:path*`,
+        },
         { source: '/graphql', destination: `${graphqlServer}/graphql` },
+        { source: '/starlet/graphql', destination: `${graphqlServer}/graphql` },
         { source: '/graphiql', destination: `${graphqlServer}/graphiql` },
       );
     } else {
       rewrites.push(
-        { source: '/member/download', destination: "https://api.rozpisovnik.cz/member/download" },
-        { source: '/galerie/:path*', destination: 'https://api.rozpisovnik.cz/galerie/:path*' },
+        {
+          source: '/member/download',
+          destination: 'https://api.rozpisovnik.cz/member/download',
+        },
+        {
+          source: '/galerie/:path*',
+          destination: 'https://api.rozpisovnik.cz/galerie/:path*',
+        },
       );
     }
     return rewrites;

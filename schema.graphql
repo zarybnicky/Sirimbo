@@ -7612,7 +7612,6 @@ type Query {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventsConnection
-  evidenceStarlet(auth: String, data: JSON!, url: String!): JSON
   filteredPeopleList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -11186,6 +11185,8 @@ type User {
   """Reads a single `Tenant` that is related to this `User`."""
   tenant: Tenant
   tenantId: BigInt!
+  uConfirmed: Boolean!
+  uCreatedAt: Datetime
   uEmail: String!
   uJmeno: String
   uLogin: String
@@ -11231,6 +11232,12 @@ input UserCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
+
+  """Checks for equality with the object’s `uConfirmed` field."""
+  uConfirmed: Boolean
+
+  """Checks for equality with the object’s `uCreatedAt` field."""
+  uCreatedAt: Datetime
 
   """Checks for equality with the object’s `uEmail` field."""
   uEmail: String
@@ -11387,6 +11394,10 @@ enum UsersOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  U_CONFIRMED_ASC
+  U_CONFIRMED_DESC
+  U_CREATED_AT_ASC
+  U_CREATED_AT_DESC
   U_EMAIL_ASC
   U_EMAIL_DESC
   U_JMENO_ASC

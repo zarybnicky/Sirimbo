@@ -53,7 +53,7 @@ export async function fetchGql<TResult, TVariables>(
       variables,
     }),
   });
-  if (response.status !== 200) {
+  if (!response.ok) {
     throw new Error(
       `Failed to fetch: ${response.statusText}. Body: ${await response.text()}`,
     );

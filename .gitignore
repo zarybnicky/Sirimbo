@@ -32,3 +32,4 @@ frontend/public/swe-worker-*.js
 frontend/public/swe-worker-*.js.map
 
 olymp.psql
+olymp.dump

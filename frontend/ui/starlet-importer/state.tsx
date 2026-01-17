@@ -1,7 +1,6 @@
-import { EvidenceStarletDocument } from '@/graphql/CurrentUser';
-import { fetchGql } from '@/lib/query';
 import { UserRole } from '@/starlet/graphql';
 import { atom } from 'jotai';
+import { fetchStarlet } from '@/starlet/query';
 
 type LoginToken =
   | { auth_ok: false }
@@ -27,10 +26,9 @@ export const starletTokenAtom = atom(
       set(baseStarletTokenAtom, undefined);
       return;
     }
-    fetchGql(EvidenceStarletDocument, {
-      url: 'https://evidence.tsstarlet.com/spa_auth/login',
-      data: JSON.stringify({ login, password }),
-    }).then((x) => set(baseStarletTokenAtom, JSON.parse(x.evidenceStarlet)));
+    fetchStarlet('login' as any, { login, password }).then((x) => {
+      set(baseStarletTokenAtom, x as LoginToken);
+    });
   },
 );
 

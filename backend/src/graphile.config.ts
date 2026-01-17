@@ -9,7 +9,6 @@ import { pool, poolGraphqlContext } from './db.ts';
 import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
 import 'postgraphile/grafserv/express/v4';
 
-import proxyPlugin from './plugins/proxy.ts';
 import filePlugin from './plugins/file.ts';
 import currentUserPlugin from './plugins/current-user.ts';
 
@@ -51,8 +50,8 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
   if (authorization?.toLowerCase().startsWith('bearer ')) {
     token = authorization.substring(7);
   }
-  if (!token && req.cookies.auth) {
-    token = req.cookies.auth;
+  if (!token && req.cookies.rozpisovnik && req.cookies.rozpisovnik.length > 9) {
+    token = req.cookies.rozpisovnik;
   }
   if (!token) return settings;
 
@@ -96,7 +95,7 @@ const preset: GraphileConfig.Preset = {
   ],
 
   disablePlugins: ['NodePlugin'],
-  plugins: [...proxyPlugin, ...filePlugin, currentUserPlugin],
+  plugins: [...filePlugin, currentUserPlugin],
 
   grafast: {
     async context(ctx) {

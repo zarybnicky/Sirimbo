@@ -1,10 +1,9 @@
-import { EvidenceStarletDocument } from '@/graphql/CurrentUser';
+import { fetchStarlet } from '@/starlet/query';
 import { fetchGql } from '@/lib/query';
 import { Course, Student } from '@/starlet/graphql';
-import { CourseDocument, CourseQuery } from '@/starlet/graphql/Query';
+import { CourseDocument } from '@/starlet/graphql/Query';
 import { capitalize } from '@/ui/format';
 import { slugify } from '@/ui/slugify';
-import { print } from '@0no-co/graphql.web';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   CreatePersonDocument,
@@ -115,14 +114,10 @@ export function PersonComparisonForm() {
   const cohorts = cohortQuery?.getCurrentTenant?.cohortsList;
 
   const [coursesWithStudents, setCoursesWithStudents] = useState<CleanedCourse[]>([]);
-  const authToken = token?.auth_ok ? token?.auth_token : '';
   useEffect(() => {
     if (!token?.auth_ok) return;
-    fetchCoursesWithStudents(
-      authToken,
-      courses.map((x) => x[0]),
-    ).then(setCoursesWithStudents);
-  }, [token?.auth_ok, authToken, courses]);
+    fetchCoursesWithStudents(courses.map((x) => x[0])).then(setCoursesWithStudents);
+  }, [token?.auth_ok, courses]);
 
   const [students, problematic] = useMemo(
     () => deduplicateStudents(coursesWithStudents),
@@ -551,25 +546,17 @@ function disambiguateCandidates(student: DeduplicatedStudent, candidates: Person
     .find(Boolean);
 }
 
-async function fetchCoursesWithStudents(auth_token: string, courses: string[]) {
+async function fetchCoursesWithStudents(courses: string[]) {
   const result: CleanedCourse[] = [];
 
-  for (const course of courses) {
-    const { evidenceStarlet } = await fetchGql(EvidenceStarletDocument, {
-      url: 'https://evidence.tsstarlet.com/graphql',
-      data: JSON.stringify({
-        query: print(CourseDocument),
-        variables: { key: course },
-      }),
-      auth: auth_token,
-    });
+  for (const key of courses) {
+    const data = await fetchStarlet(CourseDocument, { key });
+    const { course } = data;
+    if (!course) continue;
+    const students = data.students ?? [];
 
-    const data = JSON.parse(evidenceStarlet).data as CourseQuery;
-    if (!data?.course) continue;
-
-    const students = data.students || [];
     const cleanedStudents = [];
-    for (const student of students) {
+    for (const student of students ?? []) {
       if (!student) continue;
 
       const name = getNormalizedName(student.name, student.surname);
@@ -580,7 +567,7 @@ async function fetchCoursesWithStudents(auth_token: string, courses: string[]) {
       const cleanedStudent: QueriedStudent = {
         normal_name: name,
         partner_name: partner ? getNormalizedName(partner.name, partner.surname) : null,
-        course_name: data.course.code!,
+        course_name: course.code!,
         key: student.key,
         course_key: student.course_key,
         sex: student.sex,
@@ -598,7 +585,7 @@ async function fetchCoursesWithStudents(auth_token: string, courses: string[]) {
       };
       cleanedStudents.push(cleanedStudent);
     }
-    result.push({ course: data.course as any, students: cleanedStudents });
+    result.push({ course: course as any, students: cleanedStudents });
   }
   return result;
 }
@@ -634,7 +621,6 @@ function deduplicateStudents(courses: CleanedCourse[]) {
           'Stejný rok narození ale jiné kontaktní údaje, nemůžu sloučit',
           candidates,
         ]);
-        continue;
       }
     } else if (birthYears.size >= phones.size && birthYears.size >= emails.size) {
       if (candidates.map((x) => x.year).some((x) => !x)) {
@@ -643,18 +629,18 @@ function deduplicateStudents(courses: CleanedCourse[]) {
           'Podle roku narození jiní lidé, ale některým rok narození chybí, nemůžu rozdělit',
           candidates,
         ]);
-        continue;
+      } else {
+        for (const discriminant of birthYears) {
+          deduplicated.push(
+            mergeCandidates(candidates.filter((x) => x.year === discriminant)),
+          );
+        }
+        if (birthYears.size > 1)
+          problematic.push([
+            `${normalName}: konflikt vyřešen rozdělením podle roků narození (${[...birthYears].join(', ')})`,
+            [],
+          ]);
       }
-      for (const discriminant of birthYears) {
-        deduplicated.push(
-          mergeCandidates(candidates.filter((x) => x.year === discriminant)),
-        );
-      }
-      if (birthYears.size > 1)
-        problematic.push([
-          `${normalName}: konflikt vyřešen rozdělením podle roků narození (${[...birthYears].join(', ')})`,
-          [],
-        ]);
     }
   }
 

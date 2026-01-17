@@ -1,13 +1,9 @@
-import {
-  EvidenceStarletDocument,
-  UpdateTenantSettingsDocument,
-} from '@/graphql/CurrentUser';
-import { fetchGql } from '@/lib/query';
+import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
+import { fetchStarlet } from '@/starlet/query';
 import { FoldersAndSeasonsDocument } from '@/starlet/graphql/Query';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { print } from '@0no-co/graphql.web';
 import React, { useEffect, useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
@@ -16,6 +12,7 @@ import { starletSettingsAtom, starletTokenAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { isTruthy } from '@/ui/truthyFilter';
 
 const Form = z.object({
   folders: z.record(z.string(), z.boolean().prefault(false)),
@@ -33,7 +30,7 @@ export function ChangeFoldersForm() {
   const { control, handleSubmit, reset } = useForm({
     resolver: zodResolver(Form),
   });
-  const update = useMutation(UpdateTenantSettingsDocument)[1];
+  const updateSettings = useMutation(UpdateTenantSettingsDocument)[1];
   const token = useAtomValue(starletTokenAtom);
 
   const { folders: prevFolders, seasons: prevSeasons } =
@@ -52,30 +49,23 @@ export function ChangeFoldersForm() {
   useEffect(() => {
     if (!token?.auth_ok) return;
 
-    fetchGql(EvidenceStarletDocument, {
-      url: 'https://evidence.tsstarlet.com/graphql',
-      data: JSON.stringify({
-        query: print(FoldersAndSeasonsDocument),
-        variables: {},
-      }),
-      auth: token.auth_token,
-    }).then((x) => {
-      const data = JSON.parse(x.evidenceStarlet).data;
+    fetchStarlet(FoldersAndSeasonsDocument, {}).then(({ folders, seasons }) => {
+      if (!folders || !seasons) return;
       setFolders(
-        data.folders.toSorted(
-          (x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value,
+        (folders.filter(isTruthy) as FolderOrSeason[]).toSorted(
+          (x, y) => x.order_value - y.order_value,
         ),
       );
       setSeasons(
-        data.seasons.toSorted(
-          (x: FolderOrSeason, y: FolderOrSeason) => x.order_value - y.order_value,
+        (seasons.filter(isTruthy) as FolderOrSeason[]).toSorted(
+          (x, y) => x.order_value - y.order_value,
         ),
       );
     });
-  }, [token]);
+  }, [token?.auth_ok]);
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    await update({
+    await updateSettings({
       input: {
         path: ['evidenceFolders'],
         newValue: JSON.stringify(
@@ -85,7 +75,7 @@ export function ChangeFoldersForm() {
         ),
       },
     });
-    await update({
+    await updateSettings({
       input: {
         path: ['evidenceSeasons'],
         newValue: JSON.stringify(
@@ -101,32 +91,28 @@ export function ChangeFoldersForm() {
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <div className="grid grid-cols-2">
-        {folders && (
-          <ul>
-            {folders.map((x) => (
-              <li key={x.key}>
-                <CheckboxElement
-                  control={control}
-                  name={`folders.${x.key}`}
-                  label={x.name}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
-        {seasons && (
-          <ul>
-            {seasons.map((x) => (
-              <li key={x.key}>
-                <CheckboxElement
-                  control={control}
-                  name={`seasons.${x.key}`}
-                  label={x.name}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul>
+          {folders.map((x) => (
+            <li key={x.key}>
+              <CheckboxElement
+                control={control}
+                name={`folders.${x.key}`}
+                label={x.name}
+              />
+            </li>
+          ))}
+        </ul>
+        <ul>
+          {seasons.map((x) => (
+            <li key={x.key}>
+              <CheckboxElement
+                control={control}
+                name={`seasons.${x.key}`}
+                label={x.name}
+              />
+            </li>
+          ))}
+        </ul>
       </div>
       <SubmitButton loading={onSubmit.loading} />
     </form>

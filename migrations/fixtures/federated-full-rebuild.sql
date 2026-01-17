@@ -1,10 +1,12 @@
-drop schema if exists federated cascade;
-
 update crawler.frontier set process_status = 'pending'
 where fetch_status in ('ok', 'pending');
 
+select graphile_worker.complete_jobs(array_agg(id)) from graphile_worker.jobs where task_identifier in ('frontier_schedule', 'frontier_process');
+
 create extension if not exists btree_gist;
 CREATE EXTENSION IF NOT EXISTS unaccent;
+
+drop schema if exists federated cascade;
 
 create schema federated;
 
@@ -886,3 +888,5 @@ $$ language sql stable;
 
 comment on function public.person_csts_progress is '@simpleCollections only';
 grant all on function public.person_csts_progress to anonymous;
+
+select graphile_worker.add_job('frontier_process');

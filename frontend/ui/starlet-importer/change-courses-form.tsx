@@ -1,13 +1,8 @@
-import {
-  EvidenceStarletDocument,
-  UpdateTenantSettingsDocument,
-} from '@/graphql/CurrentUser';
-import { fetchGql } from '@/lib/query';
+import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
 import { EnumerateCoursesDocument } from '@/starlet/graphql/Query';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { print } from '@0no-co/graphql.web';
 import React, { useEffect, useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
@@ -16,6 +11,7 @@ import { starletSettingsAtom, starletTokenAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { fetchStarlet } from '@/starlet/query';
 
 const Form = z.object({
   courses: z.record(z.string(), z.boolean().prefault(false)),
@@ -26,7 +22,6 @@ type SimpleCourse = {
   name: string;
   period: string;
   code: string;
-  evi_group: string;
 };
 
 export function ChangeCoursesForm() {
@@ -51,11 +46,10 @@ export function ChangeCoursesForm() {
     if (!token?.auth_ok) return;
 
     fetchCoursesByFolders(
-      token.auth_token,
       folders.map((x) => x[0]),
       seasons.map((x) => x[0]),
     ).then(setCourses);
-  }, [folders, token, seasons]);
+  }, [folders, token?.auth_ok, seasons]);
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     await update({
@@ -94,24 +88,18 @@ export function ChangeCoursesForm() {
   );
 }
 
-async function fetchCoursesByFolders(
-  token: string,
-  folders: string[],
-  seasons: string[],
-) {
+async function fetchCoursesByFolders(folders: string[], seasons: string[]) {
   const result: SimpleCourse[] = [];
 
   for (const folder of folders) {
     for (const season of seasons) {
-      const { evidenceStarlet } = await fetchGql(EvidenceStarletDocument, {
-        url: 'https://evidence.tsstarlet.com/graphql',
-        data: JSON.stringify({
-          query: print(EnumerateCoursesDocument),
-          variables: { folder, season },
-        }),
-        auth: token,
-      });
-      result.push(...JSON.parse(evidenceStarlet).data.courses);
+      const data = await fetchStarlet(EnumerateCoursesDocument, { folder, season });
+      for (const course of data?.courses ?? []) {
+        if (!course) continue;
+        const { key, code, name, period } = course;
+        if (!key || !code || !name || !period) continue;
+        result.push({ key, code, name, period });
+      }
     }
   }
   return result.toSorted((x, y) => x.code.localeCompare(y.code));
