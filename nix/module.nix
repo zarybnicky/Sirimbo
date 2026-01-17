@@ -184,14 +184,6 @@ in {
             ignore_invalid_headers off;
             client_max_body_size 0;
             proxy_buffering off;
-            if ($http_origin = '''){
-              set $http_origin "*";
-            }
-            proxy_hide_header Access-Control-Allow-Origin;
-            add_header Access-Control-Allow-Origin $http_origin always;
-            add_header Access-Control-Allow-Credentials 'true' always;
-            add_header Access-Control-Allow-Methods 'GET,OPTIONS,PATCH,DELETE,POST,PUT' always;
-            add_header Access-Control-Allow-Headers 'X-Tenant-Id,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version' always;
           '';
 
           locations."/gallery".root = cfg.stateDir;
