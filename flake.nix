@@ -19,7 +19,6 @@
 
     overlays.default = final: prev: {
       graphile-migrate = final.callPackage ./nix/graphile-migrate {};
-      tbls = final.callPackage ./nix/tbls {};
 
       rozpisovnik-worker = final.callPackage ./nix/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./worker/package.json;
@@ -53,7 +52,6 @@
           pkgs.postgresql_18
           pkgs.sqlfluff
           pkgs.pgformatter
-          pkgs.tbls
           pkgs.overmind
           pkgs.prefetch-npm-deps
         ];
@@ -63,7 +61,6 @@
     packages = forAllSystems (pkgs: {
       inherit (pkgs)
         graphile-migrate
-        tbls
         rozpisovnik-api
         rozpisovnik-worker
         rozpisovnik-migrations;
