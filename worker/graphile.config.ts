@@ -1,8 +1,8 @@
 import type { GraphileConfig } from "graphile-config";
 import type {} from "graphile-worker";
-import { initSDK } from '@hyperdx/node-opentelemetry';
+import * as HyperDX from '@hyperdx/node-opentelemetry';
 
-initSDK({
+HyperDX.init({
   consoleCapture: false,
   service: 'rozpisovnik-worker',
 });

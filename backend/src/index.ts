@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-import { init, setupExpressErrorHandler } from '@hyperdx/node-opentelemetry';
-init({
+import * as HyperDX from '@hyperdx/node-opentelemetry';
+
+HyperDX.init({
   consoleCapture: false,
   service: 'rozpisovnik-api',
 });
@@ -75,8 +76,6 @@ serv.addTo(app, server).catch((e) => {
   console.error(e);
   process.exit(1);
 });
-
-setupExpressErrorHandler(app);
 
 server.listen(preset.grafserv?.port ?? 5000, () => {
   const address = server.address();

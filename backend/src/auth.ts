@@ -8,7 +8,6 @@ import {
   makePgAdaptorWithPgClient,
   type NodePostgresPgClient,
 } from '@dataplan/pg/adaptors/pg';
-import { setTraceAttributes } from '@hyperdx/node-opentelemetry';
 
 export const JWT_SECRET = process.env.JWT_SECRET!;
 if (!JWT_SECRET && process.env.NODE_ENV !== 'development') {
@@ -121,10 +120,6 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
 export function authContext() {
   return async (req: express.Request, _res: unknown, next: express.NextFunction) => {
     req.pgSettings = await loadUserFromSession(req);
-
-    if (req.pgSettings) {
-      setTraceAttributes(req.pgSettings);
-    }
     next();
   };
 }
