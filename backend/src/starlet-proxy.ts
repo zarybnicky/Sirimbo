@@ -36,4 +36,5 @@ export const installStarletProxy = (app: Application) => {
       },
     }),
   );
+  app.options('/starlet/graphql', (_req, res) => res.sendStatus(204));
 };
