@@ -1,5 +1,11 @@
 import type { GraphileConfig } from "graphile-config";
 import type {} from "graphile-worker";
+import { initSDK } from '@hyperdx/node-opentelemetry';
+
+initSDK({
+  consoleCapture: false,
+  service: 'rozpisovnik-worker',
+});
 
 const preset: GraphileConfig.Preset = {
   worker: {

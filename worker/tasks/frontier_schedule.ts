@@ -12,7 +12,7 @@ const MAX_OUTSTANDING_FETCH = 100;
 export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, helpers) => {
   const { withPgClient, addJob, logger } = helpers;
 
-  const allowRefetch = process.env.DISABLE_REFETCH !== 'true';
+  const allowRefetch = process.env.CRAWLER_DISABLE_REFETCH !== 'true';
 
   await withPgClient(async (client) => {
     const scheduleRows = await getFetchScheduleRules.run(undefined, client);

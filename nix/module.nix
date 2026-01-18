@@ -105,6 +105,17 @@ in {
         description = "${pkgName} AWS_SECRET_ACCESS_KEY";
       };
     };
+
+    otel = {
+      endpoint = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} OTEL_EXPORTER_OTLP_ENDPOINT";
+      };
+      apiKey = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} HYPERDX_API_KEY";
+      };
+    };
   };
 
   config = lib.mkMerge [
@@ -156,6 +167,11 @@ in {
           S3_REGION = cfg.s3.region;
           S3_ENDPOINT = cfg.s3.endpoint;
           S3_PUBLIC_ENDPOINT = if cfg.s3.publicEndpoint != null then cfg.s3.publicEndpoint else cfg.s3.endpoint;
+
+          OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
+          OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
+          HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
+          HDX_NODE_BETA_MODE = "1";
         };
 
         serviceConfig = {
@@ -239,6 +255,11 @@ in {
           SMTP_USER = cfg.smtp.user;
           SMTP_PASS = cfg.smtp.pass;
           WDSF_AUTH = cfg.wdsfAuth;
+
+          OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
+          OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
+          HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
+          HDX_NODE_BETA_MODE = "1";
         };
 
         serviceConfig = {
