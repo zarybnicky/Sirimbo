@@ -7,13 +7,13 @@ declare
   duration numeric(19, 4);
   counter int;
 begin
+  if current_tenant_id() <> 2 then
+    return null;
+  end if;
+
   select * into payment from payment where event_instance_id = i.id;
   if found then
     return payment;
-  end if;
-
-  if current_tenant_id() <> 2 then
-    return null;
   end if;
 
   select * into e from event where id = i.event_id;
