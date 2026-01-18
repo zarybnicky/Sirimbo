@@ -2,32 +2,58 @@ import express from 'express';
 import 'graphile-config';
 import jwt from 'jsonwebtoken';
 import path from 'path';
-import * as adaptor from 'postgraphile/@dataplan/pg/adaptors/pg';
 import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
 import { makeV4Preset } from 'postgraphile/presets/v4';
-import { pool, poolGraphqlContext } from './db.ts';
+import { pool } from './db.ts';
 import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
 import 'postgraphile/grafserv/express/v4';
-
+import { LRUCache } from 'lru-cache';
 import filePlugin from './plugins/file.ts';
 import currentUserPlugin from './plugins/current-user.ts';
+import { makePgService } from 'postgraphile/@dataplan/pg/adaptors/pg';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
+
+const JWT_SECRET = process.env.JWT_SECRET!;
+if (!JWT_SECRET && process.env.NODE_ENV !== 'development') {
+  throw new Error('JWT_SECRET must be set');
+}
+
+const tenantCache = new LRUCache<string, string>({
+  max: 500,
+  ttl: 5 * 60 * 1000, // 5 min
+});
+
+function normalizeOrigin(req: express.Request) {
+  const raw = req.get('origin');
+  if (!raw) return '';
+  try {
+    return new URL(raw).origin.toLowerCase();
+  } catch {
+    return '';
+  }
+}
 
 async function findTenantId(req: express.Request): Promise<string> {
   const tenantId = req.get('x-tenant-id');
   if (tenantId) return tenantId;
 
+  const hostname = (req.hostname || '').toLowerCase();
+  const origin = normalizeOrigin(req);
+  const key = `${hostname}|${origin}`;
+
+  const cached = tenantCache.get(key);
+  if (cached) return cached;
+
   const {
     rows: [host],
   } = await pool.query(
     'select id from tenant where $1 = any (origins) or $2 = any (origins)',
-    [req.headers.host, req.headers.origin],
+    [hostname, origin],
   );
-  if (host) {
-    return host.id;
-  }
-  return '1';
+  const resolved = host ? host.id : '1';
+  tenantCache.set(key, resolved);
+  return resolved;
 }
 
 async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
@@ -55,8 +81,9 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
   }
   if (!token) return settings;
 
-  const claims = jwt.verify(token, process.env.JWT_SECRET || '', {
+  const claims = jwt.verify(token, JWT_SECRET, {
     ignoreExpiration: true,
+    algorithms: ['HS256'],
   }) as jwt.JwtPayload;
 
   settings.role = claims.is_system_admin
@@ -102,7 +129,6 @@ const preset: GraphileConfig.Preset = {
       const { req } = ctx.expressv4 ?? {};
       return {
         pgSettings: req ? await loadUserFromSession(req) : {},
-        ...poolGraphqlContext,
       };
     },
     explain: isDevelopment,
@@ -113,30 +139,26 @@ const preset: GraphileConfig.Preset = {
     graphiql: isDevelopment,
   },
   gather: {
-    pgJwtTypes: 'public.jwt_token',
+    pgJwtTypes: ['public.jwt_token'],
+    installWatchFixtures: true,
   },
   schema: {
-    pgJwtSecret: process.env.JWT_SECRET || '',
+    pgJwtSecret: JWT_SECRET,
+    pgJwtSignOptions: {
+      algorithm: 'HS256',
+    },
     pgForbidSetofFunctionsToReturnNull: true,
     retryOnInitFail: true,
     sortExport: true,
     exportSchemaSDLPath: isDevelopment ? path.resolve('../schema.graphql') : undefined,
   },
-
   pgServices: [
-    {
+    makePgService({
       name: 'main',
       schemas: ['public'],
-      pgSettingsKey: 'pgSettings',
-      pgSubscriberKey: 'pgSubscriber' as any as undefined,
-      withPgClientKey: 'withPgClient',
-      adaptor,
-      adaptorSettings: {
-        pool,
-        // superuserConnectionString: process.env.SUPERUSER_DATABASE_URL,
-      },
-      pgSubscriber: new adaptor.PgSubscriber(pool),
-    },
+      pool,
+      superuserPool: pool,
+    }),
   ],
 };
 
