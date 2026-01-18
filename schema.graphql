@@ -7703,18 +7703,6 @@ type Query {
     orderByUpdated: Boolean
     sticky: Boolean
   ): AnnouncementsConnection
-  myEventInstancesForRangeList(
-    endRange: Datetime
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-    onlyType: EventType
-    startRange: Datetime
-    trainerIds: [BigInt]
-  ): [EventInstance!] @deprecated(reason: " ")
 
   """Get a single `Payment`."""
   payment(id: BigInt!): Payment

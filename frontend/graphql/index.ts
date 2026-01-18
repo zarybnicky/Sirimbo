@@ -6077,8 +6077,6 @@ export type Query = {
   membershipApplicationsList: Maybe<Array<MembershipApplication>>;
   /** Reads and enables pagination through a set of `Announcement`. */
   myAnnouncements: Maybe<AnnouncementsConnection>;
-  /** @deprecated   */
-  myEventInstancesForRangeList: Maybe<Array<EventInstance>>;
   /** Get a single `Payment`. */
   payment: Maybe<Payment>;
   /** Get a single `PaymentDebtor`. */
@@ -6662,17 +6660,6 @@ export type QueryMyAnnouncementsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderByUpdated?: InputMaybe<Scalars['Boolean']['input']>;
   sticky?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryMyEventInstancesForRangeListArgs = {
-  endRange?: InputMaybe<Scalars['Datetime']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  onlyType?: InputMaybe<EventType>;
-  startRange?: InputMaybe<Scalars['Datetime']['input']>;
-  trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
 };
 
 
@@ -9718,7 +9705,6 @@ export type GraphCacheResolvers = {
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
-    myEventInstancesForRangeList?: GraphCacheResolver<WithTypename<Query>, QueryMyEventInstancesForRangeListArgs, Array<WithTypename<EventInstance> | string>>,
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
@@ -11454,7 +11440,6 @@ export type GraphCacheUpdaters = {
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
     myAnnouncements?: GraphCacheUpdateResolver<{ myAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryMyAnnouncementsArgs>,
-    myEventInstancesForRangeList?: GraphCacheUpdateResolver<{ myEventInstancesForRangeList: Maybe<Array<WithTypename<EventInstance>>> }, QueryMyEventInstancesForRangeListArgs>,
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
     paymentDebtorsList?: GraphCacheUpdateResolver<{ paymentDebtorsList: Maybe<Array<WithTypename<PaymentDebtor>>> }, QueryPaymentDebtorsListArgs>,

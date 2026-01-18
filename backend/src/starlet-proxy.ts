@@ -1,9 +1,14 @@
 import proxy from 'express-http-proxy';
 import type { Application } from 'express';
+import cors from 'cors';
 
 export const installStarletProxy = (app: Application) => {
   app.use(
     '/starlet/graphql',
+    cors({
+      origin: true,
+      credentials: true,
+    }),
     proxy('https://evidence.tsstarlet.com', {
       parseReqBody: true,
       proxyReqPathResolver(req) {

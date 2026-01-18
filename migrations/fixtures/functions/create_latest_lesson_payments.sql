@@ -8,7 +8,7 @@ begin
     set local role to administrator;
   end if;
 
-  WITH created AS (
+  return query WITH created AS (
     SELECT p.*
     FROM event_instance ei
       JOIN event e ON e.id = ei.event_id

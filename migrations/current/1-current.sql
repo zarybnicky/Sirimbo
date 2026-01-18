@@ -9,3 +9,5 @@
 alter table event drop column if exists payment_type;
 
 drop type if exists event_payment_type;
+
+drop function if exists my_event_instances_for_range;
