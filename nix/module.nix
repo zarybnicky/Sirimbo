@@ -205,14 +205,7 @@ in {
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
-          locations."/member/download" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
-          };
-          locations."/graphql" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
-            proxyWebsockets = true;
-          };
-          locations."/graphiql" = {
+          locations."/" = {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
             proxyWebsockets = true;
           };
