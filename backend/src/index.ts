@@ -39,6 +39,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text({ type: 'application/graphql' }));
 
+installStarletProxy(app);
+
 app.use(authContext());
 
 app.get('/member/download', async function (req, res) {
@@ -61,8 +63,6 @@ app.get('/member/download', async function (req, res) {
     res.download(path, rows[0].d_filename);
   });
 });
-
-installStarletProxy(app);
 
 const server = createServer(app);
 server.on('error', (e) => {
