@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import { chdir } from 'node:process';
+chdir(import.meta.dirname);
+
 import process from 'process';
 import express from 'express';
 import bodyParser from 'body-parser';

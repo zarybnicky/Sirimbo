@@ -31,7 +31,7 @@
         packageJSON = final.lib.importJSON ./backend/package.json;
         workspaceFolders = [ "backend" ];
         pnpmDepsHash = builtins.readFile ./backend/pnpm-deps-hash.txt;
-        postInstall = "cp -s $out/share/backend/dist/index.cjs $out/bin/rozpisovnik-api";
+        postInstall = "cp -s $out/share/backend/src/index.ts $out/bin/rozpisovnik-api";
       };
 
       rozpisovnik-migrations = final.runCommand "rozpisovnik-migrations" {} ''

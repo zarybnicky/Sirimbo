@@ -179,7 +179,7 @@ in {
           User = cfg.user;
           Group = cfg.group;
           ExecStart = "${pkgs.rozpisovnik-api}/bin/rozpisovnik-api";
-          WorkingDirectory = cfg.stateDir;
+          WorkingDirectory = "${pkgs.rozpisovnik-api}/share";
           Restart = "always";
           RestartSec = "10s";
         };

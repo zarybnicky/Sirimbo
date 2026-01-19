@@ -9,7 +9,7 @@ import filePlugin from './plugins/file.ts';
 import currentUserPlugin from './plugins/current-user.ts';
 import { makePgService } from 'postgraphile/@dataplan/pg/adaptors/pg';
 import { JWT_SECRET } from './auth.ts';
-//import { OTELPlugin } from './postgraphile-otel.ts';
+import { OTELPlugin } from './postgraphile-otel.ts';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -24,11 +24,7 @@ const preset: GraphileConfig.Preset = {
   ],
 
   disablePlugins: ['NodePlugin'],
-  plugins: [
-    ...filePlugin,
-    currentUserPlugin,
-    //OTELPlugin
-  ],
+  plugins: [...filePlugin, currentUserPlugin, OTELPlugin],
 
   grafast: {
     async context(ctx) {

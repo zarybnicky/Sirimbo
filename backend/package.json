@@ -7,9 +7,9 @@
   "license": "MIT",
   "private": true,
   "type": "module",
-  "bin": "./dist/index.cjs",
+  "bin": "./src/index.cjs",
   "scripts": {
-    "build": "tsc --noEmit && node build.cjs",
+    "build": "tsc --noEmit",
     "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node src/index.ts\"",
     "import:people": "node ./scripts/import_people_from_csv.ts"
   },
@@ -66,7 +66,6 @@
     "@types/nodemailer": "~6.4.21",
     "@types/pg": "8.15.6",
     "@types/ws": "^8.18.1",
-    "esbuild": "^0.25.12",
     "eslint": "^9.39.1",
     "typescript": "~5.9.3"
   }
