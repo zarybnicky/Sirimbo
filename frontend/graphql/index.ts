@@ -606,7 +606,6 @@ export type ArchiveCohortPayloadCohortEdgeArgs = {
 export type Attachment = {
   __typename?: 'Attachment';
   directory: Maybe<Scalars['String']['output']>;
-  downloadUrl: Scalars['String']['output'];
   height: Maybe<Scalars['Int']['output']>;
   objectName: Scalars['String']['output'];
   previewObjectName: Maybe<Scalars['String']['output']>;
@@ -2158,40 +2157,6 @@ export type DeleteAnnouncementPayload = {
 /** The output of our delete `Announcement` mutation. */
 export type DeleteAnnouncementPayloadAnnouncementEdgeArgs = {
   orderBy?: Array<AnnouncementsOrderBy>;
-};
-
-/** All input for the `deleteAttachment` mutation. */
-export type DeleteAttachmentInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  objectName: Scalars['String']['input'];
-};
-
-/** The output of our delete `Attachment` mutation. */
-export type DeleteAttachmentPayload = {
-  __typename?: 'DeleteAttachmentPayload';
-  /** The `Attachment` that was deleted by this mutation. */
-  attachment: Maybe<Attachment>;
-  /** An edge for our `Attachment`. May be used by Relay 1. */
-  attachmentEdge: Maybe<AttachmentsEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `Attachment`. */
-  user: Maybe<User>;
-};
-
-
-/** The output of our delete `Attachment` mutation. */
-export type DeleteAttachmentPayloadAttachmentEdgeArgs = {
-  orderBy?: Array<AttachmentsOrderBy>;
 };
 
 /** All input for the `deleteCohortGroup` mutation. */
@@ -4511,8 +4476,6 @@ export type Mutation = {
   deleteAktuality: Maybe<DeleteAktualityPayload>;
   /** Deletes a single `Announcement` using a unique key. */
   deleteAnnouncement: Maybe<DeleteAnnouncementPayload>;
-  /** Deletes a single `Attachment` using a unique key. */
-  deleteAttachment: Maybe<DeleteAttachmentPayload>;
   /** Deletes a single `Cohort` using a unique key. */
   deleteCohort: Maybe<DeleteCohortPayload>;
   /** Deletes a single `CohortGroup` using a unique key. */
@@ -4773,12 +4736,6 @@ export type MutationDeleteAktualityArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAnnouncementArgs = {
   input: DeleteAnnouncementInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAttachmentArgs = {
-  input: DeleteAttachmentInput;
 };
 
 
@@ -9520,7 +9477,6 @@ export type GraphCacheKeysConfig = {
   DatetimeRangeBound?: (data: WithTypename<DatetimeRangeBound>) => null | string,
   DeleteAktualityPayload?: (data: WithTypename<DeleteAktualityPayload>) => null | string,
   DeleteAnnouncementPayload?: (data: WithTypename<DeleteAnnouncementPayload>) => null | string,
-  DeleteAttachmentPayload?: (data: WithTypename<DeleteAttachmentPayload>) => null | string,
   DeleteCohortGroupPayload?: (data: WithTypename<DeleteCohortGroupPayload>) => null | string,
   DeleteCohortMembershipPayload?: (data: WithTypename<DeleteCohortMembershipPayload>) => null | string,
   DeleteCohortPayload?: (data: WithTypename<DeleteCohortPayload>) => null | string,
@@ -9858,7 +9814,6 @@ export type GraphCacheResolvers = {
   },
   Attachment?: {
     directory?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
-    downloadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     height?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Int'] | string>,
     objectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     previewObjectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
@@ -10184,13 +10139,6 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, Scalars['String'] | string>,
     query?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, WithTypename<Tenant> | string>
-  },
-  DeleteAttachmentPayload?: {
-    attachment?: GraphCacheResolver<WithTypename<DeleteAttachmentPayload>, Record<string, never>, WithTypename<Attachment> | string>,
-    attachmentEdge?: GraphCacheResolver<WithTypename<DeleteAttachmentPayload>, DeleteAttachmentPayloadAttachmentEdgeArgs, WithTypename<AttachmentsEdge> | string>,
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteAttachmentPayload>, Record<string, never>, Scalars['String'] | string>,
-    query?: GraphCacheResolver<WithTypename<DeleteAttachmentPayload>, Record<string, never>, WithTypename<Query> | string>,
-    user?: GraphCacheResolver<WithTypename<DeleteAttachmentPayload>, Record<string, never>, WithTypename<User> | string>
   },
   DeleteCohortGroupPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteCohortGroupPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -11314,7 +11262,6 @@ export type GraphCacheOptimisticUpdaters = {
   createUserProxy?: GraphCacheOptimisticMutationResolver<MutationCreateUserProxyArgs, Maybe<WithTypename<CreateUserProxyPayload>>>,
   deleteAktuality?: GraphCacheOptimisticMutationResolver<MutationDeleteAktualityArgs, Maybe<WithTypename<DeleteAktualityPayload>>>,
   deleteAnnouncement?: GraphCacheOptimisticMutationResolver<MutationDeleteAnnouncementArgs, Maybe<WithTypename<DeleteAnnouncementPayload>>>,
-  deleteAttachment?: GraphCacheOptimisticMutationResolver<MutationDeleteAttachmentArgs, Maybe<WithTypename<DeleteAttachmentPayload>>>,
   deleteCohort?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortArgs, Maybe<WithTypename<DeleteCohortPayload>>>,
   deleteCohortGroup?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortGroupArgs, Maybe<WithTypename<DeleteCohortGroupPayload>>>,
   deleteCohortMembership?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortMembershipArgs, Maybe<WithTypename<DeleteCohortMembershipPayload>>>,
@@ -11511,7 +11458,6 @@ export type GraphCacheUpdaters = {
     createUserProxy?: GraphCacheUpdateResolver<{ createUserProxy: Maybe<WithTypename<CreateUserProxyPayload>> }, MutationCreateUserProxyArgs>,
     deleteAktuality?: GraphCacheUpdateResolver<{ deleteAktuality: Maybe<WithTypename<DeleteAktualityPayload>> }, MutationDeleteAktualityArgs>,
     deleteAnnouncement?: GraphCacheUpdateResolver<{ deleteAnnouncement: Maybe<WithTypename<DeleteAnnouncementPayload>> }, MutationDeleteAnnouncementArgs>,
-    deleteAttachment?: GraphCacheUpdateResolver<{ deleteAttachment: Maybe<WithTypename<DeleteAttachmentPayload>> }, MutationDeleteAttachmentArgs>,
     deleteCohort?: GraphCacheUpdateResolver<{ deleteCohort: Maybe<WithTypename<DeleteCohortPayload>> }, MutationDeleteCohortArgs>,
     deleteCohortGroup?: GraphCacheUpdateResolver<{ deleteCohortGroup: Maybe<WithTypename<DeleteCohortGroupPayload>> }, MutationDeleteCohortGroupArgs>,
     deleteCohortMembership?: GraphCacheUpdateResolver<{ deleteCohortMembership: Maybe<WithTypename<DeleteCohortMembershipPayload>> }, MutationDeleteCohortMembershipArgs>,
@@ -11682,7 +11628,6 @@ export type GraphCacheUpdaters = {
   },
   Attachment?: {
     directory?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    downloadUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     height?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     previewObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
@@ -12008,13 +11953,6 @@ export type GraphCacheUpdaters = {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAnnouncementPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAnnouncementPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAnnouncementPayload>>, Record<string, never>>
-  },
-  DeleteAttachmentPayload?: {
-    attachment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>,
-    attachmentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, DeleteAttachmentPayloadAttachmentEdgeArgs>,
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>,
-    query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>,
-    user?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteAttachmentPayload>>, Record<string, never>>
   },
   DeleteCohortGroupPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCohortGroupPayload>>, Record<string, never>>,

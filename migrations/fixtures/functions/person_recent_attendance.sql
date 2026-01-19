@@ -7,6 +7,7 @@ CREATE or replace FUNCTION public.person_recent_attendance(p public.person) RETU
   where person_id = p.id
     and since <= (CURRENT_DATE + interval '1 day')
     and since > (CURRENT_DATE - interval '6 month')
+    and status <> 'cancelled'
   order by since desc
 $$;
 

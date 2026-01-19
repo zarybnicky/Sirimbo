@@ -1302,17 +1302,6 @@
             "args": []
           },
           {
-            "name": "downloadUrl",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "height",
             "type": {
               "kind": "SCALAR",
@@ -4587,74 +4576,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "Tenant",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DeleteAttachmentPayload",
-        "fields": [
-          {
-            "name": "attachment",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Attachment",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "attachmentEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AttachmentsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "ofType": {
-                        "kind": "SCALAR",
-                        "name": "Any"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "query",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "user",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
               "ofType": null
             },
             "args": []
@@ -9935,26 +9856,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "DeleteAnnouncementPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "deleteAttachment",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DeleteAttachmentPayload",
               "ofType": null
             },
             "args": [

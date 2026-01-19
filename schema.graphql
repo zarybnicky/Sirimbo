@@ -669,7 +669,6 @@ type ArchiveCohortPayload {
 
 type Attachment {
   directory: String
-  downloadUrl: String!
   height: Int
   objectName: String!
   previewObjectName: String
@@ -2553,42 +2552,6 @@ type DeleteAnnouncementPayload {
 
   """Reads a single `Tenant` that is related to this `Announcement`."""
   tenant: Tenant
-}
-
-"""All input for the `deleteAttachment` mutation."""
-input DeleteAttachmentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  objectName: String!
-}
-
-"""The output of our delete `Attachment` mutation."""
-type DeleteAttachmentPayload {
-  """The `Attachment` that was deleted by this mutation."""
-  attachment: Attachment
-
-  """An edge for our `Attachment`. May be used by Relay 1."""
-  attachmentEdge(
-    """The method to use when ordering `Attachment`."""
-    orderBy: [AttachmentsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AttachmentsEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `Attachment`."""
-  user: User
 }
 
 """All input for the `deleteCohortGroup` mutation."""
@@ -5529,14 +5492,6 @@ type Mutation {
     """
     input: DeleteAnnouncementInput!
   ): DeleteAnnouncementPayload
-
-  """Deletes a single `Attachment` using a unique key."""
-  deleteAttachment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAttachmentInput!
-  ): DeleteAttachmentPayload
 
   """Deletes a single `Cohort` using a unique key."""
   deleteCohort(

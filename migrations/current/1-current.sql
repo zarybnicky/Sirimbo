@@ -1,4 +1,3 @@
-
 --!include functions/create_event_instance_payment.sql
 --!include functions/resolve_payment_with_credit.sql
 --!include functions/event_instance_approx_price.sql
@@ -11,3 +10,5 @@ alter table event drop column if exists payment_type;
 drop type if exists event_payment_type;
 
 drop function if exists my_event_instances_for_range;
+
+COMMENT ON TABLE public.attachment IS '@omit update,delete';
