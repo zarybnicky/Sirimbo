@@ -1,12 +1,5 @@
 #!/usr/bin/env node
 
-import * as HyperDX from '@hyperdx/node-opentelemetry';
-
-HyperDX.init({
-  consoleCapture: false,
-  service: 'rozpisovnik-api',
-});
-
 import process from 'process';
 import express from 'express';
 import bodyParser from 'body-parser';

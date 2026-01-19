@@ -170,8 +170,10 @@ in {
 
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
           OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
+          OTEL_SERVICE_NAME = "rozpisovnik-api";
           HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
           HDX_NODE_BETA_MODE = "1";
+          NODE_OPTIONS = "--require '@hyperdx/node-opentelemetry/build/src/tracing'";
         };
 
         serviceConfig = {
@@ -251,8 +253,10 @@ in {
 
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
           OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
+          OTEL_SERVICE_NAME = "rozpisovnik-api";
           HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
           HDX_NODE_BETA_MODE = "1";
+          NODE_OPTIONS = "--require '@hyperdx/node-opentelemetry/build/src/tracing'";
         };
 
         serviceConfig = {
