@@ -1,5 +1,7 @@
-import { type Span, SpanStatusCode, trace } from '@opentelemetry/api';
+import { context, type Span, SpanStatusCode, trace } from '@opentelemetry/api';
 import type { Result } from 'postgraphile/grafserv';
+import type { MiddlewareNext } from 'graphile-config';
+import type { PromiseOrDirect } from 'grafast';
 
 declare module 'grafast' {
   interface ExecutionExtra {
@@ -26,52 +28,12 @@ export const OTELPlugin: GraphileConfig.Plugin = {
         // @ts-expect-error
         const isHttpRequest = parentSpan?.['attributes']?.['http.method'];
         if (parentSpan && isHttpRequest) {
-          return executeWithSpan(parentSpan);
+          return executeWithSpan(parentSpan, next, true);
         }
 
-        return tracer.startActiveSpan('GraphQL Request', executeWithSpan);
-
-        function executeWithSpan(span: Span) {
-          let rslt: ReturnType<typeof next>;
-          try {
-            rslt = next();
-          } catch (err: any) {
-            onSpanError(span, err, true);
-          }
-
-          if (!(rslt instanceof Promise)) {
-            endSpan(span);
-            return rslt;
-          }
-
-          return rslt
-            .then((obj: Result | null) => {
-              if (obj?.type === 'error') {
-                span.recordException(obj.error);
-                span.setStatus({
-                  code: SpanStatusCode.ERROR,
-                  message: obj.error.message,
-                });
-              } else if (
-                obj?.type === 'json' &&
-                typeof obj.json === 'object' &&
-                obj.json !== null &&
-                'errors' in obj.json &&
-                Array.isArray(obj.json.errors) &&
-                obj.json.errors.length
-              ) {
-                span.setStatus({
-                  code: SpanStatusCode.ERROR,
-                  // @ts-expect-error
-                  message: obj.json.errors[0]?.['message'] || 'Unknown error',
-                });
-              }
-
-              return obj;
-            })
-            .catch((err) => onSpanError(span, err))
-            .finally(() => endSpan(span));
-        }
+        return tracer.startActiveSpan('GraphQL Request', (span) =>
+          executeWithSpan(span, next, false),
+        );
       },
     },
   },
@@ -117,7 +79,7 @@ export const OTELPlugin: GraphileConfig.Plugin = {
           } catch (err: any) {
             onSpanError(span, err);
           } finally {
-            endSpan(span);
+            span.end();
           }
         });
       },
@@ -126,27 +88,34 @@ export const OTELPlugin: GraphileConfig.Plugin = {
         return tracer.startActiveSpan('ExecuteStep: ' + stepname, (span) => {
           event.executeDetails.extra.span = span;
           span.setAttribute('step.count', event.executeDetails.count);
-          let rslt: ReturnType<typeof next>;
+
+          const ctx = trace.setSpan(context.active(), span);
+
+          let result: ReturnType<typeof next>;
           try {
-            rslt = next();
+            result = context.with(ctx, next);
           } catch (err: any) {
             onSpanError(span, err, true);
           }
 
-          if (Array.isArray(rslt)) {
-            return Promise.all(rslt)
+          if (Array.isArray(result)) {
+            const bound = result.map((v) =>
+              v instanceof Promise ? context.bind(ctx, v) : v,
+            );
+            void Promise.allSettled(bound.map((v) => Promise.resolve(v)))
               .catch((err) => onSpanError(span, err))
-              .finally(() => endSpan(span));
+              .finally(() => span.end());
+            return bound;
           }
 
-          if (rslt instanceof Promise) {
-            return rslt
-              .then((items) => Promise.all(items))
+          if (result instanceof Promise) {
+            return context
+              .bind(ctx, result)
               .catch((err) => onSpanError(span, err))
-              .finally(() => endSpan(span));
+              .finally(() => span.end());
           }
 
-          return rslt;
+          return result;
         });
       },
     },
@@ -160,12 +129,55 @@ function onSpanError(span: Span, err: any, end = false): never {
     message: err.message,
   });
   if (end) {
-    endSpan(span);
+    span.end();
   }
-
   throw err;
 }
 
-function endSpan(span: Span) {
-  span.end();
+function executeWithSpan(
+  span: Span,
+  next: MiddlewareNext<PromiseOrDirect<Result | null>>,
+  shouldEndSpan = false,
+) {
+  let rslt: ReturnType<typeof next>;
+  try {
+    rslt = next();
+  } catch (err: any) {
+    onSpanError(span, err, shouldEndSpan);
+  }
+
+  if (!(rslt instanceof Promise)) {
+    if (shouldEndSpan) span.end();
+    return rslt;
+  }
+
+  return rslt
+    .then((obj: Result | null) => {
+      if (obj?.type === 'error') {
+        span.recordException(obj.error);
+        span.setStatus({
+          code: SpanStatusCode.ERROR,
+          message: obj.error.message,
+        });
+      } else if (
+        obj?.type === 'json' &&
+        typeof obj.json === 'object' &&
+        obj.json !== null &&
+        'errors' in obj.json &&
+        Array.isArray(obj.json.errors) &&
+        obj.json.errors.length
+      ) {
+        span.setStatus({
+          code: SpanStatusCode.ERROR,
+          // @ts-expect-error
+          message: obj.json.errors[0]?.['message'] || 'Unknown error',
+        });
+      }
+
+      return obj;
+    })
+    .catch((err) => onSpanError(span, err))
+    .finally(() => {
+      if (shouldEndSpan) span.end();
+    });
 }
