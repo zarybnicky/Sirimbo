@@ -57,6 +57,10 @@
       accessKeyId = "00000000";
       secretAccessKey = "000000000000";
     };
+    otel = {
+      endpoint = "http://localhost:4318";
+      apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+    };
   };
 
   services.minio = {

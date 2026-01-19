@@ -173,7 +173,7 @@ in {
           OTEL_SERVICE_NAME = "rozpisovnik-api";
           HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
           HDX_NODE_BETA_MODE = "1";
-          NODE_OPTIONS = "--require '@hyperdx/node-opentelemetry/build/src/tracing'";
+          NODE_OPTIONS = "--require ${pkgs.rozpisovnik-api}/share/backend/node_modules/@hyperdx/node-opentelemetry/build/src/tracing.js";
         };
 
         serviceConfig = {
@@ -256,7 +256,7 @@ in {
           OTEL_SERVICE_NAME = "rozpisovnik-api";
           HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
           HDX_NODE_BETA_MODE = "1";
-          NODE_OPTIONS = "--require '@hyperdx/node-opentelemetry/build/src/tracing'";
+          NODE_OPTIONS = "--require ${pkgs.rozpisovnik-worker}/share/worker/node_modules/@hyperdx/node-opentelemetry/build/src/tracing.js";
         };
 
         serviceConfig = {

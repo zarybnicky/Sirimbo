@@ -44,16 +44,10 @@ app.get('/member/download', async function (req, res) {
     });
     if (rows.length < 1) {
       res.status(404).send('Nenalezeno');
-      return;
+    } else {
+      const { d_path, d_filename } = rows[0];
+      res.download(process.env.STATE_DIR + d_path, d_filename);
     }
-
-    let path = rows[0].d_path;
-    path = path.replace('/var/lib/olymp/uploads/', 'uploads/');
-    path = path.replace('upload/', 'uploads/');
-    if (process.env.TS_NODE_DEV) {
-      path = `../${path}`;
-    }
-    res.download(path, rows[0].d_filename);
   });
 });
 
