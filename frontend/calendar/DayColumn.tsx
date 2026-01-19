@@ -35,7 +35,7 @@ type DayColumnProps = {
   resource?: Resource;
   events: CalendarEvent[];
   backgroundEvents: CalendarEvent[];
-  gridRef: React.RefObject<HTMLDivElement>;
+  gridRef: React.RefObject<HTMLDivElement | null>;
 };
 
 type BackgroundSelectionState = {

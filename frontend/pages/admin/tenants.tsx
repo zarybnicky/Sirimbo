@@ -1,27 +1,166 @@
-import { Layout } from '@/ui/Layout';
-import { TextFieldElement } from '@/ui/fields/text';
-import { TextAreaElement } from '@/ui/fields/textarea';
-import { FormError, useFormResult } from '@/ui/form';
-import { SubmitButton } from '@/ui/submit';
-import { TitleBar } from '@/ui/TitleBar';
+import * as React from 'react';
+import { type Column, DataGrid } from 'react-data-grid';
+import 'react-data-grid/lib/styles.css';
+import { Sheet, type SheetRef } from 'react-modal-sheet';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
-import * as React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
+import { Layout } from '@/ui/Layout';
 import { useMutation, useQuery } from 'urql';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import {
   SystemAdminTenantsDocument,
-  SystemAdminTenantsQuery,
   SystemAdminUpdateTenantDocument,
 } from '@/graphql/SystemAdmin';
 import { AddressDomain, SystemAdminTenantsRecord } from '@/graphql';
-import { DataTable } from '@/ui/DataTable';
-import { CellContext, ColumnDef } from '@tanstack/react-table';
+import z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormError, useFormResult } from '@/ui/form';
+import { useAsyncCallback } from 'react-async-hook';
+import { SubmitButton } from '@/ui/submit';
+import { TextFieldElement } from '@/ui/fields/text';
+import { TextAreaElement } from '@/ui/fields/textarea';
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = React.useState(false);
+
+  React.useEffect(() => {
+    const m = window.matchMedia(query);
+    const onChange = () => setMatches(m.matches);
+    onChange();
+    m.addEventListener?.('change', onChange);
+    return () => m.removeEventListener?.('change', onChange);
+  }, [query]);
+
+  return matches;
+}
 
 const decimalFormatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
+
+const columns: Column<SystemAdminTenantsRecord>[] = [
+  {
+    key: '__actions',
+    name: '',
+    frozen: true,
+    sortable: false,
+    resizable: false,
+    renderCell({ row }) {
+      return (
+        <Dialog>
+          <DialogTrigger.Edit text="" size="md" variant="none" />
+          <DialogContent>
+            <TenantEditDialog tenant={row} />
+          </DialogContent>
+        </Dialog>
+      );
+    },
+  },
+  { key: 'id', name: 'ID', frozen: true },
+  { key: 'name', name: 'Jméno' },
+  { key: 'membershipCount', name: 'Členové' },
+  { key: 'trainerCount', name: 'Trenéři' },
+  { key: 'administratorCount', name: 'Správci' },
+  { key: 'sessionCountLast30Days', name: 'Lekce / 30 dní' },
+  {
+    key: 'sessionCountPerTrainerLast30Days',
+    name: 'Lekce / trenér / 30 dní',
+    renderCell({ row }) {
+      const v = Number(row.sessionCountPerTrainerLast30Days ?? 0);
+      return Number.isFinite(v) ? decimalFormatter.format(v) : '—';
+    },
+  },
+];
+
+export default function SystemAdminTenantsPage() {
+  const [{ data, fetching, error }] = useQuery({ query: SystemAdminTenantsDocument });
+  const tenants = React.useMemo(() => data?.systemAdminTenants?.nodes ?? [], [data]);
+
+  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const selected = React.useMemo(
+    () => tenants.find((t) => String(t.id) === selectedId) ?? null,
+    [tenants, selectedId],
+  );
+
+  // Mobile sheet: 2 detents + closed.
+  const sheetRef = React.useRef<SheetRef>(null);
+  const snapPoints = React.useMemo(() => [0, 0.2, 1], []); // must include 0 and 1 :contentReference[oaicite:1]{index=1}
+
+  const isDesktop = useMediaQuery('(min-width: 1024px)'); // Tailwind lg
+
+  return (
+    <Layout requireSystemAdmin>
+      <div className="col-full-width flex">
+        {fetching && (
+          <div className="flex h-40 items-center justify-center">
+            <Spinner />
+          </div>
+        )}
+
+        {error && (
+          <div className="rounded-md border border-accent-7 bg-accent-3 p-4 text-sm text-accent-11">
+            Nepodařilo se načíst seznam klubů: {error.message}
+          </div>
+        )}
+
+        {!fetching && !error && tenants.length === 0 && (
+          <div className="mt-6 rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
+            Nebyly nalezeny žádné kluby.
+          </div>
+        )}
+
+        {!fetching && !error && tenants.length > 0 && (
+          <div className="mt-6 grid gap-4 lg:grid-cols-[3fr_1fr]">
+            <div className="rounded-md border border-neutral-6 bg-neutral-1 overflow-auto">
+              <DataGrid
+                columns={columns}
+                rows={tenants}
+                rowKeyGetter={(r) => String(r.id)}
+                defaultColumnOptions={{ resizable: true }}
+                headerRowHeight={44}
+                rowHeight={44}
+                onCellClick={({ row }) => setSelectedId(row.id)}
+                rowClass={(row) => (row.id === selectedId ? 'bg-neutral-2' : undefined)}
+              />
+            </div>
+
+            <aside className="hidden lg:block">
+              <div className="sticky top-4 space-y-3">
+                {selected ? (
+                  <TenantCard tenant={selected} />
+                ) : (
+                  <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
+                    Vyber klub pro detail.
+                  </div>
+                )}
+              </div>
+            </aside>
+
+            {!isDesktop && (
+              <Sheet
+                ref={sheetRef}
+                isOpen={!!selected}
+                onClose={() => setSelectedId(null)}
+                snapPoints={snapPoints}
+                initialSnap={1}
+                disableScrollLocking
+              >
+                <Sheet.Container>
+                  <Sheet.Header />
+                  <Sheet.Content>
+                    <div className="p-4 space-y-3">
+                      {selected && <TenantCard tenant={selected} />}
+                    </div>
+                  </Sheet.Content>
+                </Sheet.Container>
+
+                {/* Non-blocking: omit Backdrop entirely */}
+              </Sheet>
+            )}
+          </div>
+        )}
+      </div>
+    </Layout>
+  );
+}
 
 const TenantFormSchema = z.object({
   name: z.string().min(1, 'Název je povinný'),
@@ -34,84 +173,6 @@ const TenantFormSchema = z.object({
 
 type TenantFormValues = z.infer<typeof TenantFormSchema>;
 
-type TableRow = NonNullable<
-  SystemAdminTenantsQuery['systemAdminTenants']
->['nodes'][number];
-const columns: ColumnDef<TableRow>[] = [
-  {
-    id: '__actions',
-    size: 36,
-    enableSorting: false,
-    enableHiding: false,
-    header: () => null,
-    cell: ({ row }: CellContext<TableRow, unknown>) => (
-      <Dialog>
-        <DialogTrigger.Edit text="" size="md" variant="none" className="rounded-sm" />
-        <DialogContent>
-          <TenantEditDialog tenant={row.original} />
-        </DialogContent>
-      </Dialog>
-    ),
-  },
-  { accessorKey: 'id', header: 'ID' },
-  { accessorKey: 'name', header: 'Jméno' },
-  { accessorKey: 'membershipCount', header: 'Členové', sortingFn: 'alphanumeric' },
-  { accessorKey: 'trainerCount', header: 'Trenéři', sortingFn: 'alphanumeric' },
-  { accessorKey: 'administratorCount', header: 'Správci', sortingFn: 'alphanumeric' },
-  {
-    accessorKey: 'sessionCountLast30Days',
-    header: 'Lekce / 30 dní',
-    sortingFn: 'alphanumeric',
-  },
-  {
-    accessorKey: 'sessionCountPerTrainerLast30Days',
-    header: 'Lekce / trenér / 30 dní',
-    sortingFn: 'alphanumeric',
-    cell: (info) => decimalFormatter.format(Number.parseFloat(info.getValue() as string)),
-  },
-];
-
-export default function SystemAdminTenantsPage() {
-  const [{ data, fetching, error }] = useQuery({
-    query: SystemAdminTenantsDocument,
-  });
-
-  return (
-    <Layout requireSystemAdmin>
-      <TitleBar title="Kluby" />
-
-      {fetching && (
-        <div className="flex h-40 items-center justify-center">
-          <Spinner />
-        </div>
-      )}
-
-      {error && (
-        <div className="rounded-md border border-accent-7 bg-accent-3 p-4 text-sm text-accent-11">
-          Nepodařilo se načíst seznam klubů: {error.message}
-        </div>
-      )}
-
-      <div className="mt-6 grid gap-4 col-feature">
-        {!fetching && data?.systemAdminTenants?.nodes && (
-          <DataTable
-            data={data.systemAdminTenants.nodes}
-            columns={columns}
-            enableSelection={false}
-            enablePagination={false}
-            renderExpanded={(row) => <TenantCard tenant={row} />}
-          />
-        )}
-        {!fetching && !error && !data?.systemAdminTenants?.nodes?.length && (
-          <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
-            Nebyly nalezeny žádné kluby.
-          </div>
-        )}
-      </div>
-    </Layout>
-  );
-}
-
 type TenantCardProps = {
   tenant: SystemAdminTenantsRecord;
 };
@@ -121,32 +182,28 @@ function TenantCard({ tenant }: TenantCardProps) {
 
   return (
     <div className="space-y-3 rounded-lg border border-neutral-6 bg-neutral-2 p-4">
+      <div className="flex items-center justify-between">
+        <div className="text-base font-semibold">{tenant.name}</div>
+      </div>
+
       {tenant.description && (
         <p className="whitespace-pre-wrap text-sm text-neutral-12">
           {tenant.description}
         </p>
       )}
 
-      <dl className="grid gap-2 text-sm text-neutral-12 sm:grid-cols-2">
-        <div>
-          <dt className="font-semibold text-neutral-11">Bankovní účet</dt>
-          <dd>{tenant.bankAccount || '—'}</dd>
-        </div>
-        <div>
-          <dt className="font-semibold text-neutral-11">Domény</dt>
-          <dd>{tenant.origins?.length ? tenant.origins.join(', ') : '—'}</dd>
-        </div>
-        <div>
-          <dt className="font-semibold text-neutral-11">IČO / DIČ</dt>
-          <dd>
-            {tenant.czIco || '—'}
-            {tenant.czDic ? ` / ${tenant.czDic}` : ''}
-          </dd>
-        </div>
-        <div>
-          <dt className="font-semibold text-neutral-11">Adresa</dt>
-          <dd>{address || '—'}</dd>
-        </div>
+      <dl className="grid gap-2 text-sm text-neutral-12 sm:grid-cols-[1fr_2fr]">
+        <dt className="font-semibold text-neutral-11">Bankovní účet</dt>
+        <dd>{tenant.bankAccount || '—'}</dd>
+        <dt className="font-semibold text-neutral-11">Domény</dt>
+        <dd>{tenant.origins?.length ? tenant.origins.join(', ') : '—'}</dd>
+        <dt className="font-semibold text-neutral-11">IČO / DIČ</dt>
+        <dd>
+          {tenant.czIco || '—'}
+          {tenant.czDic ? ` / ${tenant.czDic}` : ''}
+        </dd>
+        <dt className="font-semibold text-neutral-11">Adresa</dt>
+        <dd>{address || '—'}</dd>
       </dl>
     </div>
   );

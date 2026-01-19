@@ -6,7 +6,7 @@ import { withSentryConfig } from '@sentry/nextjs';
 type NextConfig = import('next').NextConfig;
 type NextPlugin = (config: NextConfig) => NextConfig;
 type NextRedirect = Awaited<ReturnType<NonNullable<NextConfig['redirects']>>>;
-type NextRewrite = Awaited<ReturnType<NonNullable<NextConfig['rewrite']>>>;
+type NextRewrite = Awaited<ReturnType<NonNullable<NextConfig['rewrites']>>>;
 
 const compose =
   (...plugins: NextPlugin[]) =>
@@ -49,11 +49,6 @@ export default compose(
     minimumCacheTTL: 2_678_400,
     unoptimized: true,
     qualities: [75, 90],
-  },
-
-  eslint: {
-    ignoreDuringBuilds: true,
-    dirs: ['pages', 'graphql', 'calendar', 'map', 'ui', 'editor', 'lib'],
   },
 
   async redirects() {

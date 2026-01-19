@@ -12,7 +12,7 @@ export const config = {
   ],
 };
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const forwardedHost = request.headers.get('x-forwarded-host');
   const hostHeader = forwardedHost ?? request.headers.get('host') ?? request.nextUrl.host;
   const hostname = hostHeader?.split(':')[0]?.toLowerCase() ?? null;

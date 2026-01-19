@@ -2,7 +2,7 @@ import type { EditorProps } from '@/ui/fields/richtext.client';
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { AlertCircle } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import React from 'react';
+import React, { type JSX } from 'react';
 import {
   type Control,
   type FieldValues,

@@ -21,7 +21,7 @@ type DateContentRowProps = {
   events: CalendarEvent[];
   className?: string;
   resource?: Resource;
-  containerRef: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 };
 
 function DateContentRow({

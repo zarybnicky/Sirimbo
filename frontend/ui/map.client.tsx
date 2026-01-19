@@ -6,7 +6,7 @@ import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
 export type MapProps = {
-  children: (x: typeof ReactLeaflet) => React.ReactElement;
+  children: (x: typeof ReactLeaflet) => React.ReactElement<any>;
 } & Omit<ReactLeaflet.MapContainerProps, 'children'>;
 
 function Map({ children, ...rest }: MapProps) {

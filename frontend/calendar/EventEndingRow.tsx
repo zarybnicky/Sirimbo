@@ -1,5 +1,5 @@
 import range from 'lodash.range';
-import React from 'react';
+import React, { type JSX } from 'react';
 import { eventLevels, type Segment } from './common';
 import type { DateSlotMetrics } from './DateSlotMetrics';
 import EventCell from './EventCell';

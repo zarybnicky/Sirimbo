@@ -7,7 +7,7 @@ import { tenantConfigAtom } from './state/auth';
 
 export const Tracking = React.memo(function Tracking() {
   const router = useRouter();
-  const lastTrackedPath = React.useRef<string>();
+  const lastTrackedPath = React.useRef<string>(undefined);
   const { facebookPixelId } = useAtomValue(tenantConfigAtom);
   const facebookRef = React.useRef<{
     init: typeof init;

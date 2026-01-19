@@ -29,6 +29,7 @@ import 'core-js/actual/array/to-sorted';
 import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-data-grid/lib/styles.css';
 import '../style/calendar.css';
 import '../style/index.css';
 import '../style/leaflet.css';

@@ -16,7 +16,7 @@ import { cn } from '@/ui/cn';
 import type { Resource } from './types';
 
 type BackgroundCellsProps = {
-  rowRef: React.RefObject<HTMLDivElement>;
+  rowRef: React.RefObject<HTMLDivElement | null>;
   range: Date[];
   date?: Date;
   resource?: Resource;

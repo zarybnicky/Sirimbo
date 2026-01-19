@@ -5,7 +5,7 @@ import { Serwist, SerwistLifecycleEvent } from '@serwist/window';
 const CHECK_MS = 5 * 60 * 1000;
 
 export const UpdateNotifier = React.memo(function UpdateNotifier() {
-  const toastRef = useRef<string | number | undefined>();
+  const toastRef = useRef<string | number | undefined>(undefined);
 
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;

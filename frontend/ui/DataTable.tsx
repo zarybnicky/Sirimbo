@@ -77,7 +77,7 @@ export type DataTableProps<TData, TValue> = {
 
   /** layout */
   estimatedRowHeight?: number; // px; override for compact sidebar
-  scrollParentRef?: React.RefObject<HTMLElement>; // attached to our scroll container
+  scrollParentRef?: React.RefObject<HTMLElement | null>; // attached to our scroll container
 
   /** slots */
   toolbar?: (ctx: { table: TableType<TData> }) => React.ReactNode;
@@ -278,10 +278,9 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
           table={table}
         />
       )}
-
       {/* Scroll container with reserved scrollbar gutter so sticky header never covers it */}
       <div
-        ref={scrollRef as React.RefObject<HTMLDivElement>}
+        ref={scrollRef as React.RefObject<HTMLDivElement | null>}
         className="max-h-[60vh] overflow-auto rounded-lg border border-neutral-6 bg-neutral-1 shadow-inner [scrollbar-gutter:stable]"
       >
         <table className="min-w-full border-collapse text-sm m-0">
@@ -356,7 +355,6 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
           </tbody>
         </table>
       </div>
-
       {/* Footer */}
       {enablePagination && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-neutral-6 bg-neutral-1 px-3 py-2 text-sm text-neutral-11">
