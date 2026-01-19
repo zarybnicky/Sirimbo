@@ -31,10 +31,10 @@ function Agenda({ events }: ViewProps): React.ReactNode {
       const mapItem: MapItem = map.get(date) ?? { groups: [], lessons: new Map() };
       if (event.type === 'LESSON') {
         const trainers = instance.trainersList ?? [];
-        const key =
-          trainers.map((x) => x.personId).join(',') +
-          event.location?.id +
-          event.locationText;
+        const key = trainers
+          .map((x) => x.personId)
+          .toSorted((a, b) => a.localeCompare(b))
+          .join(',');
         const arr = mapItem.lessons.get(key);
         if (arr) arr.push(calendarEvent);
         else mapItem.lessons.set(key, [calendarEvent]);
@@ -145,15 +145,12 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
 function LessonGroup({ items }: { items: CalendarEvent[] }) {
   const auth = useAuth();
 
-  const location = React.useMemo(() => {
-    const withLocation = items.find(
-      (x) => !!x.event?.location?.name || !!x.event?.locationText,
-    );
-    return withLocation?.event?.location?.name || withLocation?.event?.locationText;
-  }, [items]);
+  const locLabel = (it: CalendarEvent) =>
+    it.event.location?.name || it.event.locationText || '-';
 
   const nextEvent: Partial<EventFormType> = React.useMemo(() => {
-    const lastEnd = items.at(-1)?.end ?? new Date();
+    const last = items.at(-1);
+    const lastEnd = last?.end ?? new Date();
     return {
       instances: [
         {
@@ -167,10 +164,10 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
       isVisible: true,
       type: 'LESSON',
       capacity: 2,
-      locationId: items[0]?.event?.location?.id,
-      locationText: items[0]?.event?.locationText,
+      locationId: last?.event?.location?.id,
+      locationText: last?.event?.locationText,
       trainers:
-        items[0]?.instance.trainersList?.map(({ personId }) => ({
+        last?.instance.trainersList?.map(({ personId }) => ({
           itemId: null,
           personId,
           lessonsOffered: 0,
@@ -182,7 +179,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
     <div
       className={cardCls({
         className:
-          'relative group min-w-[200px] w-72 p-1 pt-3 rounded-lg border-accent-7 border',
+          'relative group min-w-[200px] w-72 p-1 pt-2 rounded-lg border-accent-7 border',
       })}
     >
       {auth.isTrainerOrAdmin && (
@@ -199,19 +196,29 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
         </Dialog>
       )}
 
-      <div className="ml-2 text-sm text-accent-11">{location}</div>
       <div className="ml-2 text-xl mb-1">
         {(items[0]?.instance.trainersList ?? []).map((x) => x.person?.name).join(', ') ||
           '-'}
       </div>
-      {items.map((item) => (
-        <EventButton
-          key={item.instance.id}
-          event={item.event}
-          instance={item.instance}
-          viewer="trainer"
-        />
-      ))}
+
+      {items.map((item, i) => {
+        const loc = locLabel(item);
+        const prevLoc = i === 0 ? null : locLabel(items[i - 1]!);
+        const showHeader = loc !== prevLoc && (i !== 0 || loc !== '-'); // Don't show first if missing
+
+        return (
+          <React.Fragment key={item.instance.id}>
+            {showHeader && (
+              <div className="ml-2.5 mt-1 text-sm text-accent-11">{loc}</div>
+            )}
+            <EventButton
+              event={item.event}
+              instance={item.instance}
+              viewer="trainer"
+            />
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 }
