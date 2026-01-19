@@ -137,7 +137,6 @@ in {
         "d ${cfg.stateDir}/gallery 0755 ${cfg.user} ${cfg.user} -"
         "d ${cfg.stateDir}/gallery/thumbnails 0755 ${cfg.user} ${cfg.user} -"
         "d ${cfg.stateDir}/uploads 0755 ${cfg.user} ${cfg.user} -"
-        "d ${cfg.stateDir}/cache 0755 ${cfg.user} ${cfg.user} -"
       ];
 
       systemd.services.rozpisovnik-api = {
@@ -253,7 +252,7 @@ in {
 
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
           OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
-          OTEL_SERVICE_NAME = "rozpisovnik-api";
+          OTEL_SERVICE_NAME = "rozpisovnik-worker";
           HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
           HDX_NODE_BETA_MODE = "1";
           NODE_OPTIONS = "--require ${pkgs.rozpisovnik-worker}/share/worker/node_modules/@hyperdx/node-opentelemetry/build/src/tracing.js";
