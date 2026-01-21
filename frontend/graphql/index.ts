@@ -56,8 +56,6 @@ export type Account = {
   cohortSubscriptionsList: Array<CohortSubscription>;
   createdAt: Scalars['Datetime']['output'];
   currency: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `Event`. */
-  eventsByPaymentRecipientId: EventsConnection;
   id: Scalars['BigInt']['output'];
   liabilities: Maybe<Scalars['BigFloat']['output']>;
   openingBalance: Scalars['BigFloat']['output'];
@@ -88,17 +86,6 @@ export type AccountCohortSubscriptionsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortSubscriptionsOrderBy>>;
-};
-
-
-export type AccountEventsByPaymentRecipientIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<EventCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
 
 
@@ -1701,8 +1688,6 @@ export type CreateEventPayload = {
   info: Maybe<Event>;
   /** Reads a single `TenantLocation` that is related to this `Event`. */
   location: Maybe<TenantLocation>;
-  /** Reads a single `Account` that is related to this `Event`. */
-  paymentRecipient: Maybe<Account>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `Event`. */
@@ -2377,8 +2362,6 @@ export type DeleteEventPayload = {
   eventEdge: Maybe<EventsEdge>;
   /** Reads a single `TenantLocation` that is related to this `Event`. */
   location: Maybe<TenantLocation>;
-  /** Reads a single `Account` that is related to this `Event`. */
-  paymentRecipient: Maybe<Account>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `Event`. */
@@ -2913,7 +2896,6 @@ export type Event = {
   filesLegacy: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
   isLocked: Scalars['Boolean']['output'];
-  isPaidByTenant: Scalars['Boolean']['output'];
   isPublic: Scalars['Boolean']['output'];
   isRegistrationOpen: Maybe<Scalars['Boolean']['output']>;
   isVisible: Scalars['Boolean']['output'];
@@ -2923,9 +2905,6 @@ export type Event = {
   locationText: Scalars['String']['output'];
   myRegistrationsList: Maybe<Array<EventRegistration>>;
   name: Scalars['String']['output'];
-  /** Reads a single `Account` that is related to this `Event`. */
-  paymentRecipient: Maybe<Account>;
-  paymentRecipientId: Maybe<Scalars['BigInt']['output']>;
   registrantsList: Maybe<Array<Person>>;
   remainingLessons: Maybe<Scalars['Int']['output']>;
   remainingPersonSpots: Maybe<Scalars['Int']['output']>;
@@ -3095,8 +3074,6 @@ export type EventCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isLocked` field. */
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Checks for equality with the object’s `isPaidByTenant` field. */
-  isPaidByTenant?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isPublic` field. */
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
@@ -3107,8 +3084,6 @@ export type EventCondition = {
   locationText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `paymentRecipientId` field. */
-  paymentRecipientId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `summary` field. */
   summary?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -3250,13 +3225,11 @@ export type EventInput = {
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
-  isPaidByTenant?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   locationText: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  paymentRecipientId?: InputMaybe<Scalars['BigInt']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   type?: InputMaybe<EventType>;
@@ -3585,13 +3558,11 @@ export type EventPatch = {
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
-  isPaidByTenant?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   locationText?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  paymentRecipientId?: InputMaybe<Scalars['BigInt']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   type?: InputMaybe<EventType>;
@@ -3997,8 +3968,6 @@ export type EventsOrderBy =
   | 'ID_DESC'
   | 'IS_LOCKED_ASC'
   | 'IS_LOCKED_DESC'
-  | 'IS_PAID_BY_TENANT_ASC'
-  | 'IS_PAID_BY_TENANT_DESC'
   | 'IS_PUBLIC_ASC'
   | 'IS_PUBLIC_DESC'
   | 'IS_VISIBLE_ASC'
@@ -4010,8 +3979,6 @@ export type EventsOrderBy =
   | 'NAME_ASC'
   | 'NAME_DESC'
   | 'NATURAL'
-  | 'PAYMENT_RECIPIENT_ID_ASC'
-  | 'PAYMENT_RECIPIENT_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'SUMMARY_ASC'
@@ -8717,8 +8684,6 @@ export type UpdateEventPayload = {
   eventEdge: Maybe<EventsEdge>;
   /** Reads a single `TenantLocation` that is related to this `Event`. */
   location: Maybe<TenantLocation>;
-  /** Reads a single `Account` that is related to this `Event`. */
-  paymentRecipient: Maybe<Account>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `Event`. */
@@ -9160,8 +9125,6 @@ export type UpsertEventPayload = {
   eventEdge: Maybe<EventsEdge>;
   /** Reads a single `TenantLocation` that is related to this `Event`. */
   location: Maybe<TenantLocation>;
-  /** Reads a single `Account` that is related to this `Event`. */
-  paymentRecipient: Maybe<Account>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `Event`. */
@@ -9719,7 +9682,6 @@ export type GraphCacheResolvers = {
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Account>, AccountCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['Datetime'] | string>,
     currency?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['String'] | string>,
-    eventsByPaymentRecipientId?: GraphCacheResolver<WithTypename<Account>, AccountEventsByPaymentRecipientIdArgs, WithTypename<EventsConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigInt'] | string>,
     liabilities?: GraphCacheResolver<WithTypename<Account>, AccountLiabilitiesArgs, Scalars['BigFloat'] | string>,
     openingBalance?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigFloat'] | string>,
@@ -10042,7 +10004,6 @@ export type GraphCacheResolvers = {
     eventEdge?: GraphCacheResolver<WithTypename<CreateEventPayload>, CreateEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
     info?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     location?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
-    paymentRecipient?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Account> | string>,
     query?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<CreateEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
@@ -10200,7 +10161,6 @@ export type GraphCacheResolvers = {
     event?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     eventEdge?: GraphCacheResolver<WithTypename<DeleteEventPayload>, DeleteEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
     location?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
-    paymentRecipient?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, WithTypename<Account> | string>,
     query?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<DeleteEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
@@ -10333,7 +10293,6 @@ export type GraphCacheResolvers = {
     filesLegacy?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     isLocked?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
-    isPaidByTenant?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     isRegistrationOpen?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -10342,8 +10301,6 @@ export type GraphCacheResolvers = {
     locationText?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     myRegistrationsList?: GraphCacheResolver<WithTypename<Event>, EventMyRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
     name?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
-    paymentRecipient?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Account> | string>,
-    paymentRecipientId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     registrantsList?: GraphCacheResolver<WithTypename<Event>, EventRegistrantsListArgs, Array<WithTypename<Person> | string>>,
     remainingLessons?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
     remainingPersonSpots?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
@@ -11096,7 +11053,6 @@ export type GraphCacheResolvers = {
     event?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     eventEdge?: GraphCacheResolver<WithTypename<UpdateEventPayload>, UpdateEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
     location?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
-    paymentRecipient?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Account> | string>,
     query?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpdateEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
@@ -11195,7 +11151,6 @@ export type GraphCacheResolvers = {
     event?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Event> | string>,
     eventEdge?: GraphCacheResolver<WithTypename<UpsertEventPayload>, UpsertEventPayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
     location?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
-    paymentRecipient?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Account> | string>,
     query?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Query> | string>,
     tenant?: GraphCacheResolver<WithTypename<UpsertEventPayload>, Record<string, never>, WithTypename<Tenant> | string>
   },
@@ -11534,7 +11489,6 @@ export type GraphCacheUpdaters = {
     cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountCohortSubscriptionsListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
-    eventsByPaymentRecipientId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountEventsByPaymentRecipientIdArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     liabilities?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountLiabilitiesArgs>,
     openingBalance?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
@@ -11857,7 +11811,6 @@ export type GraphCacheUpdaters = {
     eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, CreateEventPayloadEventEdgeArgs>,
     info?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,
-    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventPayload>>, Record<string, never>>
   },
@@ -12015,7 +11968,6 @@ export type GraphCacheUpdaters = {
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
     eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, DeleteEventPayloadEventEdgeArgs>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
-    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventPayload>>, Record<string, never>>
   },
@@ -12148,7 +12100,6 @@ export type GraphCacheUpdaters = {
     filesLegacy?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     isLocked?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
-    isPaidByTenant?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     isRegistrationOpen?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
@@ -12157,8 +12108,6 @@ export type GraphCacheUpdaters = {
     locationText?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     myRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventMyRegistrationsListArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
-    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
-    paymentRecipientId?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     registrantsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventRegistrantsListArgs>,
     remainingLessons?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     remainingPersonSpots?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
@@ -12911,7 +12860,6 @@ export type GraphCacheUpdaters = {
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
     eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, UpdateEventPayloadEventEdgeArgs>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
-    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventPayload>>, Record<string, never>>
   },
@@ -13010,7 +12958,6 @@ export type GraphCacheUpdaters = {
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
     eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, UpsertEventPayloadEventEdgeArgs>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
-    paymentRecipient?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
     query?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>,
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertEventPayload>>, Record<string, never>>
   },

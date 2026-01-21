@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { type Column, DataGrid } from 'react-data-grid';
-import 'react-data-grid/lib/styles.css';
 import { Sheet, type SheetRef } from 'react-modal-sheet';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
@@ -19,7 +18,6 @@ import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from '@/ui/submit';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
-import { useRef } from 'react';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 
 function useMediaQuery(query: string) {

@@ -1,10 +1,10 @@
 import { PersonPaymentsDocument, PersonPaymentsQuery } from '@/graphql/Person';
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   describePosting,
   fullDateFormatter,
   moneyFormatter,
-  numericDateFormatter,
+  numericDateWithYearFormatter,
 } from '@/ui/format';
 import { useMutation, useQuery } from 'urql';
 import { QRPayment } from '@/ui/QRPayment';
@@ -16,15 +16,14 @@ import { buttonCls } from '@/ui/style';
 import { useAuth } from './use-auth';
 import {
   DropdownMenu,
+  DropdownMenuButton,
   DropdownMenuContent,
   DropdownMenuTrigger,
-  DropdownMenuButton,
 } from './dropdown';
 import { DeleteTransactionDocument } from '@/graphql/Payment';
 import { PaymentMenu } from './EventView';
-import { isTruthy, keyIsNonNull } from './truthyFilter';
-import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
-import { DataTable } from './DataTable';
+import { keyIsNonNull } from './truthyFilter';
+import { Column, DataGrid, SortColumn } from 'react-data-grid';
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const auth = useAuth();
@@ -86,7 +85,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
       ))}
 
       {auth.isAdmin && (
-        <div className="flex gap-2">
+        <div className="flex gap-2 my-2">
           <Dialog>
             <DialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
             <DialogContent>
@@ -110,7 +109,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
             <div className="flex gap-2">
               <button
                 type="button"
-                className={buttonCls()}
+                className={buttonCls({ size: 'sm', variant: 'outline' })}
                 onClick={() =>
                   exportPostings(
                     `${new Date().getFullYear()}-${new Date().getMonth()} ${person?.name}`,
@@ -123,10 +122,12 @@ export function PersonPaymentsView({ id }: { id: string }) {
             </div>
           </div>
 
-          <div>
-            <h3>Minulé</h3>
-            <AccountPaymentsTable account={account} />
-          </div>
+          {account.postingsList.length > 0 && (
+            <div>
+              <h3>Minulé</h3>
+              <AccountPaymentsTable account={account} />
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -157,77 +158,140 @@ type Account = NonNullable<
 type Posting = NonNullable<Account['postingsList']>[number];
 type PostingRow = Posting & { transaction: NonNullable<Posting['transaction']> };
 
-const columnHelper = createColumnHelper<PostingRow>();
-const columns = (isAdmin: boolean, currency: string): ColumnDef<PostingRow, any>[] =>
-  [
-    isAdmin &&
-      columnHelper.display({
-        id: 'actions',
-        enableSorting: false,
-        cell: ({ row }) => {
-          const { transaction } = row.original;
-          return transaction.payment ? (
-            <PaymentMenu id={transaction.payment.id} />
-          ) : (
-            <TransactionMenu id={transaction.id} />
-          );
-        },
-      }),
-    columnHelper.accessor('transaction.effectiveDate', {
-      header: 'Datum',
-      sortingFn: 'datetime',
-      cell: (info) => (
-        <time dateTime={info.getValue()} className="text-sm font-medium text-neutral-12">
-          {numericDateFormatter.format(new Date(info.getValue()))}
-        </time>
-      ),
-    }),
-    columnHelper.accessor('transaction.description', {
-      header: 'Popis',
-      cell: ({ getValue, row }) => (
-        <span className="text-sm text-neutral-12">
-          {getValue() ||
-            describePosting(row.original.transaction.payment ?? undefined, row.original)}
-        </span>
-      ),
-    }),
-    columnHelper.accessor('amount', {
-      header: 'Částka',
-      sortingFn: 'alphanumeric',
-      cell: (info) => (
-        <div className="text-right text-sm font-semibold text-neutral-12">
-          {moneyFormatter.format({ amount: info.getValue(), currency })}
-        </div>
-      ),
-    }),
-  ].filter(isTruthy);
+function sortRows(rows: PostingRow[], sortColumns: readonly SortColumn[]) {
+  if (sortColumns.length === 0) return rows;
+
+  const { columnKey, direction } = sortColumns[0]!;
+  const dir = direction === 'ASC' ? 1 : -1;
+
+  const copy = [...rows];
+  copy.sort((ra, rb) => {
+    let cmp = 0;
+
+    switch (columnKey) {
+      case 'effectiveDate':
+        cmp = ra.transaction.effectiveDate.localeCompare(rb.transaction.effectiveDate);
+        break;
+      case 'description':
+        const da =
+          ra.transaction.description ??
+          describePosting(ra.transaction.payment ?? undefined, ra) ??
+          '';
+        const db =
+          rb.transaction.description ??
+          describePosting(rb.transaction.payment ?? undefined, rb) ??
+          '';
+        cmp = da.localeCompare(db);
+        break;
+      case 'amount':
+        const aa = Number(ra.amount ?? 0);
+        const bb = Number(rb.amount ?? 0);
+        cmp = aa === bb ? 0 : aa < bb ? -1 : 1;
+        break;
+    }
+
+    return cmp * dir;
+  });
+
+  return copy;
+}
 
 function AccountPaymentsTable({ account }: { account: Account }) {
   const auth = useAuth();
   const currency = account.currency ?? 'CZK';
-  const columnDef = useMemo(
-    () => columns(auth.isAdmin, currency),
-    [currency, auth.isAdmin],
-  );
-  const rows = (account.postingsList ?? []).filter(
-    keyIsNonNull('transaction'),
-  ) as PostingRow[];
-  rows.sort((a, b) =>
-    b.transaction.effectiveDate.localeCompare(a.transaction.effectiveDate),
+
+  const baseRows = React.useMemo(() => {
+    return (account.postingsList ?? []).filter(keyIsNonNull('transaction'));
+  }, [account.postingsList]);
+
+  const [sortColumns, setSortColumns] = React.useState<SortColumn[]>([
+    { columnKey: 'effectiveDate', direction: 'DESC' },
+  ]);
+
+  const rows = React.useMemo(
+    () => sortRows(baseRows, sortColumns),
+    [baseRows, sortColumns],
   );
 
-  if (rows.length === 0) {
-    return <p>Žádné pohyby.</p>;
-  }
+  const columns = React.useMemo(() => {
+    const cols: Column<PostingRow>[] = [];
+
+    if (auth.isAdmin) {
+      cols.push({
+        key: 'actions',
+        name: '',
+        width: 44,
+        resizable: false,
+        sortable: false,
+        renderCell: ({ row }) => {
+          const { transaction } = row;
+          return (
+            <div className="flex items-center justify-center">
+              {transaction.payment ? (
+                <PaymentMenu id={transaction.payment.id} />
+              ) : (
+                <TransactionMenu id={transaction.id} />
+              )}
+            </div>
+          );
+        },
+      });
+    }
+
+    cols.push(
+      {
+        key: 'effectiveDate',
+        name: 'Datum',
+        sortable: true,
+        renderCell: ({ row }) => (
+          <time
+            dateTime={row.transaction.effectiveDate}
+            className="text-sm font-medium text-neutral-12"
+          >
+            {numericDateWithYearFormatter.format(new Date(row.transaction.effectiveDate))}
+          </time>
+        ),
+      },
+      {
+        key: 'description',
+        name: 'Popis',
+        sortable: true,
+        renderCell: ({ row }) => (
+          <span className="text-sm text-neutral-12">
+            {row.transaction.description ||
+              describePosting(row.transaction.payment ?? undefined, row)}
+          </span>
+        ),
+      },
+      {
+        key: 'amount',
+        name: 'Částka',
+        sortable: true,
+        renderCell: ({ row }) => (
+          <div className="text-right text-sm font-semibold text-neutral-12">
+            {moneyFormatter.format({ amount: row.amount, currency })}
+          </div>
+        ),
+        headerCellClass: 'justify-end',
+        cellClass: 'justify-end',
+      },
+    );
+
+    return cols;
+  }, [auth.isAdmin, currency]);
 
   return (
-    <DataTable
-      data={rows}
-      columns={columnDef}
-      enableSelection={false}
-      enablePagination={false}
-      toolbar={() => null}
-      estimatedRowHeight={48}
-    />
+    <div className="not-prose">
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        rowKeyGetter={(r) => String(r.id)}
+        sortColumns={sortColumns}
+        onSortColumnsChange={setSortColumns}
+        headerRowHeight={36}
+        rowHeight={48}
+        style={{ height: `${Math.min(rows.length * 6 + 10, 60)}vh` }}
+      />
+    </div>
   );
 }
