@@ -43,10 +43,10 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
       reset({
         since: item.since ? new Date(item.since) : null,
         until: item.until ? new Date(item.until) : null,
-        memberPrice: Number.parseFloat(item.memberPrice45Min?.amount || '0') || null,
-        guestPrice: Number.parseFloat(item.guestPrice45Min?.amount || '0') || null,
-        memberPayout: Number.parseFloat(item.memberPayout45Min?.amount || '0') || null,
-        guestPayout: Number.parseFloat(item.guestPayout45Min?.amount || '0') || null,
+        memberPrice: Number.parseFloat(item.memberPrice45MinAmount || '0') || null,
+        guestPrice: Number.parseFloat(item.guestPrice45MinAmount || '0') || null,
+        memberPayout: Number.parseFloat(item.memberPayout45MinAmount || '0') || null,
+        guestPayout: Number.parseFloat(item.guestPayout45MinAmount || '0') || null,
         createPayoutPayments: item.createPayoutPayments,
       });
     }

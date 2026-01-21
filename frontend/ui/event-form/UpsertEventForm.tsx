@@ -132,7 +132,7 @@ export function UpsertEventForm({
     let memberPrice = 0;
     for (const x of trainers || []) {
       const trainer = tenant?.tenantTrainersList.find((p) => p.person?.id === x.personId);
-      const numericMember = Number.parseFloat(trainer?.memberPrice45Min?.amount || '');
+      const numericMember = Number.parseFloat(trainer?.memberPrice45MinAmount || '');
       memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
     }
 

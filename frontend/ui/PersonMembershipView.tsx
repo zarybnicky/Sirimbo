@@ -64,7 +64,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       </div>
 
       {item.allCouplesList
-        ?.sort((a, b) => a.since.localeCompare(b.since))
+        ?.toSorted((a, b) => a.since.localeCompare(b.since))
         ?.map((item) => (
           <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
             <CoupleMenu align="start" data={item}>
@@ -175,9 +175,12 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               <b>Trenér v klubu {item.tenant?.name}</b>
               {auth.isAdmin && (
                 <div>
-                  {moneyFormatter.format(item.memberPrice45Min, '-')}{' '}
-                  {item.guestPrice45Min?.amount
-                    ? `(${moneyFormatter.format(item.guestPrice45Min)})`
+                  {moneyFormatter.format({
+                    amount: item.memberPrice45MinAmount,
+                    currency: item.currency,
+                  }) || '-'}{' '}
+                  {item.guestPrice45MinAmount
+                    ? `(${moneyFormatter.format({ amount: item.guestPrice45MinAmount, currency: item.currency })})`
                     : ''}
                   {' / 45min'}
                 </div>

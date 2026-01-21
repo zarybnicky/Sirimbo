@@ -66,9 +66,12 @@ export default function ClubPage() {
             {auth.isAdmin && (
               <div className="flex flex-wrap gap-4">
                 <span>
-                  {moneyFormatter.format(data.memberPrice45Min, '-')}{' '}
-                  {data.guestPrice45Min?.amount
-                    ? `(${moneyFormatter.format(data.guestPrice45Min)})`
+                  {moneyFormatter.format({
+                    amount: data.memberPrice45MinAmount,
+                    currency: data.currency,
+                  }) || '-'}
+                  {data.guestPrice45MinAmount
+                    ? ` (${moneyFormatter.format({ amount: data.guestPrice45MinAmount, currency: data.currency })})`
                     : ''}
                   {' / 45min'}
                 </span>

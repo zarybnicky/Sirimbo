@@ -19,6 +19,8 @@ import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from '@/ui/submit';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
+import { useRef } from 'react';
+import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = React.useState(false);
@@ -84,6 +86,14 @@ export default function SystemAdminTenantsPage() {
   const sheetRef = React.useRef<SheetRef>(null);
   const snapPoints = React.useMemo(() => [0, 0.2, 1], []); // must include 0 and 1 :contentReference[oaicite:1]{index=1}
 
+  useLayoutEffect(() => {
+    if (!!selected) document.querySelector('body')!.style.overscrollBehavior = 'none';
+
+    return () => {
+      document.querySelector('body')!.style.overscrollBehavior = 'unset';
+    };
+  }, [selected]);
+
   const isDesktop = useMediaQuery('(min-width: 1024px)'); // Tailwind lg
 
   return (
@@ -141,14 +151,17 @@ export default function SystemAdminTenantsPage() {
                 onClose={() => setSelectedId(null)}
                 snapPoints={snapPoints}
                 initialSnap={1}
-                disableScrollLocking
               >
                 <Sheet.Container>
                   <Sheet.Header />
-                  <Sheet.Content>
-                    <div className="p-4 space-y-3">
-                      {selected && <TenantCard tenant={selected} />}
-                    </div>
+                  <Sheet.Content
+                    scrollStyle={{
+                      overscrollBehavior: 'contain', // prevents scroll chaining to body
+                      WebkitOverflowScrolling: 'touch', // iOS momentum scroll
+                      touchAction: 'pan-y', // let it scroll when enabled
+                    }}
+                  >
+                    {selected && <TenantCard tenant={selected} />}
                   </Sheet.Content>
                 </Sheet.Container>
 

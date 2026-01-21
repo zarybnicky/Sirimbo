@@ -18,7 +18,6 @@ as $$
   where
     s.num_participants > 0
     and s.duration > 0
-    and tt.member_price_45min is not null
     and tt.member_price_45min_amount is not null
     and tt.currency is not null
   group by tt.currency;

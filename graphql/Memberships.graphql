@@ -22,22 +22,11 @@ fragment TenantTrainer on TenantTrainer {
   since
   until
   status
-  guestPrice45Min {
-    amount
-    currency
-  }
-  memberPrice45Min {
-    amount
-    currency
-  }
-  guestPayout45Min {
-    amount
-    currency
-  }
-  memberPayout45Min {
-    amount
-    currency
-  }
+  memberPayout45MinAmount
+  memberPrice45MinAmount
+  guestPayout45MinAmount
+  guestPrice45MinAmount
+  currency
   createPayoutPayments
   tenant {
     id

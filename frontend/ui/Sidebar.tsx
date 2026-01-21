@@ -81,7 +81,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           isOpen ? 'translate-x-0 shadow-lg' : '-translate-x-full lg:translate-x-0',
           showTopMenu ? 'lg:hidden' : '',
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
-          'z-50 lg:z-auto flex-none pb-10 transition-transform duration-200 ease-in-out sm:pb-0',
+          'z-50 lg:z-auto flex-none transition-transform duration-200 ease-in-out',
           'bg-accent-1 text-neutral-12 lg:bg-accent-9 lg:text-white',
           'overflow-y-auto scrollbar max-h-screen min-h-screen',
         )}

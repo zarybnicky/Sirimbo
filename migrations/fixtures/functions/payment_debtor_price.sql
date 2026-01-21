@@ -1,4 +1,6 @@
-CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor, out amount numeric(19,4), out currency text)
+drop function if exists public.payment_debtor_price;
+
+CREATE or replace FUNCTION public.payment_debtor_price(p public.payment_debtor, out amount numeric(19,4), out currency text)
   LANGUAGE sql STABLE
 AS $$
 SELECT

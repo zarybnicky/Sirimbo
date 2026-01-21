@@ -11540,7 +11540,7 @@
             "name": "price",
             "type": {
               "kind": "OBJECT",
-              "name": "PriceType",
+              "name": "PaymentDebtorPriceRecord",
               "ofType": null
             },
             "args": []
@@ -11562,6 +11562,29 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PaymentDebtorPriceRecord",
+        "fields": [
+          {
+            "name": "amount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "currency",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }
@@ -13311,29 +13334,6 @@
       {
         "kind": "OBJECT",
         "name": "Price",
-        "fields": [
-          {
-            "name": "amount",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "currency",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "PriceType",
         "fields": [
           {
             "name": "amount",

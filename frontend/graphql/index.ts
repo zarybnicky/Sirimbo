@@ -5232,7 +5232,7 @@ export type PaymentDebtor = {
   /** Reads a single `Person` that is related to this `PaymentDebtor`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
-  price: Maybe<PriceType>;
+  price: Maybe<PaymentDebtorPriceRecord>;
   /** Reads a single `Tenant` that is related to this `PaymentDebtor`. */
   tenant: Maybe<Tenant>;
   tenantId: Scalars['BigInt']['output'];
@@ -5253,6 +5253,12 @@ export type PaymentDebtorCondition = {
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+export type PaymentDebtorPriceRecord = {
+  __typename?: 'PaymentDebtorPriceRecord';
+  amount: Maybe<Scalars['BigFloat']['output']>;
+  currency: Maybe<Scalars['String']['output']>;
 };
 
 /** Methods to use when ordering `PaymentDebtor`. */
@@ -5915,12 +5921,6 @@ export type Price = {
 export type PriceInput = {
   amount?: InputMaybe<Scalars['BigFloat']['input']>;
   currency?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type PriceType = {
-  __typename?: 'PriceType';
-  amount: Maybe<Scalars['BigFloat']['output']>;
-  currency: Maybe<Scalars['String']['output']>;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -9539,6 +9539,7 @@ export type GraphCacheKeysConfig = {
   PageInfo?: (data: WithTypename<PageInfo>) => null | string,
   Payment?: (data: WithTypename<Payment>) => null | string,
   PaymentDebtor?: (data: WithTypename<PaymentDebtor>) => null | string,
+  PaymentDebtorPriceRecord?: (data: WithTypename<PaymentDebtorPriceRecord>) => null | string,
   PaymentRecipient?: (data: WithTypename<PaymentRecipient>) => null | string,
   PeopleConnection?: (data: WithTypename<PeopleConnection>) => null | string,
   PeopleEdge?: (data: WithTypename<PeopleEdge>) => null | string,
@@ -9548,7 +9549,6 @@ export type GraphCacheKeysConfig = {
   PersonWeeklyAttendanceRecord?: (data: WithTypename<PersonWeeklyAttendanceRecord>) => null | string,
   Posting?: (data: WithTypename<Posting>) => null | string,
   Price?: (data: WithTypename<Price>) => null | string,
-  PriceType?: (data: WithTypename<PriceType>) => null | string,
   RegisterToEventManyPayload?: (data: WithTypename<RegisterToEventManyPayload>) => null | string,
   RegisterUsingInvitationPayload?: (data: WithTypename<RegisterUsingInvitationPayload>) => null | string,
   RegisterWithoutInvitationPayload?: (data: WithTypename<RegisterWithoutInvitationPayload>) => null | string,
@@ -10652,9 +10652,13 @@ export type GraphCacheResolvers = {
     paymentId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>,
     person?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>,
-    price?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<PriceType> | string>,
+    price?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<PaymentDebtorPriceRecord> | string>,
     tenant?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantId?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt'] | string>
+  },
+  PaymentDebtorPriceRecord?: {
+    amount?: GraphCacheResolver<WithTypename<PaymentDebtorPriceRecord>, Record<string, never>, Scalars['BigFloat'] | string>,
+    currency?: GraphCacheResolver<WithTypename<PaymentDebtorPriceRecord>, Record<string, never>, Scalars['String'] | string>
   },
   PaymentRecipient?: {
     account?: GraphCacheResolver<WithTypename<PaymentRecipient>, Record<string, never>, WithTypename<Account> | string>,
@@ -10763,10 +10767,6 @@ export type GraphCacheResolvers = {
   Price?: {
     amount?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['BigFloat'] | string>,
     currency?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['String'] | string>
-  },
-  PriceType?: {
-    amount?: GraphCacheResolver<WithTypename<PriceType>, Record<string, never>, Scalars['BigFloat'] | string>,
-    currency?: GraphCacheResolver<WithTypename<PriceType>, Record<string, never>, Scalars['String'] | string>
   },
   RegisterToEventManyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RegisterToEventManyPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -12471,6 +12471,10 @@ export type GraphCacheUpdaters = {
     tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>
   },
+  PaymentDebtorPriceRecord?: {
+    amount?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtorPriceRecord>>, Record<string, never>>,
+    currency?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtorPriceRecord>>, Record<string, never>>
+  },
   PaymentRecipient?: {
     account?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
     accountId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
@@ -12578,10 +12582,6 @@ export type GraphCacheUpdaters = {
   Price?: {
     amount?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>
-  },
-  PriceType?: {
-    amount?: GraphCacheUpdateResolver<Maybe<WithTypename<PriceType>>, Record<string, never>>,
-    currency?: GraphCacheUpdateResolver<Maybe<WithTypename<PriceType>>, Record<string, never>>
   },
   RegisterToEventManyPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventManyPayload>>, Record<string, never>>,
