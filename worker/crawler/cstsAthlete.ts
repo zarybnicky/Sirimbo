@@ -122,6 +122,8 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
   for (const rp of data.rankingPoints) {
     if (!rp.competitorId) continue;
 
+    const competitorType = mapCompetitorType(rp.competitors);
+
     const [{ id: categoryId }] = await upsertCategory.run(
       {
         class: rp.class ?? '',
@@ -129,21 +131,19 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
         genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
         discipline: rp.discipline,
         series: rp.series,
-        competitorType: mapCompetitorType(rp.competitors),
+        competitorType,
       },
       client,
     );
 
     const competitorId =
-      rp.competitors === 'Couple'
+      competitorType === 'couple'
         ? await loadCstsCouple(data, rp, client, mainAthleteId)
-        : rp.competitors === 'DuoF' || rp.competitors === 'Duo'
+        : competitorType === 'duo'
           ? await loadCstsDuo(data, rp, client, mainAthleteId)
-          : rp.competitors === 'SoloDancer' ||
-              rp.competitors === 'SoloM' ||
-              rp.competitors === 'SoloF'
+          : competitorType === 'solo'
             ? await loadCstsSolo(data, rp, client, mainAthleteId)
-            : assertUnreachable(rp.competitors);
+        : (() => {throw new Error(`Don't know how to process ${competitorType}`) })();
 
     await upsertCompetitorProgress.run(
       {
@@ -157,10 +157,6 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
       client,
     );
   }
-}
-
-function assertUnreachable(_value: never): never {
-  throw new Error('Statement should be unreachable');
 }
 
 async function loadCstsSolo(

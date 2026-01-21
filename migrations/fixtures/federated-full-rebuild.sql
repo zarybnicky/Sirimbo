@@ -89,7 +89,7 @@ CREATE TABLE federated.category (
   class         text NOT NULL,       -- A,B,C,Open,...
   competitor_type  federated.competitor_type NOT NULL DEFAULT 'couple',
   base_dance_program_id bigint REFERENCES federated.dance_program(id),
-  UNIQUE (series, discipline, age_group, gender_group, class)
+  UNIQUE (series, discipline, age_group, gender_group, class, competitor_type)
 );
 
 CREATE TABLE federated.federation_category (
@@ -519,7 +519,7 @@ AS $$
       concat_ws(' ', in_series, in_age_group, nullif(in_competitor_type, 'couple'), in_class, in_discipline)
     )
   )
-  ON CONFLICT (series, discipline, age_group, gender_group, class)
+  ON CONFLICT (series, discipline, age_group, gender_group, class, competitor_type)
     DO UPDATE SET name = EXCLUDED.name
 RETURNING id;
 $$;
