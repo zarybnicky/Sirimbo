@@ -30,10 +30,10 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
       );
     };
 
-    const onInstalled = (event: SerwistLifecycleEvent) => {
+    const onActivated = (event: SerwistLifecycleEvent) => {
       if (event?.isUpdate) showToast();
     };
-    serwist.addEventListener('installed', onInstalled);
+    serwist.addEventListener('activated', onActivated);
 
     const check = () =>
       navigator.serviceWorker
@@ -43,8 +43,7 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
 
     let interval: number | undefined;
     const start = () => {
-      if (interval) return;
-      if (document.visibilityState !== 'visible') return;
+      if (interval || document.visibilityState !== 'visible') return;
       interval = window.setInterval(check, CHECK_MS);
       void check();
     };
@@ -71,7 +70,7 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
       stop();
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('pagehide', stop);
-      serwist.removeEventListener('installed', onInstalled);
+      serwist.removeEventListener('activated', onActivated);
     };
   }, []);
 
