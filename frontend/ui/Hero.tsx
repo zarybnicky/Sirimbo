@@ -7,7 +7,20 @@ import Link, { LinkProps } from 'next/link';
 import * as React from 'react';
 
 export function Hero({ data }: { data: ArticleFragment[] }) {
+  const mappedData = data.map((x) => ({
+    id: x.id,
+    href: {
+      pathname: '/clanky/[id]/[...slug]',
+      query: { id: x.id, slug: [slugify(x.atJmeno)] },
+    },
+    name: x.atJmeno,
+    summary: x.atPreview,
+    img: x.titlePhotoUrl || '',
+    inset: false,
+  }));
+
   const articles = [
+    ...mappedData.filter((x) => x.id === '470'),
     {
       id: '-1',
       href: 'https://nabor.tkolymp.cz' as LinkProps['href'],
@@ -17,19 +30,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       inset: false,
       img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837164-0016-DSC_0009%201.jpg',
     },
-    ...data
-      .filter((x) => x.id !== '467' && x.id !== '468')
-      .map((x) => ({
-        id: x.id,
-        href: {
-          pathname: '/clanky/[id]/[...slug]',
-          query: { id: x.id, slug: [slugify(x.atJmeno)] },
-        },
-        name: x.atJmeno,
-        summary: x.atPreview,
-        img: x.titlePhotoUrl || '',
-        inset: false,
-      })),
+    ...mappedData.filter((x) => x.id !== '467' && x.id !== '468' && x.id !== '470'),
   ];
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);

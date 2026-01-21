@@ -12,20 +12,19 @@ import { useAtomValue } from 'jotai';
 import { tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 
 export default function HomePage() {
   const router = useRouter();
   const tenantId = useAtomValue(tenantIdAtom);
   const { enableHome } = useAtomValue(tenantConfigAtom);
 
-  const [{ data: heroData }] = useQuery({
-    query: ArticlesDocument,
-    variables: { first: 3, offset: 0 },
-  });
   const [{ data }] = useQuery({
     query: ArticlesDocument,
-    variables: { first: 3, offset: 3 },
+    variables: { first: 6, offset: 0 },
   });
+  const heroData = useMemo(() => data?.aktualities?.nodes?.slice(0, 3) || [], [data]);
+  const restData = useMemo(() => data?.aktualities?.nodes?.slice(3) || [], [data]);
 
   useLayoutEffect(() => {
     if (tenantId && !enableHome) {
@@ -37,7 +36,7 @@ export default function HomePage() {
 
   return (
     <Layout hideCta showTopMenu>
-      <Hero data={heroData?.aktualities?.nodes || []} />
+      <Hero data={heroData} />
 
       <CallToAction url="/" />
 
@@ -57,7 +56,7 @@ export default function HomePage() {
       <div className="col-feature my-12">
         <h4 className="text-3xl font-bold text-accent-9">Aktuálně</h4>
         <div className="grid place-items-stretch gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-3 mb-6">
-          {data?.aktualities?.nodes?.map((x) => (
+          {restData?.map((x) => (
             <ArticleCard
               key={x.id}
               header={x.atJmeno}
