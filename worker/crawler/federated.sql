@@ -13,7 +13,8 @@ SELECT federated.upsert_category(
   in_discipline   => :discipline,
   in_age_group    => :ageGroup,
   in_gender_group => :genderGroup,
-  in_class        => :class
+  in_class        => :class,
+  in_competitor_type => :competitorType::federated.competitor_type
 ) as id;
 
 /* @name UpsertCompetitor */

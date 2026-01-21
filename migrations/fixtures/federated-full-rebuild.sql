@@ -69,6 +69,15 @@ CREATE TABLE federated.dance_program_dance (
 CREATE INDEX ON federated.dance_program_dance (program_id);
 CREATE INDEX ON federated.dance_program_dance (dance_code);
 
+CREATE TYPE federated.competitor_type AS ENUM (
+  'couple',
+  'solo',
+  'duo',
+  'trio',
+  'formation',
+  'team'
+);
+
 -- single cross-federation category
 CREATE TABLE federated.category (
   id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -78,6 +87,7 @@ CREATE TABLE federated.category (
   age_group     text NOT NULL,       -- junior, youth, adult, senior...
   gender_group  text NOT NULL DEFAULT 'mixed',       -- male, female, same-sex, mixed
   class         text NOT NULL,       -- A,B,C,Open,...
+  competitor_type  federated.competitor_type NOT NULL DEFAULT 'couple',
   base_dance_program_id bigint REFERENCES federated.dance_program(id),
   UNIQUE (series, discipline, age_group, gender_group, class)
 );
@@ -152,15 +162,6 @@ CREATE TABLE federated.federation_athlete (
 CREATE INDEX ON federated.federation_athlete (athlete_id);
 CREATE UNIQUE INDEX ON federated.federation_athlete (federation, athlete_id)
   WHERE athlete_id IS NOT NULL;
-
-CREATE TYPE federated.competitor_type AS ENUM (
-  'couple',
-  'solo',
-  'duo',
-  'trio',
-  'formation',
-  'team'
-);
 
 CREATE TYPE federated.competitor_role AS ENUM (
   'lead',
@@ -490,6 +491,7 @@ CREATE OR REPLACE FUNCTION federated.upsert_category(
   in_age_group    text,
   in_gender_group text,
   in_class        text,
+  in_competitor_type federated.competitor_type,
   in_name         text DEFAULT NULL
 )
   RETURNS bigint
@@ -502,6 +504,7 @@ AS $$
     age_group,
     gender_group,
     class,
+    competitor_type,
     name
   )
   VALUES (
@@ -510,9 +513,10 @@ AS $$
     in_age_group,
     in_gender_group,
     in_class,
+    in_competitor_type,
     COALESCE(
       in_name,
-      concat_ws(' ', in_series, in_discipline, in_age_group, in_class)
+      concat_ws(' ', in_series, in_age_group, nullif(in_competitor_type, 'couple'), in_class, in_discipline)
     )
   )
   ON CONFLICT (series, discipline, age_group, gender_group, class)

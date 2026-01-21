@@ -8,6 +8,7 @@ import {
   upsertCompetitorProgress,
 } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
+import { mapCompetitorType } from './cstsEnums.ts';
 
 const rankingPointsSchema = z.object({
   id: z.number(),
@@ -128,6 +129,7 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
         genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
         discipline: rp.discipline,
         series: rp.series,
+        competitorType: mapCompetitorType(rp.competitors),
       },
       client,
     );

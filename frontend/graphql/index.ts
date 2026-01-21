@@ -750,6 +750,7 @@ export type Category = {
   ageGroup: Scalars['String']['output'];
   baseDanceProgramId: Maybe<Scalars['BigInt']['output']>;
   class: Scalars['String']['output'];
+  competitorType: CompetitorType;
   discipline: Scalars['String']['output'];
   genderGroup: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
@@ -1218,6 +1219,14 @@ export type CohortsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
+
+export type CompetitorType =
+  | 'COUPLE'
+  | 'DUO'
+  | 'FORMATION'
+  | 'SOLO'
+  | 'TEAM'
+  | 'TRIO';
 
 /** All input for the `confirmMembershipApplication` mutation. */
 export type ConfirmMembershipApplicationInput = {
@@ -9853,6 +9862,7 @@ export type GraphCacheResolvers = {
     ageGroup?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>,
     baseDanceProgramId?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['BigInt'] | string>,
     class?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>,
+    competitorType?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, CompetitorType | string>,
     discipline?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>,
     genderGroup?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -11667,6 +11677,7 @@ export type GraphCacheUpdaters = {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     baseDanceProgramId?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     class?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    competitorType?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     discipline?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     genderGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,

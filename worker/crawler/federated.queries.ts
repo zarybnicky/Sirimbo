@@ -58,6 +58,7 @@ export const upsertFederationAthlete = new PreparedQuery<IUpsertFederationAthlet
 export interface IUpsertCategoryParams {
   ageGroup?: string | null | void;
   class?: string | null | void;
+  competitorType?: competitor_type | null | void;
   discipline?: string | null | void;
   genderGroup?: string | null | void;
   series?: string | null | void;
@@ -74,7 +75,7 @@ export interface IUpsertCategoryQuery {
   result: IUpsertCategoryResult;
 }
 
-const upsertCategoryIR: any = {"usedParamSet":{"series":true,"discipline":true,"ageGroup":true,"genderGroup":true,"class":true},"params":[{"name":"series","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":61}]},{"name":"discipline","required":false,"transform":{"type":"scalar"},"locs":[{"a":85,"b":95}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":119,"b":127}]},{"name":"genderGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":151,"b":162}]},{"name":"class","required":false,"transform":{"type":"scalar"},"locs":[{"a":186,"b":191}]}],"statement":"SELECT federated.upsert_category(\n  in_series       => :series,\n  in_discipline   => :discipline,\n  in_age_group    => :ageGroup,\n  in_gender_group => :genderGroup,\n  in_class        => :class\n) as id"};
+const upsertCategoryIR: any = {"usedParamSet":{"series":true,"discipline":true,"ageGroup":true,"genderGroup":true,"class":true,"competitorType":true},"params":[{"name":"series","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":61}]},{"name":"discipline","required":false,"transform":{"type":"scalar"},"locs":[{"a":85,"b":95}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":119,"b":127}]},{"name":"genderGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":151,"b":162}]},{"name":"class","required":false,"transform":{"type":"scalar"},"locs":[{"a":186,"b":191}]},{"name":"competitorType","required":false,"transform":{"type":"scalar"},"locs":[{"a":218,"b":232}]}],"statement":"SELECT federated.upsert_category(\n  in_series       => :series,\n  in_discipline   => :discipline,\n  in_age_group    => :ageGroup,\n  in_gender_group => :genderGroup,\n  in_class        => :class,\n  in_competitor_type => :competitorType::federated.competitor_type\n) as id"};
 
 /**
  * Query generated from SQL:
@@ -84,7 +85,8 @@ const upsertCategoryIR: any = {"usedParamSet":{"series":true,"discipline":true,"
  *   in_discipline   => :discipline,
  *   in_age_group    => :ageGroup,
  *   in_gender_group => :genderGroup,
- *   in_class        => :class
+ *   in_class        => :class,
+ *   in_competitor_type => :competitorType::federated.competitor_type
  * ) as id
  * ```
  */

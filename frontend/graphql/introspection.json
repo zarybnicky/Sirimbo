@@ -1631,6 +1631,17 @@
             "args": []
           },
           {
+            "name": "competitorType",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "discipline",
             "type": {
               "kind": "NON_NULL",

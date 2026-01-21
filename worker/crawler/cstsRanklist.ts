@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import {
-  type competitor_type,
   upsertCategory,
   upsertManyCompetitors,
   upsertRanklistSnapshot,
@@ -86,6 +85,7 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
       genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
       discipline: entity.discipline,
       series: entity.series,
+      competitorType: mapCompetitorType(entity.competitorType),
     },
     client,
   );
