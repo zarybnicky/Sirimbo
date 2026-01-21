@@ -54,7 +54,6 @@ function App({
   resetUrqlClient: () => void;
 }) {
   storeRef.resetUrqlClient = resetUrqlClient;
-  // eslint-disable-next-line unicorn/prefer-global-this
   if (typeof window === 'undefined') {
     storeRef.current = createStore();
   }

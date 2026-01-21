@@ -1,5 +1,4 @@
 import nextRoutes from 'nextjs-routes/config';
-import serwistNext from '@serwist/next';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 
@@ -15,13 +14,6 @@ const compose =
 
 // eslint-disable-next-line import/no-unused-modules
 export default compose(
-  serwistNext({
-    swSrc: 'sw.ts',
-    swDest: 'public/sw.js',
-    reloadOnOnline: false,
-    // disable: process.env.NODE_ENV !== 'production',
-    maximumFileSizeToCacheInBytes: 1_000_000,
-  }),
   nextRoutes(),
   bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' }),
   (cfg: NextConfig) =>

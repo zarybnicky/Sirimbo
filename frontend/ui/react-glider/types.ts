@@ -117,11 +117,6 @@ export interface GliderProps {
    */
   responsive?: BreakPoint[];
 
-  /**
-   * Replace container html element
-   */
-  containerElement?: React.ElementType;
-
   /** use any custom easing function, compatible with most easing plugins */
   easing?(x: number, t: number, b: number, c: number, d: number): number;
 

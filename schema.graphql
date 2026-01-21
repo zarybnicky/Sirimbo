@@ -6128,7 +6128,7 @@ type PaymentDebtor {
   """Reads a single `Person` that is related to this `PaymentDebtor`."""
   person: Person
   personId: BigInt!
-  price: PriceType
+  price: PaymentDebtorPriceRecord
 
   """Reads a single `Tenant` that is related to this `PaymentDebtor`."""
   tenant: Tenant
@@ -6154,6 +6154,11 @@ input PaymentDebtorCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
+}
+
+type PaymentDebtorPriceRecord {
+  amount: BigFloat
+  currency: String
 }
 
 """Methods to use when ordering `PaymentDebtor`."""
@@ -6992,11 +6997,6 @@ type Price {
 
 """An input for mutations affecting `Price`"""
 input PriceInput {
-  amount: BigFloat
-  currency: String
-}
-
-type PriceType {
   amount: BigFloat
   currency: String
 }

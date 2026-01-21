@@ -39,7 +39,6 @@ const GliderComponent = React.forwardRef(function GliderReact(
 ) {
   const {
     id,
-    containerElement,
     className,
     hasArrows,
     arrows,
@@ -205,10 +204,8 @@ const GliderComponent = React.forwardRef(function GliderReact(
   // expose the glider instance to the user so they can call the methods too
   React.useImperativeHandle(ref, () => gliderRef.current as GliderMethods);
 
-  const Element = containerElement || 'div';
-
   return (
-    <Element className="glider-contain">
+    <div className="glider-contain">
       {props.hasArrows && !arrows && (
         <button
           type="button"
@@ -236,7 +233,7 @@ const GliderComponent = React.forwardRef(function GliderReact(
           {iconRight || '»'}
         </button>
       )}
-    </Element>
+    </div>
   );
 });
 
