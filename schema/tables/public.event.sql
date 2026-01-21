@@ -14,9 +14,6 @@ CREATE TABLE public.event (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
     location_id bigint,
-    payment_type public.event_payment_type DEFAULT 'none'::public.event_payment_type NOT NULL,
-    is_paid_by_tenant boolean DEFAULT true NOT NULL,
-    payment_recipient_id bigint,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -30,8 +27,6 @@ ALTER TABLE ONLY public.event
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.tenant_location(id);
 ALTER TABLE ONLY public.event
-    ADD CONSTRAINT event_payment_recipient_id_fkey FOREIGN KEY (payment_recipient_id) REFERENCES public.account(id);
-ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_same_tenant ON public.event TO administrator USING (true);
@@ -43,7 +38,6 @@ CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX event_location_id_idx ON public.event USING btree (location_id);
-CREATE INDEX event_payment_recipient_id_idx ON public.event USING btree (payment_recipient_id);
 CREATE INDEX event_tenant_visible_public_idx ON public.event USING btree (tenant_id, is_public, is_visible);
 CREATE INDEX event_type_idx ON public.event USING btree (type);
 CREATE INDEX event_visible_public_tenant_idx ON public.event USING btree (is_public, is_visible, tenant_id);

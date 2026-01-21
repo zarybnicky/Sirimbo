@@ -21,29 +21,29 @@ begin
   total_amount := 0;
 
   for recipient in select * from payment_recipient where payment_id=p.id loop
-    remaining_amount := recipient.amount;
-    total_amount := total_amount + remaining_amount;
+      remaining_amount := recipient.amount;
+      total_amount := total_amount + remaining_amount;
 
-    select account.* into acc from account where id=recipient.account_id;
-    select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id and tenant_id=acc.tenant_id;
+      select account.* into acc from account where id=recipient.account_id;
+      select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id and tenant_id=acc.tenant_id;
 
-    if trainer is null or trainer.create_payout_payments then
-      if trainer.member_payout_45min is not null then
-        actual_payout := remaining_amount * (trainer.member_payout_45min).amount / (trainer.member_price_45min).amount;
-        insert into posting (transaction_id, original_account_id, account_id, amount)
-        values (trans.id, recipient.account_id, (select id from tenant_account(acc.currency)), remaining_amount - actual_payout);
-        remaining_amount := actual_payout;
+      if trainer is null or trainer.create_payout_payments then
+        if trainer.member_payout_45min_amount is not null then
+          actual_payout := remaining_amount * trainer.member_payout_45min_amount / trainer.member_price_45min_amount;
+          insert into posting (transaction_id, original_account_id, account_id, amount)
+          values (trans.id, recipient.account_id, (select id from tenant_account(acc.currency)), remaining_amount - actual_payout);
+          remaining_amount := actual_payout;
+        end if;
+
+        insert into posting (transaction_id, account_id, amount)
+        values (trans.id, recipient.account_id, remaining_amount);
       end if;
-
-      insert into posting (transaction_id, account_id, amount)
-      values (trans.id, recipient.account_id, remaining_amount);
-    end if;
-  end loop;
+    end loop;
 
   remaining_amount := total_amount / (select coalesce(nullif(count(*), 0), 1) from payment_debtor where payment_id = p.id);
   for acc in select a.* from payment_debtor d join lateral person_account(d.person_id, 'CZK') a on true where payment_id = p.id loop
-    insert into posting (transaction_id, account_id, amount) values (trans.id, acc.id, 0.0 - remaining_amount);
-  end loop;
+      insert into posting (transaction_id, account_id, amount) values (trans.id, acc.id, 0.0 - remaining_amount);
+    end loop;
 
   update payment set status = 'paid', paid_at = now() where id=p.id returning * into p;
   return p;

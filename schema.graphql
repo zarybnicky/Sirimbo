@@ -20,35 +20,6 @@ type Account {
   ): [CohortSubscription!]!
   createdAt: Datetime!
   currency: String!
-
-  """Reads and enables pagination through a set of `Event`."""
-  eventsByPaymentRecipientId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventsConnection!
   id: BigInt!
   liabilities(since: Datetime, until: Datetime): BigFloat
   openingBalance: BigFloat!
@@ -2004,9 +1975,6 @@ type CreateEventPayload {
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
 
-  """Reads a single `Account` that is related to this `Event`."""
-  paymentRecipient: Account
-
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -2811,9 +2779,6 @@ type DeleteEventPayload {
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
 
-  """Reads a single `Account` that is related to this `Event`."""
-  paymentRecipient: Account
-
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -3536,7 +3501,6 @@ type Event {
   filesLegacy: String!
   id: BigInt!
   isLocked: Boolean!
-  isPaidByTenant: Boolean!
   isPublic: Boolean!
   isRegistrationOpen: Boolean
   isVisible: Boolean!
@@ -3553,10 +3517,6 @@ type Event {
     offset: Int
   ): [EventRegistration!]
   name: String!
-
-  """Reads a single `Account` that is related to this `Event`."""
-  paymentRecipient: Account
-  paymentRecipientId: BigInt
   registrantsList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -3695,9 +3655,6 @@ input EventCondition {
   """Checks for equality with the object’s `isLocked` field."""
   isLocked: Boolean
 
-  """Checks for equality with the object’s `isPaidByTenant` field."""
-  isPaidByTenant: Boolean
-
   """Checks for equality with the object’s `isPublic` field."""
   isPublic: Boolean
 
@@ -3712,9 +3669,6 @@ input EventCondition {
 
   """Checks for equality with the object’s `name` field."""
   name: String
-
-  """Checks for equality with the object’s `paymentRecipientId` field."""
-  paymentRecipientId: BigInt
 
   """Checks for equality with the object’s `summary` field."""
   summary: String
@@ -3884,13 +3838,11 @@ input EventInput {
   filesLegacy: String
   id: BigInt
   isLocked: Boolean
-  isPaidByTenant: Boolean
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
   locationText: String!
   name: String!
-  paymentRecipientId: BigInt
   summary: String
   tenantId: BigInt
   type: EventType
@@ -4278,13 +4230,11 @@ input EventPatch {
   filesLegacy: String
   id: BigInt
   isLocked: Boolean
-  isPaidByTenant: Boolean
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
   locationText: String
   name: String
-  paymentRecipientId: BigInt
   summary: String
   tenantId: BigInt
   type: EventType
@@ -4788,8 +4738,6 @@ enum EventsOrderBy {
   ID_DESC
   IS_LOCKED_ASC
   IS_LOCKED_DESC
-  IS_PAID_BY_TENANT_ASC
-  IS_PAID_BY_TENANT_DESC
   IS_PUBLIC_ASC
   IS_PUBLIC_DESC
   IS_VISIBLE_ASC
@@ -4801,8 +4749,6 @@ enum EventsOrderBy {
   NAME_ASC
   NAME_DESC
   NATURAL
-  PAYMENT_RECIPIENT_ID_ASC
-  PAYMENT_RECIPIENT_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   SUMMARY_ASC
@@ -10435,9 +10381,6 @@ type UpdateEventPayload {
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
 
-  """Reads a single `Account` that is related to this `Event`."""
-  paymentRecipient: Account
-
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
@@ -10976,9 +10919,6 @@ type UpsertEventPayload {
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
-
-  """Reads a single `Account` that is related to this `Event`."""
-  paymentRecipient: Account
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.

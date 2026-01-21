@@ -10,17 +10,16 @@ CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_insta
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
   )
   select
-    sum((tt.member_price_45min).amount * s.duration / 45 / s.num_participants) as amount,
-    (tt.member_price_45min).currency as currency
+    sum(tt.member_price_45min_amount * s.duration / 45 / s.num_participants) as amount,
+    tt.currency as currency
   from stats s
   join lateral public.event_instance_trainers(v_instance) tt on true
   where
     s.num_participants > 0
     and s.duration > 0
-    and tt.member_price_45min is not null
-    and (tt.member_price_45min).amount is not null
-    and (tt.member_price_45min).currency is not null
-  group by (tt.member_price_45min).currency;
+    and tt.member_price_45min_amount is not null
+    and tt.currency is not null
+  group by tt.currency;
 $$;
 
 COMMENT ON FUNCTION public.event_instance_approx_price(v_instance public.event_instance) IS '@simpleCollections only';

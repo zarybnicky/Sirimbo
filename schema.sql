@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 9NZwFqfc2arfJgiUucbzy6MF75ybb0IEqWubmWpOKEY8IsRZS0YCT9xxa5lKDOA
+\restrict z730qSXNFHcdlnjFOC4WyF8BTG9v8bCV3WNOuido49jCS5Tyd2Lc1B9w8bKe3tg
 
 -- Dumped from database version 17.7
 -- Dumped by pg_dump version 18.1
@@ -356,17 +356,6 @@ COMMENT ON TYPE public.event_overlaps_conflict IS 'Pair of overlapping event ins
 
 
 --
--- Name: event_payment_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.event_payment_type AS ENUM (
-    'upfront',
-    'after_instance',
-    'none'
-);
-
-
---
 -- Name: event_registration_type_input; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -412,24 +401,6 @@ CREATE TYPE public.event_type AS ENUM (
 
 
 --
--- Name: price_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.price_type AS (
-	amount numeric(19,4),
-	currency text
-);
-
-
---
--- Name: price; Type: DOMAIN; Schema: public; Owner: -
---
-
-CREATE DOMAIN public.price AS public.price_type
-	CONSTRAINT price_check CHECK (((VALUE IS NULL) OR (((VALUE).currency IS NOT NULL) AND ((VALUE).amount IS NOT NULL) AND (length((VALUE).currency) = 3) AND ((VALUE).currency = upper((VALUE).currency)))));
-
-
---
 -- Name: event_type_input; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -438,7 +409,6 @@ CREATE TYPE public.event_type_input AS (
 	name text,
 	summary text,
 	description text,
-	description_member text,
 	type public.event_type,
 	location_id bigint,
 	location_text text,
@@ -446,10 +416,7 @@ CREATE TYPE public.event_type_input AS (
 	is_visible boolean,
 	is_public boolean,
 	is_locked boolean,
-	enable_notes boolean,
-	payment_type public.event_payment_type,
-	member_price public.price,
-	guest_price public.price
+	enable_notes boolean
 );
 
 
@@ -574,6 +541,24 @@ CREATE TYPE public.payment_status AS ENUM (
     'unpaid',
     'paid'
 );
+
+
+--
+-- Name: price_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.price_type AS (
+	amount numeric(19,4),
+	currency text
+);
+
+
+--
+-- Name: price; Type: DOMAIN; Schema: public; Owner: -
+--
+
+CREATE DOMAIN public.price AS public.price_type
+	CONSTRAINT price_check CHECK (((VALUE IS NULL) OR (((VALUE).currency IS NOT NULL) AND ((VALUE).amount IS NOT NULL) AND (length((VALUE).currency) = 3) AND ((VALUE).currency = upper((VALUE).currency)))));
 
 
 --
@@ -903,9 +888,6 @@ COMMENT ON FUNCTION app_private.create_jwt_token(u public.users) IS 'Generates t
 CREATE FUNCTION app_private.create_latest_lesson_payments() RETURNS SETOF public.payment
     LANGUAGE plpgsql
     AS $$
-declare
-  v_id bigint;
-  created_ids bigint[] := array[]::bigint[];
 begin
   perform set_config('jwt.claims.tenant_id', '2', true);
   perform set_config('jwt.claims.my_tenant_ids', '[2]', true);
@@ -913,26 +895,32 @@ begin
     set local role to administrator;
   end if;
 
-  update event set payment_type='after_instance'
-  where type='lesson' and payment_type <> 'after_instance';
-
-  select array_agg((create_event_instance_payment(event_instance)).id) into created_ids
-  from event_instance join event on event.id=event_id
-  where type='lesson'
-    and not event_instance.is_cancelled
-    and event_instance.since < now()
-    and payment_type = 'after_instance'
-    and not exists (
-      select * from payment where event_instance_id=event_instance.id
-    );
-
-  update payment set status ='unpaid' where id = any (created_ids);
-
-  foreach v_id in array created_ids loop
-    perform resolve_payment_with_credit(payment.*) from payment where id = v_id;
-  end loop;
-
-  return query select * from payment where id = any (created_ids);
+  return query WITH created AS (
+    SELECT p.*
+    FROM event_instance ei
+      JOIN event e ON e.id = ei.event_id
+      JOIN LATERAL create_event_instance_payment(ei) p ON true
+    WHERE e.type = 'lesson'
+      AND NOT ei.is_cancelled
+      AND ei.since < now()
+      AND NOT EXISTS (
+        SELECT 1
+        FROM payment p
+        WHERE p.event_instance_id = ei.id
+      )
+      AND p IS NOT NULL
+  ),
+  unpaid AS (
+    UPDATE payment p
+      SET status = 'unpaid'
+      FROM created
+      WHERE p.id = created.id
+      RETURNING p.*
+  )
+  SELECT p.*
+  FROM unpaid
+    CROSS JOIN LATERAL resolve_payment_with_credit(unpaid.*) p
+  WHERE p IS NOT NULL;
 end;
 $$;
 
@@ -1729,7 +1717,6 @@ begin
       and event_instance.id = NEW.id
       and not event_instance.is_cancelled
       and event_instance.since < now()
-      and payment_type = 'after_instance'
       and not exists (
         select * from payment where event_instance_id=event_instance.id
       );
@@ -2550,7 +2537,7 @@ CREATE TABLE public.attachment (
 -- Name: TABLE attachment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.attachment IS '@omit update';
+COMMENT ON TABLE public.attachment IS '@omit update,delete';
 
 
 --
@@ -2795,9 +2782,6 @@ CREATE TABLE public.event (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
     location_id bigint,
-    payment_type public.event_payment_type DEFAULT 'none'::public.event_payment_type NOT NULL,
-    is_paid_by_tenant boolean DEFAULT true NOT NULL,
-    payment_recipient_id bigint,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -2906,17 +2890,17 @@ declare
   duration numeric(19, 4);
   counter int;
 begin
+  if current_tenant_id() <> 2 then
+    return null;
+  end if;
+
   select * into payment from payment where event_instance_id = i.id;
   if found then
     return payment;
   end if;
 
-  if current_tenant_id() <> 2 then
-    return null;
-  end if;
-
   select * into e from event where id = i.event_id;
-  if e.payment_type <> 'after_instance' or not exists (select * from event_registration where event_id=e.id) then
+  if e.type <> 'lesson' or not exists (select * from event_registration where event_id=e.id) then
     return null;
   end if;
 
@@ -2927,22 +2911,20 @@ begin
   returning * into payment;
 
   insert into payment_recipient (payment_id, account_id, amount)
-  select payment.id, account.id, (price).amount
+  select distinct on (account.id) payment.id, account.id, tenant_trainer.member_price_45min_amount / 45 * duration
   from event_instance_trainer
   join tenant_trainer on event_instance_trainer.person_id = tenant_trainer.person_id and tenant_trainer.tenant_id=current_tenant_id() and tenant_trainer.active_range @> now()
-  join lateral coalesce(event_instance_trainer.lesson_price, ((tenant_trainer.member_price_45min).amount / 45 * duration, (tenant_trainer.member_price_45min).currency)::price) price on true
-  join lateral person_account(tenant_trainer.person_id, (price).currency) account on true
-  where event_instance_trainer.instance_id=i.id and (lesson_price is not null or member_price_45min is not null);
+  join lateral person_account(tenant_trainer.person_id, tenant_trainer.currency) account on true
+  where event_instance_trainer.instance_id=i.id and member_price_45min_amount is not null;
 
   get diagnostics counter = row_count;
   if counter <= 0 then
     insert into payment_recipient (payment_id, account_id, amount)
-    select payment.id, account.id, (price).amount
+    select distinct on (account.id) payment.id, account.id, tenant_trainer.member_price_45min_amount / 45 * duration
     from event_trainer
     join tenant_trainer on event_trainer.person_id = tenant_trainer.person_id and tenant_trainer.tenant_id=current_tenant_id() and tenant_trainer.active_range @> now()
-    join lateral coalesce(event_trainer.lesson_price, ((tenant_trainer.member_price_45min).amount / 45 * duration, (tenant_trainer.member_price_45min).currency)::price) price on true
-    join lateral person_account(tenant_trainer.person_id, (price).currency) account on true
-    where event_trainer.event_id=i.event_id and (lesson_price is not null or member_price_45min is not null);
+    join lateral person_account(tenant_trainer.person_id, tenant_trainer.currency) account on true
+    where event_trainer.event_id=i.event_id and member_price_45min_amount is not null;
   end if;
 
   if e.type = 'group' and current_tenant_id() = 2 then
@@ -3299,17 +3281,16 @@ CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_insta
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
   )
   select
-    sum((tt.member_price_45min).amount * s.duration / 45 / s.num_participants) as amount,
-    (tt.member_price_45min).currency as currency
+    sum(tt.member_price_45min_amount * s.duration / 45 / s.num_participants) as amount,
+    tt.currency as currency
   from stats s
   join lateral public.event_instance_trainers(v_instance) tt on true
   where
     s.num_participants > 0
     and s.duration > 0
-    and tt.member_price_45min is not null
-    and (tt.member_price_45min).amount is not null
-    and (tt.member_price_45min).currency is not null
-  group by (tt.member_price_45min).currency;
+    and tt.member_price_45min_amount is not null
+    and tt.currency is not null
+  group by tt.currency;
 $$;
 
 
@@ -4030,43 +4011,6 @@ $$;
 
 
 --
--- Name: my_event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, bigint[]); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.event_instance
-    LANGUAGE sql STABLE
-    AS $$
-  select i.*
-  from event_instance i
-  join event on event_id=event.id
-  where event.is_visible
-    and i.since <= end_range
-    and i.until >= start_range
-    and (only_type is null or event.type = only_type)
-    and (trainer_ids is null
-      OR i.event_id IN (SELECT et.event_id FROM event_trainer et WHERE et.person_id = ANY (trainer_ids))
-      OR i.id IN (SELECT eit.instance_id FROM event_instance_trainer eit WHERE eit.person_id = ANY (trainer_ids)))
-    and (
-      i.event_id IN (
-        SELECT r.event_id FROM event_registration r WHERE r.person_id = ANY (current_person_ids()) OR r.couple_id = ANY (current_couple_ids())
-      ) OR i.event_id IN (
-        SELECT et2.event_id FROM event_trainer et2 WHERE et2.person_id = ANY (current_person_ids())
-      ) OR i.id IN (
-        SELECT eit2.instance_id FROM event_instance_trainer eit2 WHERE eit2.person_id = ANY (current_person_ids())
-      )
-    );
-$$;
-
-
---
--- Name: FUNCTION my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[]) IS '@deprecated
-@simpleCollections only';
-
-
---
 -- Name: my_tenants_array(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4159,28 +4103,27 @@ COMMENT ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) IS 
 -- Name: payment_debtor_price(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor) RETURNS public.price_type
+CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text) RETURNS record
     LANGUAGE sql STABLE
     AS $$
-  SELECT (
-    sum(payment_recipient.amount) / (
-      SELECT count(*) AS count
-      FROM public.payment_debtor
-      WHERE p.payment_id = payment_debtor.payment_id
-    )::numeric(19,4),
-    min(account.currency)::text
-  )::price
-  FROM payment_recipient
+SELECT
+  sum(payment_recipient.amount) / (
+    SELECT count(*) AS count
+    FROM public.payment_debtor
+    WHERE p.payment_id = payment_debtor.payment_id
+  )::numeric(19,4) as amount,
+  min(account.currency)::text as currency
+FROM payment_recipient
   JOIN account ON payment_recipient.account_id = account.id
-  WHERE payment_recipient.payment_id = p.payment_id;
+WHERE payment_recipient.payment_id = p.payment_id;
 $$;
 
 
 --
--- Name: FUNCTION payment_debtor_price(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text) IS '@simpleCollections only';
 
 
 --
@@ -4736,29 +4679,29 @@ begin
   total_amount := 0;
 
   for recipient in select * from payment_recipient where payment_id=p.id loop
-    remaining_amount := recipient.amount;
-    total_amount := total_amount + remaining_amount;
+      remaining_amount := recipient.amount;
+      total_amount := total_amount + remaining_amount;
 
-    select account.* into acc from account where id=recipient.account_id;
-    select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id and tenant_id=acc.tenant_id;
+      select account.* into acc from account where id=recipient.account_id;
+      select tenant_trainer.* into trainer from tenant_trainer where acc.person_id=tenant_trainer.person_id and tenant_id=acc.tenant_id;
 
-    if trainer is null or trainer.create_payout_payments then
-      if trainer.member_payout_45min is not null then
-        actual_payout := remaining_amount * (trainer.member_payout_45min).amount / (trainer.member_price_45min).amount;
-        insert into posting (transaction_id, original_account_id, account_id, amount)
-        values (trans.id, recipient.account_id, (select id from tenant_account(acc.currency)), remaining_amount - actual_payout);
-        remaining_amount := actual_payout;
+      if trainer is null or trainer.create_payout_payments then
+        if trainer.member_payout_45min_amount is not null then
+          actual_payout := remaining_amount * trainer.member_payout_45min_amount / trainer.member_price_45min_amount;
+          insert into posting (transaction_id, original_account_id, account_id, amount)
+          values (trans.id, recipient.account_id, (select id from tenant_account(acc.currency)), remaining_amount - actual_payout);
+          remaining_amount := actual_payout;
+        end if;
+
+        insert into posting (transaction_id, account_id, amount)
+        values (trans.id, recipient.account_id, remaining_amount);
       end if;
-
-      insert into posting (transaction_id, account_id, amount)
-      values (trans.id, recipient.account_id, remaining_amount);
-    end if;
-  end loop;
+    end loop;
 
   remaining_amount := total_amount / (select coalesce(nullif(count(*), 0), 1) from payment_debtor where payment_id = p.id);
   for acc in select a.* from payment_debtor d join lateral person_account(d.person_id, 'CZK') a on true where payment_id = p.id loop
-    insert into posting (transaction_id, account_id, amount) values (trans.id, acc.id, 0.0 - remaining_amount);
-  end loop;
+      insert into posting (transaction_id, account_id, amount) values (trans.id, acc.id, 0.0 - remaining_amount);
+    end loop;
 
   update payment set status = 'paid', paid_at = now() where id=p.id returning * into p;
   return p;
@@ -5430,33 +5373,14 @@ declare
   cohort event_target_cohort_type_input;
   registration event_registration_type_input;
   v_event event;
-  v_instance event_instance;
+  v_instance_id bigint;
 begin
-  if info.id is not null then
-    update event set
-      name=info.name,
-      summary=info.summary,
-      description=info.description,
-      description_member=info.description_member,
-      type=info.type,
-      location_id=info.location_id,
-      location_text=info.location_text,
-      capacity=info.capacity,
-      is_visible=info.is_visible,
-      is_public=info.is_public,
-      is_locked=info.is_locked,
-      enable_notes=info.enable_notes,
-      payment_type=info.payment_type,
-      guest_price=info.guest_price,
-      member_price=info.member_price
-    where id=info.id
-    returning * into v_event;
-  else
+  if info.id is null then
+
     insert into event (
       name,
       summary,
       description,
-      description_member,
       type,
       location_id,
       location_text,
@@ -5464,16 +5388,12 @@ begin
       is_visible,
       is_public,
       is_locked,
-      enable_notes,
-      payment_type,
-      guest_price,
-      member_price
+      enable_notes
     )
     values (
       info.name,
       info.summary,
       info.description,
-      info.description_member,
       info.type,
       info.location_id,
       info.location_text,
@@ -5481,86 +5401,92 @@ begin
       info.is_visible,
       info.is_public,
       info.is_locked,
-      info.enable_notes,
-      info.payment_type,
-      info.guest_price,
-      info.member_price
+      info.enable_notes
     )
     returning * into v_event;
+  else
+    update event set
+      name=info.name,
+      summary=info.summary,
+      description=info.description,
+      type=info.type,
+      location_id=info.location_id,
+      location_text=info.location_text,
+      capacity=info.capacity,
+      is_visible=info.is_visible,
+      is_public=info.is_public,
+      is_locked=info.is_locked,
+      enable_notes=info.enable_notes
+    where id=info.id
+    returning * into v_event;
+
+    if not found then
+      raise exception 'event % not found', info.id;
+    end if;
   end if;
 
-  foreach instance in array instances loop
-    if instance.id is not null then
-      if instance.since is null and instance.until is null then
-        delete from event_instance where id=instance.id;
-        v_instance.id := null;
-      else
-        update event_instance
-        set since=instance.since, until=instance.until, is_cancelled=instance.is_cancelled
-        where id=instance.id
-        returning * into v_instance;
-      end if;
-    else
+  foreach instance in array coalesce(instances, '{}'::event_instance_type_input[]) loop
+    if instance.id is null then
       insert into event_instance (event_id, since, until, is_cancelled)
       values (v_event.id, instance.since, instance.until, instance.is_cancelled)
-      returning * into v_instance;
+      returning id into v_instance_id;
+    elsif instance.since is null and instance.until is null then
+      delete from event_instance where id=instance.id;
+      v_instance_id := null;
+    else
+      update event_instance
+      set since=instance.since, until=instance.until, is_cancelled=instance.is_cancelled
+      where id=instance.id
+      returning id into v_instance_id;
     end if;
 
-    if v_instance.id is not null then
-      foreach instance_trainer in array instance.trainers loop
-        if instance_trainer.id is not null then
-          if instance_trainer.person_id is null then
-            delete from event_instance_trainer where id=instance_trainer.id;
-          end if;
-        else
+    if v_instance_id is not null then
+      foreach instance_trainer in array coalesce(instance.trainers, '{}'::event_instance_trainer_type_input[]) loop
+        if instance_trainer.id is null then
           insert into event_instance_trainer (instance_id, person_id)
-          values (v_instance.id, instance_trainer.person_id)
+          values (v_instance_id, instance_trainer.person_id)
           on conflict (instance_id, person_id) do nothing;
+        elsif instance_trainer.person_id is null then
+          delete from event_instance_trainer where id=instance_trainer.id;
         end if;
       end loop;
     end if;
   end loop;
 
-  foreach trainer in array trainers loop
-    if trainer.id is not null then
-      if trainer.person_id is null then
-        delete from event_trainer where id=trainer.id;
-      else
-        update event_trainer set lessons_offered=trainer.lessons_offered where id=trainer.id;
-      end if;
-    else
+  foreach trainer in array coalesce(trainers, '{}'::event_trainer_type_input[]) loop
+    if trainer.id is null then
       insert into event_trainer (event_id, person_id, lessons_offered)
       values (v_event.id, trainer.person_id, coalesce(trainer.lessons_offered, 0))
       on conflict (event_id, person_id) do update
-      set lessons_offered = coalesce(trainer.lessons_offered, 0);
+        set lessons_offered = coalesce(trainer.lessons_offered, 0);
+    elsif trainer.person_id is null then
+      delete from event_trainer where id=trainer.id;
+    else
+      update event_trainer set lessons_offered=trainer.lessons_offered where id=trainer.id;
     end if;
   end loop;
 
-  foreach cohort in array cohorts loop
-    if cohort.id is not null then
-      if cohort.cohort_id is null then
-        delete from event_target_cohort where id=cohort.id;
-      end if;
-    else
+  foreach cohort in array coalesce(cohorts, '{}'::event_target_cohort_type_input[]) loop
+    if cohort.id is null then
       insert into event_target_cohort (event_id, cohort_id)
       values (v_event.id, cohort.cohort_id)
       on conflict (event_id, cohort_id) do nothing;
+    elsif cohort.cohort_id is null then
+      delete from event_target_cohort where id=cohort.id;
     end if;
   end loop;
 
-  foreach registration in array registrations loop
-    if registration.id is not null then
-      if registration.person_id is null and registration.couple_id is null then
-        delete from event_registration where id=registration.id;
-      else
-        update event_registration
-        set person_id=registration.person_id, couple_id=registration.couple_id
-        where id=registration.id;
-      end if;
-    else
+  foreach registration in array coalesce(registrations, '{}'::event_registration_type_input[]) loop
+    if registration.id is null then
       insert into event_registration (event_id, person_id, couple_id)
       values (v_event.id, registration.person_id, registration.couple_id)
       on conflict (event_id, person_id, couple_id) do nothing;
+    elsif registration.person_id is null and registration.couple_id is null then
+      delete from event_registration where id=registration.id;
+    else
+      update event_registration
+      set person_id=registration.person_id, couple_id=registration.couple_id
+      where id=registration.id;
     end if;
   end loop;
 
@@ -9562,13 +9488,6 @@ CREATE INDEX event_location_id_idx ON public.event USING btree (location_id);
 
 
 --
--- Name: event_payment_recipient_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_payment_recipient_id_idx ON public.event USING btree (payment_recipient_id);
-
-
---
 -- Name: event_registration_couple_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11425,14 +11344,6 @@ ALTER TABLE ONLY public.event_lesson_demand
 
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.tenant_location(id);
-
-
---
--- Name: event event_payment_recipient_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event
-    ADD CONSTRAINT event_payment_recipient_id_fkey FOREIGN KEY (payment_recipient_id) REFERENCES public.account(id);
 
 
 --
@@ -13684,13 +13595,6 @@ GRANT ALL ON FUNCTION public.my_announcements(sticky boolean, archive boolean, o
 
 
 --
--- Name: FUNCTION my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[]); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[]) TO anonymous;
-
-
---
 -- Name: FUNCTION my_tenants_array(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -13719,10 +13623,10 @@ GRANT ALL ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) T
 
 
 --
--- Name: FUNCTION payment_debtor_price(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
+GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text) TO anonymous;
 
 
 --
@@ -14661,5 +14565,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 9NZwFqfc2arfJgiUucbzy6MF75ybb0IEqWubmWpOKEY8IsRZS0YCT9xxa5lKDOA
+\unrestrict z730qSXNFHcdlnjFOC4WyF8BTG9v8bCV3WNOuido49jCS5Tyd2Lc1B9w8bKe3tg
 
