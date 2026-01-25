@@ -15,32 +15,41 @@ as $$
     from current_cohort_membership cm
     where (cm.cohort_id = scoreboard_entries.cohort_id or scoreboard_entries.cohort_id is null)
   ),
-  attendance as (
+  instances as (
+    select
+      i.id as instance_id,
+      i.since,
+      i.until,
+      e.id as event_id,
+      e.type as event_type
+    from event_instance i join event e on e.id = i.event_id
+    where not i.is_cancelled
+      and i.since >= scoreboard_entries.since::timestamptz
+      and i.until  < scoreboard_entries.until::timestamptz
+      and e.type <> 'reservation'
+  ),
+  member_people as (
+    select distinct person_id
+    from membership
+  ),
+  attendance as materialized (
     select
       ea.person_id,
-      case when scoreboard_entries.cohort_id is null then null else matched_membership.cohort_id end as cohort_id,
-      case when e.type = 'lesson' then 1 else 0 end as lesson_score,
-      case when e.type = 'group' then floor((extract(epoch from (i.until - i.since)) / 60)::numeric / 45::numeric) else 0 end as group_score,
-      case when e.type = 'camp' then 3 + 2 * ((extract(epoch from (i.until - i.since)) > 86400)::int) else 0 end as event_score,
-      date_trunc('day', i.since)::date as day
-    from event_attendance ea
+      scoreboard_entries.cohort_id as cohort_id,
+      case when inst.event_type = 'lesson' then 1 else 0 end as lesson_score,
+      case when inst.event_type = 'group' then floor((extract(epoch from (inst.until - inst.since)) / 60)::numeric / 45::numeric) else 0 end as group_score,
+      case when inst.event_type = 'camp'  then 3 + 2 * ((extract(epoch from (inst.until - inst.since)) > 86400)::int) else 0 end as event_score,
+      date_trunc('day', inst.since)::date as day
+    from instances inst
+    join lateral (select ea.person_id, ea.registration_id, ea.status from event_attendance ea where ea.instance_id = inst.instance_id) ea on true
     join event_registration er on er.id = ea.registration_id
-    join event e on e.id = er.event_id
-    join event_instance i on i.id = ea.instance_id
-    left join event_target_cohort tc on tc.id = er.target_cohort_id
-    join lateral (
-      select m.cohort_id
-      from membership m
-      where m.person_id = ea.person_id
-        and (scoreboard_entries.cohort_id is null or m.cohort_id = scoreboard_entries.cohort_id)
-        and (tc.cohort_id is null or tc.cohort_id = m.cohort_id)
-      limit 1
-    ) matched_membership on true
-    where (ea.status = 'attended' or e.type = 'lesson')
-      and e.type <> 'reservation'
-      and not i.is_cancelled
-      and i.since >= scoreboard_entries.since::timestamptz
-      and i.until < scoreboard_entries.until::timestamptz
+    left join lateral (
+      select tc.cohort_id from event_target_cohort tc where tc.id = er.target_cohort_id
+    ) tc on true
+    where
+      (ea.status = 'attended' or inst.event_type = 'lesson')
+      and ea.person_id = any (select person_id from member_people)
+      and (scoreboard_entries.cohort_id is null or tc.cohort_id = scoreboard_entries.cohort_id)
   ),
   per_day as (
     select

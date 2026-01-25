@@ -279,7 +279,8 @@ CREATE TABLE public.event_instance (
   until timestamp with time zone NOT NULL,
   is_cancelled boolean DEFAULT false NOT NULL,
   range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-  CHECK (until > since)
+  CHECK (until > since),
+  UNIQUE (tenant_id, id, event_id)
 );
 
 CREATE TABLE public.event_instance_trainer (
@@ -287,15 +288,18 @@ CREATE TABLE public.event_instance_trainer (
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  instance_id bigint NOT NULL REFERENCES public.event_instance (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
+  instance_id bigint NOT NULL,
   person_id bigint NOT NULL REFERENCES public.person (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  UNIQUE (instance_id, person_id)
+  event_id bigint NOT NULL,
+  UNIQUE (instance_id, person_id),
+  FOREIGN KEY(tenant_id, instance_id, event_id)
+    REFERENCES public.event_instance (tenant_id, id, event_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 CREATE TABLE public.event_target_cohort (
@@ -338,6 +342,7 @@ CREATE TABLE public.event_registration (
       OR (couple_id IS NULL
       AND person_id IS NOT NULL)
   ),
+  UNIQUE (tenant_id, id, event_id),
   UNIQUE NULLS NOT DISTINCT (event_id, person_id, couple_id)
 );
 
@@ -348,9 +353,7 @@ CREATE TABLE public.event_attendance (
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  instance_id bigint NOT NULL REFERENCES public.event_instance (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
+  instance_id bigint NOT NULL,
   person_id bigint NOT NULL REFERENCES public.person (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
@@ -358,10 +361,17 @@ CREATE TABLE public.event_attendance (
   note text,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  registration_id bigint NOT NULL REFERENCES public.event_registration (id)
+  registration_id bigint NOT NULL,
+  event_id bigint NOT NULL,
+  UNIQUE (registration_id, instance_id, person_id),
+  FOREIGN KEY(tenant_id, instance_id, event_id)
+    REFERENCES public.event_instance (tenant_id, id, event_id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  UNIQUE (registration_id, instance_id, person_id)
+  FOREIGN KEY(tenant_id, registration_id, event_id)
+    REFERENCES public.event_registration (tenant_id, id, event_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 CREATE TABLE public.event_trainer (
@@ -389,14 +399,17 @@ CREATE TABLE public.event_lesson_demand (
   trainer_id bigint NOT NULL REFERENCES public.event_trainer (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  registration_id bigint NOT NULL REFERENCES public.event_registration (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
+  registration_id bigint NOT NULL,
   lesson_count int NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  event_id bigint NOT NULL,
   CHECK (lesson_count > 0),
-  UNIQUE (registration_id, trainer_id)
+  UNIQUE (registration_id, trainer_id),
+  FOREIGN KEY(tenant_id, registration_id, event_id)
+    REFERENCES public.event_registration (tenant_id, id, event_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 CREATE TYPE public.payment_status AS ENUM ('tentative', 'unpaid', 'paid');

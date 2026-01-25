@@ -2802,6 +2802,20 @@ input DeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdInput {
   personId: BigInt!
 }
 
+"""
+All input for the `deleteEventRegistrationByTenantIdAndIdAndEventId` mutation.
+"""
+input DeleteEventRegistrationByTenantIdAndIdAndEventIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  eventId: BigInt!
+  id: BigInt!
+  tenantId: BigInt!
+}
+
 """All input for the `deleteEventRegistration` mutation."""
 input DeleteEventRegistrationInput {
   """
@@ -5519,6 +5533,14 @@ type Mutation {
     input: DeleteEventRegistrationByEventIdAndPersonIdAndCoupleIdInput!
   ): DeleteEventRegistrationPayload
 
+  """Deletes a single `EventRegistration` using a unique key."""
+  deleteEventRegistrationByTenantIdAndIdAndEventId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEventRegistrationByTenantIdAndIdAndEventIdInput!
+  ): DeleteEventRegistrationPayload
+
   """Deletes a single `MembershipApplication` using a unique key."""
   deleteMembershipApplication(
     """
@@ -5771,6 +5793,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateEventInstanceInput!
+  ): UpdateEventInstancePayload
+
+  """Updates a single `EventInstance` using a unique key and a patch."""
+  updateEventInstanceByTenantIdAndIdAndEventId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEventInstanceByTenantIdAndIdAndEventIdInput!
   ): UpdateEventInstancePayload
 
   """
@@ -7303,6 +7333,9 @@ type Query {
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
 
+  """Get a single `EventInstance`."""
+  eventInstanceByTenantIdAndIdAndEventId(eventId: BigInt!, id: BigInt!, tenantId: BigInt!): EventInstance
+
   """Get a single `EventInstanceTrainer`."""
   eventInstanceTrainer(id: BigInt!): EventInstanceTrainer
 
@@ -7402,6 +7435,9 @@ type Query {
 
   """Get a single `EventRegistration`."""
   eventRegistrationByEventIdAndPersonIdAndCoupleId(coupleId: BigInt!, eventId: BigInt!, personId: BigInt!): EventRegistration
+
+  """Get a single `EventRegistration`."""
+  eventRegistrationByTenantIdAndIdAndEventId(eventId: BigInt!, id: BigInt!, tenantId: BigInt!): EventRegistration
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrations(
@@ -10321,6 +10357,25 @@ input UpdateEventInput {
   An object where the defined keys will be set on the `Event` being updated.
   """
   patch: EventPatch!
+}
+
+"""
+All input for the `updateEventInstanceByTenantIdAndIdAndEventId` mutation.
+"""
+input UpdateEventInstanceByTenantIdAndIdAndEventIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  eventId: BigInt!
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `EventInstance` being updated.
+  """
+  patch: EventInstancePatch!
+  tenantId: BigInt!
 }
 
 """All input for the `updateEventInstance` mutation."""

@@ -9949,6 +9949,26 @@
             ]
           },
           {
+            "name": "deleteEventRegistrationByTenantIdAndIdAndEventId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteEventRegistrationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "deleteMembershipApplication",
             "type": {
               "kind": "OBJECT",
@@ -10630,6 +10650,26 @@
           },
           {
             "name": "updateEventInstance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateEventInstancePayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateEventInstanceByTenantIdAndIdAndEventId",
             "type": {
               "kind": "OBJECT",
               "name": "UpdateEventInstancePayload",
@@ -14411,6 +14451,46 @@
             ]
           },
           {
+            "name": "eventInstanceByTenantIdAndIdAndEventId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "eventId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "eventInstanceTrainer",
             "type": {
               "kind": "OBJECT",
@@ -14866,6 +14946,46 @@
               },
               {
                 "name": "personId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventRegistrationByTenantIdAndIdAndEventId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventRegistration",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "eventId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {

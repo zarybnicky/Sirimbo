@@ -35,4 +35,5 @@ CREATE TRIGGER _500_unregister_members AFTER DELETE ON public.event_target_cohor
 
 CREATE INDEX event_target_cohort_cohort_id_idx ON public.event_target_cohort USING btree (cohort_id);
 CREATE INDEX event_target_cohort_event_id_idx ON public.event_target_cohort USING btree (event_id);
+CREATE INDEX event_target_cohort_tenant_id_id_idx ON public.event_target_cohort USING btree (tenant_id, id) INCLUDE (cohort_id);
 CREATE INDEX event_target_cohort_tenant_id_idx ON public.event_target_cohort USING btree (tenant_id);

@@ -3,20 +3,22 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
     AS $$
   select i.*
   from event_instance i
-  join event on event_id=event.id
-  where i.since <= COALESCE(end_range, 'infinity'::timestamptz)
-    and i.until >= start_range
-    AND i.event_id IN (SELECT e.id FROM public.event e WHERE e.is_visible AND (only_type IS NULL OR e.type = only_type))
+  join event e on event_id=e.id and e.is_visible AND (only_type IS NULL OR e.type = only_type)
+  where i.tenant_id = current_tenant_id()
+    and i.range && tstzrange(start_range, coalesce(end_range, 'infinity'::timestamptz), '[]')
     and (trainer_ids is null
-      or exists (select 1 from event_trainer where person_id = any (trainer_ids) and event_id = event.id)
+      or exists (select 1 from event_trainer where person_id = any (trainer_ids) and event_id = e.id)
       or exists (select 1 from event_instance_trainer where person_id = any (trainer_ids) and instance_id=i.id))
     and (only_mine is FALSE
-      or i.event_id IN (
-        SELECT r.event_id FROM event_registration r WHERE r.person_id = ANY (current_person_ids()) OR r.couple_id = ANY (current_couple_ids()))
-      OR i.event_id IN (
-        SELECT et2.event_id FROM event_trainer et2 WHERE et2.person_id = ANY (current_person_ids()))
+      or i.event_id = any (
+        select r.event_id from event_registration r where r.person_id = any ((select current_person_ids())::bigint[])
+        union all
+        select r.event_id from event_registration r where r.couple_id = any ((select current_couple_ids())::bigint[])
+        union all
+        SELECT et2.event_id FROM event_trainer et2 WHERE et2.person_id = ANY ((select current_person_ids())::bigint[])
+      )
       OR i.id IN (
-        SELECT eit2.instance_id FROM event_instance_trainer eit2 WHERE eit2.person_id = ANY (current_person_ids())));
+        SELECT eit2.instance_id FROM event_instance_trainer eit2 WHERE eit2.person_id = ANY ((select current_person_ids())::bigint[])));
 $$;
 
 COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], only_mine boolean) IS '@simpleCollections only';

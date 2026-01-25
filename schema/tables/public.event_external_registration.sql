@@ -51,9 +51,8 @@ CREATE POLICY register_public ON public.event_external_registration FOR INSERT T
    FROM public.event
   WHERE (event_external_registration.event_id = event.id)));
 CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
-CREATE POLICY view_visible_event ON public.event_external_registration FOR SELECT TO member USING ((EXISTS ( SELECT 1
-   FROM public.event
-  WHERE (event_external_registration.event_id = event.id))));
+CREATE POLICY view_visible_event ON public.event_external_registration FOR SELECT TO member USING ((event_id IN ( SELECT event.id
+   FROM public.event)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_external_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
