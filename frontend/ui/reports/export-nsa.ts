@@ -17,7 +17,11 @@ export async function exportNsa() {
 
   const rows: Record<string, string>[] = [];
   for (const x of inputs) {
-    if (x.cohortMembershipsList.every(x => !x.cohort?.isVisible) && !x.isTrainer)
+    const isTrainer = x.isTrainer;
+    const isAthlete = x.cohortMembershipsList.some(x => x.cohort?.isVisible);
+    const isCzech = x.nationality === '203';
+
+    if (!isTrainer && !isAthlete)
       continue;
 
     const athleteSince = x.tenantMembershipsList
@@ -32,7 +36,7 @@ export async function exportNsa() {
       '[PRIJMENI]': x.lastName,
       '[TITUL_PRED]': x.prefixTitle,
       '[TITUL_ZA]': x.suffixTitle,
-      '[RODNE_CISLO]': x.nationality === '203' ? x.taxIdentificationNumber || '' : '',
+      '[RODNE_CISLO]': isCzech ? x.taxIdentificationNumber || '' : '',
       '[OBCANSTVI]':
         {
           203: 'CZE',
@@ -42,20 +46,20 @@ export async function exportNsa() {
           703: 'SVK',
           348: 'HUN',
         }[x.nationality] || '',
-      '[DATUM_NAROZENI]': (x.nationality === '203' || !x.birthDate) ? '' : formatNsaDate(Date.parse(x.birthDate)),
+      '[DATUM_NAROZENI]': (isCzech || !x.birthDate) ? '' : formatNsaDate(Date.parse(x.birthDate)),
       '[POHLAVI]': x.gender === 'MAN' ? 'M' : 'Ž',
-      '[NAZEV_OBCE]': x.nationality === '203' ? '' : x.address?.city || '',
-      '[NAZEV_CASTI_OBCE]': x.nationality === '203' ? '' : x.address?.district || '',
-      '[NAZEV_ULICE]': x.nationality === '203' ? '' : x.address?.street || '',
-      '[CISLO_POPISNE]': x.nationality === '203' ? '' : x.address?.conscriptionNumber || '',
-      '[CISLO_ORIENTACNI]': x.nationality === '203' ? '' : x.address?.orientationNumber || '',
-      '[PSC]': x.nationality === '203' ? '' : x.address?.postalCode || '',
-      '[SPORTOVEC]': !x.isTrainer ? '1' : '0',
-      '[SPORTOVCEM_OD]': !x.isTrainer ? '' : formatNsaDate(athleteSince),
+      '[NAZEV_OBCE]': isCzech ? '' : x.address?.city || '',
+      '[NAZEV_CASTI_OBCE]': isCzech ? '' : x.address?.district || '',
+      '[NAZEV_ULICE]': isCzech ? '' : x.address?.street || '',
+      '[CISLO_POPISNE]': isCzech ? '' : x.address?.conscriptionNumber || '',
+      '[CISLO_ORIENTACNI]': isCzech ? '' : x.address?.orientationNumber || '',
+      '[PSC]': isCzech ? '' : x.address?.postalCode || '',
+      '[SPORTOVEC]': isAthlete ? '1' : '0',
+      '[SPORTOVCEM_OD]': isAthlete ? formatNsaDate(athleteSince) : '',
       '[SPORTOVCEM_DO]': '',
-      '[SPORTOVEC_CETNOST]': !x.isTrainer ? '3' : '0',
-      '[SPORTOVEC_DRUH_SPORTU]': '66.1',
-      '[SPORTOVEC_UCAST_SOUTEZE_POCET]': '6',
+      '[SPORTOVEC_CETNOST]': isAthlete ? '3' : '',
+      '[SPORTOVEC_DRUH_SPORTU]': isAthlete ? '66.1' : '',
+      '[SPORTOVEC_UCAST_SOUTEZE_POCET]': isAthlete ? '6' : '',
       '[TRENER]': x.isTrainer ? '1' : '0',
       '[TRENEREM_OD]': x.isTrainer ? formatNsaDate(trainerSince) : '',
       '[TRENEREM_DO]': '',
