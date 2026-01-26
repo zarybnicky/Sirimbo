@@ -13,18 +13,19 @@ export async function exportNsa() {
     ),
   );
 
-  const initDate = new Date();
+  const initDate = Date.now();
 
   const rows: Record<string, string>[] = [];
   for (const x of inputs) {
+    if (x.cohortMembershipsList.every(x => !x.cohort?.isVisible) && !x.isTrainer)
+      continue;
+
     const athleteSince = x.tenantMembershipsList
-      .map((y) => new Date(y.since))
-      // eslint-disable-next-line unicorn/prefer-math-min-max
-      .reduceRight((min, y) => (y < min ? y : min), initDate);
+      .map((y) => Date.parse(y.since))
+      .reduceRight((min, y) => Math.min(y, min), initDate);
     const trainerSince = x.tenantTrainersList
-      .map((y) => new Date(y.since))
-      // eslint-disable-next-line unicorn/prefer-math-min-max
-      .reduceRight((min, y) => (y < min ? y : min), initDate);
+      .map((y) => Date.parse(y.since))
+      .reduceRight((min, y) => Math.min(y, min), initDate);
 
     rows.push({
       '[JMENO]': x.firstName,
@@ -41,32 +42,27 @@ export async function exportNsa() {
           703: 'SVK',
           348: 'HUN',
         }[x.nationality] || '',
-      '[DATUM_NAROZENI]': x.nationality === '203' ? '' : formatNsaDate(x.birthDate),
+      '[DATUM_NAROZENI]': (x.nationality === '203' || !x.birthDate) ? '' : formatNsaDate(Date.parse(x.birthDate)),
       '[POHLAVI]': x.gender === 'MAN' ? 'M' : 'Ž',
-      '[NAZEV_OBCE]': x.address?.city || '',
-      '[NAZEV_CASTI_OBCE]': x.address?.district || '',
-      '[NAZEV_ULICE]': x.address?.street || '',
-      '[CISLO_POPISNE]': x.address?.conscriptionNumber || '',
-      '[CISLO_ORIENTACNI]': x.address?.orientationNumber || '',
-      '[PSC]': x.address?.postalCode || '',
-      '[SPORTOVEC]': x.tenantMembershipsList.some((y) => y.status === 'ACTIVE')
-        ? '1'
-        : '0',
-      '[SPORTOVCEM_OD]':
-        athleteSince == initDate ? '' : formatNsaDate(athleteSince.toString()),
+      '[NAZEV_OBCE]': x.nationality === '203' ? '' : x.address?.city || '',
+      '[NAZEV_CASTI_OBCE]': x.nationality === '203' ? '' : x.address?.district || '',
+      '[NAZEV_ULICE]': x.nationality === '203' ? '' : x.address?.street || '',
+      '[CISLO_POPISNE]': x.nationality === '203' ? '' : x.address?.conscriptionNumber || '',
+      '[CISLO_ORIENTACNI]': x.nationality === '203' ? '' : x.address?.orientationNumber || '',
+      '[PSC]': x.nationality === '203' ? '' : x.address?.postalCode || '',
+      '[SPORTOVEC]': !x.isTrainer ? '1' : '0',
+      '[SPORTOVCEM_OD]': !x.isTrainer ? '' : formatNsaDate(athleteSince),
       '[SPORTOVCEM_DO]': '',
-      '[SPORTOVEC_CETNOST]': '3',
+      '[SPORTOVEC_CETNOST]': !x.isTrainer ? '3' : '0',
       '[SPORTOVEC_DRUH_SPORTU]': '66.1',
       '[SPORTOVEC_UCAST_SOUTEZE_POCET]': '6',
-      '[TRENER]': x.tenantTrainersList.some((y) => y.status === 'ACTIVE') ? '1' : '0',
-      '[TRENEREM_OD]':
-        trainerSince == initDate ? '' : formatNsaDate(trainerSince.toString()),
+      '[TRENER]': x.isTrainer ? '1' : '0',
+      '[TRENEREM_OD]': x.isTrainer ? formatNsaDate(trainerSince) : '',
       '[TRENEREM_DO]': '',
-      '[TRENER_CETNOST]': '3',
-      '[TRENER_DRUH_SPORTU]': '66.1',
+      '[TRENER_CETNOST]': x.isTrainer ? '3' : '',
+      '[TRENER_DRUH_SPORTU]': x.isTrainer ? '66.1' : '',
       '[EXT_ID]': x.cstsId || '',
       '[SVAZ_ICO_SKTJ]': '',
-      '[STAV]': '',
     });
   }
 
@@ -78,7 +74,7 @@ export async function exportNsa() {
   saveAs(new Blob([new TextEncoder().encode(buf)]), 'NSA-export.csv');
 }
 
-function formatNsaDate(dateString: string | null) {
+function formatNsaDate(dateString: number | null) {
   if (!dateString) return '';
   const date = new Date(dateString);
   return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;

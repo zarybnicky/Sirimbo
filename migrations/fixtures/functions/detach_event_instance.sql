@@ -39,6 +39,7 @@ BEGIN
      note                 text
   ) ON COMMIT DROP;
 
+  PERFORM plpgsql_check_pragma('disable:check');
   INSERT INTO _old_att (reg_person_id, reg_couple_id, attendee_person_id, status, note)
   SELECT er.person_id, er.couple_id, ea.person_id, ea.status, ea.note
   FROM public.event_attendance ea
@@ -46,6 +47,7 @@ BEGIN
   WHERE ea.tenant_id   = p_tenant_id
     AND ea.instance_id = p_instance_id
     AND ea.event_id    = v_old_event_id;
+  PERFORM plpgsql_check_pragma('enable:check');
 
   -- Critical: delete instance attendance BEFORE changing instance.event_id
   DELETE FROM public.event_attendance ea
@@ -121,6 +123,7 @@ BEGIN
   ON CONFLICT (registration_id, trainer_id) DO NOTHING;
 
   -- Restore attendance status/note on the newly generated attendance rows for the detached instance
+  PERFORM plpgsql_check_pragma('disable:check');
   UPDATE public.event_attendance ea
   SET status = oa.status, note = oa.note
   FROM _old_att oa
@@ -130,6 +133,7 @@ BEGIN
     AND ea.event_id        = v_new_event_id
     AND ea.registration_id = new_reg.id
     AND ea.person_id       = oa.attendee_person_id;
+  PERFORM plpgsql_check_pragma('enable:check');
 
   select * into v_new_event from event where id = v_new_event_id;
   RETURN v_new_event;

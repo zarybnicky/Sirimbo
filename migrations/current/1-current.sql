@@ -73,6 +73,18 @@ begin
 end
 $$;
 
+update public.payment p
+set accounting_period_id = ap.id
+from public.accounting_period ap
+where ap.tenant_id = p.tenant_id
+  and ap.range @> p.created_at
+  and exists (
+    select 1
+    from public.accounting_period ap_old
+    where ap_old.id = p.accounting_period_id
+      and ap_old.tenant_id <> p.tenant_id
+  );
+
 WITH needed AS (
   select distinct
     p.tenant_id,
@@ -97,14 +109,13 @@ WITH needed AS (
          select
            n.tenant_id,
            'Školní rok ' || extract(year from n.since),
-           n.since,
-           n.since + interval '12 months' - interval '1 day'
+           n.since::timestamp AT TIME ZONE 'UTC',
+           (n.since + interval '12 months' - interval '1 day')::timestamp AT TIME ZONE 'UTC'
          from needed n
          on conflict (tenant_id, since) do nothing
          returning 1
      )
 select count(*) as inserted_periods from ins;
-
 
 update public.payment p
 set accounting_period_id = ap.id

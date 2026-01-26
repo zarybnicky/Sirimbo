@@ -40,6 +40,9 @@ fragment PersonWithLinks on Person {
   }
   cohortMembershipsList(orderBy: SINCE_ASC) {
     ...CohortMembership
+    cohort {
+      ...Cohort
+    }
   }
   tenantAdministratorsList(orderBy: SINCE_ASC) {
     ...TenantAdministrator

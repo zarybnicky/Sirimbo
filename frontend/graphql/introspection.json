@@ -5680,6 +5680,83 @@
       },
       {
         "kind": "OBJECT",
+        "name": "DetachEventInstancePayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "location",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocation",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "Dokumenty",
         "fields": [
           {
@@ -9789,7 +9866,47 @@
             ]
           },
           {
+            "name": "deleteCohortByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteCohortPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "deleteCohortGroup",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteCohortGroupPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deleteCohortGroupByTenantIdAndId",
             "type": {
               "kind": "OBJECT",
               "name": "DeleteCohortGroupPayload",
@@ -9850,6 +9967,26 @@
           },
           {
             "name": "deleteEvent",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteEventPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deleteEventByTenantIdAndId",
             "type": {
               "kind": "OBJECT",
               "name": "DeleteEventPayload",
@@ -9990,6 +10127,26 @@
           },
           {
             "name": "deletePayment",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeletePaymentPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deletePaymentByTenantIdAndId",
             "type": {
               "kind": "OBJECT",
               "name": "DeletePaymentPayload",
@@ -10189,10 +10346,50 @@
             ]
           },
           {
+            "name": "deleteTransactionByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteTransactionPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "deleteUserProxy",
             "type": {
               "kind": "OBJECT",
               "name": "DeleteUserProxyPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "detachEventInstance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DetachEventInstancePayload",
               "ofType": null
             },
             "args": [
@@ -10549,7 +10746,47 @@
             ]
           },
           {
+            "name": "updateCohortByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateCohortPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "updateCohortGroup",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateCohortGroupPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateCohortGroupByTenantIdAndId",
             "type": {
               "kind": "OBJECT",
               "name": "UpdateCohortGroupPayload",
@@ -10649,6 +10886,26 @@
             ]
           },
           {
+            "name": "updateEventByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateEventPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "updateEventInstance",
             "type": {
               "kind": "OBJECT",
@@ -10710,6 +10967,26 @@
           },
           {
             "name": "updatePayment",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdatePaymentPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updatePaymentByTenantIdAndId",
             "type": {
               "kind": "OBJECT",
               "name": "UpdatePaymentPayload",
@@ -13305,6 +13582,36 @@
             ]
           },
           {
+            "name": "accountByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Account",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "accountByTenantIdAndPersonIdAndCurrency",
             "type": {
               "kind": "OBJECT",
@@ -13800,6 +14107,36 @@
             ]
           },
           {
+            "name": "cohortByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Cohort",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "cohortGroup",
             "type": {
               "kind": "OBJECT",
@@ -13809,6 +14146,36 @@
             "args": [
               {
                 "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "cohortGroupByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CohortGroup",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -14355,6 +14722,36 @@
                       "kind": "SCALAR",
                       "name": "Any"
                     }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
                   }
                 }
               }
@@ -15737,6 +16134,36 @@
             ]
           },
           {
+            "name": "paymentByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Payment",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "paymentDebtor",
             "type": {
               "kind": "OBJECT",
@@ -16921,6 +17348,36 @@
             "args": [
               {
                 "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "transactionByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Transaction",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
