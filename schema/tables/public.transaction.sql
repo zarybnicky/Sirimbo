@@ -18,9 +18,11 @@ ALTER TABLE public.transaction ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.transaction
     ADD CONSTRAINT transaction_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.transaction
-    ADD CONSTRAINT transaction_accounting_period_id_fkey FOREIGN KEY (accounting_period_id) REFERENCES public.accounting_period(id);
+    ADD CONSTRAINT transaction_tenant_id_id_key UNIQUE (tenant_id, id);
 ALTER TABLE ONLY public.transaction
-    ADD CONSTRAINT transaction_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT transaction_accounting_period_fkey FOREIGN KEY (tenant_id, accounting_period_id) REFERENCES public.accounting_period(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE ONLY public.transaction
+    ADD CONSTRAINT transaction_payment_fkey FOREIGN KEY (tenant_id, payment_id) REFERENCES public.payment(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.transaction
     ADD CONSTRAINT transaction_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 

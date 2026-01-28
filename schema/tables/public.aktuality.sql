@@ -1,5 +1,5 @@
 CREATE TABLE public.aktuality (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT aktuality_at_id_not_null NOT NULL,
     at_kdo bigint,
     at_kat text DEFAULT '1'::text NOT NULL,
     at_jmeno text NOT NULL,

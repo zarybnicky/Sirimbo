@@ -3,22 +3,54 @@ CREATE FUNCTION app_private.tg_payment__fill_accounting_period() RETURNS trigger
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
-  period accounting_period;
-  since timestamptz;
+  v_now  timestamptz := CURRENT_TIMESTAMP;
+  since  timestamptz;
 begin
-	if NEW.accounting_period_id is null then
-    select id into NEW.accounting_period_id from accounting_period where range @> now();
+  if NEW.tenant_id is null then
+    raise exception 'payment.tenant_id must be set before tg_payment__fill_accounting_period';
+  end if;
+
+  if NEW.accounting_period_id is null then
+    select ap.id
+    into NEW.accounting_period_id
+    from public.accounting_period ap
+    where ap.tenant_id = NEW.tenant_id
+      and ap.range @> v_now
+    order by lower(ap.range) desc
+    limit 1;
+
     if not found then
       since := case
-        when extract(month from now()) > 8
-        then date_trunc('year', now()) + '8 month'::interval
-        else date_trunc('year', now()) + '8 month'::interval - '1 year'::interval
+        when extract(month from v_now) >= 9 then date_trunc('year', v_now) + interval '8 months'
+        else date_trunc('year', v_now) + interval '8 months' - interval '1 year'
       end;
-      insert into accounting_period (name, since, until)
-      values ('Školní rok ' || extract(year from since), since, since + '12 month'::interval - '1 day'::interval)
-      returning id into NEW.accounting_period_id;
+
+      begin
+        insert into public.accounting_period (tenant_id, name, since, until)
+        values (
+          NEW.tenant_id,
+          'Školní rok ' || extract(year from since),
+          since,
+          since + interval '12 months' - interval '1 day'
+        )
+        returning id into NEW.accounting_period_id;
+      exception
+        when exclusion_violation or unique_violation then
+          select ap.id
+          into NEW.accounting_period_id
+          from public.accounting_period ap
+          where ap.tenant_id = NEW.tenant_id
+            and ap.range @> v_now
+          order by lower(ap.range) desc
+          limit 1;
+
+          if not found then
+            raise exception 'Failed to create/find accounting_period for tenant % at %', NEW.tenant_id, v_now;
+          end if;
+      end;
     end if;
   end if;
+
   return NEW;
-END
+end
 $$;

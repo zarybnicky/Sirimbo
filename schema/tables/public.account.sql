@@ -17,6 +17,8 @@ ALTER TABLE public.account ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.account
     ADD CONSTRAINT account_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.account
+    ADD CONSTRAINT account_tenant_id_id_key UNIQUE (tenant_id, id);
+ALTER TABLE ONLY public.account
     ADD CONSTRAINT account_tenant_id_person_id_currency_idx UNIQUE NULLS NOT DISTINCT (tenant_id, person_id, currency);
 ALTER TABLE ONLY public.account
     ADD CONSTRAINT account_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;

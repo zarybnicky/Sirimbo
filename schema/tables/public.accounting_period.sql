@@ -15,9 +15,15 @@ GRANT ALL ON TABLE public.accounting_period TO anonymous;
 ALTER TABLE public.accounting_period ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period__no_overlap__excl EXCLUDE USING gist (tenant_id WITH =, range WITH &&);
+ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period__tenant_since__uk UNIQUE (tenant_id, since);
+ALTER TABLE ONLY public.accounting_period
     ADD CONSTRAINT accounting_period_no_overlap EXCLUDE USING gist (tenant_id WITH =, range WITH &&);
 ALTER TABLE ONLY public.accounting_period
     ADD CONSTRAINT accounting_period_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period_tenant_id_id_key UNIQUE (tenant_id, id);
 ALTER TABLE ONLY public.accounting_period
     ADD CONSTRAINT accounting_period_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 

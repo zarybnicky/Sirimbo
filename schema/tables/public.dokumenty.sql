@@ -1,5 +1,5 @@
 CREATE TABLE public.dokumenty (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT dokumenty_d_id_not_null NOT NULL,
     d_path text NOT NULL,
     d_name text NOT NULL,
     d_filename text NOT NULL,

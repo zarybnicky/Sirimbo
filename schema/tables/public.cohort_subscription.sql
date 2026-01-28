@@ -22,9 +22,9 @@ ALTER TABLE public.cohort_subscription ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.cohort_subscription
     ADD CONSTRAINT cohort_subscription_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.cohort_subscription
-    ADD CONSTRAINT cohort_subscription_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT cohort_subscription_account_fkey FOREIGN KEY (tenant_id, account_id) REFERENCES public.account(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.cohort_subscription
-    ADD CONSTRAINT cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
+    ADD CONSTRAINT cohort_subscription_cohort_fkey FOREIGN KEY (tenant_id, cohort_id) REFERENCES public.cohort(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.cohort_subscription
     ADD CONSTRAINT cohort_subscription_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 

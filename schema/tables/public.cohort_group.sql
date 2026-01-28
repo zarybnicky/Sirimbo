@@ -13,6 +13,8 @@ ALTER TABLE public.cohort_group ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.cohort_group
     ADD CONSTRAINT cohort_group_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.cohort_group
+    ADD CONSTRAINT cohort_group_tenant_id_id_key UNIQUE (tenant_id, id);
+ALTER TABLE ONLY public.cohort_group
     ADD CONSTRAINT cohort_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.cohort_group TO administrator USING (true);

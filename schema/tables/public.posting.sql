@@ -18,13 +18,13 @@ ALTER TABLE public.posting ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.posting
     ADD CONSTRAINT posting_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.posting
-    ADD CONSTRAINT posting_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id);
+    ADD CONSTRAINT posting_account_fkey FOREIGN KEY (tenant_id, account_id) REFERENCES public.account(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE ONLY public.posting
     ADD CONSTRAINT posting_original_account_id_fkey FOREIGN KEY (original_account_id) REFERENCES public.account(id);
 ALTER TABLE ONLY public.posting
     ADD CONSTRAINT posting_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.posting
-    ADD CONSTRAINT posting_transaction_id_fkey FOREIGN KEY (transaction_id) REFERENCES public.transaction(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT posting_transaction_fkey FOREIGN KEY (tenant_id, transaction_id) REFERENCES public.transaction(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_manage ON public.posting TO administrator USING (true);
 CREATE POLICY current_tenant ON public.posting AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

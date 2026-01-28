@@ -23,7 +23,7 @@ ALTER TABLE ONLY public.cohort_membership
 ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.cohort_membership
-    ADD CONSTRAINT cohort_membership_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
+    ADD CONSTRAINT cohort_membership_cohort_fkey FOREIGN KEY (tenant_id, cohort_id) REFERENCES public.cohort(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.cohort_membership

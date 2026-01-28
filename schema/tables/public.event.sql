@@ -1,16 +1,16 @@
 CREATE TABLE public.event (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    location_text text NOT NULL,
-    description text NOT NULL,
-    capacity integer DEFAULT 0 NOT NULL,
-    files_legacy text DEFAULT ''::text NOT NULL,
+    id bigint CONSTRAINT akce_a_id_not_null NOT NULL,
+    name text CONSTRAINT akce_a_jmeno_not_null NOT NULL,
+    location_text text CONSTRAINT akce_a_kde_not_null NOT NULL,
+    description text CONSTRAINT akce_a_info_not_null NOT NULL,
+    capacity integer DEFAULT 0 CONSTRAINT akce_a_kapacita_not_null NOT NULL,
+    files_legacy text DEFAULT ''::text CONSTRAINT akce_a_dokumenty_not_null NOT NULL,
     updated_at timestamp with time zone,
-    is_locked boolean DEFAULT false NOT NULL,
-    is_visible boolean DEFAULT false NOT NULL,
-    summary text DEFAULT ''::text NOT NULL,
-    is_public boolean DEFAULT false NOT NULL,
-    enable_notes boolean DEFAULT false NOT NULL,
+    is_locked boolean DEFAULT false CONSTRAINT akce_a_lock_not_null NOT NULL,
+    is_visible boolean DEFAULT false CONSTRAINT akce_a_visible_not_null NOT NULL,
+    summary text DEFAULT ''::text CONSTRAINT akce_summary_not_null NOT NULL,
+    is_public boolean DEFAULT false CONSTRAINT akce_is_public_not_null NOT NULL,
+    enable_notes boolean DEFAULT false CONSTRAINT akce_enable_notes_not_null NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
     location_id bigint,
@@ -22,6 +22,8 @@ COMMENT ON TABLE public.event IS '@omit create';
 GRANT ALL ON TABLE public.event TO anonymous;
 ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_tenant_id_id_key UNIQUE (tenant_id, id);
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT idx_23735_primary PRIMARY KEY (id);
 ALTER TABLE ONLY public.event

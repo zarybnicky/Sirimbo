@@ -24,6 +24,8 @@ ALTER TABLE public.payment ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_tenant_id_id_key UNIQUE (tenant_id, id);
+ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_accounting_period_id_fkey FOREIGN KEY (accounting_period_id) REFERENCES public.accounting_period(id);
 ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_cohort_subscription_id_fkey FOREIGN KEY (cohort_subscription_id) REFERENCES public.cohort_subscription(id) ON UPDATE CASCADE ON DELETE SET NULL;
@@ -31,6 +33,8 @@ ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_event_instance_id_fkey FOREIGN KEY (event_instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_event_registration_id_fkey FOREIGN KEY (event_registration_id) REFERENCES public.event_registration(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_tenant_id_accounting_period_fkey FOREIGN KEY (tenant_id, accounting_period_id) REFERENCES public.accounting_period(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 

@@ -19,7 +19,9 @@ ALTER TABLE public.cohort ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.cohort
     ADD CONSTRAINT cohort_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.cohort
-    ADD CONSTRAINT cohort_cohort_group_id_fkey FOREIGN KEY (cohort_group_id) REFERENCES public.cohort_group(id) ON DELETE SET NULL;
+    ADD CONSTRAINT cohort_tenant_id_id_key UNIQUE (tenant_id, id);
+ALTER TABLE ONLY public.cohort
+    ADD CONSTRAINT cohort_cohort_group_fkey FOREIGN KEY (tenant_id, cohort_group_id) REFERENCES public.cohort_group(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public.cohort
     ADD CONSTRAINT cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 

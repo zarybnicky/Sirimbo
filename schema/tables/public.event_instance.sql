@@ -22,7 +22,7 @@ ALTER TABLE ONLY public.event_instance
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_tenant_id_id_event_id_ux UNIQUE (tenant_id, id, event_id);
 ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_instance_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 

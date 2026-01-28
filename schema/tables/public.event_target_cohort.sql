@@ -18,9 +18,9 @@ ALTER TABLE ONLY public.event_target_cohort
 ALTER TABLE ONLY public.event_target_cohort
     ADD CONSTRAINT event_target_cohort_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
+    ADD CONSTRAINT event_target_cohort_cohort_fkey FOREIGN KEY (tenant_id, cohort_id) REFERENCES public.cohort(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_target_cohort_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_target_cohort
     ADD CONSTRAINT event_target_cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 

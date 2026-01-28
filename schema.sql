@@ -2,9 +2,9 @@
 -- PostgreSQL database dump
 --
 
-\restrict vw0huq9zHrHi0cJZdzzljPuPePqsMVmjTJFiozKWOeMQTlvTzqZmQoJfuae6bCB
+\restrict 91iUtDDSzYEAtiFzaHvnVU7Y9jkNvbEzaQMtg3nlWAmSWgGDyhR3WTLOH7gboO7
 
--- Dumped from database version 17.7
+-- Dumped from database version 18.1 (Postgres.app)
 -- Dumped by pg_dump version 18.1
 
 SET statement_timeout = 0;
@@ -486,14 +486,14 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.users (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT users_u_id_not_null NOT NULL,
     u_login public.citext,
     u_pass character(40) NOT NULL,
     u_jmeno text,
     u_prijmeni text,
     u_email public.citext NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() CONSTRAINT users_u_timestamp_not_null NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP CONSTRAINT users_u_created_at_not_null NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     last_login timestamp with time zone,
     last_active_at timestamp with time zone,
@@ -1819,24 +1819,56 @@ CREATE FUNCTION app_private.tg_payment__fill_accounting_period() RETURNS trigger
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
-  period accounting_period;
-  since timestamptz;
+  v_now  timestamptz := CURRENT_TIMESTAMP;
+  since  timestamptz;
 begin
-	if NEW.accounting_period_id is null then
-    select id into NEW.accounting_period_id from accounting_period where range @> now();
+  if NEW.tenant_id is null then
+    raise exception 'payment.tenant_id must be set before tg_payment__fill_accounting_period';
+  end if;
+
+  if NEW.accounting_period_id is null then
+    select ap.id
+    into NEW.accounting_period_id
+    from public.accounting_period ap
+    where ap.tenant_id = NEW.tenant_id
+      and ap.range @> v_now
+    order by lower(ap.range) desc
+    limit 1;
+
     if not found then
       since := case
-        when extract(month from now()) > 8
-        then date_trunc('year', now()) + '8 month'::interval
-        else date_trunc('year', now()) + '8 month'::interval - '1 year'::interval
+        when extract(month from v_now) >= 9 then date_trunc('year', v_now) + interval '8 months'
+        else date_trunc('year', v_now) + interval '8 months' - interval '1 year'
       end;
-      insert into accounting_period (name, since, until)
-      values ('Školní rok ' || extract(year from since), since, since + '12 month'::interval - '1 day'::interval)
-      returning id into NEW.accounting_period_id;
+
+      begin
+        insert into public.accounting_period (tenant_id, name, since, until)
+        values (
+          NEW.tenant_id,
+          'Školní rok ' || extract(year from since),
+          since,
+          since + interval '12 months' - interval '1 day'
+        )
+        returning id into NEW.accounting_period_id;
+      exception
+        when exclusion_violation or unique_violation then
+          select ap.id
+          into NEW.accounting_period_id
+          from public.accounting_period ap
+          where ap.tenant_id = NEW.tenant_id
+            and ap.range @> v_now
+          order by lower(ap.range) desc
+          limit 1;
+
+          if not found then
+            raise exception 'Failed to create/find accounting_period for tenant % at %', NEW.tenant_id, v_now;
+          end if;
+      end;
     end if;
   end if;
+
   return NEW;
-END
+end
 $$;
 
 
@@ -2798,18 +2830,18 @@ $$;
 --
 
 CREATE TABLE public.event (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    location_text text NOT NULL,
-    description text NOT NULL,
-    capacity integer DEFAULT 0 NOT NULL,
-    files_legacy text DEFAULT ''::text NOT NULL,
+    id bigint CONSTRAINT akce_a_id_not_null NOT NULL,
+    name text CONSTRAINT akce_a_jmeno_not_null NOT NULL,
+    location_text text CONSTRAINT akce_a_kde_not_null NOT NULL,
+    description text CONSTRAINT akce_a_info_not_null NOT NULL,
+    capacity integer DEFAULT 0 CONSTRAINT akce_a_kapacita_not_null NOT NULL,
+    files_legacy text DEFAULT ''::text CONSTRAINT akce_a_dokumenty_not_null NOT NULL,
     updated_at timestamp with time zone,
-    is_locked boolean DEFAULT false NOT NULL,
-    is_visible boolean DEFAULT false NOT NULL,
-    summary text DEFAULT ''::text NOT NULL,
-    is_public boolean DEFAULT false NOT NULL,
-    enable_notes boolean DEFAULT false NOT NULL,
+    is_locked boolean DEFAULT false CONSTRAINT akce_a_lock_not_null NOT NULL,
+    is_visible boolean DEFAULT false CONSTRAINT akce_a_visible_not_null NOT NULL,
+    summary text DEFAULT ''::text CONSTRAINT akce_summary_not_null NOT NULL,
+    is_public boolean DEFAULT false CONSTRAINT akce_is_public_not_null NOT NULL,
+    enable_notes boolean DEFAULT false CONSTRAINT akce_enable_notes_not_null NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
     location_id bigint,
@@ -3267,6 +3299,148 @@ $_$;
 
 
 --
+-- Name: detach_event_instance(bigint, bigint, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.detach_event_instance(p_instance_id bigint, p_tenant_id bigint DEFAULT public.current_tenant_id(), p_new_event_name text DEFAULT NULL::text) RETURNS public.event
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  v_old_event_id bigint;
+  v_new_event_id bigint;
+  v_new_event event;
+BEGIN
+  -- Lock the instance and fetch old event_id
+  SELECT ei.event_id
+  INTO v_old_event_id
+  FROM public.event_instance ei
+  WHERE ei.tenant_id = p_tenant_id
+    AND ei.id        = p_instance_id
+    FOR UPDATE;
+
+  IF v_old_event_id IS NULL THEN
+    RAISE EXCEPTION 'detach_event_instance: instance % not found in tenant %', p_instance_id, p_tenant_id;
+  END IF;
+
+  -- Also lock the parent event row (prevents concurrent edits during cloning)
+  PERFORM 1
+  FROM public.event e
+  WHERE e.tenant_id = p_tenant_id
+    AND e.id        = v_old_event_id
+    FOR UPDATE;
+
+  -- Snapshot attendance state for this instance so we can restore status/note later
+  CREATE TEMP TABLE _old_att (
+     reg_person_id        bigint,
+     reg_couple_id        bigint,
+     attendee_person_id   bigint NOT NULL,
+     status               public.attendance_type NOT NULL,
+     note                 text
+  ) ON COMMIT DROP;
+
+  PERFORM plpgsql_check_pragma('disable:check');
+  INSERT INTO _old_att (reg_person_id, reg_couple_id, attendee_person_id, status, note)
+  SELECT er.person_id, er.couple_id, ea.person_id, ea.status, ea.note
+  FROM public.event_attendance ea
+  JOIN public.event_registration er ON er.tenant_id = ea.tenant_id AND er.id = ea.registration_id AND er.event_id  = ea.event_id
+  WHERE ea.tenant_id   = p_tenant_id
+    AND ea.instance_id = p_instance_id
+    AND ea.event_id    = v_old_event_id;
+  PERFORM plpgsql_check_pragma('enable:check');
+
+  -- Critical: delete instance attendance BEFORE changing instance.event_id
+  DELETE FROM public.event_attendance ea
+  WHERE ea.tenant_id   = p_tenant_id
+    AND ea.instance_id = p_instance_id
+    AND ea.event_id    = v_old_event_id;
+
+  -- Clone the event (explicit column list, but short and stable in compact.sql)
+  INSERT INTO public.event (
+    name, location_text, description, capacity, files_legacy,
+    updated_at, is_locked, is_visible, summary, is_public, enable_notes, tenant_id,
+    type, location_id, created_at
+  )
+  SELECT
+    COALESCE(p_new_event_name, e.name), e.location_text, e.description, e.capacity, e.files_legacy,
+    now(), e.is_locked, e.is_visible, e.summary, e.is_public, e.enable_notes, e.tenant_id,
+    e.type, e.location_id, now()
+  FROM public.event e
+  WHERE e.tenant_id = p_tenant_id
+    AND e.id        = v_old_event_id
+  RETURNING id INTO v_new_event_id;
+
+  -- Copy event_target_cohort (natural key: cohort_id)
+  INSERT INTO public.event_target_cohort (tenant_id, event_id, cohort_id, created_at, updated_at)
+  SELECT p_tenant_id, v_new_event_id, etc.cohort_id, now(), now()
+  FROM public.event_target_cohort etc
+  WHERE etc.tenant_id = p_tenant_id
+    AND etc.event_id  = v_old_event_id
+  ON CONFLICT (event_id, cohort_id) DO NOTHING;
+
+  -- Copy event_trainer (natural key: person_id)
+  INSERT INTO public.event_trainer (tenant_id, event_id, person_id, created_at, updated_at, lessons_offered)
+  SELECT p_tenant_id, v_new_event_id, et.person_id, now(), now(), et.lessons_offered
+  FROM public.event_trainer et
+  WHERE et.tenant_id = p_tenant_id
+    AND et.event_id  = v_old_event_id
+  ON CONFLICT (event_id, person_id) DO NOTHING;
+
+  -- Re-point the instance (event_instance_trainer + any other (tenant_id, instance_id, event_id) dependents follow via FK cascade)
+  UPDATE public.event_instance ei
+  SET event_id   = v_new_event_id
+  WHERE ei.tenant_id = p_tenant_id
+    AND ei.id        = p_instance_id
+    AND ei.event_id  = v_old_event_id;
+
+  -- Copy registrations: map target_cohort_id by cohort_id (old_tc -> new_tc)
+  -- This will auto-generate attendance rows via tg_event_registration__create_attendance()
+  INSERT INTO public.event_registration (
+    tenant_id, event_id, target_cohort_id, couple_id, person_id, note, created_at
+  )
+  SELECT p_tenant_id, v_new_event_id, new_tc.id, er.couple_id, er.person_id, er.note, er.created_at
+  FROM public.event_registration er
+  LEFT JOIN public.event_target_cohort old_tc ON old_tc.tenant_id = er.tenant_id AND old_tc.id = er.target_cohort_id
+  LEFT JOIN public.event_target_cohort new_tc ON new_tc.tenant_id = er.tenant_id AND new_tc.event_id  = v_new_event_id AND new_tc.cohort_id = old_tc.cohort_id
+  WHERE er.tenant_id = p_tenant_id
+    AND er.event_id  = v_old_event_id
+  ON CONFLICT (event_id, person_id, couple_id) DO NOTHING;
+
+  -- Copy lesson demand:
+  -- - trainer maps by person_id (old event_trainer -> new event_trainer)
+  -- - registration maps by (person_id, couple_id) to new event_registration
+  INSERT INTO public.event_lesson_demand (
+    tenant_id, trainer_id, registration_id, lesson_count, created_at, event_id
+  )
+  SELECT p_tenant_id, new_tr.id, new_reg.id, d.lesson_count, d.created_at, v_new_event_id
+  FROM public.event_lesson_demand d
+  JOIN public.event_trainer old_tr ON old_tr.tenant_id = p_tenant_id AND old_tr.id = d.trainer_id AND old_tr.event_id  = v_old_event_id
+  JOIN public.event_trainer new_tr ON new_tr.tenant_id = p_tenant_id AND new_tr.event_id  = v_new_event_id AND new_tr.person_id = old_tr.person_id
+  JOIN public.event_registration old_reg ON old_reg.tenant_id = p_tenant_id AND old_reg.id = d.registration_id AND old_reg.event_id  = v_old_event_id
+  JOIN public.event_registration new_reg ON new_reg.tenant_id = p_tenant_id AND new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM old_reg.person_id AND new_reg.couple_id IS NOT DISTINCT FROM old_reg.couple_id
+  WHERE d.tenant_id = p_tenant_id
+    AND d.event_id  = v_old_event_id
+  ON CONFLICT (registration_id, trainer_id) DO NOTHING;
+
+  -- Restore attendance status/note on the newly generated attendance rows for the detached instance
+  PERFORM plpgsql_check_pragma('disable:check');
+  UPDATE public.event_attendance ea
+  SET status = oa.status, note = oa.note
+  FROM _old_att oa
+  JOIN public.event_registration new_reg ON new_reg.tenant_id = p_tenant_id AND new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM oa.reg_person_id AND new_reg.couple_id IS NOT DISTINCT FROM oa.reg_couple_id
+  WHERE ea.tenant_id       = p_tenant_id
+    AND ea.instance_id     = p_instance_id
+    AND ea.event_id        = v_new_event_id
+    AND ea.registration_id = new_reg.id
+    AND ea.person_id       = oa.attendee_person_id;
+  PERFORM plpgsql_check_pragma('enable:check');
+
+  select * into v_new_event from event where id = v_new_event_id;
+  RETURN v_new_event;
+END;
+$$;
+
+
+--
 -- Name: edit_registration(bigint, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3686,12 +3860,11 @@ $$;
 
 CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select (
-    select coalesce(sum(lessons_offered), 0) from event_trainer where event_id = e.id
+    select coalesce(sum(lessons_offered), 0) from event_trainer et where et.event_id = e.id
   ) - (
-    select coalesce(sum(lesson_count), 0) from event_registration join event_lesson_demand on registration_id = event_registration.id where event_id = e.id
+    select coalesce(sum(lesson_count), 0) from event_registration er join event_lesson_demand eld on eld.registration_id = er.id where er.event_id = e.id
   );
 $$;
 
@@ -3702,7 +3875,6 @@ $$;
 
 CREATE FUNCTION public.event_remaining_person_spots(e public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select e.capacity - (
     select coalesce(sum(case when couple_id is not null then 2 else 1 end), 0)
@@ -4681,7 +4853,7 @@ begin
       'email', v_user.u_email,
       'token', v_token.access_token,
       'people', (
-        select jsonb_agg(person_name(person.*))
+        select jsonb_agg(person.name)
         from user_proxy join person on person_id=person.id
         where status = 'active' and user_id = v_user.id
       )
@@ -6098,7 +6270,7 @@ CREATE TABLE crawler.rate_limit_rule (
     max_requests integer NOT NULL,
     per_interval interval NOT NULL,
     spacing interval GENERATED ALWAYS AS (((per_interval / (max_requests)::double precision) + '00:00:00.02'::interval)) STORED NOT NULL,
-    next_available_at timestamp with time zone DEFAULT '1970-01-01 00:00:00+00'::timestamp with time zone NOT NULL,
+    next_available_at timestamp with time zone DEFAULT '1970-01-01 00:00:00+01'::timestamp with time zone NOT NULL,
     CONSTRAINT rate_limit_rule_max_requests_check CHECK ((max_requests > 0)),
     CONSTRAINT rate_limit_rule_per_interval_check CHECK ((per_interval > '00:00:00'::interval))
 );
@@ -6717,7 +6889,7 @@ ALTER TABLE public.accounting_period ALTER COLUMN id ADD GENERATED BY DEFAULT AS
 --
 
 CREATE TABLE public.aktuality (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT aktuality_at_id_not_null NOT NULL,
     at_kdo bigint,
     at_kat text DEFAULT '1'::text NOT NULL,
     at_jmeno text NOT NULL,
@@ -7071,7 +7243,7 @@ COMMENT ON VIEW public.current_tenant_trainer IS '@omit';
 --
 
 CREATE TABLE public.dokumenty (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT dokumenty_d_id_not_null NOT NULL,
     d_path text NOT NULL,
     d_name text NOT NULL,
     d_filename text NOT NULL,
@@ -8404,11 +8576,35 @@ ALTER TABLE ONLY federated.round_dance
 
 
 --
+-- Name: account account_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account
+    ADD CONSTRAINT account_tenant_id_id_key UNIQUE (tenant_id, id);
+
+
+--
 -- Name: account account_tenant_id_person_id_currency_idx; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.account
     ADD CONSTRAINT account_tenant_id_person_id_currency_idx UNIQUE NULLS NOT DISTINCT (tenant_id, person_id, currency);
+
+
+--
+-- Name: accounting_period accounting_period__no_overlap__excl; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period__no_overlap__excl EXCLUDE USING gist (tenant_id WITH =, range WITH &&);
+
+
+--
+-- Name: accounting_period accounting_period__tenant_since__uk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period__tenant_since__uk UNIQUE (tenant_id, since);
 
 
 --
@@ -8425,6 +8621,14 @@ ALTER TABLE ONLY public.accounting_period
 
 ALTER TABLE ONLY public.accounting_period
     ADD CONSTRAINT accounting_period_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: accounting_period accounting_period_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounting_period
+    ADD CONSTRAINT accounting_period_tenant_id_id_key UNIQUE (tenant_id, id);
 
 
 --
@@ -8460,6 +8664,14 @@ ALTER TABLE ONLY public.cohort_group
 
 
 --
+-- Name: cohort_group cohort_group_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort_group
+    ADD CONSTRAINT cohort_group_tenant_id_id_key UNIQUE (tenant_id, id);
+
+
+--
 -- Name: cohort_membership cohort_membership_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8489,6 +8701,14 @@ ALTER TABLE ONLY public.cohort
 
 ALTER TABLE ONLY public.cohort_subscription
     ADD CONSTRAINT cohort_subscription_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cohort cohort_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cohort
+    ADD CONSTRAINT cohort_tenant_id_id_key UNIQUE (tenant_id, id);
 
 
 --
@@ -8620,6 +8840,14 @@ ALTER TABLE ONLY public.event_target_cohort
 
 
 --
+-- Name: event event_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_tenant_id_id_key UNIQUE (tenant_id, id);
+
+
+--
 -- Name: event_trainer event_trainer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8721,6 +8949,14 @@ ALTER TABLE ONLY public.payment
 
 ALTER TABLE ONLY public.payment_recipient
     ADD CONSTRAINT payment_recipient_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payment payment_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_tenant_id_id_key UNIQUE (tenant_id, id);
 
 
 --
@@ -8841,6 +9077,14 @@ ALTER TABLE ONLY public.tenant_trainer
 
 ALTER TABLE ONLY public.transaction
     ADD CONSTRAINT transaction_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: transaction transaction_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transaction
+    ADD CONSTRAINT transaction_tenant_id_id_key UNIQUE (tenant_id, id);
 
 
 --
@@ -11236,11 +11480,19 @@ ALTER TABLE ONLY public.attachment
 
 
 --
--- Name: cohort cohort_cohort_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: cohort cohort_cohort_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cohort
-    ADD CONSTRAINT cohort_cohort_group_id_fkey FOREIGN KEY (cohort_group_id) REFERENCES public.cohort_group(id) ON DELETE SET NULL;
+    ADD CONSTRAINT cohort_cohort_group_fkey FOREIGN KEY (tenant_id, cohort_group_id) REFERENCES public.cohort_group(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: CONSTRAINT cohort_cohort_group_fkey ON cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT cohort_cohort_group_fkey ON public.cohort IS '@fieldName cohortGroup
+@foreignFieldName cohorts';
 
 
 --
@@ -11252,11 +11504,19 @@ ALTER TABLE ONLY public.cohort_group
 
 
 --
--- Name: cohort_membership cohort_membership_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: cohort_membership cohort_membership_cohort_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cohort_membership
-    ADD CONSTRAINT cohort_membership_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
+    ADD CONSTRAINT cohort_membership_cohort_fkey FOREIGN KEY (tenant_id, cohort_id) REFERENCES public.cohort(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT cohort_membership_cohort_fkey ON cohort_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT cohort_membership_cohort_fkey ON public.cohort_membership IS '@fieldName cohort
+@foreignFieldName cohortMemberships';
 
 
 --
@@ -11276,19 +11536,35 @@ ALTER TABLE ONLY public.cohort_membership
 
 
 --
--- Name: cohort_subscription cohort_subscription_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: cohort_subscription cohort_subscription_account_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cohort_subscription
-    ADD CONSTRAINT cohort_subscription_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT cohort_subscription_account_fkey FOREIGN KEY (tenant_id, account_id) REFERENCES public.account(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: cohort_subscription cohort_subscription_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: CONSTRAINT cohort_subscription_account_fkey ON cohort_subscription; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT cohort_subscription_account_fkey ON public.cohort_subscription IS '@fieldName account
+@foreignFieldName cohortSubscriptions';
+
+
+--
+-- Name: cohort_subscription cohort_subscription_cohort_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cohort_subscription
-    ADD CONSTRAINT cohort_subscription_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
+    ADD CONSTRAINT cohort_subscription_cohort_fkey FOREIGN KEY (tenant_id, cohort_id) REFERENCES public.cohort(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT cohort_subscription_cohort_fkey ON cohort_subscription; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT cohort_subscription_cohort_fkey ON public.cohort_subscription IS '@fieldName cohort
+@foreignFieldName cohortSubscriptions';
 
 
 --
@@ -11413,11 +11689,19 @@ ALTER TABLE ONLY public.event_external_registration
 
 
 --
--- Name: event_instance event_instance_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: event_instance event_instance_event_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_instance_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT event_instance_event_fkey ON event_instance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_instance_event_fkey ON public.event_instance IS '@fieldName event
+@foreignFieldName eventInstances';
 
 
 --
@@ -11510,11 +11794,19 @@ ALTER TABLE ONLY public.event_registration
 
 
 --
--- Name: event_registration event_registration_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: event_registration event_registration_event_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_registration_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT event_registration_event_fkey ON event_registration; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_registration_event_fkey ON public.event_registration IS '@fieldName event
+@foreignFieldName eventRegistrations';
 
 
 --
@@ -11542,19 +11834,35 @@ ALTER TABLE ONLY public.event_registration
 
 
 --
--- Name: event_target_cohort event_target_cohort_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: event_target_cohort event_target_cohort_cohort_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id);
+    ADD CONSTRAINT event_target_cohort_cohort_fkey FOREIGN KEY (tenant_id, cohort_id) REFERENCES public.cohort(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --
--- Name: event_target_cohort event_target_cohort_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: CONSTRAINT event_target_cohort_cohort_fkey ON event_target_cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_target_cohort_cohort_fkey ON public.event_target_cohort IS '@fieldName cohort
+@foreignFieldName eventTargetCohorts';
+
+
+--
+-- Name: event_target_cohort event_target_cohort_event_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_target_cohort_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT event_target_cohort_event_fkey ON event_target_cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_target_cohort_event_fkey ON public.event_target_cohort IS '@fieldName event
+@foreignFieldName eventTargetCohorts';
 
 
 --
@@ -11718,6 +12026,14 @@ ALTER TABLE ONLY public.payment_recipient
 
 
 --
+-- Name: payment payment_tenant_id_accounting_period_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment
+    ADD CONSTRAINT payment_tenant_id_accounting_period_fkey FOREIGN KEY (tenant_id, accounting_period_id) REFERENCES public.accounting_period(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
 -- Name: payment payment_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11742,11 +12058,19 @@ ALTER TABLE ONLY public.person_invitation
 
 
 --
--- Name: posting posting_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: posting posting_account_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.posting
-    ADD CONSTRAINT posting_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.account(id);
+    ADD CONSTRAINT posting_account_fkey FOREIGN KEY (tenant_id, account_id) REFERENCES public.account(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: CONSTRAINT posting_account_fkey ON posting; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT posting_account_fkey ON public.posting IS '@fieldName account
+@foreignFieldName postings';
 
 
 --
@@ -11766,11 +12090,19 @@ ALTER TABLE ONLY public.posting
 
 
 --
--- Name: posting posting_transaction_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: posting posting_transaction_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.posting
-    ADD CONSTRAINT posting_transaction_id_fkey FOREIGN KEY (transaction_id) REFERENCES public.transaction(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT posting_transaction_fkey FOREIGN KEY (tenant_id, transaction_id) REFERENCES public.transaction(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT posting_transaction_fkey ON posting; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT posting_transaction_fkey ON public.posting IS '@fieldName transaction
+@foreignFieldName postings';
 
 
 --
@@ -11862,19 +12194,35 @@ ALTER TABLE ONLY public.tenant_trainer
 
 
 --
--- Name: transaction transaction_accounting_period_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: transaction transaction_accounting_period_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.transaction
-    ADD CONSTRAINT transaction_accounting_period_id_fkey FOREIGN KEY (accounting_period_id) REFERENCES public.accounting_period(id);
+    ADD CONSTRAINT transaction_accounting_period_fkey FOREIGN KEY (tenant_id, accounting_period_id) REFERENCES public.accounting_period(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --
--- Name: transaction transaction_payment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: CONSTRAINT transaction_accounting_period_fkey ON transaction; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT transaction_accounting_period_fkey ON public.transaction IS '@fieldName accountingPeriod
+@foreignFieldName transactions';
+
+
+--
+-- Name: transaction transaction_payment_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.transaction
-    ADD CONSTRAINT transaction_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.payment(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT transaction_payment_fkey FOREIGN KEY (tenant_id, payment_id) REFERENCES public.payment(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT transaction_payment_fkey ON transaction; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT transaction_payment_fkey ON public.transaction IS '@fieldName payment
+@foreignFieldName transactions';
 
 
 --
@@ -13528,6 +13876,13 @@ GRANT ALL ON FUNCTION public.current_person_ids() TO anonymous;
 
 
 --
+-- Name: FUNCTION detach_event_instance(p_instance_id bigint, p_tenant_id bigint, p_new_event_name text); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.detach_event_instance(p_instance_id bigint, p_tenant_id bigint, p_new_event_name text) TO trainer;
+
+
+--
 -- Name: FUNCTION digest(bytea, text); Type: ACL; Schema: public; Owner: -
 --
 
@@ -14708,5 +15063,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict vw0huq9zHrHi0cJZdzzljPuPePqsMVmjTJFiozKWOeMQTlvTzqZmQoJfuae6bCB
+\unrestrict 91iUtDDSzYEAtiFzaHvnVU7Y9jkNvbEzaQMtg3nlWAmSWgGDyhR3WTLOH7gboO7
 

@@ -1,11 +1,10 @@
 CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select (
-    select coalesce(sum(lessons_offered), 0) from event_trainer where event_id = e.id
+    select coalesce(sum(lessons_offered), 0) from event_trainer et where et.event_id = e.id
   ) - (
-    select coalesce(sum(lesson_count), 0) from event_registration join event_lesson_demand on registration_id = event_registration.id where event_id = e.id
+    select coalesce(sum(lesson_count), 0) from event_registration er join event_lesson_demand eld on eld.registration_id = er.id where er.event_id = e.id
   );
 $$;
 
