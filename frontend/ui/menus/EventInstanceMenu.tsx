@@ -1,10 +1,10 @@
 import {
   DeleteEventInstanceDocument,
+  DetachEventInstanceDocument,
   EventDocument,
   EventFragment,
   EventInstanceWithTrainerFragment,
   UpdateEventInstanceDocument,
-  UpsertEventDocument,
 } from '@/graphql/Event';
 import { DropdownMenu, DropdownMenuButton, DropdownMenuContent } from '@/ui/dropdown';
 import {
@@ -25,7 +25,6 @@ import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 import { useAuth } from '../use-auth';
-import { keyIsNonNull } from '../truthyFilter';
 
 export function EventInstanceMenu({
   event,
@@ -38,7 +37,7 @@ export function EventInstanceMenu({
 } & DropdownMenuContentProps) {
   const confirm = useConfirm();
   const client = useClient();
-  const upsertEvent = useMutation(UpsertEventDocument)[1];
+  const doDetachInstance = useMutation(DetachEventInstanceDocument)[1];
   const updateInstance = useMutation(UpdateEventInstanceDocument)[1];
   const deleteMutation = useMutation(DeleteEventInstanceDocument)[1];
   const auth = useAuth();
@@ -63,55 +62,17 @@ export function EventInstanceMenu({
       return;
     }
 
-    const upsertResult = await upsertEvent({
-      input: {
-        info: {
-          name: event.name,
-          summary: event.summary,
-          description: event.description,
-          type: event.type,
-          locationId: event.location?.id ?? null,
-          locationText: event.locationText || '',
-          capacity: event.capacity,
-          isVisible: event.isVisible,
-          isPublic: event.isPublic,
-          isLocked: event.isLocked,
-          enableNotes: event.enableNotes,
-        },
-        trainers: event.eventTrainersList.map((x) => ({
-          personId: x.personId,
-          lessonsOffered: x.lessonsOffered,
-        })),
-        cohorts: event.eventTargetCohortsList
-          .filter(keyIsNonNull('cohort'))
-          .map((x) => ({ cohortId: x.cohort.id })),
-        registrations: event.eventRegistrations.nodes.map((x) => ({
-          coupleId: x.coupleId,
-          personId: x.personId,
-        })),
-        instances: [],
-      },
-    });
-    if (upsertResult.error) {
-      throw upsertResult.error;
+    const result = await doDetachInstance({ id: instance.id });
+    if (result.error) {
+      throw result.error;
     }
-
-    const newEventId = upsertResult.data?.upsertEvent?.event?.id;
-    if (!newEventId) return;
-
-    const updateResult = await updateInstance({
-      id: instance.id,
-      patch: { eventId: newEventId },
-    });
-    if (updateResult.error) {
-      throw updateResult.error;
-    }
-
-    // Re-assign attendance records
 
     await client.query(EventDocument, { id: event.id }).toPromise();
-    await client.query(EventDocument, { id: newEventId }).toPromise();
-  }, [client, confirm, event, instance.id, upsertEvent, updateInstance]);
+
+    const newEventId = result.data?.detachEventInstance?.event?.id;
+    if (newEventId)
+      await client.query(EventDocument, { id: newEventId }).toPromise();
+  }, [client, confirm, event.id, instance.id, doDetachInstance]);
 
   const deleteInstance = React.useCallback(async () => {
     if ((event?.eventInstancesList.length ?? 0) < 2) {

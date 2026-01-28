@@ -266,6 +266,14 @@ mutation UpsertEvent($input: UpsertEventInput!) {
   }
 }
 
+mutation DetachEventInstance($id: BigInt!) {
+  detachEventInstance(input: { pInstanceId: $id }) {
+    event {
+      ...Event
+    }
+  }
+}
+
 mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
   updateEvent(input: { id: $id, patch: $patch }) {
     event {
