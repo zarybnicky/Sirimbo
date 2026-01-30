@@ -297,6 +297,13 @@ CREATE TABLE public.event_instance (
   until timestamp with time zone NOT NULL,
   is_cancelled boolean DEFAULT false NOT NULL,
   range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+  name text,
+  type public.event_type,
+  location_text text,
+  location_id bigint,
+  is_visible boolean,
+  is_public boolean,
+  custom jsonb DEFAULT '{}'::jsonb NOT NULL,
   CHECK (until > since),
   UNIQUE (tenant_id, id, event_id),
   FOREIGN KEY(tenant_id, event_id)

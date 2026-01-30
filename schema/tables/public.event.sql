@@ -38,8 +38,10 @@ CREATE POLICY public_view ON public.event FOR SELECT TO anonymous USING (is_publ
 CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _800_event__propagate_to_instances AFTER UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION public.tg_event__propagate_to_instances();
 
 CREATE INDEX event_location_id_idx ON public.event USING btree (location_id);
+CREATE INDEX event_tenant_visible_public ON public.event USING btree (tenant_id) WHERE (is_visible OR is_public);
 CREATE INDEX event_tenant_visible_public_idx ON public.event USING btree (tenant_id, is_public, is_visible);
 CREATE INDEX event_type_idx ON public.event USING btree (type);
 CREATE INDEX event_visible_public_tenant_idx ON public.event USING btree (is_public, is_visible, tenant_id);
