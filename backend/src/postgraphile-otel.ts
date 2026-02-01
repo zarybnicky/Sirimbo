@@ -1,5 +1,6 @@
 import { type Span, SpanStatusCode, trace } from '@opentelemetry/api';
 import type { Result } from 'postgraphile/grafserv';
+import { print } from 'graphql';
 
 declare module 'grafast' {
   interface ExecutionExtra {
@@ -24,7 +25,7 @@ export const OTELPlugin: GraphileConfig.Plugin = {
 
         const parentSpan = trace.getActiveSpan();
         // @ts-expect-error
-        const isHttpRequest = parentSpan?.['attributes']?.['http.method'];
+        const isHttpRequest = parentSpan?.attributes?.['http.method'];
         if (parentSpan && isHttpRequest) {
           return executeWithSpan(parentSpan);
         }
@@ -77,7 +78,7 @@ export const OTELPlugin: GraphileConfig.Plugin = {
   },
   grafast: {
     middleware: {
-      execute(next, { args: { operationName, contextValue, requestContext } }) {
+      execute(next, { args: { operationName, contextValue, requestContext, document } }) {
         const span = trace.getActiveSpan();
         if (!span) {
           return next();
@@ -94,6 +95,7 @@ export const OTELPlugin: GraphileConfig.Plugin = {
 
         span.updateName(traceName);
         span.setAttribute('operation.name', operationName || 'unknown');
+        span.setAttribute('operation.document', print(document));
         if (
           typeof contextValue === 'object' &&
           contextValue !== null &&
