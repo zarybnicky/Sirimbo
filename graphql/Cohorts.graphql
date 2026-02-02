@@ -17,11 +17,8 @@ fragment Cohort on Cohort {
 }
 
 query CohortList($first: Int, $offset: Int, $visible: Boolean) {
-  getCurrentTenant {
-    id
-    cohortsList(first: $first, offset: $offset, condition: {isVisible: $visible}, orderBy: [ORDERING_ASC]) {
-      ...Cohort
-    }
+  cohortsList(first: $first, offset: $offset, condition: {isVisible: $visible}, orderBy: [ORDERING_ASC]) {
+    ...Cohort
   }
 }
 

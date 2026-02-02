@@ -13,7 +13,8 @@ import { MyRegistrationForm } from '@/ui/forms/MyRegistrationForm';
 import { useConfirm } from './Confirm';
 import { SubmitButton } from './submit';
 import { cardCls } from './style';
-import { useTenant } from './useTenant';
+import { useAtomValue } from 'jotai';
+import { tenantIdAtom } from '@/ui/state/auth';
 
 export function MyRegistrationCard({
   event,
@@ -22,7 +23,7 @@ export function MyRegistrationCard({
   event: EventFragment;
   registration: EventRegistrationFragment;
 }) {
-  const { data: tenant } = useTenant();
+  const tenantId = useAtomValue(tenantIdAtom);
   const confirm = useConfirm();
   const cancel = useMutation(CancelRegistrationDocument)[1];
   const onCancel = useAsyncCallback(async () => {
@@ -64,7 +65,7 @@ export function MyRegistrationCard({
         </Dialog>
       )}
 
-      {tenant?.id === '2' ? null : (
+      {tenantId === '2' ? null : (
         <SubmitButton
           type="button"
           variant="outline"

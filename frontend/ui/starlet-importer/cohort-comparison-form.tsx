@@ -16,7 +16,7 @@ export function CohortComparisonForm() {
   const [{ data: cohortQuery }] = useQuery({
     query: CohortListDocument,
   });
-  const cohorts = cohortQuery?.getCurrentTenant?.cohortsList;
+  const cohorts = cohortQuery?.cohortsList;
   const { courses } = useAtomValue(starletSettingsAtom);
 
   const [, create] = useMutation(CreateCohortDocument);

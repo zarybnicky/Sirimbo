@@ -13,17 +13,17 @@ import { TenantLocationMenu } from '@/ui/menus/TenantLocationMenu';
 import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { useTenant } from '@/ui/useTenant';
 import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
 
 export default function ClubPage() {
   const auth = useAuth();
-  const { data: tenant } = useTenant();
+  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const [{ data: applications }] = useQuery({ query: MyMembershipApplicationsDocument });
 
-  if (!tenant) return null;
+  if (!tenant?.tenant) return null;
 
   return (
     <Layout requireMember>
@@ -38,12 +38,12 @@ export default function ClubPage() {
         )}
       </TitleBar>
 
-      <RichTextView value={tenant.description} />
+      <RichTextView value={tenant.tenant.description} />
 
       <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Trenéři
       </h2>
-      {tenant.tenantTrainersList.map((data) => (
+      {tenant.tenant.tenantTrainersList.map((data) => (
         <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
           <TenantTrainerMenu align="start" data={data}>
             <DropdownMenuTrigger.RowDots />
@@ -84,7 +84,7 @@ export default function ClubPage() {
       <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Správci
       </h2>
-      {tenant.tenantAdministratorsList.map((data) => (
+      {tenant.tenant.tenantAdministratorsList.map((data) => (
         <div className="flex gap-3 mb-1" key={data.id}>
           <TenantAdministratorMenu align="start" data={data}>
             <DropdownMenuTrigger.RowDots />
@@ -119,7 +119,7 @@ export default function ClubPage() {
         )}
       </TitleBar>
 
-      {tenant.tenantLocationsList.map((item) => (
+      {tenant.tenant.tenantLocationsList.map((item) => (
         <div className="flex gap-3 mb-1" key={item.id}>
           <TenantLocationMenu id={item.id} align="start">
             <DropdownMenuTrigger.RowDots />

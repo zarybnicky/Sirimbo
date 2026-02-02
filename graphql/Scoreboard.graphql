@@ -1,10 +1,7 @@
 query Scoreboard($cohortId: BigInt, $since: Date, $until: Date) {
-  getCurrentTenant {
+  cohortsList(condition: { isVisible: true }, orderBy: [NAME_ASC]) {
     id
-    cohortsList(condition: { isVisible: true }, orderBy: [NAME_ASC]) {
-      id
-      name
-    }
+    name
   }
   scoreboardEntriesList(cohortId: $cohortId, since: $since, until: $until) {
     totalScore

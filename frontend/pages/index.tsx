@@ -4,7 +4,6 @@ import { Hero } from '@/ui/Hero';
 import { ArticleCard } from '@/ui/ArticleCard';
 import { slugify } from '@/ui/slugify';
 import { TrainingPrograms } from '@/ui/TrainingPrograms';
-import * as React from 'react';
 import { useQuery } from 'urql';
 import { Layout } from '@/ui/Layout';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';

@@ -149,7 +149,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       </div>
 
       {item.tenantAdministratorsList
-        .filter((x) => x.tenant?.id === tenantId)
+        .filter((x) => x.tenantId === tenantId)
         .map((item) => (
           <div className="flex gap-3 mb-1" key={item.id}>
             <TenantAdministratorMenu align="start" data={item}>
@@ -157,14 +157,14 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
             </TenantAdministratorMenu>
 
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <b>Správce klubu {item.tenant?.name}</b>
+              <b>Správce klubu {item.tenantName}</b>
             </div>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
         ))}
 
       {item.tenantTrainersList
-        .filter((x) => x.tenant?.id === tenantId && x.status === 'ACTIVE')
+        .filter((x) => x.tenantId === tenantId && x.status === 'ACTIVE')
         .map((item) => (
           <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
             <TenantTrainerMenu align="start" data={item}>
@@ -172,7 +172,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
             </TenantTrainerMenu>
 
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <b>Trenér v klubu {item.tenant?.name}</b>
+              <b>Trenér v klubu {item.tenantName}</b>
               {auth.isAdmin && (
                 <div>
                   {moneyFormatter.format({
@@ -189,7 +189,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           </div>
         ))}
       {item.tenantMembershipsList
-        .filter((x) => x.tenant?.id === tenantId)
+        .filter((x) => x.tenantId === tenantId)
         .map((item) => (
           <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
             <TenantMembershipMenu align="start" data={item}>
@@ -197,7 +197,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
             </TenantMembershipMenu>
 
             <div className="grow align-baseline text-sm font-bold py-1">
-              Člen klubu {item.tenant?.name}
+              Člen klubu {item.tenantName}
             </div>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>

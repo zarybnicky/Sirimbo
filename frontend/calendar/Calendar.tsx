@@ -47,9 +47,9 @@ import type {
 import Agenda from './views/Agenda';
 import Month from './views/Month';
 import { Spinner } from '@/ui/Spinner';
-import { useTenant } from '@/ui/useTenant';
 import { EventFormType } from '@/ui/event-form/types';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
 
 type View = {
   component: React.ComponentType<ViewProps>;
@@ -251,12 +251,12 @@ function slotToEventForm(
         }
       }
     }
-    if (closestPrev?.event?.locationText) {
+    if (closestPrev?.instance?.locationText) {
       def.locationId = 'other';
-      def.locationText = closestPrev.event.locationText;
+      def.locationText = closestPrev.instance.locationText;
     }
-    if (closestPrev?.event?.location?.id) {
-      def.locationId = closestPrev.event.location.id;
+    if (closestPrev?.instance?.location?.id) {
+      def.locationId = closestPrev.instance.location.id;
     }
   }
   return def;
@@ -441,14 +441,14 @@ export function Calendar() {
 
 function TrainerFilter() {
   const [trainerIds, setTrainerIds] = useAtom(trainerIdsFilterAtom);
-  const { data: tenant } = useTenant();
+  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
         <FilterIcon className="my-0.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {tenant?.tenantTrainersList?.map((x) => (
+        {tenant?.tenant?.tenantTrainersList?.map((x) => (
           <DropdownMenuButton
             key={x.id}
             onSelect={(e) => {

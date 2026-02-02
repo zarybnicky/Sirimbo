@@ -1,7 +1,7 @@
 'use client';
 
 import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
-import { SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
+import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import {
   RadioButtonGroupElement,
   VerticalCheckboxButtonGroupElement,
@@ -21,7 +21,6 @@ import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { countries } from '@/lib/countries';
-import { useCohorts } from '@/ui/useCohorts';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { FieldLabel } from '@/ui/form';
 import { ChevronDown, Plus } from 'lucide-react';
@@ -32,7 +31,7 @@ import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { isTruthy } from './truthyFilter';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
@@ -91,14 +90,17 @@ export function CreatePersonDialog() {
   const { control, handleSubmit, getValues, setValue, reset, watch } = useForm({
     resolver: zodResolver(Form),
   });
-  const { data: cohorts } = useCohorts({ visible: true });
+  const [{ data: cohorts }] = useQuery({
+    query: CohortListDocument,
+    variables: { visible: true },
+  });
   const cohortOptions = React.useMemo(
-    () => cohorts.map((x) => ({ id: x.id, label: x.name })),
+    () => cohorts?.cohortsList?.map((x) => ({ id: x.id, label: x.name })) || [],
     [cohorts],
   );
 
-  const personId = watch('personId');
-  const selectedCohortCount = watch('cohortIds')?.length ?? 0;
+  const personId = useWatch({ control, name: 'personId' });
+  const selectedCohortCount = useWatch({ control, name: 'cohortIds' })?.length ?? 0;
   const [cohortPickerOpen, setCohortPickerOpen] = React.useState(false);
   React.useEffect(() => {
     const person = personQuery.data?.people?.nodes.find((x) => x.id === personId);
@@ -119,7 +121,7 @@ export function CreatePersonDialog() {
       setValue('cohortIds', person.cohortIds?.filter(isTruthy) ?? []);
       setCohortPickerOpen((person.cohortIds?.filter(isTruthy) ?? []).length > 0);
     }
-  }, [setValue, personId, setCohortPickerOpen]);
+  }, [setValue, personId, setCohortPickerOpen, personQuery.data?.people?.nodes]);
 
   const email = watch('email');
   React.useEffect(() => {

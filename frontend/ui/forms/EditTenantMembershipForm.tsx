@@ -59,7 +59,7 @@ export function EditTenantMembershipForm({ id }: { id: string }) {
 
       <div className="prose prose-accent">
         <h4>
-          {item?.person?.name} v klubu {item?.tenant?.name}
+          {item?.person?.name} v klubu {item?.tenantName}
         </h4>
       </div>
 

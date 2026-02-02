@@ -7,7 +7,7 @@ import * as React from 'react';
 export function BasicEventInfo({ event }: { event: EventFragment }) {
   return (
     <dl className="not-prose gap-2 mb-6">
-      <dd>{formatEventType(event)}</dd>
+      <dd>{formatEventType(event.type)}</dd>
       <dt>Termíny</dt>
       <dd>{event.eventInstancesList.map(formatOpenDateRange).join(', ')}</dd>
 

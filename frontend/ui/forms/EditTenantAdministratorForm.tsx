@@ -59,7 +59,7 @@ export function EditTenantAdministratorForm({ id }: { id: string }) {
 
       <div className="prose prose-accent">
         <h4>
-          Administrátor {item?.person?.name} v klubu {item?.tenant?.name}
+          Administrátor {item?.person?.name} v klubu {item?.tenantName}
         </h4>
       </div>
 

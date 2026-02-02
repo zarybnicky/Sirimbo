@@ -7,9 +7,10 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { formatLongCoupleName } from '@/ui/format';
-import { useTenant } from '@/ui/useTenant';
 import { cn } from '../cn';
 import { z } from 'zod';
+import { useQuery } from 'urql';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
 
 export function ParticipantListElement({
   name,
@@ -20,11 +21,11 @@ export function ParticipantListElement({
 }) {
   const [open, setOpen] = React.useState<'couple' | 'person' | null>(null);
   const { fields, append, remove, update } = useFieldArray({ name, control });
-  const { data: tenant } = useTenant();
+  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
 
   const possibleCouples = React.useMemo(
     () =>
-      (tenant?.couplesList || [])
+      (tenant?.tenant?.couplesList || [])
         .filter((x) => x.status === 'ACTIVE')
         .map((c) => ({
           id: c.id,
@@ -33,7 +34,7 @@ export function ParticipantListElement({
     [tenant],
   );
 
-  const possiblePeople = (tenant?.tenantMembershipsList || [])
+  const possiblePeople = (tenant?.tenant?.tenantMembershipsList || [])
     .filter((x) => x.status === 'ACTIVE')
     .map((p) => ({
       id: p.person?.id ?? '',

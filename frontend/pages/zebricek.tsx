@@ -35,7 +35,7 @@ export default function ScoreboardPage() {
     pause: !period.since || !period.until,
   });
 
-  const cohorts = data?.getCurrentTenant?.cohortsList ?? [];
+  const cohorts = data?.cohortsList ?? [];
   const scoreboard = data?.scoreboardEntriesList ?? [];
   const activeCohort = selectedCohortId
     ? (cohorts.find((item) => item.id === selectedCohortId) ?? null)

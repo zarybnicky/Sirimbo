@@ -259,7 +259,8 @@ CREATE TABLE public.tenant_location (
   is_public boolean DEFAULT true NOT NULL,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id),
   created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  UNIQUE (tenant_id, id)
 );
 
 CREATE TYPE public.event_type AS ENUM ('camp', 'lesson', 'reservation', 'holiday', 'group');
@@ -280,9 +281,13 @@ CREATE TABLE public.event (
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
     ON DELETE CASCADE,
   type public.event_type DEFAULT CAST('camp' AS public.event_type) NOT NULL,
-  location_id bigint REFERENCES public.tenant_location (id),
+  location_id bigint,
   created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE (tenant_id, id)
+  UNIQUE (tenant_id, id),
+  FOREIGN KEY(tenant_id, location_id)
+    REFERENCES public.tenant_location (tenant_id, id)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
 );
 
 CREATE TABLE public.event_instance (
@@ -309,7 +314,11 @@ CREATE TABLE public.event_instance (
   FOREIGN KEY(tenant_id, event_id)
     REFERENCES public.event (tenant_id, id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY(tenant_id, location_id)
+    REFERENCES public.tenant_location (tenant_id, id)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
 );
 
 CREATE TABLE public.event_instance_trainer (

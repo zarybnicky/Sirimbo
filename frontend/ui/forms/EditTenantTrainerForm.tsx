@@ -84,7 +84,7 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
 
       <div className="prose prose-accent">
         <h4>
-          Trenér {item?.person?.name} v klubu {item?.tenant?.name}
+          Trenér {item?.person?.name} v klubu {item?.tenantName}
         </h4>
       </div>
 

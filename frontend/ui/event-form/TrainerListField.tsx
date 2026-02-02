@@ -3,13 +3,14 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { useTenant } from '@/ui/useTenant';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
 import { type Control, useFieldArray, useWatch } from 'react-hook-form';
 import { EventForm } from '@/ui/event-form/types';
 import { z } from 'zod';
+import { useQuery } from 'urql';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
 
 export function TrainerListElement({
   name,
@@ -22,10 +23,10 @@ export function TrainerListElement({
   const { fields, append, remove, update, replace } = useFieldArray({ name, control });
   const type = useWatch({ control, name: 'type' });
 
-  const { data: tenant } = useTenant();
+  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const trainerOptions = React.useMemo(
     () =>
-      (tenant?.tenantTrainersList || [])
+      (tenant?.tenant?.tenantTrainersList || [])
         .filter((x) => x.status === 'ACTIVE')
         .map((trainer) => ({
           id: trainer.person?.id || '',

@@ -8,7 +8,6 @@ import {
 } from '@/ui/format';
 import { useMutation, useQuery } from 'urql';
 import { QRPayment } from '@/ui/QRPayment';
-import { useTenant } from '@/ui/useTenant';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateCreditTransactionForm } from '@/ui/forms/CreateCreditTransactionForm';
 import { exportPostings } from '@/ui/reports/export-postings';
@@ -24,10 +23,12 @@ import { DeleteTransactionDocument } from '@/graphql/Payment';
 import { PaymentMenu } from './EventView';
 import { keyIsNonNull } from './truthyFilter';
 import { Column, DataGrid, SortColumn } from 'react-data-grid';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const auth = useAuth();
-  const { data: tenant } = useTenant();
+  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
+
   const [query] = useQuery({
     query: PersonPaymentsDocument,
     variables: { id },
@@ -69,10 +70,10 @@ export function PersonPaymentsView({ id }: { id: string }) {
             )}
           </dl>
 
-          {tenant?.bankAccount && x.price?.amount && (
+          {tenant?.tenant?.bankAccount && x.price?.amount && (
             <div className="border-4 border-transparent dark:border-white w-fit">
               <QRPayment
-                acc={tenant.bankAccount}
+                acc={tenant.tenant.bankAccount}
                 am={x.price.amount}
                 cc={x.price.currency || 'CZK'}
                 ss={x.payment?.specificSymbol}

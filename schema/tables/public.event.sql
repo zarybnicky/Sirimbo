@@ -27,7 +27,7 @@ ALTER TABLE ONLY public.event
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT idx_23735_primary PRIMARY KEY (id);
 ALTER TABLE ONLY public.event
-    ADD CONSTRAINT event_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.tenant_location(id);
+    ADD CONSTRAINT event_location_id_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 

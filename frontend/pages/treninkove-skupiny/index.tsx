@@ -7,13 +7,17 @@ import { CohortList } from '@/ui/lists/CohortList';
 import { RichTextView } from '@/ui/RichTextView';
 import Link from 'next/link';
 import { cn } from '@/ui/cn';
-import { useCohorts } from '@/ui/useCohorts';
 import { buttonCls, cardCls } from '@/ui/style';
 import { exportCohort } from '@/ui/reports/export-cohort';
+import { useQuery } from 'urql';
+import { CohortListDocument } from '@/graphql/Cohorts';
 
 export default function TrainingGroupsPage() {
   const auth = useAuth();
-  const { data } = useCohorts({ visible: true });
+  const [{ data: cohorts }] = useQuery({
+    query: CohortListDocument,
+    variables: { visible: true },
+  });
 
   const wrap = (x: React.ReactNode) => (
     <Layout hideTopMenuIfLoggedIn>
@@ -29,7 +33,7 @@ export default function TrainingGroupsPage() {
             <button
               type="button"
               className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() => exportCohort(data.map((x) => x.id))}
+              onClick={() => exportCohort(cohorts?.cohortsList?.map((x) => x.id) || [])}
             >
               Export všech
             </button>
@@ -38,7 +42,7 @@ export default function TrainingGroupsPage() {
       )}
 
       <div className={cn('pl-8', auth.user ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
-        {data.map((item) => (
+        {cohorts?.cohortsList?.map((item) => (
           <div
             key={item.id}
             className={cardCls({ className: 'group break-inside-avoid pl-6' })}

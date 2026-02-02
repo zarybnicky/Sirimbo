@@ -2,13 +2,14 @@ import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { useTenant } from '@/ui/useTenant';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
 import { type Control, useFieldArray } from 'react-hook-form';
 import { EventForm } from '@/ui/event-form/types';
 import { z } from 'zod';
+import { useQuery } from 'urql';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
 
 export function InstanceTrainerListElement({
   index,
@@ -23,10 +24,10 @@ export function InstanceTrainerListElement({
     control,
   });
 
-  const { data: tenant } = useTenant();
+  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const trainerOptions = React.useMemo(
     () =>
-      (tenant?.tenantTrainersList || []).map((trainer) => ({
+      (tenant?.tenant?.tenantTrainersList || []).map((trainer) => ({
         id: trainer.person?.id || '',
         label: trainer.person?.name || '?',
       })),

@@ -223,10 +223,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Announcement', id: args.input.id });
       },
 
-      deleteEvent(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Event', id: args.input.id });
-      },
-
       registerToEventMany(result, _args, cache, _info) {
         for (const registration of result.registerToEventMany?.eventRegistrations || []) {
           cache.invalidate({ __typename: 'Event', id: registration.eventId });
@@ -246,10 +242,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
             __typename: 'EventRegistration',
             id: args.input.registrationId,
           });
-      },
-
-      deleteCohortGroup(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'CohortGroup', id: args.input.id });
       },
 
       createCouple(_result, args, cache, _info) {
@@ -341,8 +333,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       createAttachment(_result, _args, cache, _info) {
         for (const field of cache
           .inspectFields('Query')
-          .filter((field) => ['attachments'].includes(field.fieldName)))
+          .filter((field) => field.fieldName.includes('attachments'))) {
           cache.invalidate('Query', field.fieldName, field.arguments);
+        }
       },
 
       createPerson(_result, _args, cache, _info) {

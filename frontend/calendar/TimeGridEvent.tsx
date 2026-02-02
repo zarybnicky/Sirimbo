@@ -111,14 +111,14 @@ function TimeGridEvent({
       label += `, ${trainerLabel}`;
     }
 
-    const location = event.event.location?.name || event.event.locationText || '';
+    const location = event.instance.location?.name || event.instance.locationText || '';
     if (location) label += `, ${location}`;
 
     return label;
   }, [
     event.end,
-    event.event.location?.name,
-    event.event.locationText,
+    event.instance.location?.name,
+    event.instance.locationText,
     event.instance.trainersList,
     event.start,
     slotMetrics,
@@ -141,7 +141,7 @@ function TimeGridEvent({
           'rbc-event group transition-opacity': true,
           'rbc-resizable': isResizable,
           'empty-event': event.event.eventRegistrations.totalCount === 0,
-          'is-group': event.event.type === 'GROUP',
+          'is-group': event.instance.type === 'GROUP',
           // TODO: 'rbc-selected': selected,
           'opacity-75': isBackgroundEvent,
           'rbc-drag-preview': event.__isPreview,

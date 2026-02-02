@@ -12,7 +12,6 @@ import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextFieldElement } from '@/ui/fields/text';
 import { moneyFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
-import { useTenant } from '@/ui/useTenant';
 import { diff } from 'date-arithmetic';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -23,6 +22,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
 
 type NonEmptyArray<T> = [T, ...T[]];
 const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyArray<T> =>
@@ -45,7 +45,7 @@ export function UpsertEventForm({
     variables: { id },
     pause: true,
   });
-  const { data: tenant } = useTenant();
+  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
 
   const { reset, control, handleSubmit, watch, setValue, getValues } = useForm<
     z.input<typeof EventForm>,
@@ -62,7 +62,7 @@ export function UpsertEventForm({
   const locationOptions = React.useMemo(() => {
     return [
       { id: 'none', label: 'Žádné' } as RadioButtonGroupItem,
-      ...(tenant?.tenantLocationsList || []).map((x) => ({
+      ...(tenant?.tenant?.tenantLocationsList || []).map((x) => ({
         id: x.id,
         label: x.name,
       })),
@@ -131,7 +131,9 @@ export function UpsertEventForm({
   const memberPrice = React.useMemo(() => {
     let memberPrice = 0;
     for (const x of trainers || []) {
-      const trainer = tenant?.tenantTrainersList.find((p) => p.person?.id === x.personId);
+      const trainer = tenant?.tenant?.tenantTrainersList.find(
+        (p) => p.person?.id === x.personId,
+      );
       const numericMember = Number.parseFloat(trainer?.memberPrice45MinAmount || '');
       memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
     }
@@ -146,7 +148,7 @@ export function UpsertEventForm({
 
     memberPrice = Number.isNaN(memberPrice) ? 0 : memberPrice * multiplier;
     return Math.floor(memberPrice / 10) * 10;
-  }, [instances, trainers, tenant?.tenantTrainersList]);
+  }, [instances, trainers, tenant?.tenant?.tenantTrainersList]);
 
   React.useEffect(() => {
     if (locationId !== 'other' && getValues('locationText')) {

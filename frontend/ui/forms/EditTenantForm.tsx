@@ -1,12 +1,11 @@
-import { UpdateTenantDocument } from '@/graphql/Tenant';
+import { CurrentTenantDocument, UpdateTenantDocument } from '@/graphql/Tenant';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useTenant } from '@/ui/useTenant';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,7 +17,7 @@ const Form = z.object({
 });
 
 export function EditTenantForm() {
-  const { data } = useTenant();
+  const [{ data }] = useQuery({ query: CurrentTenantDocument });
   const { onSuccess } = useFormResult();
   const doUpdate = useMutation(UpdateTenantDocument)[1];
 
@@ -26,16 +25,16 @@ export function EditTenantForm() {
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
-    reset(Form.partial().optional().parse(data), {
+    reset(Form.partial().optional().parse(data?.tenant), {
       keepDirtyValues: true,
       keepTouched: true,
       keepErrors: true,
     });
-  }, [reset, data]);
+  }, [reset, data?.tenant]);
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     if (!data) return;
-    await doUpdate({ input: { id: data.id, patch: values } });
+    await doUpdate({ input: { id: data?.tenant?.id!, patch: values } });
     onSuccess();
   });
 
@@ -51,7 +50,7 @@ export function EditTenantForm() {
       />
       <RichTextEditor
         control={control}
-        initialState={data?.description}
+        initialState={data?.tenant?.description}
         name="description"
         label="Základní informace"
       />

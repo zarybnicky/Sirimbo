@@ -111,7 +111,7 @@ export function PersonComparisonForm() {
   const [{ data: personQuery }] = useQuery({ query: PersonListDocument });
   const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
   const persons = personQuery?.filteredPeopleList;
-  const cohorts = cohortQuery?.getCurrentTenant?.cohortsList;
+  const cohorts = cohortQuery?.cohortsList;
 
   const [coursesWithStudents, setCoursesWithStudents] = useState<CleanedCourse[]>([]);
   useEffect(() => {
@@ -217,7 +217,7 @@ export function PersonComparisonForm() {
         });
         const memberships = await fetchGql(PersonMembershipsDocument, { id: person!.id });
         const currentMembership = memberships.person?.tenantMembershipsList.find(
-          (x) => x.tenant?.id === tenantId,
+          (x) => x.tenantId === tenantId,
         );
         if (currentMembership) {
           await updateMembership({

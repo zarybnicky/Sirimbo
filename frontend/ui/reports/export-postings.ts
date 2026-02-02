@@ -28,7 +28,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
       if (event) {
         desc =
           Number.parseFloat(x.amount || '') < 0
-            ? `${formatEventType(event)}: ${event.eventTrainersList.map((x) => x.name).join(', ')}`
+            ? `${formatEventType(event.type)}: ${event.eventTrainersList.map((x) => x.name).join(', ')}`
             : formatDefaultEventName(event);
         date = payment?.eventInstance?.since;
       }

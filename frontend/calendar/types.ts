@@ -1,12 +1,5 @@
 import type { EventFragment, EventInstanceWithTrainerFragment } from '@/graphql/Event';
 
-export enum Navigate {
-  PREVIOUS = 'PREV',
-  NEXT = 'NEXT',
-  TODAY = 'TODAY',
-  DATE = 'DATE',
-}
-
 export interface CalendarEvent {
   event: EventFragment;
   instance: EventInstanceWithTrainerFragment;

@@ -12,9 +12,9 @@ import { useSessionStorage } from '@/lib/use-local-storage';
 import { cn } from '@/ui/cn';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
-import { useCohorts } from '@/ui/useCohorts';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { exportNsa } from '../reports/export-nsa';
+import { CohortListDocument } from '@/graphql/Cohorts';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -32,12 +32,12 @@ export function PersonList() {
     'personfilter-include-former',
   );
   const [search, setSearch] = useSessionStorage('personfilter-search', '');
+  const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
 
-  const { data: cohorts } = useCohorts();
   const cohortOptions = React.useMemo(
     () => [
       { id: 'none', label: 'Bez skupiny' },
-      ...cohorts.map((x) => ({ id: x.id, label: x.name })),
+      ...(cohorts?.cohortsList?.map((x) => ({ id: x.id, label: x.name })) || []),
     ],
     [cohorts],
   );
@@ -58,7 +58,9 @@ export function PersonList() {
         `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
       )
       .map((item) => {
-        const cohort = cohorts.find((x) => (item.cohortIds || []).includes(x.id));
+        const cohort = cohorts?.cohortsList?.find((x) =>
+          (item.cohortIds || []).includes(x.id),
+        );
         return {
           yearOfBirth: item.birthDate
             ? new Date(item.birthDate).getFullYear()

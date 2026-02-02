@@ -1,5 +1,4 @@
 import type { AnnouncementAudienceRole, UpsertAnnouncementInput } from '@/graphql';
-
 import {
   type AnnouncementFragment,
   AnnouncementAudienceFragment,
@@ -12,15 +11,15 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
-import { useCohorts } from '@/ui/useCohorts';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useController, useForm, useWatch, type Control } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { isTruthy } from '../truthyFilter';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CohortListDocument } from '@/graphql/Cohorts';
 
 const ROLE_OPTIONS: {
   value: AnnouncementAudienceRole;
@@ -187,7 +186,11 @@ function AnnouncementAudienceEditor({
   control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
 }) {
   const { audienceRoles = [], cohortIds = [] } = useWatch({ control });
-  const { data: cohorts, fetching: cohortsLoading } = useCohorts({ visible: true });
+
+  const [{ data: cohortQuery, fetching: cohortsLoading }] = useQuery({
+    query: CohortListDocument,
+    variables: { visible: true },
+  });
 
   const audiences: AnnouncementAudienceFragment[] = [
     ...audienceRoles.map((x) => ({
@@ -199,7 +202,7 @@ function AnnouncementAudienceEditor({
     ...cohortIds.map((x) => ({
       id: '',
       cohortId: x,
-      cohort: cohorts.find((c) => c.id === x) || null,
+      cohort: cohortQuery?.cohortsList?.find((c) => c.id === x) || null,
       audienceRole: null,
     })),
   ];
@@ -228,7 +231,7 @@ function AnnouncementAudienceEditor({
         </h4>
         <AudienceCohortCheckboxes
           control={control}
-          cohorts={cohorts}
+          cohorts={cohortQuery?.cohortsList}
           loading={cohortsLoading}
         />
       </section>
@@ -294,7 +297,10 @@ function AudienceCohortCheckboxes({
   loading,
 }: {
   control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
-  cohorts: { id: string; name?: string | null; colorRgb?: string | null }[];
+  cohorts:
+    | { id: string; name?: string | null; colorRgb?: string | null }[]
+    | null
+    | undefined;
   loading?: boolean;
 }) {
   const { field } = useController({ control, name: 'cohortIds' });
@@ -316,7 +322,7 @@ function AudienceCohortCheckboxes({
     return <div className="text-xs text-neutral-11">Načítám skupiny…</div>;
   }
 
-  if (cohorts.length === 0) {
+  if (!cohorts || cohorts.length === 0) {
     return (
       <div className="text-xs text-neutral-11">Žádné skupiny nejsou k dispozici.</div>
     );

@@ -17,6 +17,8 @@ ALTER TABLE public.tenant_location ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ONLY public.tenant_location
     ADD CONSTRAINT tenant_location_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.tenant_location
+    ADD CONSTRAINT tenant_location_tenant_id_id_key UNIQUE (tenant_id, id);
+ALTER TABLE ONLY public.tenant_location
     ADD CONSTRAINT tenant_location_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true);

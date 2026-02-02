@@ -77,7 +77,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
             <div className={cn('grow', instance.isCancelled ? 'line-through' : '')}>
               {event.name ||
                 (showTrainer ? (
-                  `${formatEventType(event)}: ${instanceTrainers}`
+                  `${formatEventType(event.type)}: ${instanceTrainers}`
                 ) : isNonEmpty(registrations) ? (
                   <>
                     {registrations.slice(0, 2).map((x, i) => (

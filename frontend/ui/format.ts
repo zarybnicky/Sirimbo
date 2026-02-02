@@ -25,11 +25,10 @@ const names: { [type in EventType]: string } = {
   RESERVATION: 'Nabídka',
   GROUP: 'Společná',
 };
-export const formatEventType = (event: { type: EventType } | null | undefined) =>
-  event?.type ? names[event.type] : '';
+export const formatEventType = (type: EventType | null | undefined) =>
+  type ? names[type] : '';
 
 export const formatDefaultEventName = (event: {
-  __typename?: 'Event' | undefined;
   name: string;
   type: EventType;
   eventRegistrations: {
@@ -39,20 +38,15 @@ export const formatDefaultEventName = (event: {
     name?: string | null;
   }[];
 }) => {
-  return (
-    event.name ||
-    (event.type === 'CAMP'
-      ? 'Soustředění'
-      : event.type === 'GROUP'
-        ? 'Společná'
-        : event.type === 'LESSON'
-          ? event.eventRegistrations.nodes.length > 0
-            ? event.eventRegistrations.nodes.map(formatRegistrant).join(', ')
-            : 'VOLNO'
-          : event.type === 'RESERVATION'
-            ? `Nabídka: ${event.eventTrainersList.map((x) => x.name).join(', ')}`
-            : 'Prázdniny')
-  );
+  if (event.name) return event.name;
+
+  if (event.type === 'LESSON' && event.eventRegistrations.nodes.length > 0)
+    return event.eventRegistrations.nodes.map(formatRegistrant).join(', ');
+
+  let name = formatEventType(event.type);
+  if (event.type === 'RESERVATION' && event.eventTrainersList.length > 0)
+    name += `: ${event.eventTrainersList.map((x) => x.name).join(', ')}`;
+  return name;
 };
 
 const weekDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
@@ -189,7 +183,7 @@ export function describePosting(
       payment.eventInstance?.trainersList?.map((x) => x.person?.name) ??
       payment.eventRegistration?.event?.eventTrainersList?.map((x) => x.name) ??
       [];
-    return `${formatEventType(event)}: ${trainers.join(', ')}`;
+    return `${formatEventType(event.type)}: ${trainers.join(', ')}`;
   }
   return formatDefaultEventName(event);
 }

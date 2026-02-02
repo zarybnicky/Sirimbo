@@ -57,7 +57,6 @@ export function EditCohortMembershipForm({ id }: { id: string }) {
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
 
-      <div>{item?.tenant?.name}</div>
       <div>
         <b>
           {item?.person?.name} ve skupině {item?.cohort?.name}

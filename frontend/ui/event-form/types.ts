@@ -8,7 +8,7 @@ export const EventForm = z.object({
   summary: z.string().prefault(''),
   description: z.string().prefault(''),
   locationId: z.string().nullish().prefault(null),
-  locationText: z.string().prefault(''),
+  locationText: z.string().nullish().prefault(''),
   capacity: z.number().nullish().prefault(0),
   isVisible: z.boolean().prefault(false),
   isPublic: z.boolean().prefault(false),

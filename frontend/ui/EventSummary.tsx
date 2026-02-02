@@ -33,7 +33,7 @@ export function EventSummary({
   const myRegistrations = event.myRegistrationsList || [];
   const start = new Date(instance.since);
   const end = new Date(instance.until);
-  const locationLabel = event.location?.name ?? event.locationText;
+  const locationLabel = instance.location?.name ?? instance.locationText;
 
   const instancesBefore = event.eventInstancesList.filter(
     (e) => e.since < instance.since,
@@ -51,7 +51,7 @@ export function EventSummary({
           </Link>
 
           <div>
-            {formatEventType(event)}
+            {formatEventType(instance.type)}
             {event.eventInstancesList.length > 1
               ? ` (${instancesBefore + 1}. z ${event.eventInstancesList.length} opakování)`
               : ' (jednorázová)'}
@@ -81,7 +81,7 @@ export function EventSummary({
         </div>
       ) : null}
 
-      <EventInstancePriceView event={event} id={instance.id} />
+      {instance.type === 'LESSON' && <EventInstancePriceView id={instance.id} />}
 
       <div className="flex items-center gap-2">
         <Users className="size-5 text-accent-11" />
@@ -129,15 +129,10 @@ export function EventSummary({
   );
 }
 
-function EventInstancePriceView({ id, event }: { id: string; event: EventFragment }) {
-  const hasPrice =
-    event.eventTrainersList.length > 0 &&
-    event.eventRegistrations.totalCount > 0 &&
-    event.type === 'LESSON';
+function EventInstancePriceView({ id }: { id: string }) {
   const [response] = useQuery({
     query: EventInstanceApproxPriceDocument,
     variables: { id },
-    pause: !hasPrice,
   });
 
   const priceString = (response.data?.eventInstance?.approxPriceList ?? [])
@@ -146,7 +141,7 @@ function EventInstancePriceView({ id, event }: { id: string; event: EventFragmen
     .map((price) => moneyFormatter.format(price))
     .join(', ');
 
-  if (!hasPrice || !priceString) return null;
+  if (!priceString) return null;
   return (
     <div className="flex items-center gap-2" key="money">
       <Coins className="size-5 text-accent-11 shrink-0" />

@@ -64,6 +64,13 @@ fragment EventInstance on EventInstance {
 
 fragment EventInstanceWithTrainer on EventInstance {
   ...EventInstance
+  name
+  type
+  locationText
+  location {
+    id
+    name
+  }
   trainersList {
     id
     personId

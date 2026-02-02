@@ -24,7 +24,7 @@ export function CoupleList() {
   const [{ data }] = useQuery({ query: CoupleListDocument });
 
   const nodes = React.useMemo(() => {
-    return (data?.tenant?.couplesList || []).map((item) => ({
+    return (data?.couplesList || []).map((item) => ({
       id: item.id,
       title: formatLongCoupleName(item),
       href: {

@@ -5,11 +5,12 @@ import { CohortForm } from '@/ui/forms/CohortForm';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
-import { useCohorts } from '@/ui/useCohorts';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
 import React from 'react';
 import { z } from 'zod';
+import { useQuery } from 'urql';
+import { CohortListDocument } from '@/graphql/Cohorts';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -21,21 +22,24 @@ export function CohortList() {
   } = useTypedRouter(QueryParams);
   const auth = useAuth();
   const [isArchive, setIsArchive] = React.useState(false);
-
-  const { data } = useCohorts({ visible: !isArchive });
-
-  const nodes = React.useMemo(() => {
-    return data.map((x) => ({
-      id: x.id,
-      title: x.name,
-      subtitle: [!x.isVisible && 'Skrytá', x.location].filter(Boolean).join(', '),
-      colorRgb: x.colorRgb,
-      href: {
-        pathname: '/treninkove-skupiny/[id]',
-        query: { id: x.id },
-      },
-    }));
-  }, [data]);
+  const [{ data: cohorts }] = useQuery({
+    query: CohortListDocument,
+    variables: { visible: true },
+  });
+  const nodes = React.useMemo(
+    () =>
+      cohorts?.cohortsList?.map((x) => ({
+        id: x.id,
+        title: x.name,
+        subtitle: [!x.isVisible && 'Skrytá', x.location].filter(Boolean).join(', '),
+        colorRgb: x.colorRgb,
+        href: {
+          pathname: '/treninkove-skupiny/[id]',
+          query: { id: x.id },
+        },
+      })) || [],
+    [cohorts?.cohortsList],
+  );
   const [search, setSearch] = React.useState('');
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
 

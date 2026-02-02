@@ -3,13 +3,13 @@ import type { PersonFragment } from '@/graphql/Person';
 import { useFormResult } from '@/ui/form';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { SubmitButton } from '@/ui/submit';
-import { useCohorts } from '@/ui/useCohorts';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CohortListDocument } from '@/graphql/Cohorts';
 
 const Form = z.object({
   cohortIds: z.array(z.string()),
@@ -22,9 +22,12 @@ export function AddToCohortForm({ person }: { person: PersonFragment }) {
   });
   const createCohortMember = useMutation(CreateCohortMembershipDocument)[1];
 
-  const { data: cohorts } = useCohorts({ visible: true });
+  const [{ data: cohorts }] = useQuery({
+    query: CohortListDocument,
+    variables: { visible: true },
+  });
   const cohortOptions = React.useMemo(
-    () => cohorts.map((x) => ({ id: x.id, label: x.name })),
+    () => cohorts?.cohortsList?.map((x) => ({ id: x.id, label: x.name })) || [],
     [cohorts],
   );
 

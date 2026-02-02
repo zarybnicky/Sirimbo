@@ -34,9 +34,7 @@ type TenantAccount = Omit<TenantAccountPage, 'postingsList'> & {
 };
 type TenantTransaction = NonNullable<TenantPosting['transaction']>;
 type ManualCreditTransaction = NonNullable<
-  NonNullable<
-    NonNullable<TenantManualCreditTransactionsQuery['tenant']>['transactions']
-  >['nodes']
+  NonNullable<NonNullable<TenantManualCreditTransactionsQuery>['transactions']>['nodes']
 >[number];
 
 const TURNOVER_PAGE_SIZE = 50;
@@ -402,7 +400,7 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
   });
   const auth = useAuth();
 
-  const transactions = data?.tenant?.transactions;
+  const transactions = data?.transactions;
   const nodes = transactions?.nodes ?? [];
   const hasMore = transactions?.pageInfo.hasNextPage ?? false;
   const endCursor = transactions?.pageInfo.endCursor ?? undefined;

@@ -2,12 +2,13 @@ import { EventForm } from '@/ui/event-form/types';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';
-import { useCohorts } from '@/ui/useCohorts';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
 import { type Control, useFieldArray, useWatch } from 'react-hook-form';
 import { z } from 'zod';
+import { useQuery } from 'urql';
+import { CohortListDocument } from '@/graphql/Cohorts';
 
 export function CohortListElement({
   name,
@@ -20,14 +21,14 @@ export function CohortListElement({
   const type = useWatch({ control, name: 'type' });
   const { fields, append, remove, update } = useFieldArray({ name, control });
 
-  const { data: cohorts } = useCohorts();
+  const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
   const cohortOptions = React.useMemo(
     () =>
-      cohorts.map((x) => ({
+      cohortQuery?.cohortsList?.map((x) => ({
         id: x.id,
         label: x.name,
-      })),
-    [cohorts],
+      })) || [],
+    [cohortQuery?.cohortsList],
   );
 
   return (

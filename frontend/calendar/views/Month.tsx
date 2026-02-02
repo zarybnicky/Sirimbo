@@ -36,7 +36,7 @@ function MonthView({ date, range: days, events }: ViewProps) {
           date={date}
           containerRef={containerRef}
           events={events
-            .filter((e) => e.event?.type !== 'LESSON')
+            .filter((e) => e.instance.type !== 'LESSON')
             .filter((e) => inEventRange(e, { start: week[0]!, end: week.at(-1)! }))
             .toSorted(sortEvents)}
         />

@@ -260,7 +260,7 @@ export default function NowPage() {
                             className="rounded-2xl border border-accent-7 bg-accent-3/40 p-4 shadow-inner"
                           >
                             <p className="text-sm uppercase tracking-wide text-accent-11">
-                              {formatEventType(event)}
+                              {formatEventType(event.type)}
                             </p>
                             <h3 className="mt-1 text-2xl font-semibold text-accent-12">
                               {formatDefaultEventName(event)}

@@ -278,7 +278,7 @@ function AccountSummary({ account, className }: AccountSummaryProps) {
           </li>
           <li>
             <span className="font-semibold text-neutral-12">Tenant:</span>{' '}
-            {account.tenant ? `${account.tenant.name} (#${account.tenant.id})` : '—'}
+            {account.tenantId ?? '—'}
           </li>
         </ul>
       ) : (

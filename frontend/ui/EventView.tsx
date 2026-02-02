@@ -325,7 +325,8 @@ function Payments({ event }: { event: EventFragment }) {
                     <li key={posting.id}>
                       {moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}
                       {' - '}
-                      {posting.account?.person?.name || posting.account?.tenant?.name}
+                      {posting.account?.person?.name ||
+                        (posting.account?.tenantId ? 'Klub' : '-')}
                     </li>
                   ))}
                 </ul>

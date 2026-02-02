@@ -25,11 +25,11 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   const dataByDay = React.useMemo(() => {
     const map = new Map<string, MapItem>();
     for (const calendarEvent of events) {
-      const { event, instance } = calendarEvent;
+      const { instance } = calendarEvent;
 
       const date = startOf(new Date(instance.since), 'day').toISOString();
       const mapItem: MapItem = map.get(date) ?? { groups: [], lessons: new Map() };
-      if (event.type === 'LESSON') {
+      if (instance.type === 'LESSON') {
         const trainers = instance.trainersList ?? [];
         const key = trainers
           .map((x) => x.personId)
@@ -126,7 +126,7 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
             ))}
         </div>
       )}
-      <div className="text-sm text-accent-11">{formatEventType(event)}</div>
+      <div className="text-sm text-accent-11">{formatEventType(event.type)}</div>
       <Link
         href={{ pathname: '/akce/[id]', query: { id: event.id } }}
         className={cn(
@@ -134,7 +134,7 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
           instance.isCancelled ? 'line-through' : 'underline',
         )}
       >
-        {event.name ||
+        {instance.name ||
           (instance.trainersList ?? []).map((x) => x.person?.name).join(', ')}
       </Link>
       <EventSummary event={event} instance={instance} />
@@ -146,7 +146,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
   const auth = useAuth();
 
   const locLabel = (it: CalendarEvent) =>
-    it.event.location?.name || it.event.locationText || '-';
+    it.instance.location?.name || it.instance.locationText || '-';
 
   const nextEvent: Partial<EventFormType> = React.useMemo(() => {
     const last = items.at(-1);
@@ -164,8 +164,8 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
       isVisible: true,
       type: 'LESSON',
       capacity: 2,
-      locationId: last?.event?.location?.id,
-      locationText: last?.event?.locationText,
+      locationId: last?.instance?.location?.id,
+      locationText: last?.instance?.locationText,
       trainers:
         last?.instance.trainersList?.map(({ personId }) => ({
           itemId: null,
@@ -211,11 +211,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
             {showHeader && (
               <div className="ml-2.5 mt-1 text-sm text-accent-11">{loc}</div>
             )}
-            <EventButton
-              event={item.event}
-              instance={item.instance}
-              viewer="trainer"
-            />
+            <EventButton event={item.event} instance={item.instance} viewer="trainer" />
           </React.Fragment>
         );
       })}
