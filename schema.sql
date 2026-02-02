@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict Ca0p1u08vtFvgvXi6fzbR3yhJAUNVKQxEgJuvluC4P6SMNNkWVEo9bnhmqHgfyw
+\restrict bkcmNA5J5SP4Z2yJViTYdE3njGswKAaGcybC6zADl0pFqReNRNcTSp6IfyIo6o7
 
 -- Dumped from database version 18.1 (Postgres.app)
 -- Dumped by pg_dump version 18.1
@@ -583,6 +583,7 @@ CREATE TABLE public.event_lesson_demand (
 --
 
 COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 
@@ -739,7 +740,8 @@ CREATE TABLE public.event_registration (
 -- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_registration IS '@omit update
+COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections both';
 
 
@@ -2438,6 +2440,7 @@ CREATE TABLE public.account (
 --
 
 COMMENT ON TABLE public.account IS '@omit create,update,delete
+@behavior -query:resource:single
 @simpleCollections only';
 
 
@@ -2462,6 +2465,7 @@ CREATE TABLE public.posting (
 --
 
 COMMENT ON TABLE public.posting IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 
@@ -2928,6 +2932,7 @@ CREATE TABLE public.cohort_subscription (
 --
 
 COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 
@@ -3218,7 +3223,7 @@ CREATE TABLE public.event (
 -- Name: TABLE event; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event IS '@omit create';
+COMMENT ON TABLE public.event IS '@omit create,delete';
 
 
 --
@@ -3467,6 +3472,7 @@ CREATE TABLE public.event_instance_trainer (
 --
 
 COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 
@@ -3823,6 +3829,7 @@ CREATE TABLE public.event_trainer (
 --
 
 COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 
@@ -3942,6 +3949,7 @@ CREATE TABLE public.tenant (
 --
 
 COMMENT ON TABLE public.tenant IS '@omit create,delete
+@behavior -singularRelation:resource:single
 @simpleCollections only';
 
 
@@ -4118,6 +4126,13 @@ CREATE TABLE public.announcement (
     scheduled_since timestamp with time zone,
     scheduled_until timestamp with time zone
 );
+
+
+--
+-- Name: TABLE announcement; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.announcement IS '@omit create';
 
 
 --
@@ -4545,6 +4560,7 @@ CREATE TABLE public.event_attendance (
 --
 
 COMMENT ON TABLE public.event_attendance IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 
@@ -7164,7 +7180,8 @@ CREATE TABLE public.announcement_audience (
 -- Name: TABLE announcement_audience; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.announcement_audience IS '@omit create,update,delete';
+COMMENT ON TABLE public.announcement_audience IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single';
 
 
 --
@@ -7207,6 +7224,13 @@ CREATE TABLE public.cohort_group (
     is_public boolean DEFAULT true NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
+
+
+--
+-- Name: TABLE cohort_group; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.cohort_group IS '@omit create,update,delete';
 
 
 --
@@ -7477,6 +7501,7 @@ CREATE TABLE public.event_external_registration (
 --
 
 COMMENT ON TABLE public.event_external_registration IS '@omit update
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 
@@ -7583,6 +7608,7 @@ CREATE TABLE public.event_target_cohort (
 --
 
 COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 
@@ -7633,7 +7659,7 @@ CREATE TABLE public.form_responses (
 -- Name: TABLE form_responses; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.form_responses IS '@omit update,delete';
+COMMENT ON TABLE public.form_responses IS '@omit create,update,delete';
 
 
 --
@@ -15330,5 +15356,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Ca0p1u08vtFvgvXi6fzbR3yhJAUNVKQxEgJuvluC4P6SMNNkWVEo9bnhmqHgfyw
+\unrestrict bkcmNA5J5SP4Z2yJViTYdE3njGswKAaGcybC6zADl0pFqReNRNcTSp6IfyIo6o7
 

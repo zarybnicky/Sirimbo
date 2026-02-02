@@ -12,6 +12,7 @@ CREATE TABLE public.event_attendance (
 );
 
 COMMENT ON TABLE public.event_attendance IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 COMMENT ON COLUMN public.event_attendance.event_id IS '@omit';
 

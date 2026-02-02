@@ -9,6 +9,7 @@ CREATE TABLE public.account (
 );
 
 COMMENT ON TABLE public.account IS '@omit create,update,delete
+@behavior -query:resource:single
 @simpleCollections only';
 
 GRANT ALL ON TABLE public.account TO anonymous;

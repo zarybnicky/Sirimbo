@@ -11,6 +11,7 @@ CREATE TABLE public.event_lesson_demand (
 );
 
 COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 COMMENT ON COLUMN public.event_lesson_demand.registration_id IS '@hasDefault';
 COMMENT ON COLUMN public.event_lesson_demand.event_id IS '@omit';

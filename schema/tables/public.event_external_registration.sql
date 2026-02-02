@@ -18,6 +18,7 @@ CREATE TABLE public.event_external_registration (
 );
 
 COMMENT ON TABLE public.event_external_registration IS '@omit update
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 GRANT SELECT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE public.event_external_registration TO anonymous;

@@ -14,6 +14,7 @@ CREATE TABLE public.cohort_subscription (
 );
 
 COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 GRANT ALL ON TABLE public.cohort_subscription TO anonymous;

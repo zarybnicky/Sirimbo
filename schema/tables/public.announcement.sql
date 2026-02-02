@@ -13,6 +13,8 @@ CREATE TABLE public.announcement (
     scheduled_until timestamp with time zone
 );
 
+COMMENT ON TABLE public.announcement IS '@omit create';
+
 GRANT ALL ON TABLE public.announcement TO anonymous;
 ALTER TABLE public.announcement ENABLE ROW LEVEL SECURITY;
 

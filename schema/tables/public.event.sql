@@ -17,7 +17,7 @@ CREATE TABLE public.event (
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
-COMMENT ON TABLE public.event IS '@omit create';
+COMMENT ON TABLE public.event IS '@omit create,delete';
 
 GRANT ALL ON TABLE public.event TO anonymous;
 ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;

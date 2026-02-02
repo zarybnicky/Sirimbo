@@ -10,6 +10,7 @@ CREATE TABLE public.posting (
 );
 
 COMMENT ON TABLE public.posting IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 GRANT ALL ON TABLE public.posting TO anonymous;

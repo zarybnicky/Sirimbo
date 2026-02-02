@@ -8,6 +8,7 @@ CREATE TABLE public.event_target_cohort (
 );
 
 COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 GRANT ALL ON TABLE public.event_target_cohort TO anonymous;

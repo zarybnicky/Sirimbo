@@ -11,7 +11,8 @@ CREATE TABLE public.event_registration (
     CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
 );
 
-COMMENT ON TABLE public.event_registration IS '@omit update
+COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections both';
 
 GRANT ALL ON TABLE public.event_registration TO anonymous;
