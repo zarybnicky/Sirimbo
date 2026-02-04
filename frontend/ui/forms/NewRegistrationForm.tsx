@@ -3,7 +3,7 @@ import { cn } from '@/ui/cn';
 import { NumberFieldElement } from '@/ui/fields/number';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';
-import { formatCoupleName } from '@/ui/format';
+import { formatCoupleName, numericDateFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/ui/use-auth';
 import { CheckCircle, Circle } from 'lucide-react';
@@ -230,6 +230,16 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
           ),
         )}
       </div>
+
+      {event.eventInstancesList.length > 1 && (
+        <>
+          Pozor, přihlášením se přihlásíte na všechny termíny této akce:{' '}
+          {event.eventInstancesList
+            .map((instance) => numericDateFormatter.format(new Date(instance.since)))
+            .join(', ')}
+        </>
+      )}
+
       <SubmitButton loading={onSubmit.loading}>Přihlásit</SubmitButton>
     </form>
   );
