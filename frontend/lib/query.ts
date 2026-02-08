@@ -81,37 +81,64 @@ const errorEmitter = (errorTarget: ErrorEventTarget) =>
   });
 
 const noopExchange: Exchange = ({ forward }) => forward;
+
 const refocusReloadExchange: Exchange =
   ({ client, forward }) =>
   (ops$) => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return forward(ops$);
+    }
+
     const watchedOperations = new Map<number, Operation>();
     const observedOperations = new Set<number>();
+    let pendingRefocusReload = false;
 
-    window.addEventListener('focus', () => {
-      if (typeof document !== 'object' || document.visibilityState === 'visible') {
-        for (const [_, op] of watchedOperations) {
-          client.reexecuteOperation(
-            client.createRequestOperation('query', op, {
-              ...op.context,
-              requestPolicy: 'cache-and-network',
-            }),
-          );
-        }
+    const reexecuteAllWatched = () => {
+      for (const op of watchedOperations.values()) {
+        client.reexecuteOperation(
+          client.createRequestOperation('query', op, {
+            ...op.context,
+            requestPolicy: 'cache-and-network',
+          }),
+        );
       }
-    });
+    };
+
+    const maybeReload = (reason: 'focus' | 'online') => {
+      if (document.visibilityState !== 'visible') return;
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        if (reason === 'focus') pendingRefocusReload = true;
+        return;
+      }
+      if (reason === 'online' && !pendingRefocusReload) return;
+
+      pendingRefocusReload = false;
+      reexecuteAllWatched();
+    };
+
+    const onFocus = () => maybeReload('focus');
+    const onOnline = () => maybeReload('online');
 
     const processIncomingOperation = (op: Operation) => {
       if (op.kind === 'query' && !observedOperations.has(op.key)) {
+        if (observedOperations.size === 0) {
+          window.addEventListener('focus', onFocus);
+          window.addEventListener('online', onOnline);
+        }
         observedOperations.add(op.key);
         watchedOperations.set(op.key, op);
       }
       if (op.kind === 'teardown' && observedOperations.has(op.key)) {
         observedOperations.delete(op.key);
         watchedOperations.delete(op.key);
+        if (observedOperations.size === 0) {
+          window.removeEventListener('focus', onFocus);
+          window.removeEventListener('online', onOnline);
+        }
       }
     };
 
-    return forward(pipe<Operation, Operation>(ops$, tap(processIncomingOperation)));
+    return forward(pipe(ops$, tap(processIncomingOperation)));
   };
 
 const shouldTrace = false;
