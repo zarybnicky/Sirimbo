@@ -33,7 +33,7 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
     const onActivated = (event: SerwistLifecycleEvent) => {
       if (event?.isUpdate) showToast();
     };
-    serwist.addEventListener('activated', onActivated);
+    // serwist.addEventListener('activated', onActivated);
 
     const check = () =>
       navigator.serviceWorker
