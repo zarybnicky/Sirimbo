@@ -177,3 +177,24 @@ FROM payload;
 INSERT INTO crawler.frontier (federation, kind, key)
 VALUES (:federation, :kind, :key)
 ON CONFLICT (federation, kind, key) DO NOTHING;
+
+/* @name UpsertFrontiers */
+INSERT INTO crawler.frontier (federation, kind, key)
+SELECT :federation, :kind, key
+FROM unnest(:keys::text[]) AS t(key)
+ON CONFLICT (federation, kind, key) DO NOTHING;
+
+/* @name GetFrontierKeyBounds */
+SELECT
+  min(key COLLATE "C") AS min_key,
+  max(key COLLATE "C") AS max_key
+FROM crawler.frontier
+WHERE federation = :federation
+  AND kind = :kind;
+
+/* @name GetExistingFrontierKeys */
+SELECT key
+FROM crawler.frontier
+WHERE federation = :federation
+  AND kind = :kind
+  AND key = ANY(:keys::text[]);

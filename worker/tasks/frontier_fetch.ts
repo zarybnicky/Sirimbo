@@ -58,10 +58,11 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
   if (!result) return;
   const { frontier, handler, url, init } = result;
 
-  const { httpStatus, error, content, fetchStatus } =
-    handler.mode === 'json'
-      ? await fetchFrontierJson(handler, url, init)
-      : await fetchFrontierHtml(handler, url, init);
+  const { httpStatus, error, content, fetchStatus } = await fetchFrontier(
+    handler,
+    url,
+    init,
+  );
 
   if (error) {
     logger.warn(`Fetch error in ${frontier.id}, URL ${url} (${error})`);
@@ -98,7 +99,21 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
   });
 };
 
-async function fetchFrontierJson(handler: JsonLoader, url: URL, init: RequestInit) {
+export async function fetchFrontier<T = any>(
+  handler: JsonLoader<T> | HtmlLoader,
+  url: URL,
+  init: RequestInit,
+) {
+  return handler.mode === 'json'
+    ? await fetchFrontierJson(handler, url, init)
+    : await fetchFrontierHtml(handler, url, init);
+}
+
+export async function fetchFrontierJson(
+  handler: JsonLoader,
+  url: URL,
+  init: RequestInit,
+) {
   let httpStatus: number | null = null;
   let rawJson: unknown | null = null;
   let parsed: any | null = null;

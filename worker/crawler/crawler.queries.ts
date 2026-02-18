@@ -11,6 +11,8 @@ export type Json = null | boolean | number | string | Json[] | { [key: string]: 
 
 export type NumberOrString = number | string;
 
+export type stringArray = (string)[];
+
 /** 'GetFrontierForUpdate' parameters type */
 export interface IGetFrontierForUpdateParams {
   id?: NumberOrString | null | void;
@@ -672,5 +674,102 @@ const upsertFrontierIR: any = {"usedParamSet":{"federation":true,"kind":true,"ke
  * ```
  */
 export const upsertFrontier = new PreparedQuery<IUpsertFrontierParams,IUpsertFrontierResult>(upsertFrontierIR);
+
+
+/** 'UpsertFrontiers' parameters type */
+export interface IUpsertFrontiersParams {
+  federation?: string | null | void;
+  keys?: stringArray | null | void;
+  kind?: string | null | void;
+}
+
+/** 'UpsertFrontiers' return type */
+export type IUpsertFrontiersResult = void;
+
+/** 'UpsertFrontiers' query type */
+export interface IUpsertFrontiersQuery {
+  params: IUpsertFrontiersParams;
+  result: IUpsertFrontiersResult;
+}
+
+const upsertFrontiersIR: any = {"usedParamSet":{"federation":true,"kind":true,"keys":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":60,"b":70}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":73,"b":77}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":96,"b":100}]}],"statement":"INSERT INTO crawler.frontier (federation, kind, key)\nSELECT :federation, :kind, key\nFROM unnest(:keys::text[]) AS t(key)\nON CONFLICT (federation, kind, key) DO NOTHING"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO crawler.frontier (federation, kind, key)
+ * SELECT :federation, :kind, key
+ * FROM unnest(:keys::text[]) AS t(key)
+ * ON CONFLICT (federation, kind, key) DO NOTHING
+ * ```
+ */
+export const upsertFrontiers = new PreparedQuery<IUpsertFrontiersParams,IUpsertFrontiersResult>(upsertFrontiersIR);
+
+
+/** 'GetFrontierKeyBounds' parameters type */
+export interface IGetFrontierKeyBoundsParams {
+  federation?: string | null | void;
+  kind?: string | null | void;
+}
+
+/** 'GetFrontierKeyBounds' return type */
+export interface IGetFrontierKeyBoundsResult {
+  max_key: string | null;
+  min_key: string | null;
+}
+
+/** 'GetFrontierKeyBounds' query type */
+export interface IGetFrontierKeyBoundsQuery {
+  params: IGetFrontierKeyBoundsParams;
+  result: IGetFrontierKeyBoundsResult;
+}
+
+const getFrontierKeyBoundsIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":117,"b":127}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":142,"b":146}]}],"statement":"SELECT\n  min(key COLLATE \"C\") AS min_key,\n  max(key COLLATE \"C\") AS max_key\nFROM crawler.frontier\nWHERE federation = :federation\n  AND kind = :kind"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *   min(key COLLATE "C") AS min_key,
+ *   max(key COLLATE "C") AS max_key
+ * FROM crawler.frontier
+ * WHERE federation = :federation
+ *   AND kind = :kind
+ * ```
+ */
+export const getFrontierKeyBounds = new PreparedQuery<IGetFrontierKeyBoundsParams,IGetFrontierKeyBoundsResult>(getFrontierKeyBoundsIR);
+
+
+/** 'GetExistingFrontierKeys' parameters type */
+export interface IGetExistingFrontierKeysParams {
+  federation?: string | null | void;
+  keys?: stringArray | null | void;
+  kind?: string | null | void;
+}
+
+/** 'GetExistingFrontierKeys' return type */
+export interface IGetExistingFrontierKeysResult {
+  key: string;
+}
+
+/** 'GetExistingFrontierKeys' query type */
+export interface IGetExistingFrontierKeysQuery {
+  params: IGetExistingFrontierKeysParams;
+  result: IGetExistingFrontierKeysResult;
+}
+
+const getExistingFrontierKeysIR: any = {"usedParamSet":{"federation":true,"kind":true,"keys":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":52,"b":62}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":77,"b":81}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":99,"b":103}]}],"statement":"SELECT key\nFROM crawler.frontier\nWHERE federation = :federation\n  AND kind = :kind\n  AND key = ANY(:keys::text[])"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT key
+ * FROM crawler.frontier
+ * WHERE federation = :federation
+ *   AND kind = :kind
+ *   AND key = ANY(:keys::text[])
+ * ```
+ */
+export const getExistingFrontierKeys = new PreparedQuery<IGetExistingFrontierKeysParams,IGetExistingFrontierKeysResult>(getExistingFrontierKeysIR);
 
 

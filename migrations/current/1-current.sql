@@ -1,1 +1,1 @@
-
+--!include federated-full-rebuild.sql

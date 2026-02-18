@@ -3,6 +3,5 @@ packages:
   - graphql
   - worker
   - backend
-  - wdsf
 
 injectWorkspacePackages: true

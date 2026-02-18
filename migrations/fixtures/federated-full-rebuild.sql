@@ -102,6 +102,66 @@ CREATE TABLE federated.federation_category (
 );
 CREATE INDEX ON federated.federation_category (category_id);
 
+CREATE TABLE IF NOT EXISTS federated.federation_age_group_rule (
+  federation   text NOT NULL REFERENCES federated.federation(code),
+  as_of_year   int  NOT NULL,
+  name         text NOT NULL,
+  from_age     int,
+  to_age       int,
+  min_birthdate date,
+  max_birthdate date,
+  allowed_to_dance_in text[] NOT NULL DEFAULT '{}',
+  divisions    text[] NOT NULL DEFAULT '{}',
+  PRIMARY KEY (federation, as_of_year, name)
+);
+
+CREATE INDEX IF NOT EXISTS federation_age_group_rule_lookup_idx
+  ON federated.federation_age_group_rule (federation, name, as_of_year DESC);
+
+CREATE INDEX IF NOT EXISTS federation_age_group_rule_allowed_gin
+  ON federated.federation_age_group_rule USING gin (allowed_to_dance_in);
+
+CREATE OR REPLACE FUNCTION federated.yob_range_for_competed_age_group(
+  in_federation text,
+  in_age_group  text,
+  in_as_of_date date
+) RETURNS int4range
+  LANGUAGE sql
+  STABLE
+  SET search_path = federated, pg_temp
+AS $$
+  WITH y AS (
+    SELECT max(r.as_of_year) AS as_of_year
+    FROM federated.federation_age_group_rule r
+    WHERE r.federation = in_federation
+      AND r.as_of_year <= extract(year from in_as_of_date)::int
+  ), rules AS (
+    SELECT r.*
+    FROM federated.federation_age_group_rule r
+    JOIN y ON y.as_of_year = r.as_of_year
+    WHERE r.federation = in_federation
+  ), candidates AS (
+    SELECT min_birthdate, max_birthdate
+    FROM rules r
+    WHERE (
+      (r.name = in_age_group OR r.allowed_to_dance_in @> ARRAY [in_age_group]) AND
+      r.min_birthdate IS NOT NULL AND
+      r.max_birthdate IS NOT NULL
+    )
+  )
+  SELECT
+    CASE
+      WHEN COUNT(*) = 0 THEN NULL
+      ELSE int4range(
+        EXTRACT(YEAR FROM MIN(min_birthdate))::int,
+        (EXTRACT(YEAR FROM MAX(max_birthdate))::int + 1),
+        '[)'
+      )
+    END
+  FROM candidates;
+$$;
+
+
 CREATE TYPE federated.gender AS ENUM (
   'male',
   'female',
@@ -119,9 +179,28 @@ CREATE TABLE federated.person (
   ) STORED,
   gender         federated.gender,
   dob            date,
+  yob_approx     int4range,
   nationality    text,
   created_at     timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE OR REPLACE FUNCTION federated.tg_person__sync_yob_from_dob()
+  RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE
+  y int;
+BEGIN
+  IF NEW.dob IS NOT NULL THEN
+    y := extract(year from NEW.dob)::int;
+    NEW.yob_approx := int4range(y, y + 1, '[)');
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER _100_person__sync_yob_from_dob
+  BEFORE INSERT OR UPDATE OF dob ON federated.person
+  FOR EACH ROW
+  EXECUTE FUNCTION federated.tg_person__sync_yob_from_dob();
 
 CREATE TABLE federated.judge (
   id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -280,6 +359,7 @@ CREATE TABLE federated.event (
 );
 CREATE INDEX ON federated.event (federation, start_date);
 CREATE INDEX ON federated.event USING gist (range);
+CREATE INDEX ON federated.event USING gist (federation, location, country, range);
 
 CREATE TABLE federated.competition (
   id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -289,6 +369,7 @@ CREATE TABLE federated.competition (
   category_id   bigint not null references federated.category(id),
   start_date    date not null,
   end_date      date,
+  participants_total integer,
   UNIQUE (federation, external_id),
   UNIQUE (federation, id),
   UNIQUE (id, event_id),
@@ -325,7 +406,9 @@ CREATE INDEX ON federated.competition_round (dance_program_id);
 CREATE TABLE federated.round_dance (
   round_id   bigint NOT NULL REFERENCES federated.competition_round(id),
   dance_code text NOT NULL REFERENCES federated.dance(code),
-  PRIMARY KEY (round_id, dance_code)
+  dance_order int,
+  PRIMARY KEY (round_id, dance_code),
+  UNIQUE (round_id, dance_order)
 );
 CREATE INDEX ON federated.round_dance (round_id);
 
@@ -353,21 +436,33 @@ CREATE TABLE federated.competition_entry (
   PRIMARY KEY (competition_id, competitor_id)
 );
 CREATE INDEX ON federated.competition_entry (competitor_id);
+CREATE INDEX ON federated.competition_entry (competition_id);
 
 -- Result per competitor per round (aggregated per round)
 CREATE TABLE federated.competition_round_result (
   round_id          bigint NOT NULL REFERENCES federated.competition_round(id),
   competitor_id     bigint NOT NULL REFERENCES federated.competitor(id),
-  overall_ranking   integer NOT NULL,       -- place in round (if defined)
+  overall_ranking   integer,       -- place in round (if defined)
   overall_ranking_to integer,      -- ties
   qualified_next    boolean,       -- progressed to next round?
   overall_score     numeric(10,3), -- aggregate across dances, if provided/derived
   PRIMARY KEY (round_id, competitor_id),
-  CHECK (overall_ranking_to IS NULL OR overall_ranking_to >= overall_ranking)
+  CHECK (overall_ranking IS NULL OR overall_ranking_to IS NULL OR overall_ranking_to >= overall_ranking)
 );
 CREATE INDEX ON federated.competition_round_result (competitor_id);
 CREATE INDEX ON federated.competition_round_result (round_id, overall_ranking);
 
+CREATE TABLE IF NOT EXISTS federated.competition_round_judge (
+  round_id    bigint NOT NULL REFERENCES federated.competition_round(id) ON DELETE CASCADE,
+  judge_id    bigint NOT NULL REFERENCES federated.judge(id),
+  judge_index int    NOT NULL,
+  judge_label text,
+  PRIMARY KEY (round_id, judge_id),
+  UNIQUE (round_id, judge_index)
+);
+
+CREATE INDEX IF NOT EXISTS competition_round_judge_judge
+  ON federated.competition_round_judge (judge_id);
 
 CREATE TYPE federated.score_component AS ENUM (
   'mark',         -- simple yes/no
@@ -375,7 +470,8 @@ CREATE TYPE federated.score_component AS ENUM (
   'ajs_tq',
   'ajs_mm',
   'ajs_ps',
-  'ajs_cp'
+  'ajs_cp',
+  'ajs_reduction'
 );
 
 -- Judge scores per dance (round × dance × judge × competitor × component)
@@ -397,22 +493,19 @@ CREATE TABLE federated.judge_score (
   foreign key (round_id, dance_code)
     references federated.round_dance (round_id, dance_code),
   FOREIGN KEY (round_id, competition_id)
-    REFERENCES federated.competition_round (id, competition_id),
+    REFERENCES federated.competition_round (id, competition_id) ON UPDATE CASCADE,
   FOREIGN KEY (competition_id, event_id)
-    REFERENCES federated.competition (id, event_id),
+    REFERENCES federated.competition (id, event_id) ON UPDATE CASCADE,
   FOREIGN KEY (competition_id, category_id)
-    REFERENCES federated.competition (id, category_id),
+    REFERENCES federated.competition (id, category_id) ON UPDATE CASCADE,
   FOREIGN KEY (federation, competition_id)
-    REFERENCES federated.competition (federation,id)
+    REFERENCES federated.competition (federation, id) ON UPDATE CASCADE
 );
 
 CREATE INDEX ON federated.judge_score (federation, judge_id, event_date);
 CREATE INDEX ON federated.judge_score (federation, competitor_id, event_date);
 CREATE INDEX ON federated.judge_score (federation, category_id, event_date);
-
-create view federated.round_judge as
-select distinct round_id, judge_id
-from federated.judge_score;
+CREATE INDEX ON federated.judge_score (round_id);
 
 CREATE TABLE federated.competition_result (
   competition_id bigint NOT NULL REFERENCES federated.competition(id),
@@ -524,6 +617,42 @@ AS $$
 RETURNING id;
 $$;
 
+CREATE OR REPLACE FUNCTION federated.narrow_person_yob_approx(
+  in_person_id bigint,
+  in_yob_range int4range
+) RETURNS int4range
+  LANGUAGE plpgsql
+  SET search_path = federated, pg_temp
+AS $$
+DECLARE
+  v_dob date;
+  v_current int4range;
+  v_new int4range;
+  v_yob int;
+BEGIN
+  IF in_person_id IS NULL OR in_yob_range IS NULL THEN
+    RAISE EXCEPTION 'Missing argument to narrow_person_yob_approx';
+  END IF;
+
+  SELECT dob, yob_approx
+  INTO v_dob, v_current
+  FROM federated.person
+  WHERE id = in_person_id
+    FOR UPDATE;
+
+  IF v_dob IS NOT NULL THEN
+    v_yob := extract(year from v_dob)::int;
+    v_new := int4range(v_yob, v_yob + 1, '[)');
+    UPDATE federated.person SET yob_approx = v_new WHERE id = in_person_id;
+    RETURN v_new;
+  END IF;
+
+  v_new := CASE WHEN v_current IS NULL THEN in_yob_range ELSE v_current * in_yob_range END;
+  UPDATE federated.person SET yob_approx = v_new WHERE id = in_person_id;
+  RETURN v_new;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION federated.upsert_athlete(
   in_federation     text,
   in_external_id    text,
@@ -568,7 +697,181 @@ BEGIN
   RETURN v_athlete_id;
 END;
 $$;
-SELECT verify_function('federated.upsert_athlete');
+
+CREATE OR REPLACE FUNCTION federated.upsert_judge(
+  in_federation  text,
+  in_external_id text,
+  in_first_name  text,
+  in_last_name   text,
+  in_country     text
+) RETURNS bigint
+  LANGUAGE plpgsql
+  SET search_path = federated, pg_temp
+AS $$
+DECLARE
+  v_person_id bigint;
+  v_judge_id  bigint;
+BEGIN
+  INSERT INTO federated.federation_judge (federation, external_id, judge_id)
+  VALUES (in_federation, in_external_id, NULL)
+  ON CONFLICT (federation, external_id) DO NOTHING;
+
+  SELECT judge_id
+  INTO v_judge_id
+  FROM federated.federation_judge
+  WHERE federation = in_federation
+    AND external_id = in_external_id
+    FOR UPDATE;
+
+  IF v_judge_id IS NULL THEN
+    INSERT INTO federated.person (first_name, last_name, canonical_name, gender, nationality)
+    VALUES (
+      NULLIF(in_first_name, ''),
+      NULLIF(in_last_name, ''),
+      NULLIF(concat_ws(' ', in_first_name, in_last_name), ''),
+      'unknown',
+      NULLIF(in_country, '')
+    )
+    RETURNING id INTO v_person_id;
+
+    INSERT INTO federated.judge (person_id)
+    VALUES (v_person_id)
+    RETURNING id INTO v_judge_id;
+
+    UPDATE federated.federation_judge
+    SET judge_id = v_judge_id
+    WHERE federation = in_federation
+      AND external_id = in_external_id;
+  END IF;
+
+  RETURN v_judge_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION federated.upsert_event_for_date(
+  in_federation text,
+  in_date date,
+  in_location text,
+  in_country text,
+  in_name text DEFAULT NULL,
+  in_max_gap_days int DEFAULT 1
+) RETURNS bigint
+  LANGUAGE plpgsql
+  SET search_path = federated, pg_temp
+AS $$
+DECLARE
+  v_location text := nullif(btrim(in_location), '');
+  v_country  text := nullif(btrim(in_country), '');
+  v_probe    daterange;
+  v_keep_id  bigint;
+  v_min_date date;
+  v_max_date date;
+BEGIN
+  IF in_federation IS NULL OR in_date IS NULL OR v_location IS NULL THEN
+    RAISE EXCEPTION 'upsert_event_for_date: missing federation/date/location';
+  END IF;
+
+  v_probe := daterange(
+    in_date - GREATEST(in_max_gap_days, 0),
+    in_date + GREATEST(in_max_gap_days, 0) + 1,
+    '[)'
+  );
+
+  PERFORM pg_advisory_xact_lock(
+    hashtextextended(in_federation || '|' || v_location || '|' || coalesce(v_country,''), 0)
+  );
+
+  WITH candidates AS (
+    SELECT id, start_date, COALESCE(end_date, start_date) AS end_eff
+    FROM federated.event
+    WHERE federation = in_federation
+      AND location = v_location
+      AND country IS NOT DISTINCT FROM v_country
+      AND range && v_probe
+    ORDER BY id
+      FOR UPDATE
+  )
+  SELECT
+    (SELECT id FROM candidates ORDER BY id LIMIT 1),
+    (SELECT MIN(start_date) FROM candidates),
+    (SELECT MAX(end_eff) FROM candidates)
+  INTO v_keep_id, v_min_date, v_max_date;
+
+  IF v_keep_id IS NULL THEN
+    INSERT INTO federated.event (federation, external_id, name, start_date, end_date, location, country)
+    VALUES (
+      in_federation,
+      concat_ws(':', in_federation, to_char(in_date,'YYYYMMDD'), left(md5(v_location || '|' || coalesce(v_country,'')), 12)),
+      NULLIF(in_name, ''),
+      in_date,
+      NULL,
+      v_location,
+      v_country
+    )
+    RETURNING id INTO v_keep_id;
+    RETURN v_keep_id;
+  END IF;
+
+  v_min_date := LEAST(v_min_date, in_date);
+  v_max_date := GREATEST(v_max_date, in_date);
+
+  UPDATE federated.event e
+  SET start_date = v_min_date,
+      end_date   = CASE WHEN v_max_date = v_min_date THEN NULL ELSE v_max_date END,
+      name       = COALESCE(e.name, NULLIF(in_name,''), e.location)
+  WHERE e.id = v_keep_id;
+
+  WITH losers AS (
+    SELECT id
+    FROM federated.event
+    WHERE federation = in_federation
+      AND location = v_location
+      AND country IS NOT DISTINCT FROM v_country
+      AND range && v_probe
+      AND id <> v_keep_id
+      FOR UPDATE
+  )
+  UPDATE federated.competition c
+  SET event_id = v_keep_id
+  WHERE c.event_id IN (SELECT id FROM losers);
+
+  DELETE FROM federated.event e
+  WHERE e.id IN (
+    SELECT id
+    FROM federated.event
+    WHERE federation = in_federation
+      AND location = v_location
+      AND country IS NOT DISTINCT FROM v_country
+      AND range && v_probe
+      AND id <> v_keep_id
+  );
+
+  RETURN v_keep_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION federated.upsert_club_by_name(
+  in_federation text,
+  in_name       text,
+  in_country    text DEFAULT NULL
+) RETURNS bigint
+  LANGUAGE sql
+  SET search_path = federated, pg_temp
+AS $$
+  INSERT INTO federated.federation_club (federation, external_id, name, country)
+  VALUES (
+    in_federation,
+    federated.normalize_name(in_name),
+    in_name,
+    in_country
+  )
+  ON CONFLICT (federation, external_id)
+    DO UPDATE SET
+      name    = EXCLUDED.name,
+      country = COALESCE(EXCLUDED.country, federated.federation_club.country)
+  RETURNING id;
+$$;
+
 
 CREATE OR REPLACE FUNCTION federated.merge_competitor(
   in_old bigint,
@@ -635,7 +938,6 @@ BEGIN
   DELETE FROM federated.competitor WHERE id = in_old;
 END;
 $$;
-
 
 CREATE OR REPLACE FUNCTION federated.upsert_competitor(
   in_federation     text,
@@ -749,7 +1051,6 @@ BEGIN
   RETURN v_competitor_id;
 END;
 $$;
-SELECT verify_function('federated.upsert_competitor');
 
 CREATE OR REPLACE FUNCTION federated.upsert_competitor_category_progress(
   in_federation      text,
@@ -843,7 +1144,145 @@ BEGIN
   RETURN v_snapshot_id;
 END;
 $$;
-SELECT verify_function('federated.upsert_ranklist_snapshot');
+
+CREATE OR REPLACE FUNCTION federated.try_materialize_competition_round_results(
+  in_competition_id bigint
+) RETURNS boolean
+  LANGUAGE plpgsql
+  SET search_path = federated, pg_temp
+AS $$
+DECLARE
+  v_total integer;
+  v_seen  integer;
+BEGIN
+  SELECT participants_total
+  INTO v_total
+  FROM federated.competition
+  WHERE id = in_competition_id
+    FOR UPDATE;
+
+  IF v_total IS NULL OR v_total = 0 THEN
+    RETURN false;
+  END IF;
+
+  SELECT count(*)
+  INTO v_seen
+  FROM federated.competition_entry
+  WHERE competition_id = in_competition_id;
+
+  IF v_seen < v_total THEN
+    RETURN false;
+  END IF;
+
+  -- Materialize from judge_score (source of truth).
+  WITH round_meta AS (
+    SELECT cr.id AS round_id, cr.scoring_method
+    FROM federated.competition_round cr
+    WHERE cr.competition_id = in_competition_id
+  ),
+  per_competitor AS (
+    SELECT
+      js.round_id,
+      js.competitor_id,
+      rm.scoring_method,
+      SUM(js.score) FILTER (WHERE js.component = 'mark') AS marks_sum,
+      SUM(js.score) FILTER (WHERE js.component = 'places') AS places_sum,
+      SUM(js.score) FILTER (WHERE js.component IN ('ajs_tq','ajs_mm','ajs_ps','ajs_cp')) AS ajs_sum,
+      SUM(js.score) FILTER (WHERE js.component = 'ajs_reduction') AS ajs_reduction_sum
+    FROM federated.judge_score js
+    JOIN round_meta rm ON rm.round_id = js.round_id
+    GROUP BY js.round_id, js.competitor_id, rm.scoring_method
+  ),
+  scored AS (
+    SELECT
+      round_id,
+      competitor_id,
+      scoring_method,
+      CASE scoring_method
+        WHEN 'skating_marks'  THEN COALESCE(marks_sum, 0)
+        WHEN 'skating_places' THEN COALESCE(places_sum, 0)
+        WHEN 'ajs-3.0'        THEN COALESCE(ajs_sum, 0) - COALESCE(ajs_reduction_sum, 0)
+      END AS overall_score
+    FROM per_competitor
+  ),
+  ranked AS (
+    SELECT
+      round_id,
+      competitor_id,
+      scoring_method,
+      overall_score,
+      CASE scoring_method
+        WHEN 'skating_places'
+          THEN rank() OVER (PARTITION BY round_id ORDER BY overall_score NULLS LAST)
+          ELSE rank() OVER (PARTITION BY round_id ORDER BY overall_score DESC NULLS LAST)
+      END AS r_from,
+      count(*) OVER (PARTITION BY round_id, overall_score) AS tie_count
+    FROM scored
+  ),
+  final_rows AS (
+    SELECT
+      round_id,
+      competitor_id,
+      r_from AS overall_ranking,
+      CASE
+        WHEN tie_count > 1 THEN (r_from + tie_count - 1)
+      END AS overall_ranking_to,
+      overall_score
+    FROM ranked
+  )
+  INSERT INTO federated.competition_round_result (
+    round_id,
+    competitor_id,
+    overall_ranking,
+    overall_ranking_to,
+    overall_score
+  )
+  SELECT
+    round_id,
+    competitor_id,
+    overall_ranking,
+    overall_ranking_to,
+    overall_score
+  FROM final_rows
+  ON CONFLICT (round_id, competitor_id)
+    DO UPDATE SET
+      overall_ranking    = EXCLUDED.overall_ranking,
+      overall_ranking_to = EXCLUDED.overall_ranking_to,
+      overall_score      = EXCLUDED.overall_score;
+
+  RETURN true;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION federated.ensure_dance_program(
+  in_code        text,
+  in_name        text,
+  in_discipline  text,
+  in_dance_codes text[]
+) RETURNS bigint
+  LANGUAGE plpgsql
+  SET search_path = federated, pg_temp
+AS $$
+DECLARE
+  v_id bigint;
+BEGIN
+  INSERT INTO federated.dance_program (code, name, discipline)
+  VALUES (in_code, in_name, in_discipline)
+  ON CONFLICT (code)
+    DO UPDATE SET
+      name = EXCLUDED.name,
+      discipline = EXCLUDED.discipline
+  RETURNING id INTO v_id;
+
+  DELETE FROM federated.dance_program_dance WHERE program_id = v_id;
+
+  INSERT INTO federated.dance_program_dance (program_id, dance_code, dance_order)
+  SELECT v_id, x.dance_code, x.ord::int
+  FROM unnest(in_dance_codes) WITH ORDINALITY AS x(dance_code, ord);
+
+  RETURN v_id;
+END;
+$$;
 
 
 ------------------------------------

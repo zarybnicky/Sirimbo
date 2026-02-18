@@ -24,7 +24,7 @@ begin
   duration := extract(epoch from (i.until - i.since)) / 60;
 
   insert into payment (accounting_period_id, status, event_instance_id, due_at)
-  values ((select id from accounting_period where range @> now()), 'tentative', i.id, now() + '2 week'::interval)
+  values ((select id from accounting_period where range @> now() and tenant_id = e.tenant_id), 'tentative', i.id, now() + '2 week'::interval)
   returning * into payment;
 
   insert into payment_recipient (payment_id, account_id, amount)
