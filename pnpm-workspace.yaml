@@ -4,6 +4,5 @@ packages:
   - worker
   - backend
   - wdsf
-  - e2e
 
 injectWorkspacePackages: true

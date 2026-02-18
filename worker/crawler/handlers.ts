@@ -4,25 +4,32 @@ import { cstsRanklistIndex } from './cstsRanklistIndex.ts';
 import { cstsRanklist } from './cstsRanklist.ts';
 import { wdsfMember } from './wdsfMember.ts';
 import { wdsfMemberIndex } from './wdsfMemberIndex.ts';
+import { wdsfCompetitionIndex } from './wdsfCompetitionIndex.ts';
+import { wdsfCompetition } from './wdsfCompetition.ts';
+import { wdsfParticipantIndex } from './wdsfParticipantIndex.ts';
+import { wdsfParticipant } from './wdsfParticipant.ts';
 
 export const LOADERS = {
   wdsf: {
     // https://services.worlddancesport.org/api/1/person
     memberIndex: wdsfMemberIndex,
-
     // https://services.worlddancesport.org/api/1/person/10116109
     member: wdsfMember,
+    // https://services.worlddancesport.org/api/1/competition?from=2025/11/01
+    competitionIndex: wdsfCompetitionIndex,
+    // https://services.worlddancesport.org/api/1/competition/64306
+    competition: wdsfCompetition,
+    // https://services.worlddancesport.org/api/1/participant?competitionId=64306
+    participantIndex: wdsfParticipantIndex,
+    // https://services.worlddancesport.org/api/1/participant/64306
+    participant: wdsfParticipant,
 
     // modifiedsince, worldranking
     // computed merging of competitions into events, by location + same/adjacent date???
     // scraping by week, maybe?, or maybe from HTML
     // https://www.worlddancesport.org/Calendar/Competitions?Month=2&Year=2026 => /Events/Voesendorf-Vienna-Austria-21022026-22022026-8685
-    // https://services.worlddancesport.org/api/1/competition?from=2025/11/01
-    // https://services.worlddancesport.org/api/1/competition/64306
-    // https://services.worlddancesport.org/api/1/participant?competitionId=64306
     // https://services.worlddancesport.org/api/1/official?competitionId=64306 - includes letters of judges
     // https://services.worlddancesport.org/api/1/couple
-    // https://services.worlddancesport.org/api/1/participant?coupleId=rls-1912
     // https://services.worlddancesport.org/api/1/participant/2313241?format=json = results!
     // https://services.worlddancesport.org/api/1/ranking?ageGroup=???&discipline=???&division=???
     // https://services.worlddancesport.org/api/1/country
@@ -39,6 +46,11 @@ export const LOADERS = {
     ranklistIndex: cstsRanklistIndex,
     ranklist: cstsRanklist,
 
+    // https://www.csts.cz/api/1/events?filter=date%3E%3D2025-12-01%20AND%20date%3C%3D2026-03-01
+    //competitionIndex: cstsCompetitionIndex,
+    // https://www.csts.cz/api/1/competition_events?from=2025-11-01&to=2025-11-30
+    //resultsIndex: cstsResultsIndex,
+
     // Osobní údaje, žlutý JS
     // https://www.csts.cz/api/evidence/clenove/detail-clena/osobni-udaje/18038132
 
@@ -53,13 +65,11 @@ export const LOADERS = {
     // https://www.csts.cz/api/evidence/clenove/prestupy/prestup/1159
 
     // Soutěže
-    // https://www.csts.cz/api/1/events?filter=date%3E%3D2025-12-01%20AND%20date%3C%3D2026-03-01
     // https://www.csts.cz/api/1/events/327/competitions?filter=eventCompetitionId%3D327&order=type
     // https://www.csts.cz/api/1/events/327/officials
     // https://www.csts.cz/api/1/events/327/competitors?eventCompetitionId=327
 
     // Výsledky
-    // https://www.csts.cz/api/1/competition_events?from=2025-11-01&to=2025-11-30
     // https://www.csts.cz/api/1/competition_events/1262
     // https://www.csts.cz/api/1/competitions/32329/result
 
