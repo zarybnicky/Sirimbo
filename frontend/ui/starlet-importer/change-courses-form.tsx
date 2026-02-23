@@ -3,7 +3,7 @@ import { EnumerateCoursesDocument } from '@/starlet/graphql/Query';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { z } from 'zod';
@@ -20,7 +20,7 @@ const Form = z.object({
 type SimpleCourse = {
   key: string;
   name: string;
-  period: string;
+  period: string | null;
   code: string;
 };
 
@@ -97,7 +97,7 @@ async function fetchCoursesByFolders(folders: string[], seasons: string[]) {
       for (const course of data?.courses ?? []) {
         if (!course) continue;
         const { key, code, name, period } = course;
-        if (!key || !code || !name || !period) continue;
+        if (!key || !code || !name) continue;
         result.push({ key, code, name, period });
       }
     }
