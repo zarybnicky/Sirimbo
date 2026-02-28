@@ -33,12 +33,7 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
   const { onSuccess } = useFormResult();
   const create = useMutation(RegisterToEventExternalDocument)[1];
 
-  const {
-    control,
-    watch,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { control, watch, handleSubmit } = useForm({
     defaultValues: {
       nationality: '203',
     },
@@ -63,7 +58,7 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
   return (
     <form onSubmit={handleSubmit(onSubmit.execute)}>
       <fieldset className="grid lg:grid-cols-2 gap-2">
-        <FormError error={(errors as any) || onSubmit.error} />
+        <FormError error={onSubmit.error} />
 
         <TextFieldElement
           control={control}
