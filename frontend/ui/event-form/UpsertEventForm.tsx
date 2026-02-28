@@ -119,10 +119,10 @@ export function UpsertEventForm({
   }, [reset, eventData]);
 
   const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
-  const trainers = watch('trainers');
-  const instances = watch('instances');
-  const registrations = watch('registrations');
-  const locationId = watch('locationId');
+  const trainers = useWatch({ control, name: 'trainers' });
+  const instances = useWatch({ control, name: 'instances' });
+  const registrations = useWatch({ control, name: 'registrations' });
+  const locationId = useWatch({ control, name: 'locationId' });
   const registrantCount = (registrations || []).reduce(
     (n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0),
     0,

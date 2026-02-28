@@ -123,7 +123,7 @@ export function CreatePersonDialog() {
     }
   }, [setValue, personId, setCohortPickerOpen, personQuery.data?.people?.nodes]);
 
-  const email = watch('email');
+  const email = useWatch({ control, name: 'email' });
   React.useEffect(() => {
     if (email && !getValues('sendInvitation')) {
       setValue('sendInvitation', true);

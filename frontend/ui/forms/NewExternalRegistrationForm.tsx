@@ -85,14 +85,14 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
           placeholder="vyberte národnost"
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
-        {watch('nationality') === '203' ? (
+        {/*watch('nationality') === '203' ? (
           <TextFieldElement
             control={control}
             name="taxIdentificationNumber"
             label="Rodné číslo"
             placeholder="1111119999"
           />
-        ) : (
+        ) : */(
           <TextFieldElement
             control={control}
             name="birthDate"
