@@ -169,7 +169,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
                 ) : (
                   <Circle className="size-5" />
                 )}
-                {label}
+                {String(label)}
               </div>
             </button>
           ) : (
@@ -194,7 +194,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
                   className="text-accent-11"
                   htmlFor={`registrations.${index}.selected`}
                 >
-                  {label}
+                  {String(label)}
                 </label>
                 {selected && (
                   <>

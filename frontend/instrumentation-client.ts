@@ -4,7 +4,7 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 if (process.env.NODE_ENV === "production") {
   init({
-    environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || 'development',
+    environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || process.env.NODE_ENV,
     ignoreErrors: [
       /ResizeObserver loop/,
       /attempted to hard navigate to the same URL/,

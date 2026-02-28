@@ -5,7 +5,7 @@ export async function register() {
   if (process.env.NODE_ENV === "production") {
     const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
     init({
-      environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || 'development',
+      environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || process.env.NODE_ENV,
       ignoreErrors: [
         /ResizeObserver loop completed with undelivered notifications/,
         /attempted to hard navigate to the same URL/,
