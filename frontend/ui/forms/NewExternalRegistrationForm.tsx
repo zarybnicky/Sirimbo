@@ -60,7 +60,7 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
       <fieldset className="grid lg:grid-cols-2 gap-2">
         <FormError error={onSubmit.error} />
 
-        <TextFieldElement
+        {/*<TextFieldElement
           control={control}
           name="prefixTitle"
           label="Titul před jménem"
@@ -72,7 +72,7 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
           label="Jméno"
           required
           autoFocus
-        />
+        />*/}
         <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
         <TextFieldElement control={control} name="email" type="email" label="E-mail" />
