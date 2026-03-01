@@ -65,14 +65,14 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
           name="prefixTitle"
           label="Titul před jménem"
         />
-        <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
+        <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />*/}
         <TextFieldElement
           control={control}
           name="firstName"
           label="Jméno"
           required
           autoFocus
-        />*/}
+        />
         <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
         <TextFieldElement control={control} name="email" type="email" label="E-mail" />
