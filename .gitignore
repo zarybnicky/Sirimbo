@@ -33,3 +33,10 @@ frontend/public/swe-worker-*.js.map
 
 olymp.psql
 olymp.dump
+
+e2e/.auth/
+playwright-report/
+test-results/
+
+# AgentOps session artifacts
+.agents/

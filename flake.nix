@@ -50,11 +50,18 @@
           pkgs.pnpm_9
           pkgs.nodejs_24
           pkgs.postgresql_18
+          pkgs.postgresql_18.pkgs.pgtap
           pkgs.sqlfluff
           pkgs.pgformatter
           pkgs.overmind
           pkgs.prefetch-npm-deps
+          pkgs.playwright-driver
+          pkgs.playwright-driver.browsers
         ];
+        env = {
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
+          PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
+        };
       };
     });
 
