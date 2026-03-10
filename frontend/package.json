@@ -7,7 +7,8 @@
     "dev": "concurrently -p none 'serwist build --watch' 'next dev'",
     "build": "next build --webpack && serwist build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@0no-co/graphql.web": "^1.2.0",

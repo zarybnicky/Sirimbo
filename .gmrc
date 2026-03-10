@@ -88,6 +88,7 @@
     "10-postgraphile-watch.sql",
     "test/10_check_plpgsql.sql",
     "test/20_check_sql_functions.sql",
+    "test/30_pgtap_smoke.sql",
   ],
 
   "blankMigrationContent": "",

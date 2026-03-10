@@ -66,6 +66,7 @@ stdenv.mkDerivation (finalAttrs: {
     runHook preCheck
     for folder in ${lib.escapeShellArgs workspaceFolders}; do
       pnpm run -C $folder --if-present lint
+      pnpm run -C $folder --if-present typecheck
     done
     runHook postCheck
   '';

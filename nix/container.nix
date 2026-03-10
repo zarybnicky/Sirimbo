@@ -8,11 +8,12 @@
   services.postgresql = {
     enable = true;
     enableTCPIP = true;
-    package = pkgs.postgresql_17;
-    extensions = with pkgs.postgresql_17.pkgs; [
+    package = pkgs.postgresql_18;
+    extensions = with pkgs.postgresql_18.pkgs; [
       plpgsql_check
       hypopg
       pgsql-http
+      pgtap
     ];
     ensureDatabases = [ "olymp" "olymp_shadow" ];
     ensureUsers = [{

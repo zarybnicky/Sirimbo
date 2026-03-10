@@ -50,7 +50,6 @@
           pkgs.pnpm_9
           pkgs.nodejs_24
           pkgs.postgresql_18
-          pkgs.postgresql_18.pkgs.pgtap
           pkgs.sqlfluff
           pkgs.pgformatter
           pkgs.overmind
@@ -71,6 +70,11 @@
         rozpisovnik-api
         rozpisovnik-worker
         rozpisovnik-migrations;
+    });
+
+    checks = forAllSystems (pkgs: {
+      rozpisovnik-api = pkgs.rozpisovnik-api;
+      rozpisovnik-worker = pkgs.rozpisovnik-worker;
     });
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {

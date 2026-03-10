@@ -40,3 +40,8 @@ test-results/
 
 # AgentOps session artifacts
 .agents/
+
+# Dolt database files (added by bd init)
+.dolt/
+.beads/
+*.db
