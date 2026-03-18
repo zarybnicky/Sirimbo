@@ -327,6 +327,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'UserProxy', id: args.input.id });
       },
 
+      detachEventInstance(_result, args, cache, _info) {
+        if (args.input.pInstanceId)
+          cache.invalidate({ __typename: 'EventInstance', id: args.input.pInstanceId });
+      },
       deleteEventInstance(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
       },
