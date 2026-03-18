@@ -23,7 +23,6 @@ import { buttonCls } from '@/ui/style';
 import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
 import { Spinner } from '@/ui/Spinner';
 import Link from 'next/link';
-import type { LinkProps } from 'next/link';
 import { useAuth } from '@/ui/use-auth';
 import { isTruthy } from '@/ui/truthyFilter';
 
@@ -39,9 +38,6 @@ type ManualCreditTransaction = NonNullable<
 
 const TURNOVER_PAGE_SIZE = 50;
 const DEPOSIT_PAGE_SIZE = 50;
-
-const paymentDetailHref = (id: string): LinkProps['href'] =>
-  ({ pathname: '/platby/[id]', query: { id } }) as unknown as LinkProps['href'];
 
 export default function PaymentsPage() {
   const [tab, setTab] = useQueryParam('tab', StringParam);
@@ -86,7 +82,7 @@ function AccountOverview() {
         Přehled plateb 2023
       </button>
       {(data?.filteredPeopleList || [])
-        .sort((a, b) =>
+        .toSorted((a, b) =>
           `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
         )
         .map((x) => (
@@ -134,7 +130,7 @@ function UnpaidPayments() {
             </DropdownMenu>
             {auth.isAdmin && x.payment?.id && (
               <Link
-                href={paymentDetailHref(x.payment.id)}
+                href={{ pathname: '/platby/[id]', query: { id: x.payment.id } }}
                 className="mt-1 block text-xs font-medium text-accent-11 hover:underline"
               >
                 Detail
@@ -325,7 +321,7 @@ function TenantTurnover() {
                       )}
                       {auth.isAdmin && payment?.id && (
                         <Link
-                          href={paymentDetailHref(payment.id)}
+                          href={{ pathname: '/platby/[id]', query: { id: payment.id } }}
                           className="text-xs font-medium text-accent-11 hover:underline"
                         >
                           Detail platby
@@ -490,7 +486,7 @@ function DepositRow({
         )}
         {showDebug && transaction.payment?.id && (
           <Link
-            href={paymentDetailHref(transaction.payment.id)}
+            href={{ pathname: '/platby/[id]', query: { id: transaction.payment.id } }}
             className="text-xs font-medium text-accent-11 hover:underline"
           >
             Detail platby

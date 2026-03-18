@@ -10,6 +10,7 @@ import {
 import { DeletePaymentDocument } from '@/graphql/Payment';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
+import { Spinner } from '@/ui/Spinner';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
 import {
@@ -65,22 +66,20 @@ export function EventView({ event }: { event: EventFullFragment }) {
       (event.eventRegistrationsList.length ?? 0) +
       (event.eventExternalRegistrationsList.length ?? 0);
     if (auth.user?.id && numRegistrations > 0) {
+      tabs.push({
+        id: 'registrations',
+        title: `Přihlášky (${numRegistrations})`,
+        contents: () => <Registrations event={event} />,
+      });
+    }
+
+    if (auth.isTrainerOrAdmin) {
       tabs.push(
-        {
-          id: 'registrations',
-          title: `Přihlášky (${numRegistrations})`,
-          contents: () => <Registrations event={event} />,
-        },
         {
           id: 'attendance',
           title: 'Účast',
           contents: () => <Attendance event={event} />,
         },
-      );
-    }
-
-    if (auth.isTrainerOrAdmin) {
-      tabs.push(
         {
           id: 'payments',
           title: 'Platby',
@@ -192,13 +191,14 @@ function EventInstances({ event }: { event: EventFullFragment }) {
         <tbody>
           {event.eventInstancesList.map((instance) => {
             return (
-              <tr key={instance.id}>
+              <tr key={instance.id} className={instance.isCancelled ? 'opacity-50' : ''}>
                 <td>
                   <Link
                     href={{
                       pathname: '/akce/[id]/termin/[instance]',
                       query: { id: event.id, instance: instance.id },
                     }}
+                    className={instance.isCancelled ? 'line-through' : ''}
                   >
                     {formatOpenDateRange(instance)}
                   </Link>
@@ -303,10 +303,18 @@ export function PaymentMenu({
 }
 
 function Payments({ event }: { event: EventFragment }) {
-  const [{ data }] = useQuery({
+  const [{ data, fetching }] = useQuery({
     query: EventPaymentsDocument,
     variables: { id: event.id },
   });
+
+  if (fetching && !data) {
+    return (
+      <div className="flex justify-center py-8">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div>

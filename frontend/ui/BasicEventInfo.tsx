@@ -20,16 +20,10 @@ export function BasicEventInfo({ event }: { event: EventFragment }) {
         </>
       )}
 
-      {!!event.location?.name && (
+      {!!(event.location?.name || event.locationText) && (
         <>
           <dt>Místo konání</dt>
-          <dd>{event.location.name}</dd>
-        </>
-      )}
-      {!!event.locationText && (
-        <>
-          <dt>Místo konání</dt>
-          <dd>{event.locationText}</dd>
+          <dd>{event.location?.name || event.locationText}</dd>
         </>
       )}
 
