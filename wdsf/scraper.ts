@@ -99,12 +99,12 @@ function sanitizeCountry(value?: string | null): string | null {
   if (trimmed === "China, People's Republic of") {
     return 'China';
   }
-  const withoutQuotes = trimmed.replace(/'/g, ' ').trim();
+  const withoutQuotes = trimmed.replaceAll(/'/g, ' ').trim();
   return withoutQuotes.length > 0 ? withoutQuotes : null;
 }
 
 function sanitizeText(value?: string | null): string {
-  return value?.replace(/'/g, ' ').trim() ?? '';
+  return value?.replaceAll(/'/g, ' ').trim() ?? '';
 }
 
 function formatDateForApi(date: Date): string {

@@ -217,10 +217,10 @@ function sanitiseHeaderKey(input: string): string {
   return input
     .trim()
     .toLowerCase()
-    .replace(/[\s-]+/g, '_')
-    .replace(/[^\p{Letter}\p{Number}_]+/gu, '')
-    .replace(/_+/g, '_')
-    .replace(/^_|_$/g, '');
+    .replaceAll(/[\s-]+/g, '_')
+    .replaceAll(/[^\p{Letter}\p{Number}_]+/gu, '')
+    .replaceAll(/_+/g, '_')
+    .replaceAll(/^_|_$/g, '');
 }
 
 const HEADER_ALIAS_MAP = new Map<string, FieldAliasKey>(

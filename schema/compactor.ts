@@ -31,7 +31,7 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
   for await (const chunk of process.stdin) input += chunk.toString();
 
   // psql meta-commands pgsql parser won't accept
-  input = input.replace(/\\(un)?restrict [a-zA-Z0-9]+/g, '');
+  input = input.replaceAll(/\\(un)?restrict [a-zA-Z0-9]+/g, '');
 
   const ast = await parse(input);
   const stmts: RawStmt[] = ast.stmts ?? [];
@@ -389,8 +389,8 @@ const strip = <T extends Record<string, any>, K extends keyof T>(o: T, ...ks: K[
 
   process.stdout.write(
     outSql
-      .replace(/[ \t]+$/gm, '')
-      .replace(/\n{3,}/g, '\n\n')
-      .replace(/\n?$/, '\n'),
+      .replaceAll(/[ \t]+$/gm, '')
+      .replaceAll(/\n{3,}/g, '\n\n')
+      .replaceAll(/\n?$/g, '\n'),
   );
 })();

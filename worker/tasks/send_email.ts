@@ -27,7 +27,7 @@ const task: Task<"send_email"> = async (payload) => {
       console.error(mjmlResult.errors);
     }
     options.html = mjmlResult.html;
-    options.text = htmlToText(options.html, { wordwrap: 120 }).replace(/\n\s+\n/g, "\n\n");
+    options.text = htmlToText(options.html, { wordwrap: 120 }).replaceAll(/\n\s+\n/g, "\n\n");
   }
   await transport.sendMail({
     from: fromEmail,
