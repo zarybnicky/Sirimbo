@@ -56,6 +56,7 @@
           pkgs.prefetch-npm-deps
           pkgs.playwright-driver
           pkgs.playwright-driver.browsers
+          pkgs.perlPackages.TAPParserSourceHandlerpgTAP
         ];
         env = {
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";

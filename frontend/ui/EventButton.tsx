@@ -10,14 +10,12 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { useAuth } from '@/ui/use-auth';
 import { diff } from 'date-arithmetic';
-import React from 'react';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 
 type Props = {
   event: EventFragment;
   instance: EventInstanceWithTrainerFragment;
   showDate?: boolean;
-  alwaysExpanded?: boolean;
   viewer: 'auto' | 'trainer' | 'couple';
 };
 

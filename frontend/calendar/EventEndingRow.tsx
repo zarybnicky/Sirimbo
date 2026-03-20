@@ -58,7 +58,7 @@ function EventEndingRow({
             <button
               type="button"
               key={`sm_${current}`}
-              className="rbc-button-link rbc-show-more"
+              className="rbc-show-more text-inherit bg-transparent m-0 p-0 border-none cursor-pointer select-text"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

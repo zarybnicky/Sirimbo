@@ -19,7 +19,6 @@ type DateContentRowProps = {
   date: Date;
   range: Date[];
   events: CalendarEvent[];
-  className?: string;
   resource?: Resource;
   containerRef: React.RefObject<HTMLDivElement | null>;
 };
@@ -28,7 +27,6 @@ function DateContentRow({
   date: currentDate,
   range,
   events,
-  className,
   resource,
   containerRef,
 }: DateContentRowProps) {
@@ -237,7 +235,11 @@ function DateContentRow({
   }, [renderForMeasure, containerRef]);
 
   return (
-    <div className={className} role="rowgroup" ref={containerRef}>
+    <div
+      className="flex relative flex-col flex-1 basis-0 overflow-hidden h-full divide-y divide-neutral-6"
+      role="rowgroup"
+      ref={containerRef}
+    >
       {!renderForMeasure && (
         <BackgroundCells
           date={currentDate}
@@ -247,20 +249,19 @@ function DateContentRow({
         />
       )}
 
-      <div className="rbc-row-content" role="row">
+      <div className="relative select-none z-[4]" role="row">
         <div className="rbc-row" ref={headingRowRef}>
           {range.map((date, index) => (
             <div
               key={`header_${index}`}
-              className={cn('rbc-date-cell', {
-                'rbc-now': eq(date, new Date(), 'day'),
-                'rbc-off-range': neq(date, currentDate, 'month'),
-                'rbc-current': eq(date, currentDate, 'day'),
+              className={cn('flex-1 min-w-0 pr-[5px] text-right', {
+                'font-bold': eq(date, new Date(), 'day'),
+                'text-neutral-9': neq(date, currentDate, 'month'),
               })}
             >
               <button
                 type="button"
-                className="rbc-button-link"
+                className="text-inherit bg-transparent m-0 p-0 border-none cursor-pointer select-text"
                 onClick={(e) => {
                   e.preventDefault();
                   onDrillDown?.(date);
@@ -299,7 +300,7 @@ function DateContentRow({
             )}
             {segment && (
               <EventRow
-                className="rbc-drag-row"
+                className="absolute inset-x-0 top-0"
                 segments={[segment]}
                 resource={resource}
                 slotMetrics={slotMetrics}

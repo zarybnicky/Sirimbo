@@ -42,7 +42,7 @@ export function isEvent(node: HTMLElement, { clientX, clientY }: ClientPoint) {
 export function pointInColumn(bounds: BoxSize, point: { x: number; y: number }) {
   const { left, right, top } = bounds;
   const { x, y } = point;
-  return x < right + 10 && x > left && y > top;
+  return x < right + 1 && x > left && y > top;
 }
 
 export function getSlotAtX(rowBox: BoxSize, x: number, slots: number) {
@@ -81,13 +81,13 @@ class Selection extends TypedEventTarget<EventMap> {
   public selecting = false;
   public isDetached = false;
   public selectRect?: Bounds;
-  public removeTouchMoveWindowListener?: () => void;
   public removeInitialEventListener?: () => void;
   public removeEndListener?: () => void;
   public onEscListener?: () => void;
   public removeMoveListener?: () => void;
   public removeKeyUpListener?: () => void;
   public removeKeyDownListener?: () => void;
+  public removeSelectStartListener?: () => void;
   public removeDropFromOutsideListener?: () => void;
   public removeDragOverFromOutsideListener?: () => void;
   public initialEventData?: ClientPoint & { isTouch: boolean };
@@ -100,11 +100,6 @@ class Selection extends TypedEventTarget<EventMap> {
     } = { shouldSelect: () => true },
   ) {
     super();
-    // Fixes an iOS 10 bug where scrolling could not be prevented on the window.
-    // https://github.com/metafizzy/flickity/issues/457#issuecomment-254501356
-    this.removeTouchMoveWindowListener = addEventListener('touchmove', () => {
-      /* ignore */
-    });
     this.removeDropFromOutsideListener = addEventListener(
       'drop',
       this.dropFromOutsideListener.bind(this),
@@ -118,13 +113,13 @@ class Selection extends TypedEventTarget<EventMap> {
 
   teardown() {
     this.isDetached = true;
-    this.removeTouchMoveWindowListener?.();
     this.removeInitialEventListener?.();
     this.removeEndListener?.();
     this.onEscListener?.();
     this.removeMoveListener?.();
     this.removeKeyUpListener?.();
     this.removeKeyDownListener?.();
+    this.removeSelectStartListener?.();
     this.removeDropFromOutsideListener?.();
     this.removeDragOverFromOutsideListener?.();
   }
@@ -254,7 +249,7 @@ class Selection extends TypedEventTarget<EventMap> {
       clientX,
       clientY,
     };
-    if (this.options.shouldSelect(this.initialEventData) === false) {
+    if (!this.options.shouldSelect(this.initialEventData)) {
       return;
     }
 
@@ -272,14 +267,12 @@ class Selection extends TypedEventTarget<EventMap> {
           'mousemove',
           this.handleMoveEvent.bind(this),
         );
+        this.removeSelectStartListener = addEventListener('selectstart', (e) =>
+          e.preventDefault(),
+        );
         break;
       case 'touchstart':
-        for (const x of document.querySelectorAll<HTMLElement>('.rbc-time-content'))
-          x.style.overflowY = 'hidden';
-        for (const x of document.querySelectorAll<HTMLElement>('.rbc-time-column'))
-          x.style.overflowY = 'hidden';
-        for (const x of document.querySelectorAll<HTMLElement>('body'))
-          x.style.overflowY = 'hidden';
+        this.container()?.style.setProperty('touch-action', 'none');
         this.handleMoveEvent(e);
         this.removeEndListener = addEventListener(
           'touchend',
@@ -288,6 +281,9 @@ class Selection extends TypedEventTarget<EventMap> {
         this.removeMoveListener = addEventListener(
           'touchmove',
           this.handleMoveEvent.bind(this),
+        );
+        this.removeSelectStartListener = addEventListener('selectstart', (e) =>
+          e.preventDefault(),
         );
         break;
     }
@@ -307,15 +303,10 @@ class Selection extends TypedEventTarget<EventMap> {
   handleTerminatingEvent(e: MouseEvent | TouchEvent | KeyboardEvent) {
     this.selecting = false;
 
-    for (const x of document.querySelectorAll<HTMLElement>('.rbc-time-content'))
-      x.style.overflowY = '';
-    for (const x of document.querySelectorAll<HTMLElement>('.rbc-time-column'))
-      x.style.overflowY = '';
-    for (const x of document.querySelectorAll<HTMLElement>('body'))
-      x.style.overflowY = '';
-
+    this.container()?.style.removeProperty('touch-action');
     this.removeEndListener?.();
     this.removeMoveListener?.();
+    this.removeSelectStartListener?.();
 
     if (!this.initialEventData) return;
 

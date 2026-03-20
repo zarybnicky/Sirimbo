@@ -2,7 +2,6 @@ import { type EventFragment, RegisterToEventExternalDocument } from '@/graphql/E
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
@@ -33,7 +32,7 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
   const { onSuccess } = useFormResult();
   const create = useMutation(RegisterToEventExternalDocument)[1];
 
-  const { control, watch, handleSubmit } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: {
       nationality: '203',
     },

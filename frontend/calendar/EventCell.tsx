@@ -32,7 +32,7 @@ function EventCell({
 
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const getCurrentEvent = useCallback(
-    (v: DragSubject) => (v?.event === event ? v : null),
+    (v: DragSubject) => (v?.event?.instance.id === event.instance.id ? v : null),
     [event],
   );
   const currentDragSubject = useAtomValue(selectAtom(dragSubjectAtom, getCurrentEvent));
@@ -65,14 +65,13 @@ function EventCell({
           onTouchStart={onTouchOrMouse}
           className={cn(className, {
             'rbc-event group transition-opacity': true,
-            // TODO: 'rbc-selected': selected,
-            'rbc-resizable': isResizable,
+            'relative w-full h-full': isResizable,
             'rounded-l-none': continuesPrior,
             'rounded-r-none': continuesAfter,
             'cursor-grab': event.isDraggable !== false,
             'rbc-nondraggable': event.isDraggable === false,
             'rbc-drag-preview': event.__isPreview,
-            'rbc-dragged-event': !!currentDragSubject,
+            'rbc-dragged-event': !!currentDragSubject && !event.__isPreview,
             'pl-3': event.event.eventTargetCohortsList.length > 0,
             relative: true,
           })}

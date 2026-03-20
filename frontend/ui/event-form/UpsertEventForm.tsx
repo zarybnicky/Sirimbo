@@ -47,7 +47,7 @@ export function UpsertEventForm({
   });
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
 
-  const { reset, control, handleSubmit, watch, setValue, getValues } = useForm<
+  const { reset, control, handleSubmit, setValue, getValues } = useForm<
     z.input<typeof EventForm>,
     unknown,
     z.infer<typeof EventForm>

@@ -157,18 +157,20 @@ function BackgroundCells({
   }, [auth.isTrainerOrAdmin, onSelectSlot, range, resource, rowRef]);
 
   return (
-    <div className="rbc-row-bg" ref={cellRef}>
+    <div
+      ref={cellRef}
+      className="absolute flex inset-0 overflow-hidden divide-x divide-neutral-6 flex-1"
+    >
       {range.map((date, index) => (
         <div
           key={index}
-          className={cn({
-            'rbc-day-bg': true,
-            'rbc-selected-cell':
+          className={cn('rbc-day-bg', {
+            'bg-accent-3/80': eq(date, new Date(), 'day'),
+            'bg-neutral-3': currentDate && neq(currentDate, date, 'month'),
+            'bg-neutral-5':
               state.selecting &&
               index >= (state.start ?? -1) &&
               index <= (state.end ?? Number.POSITIVE_INFINITY),
-            'rbc-today': eq(date, new Date(), 'day'),
-            'rbc-off-range-bg': currentDate && neq(currentDate, date, 'month'),
           })}
         />
       ))}

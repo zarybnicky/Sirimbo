@@ -1,6 +1,6 @@
 import { chromium, FullConfig } from '@playwright/test';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 async function globalSetup(config: FullConfig) {
   const baseURL = config.projects[0].use.baseURL ?? 'http://localhost:3000';

@@ -11,9 +11,8 @@ function MonthView({ date, range: days, events }: ViewProps) {
 
   return (
     <div
-      className="rbc-month-view overscroll-contain"
+      className="relative flex flex-col flex-1 w-full select-none border border-neutral-6 overscroll-contain"
       role="table"
-      aria-label="Month View"
       ref={containerRef}
     >
       <div className="rbc-row flex" role="row">
@@ -30,7 +29,6 @@ function MonthView({ date, range: days, events }: ViewProps) {
 
       {weeks.map((week, weekIdx) => (
         <DateContentRow
-          className="rbc-month-row"
           key={weekIdx}
           range={week}
           date={date}

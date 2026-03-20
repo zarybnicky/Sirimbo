@@ -211,23 +211,22 @@ function DayColumn({
         return;
       }
 
-      setTimeout(() => {
-        const draggedEl = columnRef.current!.querySelector(
+      requestAnimationFrame(() => {
+        const draggedEl = columnRef.current?.querySelector(
           '.rbc-drag-preview',
         ) as HTMLElement;
-        if (draggedEl) {
-          const parent = gridRef.current!;
-          if (draggedEl.offsetTop < parent.scrollTop) {
-            parent.scrollTop = Math.max(draggedEl.offsetTop, 0);
-          } else if (
-            draggedEl.offsetTop + draggedEl.offsetHeight >
-            parent.scrollTop + parent.clientHeight
-          ) {
-            parent.scrollTop = Math.min(
-              draggedEl.offsetTop - parent.offsetHeight + draggedEl.offsetHeight,
-              parent.scrollHeight,
-            );
-          }
+        const parent = gridRef.current;
+        if (!draggedEl || !parent) return;
+
+        const elTop = draggedEl.offsetTop;
+        const elBottom = elTop + draggedEl.offsetHeight;
+        const viewTop = parent.scrollTop;
+        const viewBottom = viewTop + parent.clientHeight;
+
+        if (elTop < viewTop) {
+          parent.scrollTop = elTop;
+        } else if (elBottom > viewBottom) {
+          parent.scrollTop = elBottom - parent.clientHeight;
         }
       });
 
@@ -357,19 +356,30 @@ function DayColumn({
     return layoutEvents(events, slotMetrics, 5); // allow 5 minute overlaps
   }, [events, slotMetrics]);
 
+  const isToday = eq(date, new Date(), 'day');
+
   return (
     <div
       ref={columnRef}
-      className={cn(
-        'rbc-day-slot rbc-time-column',
-        eq(date, new Date(), 'day') && 'rbc-now rbc-today',
-        backgroundState.selecting && 'rbc-slot-selecting',
-      )}
+      className={cn('rbc-day-slot rbc-time-column', {
+        'bg-accent-3/80': isToday,
+        'rbc-slot-selecting': backgroundState.selecting,
+      })}
     >
       {slotMetrics.groups.map((group, idx) => (
-        <div key={idx} className="rbc-timeslot-group">
+        <div
+          key={idx}
+          className={cn('rbc-timeslot-group', {
+            'border-accent-6': isToday,
+          })}
+        >
           {group.map((_, idx) => (
-            <div key={idx} className="rbc-time-slot" />
+            <div
+              key={idx}
+              className={cn('rbc-time-slot border-t border-neutral-3', {
+                'border-accent-4': isToday,
+              })}
+            />
           ))}
         </div>
       ))}
@@ -412,7 +422,7 @@ function DayColumn({
 
       {backgroundState.startDate && backgroundState.endDate && (
         <div
-          className="rbc-slot-selection"
+          className="absolute z-10 w-full p-[3px] text-xs bg-neutral-9 text-white"
           style={{ top: backgroundState.top, height: backgroundState.height }}
         >
           <span>

@@ -53,7 +53,7 @@ function TimeGridEvent({
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const getCurrentEvent = useCallback(
-    (v: DragSubject) => (v?.event === event ? v : null),
+    (v: DragSubject) => (v?.event?.instance.id === event.instance.id ? v : null),
     [event],
   );
   const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
@@ -137,20 +137,22 @@ function TimeGridEvent({
           left: `${style.xOffset}%`,
         }}
         title={label + ' ' + title}
-        className={cn(className, {
-          'rbc-event group transition-opacity': true,
-          'rbc-resizable': isResizable,
-          'empty-event': event.event.eventRegistrations.totalCount === 0,
-          'is-group': event.instance.type === 'GROUP',
-          // TODO: 'rbc-selected': selected,
-          'opacity-75': isBackgroundEvent,
-          'rbc-drag-preview': event.__isPreview,
-          'rounded-t-none': continuesPrior,
-          'rounded-b-none': continuesAfter,
-          'rbc-dragged-event': isDragging && currentDragSubject,
-          'pl-3': event.event.eventTargetCohortsList.length > 0,
-          relative: true,
-        })}
+        className={cn(
+          className,
+          ' absolute overflow-hidden max-h-full min-h-[20px] border border-[#008fab]',
+          {
+            'rbc-event group transition-opacity': true,
+            'w-full h-full': isResizable,
+            'empty-event': event.event.eventRegistrations.totalCount === 0,
+            'is-group': event.instance.type === 'GROUP',
+            'opacity-75': isBackgroundEvent,
+            'rbc-drag-preview': event.__isPreview,
+            'rounded-t-none': continuesPrior,
+            'rounded-b-none': continuesAfter,
+            'rbc-dragged-event': isDragging && currentDragSubject && !event.__isPreview,
+            'pl-3': event.event.eventTargetCohortsList.length > 0,
+          },
+        )}
       >
         <ConflictsInstanceBadge
           instanceId={event.instance.id}
@@ -178,11 +180,13 @@ function TimeGridEvent({
         )}
 
         <div
-          className={`rbc-event-content${event.instance.isCancelled ? ' line-through' : ''}`}
+          className={cn('rbc-event-content w-full break-words leading-none min-h-[1em]', {
+            'line-through': event.instance.isCancelled,
+          })}
         >
           {title}
         </div>
-        <div className="rbc-event-label">{label}</div>
+        <div className="block truncate text-[80%] pr-[5px] w-auto">{label}</div>
 
         {!continuesPrior && isResizable && (
           <div

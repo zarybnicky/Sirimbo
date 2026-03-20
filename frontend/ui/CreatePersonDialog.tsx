@@ -43,15 +43,15 @@ const Form = z.object({
   birthDate: z.string().nullish(),
   cstsId: z
     .string()
-    .regex(/^$|[0-9]{8}/, 'Neplatné IDT')
+    .regex(/^$|\d{8}/, 'Neplatné IDT')
     .nullish(),
   wdsfId: z
     .string()
-    .regex(/^$|[0-9]{8}/, 'Neplatný MIN')
+    .regex(/^$|\d{8}/, 'Neplatný MIN')
     .nullish(),
   taxIdentificationNumber: z
     .string()
-    .regex(/^$|[0-9]{9,10}/, 'Neplatné rodné číslo')
+    .regex(/^$|\d{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
   bio: z.string().prefault(''),
@@ -87,7 +87,7 @@ export function CreatePersonDialog() {
     [personQuery],
   );
 
-  const { control, handleSubmit, getValues, setValue, reset, watch } = useForm({
+  const { control, handleSubmit, getValues, setValue, reset } = useForm({
     resolver: zodResolver(Form),
   });
   const [{ data: cohorts }] = useQuery({

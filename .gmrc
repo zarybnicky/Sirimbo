@@ -1,31 +1,16 @@
 {
-  /*
-   * pgSettings: key-value settings to be automatically loaded into PostgreSQL
-   * before running migrations, using an equivalent of `SET LOCAL <key> TO
-   * <value>`
-   */
   "pgSettings": {
     // "search_path": "app_public,app_private,app_hidden,public",
   },
 
   /*
-   * placeholders: substituted in SQL files when compiled/executed. Placeholder
-   * keys should be prefixed with a colon and in all caps, like
-   * `:COLON_PREFIXED_ALL_CAPS`. Placeholder values should be strings. They
-   * will be replaced verbatim with NO ESCAPING AT ALL (this differs from how
-   * psql handles placeholders) so should only be used with "safe" values. This
-   * is useful for committing migrations where certain parameters can change
-   * between environments (development, staging, production) but you wish to
-   * use the same signed migration files for all.
-   *
-   * The special value "!ENV" can be used to indicate an environmental variable
-   * of the same name should be used.
-   *
    * Graphile Migrate automatically sets the `:DATABASE_NAME` and
    * `:DATABASE_OWNER` placeholders, and you should not attempt to override
    * these.
    */
   "placeholders": {
+    // ":DATABASE_NAME": -          // Built-in
+    // ":DATABASE_OWNER": -         // Built-in
     // ":DATABASE_VISITOR": "!ENV", // Uses process.env.DATABASE_VISITOR
   },
 
@@ -45,18 +30,14 @@
    * actions to the shadow DB, and if false only on actions to the main DB.
    */
 
-  /*
-   * afterReset: actions executed after a `graphile-migrate reset` command.
-   */
+  /* afterReset: actions executed after a `graphile-migrate reset` command. */
   "afterReset": [
     "!roles_extensions.sql",
     "!initial_schema.sql",
     { "_": "command", "command": "pnpm --filter @rozpisovnik/worker schema -c $GM_DBURL" },
   ],
 
-  /*
-   * afterAllMigrations: actions executed once all migrations are complete.
-   */
+  /* afterAllMigrations: actions executed once all migrations are complete. */
   "afterAllMigrations": [
     {
       "_": "command",
@@ -75,15 +56,12 @@
     },
   ],
 
-  /*
-   * afterCurrent: actions executed once the current migration has been
-   * evaluated (i.e. in watch mode).
-   */
+  /* afterCurrent: actions executed once the current migration has been evaluated (i.e. in watch mode). */
   "afterCurrent": [
     // {
     //   "_": "command",
     //   "shadow": true,
-    //   "command": "if [ \"$IN_TESTS\" = \"1\" ]; then ./scripts/test-seed; fi",
+    //   "command": "if [ \"$IN_TESTS\" = \"1\" ]; then psql -f ./scripts/test-seed $GM_DBURL; fi",
     // },
     "10-postgraphile-watch.sql",
     "test/10_check_plpgsql.sql",

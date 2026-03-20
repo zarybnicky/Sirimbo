@@ -6,12 +6,11 @@ import { maxTimeAtom, minTimeAtom, stepAtom, timeslotsAtom } from './state';
 import { cn } from '@/ui/cn';
 
 type TimeGutterProps = {
-  className: string;
   date: Date;
   gutterRef: React.ForwardedRef<HTMLDivElement>;
 };
 
-function TimeGutter({ gutterRef, className, date }: TimeGutterProps) {
+function TimeGutter({ gutterRef, date }: TimeGutterProps) {
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
   const timeslots = useAtomValue(timeslotsAtom);
@@ -22,7 +21,7 @@ function TimeGutter({ gutterRef, className, date }: TimeGutterProps) {
   }, [date, minTime, maxTime, timeslots, step]);
 
   return (
-    <div className={cn('rbc-time-gutter rbc-time-column', className)} ref={gutterRef}>
+    <div className="rbc-time-gutter rbc-time-column" ref={gutterRef}>
       {slotMetrics.groups.map((group, idx) => (
         <div key={idx} className="rbc-timeslot-group">
           {group.map((value, idx) => (
@@ -30,10 +29,9 @@ function TimeGutter({ gutterRef, className, date }: TimeGutterProps) {
               {idx === 0 && (
                 <span
                   key={idx}
-                  className={cn(
-                    'px-1',
-                    slotMetrics.dateIsInGroup(date, idx) && 'rbc-now',
-                  )}
+                  className={cn('px-1', {
+                    'font-bold': slotMetrics.dateIsInGroup(date, idx),
+                  })}
                 >
                   {shortTimeIntl.format(value)}
                 </span>

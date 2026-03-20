@@ -137,17 +137,19 @@ export default React.memo(function TimeGrid({
       <div
         ref={contentRef}
         className="rbc-time-content"
+        style={{
+          WebkitTouchCallout: 'none',
+          WebkitUserSelect: 'none',
+          userSelect: 'none',
+        }}
+        onSelectCapture={(e) => e.preventDefault()}
         onScroll={(e) => {
           if (scrollRef.current) {
             scrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
           }
         }}
       >
-        <TimeGutter
-          className="rbc-time-gutter"
-          gutterRef={gutterRef}
-          date={grid.days[0]!}
-        />
+        <TimeGutter gutterRef={gutterRef} date={grid.days[0]!} />
 
         {primary === 'resource'
           ? grid.resources.flatMap((resource, rIdx) =>
@@ -242,10 +244,14 @@ function buildGrid(
 function DayButton({ today, date }: { today: Date; date: Date }) {
   const { onDrillDown } = useAtomValue(dragListenersAtom);
   return (
-    <div className={cn('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
+    <div
+      className={cn('rbc-header', {
+        'bg-accent-3/80': eq(date, today, 'day'),
+      })}
+    >
       <button
         type="button"
-        className="rbc-button-link"
+        className="text-inherit bg-transparent m-0 p-0 border-none cursor-pointer select-text"
         onClick={(e) => {
           e.preventDefault();
           onDrillDown?.(date);

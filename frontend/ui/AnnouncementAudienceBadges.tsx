@@ -1,5 +1,4 @@
 import { AnnouncementAudienceRole } from '@/graphql';
-import { CohortBasicFragment } from '@/graphql/Cohorts';
 import { cn } from '@/ui/cn';
 import { isTruthy } from './truthyFilter';
 import { AnnouncementAudienceFragment } from '@/graphql/Announcement';
@@ -12,12 +11,10 @@ const ROLE_LABEL: Record<AnnouncementAudienceRole, string> = {
 
 interface Props {
   audiences?: AnnouncementAudienceFragment[];
-  cohorts?: (CohortBasicFragment | null | undefined)[] | null;
-  roles?: (AnnouncementAudienceRole | null | undefined)[] | null;
   className?: string;
 }
 
-export function AnnouncementAudienceBadges({ audiences, className }: Props) {
+export function AnnouncementAudienceBadges({ audiences, className }: Readonly<Props>) {
   const derivedCohorts = audiences?.map((x) => x.cohort).filter(isTruthy) || [];
   const derivedRoles = audiences?.map((x) => x.audienceRole).filter(isTruthy) || [];
 
