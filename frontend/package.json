@@ -8,6 +8,7 @@
     "build": "next build --webpack && serwist build",
     "start": "next start",
     "lint": "eslint .",
+    "test": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -134,6 +135,7 @@
     "prettier": "3.6.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.1",
+    "vitest": "^4.1.0",
     "webpack": "~5.102.1",
     "windy-radix-typography": "~0.2.1"
   },
