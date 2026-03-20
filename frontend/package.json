@@ -51,7 +51,6 @@
     "fuzzysort": "^3.1.0",
     "glider-js": "~1.7.9",
     "graphql": "^16.12.0",
-    "heap-typed": "^2.2.1",
     "html-react-parser": "^5.2.10",
     "iban": "~0.0.14",
     "jotai": "^2.15.2",

@@ -363,9 +363,6 @@ importers:
       graphql:
         specifier: ^16.12.0
         version: 16.12.0
-      heap-typed:
-        specifier: ^2.2.1
-        version: 2.2.1
       html-react-parser:
         specifier: ^5.2.10
         version: 5.2.10(@types/react@19.2.8)(react@19.2.3)
@@ -6519,10 +6516,6 @@ packages:
   damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
 
-  data-structure-typed@2.2.1:
-    resolution: {integrity: sha512-al3tB6BLWGYkK9iQyUl1SYpywiT4JvAehmKNUGY24aL/5XwyxtCVUlfuqgmzWDiXn2fjDuB1S6CcIny6CVzT1g==}
-    engines: {node: '>=12.20.0', npm: '>=6.14.0'}
-
   data-uri-to-buffer@4.0.1:
     resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
     engines: {node: '>= 12'}
@@ -7578,10 +7571,6 @@ packages:
 
   header-case@2.0.4:
     resolution: {integrity: sha512-H/vuk5TEEVZwrR0lp2zed9OCo1uAILMlx0JEMgC26rzyJJ3N1v6XkwHHXJQdR2doSjcGPM6OKPYoJgf0plJ11Q==}
-
-  heap-typed@2.2.1:
-    resolution: {integrity: sha512-UjWzQwP97bKqsL8u4Xy0dfnk/YgHgKBpq7GOVPBl3B0pSCwzlarnSuOYjhTr4rDvmyaAzhKLYsha4yw9pMhINg==}
-    engines: {node: '>=12.20.0', npm: '>=6.14.0'}
 
   helmet@8.1.0:
     resolution: {integrity: sha512-jOiHyAZsmnr8LqoPGmCjYAaiuWwjAPLgY8ZX2XrmHawt99/u1y6RgrZMTeoPfpUbV96HOalYgz1qzkRbw54Pmg==}
@@ -12759,6 +12748,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-page-break@47.3.0':
     dependencies:
@@ -12768,6 +12759,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       '@ckeditor/ckeditor5-widget': 47.3.0
       ckeditor5: 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-paragraph@47.3.0':
     dependencies:
@@ -12776,6 +12769,8 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.3.0
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-paste-from-office@47.3.0':
     dependencies:
@@ -18802,8 +18797,6 @@ snapshots:
 
   damerau-levenshtein@1.0.8: {}
 
-  data-structure-typed@2.2.1: {}
-
   data-uri-to-buffer@4.0.1: {}
 
   data-view-buffer@1.0.2:
@@ -20239,10 +20232,6 @@ snapshots:
     dependencies:
       capital-case: 1.0.4
       tslib: 2.8.1
-
-  heap-typed@2.2.1:
-    dependencies:
-      data-structure-typed: 2.2.1
 
   helmet@8.1.0: {}
 

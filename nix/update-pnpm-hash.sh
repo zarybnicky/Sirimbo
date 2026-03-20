@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -eux
-cd "$(dirname "${BASH_SOURCE[0]}")"
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 :> worker/pnpm-deps-hash.txt # Clear hash to trigger rebuild
 BUILD_LOG="$(mktemp)"
