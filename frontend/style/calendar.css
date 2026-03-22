@@ -1,15 +1,8 @@
 .rbc-calendar {
-  box-sizing: border-box;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-}
-
-.rbc-calendar *,
-.rbc-calendar *:before,
-.rbc-calendar *:after {
-  box-sizing: inherit;
 }
 
 .rbc-header {
@@ -30,7 +23,7 @@
   font-size: 90%;
   padding: 2px 5px;
   background-color: #00B9DE;
-  border-radius: 5px;
+  border-radius: 6px;
   color: #fff;
   cursor: pointer;
   width: 100%;
@@ -52,7 +45,6 @@
 }
 .rbc-event.is-group {
   background: HSL(352, 86%, 61%);
-  border: 1px solid HSL(352, 86%, 45%) !important;
 }
 
 .rbc-slot-selecting .rbc-event {
@@ -106,7 +98,7 @@
 }
 
 .rbc-timeslot-group {
-  @apply border-b border-neutral-6;
+  @apply border-b border-neutral-4;
   min-height: 40px;
   display: flex;
   flex-flow: column nowrap;

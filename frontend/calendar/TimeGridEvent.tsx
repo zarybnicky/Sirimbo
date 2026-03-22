@@ -139,9 +139,9 @@ function TimeGridEvent({
         title={label + ' ' + title}
         className={cn(
           className,
-          ' absolute overflow-hidden max-h-full min-h-[20px] border border-[#008fab]',
+          'rbc-event group transition-opacity',
+          'absolute overflow-hidden max-h-full min-h-[20px] border border-b-transparent',
           {
-            'rbc-event group transition-opacity': true,
             'w-full h-full': isResizable,
             'empty-event': event.event.eventRegistrations.totalCount === 0,
             'is-group': event.instance.type === 'GROUP',

@@ -370,13 +370,13 @@ function DayColumn({
         <div
           key={idx}
           className={cn('rbc-timeslot-group', {
-            'border-accent-6': isToday,
+            'border-accent-5': isToday,
           })}
         >
           {group.map((_, idx) => (
             <div
               key={idx}
-              className={cn('rbc-time-slot border-t border-neutral-3', {
+              className={cn('rbc-time-slot border-t border-neutral-3/80', {
                 'border-accent-4': isToday,
               })}
             />
