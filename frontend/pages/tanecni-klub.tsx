@@ -81,67 +81,69 @@ export default function ClubPage() {
         </div>
       ))}
 
-      <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
-        Správci
-      </h2>
-      {tenant.tenant.tenantAdministratorsList.map((data) => (
-        <div className="flex gap-3 mb-1" key={data.id}>
-          <TenantAdministratorMenu align="start" data={data}>
-            <DropdownMenuTrigger.RowDots />
-          </TenantAdministratorMenu>
-
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            {!data.person ? (
-              '?'
-            ) : (
-              <Link
-                className="underline font-bold"
-                href={{
-                  pathname: '/clenove/[id]',
-                  query: { id: data.person?.id },
-                }}
-              >
-                {data.person?.name}
-              </Link>
-            )}
-          </div>
-        </div>
-      ))}
-
-      <TitleBar title="Lokality/sály" variant="section" className="mt-3">
-        {auth.isAdmin && (
-          <Dialog>
-            <DialogTrigger.Add size="sm" />
-            <DialogContent>
-              <EditTenantLocationForm />
-            </DialogContent>
-          </Dialog>
-        )}
-      </TitleBar>
-
-      {tenant.tenant.tenantLocationsList.map((item) => (
-        <div className="flex gap-3 mb-1" key={item.id}>
-          <TenantLocationMenu id={item.id} align="start">
-            <DropdownMenuTrigger.RowDots />
-          </TenantLocationMenu>
-          <div className="grow gap-2 flex text-sm font-bold py-1">{item.name}</div>
-        </div>
-      ))}
-
-      {auth.isAdmin && !!applications?.membershipApplicationsList?.length && (
+      {auth.isAdmin && (
         <>
           <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
-            Žádosti o členství
+            Správci
           </h2>
+          {tenant.tenant.tenantAdministratorsList.map((data) => (
+            <div className="flex gap-3 mb-1" key={data.id}>
+              <TenantAdministratorMenu align="start" data={data}>
+                <DropdownMenuTrigger.RowDots />
+              </TenantAdministratorMenu>
 
-          {applications.membershipApplicationsList.map((x) => (
-            <Dialog key={x.id}>
-              <DialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
+              <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+                {!data.person ? (
+                  '?'
+                ) : (
+                  <Link
+                    className="underline font-bold"
+                    href={{
+                      pathname: '/clenove/[id]',
+                      query: { id: data.person?.id },
+                    }}
+                  >
+                    {data.person?.name}
+                  </Link>
+                )}
+              </div>
+            </div>
+          ))}
+
+          <TitleBar title="Lokality/sály" variant="section" className="mt-3">
+            <Dialog>
+              <DialogTrigger.Add size="sm" />
               <DialogContent>
-                <CreateMembershipApplicationForm data={x} />
+                <EditTenantLocationForm />
               </DialogContent>
             </Dialog>
+          </TitleBar>
+
+          {tenant.tenant.tenantLocationsList.map((item) => (
+            <div className="flex gap-3 mb-1" key={item.id}>
+              <TenantLocationMenu id={item.id} align="start">
+                <DropdownMenuTrigger.RowDots />
+              </TenantLocationMenu>
+              <div className="grow gap-2 flex text-sm font-bold py-1">{item.name}</div>
+            </div>
           ))}
+
+          {!!applications?.membershipApplicationsList?.length && (
+            <>
+              <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
+                Žádosti o členství
+              </h2>
+
+              {applications.membershipApplicationsList.map((x) => (
+                <Dialog key={x.id}>
+                  <DialogTrigger.Edit text={`${x.firstName} ${x.lastName}`} />
+                  <DialogContent>
+                    <CreateMembershipApplicationForm data={x} />
+                  </DialogContent>
+                </Dialog>
+              ))}
+            </>
+          )}
         </>
       )}
     </Layout>
