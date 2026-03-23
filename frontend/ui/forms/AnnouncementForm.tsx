@@ -102,7 +102,7 @@ export function AnnouncementForm({
     const newAudiences: UpsertAnnouncementInput['audiences'] = [];
 
     for (const cohortId of values.cohortIds) {
-      const existing = oldAudiences.findIndex((x) => x.cohortId === cohortId);
+      const existing = oldAudiences.findIndex((x) => x?.cohortId === cohortId);
       if (existing !== -1) {
         newAudiences.push({ cohortId, id: oldAudiences[existing]!.id });
         delete oldAudiences[existing];
@@ -111,7 +111,7 @@ export function AnnouncementForm({
       }
     }
     for (const audienceRole of values.audienceRoles) {
-      const existing = oldAudiences.findIndex((x) => x.audienceRole === audienceRole);
+      const existing = oldAudiences.findIndex((x) => x?.audienceRole === audienceRole);
       if (existing !== -1) {
         newAudiences.push({ audienceRole, id: oldAudiences[existing]!.id });
         delete oldAudiences[existing];
