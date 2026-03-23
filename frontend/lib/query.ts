@@ -403,6 +403,12 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           id: args.input.personInvitation.personId!,
         });
       },
+      deletePersonInvitation(_result, args, cache, _info) {
+        cache.invalidate({
+          __typename: 'PersonInvitation',
+          id: args.input.id,
+        });
+      },
 
       createCreditTransactionForPerson(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.vPersonId! });

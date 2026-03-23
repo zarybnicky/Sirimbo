@@ -9,6 +9,12 @@ mutation CreateInvitation($input: CreatePersonInvitationInput!) {
   }
 }
 
+mutation DeleteInvitation($input: DeletePersonInvitationInput!) {
+  deletePersonInvitation(input: $input) {
+    __typename
+  }
+}
+
 query PeopleWithAnotherAccount {
   peopleWithoutAccessWithExistingAccountList {
     id
