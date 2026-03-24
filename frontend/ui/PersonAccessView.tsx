@@ -13,7 +13,6 @@ import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
 import { useAuth } from './use-auth';
 import Link from 'next/link';
-import * as React from 'react';
 import { useMutation } from 'urql';
 
 export function PersonAccessView({ item }: { item: PersonWithLinksFragment }) {

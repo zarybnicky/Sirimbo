@@ -1,4 +1,3 @@
-import React from 'react';
 import { Layout } from '@/ui/Layout';
 import { PersonList } from '@/ui/lists/PersonList';
 import { WithSidebar } from '@/ui/WithSidebar';
@@ -19,7 +18,7 @@ function PersonPage() {
   return (
     <Layout requireMember>
       <WithSidebar sidebar={<PersonList />}>
-        <div className="lg:hidden">
+        <div className="lg:hidden pt-4">
           <Link href="/clenove" className="flex gap-2">
             <CornerLeftUp className="size-4" />
             Zpět na seznam

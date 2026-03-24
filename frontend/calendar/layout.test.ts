@@ -277,11 +277,11 @@ describe('rank and type priority', () => {
     // Relative order should be preserved
     const order1 = ['a', 'b', 'c']
       .map((t) => ({ t, x: trainerOffset(t, 10) }))
-      .sort((a, b) => a.x - b.x)
+      .toSorted((a, b) => a.x - b.x)
       .map((o) => o.t);
     const order2 = ['a', 'b', 'c']
       .map((t) => ({ t, x: trainerOffset(t, 12) }))
-      .sort((a, b) => a.x - b.x)
+      .toSorted((a, b) => a.x - b.x)
       .map((o) => o.t);
 
     expect(order1).toEqual(order2);

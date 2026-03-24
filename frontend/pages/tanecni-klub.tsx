@@ -14,7 +14,6 @@ import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
-import React from 'react';
 import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 

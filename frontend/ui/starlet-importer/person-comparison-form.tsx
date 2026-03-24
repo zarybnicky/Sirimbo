@@ -4,7 +4,7 @@ import { Course, Student } from '@/starlet/graphql';
 import { CourseDocument } from '@/starlet/graphql/Query';
 import { capitalize } from '@/ui/format';
 import { slugify } from '@/ui/slugify';
-import React, { useEffect, useMemo, useState, type JSX } from 'react';
+import { useEffect, useMemo, useState, type JSX } from 'react';
 import {
   CreatePersonDocument,
   PersonListDocument,

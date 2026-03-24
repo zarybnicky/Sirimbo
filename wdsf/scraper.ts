@@ -23,23 +23,6 @@ interface ParticipantSummary {
   status?: string;
 }
 
-interface ParticipantDetails {
-  id: number;
-  coupleId: string;
-  rounds?: RoundSummary[];
-}
-
-interface RoundSummary {
-  name?: string;
-  dances?: DanceSummary[];
-}
-
-interface DanceSummary {
-  name?: string;
-  isGroupDance?: boolean;
-  scores?: Array<Record<string, unknown>>;
-}
-
 interface CoupleDetails {
   name?: string;
   country?: string | null;

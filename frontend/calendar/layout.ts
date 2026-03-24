@@ -104,8 +104,8 @@ export function layoutEvents(
       let bestLane = -1;
       let bestScore = Infinity;
 
-      for (let l = 0; l < lanes.length; l++) {
-        const last = lanes[l]!.at(-1)!;
+      for (const [l, lane] of lanes.entries()) {
+        const last = lane!.at(-1)!;
         if (last.until > it.since + epsMs) continue; // occupied
         const score = Math.abs(l - target);
         if (score < bestScore) {
@@ -171,9 +171,9 @@ export function layoutEvents(
     let changed = true;
     while (changed) {
       changed = false;
-      for (let i = 0; i < group.length; i++) {
+      for (const [i, element] of group.entries()) {
         if (!expandable[i]) continue;
-        const it = group[i]!;
+        const it = element!;
         let grew = false;
 
         // Try right first
@@ -197,13 +197,13 @@ export function layoutEvents(
       }
     }
 
-    for (let i = 0; i < group.length; i++) {
+    for (const [i, element] of group.entries()) {
       const spanned = right[i]! - left[i]! + 1;
       out.push({
-        event: group[i]!.event,
+        event: element!.event,
         style: {
-          top: group[i]!.top,
-          height: group[i]!.height,
+          top: element!.top,
+          height: element!.height,
           xOffset: left[i]! * baseWidth,
           width: baseWidth * spanned,
         },

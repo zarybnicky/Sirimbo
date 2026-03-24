@@ -1,4 +1,4 @@
-import React, { type JSX } from 'react';
+import type { JSX } from 'react';
 import EventCell from './EventCell';
 import type { DateSlotMetrics } from './DateSlotMetrics';
 import type { Segment } from './common';
