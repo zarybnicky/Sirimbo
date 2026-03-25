@@ -2,6 +2,7 @@
 --!include functions/create_latest_lesson_payments.sql
 --!include functions/tg_account_balances__update.sql
 --!include functions/tg_cohort_membership__on_status.sql
+--!include functions/detach_event_instance.sql
 
 CREATE OR REPLACE FUNCTION public.sync_cohort_memberships(person_id bigint, cohort_ids bigint[]) RETURNS void
     LANGUAGE sql

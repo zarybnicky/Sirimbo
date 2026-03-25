@@ -94,7 +94,6 @@ BEGIN
     AND ei.event_id  = v_old_event_id;
 
   -- Copy registrations: map target_cohort_id by cohort_id (old_tc -> new_tc)
-  -- This will auto-generate attendance rows via tg_event_registration__create_attendance()
   INSERT INTO public.event_registration (
     tenant_id, event_id, target_cohort_id, couple_id, person_id, note, created_at
   )
@@ -105,6 +104,19 @@ BEGIN
   WHERE er.tenant_id = p_tenant_id
     AND er.event_id  = v_old_event_id
   ON CONFLICT (event_id, person_id, couple_id) DO NOTHING;
+
+  -- Explicitly create attendance rows for the detached instance.
+  -- tg_event_registration__create_attendance fires on registration INSERT but
+  -- queries event_instance by event_id; since the instance was re-pointed via
+  -- UPDATE (not INSERT) the tg_event_instance__create_attendance trigger never
+  -- fired. Insert directly to guarantee coverage regardless of trigger ordering.
+  INSERT INTO public.event_attendance (tenant_id, registration_id, instance_id, person_id)
+  SELECT p_tenant_id, new_reg.id, p_instance_id, pid
+  FROM public.event_registration new_reg
+  CROSS JOIN LATERAL app_private.event_registration_person_ids(new_reg) AS pid
+  WHERE new_reg.tenant_id = p_tenant_id
+    AND new_reg.event_id  = v_new_event_id
+  ON CONFLICT (registration_id, instance_id, person_id) DO NOTHING;
 
   -- Copy lesson demand:
   -- - trainer maps by person_id (old event_trainer -> new event_trainer)
