@@ -11,7 +11,12 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
-import { formatLongCoupleName, formatOpenDateRange, moneyFormatter } from '@/ui/format';
+import {
+  formatLongCoupleName,
+  fullDateFormatter,
+  formatOpenDateRange,
+  moneyFormatter,
+} from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { CohortMembershipMenu } from '@/ui/menus/CohortMembershipMenu';
@@ -27,13 +32,19 @@ import Link from 'next/link';
 import React from 'react';
 import { useMutation } from 'urql';
 import { tenantIdAtom } from '@/ui/state/auth';
+import { DeleteInvitationDocument } from '@/graphql/Invitation';
+import { AddToPersonButton } from '@/ui/AddToPersonButton';
+import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
+import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
+  const isAdminOrCurrentPerson = auth.isAdmin || auth.personIds.includes(item.id);
   const tenantId = useAtomValue(tenantIdAtom);
   const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
   const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
   const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
+  const deleteInvitation = useMutation(DeleteInvitationDocument)[1];
 
   const addAsMember = React.useCallback(
     () => createTenantMember({ input: { tenantMembership: { personId: item.id } } }),
@@ -202,6 +213,83 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
         ))}
+
+      {isAdminOrCurrentPerson && (
+        <>
+          <div className="flex justify-between items-baseline flex-wrap gap-4">
+            <h3>Přístupové údaje</h3>
+            <AddToPersonButton person={item} />
+          </div>
+
+          {item.userProxiesList?.map((proxy) => (
+            <div className="flex gap-3 mb-3 items-start" key={proxy.id}>
+              <UserProxyMenu align="start" data={proxy}>
+                <DropdownMenuTrigger.RowDots />
+              </UserProxyMenu>
+
+              <div className="grow min-w-0 space-y-2 text-sm">
+                <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3">
+                  <b className="break-words">
+                    {proxy.user ? (
+                      <Link
+                        href={{ pathname: '/users/[id]', query: { id: proxy.user.id } }}
+                        className="underline"
+                      >
+                        {[proxy.user.uEmail, proxy.user.uLogin]
+                          .filter(Boolean)
+                          .join(', ')}
+                      </Link>
+                    ) : (
+                      '—'
+                    )}
+                  </b>
+                  <span className="text-neutral-10">{formatOpenDateRange(proxy)}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {auth.isAdmin && (
+            <>
+              <div className="flex justify-between items-baseline flex-wrap gap-4">
+                <h3>Pozvánky</h3>
+                <Dialog>
+                  <DialogTrigger.Add size="sm" />
+                  <DialogContent>
+                    <CreateInvitationForm person={item} />
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              {item.personInvitationsList?.map((invitation) => (
+                <DropdownMenu key={invitation.id}>
+                  <div className="flex gap-2">
+                    <DropdownMenuTrigger.RowDots />
+                    {invitation.email}, vytvořena{' '}
+                    {fullDateFormatter.format(new Date(invitation.createdAt))}
+                  </div>
+                  <DropdownMenuContent>
+                    <DropdownMenuButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(
+                          `${window.location.origin}/pozvanka?token=${invitation.accessToken}`,
+                        )
+                      }
+                    >
+                      Kopírovat odkaz
+                    </DropdownMenuButton>
+                    <DropdownMenuButton
+                      onClick={() => deleteInvitation({ input: { id: invitation.id } })}
+                    >
+                      Zrušit pozvánku
+                    </DropdownMenuButton>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ))}
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 }

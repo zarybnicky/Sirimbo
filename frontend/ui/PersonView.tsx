@@ -16,8 +16,6 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { useRouter } from 'next/router';
-import { UserCheck2, UserX2 } from 'lucide-react';
-import { PersonAccessView } from '@/ui/PersonAccessView';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
 import { PersonAttendanceView } from '@/ui/PersonAttendanceView';
 import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
@@ -67,13 +65,6 @@ export function PersonView({ id }: { id: string }) {
           id: 'payment',
           title: <>Platby</>,
           contents: () => <PersonPaymentsView key="payments" id={id} />,
-        },
-        {
-          id: 'access',
-          title: (
-            <>Přístupy {item.userProxiesList.length > 0 ? <UserCheck2 /> : <UserX2 />}</>
-          ),
-          contents: () => <PersonAccessView key="access" item={item} />,
         },
       );
     }

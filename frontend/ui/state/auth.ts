@@ -169,6 +169,7 @@ export const authAtom = atom<AuthState, [string | null, UserAuthFragment | null]
     }
 
     set(tokenAtom, token);
+    // only update baseUserAtom if the token payload changes
     if (!deepEqual(nextValue, get(baseUserAtom))) {
       set(baseUserAtom, nextValue);
       storage.setItem('user', nextValue ? JSON.stringify(nextValue) : null);
