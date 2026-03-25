@@ -1280,7 +1280,7 @@ CREATE TABLE crawler.rate_limit_rule (
   max_requests int NOT NULL,
   per_interval interval NOT NULL,
   spacing interval GENERATED ALWAYS AS ((per_interval / CAST(max_requests AS double precision)) + '00:00:00.02'::interval) STORED NOT NULL,
-  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+01' AS timestamp with time zone) NOT NULL,
+  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+00' AS timestamp with time zone) NOT NULL,
   CHECK (max_requests > 0),
   CHECK (per_interval > '00:00:00'::interval)
 );

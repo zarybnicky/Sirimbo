@@ -2,9 +2,9 @@
 -- PostgreSQL database dump
 --
 
-\restrict bkcmNA5J5SP4Z2yJViTYdE3njGswKAaGcybC6zADl0pFqReNRNcTSp6IfyIo6o7
+\restrict q7emD95EdMHcxY1p2sQOP3Z5c8eJsfJ2mOm8KR6Vbc471CsgyiCUjwB24XN9bro
 
--- Dumped from database version 18.1 (Postgres.app)
+-- Dumped from database version 18.1
 -- Dumped by pg_dump version 18.1
 
 SET statement_timeout = 0;
@@ -922,9 +922,9 @@ begin
       AND NOT EXISTS (
         SELECT 1
         FROM payment p
-        WHERE p.event_instance_id = ei.id
+        WHERE p.event_instance_id = ei.id AND p.status = 'paid'
       )
-      AND p IS NOT NULL
+      AND p.status in ('unpaid', 'tentative')
   ),
   unpaid AS (
     UPDATE payment p
@@ -1535,7 +1535,10 @@ CREATE FUNCTION app_private.tg_account_balances__update() RETURNS trigger
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 BEGIN
-	REFRESH MATERIALIZED VIEW account_balances;
+  PERFORM graphile_worker.add_job(
+    'refresh_account_balances',
+    job_key := 'refresh_account_balances'
+  );
   return null;
 END
 $$;
@@ -1682,10 +1685,16 @@ begin
       FROM event_target_cohort etc
       JOIN event_registration er ON er.event_id = etc.event_id
       WHERE etc.cohort_id = NEW.cohort_id
-        AND er.person_id = NEW.person_id
+        AND (er.person_id = NEW.person_id OR (
+          er.couple_id IS NOT NULL AND EXISTS (
+            SELECT 1 FROM couple c WHERE c.id = er.couple_id AND NEW.person_id IN (c.man_id, c.woman_id))
+          )
+        )
     ),
     future_att AS (
-      SELECT ea.id, ea.registration_id
+      -- Capture future attendance rows with their pre-update status
+      SELECT ea.id, ea.registration_id,
+             (ea.status IN ('unknown', 'not-excused', 'cancelled')) AS will_be_cancelled
       FROM event_attendance ea
       JOIN event_instance ei ON ei.id = ea.instance_id
       JOIN affected a ON a.registration_id = ea.registration_id
@@ -1700,15 +1709,22 @@ begin
         RETURNING ea.registration_id
     ),
     deletable AS (
-      -- After the UPDATE, delete registrations where:
-      --   (a) there exists at least one future attendance, and
-      --   (b) all future attendances are cancelled.
+      -- Delete registrations where:
+      --   (a) all future attendances will be cancelled (pre-update check avoids CTE
+      --       visibility issue with upd), AND
+      --   (b) there are no non-cancelled past/present attendance rows
       SELECT fa.registration_id
       FROM future_att fa
-      JOIN event_attendance ea ON ea.id = fa.id
       GROUP BY fa.registration_id
       HAVING count(*) > 0
-         AND bool_and(ea.status = 'cancelled')
+         AND bool_and(fa.will_be_cancelled)
+         AND NOT EXISTS (
+           SELECT 1 FROM event_attendance ea2
+           JOIN event_instance ei2 ON ei2.id = ea2.instance_id
+           WHERE ea2.registration_id = fa.registration_id
+             AND ei2.since <= NEW.until
+             AND ea2.status NOT IN ('unknown', 'cancelled')
+         )
     )
     DELETE FROM event_registration er
       USING deletable d
@@ -3321,7 +3337,6 @@ BEGIN
     AND ei.event_id  = v_old_event_id;
 
   -- Copy registrations: map target_cohort_id by cohort_id (old_tc -> new_tc)
-  -- This will auto-generate attendance rows via tg_event_registration__create_attendance()
   INSERT INTO public.event_registration (
     tenant_id, event_id, target_cohort_id, couple_id, person_id, note, created_at
   )
@@ -3332,6 +3347,19 @@ BEGIN
   WHERE er.tenant_id = p_tenant_id
     AND er.event_id  = v_old_event_id
   ON CONFLICT (event_id, person_id, couple_id) DO NOTHING;
+
+  -- Explicitly create attendance rows for the detached instance.
+  -- tg_event_registration__create_attendance fires on registration INSERT but
+  -- queries event_instance by event_id; since the instance was re-pointed via
+  -- UPDATE (not INSERT) the tg_event_instance__create_attendance trigger never
+  -- fired. Insert directly to guarantee coverage regardless of trigger ordering.
+  INSERT INTO public.event_attendance (tenant_id, registration_id, instance_id, person_id)
+  SELECT p_tenant_id, new_reg.id, p_instance_id, pid
+  FROM public.event_registration new_reg
+  CROSS JOIN LATERAL app_private.event_registration_person_ids(new_reg) AS pid
+  WHERE new_reg.tenant_id = p_tenant_id
+    AND new_reg.event_id  = v_new_event_id
+  ON CONFLICT (registration_id, instance_id, person_id) DO NOTHING;
 
   -- Copy lesson demand:
   -- - trainer maps by person_id (old event_trainer -> new event_trainer)
@@ -5102,12 +5130,12 @@ CREATE FUNCTION public.sync_cohort_memberships(person_id bigint, cohort_ids bigi
     LANGUAGE sql
     AS $_$
   update cohort_membership set until = now(), status = 'expired'
-  where active and person_id = $1 and cohort_id <> all (cohort_ids);
+  where status = 'active' and person_id = $1 and cohort_id <> all (cohort_ids);
 
   insert into cohort_membership (status, since, person_id, cohort_id)
   select 'active', NOW(), $1, new_cohort_id
   from unnest(cohort_ids) as x(new_cohort_id)
-  where not exists (select 1 from cohort_membership where active and person_id = $1 and cohort_id = new_cohort_id);
+  where not exists (select 1 from cohort_membership where status = 'active' and person_id = $1 and cohort_id = new_cohort_id);
 $_$;
 
 
@@ -6503,7 +6531,7 @@ CREATE TABLE crawler.rate_limit_rule (
     max_requests integer NOT NULL,
     per_interval interval NOT NULL,
     spacing interval GENERATED ALWAYS AS (((per_interval / (max_requests)::double precision) + '00:00:00.02'::interval)) STORED NOT NULL,
-    next_available_at timestamp with time zone DEFAULT '1970-01-01 00:00:00+01'::timestamp with time zone NOT NULL,
+    next_available_at timestamp with time zone DEFAULT '1970-01-01 00:00:00+00'::timestamp with time zone NOT NULL,
     CONSTRAINT rate_limit_rule_max_requests_check CHECK ((max_requests > 0)),
     CONSTRAINT rate_limit_rule_per_interval_check CHECK ((per_interval > '00:00:00'::interval))
 );
@@ -15356,5 +15384,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict bkcmNA5J5SP4Z2yJViTYdE3njGswKAaGcybC6zADl0pFqReNRNcTSp6IfyIo6o7
+\unrestrict q7emD95EdMHcxY1p2sQOP3Z5c8eJsfJ2mOm8KR6Vbc471CsgyiCUjwB24XN9bro
 

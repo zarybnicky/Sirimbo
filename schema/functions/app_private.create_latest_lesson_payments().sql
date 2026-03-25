@@ -19,9 +19,9 @@ begin
       AND NOT EXISTS (
         SELECT 1
         FROM payment p
-        WHERE p.event_instance_id = ei.id
+        WHERE p.event_instance_id = ei.id AND p.status = 'paid'
       )
-      AND p IS NOT NULL
+      AND p.status in ('unpaid', 'tentative')
   ),
   unpaid AS (
     UPDATE payment p

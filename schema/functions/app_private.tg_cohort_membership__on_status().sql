@@ -14,10 +14,16 @@ begin
       FROM event_target_cohort etc
       JOIN event_registration er ON er.event_id = etc.event_id
       WHERE etc.cohort_id = NEW.cohort_id
-        AND er.person_id = NEW.person_id
+        AND (er.person_id = NEW.person_id OR (
+          er.couple_id IS NOT NULL AND EXISTS (
+            SELECT 1 FROM couple c WHERE c.id = er.couple_id AND NEW.person_id IN (c.man_id, c.woman_id))
+          )
+        )
     ),
     future_att AS (
-      SELECT ea.id, ea.registration_id
+      -- Capture future attendance rows with their pre-update status
+      SELECT ea.id, ea.registration_id,
+             (ea.status IN ('unknown', 'not-excused', 'cancelled')) AS will_be_cancelled
       FROM event_attendance ea
       JOIN event_instance ei ON ei.id = ea.instance_id
       JOIN affected a ON a.registration_id = ea.registration_id
@@ -32,15 +38,22 @@ begin
         RETURNING ea.registration_id
     ),
     deletable AS (
-      -- After the UPDATE, delete registrations where:
-      --   (a) there exists at least one future attendance, and
-      --   (b) all future attendances are cancelled.
+      -- Delete registrations where:
+      --   (a) all future attendances will be cancelled (pre-update check avoids CTE
+      --       visibility issue with upd), AND
+      --   (b) there are no non-cancelled past/present attendance rows
       SELECT fa.registration_id
       FROM future_att fa
-      JOIN event_attendance ea ON ea.id = fa.id
       GROUP BY fa.registration_id
       HAVING count(*) > 0
-         AND bool_and(ea.status = 'cancelled')
+         AND bool_and(fa.will_be_cancelled)
+         AND NOT EXISTS (
+           SELECT 1 FROM event_attendance ea2
+           JOIN event_instance ei2 ON ei2.id = ea2.instance_id
+           WHERE ea2.registration_id = fa.registration_id
+             AND ei2.since <= NEW.until
+             AND ea2.status NOT IN ('unknown', 'cancelled')
+         )
     )
     DELETE FROM event_registration er
       USING deletable d
