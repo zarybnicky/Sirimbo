@@ -15,7 +15,7 @@ const Form = z.object({
   woman: z.string(),
 });
 
-export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment }) {
+export function CreateCoupleForm({ person: initialPerson }: { person?: PersonBasicFragment }) {
   const { onSuccess } = useFormResult();
   const doCreate = useMutation(CreateCoupleDocument)[1];
   const [{ data }] = useQuery({ query: PersonListDocument });
@@ -52,12 +52,12 @@ export function CreateCoupleForm({ initial }: { initial?: PersonBasicFragment })
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
-    if (initial && initial.gender === 'MAN') {
-      reset({ man: initial.id });
-    } else if (initial && initial.gender === 'WOMAN') {
-      reset({ woman: initial.id });
+    if (initialPerson && initialPerson.gender === 'MAN') {
+      reset({ man: initialPerson.id });
+    } else if (initialPerson && initialPerson.gender === 'WOMAN') {
+      reset({ woman: initialPerson.id });
     }
-  }, [initial, reset]);
+  }, [initialPerson, reset]);
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const res = await doCreate({

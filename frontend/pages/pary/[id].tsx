@@ -8,7 +8,6 @@ import { TitleBar } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { formatLongCoupleName, formatOpenDateRange } from '@/ui/format';
 import Link from 'next/link';
-import React from 'react';
 import { useQuery } from 'urql';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';

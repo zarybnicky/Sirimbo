@@ -7,7 +7,7 @@ import { tenantCatalog } from '@/tenant/catalog';
 import type { TenantConfig } from '@/tenant/types';
 import { getCookie, setCookie, deleteCookie } from 'cookies-next/client';
 
-interface AuthState {
+export interface AuthState {
   user: null | {
     id: string;
     uLogin: string | null;

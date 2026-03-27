@@ -69,7 +69,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" />
             <DialogContent>
-              <CreateCoupleForm initial={item} />
+              <CreateCoupleForm person={item} />
             </DialogContent>
           </Dialog>
         )}
