@@ -36,6 +36,7 @@ import { DeleteInvitationDocument } from '@/graphql/Invitation';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
+import { keyIsNonNull } from './truthyFilter';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
@@ -60,9 +61,9 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
   );
 
   return (
-    <div key="info" className="prose prose-accent mb-2">
+    <div key="info" className="mb-2">
       <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3>Páry</h3>
+        <h3 className="text-lg font-semibold mt-4 mb-2">Páry</h3>
 
         {auth.isAdmin && (
           <Dialog modal={false}>
@@ -98,7 +99,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3>Tréninkové skupiny</h3>
+        <h3 className="text-lg font-semibold mt-4 mb-2">Tréninkové skupiny</h3>
 
         {auth.isAdmin && (
           <Dialog modal={false}>
@@ -110,6 +111,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         )}
       </div>
       {item.cohortMembershipsList
+        .filter(keyIsNonNull('cohort'))
         .toSorted((x, y) => (x.person?.name || '').localeCompare(y.person?.name || ''))
         .map((item) => (
           <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
@@ -118,29 +120,22 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
             </CohortMembershipMenu>
 
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <b>
-                Člen skupiny{' '}
-                {!item.cohort ? (
-                  '?'
-                ) : (
-                  <Link
-                    className="underline font-bold"
-                    href={{
-                      pathname: '/treninkove-skupiny/[id]',
-                      query: { id: item.cohort?.id },
-                    }}
-                  >
-                    {item.cohort?.name}
-                  </Link>
-                )}
-              </b>
+              <Link
+                className="underline font-bold"
+                href={{
+                  pathname: '/treninkove-skupiny/[id]',
+                  query: { id: item.cohort.id },
+                }}
+              >
+                {item.cohort.name}
+              </Link>
               <span>{formatOpenDateRange(item)}</span>
             </div>
           </div>
         ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3>Členství</h3>
+        <h3 className="text-lg font-semibold mt-4 mb-2">Členství</h3>
 
         {auth.isAdmin && (
           <DropdownMenu>
@@ -217,11 +212,11 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       {isAdminOrCurrentPerson && (
         <>
           <div className="flex justify-between items-baseline flex-wrap gap-4">
-            <h3>Přístupové údaje</h3>
+            <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové údaje</h3>
             <AddToPersonButton person={item} />
           </div>
 
-          {item.userProxiesList?.map((proxy) => (
+          {item.userProxiesList?.filter(keyIsNonNull('user')).map((proxy) => (
             <div className="flex gap-3 mb-3 items-start" key={proxy.id}>
               <UserProxyMenu align="start" data={proxy}>
                 <DropdownMenuTrigger.RowDots />
@@ -230,18 +225,14 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               <div className="grow min-w-0 space-y-2 text-sm">
                 <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3">
                   <b className="break-words">
-                    {proxy.user ? (
-                      <Link
-                        href={{ pathname: '/users/[id]', query: { id: proxy.user.id } }}
-                        className="underline"
-                      >
-                        {[proxy.user.uEmail, proxy.user.uLogin]
-                          .filter(Boolean)
-                          .join(', ')}
-                      </Link>
-                    ) : (
-                      '—'
-                    )}
+                    <Link
+                      href={{ pathname: '/users/[id]', query: { id: proxy.user.id } }}
+                      className="underline"
+                    >
+                      {[proxy.user.uEmail, proxy.user.uLogin]
+                        .filter(Boolean)
+                        .join(', ')}
+                    </Link>
                   </b>
                   <span className="text-neutral-10">{formatOpenDateRange(proxy)}</span>
                 </div>
@@ -252,7 +243,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           {auth.isAdmin && (
             <>
               <div className="flex justify-between items-baseline flex-wrap gap-4">
-                <h3>Pozvánky</h3>
+                <h3 className="text-lg font-semibold mt-4 mb-2">Pozvánky</h3>
                 <Dialog>
                   <DialogTrigger.Add size="sm" />
                   <DialogContent>
