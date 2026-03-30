@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import { useQuery } from 'urql';
-import { tokenAtom, authAtom, authLoadingAtom } from '@/ui/state/auth';
+import { tokenAtom, authAtom, authLoadingAtom, authHelpersAtom } from '@/ui/state/auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { buildIdAtom } from './state/build-id';
 
@@ -42,5 +42,5 @@ export const UserRefresher = React.memo(function ProvideAuth() {
   return null;
 });
 
-export const useAuth = () => useAtomValue(authAtom);
+export const useAuth = () => useAtomValue(authHelpersAtom);
 export const useAuthLoading = () => useAtomValue(authLoadingAtom);

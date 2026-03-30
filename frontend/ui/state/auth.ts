@@ -7,7 +7,7 @@ import { tenantCatalog } from '@/tenant/catalog';
 import type { TenantConfig } from '@/tenant/types';
 import { getCookie, setCookie, deleteCookie } from 'cookies-next/client';
 
-export interface AuthState {
+interface BaseAuthState {
   user: null | {
     id: string;
     uLogin: string | null;
@@ -24,7 +24,12 @@ export interface AuthState {
   isLoggedIn: boolean;
 }
 
-const defaultAuthState: AuthState = {
+export interface AuthState extends BaseAuthState {
+  isMyPerson: (id: string) => boolean;
+  isMyCouple: (id: string) => boolean;
+}
+
+const defaultAuthState: BaseAuthState = {
   user: null,
   persons: [],
   couples: [],
@@ -98,7 +103,7 @@ export const authLoadingAtom = atom(true);
 
 const baseTokenAtom: PrimitiveAtom<string | null> = atom(storage.getItem('token'));
 
-const baseUserAtom: PrimitiveAtom<AuthState> = atom(
+const baseUserAtom: PrimitiveAtom<BaseAuthState> = atom(
   (() => {
     const item = storage.getItem('user');
     return item ? { ...defaultAuthState, ...JSON.parse(item) } : defaultAuthState;
@@ -136,7 +141,7 @@ export const tokenAtom = atom<string | null, [string | null], void>(
   },
 );
 
-export const authAtom = atom<AuthState, [string | null, UserAuthFragment | null], void>(
+export const authAtom = atom<BaseAuthState, [string | null, UserAuthFragment | null], void>(
   (get) => get(baseUserAtom) || defaultAuthState,
   (get, set, token, user) => {
     let nextValue = defaultAuthState;
@@ -176,3 +181,12 @@ export const authAtom = atom<AuthState, [string | null, UserAuthFragment | null]
     }
   },
 );
+
+export const authHelpersAtom = atom((get) => {
+  const auth = get(authAtom);
+  return {
+    ...auth,
+    isMyPerson: (id: string) => auth.personIds.includes(id),
+    isMyCouple: (id: string) => auth.couples.some(x => x.id === id),
+  };
+});

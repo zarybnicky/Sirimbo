@@ -50,7 +50,7 @@ export const typographyCls = tv({
     },
     spacing: {
       default: '',
-      topLevel: 'mt-12',
+      topLevel: 'mt-8',
     },
   },
   defaultVariants: {
