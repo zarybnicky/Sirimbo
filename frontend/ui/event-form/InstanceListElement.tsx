@@ -1,4 +1,4 @@
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { EventForm } from '@/ui/event-form/types';
 import { buttonCls } from '@/ui/style';
 import { add } from 'date-arithmetic';

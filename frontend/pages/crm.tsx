@@ -5,7 +5,7 @@ import { useQuery } from 'urql';
 import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
 

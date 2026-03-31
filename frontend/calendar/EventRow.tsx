@@ -2,7 +2,7 @@ import type { JSX } from 'react';
 import EventCell from './EventCell';
 import type { DateSlotMetrics } from './DateSlotMetrics';
 import type { Segment } from './common';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import type { Resource } from './types';
 
 type EventRowProps = {

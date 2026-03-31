@@ -1,4 +1,4 @@
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { add, eq, startOf } from 'date-arithmetic';
 import scrollbarSize from 'dom-helpers/scrollbarSize';

@@ -12,7 +12,7 @@ import Selection, {
 import { useAuth } from '@/ui/use-auth';
 import { dragListenersAtom } from './state';
 import { useAtomValue } from 'jotai';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import type { Resource } from './types';
 
 type BackgroundCellsProps = {

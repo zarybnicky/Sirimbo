@@ -1,6 +1,6 @@
 import type { EventFragment, EventInstanceWithTrainerFragment } from '@/graphql/Event';
 import { EventSummary } from '@/ui/EventSummary';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import {
   dateTimeFormatter,
   formatEventType,

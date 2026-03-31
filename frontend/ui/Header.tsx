@@ -1,7 +1,7 @@
-import { type MenuStructItem, getHrefs, topMenu } from '@/lib/use-menu';
+import { getHrefs, type MenuStructItem, topMenu } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/catalog';
 import { AuthButton } from '@/ui/AuthButton';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
 } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { User as Account, ChevronDown, Menu as MenuIcon } from 'lucide-react';
+import { ChevronDown, Menu as MenuIcon, User as Account } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';

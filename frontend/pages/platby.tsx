@@ -17,7 +17,7 @@ import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
 import { Spinner } from '@/ui/Spinner';
 import Link from 'next/link';
 import { useAuth } from '@/ui/use-auth';
-import { isTruthy } from '@/ui/truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionGroup } from '@/ui/ActionGroup';

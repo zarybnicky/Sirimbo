@@ -2,7 +2,7 @@ import { CallToAction } from '@/ui/CallToAction';
 import { ArticlesDocument } from '@/graphql/Articles';
 import { Hero } from '@/ui/Hero';
 import { ArticleCard } from '@/ui/ArticleCard';
-import { slugify } from '@/ui/slugify';
+import { slugify } from '@/lib/slugify';
 import { TrainingPrograms } from '@/ui/TrainingPrograms';
 import { useQuery } from 'urql';
 import { Layout } from '@/ui/Layout';

@@ -1,10 +1,10 @@
 import {
   EventInstanceRangeDocument,
-  type EventInstanceRangeQueryVariables,
   type EventInstanceRangeQuery,
+  type EventInstanceRangeQueryVariables,
   MoveEventInstanceDocument,
 } from '@/graphql/Event';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import {
   DropdownMenu,

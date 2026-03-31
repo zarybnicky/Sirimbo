@@ -36,7 +36,7 @@ import { DeleteInvitationDocument } from '@/graphql/Invitation';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
-import { keyIsNonNull } from './truthyFilter';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActionGroup } from '@/ui/ActionGroup';

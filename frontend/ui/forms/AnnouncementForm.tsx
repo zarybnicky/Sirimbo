@@ -1,7 +1,7 @@
 import type { AnnouncementAudienceRole, UpsertAnnouncementInput } from '@/graphql';
 import {
-  type AnnouncementFragment,
   AnnouncementAudienceFragment,
+  type AnnouncementFragment,
   UpsertAnnouncementDocument,
 } from '@/graphql/Announcement';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
@@ -13,10 +13,10 @@ import { SubmitButton } from '@/ui/submit';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useController, useForm, useWatch, type Control } from 'react-hook-form';
+import { type Control, useController, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { isTruthy } from '../truthyFilter';
+import { isTruthy } from '../../lib/truthyFilter';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CohortListDocument } from '@/graphql/Cohorts';

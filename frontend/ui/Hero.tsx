@@ -1,6 +1,6 @@
 import type { ArticleFragment } from '@/graphql/Articles';
 import Glider from '@/ui/react-glider';
-import { slugify } from '@/ui/slugify';
+import { slugify } from '@/lib/slugify';
 import type GliderJs from 'glider-js';
 import Image from 'next/image';
 import Link, { LinkProps } from 'next/link';

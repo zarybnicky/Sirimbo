@@ -1,7 +1,7 @@
 import { CohortGroupDocument } from '@/graphql/CohortGroup';
 import { PageHeader } from '@/ui/TitleBar';
 import { RichTextView } from '@/ui/RichTextView';
-import { slugify } from '@/ui/slugify';
+import { slugify } from '@/lib/slugify';
 import { Layout } from '@/ui/Layout';
 import React from 'react';
 import Link from 'next/link';

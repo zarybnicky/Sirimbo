@@ -30,7 +30,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { isTruthy } from './truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 

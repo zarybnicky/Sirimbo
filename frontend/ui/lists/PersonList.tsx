@@ -9,7 +9,7 @@ import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
 import { useAuth } from '@/ui/use-auth';
 import { buttonCls } from '@/ui/style';
 import { useSessionStorage } from '@/lib/use-local-storage';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
 import { StringParam, useQueryParam } from 'use-query-params';

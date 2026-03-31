@@ -1,5 +1,5 @@
 import { type EventFragment, RegisterToEventDocument } from '@/graphql/Event';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { NumberFieldElement } from '@/ui/fields/number';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';

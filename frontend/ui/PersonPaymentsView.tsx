@@ -13,7 +13,7 @@ import { CreateCreditTransactionForm } from '@/ui/forms/CreateCreditTransactionF
 import { exportPostings } from '@/ui/reports/export-postings';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from './use-auth';
-import { keyIsNonNull } from './truthyFilter';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 import { Column, DataGrid, SortColumn } from 'react-data-grid';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { ResolvedActions, useActions } from '@/lib/actions';

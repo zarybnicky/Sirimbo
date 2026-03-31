@@ -1,4 +1,4 @@
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { CohortForm } from '@/ui/forms/CohortForm';

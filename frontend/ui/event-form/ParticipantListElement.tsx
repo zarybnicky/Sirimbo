@@ -7,7 +7,7 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { formatLongCoupleName } from '@/ui/format';
-import { cn } from '../cn';
+import { cn } from '@/lib/cn';
 import { z } from 'zod';
 import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';

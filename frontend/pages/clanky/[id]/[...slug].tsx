@@ -2,7 +2,7 @@ import { RichTextView } from '@/ui/RichTextView';
 import { ArticleDocument } from '@/graphql/Articles';
 import { PageHeader } from '@/ui/TitleBar';
 import { fullDateFormatter } from '@/ui/format';
-import { slugify } from '@/ui/slugify';
+import { slugify } from '@/lib/slugify';
 import { NextSeo } from 'next-seo';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';

@@ -12,7 +12,7 @@ import { z } from 'zod';
 import { UpsertEventForm } from '../event-form/UpsertEventForm';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { EventForm } from '@/ui/event-form/types';
 
 const QueryParams = z.object({

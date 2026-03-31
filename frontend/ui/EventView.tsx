@@ -32,7 +32,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
-import { isTruthy } from './truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionGroup } from '@/ui/ActionGroup';

@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { useAuth } from '../use-auth';
+import { useAuth } from '@/ui/use-auth';
 
 export function UserProxyMenu({
   data,

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { X } from 'lucide-react';
 
 export const Popover = PopoverPrimitive.Root;

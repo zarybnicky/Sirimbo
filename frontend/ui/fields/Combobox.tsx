@@ -1,15 +1,15 @@
-import { ChevronDown, ChevronsDown, Check, Search, XCircle } from 'lucide-react';
+import { Check, ChevronDown, ChevronsDown, Search, XCircle } from 'lucide-react';
 import * as Popover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
 import {
-  useController,
+  type Control,
   type FieldValues,
   type Path,
-  type Control,
+  useController,
 } from 'react-hook-form';
 import React from 'react';
 import { FieldHelper, FieldLabel } from '@/ui/form';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { buttonCls } from '@/ui/style';
 import { rankItem } from '@tanstack/match-sorter-utils';
 

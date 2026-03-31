@@ -1,6 +1,6 @@
 import { AnnouncementAudienceRole } from '@/graphql';
-import { cn } from '@/ui/cn';
-import { isTruthy } from './truthyFilter';
+import { cn } from '@/lib/cn';
+import { isTruthy } from '@/lib/truthyFilter';
 import { AnnouncementAudienceFragment } from '@/graphql/Announcement';
 
 const ROLE_LABEL: Record<AnnouncementAudienceRole, string> = {

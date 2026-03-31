@@ -2,12 +2,11 @@
 
 import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
-import { cn } from '@/ui/cn';
+import { Edit, Plus, X } from 'lucide-react';
+import { cn } from '@/lib/cn';
 import { useControllableState } from '@radix-ui/react-use-controllable-state';
 import { FormResultContext } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
-import { Edit, Plus } from 'lucide-react';
 
 export function Dialog({
   open: maybeOpen,

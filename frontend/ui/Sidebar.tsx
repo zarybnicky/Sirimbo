@@ -1,14 +1,14 @@
 import { buildId } from '@/lib/build-id';
 import {
+  getHrefs,
   type MenuLink,
   type MenuStructItem,
-  getHrefs,
-  useMemberMenu,
   topMenu,
+  useMemberMenu,
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/catalog';
 import { hostToTenantId, serverTenantCatalog } from '@/tenant/catalog-server';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { authAtom, storeRef, tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';

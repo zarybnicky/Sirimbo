@@ -3,9 +3,9 @@ import {
   type EventInstanceRangeQuery,
   type EventInstanceRangeQueryVariables,
 } from '@/graphql/Event';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { formatDefaultEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
-import { isTruthy } from '@/ui/truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 import { add } from 'date-arithmetic';
 import Head from 'next/head';
 import React from 'react';

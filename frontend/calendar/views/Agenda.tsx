@@ -4,14 +4,14 @@ import { formatEventType, formatWeekDay } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
-import type { CalendarEvent, ViewProps } from '../types';
-import { cn } from '@/ui/cn';
+import type { CalendarEvent, ViewProps } from '@/calendar/types';
+import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { useAuth } from '@/ui/use-auth';
 import { cardCls } from '@/ui/style';
 import { EventFormType } from '@/ui/event-form/types';
-import { isTruthy } from '@/ui/truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 
 type MapItem = {

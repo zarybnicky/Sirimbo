@@ -1,6 +1,6 @@
 import { AnnouncementItem } from '@/ui/AnnouncementItem';
 import { Pagination } from '@/ui/Pagination';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import {
   MyAnnouncementsDocument,
   StickyAnnouncementsDocument,

@@ -1,10 +1,10 @@
 import {
   type Control,
-  useController,
   type FieldValues,
   type Path,
+  useController,
 } from 'react-hook-form';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 
 type RadioProps = {
   label: React.ReactNode;

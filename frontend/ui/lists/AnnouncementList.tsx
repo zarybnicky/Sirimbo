@@ -7,7 +7,7 @@ import {
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { buttonCls } from '@/ui/style';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { SubmitButton } from '@/ui/submit';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';

@@ -4,7 +4,7 @@ import {
   EventInstanceWithTrainerFragment,
 } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { DropdownMenuTrigger } from '@/ui/dropdown';
 import {
   formatDefaultEventName,
@@ -14,11 +14,11 @@ import {
   shortTimeFormatter,
 } from '@/ui/format';
 import { EventInstanceMenu } from '@/ui/menus/EventInstanceMenu';
-import { Clock, MapPin, User, Users, Coins } from 'lucide-react';
+import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
-import { isTruthy } from './truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 
 export function EventSummary({
   event,

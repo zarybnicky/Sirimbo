@@ -4,10 +4,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { type DragSubject, dragSubjectAtom } from './state';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
-import { isTruthy } from '@/ui/truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 
 type EventCellProps = {

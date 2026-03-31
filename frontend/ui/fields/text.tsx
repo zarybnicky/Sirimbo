@@ -1,7 +1,7 @@
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { FieldHelper, type FieldHelperProps, FieldLabel } from '@/ui/form';
 import { AlertCircle as ReportProblemIcon } from 'lucide-react';
-import React, { InputHTMLAttributes } from 'react';
+import React from 'react';
 import {
   type Control,
   type FieldValues,

@@ -3,8 +3,8 @@ import { fetchGql } from '@/lib/query';
 import { Course, Student } from '@/starlet/graphql';
 import { CourseDocument } from '@/starlet/graphql/Query';
 import { capitalize } from '@/ui/format';
-import { slugify } from '@/ui/slugify';
-import { useEffect, useMemo, useState, type JSX } from 'react';
+import { slugify } from '@/lib/slugify';
+import { type JSX, useEffect, useMemo, useState } from 'react';
 import {
   CreatePersonDocument,
   PersonListDocument,
@@ -12,10 +12,10 @@ import {
   UpdatePersonDocument,
 } from '@/graphql/Person';
 import { useMutation, useQuery } from 'urql';
-import { SubmitButton } from '../submit';
+import { SubmitButton } from '@/ui/submit';
 import { useAtomValue } from 'jotai';
 import { starletSettingsAtom, starletTokenAtom } from './state';
-import { isTruthy } from '../truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';

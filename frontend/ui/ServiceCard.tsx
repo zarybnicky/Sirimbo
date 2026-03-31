@@ -1,4 +1,4 @@
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { buttonCls } from '@/ui/style';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';

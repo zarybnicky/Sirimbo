@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useAtomValue } from 'jotai';
 import { AlertTriangle } from 'lucide-react';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { calendarConflictsFor } from './state';
 import { shortTimeFormatter } from '@/ui/format';
 

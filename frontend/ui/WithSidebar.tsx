@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 
 export const WithSidebar = React.memo(function WithSidebar({
   sidebar,

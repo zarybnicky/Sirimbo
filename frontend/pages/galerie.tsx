@@ -4,7 +4,7 @@ import FacebookImage from '@/public/images/Facebook-202209.jpg';
 import YoutubeImage from '@/public/images/YouTube-Veverka.jpg';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 
 export default function GalleryPage() {
   return (

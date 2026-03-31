@@ -1,7 +1,7 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { Pagination } from '@/ui/Pagination';
 import { ArticleCard } from '@/ui/ArticleCard';
-import { slugify } from '@/ui/slugify';
+import { slugify } from '@/lib/slugify';
 import * as React from 'react';
 import { useQuery } from 'urql';
 

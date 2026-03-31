@@ -13,7 +13,7 @@ import type { CalendarEvent, Resource } from './types';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 
 type DateContentRowProps = {
   date: Date;

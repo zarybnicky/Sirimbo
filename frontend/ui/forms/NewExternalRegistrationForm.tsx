@@ -6,8 +6,8 @@ import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { z } from 'zod';
-import { ComboboxElement } from '../fields/Combobox';
-import { TextFieldElement } from '../fields/text';
+import { ComboboxElement } from '@/ui/fields/Combobox';
+import { TextFieldElement } from '@/ui/fields/text';
 import { countries } from '@/lib/countries';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -84,21 +84,21 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
           placeholder="vyberte národnost"
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
-        {/*watch('nationality') === '203' ? (
+        {
+          /*watch('nationality') === '203' ? (
           <TextFieldElement
             control={control}
             name="taxIdentificationNumber"
             label="Rodné číslo"
             placeholder="1111119999"
           />
-        ) : */(
-          <TextFieldElement
+        ) : */ <TextFieldElement
             control={control}
             name="birthDate"
             label="Datum narození"
             type="date"
           />
-        )}
+        }
 
         <div className="col-full">
           <TextAreaElement control={control} name="note" label="Poznámky" />

@@ -2,7 +2,7 @@ import { ArticlesDocument } from '@/graphql/Articles';
 import { TextField } from '@/ui/fields/text';
 import { fullDateFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';

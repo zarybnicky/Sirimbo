@@ -3,7 +3,7 @@ import { useQuery } from 'urql';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceReport';
-import { isTruthy } from '@/ui/truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 import { computeRange } from '@/scoreboard/periods';
 import { fullDateFormatter } from '@/ui/format';
 

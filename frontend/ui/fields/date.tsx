@@ -1,4 +1,4 @@
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';

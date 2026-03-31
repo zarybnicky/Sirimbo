@@ -3,7 +3,7 @@ import { getSlotMetrics } from './TimeSlotMetrics';
 import { shortTimeIntl } from './localizer';
 import { useAtomValue } from 'jotai';
 import { maxTimeAtom, minTimeAtom, stepAtom, timeslotsAtom } from './state';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 
 type TimeGutterProps = {
   date: Date;

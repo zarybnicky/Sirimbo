@@ -1,7 +1,7 @@
 import {
-  UpdateAttendanceDocument,
   type EventAttendanceFragment,
   EventInstanceWithAttendanceDocument,
+  UpdateAttendanceDocument,
 } from '@/graphql/Event';
 import { dateTimeFormatter, numericDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
@@ -10,10 +10,10 @@ import { useMutation, useQuery } from 'urql';
 import type { AttendanceType } from '@/graphql';
 import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import Link from 'next/link';
-import { keyIsNonNull } from './truthyFilter';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 
 export function InstanceAttendanceView({ id }: { id: string }) {
   const auth = useAuth();

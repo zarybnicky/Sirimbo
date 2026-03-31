@@ -6,7 +6,7 @@ import { WithSidebar } from '@/ui/WithSidebar';
 import { CohortList } from '@/ui/lists/CohortList';
 import { RichTextView } from '@/ui/RichTextView';
 import Link from 'next/link';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { buttonCls, cardCls } from '@/ui/style';
 import { exportCohort } from '@/ui/reports/export-cohort';
 import { useQuery } from 'urql';

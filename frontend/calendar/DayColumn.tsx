@@ -25,7 +25,7 @@ import {
   timeslotsAtom,
 } from './state';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
-import { cn } from '@/ui/cn';
+import { cn } from '@/lib/cn';
 import { layoutEvents } from '@/calendar/layout';
 
 const EMPTY = {};

@@ -12,7 +12,7 @@ import { starletSettingsAtom, starletTokenAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { isTruthy } from '@/ui/truthyFilter';
+import { isTruthy } from '@/lib/truthyFilter';
 
 const Form = z.object({
   folders: z.record(z.string(), z.boolean().prefault(false)),
