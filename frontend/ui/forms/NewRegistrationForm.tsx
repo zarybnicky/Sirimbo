@@ -144,7 +144,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
       <FormError error={onSubmit.error} />
       <div className="relative">
         {fields.map(({ id, selected, label }, index) =>
-          event.type === 'LESSON' ? (
+          event.type === 'LESSON' || event.type === 'GROUP' ? (
             <button
               type="button"
               key={id}
