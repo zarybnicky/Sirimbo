@@ -7,7 +7,7 @@ import {
 } from '@/graphql/Invitation';
 import { fullDateFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
@@ -41,7 +41,7 @@ export default function InvitationOverviewPage() {
 
   return (
     <Layout requireAdmin>
-      <TitleBar title="Přehled pozvánek" />
+      <PageHeader title="Přehled pozvánek" />
 
       <div className="prose prose-accent">
         {(withAnotherAccount?.peopleWithoutAccessWithExistingAccountList || []).length >

@@ -1,8 +1,8 @@
 import { Layout } from '@/ui/Layout';
-import { PaymentDocument } from '@/graphql/Payment';
 import type { PaymentQuery } from '@/graphql/Payment';
+import { PaymentDocument } from '@/graphql/Payment';
 import { moneyFormatter, numericDateFormatter } from '@/ui/format';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
 import React from 'react';
@@ -25,14 +25,7 @@ export default function PaymentPage() {
 
   return (
     <Layout requireAdmin>
-      <TitleBar title={`Detail platby ${id ?? ''}`}>
-        <Link
-          href="/platby"
-          className="text-sm font-medium text-accent-11 hover:underline"
-        >
-          Přehled plateb
-        </Link>
-      </TitleBar>
+      <PageHeader title={`Detail platby ${id ?? ''}`} />
       <div className="space-y-6">
         {fetching && <p>Načítám…</p>}
         {error && <p className="text-accent-11">Nepodařilo se načíst platbu.</p>}

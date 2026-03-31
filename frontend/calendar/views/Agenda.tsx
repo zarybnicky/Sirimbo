@@ -179,7 +179,7 @@ function LessonGroup({ items }: { items: CalendarEvent[] }) {
     <div
       className={cardCls({
         className:
-          'relative group min-w-[200px] w-72 p-1 pt-2 rounded-lg border-accent-7 border',
+          'relative group min-w-[200px] w-72 p-1 pt-2 rounded-lg border-accent-7 border flex flex-col gap-y-px',
       })}
     >
       {auth.isTrainerOrAdmin && (

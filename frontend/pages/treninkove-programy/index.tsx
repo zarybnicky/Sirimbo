@@ -1,4 +1,4 @@
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { TrainingPrograms } from '@/ui/TrainingPrograms';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
@@ -9,7 +9,7 @@ import { buttonCls } from '@/ui/style';
 export default function TrainingProgramPage() {
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <TitleBar title="Tréninkové programy" />
+      <PageHeader title="Tréninkové programy" />
       <TrainingPrograms />
       <div className="my-8">
         <Link className={buttonCls()} href="/treninkove-skupiny">

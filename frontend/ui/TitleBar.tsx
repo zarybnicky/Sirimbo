@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { NextSeo } from 'next-seo';
 import { typographyCls } from '@/ui/style';
-import { Fragment } from 'react';
 import Link, { LinkProps } from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { ActionGroup } from '@/ui/ActionGroup';
@@ -34,14 +33,14 @@ export function TitleBar({
   );
 }
 
-type PageHeaderProps<TItem> = {
+type PageHeaderProps<TItem extends object = object> = {
   breadcrumbs?: { label: string; href?: LinkProps['href'] }[];
   title: string;
   subtitle?: React.ReactNode;
   actions?: ResolvedActions<TItem>;
 };
 
-export function PageHeader<TItem>({
+export function PageHeader<TItem extends object = object>({
   breadcrumbs,
   title,
   subtitle,
@@ -53,7 +52,7 @@ export function PageHeader<TItem>({
 
   return (
     <div className="mb-4">
-      <NextSeo title={title} />
+      {title && variant === 'heading' && <NextSeo title={title} />}
 
       {parent?.href && (
         <nav className="mb-1.5 text-sm text-neutral-7">
@@ -92,11 +91,11 @@ export function PageHeader<TItem>({
           >
             {title}
           </h1>
-          {subtitle && <p className="mt-0.5 text-sm text-accent-12">{subtitle}</p>}
         </div>
 
         {actions && <ActionGroup actions={actions} />}
       </div>
+      {subtitle && <p className="mt-0.5 text-sm text-accent-12">{subtitle}</p>}
     </div>
   );
 }

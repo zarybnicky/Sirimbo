@@ -1,4 +1,5 @@
 import {
+  CoupleFragment,
   CreateTenantAdministratorDocument,
   CreateTenantMembershipDocument,
   CreateTenantTrainerDocument,
@@ -13,14 +14,13 @@ import {
 } from '@/ui/dropdown';
 import {
   formatLongCoupleName,
-  fullDateFormatter,
   formatOpenDateRange,
+  fullDateFormatter,
   moneyFormatter,
 } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { CohortMembershipMenu } from '@/ui/menus/CohortMembershipMenu';
-import { CoupleMenu } from '@/ui/menus/CoupleMenu';
 import { TenantAdministratorMenu } from '@/ui/menus/TenantAdministratorMenu';
 import { TenantMembershipMenu } from '@/ui/menus/TenantMembershipMenu';
 import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
@@ -37,6 +37,9 @@ import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
 import { keyIsNonNull } from './truthyFilter';
+import { useActions } from '@/lib/actions';
+import { coupleActions } from '@/lib/actions/couple';
+import { ActionGroup } from '@/ui/ActionGroup';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
@@ -78,24 +81,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       {item.allCouplesList
         ?.toSorted((a, b) => a.since.localeCompare(b.since))
         ?.map((item) => (
-          <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-            <CoupleMenu align="start" data={item}>
-              <DropdownMenuTrigger.RowDots />
-            </CoupleMenu>
-
-            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <Link
-                className="underline font-bold"
-                href={{
-                  pathname: '/pary/[id]',
-                  query: { id: item.id },
-                }}
-              >
-                {formatLongCoupleName(item)}
-              </Link>
-              <span>{formatOpenDateRange(item)}</span>
-            </div>
-          </div>
+          <CoupleRow key={item.id} item={item} />
         ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -229,9 +215,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
                       href={{ pathname: '/users/[id]', query: { id: proxy.user.id } }}
                       className="underline"
                     >
-                      {[proxy.user.uEmail, proxy.user.uLogin]
-                        .filter(Boolean)
-                        .join(', ')}
+                      {[proxy.user.uEmail, proxy.user.uLogin].filter(Boolean).join(', ')}
                     </Link>
                   </b>
                   <span className="text-neutral-10">{formatOpenDateRange(proxy)}</span>
@@ -281,6 +265,28 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           )}
         </>
       )}
+    </div>
+  );
+}
+
+function CoupleRow({ item }: { item: CoupleFragment }) {
+  const actions = useActions(coupleActions, item);
+  return (
+    <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
+      <ActionGroup variant="row" actions={actions} />
+
+      <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+        <Link
+          className="underline font-bold"
+          href={{
+            pathname: '/pary/[id]',
+            query: { id: item.id },
+          }}
+        >
+          {formatLongCoupleName(item)}
+        </Link>
+        <span>{formatOpenDateRange(item)}</span>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
 import * as React from 'react';
 import { typographyCls } from '@/ui/style';
@@ -7,7 +7,7 @@ import Image from 'next/image';
 export default function TrainersPage() {
   return (
     <Layout showTopMenu>
-      <TitleBar title="Naši trenéři" />
+      <PageHeader title="Naši trenéři" />
 
       <div className="mb-12">
         <p className="prose prose-accent">

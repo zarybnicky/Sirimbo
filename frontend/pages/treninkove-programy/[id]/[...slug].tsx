@@ -1,5 +1,5 @@
 import { CohortGroupDocument } from '@/graphql/CohortGroup';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { RichTextView } from '@/ui/RichTextView';
 import { slugify } from '@/ui/slugify';
 import { Layout } from '@/ui/Layout';
@@ -56,7 +56,7 @@ function TrainingGroupPage() {
 
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <TitleBar title={item.name} />
+      <PageHeader title={item.name} />
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.cohortsList.map((item) => (

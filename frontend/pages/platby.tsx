@@ -1,30 +1,26 @@
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
 import React from 'react';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from '@/ui/TabMenu';
-import { useClient, useMutation, useQuery } from 'urql';
+import { useClient, useQuery } from 'urql';
 import {
   TenantManualCreditTransactionsDocument,
-  TenantTurnoverPageDocument,
   type TenantManualCreditTransactionsQuery,
+  TenantTurnoverPageDocument,
   type TenantTurnoverPageQuery,
 } from '@/graphql/Payment';
 import { PersonAccountsDocument, UnpaidPaymentsDocument } from '@/graphql/Person';
 import { describePosting, moneyFormatter, numericDateFormatter } from '@/ui/format';
-import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown';
-import { MarkAsPaidDocument } from '@/graphql/Payment';
 import { buttonCls } from '@/ui/style';
 import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
 import { Spinner } from '@/ui/Spinner';
 import Link from 'next/link';
 import { useAuth } from '@/ui/use-auth';
 import { isTruthy } from '@/ui/truthyFilter';
+import { useActionMap } from '@/lib/actions';
+import { paymentActions } from '@/lib/actions/payment';
+import { ActionGroup } from '@/ui/ActionGroup';
 
 type TenantAccountPage = NonNullable<TenantTurnoverPageQuery['accountsList']>[number];
 type TenantPosting = TenantAccountPage['postingsList'][number];
@@ -67,7 +63,7 @@ export default function PaymentsPage() {
 
   return (
     <Layout requireAdmin>
-      <TitleBar title="Platby" />
+      <PageHeader title="Platby" />
       <TabMenu selected={tab} onSelect={setTab} options={tabs} />
     </Layout>
   );
@@ -106,8 +102,11 @@ function AccountOverview() {
 function UnpaidPayments() {
   const [{ data }] = useQuery({ query: UnpaidPaymentsDocument });
   const { unpaidPayments } = data || {};
-  const markAsPaid = useMutation(MarkAsPaidDocument)[1];
   const auth = useAuth();
+  const actionMap = useActionMap(
+    paymentActions,
+    unpaidPayments?.map((x) => x.payment).filter(isTruthy) ?? [],
+  );
 
   return (
     <>
@@ -120,21 +119,16 @@ function UnpaidPayments() {
           <span>{describePosting(x.payment!)}</span>
           <span>{moneyFormatter.format(x.price)}</span>
           <span>
-            <DropdownMenu>
-              <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />
-              <DropdownMenuContent align="end">
-                <DropdownMenuButton onClick={() => markAsPaid({ id: x.payment?.id! })}>
-                  Označit jako zaplacenou
-                </DropdownMenuButton>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {auth.isAdmin && x.payment?.id && (
-              <Link
-                href={{ pathname: '/platby/[id]', query: { id: x.payment.id } }}
-                className="mt-1 block text-xs font-medium text-accent-11 hover:underline"
-              >
-                Detail
-              </Link>
+            {auth.isAdmin && x.payment && (
+              <>
+                <ActionGroup variant="row" actions={actionMap.get(x.payment.id)!} />
+                <Link
+                  href={{ pathname: '/platby/[id]', query: { id: x.payment.id } }}
+                  className="mt-1 block text-xs font-medium text-accent-11 hover:underline"
+                >
+                  Detail
+                </Link>
+              </>
             )}
           </span>
         </div>

@@ -1,4 +1,4 @@
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { ServiceCard } from '@/ui/ServiceCard';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
@@ -6,7 +6,7 @@ import { Layout } from '@/ui/Layout';
 export default function GalerieMistruPage() {
   return (
     <Layout showTopMenu>
-      <TitleBar title="Galerie mistrů" />
+      <PageHeader title="Galerie mistrů" />
 
       <div className="col-popout">
         {couples.map((couple) => (

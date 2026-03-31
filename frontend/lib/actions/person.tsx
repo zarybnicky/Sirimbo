@@ -2,7 +2,7 @@ import { Pencil, Trash2, UserPlus } from 'lucide-react';
 import { DeletePersonDocument, type PersonFragment } from '@/graphql/Person';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import { Action } from "@/lib/actions";
+import { Action } from '@/lib/actions';
 
 export const personActions: Action<PersonFragment>[] = [
   {
@@ -33,10 +33,13 @@ export const personActions: Action<PersonFragment>[] = [
     variant: 'danger',
     visible: ({ auth, item }) => auth.isAdmin && !item.externalIds,
     type: 'mutation',
-    confirm: ({ item }) => `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!`,
-    execute: async ({ item, mutate, redirect }) => {
+    confirm: ({ item }) =>
+      `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!`,
+    execute: async ({ item, mutate, router }) => {
       await mutate(DeletePersonDocument, { id: item.id });
-      await redirect('/clenove');
+      if (router.pathname === '/clenove/[id]') {
+        await router.replace('/clenove');
+      }
     },
   },
 ];

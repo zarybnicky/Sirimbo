@@ -1,6 +1,6 @@
 import { RichTextView } from '@/ui/RichTextView';
 import { ArticleDocument } from '@/graphql/Articles';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { fullDateFormatter } from '@/ui/format';
 import { slugify } from '@/ui/slugify';
 import { NextSeo } from 'next-seo';
@@ -56,7 +56,7 @@ function ArticlePage() {
 
   return (
     <Layout showTopMenu>
-      <TitleBar title={item.atJmeno} />
+      <PageHeader title={item.atJmeno} />
       <NextSeo
         title={item.atJmeno}
         openGraph={{

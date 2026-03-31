@@ -1,12 +1,12 @@
 import { ExhibitionRequestForm } from '@/ui/forms/ExhibitionRequestForm';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
 export default function Vystoupeni() {
   return (
     <Layout showTopMenu>
-      <TitleBar title="Taneční vystoupení" />
+      <PageHeader title="Taneční vystoupení" />
 
       <div>
         <LiteYouTubeEmbed

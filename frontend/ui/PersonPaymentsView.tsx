@@ -6,24 +6,20 @@ import {
   moneyFormatter,
   numericDateWithYearFormatter,
 } from '@/ui/format';
-import { useMutation, useQuery } from 'urql';
+import { useQuery } from 'urql';
 import { QRPayment } from '@/ui/QRPayment';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateCreditTransactionForm } from '@/ui/forms/CreateCreditTransactionForm';
 import { exportPostings } from '@/ui/reports/export-postings';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from './use-auth';
-import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from './dropdown';
-import { DeleteTransactionDocument } from '@/graphql/Payment';
-import { PaymentMenu } from './EventView';
 import { keyIsNonNull } from './truthyFilter';
 import { Column, DataGrid, SortColumn } from 'react-data-grid';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { ResolvedActions, useActions } from '@/lib/actions';
+import { paymentActions } from '@/lib/actions/payment';
+import { transactionActions } from '@/lib/actions/transaction';
+import { ActionGroup } from '@/ui/ActionGroup';
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const auth = useAuth();
@@ -135,24 +131,6 @@ export function PersonPaymentsView({ id }: { id: string }) {
   );
 }
 
-function TransactionMenu({ id, children }: { id: string; children?: React.ReactNode }) {
-  const doDelete = useMutation(DeleteTransactionDocument)[1];
-  const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
-  const auth = useAuth();
-  if (!auth.isAdmin) return children;
-  return (
-    <DropdownMenu>
-      <div className="flex gap-2">
-        <DropdownMenuTrigger.RowDots />
-        {children}
-      </div>
-      <DropdownMenuContent>
-        <DropdownMenuButton onClick={onDelete}>Smazat platbu</DropdownMenuButton>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
 type Account = NonNullable<
   NonNullable<PersonPaymentsQuery['person']>['accountsList']
 >[number];
@@ -226,15 +204,12 @@ function AccountPaymentsTable({ account }: { account: Account }) {
         sortable: false,
         renderCell: ({ row }) => {
           const { transaction } = row;
-          return (
-            <div className="flex items-center justify-center">
-              {transaction.payment ? (
-                <PaymentMenu id={transaction.payment.id} />
-              ) : (
-                <TransactionMenu id={transaction.id} />
-              )}
-            </div>
-          );
+          const actions = transaction.payment
+            ? // eslint-disable-next-line react-hooks/rules-of-hooks
+              (useActions(paymentActions, transaction.payment) as ResolvedActions)
+            : // eslint-disable-next-line react-hooks/rules-of-hooks
+              (useActions(transactionActions, transaction) as ResolvedActions);
+          return <ActionGroup variant="row" actions={actions} />;
         },
       });
     }

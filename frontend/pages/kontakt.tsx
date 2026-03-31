@@ -1,11 +1,11 @@
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
 
 export default function ContactPage() {
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <TitleBar title="Kontakt" />
+      <PageHeader title="Kontakt" />
       <div className="prose prose-accent">
         <h2>Fakturační údaje:</h2>
         <p>

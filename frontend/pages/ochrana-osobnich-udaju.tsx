@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
 
 export default function OchranaOsobnichUdajuPage() {
   return (
     <Layout showTopMenu>
-      <TitleBar title="Ochrana osobních údajů" />
+      <PageHeader title="Ochrana osobních údajů" />
 
       <div className="prose prose-accent">
         <p>

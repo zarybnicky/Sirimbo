@@ -1,13 +1,13 @@
-import { TitleBar } from '@/ui/TitleBar';
 import { LocationCard } from '@/ui/LocationCard';
 import * as React from 'react';
 import Image from 'next/image';
 import { Layout } from '@/ui/Layout';
+import { PageHeader } from '@/ui/TitleBar';
 
 export default function LocationsPage() {
   return (
     <Layout showTopMenu>
-      <TitleBar title="Kde trénujeme" />
+      <PageHeader title="Kde trénujeme" />
 
       <div className="mt-8 mb-16 space-y-4">
         <h2 className="text-4xl text-accent-10 tracking-wide">V Olomouci</h2>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from 'urql';
 import { Layout } from '@/ui/Layout';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceReport';
 import { isTruthy } from '@/ui/truthyFilter';
 import { computeRange } from '@/scoreboard/periods';
@@ -74,7 +74,7 @@ export default function TrainerAttendanceReportPage() {
   return (
     <Layout requireAdmin>
       <div className="container col-feature space-y-6 py-6">
-        <TitleBar title="Docházka trenérů – skupinové lekce" />
+        <PageHeader title="Vyplněnost docházky" />
 
         <section className="space-y-2 text-sm text-neutral-10">
           <p>Přehled vychází z proběhlých termínů vedených.</p>

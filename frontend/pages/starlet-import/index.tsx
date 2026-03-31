@@ -1,6 +1,6 @@
 import { Layout } from '@/ui/Layout';
 import { TenantSettingsDocument } from '@/graphql/CurrentUser';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import React, { useEffect } from 'react';
 import { useQuery } from 'urql';
 import { starletSettingsAtom, starletTokenAtom } from '@/ui/starlet-importer/state';
@@ -45,8 +45,7 @@ export default function StarletImportPage() {
 
   return (
     <Layout requireAdmin>
-      <TitleBar title="Nastavení importu" />
-
+      <PageHeader title="Nastavení importu" />
       <StarletImporter />
     </Layout>
   );

@@ -7,7 +7,6 @@ import {
   EventPaymentsDocument,
   type EventRegistrationsFragment,
 } from '@/graphql/Event';
-import { DeletePaymentDocument } from '@/graphql/Payment';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
 import { Spinner } from '@/ui/Spinner';
@@ -34,6 +33,9 @@ import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { isTruthy } from './truthyFilter';
+import { useActionMap } from '@/lib/actions';
+import { paymentActions } from '@/lib/actions/payment';
+import { ActionGroup } from '@/ui/ActionGroup';
 
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
@@ -58,7 +60,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
       tabs.push({
         id: 'info',
         title: 'Informace',
-        contents: () => <EventInfo event={event} />,
+        contents: () => <RichTextView value={event.description} />,
       });
     }
 
@@ -114,110 +116,98 @@ export function EventView({ event }: { event: EventFullFragment }) {
   );
 }
 
-function EventInfo({ event }: { event: EventFragment }) {
-  return (
-    <div>
-      <RichTextView value={event.description} />
-    </div>
-  );
-}
-
 function Attendance({
   event,
 }: {
   event: EventAttendanceSummaryFragment & EventFragment;
 }) {
   return (
-    <div className="prose prose-accent">
-      <table>
-        <thead>
-          <tr>
-            <th />
-            {Object.entries(labels)
-              .filter(([k]) => k !== 'CANCELLED')
-              .map(([k, x]) => (
-                <th className="text-center" key={k}>
-                  {React.createElement(x, { className: 'inline-block' })}
-                </th>
+    <table className="prose prose-accent max-w-full">
+      <thead>
+        <tr>
+          <th />
+          {Object.entries(labels)
+            .filter(([k]) => k !== 'CANCELLED')
+            .map(([k, x]) => (
+              <th className="text-center" key={k}>
+                {React.createElement(x, { className: 'inline-block' })}
+              </th>
+            ))}
+        </tr>
+      </thead>
+      <tbody>
+        {event.eventInstancesList.map((instance) => (
+          <tr key={instance.id}>
+            <td>
+              <Link
+                href={{
+                  pathname: '/akce/[id]/termin/[instance]',
+                  query: { id: event.id, instance: instance.id },
+                }}
+              >
+                {fullDateFormatter.formatRange(
+                  new Date(instance.since),
+                  new Date(instance.until),
+                )}
+              </Link>
+            </td>
+            {Object.keys(labels)
+              .filter((x) => x !== 'CANCELLED')
+              .map((status) => (
+                <td className="text-center" key={status}>
+                  {instance.attendanceSummaryList?.find((x) => x?.status === status)
+                    ?.count ?? 0}
+                </td>
               ))}
           </tr>
-        </thead>
-        <tbody>
-          {event.eventInstancesList.map((instance) => (
-            <tr key={instance.id}>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function EventInstances({ event }: { event: EventFullFragment }) {
+  return (
+    <table className="prose prose-accent max-w-none">
+      <thead>
+        <tr>
+          <th scope="col" className="text-left">
+            Termín
+          </th>
+          <th scope="col" className="text-left">
+            Trenéři
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {event.eventInstancesList.map((instance) => {
+          return (
+            <tr key={instance.id} className={instance.isCancelled ? 'opacity-50' : ''}>
               <td>
                 <Link
                   href={{
                     pathname: '/akce/[id]/termin/[instance]',
                     query: { id: event.id, instance: instance.id },
                   }}
+                  className={instance.isCancelled ? 'line-through' : ''}
                 >
-                  {fullDateFormatter.formatRange(
-                    new Date(instance.since),
-                    new Date(instance.until),
-                  )}
+                  {formatOpenDateRange(instance)}
                 </Link>
+                {instance.isCancelled && (
+                  <div className="text-sm text-neutral-10">Zrušeno</div>
+                )}
               </td>
-              {Object.keys(labels)
-                .filter((x) => x !== 'CANCELLED')
-                .map((status) => (
-                  <td className="text-center" key={status}>
-                    {instance.attendanceSummaryList?.find((x) => x?.status === status)
-                      ?.count ?? 0}
-                  </td>
-                ))}
+              <td>
+                {instance.trainersList
+                  ?.map((x) => x.person?.name)
+                  .filter(isTruthy)
+                  .join(', ') ?? '—'}
+              </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function EventInstances({ event }: { event: EventFullFragment }) {
-  return (
-    <div className="prose prose-accent max-w-none">
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th scope="col" className="text-left">
-              Termín
-            </th>
-            <th scope="col" className="text-left">
-              Trenéři
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {event.eventInstancesList.map((instance) => {
-            return (
-              <tr key={instance.id} className={instance.isCancelled ? 'opacity-50' : ''}>
-                <td>
-                  <Link
-                    href={{
-                      pathname: '/akce/[id]/termin/[instance]',
-                      query: { id: event.id, instance: instance.id },
-                    }}
-                    className={instance.isCancelled ? 'line-through' : ''}
-                  >
-                    {formatOpenDateRange(instance)}
-                  </Link>
-                  {instance.isCancelled && (
-                    <div className="text-sm text-neutral-10">Zrušeno</div>
-                  )}
-                </td>
-                <td>
-                  {instance.trainersList
-                    ?.map((x) => x.person?.name)
-                    .filter(isTruthy)
-                    .join(', ') ?? '—'}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }
 
@@ -278,35 +268,21 @@ function EventExternalRegistrationMenu({
   );
 }
 
-export function PaymentMenu({
-  id,
-  children,
-}: {
-  id: string;
-  children?: React.ReactNode;
-}) {
-  const doDelete = useMutation(DeletePaymentDocument)[1];
-  const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
-  const auth = useAuth();
-  if (!auth.isAdmin) return children;
-  return (
-    <DropdownMenu>
-      <div className="flex gap-2">
-        <DropdownMenuTrigger.RowDots />
-        {children}
-      </div>
-      <DropdownMenuContent>
-        <DropdownMenuButton onClick={onDelete}>Smazat platbu</DropdownMenuButton>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
 function Payments({ event }: { event: EventFragment }) {
   const [{ data, fetching }] = useQuery({
     query: EventPaymentsDocument,
     variables: { id: event.id },
   });
+
+  const payments = (data?.event?.eventInstancesList || []).flatMap((registration) =>
+    registration.paymentsList.flatMap((payment) =>
+      payment.transactions.nodes.map((trans) => [registration, payment, trans] as const),
+    ),
+  );
+  const actionMap = useActionMap(
+    paymentActions,
+    data?.event?.eventInstancesList.flatMap((x) => x.paymentsList) ?? [],
+  );
 
   if (fetching && !data) {
     return (
@@ -317,32 +293,25 @@ function Payments({ event }: { event: EventFragment }) {
   }
 
   return (
-    <div>
-      {data?.event?.eventInstancesList.map((reg) =>
-        reg.paymentsList.flatMap((payment) => (
-          <div key={payment.id} className="prose prose-accent">
-            {payment.transactions.nodes.map((transaction) => (
-              <div key={transaction.id}>
-                <div className="flex gap-2 items-center">
-                  <PaymentMenu id={payment.id}>
-                    Za lekci {fullDateFormatter.format(new Date(reg.since))}
-                  </PaymentMenu>
-                </div>
-                <ul>
-                  {transaction.postingsList.map((posting) => (
-                    <li key={posting.id}>
-                      {moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}
-                      {' - '}
-                      {posting.account?.person?.name ||
-                        (posting.account?.tenantId ? 'Klub' : '-')}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+    <div className="prose prose-accent">
+      {payments.map(([registration, payment, transaction]) => (
+        <div key={transaction.id}>
+          <div className="flex gap-2 items-center">
+            <ActionGroup variant="row" actions={actionMap.get(payment.id)!} />
+            Za lekci {fullDateFormatter.format(new Date(registration.since))}
           </div>
-        )),
-      )}
+          <ul>
+            {transaction.postingsList.map((posting) => (
+              <li key={posting.id}>
+                {moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}
+                {' - '}
+                {posting.account?.person?.name ||
+                  (posting.account?.tenantId ? 'Klub' : '-')}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }

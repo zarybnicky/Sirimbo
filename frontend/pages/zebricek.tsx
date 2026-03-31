@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { Layout } from '@/ui/Layout';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { ScoreboardPeriodSelector } from '@/scoreboard/ScoreboardPeriodSelector';
 import { computeRange, PeriodPreset } from '@/scoreboard/periods';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
@@ -43,7 +43,7 @@ export default function ScoreboardPage() {
 
   return (
     <Layout requireMember>
-      <TitleBar title="Žebříček aktivity" />
+      <PageHeader title="Žebříček aktivity" />
 
       <div className="prose prose-accent space-y-8">
         <section>
@@ -157,7 +157,6 @@ export default function ScoreboardPage() {
                     <th className="p-2 text-center">Lekce</th>
                     <th className="p-2 text-center">Skupiny</th>
                     <th className="p-2 text-center">Akce</th>
-                    <th className="p-2 text-center">Manuální</th>
                     <th className="py-2 pl-2 text-center">Celkem</th>
                   </tr>
                 </thead>
@@ -203,9 +202,6 @@ export default function ScoreboardPage() {
                         </td>
                         <td className="py-1 px-2 text-center">
                           {entry.eventTotalScore ?? '0'}
-                        </td>
-                        <td className="py-1 px-2 text-center">
-                          {entry.manualTotalScore ?? '0'}
                         </td>
                         <td className="py-1 pl-2 text-center font-bold">
                           {entry.totalScore ?? '0'}

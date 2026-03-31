@@ -7,11 +7,18 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { useConfirm } from '@/ui/Confirm';
-import type { ResolvedActions, ResolvedAction } from '@/lib/actions';
+import type { ResolvedAction, ResolvedActions } from '@/lib/actions';
 import { buttonCls } from '@/ui/style';
 
-export function ActionGroup<TItem>({ actions }: { actions: ResolvedActions<TItem> }) {
-  const { primary, secondary, ctx } = actions;
+export function ActionGroup<TItem extends object = object>({
+  actions,
+  variant = 'main',
+}: {
+  variant?: 'main' | 'row';
+  actions: ResolvedActions<TItem>;
+}) {
+  const primary = variant === 'row' ? [] : actions.primary;
+  const secondary = variant === 'row' ? actions.all : actions.secondary;
   const confirm = useConfirm();
   const [dialogAction, setDialogAction] = useState<ResolvedAction<TItem> | null>(null);
   const [pending, setPending] = useState<string | null>(null);
@@ -34,7 +41,7 @@ export function ActionGroup<TItem>({ actions }: { actions: ResolvedActions<TItem
 
     setPending(action.id);
     try {
-      await action.execute(ctx);
+      await action.execute(actions.ctx);
     } finally {
       setPending(null);
     }
@@ -58,8 +65,12 @@ export function ActionGroup<TItem>({ actions }: { actions: ResolvedActions<TItem
 
         {secondary.length > 0 && (
           <DropdownMenu>
-            <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />
-            <DropdownMenuContent align="end">
+            {variant === 'main' ? (
+              <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />
+            ) : (
+              <DropdownMenuTrigger.RowDots className="relative top-0 right-0" />
+            )}
+            <DropdownMenuContent align={variant === 'main' ? 'end' : 'start'}>
               {secondary.map((action) => (
                 <DropdownMenuButton
                   key={action.id}
@@ -79,7 +90,7 @@ export function ActionGroup<TItem>({ actions }: { actions: ResolvedActions<TItem
       {dialogAction && dialogAction.type === 'dialog' && (
         <Dialog open onOpenChange={() => setDialogAction(null)}>
           <DialogContent {...dialogAction.dialogProps}>
-            {dialogAction.render(ctx)}
+            {dialogAction.render(actions.ctx)}
           </DialogContent>
         </Dialog>
       )}

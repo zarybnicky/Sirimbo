@@ -1,18 +1,19 @@
-import { useMemo, type ComponentType } from 'react';
+import { type ComponentType, useMemo } from 'react';
 import { type AuthState } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 import { DialogContent } from '@radix-ui/react-dialog';
 
 export type ActionContext<TItem> = {
   auth: AuthState;
+  client: Client;
+  router: NextRouter;
   mutate: <TData, TVars extends Record<string, unknown>>(
     document: TypedDocumentNode<TData, TVars>,
     variables: TVars,
   ) => Promise<TData>;
   item: TItem;
-  redirect: ReturnType<typeof useRouter>['replace'];
 };
 
 type ActionIcon = ComponentType<{ className?: string }>;
@@ -59,7 +60,7 @@ export type ResolvedAction<TItem> =
   | ResolvedDialogAction<TItem>
   | ResolvedMutationAction<TItem>;
 
-export type ResolvedActions<TItem> = {
+export type ResolvedActions<TItem extends object = object> = {
   all: ResolvedAction<TItem>[];
   primary: ResolvedAction<TItem>[];
   secondary: ResolvedAction<TItem>[];
@@ -108,19 +109,15 @@ export function useActions<TItem extends object>(
   const router = useRouter();
 
   return useMemo(() => {
-    const ctx = {
-      auth,
-      item: item!,
-      redirect: router.replace,
-      async mutate<TData, TVars extends Record<string, unknown>>(
-        document: TypedDocumentNode<TData, TVars>,
-        variables: TVars,
-      ): Promise<TData> {
-        const result = await client.mutation(document, variables).toPromise();
-        if (result.error) throw result.error;
-        return result.data!;
-      },
-    };
+    async function mutate<TData, TVars extends Record<string, unknown>>(
+      document: TypedDocumentNode<TData, TVars>,
+      variables: TVars,
+    ): Promise<TData> {
+      const result = await client.mutation(document, variables).toPromise();
+      if (result.error) throw result.error;
+      return result.data!;
+    }
+    const ctx = { auth, client, router, item: item!, mutate };
 
     const visible = !item
       ? []
@@ -132,5 +129,43 @@ export function useActions<TItem extends object>(
       secondary: visible.filter((a) => !a.primary),
       ctx,
     };
-  }, [actions, auth, client, item, router.replace]);
+  }, [actions, auth, client, item, router]);
+}
+
+export function useActionMap<TItem extends { id: string }>(
+  actions: Action<TItem>[],
+  items: TItem[],
+): Map<string, ResolvedActions<TItem>> {
+  const auth = useAuth();
+  const client = useClient();
+  const router = useRouter();
+
+  return useMemo(() => {
+    const map = new Map<string, ResolvedActions<TItem>>();
+
+    async function mutate<TData, TVars extends Record<string, unknown>>(
+      document: TypedDocumentNode<TData, TVars>,
+      variables: TVars,
+    ): Promise<TData> {
+      const result = await client.mutation(document, variables).toPromise();
+      if (result.error) throw result.error;
+      return result.data!;
+    }
+    for (const item of items) {
+      const ctx: ActionContext<TItem> = { auth, client, item, router, mutate };
+
+      const visible = actions
+        .filter((a) => a.visible(ctx))
+        .map((a) => resolveAction(a, ctx));
+
+      map.set(item.id, {
+        all: visible,
+        primary: visible.filter((a) => !!a.primary),
+        secondary: visible.filter((a) => !a.primary),
+        ctx,
+      });
+    }
+
+    return map;
+  }, [actions, auth, client, items, router]);
 }

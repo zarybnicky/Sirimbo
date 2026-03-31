@@ -1,13 +1,13 @@
-import { TitleBar } from '@/ui/TitleBar';
 import Image from 'next/image';
 import ONasImage from '@/public/images/2023-04-MCRDruzstev.jpg';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
+import { PageHeader } from '@/ui/TitleBar';
 
 export default function OKlubuPage() {
   return (
     <Layout showTopMenu>
-      <TitleBar title="Olymp v tanečním světě" />
+      <PageHeader title="Olymp v tanečním světě" />
 
       <div className="prose prose-accent mb-8">
         <p>

@@ -1,4 +1,4 @@
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
 import VyhodyImage from '@/public/images/2022-09-MCRDruzstev.jpg';
 import * as React from 'react';
@@ -7,7 +7,7 @@ import { Layout } from '@/ui/Layout';
 export default function VyhodyClenstvi() {
   return (
     <Layout showTopMenu>
-      <TitleBar title="Členství v Olympu" />
+      <PageHeader title="Členství v Olympu" />
 
       <div className=" prose prose-accent mb-8">
         <p>

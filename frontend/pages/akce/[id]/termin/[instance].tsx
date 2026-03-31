@@ -1,7 +1,7 @@
 import { Layout } from '@/ui/Layout';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { formatDefaultEventName } from '@/ui/format';
 import { EventDocument } from '@/graphql/Event';
@@ -29,7 +29,7 @@ function EventInstancePage() {
     <Layout hideTopMenuIfLoggedIn>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       <WithSidebar sidebar={<EventList />}>
-        {event && <TitleBar title={event?.name || formatDefaultEventName(event)} />}
+        {event && <PageHeader title={event?.name || formatDefaultEventName(event)} />}
         <div
           className={
             auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'
