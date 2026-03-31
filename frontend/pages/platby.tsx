@@ -113,24 +113,16 @@ function UnpaidPayments() {
       {unpaidPayments?.map((x) => (
         <div
           key={x.id}
-          className="flex flex-wrap gap-4 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b"
+          className="flex flex-wrap gap-4 justify-between items-center even:bg-neutral-2 odd:bg-neutral-1 border-b p-1.5"
         >
+          <span>
+            {auth.isAdmin && x.payment && (
+              <ActionGroup variant="row" actions={actionMap.get(x.payment.id)!} />
+            )}
+          </span>
           <span className="grow">{x.person?.name}</span>
           <span>{describePosting(x.payment!)}</span>
           <span>{moneyFormatter.format(x.price)}</span>
-          <span>
-            {auth.isAdmin && x.payment && (
-              <>
-                <ActionGroup variant="row" actions={actionMap.get(x.payment.id)!} />
-                <Link
-                  href={{ pathname: '/platby/[id]', query: { id: x.payment.id } }}
-                  className="mt-1 block text-xs font-medium text-accent-11 hover:underline"
-                >
-                  Detail
-                </Link>
-              </>
-            )}
-          </span>
         </div>
       ))}
     </>

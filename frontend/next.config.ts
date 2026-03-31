@@ -51,6 +51,11 @@ export default compose(
     ];
     const olympSpecificRedirects = [
       {
+        source: '/soutez',
+        destination: '/clanky/473/olymp-prostejov-cup-2026',
+        permanent: false,
+      },
+      {
         source: '/tancirna',
         destination: '/clanky/470/olymp-dance-night-2026',
         permanent: false,

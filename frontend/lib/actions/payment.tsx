@@ -1,9 +1,19 @@
-import { HandCoins, Trash2 } from 'lucide-react';
+import { HandCoins, Info, Trash2 } from 'lucide-react';
 import { Action } from '@/lib/actions';
 import { DeletePaymentDocument, MarkAsPaidDocument } from '@/graphql/Payment';
 import { PaymentStatus } from '@/graphql';
 
 export const paymentActions: Action<{ id: string; status: PaymentStatus }>[] = [
+  {
+    id: 'payment.detail',
+    label: 'Detail',
+    icon: Info,
+    visible: () => true,
+    type: 'mutation',
+    execute: async ({ item, router }) => {
+      await router.push({ pathname: '/platby/[id]', query: { id: item.id } });
+    },
+  },
   {
     id: 'payment.markAsPaid',
     label: 'Označit jako zaplacenou',
