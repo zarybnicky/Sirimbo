@@ -5,6 +5,9 @@ import {
   PeopleWithInvitationDocument,
   PeopleWithoutInvitationDocument,
 } from '@/graphql/Invitation';
+import { useActionMap } from '@/lib/actions';
+import { personInvitationActions } from '@/lib/actions/personInvitation';
+import { ActionGroup } from '@/ui/ActionGroup';
 import { fullDateFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { PageHeader } from '@/ui/TitleBar';
@@ -21,6 +24,11 @@ export default function InvitationOverviewPage() {
   });
   const [{ data: withInvitation }] = useQuery({ query: PeopleWithInvitationDocument });
   const [, sendInvitation] = useMutation(CreateInvitationDocument);
+  const invitations =
+    withInvitation?.peopleWithoutAccessWithInvitationList?.flatMap((person) =>
+      person.personInvitationsList,
+    ) ?? [];
+  const invitationActionMap = useActionMap(personInvitationActions, invitations);
 
   const bulkSendInvitations = useAsyncCallback(async () => {
     const sent = new Set<string>();
@@ -129,15 +137,32 @@ export default function InvitationOverviewPage() {
                 ?.toSorted((x, y) => x.createdAt.localeCompare(y.createdAt))
                 .map((x) => (
                   <li key={x.id}>
-                    <Link href={{ pathname: '/clenove/[id]', query: { id: x.id } }}>
-                      {x.name}
-                    </Link>
-                    {', vytvořen '}
-                    {x.createdAt ? fullDateFormatter.format(new Date(x.createdAt)) : ''}
-                    {', pozvánka odeslána '}
-                    {x.personInvitationsList
-                      .map((x) => fullDateFormatter.format(new Date(x.createdAt)))
-                      .join(', ')}
+                    <div>
+                      <Link href={{ pathname: '/clenove/[id]', query: { id: x.id } }}>
+                        {x.name}
+                      </Link>
+                      {', vytvořen '}
+                      {x.createdAt
+                        ? fullDateFormatter.format(new Date(x.createdAt))
+                        : ''}
+                    </div>
+                    <div className="not-prose mt-2 space-y-1">
+                      {x.personInvitationsList.map((invitation) => (
+                        <div
+                          key={invitation.id}
+                          className="flex flex-wrap items-center gap-2 text-sm"
+                        >
+                          <ActionGroup
+                            variant="row"
+                            actions={invitationActionMap.get(invitation.id)!}
+                          />
+                          <span>
+                            Pozvánka odeslána{' '}
+                            {fullDateFormatter.format(new Date(invitation.createdAt))}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </li>
                 ))}
             </ul>

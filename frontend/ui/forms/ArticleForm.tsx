@@ -4,15 +4,10 @@ import {
   DeleteArticleDocument,
   UpdateArticleDocument,
 } from '@/graphql/Articles';
-import { useConfirm } from '@/ui/Confirm';
+import { useActions } from '@/lib/actions';
 import { ErrorPage } from '@/ui/ErrorPage';
+import { ActionGroup } from '@/ui/ActionGroup';
 import { TitleBar } from '@/ui/TitleBar';
-import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
@@ -40,14 +35,12 @@ type FormValues = z.infer<typeof Form>;
 
 export function ArticleForm({ id = '' }: { id?: string }) {
   const router = useRouter();
-  const confirm = useConfirm();
   const [query] = useQuery({ query: ArticleDocument, variables: { id }, pause: !id });
   const data = query.data?.aktuality;
   const title = id ? data?.atJmeno || '(Bez názvu)' : 'Nový článek';
 
   const create = useMutation(CreateArticleDocument)[1];
   const update = useMutation(UpdateArticleDocument)[1];
-  const deleteMutation = useMutation(DeleteArticleDocument)[1];
 
   const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
@@ -85,12 +78,24 @@ export function ArticleForm({ id = '' }: { id?: string }) {
       }
     }
   });
-
-  const remove = React.useCallback(async () => {
-    await confirm({ description: `Opravdu chcete smazat příspěvek "${data?.atJmeno}"?` });
-    await deleteMutation({ id });
-    router.replace('/aktuality');
-  }, [router, confirm, deleteMutation, id, data?.atJmeno]);
+  const actions = useActions(
+    [
+      {
+        id: 'article.delete',
+        label: 'Smazat',
+        visible: () => !!data && !!id,
+        type: 'mutation' as const,
+        confirm: ({ item }: { item: { id: string; title: string } }) => ({
+          description: `Opravdu chcete smazat příspěvek "${item.title}"?`,
+        }),
+        execute: async ({ item, mutate, router }) => {
+          await mutate(DeleteArticleDocument, { id: item.id });
+          await router.replace('/aktuality');
+        },
+      },
+    ],
+    data && id ? { id, title: data.atJmeno } : null,
+  );
 
   if (query.data && query.data.aktuality === null) {
     return <ErrorPage error="Nenalezeno" />;
@@ -99,14 +104,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <TitleBar title={title}>
-        {data && (
-          <DropdownMenu>
-            <DropdownMenuTrigger.CornerDots />
-            <DropdownMenuContent align="end">
-              <DropdownMenuButton onClick={remove}>Smazat</DropdownMenuButton>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        <ActionGroup actions={actions} />
       </TitleBar>
 
       <FormError error={onSubmit.error} />

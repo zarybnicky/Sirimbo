@@ -7,12 +7,6 @@ import {
 import type { PersonWithLinksFragment } from '@/graphql/Person';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown';
-import {
   formatLongCoupleName,
   formatOpenDateRange,
   fullDateFormatter,
@@ -20,21 +14,18 @@ import {
 } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue } from 'jotai';
-import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { useMutation } from 'urql';
 import { tenantIdAtom } from '@/ui/state/auth';
-import { DeleteInvitationDocument } from '@/graphql/Invitation';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 import { useActionMap, useActions } from '@/lib/actions';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { coupleActions } from '@/lib/actions/couple';
+import { personInvitationActions } from '@/lib/actions/personInvitation';
 import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { tenantMembershipActions } from '@/lib/actions/tenantMembership';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
@@ -45,22 +36,43 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
   const auth = useAuth();
   const isAdminOrCurrentPerson = auth.isAdmin || auth.personIds.includes(item.id);
   const tenantId = useAtomValue(tenantIdAtom);
-  const createTenantMember = useMutation(CreateTenantMembershipDocument)[1];
-  const createTenantTrainer = useMutation(CreateTenantTrainerDocument)[1];
-  const createTenantAdmin = useMutation(CreateTenantAdministratorDocument)[1];
-  const deleteInvitation = useMutation(DeleteInvitationDocument)[1];
-
-  const addAsMember = React.useCallback(
-    () => createTenantMember({ input: { tenantMembership: { personId: item.id } } }),
-    [createTenantMember, item.id],
-  );
-  const addAsTrainer = React.useCallback(
-    () => createTenantTrainer({ input: { tenantTrainer: { personId: item.id } } }),
-    [createTenantTrainer, item.id],
-  );
-  const addAsAdmin = React.useCallback(
-    () => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id } } }),
-    [createTenantAdmin, item.id],
+  const createMembershipActions = useActions(
+    [
+      {
+        id: 'personMembership.addAdmin',
+        label: 'Přidat jako správce',
+        visible: ({ auth }) => auth.isAdmin,
+        type: 'mutation' as const,
+        execute: async ({ item, mutate }) => {
+          await mutate(CreateTenantAdministratorDocument, {
+            input: { tenantAdministrator: { personId: item.id } },
+          });
+        },
+      },
+      {
+        id: 'personMembership.addTrainer',
+        label: 'Přidat jako trenéra',
+        visible: ({ auth }) => auth.isAdmin,
+        type: 'mutation' as const,
+        execute: async ({ item, mutate }) => {
+          await mutate(CreateTenantTrainerDocument, {
+            input: { tenantTrainer: { personId: item.id } },
+          });
+        },
+      },
+      {
+        id: 'personMembership.addMember',
+        label: 'Přidat jako člena',
+        visible: ({ auth }) => auth.isAdmin,
+        type: 'mutation' as const,
+        execute: async ({ item, mutate }) => {
+          await mutate(CreateTenantMembershipDocument, {
+            input: { tenantMembership: { personId: item.id } },
+          });
+        },
+      },
+    ],
+    item,
   );
   const cohortMembershipActionMap = useActionMap(
     cohortMembershipActions,
@@ -79,6 +91,10 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
     item.tenantTrainersList,
   );
   const userProxyActionMap = useActionMap(userProxyActions, item.userProxiesList ?? []);
+  const invitationActionMap = useActionMap(
+    personInvitationActions,
+    item.personInvitationsList ?? [],
+  );
 
   return (
     <div key="info" className="mb-2">
@@ -138,21 +154,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3 className="text-lg font-semibold mt-4 mb-2">Členství</h3>
 
-        {auth.isAdmin && (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className={buttonCls({ variant: 'outline', size: 'sm' })}
-            >
-              <Plus />
-              Přidat
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuButton onClick={addAsAdmin}>jako správce</DropdownMenuButton>
-              <DropdownMenuButton onClick={addAsTrainer}>jako trenéra</DropdownMenuButton>
-              <DropdownMenuButton onClick={addAsMember}>jako člena</DropdownMenuButton>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        {auth.isAdmin && <ActionGroup actions={createMembershipActions} />}
       </div>
 
       {item.tenantAdministratorsList
@@ -247,29 +249,16 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               </div>
 
               {item.personInvitationsList?.map((invitation) => (
-                <DropdownMenu key={invitation.id}>
-                  <div className="flex gap-2">
-                    <DropdownMenuTrigger.RowDots />
+                <div className="flex gap-2 items-center" key={invitation.id}>
+                  <ActionGroup
+                    variant="row"
+                    actions={invitationActionMap.get(invitation.id)!}
+                  />
+                  <span>
                     {invitation.email}, vytvořena{' '}
                     {fullDateFormatter.format(new Date(invitation.createdAt))}
-                  </div>
-                  <DropdownMenuContent>
-                    <DropdownMenuButton
-                      onClick={() =>
-                        navigator.clipboard.writeText(
-                          `${window.location.origin}/pozvanka?token=${invitation.accessToken}`,
-                        )
-                      }
-                    >
-                      Kopírovat odkaz
-                    </DropdownMenuButton>
-                    <DropdownMenuButton
-                      onClick={() => deleteInvitation({ input: { id: invitation.id } })}
-                    >
-                      Zrušit pozvánku
-                    </DropdownMenuButton>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  </span>
+                </div>
               ))}
             </>
           )}
