@@ -3,12 +3,10 @@ import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { DropdownMenuTrigger } from '@/ui/dropdown';
 import { moneyFormatter } from '@/ui/format';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
-import { TenantLocationMenu } from '@/ui/menus/TenantLocationMenu';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
@@ -16,6 +14,7 @@ import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { useActionMap } from '@/lib/actions';
 import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
+import { tenantLocationActions } from '@/lib/actions/tenantLocation';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionGroup } from '@/ui/ActionGroup';
 
@@ -30,6 +29,10 @@ export default function ClubPage() {
   const trainerActionMap = useActionMap(
     tenantTrainerActions,
     tenant?.tenant?.tenantTrainersList ?? [],
+  );
+  const locationActionMap = useActionMap(
+    tenantLocationActions,
+    tenant?.tenant?.tenantLocationsList ?? [],
   );
 
   if (!tenant?.tenant) return null;
@@ -129,9 +132,7 @@ export default function ClubPage() {
 
           {tenant.tenant.tenantLocationsList.map((item) => (
             <div className="flex gap-3 mb-1" key={item.id}>
-              <TenantLocationMenu id={item.id} align="start">
-                <DropdownMenuTrigger.RowDots />
-              </TenantLocationMenu>
+              <ActionGroup variant="row" actions={locationActionMap.get(item.id)!} />
               <div className="grow gap-2 flex text-sm font-bold py-1">{item.name}</div>
             </div>
           ))}
