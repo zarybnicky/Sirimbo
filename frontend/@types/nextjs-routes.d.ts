@@ -22,6 +22,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/aktuality">
     | DynamicRoute<"/aktuality/[id]", { "id": string }>
     | StaticRoute<"/aktuality/add">
+    | StaticRoute<"/bpm">
     | StaticRoute<"/clanky">
     | DynamicRoute<"/clanky/[id]", { "id": string }>
     | DynamicRoute<"/clanky/[id]/[...slug]", { "id": string; "slug": string[] }>
