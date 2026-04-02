@@ -24,7 +24,7 @@ export function CohortList() {
   const [isArchive, setIsArchive] = React.useState(false);
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
-    variables: { visible: true },
+    variables: { visible: !isArchive },
   });
   const nodes = React.useMemo(
     () =>

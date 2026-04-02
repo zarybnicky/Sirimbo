@@ -1,7 +1,7 @@
 import { Layout } from '@/ui/Layout';
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { RichTextView } from '@/ui/RichTextView';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader, TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { moneyFormatter } from '@/ui/format';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
@@ -9,14 +9,15 @@ import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
+import { Pencil } from 'lucide-react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
-import { useActionMap } from '@/lib/actions';
+import { useActionMap, useActions } from '@/lib/actions';
 import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { tenantLocationActions } from '@/lib/actions/tenantLocation';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
-import { ActionGroup } from '@/ui/ActionGroup';
+import { ActionRow } from '@/ui/ActionRow';
 
 export default function ClubPage() {
   const auth = useAuth();
@@ -34,21 +35,26 @@ export default function ClubPage() {
     tenantLocationActions,
     tenant?.tenant?.tenantLocationsList ?? [],
   );
+  const tenantActions = useActions(
+    [
+      {
+        id: 'tenant.edit',
+        primary: true,
+        label: 'Upravit klub',
+        icon: Pencil,
+        visible: ({ auth }) => auth.isAdmin,
+        type: 'dialog' as const,
+        render: () => <EditTenantForm />,
+      },
+    ],
+    tenant?.tenant,
+  );
 
   if (!tenant?.tenant) return null;
 
   return (
     <Layout requireMember>
-      <TitleBar title="Klub">
-        {auth.isAdmin && (
-          <Dialog>
-            <DialogTrigger.Edit />
-            <DialogContent>
-              <EditTenantForm />
-            </DialogContent>
-          </Dialog>
-        )}
-      </TitleBar>
+      <PageHeader title="Klub" actions={tenantActions} />
 
       <RichTextView value={tenant.tenant.description} />
 
@@ -56,9 +62,7 @@ export default function ClubPage() {
         Trenéři
       </h2>
       {tenant.tenant.tenantTrainersList.map((data) => (
-        <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
-          <ActionGroup variant="row" actions={trainerActionMap.get(data.id)!} />
-
+        <ActionRow key={data.id} actions={trainerActionMap.get(data.id)!}>
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             {!data.person ? (
               '?'
@@ -88,7 +92,7 @@ export default function ClubPage() {
               </div>
             )}
           </div>
-        </div>
+        </ActionRow>
       ))}
 
       {auth.isAdmin && (
@@ -97,28 +101,21 @@ export default function ClubPage() {
             Správci
           </h2>
           {tenant.tenant.tenantAdministratorsList.map((data) => (
-            <div className="flex gap-3 mb-1" key={data.id}>
-              <ActionGroup
-                variant="row"
-                actions={administratorActionMap.get(data.id)!}
-              />
-
-              <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-                {!data.person ? (
-                  '?'
-                ) : (
-                  <Link
-                    className="underline font-bold"
-                    href={{
-                      pathname: '/clenove/[id]',
-                      query: { id: data.person?.id },
-                    }}
-                  >
-                    {data.person?.name}
-                  </Link>
-                )}
-              </div>
-            </div>
+            <ActionRow key={data.id} actions={administratorActionMap.get(data.id)!}>
+              {!data.person ? (
+                '?'
+              ) : (
+                <Link
+                  className="underline font-bold text-sm py-1"
+                  href={{
+                    pathname: '/clenove/[id]',
+                    query: { id: data.person?.id },
+                  }}
+                >
+                  {data.person?.name}
+                </Link>
+              )}
+            </ActionRow>
           ))}
 
           <TitleBar title="Lokality/sály" variant="section" className="mt-3">
@@ -131,10 +128,9 @@ export default function ClubPage() {
           </TitleBar>
 
           {tenant.tenant.tenantLocationsList.map((item) => (
-            <div className="flex gap-3 mb-1" key={item.id}>
-              <ActionGroup variant="row" actions={locationActionMap.get(item.id)!} />
+            <ActionRow key={item.id} actions={locationActionMap.get(item.id)!}>
               <div className="grow gap-2 flex text-sm font-bold py-1">{item.name}</div>
-            </div>
+            </ActionRow>
           ))}
 
           {!!applications?.membershipApplicationsList?.length && (

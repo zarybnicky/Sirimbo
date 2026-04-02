@@ -56,7 +56,7 @@ export function ActionGroup<TItem extends object = object>({
 
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="inline-flex items-center gap-2">
         {primary.map((action) => (
           <button
             key={action.id}

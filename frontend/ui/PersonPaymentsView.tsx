@@ -16,7 +16,7 @@ import { useAuth } from './use-auth';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 import { Column, DataGrid, SortColumn } from 'react-data-grid';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
-import { ResolvedActions, useActions } from '@/lib/actions';
+import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
 import { transactionActions } from '@/lib/actions/transaction';
 import { ActionGroup } from '@/ui/ActionGroup';
@@ -191,6 +191,22 @@ function AccountPaymentsTable({ account }: { account: Account }) {
     () => sortRows(baseRows, sortColumns),
     [baseRows, sortColumns],
   );
+  const paymentActionMap = useActionMap(
+    paymentActions,
+    baseRows
+      .map((row) => row.transaction.payment)
+      .filter(
+        (
+          payment,
+        ): payment is NonNullable<PostingRow['transaction']['payment']> => !!payment,
+      ),
+  );
+  const transactionActionMap = useActionMap(
+    transactionActions,
+    baseRows
+      .filter((row) => !row.transaction.payment)
+      .map((row) => row.transaction),
+  );
 
   const columns = React.useMemo(() => {
     const cols: Column<PostingRow>[] = [];
@@ -203,13 +219,13 @@ function AccountPaymentsTable({ account }: { account: Account }) {
         resizable: false,
         sortable: false,
         renderCell: ({ row }) => {
-          const { transaction } = row;
-          const actions = transaction.payment
-            ? // eslint-disable-next-line react-hooks/rules-of-hooks
-              (useActions(paymentActions, transaction.payment) as ResolvedActions)
-            : // eslint-disable-next-line react-hooks/rules-of-hooks
-              (useActions(transactionActions, transaction) as ResolvedActions);
-          return <ActionGroup variant="row" actions={actions} />;
+          if (row.transaction.payment) {
+            const actions = paymentActionMap.get(row.transaction.payment.id);
+            return actions ? <ActionGroup variant="row" actions={actions} /> : null;
+          }
+
+          const actions = transactionActionMap.get(row.transaction.id);
+          return actions ? <ActionGroup variant="row" actions={actions} /> : null;
         },
       });
     }
@@ -254,7 +270,7 @@ function AccountPaymentsTable({ account }: { account: Account }) {
     );
 
     return cols;
-  }, [auth.isAdmin, currency]);
+  }, [auth.isAdmin, currency, paymentActionMap, transactionActionMap]);
 
   return (
     <div className="not-prose">

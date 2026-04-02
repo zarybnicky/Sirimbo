@@ -2,22 +2,20 @@ import { Layout } from '@/ui/Layout';
 import { CohortWithMembersDocument } from '@/graphql/Cohorts';
 import { CohortList } from '@/ui/lists/CohortList';
 import { RichTextView } from '@/ui/RichTextView';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { CohortForm } from '@/ui/forms/CohortForm';
 import { slugify } from '@/lib/slugify';
-import { buttonCls, typographyCls } from '@/ui/style';
+import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useTypedRouter, zRouterString } from '@/ui/useTypedRouter';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { exportCohort } from '@/ui/reports/export-cohort';
 import Link from 'next/link';
 import { formatOpenDateRange } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
-import { useActionMap } from '@/lib/actions';
+import { useActionMap, useActions } from '@/lib/actions';
+import { cohortActions } from '@/lib/actions/cohort';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { ActionGroup } from '@/ui/ActionGroup';
 
@@ -45,6 +43,7 @@ function TrainingCohortPage() {
     () => cohort?.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', ''),
     [cohort?.description],
   );
+  const actions = useActions(cohortActions, cohort);
 
   React.useEffect(() => {
     if (!router.isReady || !idParam || fetchingCohort) return;
@@ -79,25 +78,7 @@ function TrainingCohortPage() {
   return (
     <Layout hideTopMenuIfLoggedIn>
       <WithSidebar sidebar={<CohortList />}>
-        <TitleBar title={cohort?.name}>
-          {auth.isTrainerOrAdmin && cohort.id && (
-            <button
-              type="button"
-              className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() => exportCohort([cohort.id], cohort.name)}
-            >
-              Export členů
-            </button>
-          )}
-          {auth.isAdmin && cohort.id && (
-            <Dialog>
-              <DialogTrigger.Edit size="sm" />
-              <DialogContent>
-                <CohortForm id={cohort.id} />
-              </DialogContent>
-            </Dialog>
-          )}
-        </TitleBar>
+        <PageHeader title={cohort.name} actions={actions} />
 
         <h6 className="font-bold mb-2">{cohort.location}</h6>
         <RichTextView value={description} />

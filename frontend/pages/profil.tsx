@@ -3,7 +3,7 @@ import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { PersonView } from '@/ui/PersonView';
 import { TabMenu, type TabMenuProps } from '@/ui/TabMenu';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { useAuth } from '@/ui/use-auth';
@@ -13,6 +13,8 @@ import { useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
+import { LockKeyhole } from 'lucide-react';
+import { useActions } from '@/lib/actions';
 
 type Tabs = TabMenuProps['options'];
 
@@ -24,6 +26,20 @@ export default function ProfilePage() {
     pause: !enableRegistration,
   });
   const [variant, setVariant] = useQueryParam('person', StringParam);
+  const actions = useActions(
+    [
+      {
+        id: 'profile.changePassword',
+        primary: true,
+        label: 'Změnit heslo',
+        icon: LockKeyhole,
+        visible: () => true,
+        type: 'dialog' as const,
+        render: () => <ChangePasswordForm />,
+      },
+    ],
+    {},
+  );
 
   const [tabs, setTabs] = React.useState<Tabs>([]);
   useLayoutEffect(() => {
@@ -62,14 +78,7 @@ export default function ProfilePage() {
 
   return (
     <Layout requireUser>
-      <TitleBar title="Můj profil">
-        <Dialog>
-          <DialogTrigger size="sm" text="Změnit heslo" />
-          <DialogContent>
-            <ChangePasswordForm />
-          </DialogContent>
-        </Dialog>
-      </TitleBar>
+      <PageHeader title="Můj profil" actions={actions} />
 
       <div className="max-w-full">
         <TabMenu selected={variant} onSelect={setVariant} options={tabs} />

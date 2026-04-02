@@ -10,6 +10,9 @@ import { useTypedRouter, zRouterString } from '@/ui/useTypedRouter';
 import { cardCls } from '@/ui/style';
 import { useQuery } from 'urql';
 import { Spinner } from '@/ui/Spinner';
+import { useActionMap } from '@/lib/actions';
+import { cohortActions } from '@/lib/actions/cohort';
+import { ActionGroup } from '@/ui/ActionGroup';
 
 const QueryParams = z.object({
   id: zRouterString,
@@ -25,6 +28,7 @@ function TrainingGroupPage() {
     pause: !router.isReady || !idParam,
   });
   const item = data?.cohortGroup;
+  const cohortActionMap = useActionMap(cohortActions, item?.cohortsList ?? []);
 
   React.useEffect(() => {
     if (!router.isReady || !idParam || fetching) return;
@@ -64,16 +68,19 @@ function TrainingGroupPage() {
             key={item.id}
             className={cardCls({ className: 'group break-inside-avoid pl-8' })}
           >
-            <h5 className="text-xl underline">
-              <Link
-                href={{
-                  pathname: '/treninkove-skupiny/[id]',
-                  query: { id: item.id },
-                }}
-              >
-                {item.name}
-              </Link>
-            </h5>
+            <div className="mb-2 flex items-start justify-between gap-3">
+              <h5 className="text-xl underline">
+                <Link
+                  href={{
+                    pathname: '/treninkove-skupiny/[id]',
+                    query: { id: item.id },
+                  }}
+                >
+                  {item.name}
+                </Link>
+              </h5>
+              <ActionGroup actions={cohortActionMap.get(item.id)!} />
+            </div>
             <h6 className="font-bold mb-2">{item.location}</h6>
             <RichTextView
               value={item.description.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}

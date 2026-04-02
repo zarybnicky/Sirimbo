@@ -11,6 +11,9 @@ import { buttonCls, cardCls } from '@/ui/style';
 import { exportCohort } from '@/ui/reports/export-cohort';
 import { useQuery } from 'urql';
 import { CohortListDocument } from '@/graphql/Cohorts';
+import { useActionMap } from '@/lib/actions';
+import { cohortActions } from '@/lib/actions/cohort';
+import { ActionGroup } from '@/ui/ActionGroup';
 
 export default function TrainingGroupsPage() {
   const auth = useAuth();
@@ -18,6 +21,7 @@ export default function TrainingGroupsPage() {
     query: CohortListDocument,
     variables: { visible: true },
   });
+  const cohortActionMap = useActionMap(cohortActions, cohorts?.cohortsList ?? []);
 
   const wrap = (x: React.ReactNode) => (
     <Layout hideTopMenuIfLoggedIn>
@@ -47,16 +51,19 @@ export default function TrainingGroupsPage() {
             key={item.id}
             className={cardCls({ className: 'group break-inside-avoid pl-6' })}
           >
-            <h5 className="text-xl underline">
-              <Link
-                href={{
-                  pathname: '/treninkove-skupiny/[id]',
-                  query: { id: item.id },
-                }}
-              >
-                {item.name}
-              </Link>
-            </h5>
+            <div className="mb-2 flex items-start justify-between gap-3">
+              <h5 className="text-xl underline">
+                <Link
+                  href={{
+                    pathname: '/treninkove-skupiny/[id]',
+                    query: { id: item.id },
+                  }}
+                >
+                  {item.name}
+                </Link>
+              </h5>
+              <ActionGroup actions={cohortActionMap.get(item.id)!} />
+            </div>
             <h6 className="font-bold mb-2">{item.location}</h6>
             <RichTextView
               value={item.description.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}

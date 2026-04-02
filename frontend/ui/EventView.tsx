@@ -10,7 +10,7 @@ import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
 import { Spinner } from '@/ui/Spinner';
 import { TabMenu } from '@/ui/TabMenu';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import {
   formatDefaultEventName,
   formatLongCoupleName,
@@ -95,9 +95,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
 
   return (
     <>
-      <TitleBar title={event.name || formatDefaultEventName(event)}>
-        <ActionGroup actions={actions} />
-      </TitleBar>
+      <PageHeader title={event.name || formatDefaultEventName(event)} actions={actions} />
 
       <BasicEventInfo event={event} />
 

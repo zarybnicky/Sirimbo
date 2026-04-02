@@ -31,6 +31,7 @@ import { tenantMembershipActions } from '@/lib/actions/tenantMembership';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { ActionGroup } from '@/ui/ActionGroup';
+import { ActionRow } from '@/ui/ActionRow';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
@@ -133,9 +134,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         .filter(keyIsNonNull('cohort'))
         .toSorted((x, y) => (x.person?.name || '').localeCompare(y.person?.name || ''))
         .map((item) => (
-          <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-            <ActionGroup variant="row" actions={cohortMembershipActionMap.get(item.id)!} />
-
+          <ActionRow key={item.id} actions={cohortMembershipActionMap.get(item.id)!}>
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
               <Link
                 className="underline font-bold"
@@ -148,7 +147,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               </Link>
               <span>{formatOpenDateRange(item)}</span>
             </div>
-          </div>
+          </ActionRow>
         ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -160,25 +159,18 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       {item.tenantAdministratorsList
         .filter((x) => x.tenantId === tenantId)
         .map((item) => (
-          <div className="flex gap-3 mb-1" key={item.id}>
-            <ActionGroup
-              variant="row"
-              actions={tenantAdministratorActionMap.get(item.id)!}
-            />
-
+          <ActionRow key={item.id} actions={tenantAdministratorActionMap.get(item.id)!}>
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
               <b>Správce klubu {item.tenantName}</b>
             </div>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
-          </div>
+          </ActionRow>
         ))}
 
       {item.tenantTrainersList
         .filter((x) => x.tenantId === tenantId && x.status === 'ACTIVE')
         .map((item) => (
-          <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-            <ActionGroup variant="row" actions={tenantTrainerActionMap.get(item.id)!} />
-
+          <ActionRow key={item.id} actions={tenantTrainerActionMap.get(item.id)!}>
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
               <b>Trenér v klubu {item.tenantName}</b>
               {auth.isAdmin && (
@@ -194,19 +186,17 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
                 </div>
               )}
             </div>
-          </div>
+          </ActionRow>
         ))}
       {item.tenantMembershipsList
         .filter((x) => x.tenantId === tenantId)
         .map((item) => (
-          <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-            <ActionGroup variant="row" actions={tenantMembershipActionMap.get(item.id)!} />
-
+          <ActionRow key={item.id} actions={tenantMembershipActionMap.get(item.id)!}>
             <div className="grow align-baseline text-sm font-bold py-1">
               Člen klubu {item.tenantName}
             </div>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
-          </div>
+          </ActionRow>
         ))}
 
       {isAdminOrCurrentPerson && (
@@ -217,23 +207,19 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           </div>
 
           {item.userProxiesList?.filter(keyIsNonNull('user')).map((proxy) => (
-            <div className="flex gap-3 mb-3 items-start" key={proxy.id}>
-              <ActionGroup variant="row" actions={userProxyActionMap.get(proxy.id)!} />
-
-              <div className="grow min-w-0 space-y-2 text-sm">
-                <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3">
-                  <b className="break-words">
-                    <Link
-                      href={{ pathname: '/users/[id]', query: { id: proxy.user.id } }}
-                      className="underline"
-                    >
-                      {[proxy.user.uEmail, proxy.user.uLogin].filter(Boolean).join(', ')}
-                    </Link>
-                  </b>
-                  <span className="text-neutral-10">{formatOpenDateRange(proxy)}</span>
-                </div>
+            <ActionRow key={proxy.id} actions={userProxyActionMap.get(proxy.id)!}>
+              <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between text-sm gap-y-1 sm:gap-x-3">
+                <b className="break-words">
+                  <Link
+                    href={{ pathname: '/users/[id]', query: { id: proxy.user.id } }}
+                    className="underline"
+                  >
+                    {[proxy.user.uEmail, proxy.user.uLogin].filter(Boolean).join(', ')}
+                  </Link>
+                </b>
+                <span>{formatOpenDateRange(proxy)}</span>
               </div>
-            </div>
+            </ActionRow>
           ))}
 
           {auth.isAdmin && (
@@ -249,16 +235,17 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               </div>
 
               {item.personInvitationsList?.map((invitation) => (
-                <div className="flex gap-2 items-center" key={invitation.id}>
-                  <ActionGroup
-                    variant="row"
-                    actions={invitationActionMap.get(invitation.id)!}
-                  />
-                  <span>
-                    {invitation.email}, vytvořena{' '}
-                    {fullDateFormatter.format(new Date(invitation.createdAt))}
-                  </span>
-                </div>
+                <ActionRow key={invitation.id} actions={invitationActionMap.get(invitation.id)!}>
+                  <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3 text-sm py-1">
+                    <b className="break-words">
+                      {invitation.email}
+                    </b>
+                    <span>
+                      vytvořena{' '}
+                      {fullDateFormatter.format(new Date(invitation.createdAt))}
+                    </span>
+                  </div>
+                </ActionRow>
               ))}
             </>
           )}
@@ -271,9 +258,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
 function CoupleRow({ item }: { item: CoupleFragment }) {
   const actions = useActions(coupleActions, item);
   return (
-    <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-      <ActionGroup variant="row" actions={actions} />
-
+    <ActionRow actions={actions} className="items-baseline">
       <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
         <Link
           className="underline font-bold"
@@ -286,6 +271,6 @@ function CoupleRow({ item }: { item: CoupleFragment }) {
         </Link>
         <span>{formatOpenDateRange(item)}</span>
       </div>
-    </div>
+    </ActionRow>
   );
 }
