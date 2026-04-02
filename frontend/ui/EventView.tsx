@@ -4,16 +4,15 @@ import {
   type EventFragment,
   type EventFullFragment,
   EventPaymentsDocument,
-  type EventRegistrationsFragment,
 } from '@/graphql/Event';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
+import { EventRegistrationsView } from '@/ui/EventRegistrationsView';
 import { RichTextView } from '@/ui/RichTextView';
 import { Spinner } from '@/ui/Spinner';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import {
   formatDefaultEventName,
-  formatLongCoupleName,
   formatOpenDateRange,
   fullDateFormatter,
   moneyFormatter,
@@ -26,7 +25,7 @@ import { useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { isTruthy } from '@/lib/truthyFilter';
 import { useActionMap, useActions } from '@/lib/actions';
-import { eventActions, eventExternalRegistrationActions } from '@/lib/actions/event';
+import { eventActions } from '@/lib/actions/event';
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionGroup } from '@/ui/ActionGroup';
 
@@ -61,11 +60,11 @@ export function EventView({ event }: { event: EventFullFragment }) {
     const numRegistrations =
       (event.eventRegistrationsList.length ?? 0) +
       (event.eventExternalRegistrationsList.length ?? 0);
-    if (auth.user?.id && numRegistrations > 0) {
+    if (auth.isTrainerOrAdmin && numRegistrations > 0) {
       tabs.push({
         id: 'registrations',
         title: `Přihlášky (${numRegistrations})`,
-        contents: () => <Registrations event={event} />,
+        contents: () => <EventRegistrationsView event={event} />,
       });
     }
 
@@ -89,7 +88,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
       );
     }
     return tabs;
-  }, [auth.isTrainerOrAdmin, auth.user?.id, event]);
+  }, [auth.isTrainerOrAdmin, event]);
 
   if (!event) return null;
 
@@ -198,48 +197,6 @@ function EventInstances({ event }: { event: EventFullFragment }) {
         })}
       </tbody>
     </table>
-  );
-}
-
-function Registrations({ event }: { event: EventFragment & EventRegistrationsFragment }) {
-  const externalRegistrationActionMap = useActionMap(
-    eventExternalRegistrationActions,
-    event.eventExternalRegistrationsList ?? [],
-  );
-
-  return (
-    <div>
-      {event.eventRegistrationsList?.map((x) => (
-        <div key={x.id} className="p-1">
-          <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple)}</div>
-          {(x.note || x.eventLessonDemandsByRegistrationIdList) && (
-            <div className="ml-3">
-              {x.eventLessonDemandsByRegistrationIdList.map((x) => (
-                <div key={x.id}>
-                  {x.lessonCount}x{' '}
-                  {event.eventTrainersList.find((y) => y.id === x.trainerId)?.name}
-                </div>
-              ))}
-              {x.note}
-            </div>
-          )}
-        </div>
-      ))}
-      {event.eventExternalRegistrationsList?.map((x) => (
-        <div key={x.id} className="p-1">
-          <div className="flex gap-2 items-center justify-between">
-            <div>
-              {x.prefixTitle} {x.firstName} {x.lastName} {x.suffixTitle}
-            </div>
-            <ActionGroup
-              variant="row"
-              actions={externalRegistrationActionMap.get(x.id)!}
-            />
-          </div>
-          {x.note && <div className="ml-3">{x.note}</div>}
-        </div>
-      ))}
-    </div>
   );
 }
 
