@@ -1,11 +1,11 @@
-import { type EventFragment, UpdateEventDocument } from '@/graphql/Event';
+import { UpdateEventDocument, EventDocument } from '@/graphql/Event';
 import { TabMenu } from '@/ui/TabMenu';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,45 +15,47 @@ const Form = z.object({
   description: z.string(),
 });
 
-type NonEmptyArray<T> = [T, ...T[]];
-
-export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
+export function EditEventDescriptionForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit, getValues } = useForm({
     shouldUnregister: false,
     resolver: zodResolver(Form),
   });
   const update = useMutation(UpdateEventDocument)[1];
+  const [{ data: event }] = useQuery({
+    query: EventDocument,
+    variables: { id },
+  });
   const [tab, setTab] = React.useState('summary');
 
   const values = getValues();
 
   React.useEffect(() => {
-    if (!getValues('summary') && !getValues('description')) {
+    if (event?.event && !getValues('summary') && !getValues('description')) {
       reset({
-        summary: event.summary,
-        description: event.description,
+        summary: event.event.summary,
+        description: event.event.description,
       });
     }
   }, [reset, getValues, event]);
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    await update({ id: event.id, patch: values });
+    await update({ id, patch: values });
     onSuccess();
   });
 
-  const tabs: NonEmptyArray<{
+  const tabs: Array<{
     id: string;
     title: React.ReactNode;
     contents: () => React.ReactNode;
-  }> = [
+  }> = event?.event ? [
     {
       id: 'summary',
       title: 'Shrnutí',
       contents: () => (
         <RichTextEditor
           name="summary"
-          initialState={values.summary || event?.summary}
+          initialState={values.summary || event.event?.summary}
           control={control}
           key="summary"
         />
@@ -65,13 +67,13 @@ export function EditEventDescriptionForm({ event }: { event: EventFragment }) {
       contents: () => (
         <RichTextEditor
           name="description"
-          initialState={values.description || event?.description}
+          initialState={values.description || event.event?.description}
           control={control}
           key="description"
         />
       ),
     },
-  ];
+  ] : [];
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>

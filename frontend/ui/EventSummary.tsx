@@ -5,7 +5,6 @@ import {
 } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from '@/lib/cn';
-import { DropdownMenuTrigger } from '@/ui/dropdown';
 import {
   formatDefaultEventName,
   formatEventType,
@@ -13,7 +12,9 @@ import {
   moneyFormatter,
   shortTimeFormatter,
 } from '@/ui/format';
-import { EventInstanceMenu } from '@/ui/menus/EventInstanceMenu';
+import { useActions } from '@/lib/actions';
+import { eventInstanceActions } from '@/lib/actions/eventInstance';
+import { ActionGroup } from '@/ui/ActionGroup';
 import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -29,6 +30,7 @@ export function EventSummary({
   instance: EventInstanceWithTrainerFragment;
   offsetButtons?: boolean;
 }) {
+  const actions = useActions(eventInstanceActions, instance);
   const registrationCount = event.eventRegistrations.totalCount;
   const myRegistrations = event.myRegistrationsList || [];
   const start = new Date(instance.since);
@@ -115,16 +117,9 @@ export function EventSummary({
 
       <MyRegistrationsDialog event={event} />
 
-      <EventInstanceMenu
-        className="z-[100]"
-        align="end"
-        event={event}
-        instance={instance}
-      >
-        <DropdownMenuTrigger.RowDots
-          className={cn('size-5 absolute top-4', offsetButtons ? 'right-9' : 'right-2')}
-        />
-      </EventInstanceMenu>
+      <div className={cn('absolute top-4 z-[100]', offsetButtons ? 'right-9' : 'right-2')}>
+        <ActionGroup variant="row" align="end" actions={actions} />
+      </div>
     </div>
   );
 }

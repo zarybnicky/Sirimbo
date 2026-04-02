@@ -64,6 +64,7 @@ fragment EventInstance on EventInstance {
 
 fragment EventInstanceWithTrainer on EventInstance {
   ...EventInstance
+  eventId
   name
   type
   locationText

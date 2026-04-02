@@ -1,6 +1,5 @@
 import type { AttendanceType } from '@/graphql';
 import {
-  DeleteEventExternalRegistrationDocument,
   type EventAttendanceSummaryFragment,
   type EventFragment,
   type EventFullFragment,
@@ -13,27 +12,21 @@ import { Spinner } from '@/ui/Spinner';
 import { TabMenu } from '@/ui/TabMenu';
 import { TitleBar } from '@/ui/TitleBar';
 import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown';
-import {
   formatDefaultEventName,
   formatLongCoupleName,
   formatOpenDateRange,
   fullDateFormatter,
   moneyFormatter,
 } from '@/ui/format';
-import { EventMenu } from '@/ui/menus/EventMenu';
 import { useAuth } from '@/ui/use-auth';
 import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
-import { useMutation, useQuery } from 'urql';
+import { useQuery } from 'urql';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { isTruthy } from '@/lib/truthyFilter';
-import { useActionMap } from '@/lib/actions';
+import { useActionMap, useActions } from '@/lib/actions';
+import { eventActions, eventExternalRegistrationActions } from '@/lib/actions/event';
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionGroup } from '@/ui/ActionGroup';
 
@@ -47,6 +40,7 @@ const labels: { [key in AttendanceType]: LucideIcon } = {
 export function EventView({ event }: { event: EventFullFragment }) {
   const auth = useAuth();
   const [variant, setVariant] = useQueryParam('tab', StringParam);
+  const actions = useActions(eventActions, event);
 
   const tabs = React.useMemo(() => {
     const tabs: {
@@ -102,9 +96,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
   return (
     <>
       <TitleBar title={event.name || formatDefaultEventName(event)}>
-        <EventMenu align="end" data={event}>
-          <DropdownMenuTrigger.CornerDots />
-        </EventMenu>
+        <ActionGroup actions={actions} />
       </TitleBar>
 
       <BasicEventInfo event={event} />
@@ -212,6 +204,11 @@ function EventInstances({ event }: { event: EventFullFragment }) {
 }
 
 function Registrations({ event }: { event: EventFragment & EventRegistrationsFragment }) {
+  const externalRegistrationActionMap = useActionMap(
+    eventExternalRegistrationActions,
+    event.eventExternalRegistrationsList ?? [],
+  );
+
   return (
     <div>
       {event.eventRegistrationsList?.map((x) => (
@@ -232,39 +229,19 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
       ))}
       {event.eventExternalRegistrationsList?.map((x) => (
         <div key={x.id} className="p-1">
-          <EventExternalRegistrationMenu id={x.id}>
+          <div className="flex gap-2 items-center justify-between">
             <div>
               {x.prefixTitle} {x.firstName} {x.lastName} {x.suffixTitle}
             </div>
-          </EventExternalRegistrationMenu>
+            <ActionGroup
+              variant="row"
+              actions={externalRegistrationActionMap.get(x.id)!}
+            />
+          </div>
           {x.note && <div className="ml-3">{x.note}</div>}
         </div>
       ))}
     </div>
-  );
-}
-
-function EventExternalRegistrationMenu({
-  id,
-  children,
-}: {
-  id: string;
-  children: React.ReactNode;
-}) {
-  const doDelete = useMutation(DeleteEventExternalRegistrationDocument)[1];
-  const onDelete = React.useCallback(() => doDelete({ id }), [id, doDelete]);
-  const auth = useAuth();
-  if (!auth.isAdmin) return children;
-  return (
-    <DropdownMenu>
-      <div className="flex gap-2 items-center justify-between">
-        {children}
-        <DropdownMenuTrigger.RowDots />
-      </div>
-      <DropdownMenuContent>
-        <DropdownMenuButton onClick={onDelete}>Smazat</DropdownMenuButton>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
 

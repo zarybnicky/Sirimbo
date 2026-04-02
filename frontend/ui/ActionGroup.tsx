@@ -7,14 +7,17 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { useConfirm } from '@/ui/Confirm';
+import type { ConfirmOptions } from '@/ui/Confirm';
 import type { ResolvedAction, ResolvedActions } from '@/lib/actions';
 import { buttonCls } from '@/ui/style';
 
 export function ActionGroup<TItem extends object = object>({
   actions,
   variant = 'main',
+  align,
 }: {
   variant?: 'main' | 'row';
+  align?: 'start' | 'end';
   actions: ResolvedActions<TItem>;
 }) {
   const primary = variant === 'row' ? [] : actions.primary;
@@ -33,7 +36,11 @@ export function ActionGroup<TItem extends object = object>({
 
     if (action.confirm) {
       try {
-        await confirm({ description: action.confirm });
+        const options: Partial<ConfirmOptions> =
+          typeof action.confirm === 'string'
+            ? { description: action.confirm }
+            : action.confirm;
+        await confirm(options);
       } catch {
         return;
       }
@@ -70,7 +77,7 @@ export function ActionGroup<TItem extends object = object>({
             ) : (
               <DropdownMenuTrigger.RowDots className="relative top-0 right-0" />
             )}
-            <DropdownMenuContent align={variant === 'main' ? 'end' : 'start'}>
+            <DropdownMenuContent align={align ?? (variant === 'main' ? 'end' : 'start')}>
               {secondary.map((action) => (
                 <DropdownMenuButton
                   key={action.id}

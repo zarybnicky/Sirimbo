@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { cn } from '@/lib/cn';
 
-type ConfirmOptions = {
+export type ConfirmOptions = {
   title: React.ReactNode;
   description: React.ReactNode;
   content: React.ReactNode;

@@ -4,6 +4,7 @@ import { useAuth } from '@/ui/use-auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';
 import { NextRouter, useRouter } from 'next/router';
 import { DialogContent } from '@radix-ui/react-dialog';
+import type { ConfirmOptions } from '@/ui/Confirm';
 
 export type ActionContext<TItem> = {
   auth: AuthState;
@@ -42,7 +43,7 @@ export type DialogAction<TItem> = BaseAction<TItem> & {
 
 export type MutationAction<TItem> = BaseAction<TItem> & {
   type: 'mutation';
-  confirm?: Resolvable<TItem, string>;
+  confirm?: Resolvable<TItem, string | Partial<ConfirmOptions>>;
   execute: (ctx: ActionContext<TItem>) => Promise<void>;
 };
 
@@ -53,7 +54,7 @@ export type ResolvedDialogAction<TItem> = ResolvedBaseAction<TItem> &
 
 export type ResolvedMutationAction<TItem> = ResolvedBaseAction<TItem> &
   Omit<MutationAction<TItem>, keyof BaseAction<TItem> | 'confirm'> & {
-    confirm?: string;
+    confirm?: string | Partial<ConfirmOptions>;
   };
 
 export type ResolvedAction<TItem> =

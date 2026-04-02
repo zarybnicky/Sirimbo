@@ -30,16 +30,16 @@ const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyAr
 
 export function UpsertEventForm({
   initialValue = {},
-  event,
+  eventId,
 }: {
   initialValue?: Partial<z.input<typeof EventForm>>;
-  event?: EventFragment;
+  eventId?: string;
 }) {
   const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
   const initializedRef = React.useRef(false);
   const { onSuccess } = useFormResult();
   const upsert = useMutation(UpsertEventDocument)[1];
-  const id = event?.id ?? '';
+  const id = eventId ?? '';
   const [{ data: eventData }, fetchEvent] = useQuery({
     query: EventDocument,
     variables: { id },
@@ -71,10 +71,10 @@ export function UpsertEventForm({
   }, [tenant]);
 
   React.useEffect(() => {
-    if (event && !initializedRef.current) {
+    if (eventId && !initializedRef.current) {
       fetchEvent();
     }
-  }, [event, fetchEvent]);
+  }, [eventId, fetchEvent]);
 
   React.useEffect(() => {
     const event = eventData?.event;
@@ -164,7 +164,7 @@ export function UpsertEventForm({
     const result = await upsert({
       input: {
         info: {
-          id: event?.id || null,
+          id: eventId || null,
           name: values.name,
           summary: values.summary,
           description: values.description,
