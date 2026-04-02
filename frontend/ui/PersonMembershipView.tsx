@@ -21,7 +21,6 @@ import {
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { TenantAdministratorMenu } from '@/ui/menus/TenantAdministratorMenu';
-import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue } from 'jotai';
@@ -39,6 +38,7 @@ import { useActionMap, useActions } from '@/lib/actions';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { coupleActions } from '@/lib/actions/couple';
 import { tenantMembershipActions } from '@/lib/actions/tenantMembership';
+import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionGroup } from '@/ui/ActionGroup';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
@@ -69,6 +69,10 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
   const tenantMembershipActionMap = useActionMap(
     tenantMembershipActions,
     item.tenantMembershipsList,
+  );
+  const tenantTrainerActionMap = useActionMap(
+    tenantTrainerActions,
+    item.tenantTrainersList,
   );
 
   return (
@@ -165,9 +169,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         .filter((x) => x.tenantId === tenantId && x.status === 'ACTIVE')
         .map((item) => (
           <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-            <TenantTrainerMenu align="start" data={item}>
-              <DropdownMenuTrigger.RowDots />
-            </TenantTrainerMenu>
+            <ActionGroup variant="row" actions={tenantTrainerActionMap.get(item.id)!} />
 
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
               <b>Trenér v klubu {item.tenantName}</b>

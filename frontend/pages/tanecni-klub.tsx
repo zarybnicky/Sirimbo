@@ -10,17 +10,23 @@ import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
 import { TenantAdministratorMenu } from '@/ui/menus/TenantAdministratorMenu';
 import { TenantLocationMenu } from '@/ui/menus/TenantLocationMenu';
-import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { useActionMap } from '@/lib/actions';
+import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
+import { ActionGroup } from '@/ui/ActionGroup';
 
 export default function ClubPage() {
   const auth = useAuth();
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const [{ data: applications }] = useQuery({ query: MyMembershipApplicationsDocument });
+  const trainerActionMap = useActionMap(
+    tenantTrainerActions,
+    tenant?.tenant?.tenantTrainersList ?? [],
+  );
 
   if (!tenant?.tenant) return null;
 
@@ -44,9 +50,7 @@ export default function ClubPage() {
       </h2>
       {tenant.tenant.tenantTrainersList.map((data) => (
         <div className="flex gap-3 mb-1 align-baseline" key={data.id}>
-          <TenantTrainerMenu align="start" data={data}>
-            <DropdownMenuTrigger.RowDots />
-          </TenantTrainerMenu>
+          <ActionGroup variant="row" actions={trainerActionMap.get(data.id)!} />
 
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             {!data.person ? (
