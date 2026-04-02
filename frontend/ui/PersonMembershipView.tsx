@@ -31,7 +31,6 @@ import { tenantIdAtom } from '@/ui/state/auth';
 import { DeleteInvitationDocument } from '@/graphql/Invitation';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
-import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 import { useActionMap, useActions } from '@/lib/actions';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
@@ -39,6 +38,7 @@ import { coupleActions } from '@/lib/actions/couple';
 import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { tenantMembershipActions } from '@/lib/actions/tenantMembership';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
+import { userProxyActions } from '@/lib/actions/userProxy';
 import { ActionGroup } from '@/ui/ActionGroup';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
@@ -78,6 +78,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
     tenantTrainerActions,
     item.tenantTrainersList,
   );
+  const userProxyActionMap = useActionMap(userProxyActions, item.userProxiesList ?? []);
 
   return (
     <div key="info" className="mb-2">
@@ -215,9 +216,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
 
           {item.userProxiesList?.filter(keyIsNonNull('user')).map((proxy) => (
             <div className="flex gap-3 mb-3 items-start" key={proxy.id}>
-              <UserProxyMenu align="start" data={proxy}>
-                <DropdownMenuTrigger.RowDots />
-              </UserProxyMenu>
+              <ActionGroup variant="row" actions={userProxyActionMap.get(proxy.id)!} />
 
               <div className="grow min-w-0 space-y-2 text-sm">
                 <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3">
