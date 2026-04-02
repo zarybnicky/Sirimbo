@@ -14,11 +14,12 @@ import { useQuery } from 'urql';
 import { z } from 'zod';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { exportCohort } from '@/ui/reports/export-cohort';
-import { DropdownMenuTrigger } from '@/ui/dropdown';
-import { CohortMembershipMenu } from '@/ui/menus/CohortMembershipMenu';
 import Link from 'next/link';
 import { formatOpenDateRange } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
+import { useActionMap } from '@/lib/actions';
+import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
+import { ActionGroup } from '@/ui/ActionGroup';
 
 const QueryParams = z.object({
   id: zRouterString,
@@ -39,6 +40,7 @@ function TrainingCohortPage() {
     () => cohort?.cohortMembershipsList ?? [],
     [cohort?.cohortMembershipsList],
   );
+  const memberActionMap = useActionMap(cohortMembershipActions, members);
   const description = React.useMemo(
     () => cohort?.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', ''),
     [cohort?.description],
@@ -117,9 +119,10 @@ function TrainingCohortPage() {
             >
               <div className="flex align-baseline gap-2">
                 {auth.isAdmin && (
-                  <CohortMembershipMenu data={membership}>
-                    <DropdownMenuTrigger.RowDots />
-                  </CohortMembershipMenu>
+                  <ActionGroup
+                    variant="row"
+                    actions={memberActionMap.get(membership.id)!}
+                  />
                 )}
                 {membership.person ? (
                   <Link

@@ -20,7 +20,6 @@ import {
 } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import { CohortMembershipMenu } from '@/ui/menus/CohortMembershipMenu';
 import { TenantAdministratorMenu } from '@/ui/menus/TenantAdministratorMenu';
 import { TenantMembershipMenu } from '@/ui/menus/TenantMembershipMenu';
 import { TenantTrainerMenu } from '@/ui/menus/TenantTrainerMenu';
@@ -37,7 +36,8 @@ import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { UserProxyMenu } from '@/ui/menus/UserProxyMenu';
 import { keyIsNonNull } from '@/lib/truthyFilter';
-import { useActions } from '@/lib/actions';
+import { useActionMap, useActions } from '@/lib/actions';
+import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActionGroup } from '@/ui/ActionGroup';
 
@@ -61,6 +61,10 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
   const addAsAdmin = React.useCallback(
     () => createTenantAdmin({ input: { tenantAdministrator: { personId: item.id } } }),
     [createTenantAdmin, item.id],
+  );
+  const cohortMembershipActionMap = useActionMap(
+    cohortMembershipActions,
+    item.cohortMembershipsList,
   );
 
   return (
@@ -101,9 +105,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         .toSorted((x, y) => (x.person?.name || '').localeCompare(y.person?.name || ''))
         .map((item) => (
           <div className="flex gap-3 mb-1 align-baseline" key={item.id}>
-            <CohortMembershipMenu align="start" data={item}>
-              <DropdownMenuTrigger.RowDots />
-            </CohortMembershipMenu>
+            <ActionGroup variant="row" actions={cohortMembershipActionMap.get(item.id)!} />
 
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
               <Link
