@@ -1,4 +1,13 @@
-import type { GraphCacheConfig } from '@/graphql';
+import type {
+  EventInstance,
+  GraphCacheConfig,
+  Maybe,
+  MoveEventInstancePayload,
+  Person,
+  TenantLocation,
+  TenantTrainer,
+  WithTypename,
+} from '@/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
 import { print } from '@0no-co/graphql.web';
@@ -204,6 +213,47 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     Price: () => null,
     ScoreboardRecord: (x) => x.personId || null,
     TenantSetting: (x) => x.tenantId || null,
+  },
+  optimistic: {
+    moveEventInstance({ input }, cache): Maybe<WithTypename<MoveEventInstancePayload>> {
+      if (!input.id) return null;
+      const trainers = cache.resolve(
+        { __typename: 'EventInstance', id: input.id },
+        'trainersList',
+      );
+      return {
+        __typename: 'MoveEventInstancePayload',
+        eventInstance: {
+          __typename: 'EventInstance',
+          id: input.id,
+          ...(input.since != null ? { since: input.since } : {}),
+          ...(input.until != null ? { until: input.until } : {}),
+          location:
+            input.locationId !== null
+              ? ({
+                  __typename: 'TenantLocation' as const,
+                  id: input.locationId,
+                } as TenantLocation)
+              : null,
+          locationText:
+            typeof input.locationText === 'string' ? input.locationText : null,
+          trainersList:
+            !input.trainerPersonId || (Array.isArray(trainers) && trainers.length > 1)
+              ? []
+              : [
+                  {
+                    __typename: 'TenantTrainer' as const,
+                    id: `optimistic-tenant-trainer:${input.trainerPersonId}`,
+                    personId: input.trainerPersonId,
+                    person: {
+                      __typename: 'Person' as const,
+                      id: input.trainerPersonId,
+                    } as Person,
+                  } as TenantTrainer,
+                ],
+        } as EventInstance,
+      };
+    },
   },
   updates: {
     Mutation: {

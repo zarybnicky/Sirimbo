@@ -203,8 +203,8 @@ function buildGrid(
     for (const ev of src) {
       if (!inEventRange(ev, dateRange)) continue;
 
-      const evStart = startOf(Math.max(+ev.start, +viewStart), 'day');
-      const evEnd = startOf(Math.min(+ev.end, +viewEnd), 'day');
+      const evStart = startOf(new Date(Math.max(+ev.start, +viewStart)), 'day');
+      const evEnd = startOf(new Date(Math.min(+ev.end, +viewEnd)), 'day');
 
       const ids = hasResources ? ev.resourceIds : ['__nothing__'];
       for (const rid of ids) {
