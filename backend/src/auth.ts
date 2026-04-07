@@ -70,6 +70,21 @@ function getBearerOrCookie(req: express.Request): string | undefined {
   return undefined;
 }
 
+function verifySessionToken(token: string): jwt.JwtPayload | undefined {
+  try {
+    return jwt.verify(token, JWT_SECRET, {
+      ignoreExpiration: true,
+      algorithms: ['HS256'],
+    }) as jwt.JwtPayload;
+  } catch (error) {
+    // Stale or tampered tokens should downgrade to anonymous access.
+    if (error instanceof jwt.JsonWebTokenError) {
+      return undefined;
+    }
+    throw error;
+  }
+}
+
 async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
   const tenantId = await findTenantId(req);
   const settings: Record<string, string> = {
@@ -87,10 +102,8 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
   const token = getBearerOrCookie(req);
   if (!token) return settings;
 
-  const claims = jwt.verify(token, JWT_SECRET, {
-    ignoreExpiration: true,
-    algorithms: ['HS256'],
-  }) as jwt.JwtPayload;
+  const claims = verifySessionToken(token);
+  if (!claims) return settings;
 
   settings.role = claims.is_system_admin
     ? 'system_admin'
@@ -119,8 +132,12 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
 
 export function authContext() {
   return async (req: express.Request, _res: unknown, next: express.NextFunction) => {
-    req.pgSettings = await loadUserFromSession(req);
-    next();
+    try {
+      req.pgSettings = await loadUserFromSession(req);
+      next();
+    } catch (error) {
+      next(error);
+    }
   };
 }
 
