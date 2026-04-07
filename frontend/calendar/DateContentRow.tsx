@@ -1,6 +1,5 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { add, eq, gt, inRange, lt, neq, startOf } from 'date-arithmetic';
-import getHeight from 'dom-helpers/height';
 import React from 'react';
 import BackgroundCells from './BackgroundCells';
 import { getSlotMetrics } from './DateSlotMetrics';
@@ -225,10 +224,15 @@ function DateContentRow({
 
   useLayoutEffect(() => {
     if (renderForMeasure) {
-      const eventHeight = eventRowRef.current ? getHeight(eventRowRef.current) : 0;
-      const headingHeight = headingRowRef.current ? getHeight(headingRowRef.current) : 0;
+      const eventHeight = eventRowRef.current
+        ? eventRowRef.current.getBoundingClientRect().height
+        : 0;
+      const headingHeight = headingRowRef.current
+        ? headingRowRef.current.getBoundingClientRect().height
+        : 0;
       const eventSpace =
-        (containerRef.current ? getHeight(containerRef.current) : 0) - headingHeight;
+        (containerRef.current ? containerRef.current.getBoundingClientRect().height : 0) -
+        headingHeight;
       setMaxRows(Math.max(Math.floor(eventSpace / eventHeight + 0.6), 1));
       setRenderForMeasure(false);
     }

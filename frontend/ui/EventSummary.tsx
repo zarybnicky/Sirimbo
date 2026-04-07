@@ -117,7 +117,7 @@ export function EventSummary({
 
       <MyRegistrationsDialog event={event} />
 
-      <div className={cn('absolute top-4 z-[100]', offsetButtons ? 'right-9' : 'right-2')}>
+      <div className={cn('absolute', offsetButtons ? 'right-9 top-3.5' : 'right-2 top-2')}>
         <ActionGroup variant="row" align="end" actions={actions} />
       </div>
     </div>

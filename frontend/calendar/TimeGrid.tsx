@@ -1,8 +1,6 @@
 import { cn } from '@/lib/cn';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { add, eq, startOf } from 'date-arithmetic';
-import scrollbarSize from 'dom-helpers/scrollbarSize';
-import getWidth from 'dom-helpers/width';
 import { useAtomValue } from 'jotai';
 import React from 'react';
 import DayColumn from './DayColumn';
@@ -46,23 +44,14 @@ export default React.memo(function TimeGrid({
   const gutterRef = React.useRef<HTMLDivElement>(null);
 
   const [gutterWidth, setGutterWidth] = React.useState<number | undefined>();
-  const [scrollbarMargin, setScrollbarMargin] = React.useState(false);
 
   useLayoutEffect(() => {
     if (!gutterRef?.current) return;
-    const width = getWidth(gutterRef.current);
+    const width = gutterRef.current.getBoundingClientRect().width;
     if (width && gutterWidth !== width) {
       setGutterWidth(width);
     }
-    const content = contentRef.current;
-    if (!content) return;
-    const isOverflowing =
-      content.scrollHeight > content.clientHeight &&
-      content.offsetWidth !== content.clientWidth;
-    if (scrollbarMargin !== isOverflowing) {
-      setScrollbarMargin(isOverflowing);
-    }
-  }, [gutterWidth, scrollbarMargin]);
+  }, [gutterWidth]);
 
   useLayoutEffect(() => {
     const content = contentRef.current;
@@ -88,11 +77,7 @@ export default React.memo(function TimeGrid({
         resources.length > 0 && 'rbc-time-view-resources',
       )}
     >
-      <div
-        ref={scrollRef}
-        className="rbc-time-header"
-        style={{ marginRight: scrollbarMargin ? `${scrollbarSize() - 1}px` : undefined }}
-      >
+      <div ref={scrollRef} className="rbc-time-header">
         <div
           className="px-1 rbc-time-header-gutter"
           style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }}
@@ -218,8 +203,8 @@ function buildGrid(
     for (const ev of src) {
       if (!inEventRange(ev, dateRange)) continue;
 
-      const evStart = startOf(ev.start < viewStart ? viewStart : ev.start, 'day');
-      const evEnd = startOf(ev.end > viewEnd ? viewEnd : ev.end, 'day');
+      const evStart = startOf(Math.max(+ev.start, +viewStart), 'day');
+      const evEnd = startOf(Math.min(+ev.end, +viewEnd), 'day');
 
       const ids = hasResources ? ev.resourceIds : ['__nothing__'];
       for (const rid of ids) {

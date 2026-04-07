@@ -1,5 +1,4 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import closest from 'dom-helpers/closest';
 import { add, eq, gt, lte, max, min } from 'date-arithmetic';
 import React from 'react';
 import { NowIndicator } from './NowIndicator';
@@ -188,8 +187,8 @@ function DayColumn({
           return pointInColumn(bounds, point);
         }
         const target = document.elementFromPoint(point.clientX, point.clientY)!;
-        const eventNode = closest(target, '.rbc-event', columnRef.current || undefined);
-        if (!eventNode) {
+        const eventNode = target.closest('.rbc-event');
+        if (!eventNode || !columnRef.current?.contains(eventNode)) {
           return false;
         }
         // eventOffsetTop is distance from the top of the event to the initial

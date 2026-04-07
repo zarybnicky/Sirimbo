@@ -1,5 +1,4 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import closest from 'dom-helpers/closest';
 import React from 'react';
 import { eq, neq } from 'date-arithmetic';
 import Selection, {
@@ -111,7 +110,8 @@ function BackgroundCells({
         if (isEvent(cellRef.current!, point)) {
           return EMPTY;
         }
-        if (closest(target, '.rbc-show-more', cellRef.current!)) {
+        const showMore = target.closest('.rbc-show-more');
+        if (showMore && cellRef.current!.contains(showMore)) {
           return EMPTY;
         }
         const rowBox = getBoundsForNode(cellRef.current!);

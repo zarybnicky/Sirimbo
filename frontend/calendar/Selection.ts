@@ -1,5 +1,3 @@
-import contains from 'dom-helpers/contains';
-import closest from 'dom-helpers/closest';
 import { TypedEventTarget } from 'typescript-event-target';
 
 export type ClientPoint = {
@@ -35,8 +33,9 @@ const addEventListener: <K extends keyof WindowEventMap>(
 };
 
 export function isEvent(node: HTMLElement, { clientX, clientY }: ClientPoint) {
-  const target = document.elementFromPoint(clientX, clientY)!;
-  return !!closest(target, '.rbc-event', node);
+  const target = document.elementFromPoint(clientX, clientY);
+  const event = target?.closest('.rbc-event');
+  return !!event && node.contains(event);
 }
 
 export function pointInColumn(bounds: BoxSize, point: { x: number; y: number }) {
@@ -231,12 +230,12 @@ class Selection extends TypedEventTarget<EventMap> {
     if (
       e.which === 3 ||
       (e as MouseEvent).button === 2 ||
-      !contains(node, document.elementFromPoint(clientX, clientY)!)
+      !node.contains(document.elementFromPoint(clientX, clientY))
     ) {
       return;
     }
     if (
-      !contains(node, e.target as HTMLElement) &&
+      !node.contains(e.target as Node | null) &&
       !objectsCollide(node, { top: pageY, left: pageX, bottom: pageY, right: pageX })
     ) {
       return;
@@ -311,7 +310,7 @@ class Selection extends TypedEventTarget<EventMap> {
     if (!this.initialEventData) return;
 
     const node = this.container();
-    const inRoot = !node || contains(node, e.target as HTMLElement);
+    const inRoot = !node || node.contains(e.target as Node | null);
 
     const { pageX, pageY } = getEventCoordinates(e as MouseEvent);
     const click = this.isClick(pageX, pageY);

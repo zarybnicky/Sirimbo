@@ -189,6 +189,7 @@
   width: 100%;
   @apply border-t-2 border-neutral-6;
   overflow-y: auto;
+  scrollbar-gutter: stable;
   position: relative;
 }
 .rbc-time-content > * + * > * {
