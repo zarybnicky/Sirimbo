@@ -1,5 +1,4 @@
 import { fetchStarlet } from '@/starlet/query';
-import { fetchGql } from '@/lib/query';
 import { Course, Student } from '@/starlet/graphql';
 import { CourseDocument } from '@/starlet/graphql/Query';
 import { capitalize } from '@/ui/format';
@@ -11,7 +10,7 @@ import {
   PersonMembershipsDocument,
   UpdatePersonDocument,
 } from '@/graphql/Person';
-import { useMutation, useQuery } from 'urql';
+import { useClient, useMutation, useQuery } from 'urql';
 import { SubmitButton } from '@/ui/submit';
 import { useAtomValue } from 'jotai';
 import { starletSettingsAtom, starletTokenAtom } from './state';
@@ -105,6 +104,7 @@ type Person = {
 };
 
 export function PersonComparisonForm() {
+  const client = useClient();
   const tenantId = useAtomValue(tenantIdAtom);
   const token = useAtomValue(starletTokenAtom);
   const { courses } = useAtomValue(starletSettingsAtom);
@@ -215,7 +215,11 @@ export function PersonComparisonForm() {
             cohortIds: [],
           },
         });
-        const memberships = await fetchGql(PersonMembershipsDocument, { id: person!.id });
+        const membershipsResult = await client
+          .query(PersonMembershipsDocument, { id: person!.id })
+          .toPromise();
+        if (membershipsResult.error) throw membershipsResult.error;
+        const memberships = membershipsResult.data!;
         const currentMembership = memberships.person?.tenantMembershipsList.find(
           (x) => x.tenantId === tenantId,
         );

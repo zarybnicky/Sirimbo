@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fullDateFormatter } from '@/ui/format';
 import { FormResponsesDocument } from '@/graphql/Crm';
-import { useQuery } from 'urql';
+import { useClient, useQuery } from 'urql';
 import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
@@ -10,6 +10,7 @@ import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
 
 export default function CrmPage() {
+  const client = useClient();
   const [{ data }] = useQuery({ query: FormResponsesDocument });
 
   const dataset = React.useMemo(() => {
@@ -50,7 +51,7 @@ export default function CrmPage() {
           <button
             type="button"
             className={buttonCls({ variant: 'outline' })}
-            onClick={exportFormResponses}
+            onClick={() => exportFormResponses(client)}
           >
             Export všech
           </button>

@@ -1,10 +1,12 @@
 import { EventDocument } from '@/graphql/Event';
-import { fetchGql } from '@/lib/query';
 import { fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
+import type { Client } from 'urql';
 
-export async function exportEventRegistrations(id: string) {
-  const data = await fetchGql(EventDocument, { id });
+export async function exportEventRegistrations(client: Client, id: string) {
+  const result = await client.query(EventDocument, { id }).toPromise();
+  if (result.error) throw result.error;
+  const data = result.data!;
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet(data.event?.name || 'Sheet 1');

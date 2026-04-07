@@ -70,11 +70,16 @@ export default function PaymentsPage() {
 }
 
 function AccountOverview() {
+  const client = useClient();
   const [{ data }] = useQuery({ query: PersonAccountsDocument });
 
   return (
     <>
-      <button type="button" className={buttonCls()} onClick={exportBalanceSheet}>
+      <button
+        type="button"
+        className={buttonCls()}
+        onClick={() => exportBalanceSheet(client)}
+      >
         Přehled plateb 2023
       </button>
       {(data?.filteredPeopleList || [])

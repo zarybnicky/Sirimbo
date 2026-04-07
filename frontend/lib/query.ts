@@ -10,7 +10,6 @@ import type {
 } from '@/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
-import { print } from '@0no-co/graphql.web';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { TypedEventTarget } from 'typescript-event-target';
@@ -18,10 +17,8 @@ import type {
   ClientOptions,
   CombinedError,
   Exchange,
-  ExecutionResult,
   Operation,
   SSRExchange,
-  TypedDocumentNode,
 } from 'urql';
 import { fetchExchange, mapExchange } from 'urql';
 import { pipe, tap } from 'wonka';
@@ -33,50 +30,6 @@ export const origin =
   typeof window === 'undefined'
     ? (process.env.GRAPHQL_BACKEND ?? `http://localhost:${process.env.PORT || 3000}`)
     : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? window.origin);
-
-export async function fetchGql<TResult, TVariables>(
-  document: TypedDocumentNode<TResult, TVariables>,
-  variables: TVariables,
-  server: string = origin,
-): Promise<TResult> {
-  const token = storeRef.current.get(tokenAtom);
-  const tenantId = storeRef.current.get(tenantIdAtom);
-  const response = await fetch(server + '/graphql', {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'content-type': 'application/json',
-      ...(tenantId
-        ? {
-            'x-tenant-id': tenantId,
-          }
-        : {}),
-      ...(token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {}),
-    },
-    body: JSON.stringify({
-      query: print(document),
-      variables,
-    }),
-  });
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch: ${response.statusText}. Body: ${await response.text()}`,
-    );
-  }
-
-  const result: ExecutionResult = await response.json();
-  if (result.errors?.length) {
-    const rawError = result.errors[0];
-    if (rawError) {
-      throw rawError;
-    }
-  }
-  return result.data! as TResult;
-}
 
 type ErrorEventTarget = TypedEventTarget<{ error: CustomEvent<CombinedError> }>;
 const errorEmitter = (errorTarget: ErrorEventTarget) =>

@@ -1,11 +1,13 @@
 import { PersonListDocument } from '@/graphql/Person';
-import { fetchGql } from '@/lib/query';
 import { fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
+import type { Client } from 'urql';
 
-export async function exportCohort(ids: string[], name?: string) {
+export async function exportCohort(client: Client, ids: string[], name?: string) {
   const { Workbook } = await import('exceljs');
-  const data = await fetchGql(PersonListDocument, { inCohorts: ids });
+  const result = await client.query(PersonListDocument, { inCohorts: ids }).toPromise();
+  if (result.error) throw result.error;
+  const data = result.data!;
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet(name || 'Sheet 1');
 

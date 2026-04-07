@@ -2,7 +2,7 @@ import { TextField } from '@/ui/fields/text';
 import React from 'react';
 import { PersonListDocument } from '@/graphql/Person';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
-import { useQuery } from 'urql';
+import { useClient, useQuery } from 'urql';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import Link from 'next/link';
 import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
@@ -24,6 +24,7 @@ export function PersonList() {
   const router = useTypedRouter(QueryParams);
   const id = router.query.id;
   const auth = useAuth();
+  const client = useClient();
 
   const [cohort, setCohort] = useSessionStorage('personfilter-cohort');
   const [isTrainer, setIsTrainer] = useSessionStorage('personfilter-trainer');
@@ -87,7 +88,7 @@ export function PersonList() {
             <button
               type="button"
               className={buttonCls({ size: 'sm' })}
-              onClick={exportNsa}
+              onClick={() => exportNsa(client)}
             >
               NSA export
             </button>

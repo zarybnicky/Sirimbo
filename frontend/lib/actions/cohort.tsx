@@ -13,8 +13,8 @@ export const cohortActions: Action<CohortActionItem>[] = [
     icon: Download,
     visible: ({ auth, item }) => auth.isTrainerOrAdmin && !!item.id,
     type: 'mutation',
-    execute: async ({ item }) => {
-      await exportCohort([item.id], item.name);
+    execute: async ({ item, client }) => {
+      await exportCohort(client, [item.id], item.name);
     },
   },
   {

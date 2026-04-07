@@ -1,10 +1,12 @@
 import { PersonWithLinksListDocument } from '@/graphql/Person';
-import { fetchGql } from '@/lib/query';
 import { saveAs } from 'file-saver';
 import { stringify } from 'csv-stringify/sync';
+import type { Client } from 'urql';
 
-export async function exportNsa() {
-  const data = await fetchGql(PersonWithLinksListDocument, {});
+export async function exportNsa(client: Client) {
+  const result = await client.query(PersonWithLinksListDocument, {}).toPromise();
+  if (result.error) throw result.error;
+  const data = result.data!;
 
   const inputs = (data.filteredPeopleList || []).filter((x) => x.isMember || x.isTrainer);
   inputs.sort((x, y) =>

@@ -1,13 +1,15 @@
 import { BalanceSheetDocument } from '@/graphql/Payment';
 import { saveAs } from 'file-saver';
-import { fetchGql } from '@/lib/query';
+import type { Client } from 'urql';
 
-export async function exportBalanceSheet() {
+export async function exportBalanceSheet(client: Client) {
   const { Workbook } = await import('exceljs');
-  const data = await fetchGql(BalanceSheetDocument, {
+  const result = await client.query(BalanceSheetDocument, {
     since: new Date('2023-09-01').toISOString(),
     until: new Date('2023-12-31').toISOString(),
-  });
+  }).toPromise();
+  if (result.error) throw result.error;
+  const data = result.data!;
 
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet('Přehled plateb 2023');

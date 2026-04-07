@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/cn';
 import { buttonCls, cardCls } from '@/ui/style';
 import { exportCohort } from '@/ui/reports/export-cohort';
-import { useQuery } from 'urql';
+import { useClient, useQuery } from 'urql';
 import { CohortListDocument } from '@/graphql/Cohorts';
 import { useActionMap } from '@/lib/actions';
 import { cohortActions } from '@/lib/actions/cohort';
@@ -17,6 +17,7 @@ import { ActionGroup } from '@/ui/ActionGroup';
 
 export default function TrainingGroupsPage() {
   const auth = useAuth();
+  const client = useClient();
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
     variables: { visible: true },
@@ -37,7 +38,9 @@ export default function TrainingGroupsPage() {
             <button
               type="button"
               className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() => exportCohort(cohorts?.cohortsList?.map((x) => x.id) || [])}
+              onClick={() =>
+                exportCohort(client, cohorts?.cohortsList?.map((x) => x.id) || [])
+              }
             >
               Export všech
             </button>

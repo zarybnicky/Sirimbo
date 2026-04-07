@@ -1,9 +1,11 @@
 import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from '@/graphql/Crm';
-import { fetchGql } from '@/lib/query';
+import type { Client } from 'urql';
 
-export async function exportFormResponses() {
-  const data = await fetchGql(FormResponsesDocument, {});
+export async function exportFormResponses(client: Client) {
+  const result = await client.query(FormResponsesDocument, {}).toPromise();
+  if (result.error) throw result.error;
+  const data = result.data!;
   const nodes = data?.formResponses?.nodes || [];
 
   const { Workbook } = await import('exceljs');

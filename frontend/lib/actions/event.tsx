@@ -44,8 +44,8 @@ export const eventActions: Action<EventFragment>[] = [
       auth.isAdmin ||
       (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
-    execute: async ({ item }) => {
-      await exportEventParticipants(item.id);
+    execute: async ({ item, client }) => {
+      await exportEventParticipants(client, item.id);
     },
   },
   {
@@ -55,8 +55,8 @@ export const eventActions: Action<EventFragment>[] = [
       auth.isAdmin ||
       (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
-    execute: async ({ item }) => {
-      await exportEventRegistrations(item.id);
+    execute: async ({ item, client }) => {
+      await exportEventRegistrations(client, item.id);
     },
   },
 ];

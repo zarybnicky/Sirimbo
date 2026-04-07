@@ -121,8 +121,8 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
       (auth.isTrainer &&
         (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
-    execute: async ({ item }) => {
-      await exportEventParticipants(item.eventId);
+    execute: async ({ item, client }) => {
+      await exportEventParticipants(client, item.eventId);
     },
   },
   {
@@ -133,8 +133,8 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
       (auth.isTrainer &&
         (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
-    execute: async ({ item }) => {
-      await exportEventRegistrations(item.eventId);
+    execute: async ({ item, client }) => {
+      await exportEventRegistrations(client, item.eventId);
     },
   },
 ];
