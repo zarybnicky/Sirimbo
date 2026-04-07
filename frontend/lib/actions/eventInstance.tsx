@@ -29,7 +29,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.personIds.includes(x.personId))),
+        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
     type: 'dialog',
     render: ({ item }) => <UpsertEventForm eventId={item.eventId} />,
     dialogProps: {
@@ -44,7 +44,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.personIds.includes(x.personId))),
+        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
     type: 'dialog',
     render: ({ item }) => <EditEventDescriptionForm id={item.eventId} />,
     dialogProps: {
@@ -59,7 +59,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.personIds.includes(x.personId))),
+        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
     execute: async ({ item, mutate }) => {
       await mutate(UpdateEventInstanceDocument, {
@@ -75,7 +75,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.personIds.includes(x.personId))),
+        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
     confirm: {
       description: [
@@ -103,7 +103,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.personIds.includes(x.personId))),
+        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
     confirm: {
       description:
@@ -119,10 +119,10 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.personIds.includes(x.personId))),
+        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
     execute: async ({ item }) => {
-      exportEventParticipants(item.eventId);
+      await exportEventParticipants(item.eventId);
     },
   },
   {
@@ -131,10 +131,10 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.personIds.includes(x.personId))),
+        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
     execute: async ({ item }) => {
-      exportEventRegistrations(item.eventId);
+      await exportEventRegistrations(item.eventId);
     },
   },
 ];

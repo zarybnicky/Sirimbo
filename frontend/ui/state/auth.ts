@@ -1,11 +1,11 @@
-import { type PrimitiveAtom, atom, createStore } from 'jotai';
+import { atom, createStore, type PrimitiveAtom } from 'jotai';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import deepEqual from 'fast-deep-equal';
 import { tenantCatalog } from '@/tenant/catalog';
 import type { TenantConfig } from '@/tenant/types';
-import { getCookie, setCookie, deleteCookie } from 'cookies-next/client';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 
 interface BaseAuthState {
   user: null | {
@@ -141,7 +141,11 @@ export const tokenAtom = atom<string | null, [string | null], void>(
   },
 );
 
-export const authAtom = atom<BaseAuthState, [string | null, UserAuthFragment | null], void>(
+export const authAtom = atom<
+  BaseAuthState,
+  [string | null, UserAuthFragment | null],
+  void
+>(
   (get) => get(baseUserAtom) || defaultAuthState,
   (get, set, token, user) => {
     let nextValue = defaultAuthState;
@@ -154,10 +158,6 @@ export const authAtom = atom<BaseAuthState, [string | null, UserAuthFragment | n
       const persons =
         user.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) || [];
 
-      const isSystemAdmin = !!jwt.is_system_admin;
-      const isAdmin = !!jwt.is_admin || isSystemAdmin;
-      const isTrainer = !!jwt.is_trainer;
-
       nextValue = {
         user,
         persons,
@@ -166,10 +166,10 @@ export const authAtom = atom<BaseAuthState, [string | null, UserAuthFragment | n
 
         isLoggedIn: !!user?.id,
         isMember: !!jwt.is_member,
-        isTrainer,
-        isAdmin,
-        isSystemAdmin,
-        isTrainerOrAdmin: isAdmin || isTrainer,
+        isTrainer: !!jwt.is_trainer,
+        isTrainerOrAdmin: !!jwt.is_trainer || !!jwt.is_admin || !!jwt.is_system_admin,
+        isAdmin: !!jwt.is_admin || !!jwt.is_system_admin,
+        isSystemAdmin: !!jwt.is_system_admin,
       };
     }
 
@@ -187,6 +187,6 @@ export const authHelpersAtom = atom((get) => {
   return {
     ...auth,
     isMyPerson: (id: string) => auth.personIds.includes(id),
-    isMyCouple: (id: string) => auth.couples.some(x => x.id === id),
+    isMyCouple: (id: string) => auth.couples.some((x) => x.id === id),
   };
 });

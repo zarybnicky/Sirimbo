@@ -28,8 +28,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   const { event } = instance;
   const trainerIds = instance.trainersList?.map((x) => x.personId) ?? [];
   const isMyEvent =
-    auth.isAdmin ||
-    (auth.isTrainer && trainerIds.find((x) => auth.personIds.includes(x)));
+    auth.isAdmin || (auth.isTrainer && trainerIds.find((x) => auth.isMyPerson(x)));
   const attendanceList = instance.eventAttendancesByInstanceIdList
     .filter((x) => x.status !== 'CANCELLED')
     .filter(keyIsNonNull('person'))

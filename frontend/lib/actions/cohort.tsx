@@ -14,7 +14,7 @@ export const cohortActions: Action<CohortActionItem>[] = [
     visible: ({ auth, item }) => auth.isTrainerOrAdmin && !!item.id,
     type: 'mutation',
     execute: async ({ item }) => {
-      exportCohort([item.id], item.name);
+      await exportCohort([item.id], item.name);
     },
   },
   {

@@ -21,7 +21,7 @@ export function PersonView({ id }: { id: string }) {
   });
   const [tab, setTab] = useQueryParam('tab', StringParam);
 
-  const isAdminOrCurrentPerson = auth.isAdmin || auth.personIds.includes(id);
+  const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(id);
   const item = data?.person;
   const actions = useActions(personActions, item);
 

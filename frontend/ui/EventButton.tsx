@@ -39,7 +39,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
       ? true
       : viewer === 'trainer'
         ? false
-        : trainerIds.filter((id) => auth.personIds.includes(id)).length === 0;
+        : trainerIds.filter((id) => auth.isMyPerson(id)).length === 0;
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."

@@ -37,9 +37,7 @@ export function InstanceTrainerListElement({
   const auth = useAuth();
   const enabledTrainerOptions = React.useMemo(
     () =>
-      auth.isAdmin
-        ? trainerOptions
-        : trainerOptions.filter((x) => auth.personIds.includes(x.id)),
+      auth.isAdmin ? trainerOptions : trainerOptions.filter((x) => auth.isMyPerson(x.id)),
     [trainerOptions, auth],
   );
 

@@ -1,20 +1,19 @@
 import * as React from 'react';
 import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import { useQuery } from 'urql';
-import { tokenAtom, authAtom, authLoadingAtom, authHelpersAtom } from '@/ui/state/auth';
+import { authAtom, authHelpersAtom, authLoadingAtom, tokenAtom } from '@/ui/state/auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { buildIdAtom } from './state/build-id';
+import { buildId } from '@/lib/build-id';
 
 export const UserRefresher = React.memo(function ProvideAuth() {
   const [token] = useAtom(tokenAtom);
   const setAuthLoading = useSetAtom(authLoadingAtom);
   const setAuth = useSetAtom(authAtom);
-  const versionId = useAtomValue(buildIdAtom);
 
   const [{ data: currentUser, fetching }, refetch] = useQuery({
     query: CurrentUserDocument,
     pause: !token,
-    variables: { versionId },
+    variables: { versionId: buildId },
   });
 
   React.useEffect(() => setAuthLoading(fetching), [fetching, setAuthLoading]);

@@ -16,8 +16,7 @@ export const eventActions: Action<EventFragment>[] = [
     icon: Pencil,
     visible: ({ auth, item }) =>
       auth.isAdmin ||
-      (auth.isTrainer &&
-        item.eventTrainersList.some((x) => auth.personIds.includes(x.personId))),
+      (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
     type: 'dialog',
     render: ({ item }) => <UpsertEventForm eventId={item.id} />,
     dialogProps: {
@@ -31,8 +30,7 @@ export const eventActions: Action<EventFragment>[] = [
     icon: NotebookPen,
     visible: ({ auth, item }) =>
       auth.isAdmin ||
-      (auth.isTrainer &&
-        item.eventTrainersList.some((x) => auth.personIds.includes(x.personId))),
+      (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
     type: 'dialog',
     render: ({ item }) => <EditEventDescriptionForm id={item.id} />,
     dialogProps: {
@@ -44,11 +42,10 @@ export const eventActions: Action<EventFragment>[] = [
     label: 'Export přihlášených',
     visible: ({ auth, item }) =>
       auth.isAdmin ||
-      (auth.isTrainer &&
-        item.eventTrainersList.some((x) => auth.personIds.includes(x.personId))),
+      (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
     execute: async ({ item }) => {
-      exportEventParticipants(item.id);
+      await exportEventParticipants(item.id);
     },
   },
   {
@@ -56,11 +53,10 @@ export const eventActions: Action<EventFragment>[] = [
     label: 'Export přihlášek',
     visible: ({ auth, item }) =>
       auth.isAdmin ||
-      (auth.isTrainer &&
-        item.eventTrainersList.some((x) => auth.personIds.includes(x.personId))),
+      (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
     type: 'mutation',
     execute: async ({ item }) => {
-      exportEventRegistrations(item.id);
+      await exportEventRegistrations(item.id);
     },
   },
 ];
