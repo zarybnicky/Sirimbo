@@ -188,15 +188,12 @@ function DayColumn({
         }
         const target = document.elementFromPoint(point.clientX, point.clientY)!;
         const eventNode = target.closest('.rbc-event');
-        if (!eventNode || !columnRef.current?.contains(eventNode)) {
+        if (!eventNode || !gridRef.current?.contains(eventNode)) {
           return false;
         }
-        // eventOffsetTop is distance from the top of the event to the initial
-        // mouseDown position. We need this later to compute the new top of the
-        // event during move operations, since the final location is really a
-        // delta from this point. note: if we want to DRY this with WeekWrapper,
-        // probably better just to capture the mouseDown point here and do the
-        // placement computation in handleMove()...
+        // Move gestures are grid-scoped so all columns can participate once the
+        // pointer crosses into them. Keep the initial pointer offset relative to
+        // the dragged event so each column can project the preview consistently.
         eventOffsetTopRef.current =
           point.y - getBoundsForNode(eventNode as HTMLElement).top;
         return true;
@@ -259,9 +256,9 @@ function DayColumn({
           }
         }
         if (
-          event &&
-          newRange.startDate === event.start &&
-          newRange.endDate === event.end
+          eventState.event &&
+          +newRange.startDate === +eventState.event.start &&
+          +newRange.endDate === +eventState.event.end
         ) {
           return eventState;
         }
