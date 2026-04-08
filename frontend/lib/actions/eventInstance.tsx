@@ -54,8 +54,8 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
   {
     id: 'eventInstance.toggleCancelled',
     label: ({ item }) => (item.isCancelled ? 'Zrušeno' : 'Zrušit termín'),
-    icon: (ctx: ActionContext<EventInstanceWithTrainerFragment>) =>
-      ctx.item.isCancelled ? CheckSquare : Square,
+    icon: ({ item }: ActionContext<EventInstanceWithTrainerFragment>) =>
+      item.isCancelled ? CheckSquare : Square,
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer &&

@@ -1,4 +1,4 @@
-import { AnnouncementItem } from '@/ui/AnnouncementItem';
+import { AnnouncementCard } from '@/ui/AnnouncementCard';
 import { Pagination } from '@/ui/Pagination';
 import { cn } from '@/lib/cn';
 import {
@@ -127,7 +127,7 @@ export function MyAnnouncements() {
 
       <div className="space-y-2 rounded-lg">
         {(data?.myAnnouncements?.nodes || []).map((a) => (
-          <AnnouncementItem key={a.id} item={a} />
+          <AnnouncementCard key={a.id} item={a} />
         ))}
       </div>
 
@@ -165,7 +165,7 @@ export function StickyAnnouncements() {
       </div>
       <div className="space-y-2 rounded-lg">
         {data.stickyAnnouncements.nodes.map((a) => (
-          <AnnouncementItem key={a.id} item={a} onlyTitle />
+          <AnnouncementCard key={a.id} item={a} mode="titleOnly" />
         ))}
       </div>
     </div>

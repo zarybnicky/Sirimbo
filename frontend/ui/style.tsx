@@ -45,6 +45,7 @@ export const typographyCls = tv({
     variant: {
       heading: 'text-4xl text-accent-12 drop-shadow tracking-wide',
       smallHeading: 'text-2xl text-neutral-12 drop-shadow tracking-wide',
+      cardHeading: 'text-lg font-bold text-accent-12',
       section: 'text-3xl text-accent-11 drop-shadow tracking-wide',
       label: 'block text-sm text-neutral-11 mt-1',
     },

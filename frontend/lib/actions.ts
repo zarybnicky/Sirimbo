@@ -24,9 +24,9 @@ type Resolvable<TItem, TValue> = TValue | ((ctx: ActionContext<TItem>) => TValue
 type BaseAction<TItem> = {
   id: string;
   primary?: boolean;
-  visible: (ctx: ActionContext<TItem>) => boolean;
+  visible: Resolvable<TItem, boolean>;
   label: Resolvable<TItem, string>;
-  icon?: Resolvable<TItem, ActionIcon>;
+  icon?: Resolvable<TItem, ActionIcon> | undefined;
   variant?: 'default' | 'danger';
 };
 
@@ -122,7 +122,7 @@ export function useActions<TItem extends object>(
 
     const visible = !item
       ? []
-      : actions.filter((a) => a.visible(ctx)).map((a) => resolveAction(a, ctx));
+      : actions.filter((a) => resolve(a.visible, ctx)).map((a) => resolveAction(a, ctx));
 
     return {
       all: visible,
@@ -156,7 +156,7 @@ export function useActionMap<TItem extends { id: string }>(
       const ctx: ActionContext<TItem> = { auth, client, item, router, mutate };
 
       const visible = actions
-        .filter((a) => a.visible(ctx))
+        .filter((a) => resolve(a.visible, ctx))
         .map((a) => resolveAction(a, ctx));
 
       map.set(item.id, {
