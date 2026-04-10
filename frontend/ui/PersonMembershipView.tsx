@@ -258,7 +258,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
 function CoupleRow({ item }: { item: CoupleFragment }) {
   const actions = useActions(coupleActions, item);
   return (
-    <ActionRow actions={actions} className="items-baseline">
+    <ActionRow actions={actions}>
       <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
         <Link
           className="underline font-bold"

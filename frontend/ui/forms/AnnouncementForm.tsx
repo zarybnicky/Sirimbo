@@ -167,11 +167,13 @@ export function AnnouncementForm({
         control={control}
         name="scheduledSince"
         label="Odložit zveřejnění na den"
+        clearable
       />
       <DatePickerElement
         control={control}
         name="scheduledUntil"
         label="Skrýt příspěvek dne"
+        clearable
       />
       <AnnouncementAudienceEditor control={control} />
 

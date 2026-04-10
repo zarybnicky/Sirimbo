@@ -55,8 +55,8 @@ export function EditCoupleForm({ id }: { id: string }) {
         <b>{formatLongCoupleName(item)}</b>
       </div>
 
-      <DatePickerElement control={control} name="since" label="Od" />
-      <DatePickerElement control={control} name="until" label="Do" />
+      <DatePickerElement control={control} name="since" label="Od" clearable />
+      <DatePickerElement control={control} name="until" label="Do" clearable />
 
       <div className="flex flex-wrap gap-4">
         <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>

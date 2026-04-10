@@ -88,8 +88,8 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
         </h4>
       </div>
 
-      <DatePickerElement control={control} name="since" label="Trenér od" />
-      <DatePickerElement control={control} name="until" label="Trenér do" />
+      <DatePickerElement control={control} name="since" label="Trenér od" clearable />
+      <DatePickerElement control={control} name="until" label="Trenér do" clearable />
       <div className="grid lg:grid-cols-2 gap-2">
         <TextFieldElement
           control={control}

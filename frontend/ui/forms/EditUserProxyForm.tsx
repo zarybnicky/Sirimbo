@@ -57,8 +57,8 @@ export function EditUserProxyForm({ id }: { id: string }) {
         <b>Přístupové údaje pro osobu {item?.person?.name}</b>
       </div>
 
-      <DatePickerElement control={control} name="since" label="Platné od" />
-      <DatePickerElement control={control} name="until" label="Platné do" />
+      <DatePickerElement control={control} name="since" label="Platné od" clearable />
+      <DatePickerElement control={control} name="until" label="Platné do" clearable />
 
       <div className="flex flex-wrap gap-4">
         <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>

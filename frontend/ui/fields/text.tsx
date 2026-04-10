@@ -12,7 +12,7 @@ import {
 type Extras = {
   className?: string;
   label?: React.ReactNode;
-  helperText?: string;
+  helperText?: React.ReactNode;
   prefix?: React.ReactNode;
 };
 
