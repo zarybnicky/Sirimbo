@@ -53,7 +53,7 @@ export function TitleActionsRow<TItem extends object = object>({
 }: TitleActionsRowProps<TItem> &
   Omit<Partial<NonNullable<Parameters<typeof typographyCls>[0]>>, 'class'>) {
   return (
-    <div className="flex justify-between gap-4 items-baseline">
+    <div className="flex justify-between gap-4 items-center">
       <div className="min-w-0">
         <h1
           className={typographyCls({
@@ -80,7 +80,7 @@ export function PageHeader<TItem extends object = object>({
   const parent = breadcrumbs?.at(-2);
 
   return (
-    <div className="mb-4">
+    <div className="my-4">
       {title && <NextSeo title={title} />}
 
       {parent?.href && (
