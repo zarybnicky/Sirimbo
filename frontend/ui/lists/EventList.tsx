@@ -41,6 +41,7 @@ function EventListPage({ search, currentId }: EventListPageProps) {
   const nodes: EventNode[] = React.useMemo(() => {
     const nodes = (data?.events?.edges || []).map(({ node: x }) => {
       let closestInstance = x.eventInstancesList[0];
+      // eslint-disable-next-line react-hooks/purity
       const refDate = Date.now();
       for (const instance of x.eventInstancesList) {
         const intervalA = new Date(closestInstance!.since).getTime() - refDate;

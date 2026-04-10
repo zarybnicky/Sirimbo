@@ -7,7 +7,7 @@ import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
 import { Analytics } from '@vercel/analytics/react';
-import { Provider, createStore } from 'jotai';
+import { createStore, Provider } from 'jotai';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
 import type { AppProps, NextWebVitalsMetric } from 'next/app';
@@ -53,8 +53,10 @@ function App({
 }: AppProps & {
   resetUrqlClient: () => void;
 }) {
+  // eslint-disable-next-line react-hooks/immutability
   storeRef.resetUrqlClient = resetUrqlClient;
   if (typeof window === 'undefined') {
+    // eslint-disable-next-line react-hooks/immutability
     storeRef.current = createStore();
   }
 

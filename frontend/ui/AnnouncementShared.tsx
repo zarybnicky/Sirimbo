@@ -36,7 +36,7 @@ export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {
 
   return (
     <>
-      <div className="flex items-center gap-1 text-xs text-neutral-11">
+      <div className="flex items-center gap-1 text-sm text-neutral-11">
         <time
           dateTime={item.createdAt}
           title={numericFullFormatter.format(new Date(item.createdAt))}

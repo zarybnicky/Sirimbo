@@ -5,7 +5,6 @@ import Link, { LinkProps } from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { type ResolvedActions } from '@/lib/actions';
-import { cn } from '@/lib/cn';
 
 type TitleBarProps = {
   title?: string | null;
@@ -44,26 +43,27 @@ type PageHeaderProps<TItem extends object = object> = {
 type TitleActionsRowProps<TItem extends object = object> = {
   title?: React.ReactNode | null;
   actions?: ResolvedActions<TItem>;
-  align?: 'baseline' | 'start';
 };
 
 export function TitleActionsRow<TItem extends object = object>({
   title,
   actions,
-  align = 'baseline',
   variant = 'heading',
   ...typography
 }: TitleActionsRowProps<TItem> &
   Omit<Partial<NonNullable<Parameters<typeof typographyCls>[0]>>, 'class'>) {
   return (
-    <div
-      className={cn(
-        'flex justify-between gap-4',
-        align === 'start' ? 'items-start' : 'items-baseline',
-      )}
-    >
+    <div className="flex justify-between gap-4 items-baseline">
       <div className="min-w-0">
-        <h1 className={typographyCls({ variant, ...typography })}>{title}</h1>
+        <h1
+          className={typographyCls({
+            variant,
+            spacing: variant === 'heading' ? 'topLevel' : undefined,
+            ...typography,
+          })}
+        >
+          {title}
+        </h1>
       </div>
 
       {actions && <ActionGroup actions={actions} />}
@@ -113,8 +113,13 @@ export function PageHeader<TItem extends object = object>({
         </nav>
       )}
 
-      <TitleActionsRow variant="heading" title={title} actions={actions} />
-      {subtitle && <p className="mt-0.5 text-sm text-accent-12">{subtitle}</p>}
+      <TitleActionsRow
+        variant="heading"
+        spacing="default"
+        title={title}
+        actions={actions}
+      />
+      {subtitle && <p className="my-2 text-sm text-accent-12">{subtitle}</p>}
     </div>
   );
 }

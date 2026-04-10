@@ -75,6 +75,7 @@ export default defineConfig([
         },
       ],
 
+      'unicorn/catch-error-name': 'off',
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/no-null': 'off',
       'unicorn/filename-case': 'off',
@@ -83,6 +84,7 @@ export default defineConfig([
       'unicorn/no-negated-condition': 'off',
       'unicorn/no-nested-ternary': 'off',
       'unicorn/no-abusive-eslint-disable': 'off',
+      'unicorn/number-literal-case': 'off',
       'unicorn/switch-case-braces': 'off',
       'unicorn/prefer-module': 'warn',
       'unicorn/prefer-add-event-listener': 'warn',

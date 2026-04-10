@@ -144,6 +144,7 @@ export function CreatePersonDialog() {
       setValue('sendInvitation', false);
       setValue('nationality', '203');
       setValue('joinDate', new Date());
+      // eslint-disable-next-line react-hook-form/no-nested-object-setvalue
       setValue('cohortIds', []);
       setCohortPickerOpen(false);
     }

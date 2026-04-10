@@ -41,6 +41,7 @@ export default function AnnouncementPage() {
             title={pageTitle}
             breadcrumbs={[{ label: 'Nástěnka', href: '/nastenka' }, { label: pageTitle }]}
             actions={data ? actions : undefined}
+            subtitle={data ? <AnnouncementMeta item={data} /> : undefined}
           />
           {loading ? (
             <p className="text-neutral-11 text-center">Příspěvek se právě načítá.</p>
@@ -52,7 +53,6 @@ export default function AnnouncementPage() {
             <AnnouncementForm id={data.id} data={data} onSuccess={stopEditing} />
           ) : (
             <>
-              <AnnouncementMeta item={data} />
               <RichTextView className="max-w-none" value={data.body} />
             </>
           )}

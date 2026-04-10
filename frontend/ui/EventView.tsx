@@ -112,7 +112,7 @@ function Attendance({
   event: EventAttendanceSummaryFragment & EventFragment;
 }) {
   return (
-    <table className="prose prose-accent max-w-full">
+    <table className="prose prose-accent max-w-none">
       <thead>
         <tr>
           <th />
@@ -158,7 +158,7 @@ function Attendance({
 
 function EventInstances({ event }: { event: EventFullFragment }) {
   return (
-    <table className="prose prose-accent max-w-none">
+    <table className="prose prose-accent w-full">
       <thead>
         <tr>
           <th scope="col" className="text-left">

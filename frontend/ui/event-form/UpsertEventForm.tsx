@@ -1,4 +1,4 @@
-import { EventDocument, type EventFragment, UpsertEventDocument } from '@/graphql/Event';
+import { EventDocument, UpsertEventDocument } from '@/graphql/Event';
 import {
   RadioButtonGroupElement,
   type RadioButtonGroupItem,

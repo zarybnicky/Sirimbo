@@ -42,65 +42,63 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   ).length;
 
   return (
-    <div className="max-w-full overflow-x-auto">
-      <div className="prose prose-accent max-w-none">
-        <Link
-          href={{
-            pathname: '/akce/[id]',
-            query: { id: event.id, tab: 'attendance' },
-          }}
-        >
-          Zpět na seznam termínů
-        </Link>
-        <table className="mt-0">
-          <thead>
-            <tr>
-              <th>
-                {numericDateFormatter.formatRange(
-                  new Date(instance.since),
-                  new Date(instance.until),
+    <div className="prose prose-accent max-w-none">
+      <Link
+        href={{
+          pathname: '/akce/[id]',
+          query: { id: event.id, tab: 'attendance' },
+        }}
+      >
+        Zpět na seznam termínů
+      </Link>
+      <table className="mt-0">
+        <thead>
+          <tr>
+            <th>
+              {numericDateFormatter.formatRange(
+                new Date(instance.since),
+                new Date(instance.until),
+              )}
+            </th>
+            <th className="flex justify-center gap-2">
+              <div className="rounded-full flex gap-2 items-center bg-green-3 px-3 py-2 tabular-nums text-sm font-medium text-green-11">
+                {attendedCount}
+              </div>
+              <div className="rounded-full flex gap-2 items-center bg-[#fbe4e8] px-3 py-2 tabular-nums text-sm font-medium text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]">
+                {notAttendedCount}
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {attendanceList.map((x) => (
+            <tr key={x.id}>
+              <td className="align-middle">
+                <div>{x.person?.name}</div>
+                {isMyEvent && (
+                  <div className="text-xs text-neutral-9">
+                    Poslední účast:{' '}
+                    {x.registration?.lastAttended
+                      ? dateTimeFormatter.format(new Date(x.registration.lastAttended))
+                      : '—'}
+                  </div>
                 )}
-              </th>
-              <th className="flex justify-center gap-2">
-                <div className="rounded-full flex gap-2 items-center bg-green-3 px-3 py-2 tabular-nums text-sm font-medium text-green-11">
-                  {attendedCount}
-                </div>
-                <div className="rounded-full flex gap-2 items-center bg-[#fbe4e8] px-3 py-2 tabular-nums text-sm font-medium text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]">
-                  {notAttendedCount}
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {attendanceList.map((x) => (
-              <tr key={x.id}>
-                <td className="align-middle">
-                  <div>{x.person?.name}</div>
-                  {isMyEvent && (
-                    <div className="text-xs text-neutral-9">
-                      Poslední účast:{' '}
-                      {x.registration?.lastAttended
-                        ? dateTimeFormatter.format(new Date(x.registration.lastAttended))
-                        : '—'}
-                    </div>
-                  )}
+              </td>
+              {isMyEvent ? (
+                <td className="text-center align-middle py-0">
+                  <AttendanceItem attendance={x} />
                 </td>
-                {isMyEvent ? (
-                  <td className="text-center align-middle py-0">
-                    <AttendanceItem attendance={x} />
-                  </td>
-                ) : (
-                  <td className="text-center align-middle">
-                    {React.createElement(attendanceIcons[x.status], {
-                      className: 'mx-auto',
-                    })}
-                  </td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              ) : (
+                <td className="text-center align-middle">
+                  {React.createElement(attendanceIcons[x.status], {
+                    className: 'mx-auto',
+                  })}
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

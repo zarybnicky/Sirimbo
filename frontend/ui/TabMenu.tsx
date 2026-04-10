@@ -28,8 +28,8 @@ export const TabMenu = React.memo(function TabMenu({
   }, [options, selected]);
 
   return (
-    <div className="">
-      <nav className="border-b border-neutral-7 -mb-px flex space-x-4" aria-label="Tabs">
+    <>
+      <nav className="border-b border-neutral-7 mb-2 flex space-x-4" aria-label="Tabs">
         {options.map((tab) => (
           <TabButton
             key={tab.id}
@@ -41,10 +41,10 @@ export const TabMenu = React.memo(function TabMenu({
         ))}
       </nav>
 
-      <div className="mt-2" key={active.id}>
+      <React.Fragment key={active.id}>
         {useMemo(() => active.contents(), [active])}
-      </div>
-    </div>
+      </React.Fragment>
+    </>
   );
 });
 

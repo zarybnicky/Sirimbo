@@ -41,8 +41,8 @@ export function AnnouncementList() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-1 py-4 flex items-center justify-between flex-wrap">
-        <div className="font-bold first-letter:uppercase">Nástěnka</div>
+      <div className="px-1 my-2 flex gap-2 items-center justify-between flex-wrap">
+        <div className="font-bold first-letter:uppercase flex-1">Nástěnka</div>
 
         {auth.isAdmin && (
           <Link
@@ -55,17 +55,15 @@ export function AnnouncementList() {
             Přidat příspěvek
           </Link>
         )}
+        <AnnouncementSortControls sort={sort} onChange={setSort} />
 
-        <div className="flex flex-col gap-2 w-full mt-2">
-          <TextField
-            type="search"
-            className="w-full"
-            placeholder="Vyhledat..."
-            value={search}
-            onChange={(e) => setSearch(e.currentTarget.value)}
-          />
-          <AnnouncementSortControls sort={sort} onChange={setSort} />
-        </div>
+        <TextField
+          type="search"
+          className="w-full"
+          placeholder="Vyhledat..."
+          value={search}
+          onChange={(e) => setSearch(e.currentTarget.value)}
+        />
       </div>
 
       <div className="grow h-full overflow-y-auto scrollbar">

@@ -5,7 +5,7 @@ import {
   MyAnnouncementsDocument,
   StickyAnnouncementsDocument,
 } from '@/graphql/Announcement';
-import { typographyCls } from '@/ui/style';
+import { buttonCls, typographyCls } from '@/ui/style';
 import {
   DropdownMenu,
   DropdownMenuButton,
@@ -43,11 +43,7 @@ export function AnnouncementSortControls({
       <div className={cn('inline-flex', className)}>
         <DropdownMenuTrigger
           aria-label="Změnit řazení oznámení"
-          className={cn(
-            'inline-flex size-8 items-center justify-center rounded-xl border border-neutral-6 bg-neutral-1 text-neutral-11 shadow-sm transition-colors',
-            'hover:bg-neutral-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-7 focus-visible:ring-offset-1 focus-visible:ring-offset-neutral-1',
-            'data-[state=open]:text-accent-12',
-          )}
+          className={buttonCls({ variant: 'outline' })}
         >
           <ListFilter className="size-4" />
         </DropdownMenuTrigger>

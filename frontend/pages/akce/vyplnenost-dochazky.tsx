@@ -18,6 +18,7 @@ export default function TrainerAttendanceReportPage() {
     const period = computeRange('schoolyear', new Date(), null, null);
     if (period.until)
       period.until =
+        // eslint-disable-next-line react-hooks/purity
         new Date(period.until).getTime() > Date.now()
           ? new Date().toISOString()
           : period.until;
