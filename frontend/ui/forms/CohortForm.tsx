@@ -23,7 +23,8 @@ const Form = z.object({
   name: z.string(),
   description: z.string().optional().prefault(''),
   location: z.string().nullish(),
-  isVisible: z.boolean().prefault(false),
+  isVisible: z.boolean().prefault(true),
+  isArchived: z.boolean().prefault(false),
   colorRgb: z.string(),
   ordering: z.number().nullish(),
   cohortGroupId: z.string().nullish(),
@@ -104,6 +105,12 @@ export function CohortForm({ id = '' }: { id?: string }) {
         name="isVisible"
         value="1"
         label="Veřejně viditelná"
+      />
+      <CheckboxElement
+        control={control}
+        name="isArchived"
+        value="1"
+        label="Archivovaná"
       />
 
       <RichTextEditor

@@ -22,6 +22,8 @@ const Form = z.object({
   memberPayout: z.number().optional().nullish().prefault(null),
   guestPayout: z.number().optional().nullish().prefault(null),
   createPayoutPayments: z.boolean().optional().prefault(true),
+  isVisible: z.boolean().optional().prefault(true),
+  isExternal: z.boolean().optional().prefault(false),
 });
 
 export function EditTenantTrainerForm({ id }: { id: string }) {
@@ -48,6 +50,8 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
         memberPayout: Number.parseFloat(item.memberPayout45MinAmount || '0') || null,
         guestPayout: Number.parseFloat(item.guestPayout45MinAmount || '0') || null,
         createPayoutPayments: item.createPayoutPayments,
+        isVisible: item.isVisible,
+        isExternal: item.isExternal,
       });
     }
   }, [reset, item]);
@@ -72,6 +76,8 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
             ? { amount: values.guestPayout.toString(), currency: 'CZK' }
             : null,
           createPayoutPayments: values.createPayoutPayments,
+          isVisible: values.isVisible,
+          isExternal: values.isExternal,
         },
       },
     });
@@ -121,6 +127,15 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
           type="number"
           name="guestPayout"
           label="Vypláceno (hosté, Kč/45min)"
+        />
+      </div>
+      <div className="grid lg:grid-cols-2 gap-2">
+        <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
+        <CheckboxElement
+          control={control}
+          name="isExternal"
+          value="1"
+          label="Externí trenér"
         />
       </div>
 

@@ -9,6 +9,7 @@ fragment Cohort on Cohort {
   name
   location
   isVisible
+  isArchived
   colorRgb
   ordering
   description
@@ -16,8 +17,8 @@ fragment Cohort on Cohort {
   externalIds
 }
 
-query CohortList($first: Int, $offset: Int, $visible: Boolean) {
-  cohortsList(first: $first, offset: $offset, condition: {isVisible: $visible}, orderBy: [ORDERING_ASC]) {
+query CohortList($first: Int, $offset: Int, $visible: Boolean, $archived: Boolean) {
+  cohortsList(first: $first, offset: $offset, condition: {isVisible: $visible, isArchived: $archived}, orderBy: [ORDERING_ASC]) {
     ...Cohort
   }
 }

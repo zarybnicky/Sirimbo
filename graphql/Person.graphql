@@ -31,6 +31,7 @@ fragment Person on Person {
     orientationNumber
     conscriptionNumber
   }
+  note
 }
 
 fragment PersonWithLinks on Person {

@@ -216,6 +216,8 @@ export type AktualitiesOrderBy =
   | 'CREATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_VISIBLE_ASC'
+  | 'IS_VISIBLE_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
@@ -237,6 +239,7 @@ export type Aktuality = {
   atText: Scalars['String']['output'];
   createdAt: Maybe<Scalars['Datetime']['output']>;
   id: Scalars['BigInt']['output'];
+  isVisible: Maybe<Scalars['Boolean']['output']>;
   tenantId: Scalars['BigInt']['output'];
   titlePhotoUrl: Maybe<Scalars['String']['output']>;
   updatedAt: Maybe<Scalars['Datetime']['output']>;
@@ -265,6 +268,8 @@ export type AktualityCondition = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isVisible` field. */
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `titlePhotoUrl` field. */
@@ -283,6 +288,7 @@ export type AktualityInput = {
   atText: Scalars['String']['input'];
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -298,6 +304,7 @@ export type AktualityPatch = {
   atText?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -758,6 +765,7 @@ export type Cohort = {
   eventTargetCohortsList: Array<EventTargetCohort>;
   externalIds: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   id: Scalars['BigInt']['output'];
+  isArchived: Maybe<Scalars['Boolean']['output']>;
   isVisible: Scalars['Boolean']['output'];
   location: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -822,6 +830,8 @@ export type CohortCondition = {
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isArchived` field. */
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `location` field. */
@@ -919,6 +929,7 @@ export type CohortInput = {
   colorRgb: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
@@ -1022,6 +1033,7 @@ export type CohortPatch = {
   colorRgb?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1139,6 +1151,8 @@ export type CohortsOrderBy =
   | 'DESCRIPTION_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_ARCHIVED_ASC'
+  | 'IS_ARCHIVED_DESC'
   | 'IS_VISIBLE_ASC'
   | 'IS_VISIBLE_DESC'
   | 'LOCATION_ASC'
@@ -4992,6 +5006,8 @@ export type PeopleOrderBy =
   | 'NATIONAL_ID_NUMBER_ASC'
   | 'NATIONAL_ID_NUMBER_DESC'
   | 'NATURAL'
+  | 'NOTE_ASC'
+  | 'NOTE_DESC'
   | 'PHONE_ASC'
   | 'PHONE_DESC'
   | 'PREFIX_TITLE_ASC'
@@ -5049,6 +5065,7 @@ export type Person = {
   name: Scalars['String']['output'];
   nationalIdNumber: Maybe<Scalars['String']['output']>;
   nationality: Scalars['String']['output'];
+  note: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `PaymentDebtor`. */
   paymentDebtorsList: Array<PaymentDebtor>;
   /** Reads and enables pagination through a set of `PersonInvitation`. */
@@ -5264,6 +5281,8 @@ export type PersonCondition = {
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `nationality` field. */
   nationality?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `note` field. */
+  note?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `phone` field. */
   phone?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `prefixTitle` field. */
@@ -5301,6 +5320,7 @@ export type PersonInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   nationality: Scalars['String']['input'];
+  note?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   prefixTitle?: InputMaybe<Scalars['String']['input']>;
   suffixTitle?: InputMaybe<Scalars['String']['input']>;
@@ -5394,6 +5414,7 @@ export type PersonPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
   nationality?: InputMaybe<Scalars['String']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   prefixTitle?: InputMaybe<Scalars['String']['input']>;
   suffixTitle?: InputMaybe<Scalars['String']['input']>;
@@ -7449,7 +7470,8 @@ export type TenantTrainer = {
   guestPrice45Min: Maybe<Price>;
   guestPrice45MinAmount: Maybe<Scalars['BigFloat']['output']>;
   id: Scalars['BigInt']['output'];
-  isVisible: Maybe<Scalars['Boolean']['output']>;
+  isExternal: Scalars['Boolean']['output'];
+  isVisible: Scalars['Boolean']['output'];
   memberPayout45Min: Maybe<Price>;
   memberPayout45MinAmount: Maybe<Scalars['BigFloat']['output']>;
   memberPrice45Min: Maybe<Price>;
@@ -7488,6 +7510,8 @@ export type TenantTrainerCondition = {
   guestPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isExternal` field. */
+  isExternal?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `memberPayout45Min` field. */
@@ -7522,6 +7546,7 @@ export type TenantTrainerInput = {
   guestPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   guestPrice45Min?: InputMaybe<PriceInput>;
   guestPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
+  isExternal?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   memberPayout45Min?: InputMaybe<PriceInput>;
   memberPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
@@ -7545,6 +7570,7 @@ export type TenantTrainerPatch = {
   guestPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   guestPrice45Min?: InputMaybe<PriceInput>;
   guestPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
+  isExternal?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   memberPayout45Min?: InputMaybe<PriceInput>;
   memberPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
@@ -7578,6 +7604,8 @@ export type TenantTrainersOrderBy =
   | 'GUEST_PRICE_45MIN_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_EXTERNAL_ASC'
+  | 'IS_EXTERNAL_DESC'
   | 'IS_VISIBLE_ASC'
   | 'IS_VISIBLE_DESC'
   | 'MEMBER_PAYOUT_45MIN_AMOUNT_ASC'
@@ -9053,6 +9081,7 @@ export type GraphCacheResolvers = {
     atText?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
+    isVisible?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Boolean'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
     titlePhotoUrl?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -9173,6 +9202,7 @@ export type GraphCacheResolvers = {
     eventTargetCohortsList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
     externalIds?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Array<Scalars['String'] | string>>,
     id?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt'] | string>,
+    isArchived?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['Boolean'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['Boolean'] | string>,
     location?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String'] | string>,
     name?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String'] | string>,
@@ -9898,6 +9928,7 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     nationalIdNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     nationality?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
+    note?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Person>, PersonPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
     personInvitationsList?: GraphCacheResolver<WithTypename<Person>, PersonPersonInvitationsListArgs, Array<WithTypename<PersonInvitation> | string>>,
     phone?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
@@ -10156,6 +10187,7 @@ export type GraphCacheResolvers = {
     guestPrice45Min?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Price> | string>,
     guestPrice45MinAmount?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigFloat'] | string>,
     id?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
+    isExternal?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean'] | string>,
     memberPayout45Min?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, WithTypename<Price> | string>,
     memberPayout45MinAmount?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['BigFloat'] | string>,
@@ -10703,6 +10735,7 @@ export type GraphCacheUpdaters = {
     atText?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     titlePhotoUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
@@ -10823,6 +10856,7 @@ export type GraphCacheUpdaters = {
     eventTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventTargetCohortsListArgs>,
     externalIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    isArchived?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
@@ -11548,6 +11582,7 @@ export type GraphCacheUpdaters = {
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     nationalIdNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     nationality?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    note?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     paymentDebtorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonPaymentDebtorsListArgs>,
     personInvitationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonPersonInvitationsListArgs>,
     phone?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
@@ -11806,6 +11841,7 @@ export type GraphCacheUpdaters = {
     guestPrice45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     guestPrice45MinAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
+    isExternal?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     memberPayout45Min?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     memberPayout45MinAmount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,

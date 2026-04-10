@@ -20,7 +20,7 @@ export default function TrainingGroupsPage() {
   const client = useClient();
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
-    variables: { visible: true },
+    variables: { visible: true, archived: false },
   });
   const cohortActionMap = useActionMap(cohortActions, cohorts?.cohortsList ?? []);
 

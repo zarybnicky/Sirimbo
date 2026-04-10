@@ -28,6 +28,8 @@ fragment TenantTrainer on TenantTrainer {
   guestPrice45MinAmount
   currency
   createPayoutPayments
+  isExternal
+  isVisible
   tenantId
   tenantName
   person {

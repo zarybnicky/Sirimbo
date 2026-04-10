@@ -58,7 +58,9 @@ export function PersonView({ id }: { id: string }) {
     <>
       <PageHeader
         title={item.name}
-        subtitle={[formatAgeGroup(item.birthDate), item.phone, item.email].join(' · ')}
+        subtitle={[formatAgeGroup(item.birthDate), item.phone, item.email]
+          .filter(Boolean)
+          .join(' · ')}
         actions={actions}
       />
 

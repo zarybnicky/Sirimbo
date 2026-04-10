@@ -12,6 +12,7 @@ import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { RichTextEditor } from '@/ui/fields/richtext';
 
 const Form = z.object({
   prefixTitle: z.string().prefault(''),
@@ -36,6 +37,7 @@ const Form = z.object({
     .nullish(),
   nationality: z.string(),
   bio: z.string().prefault(''),
+  note: z.string().prefault(''),
   address: z.object({
     city: z.string().nullish().prefault(''),
     conscriptionNumber: z.string().nullish().prefault(''),
@@ -137,6 +139,15 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
           name="nationality"
           placeholder="vyberte národnost"
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
+        />
+      </div>
+
+      <div className="col-full">
+        <RichTextEditor
+          control={control}
+          initialState={data?.note}
+          name="note"
+          label="Poznámky"
         />
       </div>
 

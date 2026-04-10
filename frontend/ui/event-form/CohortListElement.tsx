@@ -21,7 +21,10 @@ export function CohortListElement({
   const type = useWatch({ control, name: 'type' });
   const { fields, append, remove, update } = useFieldArray({ name, control });
 
-  const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
+  const [{ data: cohortQuery }] = useQuery({
+    query: CohortListDocument,
+    variables: { archived: false },
+  });
   const cohortOptions = React.useMemo(
     () =>
       cohortQuery?.cohortsList?.map((x) => ({

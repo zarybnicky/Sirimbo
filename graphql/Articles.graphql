@@ -8,6 +8,7 @@ fragment Article on Aktuality {
   createdAt
   updatedAt
   titlePhotoUrl
+  isVisible
 }
 
 query Article($id: BigInt!) {

@@ -92,7 +92,7 @@ export function CreatePersonDialog() {
   });
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
-    variables: { visible: true },
+    variables: { archived: false },
   });
   const cohortOptions = React.useMemo(
     () => cohorts?.cohortsList?.map((x) => ({ id: x.id, label: x.name })) || [],

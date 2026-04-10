@@ -606,6 +606,14 @@
             "args": []
           },
           {
+            "name": "isVisible",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "tenantId",
             "type": {
               "kind": "NON_NULL",
@@ -1899,6 +1907,14 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "isArchived",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -11463,6 +11479,17 @@
             "args": []
           },
           {
+            "name": "note",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "paymentDebtorsList",
             "type": {
               "kind": "NON_NULL",
@@ -18739,10 +18766,24 @@
             "args": []
           },
           {
+            "name": "isExternal",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "isVisible",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },

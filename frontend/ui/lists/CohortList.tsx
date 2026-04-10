@@ -22,16 +22,19 @@ export function CohortList() {
   } = useTypedRouter(QueryParams);
   const auth = useAuth();
   const [isArchive, setIsArchive] = React.useState(false);
+  const [isHidden, setIsHidden] = React.useState(true);
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
-    variables: { visible: !isArchive },
+    variables: { visible: !isHidden, archived: isArchive },
   });
   const nodes = React.useMemo(
     () =>
       cohorts?.cohortsList?.map((x) => ({
         id: x.id,
         title: x.name,
-        subtitle: [!x.isVisible && 'Skrytá', x.location].filter(Boolean).join(', '),
+        subtitle: [!x.isVisible && 'Skrytá', x.isArchived && 'Archivovaná', x.location]
+          .filter(Boolean)
+          .join(', '),
         colorRgb: x.colorRgb,
         href: {
           pathname: '/treninkove-skupiny/[id]',
@@ -67,7 +70,17 @@ export function CohortList() {
               })}
               onClick={() => setIsArchive((x) => !x)}
             >
-              Zobrazit archivované
+              Archivované
+            </button>
+            <button
+              type="button"
+              className={buttonCls({
+                size: 'sm',
+                variant: isHidden ? 'primary' : 'outline',
+              })}
+              onClick={() => setIsHidden((x) => !x)}
+            >
+              Skryté
             </button>
           </div>
         )}

@@ -194,6 +194,8 @@ enum AktualitiesOrderBy {
   CREATED_AT_DESC
   ID_ASC
   ID_DESC
+  IS_VISIBLE_ASC
+  IS_VISIBLE_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -214,6 +216,7 @@ type Aktuality {
   atText: String!
   createdAt: Datetime
   id: BigInt!
+  isVisible: Boolean
   tenantId: BigInt!
   titlePhotoUrl: String
   updatedAt: Datetime
@@ -251,6 +254,9 @@ input AktualityCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
+  """Checks for equality with the object’s `isVisible` field."""
+  isVisible: Boolean
+
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
 
@@ -271,6 +277,7 @@ input AktualityInput {
   atText: String!
   createdAt: Datetime
   id: BigInt
+  isVisible: Boolean
   tenantId: BigInt
   titlePhotoUrl: String
   updatedAt: Datetime
@@ -288,6 +295,7 @@ input AktualityPatch {
   atText: String
   createdAt: Datetime
   id: BigInt
+  isVisible: Boolean
   tenantId: BigInt
   titlePhotoUrl: String
   updatedAt: Datetime
@@ -902,6 +910,7 @@ type Cohort {
   ): [EventTargetCohort!]!
   externalIds: [String]
   id: BigInt!
+  isArchived: Boolean
   isVisible: Boolean!
   location: String!
   name: String!
@@ -946,6 +955,9 @@ input CohortCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `isArchived` field."""
+  isArchived: Boolean
 
   """Checks for equality with the object’s `isVisible` field."""
   isVisible: Boolean
@@ -1063,6 +1075,7 @@ input CohortInput {
   colorRgb: String!
   description: String
   externalIds: [String]
+  isArchived: Boolean
   isVisible: Boolean
   location: String
   name: String!
@@ -1179,6 +1192,7 @@ input CohortPatch {
   colorRgb: String
   description: String
   externalIds: [String]
+  isArchived: Boolean
   isVisible: Boolean
   location: String
   name: String
@@ -1315,6 +1329,8 @@ enum CohortsOrderBy {
   DESCRIPTION_DESC
   ID_ASC
   ID_DESC
+  IS_ARCHIVED_ASC
+  IS_ARCHIVED_DESC
   IS_VISIBLE_ASC
   IS_VISIBLE_DESC
   LOCATION_ASC
@@ -5786,6 +5802,8 @@ enum PeopleOrderBy {
   NATIONAL_ID_NUMBER_ASC
   NATIONAL_ID_NUMBER_DESC
   NATURAL
+  NOTE_ASC
+  NOTE_DESC
   PHONE_ASC
   PHONE_DESC
   PREFIX_TITLE_ASC
@@ -6007,6 +6025,7 @@ type Person {
   name: String!
   nationalIdNumber: String
   nationality: String!
+  note: String!
 
   """Reads and enables pagination through a set of `PaymentDebtor`."""
   paymentDebtorsList(
@@ -6196,6 +6215,9 @@ input PersonCondition {
   """Checks for equality with the object’s `nationality` field."""
   nationality: String
 
+  """Checks for equality with the object’s `note` field."""
+  note: String
+
   """Checks for equality with the object’s `phone` field."""
   phone: String
 
@@ -6237,6 +6259,7 @@ input PersonInput {
   name: String
   nationalIdNumber: String
   nationality: String!
+  note: String
   phone: String
   prefixTitle: String
   suffixTitle: String
@@ -6340,6 +6363,7 @@ input PersonPatch {
   name: String
   nationalIdNumber: String
   nationality: String
+  note: String
   phone: String
   prefixTitle: String
   suffixTitle: String
@@ -8892,7 +8916,8 @@ type TenantTrainer {
   guestPrice45Min: Price
   guestPrice45MinAmount: BigFloat
   id: BigInt!
-  isVisible: Boolean
+  isExternal: Boolean!
+  isVisible: Boolean!
   memberPayout45Min: Price
   memberPayout45MinAmount: BigFloat
   memberPrice45Min: Price
@@ -8941,6 +8966,9 @@ input TenantTrainerCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
+  """Checks for equality with the object’s `isExternal` field."""
+  isExternal: Boolean
+
   """Checks for equality with the object’s `isVisible` field."""
   isVisible: Boolean
 
@@ -8985,6 +9013,7 @@ input TenantTrainerInput {
   guestPayout45MinAmount: BigFloat
   guestPrice45Min: PriceInput
   guestPrice45MinAmount: BigFloat
+  isExternal: Boolean
   isVisible: Boolean
   memberPayout45Min: PriceInput
   memberPayout45MinAmount: BigFloat
@@ -9010,6 +9039,7 @@ input TenantTrainerPatch {
   guestPayout45MinAmount: BigFloat
   guestPrice45Min: PriceInput
   guestPrice45MinAmount: BigFloat
+  isExternal: Boolean
   isVisible: Boolean
   memberPayout45Min: PriceInput
   memberPayout45MinAmount: BigFloat
@@ -9043,6 +9073,8 @@ enum TenantTrainersOrderBy {
   GUEST_PRICE_45MIN_DESC
   ID_ASC
   ID_DESC
+  IS_EXTERNAL_ASC
+  IS_EXTERNAL_DESC
   IS_VISIBLE_ASC
   IS_VISIBLE_DESC
   MEMBER_PAYOUT_45MIN_AMOUNT_ASC

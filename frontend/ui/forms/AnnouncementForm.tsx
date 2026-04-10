@@ -191,7 +191,7 @@ function AnnouncementAudienceEditor({
 
   const [{ data: cohortQuery, fetching: cohortsLoading }] = useQuery({
     query: CohortListDocument,
-    variables: { visible: true },
+    variables: { archived: false },
   });
 
   const audiences: AnnouncementAudienceFragment[] = [

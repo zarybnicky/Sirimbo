@@ -20,6 +20,7 @@ import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CheckboxElement } from '../fields/checkbox';
 
 const Form = z.object({
   atJmeno: z.string().min(1, 'Zadejte název článku'),
@@ -29,6 +30,7 @@ const Form = z.object({
     (val) => (val === '' ? null : val),
     z.string().nullable().default(null),
   ),
+  isVisible: z.boolean().prefault(true),
 });
 
 type FormValues = z.infer<typeof Form>;
@@ -52,6 +54,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         atPreview: data?.atPreview ?? '',
         atText: data?.atText ?? '',
         titlePhotoUrl: data?.titlePhotoUrl ?? '',
+        isVisible: data?.isVisible ?? true,
       },
       {
         keepDirtyValues: true,
@@ -110,6 +113,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
       <FormError error={onSubmit.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
       <TextFieldElement control={control} name="titlePhotoUrl" label="URL hlavní fotky" />
+      <CheckboxElement control={control} name="isVisible" value="1" label="Veřejný" />
 
       <RichTextEditor
         control={control}
