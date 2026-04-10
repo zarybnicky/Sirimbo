@@ -11,7 +11,6 @@ import type { AttendanceType } from '@/graphql';
 import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
 import { cn } from '@/lib/cn';
-import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import Link from 'next/link';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 
@@ -37,28 +36,38 @@ export function InstanceAttendanceView({ id }: { id: string }) {
         `${y.person.lastName}${y.person.firstName}`,
       ),
     );
+  const attendedCount = attendanceList.filter((x) => x.status === 'ATTENDED').length;
+  const notAttendedCount = attendanceList.filter(
+    (x) => x.status === 'NOT_EXCUSED',
+  ).length;
 
   return (
     <div className="max-w-full overflow-x-auto">
       <div className="prose prose-accent max-w-none">
-        <table>
+        <Link
+          href={{
+            pathname: '/akce/[id]',
+            query: { id: event.id, tab: 'attendance' },
+          }}
+        >
+          Zpět na seznam termínů
+        </Link>
+        <table className="mt-0">
           <thead>
             <tr>
               <th>
-                <Link
-                  href={{
-                    pathname: '/akce/[id]',
-                    query: { id: event.id, tab: 'attendance' },
-                  }}
-                >
-                  Zpět na seznam termínů
-                </Link>
-              </th>
-              <th className="text-center">
                 {numericDateFormatter.formatRange(
                   new Date(instance.since),
                   new Date(instance.until),
                 )}
+              </th>
+              <th className="flex justify-center gap-2">
+                <div className="rounded-full flex gap-2 items-center bg-green-3 px-3 py-2 tabular-nums text-sm font-medium text-green-11">
+                  {attendedCount}
+                </div>
+                <div className="rounded-full flex gap-2 items-center bg-[#fbe4e8] px-3 py-2 tabular-nums text-sm font-medium text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]">
+                  {notAttendedCount}
+                </div>
               </th>
             </tr>
           </thead>
@@ -102,6 +111,11 @@ export const attendanceIcons: { [key in AttendanceType]: LucideIcon } = {
   NOT_EXCUSED: X,
   CANCELLED: OctagonMinus,
 };
+const toggleableAttendanceIcons = {
+  ATTENDED: Check,
+  NOT_EXCUSED: X,
+} satisfies Record<'ATTENDED' | 'NOT_EXCUSED', LucideIcon>;
+
 function isAttendanceType(x: string): x is AttendanceType {
   return ['ATTENDED', 'NOT_EXCUSED', 'UNKNOWN', 'CANCELLED'].includes(x);
 }
@@ -113,10 +127,11 @@ function AttendanceItem({
 }) {
   const update = useMutation(UpdateAttendanceDocument)[1];
   const setStatus = useAsyncCallback(async (status: string) => {
-    if (isAttendanceType(status)) {
+    const nextStatus = status === '' ? 'UNKNOWN' : status;
+    if (isAttendanceType(nextStatus)) {
       await update({
         input: {
-          status,
+          status: nextStatus,
           instanceId: attendance.instanceId,
           note: attendance.note,
           personId: attendance.personId,
@@ -126,29 +141,32 @@ function AttendanceItem({
   });
 
   return (
-    <ToggleGroupPrimitive.Root
-      value={attendance.status}
-      onValueChange={setStatus.execute}
-      type="single"
-      className="flex flex-nowrap justify-center"
-    >
-      {Object.entries(attendanceIcons)
-        .filter(([key]) => key !== 'CANCELLED')
-        .map(([key, label]) => (
-          <ToggleGroupPrimitive.Item
-            key={`group-item-${key}-${label}`}
-            value={key}
-            className={cn(
-              'group data-[state=on]:text-white data-[state=on]:bg-accent-9 bg-neutral-1 text-accent-11',
-              'px-2 py-1 text-sm first:rounded-l-xl border last:rounded-r-xl',
-              'border-y border-l last:border-r border-accent-7 data-[state=on]:border-accent-10',
-              'disabled:border-neutral-6 disabled:data-[state=on]:border-neutral-10 disabled:data-[state=on]:bg-neutral-9 disabled:text-neutral-11 disabled:data-[state=on]:text-white',
-              'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10',
-            )}
-          >
-            {React.createElement(label)}
-          </ToggleGroupPrimitive.Item>
-        ))}
-    </ToggleGroupPrimitive.Root>
+    <div className="flex flex-nowrap justify-center">
+      {Object.entries(toggleableAttendanceIcons).map(([key, label]) => (
+        <button
+          type="button"
+          onClick={() => setStatus.execute(attendance.status === key ? 'UNKNOWN' : key)}
+          disabled={setStatus.loading}
+          aria-pressed={attendance.status === key}
+          title={attendance.status === key ? 'Kliknutím zrušíte výběr' : undefined}
+          key={`group-item-${key}-${label}`}
+          className={cn(
+            'group bg-neutral-1 text-neutral-11 hover:bg-neutral-3',
+            'px-2 py-1 text-sm first:rounded-l-xl border last:rounded-r-xl',
+            'border-y border-l last:border-r border-neutral-6',
+            'disabled:border-neutral-6 disabled:bg-neutral-2 disabled:text-neutral-8',
+            'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10',
+            attendance.status === key &&
+              key === 'ATTENDED' &&
+              'border-green-10 bg-green-9 hover:bg-green-8 text-white',
+            attendance.status === key &&
+              key === 'NOT_EXCUSED' &&
+              'border-[#b42346] bg-[#d94b67] hover:bg-[#e05570] text-white',
+          )}
+        >
+          {React.createElement(label)}
+        </button>
+      ))}
+    </div>
   );
 }
