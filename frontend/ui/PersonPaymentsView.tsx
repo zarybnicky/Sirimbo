@@ -8,8 +8,6 @@ import {
 } from '@/ui/format';
 import { useQuery } from 'urql';
 import { QRPayment } from '@/ui/QRPayment';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { CreateCreditTransactionForm } from '@/ui/forms/CreateCreditTransactionForm';
 import { exportPostings } from '@/ui/reports/export-postings';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from './use-auth';
@@ -22,7 +20,6 @@ import { transactionActions } from '@/lib/actions/transaction';
 import { ActionGroup } from '@/ui/ActionGroup';
 
 export function PersonPaymentsView({ id }: { id: string }) {
-  const auth = useAuth();
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
 
   const [query] = useQuery({
@@ -81,16 +78,6 @@ export function PersonPaymentsView({ id }: { id: string }) {
         </div>
       ))}
 
-      {auth.isAdmin && (
-        <div className="flex gap-2 my-2">
-          <Dialog>
-            <DialogTrigger size="sm" text="Ručně přidat/vyplatit kredit" />
-            <DialogContent>
-              <CreateCreditTransactionForm person={person} />
-            </DialogContent>
-          </Dialog>
-        </div>
-      )}
       {person.accountsList.length === 0 && <p>Žádné evidované platby</p>}
       {person.accountsList?.map((account) => (
         <div key={account.id}>

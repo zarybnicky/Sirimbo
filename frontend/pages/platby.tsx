@@ -20,7 +20,7 @@ import { useAuth } from '@/ui/use-auth';
 import { isTruthy } from '@/lib/truthyFilter';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
-import { ActionGroup } from '@/ui/ActionGroup';
+import { ActionRow } from '@/ui/ActionRow';
 
 type TenantAccountPage = NonNullable<TenantTurnoverPageQuery['accountsList']>[number];
 type TenantPosting = TenantAccountPage['postingsList'][number];
@@ -107,7 +107,6 @@ function AccountOverview() {
 function UnpaidPayments() {
   const [{ data }] = useQuery({ query: UnpaidPaymentsDocument });
   const { unpaidPayments } = data || {};
-  const auth = useAuth();
   const actionMap = useActionMap(
     paymentActions,
     unpaidPayments?.map((x) => x.payment).filter(isTruthy) ?? [],
@@ -116,19 +115,15 @@ function UnpaidPayments() {
   return (
     <>
       {unpaidPayments?.map((x) => (
-        <div
+        <ActionRow
           key={x.id}
-          className="flex flex-wrap gap-4 justify-between items-center even:bg-neutral-2 odd:bg-neutral-1 border-b p-1.5"
+          actions={actionMap.get(x.payment!.id)!}
+          className="mb-0 flex-wrap justify-between gap-4 even:bg-neutral-2 odd:bg-neutral-1 border-b p-1.5"
         >
-          <span>
-            {auth.isAdmin && x.payment && (
-              <ActionGroup variant="row" actions={actionMap.get(x.payment.id)!} />
-            )}
-          </span>
           <span className="grow">{x.person?.name}</span>
           <span>{describePosting(x.payment!)}</span>
           <span>{moneyFormatter.format(x.price)}</span>
-        </div>
+        </ActionRow>
       ))}
     </>
   );

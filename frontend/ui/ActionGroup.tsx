@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import {
   DropdownMenu,
@@ -10,12 +10,15 @@ import { useConfirm } from '@/ui/Confirm';
 import type { ConfirmOptions } from '@/ui/Confirm';
 import type { ResolvedAction, ResolvedActions } from '@/lib/actions';
 import { buttonCls } from '@/ui/style';
+import { cn } from '@/lib/cn';
 
 export function ActionGroup<TItem extends object = object>({
+  className,
   actions,
   variant = 'main',
   align,
 }: {
+  className?: string;
   variant?: 'main' | 'row';
   align?: 'start' | 'end';
   actions: ResolvedActions<TItem>;
@@ -57,7 +60,7 @@ export function ActionGroup<TItem extends object = object>({
   return (
     <>
       <div
-        className="inline-flex items-center gap-2"
+        className={cn("inline-flex items-center gap-2", className)}
         onClick={(event) => event.stopPropagation()}
       >
         {primary.map((action) => (

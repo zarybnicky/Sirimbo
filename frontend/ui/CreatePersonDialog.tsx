@@ -2,20 +2,13 @@
 
 import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
-import {
-  RadioButtonGroupElement,
-  VerticalCheckboxButtonGroupElement,
-} from '@/ui/fields/RadioButtonGroupElement';
+import { RadioButtonGroupElement, VerticalCheckboxButtonGroupElement, } from '@/ui/fields/RadioButtonGroupElement';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger, } from '@/ui/dropdown';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
+import { formatDateInputValue, parseDateInputValue } from '@/ui/fields/date-utils';
 import { TextFieldElement } from '@/ui/fields/text';
 import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { buttonCls } from '@/ui/style';
@@ -40,7 +33,7 @@ const Form = z.object({
   lastName: z.string(),
   suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED']),
-  birthDate: z.string().nullish(),
+  birthDate: z.date().nullish(),
   cstsId: z
     .string()
     .regex(/^$|\d{8}/, 'Neplatné IDT')
@@ -109,7 +102,7 @@ export function CreatePersonDialog() {
       setValue('suffixTitle', person.suffixTitle);
       setValue('firstName', person.firstName);
       setValue('lastName', person.lastName);
-      setValue('birthDate', person.birthDate);
+      setValue('birthDate', parseDateInputValue(person.birthDate ?? ''));
       setValue('taxIdentificationNumber', person.taxIdentificationNumber);
       setValue('cstsId', person.cstsId);
       setValue('wdsfId', person.wdsfId);
@@ -161,11 +154,13 @@ export function CreatePersonDialog() {
       cohortIds,
       ...p
     } = data;
-    const sanitizedCohortIds = (cohortIds ?? []).filter(isTruthy);
     const res = await create({
       input: {
         personId,
-        p,
+        p: {
+          ...p,
+          birthDate: formatDateInputValue(p.birthDate) || null,
+        },
         sendInvitation,
         isAdmin,
         isMember,
@@ -178,7 +173,7 @@ export function CreatePersonDialog() {
       await syncCohorts({
         input: {
           personId: id,
-          cohortIds: sanitizedCohortIds,
+          cohortIds: (cohortIds ?? []).filter(isTruthy),
         },
       });
       toast.success('Přidáno.');
@@ -249,8 +244,7 @@ export function CreatePersonDialog() {
               required
             />
 
-            <TextFieldElement
-              type="date"
+            <DatePickerElement
               control={control}
               label="Datum narození"
               name="birthDate"

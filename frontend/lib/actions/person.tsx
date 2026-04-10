@@ -1,8 +1,9 @@
-import { Pencil, Trash2, UserPlus } from 'lucide-react';
+import { Coins, Pencil, Trash2, UserPlus } from 'lucide-react';
 import { DeletePersonDocument, type PersonFragment } from '@/graphql/Person';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { Action } from '@/lib/actions';
+import { CreateCreditTransactionForm } from '@/ui/forms/CreateCreditTransactionForm';
 
 export const personActions: Action<PersonFragment>[] = [
   {
@@ -25,6 +26,14 @@ export const personActions: Action<PersonFragment>[] = [
     visible: ({ auth }) => auth.isAdmin,
     type: 'dialog',
     render: ({ item }) => <CreateCoupleForm person={item} />,
+  },
+  {
+    id: 'person.createCreditTransaction',
+    label: 'Přidat/vyplatit kredit',
+    icon: Coins,
+    visible: ({ auth }) => auth.isAdmin,
+    type: 'dialog',
+    render: ({ item }) => <CreateCreditTransactionForm personId={item.id} />,
   },
   {
     id: 'person.delete',

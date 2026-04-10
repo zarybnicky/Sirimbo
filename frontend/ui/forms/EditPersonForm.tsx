@@ -1,6 +1,8 @@
 import { type PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
+import { DatePickerElement } from '@/ui/fields/date';
+import { formatDateInputValue, parseDateInputValue } from '@/ui/fields/date-utils';
 import { TextFieldElement } from '@/ui/fields/text';
 import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
@@ -20,7 +22,7 @@ const Form = z.object({
   lastName: z.string(),
   suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN']),
-  birthDate: z.string().nullish(),
+  birthDate: z.date().nullish(),
   email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),
   cstsId: z
@@ -52,13 +54,24 @@ const Form = z.object({
 export function EditPersonForm({ data }: { data: PersonFragment }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
-    defaultValues: data as unknown as any,
+    defaultValues: {
+      ...data,
+      birthDate: parseDateInputValue(data.birthDate ?? ''),
+    } as unknown as any,
     resolver: zodResolver(Form),
   });
   const update = useMutation(UpdatePersonDocument)[1];
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    await update({ input: { id: data.id, patch: values } });
+    await update({
+      input: {
+        id: data.id,
+        patch: {
+          ...values,
+          birthDate: formatDateInputValue(values.birthDate) || null,
+        },
+      },
+    });
     onSuccess();
   });
 
@@ -80,12 +93,7 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
       <TextFieldElement control={control} name="email" type="email" label="E-mail" />
       <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
 
-      <TextFieldElement
-        type="date"
-        control={control}
-        label="Datum narození"
-        name="birthDate"
-      />
+      <DatePickerElement control={control} label="Datum narození" name="birthDate" />
       <TextFieldElement
         control={control}
         name="taxIdentificationNumber"

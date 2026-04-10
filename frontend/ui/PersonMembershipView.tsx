@@ -161,7 +161,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         .map((item) => (
           <ActionRow key={item.id} actions={tenantAdministratorActionMap.get(item.id)!}>
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <b>Správce klubu {item.tenantName}</b>
+              <b>Správce</b>
             </div>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </ActionRow>
@@ -171,19 +171,22 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         .filter((x) => x.tenantId === tenantId && x.status === 'ACTIVE')
         .map((item) => (
           <ActionRow key={item.id} actions={tenantTrainerActionMap.get(item.id)!}>
-            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <b>Trenér v klubu {item.tenantName}</b>
+            <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
+              <b>Trenér</b>
               {auth.isAdmin && (
-                <div>
-                  {moneyFormatter.format({
-                    amount: item.memberPrice45MinAmount,
-                    currency: item.currency,
-                  }) || '-'}{' '}
-                  {item.guestPrice45MinAmount
-                    ? `(${moneyFormatter.format({ amount: item.guestPrice45MinAmount, currency: item.currency })})`
-                    : ''}
-                  {' / 45min'}
-                </div>
+                <>
+                  <div>
+                    {moneyFormatter.format({
+                      amount: item.memberPrice45MinAmount,
+                      currency: item.currency,
+                    }) || '-'}{' '}
+                    {item.guestPrice45MinAmount && item.memberPrice45MinAmount !== item.guestPrice45MinAmount
+                      ? `(${moneyFormatter.format({ amount: item.guestPrice45MinAmount, currency: item.currency })})`
+                      : ''}
+                    {' / 45min'}
+                  </div>
+                  <span>{formatOpenDateRange(item)}</span>
+                </>
               )}
             </div>
           </ActionRow>
@@ -192,10 +195,10 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         .filter((x) => x.tenantId === tenantId)
         .map((item) => (
           <ActionRow key={item.id} actions={tenantMembershipActionMap.get(item.id)!}>
-            <div className="grow align-baseline text-sm font-bold py-1">
-              Člen klubu {item.tenantName}
+            <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
+              <b>Člen</b>
+              {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
             </div>
-            {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </ActionRow>
         ))}
 

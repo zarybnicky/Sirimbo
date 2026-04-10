@@ -1,3 +1,4 @@
+import { PersonPaymentsDocument } from '@/graphql/Person';
 import { CreateCreditTransactionDocument } from '@/graphql/Payment';
 import { DatePickerElement } from '@/ui/fields/date';
 import { NumberFieldElement } from '@/ui/fields/number';
@@ -8,7 +9,7 @@ import { buttonCls, buttonGroupCls, typographyCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,14 +20,12 @@ const Form = z.object({
   description: z.string().nullish().prefault(null),
 });
 
-export function CreateCreditTransactionForm({
-  person,
-}: {
-  person: {
-    id: string;
-    accountsList: { balance: string | null }[];
-  };
-}) {
+export function CreateCreditTransactionForm({ personId }: { personId: string }) {
+  const [{ data }] = useQuery({
+    query: PersonPaymentsDocument,
+    variables: { id: personId },
+    pause: !personId,
+  });
   const { onSuccess } = useFormResult();
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -38,8 +37,11 @@ export function CreateCreditTransactionForm({
   });
   const [isDeposit, setIsDeposit] = React.useState(true);
   const create = useMutation(CreateCreditTransactionDocument)[1];
+  const person = data?.person;
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+    if (!person) return;
+
     await create({
       input: {
         vDate: values.date.toISOString(),
@@ -52,6 +54,8 @@ export function CreateCreditTransactionForm({
     });
     onSuccess();
   });
+
+  if (!person) return null;
 
   const balance = Number.parseFloat(person.accountsList.find(Boolean)?.balance ?? '0');
   const amount = watch('amount') || 0;

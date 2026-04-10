@@ -28,7 +28,7 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { useActionMap, useActions } from '@/lib/actions';
 import { eventActions, eventExternalRegistrationActions } from '@/lib/actions/event';
 import { paymentActions } from '@/lib/actions/payment';
-import { ActionGroup } from '@/ui/ActionGroup';
+import { ActionRow } from '@/ui/ActionRow';
 
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
@@ -227,15 +227,14 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
       ))}
       {event.eventExternalRegistrationsList?.map((x) => (
         <div key={x.id} className="p-1">
-          <div className="flex gap-2 items-center justify-between">
+          <ActionRow
+            actions={externalRegistrationActionMap.get(x.id)!}
+            className="mb-0 justify-between"
+          >
             <div>
               {x.prefixTitle} {x.firstName} {x.lastName} {x.suffixTitle}
             </div>
-            <ActionGroup
-              variant="row"
-              actions={externalRegistrationActionMap.get(x.id)!}
-            />
-          </div>
+          </ActionRow>
           {x.note && <div className="ml-3">{x.note}</div>}
         </div>
       ))}
@@ -271,10 +270,9 @@ function Payments({ event }: { event: EventFragment }) {
     <div className="prose prose-accent">
       {payments.map(([registration, payment, transaction]) => (
         <div key={transaction.id}>
-          <div className="flex gap-2 items-center">
-            <ActionGroup variant="row" actions={actionMap.get(payment.id)!} />
+          <ActionRow actions={actionMap.get(payment.id)!} className="mb-0">
             Za lekci {fullDateFormatter.format(new Date(registration.since))}
-          </div>
+          </ActionRow>
           <ul>
             {transaction.postingsList.map((posting) => (
               <li key={posting.id}>

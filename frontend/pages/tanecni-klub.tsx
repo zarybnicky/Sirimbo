@@ -3,7 +3,7 @@ import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader, TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { moneyFormatter } from '@/ui/format';
+import { formatOpenDateRange, moneyFormatter } from '@/ui/format';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
@@ -61,35 +61,39 @@ export default function ClubPage() {
       <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Trenéři
       </h2>
-      {tenant.tenant.tenantTrainersList.map((data) => (
-        <ActionRow key={data.id} actions={trainerActionMap.get(data.id)!}>
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            {!data.person ? (
+      {tenant.tenant.tenantTrainersList.map((item) => (
+        <ActionRow key={item.id} actions={trainerActionMap.get(item.id)!}>
+          <div className="grow gap-3 align-baseline flex flex-wrap justify-between text-sm py-1">
+            {!item.person ? (
               '?'
             ) : (
               <Link
-                className="underline font-bold"
+                className="underline font-bold grow basis-40"
                 href={{
                   pathname: '/clenove/[id]',
-                  query: { id: data.person?.id },
+                  query: { id: item.person?.id },
                 }}
               >
-                {data.person?.name}
+                {item.person?.name}
               </Link>
             )}
             {auth.isAdmin && (
-              <div className="flex flex-wrap gap-4">
-                <span>
+              <>
+                <div className="self-end">
                   {moneyFormatter.format({
-                    amount: data.memberPrice45MinAmount,
-                    currency: data.currency,
-                  }) || '-'}
-                  {data.guestPrice45MinAmount
-                    ? ` (${moneyFormatter.format({ amount: data.guestPrice45MinAmount, currency: data.currency })})`
+                    amount: item.memberPrice45MinAmount,
+                    currency: item.currency,
+                  }) || '-'}{' '}
+                  {item.guestPrice45MinAmount &&
+                  item.memberPrice45MinAmount !== item.guestPrice45MinAmount
+                    ? `(${moneyFormatter.format({ amount: item.guestPrice45MinAmount, currency: item.currency })})`
                     : ''}
                   {' / 45min'}
+                </div>
+                <span className="grow basis-40 text-right">
+                  {formatOpenDateRange(item)}
                 </span>
-              </div>
+              </>
             )}
           </div>
         </ActionRow>

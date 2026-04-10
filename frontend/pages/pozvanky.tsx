@@ -7,7 +7,7 @@ import {
 } from '@/graphql/Invitation';
 import { useActionMap } from '@/lib/actions';
 import { personInvitationActions } from '@/lib/actions/personInvitation';
-import { ActionGroup } from '@/ui/ActionGroup';
+import { ActionRow } from '@/ui/ActionRow';
 import { fullDateFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { PageHeader } from '@/ui/TitleBar';
@@ -148,19 +148,16 @@ export default function InvitationOverviewPage() {
                     </div>
                     <div className="not-prose mt-2 space-y-1">
                       {x.personInvitationsList.map((invitation) => (
-                        <div
+                        <ActionRow
                           key={invitation.id}
-                          className="flex flex-wrap items-center gap-2 text-sm"
+                          actions={invitationActionMap.get(invitation.id)!}
+                          className="mb-0 text-sm"
                         >
-                          <ActionGroup
-                            variant="row"
-                            actions={invitationActionMap.get(invitation.id)!}
-                          />
                           <span>
                             Pozvánka odeslána{' '}
                             {fullDateFormatter.format(new Date(invitation.createdAt))}
                           </span>
-                        </div>
+                        </ActionRow>
                       ))}
                     </div>
                   </li>
