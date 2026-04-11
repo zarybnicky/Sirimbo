@@ -149,7 +149,7 @@ function TrainingCohortPage() {
                   .filter((x) => x.category?.discipline === 'Latin')
                   .map(({ category, points, finals }, i) => (
                     <div key={i}>
-                      {category
+                      {category && !['Novice', 'Bronze', 'Silver', 'Gold', 'Entry'].includes(category.class)
                         ? `${category.class === 'S' ? 'M' : category.class} ${Number.parseFloat(points ?? '0')}/${finals}F`
                         : ''}
                     </div>
