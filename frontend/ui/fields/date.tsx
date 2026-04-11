@@ -1,7 +1,11 @@
 import { FieldLabel } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
 import { TextField } from '@/ui/fields/text';
-import { formatDateInputValue, parseDateInputValue } from '@/ui/fields/date-utils';
+import {
+  formatDatePickerValue,
+  parseDatePickerValue,
+  type DatePickerValueMode,
+} from '@/ui/fields/date-utils';
 import { X } from 'lucide-react';
 import * as React from 'react';
 import {
@@ -21,6 +25,7 @@ type Extras = {
   label?: React.ReactNode;
   helperText?: React.ReactNode;
   clearable?: boolean;
+  valueMode?: DatePickerValueMode;
 };
 
 export function DatePickerElement<T extends FieldValues>({
@@ -30,9 +35,13 @@ export function DatePickerElement<T extends FieldValues>({
   className,
   helperText,
   clearable = false,
+  valueMode = 'date-object',
 }: DateRangeInputProps<T> & Extras) {
   const { field, fieldState } = useController<T>({ control, name });
-  const inputValue = formatDateInputValue(field.value);
+  const inputValue = formatDatePickerValue(
+    field.value as Date | string | null | undefined,
+    valueMode,
+  );
 
   return (
     <div className={className}>
@@ -47,7 +56,7 @@ export function DatePickerElement<T extends FieldValues>({
           error={fieldState.error}
           onBlur={field.onBlur}
           onChange={(e) => {
-            field.onChange(parseDateInputValue(e.currentTarget.value));
+            field.onChange(parseDatePickerValue(e.currentTarget.value, valueMode));
           }}
         />
         {clearable && inputValue && (

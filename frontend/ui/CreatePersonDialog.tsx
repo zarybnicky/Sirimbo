@@ -8,7 +8,6 @@ import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrig
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
-import { formatDateInputValue, parseDateInputValue } from '@/ui/fields/date-utils';
 import { TextFieldElement } from '@/ui/fields/text';
 import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { buttonCls } from '@/ui/style';
@@ -33,7 +32,7 @@ const Form = z.object({
   lastName: z.string(),
   suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED']),
-  birthDate: z.date().nullish(),
+  birthDate: z.string().nullish(),
   cstsId: z
     .string()
     .regex(/^$|\d{8}/, 'Neplatné IDT')
@@ -102,7 +101,7 @@ export function CreatePersonDialog() {
       setValue('suffixTitle', person.suffixTitle);
       setValue('firstName', person.firstName);
       setValue('lastName', person.lastName);
-      setValue('birthDate', parseDateInputValue(person.birthDate ?? ''));
+      setValue('birthDate', person.birthDate ?? null);
       setValue('taxIdentificationNumber', person.taxIdentificationNumber);
       setValue('cstsId', person.cstsId);
       setValue('wdsfId', person.wdsfId);
@@ -157,10 +156,7 @@ export function CreatePersonDialog() {
     const res = await create({
       input: {
         personId,
-        p: {
-          ...p,
-          birthDate: formatDateInputValue(p.birthDate) || null,
-        },
+        p,
         sendInvitation,
         isAdmin,
         isMember,
@@ -248,6 +244,7 @@ export function CreatePersonDialog() {
               control={control}
               label="Datum narození"
               name="birthDate"
+              valueMode="date"
             />
             <TextFieldElement
               control={control}

@@ -2,7 +2,6 @@ import { type PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { DatePickerElement } from '@/ui/fields/date';
-import { formatDateInputValue, parseDateInputValue } from '@/ui/fields/date-utils';
 import { TextFieldElement } from '@/ui/fields/text';
 import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
@@ -22,7 +21,7 @@ const Form = z.object({
   lastName: z.string(),
   suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN']),
-  birthDate: z.date().nullish(),
+  birthDate: z.string().nullish(),
   email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),
   cstsId: z
@@ -56,7 +55,7 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
   const { control, handleSubmit } = useForm({
     defaultValues: {
       ...data,
-      birthDate: parseDateInputValue(data.birthDate ?? ''),
+      birthDate: data.birthDate ?? null,
     } as unknown as any,
     resolver: zodResolver(Form),
   });
@@ -66,10 +65,7 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
     await update({
       input: {
         id: data.id,
-        patch: {
-          ...values,
-          birthDate: formatDateInputValue(values.birthDate) || null,
-        },
+        patch: values,
       },
     });
     onSuccess();
@@ -93,7 +89,12 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
       <TextFieldElement control={control} name="email" type="email" label="E-mail" />
       <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
 
-      <DatePickerElement control={control} label="Datum narození" name="birthDate" />
+      <DatePickerElement
+        control={control}
+        label="Datum narození"
+        name="birthDate"
+        valueMode="date"
+      />
       <TextFieldElement
         control={control}
         name="taxIdentificationNumber"

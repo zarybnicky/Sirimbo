@@ -1,7 +1,6 @@
 import { type EventFragment, RegisterToEventExternalDocument } from '@/graphql/Event';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { DatePickerElement } from '@/ui/fields/date';
-import { formatDateInputValue } from '@/ui/fields/date-utils';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useAsyncCallback } from 'react-async-hook';
@@ -20,7 +19,7 @@ const Form = z.object({
   prefixTitle: z.string().prefault(''),
   suffixTitle: z.string().prefault(''),
   nationality: z.string(),
-  birthDate: z.date().nullish(),
+  birthDate: z.string().nullish(),
   taxIdentificationNumber: z
     .string()
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
@@ -47,7 +46,6 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
         eventExternalRegistration: {
           eventId: event.id,
           ...values,
-          birthDate: formatDateInputValue(values.birthDate) || null,
         },
       },
     });
@@ -99,6 +97,7 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
             control={control}
             name="birthDate"
             label="Datum narození"
+            valueMode="date"
           />
         }
 

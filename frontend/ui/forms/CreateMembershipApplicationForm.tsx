@@ -8,7 +8,6 @@ import {
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { DatePickerElement } from '@/ui/fields/date';
-import { formatDateInputValue, parseDateInputValue } from '@/ui/fields/date-utils';
 import { TextFieldElement } from '@/ui/fields/text';
 import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
@@ -30,7 +29,7 @@ const Form = z.object({
   lastName: z.string(),
   suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN']),
-  birthDate: z.date().nullish(),
+  birthDate: z.string().nullish(),
   email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),
   cstsId: z
@@ -70,10 +69,7 @@ export function CreateMembershipApplicationForm({
   React.useEffect(() => {
     if (data) {
       reset(
-        Form.partial().optional().parse({
-          ...data,
-          birthDate: parseDateInputValue(data.birthDate ?? ''),
-        }),
+        Form.partial().optional().parse(data),
         {
           keepDirtyValues: true,
           keepTouched: true,
@@ -84,15 +80,13 @@ export function CreateMembershipApplicationForm({
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    const birthDate = formatDateInputValue(values.birthDate) || null;
     if (data) {
-      await update({ input: { id: data.id, patch: { ...values, birthDate } } });
+      await update({ input: { id: data.id, patch: values } });
     } else {
       await create({
         input: {
           membershipApplication: {
             ...values,
-            birthDate,
             createdBy: auth.user?.id!,
           },
         },
@@ -124,7 +118,12 @@ export function CreateMembershipApplicationForm({
         <TextFieldElement control={control} name="email" type="email" label="E-mail" />
         <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
 
-        <DatePickerElement control={control} label="Datum narození" name="birthDate" />
+        <DatePickerElement
+          control={control}
+          label="Datum narození"
+          name="birthDate"
+          valueMode="date"
+        />
         <TextFieldElement
           control={control}
           name="taxIdentificationNumber"

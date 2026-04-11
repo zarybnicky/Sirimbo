@@ -2,6 +2,8 @@ const DATE_INPUT_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 const pad = (value: number) => value.toString().padStart(2, '0');
 
+export type DatePickerValueMode = 'date-object' | 'date' | 'datetime';
+
 export function formatDateInputValue(value: Date | string | null | undefined) {
   if (!value) return '';
 
@@ -38,4 +40,35 @@ export function parseDateInputValue(value: string) {
   }
 
   return date;
+}
+
+export function formatDatePickerValue(
+  value: Date | string | null | undefined,
+  valueMode: DatePickerValueMode,
+) {
+  if (valueMode === 'date') {
+    if (!value) return '';
+    if (typeof value === 'string') {
+      return parseDateInputValue(value) ? value : '';
+    }
+  }
+
+  return formatDateInputValue(value);
+}
+
+export function parseDatePickerValue(value: string, valueMode: DatePickerValueMode) {
+  if (!value) return null;
+
+  if (valueMode === 'date') {
+    return parseDateInputValue(value) ? value : null;
+  }
+
+  const parsed = parseDateInputValue(value);
+  if (!parsed) return null;
+
+  if (valueMode === 'datetime') {
+    return parsed.toISOString();
+  }
+
+  return parsed;
 }
