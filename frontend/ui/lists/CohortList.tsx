@@ -22,7 +22,7 @@ export function CohortList() {
   } = useTypedRouter(QueryParams);
   const auth = useAuth();
   const [isArchive, setIsArchive] = React.useState(false);
-  const [isHidden, setIsHidden] = React.useState(true);
+  const [isHidden, setIsHidden] = React.useState(false);
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
     variables: { visible: !isHidden, archived: isArchive },
