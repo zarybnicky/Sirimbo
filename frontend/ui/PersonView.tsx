@@ -1,6 +1,7 @@
 import React from 'react';
 import { PersonMembershipsDocument } from '@/graphql/Person';
 import { PageHeader } from '@/ui/TitleBar';
+import { getBestCstsProgress, normalizeCstsClass } from '@/ui/csts';
 import { useQuery } from 'urql';
 import { useAuth } from '@/ui/use-auth';
 import { formatAgeGroup } from '@/ui/format';
@@ -24,6 +25,16 @@ export function PersonView({ id }: { id: string }) {
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(id);
   const item = data?.person;
   const actions = useActions(personActions, item);
+  const sttProgress = getBestCstsProgress(item?.cstsProgressList, 'Standard');
+  const latProgress = getBestCstsProgress(item?.cstsProgressList, 'Latin');
+  const sttClass = normalizeCstsClass(sttProgress?.category.class);
+  const latClass = normalizeCstsClass(latProgress?.category.class);
+  const ageCategory =
+    formatAgeGroup(item?.birthDate) ?? sttProgress?.category.ageGroup ?? latProgress?.category.ageGroup;
+  const categoryProgress =
+    sttClass || latClass
+      ? [ageCategory, `${sttClass ?? '-'}/${latClass ?? '-'}`].filter(Boolean).join(' ')
+      : ageCategory;
 
   const tabs = React.useMemo(() => {
     if (!item) return [];
@@ -58,7 +69,7 @@ export function PersonView({ id }: { id: string }) {
     <>
       <PageHeader
         title={item.name}
-        subtitle={[formatAgeGroup(item.birthDate), item.phone, item.email]
+        subtitle={[categoryProgress, item.phone, item.email]
           .filter(Boolean)
           .join(' · ')}
         actions={actions}

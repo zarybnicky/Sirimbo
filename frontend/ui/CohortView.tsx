@@ -5,6 +5,7 @@ import type { CohortWithMembersQuery } from '@/graphql/Cohorts';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
+import { getBestCstsProgress, normalizeCstsClass } from '@/ui/csts';
 import { formatAgeGroup, formatOpenDateRange } from '@/ui/format';
 import { typographyCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
@@ -105,32 +106,7 @@ function CategoryList({
   birthDate: string | null | undefined;
   progressList: CstsProgressRecord[];
 }) {
-  const hiddenCategoryClasses = new Set(['Novice', 'Bronze', 'Silver', 'Gold', 'Entry']);
-  const classOrder = ['E', 'D', 'C', 'B', 'A', 'M'];
-  const item = progressList
-    .filter(
-      (
-        progress,
-      ): progress is CstsProgressRecord & {
-        category: NonNullable<CstsProgressRecord['category']>;
-      } => progress.category != null,
-    )
-    .filter((progress) => !hiddenCategoryClasses.has(progress.category.class))
-    .reduce<
-      | (CstsProgressRecord & {
-          category: NonNullable<CstsProgressRecord['category']>;
-        })
-      | null
-    >((best, progress) => {
-      const bestRank = best
-        ? classOrder.indexOf(best.category.class === 'S' ? 'M' : best.category.class)
-        : -1;
-      const progressRank = classOrder.indexOf(
-        progress.category.class === 'S' ? 'M' : progress.category.class,
-      );
-
-      return progressRank > bestRank ? progress : best;
-    }, null);
+  const item = getBestCstsProgress(progressList);
 
   if (!item) {
     return null;
@@ -142,7 +118,7 @@ function CategoryList({
         <div className="font-medium">
           {[
             formatAgeGroup(birthDate) ?? item.category.ageGroup,
-            item.category.class === 'S' ? 'M' : item.category.class,
+            normalizeCstsClass(item.category.class),
             item.category.discipline === 'Standard'
               ? 'STT'
               : item.category.discipline === 'Latin'
