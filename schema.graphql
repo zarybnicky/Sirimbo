@@ -216,7 +216,7 @@ type Aktuality {
   atText: String!
   createdAt: Datetime
   id: BigInt!
-  isVisible: Boolean
+  isVisible: Boolean!
   tenantId: BigInt!
   titlePhotoUrl: String
   updatedAt: Datetime
@@ -910,7 +910,7 @@ type Cohort {
   ): [EventTargetCohort!]!
   externalIds: [String]
   id: BigInt!
-  isArchived: Boolean
+  isArchived: Boolean!
   isVisible: Boolean!
   location: String!
   name: String!

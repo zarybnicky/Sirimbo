@@ -30,6 +30,7 @@ query CohortWithMembers($id: BigInt!) {
       ...CohortMembership
       person {
         id
+        birthDate
         cstsProgressList {
           competitorName
           category {
