@@ -12,7 +12,7 @@ import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-reac
 import { useAsyncCallback } from 'react-async-hook';
 import { cn } from '@/lib/cn';
 import Link from 'next/link';
-import { keyIsNonNull } from '@/lib/truthyFilter';
+import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
 
 export function InstanceAttendanceView({ id }: { id: string }) {
   const auth = useAuth();
@@ -25,9 +25,17 @@ export function InstanceAttendanceView({ id }: { id: string }) {
 
   if (!instance?.event) return null;
   const { event } = instance;
-  const trainerIds = instance.trainersList?.map((x) => x.personId) ?? [];
-  const isMyEvent =
-    auth.isAdmin || (auth.isTrainer && trainerIds.find((x) => auth.isMyPerson(x)));
+  const managerPersonIds = React.useMemo(
+    () =>
+      new Set([
+        ...(instance.trainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
+        ...(event.eventTrainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
+      ]),
+    [instance.trainersList, event.eventTrainersList],
+  );
+  const canEditAttendance =
+    auth.isAdmin ||
+    (auth.isTrainer && auth.personIds.some((personId) => managerPersonIds.has(personId)));
   const attendanceList = instance.eventAttendancesByInstanceIdList
     .filter((x) => x.status !== 'CANCELLED')
     .filter(keyIsNonNull('person'))
@@ -75,7 +83,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
             <tr key={x.id}>
               <td className="align-middle">
                 <div>{x.person?.name}</div>
-                {isMyEvent && (
+                {canEditAttendance && (
                   <div className="text-xs text-neutral-9">
                     Poslední účast:{' '}
                     {x.registration?.lastAttended
@@ -84,7 +92,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
                   </div>
                 )}
               </td>
-              {isMyEvent ? (
+              {canEditAttendance ? (
                 <td className="text-center align-middle py-0">
                   <AttendanceItem attendance={x} />
                 </td>

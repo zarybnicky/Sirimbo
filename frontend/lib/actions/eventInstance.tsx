@@ -21,15 +21,26 @@ import { exportEventRegistrations } from '@/ui/reports/export-event-registration
 
 const preventDefault = (e: Event) => e.preventDefault();
 
-export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = [
+export type EventInstanceActionItem = EventInstanceWithTrainerFragment & {
+  managerPersonIds: Set<string>;
+};
+
+function canManageInstance({
+  auth,
+  item,
+}: Pick<ActionContext<EventInstanceActionItem>, 'auth' | 'item'>) {
+  return (
+    auth.isAdmin ||
+    (auth.isTrainer && auth.personIds.some((personId) => item.managerPersonIds.has(personId)))
+  );
+}
+
+export const eventInstanceActions: Action<EventInstanceActionItem>[] = [
   {
     id: 'eventInstance.edit',
     label: 'Upravit',
     icon: Pencil,
-    visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
+    visible: canManageInstance,
     type: 'dialog',
     render: ({ item }) => <UpsertEventForm eventId={item.eventId} />,
     dialogProps: {
@@ -41,10 +52,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     id: 'eventInstance.editDescription',
     label: 'Upravit dlouhý popis',
     icon: NotebookPen,
-    visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
+    visible: canManageInstance,
     type: 'dialog',
     render: ({ item }) => <EditEventDescriptionForm id={item.eventId} />,
     dialogProps: {
@@ -54,12 +62,9 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
   {
     id: 'eventInstance.toggleCancelled',
     label: ({ item }) => (item.isCancelled ? 'Zrušeno' : 'Zrušit termín'),
-    icon: ({ item }: ActionContext<EventInstanceWithTrainerFragment>) =>
+    icon: ({ item }: ActionContext<EventInstanceActionItem>) =>
       item.isCancelled ? CheckSquare : Square,
-    visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
+    visible: canManageInstance,
     type: 'mutation',
     execute: async ({ item, mutate }) => {
       await mutate(UpdateEventInstanceDocument, {
@@ -72,10 +77,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     id: 'eventInstance.detach',
     label: 'Oddělit termín',
     icon: GitBranch,
-    visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
+    visible: canManageInstance,
     type: 'mutation',
     confirm: {
       description: [
@@ -100,10 +102,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
     label: 'Odstranit termín',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
+    visible: canManageInstance,
     type: 'mutation',
     confirm: {
       description:
@@ -116,10 +115,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
   {
     id: 'eventInstance.exportParticipants',
     label: 'Export přihlášených',
-    visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
+    visible: canManageInstance,
     type: 'mutation',
     execute: async ({ item, client }) => {
       await exportEventParticipants(client, item.eventId);
@@ -128,10 +124,7 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
   {
     id: 'eventInstance.exportRegistrations',
     label: 'Export přihlášek',
-    visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer &&
-        (item.trainersList || []).some((x) => auth.isMyPerson(x.personId))),
+    visible: canManageInstance,
     type: 'mutation',
     execute: async ({ item, client }) => {
       await exportEventRegistrations(client, item.eventId);

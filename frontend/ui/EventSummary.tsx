@@ -13,7 +13,10 @@ import {
   shortTimeFormatter,
 } from '@/ui/format';
 import { useActions } from '@/lib/actions';
-import { eventInstanceActions } from '@/lib/actions/eventInstance';
+import {
+  eventInstanceActions,
+  type EventInstanceActionItem,
+} from '@/lib/actions/eventInstance';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
@@ -30,7 +33,17 @@ export function EventSummary({
   instance: EventInstanceWithTrainerFragment;
   offsetButtons?: boolean;
 }) {
-  const actions = useActions(eventInstanceActions, instance);
+  const actionItem = React.useMemo<EventInstanceActionItem>(
+    () => ({
+      ...instance,
+      managerPersonIds: new Set([
+        ...(instance.trainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
+        ...(event.eventTrainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
+      ]),
+    }),
+    [instance, event.eventTrainersList],
+  );
+  const actions = useActions(eventInstanceActions, actionItem);
   const registrationCount = event.eventRegistrations.totalCount;
   const myRegistrations = event.myRegistrationsList || [];
   const start = new Date(instance.since);
