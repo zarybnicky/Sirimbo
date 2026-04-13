@@ -900,4 +900,4 @@ $$ language sql stable;
 comment on function public.person_csts_progress is '@simpleCollections only';
 grant all on function public.person_csts_progress to anonymous;
 
-select graphile_worker.add_job('frontier_process');
+select graphile_worker.add_job('frontier_process', json_build_object('isFullRebuild', true));

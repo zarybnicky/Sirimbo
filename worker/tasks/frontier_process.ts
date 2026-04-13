@@ -27,69 +27,108 @@ function bump(
 }
 
 const BUDGET_MS = 1000;
+const PROCESS_BATCH_SIZE = 20;
 
 export const frontier_process: Task<'frontier_process'> = async (payload, helpers) => {
   const { logger, withPgClient } = helpers;
   const { isFullRebuild = false } = payload;
 
   let processed = 0;
+  let foundNoMoreRows = false;
   const byKind = new Map<string, ProcessorStats>();
   const started = performance.now();
 
   await withPgClient(async (client) => {
     while (performance.now() - started < BUDGET_MS) {
-      const t0 = performance.now();
-
       await client.query('BEGIN');
-      const [frontier] = await getNextPendingProcess.run(undefined, client);
-      if (!frontier) {
+      const frontiers = await getNextPendingProcess.run(
+        { limit: PROCESS_BATCH_SIZE },
+        client,
+      );
+      if (frontiers.length === 0) {
+        foundNoMoreRows = true;
         await client.query('ROLLBACK');
         break;
       }
-      const { id, federation, kind } = frontier;
 
-      const handler = LOADER_MAP[federation]?.[kind];
-      if (!handler) {
-        await markFrontierFetchError.run({ id }, client);
-        await client.query('COMMIT');
-        logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
-        bump(byKind, federation, kind, performance.now() - t0, true);
-        continue;
-      }
+      const successfulBatch: Array<{ federation: string; kind: string; ms: number }> = [];
+      let failedFrontier: (typeof frontiers)[number] | null = null;
+      let failedAt = 0;
+      let missingHandler = false;
+
       try {
-        const [contentRow] =
-          handler.mode === 'json'
-            ? await getFrontierJsonResponse.run({ id }, client)
-            : await getFrontierHtmlResponse.run({ id }, client);
-        if (contentRow?.content) {
-          const content =
+        for (const frontier of frontiers) {
+          const { id, federation, kind } = frontier;
+          failedFrontier = frontier;
+          failedAt = performance.now();
+          missingHandler = false;
+
+          const handler = LOADER_MAP[federation]?.[kind];
+          if (!handler) {
+            missingHandler = true;
+            throw new Error(
+              `Handler for frontier ${id} not found (${federation}/${kind})`,
+            );
+          }
+
+          const [contentRow] =
             handler.mode === 'json'
-              ? handler.schema.parse(contentRow.content, {
-                  reportInput: true,
-                })
-              : contentRow.content;
-          await handler.load(client, frontier, content);
+              ? await getFrontierJsonResponse.run({ id }, client)
+              : await getFrontierHtmlResponse.run({ id }, client);
+          if (contentRow?.content) {
+            const content =
+              handler.mode === 'json'
+                ? handler.schema.parse(contentRow.content, {
+                    reportInput: true,
+                  })
+                : contentRow.content;
+            await handler.load(client, frontier, content);
+          }
+          await markFrontierProcessSuccess.run({ id }, client);
+          successfulBatch.push({
+            federation,
+            kind,
+            ms: performance.now() - failedAt,
+          });
+          failedFrontier = null;
         }
-        await markFrontierProcessSuccess.run({ id }, client);
+
         await client.query('COMMIT');
-        processed += 1;
-        bump(byKind, federation, kind, performance.now() - t0, false);
+        processed += successfulBatch.length;
+        for (const { federation, kind, ms } of successfulBatch) {
+          bump(byKind, federation, kind, ms, false);
+        }
       } catch (e) {
         await client.query('ROLLBACK');
-        await markFrontierProcessError.run({ id }, client);
 
-        const stack = e instanceof Error ? e.stack : '';
-        logger.error(`Processing frontier ${id} failed: ${e} ${stack}`);
-        bump(byKind, federation, kind, performance.now() - t0, true);
+        if (!failedFrontier) throw e;
+
+        const { id, federation, kind } = failedFrontier;
+        if (missingHandler) {
+          await markFrontierFetchError.run({ id }, client);
+          logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
+        } else {
+          await markFrontierProcessError.run({ id }, client);
+          const stack = e instanceof Error ? e.stack : '';
+          logger.error(`Processing frontier ${id} failed: ${e} ${stack}`);
+        }
+        bump(byKind, federation, kind, performance.now() - failedAt, true);
       }
     }
 
-    const [countItems] = await countPendingProcess.run(undefined, client);
-    const pendingItems = countItems?.count ?? 0;
-    if (pendingItems > 0) {
-      await helpers.addJob('frontier_process', { isFullRebuild });
+    let pending = '';
+    if (isFullRebuild) {
+      if (processed > 0 && !foundNoMoreRows) {
+        await helpers.addJob('frontier_process', { isFullRebuild: true });
+      }
+    } else {
+      const [countItems] = await countPendingProcess.run(undefined, client);
+      const pendingItems = countItems?.count ?? 0;
+      if (pendingItems > 0) {
+        await helpers.addJob('frontier_process', { isFullRebuild: false });
+      }
+      pending = pendingItems > 0 ? ` (${pendingItems} pending)` : '';
     }
-    const pending = pendingItems > 0 ? ` (${pendingItems} pending)` : '';
 
     if (processed > 0) {
       const totalMs = Math.round(performance.now() - started);

@@ -102,7 +102,7 @@ WHERE process_status = 'pending'
   AND fetch_status IN ('ok', 'gone')
 ORDER BY last_fetched_at, discovered_at
 FOR UPDATE SKIP LOCKED
-LIMIT 1;
+LIMIT :limit;
 
 /* @name CountPendingProcess */
 SELECT count(*)::int
