@@ -23,16 +23,17 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   });
   const instance = data?.eventInstance;
 
-  if (!instance?.event) return null;
-  const { event } = instance;
   const managerPersonIds = React.useMemo(
     () =>
       new Set([
-        ...(instance.trainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
-        ...(event.eventTrainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
+        ...(instance?.trainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
+        ...(instance?.event?.eventTrainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
       ]),
-    [instance.trainersList, event.eventTrainersList],
+    [instance?.trainersList, instance?.event?.eventTrainersList],
   );
+
+  if (!instance) return null;
+
   const canEditAttendance =
     auth.isAdmin ||
     (auth.isTrainer && auth.personIds.some((personId) => managerPersonIds.has(personId)));
@@ -54,7 +55,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
       <Link
         href={{
           pathname: '/akce/[id]',
-          query: { id: event.id, tab: 'attendance' },
+          query: { id: instance.eventId, tab: 'attendance' },
         }}
       >
         Zpět na seznam termínů
