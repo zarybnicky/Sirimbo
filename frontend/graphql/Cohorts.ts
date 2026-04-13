@@ -4,7 +4,7 @@ import * as Types from './index';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type CohortBasicFragment = { __typename?: 'Cohort', id: string, name: string, colorRgb: string };
 
-export type CohortFragment = { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean | null, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null };
+export type CohortFragment = { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null };
 
 export type CohortListQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
@@ -14,28 +14,28 @@ export type CohortListQueryVariables = Types.Exact<{
 }>;
 
 
-export type CohortListQuery = { __typename?: 'Query', cohortsList: Array<{ __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean | null, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null }> | null };
+export type CohortListQuery = { __typename?: 'Query', cohortsList: Array<{ __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null }> | null };
 
 export type CohortWithMembersQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
 }>;
 
 
-export type CohortWithMembersQuery = { __typename?: 'Query', entity: { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean | null, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null, cohortMembershipsList: Array<{ __typename?: 'CohortMembership', id: string, since: string, until: string | null, status: Types.RelationshipStatus, person: { __typename?: 'Person', id: string, birthDate: string | null, name: string, cstsProgressList: Array<{ __typename?: 'PersonCstsProgressRecord', competitorName: string | null, points: string | null, finals: number | null, category: { __typename?: 'Category', id: string, name: string, discipline: string, series: string, ageGroup: string, competitorType: Types.CompetitorType, class: string } | null }> | null } | null, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null }> } | null };
+export type CohortWithMembersQuery = { __typename?: 'Query', entity: { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null, cohortMembershipsList: Array<{ __typename?: 'CohortMembership', id: string, since: string, until: string | null, status: Types.RelationshipStatus, person: { __typename?: 'Person', id: string, birthDate: string | null, name: string, cstsProgressList: Array<{ __typename?: 'PersonCstsProgressRecord', competitorName: string | null, points: string | null, finals: number | null, category: { __typename?: 'Category', id: string, name: string, discipline: string, series: string, ageGroup: string, competitorType: Types.CompetitorType, class: string } | null }> | null } | null, cohort: { __typename?: 'Cohort', id: string, name: string, colorRgb: string } | null }> } | null };
 
 export type CohortQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
 }>;
 
 
-export type CohortQuery = { __typename?: 'Query', entity: { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean | null, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null } | null };
+export type CohortQuery = { __typename?: 'Query', entity: { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null } | null };
 
 export type CreateCohortMutationVariables = Types.Exact<{
   input: Types.CohortInput;
 }>;
 
 
-export type CreateCohortMutation = { __typename?: 'Mutation', createCohort: { __typename?: 'CreateCohortPayload', cohort: { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean | null, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null } | null } | null };
+export type CreateCohortMutation = { __typename?: 'Mutation', createCohort: { __typename?: 'CreateCohortPayload', cohort: { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null } | null } | null };
 
 export type UpdateCohortMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];
@@ -43,7 +43,7 @@ export type UpdateCohortMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateCohortMutation = { __typename?: 'Mutation', updateCohort: { __typename?: 'UpdateCohortPayload', cohort: { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean | null, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null } | null } | null };
+export type UpdateCohortMutation = { __typename?: 'Mutation', updateCohort: { __typename?: 'UpdateCohortPayload', cohort: { __typename?: 'Cohort', id: string, name: string, location: string, isVisible: boolean, isArchived: boolean, colorRgb: string, ordering: number, description: string, cohortGroupId: string | null, externalIds: Array<string | null> | null } | null } | null };
 
 export type ArchiveCohortMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt']['input'];

@@ -239,7 +239,7 @@ export type Aktuality = {
   atText: Scalars['String']['output'];
   createdAt: Maybe<Scalars['Datetime']['output']>;
   id: Scalars['BigInt']['output'];
-  isVisible: Maybe<Scalars['Boolean']['output']>;
+  isVisible: Scalars['Boolean']['output'];
   tenantId: Scalars['BigInt']['output'];
   titlePhotoUrl: Maybe<Scalars['String']['output']>;
   updatedAt: Maybe<Scalars['Datetime']['output']>;
@@ -765,7 +765,7 @@ export type Cohort = {
   eventTargetCohortsList: Array<EventTargetCohort>;
   externalIds: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   id: Scalars['BigInt']['output'];
-  isArchived: Maybe<Scalars['Boolean']['output']>;
+  isArchived: Scalars['Boolean']['output'];
   isVisible: Scalars['Boolean']['output'];
   location: Scalars['String']['output'];
   name: Scalars['String']['output'];
