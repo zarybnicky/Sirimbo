@@ -2,15 +2,14 @@ import { cohortActions } from '@/lib/actions/cohort';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { useActionMap, useActions } from '@/lib/actions';
 import type { CohortWithMembersQuery } from '@/graphql/Cohorts';
-import { ActionGroup } from '@/ui/ActionGroup';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
 import { getBestCstsProgress, normalizeCstsClass } from '@/ui/csts';
 import { formatAgeGroup, formatOpenDateRange } from '@/ui/format';
 import { typographyCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
 import React from 'react';
+import { ActionRow } from '@/ui/ActionRow';
 
 type CohortWithMembers = NonNullable<CohortWithMembersQuery['entity']>;
 type CohortMembership = CohortWithMembers['cohortMembershipsList'][number];
@@ -19,7 +18,6 @@ type CstsProgressRecord = NonNullable<
 >[number];
 
 export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
-  const auth = useAuth();
   const members = React.useMemo(
     () => cohort.cohortMembershipsList ?? [],
     [cohort.cohortMembershipsList],
@@ -47,29 +45,24 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
             key={membership.id}
             className="col-span-full grid grid-cols-subgrid items-center gap-x-4 gap-y-2 text-sm"
           >
-            <div className="flex items-center gap-2 min-w-max">
-              {auth.isAdmin && (
-                <ActionGroup
-                  variant="row"
-                  actions={memberActionMap.get(membership.id)!}
-                />
+            <ActionRow
+              className="mb-0 min-w-max"
+              actions={memberActionMap.get(membership.id)!}
+            >
+              {membership.person ? (
+                <Link
+                  className="font-bold underline"
+                  href={{
+                    pathname: '/clenove/[id]',
+                    query: { id: membership.person.id },
+                  }}
+                >
+                  {membership.person.name}
+                </Link>
+              ) : (
+                '?'
               )}
-              <div>
-                {membership.person ? (
-                  <Link
-                    className="font-bold underline"
-                    href={{
-                      pathname: '/clenove/[id]',
-                      query: { id: membership.person.id },
-                    }}
-                  >
-                    {membership.person.name}
-                  </Link>
-                ) : (
-                  '?'
-                )}
-              </div>
-            </div>
+            </ActionRow>
 
             <div className="order-3 lg:order-2">
               <CategoryList
@@ -107,30 +100,27 @@ function CategoryList({
   progressList: CstsProgressRecord[];
 }) {
   const item = getBestCstsProgress(progressList);
-
   if (!item) {
     return null;
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="leading-tight text-center">
-        <div className="font-medium">
-          {[
-            formatAgeGroup(birthDate) ?? item.category.ageGroup,
-            normalizeCstsClass(item.category.class),
-            item.category.discipline === 'Standard'
-              ? 'STT'
-              : item.category.discipline === 'Latin'
-                ? 'LAT'
-                : item.category.discipline,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-        </div>
-        <div className="text-xs text-neutral-11">
-          {Number.parseFloat(item.points ?? '0')} / {item.finals}F
-        </div>
+    <div className="flex flex-col leading-tight text-center">
+      <div className="font-medium">
+        {[
+          formatAgeGroup(birthDate) ?? item.category.ageGroup,
+          normalizeCstsClass(item.category.class),
+          item.category.discipline === 'Standard'
+            ? 'STT'
+            : item.category.discipline === 'Latin'
+              ? 'LAT'
+              : item.category.discipline,
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      </div>
+      <div className="text-xs text-neutral-11">
+        {Number.parseFloat(item.points ?? '0')} / {item.finals}F
       </div>
     </div>
   );
