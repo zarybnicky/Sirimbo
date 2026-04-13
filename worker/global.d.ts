@@ -1,7 +1,7 @@
 namespace GraphileWorker {
   interface Tasks {
     frontier_fetch: { id: string };
-    frontier_process: unknown;
+    frontier_process: { isFullRebuild?: boolean };
     frontier_schedule: unknown;
     frontier_seed: unknown;
     frontier_validate: { federation: string; kind: string };

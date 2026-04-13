@@ -17,6 +17,8 @@ export type competitor_roleArray = (competitor_role)[];
 
 export type competitor_typeArray = (competitor_type)[];
 
+export type numberArray = (number)[];
+
 export type stringArray = (string)[];
 
 /** 'UpsertFederationAthlete' parameters type */
@@ -52,6 +54,38 @@ const upsertFederationAthleteIR: any = {"usedParamSet":{"federation":true,"exter
  * ```
  */
 export const upsertFederationAthlete = new PreparedQuery<IUpsertFederationAthleteParams,IUpsertFederationAthleteResult>(upsertFederationAthleteIR);
+
+
+/** 'UpdateFederationAthlete' parameters type */
+export interface IUpdateFederationAthleteParams {
+  ageGroup?: string | null | void;
+  externalId?: string | null | void;
+  federation?: string | null | void;
+  medicalCheckupExpiration?: DateOrString | null | void;
+}
+
+/** 'UpdateFederationAthlete' return type */
+export type IUpdateFederationAthleteResult = void;
+
+/** 'UpdateFederationAthlete' query type */
+export interface IUpdateFederationAthleteQuery {
+  params: IUpdateFederationAthleteParams;
+  result: IUpdateFederationAthleteResult;
+}
+
+const updateFederationAthleteIR: any = {"usedParamSet":{"ageGroup":true,"medicalCheckupExpiration":true,"federation":true,"externalId":true},"params":[{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":52,"b":60}]},{"name":"medicalCheckupExpiration","required":false,"transform":{"type":"scalar"},"locs":[{"a":96,"b":120}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":147,"b":157}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":179,"b":189}]}],"statement":"UPDATE federated.federation_athlete\nSET age_group = :ageGroup,\n    medical_checkup_expiration = :medicalCheckupExpiration::date\nWHERE federation = :federation\n  AND external_id = :externalId"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE federated.federation_athlete
+ * SET age_group = :ageGroup,
+ *     medical_checkup_expiration = :medicalCheckupExpiration::date
+ * WHERE federation = :federation
+ *   AND external_id = :externalId
+ * ```
+ */
+export const updateFederationAthlete = new PreparedQuery<IUpdateFederationAthleteParams,IUpdateFederationAthleteResult>(updateFederationAthleteIR);
 
 
 /** 'UpsertCategory' parameters type */
@@ -182,43 +216,53 @@ const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"extern
 export const upsertManyCompetitors = new PreparedQuery<IUpsertManyCompetitorsParams,IUpsertManyCompetitorsResult>(upsertManyCompetitorsIR);
 
 
-/** 'UpsertCompetitorProgress' parameters type */
-export interface IUpsertCompetitorProgressParams {
-  categoryId?: NumberOrString | null | void;
+/** 'ReplaceCompetitorProgress' parameters type */
+export interface IReplaceCompetitorProgressParams {
+  category_ids?: NumberOrStringArray | null | void;
   competitorId?: NumberOrString | null | void;
-  domesticFinale?: number | null | void;
+  domestic_finales?: numberArray | null | void;
   federation?: string | null | void;
-  foreignFinale?: number | null | void;
-  points?: NumberOrString | null | void;
+  foreign_finales?: numberArray | null | void;
+  points?: NumberOrStringArray | null | void;
 }
 
-/** 'UpsertCompetitorProgress' return type */
-export interface IUpsertCompetitorProgressResult {
-  upsert_competitor_category_progress: undefined | null;
+/** 'ReplaceCompetitorProgress' return type */
+export interface IReplaceCompetitorProgressResult {
+  replace_competitor_category_progress: undefined | null;
 }
 
-/** 'UpsertCompetitorProgress' query type */
-export interface IUpsertCompetitorProgressQuery {
-  params: IUpsertCompetitorProgressParams;
-  result: IUpsertCompetitorProgressResult;
+/** 'ReplaceCompetitorProgress' query type */
+export interface IReplaceCompetitorProgressQuery {
+  params: IReplaceCompetitorProgressParams;
+  result: IReplaceCompetitorProgressResult;
 }
 
-const upsertCompetitorProgressIR: any = {"usedParamSet":{"federation":true,"competitorId":true,"categoryId":true,"points":true,"domesticFinale":true,"foreignFinale":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":78,"b":88}]},{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":115,"b":127}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":154,"b":164}]},{"name":"points","required":false,"transform":{"type":"scalar"},"locs":[{"a":191,"b":197}]},{"name":"domesticFinale","required":false,"transform":{"type":"scalar"},"locs":[{"a":239,"b":253}]},{"name":"foreignFinale","required":false,"transform":{"type":"scalar"},"locs":[{"a":285,"b":298}]}],"statement":"SELECT federated.upsert_competitor_category_progress(\n  in_federation      => :federation,\n  in_competitor_id   => :competitorId,\n  in_category_id     => :categoryId,\n  in_points          => :points::numeric(10,3),\n  in_domestic_finale => :domesticFinale::int,\n  in_foreign_finale  => :foreignFinale::int\n)"};
+const replaceCompetitorProgressIR: any = {"usedParamSet":{"federation":true,"competitorId":true,"category_ids":true,"points":true,"domestic_finales":true,"foreign_finales":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":77,"b":87}]},{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":112,"b":124}]},{"name":"category_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":329,"b":341}]},{"name":"points","required":false,"transform":{"type":"scalar"},"locs":[{"a":360,"b":366}]},{"name":"domestic_finales","required":false,"transform":{"type":"scalar"},"locs":[{"a":392,"b":408}]},{"name":"foreign_finales","required":false,"transform":{"type":"scalar"},"locs":[{"a":424,"b":439}]}],"statement":"SELECT federated.replace_competitor_category_progress(\n  in_federation    => :federation,\n  in_competitor_id => :competitorId,\n  in_entries       => ARRAY(\n    SELECT (\n      u.category_id,\n      u.points,\n      u.domestic_finale,\n      u.foreign_finale\n    )::federated.competitor_category_progress_input\n    FROM unnest(\n      :category_ids::bigint[],\n      :points::numeric(10,3)[],\n      :domestic_finales::int[],\n      :foreign_finales::int[]\n    ) AS u(category_id, points, domestic_finale, foreign_finale)\n  )\n)"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT federated.upsert_competitor_category_progress(
- *   in_federation      => :federation,
- *   in_competitor_id   => :competitorId,
- *   in_category_id     => :categoryId,
- *   in_points          => :points::numeric(10,3),
- *   in_domestic_finale => :domesticFinale::int,
- *   in_foreign_finale  => :foreignFinale::int
+ * SELECT federated.replace_competitor_category_progress(
+ *   in_federation    => :federation,
+ *   in_competitor_id => :competitorId,
+ *   in_entries       => ARRAY(
+ *     SELECT (
+ *       u.category_id,
+ *       u.points,
+ *       u.domestic_finale,
+ *       u.foreign_finale
+ *     )::federated.competitor_category_progress_input
+ *     FROM unnest(
+ *       :category_ids::bigint[],
+ *       :points::numeric(10,3)[],
+ *       :domestic_finales::int[],
+ *       :foreign_finales::int[]
+ *     ) AS u(category_id, points, domestic_finale, foreign_finale)
+ *   )
  * )
  * ```
  */
-export const upsertCompetitorProgress = new PreparedQuery<IUpsertCompetitorProgressParams,IUpsertCompetitorProgressResult>(upsertCompetitorProgressIR);
+export const replaceCompetitorProgress = new PreparedQuery<IReplaceCompetitorProgressParams,IReplaceCompetitorProgressResult>(replaceCompetitorProgressIR);
 
 
 /** 'UpsertRanklistSnapshot' parameters type */

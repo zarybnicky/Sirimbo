@@ -465,6 +465,13 @@ CREATE TYPE federated.competitor_component_input AS (
   role federated.competitor_role
 );
 
+CREATE TYPE federated.competitor_category_progress_input AS (
+  category_id bigint,
+  points numeric(10,3),
+  domestic_finale integer,
+  foreign_finale integer
+);
+
 CREATE OR REPLACE FUNCTION federated.competitor_component_sig(
   in_components federated.competitor_component_input[]
 ) RETURNS text
@@ -751,18 +758,20 @@ END;
 $$;
 SELECT verify_function('federated.upsert_competitor');
 
-CREATE OR REPLACE FUNCTION federated.upsert_competitor_category_progress(
-  in_federation      text,
-  in_competitor_id   bigint,
-  in_category_id     bigint,
-  in_points          numeric(10,3),
-  in_domestic_finale integer,
-  in_foreign_finale  integer
+CREATE OR REPLACE FUNCTION federated.replace_competitor_category_progress(
+  in_federation    text,
+  in_competitor_id bigint,
+  in_entries       federated.competitor_category_progress_input[] DEFAULT '{}'::federated.competitor_category_progress_input[]
 )
   RETURNS void
-  LANGUAGE sql
+  LANGUAGE plpgsql
   SET SEARCH_PATH = federated, pg_temp
 AS $$
+BEGIN
+  DELETE FROM federated.competitor_category_progress
+  WHERE federation = in_federation
+    AND competitor_id = in_competitor_id;
+
   INSERT INTO federated.competitor_category_progress (
     federation,
     competitor_id,
@@ -771,20 +780,18 @@ AS $$
     domestic_finale,
     foreign_finale
   )
-  VALUES (
+  SELECT
     in_federation,
     in_competitor_id,
-    in_category_id,
-    in_points,
-    in_domestic_finale,
-    in_foreign_finale
-  )
-  ON CONFLICT (federation, competitor_id, category_id)
-    DO UPDATE
-    SET points          = EXCLUDED.points,
-        domestic_finale = EXCLUDED.domestic_finale,
-        foreign_finale  = EXCLUDED.foreign_finale;
+    (entry).category_id,
+    COALESCE((entry).points, 0),
+    COALESCE((entry).domestic_finale, 0),
+    COALESCE((entry).foreign_finale, 0)
+  FROM unnest(COALESCE(in_entries, '{}'::federated.competitor_category_progress_input[])) AS entry
+  WHERE (entry).category_id IS NOT NULL;
+END;
 $$;
+SELECT verify_function('federated.replace_competitor_category_progress');
 
 
 CREATE OR REPLACE FUNCTION federated.upsert_ranklist_snapshot(

@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import {
-  upsertCategory,
   upsertManyCompetitors,
   upsertRanklistSnapshot,
 } from './federated.queries.ts';
@@ -16,6 +15,7 @@ import {
   ranklistType,
   seriesType,
 } from './cstsEnums.ts';
+import { getFederatedCategoryId } from './federatedCategory.ts';
 
 const ranklistEntrySchema = z.object({
   competitorId: z.number(),
@@ -78,7 +78,8 @@ export const cstsRanklist: JsonLoader<Response> = {
 };
 
 async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
-  const [{ id: categoryId }] = await upsertCategory.run(
+  const categoryId = await getFederatedCategoryId(
+    client,
     {
       class: '',
       ageGroup: entity.age,
@@ -87,7 +88,6 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
       series: entity.series,
       competitorType: mapCompetitorType(entity.competitorType),
     },
-    client,
   );
 
   const idMap = new Map<string | null, string | null>();

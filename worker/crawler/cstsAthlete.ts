@@ -1,14 +1,16 @@
 import { z } from 'zod';
 import { defaultMapResponseToStatus, type JsonLoader } from './types.ts';
 import {
+  type competitor_type,
   type gender,
-  upsertCategory,
+  replaceCompetitorProgress,
+  updateFederationAthlete,
   upsertFederationAthlete,
   upsertCompetitor,
-  upsertCompetitorProgress,
 } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
 import { mapCompetitorType } from './cstsEnums.ts';
+import { getFederatedCategoryId } from './federatedCategory.ts';
 
 const rankingPointsSchema = z.object({
   id: z.number(),
@@ -70,6 +72,23 @@ const athletesResponseSchema = z.object({
 type Response = z.infer<typeof athletesResponseSchema>;
 type Athlete = z.infer<typeof athleteSchema>;
 type RankingPoints = z.infer<typeof rankingPointsSchema>;
+type ProgressEntry = {
+  categoryId: string;
+  rank: number;
+  domesticFinale: number;
+  foreignFinale: number;
+  points: number;
+};
+
+type ProgressClass = {
+  bucket: string;
+  className: string;
+  rank: number;
+};
+
+const MAIN_CLASS_ORDER = ['ENTRY', 'E', 'D', 'C', 'B', 'A', 'S', 'M'];
+
+const MEDAL_CLASS_ORDER = ['NOVICE', 'BRONZE', 'SILVER', 'GOLD'];
 
 export const cstsAthlete: JsonLoader<Response> = {
   mode: 'json',
@@ -110,52 +129,105 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
   );
   if (mainAthleteId === null) return;
 
-  await client.query(
-    `
-        UPDATE federated.federation_athlete fa
-        SET age_group = $2, medical_checkup_expiration = $3
-        WHERE federation = 'csts' AND external_id = $1
-      `,
-    [String(data.idt), data.age, data.medicalCheckupExpiration],
+  await updateFederationAthlete.run(
+    {
+      ageGroup: data.age,
+      externalId: String(data.idt),
+      federation: 'csts',
+      medicalCheckupExpiration: data.medicalCheckupExpiration,
+    },
+    client,
   );
 
-  for (const rp of data.rankingPoints) {
-    if (!rp.competitorId) continue;
+  const progressByCompetitor = new Map<string, Map<string, ProgressEntry>>();
 
-    const competitorType = mapCompetitorType(rp.competitors);
+  for (const rankingPoint of data.rankingPoints) {
+    if (!rankingPoint.competitorId) continue;
 
-    const [{ id: categoryId }] = await upsertCategory.run(
+    const competitorType = mapCompetitorType(rankingPoint.competitors);
+    const progressClass = classifyProgressClass(rankingPoint.class);
+    const categoryId = await getFederatedCategoryId(
+      client,
       {
-        class: rp.class ?? '',
-        ageGroup: rp.rankingAge,
+        class: progressClass.className,
+        ageGroup: rankingPoint.rankingAge,
         genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
-        discipline: rp.discipline,
-        series: rp.series,
+        discipline: rankingPoint.discipline,
+        series: rankingPoint.series,
         competitorType,
       },
+    );
+    if (!categoryId) continue;
+
+    const competitorId = await loadCompetitorId(
+      data,
+      mainAthleteId,
+      rankingPoint,
+      competitorType,
       client,
     );
+    if (!competitorId) continue;
 
-    const competitorId =
-      competitorType === 'couple'
-        ? await loadCstsCouple(data, rp, client, mainAthleteId)
-        : competitorType === 'duo'
-          ? await loadCstsDuo(data, rp, client, mainAthleteId)
-          : competitorType === 'solo'
-            ? await loadCstsSolo(data, rp, client, mainAthleteId)
-        : (() => {throw new Error(`Don't know how to process ${competitorType}`) })();
+    const bucket = [
+      rankingPoint.series,
+      rankingPoint.discipline,
+      rankingPoint.rankingAge,
+      competitorType,
+      progressClass.bucket,
+    ].join('\u0000');
 
-    await upsertCompetitorProgress.run(
+    const nextProgress = {
+      categoryId,
+      rank: progressClass.rank,
+      domesticFinale: rankingPoint.domesticFinaleCount ?? 0,
+      foreignFinale: rankingPoint.foreignFinaleCount ?? 0,
+      points: rankingPoint.points ?? 0,
+    };
+
+    const progressByBucket =
+      progressByCompetitor.get(competitorId) ?? new Map<string, ProgressEntry>();
+    const currentProgress = progressByBucket.get(bucket);
+
+    if (!currentProgress || isBetterProgress(nextProgress, currentProgress)) {
+      progressByBucket.set(bucket, nextProgress);
+    }
+
+    progressByCompetitor.set(competitorId, progressByBucket);
+  }
+
+  for (const [competitorId, progressByBucket] of progressByCompetitor) {
+    const progress = [...progressByBucket.values()];
+
+    await replaceCompetitorProgress.run(
       {
+        category_ids: progress.map((entry) => entry.categoryId),
         federation: 'csts',
         competitorId,
-        categoryId,
-        points: rp.points ?? 0,
-        domesticFinale: rp.domesticFinaleCount ?? 0,
-        foreignFinale: rp.foreignFinaleCount ?? 0,
+        domestic_finales: progress.map((entry) => entry.domesticFinale),
+        foreign_finales: progress.map((entry) => entry.foreignFinale),
+        points: progress.map((entry) => entry.points),
       },
       client,
     );
+  }
+}
+
+async function loadCompetitorId(
+  athlete: Athlete,
+  athleteId: string,
+  rankingPoint: RankingPoints,
+  competitorType: competitor_type,
+  client: PoolClient,
+) {
+  switch (competitorType) {
+    case 'couple':
+      return loadCstsCouple(athlete, rankingPoint, client, athleteId);
+    case 'duo':
+      return loadCstsDuo(athlete, rankingPoint, client, athleteId);
+    case 'solo':
+      return loadCstsSolo(athlete, rankingPoint, client, athleteId);
+    default:
+      throw new Error(`Don't know how to process ${competitorType}`);
   }
 }
 
@@ -249,4 +321,48 @@ async function loadCstsCouple(
     client,
   );
   return competitorId;
+}
+
+function classifyProgressClass(value: string | null | undefined): ProgressClass {
+  const className = value?.trim() ?? '';
+  const normalized = className.toUpperCase();
+  const mainRank = MAIN_CLASS_ORDER.indexOf(normalized);
+  if (mainRank !== -1) {
+    return {
+      bucket: 'ladder:main',
+      className,
+      rank: mainRank,
+    };
+  }
+
+  const medalRank = MEDAL_CLASS_ORDER.indexOf(normalized);
+  if (medalRank !== -1) {
+    return {
+      bucket: 'ladder:medal',
+      className,
+      rank: medalRank,
+    };
+  }
+
+  return {
+    bucket: `class:${normalized}`,
+    className,
+    rank: 0,
+  };
+}
+
+function isBetterProgress(
+  candidate: ProgressEntry,
+  current: ProgressEntry,
+) {
+  const classRankDiff = candidate.rank - current.rank;
+  if (classRankDiff !== 0) return classRankDiff > 0;
+
+  const pointDiff = candidate.points - current.points;
+  if (pointDiff !== 0) return pointDiff > 0;
+
+  return (
+    candidate.domesticFinale + candidate.foreignFinale >
+    current.domesticFinale + current.foreignFinale
+  );
 }

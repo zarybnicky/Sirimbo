@@ -28,8 +28,9 @@ function bump(
 
 const BUDGET_MS = 1000;
 
-export const frontier_process: Task<'frontier_process'> = async (_ignored, helpers) => {
+export const frontier_process: Task<'frontier_process'> = async (payload, helpers) => {
   const { logger, withPgClient } = helpers;
+  const { isFullRebuild = false } = payload;
 
   let processed = 0;
   const byKind = new Map<string, ProcessorStats>();
@@ -86,7 +87,7 @@ export const frontier_process: Task<'frontier_process'> = async (_ignored, helpe
     const [countItems] = await countPendingProcess.run(undefined, client);
     const pendingItems = countItems?.count ?? 0;
     if (pendingItems > 0) {
-      await helpers.addJob('frontier_process', {});
+      await helpers.addJob('frontier_process', { isFullRebuild });
     }
     const pending = pendingItems > 0 ? ` (${pendingItems} pending)` : '';
 

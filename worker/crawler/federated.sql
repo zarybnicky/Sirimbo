@@ -7,6 +7,13 @@ SELECT federated.upsert_athlete(
   in_gender         => :gender::federated.gender
 ) AS athlete_id;
 
+/* @name UpdateFederationAthlete */
+UPDATE federated.federation_athlete
+SET age_group = :ageGroup,
+    medical_checkup_expiration = :medicalCheckupExpiration::date
+WHERE federation = :federation
+  AND external_id = :externalId;
+
 /* @name UpsertCategory */
 SELECT federated.upsert_category(
   in_series       => :series,
@@ -49,14 +56,24 @@ FROM unnest(
   :labels::text[]
 ) AS input(federation, external_id, competitor_type, label);
 
-/* @name UpsertCompetitorProgress */
-SELECT federated.upsert_competitor_category_progress(
-  in_federation      => :federation,
-  in_competitor_id   => :competitorId,
-  in_category_id     => :categoryId,
-  in_points          => :points::numeric(10,3),
-  in_domestic_finale => :domesticFinale::int,
-  in_foreign_finale  => :foreignFinale::int
+/* @name ReplaceCompetitorProgress */
+SELECT federated.replace_competitor_category_progress(
+  in_federation    => :federation,
+  in_competitor_id => :competitorId,
+  in_entries       => ARRAY(
+    SELECT (
+      u.category_id,
+      u.points,
+      u.domestic_finale,
+      u.foreign_finale
+    )::federated.competitor_category_progress_input
+    FROM unnest(
+      :category_ids::bigint[],
+      :points::numeric(10,3)[],
+      :domestic_finales::int[],
+      :foreign_finales::int[]
+    ) AS u(category_id, points, domestic_finale, foreign_finale)
+  )
 );
 
 /* @name UpsertRanklistSnapshot */

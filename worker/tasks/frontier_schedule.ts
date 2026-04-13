@@ -69,7 +69,7 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
     const pendingItems = countItems?.count ?? 0;
     if (pendingItems <= 0) return;
 
-    await addJob('frontier_process', {});
+    await addJob('frontier_process', { isFullRebuild: false });
     logger.info(`Scheduled 1 process task, pending ${pendingItems} items`);
   });
 };
