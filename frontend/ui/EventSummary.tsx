@@ -62,7 +62,7 @@ export function EventSummary({
             href={{ pathname: '/akce/[id]', query: { id: event.id } }}
             className={cn('text-xl', instance.isCancelled ? 'line-through' : 'underline')}
           >
-            {formatDefaultEventName(event)}
+            {instance.name ?? formatDefaultEventName(event)}
           </Link>
 
           <div>

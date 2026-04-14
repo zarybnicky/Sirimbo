@@ -66,7 +66,7 @@ export function layoutEvents(
 
   const rankKeyOf = (it: Item): string => {
     if (it.event.instance.type !== 'LESSON') {
-      return `type:${it.event.event.id}`;
+      return `type:${it.event.instance.eventId}`;
     }
     return trainerKeyOf(it);
   };

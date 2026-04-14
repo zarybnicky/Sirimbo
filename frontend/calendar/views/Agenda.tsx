@@ -126,9 +126,9 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
             ))}
         </div>
       )}
-      <div className="text-sm text-accent-11">{formatEventType(event.type)}</div>
+      <div className="text-sm text-accent-11">{formatEventType(instance.type)}</div>
       <Link
-        href={{ pathname: '/akce/[id]', query: { id: event.id } }}
+        href={{ pathname: '/akce/[id]', query: { id: instance.eventId } }}
         className={cn(
           'block mb-2 text-xl',
           instance.isCancelled ? 'line-through' : 'underline',

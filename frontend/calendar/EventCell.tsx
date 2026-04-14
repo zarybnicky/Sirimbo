@@ -27,13 +27,14 @@ function EventCell({
   continuesAfter,
   resource,
 }: EventCellProps) {
+  const { instance } = event;
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
 
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const getCurrentEvent = useCallback(
-    (v: DragSubject) => (v?.event?.instance.id === event.instance.id ? v : null),
-    [event],
+    (v: DragSubject) => (v?.event?.instance.id === instance.id ? v : null),
+    [instance.id],
   );
   const currentDragSubject = useAtomValue(selectAtom(dragSubjectAtom, getCurrentEvent));
 
@@ -103,9 +104,9 @@ function EventCell({
           )}
 
           <div
-            className={`rbc-event-content${event.instance.isCancelled ? ' line-through' : ''}`}
+            className={`rbc-event-content${instance.isCancelled ? ' line-through' : ''}`}
           >
-            {formatDefaultEventName(event.event)}
+            {event.instance.name ?? formatDefaultEventName(event.event)}
           </div>
 
           {!continuesAfter && isResizable && (
@@ -118,7 +119,7 @@ function EventCell({
       </PopoverTrigger>
 
       <PopoverContent>
-        <EventSummary offsetButtons event={event.event} instance={event.instance} />
+        <EventSummary offsetButtons event={event.event} instance={instance} />
       </PopoverContent>
     </Popover>
   );
