@@ -37,7 +37,8 @@ CREATE TABLE public.person (
     ELSE ', '::text || btrim(suffix_title)
   END])) STORED NOT NULL,
   address public.address_domain,
-  external_ids text[]
+  external_ids text[],
+  note text DEFAULT ''::text NOT NULL
 );
 
 CREATE TYPE public.relationship_status AS ENUM ('pending', 'active', 'expired');
@@ -128,6 +129,7 @@ CREATE TABLE public.cohort (
   is_visible boolean DEFAULT true NOT NULL,
   ordering int DEFAULT 1 NOT NULL,
   external_ids text[],
+  is_archived boolean DEFAULT false NOT NULL,
   UNIQUE (tenant_id, id),
   FOREIGN KEY(tenant_id, cohort_group_id)
     REFERENCES public.cohort_group (tenant_id, id)
@@ -309,6 +311,8 @@ CREATE TABLE public.event_instance (
   is_visible boolean,
   is_public boolean,
   custom jsonb DEFAULT '{}'::jsonb NOT NULL,
+  manager_person_ids bigint[] DEFAULT CAST('{}' AS bigint[]) NOT NULL,
+  stats jsonb DEFAULT '{}'::jsonb NOT NULL,
   CHECK (until > since),
   UNIQUE (tenant_id, id, event_id),
   FOREIGN KEY(tenant_id, event_id)
@@ -553,7 +557,7 @@ CREATE TABLE public.tenant_trainer (
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  is_visible boolean DEFAULT true,
+  is_visible boolean DEFAULT true NOT NULL,
   description text DEFAULT ''::text NOT NULL,
   active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
   member_price_45min public.price DEFAULT CAST(NULL AS public.price_type),
@@ -567,6 +571,7 @@ CREATE TABLE public.tenant_trainer (
   guest_price_45min_amount numeric(19, 4) GENERATED ALWAYS AS ((guest_price_45min).amount) STORED,
   guest_payout_45min_amount numeric(19, 4) GENERATED ALWAYS AS ((guest_payout_45min).amount) STORED,
   currency text GENERATED ALWAYS AS ((member_price_45min).currency) STORED,
+  is_external boolean DEFAULT false NOT NULL,
   CHECK (until > since),
   EXCLUDE USING gist (tenant_id WITH =, person_id WITH =, active_range WITH &&)
 );
@@ -647,7 +652,8 @@ CREATE TABLE public.aktuality (
   created_at timestamp with time zone DEFAULT now(),
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
     ON DELETE CASCADE,
-  title_photo_url text
+  title_photo_url text,
+  is_visible boolean DEFAULT true NOT NULL
 );
 
 CREATE TABLE public.announcement (
@@ -1284,6 +1290,8 @@ CREATE TABLE crawler.rate_limit_rule (
   CHECK (max_requests > 0),
   CHECK (per_interval > '00:00:00'::interval)
 );
+
+CREATE TYPE federated.competitor_category_progress_input AS (category_id bigint, points numeric(10, 3), domestic_finale int, foreign_finale int);
 
 CREATE TYPE federated.competitor_component_input AS (athlete_id bigint, role federated.competitor_role);
 

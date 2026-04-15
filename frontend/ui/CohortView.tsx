@@ -1,10 +1,13 @@
 import { cohortActions } from '@/lib/actions/cohort';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { useActionMap, useActions } from '@/lib/actions';
-import type { CohortWithMembersQuery } from '@/graphql/Cohorts';
+import type {
+  CohortWithMembersQuery,
+  CstsProgressRecordFragment,
+} from '@/graphql/Cohorts';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
-import { getBestCstsProgress, normalizeCstsClass } from '@/ui/csts';
+import { formatCstsClass, getBestCstsProgress } from '@/ui/csts';
 import { formatAgeGroup, formatOpenDateRange } from '@/ui/format';
 import { typographyCls } from '@/ui/style';
 import Link from 'next/link';
@@ -12,10 +15,6 @@ import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
 
 type CohortWithMembers = NonNullable<CohortWithMembersQuery['entity']>;
-type CohortMembership = CohortWithMembers['cohortMembershipsList'][number];
-type CstsProgressRecord = NonNullable<
-  NonNullable<CohortMembership['person']>['cstsProgressList']
->[number];
 
 export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
   const members = React.useMemo(
@@ -97,7 +96,7 @@ function CategoryList({
   progressList,
 }: {
   birthDate: string | null | undefined;
-  progressList: CstsProgressRecord[];
+  progressList: CstsProgressRecordFragment[];
 }) {
   const item = getBestCstsProgress(progressList);
   if (!item) {
@@ -108,13 +107,13 @@ function CategoryList({
     <div className="flex flex-col leading-tight text-center">
       <div className="font-medium">
         {[
-          formatAgeGroup(birthDate) ?? item.category.ageGroup,
-          normalizeCstsClass(item.category.class),
-          item.category.discipline === 'Standard'
+          formatAgeGroup(birthDate),
+          formatCstsClass(item.category?.class),
+          item.category?.discipline === 'Standard'
             ? 'STT'
-            : item.category.discipline === 'Latin'
+            : item.category?.discipline === 'Latin'
               ? 'LAT'
-              : item.category.discipline,
+              : item.category?.discipline,
         ]
           .filter(Boolean)
           .join(' ')}

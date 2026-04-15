@@ -6244,6 +6244,20 @@
             "args": []
           },
           {
+            "name": "managerPersonIds",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            },
+            "args": []
+          },
+          {
             "name": "name",
             "type": {
               "kind": "SCALAR",
@@ -6318,6 +6332,17 @@
           },
           {
             "name": "since",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "stats",
             "type": {
               "kind": "NON_NULL",
               "ofType": {

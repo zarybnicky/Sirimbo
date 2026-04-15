@@ -6,7 +6,7 @@ CREATE TABLE public.tenant_trainer (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
-    is_visible boolean DEFAULT true,
+    is_visible boolean DEFAULT true NOT NULL,
     description text DEFAULT ''::text NOT NULL,
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     member_price_45min public.price DEFAULT NULL::public.price_type,
@@ -20,6 +20,7 @@ CREATE TABLE public.tenant_trainer (
     guest_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_price_45min).amount) STORED,
     guest_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_payout_45min).amount) STORED,
     currency text GENERATED ALWAYS AS ((member_price_45min).currency) STORED,
+    is_external boolean DEFAULT false NOT NULL,
     CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
 );
 

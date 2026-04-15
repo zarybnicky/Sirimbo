@@ -23,7 +23,8 @@ CASE
     ELSE (', '::text || btrim(suffix_title))
 END])) STORED NOT NULL,
     address public.address_domain,
-    external_ids text[]
+    external_ids text[],
+    note text DEFAULT ''::text NOT NULL
 );
 
 COMMENT ON TABLE public.person IS '@omit create';

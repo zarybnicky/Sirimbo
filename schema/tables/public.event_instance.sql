@@ -15,6 +15,8 @@ CREATE TABLE public.event_instance (
     is_visible boolean,
     is_public boolean,
     custom jsonb DEFAULT '{}'::jsonb NOT NULL,
+    manager_person_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    stats jsonb DEFAULT '{}'::jsonb NOT NULL,
     CONSTRAINT event_instance_until_gt_since CHECK ((until > since))
 );
 

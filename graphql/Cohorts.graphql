@@ -23,6 +23,21 @@ query CohortList($first: Int, $offset: Int, $visible: Boolean, $archived: Boolea
   }
 }
 
+fragment CstsProgressRecord on PersonCstsProgressRecord {
+  competitorName
+  category {
+    id
+    name
+    discipline
+    series
+    ageGroup
+    competitorType
+    class
+  }
+  points
+  finals
+}
+
 query CohortWithMembers($id: BigInt!) {
   entity: cohort(id: $id) {
     ...Cohort
@@ -32,18 +47,7 @@ query CohortWithMembers($id: BigInt!) {
         id
         birthDate
         cstsProgressList {
-          competitorName
-          category {
-            id
-            name
-            discipline
-            series
-            ageGroup
-            competitorType
-            class
-          }
-          points
-          finals
+          ...CstsProgressRecord
         }
       }
     }

@@ -37,18 +37,7 @@ fragment Person on Person {
 fragment PersonWithLinks on Person {
   ...Person
   cstsProgressList {
-    competitorName
-    category {
-      id
-      name
-      discipline
-      series
-      ageGroup
-      competitorType
-      class
-    }
-    points
-    finals
+    ...CstsProgressRecord
   }
   tenantMembershipsList(orderBy: SINCE_ASC) {
     ...TenantMembership

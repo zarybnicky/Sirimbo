@@ -32,6 +32,7 @@ CREATE POLICY member_view ON public.event_trainer FOR SELECT TO member USING (tr
 CREATE POLICY trainer_same_tenant ON public.event_trainer TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _500_refresh_manager_person_ids AFTER INSERT OR DELETE OR UPDATE OF event_id, person_id ON public.event_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_trainer__refresh_manager_person_ids();
 
 CREATE INDEX event_trainer_event_idx ON public.event_trainer USING btree (event_id, person_id);
 CREATE INDEX event_trainer_person_id_idx ON public.event_trainer USING btree (person_id);

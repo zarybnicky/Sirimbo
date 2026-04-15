@@ -1,4 +1,4 @@
-import { type ComponentType, useMemo } from 'react';
+import React, { type ComponentType, useMemo } from 'react';
 import { type AuthState } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';

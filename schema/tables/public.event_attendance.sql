@@ -48,6 +48,7 @@ CREATE POLICY view_visible_event ON public.event_attendance FOR SELECT USING ((e
 
 CREATE TRIGGER _100_event_id BEFORE INSERT OR UPDATE OF instance_id ON public.event_attendance FOR EACH ROW EXECUTE FUNCTION app_private.tg__set_event_id_from_instance_id();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_attendance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _500_recalc_instance_attendance_summary AFTER INSERT OR DELETE OR UPDATE OF instance_id, status ON public.event_attendance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_attendance__refresh_stats();
 
 CREATE INDEX event_attendance_event_id_idx ON public.event_attendance USING btree (event_id);
 CREATE INDEX event_attendance_instance_id_idx ON public.event_attendance USING btree (instance_id);

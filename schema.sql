@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict q7emD95EdMHcxY1p2sQOP3Z5c8eJsfJ2mOm8KR6Vbc471CsgyiCUjwB24XN9bro
+\restrict vAgGg6kL3AoT8Jqq3cqrdFGAcDUFQbF4Lt4zci8oIcXU3Hmpfcpby1kAaN3Jvsa
 
 -- Dumped from database version 18.1
 -- Dumped by pg_dump version 18.1
@@ -144,6 +144,18 @@ CREATE TYPE crawler.process_status AS ENUM (
     'pending',
     'ok',
     'error'
+);
+
+
+--
+-- Name: competitor_category_progress_input; Type: TYPE; Schema: federated; Owner: -
+--
+
+CREATE TYPE federated.competitor_category_progress_input AS (
+	category_id bigint,
+	points numeric(10,3),
+	domestic_finale integer,
+	foreign_finale integer
 );
 
 
@@ -706,6 +718,8 @@ CREATE TABLE public.event_instance (
     is_visible boolean,
     is_public boolean,
     custom jsonb DEFAULT '{}'::jsonb NOT NULL,
+    manager_person_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    stats jsonb DEFAULT '{}'::jsonb NOT NULL,
     CONSTRAINT event_instance_until_gt_since CHECK ((until > since))
 );
 
@@ -989,6 +1003,26 @@ $$;
 
 
 --
+-- Name: event_instance_manager_person_ids(bigint, bigint); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint) RETURNS bigint[]
+    LANGUAGE sql STABLE PARALLEL SAFE
+    AS $$
+  select coalesce(array_agg(s.person_id order by s.person_id), '{}'::bigint[])
+  from (
+    select eit.person_id
+    from public.event_instance_trainer eit
+    where eit.instance_id = p_instance_id
+    union
+    select et.person_id
+    from public.event_trainer et
+    where et.event_id = p_event_id
+  ) s;
+$$;
+
+
+--
 -- Name: tenant_trainer; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1000,7 +1034,7 @@ CREATE TABLE public.tenant_trainer (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     id bigint NOT NULL,
-    is_visible boolean DEFAULT true,
+    is_visible boolean DEFAULT true NOT NULL,
     description text DEFAULT ''::text NOT NULL,
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     member_price_45min public.price DEFAULT NULL::public.price_type,
@@ -1014,6 +1048,7 @@ CREATE TABLE public.tenant_trainer (
     guest_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_price_45min).amount) STORED,
     guest_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_payout_45min).amount) STORED,
     currency text GENERATED ALWAYS AS ((member_price_45min).currency) STORED,
+    is_external boolean DEFAULT false NOT NULL,
     CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
 );
 
@@ -1408,6 +1443,54 @@ COMMENT ON FUNCTION app_private.queue_announcement_notifications(in_announcement
 
 
 --
+-- Name: refresh_event_instance_manager_person_ids(bigint, bigint); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.refresh_event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint) RETURNS boolean
+    LANGUAGE sql
+    AS $$
+  with v as (
+    select app_private.event_instance_manager_person_ids(p_instance_id, p_event_id) as ids
+  ),
+  u as (
+    update public.event_instance ei set manager_person_ids = v.ids from v
+    where ei.id = p_instance_id and ei.event_id = p_event_id and ei.manager_person_ids is distinct from v.ids
+    returning 1
+  )
+  select exists(select 1 from u);
+$$;
+
+
+--
+-- Name: refresh_event_instance_stats(bigint); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) RETURNS void
+    LANGUAGE sql
+    AS $$
+  with v as (
+    select jsonb_build_object(
+      'TOTAL', agg.person_total,
+      'UNKNOWN', agg.unknown_count,
+      'ATTENDED', agg.attended_count,
+      'NOT_EXCUSED', agg.not_excused_count
+    ) as stats
+    from (
+      select
+        count(*) filter (where ea.status <> 'cancelled')::int as person_total,
+        count(*) filter (where ea.status = 'unknown')::int as unknown_count,
+        count(*) filter (where ea.status = 'attended')::int as attended_count,
+        count(*) filter (where ea.status = 'not-excused')::int as not_excused_count
+      from public.event_attendance ea
+      where ea.instance_id = p_instance_id
+    ) agg
+  )
+  update public.event_instance ei set stats = v.stats from v
+  where ei.id = p_instance_id and ei.stats is distinct from v.stats;
+$$;
+
+
+--
 -- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1739,6 +1822,30 @@ $$;
 
 
 --
+-- Name: tg_event_attendance__refresh_stats(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_event_attendance__refresh_stats() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if tg_op in ('UPDATE', 'DELETE') then
+    perform app_private.refresh_event_instance_stats(old.instance_id);
+  end if;
+  if tg_op in ('INSERT', 'UPDATE') then
+    if tg_op = 'INSERT'
+      or new.instance_id is distinct from old.instance_id
+      or new.status is distinct from old.status
+    then
+      perform app_private.refresh_event_instance_stats(new.instance_id);
+    end if;
+  end if;
+  return null;
+end;
+$$;
+
+
+--
 -- Name: tg_event_instance__create_attendance(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -1788,6 +1895,31 @@ $$;
 
 
 --
+-- Name: tg_event_instance_trainer__refresh_manager_person_ids(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_event_instance_trainer__refresh_manager_person_ids() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if tg_op = 'DELETE' then
+    perform app_private.refresh_event_instance_manager_person_ids(old.instance_id, old.event_id);
+    return null;
+  elsif tg_op = 'INSERT' then
+    perform app_private.refresh_event_instance_manager_person_ids(new.instance_id, new.event_id);
+    return null;
+  elsif old.instance_id is distinct from new.instance_id
+     or old.event_id is distinct from new.event_id
+     or old.person_id is distinct from new.person_id then
+    perform app_private.refresh_event_instance_manager_person_ids(old.instance_id, old.event_id);
+    perform app_private.refresh_event_instance_manager_person_ids(new.instance_id, new.event_id);
+  end if;
+  return null;
+end;
+$$;
+
+
+--
 -- Name: tg_event_registration__create_attendance(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -1831,6 +1963,34 @@ CREATE FUNCTION app_private.tg_event_target_cohort__unregister_members() RETURNS
 begin
   delete from event_registration where target_cohort_id = OLD.id;
   return OLD;
+end;
+$$;
+
+
+--
+-- Name: tg_event_trainer__refresh_manager_person_ids(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_event_trainer__refresh_manager_person_ids() RETURNS trigger
+    LANGUAGE plpgsql
+    SET search_path TO 'pg_catalog', 'public'
+    AS $$
+begin
+  if tg_op in ('DELETE', 'UPDATE') then
+    if tg_op = 'DELETE' or old.event_id is distinct from new.event_id or old.person_id is distinct from new.person_id then
+      perform app_private.refresh_event_instance_manager_person_ids(ei.id, ei.event_id)
+      from public.event_instance ei
+      where ei.event_id = old.event_id;
+    end if;
+  end if;
+  if tg_op in ('INSERT', 'UPDATE') then
+    if tg_op = 'INSERT' or old.event_id is distinct from new.event_id or old.person_id is distinct from new.person_id then
+      perform app_private.refresh_event_instance_manager_person_ids(ei.id, ei.event_id)
+      from public.event_instance ei
+      where ei.event_id = new.event_id;
+    end if;
+  end if;
+  return null;
 end;
 $$;
 
@@ -2139,6 +2299,40 @@ CREATE FUNCTION federated.normalize_name(text) RETURNS text
     AS $_$
   SELECT lower(public.unaccent('public.unaccent', $1));
 $_$;
+
+
+--
+-- Name: replace_competitor_category_progress(text, bigint, federated.competitor_category_progress_input[]); Type: FUNCTION; Schema: federated; Owner: -
+--
+
+CREATE FUNCTION federated.replace_competitor_category_progress(in_federation text, in_competitor_id bigint, in_entries federated.competitor_category_progress_input[] DEFAULT '{}'::federated.competitor_category_progress_input[]) RETURNS void
+    LANGUAGE plpgsql
+    SET search_path TO 'federated', 'pg_temp'
+    AS $$
+begin
+  delete from federated.competitor_category_progress
+  where federation = in_federation
+    and competitor_id = in_competitor_id;
+
+  insert into federated.competitor_category_progress (
+    federation,
+    competitor_id,
+    category_id,
+    points,
+    domestic_finale,
+    foreign_finale
+  )
+  select
+    in_federation,
+    in_competitor_id,
+    (entry).category_id,
+    coalesce((entry).points, 0),
+    coalesce((entry).domestic_finale, 0),
+    coalesce((entry).foreign_finale, 0)
+  from unnest(coalesce(in_entries, '{}'::federated.competitor_category_progress_input[])) as entry
+  where (entry).category_id is not null;
+end;
+$$;
 
 
 --
@@ -2546,7 +2740,8 @@ CREATE TABLE public.cohort (
     location text DEFAULT ''::text NOT NULL,
     is_visible boolean DEFAULT true NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
-    external_ids text[]
+    external_ids text[],
+    is_archived boolean DEFAULT false NOT NULL
 );
 
 
@@ -2726,7 +2921,8 @@ CASE
     ELSE (', '::text || btrim(suffix_title))
 END])) STORED NOT NULL,
     address public.address_domain,
-    external_ids text[]
+    external_ids text[],
+    note text DEFAULT ''::text NOT NULL
 );
 
 
@@ -7160,7 +7356,8 @@ CREATE TABLE public.aktuality (
     updated_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now(),
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    title_photo_url text
+    title_photo_url text,
+    is_visible boolean DEFAULT true NOT NULL
 );
 
 
@@ -10977,6 +11174,27 @@ CREATE TRIGGER _500_on_status AFTER UPDATE ON public.tenant_membership FOR EACH 
 
 
 --
+-- Name: event_attendance _500_recalc_instance_attendance_summary; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_recalc_instance_attendance_summary AFTER INSERT OR DELETE OR UPDATE OF instance_id, status ON public.event_attendance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_attendance__refresh_stats();
+
+
+--
+-- Name: event_instance_trainer _500_refresh_manager_person_ids; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_refresh_manager_person_ids AFTER INSERT OR DELETE OR UPDATE OF instance_id, event_id, person_id ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance_trainer__refresh_manager_person_ids();
+
+
+--
+-- Name: event_trainer _500_refresh_manager_person_ids; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_refresh_manager_person_ids AFTER INSERT OR DELETE OR UPDATE OF event_id, person_id ON public.event_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_trainer__refresh_manager_person_ids();
+
+
+--
 -- Name: event_target_cohort _500_register_members; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -13047,13 +13265,6 @@ CREATE POLICY admin_trainer_insert ON public.event_attendance FOR INSERT TO trai
 ALTER TABLE public.aktuality ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: cohort all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.cohort FOR SELECT USING (true);
-
-
---
 -- Name: users all_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -13141,6 +13352,13 @@ CREATE POLICY current_tenant ON public.announcement AS RESTRICTIVE USING ((tenan
 --
 
 CREATE POLICY current_tenant ON public.announcement_audience AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: cohort current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -13491,13 +13709,6 @@ CREATE POLICY member_view ON public.transaction FOR SELECT TO member USING (true
 ALTER TABLE public.membership_application ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: cohort my_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY my_tenant ON public.cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
 -- Name: cohort_membership my_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -13557,7 +13768,7 @@ CREATE POLICY public_view ON public.accounting_period FOR SELECT USING (true);
 -- Name: aktuality public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.aktuality FOR SELECT USING (true);
+CREATE POLICY public_view ON public.aktuality FOR SELECT USING (is_visible);
 
 
 --
@@ -13565,6 +13776,13 @@ CREATE POLICY public_view ON public.aktuality FOR SELECT USING (true);
 --
 
 CREATE POLICY public_view ON public.attachment FOR SELECT TO anonymous USING (true);
+
+
+--
+-- Name: cohort public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.cohort FOR SELECT USING (is_visible);
 
 
 --
@@ -15384,5 +15602,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict q7emD95EdMHcxY1p2sQOP3Z5c8eJsfJ2mOm8KR6Vbc471CsgyiCUjwB24XN9bro
+\unrestrict vAgGg6kL3AoT8Jqq3cqrdFGAcDUFQbF4Lt4zci8oIcXU3Hmpfcpby1kAaN3Jvsa
 

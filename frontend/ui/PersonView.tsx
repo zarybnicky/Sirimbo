@@ -1,7 +1,7 @@
 import React from 'react';
 import { PersonMembershipsDocument } from '@/graphql/Person';
 import { PageHeader } from '@/ui/TitleBar';
-import { getBestCstsProgress, normalizeCstsClass } from '@/ui/csts';
+import { formatCstsClass, getBestCstsProgress } from '@/ui/csts';
 import { useQuery } from 'urql';
 import { useAuth } from '@/ui/use-auth';
 import { formatAgeGroup } from '@/ui/format';
@@ -27,14 +27,14 @@ export function PersonView({ id }: { id: string }) {
   const actions = useActions(personActions, item);
   const sttProgress = getBestCstsProgress(item?.cstsProgressList, 'Standard');
   const latProgress = getBestCstsProgress(item?.cstsProgressList, 'Latin');
-  const sttClass = normalizeCstsClass(sttProgress?.category.class);
-  const latClass = normalizeCstsClass(latProgress?.category.class);
-  const ageCategory =
-    formatAgeGroup(item?.birthDate) ?? sttProgress?.category.ageGroup ?? latProgress?.category.ageGroup;
-  const categoryProgress =
-    sttClass || latClass
-      ? [ageCategory, `${sttClass ?? '-'}/${latClass ?? '-'}`].filter(Boolean).join(' ')
-      : ageCategory;
+  const sttClass = formatCstsClass(sttProgress?.category?.class);
+  const latClass = formatCstsClass(latProgress?.category?.class);
+  const categoryProgress = [
+    formatAgeGroup(item?.birthDate),
+    sttClass || latClass ? `${sttClass ?? '-'}/${latClass ?? '-'}` : null,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const tabs = React.useMemo(() => {
     if (!item) return [];
@@ -69,9 +69,7 @@ export function PersonView({ id }: { id: string }) {
     <>
       <PageHeader
         title={item.name}
-        subtitle={[categoryProgress, item.phone, item.email]
-          .filter(Boolean)
-          .join(' · ')}
+        subtitle={[categoryProgress, item.phone, item.email].filter(Boolean).join(' · ')}
         actions={actions}
       />
 

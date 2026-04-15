@@ -2901,11 +2901,13 @@ export type EventInstance = {
   location: Maybe<TenantLocation>;
   locationId: Maybe<Scalars['BigInt']['output']>;
   locationText: Maybe<Scalars['String']['output']>;
+  managerPersonIds: Array<Maybe<Scalars['BigInt']['output']>>;
   name: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Payment`. */
   paymentsList: Array<Payment>;
   range: DatetimeRange;
   since: Scalars['Datetime']['output'];
+  stats: Scalars['JSON']['output'];
   tenantId: Scalars['BigInt']['output'];
   trainersList: Maybe<Array<TenantTrainer>>;
   type: Maybe<EventType>;
@@ -2990,12 +2992,16 @@ export type EventInstanceCondition = {
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `locationText` field. */
   locationText?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `managerPersonIds` field. */
+  managerPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `range` field. */
   range?: InputMaybe<DatetimeRangeInput>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `stats` field. */
+  stats?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `type` field. */
@@ -3017,9 +3023,11 @@ export type EventInstancePatch = {
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   locationText?: InputMaybe<Scalars['String']['input']>;
+  managerPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   name?: InputMaybe<Scalars['String']['input']>;
   range?: InputMaybe<DatetimeRangeInput>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
+  stats?: InputMaybe<Scalars['JSON']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   type?: InputMaybe<EventType>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
@@ -3129,6 +3137,8 @@ export type EventInstancesOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
+  | 'STATS_ASC'
+  | 'STATS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'TYPE_ASC'
@@ -9628,10 +9638,12 @@ export type GraphCacheResolvers = {
     location?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<TenantLocation> | string>,
     locationId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
     locationText?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String'] | string>,
+    managerPersonIds?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Array<Scalars['BigInt'] | string>>,
     name?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String'] | string>,
     paymentsList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstancePaymentsListArgs, Array<WithTypename<Payment> | string>>,
     range?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<DatetimeRange> | string>,
     since?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>,
+    stats?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['JSON'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt'] | string>,
     trainersList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     type?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, EventType | string>,
@@ -11282,10 +11294,12 @@ export type GraphCacheUpdaters = {
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     locationText?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    managerPersonIds?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstancePaymentsListArgs>,
     range?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    stats?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     trainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceTrainersListArgs>,
     type?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,

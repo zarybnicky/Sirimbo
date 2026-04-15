@@ -13,10 +13,7 @@ import {
   shortTimeFormatter,
 } from '@/ui/format';
 import { useActions } from '@/lib/actions';
-import {
-  eventInstanceActions,
-  type EventInstanceActionItem,
-} from '@/lib/actions/eventInstance';
+import { eventInstanceActions } from '@/lib/actions/eventInstance';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
@@ -33,17 +30,7 @@ export function EventSummary({
   instance: EventInstanceWithTrainerFragment;
   offsetButtons?: boolean;
 }) {
-  const actionItem = React.useMemo<EventInstanceActionItem>(
-    () => ({
-      ...instance,
-      managerPersonIds: new Set([
-        ...(instance.trainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
-        ...(event.eventTrainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
-      ]),
-    }),
-    [instance, event.eventTrainersList],
-  );
-  const actions = useActions(eventInstanceActions, actionItem);
+  const actions = useActions(eventInstanceActions, instance);
   const registrationCount = event.eventRegistrations.totalCount;
   const myRegistrations = event.myRegistrationsList || [];
   const start = new Date(instance.since);
@@ -130,7 +117,9 @@ export function EventSummary({
 
       <MyRegistrationsDialog event={event} />
 
-      <div className={cn('absolute', offsetButtons ? 'right-9 top-3.5' : 'right-2 top-2')}>
+      <div
+        className={cn('absolute', offsetButtons ? 'right-9 top-3.5' : 'right-2 top-2')}
+      >
         <ActionGroup variant="row" align="end" actions={actions} />
       </div>
     </div>

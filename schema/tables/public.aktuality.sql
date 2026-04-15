@@ -9,7 +9,8 @@ CREATE TABLE public.aktuality (
     updated_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now(),
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    title_photo_url text
+    title_photo_url text,
+    is_visible boolean DEFAULT true NOT NULL
 );
 
 COMMENT ON COLUMN public.aktuality.at_kat IS '@deprecated';
@@ -26,7 +27,7 @@ ALTER TABLE ONLY public.aktuality
 
 CREATE POLICY admin_all ON public.aktuality TO administrator USING (true);
 CREATE POLICY current_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY public_view ON public.aktuality FOR SELECT USING (true);
+CREATE POLICY public_view ON public.aktuality FOR SELECT USING (is_visible);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_author BEFORE INSERT OR UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg_aktuality__author();

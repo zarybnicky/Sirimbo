@@ -36,6 +36,7 @@ CREATE POLICY trainer_same_tenant ON public.event_instance_trainer TO trainer US
 
 CREATE TRIGGER _100_event_id BEFORE INSERT OR UPDATE OF instance_id ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__set_event_id_from_instance_id();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _500_refresh_manager_person_ids AFTER INSERT OR DELETE OR UPDATE OF instance_id, event_id, person_id ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance_trainer__refresh_manager_person_ids();
 
 CREATE INDEX event_instance_trainer_instance_id_idx ON public.event_instance_trainer USING btree (instance_id);
 CREATE INDEX event_instance_trainer_person_id_idx ON public.event_instance_trainer USING btree (person_id);

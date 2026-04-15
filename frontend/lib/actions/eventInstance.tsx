@@ -21,21 +21,18 @@ import { exportEventRegistrations } from '@/ui/reports/export-event-registration
 
 const preventDefault = (e: Event) => e.preventDefault();
 
-export type EventInstanceActionItem = EventInstanceWithTrainerFragment & {
-  managerPersonIds: Set<string>;
-};
-
 function canManageInstance({
   auth,
   item,
-}: Pick<ActionContext<EventInstanceActionItem>, 'auth' | 'item'>) {
+}: Pick<ActionContext<EventInstanceWithTrainerFragment>, 'auth' | 'item'>) {
   return (
     auth.isAdmin ||
-    (auth.isTrainer && auth.personIds.some((personId) => item.managerPersonIds.has(personId)))
+    (auth.isTrainer &&
+      auth.personIds.some((personId) => item.managerPersonIds.includes(personId)))
   );
 }
 
-export const eventInstanceActions: Action<EventInstanceActionItem>[] = [
+export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = [
   {
     id: 'eventInstance.edit',
     label: 'Upravit',
@@ -62,7 +59,7 @@ export const eventInstanceActions: Action<EventInstanceActionItem>[] = [
   {
     id: 'eventInstance.toggleCancelled',
     label: ({ item }) => (item.isCancelled ? 'Zrušeno' : 'Zrušit termín'),
-    icon: ({ item }: ActionContext<EventInstanceActionItem>) =>
+    icon: ({ item }: ActionContext<EventInstanceWithTrainerFragment>) =>
       item.isCancelled ? CheckSquare : Square,
     visible: canManageInstance,
     type: 'mutation',

@@ -12,7 +12,7 @@ import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-reac
 import { useAsyncCallback } from 'react-async-hook';
 import { cn } from '@/lib/cn';
 import Link from 'next/link';
-import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 
 export function InstanceAttendanceView({ id }: { id: string }) {
   const auth = useAuth();
@@ -21,22 +21,14 @@ export function InstanceAttendanceView({ id }: { id: string }) {
     variables: { id },
     pause: !id,
   });
+
   const instance = data?.eventInstance;
-
-  const managerPersonIds = React.useMemo(
-    () =>
-      new Set([
-        ...(instance?.trainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
-        ...(instance?.event?.eventTrainersList?.map((x) => x.personId).filter(isTruthy) ?? []),
-      ]),
-    [instance?.trainersList, instance?.event?.eventTrainersList],
-  );
-
   if (!instance) return null;
 
   const canEditAttendance =
     auth.isAdmin ||
-    (auth.isTrainer && auth.personIds.some((personId) => managerPersonIds.has(personId)));
+    (auth.isTrainer &&
+      auth.personIds.some((personId) => instance.managerPersonIds.includes(personId)));
   const attendanceList = instance.eventAttendancesByInstanceIdList
     .filter((x) => x.status !== 'CANCELLED')
     .filter(keyIsNonNull('person'))

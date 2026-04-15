@@ -8,7 +8,8 @@ CREATE TABLE public.cohort (
     location text DEFAULT ''::text NOT NULL,
     is_visible boolean DEFAULT true NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
-    external_ids text[]
+    external_ids text[],
+    is_archived boolean DEFAULT false NOT NULL
 );
 
 COMMENT ON TABLE public.cohort IS '@simpleCollections only';
@@ -26,8 +27,8 @@ ALTER TABLE ONLY public.cohort
     ADD CONSTRAINT cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.cohort TO administrator USING (true);
-CREATE POLICY all_view ON public.cohort FOR SELECT USING (true);
-CREATE POLICY my_tenant ON public.cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY current_tenant ON public.cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY public_view ON public.cohort FOR SELECT USING (is_visible);
 
 CREATE INDEX cohort_cohort_group_id_idx ON public.cohort USING btree (cohort_group_id);
 CREATE INDEX cohort_tenant_id_idx ON public.cohort USING btree (tenant_id);

@@ -145,8 +145,7 @@ function Attendance({
               .filter((x) => x !== 'CANCELLED')
               .map((status) => (
                 <td className="text-center" key={status}>
-                  {instance.attendanceSummaryList?.find((x) => x?.status === status)
-                    ?.count ?? 0}
+                  {JSON.parse(instance.stats)[status] ?? 0}
                 </td>
               ))}
           </tr>

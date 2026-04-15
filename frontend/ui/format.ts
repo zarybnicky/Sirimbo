@@ -140,30 +140,30 @@ export function formatAgeGroup(birthDate: string | null | undefined) {
     return 'Děti II';
   }
   if (12 <= diff && diff < 14) {
-    return 'Junioři I';
+    return 'Jun I';
   }
   if (14 <= diff && diff < 16) {
-    return 'Junioři II';
+    return 'Jun II';
   }
   if (16 <= diff && diff < 19) {
     return 'Mládež';
   }
   if (19 <= diff && diff < 21) {
-    return 'Do 21 let';
+    return 'U21';
   }
   if (21 <= diff && diff < 35) {
     return 'Dospělí';
   }
   if (35 <= diff && diff < 45) {
-    return 'Senioři I';
+    return 'Sen I';
   }
   if (45 <= diff && diff < 55) {
-    return 'Senioři II';
+    return 'Sen II';
   }
   if (55 <= diff && diff < 65) {
-    return 'Senioři III';
+    return 'Sen III';
   }
-  return 'Senioři IV';
+  return 'Sen IV';
 }
 
 export function describePosting(

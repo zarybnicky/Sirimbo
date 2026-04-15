@@ -1,48 +1,25 @@
-type CstsCategoryLike = {
-  ageGroup?: string | null;
-  class?: string | null;
-  discipline?: string | null;
-} | null;
-
-type CstsProgressLike = {
-  category?: CstsCategoryLike;
-} | null;
+import type { CstsProgressRecordFragment } from '@/graphql/Cohorts';
 
 const hiddenCategoryClasses = new Set(['Novice', 'Bronze', 'Silver', 'Gold', 'Entry']);
 const classOrder = ['E', 'D', 'C', 'B', 'A', 'M'];
 
-export function normalizeCstsClass(value: string | null | undefined) {
-  if (!value) return null;
-  return value === 'S' ? 'M' : value;
+export function formatCstsClass(value: string | null | undefined) {
+  return !value ? null : value === 'S' ? 'M' : value;
 }
 
-export function getBestCstsProgress<T extends CstsProgressLike>(
+export function getBestCstsProgress<T extends CstsProgressRecordFragment>(
   progressList: readonly T[] | null | undefined,
   discipline?: string,
 ) {
   return (progressList ?? [])
-    .filter(
-      (
-        progress,
-      ): progress is T & {
-        category: NonNullable<NonNullable<T>['category']>;
-      } => progress?.category != null,
-    )
-    .filter((progress) => !hiddenCategoryClasses.has(progress.category.class ?? ''))
-    .filter((progress) =>
-      discipline ? progress.category.discipline === discipline : true,
-    )
-    .reduce<
-      | (T & {
-          category: NonNullable<NonNullable<T>['category']>;
-        })
-      | null
-    >((best, progress) => {
+    .filter((progress) => !hiddenCategoryClasses.has(progress?.category?.class ?? ''))
+    .filter((progress) => progress?.category?.discipline === discipline)
+    .reduce<CstsProgressRecordFragment | null>((best, progress) => {
       const bestRank = best
-        ? classOrder.indexOf(normalizeCstsClass(best.category.class) ?? '')
+        ? classOrder.indexOf(formatCstsClass(best?.category?.class) ?? '')
         : -1;
       const progressRank = classOrder.indexOf(
-        normalizeCstsClass(progress.category.class) ?? '',
+        formatCstsClass(progress?.category?.class) ?? '',
       );
 
       return progressRank > bestRank ? progress : best;

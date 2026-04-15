@@ -80,16 +80,15 @@ fragment EventInstanceWithTrainer on EventInstance {
       name
     }
   }
+  managerPersonIds
+  stats
 }
 
 fragment EventAttendanceSummary on Event {
   id
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstance
-    attendanceSummaryList {
-      count
-      status
-    }
+    stats
   }
 }
 
