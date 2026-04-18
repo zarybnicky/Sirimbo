@@ -202,6 +202,7 @@ in {
           db-schema = "federated";
           db-anon-role = "anonymous";
           db-config = false;
+          openapi-server-proxy-uri = "https://${cfg.backend.domain}/federated";
         };
       };
       systemd.services.postgrest.serviceConfig = {
