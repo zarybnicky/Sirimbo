@@ -194,6 +194,7 @@ in {
         enable = true;
         settings = {
           server-port = cfg.backend.postgrestPort;
+          server-unix-socket = null;
           db-uri = {
             dbname = cfg.backend.database;
             host = "/run/postgresql";
