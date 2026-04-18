@@ -232,8 +232,8 @@ in {
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
-          locations."/federated" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.backend.postgrestPort}";
+          locations."/federated/" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.backend.postgrestPort}/";
             extraConfig = ''
               limit_except GET HEAD {
                 deny all;
