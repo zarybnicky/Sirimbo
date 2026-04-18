@@ -202,7 +202,6 @@ in {
           db-schema = "federated";
           db-anon-role = "anonymous";
           db-config = false;
-          jwt-secret = "";
         };
       };
       systemd.services.postgrest.serviceConfig = {
