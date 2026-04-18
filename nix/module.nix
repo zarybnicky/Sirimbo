@@ -206,8 +206,8 @@ in {
       };
       systemd.services.postgrest.serviceConfig = {
         DynamicUser = lib.mkForce false;
-        User = cfg.user;
-        Group = cfg.group;
+        User = lib.mkForce cfg.user;
+        Group = lib.mkForce cfg.group;
       };
 
       services.nginx = {
