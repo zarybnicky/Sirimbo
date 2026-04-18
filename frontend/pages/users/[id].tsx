@@ -14,12 +14,7 @@ const QueryParams = z.object({
 });
 
 function formatDate(value?: string | null) {
-  if (!value) return '—';
-  try {
-    return fullDateFormatter.format(new Date(value));
-  } catch {
-    return value;
-  }
+  return value ? fullDateFormatter.format(new Date(value)) : '—';
 }
 
 function UserPage() {

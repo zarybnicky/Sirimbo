@@ -32,6 +32,11 @@ in {
         description = "${pkgName} GraphQL port";
         example = 3002;
       };
+      postgrestPort = lib.mkOption {
+        type = lib.types.int;
+        description = "${pkgName} Postgrest port";
+        example = 3003;
+      };
 
       domain = lib.mkOption {
         type = lib.types.str;
@@ -185,6 +190,26 @@ in {
         };
       };
 
+      services.postgrest = {
+        enable = true;
+        settings = {
+          server-port = cfg.backend.postgrestPort;
+          db-uri = {
+            dbname = cfg.backend.database;
+            host = "/run/postgresql";
+          };
+          db-schema = "federated";
+          db-anon-role = "anonymous";
+          db-config = false;
+          jwt-secret = "";
+        };
+      };
+      systemd.services.postgrest.serviceConfig = {
+        DynamicUser = false;
+        User = cfg.user;
+        Group = cfg.group;
+      };
+
       services.nginx = {
         enable = true;
         enableReload = true;
@@ -209,6 +234,15 @@ in {
           locations."/" = {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
             proxyWebsockets = true;
+          };
+
+          locations."/api/federated" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.backend.postgrestPort}";
+            extraConfig = ''
+              limit_except GET HEAD {
+                deny all;
+              }
+            '';
           };
         };
       };
