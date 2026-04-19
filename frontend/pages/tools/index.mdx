@@ -1,0 +1,58 @@
+import { Layout } from '@/ui/Layout';
+import { AgeCategoryTable } from '@/ui/AgeCategoryTable';
+
+export default function MDXPage({ children }) {
+  return (
+    <Layout requireAdmin>
+      <div className="prose prose-accent mt-8">{children}</div>
+    </Layout>
+  );
+}
+
+# Tempo tanců
+
+<div className="flex flex-wrap gap-2 w-full justify-stretch">
+<div className="flex-1">
+
+## STT
+
+| Tanec       | Taktů/min |
+| ----------- | --------- |
+| Waltz       | 28–30     |
+| Tango       | 31–33     |
+| Valčík      | 58–60     |
+| Slowfoxtrot | 28–30     |
+| Quickstep   | 50–52     |
+
+</div>
+<div className="flex-1">
+
+## LAT
+
+| Tanec      | Taktů/min |
+| ---------- | --------- |
+| Samba      | 50–52     |
+| Chacha     | 30–32     |
+| Rumba      | 25–27     |
+| Paso doble | 60–62     |
+| Jive       | 42–44     |
+| Polka      | 58–60     |
+
+</div>
+</div>
+
+# Tance v třídách
+
+| Kategorie        | Třída         | STT                    | LAT                | Kombi                  |
+| ---------------- | ------------- | ---------------------- | ------------------ | ---------------------- |
+| Do 8 let         | E             | -                      | -                  | 3T: Wa, Ch, Po         |
+| Děti I, II       | E             | -                      | -                  | 5T: Wa, Qs, Ch, Ji, Po |
+|                  | D             | Wa, Va, Qs             | Sa, Ch, Ji, Po     | 7T                     |
+|                  | C             | Wa, Ta, Va, Qs         | Sa, Ch, Ru, Ji     | 8T                     |
+| Junioři I a výše | E             | Wa, Va, Qs             | Sa, Ch, Ji         | 6T                     |
+|                  | D             | Wa, Ta, Va, Qs         | Sa, Ch, Ru, Ji     | 8T                     |
+|                  | C, B, A, M, P | Wa, Ta, Va, Qs, Sf, Qs | Sa, Ch, Ru, Pd, Ji | 10T                    |
+
+# Věkové kategorie
+
+<AgeCategoryTable />

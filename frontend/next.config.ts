@@ -1,6 +1,7 @@
 import nextRoutes from 'nextjs-routes/config';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
+import createMDX from '@next/mdx';
 
 type NextConfig = import('next').NextConfig;
 type NextPlugin = (config: NextConfig) => NextConfig;
@@ -15,6 +16,13 @@ const compose =
 // eslint-disable-next-line import/no-unused-modules
 export default compose(
   nextRoutes(),
+  createMDX({
+    extension: /\.mdx$/,
+    options: {
+      remarkPlugins: [['remark-gfm', { strict: true, throwOnError: true }]],
+      rehypePlugins: [],
+    },
+  }),
   bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' }),
   (cfg: NextConfig) =>
     withSentryConfig(cfg, {
@@ -32,6 +40,7 @@ export default compose(
   experimental: {
     scrollRestoration: true,
   },
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 
   images: {
     remotePatterns: [

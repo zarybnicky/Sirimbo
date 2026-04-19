@@ -27,22 +27,6 @@ export const getNextIdt = (idt: number) => {
   return IDT_RANGES[currentBlockIdx + 1]?.start ?? null;
 };
 
-export function* iterateRange({ start, end }: IdtRange): Generator<number> {
-  const baseStart = Math.floor(start / 10);
-  const baseEnd = Math.floor(end / 10);
-
-  for (let base = baseStart; base <= baseEnd; base += 1) {
-    const checkDigit = computeEan8CheckDigit(base);
-    const idt = base * 10 + checkDigit;
-
-    if (idt < start || idt > end) {
-      continue;
-    }
-
-    yield idt;
-  }
-}
-
 function toDigits(value: number, length: number): number[] {
   const digits = value.toString().padStart(length, '0').split('');
   return digits.map((digit) => {
