@@ -43,7 +43,6 @@ export default function ClubPage() {
         label: 'Upravit klub',
         icon: Pencil,
         visible: ({ auth }) => auth.isAdmin,
-        type: 'dialog' as const,
         render: () => <EditTenantForm />,
       },
     ],

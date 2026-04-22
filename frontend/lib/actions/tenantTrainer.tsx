@@ -13,7 +13,6 @@ export const tenantTrainerActions = defineActions<TenantTrainerFragment>()([
     label: 'Upravit trenéra',
     icon: Pencil,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'dialog',
     render: ({ item }) => <EditTenantTrainerForm id={item.id} />,
   },
   {
@@ -21,7 +20,6 @@ export const tenantTrainerActions = defineActions<TenantTrainerFragment>()([
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     confirm: ({ item }) =>
       `Opravdu chcete ${item.person?.name} ukončit trenérství ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
@@ -36,7 +34,6 @@ export const tenantTrainerActions = defineActions<TenantTrainerFragment>()([
     icon: Trash2,
     variant: 'danger',
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     confirm:
       'Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.',
     execute: async ({ item, mutate }) => {

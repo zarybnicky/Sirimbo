@@ -1,5 +1,6 @@
 import React, { Suspense, useState } from 'react';
 import { Dialog, DialogContent } from '@/ui/dialog';
+import { Spinner } from '@/ui/Spinner';
 import {
   DropdownMenu,
   DropdownMenuButton,
@@ -92,7 +93,7 @@ export function ActionGroup<Id extends string = string>({
   const confirm = useConfirm();
   const [dialogAction, setDialogAction] = useState<Extract<
     ResolvedAction<Id>,
-    { type: 'dialog' }
+    { render: () => React.ReactNode }
   > | null>(null);
   const [pending, setPending] = useState<Id | null>(null);
 
@@ -105,7 +106,7 @@ export function ActionGroup<Id extends string = string>({
   });
 
   const fire = async (action: ResolvedAction<Id>) => {
-    if (action.type === 'dialog') return setDialogAction(action);
+    if ('render' in action) return setDialogAction(action);
     if (action.confirm) {
       try {
         await confirm(
@@ -182,7 +183,7 @@ export function ActionGroup<Id extends string = string>({
       {dialogAction && (
         <Dialog>
           <DialogContent {...dialogAction.dialogProps}>
-            <Suspense fallback={null}>{dialogAction.render()}</Suspense>
+            <Suspense fallback={<Spinner />}>{dialogAction.render()}</Suspense>
           </DialogContent>
         </Dialog>
       )}

@@ -13,7 +13,6 @@ export const tenantAdministratorActions = defineActions<TenantAdministratorFragm
     label: 'Upravit správcovství',
     icon: Pencil,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'dialog',
     render: ({ item }) => <EditTenantAdministratorForm id={item.id} />,
   },
   {
@@ -21,7 +20,6 @@ export const tenantAdministratorActions = defineActions<TenantAdministratorFragm
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     confirm: ({ item }) =>
       `Opravdu chcete ${item.person?.name} ukončit správcovství ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
@@ -36,7 +34,6 @@ export const tenantAdministratorActions = defineActions<TenantAdministratorFragm
     icon: Trash2,
     variant: 'danger',
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     confirm:
       'Opravdu chcete vztah správce NENÁVRATNĚ smazat? Spíše použij variantu ukončení, ať zůstanou zachována historická data.',
     execute: async ({ item, mutate }) => {

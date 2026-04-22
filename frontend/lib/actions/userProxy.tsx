@@ -14,7 +14,6 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     label: 'Upravit platnost',
     icon: Pencil,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'dialog',
     render: ({ item }) => <EditUserProxyForm id={item.id} />,
   },
   {
@@ -22,7 +21,6 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     label: 'Přihlásit se jako...',
     icon: LogIn,
     visible: ({ auth, item }) => auth.isAdmin && !!item.user,
-    type: 'mutation',
     execute: async ({ item, mutate, router }) => {
       if (!item.user) return;
       await mutate(LogInAsDocument, { id: item.user.id });
@@ -34,7 +32,6 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     confirm: 'Opravdu chcete ukončit platnost těchto přihlašovacích údajů?',
     execute: async ({ item, mutate }) => {
       await mutate(UpdateUserProxyDocument, {
@@ -48,7 +45,6 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     icon: Trash2,
     variant: 'danger',
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     confirm:
       'Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?',
     execute: async ({ item, mutate }) => {

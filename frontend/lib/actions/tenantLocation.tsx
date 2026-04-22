@@ -8,7 +8,6 @@ export const tenantLocationActions = defineActions<{ id: string }>()([
     label: 'Upravit',
     icon: Pencil,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'dialog',
     render: ({ item }) => <EditTenantLocationForm id={item.id} />,
   },
 ]);

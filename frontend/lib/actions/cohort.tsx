@@ -15,7 +15,6 @@ export const cohortActions = defineActions<CohortActionItem>()([
     label: 'Upravit',
     icon: Pencil,
     visible: ({ auth, item }) => auth.isAdmin && !!item.id,
-    type: 'dialog',
     render: ({ item }) => <CohortForm id={item.id} />,
   },
   {
@@ -23,7 +22,6 @@ export const cohortActions = defineActions<CohortActionItem>()([
     label: 'Export členů',
     icon: Download,
     visible: ({ auth, item }) => auth.isTrainerOrAdmin && !!item.id,
-    type: 'mutation',
     execute: async ({ item, client }) => {
       await exportCohort(client, [item.id], item.name);
     },

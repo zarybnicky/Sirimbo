@@ -14,7 +14,6 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     icon: ({ item }: ActionContext<AnnouncementFragment>) =>
       item.isSticky ? PinOff : Pin,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     execute: async ({ item, mutate }) => {
       await mutate(ToggleAnnouncementStickyDocument, {
         id: item.id,
@@ -28,7 +27,6 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     icon: ({ item }: ActionContext<AnnouncementFragment>) =>
       item.isVisible ? EyeOff : Eye,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     execute: async ({ item, mutate }) => {
       await mutate(ToggleAnnouncementVisibleDocument, {
         id: item.id,
@@ -42,7 +40,6 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     icon: Trash2,
     variant: 'danger',
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     confirm: ({ item }) => ({
       description: `Opravdu chcete smazat příspěvek "${item.title}"?`,
     }),

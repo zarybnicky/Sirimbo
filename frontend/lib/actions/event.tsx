@@ -17,7 +17,6 @@ export const eventActions = defineActions<EventFragment>()([
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
-    type: 'dialog',
     render: ({ item }) => <UpsertEventForm eventId={item.id} />,
     dialogProps: {
       className: 'sm:max-w-xl',
@@ -31,7 +30,6 @@ export const eventActions = defineActions<EventFragment>()([
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
-    type: 'dialog',
     render: ({ item }) => <EditEventDescriptionForm id={item.id} />,
     dialogProps: {
       className: 'sm:max-w-xl',
@@ -43,7 +41,6 @@ export const eventActions = defineActions<EventFragment>()([
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
-    type: 'mutation',
     execute: async ({ item, client }) => {
       await exportEventParticipants(client, item.id);
     },
@@ -54,7 +51,6 @@ export const eventActions = defineActions<EventFragment>()([
     visible: ({ auth, item }) =>
       auth.isAdmin ||
       (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
-    type: 'mutation',
     execute: async ({ item, client }) => {
       await exportEventRegistrations(client, item.id);
     },
@@ -68,7 +64,6 @@ export const eventExternalRegistrationActions = defineActions<{ id: string }>()(
     icon: Trash2,
     variant: 'danger',
     visible: ({ auth }) => auth.isAdmin,
-    type: 'mutation',
     execute: async ({ item, mutate }) => {
       await mutate(DeleteEventExternalRegistrationDocument, { id: item.id });
     },

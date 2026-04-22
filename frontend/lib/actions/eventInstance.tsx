@@ -38,7 +38,6 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     label: 'Upravit',
     icon: Pencil,
     visible: canManageInstance,
-    type: 'dialog',
     render: ({ item }) => <UpsertEventForm eventId={item.eventId} />,
     dialogProps: {
       className: 'sm:max-w-xl',
@@ -50,7 +49,6 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     label: 'Upravit dlouhý popis',
     icon: NotebookPen,
     visible: canManageInstance,
-    type: 'dialog',
     render: ({ item }) => <EditEventDescriptionForm id={item.eventId} />,
     dialogProps: {
       className: 'sm:max-w-xl',
@@ -62,7 +60,6 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     icon: ({ item }: ActionContext<EventInstanceWithTrainerFragment>) =>
       item.isCancelled ? CheckSquare : Square,
     visible: canManageInstance,
-    type: 'mutation',
     execute: async ({ item, mutate }) => {
       await mutate(UpdateEventInstanceDocument, {
         id: item.id,
@@ -75,7 +72,6 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     label: 'Oddělit termín',
     icon: GitBranch,
     visible: canManageInstance,
-    type: 'mutation',
     confirm: {
       description: [
         'Opravdu chcete oddělit tento termín do samostatné události?',
@@ -100,7 +96,6 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     icon: Trash2,
     variant: 'danger',
     visible: canManageInstance,
-    type: 'mutation',
     confirm: {
       description:
         'Opravdu chcete smazat termín? Pokud to je poslední termín, smažete tím i celou událost. Tím se taky smažou všechny záznamy o účasti i platbách.',
@@ -113,7 +108,6 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     id: 'eventInstance.exportParticipants',
     label: 'Export přihlášených',
     visible: canManageInstance,
-    type: 'mutation',
     execute: async ({ item, client }) => {
       await exportEventParticipants(client, item.eventId);
     },
@@ -122,7 +116,6 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     id: 'eventInstance.exportRegistrations',
     label: 'Export přihlášek',
     visible: canManageInstance,
-    type: 'mutation',
     execute: async ({ item, client }) => {
       await exportEventRegistrations(client, item.eventId);
     },

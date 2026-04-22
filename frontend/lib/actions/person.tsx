@@ -18,7 +18,6 @@ export const personActions = defineActions<PersonFragment>()([
     label: 'Upravit osobu',
     icon: Pencil,
     visible: ({ auth, item }) => auth.isAdmin || auth.isMyPerson(item.id),
-    type: 'dialog',
     render: ({ item }) => <EditPersonForm data={item} />,
     dialogProps: {
       className: 'sm:max-w-2xl',
@@ -30,7 +29,6 @@ export const personActions = defineActions<PersonFragment>()([
     label: 'Přidat/vyplatit kredit',
     icon: Coins,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'dialog',
     render: ({ item }) => <CreateCreditTransactionForm personId={item.id} />,
   },
   {
@@ -39,7 +37,6 @@ export const personActions = defineActions<PersonFragment>()([
     label: 'Přidat do páru',
     icon: Plus,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'dialog',
     render: ({ item }) => <CreateCoupleForm person={item} />,
   },
   {
@@ -48,7 +45,6 @@ export const personActions = defineActions<PersonFragment>()([
     label: 'Přidat do skupiny',
     icon: Plus,
     visible: ({ auth }) => auth.isAdmin,
-    type: 'dialog',
     render: ({ item }) => <AddToCohortForm person={item} />,
   },
   {
@@ -57,7 +53,6 @@ export const personActions = defineActions<PersonFragment>()([
     label: 'Přidat jako člena',
     icon: UserPlus,
     visible: ({ auth, item }) => auth.isAdmin && !item.isMember,
-    type: 'mutation' as const,
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantMembershipDocument, {
         input: { tenantMembership: { personId: item.id } },
@@ -70,7 +65,6 @@ export const personActions = defineActions<PersonFragment>()([
     label: 'Přidat jako trenéra',
     icon: UserPlus,
     visible: ({ auth, item }) => auth.isAdmin && !item.isTrainer,
-    type: 'mutation' as const,
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantTrainerDocument, {
         input: { tenantTrainer: { personId: item.id } },
@@ -83,7 +77,6 @@ export const personActions = defineActions<PersonFragment>()([
     label: 'Přidat jako správce',
     icon: UserPlus,
     visible: ({ auth, item }) => auth.isAdmin && !item.isAdmin,
-    type: 'mutation' as const,
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantAdministratorDocument, {
         input: { tenantAdministrator: { personId: item.id } },
@@ -96,7 +89,6 @@ export const personActions = defineActions<PersonFragment>()([
     icon: Trash2,
     variant: 'danger',
     visible: ({ auth, item }) => auth.isAdmin && !item.externalIds,
-    type: 'mutation',
     confirm: ({ item }) =>
       `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!`,
     execute: async ({ item, mutate, router }) => {

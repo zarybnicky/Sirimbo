@@ -87,7 +87,6 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         id: 'article.delete',
         label: 'Smazat',
         visible: () => !!data && !!id,
-        type: 'mutation' as const,
         confirm: ({ item }: { item: { id: string; title: string } }) => ({
           description: `Opravdu chcete smazat příspěvek "${item.title}"?`,
         }),

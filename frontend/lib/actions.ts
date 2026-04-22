@@ -33,12 +33,10 @@ export type Action<T, Id extends string = string> = {
   group?: 'primary' | 'add';
 } & (
   | {
-      type: 'mutation';
       confirm?: Resolvable<T, string | Partial<ConfirmOptions>>;
       execute: (ctx: ActionContext<T>) => Promise<void>;
     }
   | {
-      type: 'dialog';
       render: DialogBody<T> | (() => Promise<{ default: DialogBody<T> }>);
       dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
     }
@@ -52,14 +50,12 @@ export type ResolvedAction<Id extends string = string> = {
   group?: 'primary' | 'add';
 } & (
   | {
-      type: 'mutation';
-      confirm?: string | Partial<ConfirmOptions>;
       execute: () => Promise<void>;
+      confirm?: string | Partial<ConfirmOptions>;
     }
   | {
-      type: 'dialog';
-      dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
       render: () => React.ReactNode;
+      dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
     }
 );
 
@@ -101,10 +97,9 @@ function resolveOne<T>(a: Action<T>, ctx: ActionContext<T>): ResolvedAction {
     group: a.group,
   };
 
-  if (a.type === 'mutation') {
+  if ('execute' in a) {
     return {
       ...base,
-      type: 'mutation',
       confirm: a.confirm ? resolve(a.confirm, ctx) : undefined,
       execute: () => a.execute(ctx),
     };
@@ -117,7 +112,6 @@ function resolveOne<T>(a: Action<T>, ctx: ActionContext<T>): ResolvedAction {
 
   return {
     ...base,
-    type: 'dialog',
     dialogProps: a.dialogProps,
     render: () => React.createElement(Body, ctx),
   };
