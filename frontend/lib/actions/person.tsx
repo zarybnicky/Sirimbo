@@ -1,15 +1,21 @@
-import { Coins, Pencil, Trash2, UserPlus } from 'lucide-react';
+import { Coins, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
 import { DeletePersonDocument, type PersonFragment } from '@/graphql/Person';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 import { CreateCreditTransactionForm } from '@/ui/forms/CreateCreditTransactionForm';
+import {
+  CreateTenantAdministratorDocument,
+  CreateTenantMembershipDocument,
+  CreateTenantTrainerDocument,
+} from '@/graphql/Memberships';
+import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 
-export const personActions: Action<PersonFragment>[] = [
+export const personActions = defineActions<PersonFragment>()([
   {
     id: 'person.edit',
-    primary: true,
-    label: 'Upravit',
+    group: 'primary',
+    label: 'Upravit osobu',
     icon: Pencil,
     visible: ({ auth, item }) => auth.isAdmin || auth.isMyPerson(item.id),
     type: 'dialog',
@@ -20,14 +26,6 @@ export const personActions: Action<PersonFragment>[] = [
     },
   },
   {
-    id: 'person.createCouple',
-    label: 'Přidat pár',
-    icon: UserPlus,
-    visible: ({ auth }) => auth.isAdmin,
-    type: 'dialog',
-    render: ({ item }) => <CreateCoupleForm person={item} />,
-  },
-  {
     id: 'person.createCreditTransaction',
     label: 'Přidat/vyplatit kredit',
     icon: Coins,
@@ -36,8 +34,65 @@ export const personActions: Action<PersonFragment>[] = [
     render: ({ item }) => <CreateCreditTransactionForm personId={item.id} />,
   },
   {
+    id: 'person.createCouple',
+    group: 'add',
+    label: 'Přidat do páru',
+    icon: Plus,
+    visible: ({ auth }) => auth.isAdmin,
+    type: 'dialog',
+    render: ({ item }) => <CreateCoupleForm person={item} />,
+  },
+  {
+    id: 'person.addToCohort',
+    group: 'add',
+    label: 'Přidat do skupiny',
+    icon: Plus,
+    visible: ({ auth }) => auth.isAdmin,
+    type: 'dialog',
+    render: ({ item }) => <AddToCohortForm person={item} />,
+  },
+  {
+    id: 'person.addMember',
+    group: 'add',
+    label: 'Přidat jako člena',
+    icon: UserPlus,
+    visible: ({ auth, item }) => auth.isAdmin && !item.isMember,
+    type: 'mutation' as const,
+    execute: async ({ item, mutate }) => {
+      await mutate(CreateTenantMembershipDocument, {
+        input: { tenantMembership: { personId: item.id } },
+      });
+    },
+  },
+  {
+    id: 'person.addTrainer',
+    group: 'add',
+    label: 'Přidat jako trenéra',
+    icon: UserPlus,
+    visible: ({ auth, item }) => auth.isAdmin && !item.isTrainer,
+    type: 'mutation' as const,
+    execute: async ({ item, mutate }) => {
+      await mutate(CreateTenantTrainerDocument, {
+        input: { tenantTrainer: { personId: item.id } },
+      });
+    },
+  },
+  {
+    id: 'person.addAdmin',
+    group: 'add',
+    label: 'Přidat jako správce',
+    icon: UserPlus,
+    visible: ({ auth, item }) => auth.isAdmin && !item.isAdmin,
+    type: 'mutation' as const,
+    execute: async ({ item, mutate }) => {
+      await mutate(CreateTenantAdministratorDocument, {
+        input: { tenantAdministrator: { personId: item.id } },
+      });
+    },
+  },
+  {
     id: 'person.delete',
-    label: 'Smazat',
+    label: 'Smazat osobu',
     icon: Trash2,
     variant: 'danger',
     visible: ({ auth, item }) => auth.isAdmin && !item.externalIds,
@@ -51,4 +106,4 @@ export const personActions: Action<PersonFragment>[] = [
       }
     },
   },
-];
+]);

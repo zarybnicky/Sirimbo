@@ -30,7 +30,7 @@ export default function ProfilePage() {
     [
       {
         id: 'profile.changePassword',
-        primary: true,
+        group: 'primary',
         label: 'Změnit heslo',
         icon: LockKeyhole,
         visible: () => true,

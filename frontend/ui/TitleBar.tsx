@@ -4,7 +4,7 @@ import { typographyCls } from '@/ui/style';
 import Link, { LinkProps } from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { ActionGroup } from '@/ui/ActionGroup';
-import { type ResolvedActions } from '@/lib/actions';
+import { ResolvedAction } from '@/lib/actions';
 
 type TitleBarProps = {
   title?: string | null;
@@ -33,24 +33,26 @@ export function TitleBar({
   );
 }
 
-type PageHeaderProps<TItem extends object = object> = {
+type TitleActionsRowProps<Id extends string = string> = {
+  title?: React.ReactNode | null;
+  actions?: ResolvedAction<Id>[];
+  primary?: Id | readonly Id[];
+  groups?: Record<'add', Id[]>;
+};
+type PageHeaderProps<Id extends string = string> = TitleActionsRowProps<Id> & {
   breadcrumbs?: { label: string; href?: LinkProps['href'] }[];
   title: string;
   subtitle?: React.ReactNode;
-  actions?: ResolvedActions<TItem>;
 };
 
-type TitleActionsRowProps<TItem extends object = object> = {
-  title?: React.ReactNode | null;
-  actions?: ResolvedActions<TItem>;
-};
-
-export function TitleActionsRow<TItem extends object = object>({
+export function TitleActionsRow<Id extends string = string>({
   title,
   actions,
+  primary,
+  groups,
   variant = 'heading',
   ...typography
-}: TitleActionsRowProps<TItem> &
+}: TitleActionsRowProps<Id> &
   Omit<Partial<NonNullable<Parameters<typeof typographyCls>[0]>>, 'class'>) {
   return (
     <div className="flex justify-between gap-4 items-center">
@@ -66,17 +68,19 @@ export function TitleActionsRow<TItem extends object = object>({
         </h1>
       </div>
 
-      {actions && <ActionGroup actions={actions} />}
+      {actions && <ActionGroup primary={primary} groups={groups} actions={actions} />}
     </div>
   );
 }
 
-export function PageHeader<TItem extends object = object>({
+export function PageHeader<Id extends string = string>({
   breadcrumbs,
   title,
   subtitle,
   actions,
-}: PageHeaderProps<TItem>) {
+  primary,
+  groups,
+}: PageHeaderProps<Id>) {
   const parent = breadcrumbs?.at(-2);
 
   return (
@@ -118,6 +122,8 @@ export function PageHeader<TItem extends object = object>({
         spacing="default"
         title={title}
         actions={actions}
+        primary={primary}
+        groups={groups}
       />
       {subtitle && <p className="my-2 text-sm text-accent-12">{subtitle}</p>}
     </div>

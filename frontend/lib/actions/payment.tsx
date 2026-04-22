@@ -1,9 +1,9 @@
 import { HandCoins, Info, Trash2 } from 'lucide-react';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 import { DeletePaymentDocument, MarkAsPaidDocument } from '@/graphql/Payment';
 import { PaymentStatus } from '@/graphql';
 
-export const paymentActions: Action<{ id: string; status: PaymentStatus }>[] = [
+export const paymentActions = defineActions<{ id: string; status: PaymentStatus }>()([
   {
     id: 'payment.detail',
     label: 'Detail',
@@ -36,4 +36,4 @@ export const paymentActions: Action<{ id: string; status: PaymentStatus }>[] = [
       await mutate(DeletePaymentDocument, { id: item.id });
     },
   },
-];
+]);

@@ -1,5 +1,5 @@
 import { Eye, EyeOff, Pin, PinOff, Trash2 } from 'lucide-react';
-import { Action, type ActionContext } from '@/lib/actions';
+import { type ActionContext, defineActions } from '@/lib/actions';
 import {
   type AnnouncementFragment,
   DeleteAnnouncementDocument,
@@ -7,7 +7,7 @@ import {
   ToggleAnnouncementVisibleDocument,
 } from '@/graphql/Announcement';
 
-export const announcementActions: Action<AnnouncementFragment>[] = [
+export const announcementActions = defineActions<AnnouncementFragment>()([
   {
     id: 'announcement.sticky',
     label: ({ item }) => (item.isSticky ? 'Odepnout' : 'Připnout'),
@@ -53,4 +53,4 @@ export const announcementActions: Action<AnnouncementFragment>[] = [
       }
     },
   },
-];
+]);

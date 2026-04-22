@@ -1,9 +1,4 @@
-import {
-  CoupleFragment,
-  CreateTenantAdministratorDocument,
-  CreateTenantMembershipDocument,
-  CreateTenantTrainerDocument,
-} from '@/graphql/Memberships';
+import { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonWithLinksFragment } from '@/graphql/Person';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import {
@@ -30,51 +25,12 @@ import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { tenantMembershipActions } from '@/lib/actions/tenantMembership';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { userProxyActions } from '@/lib/actions/userProxy';
-import { ActionGroup } from '@/ui/ActionGroup';
 import { ActionRow } from '@/ui/ActionRow';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(item.id);
   const tenantId = useAtomValue(tenantIdAtom);
-  const createMembershipActions = useActions(
-    [
-      {
-        id: 'personMembership.addAdmin',
-        label: 'Přidat jako správce',
-        visible: ({ auth }) => auth.isAdmin,
-        type: 'mutation' as const,
-        execute: async ({ item, mutate }) => {
-          await mutate(CreateTenantAdministratorDocument, {
-            input: { tenantAdministrator: { personId: item.id } },
-          });
-        },
-      },
-      {
-        id: 'personMembership.addTrainer',
-        label: 'Přidat jako trenéra',
-        visible: ({ auth }) => auth.isAdmin,
-        type: 'mutation' as const,
-        execute: async ({ item, mutate }) => {
-          await mutate(CreateTenantTrainerDocument, {
-            input: { tenantTrainer: { personId: item.id } },
-          });
-        },
-      },
-      {
-        id: 'personMembership.addMember',
-        label: 'Přidat jako člena',
-        visible: ({ auth }) => auth.isAdmin,
-        type: 'mutation' as const,
-        execute: async ({ item, mutate }) => {
-          await mutate(CreateTenantMembershipDocument, {
-            input: { tenantMembership: { personId: item.id } },
-          });
-        },
-      },
-    ],
-    item,
-  );
   const cohortMembershipActionMap = useActionMap(
     cohortMembershipActions,
     item.cohortMembershipsList,
@@ -152,8 +108,6 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3 className="text-lg font-semibold mt-4 mb-2">Členství</h3>
-
-        {auth.isAdmin && <ActionGroup actions={createMembershipActions} />}
       </div>
 
       {item.tenantAdministratorsList
@@ -180,7 +134,8 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
                       amount: item.memberPrice45MinAmount,
                       currency: item.currency,
                     }) || '-'}{' '}
-                    {item.guestPrice45MinAmount && item.memberPrice45MinAmount !== item.guestPrice45MinAmount
+                    {item.guestPrice45MinAmount &&
+                    item.memberPrice45MinAmount !== item.guestPrice45MinAmount
                       ? `(${moneyFormatter.format({ amount: item.guestPrice45MinAmount, currency: item.currency })})`
                       : ''}
                     {' / 45min'}

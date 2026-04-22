@@ -1,8 +1,8 @@
 import { Trash2 } from 'lucide-react';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 import { DeleteTransactionDocument } from '@/graphql/Payment';
 
-export const transactionActions: Action<{ id: string }>[] = [
+export const transactionActions = defineActions<{ id: string }>()([
   {
     id: 'transaction.delete',
     label: 'Smazat transakci',
@@ -15,4 +15,4 @@ export const transactionActions: Action<{ id: string }>[] = [
       await mutate(DeleteTransactionDocument, { id: item.id });
     },
   },
-];
+]);

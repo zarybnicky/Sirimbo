@@ -4,14 +4,14 @@ import {
   DeleteCoupleDocument,
   UpdateCoupleDocument,
 } from '@/graphql/Memberships';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 import { EditCoupleForm } from '@/ui/forms/EditCoupleForm';
 import { formatLongCoupleName } from '@/ui/format';
 
-export const coupleActions: Action<CoupleFragment>[] = [
+export const coupleActions = defineActions<CoupleFragment>()([
   {
     id: 'couple.edit',
-    primary: true,
+    group: 'primary',
     label: 'Upravit',
     icon: Pencil,
     visible: ({ auth }) => auth.isAdmin,
@@ -54,4 +54,4 @@ export const coupleActions: Action<CoupleFragment>[] = [
       }
     },
   },
-];
+]);

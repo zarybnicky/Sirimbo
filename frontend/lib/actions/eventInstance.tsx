@@ -13,7 +13,7 @@ import {
   type EventInstanceWithTrainerFragment,
   UpdateEventInstanceDocument,
 } from '@/graphql/Event';
-import { Action, type ActionContext } from '@/lib/actions';
+import { type ActionContext, defineActions } from '@/lib/actions';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
@@ -32,7 +32,7 @@ function canManageInstance({
   );
 }
 
-export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = [
+export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragment>()([
   {
     id: 'eventInstance.edit',
     label: 'Upravit',
@@ -127,4 +127,4 @@ export const eventInstanceActions: Action<EventInstanceWithTrainerFragment>[] = 
       await exportEventRegistrations(client, item.eventId);
     },
   },
-];
+]);

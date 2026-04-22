@@ -1,172 +1,174 @@
 import React, { type ComponentType, useMemo } from 'react';
-import { type AuthState } from '@/ui/state/auth';
+import type { AuthState } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';
 import { NextRouter, useRouter } from 'next/router';
-import { DialogContent } from '@radix-ui/react-dialog';
 import type { ConfirmOptions } from '@/ui/Confirm';
+import { DialogContent } from '@/ui/dialog';
 
-export type ActionContext<TItem> = {
+export type ActionContext<T> = {
   auth: AuthState;
   client: Client;
   router: NextRouter;
-  mutate: <TData, TVars extends Record<string, unknown>>(
-    document: TypedDocumentNode<TData, TVars>,
-    variables: TVars,
-  ) => Promise<TData>;
-  item: TItem;
+  mutate: <D, V extends Record<string, unknown>>(
+    doc: TypedDocumentNode<D, V>,
+    vars: V,
+  ) => Promise<D>;
+  item: T;
 };
 
-type ActionIcon = ComponentType<{ className?: string }>;
+type Resolvable<T, V> = V | ((ctx: ActionContext<T>) => V);
+type Icon = ComponentType<{ className?: string }>;
+type DialogBody<T> = ComponentType<ActionContext<T>>;
 
-type Resolvable<TItem, TValue> = TValue | ((ctx: ActionContext<TItem>) => TValue);
+const resolve = <T, V>(v: Resolvable<T, V>, ctx: ActionContext<T>): V =>
+  typeof v === 'function' ? (v as (c: ActionContext<T>) => V)(ctx) : v;
 
-type BaseAction<TItem> = {
-  id: string;
-  primary?: boolean;
-  visible: Resolvable<TItem, boolean>;
-  label: Resolvable<TItem, string>;
-  icon?: Resolvable<TItem, ActionIcon> | undefined;
+export type Action<T, Id extends string = string> = {
+  id: Id;
+  label: Resolvable<T, string>;
+  icon?: Resolvable<T, Icon>;
+  visible: Resolvable<T, boolean>;
   variant?: 'default' | 'danger';
-};
+  group?: 'primary' | 'add';
+} & (
+  | {
+      type: 'mutation';
+      confirm?: Resolvable<T, string | Partial<ConfirmOptions>>;
+      execute: (ctx: ActionContext<T>) => Promise<void>;
+    }
+  | {
+      type: 'dialog';
+      render: DialogBody<T> | (() => Promise<{ default: DialogBody<T> }>);
+      dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
+    }
+);
 
-type ResolvedBaseAction<TItem> = Omit<BaseAction<TItem>, 'visible' | 'label' | 'icon'> & {
+export type ResolvedAction<Id extends string = string> = {
+  id: Id;
   label: string;
-  icon?: ActionIcon;
-};
+  icon?: Icon;
+  variant?: 'default' | 'danger';
+  group?: 'primary' | 'add';
+} & (
+  | {
+      type: 'mutation';
+      confirm?: string | Partial<ConfirmOptions>;
+      execute: () => Promise<void>;
+    }
+  | {
+      type: 'dialog';
+      dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
+      render: () => React.ReactNode;
+    }
+);
 
-export type DialogAction<TItem> = BaseAction<TItem> & {
-  type: 'dialog';
-  render: (ctx: ActionContext<TItem>) => React.ReactNode;
-  dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
-};
+// ── Define / Pick / Omit ─────────────────────────────────────────────
 
-export type MutationAction<TItem> = BaseAction<TItem> & {
-  type: 'mutation';
-  confirm?: Resolvable<TItem, string | Partial<ConfirmOptions>>;
-  execute: (ctx: ActionContext<TItem>) => Promise<void>;
-};
+export const defineActions =
+  <T>() =>
+  <const A extends readonly Action<T>[]>(
+    actions: A,
+  ): readonly Action<T, A[number]['id']>[] =>
+    actions;
 
-export type Action<TItem> = DialogAction<TItem> | MutationAction<TItem>;
+type IdOf<A extends readonly { id: string }[]> = A[number]['id'];
 
-export type ResolvedDialogAction<TItem> = ResolvedBaseAction<TItem> &
-  Omit<DialogAction<TItem>, keyof BaseAction<TItem>>;
+export function pickActions<
+  A extends readonly { id: string }[],
+  const K extends readonly IdOf<A>[],
+>(a: A, ids: K) {
+  const s = new Set<string>(ids);
+  return a.filter((x) => s.has(x.id)) as Extract<A[number], { id: K[number] }>[];
+}
 
-export type ResolvedMutationAction<TItem> = ResolvedBaseAction<TItem> &
-  Omit<MutationAction<TItem>, keyof BaseAction<TItem> | 'confirm'> & {
-    confirm?: string | Partial<ConfirmOptions>;
+export function omitActions<
+  A extends readonly { id: string }[],
+  const K extends readonly IdOf<A>[],
+>(a: A, ids: K) {
+  const s = new Set<string>(ids);
+  return a.filter((x) => !s.has(x.id)) as Exclude<A[number], { id: K[number] }>[];
+}
+
+// ── Internals ────────────────────────────────────────────────────────
+
+function resolveOne<T>(a: Action<T>, ctx: ActionContext<T>): ResolvedAction {
+  const base = {
+    id: a.id,
+    label: resolve(a.label, ctx),
+    icon: a.icon ? resolve(a.icon, ctx) : undefined,
+    variant: a.variant,
+    group: a.group,
   };
 
-export type ResolvedAction<TItem> =
-  | ResolvedDialogAction<TItem>
-  | ResolvedMutationAction<TItem>;
-
-export type ResolvedActions<TItem extends object = object> = {
-  all: ResolvedAction<TItem>[];
-  primary: ResolvedAction<TItem>[];
-  secondary: ResolvedAction<TItem>[];
-  ctx: ActionContext<TItem>;
-};
-
-const resolve = <TItem, TValue>(
-  v: Resolvable<TItem, TValue>,
-  ctx: ActionContext<TItem>,
-): TValue =>
-  typeof v === 'function' ? (v as (ctx: ActionContext<TItem>) => TValue)(ctx) : v;
-
-function resolveAction<TItem>(
-  action: Action<TItem>,
-  ctx: ActionContext<TItem>,
-): ResolvedAction<TItem> {
-  const base: ResolvedBaseAction<TItem> = {
-    ...action,
-    label: resolve(action.label, ctx),
-    icon: action.icon ? resolve(action.icon, ctx) : undefined,
-  };
-
-  if (action.type === 'mutation') {
+  if (a.type === 'mutation') {
     return {
       ...base,
       type: 'mutation',
-      confirm: action.confirm ? resolve(action.confirm, ctx) : undefined,
-      execute: action.execute,
+      confirm: a.confirm ? resolve(a.confirm, ctx) : undefined,
+      execute: () => a.execute(ctx),
     };
   }
+
+  const Body =
+    typeof a.render === 'function' && a.render.length === 0
+      ? React.lazy(a.render as () => Promise<{ default: DialogBody<T> }>)
+      : (a.render as DialogBody<T>);
 
   return {
     ...base,
     type: 'dialog',
-    render: action.render,
-    dialogProps: action.dialogProps,
+    dialogProps: a.dialogProps,
+    render: () => React.createElement(Body, ctx),
   };
 }
 
-export function useActions<TItem extends object>(
-  actions: Action<TItem>[],
-  item: TItem | null | undefined,
-): ResolvedActions<TItem> {
-  const auth = useAuth();
-  const client = useClient();
-  const router = useRouter();
-
-  return useMemo(() => {
-    async function mutate<TData, TVars extends Record<string, unknown>>(
-      document: TypedDocumentNode<TData, TVars>,
-      variables: TVars,
-    ): Promise<TData> {
-      const result = await client.mutation(document, variables).toPromise();
-      if (result.error) throw result.error;
-      return result.data!;
-    }
-    const ctx = { auth, client, router, item: item!, mutate };
-
-    const visible = !item
-      ? []
-      : actions.filter((a) => resolve(a.visible, ctx)).map((a) => resolveAction(a, ctx));
-
-    return {
-      all: visible,
-      primary: visible.filter((a) => !!a.primary),
-      secondary: visible.filter((a) => !a.primary),
-      ctx,
-    };
-  }, [actions, auth, client, item, router]);
+function forItem<T, const A extends readonly Action<T>[]>(
+  actions: A,
+  ctx: ActionContext<T>,
+): ResolvedAction<IdOf<A>>[] {
+  return actions.filter((a) => resolve(a.visible, ctx)).map((a) => resolveOne(a, ctx));
 }
 
-export function useActionMap<TItem extends { id: string }>(
-  actions: Action<TItem>[],
-  items: TItem[],
-): Map<string, ResolvedActions<TItem>> {
+// — Hooks —————————————————————————————————————————————————————————————
+
+function useBase() {
   const auth = useAuth();
   const client = useClient();
   const router = useRouter();
-
   return useMemo(() => {
-    const map = new Map<string, ResolvedActions<TItem>>();
-
-    async function mutate<TData, TVars extends Record<string, unknown>>(
-      document: TypedDocumentNode<TData, TVars>,
-      variables: TVars,
-    ): Promise<TData> {
-      const result = await client.mutation(document, variables).toPromise();
-      if (result.error) throw result.error;
-      return result.data!;
+    async function mutate<D, V extends Record<string, unknown>>(
+      doc: TypedDocumentNode<D, V>,
+      vars: V,
+    ) {
+      const r = await client.mutation(doc, vars).toPromise();
+      if (r.error) throw r.error;
+      return r.data as D;
     }
-    for (const item of items) {
-      const ctx: ActionContext<TItem> = { auth, client, item, router, mutate };
+    return { auth, client, router, mutate };
+  }, [auth, client, router]);
+}
 
-      const visible = actions
-        .filter((a) => resolve(a.visible, ctx))
-        .map((a) => resolveAction(a, ctx));
+export function useActions<T extends object, Ids extends string>(
+  actions: readonly Action<T, Ids>[],
+  item: T | null | undefined,
+): ResolvedAction<Ids>[] {
+  const base = useBase();
 
-      map.set(item.id, {
-        all: visible,
-        primary: visible.filter((a) => !!a.primary),
-        secondary: visible.filter((a) => !a.primary),
-        ctx,
-      });
-    }
+  return useMemo(
+    () => (item ? forItem(actions, { ...base, item }) : []),
+    [actions, base, item],
+  );
+}
 
-    return map;
-  }, [actions, auth, client, items, router]);
+export function useActionMap<T extends { id: string }, Ids extends string>(
+  actions: readonly Action<T, Ids>[],
+  items: readonly T[],
+): Map<string, ResolvedAction<Ids>[]> {
+  const base = useBase();
+
+  return useMemo(
+    () => new Map(items.map((item) => [item.id, forItem(actions, { ...base, item })])),
+    [actions, base, items],
+  );
 }

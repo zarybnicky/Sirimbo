@@ -1,14 +1,14 @@
 import React from 'react';
-import type { ResolvedActions } from '@/lib/actions';
+import type { ResolvedAction } from '@/lib/actions';
 import { cn } from '@/lib/cn';
 import { ActionGroup } from '@/ui/ActionGroup';
 
-export function ActionRow<TItem extends object = object>({
+export function ActionRow<Id extends string = string>({
   actions,
   children,
   className,
 }: {
-  actions: ResolvedActions<TItem>;
+  actions: ResolvedAction<Id>[];
   children: React.ReactNode;
   className?: string;
 }) {

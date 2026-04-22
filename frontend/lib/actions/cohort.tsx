@@ -1,12 +1,23 @@
 import { Download, Pencil } from 'lucide-react';
-import type { CohortFragment } from '@/graphql/Cohorts';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 import { CohortForm } from '@/ui/forms/CohortForm';
 import { exportCohort } from '@/ui/reports/export-cohort';
 
-export type CohortActionItem = Pick<CohortFragment, 'id' | 'name'>;
+type CohortActionItem = {
+  id: string;
+  name: string;
+};
 
-export const cohortActions: Action<CohortActionItem>[] = [
+export const cohortActions = defineActions<CohortActionItem>()([
+  {
+    id: 'cohort.edit',
+    group: 'primary',
+    label: 'Upravit',
+    icon: Pencil,
+    visible: ({ auth, item }) => auth.isAdmin && !!item.id,
+    type: 'dialog',
+    render: ({ item }) => <CohortForm id={item.id} />,
+  },
   {
     id: 'cohort.export',
     label: 'Export členů',
@@ -17,13 +28,4 @@ export const cohortActions: Action<CohortActionItem>[] = [
       await exportCohort(client, [item.id], item.name);
     },
   },
-  {
-    id: 'cohort.edit',
-    primary: true,
-    label: 'Upravit',
-    icon: Pencil,
-    visible: ({ auth, item }) => auth.isAdmin && !!item.id,
-    type: 'dialog',
-    render: ({ item }) => <CohortForm id={item.id} />,
-  },
-];
+]);

@@ -5,10 +5,10 @@ import {
   UpdateUserProxyDocument,
   type UserProxyFragment,
 } from '@/graphql/Memberships';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
 
-export const userProxyActions: Action<UserProxyFragment>[] = [
+export const userProxyActions = defineActions<UserProxyFragment>()([
   {
     id: 'userProxy.edit',
     label: 'Upravit platnost',
@@ -55,4 +55,4 @@ export const userProxyActions: Action<UserProxyFragment>[] = [
       await mutate(DeleteUserProxyDocument, { id: item.id });
     },
   },
-];
+]);

@@ -1,13 +1,20 @@
 import { Pencil, Trash2, Unplug } from 'lucide-react';
 import {
-  type CohortMembershipFragment,
   DeleteCohortMembershipDocument,
   UpdateCohortMembershipDocument,
 } from '@/graphql/Memberships';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 import { EditCohortMembershipForm } from '@/ui/forms/EditCohortMembershipForm';
 
-export const cohortMembershipActions: Action<CohortMembershipFragment>[] = [
+type Item = {
+  __typename?: 'CohortMembership';
+  id: string;
+  person?: {
+    name: string;
+  } | null;
+};
+
+export const cohortMembershipActions = defineActions<Item>()([
   {
     id: 'cohortMembership.edit',
     label: 'Upravit členství',
@@ -32,7 +39,7 @@ export const cohortMembershipActions: Action<CohortMembershipFragment>[] = [
   },
   {
     id: 'cohortMembership.delete',
-    label: 'Smazat',
+    label: 'Smazat členství',
     icon: Trash2,
     variant: 'danger',
     visible: ({ auth }) => auth.isAdmin,
@@ -43,4 +50,4 @@ export const cohortMembershipActions: Action<CohortMembershipFragment>[] = [
       await mutate(DeleteCohortMembershipDocument, { id: item.id });
     },
   },
-];
+]);

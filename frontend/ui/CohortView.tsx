@@ -13,6 +13,8 @@ import { typographyCls } from '@/ui/style';
 import Link from 'next/link';
 import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
+import { personActions } from '@/lib/actions/person';
+import { isTruthy } from '@/lib/truthyFilter';
 
 type CohortWithMembers = NonNullable<CohortWithMembersQuery['entity']>;
 
@@ -21,7 +23,11 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
     () => cohort.cohortMembershipsList ?? [],
     [cohort.cohortMembershipsList],
   );
-  const memberActionMap = useActionMap(cohortMembershipActions, members);
+  const membershipActionMap = useActionMap(cohortMembershipActions, members);
+  const memberActionMap = useActionMap(
+    personActions,
+    members.map((x) => x.person).filter(isTruthy),
+  );
   const description = React.useMemo(
     () => cohort.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', ''),
     [cohort.description],
@@ -46,7 +52,10 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
           >
             <ActionRow
               className="mb-0 min-w-max"
-              actions={memberActionMap.get(membership.id)!}
+              actions={[
+                ...(membership.person ? memberActionMap.get(membership.person.id)! : []),
+                ...membershipActionMap.get(membership.id)!,
+              ]}
             >
               {membership.person ? (
                 <Link

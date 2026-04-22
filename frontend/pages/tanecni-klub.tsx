@@ -39,7 +39,7 @@ export default function ClubPage() {
     [
       {
         id: 'tenant.edit',
-        primary: true,
+        group: 'primary',
         label: 'Upravit klub',
         icon: Pencil,
         visible: ({ auth }) => auth.isAdmin,

@@ -1,7 +1,7 @@
 import { NotebookPen, Pencil, Trash2 } from 'lucide-react';
 import type { EventFragment } from '@/graphql/Event';
 import { DeleteEventExternalRegistrationDocument } from '@/graphql/Event';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
@@ -9,7 +9,7 @@ import { exportEventRegistrations } from '@/ui/reports/export-event-registration
 
 const preventDefault = (e: Event) => e.preventDefault();
 
-export const eventActions: Action<EventFragment>[] = [
+export const eventActions = defineActions<EventFragment>()([
   {
     id: 'event.edit',
     label: 'Upravit',
@@ -59,9 +59,9 @@ export const eventActions: Action<EventFragment>[] = [
       await exportEventRegistrations(client, item.id);
     },
   },
-];
+]);
 
-export const eventExternalRegistrationActions: Action<{ id: string }>[] = [
+export const eventExternalRegistrationActions = defineActions<{ id: string }>()([
   {
     id: 'eventExternalRegistration.delete',
     label: 'Smazat',
@@ -73,4 +73,4 @@ export const eventExternalRegistrationActions: Action<{ id: string }>[] = [
       await mutate(DeleteEventExternalRegistrationDocument, { id: item.id });
     },
   },
-];
+]);

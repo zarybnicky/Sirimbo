@@ -1,13 +1,13 @@
 import { Copy, Trash2 } from 'lucide-react';
 import { DeleteInvitationDocument } from '@/graphql/Invitation';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 
 export type PersonInvitationActionItem = {
   id: string;
   accessToken: string;
 };
 
-export const personInvitationActions: Action<PersonInvitationActionItem>[] = [
+export const personInvitationActions = defineActions<PersonInvitationActionItem>()([
   {
     id: 'personInvitation.copyLink',
     label: 'Kopírovat odkaz',
@@ -31,4 +31,4 @@ export const personInvitationActions: Action<PersonInvitationActionItem>[] = [
       await mutate(DeleteInvitationDocument, { input: { id: item.id } });
     },
   },
-];
+]);

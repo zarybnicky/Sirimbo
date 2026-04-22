@@ -4,10 +4,10 @@ import {
   type TenantMembershipFragment,
   UpdateTenantMembershipDocument,
 } from '@/graphql/Memberships';
-import { Action } from '@/lib/actions';
+import { defineActions } from '@/lib/actions';
 import { EditTenantMembershipForm } from '@/ui/forms/EditTenantMembershipForm';
 
-export const tenantMembershipActions: Action<TenantMembershipFragment>[] = [
+export const tenantMembershipActions = defineActions<TenantMembershipFragment>()([
   {
     id: 'tenantMembership.edit',
     label: 'Upravit členství',
@@ -43,4 +43,4 @@ export const tenantMembershipActions: Action<TenantMembershipFragment>[] = [
       await mutate(DeleteTenantMembershipDocument, { id: item.id });
     },
   },
-];
+]);
