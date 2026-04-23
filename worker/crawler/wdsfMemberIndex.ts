@@ -1,5 +1,5 @@
 import type { JsonLoader } from './types.ts';
-import { upsertFederationAthlete } from './federated.queries.ts';
+import { upsertPerson } from './federated.queries.ts';
 import { z } from 'zod';
 import { upsertFrontier } from './crawler.queries.ts';
 
@@ -29,7 +29,7 @@ export const wdsfMemberIndex: JsonLoader = {
   ),
   async load(client, frontier, parsed) {
     for (const member of parsed) {
-      await upsertFederationAthlete.run(
+      await upsertPerson.run(
         {
           federation: 'wdsf',
           externalId: member.id,

@@ -4,8 +4,8 @@ import {
   type competitor_type,
   type gender,
   replaceCompetitorProgress,
-  updateFederationAthlete,
-  upsertFederationAthlete,
+  updatePerson,
+  upsertPerson,
   upsertCompetitor,
 } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
@@ -118,7 +118,7 @@ export const cstsAthlete: JsonLoader<Response> = {
 };
 
 async function loadCstsAthlete(client: PoolClient, data: Athlete) {
-  const [{ athlete_id: mainAthleteId }] = await upsertFederationAthlete.run(
+  const [{ person_id: mainPersonId }] = await upsertPerson.run(
     {
       federation: 'csts',
       externalId: String(data.idt),
@@ -127,13 +127,13 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     },
     client,
   );
-  if (mainAthleteId === null) return;
+  if (mainPersonId === null) return;
 
-  await updateFederationAthlete.run(
+  await updatePerson.run(
     {
-      ageGroup: data.age,
-      externalId: String(data.idt),
       federation: 'csts',
+      externalId: String(data.idt),
+      ageGroup: data.age,
       medicalCheckupExpiration: data.medicalCheckupExpiration,
     },
     client,
@@ -146,22 +146,19 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
 
     const competitorType = mapCompetitorType(rankingPoint.competitors);
     const progressClass = classifyProgressClass(rankingPoint.class);
-    const categoryId = await getFederatedCategoryId(
-      client,
-      {
-        class: progressClass.className,
-        ageGroup: rankingPoint.rankingAge,
-        genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
-        discipline: rankingPoint.discipline,
-        series: rankingPoint.series,
-        competitorType,
-      },
-    );
+    const categoryId = await getFederatedCategoryId(client, {
+      class: progressClass.className,
+      ageGroup: rankingPoint.rankingAge,
+      genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
+      discipline: rankingPoint.discipline,
+      series: rankingPoint.series,
+      competitorType,
+    });
     if (!categoryId) continue;
 
     const competitorId = await loadCompetitorId(
       data,
-      mainAthleteId,
+      mainPersonId,
       rankingPoint,
       competitorType,
       client,
@@ -201,7 +198,6 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     await replaceCompetitorProgress.run(
       {
         category_ids: progress.map((entry) => entry.categoryId),
-        federation: 'csts',
         competitorId,
         domestic_finales: progress.map((entry) => entry.domesticFinale),
         foreign_finales: progress.map((entry) => entry.foreignFinale),
@@ -214,18 +210,18 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
 
 async function loadCompetitorId(
   athlete: Athlete,
-  athleteId: string,
+  personId: string,
   rankingPoint: RankingPoints,
   competitorType: competitor_type,
   client: PoolClient,
 ) {
   switch (competitorType) {
     case 'couple':
-      return loadCstsCouple(athlete, rankingPoint, client, athleteId);
+      return loadCstsCouple(athlete, rankingPoint, client, personId);
     case 'duo':
-      return loadCstsDuo(athlete, rankingPoint, client, athleteId);
+      return loadCstsDuo(athlete, rankingPoint, client, personId);
     case 'solo':
-      return loadCstsSolo(athlete, rankingPoint, client, athleteId);
+      return loadCstsSolo(athlete, rankingPoint, client, personId);
     default:
       throw new Error(`Don't know how to process ${competitorType}`);
   }
@@ -235,7 +231,7 @@ async function loadCstsSolo(
   data: Athlete,
   rp: RankingPoints,
   client: PoolClient,
-  mainAthleteId: string,
+  mainPersonId: string,
 ) {
   const [{ competitor_id: competitorId }] = await upsertCompetitor.run(
     {
@@ -243,7 +239,7 @@ async function loadCstsSolo(
       federationCompetitorId: rp.competitorId.toString(),
       label: data.name,
       type: 'solo',
-      component_athlete_ids: [mainAthleteId],
+      component_person_ids: [mainPersonId],
       component_roles: ['member'],
     },
     client,
@@ -255,9 +251,9 @@ async function loadCstsDuo(
   data: Athlete,
   rp: RankingPoints,
   client: PoolClient,
-  mainAthleteId: string,
+  mainPersonId: string,
 ) {
-  const [{ athlete_id: partnerAthleteId }] = await upsertFederationAthlete.run(
+  const [{ person_id: partnerPersonId }] = await upsertPerson.run(
     {
       federation: 'csts',
       externalId: String(rp.partnerIdt),
@@ -266,7 +262,7 @@ async function loadCstsDuo(
     },
     client,
   );
-  if (!partnerAthleteId) return;
+  if (!partnerPersonId) return;
 
   const [{ competitor_id: competitorId }] = await upsertCompetitor.run(
     {
@@ -277,7 +273,7 @@ async function loadCstsDuo(
           ? `${data.name} - ${rp.partner}`
           : `${rp.partner} - ${data.name}`,
       type: 'duo',
-      component_athlete_ids: [mainAthleteId, partnerAthleteId],
+      component_person_ids: [mainPersonId, partnerPersonId],
       component_roles: ['member', 'member'],
     },
     client,
@@ -290,9 +286,9 @@ async function loadCstsCouple(
   data: Athlete,
   rp: RankingPoints,
   client: PoolClient,
-  mainAthleteId: string,
+  mainPersonId: string,
 ) {
-  const [{ athlete_id: partnerAthleteId }] = await upsertFederationAthlete.run(
+  const [{ person_id: partnerPersonId }] = await upsertPerson.run(
     {
       federation: 'csts',
       externalId: String(rp.partnerIdt),
@@ -301,7 +297,7 @@ async function loadCstsCouple(
     },
     client,
   );
-  if (!partnerAthleteId) return;
+  if (!partnerPersonId) return;
 
   const [{ competitor_id: competitorId }] = await upsertCompetitor.run(
     {
@@ -312,9 +308,9 @@ async function loadCstsCouple(
           ? `${data.name} - ${rp.partner}`
           : `${rp.partner} - ${data.name}`,
       type: 'couple',
-      component_athlete_ids: [
-        data.sex === 'male' ? mainAthleteId : partnerAthleteId,
-        data.sex === 'male' ? partnerAthleteId : mainAthleteId,
+      component_person_ids: [
+        data.sex === 'male' ? mainPersonId : partnerPersonId,
+        data.sex === 'male' ? partnerPersonId : mainPersonId,
       ],
       component_roles: ['lead', 'follow'],
     },
@@ -351,10 +347,7 @@ function classifyProgressClass(value: string | null | undefined): ProgressClass 
   };
 }
 
-function isBetterProgress(
-  candidate: ProgressEntry,
-  current: ProgressEntry,
-) {
+function isBetterProgress(candidate: ProgressEntry, current: ProgressEntry) {
   const classRankDiff = candidate.rank - current.rank;
   if (classRankDiff !== 0) return classRankDiff > 0;
 

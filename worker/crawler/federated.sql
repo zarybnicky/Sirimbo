@@ -1,14 +1,12 @@
 
-/* @name UpsertFederationAthlete */
-SELECT federated.upsert_athlete(
-  in_federation     => :federation,
-  in_external_id    => :externalId,
-  in_canonical_name => :canonicalName,
-  in_gender         => :gender::federated.gender
-) AS athlete_id;
+/* @name UpsertPerson */
+INSERT INTO federated.person (federation, external_id, canonical_name, gender)
+VALUES (:federation, :externalId, :canonicalName, :gender)
+ON CONFLICT (federation, external_id) DO UPDATE SET canonical_name = EXCLUDED.canonical_name
+RETURNING id as person_id;
 
-/* @name UpdateFederationAthlete */
-UPDATE federated.federation_athlete
+/* @name UpdatePerson */
+UPDATE federated.person
 SET age_group = :ageGroup,
     medical_checkup_expiration = :medicalCheckupExpiration::date
 WHERE federation = :federation
@@ -31,34 +29,28 @@ SELECT federated.upsert_competitor(
   in_type => :type::federated.competitor_type,
   in_label => :label,
   in_components => ARRAY(
-    SELECT (u.athlete_id, u.role)::federated.competitor_component_input
+    SELECT (u.person_id, u.role)::federated.competitor_component_input
     FROM unnest(
-      :component_athlete_ids::bigint[],
+      :component_person_ids::text[],
       :component_roles::federated.competitor_role[]
-    ) AS u(athlete_id, role)
+    ) AS u(person_id, role)
   )
 ) as competitor_id;
 
 /* @name UpsertManyCompetitors */
-SELECT
-  input.external_id AS federation_id,
-  federated.upsert_competitor(
-    in_federation  => input.federation,
-    in_external_id => input.external_id,
-    in_type        => input.competitor_type,
-    in_label       => input.label,
-    in_components  => '{}'::federated.competitor_component_input[]
-  ) AS federated_id
+INSERT INTO federated.competitor (federation, external_id, competitor_type, name)
+SELECT input.federation, input.external_id, input.competitor_type, input.name
 FROM unnest(
   :federations::text[],
   :external_ids::text[],
   :types::federated.competitor_type[],
   :labels::text[]
-) AS input(federation, external_id, competitor_type, label);
+) AS input(federation, external_id, competitor_type, name)
+ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
+RETURNING external_id as federation_id, id as federated_id;
 
 /* @name ReplaceCompetitorProgress */
 SELECT federated.replace_competitor_category_progress(
-  in_federation    => :federation,
   in_competitor_id => :competitorId,
   in_entries       => ARRAY(
     SELECT (

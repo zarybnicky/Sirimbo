@@ -1,5 +1,5 @@
 import type { JsonLoader } from './types.ts';
-import { upsertFederationAthlete } from './federated.queries.ts';
+import { upsertPerson } from './federated.queries.ts';
 import { z } from 'zod';
 
 export const wdsfMember: JsonLoader = {
@@ -70,7 +70,7 @@ export const wdsfMember: JsonLoader = {
     // we need a person -> federation person mapping, to support the various officials without duplicates
     // federation_athlete, federation_judge will point to that and signify a licence
 
-    await upsertFederationAthlete.run(
+    await upsertPerson.run(
       {
         federation: 'wdsf',
         externalId: member.id.toString(),
