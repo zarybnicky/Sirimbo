@@ -88,7 +88,8 @@ function TimeGridEvent({
     [setDragSubject, event, isDraggable, isResizable, resource],
   );
 
-  const title = event.instance.name ?? (event.event ? formatDefaultEventName(event.event) : '-');
+  const title =
+    event.instance.name || (event.event ? formatDefaultEventName(event.event) : '-');
   const label = React.useMemo(() => {
     let label = '';
     if (startsBeforeDay && startsAfterDay) {

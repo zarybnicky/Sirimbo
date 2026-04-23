@@ -263,7 +263,7 @@ export default function NowPage() {
                               {formatEventType(event.type)}
                             </p>
                             <h3 className="mt-1 text-2xl font-semibold text-accent-12">
-                              {instance.name ?? formatDefaultEventName(event)}
+                              {instance.name || formatDefaultEventName(event)}
                             </h3>
                             <p className="mt-2 text-lg text-accent-10">
                               {shortTimeFormatter.formatRange(since, until)}
@@ -295,7 +295,7 @@ export default function NowPage() {
                                 className="rounded-xl border border-accent-6 bg-accent-2/60 p-3"
                               >
                                 <p className="text-sm font-medium text-accent-12">
-                                  {instance.name ?? formatDefaultEventName(event)}
+                                  {instance.name || formatDefaultEventName(event)}
                                 </p>
                                 <p className="text-sm text-neutral-9">
                                   {shortTimeFormatter.formatRange(since, until)}

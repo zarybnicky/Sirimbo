@@ -181,7 +181,7 @@ export function ActionGroup<Id extends string = string>({
       </div>
 
       {dialogAction && (
-        <Dialog>
+        <Dialog open onOpenChange={() => setDialogAction(null)}>
           <DialogContent {...dialogAction.dialogProps}>
             <Suspense fallback={<Spinner />}>{dialogAction.render()}</Suspense>
           </DialogContent>

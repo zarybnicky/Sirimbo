@@ -106,7 +106,7 @@ function EventCell({
           <div
             className={`rbc-event-content${instance.isCancelled ? ' line-through' : ''}`}
           >
-            {event.instance.name ?? formatDefaultEventName(event.event)}
+            {event.instance.name || formatDefaultEventName(event.event)}
           </div>
 
           {!continuesAfter && isResizable && (

@@ -35,7 +35,7 @@ export function EventSummary({
   const myRegistrations = event.myRegistrationsList || [];
   const start = new Date(instance.since);
   const end = new Date(instance.until);
-  const locationLabel = instance.location?.name ?? instance.locationText;
+  const locationLabel = instance.location?.name || instance.locationText;
 
   const instancesBefore = event.eventInstancesList.filter(
     (e) => e.since < instance.since,
@@ -49,7 +49,7 @@ export function EventSummary({
             href={{ pathname: '/akce/[id]', query: { id: event.id } }}
             className={cn('text-xl', instance.isCancelled ? 'line-through' : 'underline')}
           >
-            {instance.name ?? formatDefaultEventName(event)}
+            {instance.name || formatDefaultEventName(event)}
           </Link>
 
           <div>
