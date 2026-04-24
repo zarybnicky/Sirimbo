@@ -1,9 +1,22 @@
 import type { JsonLoader } from './types.ts';
 import { upsertPerson } from './federated.queries.ts';
 import { z } from 'zod';
-import { upsertFrontier } from './crawler.queries.ts';
+import { upsertFrontiers } from './crawler.queries.ts';
 
-export const wdsfMemberIndex: JsonLoader = {
+const requestSchema = z.array(
+  z.object({
+    link: z.array(
+      z.object({ href: z.string(), rel: z.string(), type: z.string().optional() }),
+    ),
+    id: z.string(),
+    name: z.string(),
+    sex: z.enum(['Male', 'Female', 'NotSupplied']),
+    country: z.string().nullable(),
+    ageGroup: z.string().nullable(),
+  }),
+);
+
+export const wdsfMemberIndex: JsonLoader<z.output<typeof requestSchema>> = {
   mode: 'json',
   revalidatePeriod: '2 day',
   buildRequest: () => ({
@@ -15,18 +28,7 @@ export const wdsfMemberIndex: JsonLoader = {
       },
     },
   }),
-  schema: z.array(
-    z.object({
-      link: z.array(
-        z.object({ href: z.string(), rel: z.string(), type: z.string().optional() }),
-      ),
-      id: z.string(),
-      name: z.string(),
-      sex: z.enum(['Male', 'Female', 'NotSupplied']),
-      country: z.string().nullable(),
-      ageGroup: z.string().nullable(),
-    }),
-  ),
+  schema: requestSchema,
   async load(client, frontier, parsed) {
     for (const member of parsed) {
       await upsertPerson.run(
@@ -43,11 +45,15 @@ export const wdsfMemberIndex: JsonLoader = {
         },
         client,
       );
-
-      await upsertFrontier.run(
-        { federation: 'wdsf', kind: 'member', key: member.id.toString() },
-        client,
-      );
     }
+
+    await upsertFrontiers.run(
+      {
+        federation: 'wdsf',
+        kind: 'member',
+        keys: parsed.map((x) => x.id.toString()),
+      },
+      client,
+    );
   },
 };

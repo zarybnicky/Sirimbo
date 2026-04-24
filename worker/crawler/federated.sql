@@ -77,3 +77,14 @@ SELECT federated.upsert_ranklist_snapshot(
   in_kind           => COALESCE(:kind, 'default'),
   in_entries        => :entries::text::jsonb
 ) AS snapshot_id;
+
+/* @name UpsertEvent */
+INSERT INTO federated.event (federation, external_id, name, start_date, end_date, location, country, organizing_club_id)
+VALUES (:federation, :externalId, :name, :startDate::date, :endDate::date, :location, :country, :organizingClubId)
+ON CONFLICT (federation, external_id) DO UPDATE
+  SET name = EXCLUDED.name,
+      start_date = EXCLUDED.start_date,
+      end_date = EXCLUDED.end_date,
+      location = EXCLUDED.location,
+      country = EXCLUDED.country,
+      organizing_club_id = EXCLUDED.organizing_club_id;

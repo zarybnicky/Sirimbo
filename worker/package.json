@@ -17,6 +17,7 @@
     "@hyperdx/node-opentelemetry": "^0.10.2",
     "@pgtyped/runtime": "^2.4.2",
     "@traversable/zod": "^0.0.57",
+    "date-fns": "~2.30.0",
     "graphile-config": "1.0.0-rc.1",
     "graphile-worker": "^0.16.6",
     "handlebars": "^4.7.8",

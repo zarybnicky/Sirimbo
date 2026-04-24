@@ -15,35 +15,26 @@ const IDT_RANGES: readonly IdtRange[] = [
 export const getNextIdt = (idt: number) => {
   if (idt === 0) return IDT_RANGES[0].start;
 
-  const currentBlockIdx = IDT_RANGES.findIndex(
-    ({ start, end }) => idt >= start && idt <= end,
-  );
-  if (currentBlockIdx === -1) return null;
+  const blockIdx = IDT_RANGES.findIndex(({ start, end }) => idt >= start && idt <= end);
+  if (blockIdx === -1) throw new Error(`Invalid IDT input in getNextIdt: ${idt}`);
 
   const nextBase = Math.floor(idt / 10) + 1;
   const nextIdt = nextBase * 10 + computeEan8CheckDigit(nextBase);
 
-  if (nextIdt <= IDT_RANGES[currentBlockIdx].end) return nextIdt;
-  return IDT_RANGES[currentBlockIdx + 1]?.start ?? null;
+  if (nextIdt > IDT_RANGES[blockIdx].end && blockIdx + 1 < IDT_RANGES.length)
+    return IDT_RANGES[blockIdx + 1].start;
+  return nextIdt;
 };
-
-function toDigits(value: number, length: number): number[] {
-  const digits = value.toString().padStart(length, '0').split('');
-  return digits.map((digit) => {
-    const parsed = Number.parseInt(digit, 10);
-    if (Number.isNaN(parsed)) {
-      throw new TypeError(`Invalid digit "${digit}" in value ${value}`);
-    }
-    return parsed;
-  });
-}
 
 function computeEan8CheckDigit(base: number): number {
   if (!Number.isInteger(base)) {
     throw new TypeError('The EAN-8 base must be an integer.');
   }
-
-  const digits = toDigits(base, 7);
+  const digits = base
+    .toString()
+    .padStart(7, '0')
+    .split('')
+    .map((digit) => Number.parseInt(digit, 10));
 
   const weightedSum = digits.reduce((sum, digit, index) => {
     const position = index + 1; // Positions are counted from the left starting at 1.

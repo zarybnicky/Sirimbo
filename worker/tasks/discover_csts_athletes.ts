@@ -1,6 +1,6 @@
 import type { Task } from 'graphile-worker';
 import { getNextIdt } from '../crawler/cstsAthleteIdts.ts';
-import { reserveRequest, upsertFrontier } from '../crawler/crawler.queries.ts';
+import { upsertFrontier } from '../crawler/crawler.queries.ts';
 import { LOADER_MAP } from '../crawler/handlers.ts';
 
 const MAX_PROBES_PER_RUN = 200;
@@ -25,30 +25,11 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
 
   while (probes < MAX_PROBES_PER_RUN) {
     const candidateId = getNextIdt(newLastChecked);
-    if (!candidateId) {
-      logger.warn(`[IDT probe] No more IDTs to probe, last IDT: ${newLastChecked}`);
-      break;
-    }
 
     probes += 1;
     newLastChecked = candidateId;
 
     const { url, init } = LOADER_MAP.csts.member.buildRequest(candidateId.toString());
-    const { host } = url;
-    while (true) {
-      const [{ granted, allowed_at }] = await helpers.withPgClient(async (client) => {
-        return reserveRequest.run({ host }, client);
-      });
-      if (granted) break;
-      const waitTime = allowed_at!.getTime() - Date.now();
-      // if (waitTime > 45_000)
-      //   break countProbes;
-      await new Promise((resolve) => {
-        logger.info(`[IDT probe] Waiting ${waitTime}ms`);
-        setTimeout(resolve, waitTime);
-      });
-    }
-
     const response = await fetch(url, init);
 
     let exists = true;

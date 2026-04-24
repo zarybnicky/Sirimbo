@@ -11,6 +11,8 @@ export type Json = null | boolean | number | string | Json[] | { [key: string]: 
 
 export type NumberOrString = number | string;
 
+export type stringArray = (string)[];
+
 /** 'GetFrontierForUpdate' parameters type */
 export interface IGetFrontierForUpdateParams {
   id?: NumberOrString | null | void;
@@ -674,5 +676,35 @@ const upsertFrontierIR: any = {"usedParamSet":{"federation":true,"kind":true,"ke
  * ```
  */
 export const upsertFrontier = new PreparedQuery<IUpsertFrontierParams,IUpsertFrontierResult>(upsertFrontierIR);
+
+
+/** 'UpsertFrontiers' parameters type */
+export interface IUpsertFrontiersParams {
+  federation?: string | null | void;
+  keys?: stringArray | null | void;
+  kind?: string | null | void;
+}
+
+/** 'UpsertFrontiers' return type */
+export type IUpsertFrontiersResult = void;
+
+/** 'UpsertFrontiers' query type */
+export interface IUpsertFrontiersQuery {
+  params: IUpsertFrontiersParams;
+  result: IUpsertFrontiersResult;
+}
+
+const upsertFrontiersIR: any = {"usedParamSet":{"federation":true,"kind":true,"keys":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":60,"b":70}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":73,"b":77}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":96,"b":100}]}],"statement":"INSERT INTO crawler.frontier (federation, kind, key)\nSELECT :federation, :kind, key\nFROM unnest(:keys::text[]) as input(key)\nON CONFLICT DO NOTHING"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO crawler.frontier (federation, kind, key)
+ * SELECT :federation, :kind, key
+ * FROM unnest(:keys::text[]) as input(key)
+ * ON CONFLICT DO NOTHING
+ * ```
+ */
+export const upsertFrontiers = new PreparedQuery<IUpsertFrontiersParams,IUpsertFrontiersResult>(upsertFrontiersIR);
 
 

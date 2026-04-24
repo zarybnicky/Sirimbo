@@ -49,6 +49,14 @@ CROSS JOIN LATERAL plpgsql_check_function_tb(
 WHERE l.lanname = 'plpgsql'
   AND n.nspname NOT IN ('pg_catalog','information_schema')
   AND n.nspname = ANY (regexp_split_to_array(current_setting('app.check_schemas', true), '\s*,\s*'))
+  -- skip functions that belong to installed extensions (pgTAP, etc.)
+  AND NOT EXISTS (
+    SELECT 1
+      FROM pg_depend d
+     WHERE d.classid = 'pg_proc'::regclass
+       AND d.objid = p.oid
+       AND d.deptype = 'e'
+  )
   -- ignore “orphaned” trigger functions: if it RETURNS trigger but no trigger exists, skip
   AND (p.prorettype <> 'trigger'::regtype OR t.tgfoid IS NOT NULL);
 
