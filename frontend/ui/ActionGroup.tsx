@@ -126,59 +126,54 @@ export function ActionGroup<Id extends string = string>({
     }
   };
 
-  const btn = (a: ResolvedAction<Id>) => (
-    <button
-      key={a.id}
-      type="button"
-      disabled={pending === a.id}
-      className={buttonCls({ variant: 'outline', size: 'sm' })}
-      onClick={() => fire(a)}
-    >
-      {a.icon && <a.icon className="size-4" />}
-      {a.label}
-    </button>
-  );
-
-  const dropdown = (key: BucketKey, items: readonly ResolvedAction<Id>[]) =>
-    items.length > 0 ? (
-      <DropdownMenu key={key}>
-        {variant === 'row' ? (
-          <DropdownMenuTrigger.RowDots className="relative top-0 right-0" />
-        ) : key === 'add' ? (
-          <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
-            <Plus className="size-5" />
-            &thinsp;
-            <ChevronDown className="size-5" />
-          </DropdownMenuTrigger>
-        ) : (
-          <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />
-        )}
-
-        <DropdownMenuContent align={align ?? (variant === 'toolbar' ? 'end' : 'start')}>
-          {items.map((a) => (
-            <DropdownMenuButton
-              key={a.id}
-              disabled={pending === a.id}
-              onSelect={() => fire(a)}
-              className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
-            >
-              {a.icon && <a.icon className="size-4" />}
-              {a.label}
-            </DropdownMenuButton>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ) : null;
-
   return (
-    <>
-      <div
-        className={cn('inline-flex items-center gap-2', className)}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {primaryActions.map(btn)}
-        {buckets.map(({ key, items }) => dropdown(key, items))}
-      </div>
+    <div
+      className={cn('inline-flex items-center gap-2', className)}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {primaryActions.map((a) => (
+        <button
+          key={a.id}
+          type="button"
+          disabled={pending === a.id}
+          className={buttonCls({ variant: 'outline', size: 'sm' })}
+          onClick={() => fire(a)}
+        >
+          {a.icon && <a.icon className="size-4" />}
+          {a.label}
+        </button>
+      ))}
+      {buckets.map(({ key, items }) => (
+        <DropdownMenu key={key}>
+          {variant === 'row' ? (
+            <DropdownMenuTrigger.RowDots className="relative top-0 right-0" />
+          ) : key === 'add' ? (
+            <DropdownMenuTrigger
+              className={buttonCls({ variant: 'outline', size: 'sm' })}
+            >
+              <Plus className="size-5" />
+              &thinsp;
+              <ChevronDown className="size-5" />
+            </DropdownMenuTrigger>
+          ) : (
+            <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />
+          )}
+
+          <DropdownMenuContent align={align ?? (variant === 'toolbar' ? 'end' : 'start')}>
+            {items.map((a) => (
+              <DropdownMenuButton
+                key={a.id}
+                disabled={pending === a.id}
+                onSelect={() => fire(a)}
+                className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
+              >
+                {a.icon && <a.icon className="size-4" />}
+                {a.label}
+              </DropdownMenuButton>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ))}
 
       {dialogAction && (
         <Dialog open onOpenChange={() => setDialogAction(null)}>
@@ -187,6 +182,6 @@ export function ActionGroup<Id extends string = string>({
           </DialogContent>
         </Dialog>
       )}
-    </>
+    </div>
   );
 }

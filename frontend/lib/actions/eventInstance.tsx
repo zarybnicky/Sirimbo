@@ -21,7 +21,7 @@ import { exportEventRegistrations } from '@/ui/reports/export-event-registration
 
 const preventDefault = (e: Event) => e.preventDefault();
 
-function canManageInstance({
+export function canManageInstance({
   auth,
   item,
 }: Pick<ActionContext<EventInstanceWithTrainerFragment>, 'auth' | 'item'>) {

@@ -13,6 +13,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { cn } from '@/lib/cn';
 import Link from 'next/link';
 import { keyIsNonNull } from '@/lib/truthyFilter';
+import { canManageInstance } from '@/lib/actions/eventInstance';
 
 export function InstanceAttendanceView({ id }: { id: string }) {
   const auth = useAuth();
@@ -25,10 +26,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   const instance = data?.eventInstance;
   if (!instance) return null;
 
-  const canEditAttendance =
-    auth.isAdmin ||
-    (auth.isTrainer &&
-      auth.personIds.some((personId) => instance.managerPersonIds.includes(personId)));
+  const canEditAttendance = canManageInstance({ auth, item: instance });
   const attendanceList = instance.eventAttendancesByInstanceIdList
     .filter((x) => x.status !== 'CANCELLED')
     .filter(keyIsNonNull('person'))

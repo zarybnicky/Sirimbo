@@ -11,18 +11,32 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { useAuth } from '@/ui/use-auth';
 import { diff } from 'date-arithmetic';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
+import { buttonCls } from '@/ui/style';
+import * as React from 'react';
+import Link from 'next/link';
+import type { AttendanceType } from '@/graphql';
+import { Check, HelpCircle, LucideIcon, OctagonMinus, X } from 'lucide-react';
+import { canManageInstance } from '@/lib/actions/eventInstance';
 
 type Props = {
   event: EventFragment;
   instance: EventInstanceWithTrainerFragment;
   showDate?: boolean;
   viewer: 'auto' | 'trainer' | 'couple';
+  attendance?: 'inline';
 };
 
 type NonEmptyArray<T> = [T, ...T[]];
 const isNonEmpty = <T,>(array: Array<T>): array is NonEmptyArray<T> => array.length > 0;
 
-export function EventButton({ event, instance, viewer, showDate }: Props) {
+const labels: { [key in AttendanceType]: LucideIcon } = {
+  ATTENDED: Check,
+  UNKNOWN: HelpCircle,
+  NOT_EXCUSED: X,
+  CANCELLED: OctagonMinus,
+};
+
+export function EventButton({ event, instance, viewer, showDate, attendance }: Props) {
   const auth = useAuth();
 
   const registrations = event.eventRegistrations.nodes || [];
@@ -41,6 +55,16 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
         ? false
         : trainerIds.filter((id) => auth.isMyPerson(id)).length === 0;
 
+  const showInlineAttendance =
+    attendance === 'inline' &&
+    event.type === 'GROUP' &&
+    canManageInstance({ auth, item: instance });
+
+  const stats = JSON.parse(instance.stats) as Record<
+    'TOTAL' | 'UNKNOWN' | 'ATTENDED' | 'NOT_EXCUSED',
+    number
+  >;
+
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
 
@@ -52,7 +76,7 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
   return (
     <div
       className={cn(
-        'group flex gap-1 rounded-lg',
+        'group flex flex-col gap-1 rounded-lg',
         'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
       )}
     >
@@ -98,6 +122,33 @@ export function EventButton({ event, instance, viewer, showDate }: Props) {
           <EventSummary offsetButtons event={event} instance={instance} />
         </PopoverContent>
       </Popover>
+
+      {showInlineAttendance && (
+        <Link
+          className={buttonCls({
+            size: 'sm',
+            variant: 'outline',
+            className: 'ml-6 mb-2 inline-flex self-start items-center',
+          })}
+          href={{
+            pathname: '/akce/[id]/termin/[instance]',
+            query: {
+              id: event.id,
+              instance: instance.id,
+            },
+          }}
+        >
+          <span>Docházka ({stats.TOTAL})</span>
+          <span className="inline-flex items-center tabular-nums -my-2 -mr-2">
+            <span className="bg-green-3 text-sm px-1 rounded-l-xl text-green-11">
+              <labels.ATTENDED className="inline" /> {stats.ATTENDED}
+            </span>
+            <span className=" bg-[#fbe4e8] text-sm px-1 rounded-r-xl  text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]">
+              {stats.NOT_EXCUSED} <labels.NOT_EXCUSED className="inline" />
+            </span>
+          </span>
+        </Link>
+      )}
     </div>
   );
 }

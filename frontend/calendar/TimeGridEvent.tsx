@@ -13,7 +13,7 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { tenantConfigAtom } from '@/ui/state/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 
-function formatTrainerLabel(name: string, useInitials: boolean): string {
+function formatTrainerLabel(name: string | undefined, useInitials: boolean): string {
   if (!name) return '';
   if (!useInitials) {
     return name;
@@ -104,10 +104,7 @@ function TimeGridEvent({
 
     const trainers = event.instance.trainersList ?? [];
     for (const trainer of trainers) {
-      const trainerLabel = formatTrainerLabel(
-        trainer.person?.name ?? '',
-        useTrainerInitials,
-      );
+      const trainerLabel = formatTrainerLabel(trainer.person?.name, useTrainerInitials);
       if (!trainerLabel) continue;
       label += `, ${trainerLabel}`;
     }
