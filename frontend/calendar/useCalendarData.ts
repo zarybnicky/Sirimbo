@@ -18,12 +18,12 @@ export type CalendarFilters = {
 const getResourceKey = (type: string, id: string) => `${type}:${id}`;
 
 function prepareVariables(
-  range: readonly Date[],
+  range: { start: Date; end: Date },
   filters: CalendarFilters,
 ): EventInstanceRangeQueryVariables {
   return {
-    start: startOf(range[0]!, 'day').toISOString(),
-    end: add(startOf(range.at(-1)!, 'day'), 1, 'day').toISOString(),
+    start: startOf(range.start, 'day').toISOString(),
+    end: add(startOf(range.end, 'day'), 1, 'day').toISOString(),
     trainerIds: filters.trainerIds.length > 0 ? filters.trainerIds : undefined,
     onlyMine: filters.onlyMine,
   };

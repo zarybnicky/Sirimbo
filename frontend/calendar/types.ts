@@ -18,8 +18,7 @@ export interface Resource {
 }
 
 export type ViewProps = {
-  date: Date;
-  range: Date[];
+  range: { start: Date; end: Date };
   events: readonly CalendarEvent[];
   backgroundEvents: readonly CalendarEvent[];
   resources: readonly Resource[];

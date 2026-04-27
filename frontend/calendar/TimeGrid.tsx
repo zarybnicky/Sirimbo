@@ -5,7 +5,7 @@ import { useAtomValue } from 'jotai';
 import React from 'react';
 import DayColumn from './DayColumn';
 import TimeGutter from './TimeGutter';
-import { diff, format, inEventRange, merge } from './localizer';
+import { diff, format, inEventRange, merge, range } from './localizer';
 import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
 import type { CalendarEvent, Resource } from './types';
 
@@ -15,7 +15,7 @@ interface TimeGridProps {
   events: readonly CalendarEvent[];
   backgroundEvents: readonly CalendarEvent[];
   resources: readonly Resource[];
-  range: readonly Date[];
+  range: { start: Date; end: Date };
   primary?: PrimaryGrouping;
 }
 
@@ -167,12 +167,12 @@ export default React.memo(function TimeGrid({
 });
 
 function buildGrid(
-  range: readonly Date[],
+  { start, end }: { start: Date; end: Date },
   resources: readonly Resource[],
   events: readonly CalendarEvent[],
   bgEvents: readonly CalendarEvent[],
 ): Grid {
-  const days = range.map((d) => startOf(d, 'day'));
+  const days = range(start, end, 'day').map((d) => startOf(d, 'day'));
   const viewStart = days[0]!;
   const viewEnd = days.at(-1)!;
 

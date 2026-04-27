@@ -1,12 +1,13 @@
 import chunk from 'lodash.chunk';
 import React from 'react';
-import DateContentRow from '../DateContentRow';
-import { ceil, diff, format, inEventRange, range } from '../localizer';
-import type { ViewProps } from '../types';
+import DateContentRow from './DateContentRow';
+import { ceil, diff, format, inEventRange, range } from './localizer';
+import type { ViewProps } from './types';
 import { startOf } from 'date-arithmetic';
 
-function MonthView({ date, range: days, events }: ViewProps) {
-  const weeks = chunk(days, 7);
+function MonthView({ range: { start, end }, events }: ViewProps) {
+  const today = new Date();
+  const weeks = chunk(range(start, end, 'day'), 7);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   return (
@@ -31,7 +32,7 @@ function MonthView({ date, range: days, events }: ViewProps) {
         <DateContentRow
           key={weekIdx}
           range={week}
-          date={date}
+          date={today}
           containerRef={containerRef}
           events={events
             .filter((e) => e.instance.type !== 'LESSON')

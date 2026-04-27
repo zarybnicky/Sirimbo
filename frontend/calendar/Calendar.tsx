@@ -200,11 +200,10 @@ export function Calendar() {
           {fetching && <Spinner />}
         </div>
 
-        <span className="grow px-3 text-right">{view.label(date)}</span>
+        <span className="grow px-3 text-right">{view.label(range)}</span>
       </div>
 
       <view.component
-        date={date}
         range={range}
         events={events}
         backgroundEvents={emptyArray}
