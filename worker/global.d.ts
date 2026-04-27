@@ -4,7 +4,6 @@ namespace GraphileWorker {
     frontier_process: { isFullRebuild?: boolean };
     frontier_schedule: unknown;
     frontier_seed: unknown;
-    frontier_validate: { federation: string; kind: string };
     discover_csts_athletes: unknown;
 
     notify_announcement: {

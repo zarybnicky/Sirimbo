@@ -86,7 +86,6 @@ export interface IGetLatestFrontierJsonResponsesParams {
 /** 'GetLatestFrontierJsonResponses' return type */
 export interface IGetLatestFrontierJsonResponsesResult {
   content: Json;
-  error: string | null;
   http_status: number | null;
   id: string;
   url: string;
@@ -98,12 +97,12 @@ export interface IGetLatestFrontierJsonResponsesQuery {
   result: IGetLatestFrontierJsonResponsesResult;
 }
 
-const getLatestFrontierJsonResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":325,"b":335}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":350,"b":354}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n  ) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation AND f.kind = :kind"};
+const getLatestFrontierJsonResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":325}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":340,"b":344}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n  ) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation AND f.kind = :kind AND f.fetch_status in ('ok', 'pending')"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
+ * SELECT f.id, jr.url, jr.http_status, jrc.content
  * FROM crawler.frontier f
  * JOIN LATERAL (
  *   SELECT jr.*
@@ -113,7 +112,7 @@ const getLatestFrontierJsonResponsesIR: any = {"usedParamSet":{"federation":true
  *   LIMIT 1
  *   ) jr ON true
  * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
- * WHERE f.federation = :federation AND f.kind = :kind
+ * WHERE f.federation = :federation AND f.kind = :kind AND f.fetch_status in ('ok', 'pending')
  * ```
  */
 export const getLatestFrontierJsonResponses = new PreparedQuery<IGetLatestFrontierJsonResponsesParams,IGetLatestFrontierJsonResponsesResult>(getLatestFrontierJsonResponsesIR);

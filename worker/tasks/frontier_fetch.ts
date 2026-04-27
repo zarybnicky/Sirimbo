@@ -56,7 +56,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 
   const { httpStatus, error, content, fetchStatus } =
     handler.mode === 'json'
-      ? await fetchJsonResponse(handler, url, init)
+      ? await fetchJsonResponse(handler, url, init, { mode: 'loose' })
       : await fetchTextResponse(handler, url, init);
 
   if (error) {

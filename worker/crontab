@@ -3,4 +3,5 @@
 12 * * * * frontier_seed ?jobKey=frontier_seed
 
 29 21 * * * create_lesson_payments ?jobKey=create_lesson_payments
+17 21 * * * discover_events ?jobKey=discover_events
 08 21 * * * discover_csts_athletes ?jobKey=discover_csts_athletes

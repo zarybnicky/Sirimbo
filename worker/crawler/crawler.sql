@@ -10,7 +10,7 @@ FROM crawler.frontier
 GROUP BY federation, kind;
 
 /* @name GetLatestFrontierJsonResponses */
-SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
+SELECT f.id, jr.url, jr.http_status, jrc.content
 FROM crawler.frontier f
 JOIN LATERAL (
   SELECT jr.*
@@ -20,7 +20,7 @@ JOIN LATERAL (
   LIMIT 1
   ) jr ON true
 JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
-WHERE f.federation = :federation AND f.kind = :kind;
+WHERE f.federation = :federation AND f.kind = :kind AND f.fetch_status in ('ok', 'pending');
 
 /* @name GetFrontierJsonResponse */
 SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content

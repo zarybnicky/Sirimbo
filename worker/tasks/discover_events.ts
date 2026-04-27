@@ -33,7 +33,7 @@ async function checkCstsResults(month: Date): Promise<string | null> {
   return key;
 }
 
-export const discover_csts_events: Task<'discover_csts_events'> = async (
+export const discover_events: Task<'discover_events'> = async (
   _payload,
   helpers,
 ) => {
@@ -154,4 +154,4 @@ const fromMonthId = (id: number): Date => {
   return new Date(Date.UTC(Math.floor(id / 12), id % 12, 1));
 };
 
-export default discover_csts_events;
+export default discover_events;
