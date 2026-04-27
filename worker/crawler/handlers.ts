@@ -6,6 +6,8 @@ import { wdsfMember } from './wdsfMember.ts';
 import { wdsfMemberIndex } from './wdsfMemberIndex.ts';
 import { cstsEventIndex } from './cstsEventIndex.ts';
 import { cstsResultIndex } from './cstsResultIndex.ts';
+import { cstsEventOfficials } from './cstsEventOfficials.ts';
+import { cstsEventCompetitors } from './cstsEventCompetitors.ts';
 
 export const LOADERS = {
   wdsf: {
@@ -59,7 +61,9 @@ export const LOADERS = {
     eventIndex: cstsEventIndex,
     // https://www.csts.cz/api/1/events/327/competitions?filter=eventCompetitionId%3D327&order=type
     // https://www.csts.cz/api/1/events/327/officials
-    // https://www.csts.cz/api/1/events/327/competitors?eventCompetitionId=327
+    eventOfficials: cstsEventOfficials,
+    // https://www.csts.cz/api/1/events/327/competitors
+    eventCompetitors: cstsEventCompetitors,
 
     // Výsledky
     // https://www.csts.cz/api/1/competition_events?from=2025-11-01&to=2025-11-30

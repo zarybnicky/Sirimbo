@@ -2,11 +2,15 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import process from 'node:process';
+import { deepStrictEqual } from 'node:assert/strict';
 import { cac } from 'cac';
 import { Pool, type PoolClient } from 'pg';
 import Cursor from 'pg-cursor';
 import { zx } from '@traversable/zod';
-import { getLatestFrontierJsonResponses } from './crawler.queries.ts';
+import {
+  getDistinctFrontierKinds,
+  getLatestFrontierJsonResponses,
+} from './crawler.queries.ts';
 import { fetchJsonResponse, fetchTextResponse } from './fetch.ts';
 import { LOADER_MAP, LOADERS } from './handlers.ts';
 import type { FrontierRow, HtmlLoader, JsonLoader } from './types.ts';
@@ -50,47 +54,110 @@ async function ensureCached(
   return { loader, path };
 }
 
-async function backtestSchemas(federation: string, kind: string) {
-  const loader = loaderFor(federation, kind);
-  if (loader.mode !== 'json') {
-    throw new Error(`Backtest only supports JSON loaders (${federation}:${kind})`);
+async function backtestJsonResponses(
+  client: PoolClient,
+  federation: string,
+  kind: string,
+  loader: JsonLoader,
+) {
+  const strictSchema = zx.deepStrict(loader.schema);
+
+  const cursor = getLatestFrontierJsonResponses.stream(
+    { federation, kind },
+    {
+      query: client.query,
+      stream: (query, bindings) => client.query(new Cursor(query, bindings)),
+    },
+  );
+
+  let count = 0;
+  try {
+    while (true) {
+      const rows = await cursor.read(10);
+      if (rows.length === 0) break;
+
+      for (const row of rows) {
+        let parsed: unknown;
+        try {
+          parsed = strictSchema.parse(row.content, { reportInput: true });
+        } catch (e) {
+          const details = e instanceof Error ? e.stack || e.message : String(e);
+          throw new Error(
+            `Strict schema failed for ${federation}:${kind} frontier ${row.id} (${row.url})\n${details}\n${JSON.stringify(row, null, 2)}`,
+          );
+        }
+
+        try {
+          const reparsed = strictSchema.parse(parsed, { reportInput: true });
+          deepStrictEqual(reparsed, parsed);
+        } catch (e) {
+          const details = e instanceof Error ? e.stack || e.message : String(e);
+          throw new Error(
+            `Strict schema is not idempotent for ${federation}:${kind} frontier ${row.id} (${row.url})\n${details}\n${JSON.stringify(row, null, 2)}`,
+          );
+        }
+
+        count++;
+      }
+    }
+  } finally {
+    await cursor.close();
   }
 
-  const strictSchema = zx.deepStrict(loader.schema);
+  return count;
+}
+
+async function backtestSchemas(
+  federation: string | undefined,
+  kind: string | undefined,
+  options: { all?: boolean },
+) {
   const pool = new Pool();
   const client = await pool.connect();
 
   try {
-    const cursor = getLatestFrontierJsonResponses.stream(
-      { federation, kind },
-      {
-        query: client.query,
-        stream: (query, bindings) => client.query(new Cursor(query, bindings)),
-      },
-    );
-
-    let count = 0;
-    try {
-      while (true) {
-        const rows = await cursor.read(10);
-        if (rows.length === 0) break;
-
-        for (const row of rows) {
-          try {
-            strictSchema.parse(row.content, { reportInput: true });
-            count++;
-          } catch (e) {
-            const details = e instanceof Error ? e.stack || e.message : String(e);
-            throw new Error(
-              `Strict schema failed for ${federation}:${kind} frontier ${row.id} (${row.url})\n${details}\n${JSON.stringify(row, null, 2)}`,
-            );
-          }
-        }
+    if (options.all) {
+      if (federation || kind) {
+        throw new Error('Use either crawler backtest --all or crawler backtest <federation> <kind>');
       }
-    } finally {
-      await cursor.close();
+
+      const rows = await getDistinctFrontierKinds.run(undefined, client);
+      let total = 0;
+      let jsonLoaders = 0;
+      for (const row of rows.sort((a, b) =>
+        `${a.federation}:${a.kind}`.localeCompare(`${b.federation}:${b.kind}`),
+      )) {
+        const loader = LOADER_MAP[row.federation]?.[row.kind];
+        if (!loader) {
+          throw new Error(`Unknown crawler loader ${row.federation}:${row.kind}`);
+        }
+        if (loader.mode !== 'json') continue;
+
+        const count = await backtestJsonResponses(
+          client,
+          row.federation,
+          row.kind,
+          loader,
+        );
+        jsonLoaders++;
+        total += count;
+        console.log(`Validated ${count} responses of type ${row.federation}:${row.kind}`);
+      }
+
+      console.log(`Validated ${total} responses across ${jsonLoaders} JSON loaders`);
+      return;
     }
 
+    if (!federation || !kind) {
+      throw new Error('Usage: crawler backtest <federation> <kind> or crawler backtest --all');
+    }
+
+    const loader = loaderFor(federation, kind);
+    if (loader.mode !== 'json') {
+      throw new Error(`Backtest only supports JSON loaders (${federation}:${kind})`);
+    }
+
+    const count = await backtestJsonResponses(client, federation, kind, loader);
     console.log(`Validated ${count} responses of type ${federation}:${kind}`);
   } finally {
     client.release();
@@ -211,10 +278,17 @@ cli
 
 cli
   .command(
-    'backtest <federation> <kind>',
+    'backtest [federation] [kind]',
     'Strict-validate cached JSON responses for a loader',
   )
-  .action((federation: string, kind: string) => backtestSchemas(federation, kind));
+  .option('--all', 'Strict-validate cached JSON responses for all JSON loaders')
+  .action(
+    (
+      federation: string | undefined,
+      kind: string | undefined,
+      options: { all?: boolean },
+    ) => backtestSchemas(federation, kind, options),
+  );
 
 cli
   .command('load <federation> <kind> [key]', 'Load a cached response')

@@ -5,8 +5,8 @@ import {
   type gender,
   replaceCompetitorProgress,
   updatePerson,
-  upsertPerson,
   upsertCompetitor,
+  upsertPerson,
 } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
 import { mapCompetitorType } from './cstsEnums.ts';
@@ -101,7 +101,7 @@ export const cstsAthlete: JsonLoader<Response> = {
     },
   }),
   mapResponseToStatus(args) {
-    if (!args.parsed?.collection.length) return 'gone';
+    if (args.parsed && !args.parsed?.collection.length) return 'gone';
     return defaultMapResponseToStatus(args);
   },
   cleanResponse(url, parsed) {
