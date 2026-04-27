@@ -178,10 +178,7 @@ export interface IUpsertManyCompetitorsParams {
 }
 
 /** 'UpsertManyCompetitors' return type */
-export interface IUpsertManyCompetitorsResult {
-  federated_id: string;
-  federation_id: string;
-}
+export type IUpsertManyCompetitorsResult = void;
 
 /** 'UpsertManyCompetitors' query type */
 export interface IUpsertManyCompetitorsQuery {
@@ -189,7 +186,7 @@ export interface IUpsertManyCompetitorsQuery {
   result: IUpsertManyCompetitorsResult;
 }
 
-const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"external_ids":true,"types":true,"labels":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":186}]},{"name":"external_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":199,"b":211}]},{"name":"types","required":false,"transform":{"type":"scalar"},"locs":[{"a":224,"b":229}]},{"name":"labels","required":false,"transform":{"type":"scalar"},"locs":[{"a":263,"b":269}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federations::text[],\n  :external_ids::text[],\n  :types::federated.competitor_type[],\n  :labels::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name\nRETURNING external_id as federation_id, id as federated_id"};
+const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"external_ids":true,"types":true,"labels":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":186}]},{"name":"external_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":199,"b":211}]},{"name":"types","required":false,"transform":{"type":"scalar"},"locs":[{"a":224,"b":229}]},{"name":"labels","required":false,"transform":{"type":"scalar"},"locs":[{"a":263,"b":269}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federations::text[],\n  :external_ids::text[],\n  :types::federated.competitor_type[],\n  :labels::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT DO NOTHING"};
 
 /**
  * Query generated from SQL:
@@ -202,8 +199,7 @@ const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"extern
  *   :types::federated.competitor_type[],
  *   :labels::text[]
  * ) AS input(federation, external_id, competitor_type, name)
- * ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
- * RETURNING external_id as federation_id, id as federated_id
+ * ON CONFLICT DO NOTHING
  * ```
  */
 export const upsertManyCompetitors = new PreparedQuery<IUpsertManyCompetitorsParams,IUpsertManyCompetitorsResult>(upsertManyCompetitorsIR);

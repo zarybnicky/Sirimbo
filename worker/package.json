@@ -11,6 +11,7 @@
     "lint": "tsc && eslint . --cache --cache-location ~/.cache/eslint",
     "schema": "graphile-worker --schema-only",
     "start": "NODE_ENV=development nodemon -e ts --exec graphile-worker",
+    "crawler": "node --experimental-strip-types crawler/dev.ts",
     "sql:generate": "pgtyped -w -c sql.config.json"
   },
   "dependencies": {
@@ -40,6 +41,7 @@
     "@types/nodemailer": "~7.0.3",
     "@types/pg": "~8.15.6",
     "@types/pg-cursor": "^2.7.2",
+    "cac": "^7.0.0",
     "eslint": "^9.39.1",
     "eslint-plugin-de-morgan": "^2.0.0",
     "eslint-plugin-import": "^2.32.0",

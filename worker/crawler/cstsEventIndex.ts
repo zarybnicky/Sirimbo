@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
-import { upsertFrontier } from './crawler.queries.ts';
+import { upsertFrontierKeys } from './crawler.queries.ts';
 import { endOfMonth } from 'date-fns';
 import { upsertEvent } from './federated.queries.ts';
 
@@ -22,15 +22,17 @@ const eventSchema = z.object({
   id: z.number(),
   dateFrom: z.iso.date(),
   dateTo: z.iso.date(),
-  eventCompetitions: z.array(
-    z.object({
-      id: z.number(),
-      city: z.string(),
-      name: z.string(),
-      date: z.iso.datetime({ local: true }),
-      state: z.number(),
-    }),
-  ),
+  eventCompetitions: z
+    .array(
+      z.object({
+        id: z.number(),
+        city: z.string(),
+        name: z.string(),
+        date: z.iso.datetime({ local: true }),
+        state: z.number(),
+      }),
+    )
+    .nonempty(),
 });
 
 const responseSchema = z.object({
@@ -56,13 +58,11 @@ export const cstsEventIndex: JsonLoader<Response> = {
   },
   async load(client, _frontier, parsed) {
     for (const event of parsed.collection) {
-      const key = event.id.toString();
       const competitionEvent = event.eventCompetitions.find((x) => x)!;
-
       await upsertEvent.run(
         {
           federation: 'csts',
-          externalId: key,
+          externalId: event.id.toString(),
           country: 'Czechia',
           startDate: competitionEvent.date,
           location: competitionEvent.city,
@@ -70,19 +70,19 @@ export const cstsEventIndex: JsonLoader<Response> = {
         },
         client,
       );
-
-      await upsertFrontier.run(
-        { federation: 'csts', kind: 'eventCompetitions', key },
-        client,
-      );
-      await upsertFrontier.run(
-        { federation: 'csts', kind: 'eventCompetitors', key },
-        client,
-      );
-      await upsertFrontier.run(
-        { federation: 'csts', kind: 'eventOfficials', key },
-        client,
-      );
     }
+    const keys = parsed.collection.map((x) => String(x.id));
+    await upsertFrontierKeys.run(
+      { federation: 'csts', kind: 'eventCompetitions', keys },
+      client,
+    );
+    await upsertFrontierKeys.run(
+      { federation: 'csts', kind: 'eventCompetitors', keys },
+      client,
+    );
+    await upsertFrontierKeys.run(
+      { federation: 'csts', kind: 'eventOfficials', keys },
+      client,
+    );
   },
 };

@@ -2,7 +2,53 @@ import type { JsonLoader } from './types.ts';
 import { upsertPerson } from './federated.queries.ts';
 import { z } from 'zod';
 
-export const wdsfMember: JsonLoader = {
+const personSchema = z.object({
+  link: z.array(
+    z.object({ href: z.string(), rel: z.string(), type: z.string().optional() }),
+  ),
+  id: z.number(),
+  nickname: z.string().nullable(),
+  name: z.string(),
+  surname: z.string().nullable(),
+  sex: z.enum(['Male', 'Female', '']),
+  nationality: z.string().nullable(),
+  country: z.string().nullable(),
+  ageGroup: z.string().nullable(),
+  yearOfBirth: z.number(),
+  nationalReference: z.string().nullable(),
+  licenses: z.array(
+    z.object({
+      type: z.enum([
+        'Examiner',
+        'Chairman',
+        'Scrutiny',
+        'Athlete',
+        'Adjudicator',
+        'DJ',
+        'HeadJudge',
+        'Invigilator',
+      ]),
+      status: z.enum(['Active', 'Expired', 'Revoked', 'Resting', 'Retired', 'Aspiring']),
+      division: z.enum([
+        'Stage',
+        'Smooth',
+        'Disco',
+        'SoloSyncroChoreo',
+        'General',
+        'Caribbean',
+        'Professional',
+        'Breaking',
+        'HipHop',
+        'Unknown',
+      ]),
+      disciplines: z.array(z.string()),
+      grade: z.enum(['A', 'B']).optional(),
+      expiresOn: z.string().optional(),
+    }),
+  ),
+});
+
+export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
   mode: 'json',
   revalidatePeriod: '5 day',
   buildRequest: (key) => ({
@@ -14,62 +60,8 @@ export const wdsfMember: JsonLoader = {
       },
     },
   }),
-  schema: z.object({
-    link: z.array(
-      z.object({ href: z.string(), rel: z.string(), type: z.string().optional() }),
-    ),
-    id: z.number(),
-    nickname: z.string().nullable(),
-    name: z.string(),
-    surname: z.string().nullable(),
-    sex: z.enum(['Male', 'Female', '']),
-    nationality: z.string().nullable(),
-    country: z.string().nullable(),
-    ageGroup: z.string().nullable(),
-    yearOfBirth: z.number(),
-    nationalReference: z.string().nullable(),
-    licenses: z.array(
-      z.object({
-        type: z.enum([
-          'Examiner',
-          'Chairman',
-          'Scrutiny',
-          'Athlete',
-          'Adjudicator',
-          'DJ',
-          'HeadJudge',
-          'Invigilator',
-        ]),
-        status: z.enum([
-          'Active',
-          'Expired',
-          'Revoked',
-          'Resting',
-          'Retired',
-          'Aspiring',
-        ]),
-        division: z.enum([
-          'Stage',
-          'Smooth',
-          'Disco',
-          'SoloSyncroChoreo',
-          'General',
-          'Caribbean',
-          'Professional',
-          'Breaking',
-          'HipHop',
-          'Unknown',
-        ]),
-        disciplines: z.array(z.string()),
-        grade: z.enum(['A', 'B']).optional(),
-        expiresOn: z.string().optional(),
-      }),
-    ),
-  }),
+  schema: personSchema,
   async load(client, frontier, member) {
-    // we need a person -> federation person mapping, to support the various officials without duplicates
-    // federation_athlete, federation_judge will point to that and signify a licence
-
     await upsertPerson.run(
       {
         federation: 'wdsf',
@@ -80,5 +72,7 @@ export const wdsfMember: JsonLoader = {
       },
       client,
     );
+
+    // TODO: licence => athlete + judge + official
   },
 };

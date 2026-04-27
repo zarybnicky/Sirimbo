@@ -1,9 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
-import {
-  upsertManyCompetitors,
-  upsertRanklistSnapshot,
-} from './federated.queries.ts';
+import { upsertManyCompetitors, upsertRanklistSnapshot } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
 import {
   ageGroup,
@@ -78,21 +75,17 @@ export const cstsRanklist: JsonLoader<Response> = {
 };
 
 async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
-  const categoryId = await getFederatedCategoryId(
-    client,
-    {
-      class: '',
-      ageGroup: entity.age,
-      genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
-      discipline: entity.discipline,
-      series: entity.series,
-      competitorType: mapCompetitorType(entity.competitorType),
-    },
-  );
+  const categoryId = await getFederatedCategoryId(client, {
+    class: '',
+    ageGroup: entity.age,
+    genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
+    discipline: entity.discipline,
+    series: entity.series,
+    competitorType: mapCompetitorType(entity.competitorType),
+  });
 
-  const idMap = new Map<string | null, string | null>();
   if (entity.competitors.length > 0) {
-    const resolved = await upsertManyCompetitors.run(
+    await upsertManyCompetitors.run(
       {
         types: entity.competitors.map(() => mapCompetitorType(entity.competitorType)),
         labels: entity.competitors.map((x) => x.competitorName),
@@ -101,7 +94,6 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
       },
       client,
     );
-    for (const x of resolved) idMap.set(x.federation_id, x.federated_id);
   }
 
   const ranklistComponents: {
@@ -112,19 +104,16 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
   }[] = [];
 
   for (const competitor of entity.competitors) {
-    const federatedId = idMap.get(competitor.competitorId.toString());
-    if (federatedId) {
-      ranklistComponents.push({
-        competitor_id: federatedId,
-        ranking: competitor.ranking,
-        ranking_to: competitor.rankingTo,
-        points:
-          competitor.points +
-          competitor.pointsWdsf +
-          competitor.pointsLeague +
-          competitor.pointsWdsf,
-      });
-    }
+    ranklistComponents.push({
+      competitor_id: `csts:${competitor.competitorId}`,
+      ranking: competitor.ranking,
+      ranking_to: competitor.rankingTo,
+      points:
+        competitor.points +
+        competitor.pointsWdsf +
+        competitor.pointsLeague +
+        competitor.pointsWdsf,
+    });
   }
 
   await upsertRanklistSnapshot.run(

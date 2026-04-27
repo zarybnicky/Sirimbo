@@ -46,8 +46,7 @@ FROM unnest(
   :types::federated.competitor_type[],
   :labels::text[]
 ) AS input(federation, external_id, competitor_type, name)
-ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
-RETURNING external_id as federation_id, id as federated_id;
+ON CONFLICT DO NOTHING;
 
 /* @name ReplaceCompetitorProgress */
 SELECT federated.replace_competitor_category_progress(

@@ -178,7 +178,7 @@ INSERT INTO crawler.frontier (federation, kind, key)
 VALUES (:federation, :kind, :key)
 ON CONFLICT (federation, kind, key) DO NOTHING;
 
-/* @name UpsertFrontiers */
+/* @name UpsertFrontierKeys */
 INSERT INTO crawler.frontier (federation, kind, key)
 SELECT :federation, :kind, key
 FROM unnest(:keys::text[]) as input(key)

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
-import { upsertFrontiers } from './crawler.queries.ts';
+import { upsertFrontierKeys } from './crawler.queries.ts';
 import { endOfMonth } from 'date-fns';
 
 const rangeKeyRe = /^(\d{4})-(\d{2})$/;
@@ -45,7 +45,7 @@ export const cstsResultIndex: JsonLoader<Response> = {
     };
   },
   async load(client, _frontier, parsed) {
-    await upsertFrontiers.run(
+    await upsertFrontierKeys.run(
       {
         federation: 'csts',
         kind: 'competitionResults',

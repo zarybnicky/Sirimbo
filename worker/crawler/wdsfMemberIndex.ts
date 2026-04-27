@@ -1,7 +1,7 @@
 import type { JsonLoader } from './types.ts';
 import { upsertPerson } from './federated.queries.ts';
 import { z } from 'zod';
-import { upsertFrontiers } from './crawler.queries.ts';
+import { upsertFrontierKeys } from './crawler.queries.ts';
 
 const requestSchema = z.array(
   z.object({
@@ -47,7 +47,7 @@ export const wdsfMemberIndex: JsonLoader<z.output<typeof requestSchema>> = {
       );
     }
 
-    await upsertFrontiers.run(
+    await upsertFrontierKeys.run(
       {
         federation: 'wdsf',
         kind: 'member',

@@ -1,5 +1,5 @@
 import type { JobHelpers, Task } from 'graphile-worker';
-import { upsertFrontiers } from '../crawler/crawler.queries.ts';
+import { upsertFrontierKeys } from '../crawler/crawler.queries.ts';
 import { cstsEventIndex } from '../crawler/cstsEventIndex.ts';
 import { cstsResultIndex } from '../crawler/cstsResultIndex.ts';
 
@@ -134,7 +134,7 @@ async function discoverMonths(
   }
 
   await helpers.withPgClient(async (client) => {
-    await upsertFrontiers.run({ federation, kind, keys: keysToAdd }, client);
+    await upsertFrontierKeys.run({ federation, kind, keys: keysToAdd }, client);
   });
   helpers.logger.info(
     `[${federation}:${kind}] inserted ${keysToAdd.length} new window(s)`,

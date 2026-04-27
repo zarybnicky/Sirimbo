@@ -9,11 +9,7 @@ import {
   rescheduleFrontier,
   reserveRequest,
 } from '../crawler/crawler.queries.ts';
-import {
-  defaultMapResponseToStatus,
-  type HtmlLoader,
-  type JsonLoader,
-} from '../crawler/types.ts';
+import { fetchJsonResponse, fetchTextResponse } from '../crawler/fetch.ts';
 import { LOADER_MAP } from '../crawler/handlers.ts';
 
 export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) => {
@@ -60,8 +56,8 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 
   const { httpStatus, error, content, fetchStatus } =
     handler.mode === 'json'
-      ? await fetchFrontierJson(handler, url, init)
-      : await fetchFrontierHtml(handler, url, init);
+      ? await fetchJsonResponse(handler, url, init)
+      : await fetchTextResponse(handler, url, init);
 
   if (error) {
     logger.warn(`Fetch error in ${frontier.id}, URL ${url} (${error})`);
@@ -76,7 +72,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
       );
     } else {
       await insertHtmlResponse.run(
-        { id, url: url.toString(), httpStatus, error, content },
+        { id, url: url.toString(), httpStatus, error, content: String(content) },
         client,
       );
     }
@@ -97,73 +93,5 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     await client.query('COMMIT');
   });
 };
-
-async function fetchFrontierJson(handler: JsonLoader, url: URL, init: RequestInit) {
-  let httpStatus: number | null = null;
-  let rawJson: unknown | null = null;
-  let parsed: any | null = null;
-  let error: string | null = null;
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30_000); // 30s timeout
-  try {
-    const resp = await fetch(url, { ...init, signal: controller.signal });
-    httpStatus = resp.status;
-
-    rawJson = await resp.json();
-    const parsedRes = handler.schema.safeParse(rawJson, {
-      reportInput: true,
-    });
-    if (parsedRes.success) {
-      parsed = parsedRes.data;
-    } else {
-      error = parsedRes.error.toString();
-    }
-  } catch (e) {
-    error = e instanceof Error ? e.message : String(e);
-  } finally {
-    clearTimeout(timeoutId);
-  }
-
-  const mapperArgs = { httpStatus, parsed, rawJson, error };
-  const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
-  const fetchStatus = mapper(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs);
-
-  let content: any = '';
-  if (parsed != null) {
-    content = handler.cleanResponse
-      ? await handler.cleanResponse(url, parsed, rawJson)
-      : parsed;
-  } else if (rawJson != null) {
-    content = rawJson;
-  }
-
-  return { httpStatus, error, content, fetchStatus };
-}
-
-async function fetchFrontierHtml(handler: HtmlLoader, url: URL, init: RequestInit) {
-  let httpStatus: number | null = null;
-  let body: string | null = null;
-  let error: string | null = null;
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30_000); // 30s timeout
-  try {
-    const resp = await fetch(url, { ...init, signal: controller.signal });
-    httpStatus = resp.status;
-    body = await resp.text();
-  } catch (e) {
-    error = e instanceof Error ? e.message : String(e);
-  } finally {
-    clearTimeout(timeoutId);
-  }
-
-  const mapperArgs = { httpStatus, body, error };
-  const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
-  const fetchStatus = mapper(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs);
-  const content = handler.cleanResponse ? await handler.cleanResponse(url, body) : body;
-
-  return { httpStatus, error, content, fetchStatus };
-}
 
 export default frontier_fetch;

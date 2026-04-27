@@ -1,13 +1,13 @@
 import type { PoolClient } from 'pg';
-import {
-  type IUpsertCategoryParams,
-  upsertCategory,
-} from './federated.queries.ts';
+import { type IUpsertCategoryParams, upsertCategory } from './federated.queries.ts';
 
 const categoryIdCache = new Map<string, string>();
 
-function categoryCacheKey(params: IUpsertCategoryParams) {
-  return [
+export async function getFederatedCategoryId(
+  client: PoolClient,
+  params: IUpsertCategoryParams,
+) {
+  const key = [
     params.series ?? '',
     params.discipline ?? '',
     params.ageGroup ?? '',
@@ -15,13 +15,6 @@ function categoryCacheKey(params: IUpsertCategoryParams) {
     params.class ?? '',
     params.competitorType ?? '',
   ].join('\u0000');
-}
-
-export async function getFederatedCategoryId(
-  client: PoolClient,
-  params: IUpsertCategoryParams,
-) {
-  const key = categoryCacheKey(params);
   const cachedCategoryId = categoryIdCache.get(key);
   if (cachedCategoryId) return cachedCategoryId;
 
