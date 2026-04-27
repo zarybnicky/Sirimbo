@@ -295,22 +295,35 @@ const upsertRanklistSnapshotIR: any = {"usedParamSet":{"federation":true,"catego
 export const upsertRanklistSnapshot = new PreparedQuery<IUpsertRanklistSnapshotParams,IUpsertRanklistSnapshotResult>(upsertRanklistSnapshotIR);
 
 
-/** Query 'UpsertEvent' is invalid, so its result is assigned type 'never'.
- *  */
-export type IUpsertEventResult = never;
+/** 'UpsertEvent' parameters type */
+export interface IUpsertEventParams {
+  country?: string | null | void;
+  endDate?: DateOrString | null | void;
+  externalId?: string | null | void;
+  federation?: string | null | void;
+  location?: string | null | void;
+  name?: string | null | void;
+  organizingClubId?: NumberOrString | null | void;
+  startDate?: DateOrString | null | void;
+}
 
-/** Query 'UpsertEvent' is invalid, so its parameters are assigned type 'never'.
- *  */
-export type IUpsertEventParams = never;
+/** 'UpsertEvent' return type */
+export type IUpsertEventResult = void;
 
-const upsertEventIR: any = {"usedParamSet":{"federation":true,"externalId":true,"name":true,"startDate":true,"endDate":true,"location":true,"country":true,"organizingClubId":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":129,"b":139}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":142,"b":152}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":155,"b":159}]},{"name":"startDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":162,"b":171}]},{"name":"endDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":180,"b":187}]},{"name":"location","required":false,"transform":{"type":"scalar"},"locs":[{"a":196,"b":204}]},{"name":"country","required":false,"transform":{"type":"scalar"},"locs":[{"a":207,"b":214}]},{"name":"organizingClubId","required":false,"transform":{"type":"scalar"},"locs":[{"a":217,"b":233}]}],"statement":"INSERT INTO federated.event (federation, external_id, name, start_date, end_date, location, country, organizing_club_id)\nVALUES (:federation, :externalId, :name, :startDate::date, :endDate::date, :location, :country, :organizingClubId)\nON CONFLICT (federation, external_idx) DO UPDATE\n  SET name = EXCLUDED.name,\n      start_date = EXCLUDED.start_date,\n      end_date = EXCLUDED.end_date,\n      location = EXCLUDED.location,\n      country = EXCLUDED.country,\n      organizing_club_id = EXCLUDED.organizing_club_id"};
+/** 'UpsertEvent' query type */
+export interface IUpsertEventQuery {
+  params: IUpsertEventParams;
+  result: IUpsertEventResult;
+}
+
+const upsertEventIR: any = {"usedParamSet":{"federation":true,"externalId":true,"name":true,"startDate":true,"endDate":true,"location":true,"country":true,"organizingClubId":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":129,"b":139}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":142,"b":152}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":155,"b":159}]},{"name":"startDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":162,"b":171}]},{"name":"endDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":180,"b":187}]},{"name":"location","required":false,"transform":{"type":"scalar"},"locs":[{"a":196,"b":204}]},{"name":"country","required":false,"transform":{"type":"scalar"},"locs":[{"a":207,"b":214}]},{"name":"organizingClubId","required":false,"transform":{"type":"scalar"},"locs":[{"a":217,"b":233}]}],"statement":"INSERT INTO federated.event (federation, external_id, name, start_date, end_date, location, country, organizing_club_id)\nVALUES (:federation, :externalId, :name, :startDate::date, :endDate::date, :location, :country, :organizingClubId)\nON CONFLICT (federation, external_id) DO UPDATE\n  SET name = EXCLUDED.name,\n      start_date = EXCLUDED.start_date,\n      end_date = EXCLUDED.end_date,\n      location = EXCLUDED.location,\n      country = EXCLUDED.country,\n      organizing_club_id = EXCLUDED.organizing_club_id"};
 
 /**
  * Query generated from SQL:
  * ```
  * INSERT INTO federated.event (federation, external_id, name, start_date, end_date, location, country, organizing_club_id)
  * VALUES (:federation, :externalId, :name, :startDate::date, :endDate::date, :location, :country, :organizingClubId)
- * ON CONFLICT (federation, external_idx) DO UPDATE
+ * ON CONFLICT (federation, external_id) DO UPDATE
  *   SET name = EXCLUDED.name,
  *       start_date = EXCLUDED.start_date,
  *       end_date = EXCLUDED.end_date,

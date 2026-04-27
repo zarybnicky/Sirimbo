@@ -227,6 +227,7 @@ CREATE TABLE federated.event (
 );
 CREATE INDEX ON federated.event (federation, start_date);
 CREATE INDEX ON federated.event USING gist (range);
+CREATE INDEX ON federated.event USING gist (federation, location, country, range);
 
 CREATE TABLE federated.competition (
   id            bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -236,6 +237,7 @@ CREATE TABLE federated.competition (
   category_id   bigint not null references federated.category(id),
   start_date    date not null,
   end_date      date,
+  participants_total integer,
   UNIQUE (federation, external_id),
   UNIQUE (federation, id),
   UNIQUE (id, event_id),
@@ -272,7 +274,9 @@ CREATE INDEX ON federated.competition_round (dance_program_id);
 CREATE TABLE federated.round_dance (
   round_id   bigint NOT NULL REFERENCES federated.competition_round(id),
   dance_code text   NOT NULL REFERENCES federated.dance(code),
-  PRIMARY KEY (round_id, dance_code)
+  dance_order int,
+  PRIMARY KEY (round_id, dance_code),
+  UNIQUE (round_id, dance_order)
 );
 CREATE INDEX ON federated.round_dance (round_id);
 
@@ -300,21 +304,33 @@ CREATE TABLE federated.competition_entry (
   PRIMARY KEY (competition_id, competitor_id)
 );
 CREATE INDEX ON federated.competition_entry (competitor_id);
+CREATE INDEX ON federated.competition_entry (competition_id);
 
 -- Result per competitor per round (aggregated per round)
 CREATE TABLE federated.competition_round_result (
   round_id          bigint  NOT NULL REFERENCES federated.competition_round(id),
   competitor_id     text    NOT NULL REFERENCES federated.competitor(id),
-  overall_ranking   integer NOT NULL,       -- place in round (if defined)
+  overall_ranking   integer,       -- place in round (if defined)
   overall_ranking_to integer,      -- ties
   qualified_next    boolean,       -- progressed to next round?
   overall_score     numeric(10,3), -- aggregate across dances, if provided/derived
   PRIMARY KEY (round_id, competitor_id),
-  CHECK (overall_ranking_to IS NULL OR overall_ranking_to >= overall_ranking)
+  CHECK (overall_ranking IS NULL OR overall_ranking_to IS NULL OR overall_ranking_to >= overall_ranking)
 );
 CREATE INDEX ON federated.competition_round_result (competitor_id);
 CREATE INDEX ON federated.competition_round_result (round_id, overall_ranking);
 
+CREATE TABLE IF NOT EXISTS federated.competition_round_judge (
+  round_id        bigint NOT NULL REFERENCES federated.competition_round(id) ON DELETE CASCADE,
+  person_judge_id text   NOT NULL REFERENCES federated.person(id),
+  judge_index     int NOT NULL,
+  judge_label text,
+  PRIMARY KEY (round_id, person_judge_id),
+  UNIQUE (round_id, judge_index)
+);
+
+CREATE INDEX IF NOT EXISTS competition_round_judge_judge
+  ON federated.competition_round_judge (person_judge_id);
 
 CREATE TYPE federated.score_component AS ENUM (
   'mark',         -- simple yes/no
@@ -322,7 +338,8 @@ CREATE TYPE federated.score_component AS ENUM (
   'ajs_tq',
   'ajs_mm',
   'ajs_ps',
-  'ajs_cp'
+  'ajs_cp',
+  'ajs_reduction'
 );
 
 -- Judge scores per dance (round × dance × judge × competitor × component)
@@ -344,22 +361,19 @@ CREATE TABLE federated.judge_score (
   foreign key (round_id, dance_code)
     references federated.round_dance (round_id, dance_code),
   FOREIGN KEY (round_id, competition_id)
-    REFERENCES federated.competition_round (id, competition_id),
+    REFERENCES federated.competition_round (id, competition_id) ON UPDATE CASCADE,
   FOREIGN KEY (competition_id, event_id)
-    REFERENCES federated.competition (id, event_id),
+    REFERENCES federated.competition (id, event_id) ON UPDATE CASCADE,
   FOREIGN KEY (competition_id, category_id)
-    REFERENCES federated.competition (id, category_id),
+    REFERENCES federated.competition (id, category_id) ON UPDATE CASCADE,
   FOREIGN KEY (federation, competition_id)
-    REFERENCES federated.competition (federation,id)
+    REFERENCES federated.competition (federation,id) ON UPDATE CASCADE
 );
 
 CREATE INDEX ON federated.judge_score (federation, judge_person_id, event_date);
 CREATE INDEX ON federated.judge_score (federation, competitor_id, event_date);
 CREATE INDEX ON federated.judge_score (federation, category_id, event_date);
-
-create view federated.round_judge as
-select distinct round_id, judge_person_id
-from federated.judge_score;
+CREATE INDEX ON federated.judge_score (round_id);
 
 CREATE TABLE federated.competition_result (
   competition_id bigint NOT NULL REFERENCES federated.competition(id),
