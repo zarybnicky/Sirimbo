@@ -129,12 +129,14 @@ export default compose(
     if (process.env.NODE_ENV !== 'production') {
       const graphqlServer = process.env.GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz';
       const externalServer = process.env.EXTERNAL_SERVER_URL || graphqlServer;
+      const postgrestServer = process.env.POSTGREST_BACKEND || graphqlServer;
       rewrites.push(
         { source: '/member/download', destination: `${graphqlServer}/member/download` },
         {
           source: '/galerie/:path*',
           destination: `${externalServer ?? ''}/galerie/:path*`,
         },
+        { source: '/federated/:path*', destination: `${postgrestServer}/:path*` },
         { source: '/graphql', destination: `${graphqlServer}/graphql` },
         { source: '/starlet/graphql', destination: `${graphqlServer}/graphql` },
         { source: '/graphiql', destination: `${graphqlServer}/graphiql` },

@@ -43,20 +43,21 @@
 
     devShells = forAllSystems (pkgs: {
       default = pkgs.mkShell {
-        buildInputs = [
-          pkgs.nodePackages.prettier
-          pkgs.nodemon
-          pkgs.graphile-migrate
-          pkgs.pnpm_9
-          pkgs.nodejs_24
-          pkgs.postgresql_18
-          pkgs.sqlfluff
-          pkgs.pgformatter
-          pkgs.overmind
-          pkgs.prefetch-npm-deps
-          pkgs.playwright-driver
-          pkgs.playwright-driver.browsers
-          pkgs.perlPackages.TAPParserSourceHandlerpgTAP
+        buildInputs = with pkgs; [
+          nodePackages.prettier
+          nodemon
+          graphile-migrate
+          pnpm_9
+          nodejs_24
+          postgresql_18
+          sqlfluff
+          pgformatter
+          overmind
+          postgrest
+          prefetch-npm-deps
+          playwright-driver
+          playwright-driver.browsers
+          perlPackages.TAPParserSourceHandlerpgTAP
         ];
         env = {
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
