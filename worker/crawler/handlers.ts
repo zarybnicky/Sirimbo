@@ -1,4 +1,4 @@
-import { cstsAthlete } from './cstsAthlete.ts';
+import { cstsMember } from './cstsMember.ts';
 import type { HtmlLoader, JsonLoader } from './types.ts';
 import { cstsRanklistIndex } from './cstsRanklistIndex.ts';
 import { cstsRanklist } from './cstsRanklist.ts';
@@ -35,7 +35,7 @@ export const LOADERS = {
   csts: {
     // Soutěžní údaje, modrý web
     // https://www.csts.cz/api/1/athletes/18038132
-    member: cstsAthlete,
+    member: cstsMember,
 
     // Ranklisty
     // https://www.csts.cz/api/1/ranklist

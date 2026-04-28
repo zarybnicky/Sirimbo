@@ -89,7 +89,7 @@ const MAIN_CLASS_ORDER = ['ENTRY', 'E', 'D', 'C', 'B', 'A', 'S', 'M'];
 
 const MEDAL_CLASS_ORDER = ['NOVICE', 'BRONZE', 'SILVER', 'GOLD'];
 
-export const cstsAthlete: JsonLoader<Response> = {
+export const cstsMember: JsonLoader<Response> = {
   mode: 'json',
   schema: athletesResponseSchema,
   revalidatePeriod: '3 day',
