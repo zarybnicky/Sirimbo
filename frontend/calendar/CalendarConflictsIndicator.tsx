@@ -16,20 +16,16 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { useSetAtom } from 'jotai';
 import { calendarConflictsAtom, type CalendarInstanceConflict } from './state';
+import { DateRange } from './types';
 
 type Props = {
-  start: string;
-  end?: string | null;
+  range: DateRange
 };
 
-export function CalendarConflictsIndicator({ start, end }: Props) {
-  const variables = React.useMemo(
-    () => ({ since: start, until: end ?? null }) as const,
-    [start, end],
-  );
+export function CalendarConflictsIndicator({ range }: Props) {
   const [{ data, fetching }] = useQuery({
     query: EventOverlapsReportDocument,
-    variables,
+    variables: { since: range.since.toISOString(), until: range.until.toISOString() },
   });
   const setInstanceConflicts = useSetAtom(calendarConflictsAtom);
 

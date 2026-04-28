@@ -1,9 +1,10 @@
 
 /* @name UpsertPerson */
-INSERT INTO federated.person (federation, external_id, canonical_name, gender)
+INSERT INTO federated.person AS person (federation, external_id, canonical_name, gender)
 VALUES (:federation, :externalId, :canonicalName, :gender)
-ON CONFLICT (federation, external_id) DO UPDATE SET canonical_name = EXCLUDED.canonical_name
-RETURNING id as person_id;
+ON CONFLICT (federation, external_id)
+  DO UPDATE SET canonical_name = EXCLUDED.canonical_name
+  WHERE person.canonical_name <> EXCLUDED.canonical_name;
 
 /* @name UpdatePerson */
 UPDATE federated.person
@@ -25,7 +26,7 @@ SELECT federated.upsert_category(
 /* @name UpsertCompetitor */
 SELECT federated.upsert_competitor(
   in_federation => :federation,
-  in_external_id => :federationCompetitorId,
+  in_external_id => :externalId,
   in_type => :type::federated.competitor_type,
   in_label => :label,
   in_components => ARRAY(

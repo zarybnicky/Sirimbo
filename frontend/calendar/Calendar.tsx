@@ -123,7 +123,7 @@ export function Calendar() {
     [onlyMine, trainerIds],
   );
 
-  const { fetching, variables, range, events, resources } = useCalendarData(
+  const { fetching, range, events, resources } = useCalendarData(
     view,
     date,
     filters,
@@ -210,7 +210,7 @@ export function Calendar() {
         resources={resources}
       />
 
-      <CalendarConflictsIndicator start={variables.start} end={variables.end} />
+      <CalendarConflictsIndicator range={range} />
 
       {auth.isTrainerOrAdmin && (
         <Dialog

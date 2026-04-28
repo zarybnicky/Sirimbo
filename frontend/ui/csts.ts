@@ -9,7 +9,7 @@ export function formatCstsClass(value: string | null | undefined) {
 
 export function getBestCstsProgress<T extends CstsProgressRecordFragment>(
   progressList: readonly T[] | null | undefined,
-  discipline?: string,
+  discipline: string,
 ) {
   return (progressList ?? [])
     .filter((progress) => !hiddenCategoryClasses.has(progress?.category?.class ?? ''))

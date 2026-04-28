@@ -73,21 +73,10 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
             </ActionRow>
 
             <div className="order-3 lg:order-2">
-              <CategoryList
-                birthDate={membership.person?.birthDate}
-                progressList={(membership.person?.cstsProgressList || [])?.filter(
-                  (x) => x.category?.discipline === 'Standard',
-                )}
-              />
+              <CategoryList person={membership.person} discipline="Standard" />
             </div>
-
             <div className="order-4 lg:order-3">
-              <CategoryList
-                birthDate={membership.person?.birthDate}
-                progressList={(membership.person?.cstsProgressList || [])?.filter(
-                  (x) => x.category?.discipline === 'Latin',
-                )}
-              />
+              <CategoryList person={membership.person} discipline="Latin" />
             </div>
 
             <div className="order-2 text-right lg:order-4">
@@ -101,22 +90,25 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
 }
 
 function CategoryList({
-  birthDate,
-  progressList,
+  person,
+  discipline,
 }: {
-  birthDate: string | null | undefined;
-  progressList: CstsProgressRecordFragment[];
+  person?: {
+    birthDate?: string | null;
+    cstsProgressList?: CstsProgressRecordFragment[] | null;
+  } | null;
+  discipline: string;
 }) {
-  const item = getBestCstsProgress(progressList);
-  if (!item) {
-    return null;
-  }
+  if (!person?.cstsProgressList) return null;
+  const item = getBestCstsProgress(person.cstsProgressList, discipline);
+  console.log(person.cstsProgressList, item);
+  if (!item) return null;
 
   return (
     <div className="flex flex-col leading-tight text-center">
       <div className="font-medium">
         {[
-          formatAgeGroup(birthDate),
+          formatAgeGroup(person.birthDate),
           formatCstsClass(item.category?.class),
           item.category?.discipline === 'Standard'
             ? 'STT'

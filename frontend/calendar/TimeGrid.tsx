@@ -7,7 +7,7 @@ import DayColumn from './DayColumn';
 import TimeGutter from './TimeGutter';
 import { diff, format, inEventRange, merge, range } from './localizer';
 import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
-import type { CalendarEvent, Resource } from './types';
+import type { CalendarEvent, DateRange, Resource } from './types';
 
 type PrimaryGrouping = 'resource' | 'day';
 
@@ -15,7 +15,7 @@ interface TimeGridProps {
   events: readonly CalendarEvent[];
   backgroundEvents: readonly CalendarEvent[];
   resources: readonly Resource[];
-  range: { start: Date; end: Date };
+  range: DateRange;
   primary?: PrimaryGrouping;
 }
 
@@ -167,12 +167,12 @@ export default React.memo(function TimeGrid({
 });
 
 function buildGrid(
-  { start, end }: { start: Date; end: Date },
+  { since, until }: DateRange,
   resources: readonly Resource[],
   events: readonly CalendarEvent[],
   bgEvents: readonly CalendarEvent[],
 ): Grid {
-  const days = range(start, end, 'day').map((d) => startOf(d, 'day'));
+  const days = range(since, until, 'day').map((d) => startOf(d, 'day'));
   const viewStart = days[0]!;
   const viewEnd = days.at(-1)!;
 

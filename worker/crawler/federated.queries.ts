@@ -30,9 +30,7 @@ export interface IUpsertPersonParams {
 }
 
 /** 'UpsertPerson' return type */
-export interface IUpsertPersonResult {
-  person_id: string;
-}
+export type IUpsertPersonResult = void;
 
 /** 'UpsertPerson' query type */
 export interface IUpsertPersonQuery {
@@ -40,15 +38,16 @@ export interface IUpsertPersonQuery {
   result: IUpsertPersonResult;
 }
 
-const upsertPersonIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":87,"b":97}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":100,"b":110}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":113,"b":126}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":129,"b":135}]}],"statement":"INSERT INTO federated.person (federation, external_id, canonical_name, gender)\nVALUES (:federation, :externalId, :canonicalName, :gender)\nON CONFLICT (federation, external_id) DO UPDATE SET canonical_name = EXCLUDED.canonical_name\nRETURNING id as person_id"};
+const upsertPersonIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":97,"b":107}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":110,"b":120}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":123,"b":136}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":139,"b":145}]}],"statement":"INSERT INTO federated.person AS person (federation, external_id, canonical_name, gender)\nVALUES (:federation, :externalId, :canonicalName, :gender)\nON CONFLICT (federation, external_id)\n  DO UPDATE SET canonical_name = EXCLUDED.canonical_name\n  WHERE person.canonical_name <> EXCLUDED.canonical_name"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO federated.person (federation, external_id, canonical_name, gender)
+ * INSERT INTO federated.person AS person (federation, external_id, canonical_name, gender)
  * VALUES (:federation, :externalId, :canonicalName, :gender)
- * ON CONFLICT (federation, external_id) DO UPDATE SET canonical_name = EXCLUDED.canonical_name
- * RETURNING id as person_id
+ * ON CONFLICT (federation, external_id)
+ *   DO UPDATE SET canonical_name = EXCLUDED.canonical_name
+ *   WHERE person.canonical_name <> EXCLUDED.canonical_name
  * ```
  */
 export const upsertPerson = new PreparedQuery<IUpsertPersonParams,IUpsertPersonResult>(upsertPersonIR);
@@ -129,8 +128,8 @@ export const upsertCategory = new PreparedQuery<IUpsertCategoryParams,IUpsertCat
 export interface IUpsertCompetitorParams {
   component_person_ids?: stringArray | null | void;
   component_roles?: competitor_roleArray | null | void;
+  externalId?: string | null | void;
   federation?: string | null | void;
-  federationCompetitorId?: string | null | void;
   label?: string | null | void;
   type?: competitor_type | null | void;
 }
@@ -146,14 +145,14 @@ export interface IUpsertCompetitorQuery {
   result: IUpsertCompetitorResult;
 }
 
-const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"federationCompetitorId":true,"type":true,"label":true,"component_person_ids":true,"component_roles":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":65}]},{"name":"federationCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":110}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":130}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":174,"b":179}]},{"name":"component_person_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":302,"b":322}]},{"name":"component_roles","required":false,"transform":{"type":"scalar"},"locs":[{"a":339,"b":354}]}],"statement":"SELECT federated.upsert_competitor(\n  in_federation => :federation,\n  in_external_id => :federationCompetitorId,\n  in_type => :type::federated.competitor_type,\n  in_label => :label,\n  in_components => ARRAY(\n    SELECT (u.person_id, u.role)::federated.competitor_component_input\n    FROM unnest(\n      :component_person_ids::text[],\n      :component_roles::federated.competitor_role[]\n    ) AS u(person_id, role)\n  )\n) as competitor_id"};
+const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true,"component_person_ids":true,"component_roles":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":65}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":98}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":114,"b":118}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":162,"b":167}]},{"name":"component_person_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":290,"b":310}]},{"name":"component_roles","required":false,"transform":{"type":"scalar"},"locs":[{"a":327,"b":342}]}],"statement":"SELECT federated.upsert_competitor(\n  in_federation => :federation,\n  in_external_id => :externalId,\n  in_type => :type::federated.competitor_type,\n  in_label => :label,\n  in_components => ARRAY(\n    SELECT (u.person_id, u.role)::federated.competitor_component_input\n    FROM unnest(\n      :component_person_ids::text[],\n      :component_roles::federated.competitor_role[]\n    ) AS u(person_id, role)\n  )\n) as competitor_id"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT federated.upsert_competitor(
  *   in_federation => :federation,
- *   in_external_id => :federationCompetitorId,
+ *   in_external_id => :externalId,
  *   in_type => :type::federated.competitor_type,
  *   in_label => :label,
  *   in_components => ARRAY(

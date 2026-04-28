@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { defaultMapResponseToStatus, type JsonLoader } from './types.ts';
 import {
-  type competitor_type,
   type gender,
   replaceCompetitorProgress,
   updatePerson,
@@ -118,7 +117,7 @@ export const cstsAthlete: JsonLoader<Response> = {
 };
 
 async function loadCstsAthlete(client: PoolClient, data: Athlete) {
-  const [{ person_id: mainPersonId }] = await upsertPerson.run(
+  await upsertPerson.run(
     {
       federation: 'csts',
       externalId: String(data.idt),
@@ -127,8 +126,7 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     },
     client,
   );
-  if (mainPersonId === null) return;
-
+  const mainPersonId = `csts:${data.idt}`;
   await updatePerson.run(
     {
       federation: 'csts',
@@ -139,7 +137,7 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     client,
   );
 
-  const progressByCompetitor = new Map<string, Map<string, ProgressEntry>>();
+  const byCompetitor = new Map<string, Map<string, ProgressEntry>>();
 
   for (const rankingPoint of data.rankingPoints) {
     if (!rankingPoint.competitorId) continue;
@@ -156,14 +154,20 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     });
     if (!categoryId) continue;
 
-    const competitorId = await loadCompetitorId(
-      data,
-      mainPersonId,
-      rankingPoint,
-      competitorType,
-      client,
-    );
-    if (!competitorId) continue;
+    switch (competitorType) {
+      case 'couple':
+        await loadCstsCouple(data, rankingPoint, client, mainPersonId);
+        break;
+      case 'duo':
+        await loadCstsDuo(data, rankingPoint, client, mainPersonId);
+        break;
+      case 'solo':
+        await loadCstsSolo(data, rankingPoint, client, mainPersonId);
+        break;
+      default:
+        throw new Error(`Don't know how to process ${competitorType}`);
+    }
+    const competitorId = `csts:${rankingPoint.competitorId}`;
 
     const bucket = [
       rankingPoint.series,
@@ -181,18 +185,15 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
       points: rankingPoint.points ?? 0,
     };
 
-    const progressByBucket =
-      progressByCompetitor.get(competitorId) ?? new Map<string, ProgressEntry>();
-    const currentProgress = progressByBucket.get(bucket);
-
+    const byBucket = byCompetitor.get(competitorId) ?? new Map<string, ProgressEntry>();
+    const currentProgress = byBucket.get(bucket);
     if (!currentProgress || isBetterProgress(nextProgress, currentProgress)) {
-      progressByBucket.set(bucket, nextProgress);
+      byBucket.set(bucket, nextProgress);
     }
-
-    progressByCompetitor.set(competitorId, progressByBucket);
+    byCompetitor.set(competitorId, byBucket);
   }
 
-  for (const [competitorId, progressByBucket] of progressByCompetitor) {
+  for (const [competitorId, progressByBucket] of byCompetitor) {
     const progress = [...progressByBucket.values()];
 
     await replaceCompetitorProgress.run(
@@ -208,35 +209,16 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
   }
 }
 
-async function loadCompetitorId(
-  athlete: Athlete,
-  personId: string,
-  rankingPoint: RankingPoints,
-  competitorType: competitor_type,
-  client: PoolClient,
-) {
-  switch (competitorType) {
-    case 'couple':
-      return loadCstsCouple(athlete, rankingPoint, client, personId);
-    case 'duo':
-      return loadCstsDuo(athlete, rankingPoint, client, personId);
-    case 'solo':
-      return loadCstsSolo(athlete, rankingPoint, client, personId);
-    default:
-      throw new Error(`Don't know how to process ${competitorType}`);
-  }
-}
-
 async function loadCstsSolo(
   data: Athlete,
   rp: RankingPoints,
   client: PoolClient,
   mainPersonId: string,
 ) {
-  const [{ competitor_id: competitorId }] = await upsertCompetitor.run(
+  await upsertCompetitor.run(
     {
       federation: 'csts',
-      federationCompetitorId: rp.competitorId.toString(),
+      externalId: rp.competitorId.toString(),
       label: data.name,
       type: 'solo',
       component_person_ids: [mainPersonId],
@@ -244,7 +226,6 @@ async function loadCstsSolo(
     },
     client,
   );
-  return competitorId;
 }
 
 async function loadCstsDuo(
@@ -253,7 +234,7 @@ async function loadCstsDuo(
   client: PoolClient,
   mainPersonId: string,
 ) {
-  const [{ person_id: partnerPersonId }] = await upsertPerson.run(
+  await upsertPerson.run(
     {
       federation: 'csts',
       externalId: String(rp.partnerIdt),
@@ -262,12 +243,12 @@ async function loadCstsDuo(
     },
     client,
   );
-  if (!partnerPersonId) return;
+  const partnerPersonId = `csts:${rp.partnerIdt}`;
 
-  const [{ competitor_id: competitorId }] = await upsertCompetitor.run(
+  await upsertCompetitor.run(
     {
       federation: 'csts',
-      federationCompetitorId: rp.competitorId.toString(),
+      externalId: rp.competitorId.toString(),
       label:
         data.idt < (rp.partnerIdt ?? 0)
           ? `${data.name} - ${rp.partner}`
@@ -278,8 +259,6 @@ async function loadCstsDuo(
     },
     client,
   );
-
-  return competitorId;
 }
 
 async function loadCstsCouple(
@@ -288,7 +267,7 @@ async function loadCstsCouple(
   client: PoolClient,
   mainPersonId: string,
 ) {
-  const [{ person_id: partnerPersonId }] = await upsertPerson.run(
+  await upsertPerson.run(
     {
       federation: 'csts',
       externalId: String(rp.partnerIdt),
@@ -297,12 +276,12 @@ async function loadCstsCouple(
     },
     client,
   );
-  if (!partnerPersonId) return;
+  const partnerPersonId = `csts:${rp.partnerIdt}`;
 
-  const [{ competitor_id: competitorId }] = await upsertCompetitor.run(
+  await upsertCompetitor.run(
     {
       federation: 'csts',
-      federationCompetitorId: rp.competitorId.toString(),
+      externalId: rp.competitorId.toString(),
       label:
         data.sex === 'male'
           ? `${data.name} - ${rp.partner}`
@@ -316,13 +295,11 @@ async function loadCstsCouple(
     },
     client,
   );
-  return competitorId;
 }
 
 function classifyProgressClass(value: string | null | undefined): ProgressClass {
   const className = value?.trim() ?? '';
-  const normalized = className.toUpperCase();
-  const mainRank = MAIN_CLASS_ORDER.indexOf(normalized);
+  const mainRank = MAIN_CLASS_ORDER.indexOf(className.toUpperCase());
   if (mainRank !== -1) {
     return {
       bucket: 'ladder:main',
@@ -331,7 +308,7 @@ function classifyProgressClass(value: string | null | undefined): ProgressClass 
     };
   }
 
-  const medalRank = MEDAL_CLASS_ORDER.indexOf(normalized);
+  const medalRank = MEDAL_CLASS_ORDER.indexOf(className.toUpperCase());
   if (medalRank !== -1) {
     return {
       bucket: 'ladder:medal',
@@ -341,7 +318,7 @@ function classifyProgressClass(value: string | null | undefined): ProgressClass 
   }
 
   return {
-    bucket: `class:${normalized}`,
+    bucket: `class:${className.toUpperCase()}`,
     className,
     rank: 0,
   };

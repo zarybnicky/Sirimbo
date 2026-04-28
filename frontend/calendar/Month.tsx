@@ -5,9 +5,9 @@ import { ceil, diff, format, inEventRange, range } from './localizer';
 import type { ViewProps } from './types';
 import { startOf } from 'date-arithmetic';
 
-function MonthView({ range: { start, end }, events }: ViewProps) {
+function MonthView({ range: { since, until }, events }: ViewProps) {
   const today = new Date();
-  const weeks = chunk(range(start, end, 'day'), 7);
+  const weeks = chunk(range(since, until, 'day'), 7);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   return (

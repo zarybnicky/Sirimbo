@@ -6,7 +6,7 @@ import {
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery } from 'urql';
-import type { CalendarEvent, Resource } from './types';
+import type { CalendarEvent, DateRange, Resource } from './types';
 import { CalendarView } from '@/calendar/CalendarViews';
 
 export type CalendarGroupBy = 'none' | 'trainer' | 'room';
@@ -18,12 +18,12 @@ export type CalendarFilters = {
 const getResourceKey = (type: string, id: string) => `${type}:${id}`;
 
 function prepareVariables(
-  range: { start: Date; end: Date },
+  range: DateRange,
   filters: CalendarFilters,
 ): EventInstanceRangeQueryVariables {
   return {
-    start: startOf(range.start, 'day').toISOString(),
-    end: add(startOf(range.end, 'day'), 1, 'day').toISOString(),
+    start: startOf(range.since, 'day').toISOString(),
+    end: add(startOf(range.until, 'day'), 1, 'day').toISOString(),
     trainerIds: filters.trainerIds.length > 0 ? filters.trainerIds : undefined,
     onlyMine: filters.onlyMine,
   };
@@ -135,7 +135,6 @@ export function useCalendarData(
 
   return {
     range,
-    variables: vars.current,
     events,
     resources,
     fetching,

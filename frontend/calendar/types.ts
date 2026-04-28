@@ -1,5 +1,10 @@
 import type { EventFragment, EventInstanceWithTrainerFragment } from '@/graphql/Event';
 
+export type DateRange = {
+  since: Date;
+  until: Date;
+};
+
 export interface CalendarEvent {
   event: EventFragment;
   instance: EventInstanceWithTrainerFragment;
@@ -18,7 +23,7 @@ export interface Resource {
 }
 
 export type ViewProps = {
-  range: { start: Date; end: Date };
+  range: DateRange;
   events: readonly CalendarEvent[];
   backgroundEvents: readonly CalendarEvent[];
   resources: readonly Resource[];
