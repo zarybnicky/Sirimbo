@@ -72,8 +72,8 @@ function TrainingGroupPage() {
               <h5 className="text-xl underline">
                 <Link
                   href={{
-                    pathname: '/treninkove-skupiny/[id]',
-                    query: { id: item.id },
+                    pathname: '/treninkove-skupiny/[id]/[...slug]',
+                    query: { id: item.id, slug: [slugify(item.name)] },
                   }}
                 >
                   {item.name}

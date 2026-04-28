@@ -8,6 +8,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
+import { slugify } from '@/lib/slugify';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -91,8 +92,11 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
                 {payment.cohortSubscription.cohort && (
                   <Link
                     href={{
-                      pathname: '/treninkove-skupiny/[id]',
-                      query: { id: payment.cohortSubscription.cohort.id },
+                      pathname: '/treninkove-skupiny/[id]/[...slug]',
+                      query: {
+                        id: payment.cohortSubscription.cohort.id,
+                        slug: [slugify(payment.cohortSubscription.cohort.name)],
+                      },
                     }}
                     className="text-sm font-medium text-accent-11 hover:underline"
                   >

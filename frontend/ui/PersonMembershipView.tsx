@@ -26,6 +26,7 @@ import { tenantMembershipActions } from '@/lib/actions/tenantMembership';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { ActionRow } from '@/ui/ActionRow';
+import { slugify } from '@/lib/slugify';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
@@ -95,8 +96,8 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               <Link
                 className="underline font-bold"
                 href={{
-                  pathname: '/treninkove-skupiny/[id]',
-                  query: { id: item.cohort.id },
+                  pathname: '/treninkove-skupiny/[id]/[...slug]',
+                  query: { id: item.cohort.id, slug: [slugify(item.cohort.name)] },
                 }}
               >
                 {item.cohort.name}

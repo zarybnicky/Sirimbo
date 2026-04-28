@@ -14,6 +14,7 @@ import { CohortListDocument } from '@/graphql/Cohorts';
 import { useActionMap } from '@/lib/actions';
 import { cohortActions } from '@/lib/actions/cohort';
 import { ActionGroup } from '@/ui/ActionGroup';
+import { slugify } from '@/lib/slugify';
 
 export default function TrainingGroupsPage() {
   const auth = useAuth();
@@ -58,8 +59,8 @@ export default function TrainingGroupsPage() {
               <h5 className="text-xl underline">
                 <Link
                   href={{
-                    pathname: '/treninkove-skupiny/[id]',
-                    query: { id: item.id },
+                    pathname: '/treninkove-skupiny/[id]/[...slug]',
+                    query: { id: item.id, slug: [slugify(item.name)] },
                   }}
                 >
                   {item.name}
