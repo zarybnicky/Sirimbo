@@ -103,13 +103,13 @@ export const cstsMember: JsonLoader<Response> = {
     if (args.parsed && !args.parsed?.collection.length) return 'gone';
     return defaultMapResponseToStatus(args);
   },
-  cleanResponse(url, parsed) {
+  cleanResponse(_url, parsed) {
     for (const row of parsed.collection) {
       if ('validFor' in row) delete row['validFor'];
     }
     return parsed;
   },
-  async load(client, frontier, parsed) {
+  async load(client, _frontier, parsed) {
     for (const athlete of parsed.collection) {
       await loadCstsAthlete(client, athlete);
     }

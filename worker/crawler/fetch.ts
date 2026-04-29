@@ -19,9 +19,6 @@ export async function fetchJsonResponse<T>(
   init: RequestInit = {},
   opts: { mode: 'strict' | 'loose' },
 ): Promise<FetchResult<T | unknown>> {
-  const schema =
-    opts.mode === 'strict' ? zx.deepStrict(handler.schema) : zx.deepLoose(handler.schema);
-
   let httpStatus: number | null = null;
   let rawJson: unknown | null = null;
   let parsed: T | null = null;
@@ -34,6 +31,10 @@ export async function fetchJsonResponse<T>(
     httpStatus = resp.status;
 
     rawJson = await resp.json();
+    const schema =
+      opts.mode === 'strict'
+        ? zx.deepStrict(handler.schema)
+        : zx.deepLoose(handler.schema);
     const parsedRes = schema.safeParse(rawJson, { reportInput: true });
     if (parsedRes.success) {
       parsed = parsedRes.data;

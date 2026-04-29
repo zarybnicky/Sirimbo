@@ -6,6 +6,8 @@ export type FetchStatus = 'pending' | 'ok' | 'gone' | 'error';
 
 export type FrontierRow = IGetFrontierForUpdateResult;
 
+export type Loader = JsonLoader | HtmlLoader;
+
 export interface JsonLoader<T = any> {
   mode: 'json';
   schema: z.ZodType<T>;

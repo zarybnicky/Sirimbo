@@ -69,7 +69,7 @@ export const cstsRanklist: JsonLoader<Response> = {
     },
   }),
   schema: responseSchema,
-  async load(client, frontier, parsed) {
+  async load(client, _frontier, parsed) {
     await loadCstsRanklist(client, parsed.entity);
   },
 };

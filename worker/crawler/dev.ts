@@ -12,16 +12,8 @@ import {
   getLatestFrontierJsonResponses,
 } from './crawler.queries.ts';
 import { fetchJsonResponse, fetchTextResponse } from './fetch.ts';
-import { LOADER_MAP, LOADERS } from './handlers.ts';
-import type { FrontierRow, HtmlLoader, JsonLoader } from './types.ts';
-
-type Loader = JsonLoader | HtmlLoader;
-
-function loaderFor(federation: string, kind: string): Loader {
-  const loader = LOADER_MAP[federation]?.[kind];
-  if (!loader) throw new Error(`Unknown crawler loader ${federation}:${kind}`);
-  return loader;
-}
+import { loaderFor, LOADER_MAP } from './handlers.ts';
+import type { FrontierRow, JsonLoader } from './types.ts';
 
 async function ensureCached(
   federation: string,
@@ -118,47 +110,36 @@ async function backtestSchemas(
   try {
     if (options.all) {
       if (federation || kind) {
-        throw new Error('Use either crawler backtest --all or crawler backtest <federation> <kind>');
+        throw new Error('Use either `backtest --all` or `backtest <federation> <kind>`');
       }
 
-      const rows = await getDistinctFrontierKinds.run(undefined, client);
       let total = 0;
       let jsonLoaders = 0;
-      for (const row of rows.sort((a, b) =>
-        `${a.federation}:${a.kind}`.localeCompare(`${b.federation}:${b.kind}`),
-      )) {
-        const loader = LOADER_MAP[row.federation]?.[row.kind];
-        if (!loader) {
-          throw new Error(`Unknown crawler loader ${row.federation}:${row.kind}`);
-        }
+      for (const row of await getDistinctFrontierKinds.run(undefined, client)) {
+        const { federation, kind } = row;
+        const loader = loaderFor(federation, kind);
         if (loader.mode !== 'json') continue;
 
-        const count = await backtestJsonResponses(
-          client,
-          row.federation,
-          row.kind,
-          loader,
-        );
+        const count = await backtestJsonResponses(client, federation, kind, loader);
         jsonLoaders++;
         total += count;
         console.log(`Validated ${count} responses of type ${row.federation}:${row.kind}`);
       }
 
       console.log(`Validated ${total} responses across ${jsonLoaders} JSON loaders`);
-      return;
-    }
+    } else {
+      if (!federation || !kind) {
+        throw new Error('Usage: backtest <federation> <kind> or backtest --all');
+      }
 
-    if (!federation || !kind) {
-      throw new Error('Usage: crawler backtest <federation> <kind> or crawler backtest --all');
-    }
+      const loader = loaderFor(federation, kind);
+      if (loader.mode !== 'json') {
+        throw new Error(`Backtest only supports JSON loaders (${federation}:${kind})`);
+      }
 
-    const loader = loaderFor(federation, kind);
-    if (loader.mode !== 'json') {
-      throw new Error(`Backtest only supports JSON loaders (${federation}:${kind})`);
+      const count = await backtestJsonResponses(client, federation, kind, loader);
+      console.log(`Validated ${count} responses of type ${federation}:${kind}`);
     }
-
-    const count = await backtestJsonResponses(client, federation, kind, loader);
-    console.log(`Validated ${count} responses of type ${federation}:${kind}`);
   } finally {
     client.release();
     await pool.end();
@@ -255,7 +236,7 @@ async function loadCached(
 const cli = cac('crawler');
 
 cli.command('list', 'List crawler loaders').action(() => {
-  for (const [federation, kinds] of Object.entries(LOADERS)) {
+  for (const [federation, kinds] of Object.entries(LOADER_MAP)) {
     for (const kind of Object.keys(kinds).sort()) {
       console.log(`${federation}:${kind}`);
     }

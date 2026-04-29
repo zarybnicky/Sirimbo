@@ -1,5 +1,5 @@
 import { cstsMember } from './cstsMember.ts';
-import type { HtmlLoader, JsonLoader } from './types.ts';
+import type { HtmlLoader, JsonLoader, Loader } from './types.ts';
 import { cstsRanklistIndex } from './cstsRanklistIndex.ts';
 import { cstsRanklist } from './cstsRanklist.ts';
 import { wdsfMember } from './wdsfMember.ts';
@@ -9,7 +9,13 @@ import { cstsResultIndex } from './cstsResultIndex.ts';
 import { cstsEventOfficials } from './cstsEventOfficials.ts';
 import { cstsEventCompetitors } from './cstsEventCompetitors.ts';
 
-export const LOADERS = {
+export function loaderFor(federation: string, kind: string): Loader {
+  const loader = LOADER_MAP[federation]?.[kind];
+  if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
+  return loader;
+}
+
+const LOADERS = {
   wdsf: {
     // https://services.worlddancesport.org/api/1/person
     memberIndex: wdsfMemberIndex,

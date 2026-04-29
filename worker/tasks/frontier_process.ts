@@ -8,7 +8,7 @@ import {
   markFrontierProcessError,
   markFrontierProcessSuccess,
 } from '../crawler/crawler.queries.ts';
-import { LOADER_MAP } from '../crawler/handlers.ts';
+import { loaderFor } from '../crawler/handlers.ts';
 
 type ProcessorStats = { count: number; ms: number; errors: number };
 
@@ -54,22 +54,14 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
       const successfulBatch: Array<{ federation: string; kind: string; ms: number }> = [];
       let failedFrontier: (typeof frontiers)[number] | null = null;
       let failedAt = 0;
-      let missingHandler = false;
 
       try {
         for (const frontier of frontiers) {
           const { id, federation, kind } = frontier;
           failedFrontier = frontier;
           failedAt = performance.now();
-          missingHandler = false;
 
-          const handler = LOADER_MAP[federation]?.[kind];
-          if (!handler) {
-            missingHandler = true;
-            throw new Error(
-              `Handler for frontier ${id} not found (${federation}/${kind})`,
-            );
-          }
+          const handler = loaderFor(federation, kind);
 
           const [contentRow] =
             handler.mode === 'json'
@@ -90,7 +82,6 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
             kind,
             ms: performance.now() - failedAt,
           });
-          failedFrontier = null;
         }
 
         await client.query('COMMIT');
@@ -102,9 +93,8 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
         await client.query('ROLLBACK');
 
         if (!failedFrontier) throw e;
-
         const { id, federation, kind } = failedFrontier;
-        if (missingHandler) {
+        if (e instanceof Error && e.message.includes('Unknown loader')) {
           await markFrontierFetchError.run({ id }, client);
           logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
         } else {
