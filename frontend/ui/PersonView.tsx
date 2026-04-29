@@ -10,11 +10,15 @@ import { TabMenu } from '@/ui/TabMenu';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
 import { PersonAttendanceView } from '@/ui/PersonAttendanceView';
 import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
+import { PersonWorkReportView } from '@/ui/PersonWorkReportView';
 import { personActions } from '@/lib/actions/person';
 import { useActions } from '@/lib/actions';
+import { tenantIdAtom } from '@/ui/state/auth';
+import { useAtomValue } from 'jotai';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
+  const tenantId = useAtomValue(tenantIdAtom);
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
     variables: { id },
@@ -24,6 +28,9 @@ export function PersonView({ id }: { id: string }) {
 
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(id);
   const item = data?.person;
+  const isCurrentTenantTrainer = item?.tenantTrainersList.some(
+    (trainer) => trainer.tenantId === tenantId && trainer.status === 'ACTIVE',
+  );
   const actions = useActions(personActions, item);
   const sttProgress = getBestCstsProgress(item?.cstsProgressList, 'Standard');
   const latProgress = getBestCstsProgress(item?.cstsProgressList, 'Latin');
@@ -60,8 +67,15 @@ export function PersonView({ id }: { id: string }) {
         },
       );
     }
+    if (isAdminOrCurrentPerson && isCurrentTenantTrainer) {
+      tabs.push({
+        id: 'workReport',
+        title: <>Výkaz práce</>,
+        contents: () => <PersonWorkReportView key="work-report" id={id} />,
+      });
+    }
     return tabs;
-  }, [id, item, isAdminOrCurrentPerson]);
+  }, [id, item, isAdminOrCurrentPerson, isCurrentTenantTrainer]);
 
   if (!item) return null;
 

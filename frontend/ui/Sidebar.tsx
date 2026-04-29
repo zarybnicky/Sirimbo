@@ -165,15 +165,6 @@ function TenantSelect() {
     [setTenantId],
   );
 
-  const [canShow, setCanShow] = React.useState(false);
-  React.useEffect(() => {
-    if (typeof window !== 'undefined' && tenantId) {
-      setCanShow(!hostToTenantId.get(window.origin));
-    }
-  }, [tenantId]);
-
-  if (!canShow) return null;
-
   return (
     <select className="text-neutral-12" onChange={onChange} value={tenantId}>
       {Object.values(serverTenantCatalog).map((x) => (
