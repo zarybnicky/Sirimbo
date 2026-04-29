@@ -106,19 +106,34 @@ export interface IUpsertCategoryQuery {
   result: IUpsertCategoryResult;
 }
 
-const upsertCategoryIR: any = {"usedParamSet":{"series":true,"discipline":true,"ageGroup":true,"genderGroup":true,"class":true,"competitorType":true},"params":[{"name":"series","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":61}]},{"name":"discipline","required":false,"transform":{"type":"scalar"},"locs":[{"a":85,"b":95}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":119,"b":127}]},{"name":"genderGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":151,"b":162}]},{"name":"class","required":false,"transform":{"type":"scalar"},"locs":[{"a":186,"b":191}]},{"name":"competitorType","required":false,"transform":{"type":"scalar"},"locs":[{"a":218,"b":232}]}],"statement":"SELECT federated.upsert_category(\n  in_series       => :series,\n  in_discipline   => :discipline,\n  in_age_group    => :ageGroup,\n  in_gender_group => :genderGroup,\n  in_class        => :class,\n  in_competitor_type => :competitorType::federated.competitor_type\n) as id"};
+const upsertCategoryIR: any = {"usedParamSet":{"series":true,"discipline":true,"ageGroup":true,"genderGroup":true,"class":true,"competitorType":true},"params":[{"name":"series","required":false,"transform":{"type":"scalar"},"locs":[{"a":101,"b":107}]},{"name":"discipline","required":false,"transform":{"type":"scalar"},"locs":[{"a":114,"b":124}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":131,"b":139}]},{"name":"genderGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":146,"b":157}]},{"name":"class","required":false,"transform":{"type":"scalar"},"locs":[{"a":164,"b":169}]},{"name":"competitorType","required":false,"transform":{"type":"scalar"},"locs":[{"a":176,"b":190}]}],"statement":"WITH input (series, discipline, age_group, gender_group, class, competitor_type) AS (\n  VALUES (\n    :series,\n    :discipline,\n    :ageGroup,\n    :genderGroup,\n    :class,\n    :competitorType::federated.competitor_type\n  )\n),\nins AS (\n  INSERT INTO federated.category (series, discipline, age_group, gender_group, class, competitor_type, name)\n  SELECT *, concat_ws(' ', series, age_group, nullif(competitor_type, 'couple'), nullif(class, ''), discipline)\n  FROM input\n  ON CONFLICT (series, discipline, age_group, gender_group, class, competitor_type) DO NOTHING\n  RETURNING id\n)\nSELECT id FROM ins\nUNION ALL\nSELECT c.id\nFROM federated.category c\nJOIN input i USING (series, discipline, age_group, gender_group, class, competitor_type)\nWHERE NOT EXISTS (SELECT 1 FROM ins)"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT federated.upsert_category(
- *   in_series       => :series,
- *   in_discipline   => :discipline,
- *   in_age_group    => :ageGroup,
- *   in_gender_group => :genderGroup,
- *   in_class        => :class,
- *   in_competitor_type => :competitorType::federated.competitor_type
- * ) as id
+ * WITH input (series, discipline, age_group, gender_group, class, competitor_type) AS (
+ *   VALUES (
+ *     :series,
+ *     :discipline,
+ *     :ageGroup,
+ *     :genderGroup,
+ *     :class,
+ *     :competitorType::federated.competitor_type
+ *   )
+ * ),
+ * ins AS (
+ *   INSERT INTO federated.category (series, discipline, age_group, gender_group, class, competitor_type, name)
+ *   SELECT *, concat_ws(' ', series, age_group, nullif(competitor_type, 'couple'), nullif(class, ''), discipline)
+ *   FROM input
+ *   ON CONFLICT (series, discipline, age_group, gender_group, class, competitor_type) DO NOTHING
+ *   RETURNING id
+ * )
+ * SELECT id FROM ins
+ * UNION ALL
+ * SELECT c.id
+ * FROM federated.category c
+ * JOIN input i USING (series, discipline, age_group, gender_group, class, competitor_type)
+ * WHERE NOT EXISTS (SELECT 1 FROM ins)
  * ```
  */
 export const upsertCategory = new PreparedQuery<IUpsertCategoryParams,IUpsertCategoryResult>(upsertCategoryIR);

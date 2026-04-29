@@ -453,45 +453,6 @@ AS $$
   END
 $$;
 
-CREATE OR REPLACE FUNCTION federated.upsert_category(
-  in_series       text,
-  in_discipline   text,
-  in_age_group    text,
-  in_gender_group text,
-  in_class        text,
-  in_competitor_type federated.competitor_type,
-  in_name         text DEFAULT NULL
-)
-  RETURNS bigint
-  LANGUAGE sql
-  SET SEARCH_PATH = federated, pg_temp
-AS $$
-  INSERT INTO federated.category (
-    series,
-    discipline,
-    age_group,
-    gender_group,
-    class,
-    competitor_type,
-    name
-  )
-  VALUES (
-    in_series,
-    in_discipline,
-    in_age_group,
-    in_gender_group,
-    in_class,
-    in_competitor_type,
-    COALESCE(
-      in_name,
-      concat_ws(' ', in_series, in_age_group, nullif(in_competitor_type, 'couple'), in_class, in_discipline)
-    )
-  )
-  ON CONFLICT (series, discipline, age_group, gender_group, class, competitor_type)
-    DO UPDATE SET name = EXCLUDED.name
-RETURNING id;
-$$;
-
 CREATE OR REPLACE FUNCTION federated.upsert_competitor(
   in_federation     text,
   in_external_id    text,

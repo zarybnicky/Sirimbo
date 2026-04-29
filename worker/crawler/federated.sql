@@ -14,14 +14,29 @@ WHERE federation = :federation
   AND external_id = :externalId;
 
 /* @name UpsertCategory */
-SELECT federated.upsert_category(
-  in_series       => :series,
-  in_discipline   => :discipline,
-  in_age_group    => :ageGroup,
-  in_gender_group => :genderGroup,
-  in_class        => :class,
-  in_competitor_type => :competitorType::federated.competitor_type
-) as id;
+WITH input (series, discipline, age_group, gender_group, class, competitor_type) AS (
+  VALUES (
+    :series,
+    :discipline,
+    :ageGroup,
+    :genderGroup,
+    :class,
+    :competitorType::federated.competitor_type
+  )
+),
+ins AS (
+  INSERT INTO federated.category (series, discipline, age_group, gender_group, class, competitor_type, name)
+  SELECT *, concat_ws(' ', series, age_group, nullif(competitor_type, 'couple'), nullif(class, ''), discipline)
+  FROM input
+  ON CONFLICT (series, discipline, age_group, gender_group, class, competitor_type) DO NOTHING
+  RETURNING id
+)
+SELECT id FROM ins
+UNION ALL
+SELECT c.id
+FROM federated.category c
+JOIN input i USING (series, discipline, age_group, gender_group, class, competitor_type)
+WHERE NOT EXISTS (SELECT 1 FROM ins);
 
 /* @name UpsertCompetitor */
 SELECT federated.upsert_competitor(
