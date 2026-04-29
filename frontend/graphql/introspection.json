@@ -13269,6 +13269,16 @@
                 }
               },
               {
+                "name": "participantIds",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
                 "name": "startRange",
                 "type": {
                   "kind": "SCALAR",

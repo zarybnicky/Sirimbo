@@ -11,6 +11,7 @@ import { CalendarView } from '@/calendar/CalendarViews';
 
 export type CalendarGroupBy = 'none' | 'trainer' | 'room';
 export type CalendarFilters = {
+  participantIds: string[];
   trainerIds: string[];
   onlyMine: boolean;
 };
@@ -19,13 +20,14 @@ const getResourceKey = (type: string, id: string) => `${type}:${id}`;
 
 function prepareVariables(
   range: DateRange,
-  filters: CalendarFilters,
+  { onlyMine, trainerIds, participantIds }: CalendarFilters,
 ): EventInstanceRangeQueryVariables {
   return {
     start: startOf(range.since, 'day').toISOString(),
     end: add(startOf(range.until, 'day'), 1, 'day').toISOString(),
-    trainerIds: filters.trainerIds.length > 0 ? filters.trainerIds : undefined,
-    onlyMine: filters.onlyMine,
+    trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
+    participantIds: participantIds.length > 0 ? participantIds : undefined,
+    onlyMine,
   };
 }
 

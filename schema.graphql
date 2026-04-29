@@ -6747,6 +6747,7 @@ type Query {
     offset: Int
     onlyMine: Boolean
     onlyType: EventType
+    participantIds: [BigInt]
     startRange: Datetime
     trainerIds: [BigInt]
   ): [EventInstance!]

@@ -18,12 +18,16 @@ export function TrainerFilter() {
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const availableTrainers = (tenant?.tenant?.tenantTrainersList || [])
     .map((x) => x.person)
-    .filter(isTruthy);
+    .filter(isTruthy)
+    .toSorted((a, b) =>
+      `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+    );
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
         <Filter />
+        Trenéři
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {availableTrainers.map((x) => (

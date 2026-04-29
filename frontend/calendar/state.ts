@@ -70,6 +70,8 @@ const storage = {
 };
 
 export const trainerIdsFilterAtom = atom<string[]>([]);
+export const participantIdsFilterAtom = atom<string[]>([]);
+
 const baseGroupByAtom = atom(
   ((storage.getItem('groupBy') as any) || 'trainer') as 'none' | 'trainer' | 'room',
 );

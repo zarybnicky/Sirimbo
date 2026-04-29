@@ -13,6 +13,7 @@ import {
   dragListenersAtom,
   groupByAtom,
   isDraggingAtom,
+  participantIdsFilterAtom,
   trainerIdsFilterAtom,
 } from './state';
 import type { CalendarEvent, InteractionInfo, SlotInfo } from './types';
@@ -25,6 +26,7 @@ import { TrainerFilter } from '@/calendar/TrainerFilter';
 import { GroupByPicker } from '@/calendar/GroupByPicker';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import { CalendarDatePicker } from '@/calendar/CalendarDatePicker';
+import { ParticipantFilter } from '@/calendar/ParticipantFilter';
 
 const emptyArray: readonly [] = [];
 const preventDefault = (e: Event) => e.preventDefault();
@@ -115,12 +117,14 @@ export function Calendar() {
   const setDragListeners = useSetAtom(dragListenersAtom);
   const groupBy = useAtomValue(groupByAtom);
   const trainerIds = useAtomValue(trainerIdsFilterAtom);
+  const participantIds = useAtomValue(participantIdsFilterAtom);
   const filters = React.useMemo(
     () => ({
       onlyMine,
       trainerIds,
+      participantIds,
     }),
-    [onlyMine, trainerIds],
+    [onlyMine, trainerIds, participantIds],
   );
 
   const { fetching, range, events, resources } = useCalendarData(
@@ -197,6 +201,7 @@ export function Calendar() {
           </button>
           {!onlyMine && view.supportsGrouping && <GroupByPicker />}
           <TrainerFilter />
+          <ParticipantFilter />
           {fetching && <Spinner />}
         </div>
 

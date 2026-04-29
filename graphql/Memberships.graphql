@@ -35,6 +35,8 @@ fragment TenantTrainer on TenantTrainer {
   person {
     id
     name
+    firstName
+    lastName
   }
 }
 
