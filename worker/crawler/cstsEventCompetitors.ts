@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
+import { numberAsEnum, competitorType } from './cstsEnums.ts';
 
 const competitorSchema = z.object({
   competitorId: z.number(),
@@ -9,9 +10,18 @@ const competitorSchema = z.object({
   registrationDate: z.iso.datetime({ offset: true }),
   deregisteredDate: z.iso.datetime({ offset: true }).optional(),
   startsFromRound: z.number(),
-  type: z.number(),
+  type: numberAsEnum(competitorType),
+  startType: z.number().optional(),
   country: z.string(),
+  name: z.string().optional(),
   club: z.string().optional(),
+
+  captain: z.string().optional(),
+  points: z.number().optional(),
+  classVaue: z.number().optional(),
+  finaleCount: z.number().optional(),
+  ranklistPosition: z.number().optional(),
+
   couplesOrDuos: z
     .array(
       z.object({
@@ -22,8 +32,22 @@ const competitorSchema = z.object({
         idt2: z.number(),
         name2: z.string(),
         surname2: z.string(),
+        backup: z.boolean().optional(),
       }),
     )
+    .nonempty()
+    .optional(),
+  persons: z
+    .array(
+      z.object({
+        competitorId: z.number(),
+        idt: z.number(),
+        name: z.string(),
+        surname: z.string(),
+        backup: z.boolean().optional(),
+      }),
+    )
+    .nonempty()
     .optional(),
 });
 

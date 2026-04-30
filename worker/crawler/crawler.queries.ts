@@ -77,6 +77,106 @@ const getDistinctFrontierKindsIR: any = {"usedParamSet":{},"params":[],"statemen
 export const getDistinctFrontierKinds = new PreparedQuery<IGetDistinctFrontierKindsParams,IGetDistinctFrontierKindsResult>(getDistinctFrontierKindsIR);
 
 
+/** 'GetFrontierKindStatus' parameters type */
+export interface IGetFrontierKindStatusParams {
+  federation?: string | null | void;
+  kind?: string | null | void;
+}
+
+/** 'GetFrontierKindStatus' return type */
+export interface IGetFrontierKindStatusResult {
+  federation: string;
+  fetch_due: number | null;
+  fetch_error: number | null;
+  fetch_gone: number | null;
+  fetch_ok: number | null;
+  fetch_pending: number | null;
+  keys: string | null;
+  kind: string;
+  latest: Date | null;
+  latest_fetch: Date | null;
+  process_error: number | null;
+  process_ok: number | null;
+  process_pending: number | null;
+  responses: number | null;
+  total: number | null;
+}
+
+/** 'GetFrontierKindStatus' query type */
+export interface IGetFrontierKindStatusQuery {
+  params: IGetFrontierKindStatusParams;
+  result: IGetFrontierKindStatusResult;
+}
+
+const getFrontierKindStatusIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":287},{"a":321,"b":331}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":347},{"a":375,"b":379}]}],"statement":"WITH frontiers AS (\n  SELECT\n    f.*,\n    row_number() OVER (\n      PARTITION BY f.federation, f.kind\n      ORDER BY\n        CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,\n        f.discovered_at DESC,\n        f.id\n    ) AS key_rank\n  FROM crawler.frontier f\n  WHERE (:federation::text IS NULL OR f.federation = :federation)\n    AND (:kind::text IS NULL OR f.kind = :kind)\n), response_counts AS (\n  SELECT\n    f.federation,\n    f.kind,\n    count(*)::int AS responses,\n    max(r.fetched_at) AS latest_response\n  FROM frontiers f\n  JOIN (\n    SELECT frontier_id, fetched_at FROM crawler.json_response\n    UNION ALL\n    SELECT frontier_id, fetched_at FROM crawler.html_response\n  ) r ON r.frontier_id = f.id\n  GROUP BY f.federation, f.kind\n), status AS (\n  SELECT\n    federation,\n    kind,\n    count(*)::int AS total,\n    coalesce(\n      string_agg(\n        key || CASE WHEN fetch_status = 'pending' THEN ' (pending)' ELSE '' END,\n        ', '\n        ORDER BY key_rank\n      ) FILTER (WHERE key <> '' AND key_rank <= 3)\n        || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,\n      '-'\n    ) AS keys,\n    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,\n    count(*) FILTER (WHERE fetch_status = 'ok')::int AS fetch_ok,\n    count(*) FILTER (WHERE fetch_status = 'gone')::int AS fetch_gone,\n    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,\n    count(*) FILTER (WHERE process_status = 'pending')::int AS process_pending,\n    count(*) FILTER (WHERE process_status = 'ok')::int AS process_ok,\n    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,\n    count(*) FILTER (WHERE next_fetch_at IS NULL OR next_fetch_at <= now())::int AS fetch_due,\n    max(last_fetched_at) AS latest_fetch\n  FROM frontiers f\n  GROUP BY federation, kind\n)\nSELECT\n  s.*,\n  coalesce(rc.responses, 0)::int AS responses,\n  coalesce(s.latest_fetch, rc.latest_response) AS latest\nFROM status s\nLEFT JOIN response_counts rc ON rc.federation = s.federation AND rc.kind = s.kind\nORDER BY s.federation, s.kind"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH frontiers AS (
+ *   SELECT
+ *     f.*,
+ *     row_number() OVER (
+ *       PARTITION BY f.federation, f.kind
+ *       ORDER BY
+ *         CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,
+ *         f.discovered_at DESC,
+ *         f.id
+ *     ) AS key_rank
+ *   FROM crawler.frontier f
+ *   WHERE (:federation::text IS NULL OR f.federation = :federation)
+ *     AND (:kind::text IS NULL OR f.kind = :kind)
+ * ), response_counts AS (
+ *   SELECT
+ *     f.federation,
+ *     f.kind,
+ *     count(*)::int AS responses,
+ *     max(r.fetched_at) AS latest_response
+ *   FROM frontiers f
+ *   JOIN (
+ *     SELECT frontier_id, fetched_at FROM crawler.json_response
+ *     UNION ALL
+ *     SELECT frontier_id, fetched_at FROM crawler.html_response
+ *   ) r ON r.frontier_id = f.id
+ *   GROUP BY f.federation, f.kind
+ * ), status AS (
+ *   SELECT
+ *     federation,
+ *     kind,
+ *     count(*)::int AS total,
+ *     coalesce(
+ *       string_agg(
+ *         key || CASE WHEN fetch_status = 'pending' THEN ' (pending)' ELSE '' END,
+ *         ', '
+ *         ORDER BY key_rank
+ *       ) FILTER (WHERE key <> '' AND key_rank <= 3)
+ *         || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,
+ *       '-'
+ *     ) AS keys,
+ *     count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,
+ *     count(*) FILTER (WHERE fetch_status = 'ok')::int AS fetch_ok,
+ *     count(*) FILTER (WHERE fetch_status = 'gone')::int AS fetch_gone,
+ *     count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,
+ *     count(*) FILTER (WHERE process_status = 'pending')::int AS process_pending,
+ *     count(*) FILTER (WHERE process_status = 'ok')::int AS process_ok,
+ *     count(*) FILTER (WHERE process_status = 'error')::int AS process_error,
+ *     count(*) FILTER (WHERE next_fetch_at IS NULL OR next_fetch_at <= now())::int AS fetch_due,
+ *     max(last_fetched_at) AS latest_fetch
+ *   FROM frontiers f
+ *   GROUP BY federation, kind
+ * )
+ * SELECT
+ *   s.*,
+ *   coalesce(rc.responses, 0)::int AS responses,
+ *   coalesce(s.latest_fetch, rc.latest_response) AS latest
+ * FROM status s
+ * LEFT JOIN response_counts rc ON rc.federation = s.federation AND rc.kind = s.kind
+ * ORDER BY s.federation, s.kind
+ * ```
+ */
+export const getFrontierKindStatus = new PreparedQuery<IGetFrontierKindStatusParams,IGetFrontierKindStatusResult>(getFrontierKindStatusIR);
+
+
 /** 'GetLatestFrontierJsonResponses' parameters type */
 export interface IGetLatestFrontierJsonResponsesParams {
   federation?: string | null | void;

@@ -3,11 +3,7 @@ import {
   EventInstanceRangeDocument,
   type EventInstanceRangeQuery,
 } from '@/graphql/Event';
-import {
-  dateTimeFormatter,
-  formatDefaultEventName,
-  formatEventType,
-} from '@/ui/format';
+import { dateTimeFormatter, formatDefaultEventName } from '@/ui/format';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';

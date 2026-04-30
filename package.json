@@ -28,6 +28,7 @@
     "typescript-language-server": "~5.1.0"
   },
   "scripts": {
+    "crawler": "node --experimental-strip-types worker/crawler/dev.ts",
     "schema": "graphql-codegen --config graphql.config.yml",
     "schema-starlet": "graphql-codegen --config graphql-starlet.config.yml",
     "cloc": "cloc --exclude-dir .next,uploads,schema,node_modules,dist,build,schema.sql,schema.graphql,olymp.psql,composer-project.nix,introspection.json,migrations,sql,index.ts,worker/tasks/*.js"

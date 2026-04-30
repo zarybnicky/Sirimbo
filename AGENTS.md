@@ -9,10 +9,14 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - `schema/` is generated from the canonical `schema.sql` dump via `python schema/split.py < schema.sql`. Do not hand-edit files under `schema/`—regenerate from the dump instead.
 - When making frontend changes, ensure `pnpm --filter @rozpisovnik/web build` completes successfully and report the command under Testing.
 
+## Code style preferences
+- Prefer compact, elegant code that keeps the local control flow easy to read. Extract helpers when they name a real concept, isolate complex behavior, or remove meaningful duplication.
+- Avoid one-line helper functions used in a single place; they usually make this codebase harder to read than an inline expression.
+
 ## High-level structure
 - `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs and HTTP proxy resolvers). Multi-tenancy and JWT enrichment are handled in `backend/src/graphile.config.ts`.
 - `frontend/`: Next.js 15 app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, pages in `frontend/pages`, feature-specific modules in folders such as `frontend/calendar`, `frontend/components`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.
-- `worker/`: Graphile Worker tasks (email, invitations, auth refresh) with templates in `worker/templates` and task handlers in `worker/tasks`.
+- `worker/`: Graphile Worker package. Queue tasks live in `worker/tasks`, MJML email templates in `worker/templates`, and the federated dance-data crawler/frontier system in `worker/crawler`.
 - `graphql/`: Source `.graphql` operation documents consumed by GraphQL Code Generator. The generated TypeScript bindings land near their usage in `frontend/graphql` (again: avoid committing regenerated outputs unless the task requires it).
 - `migrations/`: Graphile Migrate directory layout. `committed/` holds historical migrations, `current/1-current.sql` is the scratchpad for new idempotent changes, `fixtures/` contains repeatable helper SQL/PLpgSQL objects, and `initial_schema.sql` mirrors the baseline dump.
 - `schema.sql`: pg_dump of the live database, including extensions and RLS policies. Use it together with `schema/split.py` to keep the `schema/` tree synchronized.
@@ -44,6 +48,14 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - The frontend consumes the API via URQL. Operation documents reside in `graphql/*.graphql`, and typed documents live alongside feature code in `frontend/graphql`. Keep documents and generated types aligned, but avoid committing regenerated artifacts unless asked.
 - `graphql.config.yml` and `graphql-starlet.config.yml` configure code generation for different tenant bundles.
 
+## Worker and crawler model
+- Graphile Worker loads TypeScript tasks through `worker/graphile.config.ts`. `worker/crontab` schedules membership refreshes, accounting/event discovery, and the frontier crawler tasks (`frontier_seed`, `frontier_schedule`, `frontier_fetch`, `frontier_process`).
+- The crawler stores work in `crawler.frontier`. Loader definitions in `worker/crawler/handlers.ts` fetch federation-specific JSON or HTML, persist raw responses, and then normalize them through each loader's `load` handler into federated tables.
+- JSON loaders define Zod schemas. Use the crawler backtest command when changing schemas or loaders so cached responses are validated strictly against the new shape.
+- Local crawler development uses the CLI in `worker/crawler/dev.ts`: run `pnpm --filter @rozpisovnik/worker crawler ...` for the worker package, or the root shortcut `pnpm crawler ...`. Useful commands are `list`, `status [federation] [kind]`, `request <federation> <kind> [key]`, `fetch ...`, `load ... [--commit]`, and `backtest ... [--all]`.
+- `fetch` writes cached responses under `worker/.requests` regardless of whether the CLI is run through the worker package or the root shortcut; `load` replays a cached response into the database and rolls back by default unless `--commit` is passed.
+- Crawler SQL lives in `worker/crawler/*.sql`; pgtyped outputs `worker/crawler/*.queries.ts`. When SQL changes, regenerate the typed queries with `pnpm --filter @rozpisovnik/worker sql:generate` instead of hand-editing the generated files.
+
 ## Frontend conventions
 - We use Radix primitives wrapped in our custom wrappers.
 - We use Tailwind processed Radix colors. In the project they are aliased as `accent` and `neutral`, with the usual scale 1 to 12 (`bg-neutral-2`, `text-accent-11`). We don't use shadcn colors (border, background, etc.).
@@ -69,6 +81,8 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - For quick development work, use primarily `tsc` to check correctness - the Next build is slow
 - Build and lint the Next.js app after changes: `pnpm --filter @rozpisovnik/web lint` / `build`.
 - Run queue workers: `pnpm --filter @rozpisovnik/worker start`
+- Run the crawler dev tool: `pnpm crawler --help`
+- Type-check/lint the worker: `pnpm --filter @rozpisovnik/worker lint`
 - Update the split schema after refreshing `schema.sql`: `python schema/split.py < schema.sql`.
 - Create a new migration: write to `migrations/current/`, named like `1-event-attendance.sql`, prefixed by an increasing number, in kebab-case. Ensure scripts are idempotent.
 - Don't add GraphQL documents to code, add them to the root graphql/ folder, and run graphql-codegen, which will generate types and documents in `frontend/graphql/`.

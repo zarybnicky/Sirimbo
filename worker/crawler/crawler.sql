@@ -9,6 +9,67 @@ SELECT federation, kind
 FROM crawler.frontier
 GROUP BY federation, kind;
 
+/* @name GetFrontierKindStatus */
+WITH frontiers AS (
+  SELECT
+    f.*,
+    row_number() OVER (
+      PARTITION BY f.federation, f.kind
+      ORDER BY
+        CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,
+        f.discovered_at DESC,
+        f.id
+    ) AS key_rank
+  FROM crawler.frontier f
+  WHERE (:federation::text IS NULL OR f.federation = :federation)
+    AND (:kind::text IS NULL OR f.kind = :kind)
+), response_counts AS (
+  SELECT
+    f.federation,
+    f.kind,
+    count(*)::int AS responses,
+    max(r.fetched_at) AS latest_response
+  FROM frontiers f
+  JOIN (
+    SELECT frontier_id, fetched_at FROM crawler.json_response
+    UNION ALL
+    SELECT frontier_id, fetched_at FROM crawler.html_response
+  ) r ON r.frontier_id = f.id
+  GROUP BY f.federation, f.kind
+), status AS (
+  SELECT
+    federation,
+    kind,
+    count(*)::int AS total,
+    coalesce(
+      string_agg(
+        key || CASE WHEN fetch_status = 'pending' THEN ' (pending)' ELSE '' END,
+        ', '
+        ORDER BY key_rank
+      ) FILTER (WHERE key <> '' AND key_rank <= 3)
+        || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,
+      '-'
+    ) AS keys,
+    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,
+    count(*) FILTER (WHERE fetch_status = 'ok')::int AS fetch_ok,
+    count(*) FILTER (WHERE fetch_status = 'gone')::int AS fetch_gone,
+    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,
+    count(*) FILTER (WHERE process_status = 'pending')::int AS process_pending,
+    count(*) FILTER (WHERE process_status = 'ok')::int AS process_ok,
+    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,
+    count(*) FILTER (WHERE next_fetch_at IS NULL OR next_fetch_at <= now())::int AS fetch_due,
+    max(last_fetched_at) AS latest_fetch
+  FROM frontiers f
+  GROUP BY federation, kind
+)
+SELECT
+  s.*,
+  coalesce(rc.responses, 0)::int AS responses,
+  coalesce(s.latest_fetch, rc.latest_response) AS latest
+FROM status s
+LEFT JOIN response_counts rc ON rc.federation = s.federation AND rc.kind = s.kind
+ORDER BY s.federation, s.kind;
+
 /* @name GetLatestFrontierJsonResponses */
 SELECT f.id, jr.url, jr.http_status, jrc.content
 FROM crawler.frontier f

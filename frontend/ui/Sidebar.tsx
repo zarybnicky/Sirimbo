@@ -7,7 +7,7 @@ import {
   useMemberMenu,
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/catalog';
-import { hostToTenantId, serverTenantCatalog } from '@/tenant/catalog-server';
+import { serverTenantCatalog } from '@/tenant/catalog-server';
 import { cn } from '@/lib/cn';
 import { authAtom, storeRef, tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
