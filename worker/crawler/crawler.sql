@@ -30,11 +30,7 @@ WITH frontiers AS (
     count(*)::int AS responses,
     max(r.fetched_at) AS latest_response
   FROM frontiers f
-  JOIN (
-    SELECT frontier_id, fetched_at FROM crawler.json_response
-    UNION ALL
-    SELECT frontier_id, fetched_at FROM crawler.html_response
-  ) r ON r.frontier_id = f.id
+  JOIN crawler.json_response r ON r.frontier_id = f.id
   GROUP BY f.federation, f.kind
 ), status AS (
   SELECT
@@ -94,19 +90,6 @@ JOIN LATERAL (
   LIMIT 1
 ) jr ON true
 JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
-WHERE f.id = :id::bigint;
-
-/* @name GetFrontierHtmlResponse */
-SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
-FROM crawler.frontier f
-JOIN LATERAL (
-  SELECT jr.*
-  FROM crawler.html_response jr
-  WHERE jr.frontier_id = f.id
-  ORDER BY jr.fetched_at DESC
-  LIMIT 1
-) jr ON true
-JOIN crawler.html_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE f.id = :id::bigint;
 
 /* @name GetJobCountForTask */
@@ -203,21 +186,6 @@ UPDATE crawler.frontier SET process_status = 'error' WHERE id = :id::bigint;
 
 /* @name RescheduleFrontier */
 UPDATE crawler.frontier SET next_fetch_at = :nextRetryAt WHERE id = :id::bigint;
-
-/* @name InsertHtmlResponse */
-WITH payload AS (
-  SELECT :content AS content
-), ins_cache AS (
-  INSERT INTO crawler.html_response_cache (content)
-    SELECT content
-    FROM payload
-    WHERE content IS NOT NULL
-    ON CONFLICT (content_hash) DO NOTHING
-)
-INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)
-SELECT :id, :url,:httpStatus, :error,
-  case when content IS NULL then NULL else encode(digest(content, 'sha256'), 'hex') end AS content_hash
-FROM payload;
 
 /* @name InsertJsonResponse */
 WITH payload AS (

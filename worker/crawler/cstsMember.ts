@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { defaultMapResponseToStatus, type JsonLoader } from './types.ts';
+import { type JsonLoader } from './types.ts';
 import {
   type gender,
   replaceCompetitorProgress,
@@ -101,7 +101,7 @@ export const cstsMember: JsonLoader<Response> = {
   }),
   mapResponseToStatus(args) {
     if (args.parsed && !args.parsed?.collection.length) return 'gone';
-    return defaultMapResponseToStatus(args);
+    return undefined;
   },
   cleanResponse(_url, parsed) {
     for (const row of parsed.collection) {

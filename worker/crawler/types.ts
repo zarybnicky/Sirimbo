@@ -6,51 +6,28 @@ export type FetchStatus = 'pending' | 'ok' | 'gone' | 'error';
 
 export type FrontierRow = IGetFrontierForUpdateResult;
 
-export type Loader = JsonLoader | HtmlLoader;
+export type MapperArgs<T> = {
+  httpStatus: number | null;
+  error: string | null;
+  parsed: T | null;
+  raw: unknown;
+};
 
-export interface JsonLoader<T = any> {
-  mode: 'json';
-  schema: z.ZodType<T>;
-  buildRequest: (key: string) => {
-    url: URL;
-    init?: RequestInit;
-  };
-  mapResponseToStatus?: (args: {
-    httpStatus: number | null;
-    parsed: T | null;
-    rawJson: unknown | null;
-    error?: unknown;
-  }) => FetchStatus | undefined;
-  cleanResponse?: (url: URL, parsed: T, rawJson: unknown) => Promise<T> | T;
+interface LoaderBase<T> {
+  buildRequest: (key: string) => { url: URL; init?: RequestInit };
+  mapResponseToStatus?: (args: MapperArgs<T>) => FetchStatus | undefined;
+  cleanResponse?: (url: URL, parsed: T, raw: unknown) => T;
   revalidatePeriod: string;
   load: (client: PoolClient, frontier: FrontierRow, parsed: T) => Promise<void>;
 }
 
-export interface HtmlLoader {
-  mode: 'text';
-  buildRequest: (key: string) => {
-    url: URL;
-    init?: RequestInit;
-  };
-  mapResponseToStatus?: (args: {
-    httpStatus: number | null;
-    body: string | null;
-    error?: unknown;
-  }) => FetchStatus | undefined;
-  cleanResponse?: (url: URL, body: string | null) => Promise<string> | string;
-  revalidatePeriod: string;
-  load: (client: PoolClient, frontier: FrontierRow, body: string) => Promise<void>;
+export interface JsonLoader<T = any> extends LoaderBase<T> {
+  mode: 'json';
+  schema: z.ZodType<T>;
 }
 
-export const defaultMapResponseToStatus = ({
-  error,
-  httpStatus,
-}: {
-  error?: unknown;
-  httpStatus: number | null;
-}): FetchStatus => {
-  if (error) return 'error';
-  if (httpStatus === 404) return 'gone';
-  if (httpStatus && httpStatus >= 200 && httpStatus < 300) return 'ok';
-  return 'error';
-};
+export interface HtmlLoader<T = string> extends LoaderBase<T> {
+  mode: 'text';
+}
+
+export type Loader<T = any> = JsonLoader<T> | HtmlLoader<T>;

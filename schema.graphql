@@ -3412,13 +3412,6 @@ type EventInstance {
     """Skip the first `n` values."""
     offset: Int
   ): [EventInstanceApproxPriceRecord!]
-  attendanceSummaryList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [EventInstanceAttendanceSummaryRecord!]
   createdAt: Datetime!
   custom: JSON!
 
@@ -3508,11 +3501,6 @@ type EventInstance {
 type EventInstanceApproxPriceRecord {
   amount: BigFloat
   currency: String
-}
-
-type EventInstanceAttendanceSummaryRecord {
-  count: Int
-  status: AttendanceType
 }
 
 """

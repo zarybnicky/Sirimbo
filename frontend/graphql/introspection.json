@@ -6003,36 +6003,6 @@
             ]
           },
           {
-            "name": "attendanceSummaryList",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "EventInstanceAttendanceSummaryRecord",
-                  "ofType": null
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
-          },
-          {
             "name": "createdAt",
             "type": {
               "kind": "NON_NULL",
@@ -6440,29 +6410,6 @@
           },
           {
             "name": "currency",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "EventInstanceAttendanceSummaryRecord",
-        "fields": [
-          {
-            "name": "count",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "status",
             "type": {
               "kind": "SCALAR",
               "name": "Any"

@@ -1,5 +1,5 @@
 import { cstsMember } from './cstsMember.ts';
-import type { HtmlLoader, JsonLoader, Loader } from './types.ts';
+import type { HtmlLoader, Loader } from './types.ts';
 import { cstsRanklistIndex } from './cstsRanklistIndex.ts';
 import { cstsRanklist } from './cstsRanklist.ts';
 import { wdsfMember } from './wdsfMember.ts';
@@ -202,10 +202,7 @@ const LOADERS = {
   },
 };
 
-export const LOADER_MAP: Record<
-  string,
-  Record<string, JsonLoader | HtmlLoader>
-> = LOADERS;
+export const LOADER_MAP: Record<string, Record<string, Loader>> = LOADERS;
 
 export type LoaderIds = {
   [F in keyof typeof LOADERS]: {

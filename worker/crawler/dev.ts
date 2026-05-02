@@ -7,21 +7,16 @@ import { cac } from 'cac';
 import { Pool, type PoolClient } from 'pg';
 import Cursor from 'pg-cursor';
 import { zx } from '@traversable/zod';
-import { getFrontierKindStatus, getLatestFrontierJsonResponses } from './crawler.queries.ts';
-import { fetchJsonResponse, fetchTextResponse } from './fetch.ts';
-import { loaderFor, LOADER_MAP } from './handlers.ts';
+import {
+  getFrontierKindStatus,
+  getLatestFrontierJsonResponses,
+} from './crawler.queries.ts';
+import { fetchResponse } from './fetch.ts';
+import { LOADER_MAP, loaderFor } from './handlers.ts';
 import type { FrontierRow, JsonLoader } from './types.ts';
-
-type LoaderMode = 'json' | 'html';
 
 const pool = new Pool();
 const REQUEST_CACHE_DIR = resolve(import.meta.dirname, '..', '.requests');
-
-function loaderMode(federation: string, kind: string): LoaderMode | null {
-  const mode = LOADER_MAP[federation]?.[kind]?.mode;
-  if (!mode) return null;
-  return mode === 'text' ? 'html' : mode;
-}
 
 function formatDate(value: Date | string | null | undefined) {
   if (!value) return '-';
@@ -40,10 +35,7 @@ function printTable(rows: Array<Record<string, unknown>>) {
   const widths = Object.fromEntries(
     columns.map((column) => [
       column,
-      Math.max(
-        column.length,
-        ...rows.map((row) => String(row[column] ?? '').length),
-      ),
+      Math.max(column.length, ...rows.map((row) => String(row[column] ?? '').length)),
     ]),
   );
 
@@ -74,21 +66,12 @@ async function ensureCached(
   }
 
   const { url, init = {} } = loader.buildRequest(key);
-  const result =
-    loader.mode === 'json'
-      ? await fetchJsonResponse(loader, url, init, { mode: 'strict' })
-      : await fetchTextResponse(loader, url, init);
-
-  const body =
-    loader.mode === 'json'
-      ? `${JSON.stringify(result.content, null, 2)}\n`
-      : String(result.content ?? '');
+  const result = await fetchResponse(loader, url, init, { mode: 'strict' });
+  console.log(`Fetched ${url} (${result.httpStatus}, ${result.fetchStatus})`);
+  if (result.error) throw new Error(result.error);
 
   await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, body, 'utf8');
-  console.log(`Fetched ${url} (${result.httpStatus}, ${result.fetchStatus})`);
-
-  if (result.error) throw new Error(result.error);
+  await writeFile(path, `${JSON.stringify(result.content, null, 2)}`, 'utf8');
   return { loader, path };
 }
 
@@ -180,7 +163,9 @@ async function backtestSchemas(
     const { federation, kind } = row;
     const loader = LOADER_MAP[federation]?.[kind];
     if (!loader) {
-      console.log(`Skipping unknown loader ${federation}:${kind} (${row.total} frontiers)`);
+      console.log(
+        `Skipping unknown loader ${federation}:${kind} (${row.total} frontiers)`,
+      );
       continue;
     }
     if (loader.mode !== 'json') continue;
@@ -204,14 +189,13 @@ async function showStatus(
     throw new Error('Usage: status [federation] [kind]');
   }
 
-  const rows = (
-    await getFrontierKindStatus.run({ federation, kind }, pool)
-  ).filter((row) => !options.unknown || loaderMode(row.federation, row.kind) !== null);
+  const rows = (await getFrontierKindStatus.run({ federation, kind }, pool)).filter(
+    (row) => !options.unknown || LOADER_MAP[row.federation]?.[row.kind],
+  );
 
   printTable(
     rows.map((row) => ({
       kind: `${row.federation}:${row.kind}`,
-      loader: loaderMode(row.federation, row.kind) ?? 'unknown',
       total: row.total ?? 0,
       keys: row.keys ?? '-',
       'fetch p/o/g/e': [
@@ -293,19 +277,16 @@ async function loadCached(
 ) {
   const { loader, path } = await ensureCached(federation, kind, key);
   const body = await readFile(path, 'utf8');
-  const cached = loader.mode === 'json' ? JSON.parse(body) : body;
+  const raw = JSON.parse(body);
 
+  const content =
+    loader.mode === 'json'
+      ? zx.deepLoose(loader.schema).parse(raw, { reportInput: true })
+      : raw;
   const client = logClientQueries(await pool.connect());
   try {
     await client.query('BEGIN');
-    if (loader.mode === 'json') {
-      const content = loader.schema.parse(cached, { reportInput: true });
-      await loader.load(client, frontier(federation, kind, key), content);
-    } else if (typeof cached === 'string') {
-      await loader.load(client, frontier(federation, kind, key), cached);
-    } else {
-      throw new Error(`Expected text response content, got ${typeof cached}`);
-    }
+    await loader.load(client, frontier(federation, kind, key), content);
     await client.query(shouldCommit ? 'COMMIT' : 'ROLLBACK');
     console.log(`${shouldCommit ? 'Committed' : 'Rolled back'} ${path}`);
   } catch (e) {

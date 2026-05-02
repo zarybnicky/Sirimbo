@@ -1,93 +1,97 @@
-import {
-  defaultMapResponseToStatus,
-  type FetchStatus,
-  type HtmlLoader,
-  type JsonLoader,
-} from './types.ts';
+import type { FetchStatus, Loader, MapperArgs } from './types.ts';
 import { zx } from '@traversable/zod';
 
-export type FetchResult<T = unknown> = {
-  httpStatus: number | null;
-  error: string | null;
-  content: T;
-  fetchStatus: FetchStatus;
-};
+function fetchWithTimeout(
+  url: Parameters<typeof fetch>[0],
+  init: Omit<RequestInit, 'signal'> = {},
+  timeoutMs = 30_000,
+) {
+  return fetch(url, {
+    ...init,
+    signal: AbortSignal.timeout(timeoutMs),
+  });
+}
 
-export async function fetchJsonResponse<T>(
-  handler: JsonLoader<T>,
-  url: URL,
-  init: RequestInit = {},
+type ParseResult<T> =
+  | { parsed: T; raw: unknown; error: null }
+  | { parsed: null; raw: unknown; error: string };
+
+async function parseResponse<T>(
+  resp: Response,
+  handler: Loader<T>,
   opts: { mode: 'strict' | 'loose' },
-): Promise<FetchResult<T | unknown>> {
-  let httpStatus: number | null = null;
-  let rawJson: unknown | null = null;
-  let parsed: T | null = null;
-  let error: string | null = null;
+): Promise<ParseResult<T>> {
+  if (handler.mode === 'text') {
+    const text = await resp.text();
+    return { parsed: text as T, raw: text, error: null };
+  }
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30_000);
+  let raw: unknown;
   try {
-    const resp = await fetch(url, { ...init, signal: controller.signal });
-    httpStatus = resp.status;
-
-    rawJson = await resp.json();
-    const schema =
-      opts.mode === 'strict'
-        ? zx.deepStrict(handler.schema)
-        : zx.deepLoose(handler.schema);
-    const parsedRes = schema.safeParse(rawJson, { reportInput: true });
-    if (parsedRes.success) {
-      parsed = parsedRes.data;
-    } else {
-      error = parsedRes.error.toString();
-    }
-  } catch (e) {
-    error = e instanceof Error ? e.message : String(e);
-  } finally {
-    clearTimeout(timeoutId);
+    raw = await resp.json();
+  } catch {
+    return { parsed: null, raw: null, error: 'Response body is not valid JSON' };
   }
 
-  const mapperArgs = { httpStatus, parsed, rawJson, error };
-  const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
-  const fetchStatus = mapper(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs);
-
-  let content: unknown = '';
-  if (parsed != null) {
-    content = handler.cleanResponse
-      ? await handler.cleanResponse(url, parsed, rawJson)
-      : parsed;
-  } else if (rawJson != null) {
-    content = rawJson;
-  }
-
-  return { httpStatus, error, content, fetchStatus };
+  const wrapSchema = opts.mode === 'strict' ? zx.deepStrict : zx.deepLoose;
+  const result = wrapSchema(handler.schema).safeParse(raw, { reportInput: true });
+  return result.success
+    ? { parsed: result.data, raw, error: null }
+    : {
+        parsed: null,
+        raw,
+        error: result.error.toString(),
+      };
 }
 
-export async function fetchTextResponse(
-  handler: HtmlLoader,
+export async function fetchResponse<T>(
+  handler: Loader<T>,
   url: URL,
   init: RequestInit = {},
-): Promise<FetchResult<string | null>> {
+  opts: { mode: 'strict' | 'loose' } = { mode: 'loose' },
+) {
   let httpStatus: number | null = null;
-  let body: string | null = null;
-  let error: string | null = null;
+  let parsed: T | null = null;
+  let raw: unknown = null;
+  let error: string | null;
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30_000);
   try {
-    const resp = await fetch(url, { ...init, signal: controller.signal });
+    const resp = await fetchWithTimeout(url, init);
     httpStatus = resp.status;
-    body = await resp.text();
+
+    const result = await parseResponse<T>(resp, handler, opts);
+    parsed = result.parsed;
+    raw = result.raw;
+    error = result.error;
   } catch (e) {
     error = e instanceof Error ? e.message : String(e);
-  } finally {
-    clearTimeout(timeoutId);
   }
 
-  const mapperArgs = { httpStatus, body, error };
-  const mapper = handler.mapResponseToStatus || defaultMapResponseToStatus;
-  const fetchStatus = mapper(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs);
-  const content = handler.cleanResponse ? await handler.cleanResponse(url, body) : body;
+  const mapperArgs: MapperArgs<T> = { httpStatus, parsed, raw, error };
 
-  return { httpStatus, error, content, fetchStatus };
+  return {
+    httpStatus,
+    error,
+    content: (parsed ? (handler.cleanResponse?.(url, parsed, raw) ?? parsed) : raw) as T,
+    fetchStatus:
+      handler.mapResponseToStatus?.(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs),
+  } satisfies {
+    httpStatus: number | null;
+    error: string | null;
+    content: T;
+    fetchStatus: FetchStatus;
+  };
 }
+
+const defaultMapResponseToStatus = ({
+  error,
+  httpStatus,
+}: {
+  error?: unknown;
+  httpStatus: number | null;
+}): FetchStatus => {
+  if (error) return 'error';
+  if (httpStatus === 404) return 'gone';
+  if (httpStatus && httpStatus >= 200 && httpStatus < 300) return 'ok';
+  return 'error';
+};

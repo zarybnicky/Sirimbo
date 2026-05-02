@@ -1,7 +1,6 @@
 import type { Task } from 'graphile-worker';
 import {
   countPendingProcess,
-  getFrontierHtmlResponse,
   getFrontierJsonResponse,
   getNextPendingProcess,
   markFrontierFetchError,
@@ -63,10 +62,7 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
 
           const handler = loaderFor(federation, kind);
 
-          const [contentRow] =
-            handler.mode === 'json'
-              ? await getFrontierJsonResponse.run({ id }, client)
-              : await getFrontierHtmlResponse.run({ id }, client);
+          const [contentRow] = await getFrontierJsonResponse.run({ id }, client);
           if (contentRow?.content) {
             const content =
               handler.mode === 'json'

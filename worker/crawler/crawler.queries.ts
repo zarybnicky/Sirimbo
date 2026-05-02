@@ -108,7 +108,7 @@ export interface IGetFrontierKindStatusQuery {
   result: IGetFrontierKindStatusResult;
 }
 
-const getFrontierKindStatusIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":287},{"a":321,"b":331}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":347},{"a":375,"b":379}]}],"statement":"WITH frontiers AS (\n  SELECT\n    f.*,\n    row_number() OVER (\n      PARTITION BY f.federation, f.kind\n      ORDER BY\n        CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,\n        f.discovered_at DESC,\n        f.id\n    ) AS key_rank\n  FROM crawler.frontier f\n  WHERE (:federation::text IS NULL OR f.federation = :federation)\n    AND (:kind::text IS NULL OR f.kind = :kind)\n), response_counts AS (\n  SELECT\n    f.federation,\n    f.kind,\n    count(*)::int AS responses,\n    max(r.fetched_at) AS latest_response\n  FROM frontiers f\n  JOIN (\n    SELECT frontier_id, fetched_at FROM crawler.json_response\n    UNION ALL\n    SELECT frontier_id, fetched_at FROM crawler.html_response\n  ) r ON r.frontier_id = f.id\n  GROUP BY f.federation, f.kind\n), status AS (\n  SELECT\n    federation,\n    kind,\n    count(*)::int AS total,\n    coalesce(\n      string_agg(\n        key || CASE WHEN fetch_status = 'pending' THEN ' (pending)' ELSE '' END,\n        ', '\n        ORDER BY key_rank\n      ) FILTER (WHERE key <> '' AND key_rank <= 3)\n        || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,\n      '-'\n    ) AS keys,\n    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,\n    count(*) FILTER (WHERE fetch_status = 'ok')::int AS fetch_ok,\n    count(*) FILTER (WHERE fetch_status = 'gone')::int AS fetch_gone,\n    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,\n    count(*) FILTER (WHERE process_status = 'pending')::int AS process_pending,\n    count(*) FILTER (WHERE process_status = 'ok')::int AS process_ok,\n    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,\n    count(*) FILTER (WHERE next_fetch_at IS NULL OR next_fetch_at <= now())::int AS fetch_due,\n    max(last_fetched_at) AS latest_fetch\n  FROM frontiers f\n  GROUP BY federation, kind\n)\nSELECT\n  s.*,\n  coalesce(rc.responses, 0)::int AS responses,\n  coalesce(s.latest_fetch, rc.latest_response) AS latest\nFROM status s\nLEFT JOIN response_counts rc ON rc.federation = s.federation AND rc.kind = s.kind\nORDER BY s.federation, s.kind"};
+const getFrontierKindStatusIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":287},{"a":321,"b":331}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":347},{"a":375,"b":379}]}],"statement":"WITH frontiers AS (\n  SELECT\n    f.*,\n    row_number() OVER (\n      PARTITION BY f.federation, f.kind\n      ORDER BY\n        CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,\n        f.discovered_at DESC,\n        f.id\n    ) AS key_rank\n  FROM crawler.frontier f\n  WHERE (:federation::text IS NULL OR f.federation = :federation)\n    AND (:kind::text IS NULL OR f.kind = :kind)\n), response_counts AS (\n  SELECT\n    f.federation,\n    f.kind,\n    count(*)::int AS responses,\n    max(r.fetched_at) AS latest_response\n  FROM frontiers f\n  JOIN crawler.json_response r ON r.frontier_id = f.id\n  GROUP BY f.federation, f.kind\n), status AS (\n  SELECT\n    federation,\n    kind,\n    count(*)::int AS total,\n    coalesce(\n      string_agg(\n        key || CASE WHEN fetch_status = 'pending' THEN ' (pending)' ELSE '' END,\n        ', '\n        ORDER BY key_rank\n      ) FILTER (WHERE key <> '' AND key_rank <= 3)\n        || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,\n      '-'\n    ) AS keys,\n    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,\n    count(*) FILTER (WHERE fetch_status = 'ok')::int AS fetch_ok,\n    count(*) FILTER (WHERE fetch_status = 'gone')::int AS fetch_gone,\n    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,\n    count(*) FILTER (WHERE process_status = 'pending')::int AS process_pending,\n    count(*) FILTER (WHERE process_status = 'ok')::int AS process_ok,\n    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,\n    count(*) FILTER (WHERE next_fetch_at IS NULL OR next_fetch_at <= now())::int AS fetch_due,\n    max(last_fetched_at) AS latest_fetch\n  FROM frontiers f\n  GROUP BY federation, kind\n)\nSELECT\n  s.*,\n  coalesce(rc.responses, 0)::int AS responses,\n  coalesce(s.latest_fetch, rc.latest_response) AS latest\nFROM status s\nLEFT JOIN response_counts rc ON rc.federation = s.federation AND rc.kind = s.kind\nORDER BY s.federation, s.kind"};
 
 /**
  * Query generated from SQL:
@@ -133,11 +133,7 @@ const getFrontierKindStatusIR: any = {"usedParamSet":{"federation":true,"kind":t
  *     count(*)::int AS responses,
  *     max(r.fetched_at) AS latest_response
  *   FROM frontiers f
- *   JOIN (
- *     SELECT frontier_id, fetched_at FROM crawler.json_response
- *     UNION ALL
- *     SELECT frontier_id, fetched_at FROM crawler.html_response
- *   ) r ON r.frontier_id = f.id
+ *   JOIN crawler.json_response r ON r.frontier_id = f.id
  *   GROUP BY f.federation, f.kind
  * ), status AS (
  *   SELECT
@@ -257,47 +253,6 @@ const getFrontierJsonResponseIR: any = {"usedParamSet":{"id":true},"params":[{"n
  * ```
  */
 export const getFrontierJsonResponse = new PreparedQuery<IGetFrontierJsonResponseParams,IGetFrontierJsonResponseResult>(getFrontierJsonResponseIR);
-
-
-/** 'GetFrontierHtmlResponse' parameters type */
-export interface IGetFrontierHtmlResponseParams {
-  id?: NumberOrString | null | void;
-}
-
-/** 'GetFrontierHtmlResponse' return type */
-export interface IGetFrontierHtmlResponseResult {
-  content: string;
-  error: string | null;
-  http_status: number | null;
-  id: string;
-  url: string;
-}
-
-/** 'GetFrontierHtmlResponse' query type */
-export interface IGetFrontierHtmlResponseQuery {
-  params: IGetFrontierHtmlResponseParams;
-  result: IGetFrontierHtmlResponseResult;
-}
-
-const getFrontierHtmlResponseIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":317}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.html_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.html_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
- * FROM crawler.frontier f
- * JOIN LATERAL (
- *   SELECT jr.*
- *   FROM crawler.html_response jr
- *   WHERE jr.frontier_id = f.id
- *   ORDER BY jr.fetched_at DESC
- *   LIMIT 1
- * ) jr ON true
- * JOIN crawler.html_response_cache jrc ON jr.content_hash = jrc.content_hash
- * WHERE f.id = :id::bigint
- * ```
- */
-export const getFrontierHtmlResponse = new PreparedQuery<IGetFrontierHtmlResponseParams,IGetFrontierHtmlResponseResult>(getFrontierHtmlResponseIR);
 
 
 /** 'GetJobCountForTask' parameters type */
@@ -664,47 +619,6 @@ const rescheduleFrontierIR: any = {"usedParamSet":{"nextRetryAt":true,"id":true}
  * ```
  */
 export const rescheduleFrontier = new PreparedQuery<IRescheduleFrontierParams,IRescheduleFrontierResult>(rescheduleFrontierIR);
-
-
-/** 'InsertHtmlResponse' parameters type */
-export interface IInsertHtmlResponseParams {
-  content?: string | null | void;
-  error?: string | null | void;
-  httpStatus?: number | null | void;
-  id?: NumberOrString | null | void;
-  url?: string | null | void;
-}
-
-/** 'InsertHtmlResponse' return type */
-export type IInsertHtmlResponseResult = void;
-
-/** 'InsertHtmlResponse' query type */
-export interface IInsertHtmlResponseQuery {
-  params: IInsertHtmlResponseParams;
-  result: IInsertHtmlResponseResult;
-}
-
-const insertHtmlResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":321,"b":323}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":326,"b":329}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":331,"b":341}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":344,"b":349}]}],"statement":"WITH payload AS (\n  SELECT :content AS content\n), ins_cache AS (\n  INSERT INTO crawler.html_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url,:httpStatus, :error,\n  case when content IS NULL then NULL else encode(digest(content, 'sha256'), 'hex') end AS content_hash\nFROM payload"};
-
-/**
- * Query generated from SQL:
- * ```
- * WITH payload AS (
- *   SELECT :content AS content
- * ), ins_cache AS (
- *   INSERT INTO crawler.html_response_cache (content)
- *     SELECT content
- *     FROM payload
- *     WHERE content IS NOT NULL
- *     ON CONFLICT (content_hash) DO NOTHING
- * )
- * INSERT INTO crawler.html_response (frontier_id, url, http_status, error, content_hash)
- * SELECT :id, :url,:httpStatus, :error,
- *   case when content IS NULL then NULL else encode(digest(content, 'sha256'), 'hex') end AS content_hash
- * FROM payload
- * ```
- */
-export const insertHtmlResponse = new PreparedQuery<IInsertHtmlResponseParams,IInsertHtmlResponseResult>(insertHtmlResponseIR);
 
 
 /** 'InsertJsonResponse' parameters type */

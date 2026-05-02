@@ -2883,7 +2883,6 @@ export type EventExternalRegistrationsOrderBy =
 export type EventInstance = {
   __typename?: 'EventInstance';
   approxPriceList: Maybe<Array<EventInstanceApproxPriceRecord>>;
-  attendanceSummaryList: Maybe<Array<EventInstanceAttendanceSummaryRecord>>;
   createdAt: Scalars['Datetime']['output'];
   custom: Scalars['JSON']['output'];
   /** Reads a single `Event` that is related to this `EventInstance`. */
@@ -2922,12 +2921,6 @@ export type EventInstanceApproxPriceListArgs = {
 };
 
 
-export type EventInstanceAttendanceSummaryListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
 export type EventInstanceEventAttendancesByInstanceIdListArgs = {
   condition?: InputMaybe<EventAttendanceCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -2961,12 +2954,6 @@ export type EventInstanceApproxPriceRecord = {
   __typename?: 'EventInstanceApproxPriceRecord';
   amount: Maybe<Scalars['BigFloat']['output']>;
   currency: Maybe<Scalars['String']['output']>;
-};
-
-export type EventInstanceAttendanceSummaryRecord = {
-  __typename?: 'EventInstanceAttendanceSummaryRecord';
-  count: Maybe<Scalars['Int']['output']>;
-  status: Maybe<AttendanceType>;
 };
 
 /**
@@ -8870,7 +8857,6 @@ export type GraphCacheKeysConfig = {
   EventExternalRegistration?: (data: WithTypename<EventExternalRegistration>) => null | string,
   EventInstance?: (data: WithTypename<EventInstance>) => null | string,
   EventInstanceApproxPriceRecord?: (data: WithTypename<EventInstanceApproxPriceRecord>) => null | string,
-  EventInstanceAttendanceSummaryRecord?: (data: WithTypename<EventInstanceAttendanceSummaryRecord>) => null | string,
   EventInstanceTrainer?: (data: WithTypename<EventInstanceTrainer>) => null | string,
   EventInstancesEdge?: (data: WithTypename<EventInstancesEdge>) => null | string,
   EventLessonDemand?: (data: WithTypename<EventLessonDemand>) => null | string,
@@ -9625,7 +9611,6 @@ export type GraphCacheResolvers = {
   },
   EventInstance?: {
     approxPriceList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceApproxPriceListArgs, Array<WithTypename<EventInstanceApproxPriceRecord> | string>>,
-    attendanceSummaryList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceAttendanceSummaryListArgs, Array<WithTypename<EventInstanceAttendanceSummaryRecord> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime'] | string>,
     custom?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['JSON'] | string>,
     event?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<Event> | string>,
@@ -9654,10 +9639,6 @@ export type GraphCacheResolvers = {
   EventInstanceApproxPriceRecord?: {
     amount?: GraphCacheResolver<WithTypename<EventInstanceApproxPriceRecord>, Record<string, never>, Scalars['BigFloat'] | string>,
     currency?: GraphCacheResolver<WithTypename<EventInstanceApproxPriceRecord>, Record<string, never>, Scalars['String'] | string>
-  },
-  EventInstanceAttendanceSummaryRecord?: {
-    count?: GraphCacheResolver<WithTypename<EventInstanceAttendanceSummaryRecord>, Record<string, never>, Scalars['Int'] | string>,
-    status?: GraphCacheResolver<WithTypename<EventInstanceAttendanceSummaryRecord>, Record<string, never>, AttendanceType | string>
   },
   EventInstanceTrainer?: {
     createdAt?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -11281,7 +11262,6 @@ export type GraphCacheUpdaters = {
   },
   EventInstance?: {
     approxPriceList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceApproxPriceListArgs>,
-    attendanceSummaryList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceAttendanceSummaryListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     custom?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
@@ -11310,10 +11290,6 @@ export type GraphCacheUpdaters = {
   EventInstanceApproxPriceRecord?: {
     amount?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceApproxPriceRecord>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceApproxPriceRecord>>, Record<string, never>>
-  },
-  EventInstanceAttendanceSummaryRecord?: {
-    count?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceAttendanceSummaryRecord>>, Record<string, never>>,
-    status?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceAttendanceSummaryRecord>>, Record<string, never>>
   },
   EventInstanceTrainer?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
