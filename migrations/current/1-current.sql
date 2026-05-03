@@ -22,3 +22,10 @@ SELECT
 FROM crawler.html_response hr
 LEFT JOIN crawler.html_response_cache hc ON hr.content_hash = hc.content_hash
 WHERE NOT EXISTS (SELECT 1 FROM crawler.json_response jr WHERE jr.frontier_id = hr.frontier_id AND jr.fetched_at = hr.fetched_at);
+
+alter type crawler.fetch_status ADD VALUE IF NOT EXISTS 'transient';
+
+DROP INDEX crawler.frontier_federation_kind_next_fetch_at_idx;
+CREATE INDEX frontier_federation_kind_next_fetch_at_idx
+  ON crawler.frontier (federation, kind, next_fetch_at)
+  WHERE fetch_status IN ('pending', 'transient');

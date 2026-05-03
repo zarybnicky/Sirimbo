@@ -1,7 +1,7 @@
 import type { Task } from 'graphile-worker';
 import { getNextIdt } from '../crawler/cstsAthleteIdts.ts';
 import { upsertFrontier } from '../crawler/crawler.queries.ts';
-import { LOADER_MAP } from '../crawler/handlers.ts';
+import { LOADERS } from '../crawler/handlers.ts';
 
 const MAX_PROBES_PER_RUN = 200;
 const HOLE_LIMIT = 200;
@@ -29,7 +29,7 @@ export const discover_csts_athletes: Task<'discover_csts_athletes'> = async (
     probes += 1;
     newLastChecked = candidateId;
 
-    const { url, init } = LOADER_MAP.csts.member.buildRequest(candidateId.toString());
+    const { url, init } = LOADERS.csts.member.buildRequest(candidateId.toString());
     const response = await fetch(url, init);
 
     let exists = true;

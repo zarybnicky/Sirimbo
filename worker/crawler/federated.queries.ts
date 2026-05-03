@@ -9,6 +9,8 @@ export type gender = 'female' | 'male' | 'other' | 'unknown';
 
 export type DateOrString = Date | string;
 
+export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
+
 export type NumberOrString = number | string;
 
 export type NumberOrStringArray = (NumberOrString)[];
@@ -17,40 +19,48 @@ export type competitor_roleArray = (competitor_role)[];
 
 export type competitor_typeArray = (competitor_type)[];
 
+export type genderArray = (gender)[];
+
 export type numberArray = (number)[];
 
 export type stringArray = (string)[];
 
-/** 'UpsertPerson' parameters type */
-export interface IUpsertPersonParams {
-  canonicalName?: string | null | void;
-  externalId?: string | null | void;
-  federation?: string | null | void;
-  gender?: gender | null | void;
+/** 'UpsertPeople' parameters type */
+export interface IUpsertPeopleParams {
+  canonicalName?: stringArray | null | void;
+  externalId?: stringArray | null | void;
+  federation?: stringArray | null | void;
+  gender?: genderArray | null | void;
 }
 
-/** 'UpsertPerson' return type */
-export type IUpsertPersonResult = void;
+/** 'UpsertPeople' return type */
+export type IUpsertPeopleResult = void;
 
-/** 'UpsertPerson' query type */
-export interface IUpsertPersonQuery {
-  params: IUpsertPersonParams;
-  result: IUpsertPersonResult;
+/** 'UpsertPeople' query type */
+export interface IUpsertPeopleQuery {
+  params: IUpsertPeopleParams;
+  result: IUpsertPeopleResult;
 }
 
-const upsertPersonIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":97,"b":107}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":110,"b":120}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":123,"b":136}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":139,"b":145}]}],"statement":"INSERT INTO federated.person AS person (federation, external_id, canonical_name, gender)\nVALUES (:federation, :externalId, :canonicalName, :gender)\nON CONFLICT (federation, external_id)\n  DO UPDATE SET canonical_name = EXCLUDED.canonical_name\n  WHERE person.canonical_name <> EXCLUDED.canonical_name"};
+const upsertPeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":173,"b":183}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":196,"b":206}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":219,"b":232}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":245,"b":251}]}],"statement":"INSERT INTO federated.person (federation, external_id, canonical_name, gender)\nSELECT input.federation, input.external_id, input.canonical_name, input.gender\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :canonicalName::text[],\n  :gender::federated.gender[]\n) AS input(federation, external_id, canonical_name, gender)\nON CONFLICT (federation, external_id)\n  DO UPDATE SET canonical_name = EXCLUDED.canonical_name\n  WHERE federated.person.canonical_name IS DISTINCT FROM EXCLUDED.canonical_name AND EXCLUDED.canonical_name <> ''"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO federated.person AS person (federation, external_id, canonical_name, gender)
- * VALUES (:federation, :externalId, :canonicalName, :gender)
+ * INSERT INTO federated.person (federation, external_id, canonical_name, gender)
+ * SELECT input.federation, input.external_id, input.canonical_name, input.gender
+ * FROM unnest(
+ *   :federation::text[],
+ *   :externalId::text[],
+ *   :canonicalName::text[],
+ *   :gender::federated.gender[]
+ * ) AS input(federation, external_id, canonical_name, gender)
  * ON CONFLICT (federation, external_id)
  *   DO UPDATE SET canonical_name = EXCLUDED.canonical_name
- *   WHERE person.canonical_name <> EXCLUDED.canonical_name
+ *   WHERE federated.person.canonical_name IS DISTINCT FROM EXCLUDED.canonical_name AND EXCLUDED.canonical_name <> ''
  * ```
  */
-export const upsertPerson = new PreparedQuery<IUpsertPersonParams,IUpsertPersonResult>(upsertPersonIR);
+export const upsertPeople = new PreparedQuery<IUpsertPeopleParams,IUpsertPeopleResult>(upsertPeopleIR);
 
 
 /** 'UpdatePerson' parameters type */
@@ -83,6 +93,39 @@ const updatePersonIR: any = {"usedParamSet":{"ageGroup":true,"medicalCheckupExpi
  * ```
  */
 export const updatePerson = new PreparedQuery<IUpdatePersonParams,IUpdatePersonResult>(updatePersonIR);
+
+
+/** 'GetAllCategories' parameters type */
+export type IGetAllCategoriesParams = void;
+
+/** 'GetAllCategories' return type */
+export interface IGetAllCategoriesResult {
+  ageGroup: string;
+  class: string;
+  competitorType: competitor_type;
+  discipline: string;
+  genderGroup: string;
+  id: string;
+  series: string;
+}
+
+/** 'GetAllCategories' query type */
+export interface IGetAllCategoriesQuery {
+  params: IGetAllCategoriesParams;
+  result: IGetAllCategoriesResult;
+}
+
+const getAllCategoriesIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT id, series, discipline, age_group AS \"ageGroup\",\n       gender_group AS \"genderGroup\", class, competitor_type AS \"competitorType\"\nFROM federated.category"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, series, discipline, age_group AS "ageGroup",
+ *        gender_group AS "genderGroup", class, competitor_type AS "competitorType"
+ * FROM federated.category
+ * ```
+ */
+export const getAllCategories = new PreparedQuery<IGetAllCategoriesParams,IGetAllCategoriesResult>(getAllCategoriesIR);
 
 
 /** 'UpsertCategory' parameters type */
@@ -139,68 +182,24 @@ const upsertCategoryIR: any = {"usedParamSet":{"series":true,"discipline":true,"
 export const upsertCategory = new PreparedQuery<IUpsertCategoryParams,IUpsertCategoryResult>(upsertCategoryIR);
 
 
-/** 'UpsertCompetitor' parameters type */
-export interface IUpsertCompetitorParams {
-  component_person_ids?: stringArray | null | void;
-  component_roles?: competitor_roleArray | null | void;
-  externalId?: string | null | void;
-  federation?: string | null | void;
-  label?: string | null | void;
-  type?: competitor_type | null | void;
+/** 'UpsertCompetitors' parameters type */
+export interface IUpsertCompetitorsParams {
+  externalId?: stringArray | null | void;
+  federation?: stringArray | null | void;
+  label?: stringArray | null | void;
+  type?: competitor_typeArray | null | void;
 }
 
-/** 'UpsertCompetitor' return type */
-export interface IUpsertCompetitorResult {
-  competitor_id: string | null;
+/** 'UpsertCompetitors' return type */
+export type IUpsertCompetitorsResult = void;
+
+/** 'UpsertCompetitors' query type */
+export interface IUpsertCompetitorsQuery {
+  params: IUpsertCompetitorsParams;
+  result: IUpsertCompetitorsResult;
 }
 
-/** 'UpsertCompetitor' query type */
-export interface IUpsertCompetitorQuery {
-  params: IUpsertCompetitorParams;
-  result: IUpsertCompetitorResult;
-}
-
-const upsertCompetitorIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true,"component_person_ids":true,"component_roles":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":55,"b":65}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":98}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":114,"b":118}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":162,"b":167}]},{"name":"component_person_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":290,"b":310}]},{"name":"component_roles","required":false,"transform":{"type":"scalar"},"locs":[{"a":327,"b":342}]}],"statement":"SELECT federated.upsert_competitor(\n  in_federation => :federation,\n  in_external_id => :externalId,\n  in_type => :type::federated.competitor_type,\n  in_label => :label,\n  in_components => ARRAY(\n    SELECT (u.person_id, u.role)::federated.competitor_component_input\n    FROM unnest(\n      :component_person_ids::text[],\n      :component_roles::federated.competitor_role[]\n    ) AS u(person_id, role)\n  )\n) as competitor_id"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT federated.upsert_competitor(
- *   in_federation => :federation,
- *   in_external_id => :externalId,
- *   in_type => :type::federated.competitor_type,
- *   in_label => :label,
- *   in_components => ARRAY(
- *     SELECT (u.person_id, u.role)::federated.competitor_component_input
- *     FROM unnest(
- *       :component_person_ids::text[],
- *       :component_roles::federated.competitor_role[]
- *     ) AS u(person_id, role)
- *   )
- * ) as competitor_id
- * ```
- */
-export const upsertCompetitor = new PreparedQuery<IUpsertCompetitorParams,IUpsertCompetitorResult>(upsertCompetitorIR);
-
-
-/** 'UpsertManyCompetitors' parameters type */
-export interface IUpsertManyCompetitorsParams {
-  external_ids?: stringArray | null | void;
-  federations?: stringArray | null | void;
-  labels?: stringArray | null | void;
-  types?: competitor_typeArray | null | void;
-}
-
-/** 'UpsertManyCompetitors' return type */
-export type IUpsertManyCompetitorsResult = void;
-
-/** 'UpsertManyCompetitors' query type */
-export interface IUpsertManyCompetitorsQuery {
-  params: IUpsertManyCompetitorsParams;
-  result: IUpsertManyCompetitorsResult;
-}
-
-const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"external_ids":true,"types":true,"labels":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":186}]},{"name":"external_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":199,"b":211}]},{"name":"types","required":false,"transform":{"type":"scalar"},"locs":[{"a":224,"b":229}]},{"name":"labels","required":false,"transform":{"type":"scalar"},"locs":[{"a":263,"b":269}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federations::text[],\n  :external_ids::text[],\n  :types::federated.competitor_type[],\n  :labels::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT DO NOTHING"};
+const upsertCompetitorsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (federation, external_id) DO UPDATE\n  SET name = EXCLUDED.name\n  WHERE federated.competitor.name IS DISTINCT FROM EXCLUDED.name"};
 
 /**
  * Query generated from SQL:
@@ -208,69 +207,125 @@ const upsertManyCompetitorsIR: any = {"usedParamSet":{"federations":true,"extern
  * INSERT INTO federated.competitor (federation, external_id, competitor_type, name)
  * SELECT input.federation, input.external_id, input.competitor_type, input.name
  * FROM unnest(
- *   :federations::text[],
- *   :external_ids::text[],
- *   :types::federated.competitor_type[],
- *   :labels::text[]
+ *   :federation::text[],
+ *   :externalId::text[],
+ *   :type::federated.competitor_type[],
+ *   :label::text[]
  * ) AS input(federation, external_id, competitor_type, name)
- * ON CONFLICT DO NOTHING
+ * ON CONFLICT (federation, external_id) DO UPDATE
+ *   SET name = EXCLUDED.name
+ *   WHERE federated.competitor.name IS DISTINCT FROM EXCLUDED.name
  * ```
  */
-export const upsertManyCompetitors = new PreparedQuery<IUpsertManyCompetitorsParams,IUpsertManyCompetitorsResult>(upsertManyCompetitorsIR);
+export const upsertCompetitors = new PreparedQuery<IUpsertCompetitorsParams,IUpsertCompetitorsResult>(upsertCompetitorsIR);
 
 
-/** 'ReplaceCompetitorProgress' parameters type */
-export interface IReplaceCompetitorProgressParams {
-  category_ids?: NumberOrStringArray | null | void;
-  competitorId?: string | null | void;
-  domestic_finales?: numberArray | null | void;
-  foreign_finales?: numberArray | null | void;
-  points?: NumberOrStringArray | null | void;
+/** 'MergeCompetitorComponents' parameters type */
+export interface IMergeCompetitorComponentsParams {
+  competitorId?: stringArray | null | void;
+  competitorIds?: stringArray | null | void;
+  personId?: stringArray | null | void;
+  role?: competitor_roleArray | null | void;
 }
 
-/** 'ReplaceCompetitorProgress' return type */
-export interface IReplaceCompetitorProgressResult {
-  replace_competitor_category_progress: undefined | null;
+/** 'MergeCompetitorComponents' return type */
+export type IMergeCompetitorComponentsResult = void;
+
+/** 'MergeCompetitorComponents' query type */
+export interface IMergeCompetitorComponentsQuery {
+  params: IMergeCompetitorComponentsParams;
+  result: IMergeCompetitorComponentsResult;
 }
 
-/** 'ReplaceCompetitorProgress' query type */
-export interface IReplaceCompetitorProgressQuery {
-  params: IReplaceCompetitorProgressParams;
-  result: IReplaceCompetitorProgressResult;
-}
-
-const replaceCompetitorProgressIR: any = {"usedParamSet":{"competitorId":true,"category_ids":true,"points":true,"domestic_finales":true,"foreign_finales":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":77,"b":89}]},{"name":"category_ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":294,"b":306}]},{"name":"points","required":false,"transform":{"type":"scalar"},"locs":[{"a":325,"b":331}]},{"name":"domestic_finales","required":false,"transform":{"type":"scalar"},"locs":[{"a":357,"b":373}]},{"name":"foreign_finales","required":false,"transform":{"type":"scalar"},"locs":[{"a":389,"b":404}]}],"statement":"SELECT federated.replace_competitor_category_progress(\n  in_competitor_id => :competitorId,\n  in_entries       => ARRAY(\n    SELECT (\n      u.category_id,\n      u.points,\n      u.domestic_finale,\n      u.foreign_finale\n    )::federated.competitor_category_progress_input\n    FROM unnest(\n      :category_ids::bigint[],\n      :points::numeric(10,3)[],\n      :domestic_finales::int[],\n      :foreign_finales::int[]\n    ) AS u(category_id, points, domestic_finale, foreign_finale)\n  )\n)"};
+const mergeCompetitorComponentsIR: any = {"usedParamSet":{"competitorId":true,"personId":true,"role":true,"competitorIds":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":165,"b":177}]},{"name":"personId","required":false,"transform":{"type":"scalar"},"locs":[{"a":192,"b":200}]},{"name":"role","required":false,"transform":{"type":"scalar"},"locs":[{"a":215,"b":219}]},{"name":"competitorIds","required":false,"transform":{"type":"scalar"},"locs":[{"a":628,"b":641}]}],"statement":"MERGE INTO federated.competitor_component AS t\nUSING (\n  SELECT DISTINCT ON (competitor_id, person_id)\n    competitor_id,\n    person_id,\n    role\n  FROM unnest(\n    :competitorId::text[],\n    :personId::text[],\n    :role::federated.competitor_role[]\n  ) AS input(competitor_id, person_id, role)\n) AS s\nON t.competitor_id = s.competitor_id AND t.person_id = s.person_id\nWHEN MATCHED AND t.role IS DISTINCT FROM s.role THEN\n  UPDATE SET role = s.role\nWHEN NOT MATCHED THEN\n  INSERT (competitor_id, person_id, role)\n  VALUES (s.competitor_id, s.person_id, s.role)\nWHEN NOT MATCHED BY SOURCE\n  AND t.competitor_id IN (SELECT unnest(:competitorIds::text[])) THEN\n  DELETE"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT federated.replace_competitor_category_progress(
- *   in_competitor_id => :competitorId,
- *   in_entries       => ARRAY(
- *     SELECT (
- *       u.category_id,
- *       u.points,
- *       u.domestic_finale,
- *       u.foreign_finale
- *     )::federated.competitor_category_progress_input
- *     FROM unnest(
- *       :category_ids::bigint[],
- *       :points::numeric(10,3)[],
- *       :domestic_finales::int[],
- *       :foreign_finales::int[]
- *     ) AS u(category_id, points, domestic_finale, foreign_finale)
- *   )
- * )
+ * MERGE INTO federated.competitor_component AS t
+ * USING (
+ *   SELECT DISTINCT ON (competitor_id, person_id)
+ *     competitor_id,
+ *     person_id,
+ *     role
+ *   FROM unnest(
+ *     :competitorId::text[],
+ *     :personId::text[],
+ *     :role::federated.competitor_role[]
+ *   ) AS input(competitor_id, person_id, role)
+ * ) AS s
+ * ON t.competitor_id = s.competitor_id AND t.person_id = s.person_id
+ * WHEN MATCHED AND t.role IS DISTINCT FROM s.role THEN
+ *   UPDATE SET role = s.role
+ * WHEN NOT MATCHED THEN
+ *   INSERT (competitor_id, person_id, role)
+ *   VALUES (s.competitor_id, s.person_id, s.role)
+ * WHEN NOT MATCHED BY SOURCE
+ *   AND t.competitor_id IN (SELECT unnest(:competitorIds::text[])) THEN
+ *   DELETE
  * ```
  */
-export const replaceCompetitorProgress = new PreparedQuery<IReplaceCompetitorProgressParams,IReplaceCompetitorProgressResult>(replaceCompetitorProgressIR);
+export const mergeCompetitorComponents = new PreparedQuery<IMergeCompetitorComponentsParams,IMergeCompetitorComponentsResult>(mergeCompetitorComponentsIR);
+
+
+/** 'MergeCompetitorProgress' parameters type */
+export interface IMergeCompetitorProgressParams {
+  categoryId?: NumberOrStringArray | null | void;
+  competitorId?: stringArray | null | void;
+  domesticFinals?: numberArray | null | void;
+  foreignFinals?: numberArray | null | void;
+  points?: NumberOrStringArray | null | void;
+}
+
+/** 'MergeCompetitorProgress' return type */
+export type IMergeCompetitorProgressResult = void;
+
+/** 'MergeCompetitorProgress' query type */
+export interface IMergeCompetitorProgressQuery {
+  params: IMergeCompetitorProgressParams;
+  result: IMergeCompetitorProgressResult;
+}
+
+const mergeCompetitorProgressIR: any = {"usedParamSet":{"competitorId":true,"categoryId":true,"points":true,"domesticFinals":true,"foreignFinals":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":209,"b":221},{"a":879,"b":891}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":236,"b":246}]},{"name":"points","required":false,"transform":{"type":"scalar"},"locs":[{"a":263,"b":269}]},{"name":"domesticFinals","required":false,"transform":{"type":"scalar"},"locs":[{"a":293,"b":307}]},{"name":"foreignFinals","required":false,"transform":{"type":"scalar"},"locs":[{"a":321,"b":334}]}],"statement":"MERGE INTO federated.competitor_category_progress AS t\nUSING (\n  SELECT\n    entry.competitor_id,\n    entry.category_id,\n    entry.points,\n    entry.domestic_finals,\n    entry.foreign_finals\n  FROM unnest(\n    :competitorId::text[],\n    :categoryId::bigint[],\n    :points::numeric(10,3)[],\n    :domesticFinals::int[],\n    :foreignFinals::int[]\n  ) entry (competitor_id, category_id, points, domestic_finals, foreign_finals)\n) AS s\nON t.competitor_id = s.competitor_id AND t.category_id = s.category_id\nWHEN MATCHED THEN\n  UPDATE SET points = s.points, domestic_finals = s.domestic_finals, foreign_finals = s.foreign_finals\nWHEN NOT MATCHED THEN\n  INSERT (competitor_id, category_id, points, domestic_finals, foreign_finals)\n  VALUES (s.competitor_id, s.category_id, s.points, s.domestic_finals, s.foreign_finals)\nWHEN NOT MATCHED BY SOURCE\n  AND t.competitor_id IN (SELECT unnest(:competitorId::text[])) THEN\n  DELETE"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * MERGE INTO federated.competitor_category_progress AS t
+ * USING (
+ *   SELECT
+ *     entry.competitor_id,
+ *     entry.category_id,
+ *     entry.points,
+ *     entry.domestic_finals,
+ *     entry.foreign_finals
+ *   FROM unnest(
+ *     :competitorId::text[],
+ *     :categoryId::bigint[],
+ *     :points::numeric(10,3)[],
+ *     :domesticFinals::int[],
+ *     :foreignFinals::int[]
+ *   ) entry (competitor_id, category_id, points, domestic_finals, foreign_finals)
+ * ) AS s
+ * ON t.competitor_id = s.competitor_id AND t.category_id = s.category_id
+ * WHEN MATCHED THEN
+ *   UPDATE SET points = s.points, domestic_finals = s.domestic_finals, foreign_finals = s.foreign_finals
+ * WHEN NOT MATCHED THEN
+ *   INSERT (competitor_id, category_id, points, domestic_finals, foreign_finals)
+ *   VALUES (s.competitor_id, s.category_id, s.points, s.domestic_finals, s.foreign_finals)
+ * WHEN NOT MATCHED BY SOURCE
+ *   AND t.competitor_id IN (SELECT unnest(:competitorId::text[])) THEN
+ *   DELETE
+ * ```
+ */
+export const mergeCompetitorProgress = new PreparedQuery<IMergeCompetitorProgressParams,IMergeCompetitorProgressResult>(mergeCompetitorProgressIR);
 
 
 /** 'UpsertRanklistSnapshot' parameters type */
 export interface IUpsertRanklistSnapshotParams {
   asOfDate?: DateOrString | null | void;
   categoryId?: NumberOrString | null | void;
-  entries?: string | null | void;
+  entries?: Json | null | void;
   federation?: string | null | void;
   kind?: string | null | void;
   ranklistName?: string | null | void;
@@ -278,7 +333,7 @@ export interface IUpsertRanklistSnapshotParams {
 
 /** 'UpsertRanklistSnapshot' return type */
 export interface IUpsertRanklistSnapshotResult {
-  snapshot_id: string | null;
+  id: string;
 }
 
 /** 'UpsertRanklistSnapshot' query type */
@@ -287,19 +342,41 @@ export interface IUpsertRanklistSnapshotQuery {
   result: IUpsertRanklistSnapshotResult;
 }
 
-const upsertRanklistSnapshotIR: any = {"usedParamSet":{"federation":true,"categoryId":true,"ranklistName":true,"asOfDate":true,"kind":true,"entries":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":76}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":102,"b":112}]},{"name":"ranklistName","required":false,"transform":{"type":"scalar"},"locs":[{"a":138,"b":150}]},{"name":"asOfDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":176,"b":184}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":225,"b":229}]},{"name":"entries","required":false,"transform":{"type":"scalar"},"locs":[{"a":267,"b":274}]}],"statement":"SELECT federated.upsert_ranklist_snapshot(\n  in_federation     => :federation,\n  in_category_id    => :categoryId,\n  in_ranklist_name  => :ranklistName,\n  in_as_of_date     => :asOfDate::date,\n  in_kind           => COALESCE(:kind, 'default'),\n  in_entries        => :entries::text::jsonb\n) AS snapshot_id"};
+const upsertRanklistSnapshotIR: any = {"usedParamSet":{"federation":true,"categoryId":true,"ranklistName":true,"asOfDate":true,"kind":true,"entries":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":101,"b":111}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":114,"b":124}]},{"name":"ranklistName","required":false,"transform":{"type":"scalar"},"locs":[{"a":127,"b":139}]},{"name":"asOfDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":347,"b":355}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":367,"b":371}]},{"name":"entries","required":false,"transform":{"type":"scalar"},"locs":[{"a":871,"b":878}]}],"statement":"WITH upsert_ranklist AS (\n  INSERT INTO federated.ranklist (federation, category_id, name)\n  VALUES (:federation, :categoryId, :ranklistName)\n  ON CONFLICT (federation, category_id)\n    DO UPDATE SET name = EXCLUDED.name\n  RETURNING id\n),\nupsert_snapshot AS (\n  INSERT INTO federated.ranklist_snapshot (ranklist_id, as_of_date, kind)\n  SELECT id, :asOfDate, COALESCE(:kind, 'default')\n  FROM upsert_ranklist\n  ON CONFLICT (ranklist_id, as_of_date, kind)\n    DO UPDATE SET kind = EXCLUDED.kind\n  RETURNING id\n),\ndelete_old AS (\n  DELETE FROM federated.ranklist_entry WHERE snapshot_id = (SELECT id FROM upsert_snapshot)\n),\ninsert_entries AS (\n  INSERT INTO federated.ranklist_entry (snapshot_id, competitor_id, ranking, ranking_to, points)\n  SELECT s.id, e.competitor_id, e.ranking, e.ranking_to, e.points\n  FROM upsert_snapshot s\n  CROSS JOIN jsonb_to_recordset(COALESCE(:entries, '[]'::jsonb)) AS e(\n    competitor_id text,\n    ranking       integer,\n    ranking_to    integer,\n    points        numeric(10,3)\n  )\n)\nSELECT id FROM upsert_snapshot"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT federated.upsert_ranklist_snapshot(
- *   in_federation     => :federation,
- *   in_category_id    => :categoryId,
- *   in_ranklist_name  => :ranklistName,
- *   in_as_of_date     => :asOfDate::date,
- *   in_kind           => COALESCE(:kind, 'default'),
- *   in_entries        => :entries::text::jsonb
- * ) AS snapshot_id
+ * WITH upsert_ranklist AS (
+ *   INSERT INTO federated.ranklist (federation, category_id, name)
+ *   VALUES (:federation, :categoryId, :ranklistName)
+ *   ON CONFLICT (federation, category_id)
+ *     DO UPDATE SET name = EXCLUDED.name
+ *   RETURNING id
+ * ),
+ * upsert_snapshot AS (
+ *   INSERT INTO federated.ranklist_snapshot (ranklist_id, as_of_date, kind)
+ *   SELECT id, :asOfDate, COALESCE(:kind, 'default')
+ *   FROM upsert_ranklist
+ *   ON CONFLICT (ranklist_id, as_of_date, kind)
+ *     DO UPDATE SET kind = EXCLUDED.kind
+ *   RETURNING id
+ * ),
+ * delete_old AS (
+ *   DELETE FROM federated.ranklist_entry WHERE snapshot_id = (SELECT id FROM upsert_snapshot)
+ * ),
+ * insert_entries AS (
+ *   INSERT INTO federated.ranklist_entry (snapshot_id, competitor_id, ranking, ranking_to, points)
+ *   SELECT s.id, e.competitor_id, e.ranking, e.ranking_to, e.points
+ *   FROM upsert_snapshot s
+ *   CROSS JOIN jsonb_to_recordset(COALESCE(:entries, '[]'::jsonb)) AS e(
+ *     competitor_id text,
+ *     ranking       integer,
+ *     ranking_to    integer,
+ *     points        numeric(10,3)
+ *   )
+ * )
+ * SELECT id FROM upsert_snapshot
  * ```
  */
 export const upsertRanklistSnapshot = new PreparedQuery<IUpsertRanklistSnapshotParams,IUpsertRanklistSnapshotResult>(upsertRanklistSnapshotIR);

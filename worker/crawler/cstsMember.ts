@@ -1,15 +1,19 @@
 import { z } from 'zod';
 import { type JsonLoader } from './types.ts';
 import {
+  type competitor_role,
+  type competitor_type,
   type gender,
-  replaceCompetitorProgress,
+  mergeCompetitorComponents,
+  mergeCompetitorProgress,
   updatePerson,
-  upsertCompetitor,
-  upsertPerson,
+  upsertCompetitors,
+  upsertPeople,
 } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
 import { mapCompetitorType } from './cstsEnums.ts';
 import { getFederatedCategoryId } from './federatedCategory.ts';
+import { makePgtypedCollection } from './pgtypedCollection.ts';
 
 const rankingPointsSchema = z.object({
   id: z.number(),
@@ -65,17 +69,18 @@ const athleteSchema = z.object({
 });
 
 const athletesResponseSchema = z.object({
-  collection: z.array(athleteSchema),
+  collection: z.array(athleteSchema).nonempty(),
 });
 
 type Response = z.infer<typeof athletesResponseSchema>;
 type Athlete = z.infer<typeof athleteSchema>;
 type RankingPoints = z.infer<typeof rankingPointsSchema>;
 type ProgressEntry = {
+  competitorId: string;
   categoryId: string;
   rank: number;
-  domesticFinale: number;
-  foreignFinale: number;
+  domesticFinals: number;
+  foreignFinals: number;
   points: number;
 };
 
@@ -109,7 +114,7 @@ export const cstsMember: JsonLoader<Response> = {
     }
     return parsed;
   },
-  async load(client, _frontier, parsed) {
+  async load(client, parsed) {
     for (const athlete of parsed.collection) {
       await loadCstsAthlete(client, athlete);
     }
@@ -117,184 +122,173 @@ export const cstsMember: JsonLoader<Response> = {
 };
 
 async function loadCstsAthlete(client: PoolClient, data: Athlete) {
-  await upsertPerson.run(
-    {
-      federation: 'csts',
-      externalId: String(data.idt),
-      canonicalName: data.name,
-      gender: data.sex,
-    },
-    client,
-  );
-  const mainPersonId = `csts:${data.idt}`;
-  await updatePerson.run(
-    {
-      federation: 'csts',
-      externalId: String(data.idt),
-      ageGroup: data.age,
-      medicalCheckupExpiration: data.medicalCheckupExpiration,
-    },
-    client,
+  const people = makePgtypedCollection<{
+    federation: string;
+    externalId: string;
+    canonicalName: string;
+    gender: gender;
+  }>(
+    ['federation', 'externalId', 'canonicalName', 'gender'],
+    ['federation', 'externalId'],
   );
 
-  const byCompetitor = new Map<string, Map<string, ProgressEntry>>();
+  const competitors = makePgtypedCollection<{
+    federation: string;
+    externalId: string;
+    label: string;
+    type: competitor_type;
+  }>(['federation', 'externalId', 'label', 'type'], ['federation', 'externalId']);
 
-  for (const rankingPoint of data.rankingPoints) {
-    if (!rankingPoint.competitorId) continue;
+  const components = makePgtypedCollection<{
+    competitorId: string;
+    personId: string;
+    role: competitor_role;
+  }>(['competitorId', 'personId', 'role'], ['competitorId', 'personId']);
 
-    const competitorType = mapCompetitorType(rankingPoint.competitors);
-    const progressClass = classifyProgressClass(rankingPoint.class);
+  people.add({
+    federation: 'csts',
+    externalId: data.idt.toString(),
+    canonicalName: data.name,
+    gender: data.sex,
+  });
+
+  const progressByCompetitor = new Map<string, Map<string, ProgressEntry>>();
+  for (const rp of data.rankingPoints) {
+    if (!rp.competitorId) continue;
+
+    const competitorType = mapCompetitorType(rp.competitors);
+    const progressClass = classifyProgressClass(rp.class);
     const categoryId = await getFederatedCategoryId(client, {
       class: progressClass.className,
-      ageGroup: rankingPoint.rankingAge,
+      ageGroup: rp.rankingAge,
       genderGroup: 'mixed', // ČSTS distinguishes this only in competitions
-      discipline: rankingPoint.discipline,
-      series: rankingPoint.series,
+      discipline: rp.discipline,
+      series: rp.series,
       competitorType,
     });
     if (!categoryId) continue;
 
-    switch (competitorType) {
-      case 'couple':
-        await loadCstsCouple(data, rankingPoint, client, mainPersonId);
-        break;
-      case 'duo':
-        await loadCstsDuo(data, rankingPoint, client, mainPersonId);
-        break;
-      case 'solo':
-        await loadCstsSolo(data, rankingPoint, client, mainPersonId);
-        break;
-      default:
-        throw new Error(`Don't know how to process ${competitorType}`);
+    const competitorId = `csts:${rp.competitorId}`;
+    const mainPersonId = `csts:${data.idt}`;
+
+    if (rp.partnerIdt && (competitorType === 'couple' || competitorType === 'duo')) {
+      people.add({
+        federation: 'csts',
+        externalId: String(rp.partnerIdt),
+        canonicalName: rp.partner || '',
+        gender:
+          competitorType !== 'couple'
+            ? data.sex
+            : data.sex === 'male'
+              ? 'female'
+              : 'male',
+      });
     }
-    const competitorId = `csts:${rankingPoint.competitorId}`;
+
+    competitors.add({
+      federation: 'csts',
+      externalId: rp.competitorId.toString(),
+      label: buildLabel(data, rp, competitorType),
+      type: competitorType,
+    });
+    components.add(...buildComponents(data, rp, competitorType, mainPersonId));
 
     const bucket = [
-      rankingPoint.series,
-      rankingPoint.discipline,
-      rankingPoint.rankingAge,
+      rp.series,
+      rp.discipline,
+      rp.rankingAge,
       competitorType,
       progressClass.bucket,
     ].join('\u0000');
 
     const nextProgress = {
+      competitorId,
       categoryId,
       rank: progressClass.rank,
-      domesticFinale: rankingPoint.domesticFinaleCount ?? 0,
-      foreignFinale: rankingPoint.foreignFinaleCount ?? 0,
-      points: rankingPoint.points ?? 0,
+      domesticFinals: rp.domesticFinaleCount ?? 0,
+      foreignFinals: rp.foreignFinaleCount ?? 0,
+      points: rp.points ?? 0,
     };
-
-    const byBucket = byCompetitor.get(competitorId) ?? new Map<string, ProgressEntry>();
+    const byBucket =
+      progressByCompetitor.get(competitorId) ?? new Map<string, ProgressEntry>();
     const currentProgress = byBucket.get(bucket);
     if (!currentProgress || isBetterProgress(nextProgress, currentProgress)) {
       byBucket.set(bucket, nextProgress);
     }
-    byCompetitor.set(competitorId, byBucket);
+    progressByCompetitor.set(competitorId, byBucket);
   }
 
-  for (const [competitorId, progressByBucket] of byCompetitor) {
-    const progress = [...progressByBucket.values()];
-
-    await replaceCompetitorProgress.run(
+  if (people.length) {
+    await upsertPeople.run(people.params, client);
+    await updatePerson.run(
       {
-        category_ids: progress.map((entry) => entry.categoryId),
-        competitorId,
-        domestic_finales: progress.map((entry) => entry.domesticFinale),
-        foreign_finales: progress.map((entry) => entry.foreignFinale),
-        points: progress.map((entry) => entry.points),
+        federation: 'csts',
+        externalId: String(data.idt),
+        ageGroup: data.age,
+        medicalCheckupExpiration: data.medicalCheckupExpiration,
       },
       client,
     );
   }
+
+  if (competitors.length) {
+    await upsertCompetitors.run(competitors.params, client);
+  }
+  if (components.length) {
+    await mergeCompetitorComponents.run(components.params, client);
+  }
+
+  const progress = makePgtypedCollection<{
+    competitorId: string;
+    categoryId: string;
+    points: number;
+    domesticFinals: number;
+    foreignFinals: number;
+  }>(['competitorId', 'categoryId', 'points', 'domesticFinals', 'foreignFinals']);
+  progress.add(...progressByCompetitor.values().flatMap((x) => x.values()));
+  if (progress.length) {
+    await mergeCompetitorProgress.run(progress.params, client);
+  }
 }
 
-async function loadCstsSolo(
-  data: Athlete,
-  rp: RankingPoints,
-  client: PoolClient,
-  mainPersonId: string,
-) {
-  await upsertCompetitor.run(
-    {
-      federation: 'csts',
-      externalId: rp.competitorId.toString(),
-      label: data.name,
-      type: 'solo',
-      component_person_ids: [mainPersonId],
-      component_roles: ['member'],
-    },
-    client,
-  );
+function buildLabel(data: Athlete, rp: RankingPoints, type: string): string {
+  if (type === 'solo') return data.name;
+  if (type === 'couple') {
+    return data.sex === 'male'
+      ? `${data.name} - ${rp.partner}`
+      : `${rp.partner} - ${data.name}`;
+  }
+  // duo
+  return data.idt < (rp.partnerIdt ?? 0)
+    ? `${data.name} - ${rp.partner}`
+    : `${rp.partner} - ${data.name}`;
 }
 
-async function loadCstsDuo(
+function buildComponents(
   data: Athlete,
   rp: RankingPoints,
-  client: PoolClient,
+  type: string,
   mainPersonId: string,
-) {
-  await upsertPerson.run(
-    {
-      federation: 'csts',
-      externalId: String(rp.partnerIdt),
-      canonicalName: rp.partner,
-      gender: data.sex === 'male' ? 'male' : 'female',
-    },
-    client,
-  );
-  const partnerPersonId = `csts:${rp.partnerIdt}`;
-
-  await upsertCompetitor.run(
-    {
-      federation: 'csts',
-      externalId: rp.competitorId.toString(),
-      label:
-        data.idt < (rp.partnerIdt ?? 0)
-          ? `${data.name} - ${rp.partner}`
-          : `${rp.partner} - ${data.name}`,
-      type: 'duo',
-      component_person_ids: [mainPersonId, partnerPersonId],
-      component_roles: ['member', 'member'],
-    },
-    client,
-  );
-}
-
-async function loadCstsCouple(
-  data: Athlete,
-  rp: RankingPoints,
-  client: PoolClient,
-  mainPersonId: string,
-) {
-  await upsertPerson.run(
-    {
-      federation: 'csts',
-      externalId: String(rp.partnerIdt),
-      canonicalName: rp.partner,
-      gender: data.sex === 'male' ? 'female' : 'male',
-    },
-    client,
-  );
-  const partnerPersonId = `csts:${rp.partnerIdt}`;
-
-  await upsertCompetitor.run(
-    {
-      federation: 'csts',
-      externalId: rp.competitorId.toString(),
-      label:
-        data.sex === 'male'
-          ? `${data.name} - ${rp.partner}`
-          : `${rp.partner} - ${data.name}`,
-      type: 'couple',
-      component_person_ids: [
-        data.sex === 'male' ? mainPersonId : partnerPersonId,
-        data.sex === 'male' ? partnerPersonId : mainPersonId,
-      ],
-      component_roles: ['lead', 'follow'],
-    },
-    client,
-  );
+): Array<{ competitorId: string; personId: string; role: competitor_role }> {
+  const competitorId = `csts:${rp.competitorId}`;
+  if (type === 'solo') {
+    return [{ competitorId, personId: mainPersonId, role: 'member' }];
+  }
+  if (type === 'duo') {
+    return [
+      { competitorId, personId: mainPersonId, role: 'member' },
+      { competitorId, personId: `csts:${rp.partnerIdt}`, role: 'member' },
+    ];
+  }
+  if (type === 'couple') {
+    const leadId = data.sex === 'male' ? mainPersonId : `csts:${rp.partnerIdt}`;
+    const followId = data.sex === 'male' ? `csts:${rp.partnerIdt}` : mainPersonId;
+    return [
+      { competitorId, personId: leadId, role: 'lead' },
+      { competitorId, personId: followId, role: 'follow' },
+    ];
+  }
+  throw new Error('Unsupported competitor type');
 }
 
 function classifyProgressClass(value: string | null | undefined): ProgressClass {
@@ -332,7 +326,7 @@ function isBetterProgress(candidate: ProgressEntry, current: ProgressEntry) {
   if (pointDiff !== 0) return pointDiff > 0;
 
   return (
-    candidate.domesticFinale + candidate.foreignFinale >
-    current.domesticFinale + current.foreignFinale
+    candidate.domesticFinals + candidate.foreignFinals >
+    current.domesticFinals + current.foreignFinals
   );
 }

@@ -44,7 +44,7 @@ export const cstsResultIndex: JsonLoader<Response> = {
       },
     };
   },
-  async load(client, _frontier, parsed) {
+  async load(client, parsed) {
     await upsertFrontierKeys.run(
       {
         federation: 'csts',

@@ -135,9 +135,8 @@ CREATE TABLE federated.competitor (
   competitor_type federated.competitor_type NOT NULL,
   age_group       text,
   name            text,
-  component_sig   text,
   created_at      timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (competitor_type, component_sig)
+  UNIQUE (federation, external_id)
 );
 
 CREATE TABLE federated.competitor_component (
@@ -153,8 +152,8 @@ CREATE TABLE federated.competitor_category_progress (
   competitor_id   text   NOT NULL REFERENCES federated.competitor(id),
   category_id     bigint NOT NULL REFERENCES federated.category(id),
   points          numeric(10, 3) NOT NULL DEFAULT 0,
-  domestic_finale int NOT NULL DEFAULT 0,
-  foreign_finale  int NOT NULL DEFAULT 0,
+  domestic_finals int NOT NULL DEFAULT 0,
+  foreign_finals  int NOT NULL DEFAULT 0,
   PRIMARY KEY (competitor_id, category_id)
 );
 CREATE INDEX ON federated.competitor_category_progress (competitor_id);
@@ -420,171 +419,6 @@ CREATE TABLE federated.ranklist_entry (
 CREATE INDEX ON federated.ranklist_entry (competitor_id);
 CREATE INDEX ON federated.ranklist_entry (snapshot_id, ranking);
 
-
-CREATE TYPE federated.competitor_component_input AS (
-  person_id text,
-  role federated.competitor_role
-);
-
-CREATE TYPE federated.competitor_category_progress_input AS (
-  category_id bigint,
-  points numeric(10,3),
-  domestic_finale integer,
-  foreign_finale integer
-);
-
-CREATE OR REPLACE FUNCTION federated.competitor_component_sig(
-  in_components federated.competitor_component_input[]
-) RETURNS text
-  LANGUAGE sql
-  IMMUTABLE PARALLEL SAFE
-AS $$
-  SELECT
-    CASE
-      WHEN in_components IS NULL OR cardinality(in_components) = 0 THEN NULL
-      ELSE (
-        SELECT jsonb_agg(jsonb_build_array(person_id, role::text) ORDER BY person_id, role::text)::text
-        FROM (
-          SELECT DISTINCT ON (person_id) person_id, role
-          FROM unnest(in_components) AS c (person_id, role)
-          ORDER BY person_id, role
-        ) t
-      )
-  END
-$$;
-
-CREATE OR REPLACE FUNCTION federated.upsert_competitor(
-  in_federation     text,
-  in_external_id    text,
-  in_type           federated.competitor_type,
-  in_label          text,
-  in_components     federated.competitor_component_input[]
-)
-  RETURNS text
-  LANGUAGE sql
-  SET SEARCH_PATH = federated, pg_temp
-AS $$
-  with competitor as (
-    INSERT INTO federated.competitor (federation, external_id, competitor_type, name, component_sig)
-    VALUES (in_federation, in_external_id, in_type, in_label,
-            federated.competitor_component_sig(in_components))
-    ON CONFLICT (id)
-      DO UPDATE SET name = EXCLUDED.name
-    RETURNING id
-  ), src AS MATERIALIZED (
-    SELECT
-      (c).person_id AS person_id,
-      min((c).role)  AS role
-    FROM unnest(in_components) AS c
-    GROUP BY 1
-  ), upserted AS (
-    INSERT INTO federated.competitor_component (competitor_id, person_id, role)
-      SELECT competitor.id, s.person_id, s.role
-      FROM competitor, src s
-    ON CONFLICT (competitor_id, person_id) DO UPDATE SET role = EXCLUDED.role
-    WHERE federated.competitor_component.role IS DISTINCT FROM EXCLUDED.role
-    RETURNING 1
-  ), deleted AS (
-    DELETE FROM federated.competitor_component t
-      WHERE t.competitor_id = (select id from competitor)
-        AND NOT EXISTS (SELECT 1 FROM src s WHERE s.person_id = t.person_id)
-    RETURNING 1
-  )
-  SELECT competitor.id
-  FROM competitor, upserted, deleted;
-$$;
-
-CREATE OR REPLACE FUNCTION federated.replace_competitor_category_progress(
-  in_competitor_id text,
-  in_entries       federated.competitor_category_progress_input[] DEFAULT '{}'::federated.competitor_category_progress_input[]
-)
-  RETURNS void
-  LANGUAGE plpgsql
-  SET SEARCH_PATH = federated, pg_temp
-AS $$
-BEGIN
-  DELETE FROM federated.competitor_category_progress
-  WHERE competitor_id = in_competitor_id;
-
-  INSERT INTO federated.competitor_category_progress (
-    competitor_id,
-    category_id,
-    points,
-    domestic_finale,
-    foreign_finale
-  )
-  SELECT
-    in_competitor_id,
-    (entry).category_id,
-    COALESCE((entry).points, 0),
-    COALESCE((entry).domestic_finale, 0),
-    COALESCE((entry).foreign_finale, 0)
-  FROM unnest(COALESCE(in_entries, '{}'::federated.competitor_category_progress_input[])) AS entry
-  WHERE (entry).category_id IS NOT NULL;
-END;
-$$;
-SELECT verify_function('federated.replace_competitor_category_progress');
-
-
-CREATE OR REPLACE FUNCTION federated.upsert_ranklist_snapshot(
-  in_federation    text,
-  in_category_id   bigint,
-  in_ranklist_name text,
-  in_as_of_date    date,
-  in_kind          text DEFAULT 'default',
-  in_entries       jsonb DEFAULT '[]'::jsonb
-)
-  RETURNS bigint
-  LANGUAGE plpgsql
-  SET SEARCH_PATH = federated, pg_temp
-AS $$
-DECLARE
-  v_ranklist_id  bigint;
-  v_snapshot_id  bigint;
-BEGIN
-  INSERT INTO federated.ranklist (federation, category_id, name)
-  VALUES (in_federation, in_category_id, in_ranklist_name)
-  ON CONFLICT (federation, category_id)
-    DO UPDATE SET name = EXCLUDED.name
-  RETURNING id INTO v_ranklist_id;
-
-  -- 2) upsert snapshot
-  INSERT INTO federated.ranklist_snapshot (ranklist_id, as_of_date, kind)
-  VALUES (v_ranklist_id, in_as_of_date, COALESCE(in_kind, 'default'))
-  ON CONFLICT (ranklist_id, as_of_date, kind)
-    DO UPDATE SET kind = EXCLUDED.kind
-  RETURNING id INTO v_snapshot_id;
-
-  -- 3) replace entries for this snapshot (so removals are reflected too)
-  DELETE FROM federated.ranklist_entry
-  WHERE snapshot_id = v_snapshot_id;
-
-  INSERT INTO federated.ranklist_entry (
-    snapshot_id,
-    competitor_id,
-    ranking,
-    ranking_to,
-    points
-  )
-  SELECT
-    v_snapshot_id,
-    e.competitor_id,
-    e.ranking,
-    e.ranking_to,
-    e.points
-  FROM jsonb_to_recordset(COALESCE(in_entries, '[]'::jsonb)) AS e(
-    competitor_id text,
-    ranking integer,
-    ranking_to integer,
-    points numeric(10,3)
-  );
-
-  RETURN v_snapshot_id;
-END;
-$$;
-SELECT verify_function('federated.upsert_ranklist_snapshot');
-
-
 ------------------------------------
 -- Dependent objects in public API
 ------------------------------------
@@ -611,7 +445,7 @@ select
   competitor.name as competitor_name,
   row(category.*) as category,
   ccp.points,
-  ccp.domestic_finale + ccp.foreign_finale as finals
+  ccp.domestic_finals + ccp.foreign_finals as finals
 from federated.person p
        join federated.competitor_component cp on cp.person_id = p.id
        join federated.competitor on competitor.id = cp.competitor_id

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
-import { numberAsEnum, competitorType } from './cstsEnums.ts';
+import { competitorType, numberAsEnum } from './cstsEnums.ts';
 
 const competitorSchema = z.object({
   competitorId: z.number(),
@@ -69,7 +69,7 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
       },
     };
   },
-  async load(client, _frontier, parsed) {
+  async load(client, parsed) {
     for (const competitor of parsed.collection) {
       // Check on enums - type, reg.state
       // ensureCompetitor (bulk)

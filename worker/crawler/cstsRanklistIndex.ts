@@ -32,7 +32,7 @@ export const cstsRanklistIndex: JsonLoader<z.output<typeof responseSchema>> = {
     },
   }),
   schema: responseSchema,
-  async load(client, frontier, parsed) {
+  async load(client, parsed) {
     await upsertFrontierKeys.run(
       {
         federation: 'csts',

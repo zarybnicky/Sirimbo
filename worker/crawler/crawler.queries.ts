@@ -1,15 +1,15 @@
 /** Types generated for queries found in "crawler/crawler.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
-export type fetch_status = 'error' | 'gone' | 'ok' | 'pending';
-
-export type process_status = 'error' | 'ok' | 'pending';
+export type fetch_status = 'error' | 'gone' | 'ok' | 'pending' | 'transient';
 
 export type DateOrString = Date | string;
 
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
 export type NumberOrString = number | string;
+
+export type NumberOrStringArray = (NumberOrString)[];
 
 export type stringArray = (string)[];
 
@@ -91,6 +91,7 @@ export interface IGetFrontierKindStatusResult {
   fetch_gone: number | null;
   fetch_ok: number | null;
   fetch_pending: number | null;
+  fetch_transient: number | null;
   keys: string | null;
   kind: string;
   latest: Date | null;
@@ -108,7 +109,7 @@ export interface IGetFrontierKindStatusQuery {
   result: IGetFrontierKindStatusResult;
 }
 
-const getFrontierKindStatusIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":287},{"a":321,"b":331}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":347},{"a":375,"b":379}]}],"statement":"WITH frontiers AS (\n  SELECT\n    f.*,\n    row_number() OVER (\n      PARTITION BY f.federation, f.kind\n      ORDER BY\n        CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,\n        f.discovered_at DESC,\n        f.id\n    ) AS key_rank\n  FROM crawler.frontier f\n  WHERE (:federation::text IS NULL OR f.federation = :federation)\n    AND (:kind::text IS NULL OR f.kind = :kind)\n), response_counts AS (\n  SELECT\n    f.federation,\n    f.kind,\n    count(*)::int AS responses,\n    max(r.fetched_at) AS latest_response\n  FROM frontiers f\n  JOIN crawler.json_response r ON r.frontier_id = f.id\n  GROUP BY f.federation, f.kind\n), status AS (\n  SELECT\n    federation,\n    kind,\n    count(*)::int AS total,\n    coalesce(\n      string_agg(\n        key || CASE WHEN fetch_status = 'pending' THEN ' (pending)' ELSE '' END,\n        ', '\n        ORDER BY key_rank\n      ) FILTER (WHERE key <> '' AND key_rank <= 3)\n        || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,\n      '-'\n    ) AS keys,\n    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,\n    count(*) FILTER (WHERE fetch_status = 'ok')::int AS fetch_ok,\n    count(*) FILTER (WHERE fetch_status = 'gone')::int AS fetch_gone,\n    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,\n    count(*) FILTER (WHERE process_status = 'pending')::int AS process_pending,\n    count(*) FILTER (WHERE process_status = 'ok')::int AS process_ok,\n    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,\n    count(*) FILTER (WHERE next_fetch_at IS NULL OR next_fetch_at <= now())::int AS fetch_due,\n    max(last_fetched_at) AS latest_fetch\n  FROM frontiers f\n  GROUP BY federation, kind\n)\nSELECT\n  s.*,\n  coalesce(rc.responses, 0)::int AS responses,\n  coalesce(s.latest_fetch, rc.latest_response) AS latest\nFROM status s\nLEFT JOIN response_counts rc ON rc.federation = s.federation AND rc.kind = s.kind\nORDER BY s.federation, s.kind"};
+const getFrontierKindStatusIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":287},{"a":321,"b":331}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":347},{"a":375,"b":379}]}],"statement":"WITH frontiers AS (\n  SELECT\n    f.*,\n    row_number() OVER (\n      PARTITION BY f.federation, f.kind\n      ORDER BY\n        CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,\n        f.discovered_at DESC,\n        f.id\n    ) AS key_rank\n  FROM crawler.frontier f\n  WHERE (:federation::text IS NULL OR f.federation = :federation)\n    AND (:kind::text IS NULL OR f.kind = :kind)\n), response_counts AS (\n  SELECT\n    f.federation,\n    f.kind,\n    count(*)::int AS responses,\n    max(r.fetched_at) AS latest_response\n  FROM frontiers f\n  JOIN crawler.json_response r ON r.frontier_id = f.id\n  GROUP BY f.federation, f.kind\n), status AS (\n  SELECT\n    federation,\n    kind,\n    count(*)::int AS total,\n    coalesce(\n      string_agg(key, ', ' ORDER BY key_rank) FILTER (WHERE key <> '' AND key_rank <= 3)\n        || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,\n      '-'\n    ) AS keys,\n    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,\n    count(*) FILTER (WHERE fetch_status = 'transient')::int AS fetch_transient,\n    count(*) FILTER (WHERE fetch_status = 'ok')::int AS fetch_ok,\n    count(*) FILTER (WHERE fetch_status = 'gone')::int AS fetch_gone,\n    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,\n    count(*) FILTER (WHERE process_status = 'pending')::int AS process_pending,\n    count(*) FILTER (WHERE process_status = 'ok')::int AS process_ok,\n    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,\n    count(*) FILTER (WHERE next_fetch_at IS NULL OR next_fetch_at <= now())::int AS fetch_due,\n    max(last_fetched_at) AS latest_fetch\n  FROM frontiers f\n  GROUP BY federation, kind\n)\nSELECT\n  s.*,\n  coalesce(rc.responses, 0)::int AS responses,\n  coalesce(s.latest_fetch, rc.latest_response) AS latest\nFROM status s\nLEFT JOIN response_counts rc ON rc.federation = s.federation AND rc.kind = s.kind\nORDER BY s.federation, s.kind"};
 
 /**
  * Query generated from SQL:
@@ -141,15 +142,12 @@ const getFrontierKindStatusIR: any = {"usedParamSet":{"federation":true,"kind":t
  *     kind,
  *     count(*)::int AS total,
  *     coalesce(
- *       string_agg(
- *         key || CASE WHEN fetch_status = 'pending' THEN ' (pending)' ELSE '' END,
- *         ', '
- *         ORDER BY key_rank
- *       ) FILTER (WHERE key <> '' AND key_rank <= 3)
+ *       string_agg(key, ', ' ORDER BY key_rank) FILTER (WHERE key <> '' AND key_rank <= 3)
  *         || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,
  *       '-'
  *     ) AS keys,
  *     count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,
+ *     count(*) FILTER (WHERE fetch_status = 'transient')::int AS fetch_transient,
  *     count(*) FILTER (WHERE fetch_status = 'ok')::int AS fetch_ok,
  *     count(*) FILTER (WHERE fetch_status = 'gone')::int AS fetch_gone,
  *     count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,
@@ -173,27 +171,27 @@ const getFrontierKindStatusIR: any = {"usedParamSet":{"federation":true,"kind":t
 export const getFrontierKindStatus = new PreparedQuery<IGetFrontierKindStatusParams,IGetFrontierKindStatusResult>(getFrontierKindStatusIR);
 
 
-/** 'GetLatestFrontierJsonResponses' parameters type */
-export interface IGetLatestFrontierJsonResponsesParams {
+/** 'GetLatestFrontierResponses' parameters type */
+export interface IGetLatestFrontierResponsesParams {
   federation?: string | null | void;
   kind?: string | null | void;
 }
 
-/** 'GetLatestFrontierJsonResponses' return type */
-export interface IGetLatestFrontierJsonResponsesResult {
+/** 'GetLatestFrontierResponses' return type */
+export interface IGetLatestFrontierResponsesResult {
   content: Json;
   http_status: number | null;
   id: string;
   url: string;
 }
 
-/** 'GetLatestFrontierJsonResponses' query type */
-export interface IGetLatestFrontierJsonResponsesQuery {
-  params: IGetLatestFrontierJsonResponsesParams;
-  result: IGetLatestFrontierJsonResponsesResult;
+/** 'GetLatestFrontierResponses' query type */
+export interface IGetLatestFrontierResponsesQuery {
+  params: IGetLatestFrontierResponsesParams;
+  result: IGetLatestFrontierResponsesResult;
 }
 
-const getLatestFrontierJsonResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":325}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":340,"b":344}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n  ) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation AND f.kind = :kind AND f.fetch_status in ('ok', 'pending')"};
+const getLatestFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":325}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":340,"b":344}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n  ) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation AND f.kind = :kind AND f.fetch_status in ('ok', 'pending')"};
 
 /**
  * Query generated from SQL:
@@ -211,48 +209,7 @@ const getLatestFrontierJsonResponsesIR: any = {"usedParamSet":{"federation":true
  * WHERE f.federation = :federation AND f.kind = :kind AND f.fetch_status in ('ok', 'pending')
  * ```
  */
-export const getLatestFrontierJsonResponses = new PreparedQuery<IGetLatestFrontierJsonResponsesParams,IGetLatestFrontierJsonResponsesResult>(getLatestFrontierJsonResponsesIR);
-
-
-/** 'GetFrontierJsonResponse' parameters type */
-export interface IGetFrontierJsonResponseParams {
-  id?: NumberOrString | null | void;
-}
-
-/** 'GetFrontierJsonResponse' return type */
-export interface IGetFrontierJsonResponseResult {
-  content: Json;
-  error: string | null;
-  http_status: number | null;
-  id: string;
-  url: string;
-}
-
-/** 'GetFrontierJsonResponse' query type */
-export interface IGetFrontierJsonResponseQuery {
-  params: IGetFrontierJsonResponseParams;
-  result: IGetFrontierJsonResponseResult;
-}
-
-const getFrontierJsonResponseIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":317}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
- * FROM crawler.frontier f
- * JOIN LATERAL (
- *   SELECT jr.*
- *   FROM crawler.json_response jr
- *   WHERE jr.frontier_id = f.id
- *   ORDER BY jr.fetched_at DESC
- *   LIMIT 1
- * ) jr ON true
- * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
- * WHERE f.id = :id::bigint
- * ```
- */
-export const getFrontierJsonResponse = new PreparedQuery<IGetFrontierJsonResponseParams,IGetFrontierJsonResponseResult>(getFrontierJsonResponseIR);
+export const getLatestFrontierResponses = new PreparedQuery<IGetLatestFrontierResponsesParams,IGetLatestFrontierResponsesResult>(getLatestFrontierResponsesIR);
 
 
 /** 'GetJobCountForTask' parameters type */
@@ -350,7 +307,7 @@ export interface IGetPendingFetchQuery {
   result: IGetPendingFetchResult;
 }
 
-const getPendingFetchIR: any = {"usedParamSet":{"allowRefetch":true,"capacity":true},"params":[{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":210}]},{"name":"capacity","required":false,"transform":{"type":"scalar"},"locs":[{"a":561,"b":569}]}],"statement":"WITH eligible AS (\n  SELECT id, federation, kind, key, last_fetched_at\n  FROM crawler.frontier\n  WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n    AND (fetch_status = 'pending'\n       OR (:allowRefetch AND fetch_status = 'ok' AND process_status = 'ok'))\n), ranked AS (\n  SELECT\n    id, federation, kind, key, last_fetched_at,\n    row_number() OVER (\n      PARTITION BY federation, kind\n      ORDER BY last_fetched_at NULLS FIRST\n    ) AS rn\n  FROM eligible\n)\nSELECT id, federation, kind, key\nFROM ranked\nORDER BY rn, last_fetched_at NULLS FIRST\nLIMIT :capacity"};
+const getPendingFetchIR: any = {"usedParamSet":{"allowRefetch":true,"capacity":true},"params":[{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":214,"b":226}]},{"name":"capacity","required":false,"transform":{"type":"scalar"},"locs":[{"a":577,"b":585}]}],"statement":"WITH eligible AS (\n  SELECT id, federation, kind, key, last_fetched_at\n  FROM crawler.frontier\n  WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n    AND (fetch_status IN ('pending', 'transient')\n       OR (:allowRefetch AND fetch_status = 'ok' AND process_status = 'ok'))\n), ranked AS (\n  SELECT\n    id, federation, kind, key, last_fetched_at,\n    row_number() OVER (\n      PARTITION BY federation, kind\n      ORDER BY last_fetched_at NULLS FIRST\n    ) AS rn\n  FROM eligible\n)\nSELECT id, federation, kind, key\nFROM ranked\nORDER BY rn, last_fetched_at NULLS FIRST\nLIMIT :capacity"};
 
 /**
  * Query generated from SQL:
@@ -359,7 +316,7 @@ const getPendingFetchIR: any = {"usedParamSet":{"allowRefetch":true,"capacity":t
  *   SELECT id, federation, kind, key, last_fetched_at
  *   FROM crawler.frontier
  *   WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
- *     AND (fetch_status = 'pending'
+ *     AND (fetch_status IN ('pending', 'transient')
  *        OR (:allowRefetch AND fetch_status = 'ok' AND process_status = 'ok'))
  * ), ranked AS (
  *   SELECT
@@ -386,17 +343,14 @@ export interface IGetNextPendingProcessParams {
 
 /** 'GetNextPendingProcess' return type */
 export interface IGetNextPendingProcessResult {
-  discovered_at: Date;
-  error_count: number;
+  content: Json;
+  error: string | null;
   federation: string;
-  fetch_status: fetch_status;
+  http_status: number | null;
   id: string;
   key: string;
   kind: string;
-  last_fetched_at: Date | null;
-  meta: Json;
-  next_fetch_at: Date | null;
-  process_status: process_status;
+  url: string;
 }
 
 /** 'GetNextPendingProcess' query type */
@@ -405,13 +359,21 @@ export interface IGetNextPendingProcessQuery {
   result: IGetNextPendingProcessResult;
 }
 
-const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":170,"b":175}]}],"statement":"SELECT *\nFROM crawler.frontier\nWHERE process_status = 'pending'\n  AND fetch_status IN ('ok', 'gone')\nORDER BY last_fetched_at, discovered_at\nFOR UPDATE SKIP LOCKED\nLIMIT :limit"};
+const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":470,"b":475}]}],"statement":"SELECT f.id, f.federation, f.kind, f.key, jr.url, jr.http_status, jr.error, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE process_status = 'pending'\n  AND fetch_status IN ('ok', 'gone')\nORDER BY last_fetched_at, discovered_at\nFOR UPDATE SKIP LOCKED\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT *
- * FROM crawler.frontier
+ * SELECT f.id, f.federation, f.kind, f.key, jr.url, jr.http_status, jr.error, jrc.content
+ * FROM crawler.frontier f
+ * JOIN LATERAL (
+ *   SELECT jr.*
+ *   FROM crawler.json_response jr
+ *   WHERE jr.frontier_id = f.id
+ *   ORDER BY jr.fetched_at DESC
+ *   LIMIT 1
+ * ) jr ON true
+ * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
  * WHERE process_status = 'pending'
  *   AND fetch_status IN ('ok', 'gone')
  * ORDER BY last_fetched_at, discovered_at
@@ -420,34 +382,6 @@ const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"
  * ```
  */
 export const getNextPendingProcess = new PreparedQuery<IGetNextPendingProcessParams,IGetNextPendingProcessResult>(getNextPendingProcessIR);
-
-
-/** 'CountPendingProcess' parameters type */
-export type ICountPendingProcessParams = void;
-
-/** 'CountPendingProcess' return type */
-export interface ICountPendingProcessResult {
-  count: number | null;
-}
-
-/** 'CountPendingProcess' query type */
-export interface ICountPendingProcessQuery {
-  params: ICountPendingProcessParams;
-  result: ICountPendingProcessResult;
-}
-
-const countPendingProcessIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT count(*)::int\nFROM crawler.frontier\nWHERE process_status = 'pending'\n  AND fetch_status IN ('ok', 'gone')"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT count(*)::int
- * FROM crawler.frontier
- * WHERE process_status = 'pending'
- *   AND fetch_status IN ('ok', 'gone')
- * ```
- */
-export const countPendingProcess = new PreparedQuery<ICountPendingProcessParams,ICountPendingProcessResult>(countPendingProcessIR);
 
 
 /** 'ReserveRequest' parameters type */
@@ -512,6 +446,39 @@ const markFrontierFetchErrorIR: any = {"usedParamSet":{"id":true},"params":[{"na
 export const markFrontierFetchError = new PreparedQuery<IMarkFrontierFetchErrorParams,IMarkFrontierFetchErrorResult>(markFrontierFetchErrorIR);
 
 
+/** 'MarkFrontierTransient' parameters type */
+export interface IMarkFrontierTransientParams {
+  id?: NumberOrString | null | void;
+}
+
+/** 'MarkFrontierTransient' return type */
+export type IMarkFrontierTransientResult = void;
+
+/** 'MarkFrontierTransient' query type */
+export interface IMarkFrontierTransientQuery {
+  params: IMarkFrontierTransientParams;
+  result: IMarkFrontierTransientResult;
+}
+
+const markFrontierTransientIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":279,"b":281}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status    = 'transient',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      interval '30 minutes',\n      (power(2::numeric, error_count + 1) * 5) * interval '1 second'\n    )\nWHERE id = :id::bigint"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE crawler.frontier
+ * SET last_fetched_at = now(),
+ *     fetch_status    = 'transient',
+ *     error_count     = error_count + 1,
+ *     next_fetch_at   = now() + least(
+ *       interval '30 minutes',
+ *       (power(2::numeric, error_count + 1) * 5) * interval '1 second'
+ *     )
+ * WHERE id = :id::bigint
+ * ```
+ */
+export const markFrontierTransient = new PreparedQuery<IMarkFrontierTransientParams,IMarkFrontierTransientResult>(markFrontierTransientIR);
+
+
 /** 'MarkFrontierFetchSuccess' parameters type */
 export interface IMarkFrontierFetchSuccessParams {
   fetchStatus?: fetch_status | null | void;
@@ -545,29 +512,31 @@ const markFrontierFetchSuccessIR: any = {"usedParamSet":{"fetchStatus":true,"rev
 export const markFrontierFetchSuccess = new PreparedQuery<IMarkFrontierFetchSuccessParams,IMarkFrontierFetchSuccessResult>(markFrontierFetchSuccessIR);
 
 
-/** 'MarkFrontierProcessSuccess' parameters type */
-export interface IMarkFrontierProcessSuccessParams {
-  id?: NumberOrString | null | void;
+/** 'MarkFrontiersProcessSuccess' parameters type */
+export interface IMarkFrontiersProcessSuccessParams {
+  ids?: NumberOrStringArray | null | void;
 }
 
-/** 'MarkFrontierProcessSuccess' return type */
-export type IMarkFrontierProcessSuccessResult = void;
+/** 'MarkFrontiersProcessSuccess' return type */
+export type IMarkFrontiersProcessSuccessResult = void;
 
-/** 'MarkFrontierProcessSuccess' query type */
-export interface IMarkFrontierProcessSuccessQuery {
-  params: IMarkFrontierProcessSuccessParams;
-  result: IMarkFrontierProcessSuccessResult;
+/** 'MarkFrontiersProcessSuccess' query type */
+export interface IMarkFrontiersProcessSuccessQuery {
+  params: IMarkFrontiersProcessSuccessParams;
+  result: IMarkFrontiersProcessSuccessResult;
 }
 
-const markFrontierProcessSuccessIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":61,"b":63}]}],"statement":"UPDATE crawler.frontier SET process_status = 'ok' WHERE id = :id::bigint"};
+const markFrontiersProcessSuccessIR: any = {"usedParamSet":{"ids":true},"params":[{"name":"ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":65,"b":68}]}],"statement":"UPDATE crawler.frontier\nSET process_status = 'ok'\nWHERE id = ANY(:ids::bigint[])"};
 
 /**
  * Query generated from SQL:
  * ```
- * UPDATE crawler.frontier SET process_status = 'ok' WHERE id = :id::bigint
+ * UPDATE crawler.frontier
+ * SET process_status = 'ok'
+ * WHERE id = ANY(:ids::bigint[])
  * ```
  */
-export const markFrontierProcessSuccess = new PreparedQuery<IMarkFrontierProcessSuccessParams,IMarkFrontierProcessSuccessResult>(markFrontierProcessSuccessIR);
+export const markFrontiersProcessSuccess = new PreparedQuery<IMarkFrontiersProcessSuccessParams,IMarkFrontiersProcessSuccessResult>(markFrontiersProcessSuccessIR);
 
 
 /** 'MarkFrontierProcessError' parameters type */
@@ -621,8 +590,8 @@ const rescheduleFrontierIR: any = {"usedParamSet":{"nextRetryAt":true,"id":true}
 export const rescheduleFrontier = new PreparedQuery<IRescheduleFrontierParams,IRescheduleFrontierResult>(rescheduleFrontierIR);
 
 
-/** 'InsertJsonResponse' parameters type */
-export interface IInsertJsonResponseParams {
+/** 'InsertResponse' parameters type */
+export interface IInsertResponseParams {
   content?: string | null | void;
   error?: string | null | void;
   httpStatus?: number | null | void;
@@ -630,16 +599,16 @@ export interface IInsertJsonResponseParams {
   url?: string | null | void;
 }
 
-/** 'InsertJsonResponse' return type */
-export type IInsertJsonResponseResult = void;
+/** 'InsertResponse' return type */
+export type IInsertResponseResult = void;
 
-/** 'InsertJsonResponse' query type */
-export interface IInsertJsonResponseQuery {
-  params: IInsertJsonResponseParams;
-  result: IInsertJsonResponseResult;
+/** 'InsertResponse' query type */
+export interface IInsertResponseQuery {
+  params: IInsertResponseParams;
+  result: IInsertResponseResult;
 }
 
-const insertJsonResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":334,"b":336}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":339,"b":342}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":345,"b":355}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":358,"b":363}]}],"statement":"WITH payload AS (\n  SELECT :content::text::jsonb AS content\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url, :httpStatus, :error,\n       case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash\nFROM payload"};
+const insertResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":334,"b":336}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":339,"b":342}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":345,"b":355}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":358,"b":363}]}],"statement":"WITH payload AS (\n  SELECT :content::text::jsonb AS content\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url, :httpStatus, :error,\n       case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash\nFROM payload"};
 
 /**
  * Query generated from SQL:
@@ -659,7 +628,7 @@ const insertJsonResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url
  * FROM payload
  * ```
  */
-export const insertJsonResponse = new PreparedQuery<IInsertJsonResponseParams,IInsertJsonResponseResult>(insertJsonResponseIR);
+export const insertResponse = new PreparedQuery<IInsertResponseParams,IInsertResponseResult>(insertResponseIR);
 
 
 /** 'UpsertFrontier' parameters type */

@@ -34,7 +34,7 @@ export const cstsEventOfficials: JsonLoader<Response> = {
       },
     };
   },
-  async load(client, _frontier, parsed) {
+  async load(client, parsed) {
     for (const official of parsed.collection) {
       // What's what in a role? Porota, vedoucí, dozor, sčitatel = 1, 2, 3, 4, 5?
       // A kam to uložit??? event_

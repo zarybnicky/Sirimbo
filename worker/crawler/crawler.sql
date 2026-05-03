@@ -38,15 +38,12 @@ WITH frontiers AS (
     kind,
     count(*)::int AS total,
     coalesce(
-      string_agg(
-        key || CASE WHEN fetch_status = 'pending' THEN ' (pending)' ELSE '' END,
-        ', '
-        ORDER BY key_rank
-      ) FILTER (WHERE key <> '' AND key_rank <= 3)
+      string_agg(key, ', ' ORDER BY key_rank) FILTER (WHERE key <> '' AND key_rank <= 3)
         || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,
       '-'
     ) AS keys,
     count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,
+    count(*) FILTER (WHERE fetch_status = 'transient')::int AS fetch_transient,
     count(*) FILTER (WHERE fetch_status = 'ok')::int AS fetch_ok,
     count(*) FILTER (WHERE fetch_status = 'gone')::int AS fetch_gone,
     count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,
@@ -66,7 +63,7 @@ FROM status s
 LEFT JOIN response_counts rc ON rc.federation = s.federation AND rc.kind = s.kind
 ORDER BY s.federation, s.kind;
 
-/* @name GetLatestFrontierJsonResponses */
+/* @name GetLatestFrontierResponses */
 SELECT f.id, jr.url, jr.http_status, jrc.content
 FROM crawler.frontier f
 JOIN LATERAL (
@@ -78,19 +75,6 @@ JOIN LATERAL (
   ) jr ON true
 JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE f.federation = :federation AND f.kind = :kind AND f.fetch_status in ('ok', 'pending');
-
-/* @name GetFrontierJsonResponse */
-SELECT f.id, jr.url, jr.http_status, jr.error, jrc.content
-FROM crawler.frontier f
-JOIN LATERAL (
-  SELECT jr.*
-  FROM crawler.json_response jr
-  WHERE jr.frontier_id = f.id
-  ORDER BY jr.fetched_at DESC
-  LIMIT 1
-) jr ON true
-JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
-WHERE f.id = :id::bigint;
 
 /* @name GetJobCountForTask */
 SELECT count(*)::int AS count
@@ -123,7 +107,7 @@ WITH eligible AS (
   SELECT id, federation, kind, key, last_fetched_at
   FROM crawler.frontier
   WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
-    AND (fetch_status = 'pending'
+    AND (fetch_status IN ('pending', 'transient')
        OR (:allowRefetch AND fetch_status = 'ok' AND process_status = 'ok'))
 ), ranked AS (
   SELECT
@@ -140,19 +124,21 @@ ORDER BY rn, last_fetched_at NULLS FIRST
 LIMIT :capacity;
 
 /* @name GetNextPendingProcess */
-SELECT *
-FROM crawler.frontier
+SELECT f.id, f.federation, f.kind, f.key, jr.url, jr.http_status, jr.error, jrc.content
+FROM crawler.frontier f
+JOIN LATERAL (
+  SELECT jr.*
+  FROM crawler.json_response jr
+  WHERE jr.frontier_id = f.id
+  ORDER BY jr.fetched_at DESC
+  LIMIT 1
+) jr ON true
+JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE process_status = 'pending'
   AND fetch_status IN ('ok', 'gone')
 ORDER BY last_fetched_at, discovered_at
 FOR UPDATE SKIP LOCKED
 LIMIT :limit;
-
-/* @name CountPendingProcess */
-SELECT count(*)::int
-FROM crawler.frontier
-WHERE process_status = 'pending'
-  AND fetch_status IN ('ok', 'gone');
 
 /* @name ReserveRequest */
 SELECT granted, allowed_at
@@ -169,6 +155,17 @@ SET last_fetched_at = now(),
     )
 WHERE id = :id::bigint;
 
+/* @name MarkFrontierTransient */
+UPDATE crawler.frontier
+SET last_fetched_at = now(),
+    fetch_status    = 'transient',
+    error_count     = error_count + 1,
+    next_fetch_at   = now() + least(
+      interval '30 minutes',
+      (power(2::numeric, error_count + 1) * 5) * interval '1 second'
+    )
+WHERE id = :id::bigint;
+
 /* @name MarkFrontierFetchSuccess */
 UPDATE crawler.frontier
 SET last_fetched_at = now(),
@@ -178,8 +175,10 @@ SET last_fetched_at = now(),
     next_fetch_at = now() + :revalidatePeriod::interval
 WHERE id = :id::bigint;
 
-/* @name MarkFrontierProcessSuccess */
-UPDATE crawler.frontier SET process_status = 'ok' WHERE id = :id::bigint;
+/* @name MarkFrontiersProcessSuccess */
+UPDATE crawler.frontier
+SET process_status = 'ok'
+WHERE id = ANY(:ids::bigint[]);
 
 /* @name MarkFrontierProcessError */
 UPDATE crawler.frontier SET process_status = 'error' WHERE id = :id::bigint;
@@ -187,7 +186,7 @@ UPDATE crawler.frontier SET process_status = 'error' WHERE id = :id::bigint;
 /* @name RescheduleFrontier */
 UPDATE crawler.frontier SET next_fetch_at = :nextRetryAt WHERE id = :id::bigint;
 
-/* @name InsertJsonResponse */
+/* @name InsertResponse */
 WITH payload AS (
   SELECT :content::text::jsonb AS content
 ), ins_cache AS (

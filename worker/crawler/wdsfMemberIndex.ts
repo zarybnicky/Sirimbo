@@ -1,7 +1,8 @@
 import type { JsonLoader } from './types.ts';
-import { upsertPerson } from './federated.queries.ts';
+import { type gender, upsertPeople } from './federated.queries.ts';
 import { z } from 'zod';
 import { upsertFrontierKeys } from './crawler.queries.ts';
+import { makePgtypedCollection } from './pgtypedCollection.ts';
 
 const requestSchema = z.array(
   z.object({
@@ -29,29 +30,31 @@ export const wdsfMemberIndex: JsonLoader<z.output<typeof requestSchema>> = {
     },
   }),
   schema: requestSchema,
-  async load(client, frontier, parsed) {
+  async load(client, parsed) {
+    const people = makePgtypedCollection<{
+      federation: string;
+      externalId: string;
+      canonicalName: string;
+      gender: gender;
+    }>(
+      ['federation', 'externalId', 'canonicalName', 'gender'],
+      ['federation', 'externalId'],
+    );
     for (const member of parsed) {
-      await upsertPerson.run(
-        {
-          federation: 'wdsf',
-          externalId: member.id,
-          canonicalName: member.name,
-          gender:
-            member.sex === 'Male'
-              ? 'male'
-              : member.sex === 'Female'
-                ? 'female'
-                : 'unknown',
-        },
-        client,
-      );
+      people.add({
+        federation: 'wdsf',
+        externalId: member.id,
+        canonicalName: member.name,
+        gender:
+          member.sex === 'Male' ? 'male' : member.sex === 'Female' ? 'female' : 'unknown',
+      });
     }
-
+    await upsertPeople.run(people.params, client);
     await upsertFrontierKeys.run(
       {
         federation: 'wdsf',
         kind: 'member',
-        keys: parsed.map((x) => x.id.toString()),
+        keys: parsed.map((x) => x.id),
       },
       client,
     );

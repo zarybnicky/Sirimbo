@@ -7,13 +7,10 @@ import { cac } from 'cac';
 import { Pool, type PoolClient } from 'pg';
 import Cursor from 'pg-cursor';
 import { zx } from '@traversable/zod';
-import {
-  getFrontierKindStatus,
-  getLatestFrontierJsonResponses,
-} from './crawler.queries.ts';
+import { getFrontierKindStatus, getLatestFrontierResponses } from './crawler.queries.ts';
 import { fetchResponse } from './fetch.ts';
-import { LOADER_MAP, loaderFor } from './handlers.ts';
-import type { FrontierRow, JsonLoader } from './types.ts';
+import { loaderFor, LOADERS } from './handlers.ts';
+import type { JsonLoader } from './types.ts';
 
 const pool = new Pool();
 const REQUEST_CACHE_DIR = resolve(import.meta.dirname, '..', '.requests');
@@ -59,6 +56,8 @@ async function ensureCached(
   overwrite?: boolean,
 ) {
   const loader = loaderFor(federation, kind);
+  if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
+
   const path = resolve(REQUEST_CACHE_DIR, `${federation}:${kind}:${key}`);
   if (existsSync(path) && !overwrite) {
     console.log(`Using ${path}`);
@@ -86,7 +85,7 @@ async function backtestJsonResponses(
   const conn = await pool.connect();
   let count = 0;
   try {
-    const cursor = getLatestFrontierJsonResponses.stream(
+    const cursor = getLatestFrontierResponses.stream(
       { federation, kind },
       {
         query: conn.query,
@@ -142,6 +141,7 @@ async function backtestSchemas(
     }
 
     const loader = loaderFor(federation, kind);
+    if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
     if (loader.mode !== 'json') {
       throw new Error(`Backtest only supports JSON loaders (${federation}:${kind})`);
     }
@@ -161,11 +161,9 @@ async function backtestSchemas(
   let jsonLoaders = 0;
   for (const row of await getFrontierKindStatus.run({}, pool)) {
     const { federation, kind } = row;
-    const loader = LOADER_MAP[federation]?.[kind];
+    const loader = loaderFor(federation, kind);
     if (!loader) {
-      console.log(
-        `Skipping unknown loader ${federation}:${kind} (${row.total} frontiers)`,
-      );
+      console.log(`Skipping unknown loader ${federation}:${kind} (${row.total})`);
       continue;
     }
     if (loader.mode !== 'json') continue;
@@ -190,16 +188,18 @@ async function showStatus(
   }
 
   const rows = (await getFrontierKindStatus.run({ federation, kind }, pool)).filter(
-    (row) => !options.unknown || LOADER_MAP[row.federation]?.[row.kind],
+    (row) => !options.unknown || loaderFor(row.federation, row.kind),
   );
 
   printTable(
     rows.map((row) => ({
       kind: `${row.federation}:${row.kind}`,
       total: row.total ?? 0,
-      keys: row.keys ?? '-',
-      'fetch p/o/g/e': [
+      responses: row.responses ?? 0,
+      due: row.fetch_due ?? 0,
+      'fetch p/t/o/g/e': [
         row.fetch_pending ?? 0,
+        row.fetch_transient ?? 0,
         row.fetch_ok ?? 0,
         row.fetch_gone ?? 0,
         row.fetch_error ?? 0,
@@ -209,23 +209,10 @@ async function showStatus(
         row.process_ok ?? 0,
         row.process_error ?? 0,
       ].join('/'),
-      due: row.fetch_due ?? 0,
-      responses: row.responses ?? 0,
       latest: formatDate(row.latest),
+      keys: row.keys ?? '-',
     })),
   );
-}
-
-function frontier(federation: string, kind: string, key: string): FrontierRow {
-  return {
-    id: '0',
-    federation,
-    kind,
-    key,
-    fetch_status: 'ok',
-    error_count: 0,
-    meta: {},
-  };
 }
 
 function queryText(query: unknown) {
@@ -286,7 +273,7 @@ async function loadCached(
   const client = logClientQueries(await pool.connect());
   try {
     await client.query('BEGIN');
-    await loader.load(client, frontier(federation, kind, key), content);
+    await loader.load(client, content);
     await client.query(shouldCommit ? 'COMMIT' : 'ROLLBACK');
     console.log(`${shouldCommit ? 'Committed' : 'Rolled back'} ${path}`);
   } catch (e) {
@@ -300,7 +287,7 @@ async function loadCached(
 const cli = cac('crawler');
 
 cli.command('list', 'List crawler loaders').action(() => {
-  for (const [federation, kinds] of Object.entries(LOADER_MAP)) {
+  for (const [federation, kinds] of Object.entries(LOADERS)) {
     for (const kind of Object.keys(kinds).sort()) {
       console.log(`${federation}:${kind}`);
     }
@@ -322,7 +309,9 @@ cli
 cli
   .command('request <federation> <kind> [key]', 'Print the loader request')
   .action((federation: string, kind: string, key = '') => {
-    const { url, init = {} } = loaderFor(federation, kind).buildRequest(key);
+    const loader = loaderFor(federation, kind);
+    if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
+    const { url, init = {} } = loader.buildRequest(key);
     console.log(JSON.stringify({ url: url.toString(), init }, null, 2));
   });
 

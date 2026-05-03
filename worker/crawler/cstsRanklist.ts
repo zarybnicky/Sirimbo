@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
-import { upsertManyCompetitors, upsertRanklistSnapshot } from './federated.queries.ts';
+import { upsertCompetitors, upsertRanklistSnapshot } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
 import {
   ageGroup,
@@ -69,7 +69,7 @@ export const cstsRanklist: JsonLoader<Response> = {
     },
   }),
   schema: responseSchema,
-  async load(client, _frontier, parsed) {
+  async load(client, parsed) {
     await loadCstsRanklist(client, parsed.entity);
   },
 };
@@ -85,12 +85,12 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
   });
 
   if (entity.competitors.length > 0) {
-    await upsertManyCompetitors.run(
+    await upsertCompetitors.run(
       {
-        types: entity.competitors.map(() => mapCompetitorType(entity.competitorType)),
-        labels: entity.competitors.map((x) => x.competitorName),
-        federations: entity.competitors.map(() => 'csts'),
-        external_ids: entity.competitors.map((x) => x.competitorId.toString()),
+        type: entity.competitors.map(() => mapCompetitorType(entity.competitorType)),
+        label: entity.competitors.map((x) => x.competitorName),
+        federation: entity.competitors.map(() => 'csts'),
+        externalId: entity.competitors.map((x) => x.competitorId.toString()),
       },
       client,
     );

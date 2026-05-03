@@ -1,13 +1,11 @@
 import { z } from 'zod';
-import type { IGetFrontierForUpdateResult } from './crawler.queries.ts';
+import type { fetch_status, IGetFrontierForUpdateResult } from './crawler.queries.ts';
 import type { PoolClient } from 'pg';
-
-export type FetchStatus = 'pending' | 'ok' | 'gone' | 'error';
 
 export type FrontierRow = IGetFrontierForUpdateResult;
 
-export type MapperArgs<T> = {
-  httpStatus: number | null;
+type MapperArgs<T> = {
+  fetchStatus: fetch_status;
   error: string | null;
   parsed: T | null;
   raw: unknown;
@@ -15,13 +13,13 @@ export type MapperArgs<T> = {
 
 interface LoaderBase<T> {
   buildRequest: (key: string) => { url: URL; init?: RequestInit };
-  mapResponseToStatus?: (args: MapperArgs<T>) => FetchStatus | undefined;
+  mapResponseToStatus?: (args: MapperArgs<T>) => fetch_status | undefined;
   cleanResponse?: (url: URL, parsed: T, raw: unknown) => T;
   revalidatePeriod: string;
-  load: (client: PoolClient, frontier: FrontierRow, parsed: T) => Promise<void>;
+  load: (client: PoolClient, parsed: T) => Promise<void>;
 }
 
-export interface JsonLoader<T = any> extends LoaderBase<T> {
+export interface JsonLoader<T = unknown> extends LoaderBase<T> {
   mode: 'json';
   schema: z.ZodType<T>;
 }

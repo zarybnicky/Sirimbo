@@ -1,15 +1,24 @@
-import type { FetchStatus, Loader, MapperArgs } from './types.ts';
+import type { Loader } from './types.ts';
 import { zx } from '@traversable/zod';
+import type { fetch_status } from './crawler.queries.ts';
 
-function fetchWithTimeout(
-  url: Parameters<typeof fetch>[0],
-  init: Omit<RequestInit, 'signal'> = {},
-  timeoutMs = 30_000,
-) {
-  return fetch(url, {
-    ...init,
-    signal: AbortSignal.timeout(timeoutMs),
-  });
+function classifyFetchError(e: unknown): {
+  error: string;
+  fetchStatus: 'transient' | 'error';
+} {
+  if (!(e instanceof Error)) return { error: String(e), fetchStatus: 'error' };
+
+  if (['AbortError', 'TimeoutError'].includes(e.name) || (e as any).type === 'system') {
+    return { error: e.message, fetchStatus: 'transient' };
+  }
+  return { error: e.message, fetchStatus: 'error' };
+}
+
+function classifyHttpStatus(status: number): fetch_status {
+  if (status === 404 || status === 410) return 'gone';
+  if (status === 429 || status >= 500) return 'transient';
+  if (status >= 400) return 'error';
+  return 'ok';
 }
 
 type ParseResult<T> =
@@ -35,13 +44,12 @@ async function parseResponse<T>(
 
   const wrapSchema = opts.mode === 'strict' ? zx.deepStrict : zx.deepLoose;
   const result = wrapSchema(handler.schema).safeParse(raw, { reportInput: true });
-  return result.success
-    ? { parsed: result.data, raw, error: null }
-    : {
-        parsed: null,
-        raw,
-        error: result.error.toString(),
-      };
+  if (!result.success) {
+    const error = result.error.toString();
+    return { parsed: null, raw, error };
+  } else {
+    return { parsed: result.data, raw, error: null };
+  }
 }
 
 export async function fetchResponse<T>(
@@ -53,45 +61,39 @@ export async function fetchResponse<T>(
   let httpStatus: number | null = null;
   let parsed: T | null = null;
   let raw: unknown = null;
-  let error: string | null;
+  let error: string | null = null;
+  let fetchStatus: fetch_status = 'ok';
 
   try {
-    const resp = await fetchWithTimeout(url, init);
+    const resp = await fetch(url, {
+      ...init,
+      signal: AbortSignal.timeout(30_000),
+    });
+
     httpStatus = resp.status;
+    fetchStatus = classifyHttpStatus(httpStatus);
 
     const result = await parseResponse<T>(resp, handler, opts);
     parsed = result.parsed;
     raw = result.raw;
-    error = result.error;
+    if (result.error) {
+      error = result.error;
+      if (fetchStatus === 'ok') {
+        // Schema/parse failure on 2xx = permanent (API changed)
+        fetchStatus = 'error';
+      }
+    }
   } catch (e) {
-    error = e instanceof Error ? e.message : String(e);
+    const classified = classifyFetchError(e);
+    error = classified.error;
+    fetchStatus = classified.fetchStatus;
   }
-
-  const mapperArgs: MapperArgs<T> = { httpStatus, parsed, raw, error };
 
   return {
     httpStatus,
     error,
     content: (parsed ? (handler.cleanResponse?.(url, parsed, raw) ?? parsed) : raw) as T,
     fetchStatus:
-      handler.mapResponseToStatus?.(mapperArgs) ?? defaultMapResponseToStatus(mapperArgs),
-  } satisfies {
-    httpStatus: number | null;
-    error: string | null;
-    content: T;
-    fetchStatus: FetchStatus;
+      handler.mapResponseToStatus?.({ parsed, raw, error, fetchStatus }) ?? fetchStatus,
   };
 }
-
-const defaultMapResponseToStatus = ({
-  error,
-  httpStatus,
-}: {
-  error?: unknown;
-  httpStatus: number | null;
-}): FetchStatus => {
-  if (error) return 'error';
-  if (httpStatus === 404) return 'gone';
-  if (httpStatus && httpStatus >= 200 && httpStatus < 300) return 'ok';
-  return 'error';
-};

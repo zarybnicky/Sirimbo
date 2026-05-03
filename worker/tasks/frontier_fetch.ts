@@ -2,14 +2,15 @@ import type { Task } from 'graphile-worker';
 import {
   getFrontierForUpdate,
   getJobCountForTask,
-  insertJsonResponse,
+  insertResponse,
   markFrontierFetchError,
   markFrontierFetchSuccess,
+  markFrontierTransient,
   rescheduleFrontier,
   reserveRequest,
 } from '../crawler/crawler.queries.ts';
 import { fetchResponse } from '../crawler/fetch.ts';
-import { LOADER_MAP } from '../crawler/handlers.ts';
+import { loaderFor } from '../crawler/handlers.ts';
 
 export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) => {
   const { withPgClient, logger } = helpers;
@@ -25,15 +26,15 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     }
     const { federation, kind } = frontier;
 
-    const handler = LOADER_MAP[federation]?.[kind];
-    if (!handler) {
+    const loader = loaderFor(federation, kind);
+    if (!loader) {
       await markFrontierFetchError.run({ id }, client);
       logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
       await client.query('COMMIT');
       return;
     }
 
-    const { url, init } = handler.buildRequest(frontier.key);
+    const { url, init } = loader.buildRequest(frontier.key);
     const { host } = url;
     const [{ granted, allowed_at }] = await reserveRequest.run({ host }, client);
     if (!granted) {
@@ -48,7 +49,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     }
     await client.query('COMMIT');
 
-    return { frontier, handler, url, init: init || {} };
+    return { frontier, handler: loader, url, init: init || {} };
   });
   if (!result) return;
   const { frontier, handler, url, init } = result;
@@ -65,12 +66,14 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 
   await withPgClient(async (client) => {
     await client.query('BEGIN');
-    await insertJsonResponse.run(
+    await insertResponse.run(
       { id, url: url.toString(), httpStatus, error, content: JSON.stringify(content) },
       client,
     );
 
-    if (fetchStatus === 'error') {
+    if (fetchStatus === 'transient') {
+      await markFrontierTransient.run({ id }, client);
+    } else if (fetchStatus === 'error') {
       await markFrontierFetchError.run({ id }, client);
     } else {
       const { revalidatePeriod } = handler;

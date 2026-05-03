@@ -9,13 +9,19 @@ import { cstsResultIndex } from './cstsResultIndex.ts';
 import { cstsEventOfficials } from './cstsEventOfficials.ts';
 import { cstsEventCompetitors } from './cstsEventCompetitors.ts';
 
+export type LoaderIds = {
+  [F in keyof typeof LOADERS]: {
+    federation: F;
+    kind: keyof (typeof LOADERS)[F];
+  };
+}[keyof typeof LOADERS];
+
 export function loaderFor(federation: string, kind: string): Loader {
-  const loader = LOADER_MAP[federation]?.[kind];
-  if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
-  return loader;
+  const LOADER_MAP: Record<string, Record<string, Loader>> = LOADERS;
+  return LOADER_MAP[federation]?.[kind];
 }
 
-const LOADERS = {
+export const LOADERS = {
   wdsf: {
     // https://services.worlddancesport.org/api/1/person
     memberIndex: wdsfMemberIndex,
@@ -201,12 +207,3 @@ const LOADERS = {
     // https://baza.taniec-nowoczesny.pl/reg/LIVE/2025/20251108_Elblag_ZTN/PZST_category_60001159.json?_cb=1764631931521
   },
 };
-
-export const LOADER_MAP: Record<string, Record<string, Loader>> = LOADERS;
-
-export type LoaderIds = {
-  [F in keyof typeof LOADERS]: {
-    federation: F;
-    kind: keyof (typeof LOADERS)[F];
-  };
-}[keyof typeof LOADERS];

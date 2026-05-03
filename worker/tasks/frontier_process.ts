@@ -1,13 +1,12 @@
 import type { Task } from 'graphile-worker';
 import {
-  countPendingProcess,
-  getFrontierJsonResponse,
   getNextPendingProcess,
   markFrontierFetchError,
   markFrontierProcessError,
-  markFrontierProcessSuccess,
+  markFrontiersProcessSuccess,
 } from '../crawler/crawler.queries.ts';
 import { loaderFor } from '../crawler/handlers.ts';
+import { zx } from '@traversable/zod';
 
 type ProcessorStats = { count: number; ms: number; errors: number };
 
@@ -56,29 +55,30 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
 
       try {
         for (const frontier of frontiers) {
-          const { id, federation, kind } = frontier;
+          const { federation, kind } = frontier;
           failedFrontier = frontier;
           failedAt = performance.now();
 
-          const handler = loaderFor(federation, kind);
+          const loader = loaderFor(federation, kind);
+          if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
 
-          const [contentRow] = await getFrontierJsonResponse.run({ id }, client);
-          if (contentRow?.content) {
-            const content =
-              handler.mode === 'json'
-                ? handler.schema.parse(contentRow.content, {
-                    reportInput: true,
-                  })
-                : contentRow.content;
-            await handler.load(client, frontier, content);
+          let content = frontier.content;
+          if (loader.mode === 'json') {
+            content = zx.deepLoose(loader.schema).parse(content, {
+              reportInput: true,
+            });
           }
-          await markFrontierProcessSuccess.run({ id }, client);
+          await loader.load(client, content);
+
           successfulBatch.push({
             federation,
             kind,
             ms: performance.now() - failedAt,
           });
         }
+
+        const ids = frontiers.map((f) => f.id);
+        await markFrontiersProcessSuccess.run({ ids }, client);
 
         await client.query('COMMIT');
         processed += successfulBatch.length;
@@ -102,20 +102,6 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
       }
     }
 
-    let pending = '';
-    if (isFullRebuild) {
-      if (processed > 0 && !foundNoMoreRows) {
-        await helpers.addJob('frontier_process', { isFullRebuild: true });
-      }
-    } else {
-      const [countItems] = await countPendingProcess.run(undefined, client);
-      const pendingItems = countItems?.count ?? 0;
-      if (pendingItems > 0) {
-        await helpers.addJob('frontier_process', { isFullRebuild: false });
-      }
-      pending = pendingItems > 0 ? ` (${pendingItems} pending)` : '';
-    }
-
     if (processed > 0) {
       const totalMs = Math.round(performance.now() - started);
       const lines = [...byKind.entries()]
@@ -123,7 +109,11 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
         .map(([k, s]) => `${k} (${s.count}x, ${Math.round(s.ms)}ms, err=${s.errors})`)
         .join(' | ');
 
-      logger.info(`Processed ${processed} rows in ${totalMs}ms${pending} ${lines}`);
+      logger.info(`Processed ${processed} rows in ${totalMs}ms ${lines}`);
+    }
+
+    if (!foundNoMoreRows) {
+      await helpers.addJob('frontier_process', { isFullRebuild });
     }
   });
 };

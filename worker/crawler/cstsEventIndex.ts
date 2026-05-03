@@ -98,7 +98,7 @@ export const cstsEventIndex: JsonLoader<Response> = {
       },
     };
   },
-  async load(client, _frontier, parsed) {
+  async load(client, parsed) {
     for (const event of parsed.collection) {
       const competitionEvent = event.eventCompetitions.find((x) => x)!;
       await upsertEvent.run(

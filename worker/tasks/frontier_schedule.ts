@@ -2,10 +2,10 @@ import type { Task } from 'graphile-worker';
 import {
   getFetchScheduleRules,
   getJobCountForTask,
+  getNextPendingProcess,
   getPendingFetch,
-  countPendingProcess,
 } from '../crawler/crawler.queries.ts';
-import { LOADER_MAP } from '../crawler/handlers.ts';
+import { loaderFor } from '../crawler/handlers.ts';
 
 const MAX_OUTSTANDING_FETCH = 100;
 
@@ -37,10 +37,9 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
 
     const pendingIds = await getPendingFetch.run({ capacity, allowRefetch }, client);
     for (const { id, federation, kind, key } of pendingIds) {
-      const handler = LOADER_MAP[federation]?.[kind];
-      if (!handler) continue;
-      const { url } = handler.buildRequest(key);
-      const { host } = url;
+      const loader = loaderFor(federation, kind);
+      if (!loader) continue;
+      const { host } = loader.buildRequest(key).url;
 
       const rule =
         byHost.get(host) ??
@@ -65,12 +64,11 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
     const outstandingWorkers = workers?.count ?? 0;
     if (outstandingWorkers > 0) return;
 
-    const [countItems] = await countPendingProcess.run(undefined, client);
-    const pendingItems = countItems?.count ?? 0;
-    if (pendingItems <= 0) return;
-
-    await addJob('frontier_process', { isFullRebuild: false });
-    logger.info(`Scheduled 1 process task, pending ${pendingItems} items`);
+    const pendingItems = await getNextPendingProcess.run({ limit: 1 }, client);
+    if (pendingItems.length > 0) {
+      await addJob('frontier_process', { isFullRebuild: false });
+      logger.info(`Scheduled processing`);
+    }
   });
 };
 
