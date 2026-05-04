@@ -1,8 +1,8 @@
 import type { Task } from 'graphile-worker';
 import {
   getFetchScheduleRules,
-  getJobCountForTask,
   getNextPendingProcess,
+  getOutstandingJobCountForTask,
   getPendingFetch,
 } from '../crawler/crawler.queries.ts';
 import { loaderFor } from '../crawler/handlers.ts';
@@ -18,19 +18,18 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
     const scheduleRows = await getFetchScheduleRules.run(undefined, client);
     const byHost = new Map<
       string,
-      { spacingMs: number; queued: number; lastRunAt: Date }
+      { spacingMs: number; queueTailAt: Date }
     >();
 
     for (const r of scheduleRows) {
       if (!r.host) continue;
       byHost.set(r.host, {
         spacingMs: r.spacing ?? 50,
-        queued: r.queued ?? 0,
-        lastRunAt: r.last_run_at || new Date(),
+        queueTailAt: r.queue_tail_at || new Date(),
       });
     }
 
-    const outstanding = scheduleRows.reduce((acc, rule) => acc + (rule.queued ?? 0), 0);
+    const outstanding = scheduleRows.reduce((acc, rule) => acc + (rule.outstanding ?? 0), 0);
     if (outstanding >= MAX_OUTSTANDING_FETCH) return;
 
     const capacity = MAX_OUTSTANDING_FETCH - outstanding;
@@ -43,10 +42,9 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
 
       const rule =
         byHost.get(host) ??
-        byHost.set(host, { spacingMs: 50, queued: 0, lastRunAt: new Date() }).get(host)!;
-      const runAt = new Date(rule.lastRunAt.getTime() + rule.spacingMs);
-      rule.lastRunAt = runAt;
-      rule.queued += 1;
+        byHost.set(host, { spacingMs: 50, queueTailAt: new Date() }).get(host)!;
+      const runAt = new Date(rule.queueTailAt.getTime() + rule.spacingMs);
+      rule.queueTailAt = runAt;
 
       const jobKey = `fetch:${host}:${id}`;
       await addJob(
@@ -60,7 +58,7 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
   });
 
   await withPgClient(async (client) => {
-    const [workers] = await getJobCountForTask.run({ task: 'frontier_process' }, client);
+    const [workers] = await getOutstandingJobCountForTask.run({ task: 'frontier_process' }, client);
     const outstandingWorkers = workers?.count ?? 0;
     if (outstandingWorkers > 0) return;
 

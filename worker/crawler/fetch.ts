@@ -35,11 +35,12 @@ async function parseResponse<T>(
     return { parsed: text as T, raw: text, error: null };
   }
 
+  const body = await resp.text();
   let raw: unknown;
   try {
-    raw = await resp.json();
+    raw = JSON.parse(body);
   } catch {
-    return { parsed: null, raw: null, error: 'Response body is not valid JSON' };
+    return { parsed: null, raw: body, error: 'Response body is not valid JSON' };
   }
 
   const wrapSchema = opts.mode === 'strict' ? zx.deepStrict : zx.deepLoose;
@@ -78,8 +79,8 @@ export async function fetchResponse<T>(
     raw = result.raw;
     if (result.error) {
       error = result.error;
-      if (fetchStatus === 'ok') {
-        // Schema/parse failure on 2xx = permanent (API changed)
+      if (fetchStatus === 'ok' || fetchStatus === 'gone') {
+        // Schema/parse failure on non-transient responses = permanent (API changed or error page)
         fetchStatus = 'error';
       }
     }

@@ -28,7 +28,7 @@ const personSchema = z.object({
         'HeadJudge',
         'Invigilator',
       ]),
-      status: z.enum(['Active', 'Expired', 'Revoked', 'Resting', 'Retired', 'Aspiring']),
+      status: z.enum(['Active', 'Expired', 'Revoked', 'Resting', 'Retired', 'Aspiring', 'Suspended']),
       division: z.enum([
         'Stage',
         'Smooth',

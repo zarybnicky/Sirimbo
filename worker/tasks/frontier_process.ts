@@ -1,7 +1,6 @@
 import type { Task } from 'graphile-worker';
 import {
   getNextPendingProcess,
-  markFrontierFetchError,
   markFrontierProcessError,
   markFrontiersProcessSuccess,
 } from '../crawler/crawler.queries.ts';
@@ -90,13 +89,13 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
 
         if (!failedFrontier) throw e;
         const { id, federation, kind } = failedFrontier;
+        const error = e instanceof Error ? e.stack || e.message : String(e);
         if (e instanceof Error && e.message.includes('Unknown loader')) {
-          await markFrontierFetchError.run({ id }, client);
+          await markFrontierProcessError.run({ id, error }, client);
           logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
         } else {
-          await markFrontierProcessError.run({ id }, client);
-          const stack = e instanceof Error ? e.stack : '';
-          logger.error(`Processing frontier ${id} failed: ${e} ${stack}`);
+          await markFrontierProcessError.run({ id, error }, client);
+          logger.error(`Processing frontier ${id} failed: ${error}`);
         }
         bump(byKind, federation, kind, performance.now() - failedAt, true);
       }

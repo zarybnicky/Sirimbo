@@ -1,7 +1,7 @@
 import type { Task } from 'graphile-worker';
 import {
   getFrontierForUpdate,
-  getJobCountForTask,
+  getOutstandingJobCountForTask,
   insertResponse,
   markFrontierFetchError,
   markFrontierFetchSuccess,
@@ -80,7 +80,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
       await markFrontierFetchSuccess.run({ id, fetchStatus, revalidatePeriod }, client);
     }
 
-    const jobs = await getJobCountForTask.run({ task: 'frontier_fetch' }, client);
+    const jobs = await getOutstandingJobCountForTask.run({ task: 'frontier_fetch' }, client);
     if ((jobs[0].count ?? 0) <= 1) {
       // Count the current job too!
       await helpers.addJob('frontier_schedule', {});
