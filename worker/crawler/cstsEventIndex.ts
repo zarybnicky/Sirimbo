@@ -94,7 +94,9 @@ export const cstsEventIndex: JsonLoader<Response> = {
     return {
       url,
       init: {
-        referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
+        headers: {
+          referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
+        },
       },
     };
   },

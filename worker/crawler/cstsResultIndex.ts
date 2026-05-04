@@ -40,7 +40,9 @@ export const cstsResultIndex: JsonLoader<Response> = {
     return {
       url: new URL(`https://www.csts.cz/api/1/competition_events?from=${from}&to=${to}`),
       init: {
-        referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
+        headers: {
+          referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
+        },
       },
     };
   },

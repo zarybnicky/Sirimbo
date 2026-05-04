@@ -24,7 +24,7 @@ export const wdsfMemberIndex: JsonLoader<z.output<typeof requestSchema>> = {
     url: new URL('https://services.worlddancesport.org/api/1/person'),
     init: {
       headers: {
-        Authorization: process.env.WDSF_AUTH ?? undefined,
+        Authorization: process.env.WDSF_AUTH!,
         Accept: 'application/json',
       },
     },

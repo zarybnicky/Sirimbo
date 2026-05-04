@@ -9,7 +9,6 @@ import {
 import {
   DeleteEventInstanceDocument,
   DetachEventInstanceDocument,
-  EventDocument,
   type EventInstanceWithTrainerFragment,
   UpdateEventInstanceDocument,
 } from '@/graphql/Event';

@@ -1,6 +1,12 @@
 import type { Loader } from './types.ts';
 import { zx } from '@traversable/zod';
 import type { fetch_status } from './crawler.queries.ts';
+import * as Impit from 'impit';
+
+const impit = new Impit.Impit({
+  browser: "chrome",
+  ignoreTlsErrors: true,
+});
 
 function classifyFetchError(e: unknown): {
   error: string;
@@ -26,7 +32,7 @@ type ParseResult<T> =
   | { parsed: null; raw: unknown; error: string };
 
 async function parseResponse<T>(
-  resp: Response,
+  resp: Impit.ImpitResponse,
   handler: Loader<T>,
   opts: { mode: 'strict' | 'loose' },
 ): Promise<ParseResult<T>> {
@@ -56,7 +62,7 @@ async function parseResponse<T>(
 export async function fetchResponse<T>(
   handler: Loader<T>,
   url: URL,
-  init: RequestInit = {},
+  init: Impit.RequestInit = {},
   opts: { mode: 'strict' | 'loose' } = { mode: 'loose' },
 ) {
   let httpStatus: number | null = null;
@@ -66,7 +72,7 @@ export async function fetchResponse<T>(
   let fetchStatus: fetch_status = 'ok';
 
   try {
-    const resp = await fetch(url, {
+    const resp = await impit.fetch(url, {
       ...init,
       signal: AbortSignal.timeout(30_000),
     });

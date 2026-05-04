@@ -101,7 +101,9 @@ export const cstsMember: JsonLoader<Response> = {
   buildRequest: (key) => ({
     url: new URL(`https://www.csts.cz/api/1/athletes/${key}`),
     init: {
-      referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
+      headers: {
+        referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
+      },
     },
   }),
   mapResponseToStatus({ parsed }) {

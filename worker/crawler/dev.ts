@@ -966,7 +966,8 @@ async function queueExactRefetch(target: string) {
 }
 
 async function queueFailedRefetch(target: string, options: RefetchOptions) {
-  const parsed = parseKindTarget(target);
+  const parsed = parseTarget(target);
+  if (!parsed) throw new Error('Target must be federation:kind[:key]');
   const httpStatuses = parseHttpStatuses(options.httpStatus);
   const errorContains = options.errorContains?.trim() || null;
   const key = parsed.key ?? null;
