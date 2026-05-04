@@ -126,13 +126,9 @@ upsert_snapshot AS (
   ON CONFLICT (ranklist_id, as_of_date, kind)
     DO UPDATE SET kind = EXCLUDED.kind
   RETURNING id
-),
-delete_old AS (
-  DELETE FROM federated.ranklist_entry WHERE snapshot_id = (SELECT id FROM upsert_snapshot)
-),
-insert_entries AS (
-  INSERT INTO federated.ranklist_entry (snapshot_id, competitor_id, ranking, ranking_to, points)
-  SELECT s.id, e.competitor_id, e.ranking, e.ranking_to, e.points
+)
+MERGE INTO federated.ranklist_entry t USING (
+  SELECT s.id AS snapshot_id, e.competitor_id, e.ranking, e.ranking_to, e.points
   FROM upsert_snapshot s
   CROSS JOIN jsonb_to_recordset(COALESCE(:entries, '[]'::jsonb)) AS e(
     competitor_id text,
@@ -140,8 +136,17 @@ insert_entries AS (
     ranking_to    integer,
     points        numeric(10,3)
   )
-)
-SELECT id FROM upsert_snapshot;
+) s
+ON t.snapshot_id = s.snapshot_id AND t.competitor_id = s.competitor_id
+WHEN MATCHED THEN
+  UPDATE SET ranking = s.ranking, ranking_to = s.ranking_to, points = s.points
+WHEN NOT MATCHED BY TARGET THEN
+  INSERT (snapshot_id, competitor_id, ranking, ranking_to, points)
+  VALUES (s.snapshot_id, s.competitor_id, s.ranking, s.ranking_to, s.points)
+WHEN NOT MATCHED BY SOURCE
+  AND t.snapshot_id = (SELECT id FROM upsert_snapshot) THEN
+  DELETE;
+
 
 /* @name UpsertEvent */
 INSERT INTO federated.event (federation, external_id, name, start_date, end_date, location, country, organizing_club_id)

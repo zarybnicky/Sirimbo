@@ -3,7 +3,6 @@ namespace GraphileWorker {
     frontier_fetch: { id: string };
     frontier_process: { isFullRebuild?: boolean };
     frontier_schedule: unknown;
-    frontier_seed: unknown;
     discover_csts_athletes: unknown;
 
     notify_announcement: {

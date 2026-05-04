@@ -1,11 +1,10 @@
 import type {
-  IGetCrawlerBacklogStatusResult,
-  IGetCrawlerControlJobStatusResult,
-  IGetCrawlerFetchJobSummaryResult,
+  IGetCrawlerFrontierStatusResult,
   IGetCrawlerScheduleStatusResult,
+  IGetCrawlerWorkerJobStatusResult,
   IGetFrontierFailureGroupsResult,
-  IGetFrontierKindStatusResult,
 } from './crawler.queries.ts';
+import { loaderFor } from './handlers.ts';
 
 const DEFAULT_HOST_SPACING_MS = 50;
 
@@ -14,30 +13,18 @@ type StatusFilter = {
   kind?: string;
 };
 
-export type LoaderHealthMetadata = {
-  target: string;
-  has_loader: boolean;
-  host: string | null;
-  revalidate_period: string | null;
-  revalidate_period_ms: number | null;
-  error?: string;
-};
-
 type StatusInputs = {
-  generated_at: Date;
+  generatedAt: Date;
   filter: StatusFilter;
-  status_rows: IGetFrontierKindStatusResult[];
-  backlog_rows: IGetCrawlerBacklogStatusResult[];
-  failure_groups: IGetFrontierFailureGroupsResult[];
-  fetch_job: IGetCrawlerFetchJobSummaryResult;
-  control_jobs: IGetCrawlerControlJobStatusResult[];
-  schedule_rows: IGetCrawlerScheduleStatusResult[];
-  loader_metadata: LoaderHealthMetadata[];
+  frontierRows: IGetCrawlerFrontierStatusResult[];
+  failureGroups: IGetFrontierFailureGroupsResult[];
+  workerJobs: IGetCrawlerWorkerJobStatusResult[];
+  scheduleRows: IGetCrawlerScheduleStatusResult[];
 };
 
 type StatusSeverity = 'error' | 'warning' | 'info';
 
-type StatusProblem = {
+export type StatusProblem = {
   severity: StatusSeverity;
   code:
     | 'unknown_loader'
@@ -57,12 +44,19 @@ type StatusProblem = {
   sample_id?: string | null;
   sample_key?: string | null;
   at?: Date | null;
+};
+
+type ScoredStatusProblem = StatusProblem & {
   score: number;
 };
 
-type EnrichedBacklogRow = IGetCrawlerBacklogStatusResult & {
+export type CrawlerStatusRow = IGetCrawlerFrontierStatusResult & {
+  target: string;
   host: string | null;
   has_loader: boolean;
+  is_problem: boolean;
+  is_stable: boolean;
+  loader_request_error?: string;
   revalidate_period: string | null;
   revalidate_period_ms: number | null;
   deadline_at: Date | null;
@@ -70,32 +64,14 @@ type EnrichedBacklogRow = IGetCrawlerBacklogStatusResult & {
   is_stale: boolean;
 };
 
-type StatusSummary = {
-  kinds: number;
-  frontiers: number;
-  fetch_due: number;
-  unscheduled_fetch: number;
-  process_ready: number;
-  stale_kinds: number;
-  unknown_loaders: number;
-  fetch_errors: number;
-  fetch_transient: number;
-  process_errors: number;
-  fetch_job_failures: number;
-};
-
-type StatusSnapshot = {
+export type StatusSnapshot = {
   generated_at: string;
   filter: StatusFilter;
-  summary: StatusSummary;
   problems: StatusProblem[];
-  frontiers: IGetFrontierKindStatusResult[];
-  backlog: EnrichedBacklogRow[];
+  frontiers: CrawlerStatusRow[];
   failures: IGetFrontierFailureGroupsResult[];
-  fetch_job: IGetCrawlerFetchJobSummaryResult;
-  control_jobs: IGetCrawlerControlJobStatusResult[];
+  worker_jobs: IGetCrawlerWorkerJobStatusResult[];
   schedule: IGetCrawlerScheduleStatusResult[];
-  suggested_commands: string[];
 };
 
 function kindId(federation: string, kind: string) {
@@ -113,7 +89,7 @@ function severityRank(severity: StatusSeverity) {
   return severity === 'error' ? 3 : severity === 'warning' ? 2 : 1;
 }
 
-function sortProblems(a: StatusProblem, b: StatusProblem) {
+function sortProblems(a: ScoredStatusProblem, b: ScoredStatusProblem) {
   return (
     severityRank(b.severity) - severityRank(a.severity) ||
     b.score - a.score ||
@@ -123,18 +99,34 @@ function sortProblems(a: StatusProblem, b: StatusProblem) {
   );
 }
 
-function sortBacklog(a: EnrichedBacklogRow, b: EnrichedBacklogRow) {
+export function sortBacklogRows(a: CrawlerStatusRow, b: CrawlerStatusRow) {
   return (
     Number(b.is_stale) - Number(a.is_stale) ||
-    (b.unscheduled_fetch ?? 0) - (a.unscheduled_fetch ?? 0) ||
-    (b.fetch_due ?? 0) - (a.fetch_due ?? 0) ||
+    b.unscheduled_fetch - a.unscheduled_fetch ||
+    b.fetch_due - a.fetch_due ||
     (a.oldest_due_at?.getTime() ?? Number.MAX_SAFE_INTEGER) -
       (b.oldest_due_at?.getTime() ?? Number.MAX_SAFE_INTEGER) ||
     kindId(a.federation, a.kind).localeCompare(kindId(b.federation, b.kind))
   );
 }
 
-export function parseIntervalMs(value: string | null | undefined) {
+function frontierPriority(row: CrawlerStatusRow) {
+  return (
+    (row.has_loader ? 0 : 1_000_000) +
+    row.process_error * 100_000 +
+    row.fetch_error * 10_000 +
+    row.fetch_transient * 1_000 +
+    row.process_ready * 100 +
+    row.fetch_due * 10 +
+    row.fetch_pending
+  );
+}
+
+function sortFrontiers(a: CrawlerStatusRow, b: CrawlerStatusRow) {
+  return frontierPriority(b) - frontierPriority(a) || a.target.localeCompare(b.target);
+}
+
+function parseIntervalMs(value: string | null | undefined) {
   if (!value) return null;
 
   const units: Record<string, number> = {
@@ -175,86 +167,54 @@ export function parseIntervalMs(value: string | null | undefined) {
   return total > 0 ? total : null;
 }
 
-function makeSuggestedCommands(
-  filter: StatusFilter,
-  failures: IGetFrontierFailureGroupsResult[],
-  problems: StatusProblem[],
-) {
-  const scope =
-    filter.federation && filter.kind
-      ? `${filter.federation}:${filter.kind}`
-      : filter.federation;
-  const scoped = (command: string) => (scope ? `${command} ${scope}` : command);
-  const commands = [
-    scoped('pnpm crawler status') + ' --problems',
-    scoped('pnpm crawler failures'),
-    scoped('pnpm crawler failures') + ' --group',
-  ];
-
-  if (problems.some((problem) => problem.code === 'worker_failure')) {
-    commands.push(
-      scope ? `pnpm crawler jobs --failed --target ${scope}` : 'pnpm crawler jobs --failed',
-    );
-  }
-  if (
-    problems.some(
-      (problem) => problem.code === 'scheduler_gap' || problem.code === 'process_gap',
-    )
-  ) {
-    commands.push('pnpm crawler kick');
-  }
-
-  const sampleProblem = problems.find((problem) => problem.sample_id);
-  if (sampleProblem?.sample_id) {
-    commands.push(`pnpm crawler explain ${sampleProblem.sample_id}`);
-  }
-
-  const failureSample = failures.find((failure) => failure.sample_id);
-  if (failureSample?.sample_id && failureSample.sample_id !== sampleProblem?.sample_id) {
-    commands.push(`pnpm crawler explain ${failureSample.sample_id}`);
-  }
-
-  const failure = failures.find((row) => row.federation && row.kind);
-  if (failure) {
-    const target = `${failure.federation}:${failure.kind}`;
-    const http = failure.http_status == null ? '' : ` --http-status ${failure.http_status}`;
-    commands.push(`pnpm crawler refetch ${target} --failed${http}`);
-  }
-
-  const refetchProblem = problems.find(
-    (problem) =>
-      problem.kind &&
-      problem.host &&
-      problem.sample_key != null &&
-      problem.code !== 'unknown_loader',
-  );
-  if (refetchProblem?.kind && refetchProblem.sample_key != null) {
-    const target = refetchProblem.sample_key
-      ? `${refetchProblem.kind}:${refetchProblem.sample_key}`
-      : refetchProblem.kind;
-    commands.push(`pnpm crawler refetch ${target}`);
-  }
-
-  return [...new Set(commands)];
-}
-
-function attachLoaderMetadata(
-  rows: IGetCrawlerBacklogStatusResult[],
-  loaders: Map<string, LoaderHealthMetadata>,
-): EnrichedBacklogRow[] {
+function enrichFrontierRows(rows: IGetCrawlerFrontierStatusResult[]): CrawlerStatusRow[] {
   return rows.map((row) => {
-    const loader = loaders.get(kindId(row.federation, row.kind));
+    const target = kindId(row.federation, row.kind);
+    const loader = loaderFor(row.federation, row.kind);
+    const revalidatePeriodMs = parseIntervalMs(loader?.revalidatePeriod);
+    let host: string | null = null;
+    let loaderRequestError: string | undefined;
+    if (loader && row.sample_due_key != null) {
+      try {
+        host = loader.buildRequest(row.sample_due_key).url.host;
+      } catch (e) {
+        loaderRequestError = e instanceof Error ? e.message : String(e);
+      }
+    }
+
     const deadline_at =
-      row.oldest_due_at && loader?.revalidate_period_ms
-        ? new Date(row.oldest_due_at.getTime() + loader.revalidate_period_ms)
+      row.oldest_due_at && revalidatePeriodMs
+        ? new Date(row.oldest_due_at.getTime() + revalidatePeriodMs)
         : null;
+    const hasLoader = Boolean(loader);
+    const fetchTransient = row.fetch_transient;
+    const fetchError = row.fetch_error;
+    const processError = row.process_error;
 
     return {
       ...row,
-      host: loader?.host ?? null,
-      has_loader: Boolean(loader?.has_loader),
-      revalidate_period: loader?.revalidate_period ?? null,
-      revalidate_period_ms: loader?.revalidate_period_ms ?? null,
+      target,
+      host,
+      has_loader: hasLoader,
+      is_problem:
+        !hasLoader ||
+        loaderRequestError != null ||
+        fetchTransient > 0 ||
+        fetchError > 0 ||
+        processError > 0,
+      is_stable:
+        hasLoader &&
+        loaderRequestError == null &&
+        row.total === row.done &&
+        row.fetch_due === 0 &&
+        row.fetch_pending === 0 &&
+        fetchTransient === 0 &&
+        fetchError === 0 &&
+        row.process_ready === 0 &&
+        processError === 0,
+      loader_request_error: loaderRequestError,
+      revalidate_period: loader?.revalidatePeriod ?? null,
+      revalidate_period_ms: revalidatePeriodMs,
       deadline_at,
       eta_at: null,
       is_stale: false,
@@ -262,14 +222,14 @@ function attachLoaderMetadata(
   });
 }
 
-function computeBacklogEta(
-  rows: EnrichedBacklogRow[],
+function computeQueueEta(
+  rows: CrawlerStatusRow[],
   schedules: Map<string, IGetCrawlerScheduleStatusResult>,
   now: Date,
 ) {
-  const byHost = new Map<string, EnrichedBacklogRow[]>();
+  const byHost = new Map<string, CrawlerStatusRow[]>();
   for (const row of rows) {
-    if (!row.host || (row.fetch_due ?? 0) <= 0) continue;
+    if (!row.host || row.fetch_due <= 0) continue;
     const hostRows = byHost.get(row.host);
     if (hostRows) hostRows.push(row);
     else byHost.set(row.host, [row]);
@@ -294,56 +254,55 @@ function computeBacklogEta(
 
     for (const row of hostRows) {
       const spacing = schedule?.spacing ?? DEFAULT_HOST_SPACING_MS;
-      row.eta_at = new Date(tail.getTime() + (row.unscheduled_fetch ?? 0) * spacing);
+      row.eta_at = new Date(tail.getTime() + row.unscheduled_fetch * spacing);
       row.is_stale = Boolean(row.deadline_at && row.eta_at > row.deadline_at);
       tail = row.eta_at;
     }
   }
 }
 
-function loaderProblems(loaders: LoaderHealthMetadata[]): StatusProblem[] {
-  const problems: StatusProblem[] = [];
-  for (const loader of loaders) {
-    if (!loader.has_loader) {
+function loaderProblems(rows: CrawlerStatusRow[]): ScoredStatusProblem[] {
+  const problems: ScoredStatusProblem[] = [];
+  for (const row of rows) {
+    if (!row.has_loader) {
       problems.push({
         severity: 'error',
         code: 'unknown_loader',
-        kind: loader.target,
+        kind: row.target,
         count: 1,
-        message: `${loader.target} has frontier rows but no loader`,
+        message: `${row.target} has frontier rows but no loader`,
         score: 1_000_000,
       });
       continue;
     }
-    if (!loader.error) continue;
+    if (!row.loader_request_error) continue;
 
     problems.push({
       severity: 'error',
       code: 'loader_request_error',
-      kind: loader.target,
+      kind: row.target,
       count: 1,
-      message: `${loader.target} loader request failed while deriving status metadata: ${loader.error}`,
+      message: `${row.target} loader request failed while deriving status metadata: ${row.loader_request_error}`,
       score: 900_000,
     });
   }
   return problems;
 }
 
-function statusProblems(rows: IGetFrontierKindStatusResult[]): StatusProblem[] {
-  const problems: StatusProblem[] = [];
+function frontierProblems(rows: CrawlerStatusRow[]): ScoredStatusProblem[] {
+  const problems: ScoredStatusProblem[] = [];
   for (const row of rows) {
-    const id = kindId(row.federation, row.kind);
-    const fetchError = row.fetch_error ?? 0;
-    const fetchTransient = row.fetch_transient ?? 0;
-    const processError = row.process_error ?? 0;
+    const fetchError = row.fetch_error;
+    const fetchTransient = row.fetch_transient;
+    const processError = row.process_error;
 
     if (processError > 0) {
       problems.push({
         severity: 'error',
         code: 'process_failure',
-        kind: id,
+        kind: row.target,
         count: processError,
-        message: `${id} has ${processError} processing failures`,
+        message: `${row.target} has ${processError} processing failures`,
         score: 800_000 + processError,
       });
     }
@@ -351,9 +310,9 @@ function statusProblems(rows: IGetFrontierKindStatusResult[]): StatusProblem[] {
       problems.push({
         severity: 'error',
         code: 'fetch_failure',
-        kind: id,
+        kind: row.target,
         count: fetchError,
-        message: `${id} has ${fetchError} permanent fetch failures`,
+        message: `${row.target} has ${fetchError} permanent fetch failures`,
         score: 700_000 + fetchError,
       });
     }
@@ -361,9 +320,9 @@ function statusProblems(rows: IGetFrontierKindStatusResult[]): StatusProblem[] {
       problems.push({
         severity: 'warning',
         code: 'fetch_failure',
-        kind: id,
+        kind: row.target,
         count: fetchTransient,
-        message: `${id} has ${fetchTransient} transient fetch failures`,
+        message: `${row.target} has ${fetchTransient} transient fetch failures`,
         score: 400_000 + fetchTransient,
       });
     }
@@ -372,77 +331,72 @@ function statusProblems(rows: IGetFrontierKindStatusResult[]): StatusProblem[] {
   return problems;
 }
 
-function backlogProblems(
-  rows: EnrichedBacklogRow[],
-  fetchJob: IGetCrawlerFetchJobSummaryResult,
-  controlJobs: IGetCrawlerControlJobStatusResult[],
+function queueProblems(
+  rows: CrawlerStatusRow[],
+  workerJobs: IGetCrawlerWorkerJobStatusResult[],
 ) {
-  const processJobOutstanding = controlJobs.some(
-    (job) =>
-      job.task_identifier === 'frontier_process' &&
-      (job.ready ?? 0) + (job.delayed ?? 0) + (job.locked ?? 0) > 0,
-  );
-  const schedulerJobOutstanding = controlJobs.some(
-    (job) =>
-      job.task_identifier === 'frontier_schedule' &&
-      (job.ready ?? 0) + (job.delayed ?? 0) + (job.locked ?? 0) > 0,
-  );
-  const fetchJobOutstanding =
-    (fetchJob.ready ?? 0) + (fetchJob.delayed ?? 0) + (fetchJob.locked ?? 0) > 0;
-  const problems: StatusProblem[] = [];
+  const outstanding = (task: string) =>
+    workerJobs.some(
+      (job) =>
+        job.task_identifier === task &&
+        job.ready + job.delayed + job.locked > 0,
+    );
+  const processJobOutstanding = outstanding('frontier_process');
+  const schedulerJobOutstanding = outstanding('frontier_schedule');
+  const fetchJobOutstanding = outstanding('frontier_fetch');
+  const problems: ScoredStatusProblem[] = [];
 
   for (const row of rows) {
-    const id = kindId(row.federation, row.kind);
     if (row.is_stale) {
       problems.push({
         severity: 'warning',
         code: 'stale_backlog',
-        kind: id,
+        kind: row.target,
         host: row.host,
-        count: row.fetch_due ?? 0,
-        message: `${id} backlog ETA breaches next_fetch_at + revalidatePeriod`,
+        count: row.fetch_due,
+        message: `${row.target} backlog ETA breaches next_fetch_at + revalidatePeriod`,
         sample_id: row.sample_due_id,
         sample_key: row.sample_due_key,
         at: row.oldest_due_at,
-        score: 500_000 + (row.unscheduled_fetch ?? 0),
+        score: 500_000 + row.unscheduled_fetch,
       });
-    } else if ((row.unscheduled_fetch ?? 0) > 0 && row.host) {
+    } else if (row.unscheduled_fetch > 0 && row.host) {
       problems.push({
         severity: 'info',
         code: 'queue_pressure',
-        kind: id,
+        kind: row.target,
         host: row.host,
-        count: row.unscheduled_fetch ?? 0,
-        message: `${id} has due rows waiting behind the scheduler cap`,
+        count: row.unscheduled_fetch,
+        message: `${row.target} has due rows waiting behind the scheduler cap`,
         sample_id: row.sample_due_id,
         sample_key: row.sample_due_key,
         at: row.oldest_due_at,
-        score: 100_000 + (row.unscheduled_fetch ?? 0),
+        score: 100_000 + row.unscheduled_fetch,
       });
     }
 
     if (
-      (row.fetch_due ?? 0) > 0 &&
+      row.fetch_due > 0 &&
       !fetchJobOutstanding &&
       !schedulerJobOutstanding &&
-      (row.scheduled_fetch ?? 0) === 0
+      row.scheduled_fetch === 0
     ) {
       problems.push({
         severity: 'warning',
         code: 'scheduler_gap',
-        kind: id,
+        kind: row.target,
         host: row.host,
-        count: row.fetch_due ?? 0,
-        message: `${id} has due fetches but no outstanding frontier_fetch job`,
+        count: row.fetch_due,
+        message: `${row.target} has due fetches but no outstanding frontier_fetch job`,
         sample_id: row.sample_due_id,
         sample_key: row.sample_due_key,
         at: row.oldest_due_at,
-        score: 450_000 + (row.fetch_due ?? 0),
+        score: 450_000 + row.fetch_due,
       });
     }
 
     if (
-      (row.process_ready ?? 0) > 0 &&
+      row.process_ready > 0 &&
       !processJobOutstanding &&
       !fetchJobOutstanding &&
       !schedulerJobOutstanding
@@ -450,12 +404,12 @@ function backlogProblems(
       problems.push({
         severity: 'warning',
         code: 'process_gap',
-        kind: id,
-        count: row.process_ready ?? 0,
-        message: `${id} has process-ready rows but no outstanding frontier_process job`,
+        kind: row.target,
+        count: row.process_ready,
+        message: `${row.target} has process-ready rows but no outstanding frontier_process job`,
         sample_id: row.sample_process_id,
         at: row.oldest_process_ready_at,
-        score: 420_000 + (row.process_ready ?? 0),
+        score: 420_000 + row.process_ready,
       });
     }
   }
@@ -463,91 +417,47 @@ function backlogProblems(
   return problems;
 }
 
-function fetchJobProblems(row: IGetCrawlerFetchJobSummaryResult): StatusProblem[] {
-  if ((row.failed ?? 0) === 0) return [];
-  return [{
-    severity: 'error',
-    code: 'worker_failure',
-    task: 'frontier_fetch',
-    count: row.failed ?? 0,
-    message: `frontier_fetch has ${row.failed ?? 0} exhausted jobs`,
-    at: row.latest_update_at,
-    score: 600_000 + (row.failed ?? 0),
-  }];
-}
-
-function controlJobProblems(rows: IGetCrawlerControlJobStatusResult[]): StatusProblem[] {
+function workerJobProblems(rows: IGetCrawlerWorkerJobStatusResult[]): ScoredStatusProblem[] {
   return rows
-    .filter((row) => (row.failed ?? 0) > 0)
+    .filter((row) => row.failed > 0)
     .map((row) => ({
       severity: 'error',
       code: 'worker_failure',
       task: row.task_identifier,
-      count: row.failed ?? 0,
-      message: `${row.task_identifier} has ${row.failed ?? 0} exhausted jobs`,
-      at: row.latest_update_at,
-      score: 600_000 + (row.failed ?? 0),
+      count: row.failed,
+      message: `${row.task_identifier} has ${row.failed} exhausted jobs`,
+      at: row.latest_failed_at,
+      score: 600_000 + row.failed,
     }));
 }
 
-function buildSummary(
-  statusRows: IGetFrontierKindStatusResult[],
-  backlog: EnrichedBacklogRow[],
-  loaders: LoaderHealthMetadata[],
-  fetchJob: IGetCrawlerFetchJobSummaryResult,
-): StatusSummary {
-  return {
-    kinds: statusRows.length,
-    frontiers: statusRows.reduce((sum, row) => sum + (row.total ?? 0), 0),
-    fetch_due: backlog.reduce((sum, row) => sum + (row.fetch_due ?? 0), 0),
-    unscheduled_fetch: backlog.reduce((sum, row) => sum + (row.unscheduled_fetch ?? 0), 0),
-    process_ready: backlog.reduce((sum, row) => sum + (row.process_ready ?? 0), 0),
-    stale_kinds: backlog.filter((row) => row.is_stale).length,
-    unknown_loaders: loaders.filter((row) => !row.has_loader).length,
-    fetch_errors: statusRows.reduce((sum, row) => sum + (row.fetch_error ?? 0), 0),
-    fetch_transient: statusRows.reduce((sum, row) => sum + (row.fetch_transient ?? 0), 0),
-    process_errors: statusRows.reduce((sum, row) => sum + (row.process_error ?? 0), 0),
-    fetch_job_failures: fetchJob.failed ?? 0,
-  };
+function publicProblem({ score: _score, ...problem }: ScoredStatusProblem): StatusProblem {
+  return problem;
 }
 
 export function buildStatusSnapshot(inputs: StatusInputs): StatusSnapshot {
-  const loaderByKind = new Map(
-    inputs.loader_metadata.map((row) => [row.target, row]),
-  );
   const scheduleByHost = new Map(
-    inputs.schedule_rows
-      .filter((row) => row.host)
-      .map((row) => [row.host!, row]),
+    inputs.scheduleRows.map((row) => [row.host, row]),
   );
-  const backlog = attachLoaderMetadata(inputs.backlog_rows, loaderByKind);
-  computeBacklogEta(backlog, scheduleByHost, inputs.generated_at);
+  const frontiers = enrichFrontierRows(inputs.frontierRows);
+  computeQueueEta(frontiers, scheduleByHost, inputs.generatedAt);
 
-  const problems = [
-    ...loaderProblems(inputs.loader_metadata),
-    ...statusProblems(inputs.status_rows),
-    ...backlogProblems(backlog, inputs.fetch_job, inputs.control_jobs),
-    ...fetchJobProblems(inputs.fetch_job),
-    ...controlJobProblems(inputs.control_jobs),
+  const scoredProblems = [
+    ...loaderProblems(frontiers),
+    ...frontierProblems(frontiers),
+    ...queueProblems(frontiers, inputs.workerJobs),
+    ...workerJobProblems(inputs.workerJobs),
   ].sort(sortProblems);
-  backlog.sort(sortBacklog);
+  frontiers.sort(sortFrontiers);
+  const problems = scoredProblems.map(publicProblem);
 
   return {
-    generated_at: inputs.generated_at.toISOString(),
+    generated_at: inputs.generatedAt.toISOString(),
     filter: inputs.filter,
-    summary: buildSummary(
-      inputs.status_rows,
-      backlog,
-      inputs.loader_metadata,
-      inputs.fetch_job,
-    ),
     problems,
-    frontiers: inputs.status_rows,
-    backlog,
-    failures: inputs.failure_groups,
-    fetch_job: inputs.fetch_job,
-    control_jobs: inputs.control_jobs,
-    schedule: inputs.schedule_rows,
-    suggested_commands: makeSuggestedCommands(inputs.filter, inputs.failure_groups, problems),
+    frontiers,
+    failures: inputs.failureGroups,
+    worker_jobs: inputs.workerJobs,
+    schedule: inputs.scheduleRows,
   };
 }

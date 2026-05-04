@@ -104,8 +104,8 @@ export const cstsMember: JsonLoader<Response> = {
       referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
     },
   }),
-  mapResponseToStatus(args) {
-    if (args.parsed && !args.parsed?.collection.length) return 'gone';
+  mapResponseToStatus({ parsed }) {
+    if (!parsed?.collection.length) return 'gone';
     return undefined;
   },
   cleanResponse(_url, parsed) {

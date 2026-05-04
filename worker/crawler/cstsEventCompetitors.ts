@@ -52,7 +52,7 @@ const competitorSchema = z.object({
 });
 
 const responseSchema = z.object({
-  collection: z.array(competitorSchema),
+  collection: z.array(competitorSchema).prefault([]),
 });
 
 type Response = z.output<typeof responseSchema>;

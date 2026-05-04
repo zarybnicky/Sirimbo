@@ -6,6 +6,7 @@ export type FrontierRow = IGetFrontierForUpdateResult;
 
 type MapperArgs<T> = {
   fetchStatus: fetch_status;
+  httpStatus: number | null;
   error: string | null;
   parsed: T | null;
   raw: unknown;

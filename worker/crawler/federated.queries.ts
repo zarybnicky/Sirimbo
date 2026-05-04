@@ -332,9 +332,7 @@ export interface IUpsertRanklistSnapshotParams {
 }
 
 /** 'UpsertRanklistSnapshot' return type */
-export interface IUpsertRanklistSnapshotResult {
-  id: string;
-}
+export type IUpsertRanklistSnapshotResult = void;
 
 /** 'UpsertRanklistSnapshot' query type */
 export interface IUpsertRanklistSnapshotQuery {
@@ -342,7 +340,7 @@ export interface IUpsertRanklistSnapshotQuery {
   result: IUpsertRanklistSnapshotResult;
 }
 
-const upsertRanklistSnapshotIR: any = {"usedParamSet":{"federation":true,"categoryId":true,"ranklistName":true,"asOfDate":true,"kind":true,"entries":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":101,"b":111}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":114,"b":124}]},{"name":"ranklistName","required":false,"transform":{"type":"scalar"},"locs":[{"a":127,"b":139}]},{"name":"asOfDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":347,"b":355}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":367,"b":371}]},{"name":"entries","required":false,"transform":{"type":"scalar"},"locs":[{"a":871,"b":878}]}],"statement":"WITH upsert_ranklist AS (\n  INSERT INTO federated.ranklist (federation, category_id, name)\n  VALUES (:federation, :categoryId, :ranklistName)\n  ON CONFLICT (federation, category_id)\n    DO UPDATE SET name = EXCLUDED.name\n  RETURNING id\n),\nupsert_snapshot AS (\n  INSERT INTO federated.ranklist_snapshot (ranklist_id, as_of_date, kind)\n  SELECT id, :asOfDate, COALESCE(:kind, 'default')\n  FROM upsert_ranklist\n  ON CONFLICT (ranklist_id, as_of_date, kind)\n    DO UPDATE SET kind = EXCLUDED.kind\n  RETURNING id\n),\ndelete_old AS (\n  DELETE FROM federated.ranklist_entry WHERE snapshot_id = (SELECT id FROM upsert_snapshot)\n),\ninsert_entries AS (\n  INSERT INTO federated.ranklist_entry (snapshot_id, competitor_id, ranking, ranking_to, points)\n  SELECT s.id, e.competitor_id, e.ranking, e.ranking_to, e.points\n  FROM upsert_snapshot s\n  CROSS JOIN jsonb_to_recordset(COALESCE(:entries, '[]'::jsonb)) AS e(\n    competitor_id text,\n    ranking       integer,\n    ranking_to    integer,\n    points        numeric(10,3)\n  )\n)\nSELECT id FROM upsert_snapshot"};
+const upsertRanklistSnapshotIR: any = {"usedParamSet":{"federation":true,"categoryId":true,"ranklistName":true,"asOfDate":true,"kind":true,"entries":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":101,"b":111}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":114,"b":124}]},{"name":"ranklistName","required":false,"transform":{"type":"scalar"},"locs":[{"a":127,"b":139}]},{"name":"asOfDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":347,"b":355}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":367,"b":371}]},{"name":"entries","required":false,"transform":{"type":"scalar"},"locs":[{"a":703,"b":710}]}],"statement":"WITH upsert_ranklist AS (\n  INSERT INTO federated.ranklist (federation, category_id, name)\n  VALUES (:federation, :categoryId, :ranklistName)\n  ON CONFLICT (federation, category_id)\n    DO UPDATE SET name = EXCLUDED.name\n  RETURNING id\n),\nupsert_snapshot AS (\n  INSERT INTO federated.ranklist_snapshot (ranklist_id, as_of_date, kind)\n  SELECT id, :asOfDate, COALESCE(:kind, 'default')\n  FROM upsert_ranklist\n  ON CONFLICT (ranklist_id, as_of_date, kind)\n    DO UPDATE SET kind = EXCLUDED.kind\n  RETURNING id\n)\nMERGE INTO federated.ranklist_entry t USING (\n  SELECT s.id AS snapshot_id, e.competitor_id, e.ranking, e.ranking_to, e.points\n  FROM upsert_snapshot s\n  CROSS JOIN jsonb_to_recordset(COALESCE(:entries, '[]'::jsonb)) AS e(\n    competitor_id text,\n    ranking       integer,\n    ranking_to    integer,\n    points        numeric(10,3)\n  )\n) s\nON t.snapshot_id = s.snapshot_id AND t.competitor_id = s.competitor_id\nWHEN MATCHED THEN\n  UPDATE SET ranking = s.ranking, ranking_to = s.ranking_to, points = s.points\nWHEN NOT MATCHED BY TARGET THEN\n  INSERT (snapshot_id, competitor_id, ranking, ranking_to, points)\n  VALUES (s.snapshot_id, s.competitor_id, s.ranking, s.ranking_to, s.points)\nWHEN NOT MATCHED BY SOURCE\n  AND t.snapshot_id = (SELECT id FROM upsert_snapshot) THEN\n  DELETE"};
 
 /**
  * Query generated from SQL:
@@ -361,13 +359,9 @@ const upsertRanklistSnapshotIR: any = {"usedParamSet":{"federation":true,"catego
  *   ON CONFLICT (ranklist_id, as_of_date, kind)
  *     DO UPDATE SET kind = EXCLUDED.kind
  *   RETURNING id
- * ),
- * delete_old AS (
- *   DELETE FROM federated.ranklist_entry WHERE snapshot_id = (SELECT id FROM upsert_snapshot)
- * ),
- * insert_entries AS (
- *   INSERT INTO federated.ranklist_entry (snapshot_id, competitor_id, ranking, ranking_to, points)
- *   SELECT s.id, e.competitor_id, e.ranking, e.ranking_to, e.points
+ * )
+ * MERGE INTO federated.ranklist_entry t USING (
+ *   SELECT s.id AS snapshot_id, e.competitor_id, e.ranking, e.ranking_to, e.points
  *   FROM upsert_snapshot s
  *   CROSS JOIN jsonb_to_recordset(COALESCE(:entries, '[]'::jsonb)) AS e(
  *     competitor_id text,
@@ -375,8 +369,16 @@ const upsertRanklistSnapshotIR: any = {"usedParamSet":{"federation":true,"catego
  *     ranking_to    integer,
  *     points        numeric(10,3)
  *   )
- * )
- * SELECT id FROM upsert_snapshot
+ * ) s
+ * ON t.snapshot_id = s.snapshot_id AND t.competitor_id = s.competitor_id
+ * WHEN MATCHED THEN
+ *   UPDATE SET ranking = s.ranking, ranking_to = s.ranking_to, points = s.points
+ * WHEN NOT MATCHED BY TARGET THEN
+ *   INSERT (snapshot_id, competitor_id, ranking, ranking_to, points)
+ *   VALUES (s.snapshot_id, s.competitor_id, s.ranking, s.ranking_to, s.points)
+ * WHEN NOT MATCHED BY SOURCE
+ *   AND t.snapshot_id = (SELECT id FROM upsert_snapshot) THEN
+ *   DELETE
  * ```
  */
 export const upsertRanklistSnapshot = new PreparedQuery<IUpsertRanklistSnapshotParams,IUpsertRanklistSnapshotResult>(upsertRanklistSnapshotIR);

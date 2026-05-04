@@ -15,7 +15,6 @@ import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
-import { CircleQuestionMark } from 'lucide-react';
 
 type CohortWithMembers = NonNullable<CohortWithMembersQuery['entity']>;
 

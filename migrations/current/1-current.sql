@@ -36,7 +36,8 @@ SET last_process_error_at = coalesce(last_fetched_at, discovered_at)
 WHERE process_status = 'error'
   AND last_process_error_at IS NULL;
 
-CREATE OR REPLACE VIEW crawler.frontier_failure AS
+DROP VIEW IF EXISTS crawler.frontier_failure;
+CREATE VIEW crawler.frontier_failure AS
 SELECT
   f.id,
   f.federation,
@@ -114,96 +115,13 @@ RETURNS TABLE (
     );
 $$;
 
-CREATE OR REPLACE FUNCTION crawler.failed_frontier_refetch_candidates(
-  selected_federation text,
-  selected_kind text,
-  selected_key text DEFAULT NULL,
-  selected_http_statuses int[] DEFAULT NULL,
-  selected_error_contains text DEFAULT NULL,
-  selected_limit int DEFAULT NULL
-) RETURNS TABLE (
-  id bigint,
-  federation text,
-  kind text,
-  key text,
-  fetch_status crawler.fetch_status,
-  process_status crawler.process_status,
-  error_count integer,
-  next_fetch_at timestamptz,
-  failed_at timestamptz,
-  url text,
-  http_status integer,
-  error text
-) LANGUAGE sql STABLE AS $$
-  SELECT
-    ff.id,
-    ff.federation,
-    ff.kind,
-    ff.key,
-    ff.fetch_status,
-    ff.process_status,
-    ff.error_count,
-    ff.next_fetch_at,
-    ff.failed_at,
-    ff.url,
-    ff.http_status,
-    ff.error_text AS error
-  FROM crawler.frontier_failure ff
-  WHERE ff.federation = selected_federation
-    AND ff.kind = selected_kind
-    AND (selected_key IS NULL OR ff.key = selected_key)
-    AND (selected_http_statuses IS NULL OR ff.http_status = ANY(selected_http_statuses))
-    AND (
-      selected_error_contains IS NULL
-      OR ff.error_text ILIKE '%' || selected_error_contains || '%'
-    )
-  ORDER BY ff.failed_at DESC, ff.id DESC
-  LIMIT coalesce(selected_limit, 2147483647);
-$$;
-
-CREATE OR REPLACE FUNCTION crawler.queue_frontier_refetch(selected_ids bigint[])
-RETURNS TABLE (
-  id bigint,
-  federation text,
-  kind text,
-  key text,
-  job_id bigint
-) LANGUAGE sql VOLATILE AS $$
-  WITH frontier AS (
-    UPDATE crawler.frontier f
-    SET fetch_status = 'pending',
-        process_status = 'pending',
-        last_process_error = NULL,
-        last_process_error_at = NULL,
-        error_count = 0,
-        next_fetch_at = now()
-    WHERE f.id = ANY(selected_ids)
-    RETURNING f.id, f.federation, f.kind, f.key
-  ), queued AS (
-    SELECT
-      (
-        graphile_worker.add_job(
-          identifier => 'frontier_schedule',
-          payload => '{}'::json,
-          run_at => now(),
-          job_key => 'frontier_schedule',
-          job_key_mode => 'replace'
-        )
-      ).id AS job_id
-    WHERE EXISTS (SELECT 1 FROM frontier)
-  )
-  SELECT f.id, f.federation, f.kind, f.key, q.job_id
-  FROM frontier f
-  CROSS JOIN queued q;
-$$;
-
-CREATE OR REPLACE VIEW crawler.frontier_fetch_job AS
+DROP VIEW IF EXISTS crawler.frontier_fetch_job;
+CREATE VIEW crawler.frontier_fetch_job AS
 WITH jobs AS (
   SELECT
     j.id,
     j.key,
     substring(j.key FROM '^fetch:(.*):[0-9]+$') AS host,
-    pj.payload,
     CASE
       WHEN (pj.payload->>'id') ~ '^[0-9]+$' THEN (pj.payload->>'id')::bigint
     END AS frontier_id,
@@ -221,7 +139,6 @@ SELECT
   j.id AS job_id,
   j.key AS job_key,
   j.host,
-  j.payload AS job_payload,
   j.run_at,
   j.locked_at,
   j.attempts,
@@ -234,12 +151,6 @@ SELECT
   f.key AS frontier_key,
   f.fetch_status,
   f.process_status,
-  f.error_count,
-  f.next_fetch_at,
-  jr.fetched_at AS response_fetched_at,
-  jr.http_status AS response_http_status,
-  jr.error AS response_error,
-  jrc.content AS response_content,
   f.last_process_error AS process_error,
   CASE
     WHEN j.attempts >= j.max_attempts THEN 'failed'
@@ -249,14 +160,6 @@ SELECT
   END AS state
 FROM jobs j
 JOIN crawler.frontier f ON f.id = j.frontier_id
-LEFT JOIN LATERAL (
-  SELECT jr.*
-  FROM crawler.json_response jr
-  WHERE jr.frontier_id = f.id
-  ORDER BY jr.fetched_at DESC
-  LIMIT 1
-) jr ON true
-LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash
 WHERE j.frontier_id IS NOT NULL;
 
 WITH latest_response AS (

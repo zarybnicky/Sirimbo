@@ -1,6 +1,5 @@
 */2 * * * * refresh_memberships ?jobKey=refresh_memberships&jobKeyMode=preserve_run_at
 * * * * * frontier_schedule ?jobKey=frontier_schedule&jobKeyMode=preserve_run_at
-12 * * * * frontier_seed ?jobKey=frontier_seed
 
 29 21 * * * create_lesson_payments ?jobKey=create_lesson_payments
 17 21 * * * discover_events ?jobKey=discover_events

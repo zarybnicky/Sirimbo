@@ -81,7 +81,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     }
 
     const jobs = await getOutstandingJobCountForTask.run({ task: 'frontier_fetch' }, client);
-    if ((jobs[0].count ?? 0) <= 1) {
+    if (jobs[0].count <= 1) {
       // Count the current job too!
       await helpers.addJob('frontier_schedule', {});
     }

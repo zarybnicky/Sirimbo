@@ -95,6 +95,6 @@ export async function fetchResponse<T>(
     error,
     content: (parsed ? (handler.cleanResponse?.(url, parsed, raw) ?? parsed) : raw) as T,
     fetchStatus:
-      handler.mapResponseToStatus?.({ parsed, raw, error, fetchStatus }) ?? fetchStatus,
+      handler.mapResponseToStatus?.({ parsed, raw, error, httpStatus, fetchStatus }) ?? fetchStatus,
   };
 }

@@ -27,7 +27,7 @@ const personSchema = z.object({
         'DJ',
         'HeadJudge',
         'Invigilator',
-      ]),
+      ]).or(z.string<string & {}>()),
       status: z.enum(['Active', 'Expired', 'Revoked', 'Resting', 'Retired', 'Aspiring', 'Suspended']),
       division: z.enum([
         'Stage',
@@ -45,11 +45,12 @@ const personSchema = z.object({
       grade: z.enum(['A', 'B']).optional(),
       expiresOn: z.string().optional(),
     }),
-  ),
+  ).optional(),
 });
 
 export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
   mode: 'json',
+  schema: personSchema,
   revalidatePeriod: '5 day',
   buildRequest: (key) => ({
     url: new URL(`https://services.worlddancesport.org/api/1/person/${key}`),
@@ -60,7 +61,10 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
       },
     },
   }),
-  schema: personSchema,
+  mapResponseToStatus({ httpStatus }) {
+    if (httpStatus === 404) return 'gone';
+    return undefined;
+  },
   async load(client, member) {
     await upsertPeople.run(
       {
