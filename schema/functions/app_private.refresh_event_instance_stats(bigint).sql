@@ -1,5 +1,6 @@
 CREATE FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) RETURNS void
-    LANGUAGE sql
+    LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   with v as (
     select jsonb_build_object(
@@ -21,3 +22,5 @@ CREATE FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) R
   update public.event_instance ei set stats = v.stats from v
   where ei.id = p_instance_id and ei.stats is distinct from v.stats;
 $$;
+
+GRANT ALL ON FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) TO anonymous;

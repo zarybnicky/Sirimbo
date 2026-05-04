@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict vAgGg6kL3AoT8Jqq3cqrdFGAcDUFQbF4Lt4zci8oIcXU3Hmpfcpby1kAaN3Jvsa
+\restrict 19bXLxnVjIGzfsWhjXLOHg5Q2W8gcbck9MD2ZFCsrZUSoaaBQhJPII5Mhv4tDwx
 
--- Dumped from database version 18.1
--- Dumped by pg_dump version 18.1
+-- Dumped from database version 18.3
+-- Dumped by pg_dump version 18.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -132,7 +132,8 @@ CREATE TYPE crawler.fetch_status AS ENUM (
     'pending',
     'ok',
     'gone',
-    'error'
+    'error',
+    'transient'
 );
 
 
@@ -1098,7 +1099,8 @@ $$;
 --
 
 CREATE FUNCTION app_private.event_registration_person_ids(e public.event_registration) RETURNS SETOF bigint
-    LANGUAGE sql
+    LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select e.person_id as id where e.person_id is not null
   union
@@ -1447,7 +1449,8 @@ COMMENT ON FUNCTION app_private.queue_announcement_notifications(in_announcement
 --
 
 CREATE FUNCTION app_private.refresh_event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint) RETURNS boolean
-    LANGUAGE sql
+    LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   with v as (
     select app_private.event_instance_manager_person_ids(p_instance_id, p_event_id) as ids
@@ -1466,7 +1469,8 @@ $$;
 --
 
 CREATE FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) RETURNS void
-    LANGUAGE sql
+    LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   with v as (
     select jsonb_build_object(
@@ -2154,6 +2158,35 @@ CREATE FUNCTION app_private.visible_person_ids() RETURNS SETOF bigint
   union all
   -- members visible only if viewer is in tenant (any role)
   select person_id from current_tenant_membership WHERE (SELECT current_tenant_id() = ANY (my_tenants_array()))
+$$;
+
+
+--
+-- Name: frontier_fetch_due(boolean); Type: FUNCTION; Schema: crawler; Owner: -
+--
+
+CREATE FUNCTION crawler.frontier_fetch_due(allow_refetch boolean) RETURNS TABLE(id bigint, federation text, kind text, key text, discovered_at timestamp with time zone, last_fetched_at timestamp with time zone, next_fetch_at timestamp with time zone, due_at timestamp with time zone)
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT
+    f.id,
+    f.federation,
+    f.kind,
+    f.key,
+    f.discovered_at,
+    f.last_fetched_at,
+    f.next_fetch_at,
+    coalesce(f.next_fetch_at, f.discovered_at) AS due_at
+  FROM crawler.frontier f
+  WHERE (f.next_fetch_at IS NULL OR f.next_fetch_at <= now())
+    AND (
+      f.fetch_status IN ('pending', 'transient')
+      OR (
+        coalesce(allow_refetch, false)
+        AND f.fetch_status = 'ok'
+        AND f.process_status = 'ok'
+      )
+    );
 $$;
 
 
@@ -3659,24 +3692,6 @@ COMMENT ON FUNCTION public.event_instance_approx_price(v_instance public.event_i
 
 
 --
--- Name: event_instance_attendance_summary(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_instance_attendance_summary(e public.event_instance) RETURNS TABLE(status public.attendance_type, count integer)
-    LANGUAGE sql STABLE
-    AS $$
-  select status, count(status) as count from event_attendance where instance_id=e.id group by status;
-$$;
-
-
---
--- Name: FUNCTION event_instance_attendance_summary(e public.event_instance); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.event_instance_attendance_summary(e public.event_instance) IS '@simpleCollections only';
-
-
---
 -- Name: event_instance_trainer; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3743,10 +3758,10 @@ COMMENT ON FUNCTION public.event_instance_trainers(v_instance public.event_insta
 
 
 --
--- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, bigint[], boolean); Type: FUNCTION; Schema: public; Owner: -
+-- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, bigint[], bigint[], boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[], only_mine boolean DEFAULT false) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[], participant_ids bigint[] DEFAULT NULL::bigint[], only_mine boolean DEFAULT false) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
     AS $$
   select i.*
@@ -3756,19 +3771,22 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
     and i.since < coalesce(end_range, 'infinity'::timestamptz)
     and i.until > start_range
     and (trainer_ids is null
-      or exists (select 1 from event_trainer where person_id = any (trainer_ids) and event_id = i.event_id)
-      or exists (select 1 from event_instance_trainer where person_id = any (trainer_ids) and instance_id = i.id))
-    and (only_mine is FALSE or i.event_id in (select r.event_id from event_registration r where r.person_id = any ((select current_person_ids())::bigint[])) or i.event_id in (select r.event_id from event_registration r where r.couple_id = any ((select current_couple_ids())::bigint[])) or i.event_id in (SELECT et2.event_id FROM event_trainer et2 WHERE et2.person_id = ANY ((select current_person_ids())::bigint[]))
-      OR i.id IN (
-        SELECT eit2.instance_id FROM event_instance_trainer eit2 WHERE eit2.person_id = ANY ((select current_person_ids())::bigint[])));
+      or exists (select 1 from event_trainer where event_id = i.event_id and person_id = any (trainer_ids))
+      or exists (select 1 from event_instance_trainer where instance_id = i.id and person_id = any (trainer_ids)))
+    and (participant_ids is null
+      or exists (select 1 from event_attendance a where a.instance_id = i.id and a.person_id = any (participant_ids) and a.status <> 'cancelled'))
+    and (only_mine is false
+      or exists (select 1 from event_attendance where instance_id = i.id and person_id = any ((select current_person_ids())::bigint[]) and status <> 'cancelled')
+      or exists (select 1 from event_trainer where event_id = i.event_id and person_id = any ((select current_person_ids())::bigint[]))
+      or exists (select 1 from event_instance_trainer where instance_id = i.id and person_id = any ((select current_person_ids())::bigint[])));
 $$;
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], only_mine boolean); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], only_mine boolean) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean) IS '@simpleCollections only';
 
 
 --
@@ -6595,8 +6613,126 @@ CREATE TABLE crawler.frontier (
     process_status crawler.process_status DEFAULT 'pending'::crawler.process_status NOT NULL,
     error_count integer DEFAULT 0 NOT NULL,
     next_fetch_at timestamp with time zone,
-    meta jsonb DEFAULT '{}'::jsonb NOT NULL
+    meta jsonb DEFAULT '{}'::jsonb NOT NULL,
+    last_process_error text,
+    last_process_error_at timestamp with time zone
 );
+
+
+--
+-- Name: json_response; Type: TABLE; Schema: crawler; Owner: -
+--
+
+CREATE TABLE crawler.json_response (
+    id bigint NOT NULL,
+    frontier_id bigint NOT NULL,
+    url text NOT NULL,
+    fetched_at timestamp with time zone DEFAULT now() NOT NULL,
+    http_status integer,
+    error text,
+    content_hash text
+);
+
+
+--
+-- Name: frontier_failure; Type: VIEW; Schema: crawler; Owner: -
+--
+
+CREATE VIEW crawler.frontier_failure AS
+ SELECT f.id,
+    f.federation,
+    f.kind,
+    f.key,
+    f.fetch_status,
+    f.process_status,
+    f.error_count,
+    f.next_fetch_at,
+        CASE
+            WHEN ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) AND (f.process_status = 'error'::crawler.process_status)) THEN GREATEST(COALESCE(jr.fetched_at, f.last_fetched_at, f.discovered_at), COALESCE(f.last_process_error_at, f.last_fetched_at, f.discovered_at))
+            WHEN (f.process_status = 'error'::crawler.process_status) THEN COALESCE(f.last_process_error_at, f.last_fetched_at, f.discovered_at)
+            ELSE COALESCE(jr.fetched_at, f.last_fetched_at, f.discovered_at)
+        END AS failed_at,
+    jr.url,
+    jr.http_status,
+    jr.error AS response_error,
+    f.last_process_error AS process_error,
+    concat_ws('+'::text,
+        CASE
+            WHEN (f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) THEN 'fetch'::text
+            ELSE NULL::text
+        END,
+        CASE
+            WHEN (f.process_status = 'error'::crawler.process_status) THEN 'process'::text
+            ELSE NULL::text
+        END) AS failure,
+    COALESCE(
+        CASE
+            WHEN (f.process_status = 'error'::crawler.process_status) THEN f.last_process_error
+            ELSE NULL::text
+        END, jr.error, f.last_process_error, ''::text) AS error_text
+   FROM (crawler.frontier f
+     LEFT JOIN LATERAL ( SELECT jr_1.id,
+            jr_1.frontier_id,
+            jr_1.url,
+            jr_1.fetched_at,
+            jr_1.http_status,
+            jr_1.error,
+            jr_1.content_hash
+           FROM crawler.json_response jr_1
+          WHERE (jr_1.frontier_id = f.id)
+          ORDER BY jr_1.fetched_at DESC
+         LIMIT 1) jr ON (true))
+  WHERE ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR (f.process_status = 'error'::crawler.process_status));
+
+
+--
+-- Name: frontier_fetch_job; Type: VIEW; Schema: crawler; Owner: -
+--
+
+CREATE VIEW crawler.frontier_fetch_job AS
+ WITH jobs AS (
+         SELECT j_1.id,
+            j_1.key,
+            "substring"(j_1.key, '^fetch:(.*):[0-9]+$'::text) AS host,
+                CASE
+                    WHEN ((pj.payload ->> 'id'::text) ~ '^[0-9]+$'::text) THEN ((pj.payload ->> 'id'::text))::bigint
+                    ELSE NULL::bigint
+                END AS frontier_id,
+            j_1.run_at,
+            j_1.locked_at,
+            j_1.attempts,
+            j_1.max_attempts,
+            j_1.last_error,
+            j_1.updated_at
+           FROM (graphile_worker.jobs j_1
+             JOIN graphile_worker._private_jobs pj ON ((pj.id = j_1.id)))
+          WHERE (j_1.task_identifier = 'frontier_fetch'::text)
+        )
+ SELECT j.id AS job_id,
+    j.key AS job_key,
+    j.host,
+    j.run_at,
+    j.locked_at,
+    j.attempts,
+    j.max_attempts,
+    j.last_error AS job_error,
+    j.updated_at AS job_updated_at,
+    f.id AS frontier_id,
+    f.federation,
+    f.kind,
+    f.key AS frontier_key,
+    f.fetch_status,
+    f.process_status,
+    f.last_process_error AS process_error,
+        CASE
+            WHEN (j.attempts >= j.max_attempts) THEN 'failed'::text
+            WHEN (j.locked_at IS NOT NULL) THEN 'locked'::text
+            WHEN (j.run_at <= now()) THEN 'ready'::text
+            ELSE 'delayed'::text
+        END AS state
+   FROM (jobs j
+     JOIN crawler.frontier f ON ((f.id = j.frontier_id)))
+  WHERE (j.frontier_id IS NOT NULL);
 
 
 --
@@ -6671,21 +6807,6 @@ CREATE TABLE crawler.incremental_ranges (
     kind text NOT NULL,
     last_known integer DEFAULT 0 NOT NULL,
     last_checked integer DEFAULT 0 NOT NULL
-);
-
-
---
--- Name: json_response; Type: TABLE; Schema: crawler; Owner: -
---
-
-CREATE TABLE crawler.json_response (
-    id bigint NOT NULL,
-    frontier_id bigint NOT NULL,
-    url text NOT NULL,
-    fetched_at timestamp with time zone DEFAULT now() NOT NULL,
-    http_status integer,
-    error text,
-    content_hash text
 );
 
 
@@ -9679,14 +9800,14 @@ CREATE INDEX frontier_federation_kind_idx ON crawler.frontier USING btree (feder
 -- Name: frontier_federation_kind_next_fetch_at_idx; Type: INDEX; Schema: crawler; Owner: -
 --
 
-CREATE INDEX frontier_federation_kind_next_fetch_at_idx ON crawler.frontier USING btree (federation, kind, next_fetch_at) WHERE (fetch_status = 'pending'::crawler.fetch_status);
+CREATE INDEX frontier_federation_kind_next_fetch_at_idx ON crawler.frontier USING btree (federation, kind, next_fetch_at) WHERE ((fetch_status = ANY (ARRAY['pending'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR ((fetch_status = 'ok'::crawler.fetch_status) AND (process_status = 'ok'::crawler.process_status)));
 
 
 --
--- Name: frontier_process_pending_ok_gone_pick_idx; Type: INDEX; Schema: crawler; Owner: -
+-- Name: frontier_process_pending_ok_pick_idx; Type: INDEX; Schema: crawler; Owner: -
 --
 
-CREATE INDEX frontier_process_pending_ok_gone_pick_idx ON crawler.frontier USING btree (last_fetched_at, discovered_at, id) WHERE ((process_status = 'pending'::crawler.process_status) AND (fetch_status = ANY (ARRAY['ok'::crawler.fetch_status, 'gone'::crawler.fetch_status])));
+CREATE INDEX frontier_process_pending_ok_pick_idx ON crawler.frontier USING btree (last_fetched_at, discovered_at, id) WHERE ((process_status = 'pending'::crawler.process_status) AND (fetch_status = 'ok'::crawler.fetch_status));
 
 
 --
@@ -14177,10 +14298,31 @@ GRANT ALL ON FUNCTION app_private.event_instance_trainers_at(v_instance public.e
 
 
 --
+-- Name: FUNCTION event_registration_person_ids(e public.event_registration); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.event_registration_person_ids(e public.event_registration) TO anonymous;
+
+
+--
 -- Name: FUNCTION queue_announcement_notifications(in_announcement_id bigint); Type: ACL; Schema: app_private; Owner: -
 --
 
 GRANT ALL ON FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) TO anonymous;
+
+
+--
+-- Name: FUNCTION refresh_event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.refresh_event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint) TO anonymous;
+
+
+--
+-- Name: FUNCTION refresh_event_instance_stats(p_instance_id bigint); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) TO anonymous;
 
 
 --
@@ -14436,13 +14578,6 @@ GRANT ALL ON FUNCTION public.event_instance_approx_price(v_instance public.event
 
 
 --
--- Name: FUNCTION event_instance_attendance_summary(e public.event_instance); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.event_instance_attendance_summary(e public.event_instance) TO anonymous;
-
-
---
 -- Name: TABLE event_instance_trainer; Type: ACL; Schema: public; Owner: -
 --
 
@@ -14464,10 +14599,10 @@ GRANT ALL ON FUNCTION public.event_instance_trainers(v_instance public.event_ins
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], only_mine boolean); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], only_mine boolean) TO anonymous;
+GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean) TO anonymous;
 
 
 --
@@ -15602,5 +15737,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict vAgGg6kL3AoT8Jqq3cqrdFGAcDUFQbF4Lt4zci8oIcXU3Hmpfcpby1kAaN3Jvsa
+\unrestrict 19bXLxnVjIGzfsWhjXLOHg5Q2W8gcbck9MD2ZFCsrZUSoaaBQhJPII5Mhv4tDwx
 

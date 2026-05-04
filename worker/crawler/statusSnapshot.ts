@@ -54,7 +54,6 @@ export type CrawlerStatusRow = IGetCrawlerFrontierStatusResult & {
   target: string;
   host: string | null;
   has_loader: boolean;
-  is_problem: boolean;
   is_stable: boolean;
   loader_request_error?: string;
   revalidate_period: string | null;
@@ -196,12 +195,6 @@ function enrichFrontierRows(rows: IGetCrawlerFrontierStatusResult[]): CrawlerSta
       target,
       host,
       has_loader: hasLoader,
-      is_problem:
-        !hasLoader ||
-        loaderRequestError != null ||
-        fetchTransient > 0 ||
-        fetchError > 0 ||
-        processError > 0,
       is_stable:
         hasLoader &&
         loaderRequestError == null &&

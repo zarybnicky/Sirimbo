@@ -1222,7 +1222,7 @@ CREATE TABLE app_private.system_admin_user (
   created_by bigint DEFAULT public.current_user_id() NOT NULL
 );
 
-CREATE TYPE crawler.fetch_status AS ENUM ('pending', 'ok', 'gone', 'error');
+CREATE TYPE crawler.fetch_status AS ENUM ('pending', 'ok', 'gone', 'error', 'transient');
 
 CREATE TYPE crawler.process_status AS ENUM ('pending', 'ok', 'error');
 
@@ -1238,6 +1238,8 @@ CREATE TABLE crawler.frontier (
   error_count int DEFAULT 0 NOT NULL,
   next_fetch_at timestamp with time zone,
   meta jsonb DEFAULT '{}'::jsonb NOT NULL,
+  last_process_error text,
+  last_process_error_at timestamp with time zone,
   UNIQUE (federation, kind, key)
 );
 
