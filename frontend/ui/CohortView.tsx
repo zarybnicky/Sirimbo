@@ -15,6 +15,7 @@ import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
+import { CircleQuestionMark } from 'lucide-react';
 
 type CohortWithMembers = NonNullable<CohortWithMembersQuery['entity']>;
 
@@ -94,14 +95,21 @@ function CategoryList({
   discipline,
 }: {
   person?: {
+    cstsId?: string | null;
     birthDate?: string | null;
     cstsProgressList?: CstsProgressRecordFragment[] | null;
   } | null;
   discipline: string;
 }) {
+  if (!person?.cstsId) return (
+    <div className="flex justify-center">
+      <div className="px-2 border-2 border-neutral-8 rounded-full text-neutral-9 text-xs">
+                                                                                                            ? chybí IDT
+      </div>
+    </div>
+  );
   if (!person?.cstsProgressList) return null;
   const item = getBestCstsProgress(person.cstsProgressList, discipline);
-  console.log(person.cstsProgressList, item);
   if (!item) return null;
 
   return (
