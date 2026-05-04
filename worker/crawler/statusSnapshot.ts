@@ -370,6 +370,9 @@ function queueProblems(
 
     if (
       row.fetch_due > 0 &&
+      row.has_loader &&
+      row.loader_request_error == null &&
+      row.host != null &&
       !fetchJobOutstanding &&
       !schedulerJobOutstanding &&
       row.scheduled_fetch === 0

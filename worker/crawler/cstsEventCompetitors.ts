@@ -66,7 +66,7 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
       url: new URL(`https://www.csts.cz/api/1/events/${key}/competitors`),
       init: {
         headers: {
-          referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
+          Referer: 'https://www.csts.cz/dancesport/kalendar_akci',
         },
       },
     };

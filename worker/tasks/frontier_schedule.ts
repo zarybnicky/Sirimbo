@@ -6,7 +6,7 @@ import {
   getPendingFetch,
   upsertFrontiers,
 } from '../crawler/crawler.queries.ts';
-import { loaderFor, type LoaderIds } from '../crawler/handlers.ts';
+import { LOADERS, loaderFor, type LoaderIds } from '../crawler/handlers.ts';
 
 const MAX_OUTSTANDING_FETCH = 100;
 
@@ -34,6 +34,15 @@ const seedFrontierParams = {
   federations: SEED_FRONTIERS.map((frontier) => frontier.federation),
   kinds: SEED_FRONTIERS.map((frontier) => frontier.kind),
   keys: SEED_FRONTIERS.map(() => ''),
+};
+
+const loaderFrontiers = Object.entries(LOADERS).flatMap(([federation, loaders]) =>
+  Object.keys(loaders).map((kind) => ({ federation, kind })),
+);
+
+const fetchLoaderParams = {
+  loaderFederations: loaderFrontiers.map((frontier) => frontier.federation),
+  loaderKinds: loaderFrontiers.map((frontier) => frontier.kind),
 };
 
 export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, helpers) => {
@@ -64,7 +73,11 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
 
     const capacity = MAX_OUTSTANDING_FETCH - outstanding;
 
-    const pendingIds = await getPendingFetch.run({ capacity, allowRefetch }, client);
+    const pendingIds = await getPendingFetch.run(
+      { capacity, allowRefetch, ...fetchLoaderParams },
+      client,
+    );
+    let scheduled = 0;
     for (const { id, federation, kind, key } of pendingIds) {
       const loader = loaderFor(federation, kind);
       if (!loader) continue;
@@ -82,9 +95,10 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
         { id },
         { jobKey, jobKeyMode: 'preserve_run_at', runAt },
       );
+      scheduled++;
     }
     if (pendingIds.length > 0 || outstanding > 0)
-      logger.info(`${pendingIds.length} new fetch jobs, outstanding ${outstanding}`);
+      logger.info(`${scheduled} new fetch jobs, outstanding ${outstanding}`);
   });
 
   await withPgClient(async (client) => {

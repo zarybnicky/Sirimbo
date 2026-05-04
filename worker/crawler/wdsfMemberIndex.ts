@@ -14,6 +14,9 @@ const requestSchema = z.array(
     sex: z.enum(['Male', 'Female', 'NotSupplied']),
     country: z.string().nullable(),
     ageGroup: z.string().nullable(),
+    activePartner: z.string().optional(),
+    activeCoupleId: z.string().optional(),
+    activeCoupleAgeGroup: z.string().optional(),
   }),
 );
 

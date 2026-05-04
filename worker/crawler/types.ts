@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { fetch_status, IGetFrontierForUpdateResult } from './crawler.queries.ts';
 import type { PoolClient } from 'pg';
-import * as Impit from 'impit';
+import type { RequestInit } from 'impit';
 
 export type FrontierRow = IGetFrontierForUpdateResult;
 
@@ -14,7 +14,7 @@ type MapperArgs<T> = {
 };
 
 interface LoaderBase<T> {
-  buildRequest: (key: string) => { url: URL; init?: Impit.RequestInit };
+  buildRequest: (key: string) => { url: URL; init?: RequestInit };
   mapResponseToStatus?: (args: MapperArgs<T>) => fetch_status | undefined;
   cleanResponse?: (url: URL, parsed: T, raw: unknown) => T;
   revalidatePeriod: string;

@@ -31,7 +31,7 @@ export const cstsEventOfficials: JsonLoader<Response> = {
       url: new URL(`https://www.csts.cz/api/1/events/${key}/officials`),
       init: {
         headers: {
-          referrer: 'https://www.csts.cz/dancesport/kalendar_akci',
+          Referer: 'https://www.csts.cz/dancesport/kalendar_akci',
         },
       },
     };

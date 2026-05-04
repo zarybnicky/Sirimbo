@@ -806,6 +806,8 @@ export const getOutstandingJobCountForTask = new PreparedQuery<IGetOutstandingJo
 export interface IGetPendingFetchParams {
   allowRefetch?: boolean | null | void;
   capacity?: NumberOrString | null | void;
+  loaderFederations?: stringArray | null | void;
+  loaderKinds?: stringArray | null | void;
 }
 
 /** 'GetPendingFetch' return type */
@@ -822,23 +824,31 @@ export interface IGetPendingFetchQuery {
   result: IGetPendingFetchResult;
 }
 
-const getPendingFetchIR: any = {"usedParamSet":{"allowRefetch":true,"capacity":true},"params":[{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":243,"b":255}]},{"name":"capacity","required":false,"transform":{"type":"scalar"},"locs":[{"a":420,"b":428}]}],"statement":"WITH ranked AS (\n  SELECT\n    id,\n    federation,\n    kind,\n    key,\n    last_fetched_at,\n    row_number() OVER (\n      PARTITION BY federation, kind\n      ORDER BY last_fetched_at NULLS FIRST, id\n    ) AS rn\n  FROM crawler.frontier_fetch_due(:allowRefetch::boolean)\n)\nSELECT\n  id AS \"id!\",\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  key AS \"key!\"\nFROM ranked\nORDER BY rn, last_fetched_at NULLS FIRST, id\nLIMIT :capacity"};
+const getPendingFetchIR: any = {"usedParamSet":{"loaderFederations":true,"loaderKinds":true,"allowRefetch":true,"capacity":true},"params":[{"name":"loaderFederations","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":88}]},{"name":"loaderKinds","required":false,"transform":{"type":"scalar"},"locs":[{"a":103,"b":114}]},{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":449,"b":461}]},{"name":"capacity","required":false,"transform":{"type":"scalar"},"locs":[{"a":685,"b":693}]}],"statement":"WITH allowed_loaders AS (\n  SELECT federation, kind\n  FROM unnest(\n    :loaderFederations::text[],\n    :loaderKinds::text[]\n  ) AS input(federation, kind)\n), ranked AS (\n  SELECT\n    df.id,\n    df.federation,\n    df.kind,\n    df.key,\n    df.due_at,\n    df.last_fetched_at,\n    row_number() OVER (\n      PARTITION BY df.federation, df.kind\n      ORDER BY df.due_at, df.last_fetched_at NULLS FIRST, df.id\n    ) AS rn\n  FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df\n  JOIN allowed_loaders USING (federation, kind)\n)\nSELECT\n  id AS \"id!\",\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  key AS \"key!\"\nFROM ranked\nORDER BY rn, due_at, last_fetched_at NULLS FIRST, id\nLIMIT :capacity"};
 
 /**
  * Query generated from SQL:
  * ```
- * WITH ranked AS (
+ * WITH allowed_loaders AS (
+ *   SELECT federation, kind
+ *   FROM unnest(
+ *     :loaderFederations::text[],
+ *     :loaderKinds::text[]
+ *   ) AS input(federation, kind)
+ * ), ranked AS (
  *   SELECT
- *     id,
- *     federation,
- *     kind,
- *     key,
- *     last_fetched_at,
+ *     df.id,
+ *     df.federation,
+ *     df.kind,
+ *     df.key,
+ *     df.due_at,
+ *     df.last_fetched_at,
  *     row_number() OVER (
- *       PARTITION BY federation, kind
- *       ORDER BY last_fetched_at NULLS FIRST, id
+ *       PARTITION BY df.federation, df.kind
+ *       ORDER BY df.due_at, df.last_fetched_at NULLS FIRST, df.id
  *     ) AS rn
- *   FROM crawler.frontier_fetch_due(:allowRefetch::boolean)
+ *   FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df
+ *   JOIN allowed_loaders USING (federation, kind)
  * )
  * SELECT
  *   id AS "id!",
@@ -846,7 +856,7 @@ const getPendingFetchIR: any = {"usedParamSet":{"allowRefetch":true,"capacity":t
  *   kind AS "kind!",
  *   key AS "key!"
  * FROM ranked
- * ORDER BY rn, last_fetched_at NULLS FIRST, id
+ * ORDER BY rn, due_at, last_fetched_at NULLS FIRST, id
  * LIMIT :capacity
  * ```
  */

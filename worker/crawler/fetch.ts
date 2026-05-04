@@ -1,10 +1,10 @@
 import type { Loader } from './types.ts';
 import { zx } from '@traversable/zod';
 import type { fetch_status } from './crawler.queries.ts';
-import * as Impit from 'impit';
+import Impit, { type ImpitResponse, type RequestInit as ImpitRequestInit } from 'impit';
 
 const impit = new Impit.Impit({
-  browser: "chrome",
+  browser: 'chrome',
   ignoreTlsErrors: true,
 });
 
@@ -14,9 +14,18 @@ function classifyFetchError(e: unknown): {
 } {
   if (!(e instanceof Error)) return { error: String(e), fetchStatus: 'error' };
 
-  if (['AbortError', 'TimeoutError'].includes(e.name) || (e as any).type === 'system') {
+  if (['AbortError', 'TimeoutError'].includes(e.name)) {
     return { error: e.message, fetchStatus: 'transient' };
   }
+
+  if (e instanceof Impit.UnsupportedProtocol || e instanceof Impit.ProxyAuthRequired) {
+    return { error: e.message, fetchStatus: 'error' };
+  }
+
+  if (e instanceof Impit.TransportError || e instanceof Impit.StreamClosed) {
+    return { error: e.message, fetchStatus: 'transient' };
+  }
+
   return { error: e.message, fetchStatus: 'error' };
 }
 

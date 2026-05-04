@@ -401,18 +401,26 @@ WHERE task_identifier = :task::text
   AND attempts < max_attempts;
 
 /* @name GetPendingFetch */
-WITH ranked AS (
+WITH allowed_loaders AS (
+  SELECT federation, kind
+  FROM unnest(
+    :loaderFederations::text[],
+    :loaderKinds::text[]
+  ) AS input(federation, kind)
+), ranked AS (
   SELECT
-    id,
-    federation,
-    kind,
-    key,
-    last_fetched_at,
+    df.id,
+    df.federation,
+    df.kind,
+    df.key,
+    df.due_at,
+    df.last_fetched_at,
     row_number() OVER (
-      PARTITION BY federation, kind
-      ORDER BY last_fetched_at NULLS FIRST, id
+      PARTITION BY df.federation, df.kind
+      ORDER BY df.due_at, df.last_fetched_at NULLS FIRST, df.id
     ) AS rn
-  FROM crawler.frontier_fetch_due(:allowRefetch::boolean)
+  FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df
+  JOIN allowed_loaders USING (federation, kind)
 )
 SELECT
   id AS "id!",
@@ -420,7 +428,7 @@ SELECT
   kind AS "kind!",
   key AS "key!"
 FROM ranked
-ORDER BY rn, last_fetched_at NULLS FIRST, id
+ORDER BY rn, due_at, last_fetched_at NULLS FIRST, id
 LIMIT :capacity;
 
 /* @name GetNextPendingProcess */
