@@ -79,15 +79,8 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
       ].join(' '),
       confirmationText: 'Oddělit termín',
     },
-    execute: async ({ item, client, mutate }) => {
-      const result = await mutate(DetachEventInstanceDocument, { id: item.id });
-
-      await client.query(EventDocument, { id: item.eventId }).toPromise();
-
-      const newEventId = result.detachEventInstance?.event?.id;
-      if (newEventId) {
-        await client.query(EventDocument, { id: newEventId }).toPromise();
-      }
+    execute: async ({ item, mutate }) => {
+      await mutate(DetachEventInstanceDocument, { id: item.id });
     },
   },
   {

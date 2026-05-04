@@ -333,6 +333,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       detachEventInstance(_result, args, cache, _info) {
         if (args.input.pInstanceId)
           cache.invalidate({ __typename: 'EventInstance', id: args.input.pInstanceId });
+        for (const field of cache
+          .inspectFields('Query')
+          .filter((field) => field.fieldName.includes('eventInstances'))) {
+          cache.invalidate('Query', field.fieldName, field.arguments);
+        }
       },
       deleteEventInstance(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventInstance', id: args.input.id });

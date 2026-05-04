@@ -1,3 +1,55 @@
+CREATE or replace FUNCTION app_private.event_registration_person_ids(e public.event_registration) RETURNS SETOF bigint
+    LANGUAGE sql security definer
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select e.person_id as id where e.person_id is not null
+  union
+  select unnest(array[man_id, woman_id]) as id from couple where couple.id = e.couple_id and e.couple_id is not null
+$$;
+grant all on function app_private.event_registration_person_ids to anonymous;
+
+CREATE or replace FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) RETURNS void
+    LANGUAGE sql security definer
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  with v as (
+    select jsonb_build_object(
+      'TOTAL', agg.person_total,
+      'UNKNOWN', agg.unknown_count,
+      'ATTENDED', agg.attended_count,
+      'NOT_EXCUSED', agg.not_excused_count
+    ) as stats
+    from (
+      select
+        count(*) filter (where ea.status <> 'cancelled')::int as person_total,
+        count(*) filter (where ea.status = 'unknown')::int as unknown_count,
+        count(*) filter (where ea.status = 'attended')::int as attended_count,
+        count(*) filter (where ea.status = 'not-excused')::int as not_excused_count
+      from public.event_attendance ea
+      where ea.instance_id = p_instance_id
+    ) agg
+  )
+  update public.event_instance ei set stats = v.stats from v
+  where ei.id = p_instance_id and ei.stats is distinct from v.stats;
+$$;
+grant all on function app_private.refresh_event_instance_stats to anonymous;
+
+CREATE or replace FUNCTION app_private.refresh_event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint) RETURNS boolean
+    LANGUAGE sql security definer
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  with v as (
+    select app_private.event_instance_manager_person_ids(p_instance_id, p_event_id) as ids
+  ),
+  u as (
+    update public.event_instance ei set manager_person_ids = v.ids from v
+    where ei.id = p_instance_id and ei.event_id = p_event_id and ei.manager_person_ids is distinct from v.ids
+    returning 1
+  )
+  select exists(select 1 from u);
+$$;
+grant all on function app_private.refresh_event_instance_manager_person_ids to anonymous;
+
 DROP FUNCTION IF EXISTS public.event_instance_attendance_summary;
 
 DROP FUNCTION IF EXISTS event_instances_for_range(only_type event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], only_mine boolean);
