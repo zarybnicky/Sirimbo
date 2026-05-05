@@ -117,15 +117,7 @@ export const cstsEventIndex: JsonLoader<Response> = {
     }
     const keys = parsed.collection.map((x) => String(x.id));
     await upsertFrontierKeys.run(
-      { federation: 'csts', kind: 'eventCompetitions', keys },
-      client,
-    );
-    await upsertFrontierKeys.run(
-      { federation: 'csts', kind: 'eventCompetitors', keys },
-      client,
-    );
-    await upsertFrontierKeys.run(
-      { federation: 'csts', kind: 'eventOfficials', keys },
+      { federation: 'csts', kind: 'event', keys },
       client,
     );
   },

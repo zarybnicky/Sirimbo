@@ -5,9 +5,9 @@ import { cstsRanklist } from './cstsRanklist.ts';
 import { wdsfMember } from './wdsfMember.ts';
 import { wdsfMemberIndex } from './wdsfMemberIndex.ts';
 import { cstsEventIndex } from './cstsEventIndex.ts';
-import { cstsResultIndex } from './cstsResultIndex.ts';
-import { cstsEventOfficials } from './cstsEventOfficials.ts';
 import { cstsEventCompetitors } from './cstsEventCompetitors.ts';
+import { cstsEvent } from './cstsEvent.ts';
+import { cstsCompetitionResults } from './cstsCompetitionResults.ts';
 
 export type LoaderIds = {
   [F in keyof typeof LOADERS]: {
@@ -71,17 +71,20 @@ export const LOADERS = {
     // Soutěže
     // https://www.csts.cz/api/1/events?filter=date%3E%3D2025-12-01%20AND%20date%3C%3D2026-03-01
     eventIndex: cstsEventIndex,
+    event: cstsEvent,
     // https://www.csts.cz/api/1/events/327/competitions?filter=eventCompetitionId%3D327&order=type
+    // eventCompetitions: cstsEventCompetitions PART of competition_events??
     // https://www.csts.cz/api/1/events/327/officials
-    eventOfficials: cstsEventOfficials,
+    // eventOfficials: cstsEventOfficials PART of competition_events??
     // https://www.csts.cz/api/1/events/327/competitors
     eventCompetitors: cstsEventCompetitors,
 
     // Výsledky
     // https://www.csts.cz/api/1/competition_events?from=2025-11-01&to=2025-11-30
-    resultIndex: cstsResultIndex,
     // https://www.csts.cz/api/1/competition_events/1262
+    // TODO: ^^ (propozice!)
     // https://www.csts.cz/api/1/competitions/32329/result
+    competitionResults: cstsCompetitionResults,
 
     clubIndex: {
       mode: 'text',

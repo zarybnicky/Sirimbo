@@ -97,7 +97,7 @@ export const mapCompetitorType = (type: CompetitorType): competitor_type => {
   }
 };
 
-type DisciplineType =
+export type DisciplineType =
   | 'Unknown'
   | 'Standard'
   | 'Latin'
@@ -156,7 +156,7 @@ type CompetitionType =
   | 'Championship'
   | 'TopLevel'
   | 'SuperLeague'
-  | 'G_Cup';
+  | 'GCup';
 
 export const competitionType: { [key in CompetitionType]: number } = {
   Unknown: 0,
@@ -166,10 +166,10 @@ export const competitionType: { [key in CompetitionType]: number } = {
   Championship: 4,
   TopLevel: 5,
   SuperLeague: 6,
-  G_Cup: 7,
+  GCup: 7,
 };
 
-type AgeGroup =
+export type AgeGroup =
   | 'Unknown'
   | 'Under_8'
   | 'Juvenile_I'

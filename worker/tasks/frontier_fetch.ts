@@ -1,7 +1,6 @@
 import type { Task } from 'graphile-worker';
 import {
   getFrontierForUpdate,
-  getOutstandingJobCountForTask,
   insertResponse,
   markFrontierFetchError,
   markFrontierFetchSuccess,
@@ -17,39 +16,49 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 
   const result = await withPgClient(async (client) => {
     await client.query('BEGIN');
+    let committed = false;
 
-    const [frontier] = await getFrontierForUpdate.run({ id }, client);
-    if (!frontier) {
-      logger.info(`Frontier ${id} not found`);
+    try {
+      const [frontier] = await getFrontierForUpdate.run({ id }, client);
+      if (!frontier) {
+        logger.info(`Frontier ${id} not found`);
+        await client.query('COMMIT');
+        committed = true;
+        return;
+      }
+      const { federation, kind } = frontier;
+
+      const loader = loaderFor(federation, kind);
+      if (!loader) {
+        await markFrontierFetchError.run({ id }, client);
+        logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
+        await client.query('COMMIT');
+        committed = true;
+        return;
+      }
+
+      const { url, init } = loader.buildRequest(frontier.key);
+      const { host } = url;
+      const [{ granted, allowed_at }] = await reserveRequest.run({ host }, client);
+      if (!granted) {
+        logger.info(
+          `Over-scheduled for host ${host}, rescheduling in ${allowed_at!.getTime() - Date.now()} ms`,
+        );
+        await rescheduleFrontier.run({ id, nextRetryAt: allowed_at }, client);
+        await client.query('COMMIT');
+        committed = true;
+        const jobKey = `fetch:${host}:${id}`;
+        await helpers.addJob('frontier_fetch', { id }, { jobKey, runAt: allowed_at! });
+        return;
+      }
       await client.query('COMMIT');
-      return;
-    }
-    const { federation, kind } = frontier;
+      committed = true;
 
-    const loader = loaderFor(federation, kind);
-    if (!loader) {
-      await markFrontierFetchError.run({ id }, client);
-      logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);
-      await client.query('COMMIT');
-      return;
+      return { frontier, handler: loader, url, init: init || {} };
+    } catch (e) {
+      if (!committed) await client.query('ROLLBACK');
+      throw e;
     }
-
-    const { url, init } = loader.buildRequest(frontier.key);
-    const { host } = url;
-    const [{ granted, allowed_at }] = await reserveRequest.run({ host }, client);
-    if (!granted) {
-      logger.info(
-        `Over-scheduled for host ${host}, rescheduling in ${allowed_at!.getTime() - Date.now()} ms`,
-      );
-      await rescheduleFrontier.run({ id, nextRetryAt: allowed_at }, client);
-      await client.query('COMMIT');
-      const jobKey = `fetch:${host}:${id}`;
-      await helpers.addJob('frontier_fetch', { id }, { jobKey, runAt: allowed_at! });
-      return;
-    }
-    await client.query('COMMIT');
-
-    return { frontier, handler: loader, url, init: init || {} };
   });
   if (!result) return;
   const { frontier, handler, url, init } = result;
@@ -66,27 +75,26 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 
   await withPgClient(async (client) => {
     await client.query('BEGIN');
-    await insertResponse.run(
-      { id, url: url.toString(), httpStatus, error, content: JSON.stringify(content) },
-      client,
-    );
+    try {
+      await insertResponse.run(
+        { id, url: url.toString(), httpStatus, error, content: JSON.stringify(content) },
+        client,
+      );
 
-    if (fetchStatus === 'transient') {
-      await markFrontierTransient.run({ id }, client);
-    } else if (fetchStatus === 'error') {
-      await markFrontierFetchError.run({ id }, client);
-    } else {
-      const { revalidatePeriod } = handler;
-      await markFrontierFetchSuccess.run({ id, fetchStatus, revalidatePeriod }, client);
+      if (fetchStatus === 'transient') {
+        await markFrontierTransient.run({ id }, client);
+      } else if (fetchStatus === 'error') {
+        await markFrontierFetchError.run({ id }, client);
+      } else {
+        const { revalidatePeriod } = handler;
+        await markFrontierFetchSuccess.run({ id, fetchStatus, revalidatePeriod }, client);
+      }
+
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
     }
-
-    const jobs = await getOutstandingJobCountForTask.run({ task: 'frontier_fetch' }, client);
-    if (jobs[0].count <= 1) {
-      // Count the current job too!
-      await helpers.addJob('frontier_schedule', {});
-    }
-
-    await client.query('COMMIT');
   });
 };
 

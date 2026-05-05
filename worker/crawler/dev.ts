@@ -17,7 +17,7 @@ import {
   getCrawlerFrontierJobs,
   getLatestFrontierFailures,
   getBacktestFrontierResponses,
-  queueCrawlerKick,
+  queueCrawlerSchedule,
   queueFrontierRefetch,
 } from './crawler.queries.ts';
 import type {
@@ -562,9 +562,8 @@ async function showFailures(
     displayRows.map((row) => ({
       failed: formatDate(row.failed_at),
       failure: row.failure,
-      kind: `${row.federation}:${row.kind}`,
       id: row.id,
-      key: short(row.key, 28),
+      kind: formatFrontierTarget(row.federation, row.kind, row.key),
       http: row.http_status ?? '-',
       errors: row.error_count,
       next: formatDate(row.next_fetch_at),
@@ -663,9 +662,6 @@ function printStatusBacklog(rows: CrawlerStatusRow[]) {
       locked: row.locked_fetch,
       process: row.process_ready,
       oldest: formatDate(row.oldest_due_at),
-      deadline: formatDate(row.deadline_at),
-      eta: formatDate(row.eta_at),
-      stale: row.is_stale ? 'yes' : 'no',
     })),
   );
 }
@@ -694,17 +690,14 @@ function statusCommands(
     scoped('pnpm crawler failures'),
   ];
 
-  if (problems.some((problem) => problem.code === 'worker_failure')) {
+  if (
+    problems.some(
+      (problem) => problem.code === 'worker_failure' && problem.task === 'frontier_fetch',
+    )
+  ) {
     commands.push(
       scope ? `pnpm crawler jobs ${scope} --failed` : 'pnpm crawler jobs --failed',
     );
-  }
-  if (
-    problems.some(
-      (problem) => problem.code === 'scheduler_gap' || problem.code === 'process_gap',
-    )
-  ) {
-    commands.push('pnpm crawler kick');
   }
 
   const sampleProblem = problems.find((problem) => problem.sample_id);
@@ -779,8 +772,7 @@ async function showStatus(
       .filter(
         (row) =>
           row.fetch_due > 0 ||
-          row.process_ready > 0 ||
-          row.is_stale,
+          row.process_ready > 0,
       )
       .sort(sortBacklogRows),
     limit,
@@ -854,42 +846,18 @@ function explainState(row: IGetFrontierDetailResult) {
   return 'no obvious issue';
 }
 
-function explainNextAction(row: IGetFrontierDetailResult) {
-  const target = formatFrontierTarget(row.federation, row.kind, row.key);
-  const hasLoader = Boolean(loaderFor(row.federation, row.kind));
-  if (!hasLoader) return `add or restore loader ${row.federation}:${row.kind}`;
-  if (row.job_attempts != null && row.job_max_attempts != null && row.job_attempts >= row.job_max_attempts) {
-    return `inspect job with pnpm crawler jobs ${row.federation}:${row.kind} --failed`;
-  }
-  if (row.fetch_status === 'error' || row.fetch_status === 'transient' || row.process_status === 'error') {
-    return `pnpm crawler refetch ${target}`;
-  }
-  if (
-    row.fetch_status === 'pending' &&
-    !row.job_run_at &&
-    (row.next_fetch_at == null || row.next_fetch_at <= new Date())
-  ) {
-    return 'pnpm crawler kick';
-  }
-  if (row.process_status === 'pending' && row.fetch_status === 'ok') {
-    return 'pnpm crawler kick';
-  }
-  return '-';
-}
-
 async function explainFrontier(target: string, options: OutputOptions) {
   const parsed = parseExplainTarget(target);
   const [row] = await getFrontierDetail.run(parsed, pool);
   if (!row) throw new Error(`Frontier ${target} not found`);
 
   const loader = loaderFor(row.federation, row.kind);
-  const expectedUrl = loader?.buildRequest(row.key).url.toString() ?? null;
+  const expectedUrl = loader?.buildRequest(row.key).url.toString();
   const result = {
     ...row,
     has_loader: Boolean(loader),
     expected_url: expectedUrl,
     state: explainState(row),
-    next_action: explainNextAction(row),
   };
 
   if (options.json) {
@@ -908,7 +876,6 @@ async function explainFrontier(target: string, options: OutputOptions) {
       errors: result.error_count,
       next: formatDate(result.next_fetch_at),
       state: result.state,
-      next_action: truncate(result.next_action, 70),
     },
   ]);
 
@@ -955,7 +922,7 @@ async function queueExactRefetch(target: string) {
 
   const [row] = await queueFrontierRefetch.run({ ids: [frontier.id] }, pool);
   if (!row) throw new Error(`Unable to queue ${target}`);
-  const [job] = await queueCrawlerKick.run(undefined, pool);
+  const [job] = await queueCrawlerSchedule.run(undefined, pool);
 
   console.log(
     [
@@ -990,7 +957,7 @@ async function queueFailedRefetch(target: string, options: RefetchOptions) {
     const ids = rows.map((row) => row.id);
     const queuedRows = await queueFrontierRefetch.run({ ids }, pool);
     const queuedIds = new Set(queuedRows.map((row) => row.id));
-    const [job] = await queueCrawlerKick.run(undefined, pool);
+    const [job] = await queueCrawlerSchedule.run(undefined, pool);
     jobId = job.job_id;
     outputRows = rows.map((row) => ({ ...row, queued: queuedIds.has(row.id) }));
   }
@@ -1032,15 +999,6 @@ async function queueRefetch(target: string, options: RefetchOptions) {
   }
 
   await queueExactRefetch(target);
-}
-
-async function kickScheduler(options: OutputOptions) {
-  const [row] = await queueCrawlerKick.run(undefined, pool);
-  if (options.json) {
-    console.log(JSON.stringify(row, null, 2));
-    return;
-  }
-  console.log(`Queued frontier_schedule job ${row.job_id}`);
 }
 
 function queryText(query: unknown) {
@@ -1166,11 +1124,6 @@ cli
   .option('--full', 'Do not truncate long targets or errors')
   .option('--json', 'Print JSON')
   .action((target: string | undefined, options: JobOptions) => showJobs(target, options));
-
-cli
-  .command('kick', 'Wake the crawler scheduler')
-  .option('--json', 'Print JSON')
-  .action((options: OutputOptions) => kickScheduler(options));
 
 cli
   .command('explain <target>', 'Explain one frontier row by id or federation:kind[:key]')

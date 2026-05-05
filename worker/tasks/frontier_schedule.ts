@@ -54,21 +54,17 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
     await upsertFrontiers.run(seedFrontierParams, client);
 
     const scheduleRows = await getCrawlerScheduleStatus.run(undefined, client);
-    const byHost = new Map<
-      string,
-      { spacingMs: number; queueTailAt: Date }
-    >();
     const now = new Date();
+    const byHost = new Map<string, { spacingMs: number; queueTailAt: Date }>();
 
-    for (const r of scheduleRows) {
-      const queueTailAt = r.queue_tail_at && r.queue_tail_at > now ? r.queue_tail_at : now;
-      byHost.set(r.host, {
-        spacingMs: r.spacing ?? 50,
-        queueTailAt,
+    for (const row of scheduleRows) {
+      byHost.set(row.host, {
+        spacingMs: row.spacing ?? 50,
+        queueTailAt: row.queue_tail_at && row.queue_tail_at > now ? row.queue_tail_at : now,
       });
     }
 
-    const outstanding = scheduleRows.reduce((acc, rule) => acc + rule.queued + rule.locked, 0);
+    const outstanding = scheduleRows.reduce((total, row) => total + row.queued + row.locked, 0);
     if (outstanding >= MAX_OUTSTANDING_FETCH) return;
 
     const capacity = MAX_OUTSTANDING_FETCH - outstanding;
@@ -82,12 +78,11 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
       const loader = loaderFor(federation, kind);
       if (!loader) continue;
       const { host } = loader.buildRequest(key).url;
-
-      const rule =
+      const slot =
         byHost.get(host) ??
         byHost.set(host, { spacingMs: 50, queueTailAt: now }).get(host)!;
-      const runAt = new Date(rule.queueTailAt.getTime() + rule.spacingMs);
-      rule.queueTailAt = runAt;
+      const runAt = new Date(slot.queueTailAt.getTime() + slot.spacingMs);
+      slot.queueTailAt = runAt;
 
       const jobKey = `fetch:${host}:${id}`;
       await addJob(
@@ -97,8 +92,9 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
       );
       scheduled++;
     }
-    if (pendingIds.length > 0 || outstanding > 0)
+    if (pendingIds.length > 0 || outstanding > 0) {
       logger.info(`${scheduled} new fetch jobs, outstanding ${outstanding}`);
+    }
   });
 
   await withPgClient(async (client) => {

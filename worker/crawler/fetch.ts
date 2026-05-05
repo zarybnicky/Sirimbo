@@ -1,7 +1,7 @@
 import type { Loader } from './types.ts';
 import { zx } from '@traversable/zod';
 import type { fetch_status } from './crawler.queries.ts';
-import Impit, { type ImpitResponse, type RequestInit as ImpitRequestInit } from 'impit';
+import Impit from 'impit';
 
 const impit = new Impit.Impit({
   browser: 'chrome',

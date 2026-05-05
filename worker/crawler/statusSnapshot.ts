@@ -6,8 +6,6 @@ import type {
 } from './crawler.queries.ts';
 import { loaderFor } from './handlers.ts';
 
-const DEFAULT_HOST_SPACING_MS = 50;
-
 type StatusFilter = {
   federation?: string;
   kind?: string;
@@ -22,7 +20,7 @@ type StatusInputs = {
   scheduleRows: IGetCrawlerScheduleStatusResult[];
 };
 
-type StatusSeverity = 'error' | 'warning' | 'info';
+type StatusSeverity = 'error' | 'warning';
 
 export type StatusProblem = {
   severity: StatusSeverity;
@@ -32,10 +30,8 @@ export type StatusProblem = {
     | 'fetch_failure'
     | 'process_failure'
     | 'worker_failure'
-    | 'stale_backlog'
     | 'scheduler_gap'
-    | 'process_gap'
-    | 'queue_pressure';
+    | 'process_gap';
   kind?: string;
   task?: string | null;
   host?: string | null;
@@ -56,11 +52,6 @@ export type CrawlerStatusRow = IGetCrawlerFrontierStatusResult & {
   has_loader: boolean;
   is_stable: boolean;
   loader_request_error?: string;
-  revalidate_period: string | null;
-  revalidate_period_ms: number | null;
-  deadline_at: Date | null;
-  eta_at: Date | null;
-  is_stale: boolean;
 };
 
 export type StatusSnapshot = {
@@ -77,15 +68,8 @@ function kindId(federation: string, kind: string) {
   return `${federation}:${kind}`;
 }
 
-function dateMax(...values: Array<Date | null | undefined>) {
-  const timestamps = values
-    .filter((value): value is Date => value != null)
-    .map((value) => value.getTime());
-  return timestamps.length === 0 ? null : new Date(Math.max(...timestamps));
-}
-
 function severityRank(severity: StatusSeverity) {
-  return severity === 'error' ? 3 : severity === 'warning' ? 2 : 1;
+  return severity === 'error' ? 2 : 1;
 }
 
 function sortProblems(a: ScoredStatusProblem, b: ScoredStatusProblem) {
@@ -100,7 +84,6 @@ function sortProblems(a: ScoredStatusProblem, b: ScoredStatusProblem) {
 
 export function sortBacklogRows(a: CrawlerStatusRow, b: CrawlerStatusRow) {
   return (
-    Number(b.is_stale) - Number(a.is_stale) ||
     b.unscheduled_fetch - a.unscheduled_fetch ||
     b.fetch_due - a.fetch_due ||
     (a.oldest_due_at?.getTime() ?? Number.MAX_SAFE_INTEGER) -
@@ -125,52 +108,10 @@ function sortFrontiers(a: CrawlerStatusRow, b: CrawlerStatusRow) {
   return frontierPriority(b) - frontierPriority(a) || a.target.localeCompare(b.target);
 }
 
-function parseIntervalMs(value: string | null | undefined) {
-  if (!value) return null;
-
-  const units: Record<string, number> = {
-    millisecond: 1,
-    milliseconds: 1,
-    ms: 1,
-    second: 1_000,
-    seconds: 1_000,
-    sec: 1_000,
-    secs: 1_000,
-    s: 1_000,
-    minute: 60_000,
-    minutes: 60_000,
-    min: 60_000,
-    mins: 60_000,
-    m: 60_000,
-    hour: 3_600_000,
-    hours: 3_600_000,
-    hr: 3_600_000,
-    hrs: 3_600_000,
-    h: 3_600_000,
-    day: 86_400_000,
-    days: 86_400_000,
-    d: 86_400_000,
-    week: 604_800_000,
-    weeks: 604_800_000,
-    w: 604_800_000,
-  };
-
-  let total = 0;
-  const matches = value.matchAll(/(\d+(?:\.\d+)?)\s*([a-zA-Z]+)/g);
-  for (const match of matches) {
-    const unit = units[match[2].toLowerCase()];
-    if (!unit) return null;
-    total += Number(match[1]) * unit;
-  }
-
-  return total > 0 ? total : null;
-}
-
 function enrichFrontierRows(rows: IGetCrawlerFrontierStatusResult[]): CrawlerStatusRow[] {
   return rows.map((row) => {
     const target = kindId(row.federation, row.kind);
     const loader = loaderFor(row.federation, row.kind);
-    const revalidatePeriodMs = parseIntervalMs(loader?.revalidatePeriod);
     let host: string | null = null;
     let loaderRequestError: string | undefined;
     if (loader && row.sample_due_key != null) {
@@ -181,10 +122,6 @@ function enrichFrontierRows(rows: IGetCrawlerFrontierStatusResult[]): CrawlerSta
       }
     }
 
-    const deadline_at =
-      row.oldest_due_at && revalidatePeriodMs
-        ? new Date(row.oldest_due_at.getTime() + revalidatePeriodMs)
-        : null;
     const hasLoader = Boolean(loader);
     const fetchTransient = row.fetch_transient;
     const fetchError = row.fetch_error;
@@ -206,52 +143,8 @@ function enrichFrontierRows(rows: IGetCrawlerFrontierStatusResult[]): CrawlerSta
         row.process_ready === 0 &&
         processError === 0,
       loader_request_error: loaderRequestError,
-      revalidate_period: loader?.revalidatePeriod ?? null,
-      revalidate_period_ms: revalidatePeriodMs,
-      deadline_at,
-      eta_at: null,
-      is_stale: false,
     };
   });
-}
-
-function computeQueueEta(
-  rows: CrawlerStatusRow[],
-  schedules: Map<string, IGetCrawlerScheduleStatusResult>,
-  now: Date,
-) {
-  const byHost = new Map<string, CrawlerStatusRow[]>();
-  for (const row of rows) {
-    if (!row.host || row.fetch_due <= 0) continue;
-    const hostRows = byHost.get(row.host);
-    if (hostRows) hostRows.push(row);
-    else byHost.set(row.host, [row]);
-  }
-
-  for (const [host, hostRows] of byHost.entries()) {
-    const schedule = schedules.get(host);
-    let tail =
-      dateMax(
-        now,
-        schedule?.next_available_at,
-        schedule?.next_run_at,
-        schedule?.queue_tail_at,
-      ) ?? now;
-
-    hostRows.sort(
-      (a, b) =>
-        (a.oldest_due_at?.getTime() ?? Number.MAX_SAFE_INTEGER) -
-          (b.oldest_due_at?.getTime() ?? Number.MAX_SAFE_INTEGER) ||
-        kindId(a.federation, a.kind).localeCompare(kindId(b.federation, b.kind)),
-    );
-
-    for (const row of hostRows) {
-      const spacing = schedule?.spacing ?? DEFAULT_HOST_SPACING_MS;
-      row.eta_at = new Date(tail.getTime() + row.unscheduled_fetch * spacing);
-      row.is_stale = Boolean(row.deadline_at && row.eta_at > row.deadline_at);
-      tail = row.eta_at;
-    }
-  }
 }
 
 function loaderProblems(rows: CrawlerStatusRow[]): ScoredStatusProblem[] {
@@ -340,34 +233,6 @@ function queueProblems(
   const problems: ScoredStatusProblem[] = [];
 
   for (const row of rows) {
-    if (row.is_stale) {
-      problems.push({
-        severity: 'warning',
-        code: 'stale_backlog',
-        kind: row.target,
-        host: row.host,
-        count: row.fetch_due,
-        message: `${row.target} backlog ETA breaches next_fetch_at + revalidatePeriod`,
-        sample_id: row.sample_due_id,
-        sample_key: row.sample_due_key,
-        at: row.oldest_due_at,
-        score: 500_000 + row.unscheduled_fetch,
-      });
-    } else if (row.unscheduled_fetch > 0 && row.host) {
-      problems.push({
-        severity: 'info',
-        code: 'queue_pressure',
-        kind: row.target,
-        host: row.host,
-        count: row.unscheduled_fetch,
-        message: `${row.target} has due rows waiting behind the scheduler cap`,
-        sample_id: row.sample_due_id,
-        sample_key: row.sample_due_key,
-        at: row.oldest_due_at,
-        score: 100_000 + row.unscheduled_fetch,
-      });
-    }
-
     if (
       row.fetch_due > 0 &&
       row.has_loader &&
@@ -432,11 +297,7 @@ function publicProblem({ score: _score, ...problem }: ScoredStatusProblem): Stat
 }
 
 export function buildStatusSnapshot(inputs: StatusInputs): StatusSnapshot {
-  const scheduleByHost = new Map(
-    inputs.scheduleRows.map((row) => [row.host, row]),
-  );
   const frontiers = enrichFrontierRows(inputs.frontierRows);
-  computeQueueEta(frontiers, scheduleByHost, inputs.generatedAt);
 
   const scoredProblems = [
     ...loaderProblems(frontiers),

@@ -101,7 +101,7 @@ LEFT JOIN due_status ds USING (federation, kind)
 LEFT JOIN fetch_jobs fj USING (federation, kind)
 ORDER BY fs.federation, fs.kind;
 
-/* @name QueueCrawlerKick */
+/* @name QueueCrawlerSchedule */
 SELECT (
   graphile_worker.add_job(
     identifier => 'frontier_schedule',
@@ -361,7 +361,7 @@ SELECT
   jr.fetched_at AS "response_fetched_at?",
   jr.http_status AS "response_http_status?",
   jr.error AS "response_error?",
-  jr.content_hash AS "response_content_hash?",
+  jr.content AS "response_content?",
   j.job_id,
   j.job_key,
   j.run_at AS job_run_at,
@@ -371,8 +371,9 @@ SELECT
   j.locked_at AS job_locked_at
 FROM crawler.frontier f
 LEFT JOIN LATERAL (
-  SELECT jr.*
+  SELECT jr.*, jrc.content
   FROM crawler.json_response jr
+  JOIN crawler.json_response_cache jrc USING (content_hash)
   WHERE jr.frontier_id = f.id
   ORDER BY jr.fetched_at DESC
   LIMIT 1
@@ -421,6 +422,12 @@ WITH allowed_loaders AS (
     ) AS rn
   FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df
   JOIN allowed_loaders USING (federation, kind)
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM crawler.frontier_fetch_job j
+    WHERE j.frontier_id = df.id
+      AND j.state IN ('ready', 'delayed', 'locked')
+  )
 )
 SELECT
   id AS "id!",

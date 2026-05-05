@@ -69,7 +69,7 @@ const athleteSchema = z.object({
 });
 
 const athletesResponseSchema = z.object({
-  collection: z.array(athleteSchema).nonempty(),
+  collection: z.array(athleteSchema),
 });
 
 type Response = z.infer<typeof athletesResponseSchema>;
@@ -106,8 +106,8 @@ export const cstsMember: JsonLoader<Response> = {
       },
     },
   }),
-  mapResponseToStatus({ parsed }) {
-    if (!parsed?.collection.length) return 'gone';
+  mapResponseToStatus({ parsed, fetchStatus }) {
+    if (fetchStatus === 'ok' && parsed && parsed.collection.length === 0) return 'gone';
     return undefined;
   },
   cleanResponse(_url, parsed) {

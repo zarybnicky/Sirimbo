@@ -2,7 +2,6 @@ import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
 import FacebookImage from '@/public/images/Facebook-202209.jpg';
 import YoutubeImage from '@/public/images/YouTube-Veverka.jpg';
-import * as React from 'react';
 import { Layout } from '@/ui/Layout';
 import { cn } from '@/lib/cn';
 
