@@ -367,8 +367,7 @@ SELECT
   j.run_at AS job_run_at,
   j.attempts AS job_attempts,
   j.max_attempts AS job_max_attempts,
-  j.job_error AS job_last_error,
-  j.locked_at AS job_locked_at
+  j.job_error AS job_last_error
 FROM crawler.frontier f
 LEFT JOIN LATERAL (
   SELECT jr.*, jrc.content
@@ -385,15 +384,36 @@ LEFT JOIN LATERAL (
   ORDER BY j.job_updated_at DESC
   LIMIT 1
 ) j ON true
-WHERE (
-    :id::bigint IS NOT NULL
-    AND f.id = :id::bigint
-  ) OR (
-    :id::bigint IS NULL
-    AND f.federation = :federation
-    AND f.kind = :kind
-    AND f.key = :key
-  );
+  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)
+     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key));
+
+/* @name GetLatestFrontierResponse */
+WITH target AS (
+  SELECT f.id
+  FROM crawler.frontier f
+  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)
+     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))
+), latest AS (
+  SELECT
+    jr.fetched_at,
+    jrc.content AS json_content,
+    NULL::text AS text_content
+  FROM target
+  JOIN LATERAL (
+    SELECT fetched_at, content_hash
+    FROM crawler.json_response jr
+    WHERE jr.frontier_id = target.id
+    ORDER BY jr.fetched_at DESC
+    LIMIT 1
+  ) jr ON true
+  LEFT JOIN crawler.json_response_cache jrc USING (content_hash)
+)
+SELECT
+  json_content,
+  text_content
+FROM latest
+ORDER BY fetched_at DESC
+LIMIT 1;
 
 /* @name GetOutstandingJobCountForTask */
 SELECT count(*)::int AS "count!"
@@ -459,8 +479,8 @@ JOIN LATERAL (
 JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE process_status = 'pending'
   AND fetch_status = 'ok'
-ORDER BY last_fetched_at, discovered_at
-FOR UPDATE SKIP LOCKED
+ORDER BY discovered_at, last_fetched_at
+FOR UPDATE OF f SKIP LOCKED
 LIMIT :limit;
 
 /* @name ReserveRequest */

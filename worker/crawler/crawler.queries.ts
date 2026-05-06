@@ -690,7 +690,6 @@ export interface IGetFrontierDetailResult {
   job_id: string | null;
   job_key: string | null;
   job_last_error: string | null;
-  job_locked_at: Date | null;
   job_max_attempts: number | null;
   job_run_at: Date | null;
   key: string;
@@ -713,7 +712,7 @@ export interface IGetFrontierDetailQuery {
   result: IGetFrontierDetailResult;
 }
 
-const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":979,"b":981},{"a":1018,"b":1020},{"a":1043,"b":1045}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":1086,"b":1096}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":1115,"b":1119}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":1137,"b":1140}]}],"statement":"SELECT\n  f.id,\n  f.federation,\n  f.kind,\n  f.key,\n  f.discovered_at,\n  f.last_fetched_at,\n  f.fetch_status,\n  f.process_status,\n  f.error_count,\n  f.next_fetch_at,\n  f.last_process_error,\n  f.meta,\n  jr.url AS \"response_url?\",\n  jr.fetched_at AS \"response_fetched_at?\",\n  jr.http_status AS \"response_http_status?\",\n  jr.error AS \"response_error?\",\n  jr.content AS \"response_content?\",\n  j.job_id,\n  j.job_key,\n  j.run_at AS job_run_at,\n  j.attempts AS job_attempts,\n  j.max_attempts AS job_max_attempts,\n  j.job_error AS job_last_error,\n  j.locked_at AS job_locked_at\nFROM crawler.frontier f\nLEFT JOIN LATERAL (\n  SELECT jr.*, jrc.content\n  FROM crawler.json_response jr\n  JOIN crawler.json_response_cache jrc USING (content_hash)\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nLEFT JOIN LATERAL (\n  SELECT j.*\n  FROM crawler.frontier_fetch_job j\n  WHERE j.frontier_id = f.id\n  ORDER BY j.job_updated_at DESC\n  LIMIT 1\n) j ON true\nWHERE (\n    :id::bigint IS NOT NULL\n    AND f.id = :id::bigint\n  ) OR (\n    :id::bigint IS NULL\n    AND f.federation = :federation\n    AND f.kind = :kind\n    AND f.key = :key\n  )"};
+const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":944,"b":946},{"a":979,"b":981},{"a":1001,"b":1003}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":1058,"b":1068}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":1071,"b":1075}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":1078,"b":1081}]}],"statement":"SELECT\n  f.id,\n  f.federation,\n  f.kind,\n  f.key,\n  f.discovered_at,\n  f.last_fetched_at,\n  f.fetch_status,\n  f.process_status,\n  f.error_count,\n  f.next_fetch_at,\n  f.last_process_error,\n  f.meta,\n  jr.url AS \"response_url?\",\n  jr.fetched_at AS \"response_fetched_at?\",\n  jr.http_status AS \"response_http_status?\",\n  jr.error AS \"response_error?\",\n  jr.content AS \"response_content?\",\n  j.job_id,\n  j.job_key,\n  j.run_at AS job_run_at,\n  j.attempts AS job_attempts,\n  j.max_attempts AS job_max_attempts,\n  j.job_error AS job_last_error\nFROM crawler.frontier f\nLEFT JOIN LATERAL (\n  SELECT jr.*, jrc.content\n  FROM crawler.json_response jr\n  JOIN crawler.json_response_cache jrc USING (content_hash)\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nLEFT JOIN LATERAL (\n  SELECT j.*\n  FROM crawler.frontier_fetch_job j\n  WHERE j.frontier_id = f.id\n  ORDER BY j.job_updated_at DESC\n  LIMIT 1\n) j ON true\n  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))"};
 
 /**
  * Query generated from SQL:
@@ -741,8 +740,7 @@ const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"k
  *   j.run_at AS job_run_at,
  *   j.attempts AS job_attempts,
  *   j.max_attempts AS job_max_attempts,
- *   j.job_error AS job_last_error,
- *   j.locked_at AS job_locked_at
+ *   j.job_error AS job_last_error
  * FROM crawler.frontier f
  * LEFT JOIN LATERAL (
  *   SELECT jr.*, jrc.content
@@ -759,18 +757,67 @@ const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"k
  *   ORDER BY j.job_updated_at DESC
  *   LIMIT 1
  * ) j ON true
- * WHERE (
- *     :id::bigint IS NOT NULL
- *     AND f.id = :id::bigint
- *   ) OR (
- *     :id::bigint IS NULL
- *     AND f.federation = :federation
- *     AND f.kind = :kind
- *     AND f.key = :key
- *   )
+ *   WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)
+ *      OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))
  * ```
  */
 export const getFrontierDetail = new PreparedQuery<IGetFrontierDetailParams,IGetFrontierDetailResult>(getFrontierDetailIR);
+
+
+/** 'GetLatestFrontierResponse' parameters type */
+export interface IGetLatestFrontierResponseParams {
+  federation?: string | null | void;
+  id?: NumberOrString | null | void;
+  key?: string | null | void;
+  kind?: string | null | void;
+}
+
+/** 'GetLatestFrontierResponse' return type */
+export interface IGetLatestFrontierResponseResult {
+  json_content: Json;
+  text_content: string | null;
+}
+
+/** 'GetLatestFrontierResponse' query type */
+export interface IGetLatestFrontierResponseQuery {
+  params: IGetLatestFrontierResponseParams;
+  result: IGetLatestFrontierResponseResult;
+}
+
+const getLatestFrontierResponseIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":68},{"a":101,"b":103},{"a":123,"b":125}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":180,"b":190}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":193,"b":197}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":200,"b":203}]}],"statement":"WITH target AS (\n  SELECT f.id\n  FROM crawler.frontier f\n  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))\n), latest AS (\n  SELECT\n    jr.fetched_at,\n    jrc.content AS json_content,\n    NULL::text AS text_content\n  FROM target\n  JOIN LATERAL (\n    SELECT fetched_at, content_hash\n    FROM crawler.json_response jr\n    WHERE jr.frontier_id = target.id\n    ORDER BY jr.fetched_at DESC\n    LIMIT 1\n  ) jr ON true\n  LEFT JOIN crawler.json_response_cache jrc USING (content_hash)\n)\nSELECT\n  json_content,\n  text_content\nFROM latest\nORDER BY fetched_at DESC\nLIMIT 1"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH target AS (
+ *   SELECT f.id
+ *   FROM crawler.frontier f
+ *   WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)
+ *      OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))
+ * ), latest AS (
+ *   SELECT
+ *     jr.fetched_at,
+ *     jrc.content AS json_content,
+ *     NULL::text AS text_content
+ *   FROM target
+ *   JOIN LATERAL (
+ *     SELECT fetched_at, content_hash
+ *     FROM crawler.json_response jr
+ *     WHERE jr.frontier_id = target.id
+ *     ORDER BY jr.fetched_at DESC
+ *     LIMIT 1
+ *   ) jr ON true
+ *   LEFT JOIN crawler.json_response_cache jrc USING (content_hash)
+ * )
+ * SELECT
+ *   json_content,
+ *   text_content
+ * FROM latest
+ * ORDER BY fetched_at DESC
+ * LIMIT 1
+ * ```
+ */
+export const getLatestFrontierResponse = new PreparedQuery<IGetLatestFrontierResponseParams,IGetLatestFrontierResponseResult>(getLatestFrontierResponseIR);
 
 
 /** 'GetOutstandingJobCountForTask' parameters type */
@@ -893,7 +940,7 @@ export interface IGetNextPendingProcessQuery {
   result: IGetNextPendingProcessResult;
 }
 
-const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":522,"b":527}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url,\n  jr.http_status,\n  jr.error,\n  jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE process_status = 'pending'\n  AND fetch_status = 'ok'\nORDER BY last_fetched_at, discovered_at\nFOR UPDATE SKIP LOCKED\nLIMIT :limit"};
+const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":527,"b":532}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url,\n  jr.http_status,\n  jr.error,\n  jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE process_status = 'pending'\n  AND fetch_status = 'ok'\nORDER BY discovered_at, last_fetched_at\nFOR UPDATE OF f SKIP LOCKED\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -918,8 +965,8 @@ const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"
  * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
  * WHERE process_status = 'pending'
  *   AND fetch_status = 'ok'
- * ORDER BY last_fetched_at, discovered_at
- * FOR UPDATE SKIP LOCKED
+ * ORDER BY discovered_at, last_fetched_at
+ * FOR UPDATE OF f SKIP LOCKED
  * LIMIT :limit
  * ```
  */

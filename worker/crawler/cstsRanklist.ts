@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
-import { upsertCompetitors, upsertRanklistSnapshot } from './federated.queries.ts';
+import { ensureCompetitors, upsertRanklistSnapshot } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
 import {
   ageGroup,
@@ -13,6 +13,7 @@ import {
   seriesType,
 } from './cstsEnums.ts';
 import { getFederatedCategoryId } from './federatedCategory.ts';
+import { makePgtypedCollection } from './pgtypedCollection.ts';
 
 const ranklistEntrySchema = z.object({
   competitorId: z.number(),
@@ -85,10 +86,10 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
   });
 
   if (entity.competitors.length > 0) {
-    await upsertCompetitors.run(
+    await ensureCompetitors.run(
       {
         type: entity.competitors.map(() => mapCompetitorType(entity.competitorType)),
-        label: entity.competitors.map((x) => x.competitorName),
+        label: entity.competitors.map(() => ''),
         federation: entity.competitors.map(() => 'csts'),
         externalId: entity.competitors.map((x) => x.competitorId.toString()),
       },
@@ -96,19 +97,19 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
     );
   }
 
-  const ranklistComponents: {
-    competitor_id: string;
-    ranking: number;
-    ranking_to: number;
-    points: number;
-  }[] = [];
+  const entries = makePgtypedCollection<{
+    entryCompetitorId: string;
+    entryRanking: number;
+    entryRankingTo: number;
+    entryPoints: number;
+  }>(['entryCompetitorId', 'entryRanking', 'entryRankingTo', 'entryPoints']);
 
   for (const competitor of entity.competitors) {
-    ranklistComponents.push({
-      competitor_id: `csts:${competitor.competitorId}`,
-      ranking: competitor.ranking,
-      ranking_to: competitor.rankingTo,
-      points:
+    entries.add({
+      entryCompetitorId: `csts:${competitor.competitorId}`,
+      entryRanking: competitor.ranking,
+      entryRankingTo: competitor.rankingTo,
+      entryPoints:
         competitor.points +
         competitor.pointsWdsf +
         competitor.pointsLeague +
@@ -123,7 +124,7 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
       ranklistName: [entity.series, entity.discipline, entity.age].join(' '),
       asOfDate: entity.date,
       kind: entity.type,
-      entries: JSON.stringify(ranklistComponents),
+      ...entries.params,
     },
     client,
   );

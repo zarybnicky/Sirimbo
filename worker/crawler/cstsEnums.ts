@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { competitor_type } from './federated.queries.ts';
+import type { competitor_type, official_role } from './federated.queries.ts';
 
 export const numberAsEnum = <T extends string>(enumDict: { [key in T]: number }) =>
   z.union([
@@ -86,6 +86,7 @@ export const mapCompetitorType = (type: CompetitorType): competitor_type => {
     case 'Formation':
       return 'formation';
     case 'Group':
+      return 'group';
     case 'SmallTeam':
     case 'Team':
     case 'BigTeam':
@@ -94,6 +95,36 @@ export const mapCompetitorType = (type: CompetitorType): competitor_type => {
     case 'Couple':
     default:
       return 'couple';
+  }
+};
+
+export const mapGenderGroup = (type: CompetitorType) => {
+  switch (type) {
+    case 'SoloM':
+      return 'male';
+    case 'SoloF':
+    case 'DuoF':
+    case 'TrioF':
+      return 'female';
+    default:
+      return 'mixed';
+  }
+};
+
+export type OfficialType = 'Adj' | 'Inv' | 'ChP' | 'Scr' | 'LScr';
+
+export const mapOfficialRole = (type: OfficialType): official_role => {
+  switch (type) {
+    case 'Adj':
+      return 'adjudicator';
+    case 'ChP':
+      return 'chairperson';
+    case 'Inv':
+      return 'invigilator';
+    case 'LScr':
+      return 'lead_scrutineer';
+    case 'Scr':
+      return 'scrutineer';
   }
 };
 
@@ -221,6 +252,7 @@ type CompetitionClassType =
   | 'B'
   | 'A'
   | 'M'
+  | 'S'
   | 'Open'
   | 'Novice'
   | 'Bronze'
@@ -236,9 +268,14 @@ export const competitionClassType: { [key in CompetitionClassType]: number } = {
   B: 5,
   A: 6,
   M: 7,
+  S: 7,
   Open: 8,
   Novice: 9,
   Bronze: 10,
   Silver: 11,
   Gold: 12,
 };
+
+export const cstsCompetitionClass = numberAsEnum(competitionClassType).transform((x) =>
+  x === 'S' ? 'M' : x,
+);

@@ -3,12 +3,12 @@ import { type JsonLoader } from './types.ts';
 import {
   type competitor_role,
   type competitor_type,
+  ensurePeople,
   type gender,
   mergeCompetitorComponents,
   mergeCompetitorProgress,
-  updatePerson,
-  upsertCompetitors,
-  upsertPeople,
+  upsertCompetitorsDetailed,
+  upsertPeopleDetailed,
 } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
 import { mapCompetitorType } from './cstsEnums.ts';
@@ -124,6 +124,30 @@ export const cstsMember: JsonLoader<Response> = {
 };
 
 async function loadCstsAthlete(client: PoolClient, data: Athlete) {
+  const detailedPeople = makePgtypedCollection<{
+    federation: string;
+    externalId: string;
+    canonicalName: string;
+    firstName: string;
+    lastName: string;
+    gender: gender;
+    nationality: string;
+    ageGroup: string;
+    medicalCheckupExpiration: string;
+  }>(
+    [
+      'federation',
+      'externalId',
+      'canonicalName',
+      'firstName',
+      'lastName',
+      'gender',
+      'nationality',
+      'ageGroup',
+      'medicalCheckupExpiration',
+    ],
+    ['federation', 'externalId'],
+  );
   const people = makePgtypedCollection<{
     federation: string;
     externalId: string;
@@ -147,11 +171,16 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     role: competitor_role;
   }>(['competitorId', 'personId', 'role'], ['competitorId', 'personId']);
 
-  people.add({
+  detailedPeople.add({
     federation: 'csts',
     externalId: data.idt.toString(),
     canonicalName: data.name,
+    firstName: '',
+    lastName: '',
     gender: data.sex,
+    nationality: '',
+    ageGroup: data.age,
+    medicalCheckupExpiration: data.medicalCheckupExpiration ?? '',
   });
 
   const progressByCompetitor = new Map<string, Map<string, ProgressEntry>>();
@@ -220,21 +249,11 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     progressByCompetitor.set(competitorId, byBucket);
   }
 
-  if (people.length) {
-    await upsertPeople.run(people.params, client);
-    await updatePerson.run(
-      {
-        federation: 'csts',
-        externalId: String(data.idt),
-        ageGroup: data.age,
-        medicalCheckupExpiration: data.medicalCheckupExpiration,
-      },
-      client,
-    );
-  }
+  if (detailedPeople.length) await upsertPeopleDetailed.run(detailedPeople.params, client);
+  if (people.length) await ensurePeople.run(people.params, client);
 
   if (competitors.length) {
-    await upsertCompetitors.run(competitors.params, client);
+    await upsertCompetitorsDetailed.run(competitors.params, client);
   }
   if (components.length) {
     await mergeCompetitorComponents.run(components.params, client);

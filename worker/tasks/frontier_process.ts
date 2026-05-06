@@ -6,6 +6,7 @@ import {
 } from '../crawler/crawler.queries.ts';
 import { loaderFor } from '../crawler/handlers.ts';
 import { zx } from '@traversable/zod';
+import { formatException } from '../crawler/error.ts';
 
 type ProcessorStats = { count: number; ms: number; errors: number };
 
@@ -89,7 +90,7 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
 
         if (!failedFrontier) throw e;
         const { id, federation, kind } = failedFrontier;
-        const error = e instanceof Error ? e.stack || e.message : String(e);
+        const error = formatException(e);
         if (e instanceof Error && e.message.includes('Unknown loader')) {
           await markFrontierProcessError.run({ id, error }, client);
           logger.error(`Handler for frontier ${id} not found (${federation}/${kind})`);

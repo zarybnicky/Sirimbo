@@ -21,7 +21,7 @@ export function makePgtypedCollection<T extends Record<string, unknown>>(
       for (const item of items) {
         if (dedupBy) {
           const key = dedupBy.map((k) => item[k]).join('\0');
-          if (seen.has(key)) return;
+          if (seen.has(key)) continue;
           seen.add(key);
         }
         for (const k of keys) {

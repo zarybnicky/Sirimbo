@@ -7,33 +7,35 @@ import { cac } from 'cac';
 import { Pool, type PoolClient } from 'pg';
 import Cursor from 'pg-cursor';
 import { zx } from '@traversable/zod';
-import {
-  getCrawlerFrontierStatus,
-  getFrontierRefetchTarget,
-  getCrawlerWorkerJobStatus,
-  getCrawlerScheduleStatus,
-  getFrontierDetail,
-  getFrontierFailureGroups,
-  getCrawlerFrontierJobs,
-  getLatestFrontierFailures,
-  getBacktestFrontierResponses,
-  queueCrawlerSchedule,
-  queueFrontierRefetch,
-} from './crawler.queries.ts';
 import type {
   IGetCrawlerScheduleStatusResult,
   IGetFrontierDetailResult,
   IGetFrontierFailureGroupsResult,
 } from './crawler.queries.ts';
 import {
+  getBacktestFrontierResponses,
+  getCrawlerFrontierJobs,
+  getCrawlerFrontierStatus,
+  getCrawlerScheduleStatus,
+  getCrawlerWorkerJobStatus,
+  getFrontierDetail,
+  getFrontierFailureGroups,
+  getFrontierRefetchTarget,
+  getLatestFrontierFailures,
+  getLatestFrontierResponse,
+  queueCrawlerSchedule,
+  queueFrontierRefetch,
+} from './crawler.queries.ts';
+import {
   buildStatusSnapshot,
   type CrawlerStatusRow,
-  type StatusProblem,
   sortBacklogRows,
+  type StatusProblem,
 } from './statusSnapshot.ts';
 import { fetchResponse } from './fetch.ts';
 import { loaderFor, LOADERS } from './handlers.ts';
 import type { JsonLoader } from './types.ts';
+import { formatException } from './error.ts';
 
 const pool = new Pool();
 const REQUEST_CACHE_DIR = resolve(import.meta.dirname, '..', '.requests');
@@ -96,9 +98,7 @@ function printTableWithDetails(
     ]),
   );
   const rowText = (row: Record<string, unknown>) =>
-    columns
-      .map((column) => String(row[column] ?? '').padEnd(widths[column]))
-      .join('  ');
+    columns.map((column) => String(row[column] ?? '').padEnd(widths[column])).join('  ');
 
   console.log(rowText(Object.fromEntries(columns.map((column) => [column, column]))));
   console.log(columns.map((column) => '-'.repeat(widths[column])).join('  '));
@@ -149,13 +149,18 @@ function formatFrontierTarget(
   const federationText = String(federation ?? '');
   const kindText = String(kind ?? '');
   const keyText = String(key ?? '');
-  return keyText ? `${federationText}:${kindText}:${keyText}` : `${federationText}:${kindText}`;
+  return keyText
+    ? `${federationText}:${kindText}:${keyText}`
+    : `${federationText}:${kindText}`;
 }
 
 function scheduleRow(row: IGetCrawlerScheduleStatusResult) {
   return {
     host: row.host,
-    limit: row.max_requests && row.per_interval ? `${row.max_requests}/${row.per_interval}` : '-',
+    limit:
+      row.max_requests && row.per_interval
+        ? `${row.max_requests}/${row.per_interval}`
+        : '-',
     spacing: row.spacing ?? '-',
     queued: row.queued,
     ready: row.ready,
@@ -214,7 +219,8 @@ function parseTarget(target: string | undefined) {
   if (target == null) return undefined;
 
   const [federation, kind, ...keyParts] = target.split(':');
-  if (!federation || kind === '') throw new Error('Target must be federation[:kind[:key]]');
+  if (!federation || kind === '')
+    throw new Error('Target must be federation[:kind[:key]]');
 
   return {
     federation,
@@ -309,7 +315,7 @@ async function backtestJsonResponses(
         } catch (e) {
           const message = [
             `Strict schema failed for ${federation}:${kind} frontier ${row.id} (${row.url})`,
-            e instanceof Error ? e.stack || e.message : String(e),
+            formatException(e),
             options.verbose ? JSON.stringify(row.content, null, 2) : undefined,
           ].join('\n');
           throw new Error(message);
@@ -321,7 +327,7 @@ async function backtestJsonResponses(
         } catch (e) {
           const message = [
             `Strict schema is not idempotent for ${federation}:${kind} frontier ${row.id} (${row.url})`,
-            e instanceof Error ? e.stack || e.message : String(e),
+            formatException(e),
             options.verbose ? JSON.stringify(row.content, null, 2) : undefined,
           ].join('\n');
           throw new Error(message);
@@ -463,7 +469,11 @@ function frontierTableRows(rows: CrawlerStatusRow[]) {
   }));
 }
 
-function printStatusFrontiers(rows: CrawlerStatusRow[], limit: number | null, expanded = false) {
+function printStatusFrontiers(
+  rows: CrawlerStatusRow[],
+  limit: number | null,
+  expanded = false,
+) {
   printSection('Frontiers');
 
   const stable = rows
@@ -481,13 +491,13 @@ function printStatusFrontiers(rows: CrawlerStatusRow[], limit: number | null, ex
   }
 
   if (active.length > visibleRows.length) {
-    console.log(`Showing ${visibleRows.length} of ${active.length} active frontier kinds.`);
+    console.log(
+      `Showing ${visibleRows.length} of ${active.length} active frontier kinds.`,
+    );
   }
   if (stable.length > 0) {
     console.log(
-      `done: ${stable
-        .map((row) => `${row.target} (${row.total})`)
-        .join(', ')}`,
+      `done: ${stable.map((row) => `${row.target} (${row.total})`).join(', ')}`,
     );
   }
 }
@@ -541,9 +551,11 @@ async function showFailures(
     if (details.length === 0) {
       details.push({
         label: 'error',
-        value: row.error_text || (
-          row.process_status === 'error' ? 'Processing failed without a stored error' : '-'
-        ),
+        value:
+          row.error_text ||
+          (row.process_status === 'error'
+            ? 'Processing failed without a stored error'
+            : '-'),
       });
     }
 
@@ -683,21 +695,15 @@ function statusCommands(
   const scope =
     filter.federation && filter.kind
       ? `${filter.federation}:${filter.kind}`
-      : filter.federation;
-  const scoped = (command: string) => (scope ? `${command} ${scope}` : command);
-  const commands = [
-    scoped('pnpm crawler status') + ' --frontiers',
-    scoped('pnpm crawler failures'),
-  ];
+      : (filter.federation ?? '');
+  const commands = [`pnpm crawler failures ${scope}`];
 
   if (
     problems.some(
       (problem) => problem.code === 'worker_failure' && problem.task === 'frontier_fetch',
     )
   ) {
-    commands.push(
-      scope ? `pnpm crawler jobs ${scope} --failed` : 'pnpm crawler jobs --failed',
-    );
+    commands.push(`pnpm crawler jobs --failed ${scope}`);
   }
 
   const sampleProblem = problems.find((problem) => problem.sample_id);
@@ -713,7 +719,8 @@ function statusCommands(
   const failure = failures.find((row) => row.federation && row.kind);
   if (failure) {
     const target = `${failure.federation}:${failure.kind}`;
-    const http = failure.http_status == null ? '' : ` --http-status ${failure.http_status}`;
+    const http =
+      failure.http_status == null ? '' : ` --http-status ${failure.http_status}`;
     commands.push(`pnpm crawler refetch ${target} --failed${http}`);
   }
 
@@ -734,23 +741,18 @@ function statusCommands(
   return [...new Set(commands)];
 }
 
-async function showStatus(
-  target: ScopeTarget | undefined,
-  options: StatusOptions,
-) {
+async function showStatus(target: ScopeTarget | undefined, options: StatusOptions) {
   const limit = parseOptionalLimit(options.limit);
   const allowRefetch = process.env.CRAWLER_DISABLE_REFETCH !== 'true';
   const generatedAt = new Date();
   const { federation, kind } = target ?? {};
 
-  const [
-    frontierRows,
-    failureGroups,
-    workerJobRows,
-    scheduleRows,
-  ] = await Promise.all([
+  const [frontierRows, failureGroups, workerJobRows, scheduleRows] = await Promise.all([
     getCrawlerFrontierStatus.run({ federation, kind, allowRefetch }, pool),
-    getFrontierFailureGroups.run({ federation, kind, limit, excludeHttpStatuses: null }, pool),
+    getFrontierFailureGroups.run(
+      { federation, kind, limit, excludeHttpStatuses: null },
+      pool,
+    ),
     getCrawlerWorkerJobStatus.run(undefined, pool),
     getCrawlerScheduleStatus.run(undefined, pool),
   ]);
@@ -766,14 +768,13 @@ async function showStatus(
 
   const visibleFrontiers = options.frontiers
     ? limitRows(snapshot.frontiers, limit)
-    : limitRows(snapshot.frontiers.filter((row) => !row.is_stable), limit);
+    : limitRows(
+        snapshot.frontiers.filter((row) => !row.is_stable),
+        limit,
+      );
   const visibleBacklog = limitRows(
     [...snapshot.frontiers]
-      .filter(
-        (row) =>
-          row.fetch_due > 0 ||
-          row.process_ready > 0,
-      )
+      .filter((row) => row.fetch_due > 0 || row.process_ready > 0)
       .sort(sortBacklogRows),
     limit,
   );
@@ -879,25 +880,36 @@ async function explainFrontier(target: string, options: OutputOptions) {
     },
   ]);
 
-  printTable(
-    [
-      {
-        response: formatDate(result.response_fetched_at),
-        http: result.response_http_status ?? '-',
-        job: result.job_id ?? '-',
-        job_run: formatDate(result.job_run_at),
-        job_attempts:
-          result.job_attempts == null || result.job_max_attempts == null
-            ? '-'
-            : `${result.job_attempts}/${result.job_max_attempts}`,
-      },
-    ],
-  );
+  printTable([
+    {
+      response: formatDate(result.response_fetched_at),
+      http: result.response_http_status ?? '-',
+      job: result.job_id ?? '-',
+      job_run: formatDate(result.job_run_at),
+      job_attempts:
+        result.job_attempts == null || result.job_max_attempts == null
+          ? '-'
+          : `${result.job_attempts}/${result.job_max_attempts}`,
+    },
+  ]);
 
   if (result.response_error) console.log(`response error: ${result.response_error}`);
-  if (result.last_process_error) console.log(`process error: ${result.last_process_error}`);
+  if (result.last_process_error)
+    console.log(`process error: ${result.last_process_error}`);
   if (result.job_last_error) console.log(`job error: ${result.job_last_error}`);
   if (result.expected_url) console.log(`request: ${result.expected_url}`);
+}
+
+async function showLatestResponse(target: string) {
+  const parsed = parseExplainTarget(target);
+  const [row] = await getLatestFrontierResponse.run(parsed, pool);
+  if (!row) throw new Error(`Response for ${target} not found`);
+
+  console.log(
+    row.json_content == null
+      ? (row.text_content ?? '')
+      : JSON.stringify(row.json_content, null, 2),
+  );
 }
 
 type RefetchOptions = OutputOptions & {
@@ -922,11 +934,11 @@ async function queueExactRefetch(target: string) {
 
   const [row] = await queueFrontierRefetch.run({ ids: [frontier.id] }, pool);
   if (!row) throw new Error(`Unable to queue ${target}`);
-  const [job] = await queueCrawlerSchedule.run(undefined, pool);
+  await queueCrawlerSchedule.run(undefined, pool);
 
   console.log(
     [
-      `Queued frontier_schedule job ${job.job_id} after marking frontier ${row.id} due`,
+      `Queued frontier_schedule job after marking frontier ${row.id} due`,
       formatFrontierTarget(row.federation, row.kind, row.key),
     ].join('\n'),
   );
@@ -951,19 +963,21 @@ async function queueFailedRefetch(target: string, options: RefetchOptions) {
   };
   const shouldCommit = Boolean(options.commit);
   const rows = await getLatestFrontierFailures.run(params, pool);
-  let jobId: string | null = null;
+  let scheduled: boolean = false;
   let outputRows: Array<(typeof rows)[number] & { queued?: boolean }> = rows;
   if (shouldCommit && rows.length > 0) {
     const ids = rows.map((row) => row.id);
     const queuedRows = await queueFrontierRefetch.run({ ids }, pool);
     const queuedIds = new Set(queuedRows.map((row) => row.id));
-    const [job] = await queueCrawlerSchedule.run(undefined, pool);
-    jobId = job.job_id;
+    await queueCrawlerSchedule.run(undefined, pool);
+    scheduled = true;
     outputRows = rows.map((row) => ({ ...row, queued: queuedIds.has(row.id) }));
   }
 
   if (options.json) {
-    console.log(JSON.stringify({ committed: shouldCommit, job_id: jobId, rows: outputRows }, null, 2));
+    console.log(
+      JSON.stringify({ committed: shouldCommit, scheduled, rows: outputRows }, null, 2),
+    );
     return;
   }
 
@@ -971,7 +985,7 @@ async function queueFailedRefetch(target: string, options: RefetchOptions) {
     `${shouldCommit ? 'Queued' : 'Would refetch'} ${rows.length} failed frontier rows` +
       (limit == null ? '' : ` (limit ${limit})`),
   );
-  if (jobId) console.log(`Queued frontier_schedule job ${jobId}`);
+  if (scheduled) console.log(`Queued frontier_schedule job`);
   const visibleRows = outputRows.slice(0, 50);
   printTable(
     visibleRows.map((row) => ({
@@ -985,10 +999,14 @@ async function queueFailedRefetch(target: string, options: RefetchOptions) {
     })),
   );
   if (rows.length > visibleRows.length) {
-    console.log(`Showing ${visibleRows.length} of ${rows.length}; use --json for all rows.`);
+    console.log(
+      `Showing ${visibleRows.length} of ${rows.length}; use --json for all rows.`,
+    );
   }
   if (!shouldCommit) {
-    console.log('Dry run; add --commit to mark these rows due and trigger frontier_schedule.');
+    console.log(
+      'Dry run; add --commit to mark these rows due and trigger frontier_schedule.',
+    );
   }
 }
 
@@ -1033,7 +1051,7 @@ function logClientQueries(client: PoolClient): PoolClient {
           return result;
         } catch (e) {
           const ms = Math.round(performance.now() - started);
-          const message = e instanceof Error ? e.message : String(e);
+          const message = formatException(e);
           console.error(`ERR ${ms}ms ${text} ${message}`);
           throw e;
         }
@@ -1086,14 +1104,9 @@ cli
   .option('--frontiers', 'Show the expanded frontier kind table')
   .option('-n, --limit <limit>', 'Maximum rows to show per list section')
   .option('--json', 'Print JSON')
-  .action(
-    (
-      target: string | undefined,
-      options: StatusOptions,
-    ) => {
-      return showStatus(parseScopeTarget(target), options);
-    },
-  );
+  .action((target: string | undefined, options: StatusOptions) => {
+    return showStatus(parseScopeTarget(target), options);
+  });
 
 cli
   .command('failures [target]', 'Show latest failed frontier rows')
@@ -1131,17 +1144,25 @@ cli
   .action((target: string, options: OutputOptions) => explainFrontier(target, options));
 
 cli
-  .command('fetch <target>', 'Fetch and cache a response')
-  .action((target: string) => {
-    const { federation, kind, key } = parseExactTarget(target);
-    return ensureCached(federation, kind, key, true);
-  });
+  .command('response <target>', 'Print the latest stored response for a frontier')
+  .action((target: string) => showLatestResponse(target));
+
+cli.command('fetch <target>', 'Fetch and cache a response').action((target: string) => {
+  const { federation, kind, key } = parseExactTarget(target);
+  return ensureCached(federation, kind, key, true);
+});
 
 cli
   .command('refetch <target>', 'Queue federation:kind[:key] for immediate re-fetch')
   .option('--failed', 'Select failed rows under the target instead of one exact frontier')
-  .option('--http-status <codes>', 'Only include latest responses with these status codes')
-  .option('--error-contains <text>', 'Only include failures whose stored error contains text')
+  .option(
+    '--http-status <codes>',
+    'Only include latest responses with these status codes',
+  )
+  .option(
+    '--error-contains <text>',
+    'Only include failures whose stored error contains text',
+  )
   .option('-n, --limit <limit>', 'Maximum failed rows to include')
   .option('--commit', 'Apply a failed-row refetch selection')
   .option('--json', 'Print JSON for failed-row selections')
@@ -1151,28 +1172,18 @@ cli
   .command('backtest [target]', 'Strict-validate cached JSON responses for a loader')
   .option('--all', 'Strict-validate cached JSON responses for all JSON loaders')
   .option('-v, --verbose', 'Include full input in schema failure logs')
-  .action(
-    (
-      target: string | undefined,
-      options: { all?: boolean; verbose?: boolean },
-    ) => {
-      const parsed = parseScopeTarget(target);
-      return backtestSchemas(parsed?.federation, parsed?.kind, options);
-    },
-  );
+  .action((target: string | undefined, options: { all?: boolean; verbose?: boolean }) => {
+    const parsed = parseScopeTarget(target);
+    return backtestSchemas(parsed?.federation, parsed?.kind, options);
+  });
 
 cli
   .command('load <target>', 'Load a cached response')
   .option('--commit', 'Commit instead of rolling back')
-  .action(
-    (
-      target: string,
-      options: { commit?: boolean },
-    ) => {
-      const { federation, kind, key } = parseExactTarget(target);
-      return loadCached(federation, kind, key, Boolean(options.commit));
-    },
-  );
+  .action((target: string, options: { commit?: boolean }) => {
+    const { federation, kind, key } = parseExactTarget(target);
+    return loadCached(federation, kind, key, Boolean(options.commit));
+  });
 
 cli.help();
 

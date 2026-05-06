@@ -1,6 +1,12 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
-import { competitorType, numberAsEnum } from './cstsEnums.ts';
+import { competitorType, mapCompetitorType, numberAsEnum } from './cstsEnums.ts';
+import {
+  type competitor_type,
+  ensureCompetitors,
+  mergeCompetitionEntriesByEventId,
+} from './federated.queries.ts';
+import { makePgtypedCollection } from './pgtypedCollection.ts';
 
 const competitorSchema = z.object({
   competitorId: z.number(),
@@ -72,10 +78,47 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
     };
   },
   async load(client, parsed) {
-    for (const competitor of parsed.collection) {
-      // Check on enums - type, reg.state
-      // ensureCompetitor (bulk)
-      // ensureCompetition (only fed+id + fed+eventId)
+    const eventId = parsed.collection[0]?.eventId;
+    if (eventId == null) return;
+    if (parsed.collection.some((competitor) => competitor.eventId !== eventId)) {
+      throw new Error('Expected one eventId in csts event competitors response');
     }
+
+    const competitors = makePgtypedCollection<{
+      federation: string;
+      externalId: string;
+      label: string;
+      type: competitor_type;
+    }>(['federation', 'externalId', 'label', 'type'], ['federation', 'externalId']);
+    const entries = makePgtypedCollection<{
+      competitionExternalId: string;
+      competitorId: string;
+      cancelled: boolean;
+    }>(
+      ['competitionExternalId', 'competitorId', 'cancelled'],
+      ['competitionExternalId', 'competitorId'],
+    );
+
+    for (const competitor of parsed.collection) {
+      competitors.add({
+        federation: 'csts',
+        externalId: competitor.competitorId.toString(),
+        label: '',
+        type: mapCompetitorType(competitor.type),
+      });
+
+      entries.add({
+        competitionExternalId: competitor.competitionId.toString(),
+        competitorId: `csts:${competitor.competitorId}`,
+        cancelled: competitor.registrationState !== 1,
+      });
+    }
+
+    if (competitors.length) await ensureCompetitors.run(competitors.params, client);
+
+    await mergeCompetitionEntriesByEventId.run(
+      { federation: 'csts', eventId: String(eventId), ...entries.params },
+      client,
+    );
   },
 };

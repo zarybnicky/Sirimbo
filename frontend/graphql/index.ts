@@ -1171,6 +1171,7 @@ export type CompetitorType =
   | 'COUPLE'
   | 'DUO'
   | 'FORMATION'
+  | 'GROUP'
   | 'SOLO'
   | 'TEAM'
   | 'TRIO';

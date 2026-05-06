@@ -1,5 +1,5 @@
 import type { JsonLoader } from './types.ts';
-import { type gender, upsertPeople } from './federated.queries.ts';
+import { ensurePeople, type gender } from './federated.queries.ts';
 import { z } from 'zod';
 import { upsertFrontierKeys } from './crawler.queries.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
@@ -52,7 +52,7 @@ export const wdsfMemberIndex: JsonLoader<z.output<typeof requestSchema>> = {
           member.sex === 'Male' ? 'male' : member.sex === 'Female' ? 'female' : 'unknown',
       });
     }
-    await upsertPeople.run(people.params, client);
+    await ensurePeople.run(people.params, client);
     await upsertFrontierKeys.run(
       {
         federation: 'wdsf',

@@ -1,25 +1,52 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
-import { type AgeGroup, ageGroup, competitionClassType, competitionType, competitorType, disciplineType, numberAsEnum, seriesType, type DisciplineType } from './cstsEnums.ts';
+import {
+  type AgeGroup,
+  ageGroup,
+  competitionType,
+  competitorType,
+  cstsCompetitionClass,
+  disciplineType,
+  type DisciplineType,
+  mapCompetitorType,
+  mapGenderGroup,
+  mapOfficialRole,
+  numberAsEnum,
+  seriesType,
+} from './cstsEnums.ts';
 import { upsertFrontierKeys } from './crawler.queries.ts';
+import {
+  ensurePeople,
+  mergeEventOfficials,
+  type gender,
+  type official_role,
+  upsertCompetitions,
+  upsertEvents,
+} from './federated.queries.ts';
+import { type CategoryParams, getFederatedCategoryIds } from './federatedCategory.ts';
+import { makePgtypedCollection } from './pgtypedCollection.ts';
+import { danceCode } from './danceProgram.ts';
 
 const competitionSchema = z.object({
   competitionId: z.number(),
-  age: z.string()
-    .transform(x => x.replace(' ', '_'))
+  age: z
+    .string()
+    .transform((x) => x.replace(' ', '_'))
     .refine((x) => Object.keys(ageGroup).includes(x))
     .transform((x) => x as AgeGroup),
   chairPersonId: z.number(),
   checkInEnd: z.iso.time().optional(),
   completedAt: z.iso.datetime({ offset: true }).optional(),
-  class: numberAsEnum(competitionClassType).optional(),
+  class: cstsCompetitionClass.optional(),
+  toClass: cstsCompetitionClass.optional(),
   competitors: numberAsEnum(competitorType),
   danceDisciplines: z.array(z.string()),
-  dances: z.array(z.string()),
+  dances: z.array(danceCode),
   date: z.iso.date(),
-  discipline: z.string()
-    .transform(x => x.replace('+', '_'))
-    .transform(x => x === 'TenDances' ? 'TenDance' : x)
+  discipline: z
+    .string()
+    .transform((x) => x.replace('+', '_'))
+    .transform((x) => (x === 'TenDances' ? 'TenDance' : x))
     .refine((x) => Object.keys(disciplineType).includes(x))
     .transform((x) => x as DisciplineType),
   grade: numberAsEnum(competitionType),
@@ -36,15 +63,16 @@ const officialSchema = z.object({
   firstName: z.string(),
   familyName: z.string(),
   country: z.string(),
-  licences: z.array(z.object({
-    grade: z.enum(['-S', '-A', '-B', '-D']),
-    discipline: z.union([
-      z.enum(['Standard', 'Latin']),
-      z.array(z.enum(['Standard', 'Latin'])),
-    ]).optional(),
-    type: z.enum(['Adj', 'Inv', 'ChP', 'Scr']),
-    role: z.number(),
-  })),
+  licences: z.array(
+    z.object({
+      grade: z.enum(['-S', '-A', '-B', '-D']),
+      discipline: z
+        .union([z.enum(['Standard', 'Latin']), z.array(z.enum(['Standard', 'Latin']))])
+        .optional(),
+      type: z.enum(['Adj', 'Inv', 'ChP', 'Scr', 'LScr']),
+      role: z.number(),
+    }),
+  ),
 });
 
 const eventSchema = z.object({
@@ -83,14 +111,142 @@ export const cstsEvent: JsonLoader<Response> = {
       },
     };
   },
+  mapResponseToStatus({ httpStatus }) {
+    if (httpStatus === 404 || httpStatus === 410) return 'gone';
+    return undefined;
+  },
   async load(client, { entity: event }) {
-    for (const competition of event.competitions) {
-      // category same as in member
+    await upsertEvents.run(
+      {
+        federation: ['csts'],
+        externalId: [event.eventId.toString()],
+        name: [event.eventTitle],
+        startDate: [event.dateFrom],
+        endDate: [event.dateTo],
+        location: [event.location],
+        city: [event.location],
+        country: ['Czechia'],
+        organizingClubId: [''],
+      },
+      client,
+    );
+
+    const categoryParams: CategoryParams[] = event.competitions.map((competition) => ({
+      class:
+        !competition.class || competition.class === 'Unknown'
+          ? ''
+          : competition.toClass &&
+              competition.toClass !== competition.class &&
+              competition.toClass !== 'Unknown'
+            ? `${competition.class}-${competition.toClass}`
+            : competition.class,
+      ageGroup: competition.age,
+      genderGroup: mapGenderGroup(competition.competitors),
+      discipline: competition.discipline,
+      series: competition.series,
+      competitorType: mapCompetitorType(competition.competitors),
+    }));
+    const categoryIds = await getFederatedCategoryIds(client, categoryParams);
+    const competitions = makePgtypedCollection<{
+      externalId: string;
+      categoryId: string;
+      startDate: string;
+      endDate: string;
+      participantsTotal: number;
+      checkInEnd: string;
+      completedAt: string;
+      registrationFee: string;
+      excusedTotal: number;
+    }>([
+      'externalId',
+      'categoryId',
+      'startDate',
+      'endDate',
+      'participantsTotal',
+      'checkInEnd',
+      'completedAt',
+      'registrationFee',
+      'excusedTotal',
+    ]);
+
+    for (const [index, competition] of event.competitions.entries()) {
+      const categoryId = categoryIds[index];
+      if (!categoryId) continue;
+      competitions.add({
+        externalId: competition.competitionId.toString(),
+        categoryId,
+        startDate: competition.date,
+        endDate: competition.date,
+        participantsTotal: competition.registered,
+        checkInEnd: competition.checkInEnd ?? '',
+        completedAt: competition.completedAt ?? '',
+        registrationFee: competition.registrationFee.toString(),
+        excusedTotal: competition.excused,
+      });
     }
-    const keys = event.competitions.filter(x => !!x.completedAt).map(x => x.competitionId.toString());
+    if (competitions.length) {
+      await upsertCompetitions.run(
+        {
+          federation: 'csts',
+          eventExternalId: event.eventId.toString(),
+          ...competitions.params,
+        },
+        client,
+      );
+    }
+
+    const people = makePgtypedCollection<{
+      federation: string;
+      externalId: string;
+      canonicalName: string;
+      gender: gender;
+    }>(
+      ['federation', 'externalId', 'canonicalName', 'gender'],
+      ['federation', 'externalId'],
+    );
+    const eventOfficials = makePgtypedCollection<{
+      personId: string;
+      role: official_role;
+      discipline: string;
+      grade: string;
+    }>(['personId', 'role', 'discipline', 'grade'], ['personId', 'role', 'discipline']);
+
+    for (const official of event.officials) {
+      const personId = `csts:${official.id}`;
+      people.add({
+        federation: 'csts',
+        externalId: official.id.toString(),
+        canonicalName: [official.name, official.surname].filter(Boolean).join(' '),
+        gender: 'unknown',
+      });
+      for (const licence of official.licences) {
+        const role = mapOfficialRole(licence.type);
+        for (const discipline of officialDisciplines(licence.discipline)) {
+          eventOfficials.add({ personId, role, discipline, grade: licence.grade });
+        }
+      }
+    }
+    if (people.length) await ensurePeople.run(people.params, client);
+    await mergeEventOfficials.run(
+      { federation: 'csts', eventExternalId: event.eventId.toString(), ...eventOfficials.params },
+      client,
+    );
+
+    await upsertFrontierKeys.run(
+      { federation: 'csts', kind: 'eventCompetitors', keys: [event.eventId.toString()] },
+      client,
+    );
+
+    const keys = event.competitions
+      .filter((x) => !!x.completedAt)
+      .map((x) => x.competitionId.toString());
     await upsertFrontierKeys.run(
       { federation: 'csts', kind: 'competitionResults', keys },
       client,
     );
   },
 };
+
+function officialDisciplines(discipline?: 'Standard' | 'Latin' | ('Standard' | 'Latin')[]) {
+  return discipline == null ? [''] : Array.isArray(discipline) ? discipline : [discipline];
+}

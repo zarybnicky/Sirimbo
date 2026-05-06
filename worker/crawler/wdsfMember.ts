@@ -1,5 +1,5 @@
 import type { JsonLoader } from './types.ts';
-import { upsertPeople } from './federated.queries.ts';
+import { upsertPeopleDetailed } from './federated.queries.ts';
 import { z } from 'zod';
 
 const personSchema = z.object({
@@ -66,14 +66,19 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
     return undefined;
   },
   async load(client, member) {
-    await upsertPeople.run(
+    await upsertPeopleDetailed.run(
       {
         federation: ['wdsf'],
         externalId: [member.id.toString()],
         canonicalName: [[member.name, member.surname].join(' ').trim()],
+        firstName: [member.name],
+        lastName: [member.surname ?? ''],
         gender: [
           member.sex === 'Male' ? 'male' : member.sex === 'Female' ? 'female' : 'unknown',
         ],
+        nationality: [member.nationality ?? ''],
+        ageGroup: [member.ageGroup ?? ''],
+        medicalCheckupExpiration: [''],
       },
       client,
     );
