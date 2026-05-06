@@ -64,7 +64,7 @@ const eventSchema = z.object({
         referenceNumber: z.number().optional(),
         registrationFee: z.number().optional(),
         finalRegistrationFee: z.number().optional(),
-        hallOpening: z.iso.time(),
+        hallOpening: z.iso.time().optional(),
         competitionsStart: z.iso.time(),
         juryMeeting: z.iso.datetime({ offset: true }),
         createdDate: z.iso.datetime({ offset: true }),
