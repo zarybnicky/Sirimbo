@@ -5,6 +5,7 @@ select graphile_worker.complete_jobs(array_agg(id)) from graphile_worker.jobs wh
 
 create extension if not exists btree_gist;
 CREATE EXTENSION IF NOT EXISTS unaccent;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 drop schema if exists federated cascade;
 
@@ -125,6 +126,8 @@ CREATE TABLE federated.person (
   created_at     timestamptz NOT NULL DEFAULT now(),
   UNIQUE (federation, external_id)
 );
+CREATE INDEX IF NOT EXISTS idx_person_search_name_trgm
+  ON federated.person USING gin (search_name gin_trgm_ops);
 
 CREATE TYPE federated.competitor_role AS ENUM (
   'lead',
@@ -474,42 +477,6 @@ CREATE TABLE federated.ranklist_entry (
 CREATE INDEX ON federated.ranklist_entry (competitor_id);
 CREATE INDEX ON federated.ranklist_entry (snapshot_id, ranking);
 
-------------------------------------
--- Dependent objects in public API
-------------------------------------
-
-create or replace function public.csts_athlete(idt int) returns text as $$
-  select canonical_name from federated.person where federation = 'csts' and external_id = idt::text;
-$$ language sql stable;
-
-create or replace function public.wdsf_athlete(min int) returns text as $$
-  select canonical_name from federated.person where federation = 'wdsf' and external_id = min::text;
-$$ language sql stable;
-
-grant all on function public.csts_athlete to anonymous;
-grant all on function public.wdsf_athlete to anonymous;
-
-drop function if exists public.person_csts_progress;
-create or replace function public.person_csts_progress(in_person public.person) returns table (
-  competitor_name text,
-  category federated.category,
-  points numeric(10, 3),
-  finals integer
-) as $$
-select
-  competitor.name as competitor_name,
-  row(category.*) as category,
-  ccp.points,
-  ccp.domestic_finals + ccp.foreign_finals as finals
-from federated.person p
-       join federated.competitor_component cp on cp.person_id = p.id
-       join federated.competitor on competitor.id = cp.competitor_id
-       join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id
-       join federated.category on ccp.category_id = category.id
-where p.federation = 'csts' and p.external_id = in_person.csts_id;
-$$ language sql stable;
-
-comment on function public.person_csts_progress is '@simpleCollections only';
-grant all on function public.person_csts_progress to anonymous;
+--!include federated-reports.sql
 
 select graphile_worker.add_job('frontier_process', json_build_object('isFullRebuild', true));

@@ -98,6 +98,68 @@ FROM unnest(
 ) AS input(federation, external_id, competitor_type, name)
 ON CONFLICT (id) DO NOTHING;
 
+/* @name EnsureCompetitorsWithComponents */
+WITH competitor_input AS (
+  SELECT federation, external_id, competitor_type, name
+  FROM unnest(
+    :federation::text[],
+    :externalId::text[],
+    :type::federated.competitor_type[],
+    :label::text[]
+  ) AS input(federation, external_id, competitor_type, name)
+), inserted_competitor AS (
+  INSERT INTO federated.competitor (federation, external_id, competitor_type, name)
+  SELECT federation, external_id, competitor_type, name
+  FROM competitor_input
+  ON CONFLICT (id) DO NOTHING
+  RETURNING id
+), existing_competitor AS (
+  SELECT c.id
+  FROM federated.competitor c
+  JOIN competitor_input
+    ON c.federation = competitor_input.federation
+   AND c.external_id = competitor_input.external_id
+), candidate_competitor AS (
+  SELECT id FROM inserted_competitor
+  UNION
+  SELECT id FROM existing_competitor
+), component_input AS (
+  SELECT
+    component_competitor_id, person_id, person_federation, person_external_id,
+    person_canonical_name, person_gender, component_role
+  FROM unnest(
+    :componentCompetitorId::text[],
+    :personId::text[],
+    :personFederation::text[],
+    :personExternalId::text[],
+    :personCanonicalName::text[],
+    :personGender::federated.gender[],
+    :componentRole::federated.competitor_role[]
+  ) AS input(
+    component_competitor_id, person_id, person_federation, person_external_id,
+    person_canonical_name, person_gender, component_role
+  )
+), target_component AS (
+  SELECT component_input.*
+  FROM component_input
+  JOIN candidate_competitor ON candidate_competitor.id = component_input.component_competitor_id
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM federated.competitor_component component
+    WHERE component.competitor_id = component_input.component_competitor_id
+  )
+), inserted_person AS (
+  INSERT INTO federated.person (federation, external_id, canonical_name, gender)
+  SELECT DISTINCT person_federation, person_external_id, person_canonical_name, person_gender
+  FROM target_component
+  ON CONFLICT (id) DO NOTHING
+  RETURNING id
+)
+INSERT INTO federated.competitor_component (competitor_id, person_id, role)
+SELECT component_competitor_id, person_id, component_role
+FROM target_component
+ON CONFLICT (competitor_id, person_id) DO NOTHING;
+
 /* @name UpsertCompetitorsDetailed */
 INSERT INTO federated.competitor (federation, external_id, competitor_type, name)
 SELECT input.federation, input.external_id, input.competitor_type, input.name

@@ -2,7 +2,8 @@ import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import {
   clearRoundDetails,
-  ensureCompetitors,
+  type competitor_role,
+  ensureCompetitorsWithComponents,
   ensurePeople,
   type competitor_type,
   type gender,
@@ -71,7 +72,7 @@ const competitorSchema = z.object({
   completion: z.object({
     completion: z.enum(['normal', 'retirement']),
     lastRound: z.string(),
-    lastDance: z.string(),
+    lastDance: z.string().optional(),
   }),
   competitor: z.object({
     id: z.number(), // competitor ID
@@ -90,7 +91,7 @@ const competitorSchema = z.object({
 const resultSchema = z.object({
   competitionId: z.number(),
   completedAt: z.iso.datetime({ offset: true }),
-  type: z.enum(['preliminary']),
+  type: z.enum(['preliminary', 'approved']),
   rounds: z.array(roundSchema),
   officials: z.array(officialSchema),
   competitors: z.array(competitorSchema),
@@ -104,6 +105,15 @@ type Response = z.output<typeof responseSchema>;
 type Result = Response['entity'];
 type ResultCompetitor = Result['competitors'][number];
 type Round = Result['rounds'][number];
+type PayloadCompetitorComponent = {
+  componentCompetitorId: string;
+  personId: string;
+  personFederation: string;
+  personExternalId: string;
+  personCanonicalName: string;
+  personGender: gender;
+  componentRole: competitor_role;
+};
 
 export const cstsCompetitionResults: JsonLoader<Response> = {
   mode: 'json',
@@ -193,15 +203,34 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
     label: string;
     type: competitor_type;
   }>(['federation', 'externalId', 'label', 'type'], ['federation', 'externalId']);
+  const components = makePgtypedCollection<PayloadCompetitorComponent>(
+    [
+      'componentCompetitorId',
+      'personId',
+      'personFederation',
+      'personExternalId',
+      'personCanonicalName',
+      'personGender',
+      'componentRole',
+    ],
+    ['componentCompetitorId', 'personId'],
+  );
   for (const competitor of result.competitors) {
     competitors.add({
       federation: 'csts',
       externalId: competitor.competitorId.toString(),
       type: context.competitorType,
-      label: '', // ignored
+      label: resultCompetitorLabel(competitor),
     });
+
+    components.add(...resultCompetitorComponents(competitor, context.competitorType));
   }
-  if (competitors.length) await ensureCompetitors.run(competitors.params, client);
+  if (competitors.length) {
+    await ensureCompetitorsWithComponents.run(
+      { ...competitors.params, ...components.params },
+      client,
+    );
+  }
 
   const competitionResults = makePgtypedCollection<{
     competitorId: string;
@@ -398,6 +427,21 @@ function parseCstsMarks(marks: string) {
   return marks.split('|').map((mark) => mark.trim().toLowerCase());
 }
 
+function parseCstsScoreToken(raw: string):
+  | { component: score_component; score: number }
+  | undefined {
+  const match = /^([x-]|\d+(?:\.\d+)?)(?:\([wd]\))?$/.exec(raw);
+  if (!match) return undefined;
+
+  const base = match[1];
+  if (base === 'x') return { component: 'mark', score: 1 };
+  if (base === '-') return { component: 'mark', score: 0 };
+
+  const score = Number(base);
+  if (!Number.isFinite(score)) return undefined;
+  return { component: 'places', score };
+}
+
 function validateRoundMarks(result: Result) {
   for (const round of result.rounds) {
     const panel = panelForRound(result, round);
@@ -437,7 +481,7 @@ function scoringMethod(result: Result, round: Round): scoring_method {
     )
     ?.rounds.find((detail) => detail.round === round.round)?.marks;
   const tokens = marks ? parseCstsMarks(marks) : [];
-  return tokens.some((token) => token === 'x' || token === '-')
+  return tokens.some((token) => parseCstsScoreToken(token)?.component === 'mark')
     ? 'skating_marks'
     : 'skating_places';
 }
@@ -478,8 +522,8 @@ function scoresForRound(args: {
       const judge = panel[judgeIndex];
       if (!judge.id) continue;
       const raw = marks[danceIndex * panel.length + judgeIndex];
-      const score = raw === 'x' ? 1 : raw === '-' ? 0 : Number(raw);
-      if (!Number.isFinite(score)) continue;
+      const parsed = parseCstsScoreToken(raw);
+      if (!parsed) continue;
       rows.push({
         scoreFederation: 'csts',
         scoreEventDate: context.startDate.toISOString().slice(0, 10),
@@ -491,11 +535,92 @@ function scoresForRound(args: {
         scoreDanceCode: round.dances[danceIndex],
         scoreJudgePersonId: `csts:${judge.id}`,
         scoreCompetitorId: competitorId,
-        scoreComponent: raw === 'x' || raw === '-' ? 'mark' : 'places',
-        score,
+        scoreComponent: parsed.component,
+        score: parsed.score,
         rawScore: raw,
       });
     }
   }
   return rows;
+}
+
+function resultCompetitorLabel(competitor: ResultCompetitor) {
+  return [
+    fullName(competitor.competitor.name1, competitor.competitor.surname1),
+    fullName(competitor.competitor.name2, competitor.competitor.surname2),
+  ]
+    .filter(Boolean)
+    .join(' - ');
+}
+
+function fullName(...parts: Array<string | undefined>) {
+  return parts
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(' ');
+}
+
+function resultCompetitorComponents(
+  competitor: ResultCompetitor,
+  type: competitor_type,
+) {
+  const competitorId = `csts:${competitor.competitorId}`;
+  const components: PayloadCompetitorComponent[] = [];
+
+  if (type === 'couple' && competitor.competitor.idt1 && competitor.competitor.idt2) {
+    components.push(
+      resultComponent(
+        competitorId,
+        competitor.competitor.idt1,
+        fullName(competitor.competitor.name1, competitor.competitor.surname1),
+        'lead',
+      ),
+      resultComponent(
+        competitorId,
+        competitor.competitor.idt2,
+        fullName(competitor.competitor.name2, competitor.competitor.surname2),
+        'follow',
+      ),
+    );
+  } else {
+    if (competitor.competitor.idt1) {
+      components.push(
+        resultComponent(
+          competitorId,
+          competitor.competitor.idt1,
+          fullName(competitor.competitor.name1, competitor.competitor.surname1),
+          'member',
+        ),
+      );
+    }
+    if (competitor.competitor.idt2) {
+      components.push(
+        resultComponent(
+          competitorId,
+          competitor.competitor.idt2,
+          fullName(competitor.competitor.name2, competitor.competitor.surname2),
+          'member',
+        ),
+      );
+    }
+  }
+
+  return components;
+}
+
+function resultComponent(
+  competitorId: string,
+  personExternalId: number,
+  personCanonicalName: string,
+  role: competitor_role,
+): PayloadCompetitorComponent {
+  return {
+    componentCompetitorId: competitorId,
+    personId: `csts:${personExternalId}`,
+    personFederation: 'csts',
+    personExternalId: String(personExternalId),
+    personCanonicalName,
+    personGender: 'unknown',
+    componentRole: role,
+  };
 }

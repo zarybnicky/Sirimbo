@@ -282,6 +282,100 @@ const ensureCompetitorsIR: any = {"usedParamSet":{"federation":true,"externalId"
 export const ensureCompetitors = new PreparedQuery<IEnsureCompetitorsParams,IEnsureCompetitorsResult>(ensureCompetitorsIR);
 
 
+/** 'EnsureCompetitorsWithComponents' parameters type */
+export interface IEnsureCompetitorsWithComponentsParams {
+  componentCompetitorId?: stringArray | null | void;
+  componentRole?: competitor_roleArray | null | void;
+  externalId?: stringArray | null | void;
+  federation?: stringArray | null | void;
+  label?: stringArray | null | void;
+  personCanonicalName?: stringArray | null | void;
+  personExternalId?: stringArray | null | void;
+  personFederation?: stringArray | null | void;
+  personGender?: genderArray | null | void;
+  personId?: stringArray | null | void;
+  type?: competitor_typeArray | null | void;
+}
+
+/** 'EnsureCompetitorsWithComponents' return type */
+export type IEnsureCompetitorsWithComponentsResult = void;
+
+/** 'EnsureCompetitorsWithComponents' query type */
+export interface IEnsureCompetitorsWithComponentsQuery {
+  params: IEnsureCompetitorsWithComponentsParams;
+  result: IEnsureCompetitorsWithComponentsResult;
+}
+
+const ensureCompetitorsWithComponentsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true,"componentCompetitorId":true,"personId":true,"personFederation":true,"personExternalId":true,"personCanonicalName":true,"personGender":true,"componentRole":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":102,"b":112}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":127,"b":137}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":152,"b":156}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":192,"b":197}]},{"name":"componentCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1002,"b":1023}]},{"name":"personId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1038,"b":1046}]},{"name":"personFederation","required":false,"transform":{"type":"scalar"},"locs":[{"a":1061,"b":1077}]},{"name":"personExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1092,"b":1108}]},{"name":"personCanonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":1123,"b":1142}]},{"name":"personGender","required":false,"transform":{"type":"scalar"},"locs":[{"a":1157,"b":1169}]},{"name":"componentRole","required":false,"transform":{"type":"scalar"},"locs":[{"a":1196,"b":1209}]}],"statement":"WITH competitor_input AS (\n  SELECT federation, external_id, competitor_type, name\n  FROM unnest(\n    :federation::text[],\n    :externalId::text[],\n    :type::federated.competitor_type[],\n    :label::text[]\n  ) AS input(federation, external_id, competitor_type, name)\n), inserted_competitor AS (\n  INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\n  SELECT federation, external_id, competitor_type, name\n  FROM competitor_input\n  ON CONFLICT (id) DO NOTHING\n  RETURNING id\n), existing_competitor AS (\n  SELECT c.id\n  FROM federated.competitor c\n  JOIN competitor_input\n    ON c.federation = competitor_input.federation\n   AND c.external_id = competitor_input.external_id\n), candidate_competitor AS (\n  SELECT id FROM inserted_competitor\n  UNION\n  SELECT id FROM existing_competitor\n), component_input AS (\n  SELECT\n    component_competitor_id, person_id, person_federation, person_external_id,\n    person_canonical_name, person_gender, component_role\n  FROM unnest(\n    :componentCompetitorId::text[],\n    :personId::text[],\n    :personFederation::text[],\n    :personExternalId::text[],\n    :personCanonicalName::text[],\n    :personGender::federated.gender[],\n    :componentRole::federated.competitor_role[]\n  ) AS input(\n    component_competitor_id, person_id, person_federation, person_external_id,\n    person_canonical_name, person_gender, component_role\n  )\n), target_component AS (\n  SELECT component_input.*\n  FROM component_input\n  JOIN candidate_competitor ON candidate_competitor.id = component_input.component_competitor_id\n  WHERE NOT EXISTS (\n    SELECT 1\n    FROM federated.competitor_component component\n    WHERE component.competitor_id = component_input.component_competitor_id\n  )\n), inserted_person AS (\n  INSERT INTO federated.person (federation, external_id, canonical_name, gender)\n  SELECT DISTINCT person_federation, person_external_id, person_canonical_name, person_gender\n  FROM target_component\n  ON CONFLICT (id) DO NOTHING\n  RETURNING id\n)\nINSERT INTO federated.competitor_component (competitor_id, person_id, role)\nSELECT component_competitor_id, person_id, component_role\nFROM target_component\nON CONFLICT (competitor_id, person_id) DO NOTHING"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH competitor_input AS (
+ *   SELECT federation, external_id, competitor_type, name
+ *   FROM unnest(
+ *     :federation::text[],
+ *     :externalId::text[],
+ *     :type::federated.competitor_type[],
+ *     :label::text[]
+ *   ) AS input(federation, external_id, competitor_type, name)
+ * ), inserted_competitor AS (
+ *   INSERT INTO federated.competitor (federation, external_id, competitor_type, name)
+ *   SELECT federation, external_id, competitor_type, name
+ *   FROM competitor_input
+ *   ON CONFLICT (id) DO NOTHING
+ *   RETURNING id
+ * ), existing_competitor AS (
+ *   SELECT c.id
+ *   FROM federated.competitor c
+ *   JOIN competitor_input
+ *     ON c.federation = competitor_input.federation
+ *    AND c.external_id = competitor_input.external_id
+ * ), candidate_competitor AS (
+ *   SELECT id FROM inserted_competitor
+ *   UNION
+ *   SELECT id FROM existing_competitor
+ * ), component_input AS (
+ *   SELECT
+ *     component_competitor_id, person_id, person_federation, person_external_id,
+ *     person_canonical_name, person_gender, component_role
+ *   FROM unnest(
+ *     :componentCompetitorId::text[],
+ *     :personId::text[],
+ *     :personFederation::text[],
+ *     :personExternalId::text[],
+ *     :personCanonicalName::text[],
+ *     :personGender::federated.gender[],
+ *     :componentRole::federated.competitor_role[]
+ *   ) AS input(
+ *     component_competitor_id, person_id, person_federation, person_external_id,
+ *     person_canonical_name, person_gender, component_role
+ *   )
+ * ), target_component AS (
+ *   SELECT component_input.*
+ *   FROM component_input
+ *   JOIN candidate_competitor ON candidate_competitor.id = component_input.component_competitor_id
+ *   WHERE NOT EXISTS (
+ *     SELECT 1
+ *     FROM federated.competitor_component component
+ *     WHERE component.competitor_id = component_input.component_competitor_id
+ *   )
+ * ), inserted_person AS (
+ *   INSERT INTO federated.person (federation, external_id, canonical_name, gender)
+ *   SELECT DISTINCT person_federation, person_external_id, person_canonical_name, person_gender
+ *   FROM target_component
+ *   ON CONFLICT (id) DO NOTHING
+ *   RETURNING id
+ * )
+ * INSERT INTO federated.competitor_component (competitor_id, person_id, role)
+ * SELECT component_competitor_id, person_id, component_role
+ * FROM target_component
+ * ON CONFLICT (competitor_id, person_id) DO NOTHING
+ * ```
+ */
+export const ensureCompetitorsWithComponents = new PreparedQuery<IEnsureCompetitorsWithComponentsParams,IEnsureCompetitorsWithComponentsResult>(ensureCompetitorsWithComponentsIR);
+
+
 /** 'UpsertCompetitorsDetailed' parameters type */
 export interface IUpsertCompetitorsDetailedParams {
   externalId?: stringArray | null | void;

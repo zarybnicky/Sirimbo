@@ -44,6 +44,8 @@ export type Scalars = {
    * which securely represents claims between two parties.
    */
   JwtToken: { input: any; output: any; }
+  /** The exact time of day, does not include the date. May or may not have a timezone offset. */
+  Time: { input: string; output: string; }
   /** A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122). */
   UUID: { input: any; output: any; }
 };
@@ -1166,6 +1168,48 @@ export type CohortsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
+
+export type CompetitionBriefRecord = {
+  __typename?: 'CompetitionBriefRecord';
+  ageGroup: Maybe<Scalars['String']['output']>;
+  categoryName: Maybe<Scalars['String']['output']>;
+  checkInEnd: Maybe<Scalars['Time']['output']>;
+  class: Maybe<Scalars['String']['output']>;
+  competitionDate: Maybe<Scalars['Date']['output']>;
+  competitionId: Maybe<Scalars['BigInt']['output']>;
+  competitorId: Maybe<Scalars['String']['output']>;
+  competitorName: Maybe<Scalars['String']['output']>;
+  dances: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  discipline: Maybe<Scalars['String']['output']>;
+  eventId: Maybe<Scalars['BigInt']['output']>;
+  eventLocation: Maybe<Scalars['String']['output']>;
+  eventName: Maybe<Scalars['String']['output']>;
+  personId: Maybe<Scalars['String']['output']>;
+  personName: Maybe<Scalars['String']['output']>;
+};
+
+export type CompetitionReportRecord = {
+  __typename?: 'CompetitionReportRecord';
+  ageGroup: Maybe<Scalars['String']['output']>;
+  categoryName: Maybe<Scalars['String']['output']>;
+  class: Maybe<Scalars['String']['output']>;
+  competitionDate: Maybe<Scalars['Date']['output']>;
+  competitionId: Maybe<Scalars['BigInt']['output']>;
+  competitorId: Maybe<Scalars['String']['output']>;
+  competitorName: Maybe<Scalars['String']['output']>;
+  discipline: Maybe<Scalars['String']['output']>;
+  eventId: Maybe<Scalars['BigInt']['output']>;
+  eventLocation: Maybe<Scalars['String']['output']>;
+  eventName: Maybe<Scalars['String']['output']>;
+  isFinal: Maybe<Scalars['Boolean']['output']>;
+  participants: Maybe<Scalars['Int']['output']>;
+  personId: Maybe<Scalars['String']['output']>;
+  personName: Maybe<Scalars['String']['output']>;
+  pointGain: Maybe<Scalars['BigFloat']['output']>;
+  ranking: Maybe<Scalars['Int']['output']>;
+  rankingTo: Maybe<Scalars['Int']['output']>;
+  series: Maybe<Scalars['String']['output']>;
+};
 
 export type CompetitorType =
   | 'COUPLE'
@@ -5534,6 +5578,8 @@ export type Query = {
   cohortMembershipsList: Maybe<Array<CohortMembership>>;
   /** Reads a set of `Cohort`. */
   cohortsList: Maybe<Array<Cohort>>;
+  competitionBriefList: Maybe<Array<CompetitionBriefRecord>>;
+  competitionReportList: Maybe<Array<CompetitionReportRecord>>;
   /** Get a single `Couple`. */
   couple: Maybe<Couple>;
   /** Reads a set of `Couple`. */
@@ -5790,6 +5836,26 @@ export type QueryCohortsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCompetitionBriefListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  pPersonIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  pSince?: InputMaybe<Scalars['Date']['input']>;
+  pUntil?: InputMaybe<Scalars['Date']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCompetitionReportListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  pPersonIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  pSince?: InputMaybe<Scalars['Date']['input']>;
+  pUntil?: InputMaybe<Scalars['Date']['input']>;
 };
 
 
@@ -8811,6 +8877,8 @@ export type GraphCacheKeysConfig = {
   CohortMembership?: (data: WithTypename<CohortMembership>) => null | string,
   CohortSubscription?: (data: WithTypename<CohortSubscription>) => null | string,
   CohortsEdge?: (data: WithTypename<CohortsEdge>) => null | string,
+  CompetitionBriefRecord?: (data: WithTypename<CompetitionBriefRecord>) => null | string,
+  CompetitionReportRecord?: (data: WithTypename<CompetitionReportRecord>) => null | string,
   ConfirmMembershipApplicationPayload?: (data: WithTypename<ConfirmMembershipApplicationPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
   CreateAktualityPayload?: (data: WithTypename<CreateAktualityPayload>) => null | string,
@@ -8966,6 +9034,8 @@ export type GraphCacheResolvers = {
     cohortMembership?: GraphCacheResolver<WithTypename<Query>, QueryCohortMembershipArgs, WithTypename<CohortMembership> | string>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     cohortsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortsListArgs, Array<WithTypename<Cohort> | string>>,
+    competitionBriefList?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionBriefListArgs, Array<WithTypename<CompetitionBriefRecord> | string>>,
+    competitionReportList?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionReportListArgs, Array<WithTypename<CompetitionReportRecord> | string>>,
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
     couplesList?: GraphCacheResolver<WithTypename<Query>, QueryCouplesListArgs, Array<WithTypename<Couple> | string>>,
     cstsAthlete?: GraphCacheResolver<WithTypename<Query>, QueryCstsAthleteArgs, Scalars['String'] | string>,
@@ -9260,6 +9330,44 @@ export type GraphCacheResolvers = {
   CohortsEdge?: {
     cursor?: GraphCacheResolver<WithTypename<CohortsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<CohortsEdge>, Record<string, never>, WithTypename<Cohort> | string>
+  },
+  CompetitionBriefRecord?: {
+    ageGroup?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>,
+    categoryName?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>,
+    checkInEnd?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['Time'] | string>,
+    class?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>,
+    competitionDate?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['Date'] | string>,
+    competitionId?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    competitorId?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>,
+    competitorName?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>,
+    dances?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Array<Scalars['String'] | string>>,
+    discipline?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>,
+    eventId?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    eventLocation?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>,
+    eventName?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>,
+    personId?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>,
+    personName?: GraphCacheResolver<WithTypename<CompetitionBriefRecord>, Record<string, never>, Scalars['String'] | string>
+  },
+  CompetitionReportRecord?: {
+    ageGroup?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    categoryName?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    class?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    competitionDate?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['Date'] | string>,
+    competitionId?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    competitorId?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    competitorName?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    discipline?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    eventId?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    eventLocation?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    eventName?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    isFinal?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['Boolean'] | string>,
+    participants?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['Int'] | string>,
+    personId?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    personName?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>,
+    pointGain?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['BigFloat'] | string>,
+    ranking?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['Int'] | string>,
+    rankingTo?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['Int'] | string>,
+    series?: GraphCacheResolver<WithTypename<CompetitionReportRecord>, Record<string, never>, Scalars['String'] | string>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, Scalars['String'] | string>,
@@ -10529,6 +10637,8 @@ export type GraphCacheUpdaters = {
     cohortMembership?: GraphCacheUpdateResolver<{ cohortMembership: Maybe<WithTypename<CohortMembership>> }, QueryCohortMembershipArgs>,
     cohortMembershipsList?: GraphCacheUpdateResolver<{ cohortMembershipsList: Maybe<Array<WithTypename<CohortMembership>>> }, QueryCohortMembershipsListArgs>,
     cohortsList?: GraphCacheUpdateResolver<{ cohortsList: Maybe<Array<WithTypename<Cohort>>> }, QueryCohortsListArgs>,
+    competitionBriefList?: GraphCacheUpdateResolver<{ competitionBriefList: Maybe<Array<WithTypename<CompetitionBriefRecord>>> }, QueryCompetitionBriefListArgs>,
+    competitionReportList?: GraphCacheUpdateResolver<{ competitionReportList: Maybe<Array<WithTypename<CompetitionReportRecord>>> }, QueryCompetitionReportListArgs>,
     couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
     couplesList?: GraphCacheUpdateResolver<{ couplesList: Maybe<Array<WithTypename<Couple>>> }, QueryCouplesListArgs>,
     cstsAthlete?: GraphCacheUpdateResolver<{ cstsAthlete: Maybe<Scalars['String']> }, QueryCstsAthleteArgs>,
@@ -10911,6 +11021,44 @@ export type GraphCacheUpdaters = {
   CohortsEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortsEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortsEdge>>, Record<string, never>>
+  },
+  CompetitionBriefRecord?: {
+    ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    categoryName?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    checkInEnd?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    class?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    competitionDate?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    competitionId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    competitorId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    competitorName?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    dances?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    discipline?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    eventLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    eventName?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>,
+    personName?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionBriefRecord>>, Record<string, never>>
+  },
+  CompetitionReportRecord?: {
+    ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    categoryName?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    class?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    competitionDate?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    competitionId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    competitorId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    competitorName?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    discipline?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    eventLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    eventName?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    isFinal?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    participants?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    personName?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    pointGain?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    rankingTo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>,
+    series?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionReportRecord>>, Record<string, never>>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, Record<string, never>>,

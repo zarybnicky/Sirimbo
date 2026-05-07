@@ -2,8 +2,10 @@ import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import { competitorType, mapCompetitorType, numberAsEnum } from './cstsEnums.ts';
 import {
+  type competitor_role,
   type competitor_type,
-  ensureCompetitors,
+  ensureCompetitorsWithComponents,
+  type gender,
   mergeCompetitionEntriesByEventId,
 } from './federated.queries.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
@@ -98,23 +100,44 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
       ['competitionExternalId', 'competitorId', 'cancelled'],
       ['competitionExternalId', 'competitorId'],
     );
+    const components = makePgtypedCollection<PayloadCompetitorComponent>(
+      [
+        'componentCompetitorId',
+        'personId',
+        'personFederation',
+        'personExternalId',
+        'personCanonicalName',
+        'personGender',
+        'componentRole',
+      ],
+      ['componentCompetitorId', 'personId'],
+    );
 
     for (const competitor of parsed.collection) {
+      const competitorId = `csts:${competitor.competitorId}`;
+      const competitorType = mapCompetitorType(competitor.type);
       competitors.add({
         federation: 'csts',
         externalId: competitor.competitorId.toString(),
-        label: '',
-        type: mapCompetitorType(competitor.type),
+        label: competitorLabel(competitor),
+        type: competitorType,
       });
 
       entries.add({
         competitionExternalId: competitor.competitionId.toString(),
-        competitorId: `csts:${competitor.competitorId}`,
+        competitorId,
         cancelled: competitor.registrationState !== 1,
       });
+
+      components.add(...competitorComponents(competitor, competitorType));
     }
 
-    if (competitors.length) await ensureCompetitors.run(competitors.params, client);
+    if (competitors.length) {
+      await ensureCompetitorsWithComponents.run(
+        { ...competitors.params, ...components.params },
+        client,
+      );
+    }
 
     await mergeCompetitionEntriesByEventId.run(
       { federation: 'csts', eventId: String(eventId), ...entries.params },
@@ -122,3 +145,102 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
     );
   },
 };
+
+type EventCompetitor = Response['collection'][number];
+type PayloadCompetitorComponent = {
+  componentCompetitorId: string;
+  personId: string;
+  personFederation: string;
+  personExternalId: string;
+  personCanonicalName: string;
+  personGender: gender;
+  componentRole: competitor_role;
+};
+
+function fullName(...parts: Array<string | undefined>) {
+  return parts
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(' ');
+}
+
+function competitorLabel(competitor: EventCompetitor) {
+  const label = competitor.name?.trim();
+  if (label) return label;
+
+  const coupleLabels = competitor.couplesOrDuos?.map((couple) =>
+    [fullName(couple.name1, couple.surname1), fullName(couple.name2, couple.surname2)].join(
+      ' - ',
+    ),
+  );
+  if (coupleLabels?.length) return coupleLabels.join(', ');
+
+  const personLabels = competitor.persons?.map((person) =>
+    fullName(person.name, person.surname),
+  );
+  return personLabels?.join(', ') ?? '';
+}
+
+function competitorComponents(competitor: EventCompetitor, type: competitor_type) {
+  const competitorId = `csts:${competitor.competitorId}`;
+  const components: PayloadCompetitorComponent[] = [];
+
+  for (const couple of competitor.couplesOrDuos ?? []) {
+    if (type === 'couple') {
+      components.push(
+        component(competitorId, couple.idt1, fullName(couple.name1, couple.surname1), 'lead'),
+        component(
+          competitorId,
+          couple.idt2,
+          fullName(couple.name2, couple.surname2),
+          'follow',
+        ),
+      );
+    } else {
+      components.push(
+        component(
+          competitorId,
+          couple.idt1,
+          fullName(couple.name1, couple.surname1),
+          'member',
+        ),
+        component(
+          competitorId,
+          couple.idt2,
+          fullName(couple.name2, couple.surname2),
+          'member',
+        ),
+      );
+    }
+  }
+
+  for (const person of competitor.persons ?? []) {
+    components.push(
+      component(
+        competitorId,
+        person.idt,
+        fullName(person.name, person.surname),
+        person.backup ? 'substitute' : 'member',
+      ),
+    );
+  }
+
+  return components;
+}
+
+function component(
+  competitorId: string,
+  personExternalId: number,
+  personCanonicalName: string,
+  role: competitor_role,
+): PayloadCompetitorComponent {
+  return {
+    componentCompetitorId: competitorId,
+    personId: `csts:${personExternalId}`,
+    personFederation: 'csts',
+    personExternalId: String(personExternalId),
+    personCanonicalName,
+    personGender: 'unknown',
+    componentRole: role,
+  };
+}

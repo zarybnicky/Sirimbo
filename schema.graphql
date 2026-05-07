@@ -1346,6 +1346,46 @@ enum CohortsOrderBy {
   TENANT_ID_DESC
 }
 
+type CompetitionBriefRecord {
+  ageGroup: String
+  categoryName: String
+  checkInEnd: Time
+  class: String
+  competitionDate: Date
+  competitionId: BigInt
+  competitorId: String
+  competitorName: String
+  dances: [String]
+  discipline: String
+  eventId: BigInt
+  eventLocation: String
+  eventName: String
+  personId: String
+  personName: String
+}
+
+type CompetitionReportRecord {
+  ageGroup: String
+  categoryName: String
+  class: String
+  competitionDate: Date
+  competitionId: BigInt
+  competitorId: String
+  competitorName: String
+  discipline: String
+  eventId: BigInt
+  eventLocation: String
+  eventName: String
+  isFinal: Boolean
+  participants: Int
+  personId: String
+  personName: String
+  pointGain: BigFloat
+  ranking: Int
+  rankingTo: Int
+  series: String
+}
+
 enum CompetitorType {
   COUPLE
   DUO
@@ -6673,6 +6713,26 @@ type Query {
     """The method to use when ordering `Cohort`."""
     orderBy: [CohortsOrderBy!]
   ): [Cohort!]
+  competitionBriefList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    pPersonIds: [String]
+    pSince: Date
+    pUntil: Date
+  ): [CompetitionBriefRecord!]
+  competitionReportList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    pPersonIds: [String]
+    pSince: Date
+    pUntil: Date
+  ): [CompetitionReportRecord!]
 
   """Get a single `Couple`."""
   couple(id: BigInt!): Couple
@@ -9133,6 +9193,11 @@ enum TenantsOrderBy {
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
+
+"""
+The exact time of day, does not include the date. May or may not have a timezone offset.
+"""
+scalar Time
 
 type TrainerGroupAttendanceCompletion {
   filledInstances: Int
