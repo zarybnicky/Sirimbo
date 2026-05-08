@@ -576,6 +576,50 @@ const upsertRanklistSnapshotIR: any = {"usedParamSet":{"federation":true,"catego
 export const upsertRanklistSnapshot = new PreparedQuery<IUpsertRanklistSnapshotParams,IUpsertRanklistSnapshotResult>(upsertRanklistSnapshotIR);
 
 
+/** 'UpsertFederationClubs' parameters type */
+export interface IUpsertFederationClubsParams {
+  city?: stringArray | null | void;
+  country?: stringArray | null | void;
+  externalId?: stringArray | null | void;
+  federation?: stringArray | null | void;
+  name?: stringArray | null | void;
+}
+
+/** 'UpsertFederationClubs' return type */
+export type IUpsertFederationClubsResult = void;
+
+/** 'UpsertFederationClubs' query type */
+export interface IUpsertFederationClubsQuery {
+  params: IUpsertFederationClubsParams;
+  result: IUpsertFederationClubsResult;
+}
+
+const upsertFederationClubsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"name":true,"city":true,"country":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":176,"b":186}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":199,"b":209}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":222,"b":226}]},{"name":"city","required":false,"transform":{"type":"scalar"},"locs":[{"a":239,"b":243}]},{"name":"country","required":false,"transform":{"type":"scalar"},"locs":[{"a":256,"b":263}]}],"statement":"INSERT INTO federated.federation_club (federation, external_id, name, city, country)\nSELECT federation, external_id, name, nullif(city, ''), nullif(country, '')\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :name::text[],\n  :city::text[],\n  :country::text[]\n) AS input(federation, external_id, name, city, country)\nON CONFLICT (federation, external_id) DO UPDATE\n  SET name = EXCLUDED.name,\n      city = EXCLUDED.city,\n      country = EXCLUDED.country\n  WHERE federated.federation_club.name IS DISTINCT FROM EXCLUDED.name\n     OR federated.federation_club.city IS DISTINCT FROM EXCLUDED.city\n     OR federated.federation_club.country IS DISTINCT FROM EXCLUDED.country"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO federated.federation_club (federation, external_id, name, city, country)
+ * SELECT federation, external_id, name, nullif(city, ''), nullif(country, '')
+ * FROM unnest(
+ *   :federation::text[],
+ *   :externalId::text[],
+ *   :name::text[],
+ *   :city::text[],
+ *   :country::text[]
+ * ) AS input(federation, external_id, name, city, country)
+ * ON CONFLICT (federation, external_id) DO UPDATE
+ *   SET name = EXCLUDED.name,
+ *       city = EXCLUDED.city,
+ *       country = EXCLUDED.country
+ *   WHERE federated.federation_club.name IS DISTINCT FROM EXCLUDED.name
+ *      OR federated.federation_club.city IS DISTINCT FROM EXCLUDED.city
+ *      OR federated.federation_club.country IS DISTINCT FROM EXCLUDED.country
+ * ```
+ */
+export const upsertFederationClubs = new PreparedQuery<IUpsertFederationClubsParams,IUpsertFederationClubsResult>(upsertFederationClubsIR);
+
+
 /** 'UpsertEvents' parameters type */
 export interface IUpsertEventsParams {
   city?: stringArray | null | void;
@@ -1169,7 +1213,7 @@ export interface IMergeCompetitionResultsQuery {
   result: IMergeCompetitionResultsResult;
 }
 
-const mergeCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"startNumber":true,"ranking":true,"rankingTo":true,"pointGain":true,"finalGain":true,"isFinal":true,"completionStatus":true,"lastRound":true,"lastDance":true,"competitionId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":414,"b":426}]},{"name":"startNumber","required":false,"transform":{"type":"scalar"},"locs":[{"a":441,"b":452}]},{"name":"ranking","required":false,"transform":{"type":"scalar"},"locs":[{"a":467,"b":474}]},{"name":"rankingTo","required":false,"transform":{"type":"scalar"},"locs":[{"a":488,"b":497}]},{"name":"pointGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":511,"b":520}]},{"name":"finalGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":535,"b":544}]},{"name":"isFinal","required":false,"transform":{"type":"scalar"},"locs":[{"a":559,"b":566}]},{"name":"completionStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":584,"b":600}]},{"name":"lastRound","required":false,"transform":{"type":"scalar"},"locs":[{"a":615,"b":624}]},{"name":"lastDance","required":false,"transform":{"type":"scalar"},"locs":[{"a":639,"b":648}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":839,"b":852},{"a":1925,"b":1938},{"a":2147,"b":2160}]}],"statement":"MERGE INTO federated.competition_result AS t\nUSING (\n  SELECT\n    competitor_id,\n    start_number,\n    ranking,\n    ranking_to,\n    nullif(point_gain, '')::numeric(10,3) AS point_gain,\n    nullif(final_gain, '')::numeric(10,3) AS final_gain,\n    is_final,\n    nullif(completion_status, '') AS completion_status,\n    nullif(last_round, '') AS last_round,\n    nullif(last_dance, '') AS last_dance\n  FROM unnest(\n    :competitorId::text[],\n    :startNumber::text[],\n    :ranking::int[],\n    :rankingTo::int[],\n    :pointGain::text[],\n    :finalGain::text[],\n    :isFinal::boolean[],\n    :completionStatus::text[],\n    :lastRound::text[],\n    :lastDance::text[]\n  ) AS input(\n    competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance\n  )\n) AS s\nON t.competition_id = :competitionId AND t.competitor_id = s.competitor_id\nWHEN MATCHED AND (\n     t.start_number IS DISTINCT FROM s.start_number\n  OR t.ranking IS DISTINCT FROM s.ranking\n  OR t.ranking_to IS DISTINCT FROM s.ranking_to\n  OR t.point_gain IS DISTINCT FROM s.point_gain\n  OR t.final_gain IS DISTINCT FROM s.final_gain\n  OR t.is_final IS DISTINCT FROM s.is_final\n  OR t.completion_status IS DISTINCT FROM s.completion_status\n  OR t.last_round IS DISTINCT FROM s.last_round\n  OR t.last_dance IS DISTINCT FROM s.last_dance\n) THEN\n  UPDATE SET start_number = s.start_number,\n             ranking = s.ranking,\n             ranking_to = s.ranking_to,\n             point_gain = s.point_gain,\n             final_gain = s.final_gain,\n             is_final = s.is_final,\n             completion_status = s.completion_status,\n             last_round = s.last_round,\n             last_dance = s.last_dance\nWHEN NOT MATCHED THEN\n  INSERT (\n    competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance\n  ) VALUES (\n    :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain, s.final_gain,\n    s.is_final, s.completion_status, s.last_round, s.last_dance\n  )\nWHEN NOT MATCHED BY SOURCE\n  AND t.competition_id = :competitionId THEN\n  DELETE"};
+const mergeCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"startNumber":true,"ranking":true,"rankingTo":true,"pointGain":true,"finalGain":true,"isFinal":true,"completionStatus":true,"lastRound":true,"lastDance":true,"competitionId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":442,"b":454}]},{"name":"startNumber","required":false,"transform":{"type":"scalar"},"locs":[{"a":469,"b":480}]},{"name":"ranking","required":false,"transform":{"type":"scalar"},"locs":[{"a":495,"b":502}]},{"name":"rankingTo","required":false,"transform":{"type":"scalar"},"locs":[{"a":516,"b":525}]},{"name":"pointGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":539,"b":548}]},{"name":"finalGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":563,"b":572}]},{"name":"isFinal","required":false,"transform":{"type":"scalar"},"locs":[{"a":587,"b":594}]},{"name":"completionStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":612,"b":628}]},{"name":"lastRound","required":false,"transform":{"type":"scalar"},"locs":[{"a":643,"b":652}]},{"name":"lastDance","required":false,"transform":{"type":"scalar"},"locs":[{"a":667,"b":676}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":867,"b":880},{"a":1953,"b":1966},{"a":2175,"b":2188}]}],"statement":"MERGE INTO federated.competition_result AS t\nUSING (\n  SELECT\n    competitor_id,\n    nullif(start_number, '') AS start_number,\n    ranking,\n    ranking_to,\n    nullif(point_gain, '')::numeric(10,3) AS point_gain,\n    nullif(final_gain, '')::numeric(10,3) AS final_gain,\n    is_final,\n    nullif(completion_status, '') AS completion_status,\n    nullif(last_round, '') AS last_round,\n    nullif(last_dance, '') AS last_dance\n  FROM unnest(\n    :competitorId::text[],\n    :startNumber::text[],\n    :ranking::int[],\n    :rankingTo::int[],\n    :pointGain::text[],\n    :finalGain::text[],\n    :isFinal::boolean[],\n    :completionStatus::text[],\n    :lastRound::text[],\n    :lastDance::text[]\n  ) AS input(\n    competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance\n  )\n) AS s\nON t.competition_id = :competitionId AND t.competitor_id = s.competitor_id\nWHEN MATCHED AND (\n     t.start_number IS DISTINCT FROM s.start_number\n  OR t.ranking IS DISTINCT FROM s.ranking\n  OR t.ranking_to IS DISTINCT FROM s.ranking_to\n  OR t.point_gain IS DISTINCT FROM s.point_gain\n  OR t.final_gain IS DISTINCT FROM s.final_gain\n  OR t.is_final IS DISTINCT FROM s.is_final\n  OR t.completion_status IS DISTINCT FROM s.completion_status\n  OR t.last_round IS DISTINCT FROM s.last_round\n  OR t.last_dance IS DISTINCT FROM s.last_dance\n) THEN\n  UPDATE SET start_number = s.start_number,\n             ranking = s.ranking,\n             ranking_to = s.ranking_to,\n             point_gain = s.point_gain,\n             final_gain = s.final_gain,\n             is_final = s.is_final,\n             completion_status = s.completion_status,\n             last_round = s.last_round,\n             last_dance = s.last_dance\nWHEN NOT MATCHED THEN\n  INSERT (\n    competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance\n  ) VALUES (\n    :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain, s.final_gain,\n    s.is_final, s.completion_status, s.last_round, s.last_dance\n  )\nWHEN NOT MATCHED BY SOURCE\n  AND t.competition_id = :competitionId THEN\n  DELETE"};
 
 /**
  * Query generated from SQL:
@@ -1178,7 +1222,7 @@ const mergeCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"sta
  * USING (
  *   SELECT
  *     competitor_id,
- *     start_number,
+ *     nullif(start_number, '') AS start_number,
  *     ranking,
  *     ranking_to,
  *     nullif(point_gain, '')::numeric(10,3) AS point_gain,

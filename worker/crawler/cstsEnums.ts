@@ -86,10 +86,10 @@ export const mapCompetitorType = (type: CompetitorType): competitor_type => {
     case 'Formation':
       return 'formation';
     case 'Group':
-      return 'group';
     case 'SmallTeam':
-    case 'Team':
     case 'BigTeam':
+      return 'group';
+    case 'Team':
       return 'team';
     case 'ProAm':
     case 'Couple':

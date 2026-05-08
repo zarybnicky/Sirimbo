@@ -8,6 +8,7 @@ import { cstsEventIndex } from './cstsEventIndex.ts';
 import { cstsEventCompetitors } from './cstsEventCompetitors.ts';
 import { cstsEvent } from './cstsEvent.ts';
 import { cstsCompetitionResults } from './cstsCompetitionResults.ts';
+import { cstsClubIndex } from './cstsClubIndex.ts';
 
 export type LoaderIds = {
   [F in keyof typeof LOADERS]: {
@@ -86,12 +87,7 @@ export const LOADERS = {
     // https://www.csts.cz/api/1/competitions/32329/result
     competitionResults: cstsCompetitionResults,
 
-    clubIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Kluby') }),
-      async load() {},
-    } satisfies HtmlLoader,
+    clubIndex: cstsClubIndex,
 
     divisionIndex: {
       mode: 'text',

@@ -255,6 +255,24 @@ WHEN NOT MATCHED BY SOURCE
   AND t.snapshot_id = (SELECT id FROM upsert_snapshot) THEN
   DELETE;
 
+/* @name UpsertFederationClubs */
+INSERT INTO federated.federation_club (federation, external_id, name, city, country)
+SELECT federation, external_id, name, nullif(city, ''), nullif(country, '')
+FROM unnest(
+  :federation::text[],
+  :externalId::text[],
+  :name::text[],
+  :city::text[],
+  :country::text[]
+) AS input(federation, external_id, name, city, country)
+ON CONFLICT (federation, external_id) DO UPDATE
+  SET name = EXCLUDED.name,
+      city = EXCLUDED.city,
+      country = EXCLUDED.country
+  WHERE federated.federation_club.name IS DISTINCT FROM EXCLUDED.name
+     OR federated.federation_club.city IS DISTINCT FROM EXCLUDED.city
+     OR federated.federation_club.country IS DISTINCT FROM EXCLUDED.country;
+
 /* @name UpsertEvents */
 INSERT INTO federated.event (
   federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id
@@ -567,7 +585,7 @@ MERGE INTO federated.competition_result AS t
 USING (
   SELECT
     competitor_id,
-    start_number,
+    nullif(start_number, '') AS start_number,
     ranking,
     ranking_to,
     nullif(point_gain, '')::numeric(10,3) AS point_gain,

@@ -672,6 +672,9 @@ importers:
       '@traversable/zod':
         specifier: ^0.0.57
         version: 0.0.57(zod@4.1.13)
+      cheerio:
+        specifier: 1.0.0-rc.12
+        version: 1.0.0-rc.12
       date-fns:
         specifier: ~2.30.0
         version: 2.30.0

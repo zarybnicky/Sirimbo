@@ -258,7 +258,7 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
   for (const competitor of result.competitors) {
     competitionResults.add({
       competitorId: `csts:${competitor.competitorId}`,
-      startNumber: competitor.startNumber.toString(),
+      startNumber: competitor.startNumber > 0 ? competitor.startNumber.toString() : '',
       ranking: competitor.ranking,
       rankingTo: competitor.rankingTo,
       pointGain: competitor.points?.toString() ?? '',
@@ -266,7 +266,7 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
       isFinal: competitor.final,
       completionStatus: competitor.completion.completion,
       lastRound: competitor.completion.lastRound,
-      lastDance: competitor.completion.lastDance,
+      lastDance: competitor.completion.lastDance ?? '',
     });
   }
   await mergeCompetitionResults.run(
