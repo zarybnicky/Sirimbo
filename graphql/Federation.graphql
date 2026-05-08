@@ -1,108 +1,40 @@
-fragment AnnouncementAudience on AnnouncementAudience {
-  id
-  audienceRole
-  cohortId
-  cohort {
-    ...CohortBasic
+query Competitions {
+  competitionBriefList {
+    ageGroup
+    categoryName
+    checkInEnd
+    class
+    competitionDate
+    competitionId
+    competitorId
+    competitorName
+    dances
+    discipline
+    eventId
+    eventLocation
+    eventName
+    personId
+    personName
   }
-}
-
-fragment Announcement on Announcement {
-  __typename
-  id
-  title
-  body
-  createdAt
-  updatedAt
-  scheduledSince
-  scheduledUntil
-  isVisible
-  isSticky
-  author {
-    id
-    uJmeno
-    uPrijmeni
-  }
-  announcementAudiences {
-    nodes {
-      ...AnnouncementAudience
-    }
-  }
-}
-
-query StickyAnnouncements($orderByUpdated: Boolean) {
-  stickyAnnouncements: myAnnouncements(sticky: true, orderByUpdated: $orderByUpdated) {
-    totalCount
-    nodes {
-      ...Announcement
-    }
-  }
-}
-
-query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int, $orderByUpdated: Boolean) {
-  myAnnouncements(
-    archive: $archive,
-    first: $first,
-    offset: $offset,
-    orderByUpdated: $orderByUpdated,
-  ) {
-    totalCount
-    nodes {
-      ...Announcement
-    }
-  }
-}
-
-query AnnouncementList($first: Int, $cursor: Cursor, $orderBy: AnnouncementsOrderBy = CREATED_AT_DESC) {
-  announcements(
-    first: $first,
-    after: $cursor,
-    orderBy: [$orderBy],
-  ) {
-    totalCount
-    nodes {
-      ...Announcement
-    }
-    pageInfo {
-      __typename
-      hasNextPage
-      endCursor
-    }
-  }
-}
-
-mutation ToggleAnnouncementVisible($id: BigInt!, $visible: Boolean!) {
-  updateAnnouncement(input: {id: $id, patch: {isVisible: $visible}}) {
-    announcement {
-      ...Announcement
-    }
-  }
-}
-
-mutation ToggleAnnouncementSticky($id: BigInt!, $sticky: Boolean!) {
-  updateAnnouncement(input: {id: $id, patch: {isSticky: $sticky}}) {
-    announcement {
-      ...Announcement
-    }
-  }
-}
-
-query Announcement($id: BigInt!) {
-  announcement(id: $id) {
-    ...Announcement
-  }
-}
-
-mutation UpsertAnnouncement($input: UpsertAnnouncementInput!) {
-  upsertAnnouncement(input: $input) {
-    announcement {
-      ...Announcement
-    }
-  }
-}
-
-mutation DeleteAnnouncement($id: BigInt!) {
-  deleteAnnouncement(input: {id: $id}) {
-    __typename
+  competitionReportList {
+    ageGroup
+    categoryName
+    class
+    competitionDate
+    competitionId
+    competitorId
+    competitorName
+    discipline
+    eventId
+    eventLocation
+    eventName
+    isFinal
+    participants
+    personId
+    personName
+    pointGain
+    ranking
+    rankingTo
+    series
   }
 }
