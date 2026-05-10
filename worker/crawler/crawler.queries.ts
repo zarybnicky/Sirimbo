@@ -229,6 +229,36 @@ const queueCrawlerScheduleIR: any = {"usedParamSet":{},"params":[],"statement":"
 export const queueCrawlerSchedule = new PreparedQuery<IQueueCrawlerScheduleParams,IQueueCrawlerScheduleResult>(queueCrawlerScheduleIR);
 
 
+/** 'GetBacktestFrontierKinds' parameters type */
+export type IGetBacktestFrontierKindsParams = void;
+
+/** 'GetBacktestFrontierKinds' return type */
+export interface IGetBacktestFrontierKindsResult {
+  federation: string;
+  kind: string;
+  total: number;
+}
+
+/** 'GetBacktestFrontierKinds' query type */
+export interface IGetBacktestFrontierKindsQuery {
+  params: IGetBacktestFrontierKindsParams;
+  result: IGetBacktestFrontierKindsResult;
+}
+
+const getBacktestFrontierKindsIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT federation AS \"federation!\", kind AS \"kind!\", count(*)::int AS \"total!\"\nFROM crawler.frontier\nGROUP BY federation, kind\nORDER BY federation, kind"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT federation AS "federation!", kind AS "kind!", count(*)::int AS "total!"
+ * FROM crawler.frontier
+ * GROUP BY federation, kind
+ * ORDER BY federation, kind
+ * ```
+ */
+export const getBacktestFrontierKinds = new PreparedQuery<IGetBacktestFrontierKindsParams,IGetBacktestFrontierKindsResult>(getBacktestFrontierKindsIR);
+
+
 /** 'GetBacktestFrontierResponses' parameters type */
 export interface IGetBacktestFrontierResponsesParams {
   federation?: string | null | void;

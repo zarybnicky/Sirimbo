@@ -112,6 +112,12 @@ SELECT (
   )
 ).id AS "job_id!";
 
+/* @name GetBacktestFrontierKinds */
+SELECT federation AS "federation!", kind AS "kind!", count(*)::int AS "total!"
+FROM crawler.frontier
+GROUP BY federation, kind
+ORDER BY federation, kind;
+
 /* @name GetBacktestFrontierResponses */
 SELECT f.id, jr.url, jr.http_status, jrc.content
 FROM crawler.frontier f

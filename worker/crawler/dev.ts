@@ -13,6 +13,7 @@ import type {
   IGetFrontierFailureGroupsResult,
 } from './crawler.queries.ts';
 import {
+  getBacktestFrontierKinds,
   getBacktestFrontierResponses,
   getCrawlerFrontierJobs,
   getCrawlerFrontierStatus,
@@ -344,13 +345,10 @@ async function backtestJsonResponses(
 async function backtestSchemas(
   federation: string | undefined,
   kind: string | undefined,
-  options: { all?: boolean; verbose?: boolean },
+  options: { verbose?: boolean },
 ) {
-  if (!options.all) {
-    if (!federation || !kind) {
-      throw new Error('Usage: backtest <federation:kind> or backtest --all');
-    }
-
+  if (federation || kind) {
+    if (!federation || !kind) throw new Error('Usage: backtest <federation:kind>');
     const loader = loaderFor(federation, kind);
     if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
     if (loader.mode !== 'json') {
@@ -364,23 +362,29 @@ async function backtestSchemas(
     return;
   }
 
-  if (federation || kind) {
-    throw new Error('Use either `backtest --all` or `backtest <federation:kind>`');
-  }
-
   let total = 0;
   let jsonLoaders = 0;
-  for (const row of await getCrawlerFrontierStatus.run(
-    { federation: null, kind: null, allowRefetch: false },
-    pool,
-  )) {
+  let skippedTextLoaders = 0;
+  let warnings = 0;
+  const frontierKinds = new Set<string>();
+
+  for (const row of await getBacktestFrontierKinds.run(undefined, pool)) {
     const { federation, kind } = row;
+    frontierKinds.add(loaderKey(federation, kind));
+
     const loader = loaderFor(federation, kind);
     if (!loader) {
-      console.log(`Skipping unknown loader ${federation}:${kind} (${row.total})`);
+      warnings++;
+      console.warn(
+        `Warning: no loader for ${federation}:${kind} (${row.total} frontiers)`,
+      );
       continue;
     }
-    if (loader.mode !== 'json') continue;
+    if (loader.mode !== 'json') {
+      skippedTextLoaders++;
+      console.log(`Skipping text loader ${federation}:${kind} (${row.total} frontiers)`);
+      continue;
+    }
 
     const count = await backtestJsonResponses(federation, kind, loader, {
       verbose: options.verbose,
@@ -389,7 +393,32 @@ async function backtestSchemas(
     total += count;
     console.log(`Validated ${count} responses of type ${federation}:${kind}`);
   }
-  console.log(`Validated ${total} responses across ${jsonLoaders} JSON loaders`);
+
+  for (const { federation, kind, loader } of loaderEntries()) {
+    if (frontierKinds.has(loaderKey(federation, kind))) continue;
+
+    warnings++;
+    console.warn(
+      `Warning: loader ${federation}:${kind} (${loader.mode}) has no frontiers`,
+    );
+  }
+
+  console.log(
+    `Validated ${total} responses across ${jsonLoaders} JSON loaders` +
+      `; skipped ${skippedTextLoaders} text loaders; warnings ${warnings}`,
+  );
+}
+
+function loaderKey(federation: string, kind: string) {
+  return `${federation}:${kind}`;
+}
+
+function loaderEntries() {
+  return Object.entries(LOADERS).flatMap(([federation, kinds]) =>
+    Object.entries(kinds)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([kind, loader]) => ({ federation, kind, loader })),
+  );
 }
 
 type StatusOptions = OutputOptions & {
@@ -1170,9 +1199,8 @@ cli
 
 cli
   .command('backtest [target]', 'Strict-validate cached JSON responses for a loader')
-  .option('--all', 'Strict-validate cached JSON responses for all JSON loaders')
   .option('-v, --verbose', 'Include full input in schema failure logs')
-  .action((target: string | undefined, options: { all?: boolean; verbose?: boolean }) => {
+  .action((target: string | undefined, options: { verbose?: boolean }) => {
     const parsed = parseScopeTarget(target);
     return backtestSchemas(parsed?.federation, parsed?.kind, options);
   });
