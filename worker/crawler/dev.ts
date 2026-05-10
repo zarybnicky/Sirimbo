@@ -21,7 +21,6 @@ import {
   getCrawlerWorkerJobStatus,
   getFrontierDetail,
   getFrontierFailureGroups,
-  getFrontierRefetchTarget,
   getLatestFrontierFailures,
   getLatestFrontierResponse,
   queueCrawlerSchedule,
@@ -743,9 +742,7 @@ function statusCommands(
   const failure = failures.find((row) => row.federation && row.kind);
   if (failure) {
     const target = `${failure.federation}:${failure.kind}`;
-    const http =
-      failure.http_status == null ? '' : ` --http-status ${failure.http_status}`;
-    commands.push(`pnpm crawler refetch ${target} --failed${http}`);
+    commands.push(`pnpm crawler refetch ${target}`);
   }
 
   const refetchProblem = problems.find(
@@ -929,96 +926,49 @@ async function showLatestResponse(target: string) {
 
 type RefetchOptions = {
   json?: boolean;
-  failed?: boolean;
+  all?: boolean;
   limit?: string;
 };
 
-async function queueExactRefetch(target: string) {
-  const { federation, kind, key } = parseExactTarget(target);
-  const loader = loaderFor(federation, kind);
-  if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
-
-  const [frontier] = await getFrontierRefetchTarget.run({ federation, kind, key }, pool);
-  if (!frontier) {
-    throw new Error(
-      `Frontier ${target} not found; use federation:kind:key, or --failed for filtered failed rows`,
-    );
-  }
-
-  const [row] = await queueFrontierRefetch.run({ ids: [frontier.id] }, pool);
-  if (!row) throw new Error(`Unable to queue ${target}`);
-  await queueCrawlerSchedule.run(undefined, pool);
-
-  console.log(
-    [
-      `Queued frontier_schedule job after marking frontier ${row.id} due`,
-      formatFrontierTarget(row.federation, row.kind, row.key),
-    ].join('\n'),
-  );
-}
-
-async function queueFailedRefetch(target: string, options: RefetchOptions) {
+async function queueRefetch(target: string, options: RefetchOptions) {
   const parsed = parseTarget(target);
-  if (!parsed) throw new Error('Target must be federation:kind[:key]');
-  const key = parsed.key ?? null;
-
-  const limit = parseOptionalLimit(options.limit);
-  const params = {
-    federation: parsed.federation,
-    kind: parsed.kind,
-    key,
-    limit,
-  };
-  const rows = await getLatestFrontierFailures.run(params, pool);
-  let scheduled: boolean = false;
-  let outputRows: Array<(typeof rows)[number] & { queued?: boolean }> = rows;
-  if (rows.length > 0) {
-    const ids = rows.map((row) => row.id);
-    const queuedRows = await queueFrontierRefetch.run({ ids }, pool);
-    const queuedIds = new Set(queuedRows.map((row) => row.id));
-    await queueCrawlerSchedule.run(undefined, pool);
-    scheduled = true;
-    outputRows = rows.map((row) => ({ ...row, queued: queuedIds.has(row.id) }));
+  if (!parsed) throw new Error('Target must be federation[:kind[:key]]');
+  const isExact = parsed.key != null;
+  if (isExact && (!parsed.kind || !loaderFor(parsed.federation, parsed.kind))) {
+    throw new Error(`Unknown loader ${parsed.federation}:${parsed.kind}`);
   }
+
+  const limit = isExact ? 1 : parseOptionalLimit(options.limit);
+  const rows = await queueFrontierRefetch.run(
+    {
+      federation: parsed.federation,
+      kind: parsed.kind ?? null,
+      key: parsed.key ?? null,
+      includeOk: options.all ?? false,
+      limit,
+    },
+    pool,
+  );
+  const scheduled = rows.length > 0;
+  if (scheduled) await queueCrawlerSchedule.run(undefined, pool);
+  if (isExact && rows.length === 0) throw new Error(`Frontier ${target} not found`);
 
   if (options.json) {
-    console.log(
-      JSON.stringify({ scheduled, rows: outputRows }, null, 2),
-    );
+    console.log(JSON.stringify({ scheduled, rows }, null, 2));
     return;
   }
 
-  console.log(
-    `Queued ${rows.length} failed frontier rows` +
-      (limit == null ? '' : ` (limit ${limit})`),
-  );
+  const label = isExact ? 'frontier row' : options.all ? 'frontier rows' : 'failed frontier rows';
+  console.log(`Queued ${rows.length} ${label}` + (limit == null ? '' : ` (limit ${limit})`));
   if (scheduled) console.log(`Queued frontier_schedule job`);
-  const visibleRows = outputRows.slice(0, 50);
   printTable(
-    visibleRows.map((row) => ({
+    rows.slice(0, 50).map((row) => ({
       action: 'refetch queued',
-      failed: formatDate(row.failed_at),
       id: row.id,
       target: formatFrontierTarget(row.federation, row.kind, row.key),
-      http: row.http_status ?? '-',
-      error: formatDetailText(row.error_text, false, 90),
-      queued: row.queued == null ? '-' : row.queued ? 'yes' : 'no',
     })),
   );
-  if (rows.length > visibleRows.length) {
-    console.log(
-      `Showing ${visibleRows.length} of ${rows.length}; use --json for all rows.`,
-    );
-  }
-}
-
-async function queueRefetch(target: string, options: RefetchOptions) {
-  if (options.failed) {
-    await queueFailedRefetch(target, options);
-    return;
-  }
-
-  await queueExactRefetch(target);
+  if (rows.length > 50) console.log(`Showing 50 of ${rows.length}; use --json for all rows.`);
 }
 
 function queryText(query: unknown) {
@@ -1159,9 +1109,9 @@ cli.command('fetch <target>', 'Fetch and cache a response').action((target: stri
 
 cli
   .command('refetch <target>', 'Queue federation:kind[:key] for immediate re-fetch')
-  .option('--failed', 'Select failed rows under the target instead of one exact frontier')
-  .option('-n, --limit <limit>', 'Maximum failed rows to include')
-  .option('--json', 'Print JSON for failed-row selections')
+  .option('--all', 'Include OK rows when refetching a scoped federation[:kind] target')
+  .option('-n, --limit <limit>', 'Maximum scoped rows to include')
+  .option('--json', 'Print JSON for scoped-row selections')
   .action((target: string, options: RefetchOptions) => queueRefetch(target, options));
 
 cli

@@ -542,15 +542,22 @@ WHERE id = :id::bigint;
 /* @name RescheduleFrontier */
 UPDATE crawler.frontier SET next_fetch_at = :nextRetryAt WHERE id = :id::bigint;
 
-/* @name GetFrontierRefetchTarget */
-SELECT id AS "id!", federation AS "federation!", kind AS "kind!", key AS "key!"
-FROM crawler.frontier
-WHERE federation = :federation
-  AND kind = :kind
-  AND key = :key;
-
 /* @name QueueFrontierRefetch */
-WITH frontier AS (
+WITH selected AS (
+  SELECT f.id
+  FROM crawler.frontier f
+  LEFT JOIN crawler.frontier_failure ff ON ff.id = f.id
+  WHERE f.federation = :federation
+    AND (:kind::text IS NULL OR f.kind = :kind)
+    AND (:key::text IS NULL OR f.key = :key)
+    AND (
+      :key::text IS NOT NULL
+      OR coalesce(:includeOk::boolean, false)
+      OR ff.id IS NOT NULL
+    )
+  ORDER BY coalesce(ff.failed_at, f.last_fetched_at, f.discovered_at) DESC, f.id DESC
+  LIMIT :limit
+), frontier AS (
   UPDATE crawler.frontier f
   SET fetch_status = 'pending',
       process_status = 'pending',
@@ -558,7 +565,7 @@ WITH frontier AS (
       last_process_error_at = NULL,
       error_count = 0,
       next_fetch_at = now()
-  WHERE f.id = ANY(:ids::bigint[])
+  WHERE f.id IN (SELECT id FROM selected)
   RETURNING f.id, f.federation, f.kind, f.key
 )
 SELECT id AS "id!", federation AS "federation!", kind AS "kind!", key AS "key!"
