@@ -9,6 +9,78 @@ FROM unnest(
 ) AS i (federation, external_id, canonical_name, gender)
 ON CONFLICT (id) DO NOTHING;
 
+/* @name MergePersonLicenses */
+WITH input AS (
+  SELECT
+    :scopeFederation::text AS federation,
+    external_id, canonical_name, gender, kind, discipline,
+    grade, valid_until, status
+  FROM unnest(
+    :externalId::text[],
+    :canonicalName::text[],
+    :gender::federated.gender[],
+    :kind::federated.person_license_kind[],
+    :discipline::federated.person_license_discipline[],
+    :grade::text[],
+    :validUntil::text[],
+    :status::federated.person_license_status[]
+  ) AS input(
+    external_id, canonical_name, gender, kind, discipline,
+    grade, valid_until, status
+  )
+), inserted_person AS (
+  INSERT INTO federated.person (federation, external_id, canonical_name, gender)
+  SELECT DISTINCT federation, external_id, canonical_name, gender
+  FROM input
+  ON CONFLICT (id) DO NOTHING
+), source AS (
+  SELECT DISTINCT ON (federation, external_id, kind, discipline)
+    federation || ':' || external_id AS person_id,
+    federation,
+    :scopeSourceKind::text AS source_kind,
+    kind,
+    discipline,
+    nullif(grade, '') AS grade,
+    nullif(valid_until, '')::date AS valid_until,
+    status
+  FROM input
+  ORDER BY federation, external_id, kind, discipline
+), scope AS (
+  SELECT person_id
+  FROM unnest(:scopePersonId::text[]) AS scope(person_id)
+), upserted AS (
+  INSERT INTO federated.person_license (
+    person_id, federation, source_kind, kind, discipline, grade, valid_until, status
+  )
+  SELECT
+    person_id, federation, source_kind, kind, discipline, grade, valid_until, status
+  FROM source
+  ON CONFLICT (person_id, source_kind, kind, discipline) DO UPDATE SET
+    grade = EXCLUDED.grade,
+    valid_until = EXCLUDED.valid_until,
+    status = EXCLUDED.status
+  WHERE
+       federated.person_license.grade IS DISTINCT FROM EXCLUDED.grade
+    OR federated.person_license.valid_until IS DISTINCT FROM EXCLUDED.valid_until
+    OR federated.person_license.status IS DISTINCT FROM EXCLUDED.status
+  RETURNING 1
+)
+DELETE FROM federated.person_license t
+WHERE t.federation = :scopeFederation
+  AND t.source_kind = :scopeSourceKind
+  AND (
+    NOT EXISTS (SELECT 1 FROM scope)
+    OR EXISTS (SELECT 1 FROM scope WHERE scope.person_id = t.person_id)
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM source s
+    WHERE s.person_id = t.person_id
+      AND s.source_kind = t.source_kind
+      AND s.kind = t.kind
+      AND s.discipline = t.discipline
+  );
+
 /* @name UpsertPeopleDetailed */
 INSERT INTO federated.person (
   federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration
@@ -100,7 +172,7 @@ ON CONFLICT (id) DO NOTHING;
 
 /* @name EnsureCompetitorsWithComponents */
 WITH competitor_input AS (
-  SELECT federation, external_id, competitor_type, name
+  SELECT federation, external_id, federation || ':' || external_id AS id, competitor_type, name
   FROM unnest(
     :federation::text[],
     :externalId::text[],
@@ -112,17 +184,6 @@ WITH competitor_input AS (
   SELECT federation, external_id, competitor_type, name
   FROM competitor_input
   ON CONFLICT (id) DO NOTHING
-  RETURNING id
-), existing_competitor AS (
-  SELECT c.id
-  FROM federated.competitor c
-  JOIN competitor_input
-    ON c.federation = competitor_input.federation
-   AND c.external_id = competitor_input.external_id
-), candidate_competitor AS (
-  SELECT id FROM inserted_competitor
-  UNION
-  SELECT id FROM existing_competitor
 ), component_input AS (
   SELECT
     component_competitor_id, person_id, person_federation, person_external_id,
@@ -142,7 +203,7 @@ WITH competitor_input AS (
 ), target_component AS (
   SELECT component_input.*
   FROM component_input
-  JOIN candidate_competitor ON candidate_competitor.id = component_input.component_competitor_id
+  JOIN competitor_input ON competitor_input.id = component_input.component_competitor_id
   WHERE NOT EXISTS (
     SELECT 1
     FROM federated.competitor_component component
@@ -153,7 +214,6 @@ WITH competitor_input AS (
   SELECT DISTINCT person_federation, person_external_id, person_canonical_name, person_gender
   FROM target_component
   ON CONFLICT (id) DO NOTHING
-  RETURNING id
 )
 INSERT INTO federated.competitor_component (competitor_id, person_id, role)
 SELECT component_competitor_id, person_id, component_role
@@ -177,28 +237,35 @@ ON CONFLICT (id) DO UPDATE
       END;
 
 /* @name MergeCompetitorComponents */
-MERGE INTO federated.competitor_component AS t
-USING (
+WITH source AS (
   SELECT competitor_id, person_id, role
   FROM unnest(
     :competitorId::text[],
     :personId::text[],
     :role::federated.competitor_role[]
   ) AS input(competitor_id, person_id, role)
-) AS s
-ON t.competitor_id = s.competitor_id AND t.person_id = s.person_id
-WHEN MATCHED AND t.role IS DISTINCT FROM s.role THEN
-  UPDATE SET role = s.role
-WHEN NOT MATCHED THEN
-  INSERT (competitor_id, person_id, role)
-  VALUES (s.competitor_id, s.person_id, s.role)
-WHEN NOT MATCHED BY SOURCE
-  AND t.competitor_id IN (SELECT unnest(:competitorId::text[])) THEN
-  DELETE;
+), scope AS (
+  SELECT DISTINCT competitor_id
+  FROM unnest(:competitorId::text[]) AS input(competitor_id)
+), upserted AS (
+  INSERT INTO federated.competitor_component (competitor_id, person_id, role)
+  SELECT s.competitor_id, s.person_id, s.role
+  FROM source s
+  ON CONFLICT (competitor_id, person_id) DO UPDATE
+    SET role = EXCLUDED.role
+    WHERE federated.competitor_component.role IS DISTINCT FROM EXCLUDED.role
+)
+DELETE FROM federated.competitor_component t
+WHERE t.competitor_id IN (SELECT competitor_id FROM scope)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM source s
+    WHERE s.competitor_id = t.competitor_id
+      AND s.person_id = t.person_id
+  );
 
 /* @name MergeCompetitorProgress */
-MERGE INTO federated.competitor_category_progress AS t
-USING (
+WITH source AS (
   SELECT
     entry.competitor_id, entry.category_id, entry.points, entry.domestic_finals, entry.foreign_finals
   FROM unnest(
@@ -208,16 +275,31 @@ USING (
     :domesticFinals::int[],
     :foreignFinals::int[]
   ) entry (competitor_id, category_id, points, domestic_finals, foreign_finals)
-) AS s
-ON t.competitor_id = s.competitor_id AND t.category_id = s.category_id
-WHEN MATCHED THEN
-  UPDATE SET points = s.points, domestic_finals = s.domestic_finals, foreign_finals = s.foreign_finals
-WHEN NOT MATCHED THEN
-  INSERT (competitor_id, category_id, points, domestic_finals, foreign_finals)
-  VALUES (s.competitor_id, s.category_id, s.points, s.domestic_finals, s.foreign_finals)
-WHEN NOT MATCHED BY SOURCE
-  AND t.competitor_id IN (SELECT unnest(:competitorId::text[])) THEN
-  DELETE;
+), scope AS (
+  SELECT DISTINCT competitor_id
+  FROM unnest(:competitorId::text[]) AS input(competitor_id)
+), upserted AS (
+  INSERT INTO federated.competitor_category_progress (
+    competitor_id, category_id, points, domestic_finals, foreign_finals
+  )
+  SELECT s.competitor_id, s.category_id, s.points, s.domestic_finals, s.foreign_finals
+  FROM source s
+  ON CONFLICT (competitor_id, category_id) DO UPDATE
+    SET points = EXCLUDED.points,
+        domestic_finals = EXCLUDED.domestic_finals,
+        foreign_finals = EXCLUDED.foreign_finals
+    WHERE federated.competitor_category_progress.points IS DISTINCT FROM EXCLUDED.points
+       OR federated.competitor_category_progress.domestic_finals IS DISTINCT FROM EXCLUDED.domestic_finals
+       OR federated.competitor_category_progress.foreign_finals IS DISTINCT FROM EXCLUDED.foreign_finals
+)
+DELETE FROM federated.competitor_category_progress t
+WHERE t.competitor_id IN (SELECT competitor_id FROM scope)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM source s
+    WHERE s.competitor_id = t.competitor_id
+      AND s.category_id = t.category_id
+  );
 
 /* @name UpsertRanklistSnapshot */
 WITH upsert_ranklist AS (
@@ -234,8 +316,8 @@ upsert_snapshot AS (
   ON CONFLICT (ranklist_id, as_of_date, kind)
     DO UPDATE SET kind = EXCLUDED.kind
   RETURNING id
-)
-MERGE INTO federated.ranklist_entry t USING (
+),
+source AS (
   SELECT s.id AS snapshot_id, e.competitor_id, e.ranking, e.ranking_to, e.points
   FROM upsert_snapshot s
   CROSS JOIN unnest(
@@ -244,16 +326,26 @@ MERGE INTO federated.ranklist_entry t USING (
     :entryRankingTo::int[],
     :entryPoints::numeric(10,3)[]
   ) AS e(competitor_id, ranking, ranking_to, points)
-) s
-ON t.snapshot_id = s.snapshot_id AND t.competitor_id = s.competitor_id
-WHEN MATCHED THEN
-  UPDATE SET ranking = s.ranking, ranking_to = s.ranking_to, points = s.points
-WHEN NOT MATCHED BY TARGET THEN
-  INSERT (snapshot_id, competitor_id, ranking, ranking_to, points)
-  VALUES (s.snapshot_id, s.competitor_id, s.ranking, s.ranking_to, s.points)
-WHEN NOT MATCHED BY SOURCE
-  AND t.snapshot_id = (SELECT id FROM upsert_snapshot) THEN
-  DELETE;
+), upsert_entry AS (
+  INSERT INTO federated.ranklist_entry (snapshot_id, competitor_id, ranking, ranking_to, points)
+  SELECT s.snapshot_id, s.competitor_id, s.ranking, s.ranking_to, s.points
+  FROM source s
+  ON CONFLICT (snapshot_id, competitor_id) DO UPDATE
+    SET ranking = EXCLUDED.ranking,
+        ranking_to = EXCLUDED.ranking_to,
+        points = EXCLUDED.points
+    WHERE federated.ranklist_entry.ranking IS DISTINCT FROM EXCLUDED.ranking
+       OR federated.ranklist_entry.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to
+       OR federated.ranklist_entry.points IS DISTINCT FROM EXCLUDED.points
+)
+DELETE FROM federated.ranklist_entry t
+WHERE t.snapshot_id = (SELECT id FROM upsert_snapshot)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM source s
+    WHERE s.snapshot_id = t.snapshot_id
+      AND s.competitor_id = t.competitor_id
+  );
 
 /* @name UpsertFederationClubs */
 INSERT INTO federated.federation_club (federation, external_id, name, city, country)
@@ -492,21 +584,24 @@ WITH event AS (
     :discipline::text[],
     :grade::text[]
   ) AS input(person_id, role, discipline, grade)
+), upserted AS (
+  INSERT INTO federated.event_official (event_id, person_id, role, discipline, grade)
+  SELECT s.event_id, s.person_id, s.role, coalesce(s.discipline, ''), s.grade
+  FROM source s
+  ON CONFLICT (event_id, person_id, role, discipline) DO UPDATE
+    SET grade = EXCLUDED.grade
+    WHERE federated.event_official.grade IS DISTINCT FROM EXCLUDED.grade
 )
-MERGE INTO federated.event_official AS t
-USING source AS s
-ON t.event_id = s.event_id
-  AND t.person_id = s.person_id
-  AND t.role = s.role
-  AND t.discipline = coalesce(s.discipline, '')
-WHEN MATCHED AND t.grade IS DISTINCT FROM s.grade THEN
-  UPDATE SET grade = s.grade
-WHEN NOT MATCHED THEN
-  INSERT (event_id, person_id, role, discipline, grade)
-  VALUES (s.event_id, s.person_id, s.role, coalesce(s.discipline, ''), s.grade)
-WHEN NOT MATCHED BY SOURCE
-  AND t.event_id IN (SELECT id FROM event) THEN
-  DELETE;
+DELETE FROM federated.event_official t
+WHERE t.event_id IN (SELECT id FROM event)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM source s
+    WHERE s.event_id = t.event_id
+      AND s.person_id = t.person_id
+      AND s.role = t.role
+      AND coalesce(s.discipline, '') = t.discipline
+  );
 
 /* @name MergeCompetitionOfficials */
 WITH input AS (
@@ -525,18 +620,21 @@ WITH input AS (
   SELECT competitions.id AS competition_id, input.person_id, input.role
   FROM input
   JOIN competitions ON competitions.external_id = input.competition_external_id
+), inserted_official AS (
+  INSERT INTO federated.competition_official (competition_id, person_id, role)
+  SELECT s.competition_id, s.person_id, s.role
+  FROM source s
+  ON CONFLICT (competition_id, person_id, role) DO NOTHING
 )
-MERGE INTO federated.competition_official AS t
-USING source AS s
-ON t.competition_id = s.competition_id
-  AND t.person_id = s.person_id
-  AND t.role = s.role
-WHEN NOT MATCHED THEN
-  INSERT (competition_id, person_id, role)
-  VALUES (s.competition_id, s.person_id, s.role)
-WHEN NOT MATCHED BY SOURCE
-  AND t.competition_id IN (SELECT id FROM competitions) THEN
-  DELETE;
+DELETE FROM federated.competition_official t
+WHERE t.competition_id IN (SELECT id FROM competitions)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM source s
+    WHERE s.competition_id = t.competition_id
+      AND s.person_id = t.person_id
+      AND s.role = t.role
+  );
 
 /* @name GetCompetitionContext */
 SELECT
@@ -567,22 +665,25 @@ WITH input AS (
   SELECT competitions.id AS competition_id, input.competitor_id, input.cancelled
   FROM input
   JOIN competitions ON competitions.external_id = input.competition_external_id
+), upserted AS (
+  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
+  SELECT s.competition_id, s.competitor_id, s.cancelled
+  FROM source s
+  ON CONFLICT (competition_id, competitor_id) DO UPDATE
+    SET cancelled = EXCLUDED.cancelled
+    WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled
 )
-MERGE INTO federated.competition_entry AS t
-USING source AS s
-ON t.competition_id = s.competition_id AND t.competitor_id = s.competitor_id
-WHEN MATCHED AND t.cancelled IS DISTINCT FROM s.cancelled THEN
-  UPDATE SET cancelled = s.cancelled
-WHEN NOT MATCHED THEN
-  INSERT (competition_id, competitor_id, cancelled)
-  VALUES (s.competition_id, s.competitor_id, s.cancelled)
-WHEN NOT MATCHED BY SOURCE
-  AND t.competition_id IN (SELECT id FROM competitions) THEN
-  DELETE;
+DELETE FROM federated.competition_entry t
+WHERE t.competition_id IN (SELECT id FROM competitions)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM source s
+    WHERE s.competition_id = t.competition_id
+      AND s.competitor_id = t.competitor_id
+  );
 
 /* @name MergeCompetitionResults */
-MERGE INTO federated.competition_result AS t
-USING (
+WITH source AS (
   SELECT
     competitor_id,
     nullif(start_number, '') AS start_number,
@@ -609,39 +710,42 @@ USING (
     competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
     is_final, completion_status, last_round, last_dance
   )
-) AS s
-ON t.competition_id = :competitionId AND t.competitor_id = s.competitor_id
-WHEN MATCHED AND (
-     t.start_number IS DISTINCT FROM s.start_number
-  OR t.ranking IS DISTINCT FROM s.ranking
-  OR t.ranking_to IS DISTINCT FROM s.ranking_to
-  OR t.point_gain IS DISTINCT FROM s.point_gain
-  OR t.final_gain IS DISTINCT FROM s.final_gain
-  OR t.is_final IS DISTINCT FROM s.is_final
-  OR t.completion_status IS DISTINCT FROM s.completion_status
-  OR t.last_round IS DISTINCT FROM s.last_round
-  OR t.last_dance IS DISTINCT FROM s.last_dance
-) THEN
-  UPDATE SET start_number = s.start_number,
-             ranking = s.ranking,
-             ranking_to = s.ranking_to,
-             point_gain = s.point_gain,
-             final_gain = s.final_gain,
-             is_final = s.is_final,
-             completion_status = s.completion_status,
-             last_round = s.last_round,
-             last_dance = s.last_dance
-WHEN NOT MATCHED THEN
-  INSERT (
+), upserted AS (
+  INSERT INTO federated.competition_result (
     competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
     is_final, completion_status, last_round, last_dance
-  ) VALUES (
-    :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain, s.final_gain,
-    s.is_final, s.completion_status, s.last_round, s.last_dance
   )
-WHEN NOT MATCHED BY SOURCE
-  AND t.competition_id = :competitionId THEN
-  DELETE;
+  SELECT
+    :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,
+    s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance
+  FROM source s
+  ON CONFLICT (competition_id, competitor_id) DO UPDATE
+    SET start_number = EXCLUDED.start_number,
+        ranking = EXCLUDED.ranking,
+        ranking_to = EXCLUDED.ranking_to,
+        point_gain = EXCLUDED.point_gain,
+        final_gain = EXCLUDED.final_gain,
+        is_final = EXCLUDED.is_final,
+        completion_status = EXCLUDED.completion_status,
+        last_round = EXCLUDED.last_round,
+        last_dance = EXCLUDED.last_dance
+    WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number
+       OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking
+       OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to
+       OR federated.competition_result.point_gain IS DISTINCT FROM EXCLUDED.point_gain
+       OR federated.competition_result.final_gain IS DISTINCT FROM EXCLUDED.final_gain
+       OR federated.competition_result.is_final IS DISTINCT FROM EXCLUDED.is_final
+       OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status
+       OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round
+       OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance
+)
+DELETE FROM federated.competition_result t
+WHERE t.competition_id = :competitionId
+  AND NOT EXISTS (
+    SELECT 1
+    FROM source s
+    WHERE s.competitor_id = t.competitor_id
+  );
 
 /* @name UpsertCompetitionRounds */
 WITH input AS (

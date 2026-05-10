@@ -114,7 +114,6 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
     );
 
     for (const competitor of parsed.collection) {
-      const competitorId = `csts:${competitor.competitorId}`;
       const competitorType = mapCompetitorType(competitor.type);
       competitors.add({
         federation: 'csts',
@@ -125,7 +124,7 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
 
       entries.add({
         competitionExternalId: competitor.competitionId.toString(),
-        competitorId,
+        competitorId: `csts:${competitor.competitorId}`,
         cancelled: competitor.registrationState !== 1,
       });
 

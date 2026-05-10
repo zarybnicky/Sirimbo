@@ -9,6 +9,19 @@ import { cstsEventCompetitors } from './cstsEventCompetitors.ts';
 import { cstsEvent } from './cstsEvent.ts';
 import { cstsCompetitionResults } from './cstsCompetitionResults.ts';
 import { cstsClubIndex } from './cstsClubIndex.ts';
+import {
+  cstsJudgeIndex,
+  cstsOfficialIndex,
+  cstsTrainerIndex,
+} from './cstsPersonIndex.ts';
+import { sztsCoupleIndex, sztsSoloIndex } from './sztsCompetitorIndex.ts';
+import {
+  sztsJudgeIndex,
+  sztsMemberIndex,
+  sztsOfficialIndex,
+  sztsScrutineerIndex,
+  sztsTrainerIndex,
+} from './sztsPersonIndex.ts';
 
 export type LoaderIds = {
   [F in keyof typeof LOADERS]: {
@@ -96,32 +109,11 @@ export const LOADERS = {
       async load() {},
     } satisfies HtmlLoader,
 
-    trainerIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({
-        url: new URL('https://www.csts.cz/cs/Evidence/SeznamTreneru'),
-      }),
-      async load() {},
-    } satisfies HtmlLoader,
+    trainerIndex: cstsTrainerIndex,
 
-    judgeIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({
-        url: new URL('https://www.csts.cz/cs/Evidence/SeznamPorotcu'),
-      }),
-      async load() {},
-    } satisfies HtmlLoader,
+    judgeIndex: cstsJudgeIndex,
 
-    officialIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({
-        url: new URL('https://www.csts.cz/cs/Evidence/SeznamFunkcionaru'),
-      }),
-      async load() {},
-    } satisfies HtmlLoader,
+    officialIndex: cstsOfficialIndex,
   },
   szts: {
     // soutěže https://szts.ksis.eu/menu.php?akcia=KS
@@ -133,36 +125,19 @@ export const LOADERS = {
     } satisfies HtmlLoader,
 
     // clenove https://szts.ksis.eu/menu.php?akcia=CZ
-    memberIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZ') }),
-      async load() {},
-    } satisfies HtmlLoader,
+    memberIndex: sztsMemberIndex,
 
     // trenéři https://szts.ksis.eu/menu.php?akcia=CZT
-    trainerIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZT') }),
-      async load() {},
-    } satisfies HtmlLoader,
+    trainerIndex: sztsTrainerIndex,
 
-    // funkcionáři https://szts.ksis.eu/menu.php?akcia=CZS
-    officialIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZS') }),
-      async load() {},
-    } satisfies HtmlLoader,
+    // funkcionáři https://szts.ksis.eu/menu.php?akcia=CZF
+    officialIndex: sztsOfficialIndex,
+
+    // sčitatelé https://szts.ksis.eu/menu.php?akcia=CZS
+    scrutineerIndex: sztsScrutineerIndex,
 
     // porotci https://szts.ksis.eu/menu.php?akcia=CZR
-    judgeIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZR') }),
-      async load() {},
-    } satisfies HtmlLoader,
+    judgeIndex: sztsJudgeIndex,
 
     // kluby https://szts.ksis.eu/menu.php?akcia=CZK
     clubIndex: {
@@ -173,20 +148,10 @@ export const LOADERS = {
     } satisfies HtmlLoader,
 
     // solo https://szts.ksis.eu/menu.php?akcia=CZSD
-    soloIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZSD') }),
-      async load() {},
-    } satisfies HtmlLoader,
+    soloIndex: sztsSoloIndex,
 
     // páry https://szts.ksis.eu/menu.php?akcia=CZP
-    coupleIndex: {
-      mode: 'text',
-      revalidatePeriod: '1 day',
-      buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZP') }),
-      async load() {},
-    } satisfies HtmlLoader,
+    coupleIndex: sztsCoupleIndex,
 
     // soutěže porotce https://szts.ksis.eu/rozhodca.php?meno=R%C3%B3bert%20Pavl%C3%ADk&mesto=Adamovsk%C3%A9%20Kochanovce
     // detail https://szts.ksis.eu/detail_paru.php?cp=12278

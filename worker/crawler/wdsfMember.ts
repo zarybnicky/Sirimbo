@@ -1,6 +1,50 @@
 import type { JsonLoader } from './types.ts';
-import { upsertPeopleDetailed } from './federated.queries.ts';
+import {
+  mergePersonLicenses,
+  upsertPeopleDetailed,
+  type gender,
+  type person_license_discipline,
+  type person_license_kind,
+  type person_license_status,
+} from './federated.queries.ts';
+import { makePgtypedCollection } from './pgtypedCollection.ts';
 import { z } from 'zod';
+
+const wdsfLicenseTypeSchema = z.enum([
+  'Examiner',
+  'Chairman',
+  'Scrutiny',
+  'Athlete',
+  'Adjudicator',
+  'DJ',
+  'HeadJudge',
+  'Invigilator',
+]);
+
+const wdsfLicenseStatusSchema = z.enum([
+  'Active',
+  'Expired',
+  'Revoked',
+  'Resting',
+  'Retired',
+  'Aspiring',
+  'Suspended',
+]);
+
+const wdsfLicenseDisciplineSchema = z.enum([
+  'Stage',
+  'Smooth',
+  'Disco',
+  'SoloSyncroChoreo',
+  'General',
+  'Standard',
+  'Latin',
+  'Caribbean',
+  'Professional',
+  'Breaking',
+  'HipHop',
+  'Unknown',
+]);
 
 const personSchema = z.object({
   link: z.array(
@@ -18,35 +62,19 @@ const personSchema = z.object({
   nationalReference: z.string().nullable(),
   licenses: z.array(
     z.object({
-      type: z.enum([
-        'Examiner',
-        'Chairman',
-        'Scrutiny',
-        'Athlete',
-        'Adjudicator',
-        'DJ',
-        'HeadJudge',
-        'Invigilator',
-      ]).or(z.string<string & {}>()),
-      status: z.enum(['Active', 'Expired', 'Revoked', 'Resting', 'Retired', 'Aspiring', 'Suspended']),
-      division: z.enum([
-        'Stage',
-        'Smooth',
-        'Disco',
-        'SoloSyncroChoreo',
-        'General',
-        'Caribbean',
-        'Professional',
-        'Breaking',
-        'HipHop',
-        'Unknown',
-      ]),
-      disciplines: z.array(z.string()),
-      grade: z.enum(['A', 'B']).optional(),
-      expiresOn: z.string().optional(),
+      type: wdsfLicenseTypeSchema,
+      status: wdsfLicenseStatusSchema,
+      division: wdsfLicenseDisciplineSchema,
+      disciplines: z.array(wdsfLicenseDisciplineSchema),
+      grade: z.string().optional(),
+      expiresOn: z.iso.date().optional(),
     }),
   ).optional(),
 });
+
+type WdsfLicenseType = z.output<typeof wdsfLicenseTypeSchema>;
+type WdsfLicenseStatus = z.output<typeof wdsfLicenseStatusSchema>;
+type WdsfLicenseDiscipline = z.output<typeof wdsfLicenseDisciplineSchema>;
 
 export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
   mode: 'json',
@@ -73,9 +101,7 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
         canonicalName: [[member.name, member.surname].join(' ').trim()],
         firstName: [member.name],
         lastName: [member.surname ?? ''],
-        gender: [
-          member.sex === 'Male' ? 'male' : member.sex === 'Female' ? 'female' : 'unknown',
-        ],
+        gender: [wdsfGender(member.sex)],
         nationality: [member.nationality ?? ''],
         ageGroup: [member.ageGroup ?? ''],
         medicalCheckupExpiration: [''],
@@ -83,6 +109,139 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
       client,
     );
 
-    // TODO: licence => athlete + judge + official
+    const licenses = makePgtypedCollection<{
+      externalId: string;
+      canonicalName: string;
+      gender: gender;
+      kind: person_license_kind;
+      discipline: person_license_discipline;
+      grade: string;
+      validUntil: string;
+      status: person_license_status;
+    }>(
+      [
+        'externalId',
+        'canonicalName',
+        'gender',
+        'kind',
+        'discipline',
+        'grade',
+        'validUntil',
+        'status',
+      ],
+      ['externalId', 'kind', 'discipline'],
+    );
+
+    const canonicalName = [member.name, member.surname].join(' ').trim();
+    const gender = wdsfGender(member.sex);
+    for (const license of member.licenses ?? []) {
+      const kind = wdsfLicenseKind(license.type);
+      const status = wdsfLicenseStatus(license.status);
+      const disciplines = license.disciplines.length ? license.disciplines : [license.division];
+
+      for (const sourceDiscipline of disciplines) {
+        const discipline = wdsfLicenseDiscipline(sourceDiscipline);
+        licenses.add({
+          externalId: member.id.toString(),
+          canonicalName,
+          gender,
+          kind,
+          discipline,
+          grade: license.grade ?? '',
+          validUntil: license.expiresOn ?? '',
+          status,
+        });
+      }
+    }
+
+    await mergePersonLicenses.run(
+      {
+        scopeFederation: 'wdsf',
+        scopeSourceKind: 'member',
+        scopePersonId: [`wdsf:${member.id}`],
+        ...licenses.params,
+      },
+      client,
+    );
   },
 };
+
+function wdsfGender(value: z.output<typeof personSchema>['sex']): gender {
+  switch (value) {
+    case 'Male':
+      return 'male';
+    case 'Female':
+      return 'female';
+    case '':
+      return 'unknown';
+  }
+}
+
+function wdsfLicenseKind(value: WdsfLicenseType): person_license_kind {
+  switch (value) {
+    case 'Athlete':
+      return 'athlete';
+    case 'Adjudicator':
+      return 'adjudicator';
+    case 'Chairman':
+      return 'chairperson';
+    case 'Scrutiny':
+      return 'scrutineer';
+    case 'Examiner':
+      return 'examiner';
+    case 'DJ':
+      return 'dj';
+    case 'HeadJudge':
+      return 'head_judge';
+    case 'Invigilator':
+      return 'invigilator';
+  }
+}
+
+function wdsfLicenseDiscipline(value: WdsfLicenseDiscipline): person_license_discipline {
+  switch (value) {
+    case 'General':
+      return 'general';
+    case 'Standard':
+      return 'standard';
+    case 'Latin':
+      return 'latin';
+    case 'Breaking':
+      return 'breaking';
+    case 'HipHop':
+      return 'hiphop';
+    case 'Caribbean':
+      return 'caribbean';
+    case 'Stage':
+      return 'stage';
+    case 'Smooth':
+      return 'smooth';
+    case 'Disco':
+      return 'disco';
+    case 'SoloSyncroChoreo':
+      return 'solo_syncro_choreo';
+    case 'Professional':
+      return 'professional';
+    case 'Unknown':
+      return 'unknown';
+  }
+}
+
+function wdsfLicenseStatus(value: WdsfLicenseStatus): person_license_status {
+  switch (value) {
+    case 'Active':
+      return 'active';
+    case 'Expired':
+      return 'expired';
+    case 'Revoked':
+      return 'revoked';
+    case 'Resting':
+      return 'resting';
+    case 'Retired':
+      return 'retired';
+    case 'Aspiring':
+      return 'aspiring';
+    case 'Suspended':
+      return 'suspended';
+  }
+}

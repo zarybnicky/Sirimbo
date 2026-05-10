@@ -48,8 +48,7 @@ export const wdsfMemberIndex: JsonLoader<z.output<typeof requestSchema>> = {
         federation: 'wdsf',
         externalId: member.id,
         canonicalName: member.name,
-        gender:
-          member.sex === 'Male' ? 'male' : member.sex === 'Female' ? 'female' : 'unknown',
+        gender: wdsfIndexGender(member.sex),
       });
     }
     await ensurePeople.run(people.params, client);
@@ -63,3 +62,14 @@ export const wdsfMemberIndex: JsonLoader<z.output<typeof requestSchema>> = {
     );
   },
 };
+
+function wdsfIndexGender(value: z.output<typeof requestSchema>[number]['sex']): gender {
+  switch (value) {
+    case 'Male':
+      return 'male';
+    case 'Female':
+      return 'female';
+    case 'NotSupplied':
+      return 'unknown';
+  }
+}

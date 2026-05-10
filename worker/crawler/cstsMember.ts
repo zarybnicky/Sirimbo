@@ -49,15 +49,16 @@ const athleteSchema = z.object({
   idt: z.number(),
   name: z.string(),
   age: z.string(),
-  sex: z.enum(['M', 'F', 'male', 'female']).transform(
-    (x): gender =>
-      (({
-        M: 'male',
-        F: 'female',
-        male: 'male',
-        female: 'female',
-      })[x] ?? 'unknown') as gender,
-  ),
+  sex: z.enum(['M', 'F', 'male', 'female']).transform((x): gender => {
+    switch (x) {
+      case 'M':
+      case 'male':
+        return 'male';
+      case 'F':
+      case 'female':
+        return 'female';
+    }
+  }),
   medicalCheckupExpiration: z.iso.date().optional().nullable(),
   rankingPoints: z.array(rankingPointsSchema).optional().default([]),
   lat: rankingPointsSchema.optional(),

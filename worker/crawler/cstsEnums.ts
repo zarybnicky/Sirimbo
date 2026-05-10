@@ -73,6 +73,9 @@ export const competitorType: { [key in CompetitorType]: number } = {
 
 export const mapCompetitorType = (type: CompetitorType): competitor_type => {
   switch (type) {
+    case 'Couple':
+    case 'ProAm':
+      return 'couple';
     case 'DuoF':
     case 'Duo':
       return 'duo';
@@ -91,10 +94,6 @@ export const mapCompetitorType = (type: CompetitorType): competitor_type => {
       return 'group';
     case 'Team':
       return 'team';
-    case 'ProAm':
-    case 'Couple':
-    default:
-      return 'couple';
   }
 };
 
@@ -106,7 +105,16 @@ export const mapGenderGroup = (type: CompetitorType) => {
     case 'DuoF':
     case 'TrioF':
       return 'female';
-    default:
+    case 'Couple':
+    case 'SoloDancer':
+    case 'Duo':
+    case 'Group':
+    case 'ProAm':
+    case 'Team':
+    case 'Formation':
+    case 'SmallTeam':
+    case 'BigTeam':
+    case 'Trio':
       return 'mixed';
   }
 };

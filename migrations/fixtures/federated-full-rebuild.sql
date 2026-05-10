@@ -129,6 +129,60 @@ CREATE TABLE federated.person (
 CREATE INDEX IF NOT EXISTS idx_person_search_name_trgm
   ON federated.person USING gin (search_name gin_trgm_ops);
 
+CREATE TYPE federated.person_license_kind AS ENUM (
+  'athlete',
+  'trainer',
+  'adjudicator',
+  'chairperson',
+  'invigilator',
+  'scrutineer',
+  'lead_scrutineer',
+  'examiner',
+  'dj',
+  'head_judge',
+  'official'
+);
+
+CREATE TYPE federated.person_license_discipline AS ENUM (
+  'general',
+  'standard',
+  'latin',
+  'breaking',
+  'hiphop',
+  'caribbean',
+  'stage',
+  'smooth',
+  'disco',
+  'solo_syncro_choreo',
+  'professional',
+  'unknown'
+);
+
+CREATE TYPE federated.person_license_status AS ENUM (
+  'active',
+  'expired',
+  'revoked',
+  'resting',
+  'retired',
+  'aspiring',
+  'suspended',
+  'unknown'
+);
+
+CREATE TABLE federated.person_license (
+  person_id      text NOT NULL REFERENCES federated.person(id) ON DELETE CASCADE,
+  federation     text NOT NULL REFERENCES federated.federation(code),
+  source_kind    text NOT NULL,
+  kind           federated.person_license_kind NOT NULL,
+  discipline     federated.person_license_discipline NOT NULL DEFAULT 'general',
+  grade          text,
+  valid_until    date,
+  status         federated.person_license_status NOT NULL DEFAULT 'unknown',
+  created_at     timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (person_id, source_kind, kind, discipline)
+);
+CREATE INDEX ON federated.person_license (federation, source_kind, person_id);
+
 CREATE TYPE federated.competitor_role AS ENUM (
   'lead',
   'follow',
