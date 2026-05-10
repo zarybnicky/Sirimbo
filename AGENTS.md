@@ -58,6 +58,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Prefer bulk loader queries shaped as `pgtypedCollection` + `unnest` arrays. Keep per-loader query count low, and make merge/upsert statements semantic no-ops on repeated loads except where the table is intentionally cleared and reinserted.
 - Normalize incoming federation quirks in Zod schemas or enum mappers before load logic. Keep loader bodies focused on building federated rows and frontier keys.
 - Use the crawler dev tool for cached inspection and replay: `pnpm --silent crawler response <frontier-key> | jq ...` for response bodies, and `pnpm crawler load <frontier-key>` for rollback-by-default validation. Use `--commit` only when intentionally replaying into the dev database.
+- Use the crawler dev tool's backtest support to verify schema changes: `pnpm --silent crawler backtest <federation>:<kind>`
 
 ## Frontend conventions
 - We use Radix primitives wrapped in our custom wrappers.

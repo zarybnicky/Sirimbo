@@ -9,7 +9,7 @@ export type gender = 'female' | 'male' | 'other' | 'unknown';
 
 export type official_role = 'adjudicator' | 'chairperson' | 'invigilator' | 'lead_scrutineer' | 'scrutineer';
 
-export type person_license_discipline = 'breaking' | 'caribbean' | 'disco' | 'general' | 'hiphop' | 'latin' | 'professional' | 'smooth' | 'solo_syncro_choreo' | 'stage' | 'standard' | 'unknown';
+export type person_license_discipline = 'breaking' | 'caribbean' | 'disco' | 'formation_latin' | 'formation_standard' | 'general' | 'hiphop' | 'latin' | 'pd_latin' | 'pd_show_dance_latin' | 'pd_show_dance_standard' | 'pd_standard' | 'pd_ten_dance' | 'show_dance_latin' | 'show_dance_standard' | 'smooth' | 'solo_syncro_choreo' | 'stage' | 'standard' | 'ten_dance' | 'unknown';
 
 export type person_license_kind = 'adjudicator' | 'athlete' | 'chairperson' | 'dj' | 'examiner' | 'head_judge' | 'invigilator' | 'lead_scrutineer' | 'official' | 'scrutineer' | 'trainer';
 
@@ -213,7 +213,7 @@ export interface IUpsertPeopleDetailedQuery {
   result: IUpsertPeopleDetailedResult;
 }
 
-const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"firstName":true,"lastName":true,"gender":true,"nationality":true,"ageGroup":true,"medicalCheckupExpiration":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":407,"b":417}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":430,"b":440}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":453,"b":466}]},{"name":"firstName","required":false,"transform":{"type":"scalar"},"locs":[{"a":479,"b":488}]},{"name":"lastName","required":false,"transform":{"type":"scalar"},"locs":[{"a":501,"b":509}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":522,"b":528}]},{"name":"nationality","required":false,"transform":{"type":"scalar"},"locs":[{"a":553,"b":564}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":577,"b":585}]},{"name":"medicalCheckupExpiration","required":false,"transform":{"type":"scalar"},"locs":[{"a":598,"b":622}]}],"statement":"INSERT INTO federated.person (\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration\n)\nSELECT\n  federation,\n  external_id,\n  nullif(canonical_name, ''),\n  nullif(first_name, ''),\n  nullif(last_name, ''),\n  gender,\n  nullif(nationality, ''),\n  nullif(age_group, ''),\n  CAST(NULLIF(medical_checkup_expiration, '') AS date)\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :canonicalName::text[],\n  :firstName::text[],\n  :lastName::text[],\n  :gender::federated.gender[],\n  :nationality::text[],\n  :ageGroup::text[],\n  :medicalCheckupExpiration::text[]\n) AS input(\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration)\nON CONFLICT (id)\n  DO UPDATE SET\n    canonical_name = COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name),\n    first_name = EXCLUDED.first_name,\n    last_name = EXCLUDED.last_name,\n    gender = CASE\n      WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n      THEN EXCLUDED.gender\n      ELSE federated.person.gender\n    END,\n    nationality = EXCLUDED.nationality,\n    age_group = EXCLUDED.age_group,\n    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration"};
+const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"firstName":true,"lastName":true,"gender":true,"nationality":true,"ageGroup":true,"medicalCheckupExpiration":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":407,"b":417}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":430,"b":440}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":453,"b":466}]},{"name":"firstName","required":false,"transform":{"type":"scalar"},"locs":[{"a":479,"b":488}]},{"name":"lastName","required":false,"transform":{"type":"scalar"},"locs":[{"a":501,"b":509}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":522,"b":528}]},{"name":"nationality","required":false,"transform":{"type":"scalar"},"locs":[{"a":553,"b":564}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":577,"b":585}]},{"name":"medicalCheckupExpiration","required":false,"transform":{"type":"scalar"},"locs":[{"a":598,"b":622}]}],"statement":"INSERT INTO federated.person (\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration\n)\nSELECT\n  federation,\n  external_id,\n  nullif(canonical_name, ''),\n  nullif(first_name, ''),\n  nullif(last_name, ''),\n  gender,\n  nullif(nationality, ''),\n  nullif(age_group, ''),\n  CAST(NULLIF(medical_checkup_expiration, '') AS date)\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :canonicalName::text[],\n  :firstName::text[],\n  :lastName::text[],\n  :gender::federated.gender[],\n  :nationality::text[],\n  :ageGroup::text[],\n  :medicalCheckupExpiration::text[]\n) AS input(\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration)\nON CONFLICT (id)\n  DO UPDATE SET\n    canonical_name = COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name),\n    first_name = EXCLUDED.first_name,\n    last_name = EXCLUDED.last_name,\n    gender = CASE\n      WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n      THEN EXCLUDED.gender\n      ELSE federated.person.gender\n    END,\n    nationality = EXCLUDED.nationality,\n    age_group = EXCLUDED.age_group,\n    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration\n  WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)\n     OR federated.person.first_name IS DISTINCT FROM EXCLUDED.first_name\n     OR federated.person.last_name IS DISTINCT FROM EXCLUDED.last_name\n     OR federated.person.gender IS DISTINCT FROM CASE\n          WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n          THEN EXCLUDED.gender\n          ELSE federated.person.gender\n        END\n     OR federated.person.nationality IS DISTINCT FROM EXCLUDED.nationality\n     OR federated.person.age_group IS DISTINCT FROM EXCLUDED.age_group\n     OR federated.person.medical_checkup_expiration IS DISTINCT FROM EXCLUDED.medical_checkup_expiration"};
 
 /**
  * Query generated from SQL:
@@ -256,6 +256,17 @@ const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"external
  *     nationality = EXCLUDED.nationality,
  *     age_group = EXCLUDED.age_group,
  *     medical_checkup_expiration = EXCLUDED.medical_checkup_expiration
+ *   WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)
+ *      OR federated.person.first_name IS DISTINCT FROM EXCLUDED.first_name
+ *      OR federated.person.last_name IS DISTINCT FROM EXCLUDED.last_name
+ *      OR federated.person.gender IS DISTINCT FROM CASE
+ *           WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'
+ *           THEN EXCLUDED.gender
+ *           ELSE federated.person.gender
+ *         END
+ *      OR federated.person.nationality IS DISTINCT FROM EXCLUDED.nationality
+ *      OR federated.person.age_group IS DISTINCT FROM EXCLUDED.age_group
+ *      OR federated.person.medical_checkup_expiration IS DISTINCT FROM EXCLUDED.medical_checkup_expiration
  * ```
  */
 export const upsertPeopleDetailed = new PreparedQuery<IUpsertPeopleDetailedParams,IUpsertPeopleDetailedResult>(upsertPeopleDetailedIR);
@@ -497,7 +508,7 @@ export interface IUpsertCompetitorsDetailedQuery {
   result: IUpsertCompetitorsDetailedResult;
 }
 
-const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (id) DO UPDATE\n  SET competitor_type = EXCLUDED.competitor_type,\n      name = CASE\n        WHEN EXCLUDED.name <> '' THEN EXCLUDED.name\n        ELSE federated.competitor.name\n      END"};
+const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (id) DO UPDATE\n  SET competitor_type = EXCLUDED.competitor_type,\n      name = CASE\n        WHEN EXCLUDED.name <> '' THEN EXCLUDED.name\n        ELSE federated.competitor.name\n      END\n  WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type\n     OR (\n       EXCLUDED.name <> ''\n       AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name\n     )"};
 
 /**
  * Query generated from SQL:
@@ -516,6 +527,11 @@ const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"ext
  *         WHEN EXCLUDED.name <> '' THEN EXCLUDED.name
  *         ELSE federated.competitor.name
  *       END
+ *   WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type
+ *      OR (
+ *        EXCLUDED.name <> ''
+ *        AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name
+ *      )
  * ```
  */
 export const upsertCompetitorsDetailed = new PreparedQuery<IUpsertCompetitorsDetailedParams,IUpsertCompetitorsDetailedResult>(upsertCompetitorsDetailedIR);

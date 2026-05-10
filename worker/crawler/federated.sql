@@ -119,7 +119,18 @@ ON CONFLICT (id)
     END,
     nationality = EXCLUDED.nationality,
     age_group = EXCLUDED.age_group,
-    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration;
+    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration
+  WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)
+     OR federated.person.first_name IS DISTINCT FROM EXCLUDED.first_name
+     OR federated.person.last_name IS DISTINCT FROM EXCLUDED.last_name
+     OR federated.person.gender IS DISTINCT FROM CASE
+          WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'
+          THEN EXCLUDED.gender
+          ELSE federated.person.gender
+        END
+     OR federated.person.nationality IS DISTINCT FROM EXCLUDED.nationality
+     OR federated.person.age_group IS DISTINCT FROM EXCLUDED.age_group
+     OR federated.person.medical_checkup_expiration IS DISTINCT FROM EXCLUDED.medical_checkup_expiration;
 
 /* @name GetAllCategories */
 SELECT id, series, discipline, age_group AS "ageGroup",
@@ -234,7 +245,12 @@ ON CONFLICT (id) DO UPDATE
       name = CASE
         WHEN EXCLUDED.name <> '' THEN EXCLUDED.name
         ELSE federated.competitor.name
-      END;
+      END
+  WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type
+     OR (
+       EXCLUDED.name <> ''
+       AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name
+     );
 
 /* @name MergeCompetitorComponents */
 WITH source AS (

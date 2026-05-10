@@ -19,6 +19,7 @@ const wdsfLicenseTypeSchema = z.enum([
   'DJ',
   'HeadJudge',
   'Invigilator',
+  '10',
 ]);
 
 const wdsfLicenseStatusSchema = z.enum([
@@ -65,9 +66,11 @@ const personSchema = z.object({
       type: wdsfLicenseTypeSchema,
       status: wdsfLicenseStatusSchema,
       division: wdsfLicenseDisciplineSchema,
-      disciplines: z.array(wdsfLicenseDisciplineSchema),
+      disciplines: z.array(z.string()),
       grade: z.string().optional(),
       expiresOn: z.iso.date().optional(),
+      wrlBLockedUntil: z.iso.date().optional(),
+      cupOrChampionshipBlockedUntil: z.iso.date().optional(),
     }),
   ).optional(),
 });
@@ -136,18 +139,21 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
     const gender = wdsfGender(member.sex);
     for (const license of member.licenses ?? []) {
       const kind = wdsfLicenseKind(license.type);
-      const status = wdsfLicenseStatus(license.status);
-      const disciplines = license.disciplines.length ? license.disciplines : [license.division];
+      if (!kind) continue;
 
-      for (const sourceDiscipline of disciplines) {
-        const discipline = wdsfLicenseDiscipline(sourceDiscipline);
+      const status = wdsfLicenseStatus(license.status);
+      const disciplines = license.disciplines.length
+        ? license.disciplines.map(parseWdsfLicenseDiscipline)
+        : fallbackWdsfLicenseDiscipline(license.division, license.grade ?? '');
+
+      for (const { discipline, grade } of disciplines) {
         licenses.add({
           externalId: member.id.toString(),
           canonicalName,
           gender,
           kind,
           discipline,
-          grade: license.grade ?? '',
+          grade,
           validUntil: license.expiresOn ?? '',
           status,
         });
@@ -177,7 +183,7 @@ function wdsfGender(value: z.output<typeof personSchema>['sex']): gender {
   }
 }
 
-function wdsfLicenseKind(value: WdsfLicenseType): person_license_kind {
+function wdsfLicenseKind(value: WdsfLicenseType): person_license_kind | undefined {
   switch (value) {
     case 'Athlete':
       return 'athlete';
@@ -195,10 +201,27 @@ function wdsfLicenseKind(value: WdsfLicenseType): person_license_kind {
       return 'head_judge';
     case 'Invigilator':
       return 'invigilator';
+    case '10':
+      return undefined;
   }
 }
 
-function wdsfLicenseDiscipline(value: WdsfLicenseDiscipline): person_license_discipline {
+function parseWdsfLicenseDiscipline(value: string) {
+  const match = /^(.+) \(([^()]*)\) for .*[ \t]+acquired on ([0-9]{2}\/[0-9]{2}\/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2})$/.exec(value);
+  if (!match) throw new Error(`Unexpected WDSF license discipline: ${value}`);
+
+  return {
+    discipline: wdsfLicenseDiscipline(match[1]),
+    grade: match[2],
+  };
+}
+
+function fallbackWdsfLicenseDiscipline(division: WdsfLicenseDiscipline, grade: string) {
+  if (division === 'Professional') return [];
+  return [{ discipline: wdsfLicenseDiscipline(division), grade }];
+}
+
+function wdsfLicenseDiscipline(value: WdsfLicenseDiscipline | string): person_license_discipline {
   switch (value) {
     case 'General':
       return 'general';
@@ -217,13 +240,38 @@ function wdsfLicenseDiscipline(value: WdsfLicenseDiscipline): person_license_dis
     case 'Smooth':
       return 'smooth';
     case 'Disco':
+    case 'Disco Dance':
       return 'disco';
     case 'SoloSyncroChoreo':
       return 'solo_syncro_choreo';
-    case 'Professional':
-      return 'professional';
+    case 'Ten Dance':
+      return 'ten_dance';
+    case 'Show Dance Standard':
+      return 'show_dance_standard';
+    case 'Show Dance Latin':
+      return 'show_dance_latin';
+    case 'Formation Standard':
+      return 'formation_standard';
+    case 'Formation Latin':
+      return 'formation_latin';
+    case 'PD Standard':
+      return 'pd_standard';
+    case 'PD Latin':
+      return 'pd_latin';
+    case 'PD Ten Dance':
+      return 'pd_ten_dance';
+    case 'PD Show Dance Standard':
+      return 'pd_show_dance_standard';
+    case 'PD Show Dance Latin':
+      return 'pd_show_dance_latin';
+    case 'Caribbean Dances':
+      return 'caribbean';
+    case 'Hip Hop':
+      return 'hiphop';
     case 'Unknown':
       return 'unknown';
+    default:
+      throw new Error(`Unexpected WDSF license discipline: ${value}`);
   }
 }
 

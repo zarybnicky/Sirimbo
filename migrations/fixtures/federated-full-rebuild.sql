@@ -154,7 +154,16 @@ CREATE TYPE federated.person_license_discipline AS ENUM (
   'smooth',
   'disco',
   'solo_syncro_choreo',
-  'professional',
+  'ten_dance',
+  'show_dance_standard',
+  'show_dance_latin',
+  'formation_standard',
+  'formation_latin',
+  'pd_standard',
+  'pd_latin',
+  'pd_ten_dance',
+  'pd_show_dance_standard',
+  'pd_show_dance_latin',
   'unknown'
 );
 

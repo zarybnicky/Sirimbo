@@ -31,7 +31,16 @@ CREATE TYPE federated.person_license_discipline AS ENUM (
   'smooth',
   'disco',
   'solo_syncro_choreo',
-  'professional',
+  'ten_dance',
+  'show_dance_standard',
+  'show_dance_latin',
+  'formation_standard',
+  'formation_latin',
+  'pd_standard',
+  'pd_latin',
+  'pd_ten_dance',
+  'pd_show_dance_standard',
+  'pd_show_dance_latin',
   'unknown'
 );
 end if;
@@ -65,3 +74,98 @@ CREATE TABLE if not exists federated.person_license (
 );
 CREATE INDEX if not exists person_license_source_scope_idx
   ON federated.person_license (federation, source_kind, person_id);
+
+do $$
+begin
+  if exists (
+    select 1
+    from pg_enum e
+    join pg_type t on t.oid = e.enumtypid
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'federated'
+      and t.typname = 'person_license_discipline'
+      and e.enumlabel = 'professional'
+  ) or exists (
+    select label
+    from unnest(array[
+      'general',
+      'standard',
+      'latin',
+      'breaking',
+      'hiphop',
+      'caribbean',
+      'stage',
+      'smooth',
+      'disco',
+      'solo_syncro_choreo',
+      'ten_dance',
+      'show_dance_standard',
+      'show_dance_latin',
+      'formation_standard',
+      'formation_latin',
+      'pd_standard',
+      'pd_latin',
+      'pd_ten_dance',
+      'pd_show_dance_standard',
+      'pd_show_dance_latin',
+      'unknown'
+    ]) desired(label)
+    where not exists (
+      select 1
+      from pg_enum e
+      join pg_type t on t.oid = e.enumtypid
+      join pg_namespace n on n.oid = t.typnamespace
+      where n.nspname = 'federated'
+        and t.typname = 'person_license_discipline'
+        and e.enumlabel = desired.label
+    )
+  ) then
+    alter table federated.person_license alter column discipline drop default;
+    alter table federated.person_license
+      alter column discipline type text
+      using discipline::text;
+
+    delete from federated.person_license t
+    using federated.person_license keep
+    where t.discipline = 'professional'
+      and keep.person_id = t.person_id
+      and keep.source_kind = t.source_kind
+      and keep.kind = t.kind
+      and keep.discipline = 'unknown';
+
+    update federated.person_license
+    set discipline = 'unknown'
+    where discipline = 'professional';
+
+    drop type federated.person_license_discipline;
+    create type federated.person_license_discipline as enum (
+      'general',
+      'standard',
+      'latin',
+      'breaking',
+      'hiphop',
+      'caribbean',
+      'stage',
+      'smooth',
+      'disco',
+      'solo_syncro_choreo',
+      'ten_dance',
+      'show_dance_standard',
+      'show_dance_latin',
+      'formation_standard',
+      'formation_latin',
+      'pd_standard',
+      'pd_latin',
+      'pd_ten_dance',
+      'pd_show_dance_standard',
+      'pd_show_dance_latin',
+      'unknown'
+    );
+
+    alter table federated.person_license
+      alter column discipline type federated.person_license_discipline
+      using discipline::federated.person_license_discipline,
+      alter column discipline set default 'general';
+  end if;
+end
+$$;
