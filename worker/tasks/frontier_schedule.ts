@@ -24,6 +24,7 @@ const SEED_FRONTIERS: LoaderIds[] = [
   { federation: 'szts', kind: 'memberIndex' },
   { federation: 'szts', kind: 'trainerIndex' },
   { federation: 'szts', kind: 'officialIndex' },
+  { federation: 'szts', kind: 'scrutineerIndex' },
   { federation: 'szts', kind: 'judgeIndex' },
   { federation: 'szts', kind: 'clubIndex' },
   { federation: 'szts', kind: 'soloIndex' },

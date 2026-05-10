@@ -41,7 +41,7 @@ import { formatException } from './error.ts';
 const pool = new Pool();
 const REQUEST_CACHE_DIR = resolve(import.meta.dirname, '..', '.requests');
 
-type OutputOptions = { json?: boolean };
+type OutputOptions = { json?: boolean; };
 type ScopeTarget = {
   federation?: string;
   kind?: string;
@@ -421,14 +421,10 @@ function loaderEntries() {
   );
 }
 
-type StatusOptions = OutputOptions & {
-  limit?: string;
+type StatusOptions = {
+  json?: boolean;
   frontiers?: boolean;
 };
-
-function limitRows<T>(rows: T[], limit: number | null) {
-  return limit == null ? rows : rows.slice(0, limit);
-}
 
 function numericCell(value: number | null | undefined) {
   return value && value > 0 ? value : '-';
@@ -500,7 +496,6 @@ function frontierTableRows(rows: CrawlerStatusRow[]) {
 
 function printStatusFrontiers(
   rows: CrawlerStatusRow[],
-  limit: number | null,
   expanded = false,
 ) {
   printSection('Frontiers');
@@ -509,7 +504,7 @@ function printStatusFrontiers(
     .filter((row) => row.is_stable)
     .sort((a, b) => a.target.localeCompare(b.target));
   const active = rows.filter((row) => !row.is_stable);
-  const visibleRows = limitRows(expanded ? rows : active, limit);
+  const visibleRows = expanded ? rows : active;
 
   printTable([...frontierTableRows(visibleRows), frontierFooter(rows)]);
   if (expanded) {
@@ -533,7 +528,8 @@ function printStatusFrontiers(
 
 async function showFailures(
   target: ScopeTarget | undefined,
-  options: OutputOptions & {
+  options: {
+    json?: boolean;
     limit?: string;
     full?: boolean;
     group?: boolean;
@@ -564,8 +560,6 @@ async function showFailures(
       federation,
       kind,
       key: null,
-      httpStatuses: null,
-      errorContains: null,
       limit,
       excludeHttpStatuses,
     },
@@ -614,7 +608,8 @@ async function showFailures(
   );
 }
 
-type JobOptions = OutputOptions & {
+type JobOptions = {
+  json?: boolean;
   limit?: string;
   failed?: boolean;
   active?: boolean;
@@ -771,7 +766,6 @@ function statusCommands(
 }
 
 async function showStatus(target: ScopeTarget | undefined, options: StatusOptions) {
-  const limit = parseOptionalLimit(options.limit);
   const allowRefetch = process.env.CRAWLER_DISABLE_REFETCH !== 'true';
   const generatedAt = new Date();
   const { federation, kind } = target ?? {};
@@ -779,7 +773,7 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
   const [frontierRows, failureGroups, workerJobRows, scheduleRows] = await Promise.all([
     getCrawlerFrontierStatus.run({ federation, kind, allowRefetch }, pool),
     getFrontierFailureGroups.run(
-      { federation, kind, limit, excludeHttpStatuses: null },
+      { federation, kind, excludeHttpStatuses: null },
       pool,
     ),
     getCrawlerWorkerJobStatus.run(undefined, pool),
@@ -796,20 +790,12 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
   });
 
   const visibleFrontiers = options.frontiers
-    ? limitRows(snapshot.frontiers, limit)
-    : limitRows(
-        snapshot.frontiers.filter((row) => !row.is_stable),
-        limit,
-      );
-  const visibleBacklog = limitRows(
+    ? snapshot.frontiers
+    : snapshot.frontiers.filter((row) => !row.is_stable);
+  const visibleBacklog =
     [...snapshot.frontiers]
       .filter((row) => row.fetch_due > 0 || row.process_ready > 0)
-      .sort(sortBacklogRows),
-    limit,
-  );
-  const visibleProblems = limitRows(snapshot.problems, limit);
-  const visibleFailures = limitRows(snapshot.failures, limit);
-  const visibleSchedule = limitRows(snapshot.schedule, limit);
+      .sort(sortBacklogRows);
   const suggestedCommands = statusCommands(
     snapshot.filter,
     snapshot.failures,
@@ -825,11 +811,11 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
         }
       : {
           ...snapshot,
-          problems: visibleProblems,
-          frontiers: visibleFrontiers,
+          problems: snapshot.problems,
+          frontiers: snapshot.failures,
           backlog: visibleBacklog,
-          failures: visibleFailures,
-          schedule: visibleSchedule,
+          failures: snapshot.failures,
+          schedule: snapshot.schedule,
           suggested_commands: suggestedCommands,
         };
     console.log(JSON.stringify(output, null, 2));
@@ -846,17 +832,17 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
   );
 
   if (options.frontiers) {
-    printStatusFrontiers(snapshot.frontiers, limit, true);
+    printStatusFrontiers(snapshot.frontiers, true);
     return;
   }
 
-  printStatusProblems(visibleProblems);
-  printStatusFrontiers(snapshot.frontiers, limit);
+  printStatusProblems(snapshot.problems);
+  printStatusFrontiers(snapshot.frontiers);
   printStatusBacklog(visibleBacklog);
   printSection('Failure groups');
-  printTable(visibleFailures.map(failureGroupRow));
+  printTable(snapshot.failures.map(failureGroupRow));
   printSection('Schedule');
-  printTable(visibleSchedule.map(scheduleRow));
+  printTable(snapshot.schedule.map(scheduleRow));
   printCommands(suggestedCommands);
 }
 
@@ -941,12 +927,10 @@ async function showLatestResponse(target: string) {
   );
 }
 
-type RefetchOptions = OutputOptions & {
+type RefetchOptions = {
+  json?: boolean;
   failed?: boolean;
-  httpStatus?: string | string[];
-  errorContains?: string;
   limit?: string;
-  commit?: boolean;
 };
 
 async function queueExactRefetch(target: string) {
@@ -976,8 +960,6 @@ async function queueExactRefetch(target: string) {
 async function queueFailedRefetch(target: string, options: RefetchOptions) {
   const parsed = parseTarget(target);
   if (!parsed) throw new Error('Target must be federation:kind[:key]');
-  const httpStatuses = parseHttpStatuses(options.httpStatus);
-  const errorContains = options.errorContains?.trim() || null;
   const key = parsed.key ?? null;
 
   const limit = parseOptionalLimit(options.limit);
@@ -985,16 +967,12 @@ async function queueFailedRefetch(target: string, options: RefetchOptions) {
     federation: parsed.federation,
     kind: parsed.kind,
     key,
-    httpStatuses,
-    errorContains,
     limit,
-    excludeHttpStatuses: null,
   };
-  const shouldCommit = Boolean(options.commit);
   const rows = await getLatestFrontierFailures.run(params, pool);
   let scheduled: boolean = false;
   let outputRows: Array<(typeof rows)[number] & { queued?: boolean }> = rows;
-  if (shouldCommit && rows.length > 0) {
+  if (rows.length > 0) {
     const ids = rows.map((row) => row.id);
     const queuedRows = await queueFrontierRefetch.run({ ids }, pool);
     const queuedIds = new Set(queuedRows.map((row) => row.id));
@@ -1005,20 +983,20 @@ async function queueFailedRefetch(target: string, options: RefetchOptions) {
 
   if (options.json) {
     console.log(
-      JSON.stringify({ committed: shouldCommit, scheduled, rows: outputRows }, null, 2),
+      JSON.stringify({ scheduled, rows: outputRows }, null, 2),
     );
     return;
   }
 
   console.log(
-    `${shouldCommit ? 'Queued' : 'Would refetch'} ${rows.length} failed frontier rows` +
+    `Queued ${rows.length} failed frontier rows` +
       (limit == null ? '' : ` (limit ${limit})`),
   );
   if (scheduled) console.log(`Queued frontier_schedule job`);
   const visibleRows = outputRows.slice(0, 50);
   printTable(
     visibleRows.map((row) => ({
-      action: shouldCommit ? 'refetch queued' : 'would refetch',
+      action: 'refetch queued',
       failed: formatDate(row.failed_at),
       id: row.id,
       target: formatFrontierTarget(row.federation, row.kind, row.key),
@@ -1030,11 +1008,6 @@ async function queueFailedRefetch(target: string, options: RefetchOptions) {
   if (rows.length > visibleRows.length) {
     console.log(
       `Showing ${visibleRows.length} of ${rows.length}; use --json for all rows.`,
-    );
-  }
-  if (!shouldCommit) {
-    console.log(
-      'Dry run; add --commit to mark these rows due and trigger frontier_schedule.',
     );
   }
 }
@@ -1089,12 +1062,7 @@ function logClientQueries(client: PoolClient): PoolClient {
   });
 }
 
-async function loadCached(
-  federation: string,
-  kind: string,
-  key: string,
-  shouldCommit: boolean,
-) {
+async function loadCached(federation: string, kind: string, key: string, shouldCommit: boolean) {
   const { loader, path } = await ensureCached(federation, kind, key);
   const body = await readFile(path, 'utf8');
   const raw = JSON.parse(body);
@@ -1129,6 +1097,13 @@ cli.command('list', 'List crawler loaders').action(() => {
 });
 
 cli
+  .command('', 'Show crawler health status')
+  .option('--json', 'Print JSON')
+  .action((options: StatusOptions) => {
+    return showStatus(undefined, options);
+  });
+
+cli
   .command('status [target]', 'Show crawler health status')
   .option('--frontiers', 'Show the expanded frontier kind table')
   .option('-n, --limit <limit>', 'Maximum rows to show per list section')
@@ -1147,7 +1122,8 @@ cli
   .action(
     (
       target: string | undefined,
-      options: OutputOptions & {
+      options: {
+        json?: boolean;
         limit?: string;
         full?: boolean;
         group?: boolean;
@@ -1184,16 +1160,7 @@ cli.command('fetch <target>', 'Fetch and cache a response').action((target: stri
 cli
   .command('refetch <target>', 'Queue federation:kind[:key] for immediate re-fetch')
   .option('--failed', 'Select failed rows under the target instead of one exact frontier')
-  .option(
-    '--http-status <codes>',
-    'Only include latest responses with these status codes',
-  )
-  .option(
-    '--error-contains <text>',
-    'Only include failures whose stored error contains text',
-  )
   .option('-n, --limit <limit>', 'Maximum failed rows to include')
-  .option('--commit', 'Apply a failed-row refetch selection')
   .option('--json', 'Print JSON for failed-row selections')
   .action((target: string, options: RefetchOptions) => queueRefetch(target, options));
 

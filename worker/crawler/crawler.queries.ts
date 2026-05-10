@@ -305,10 +305,8 @@ export const getBacktestFrontierResponses = new PreparedQuery<IGetBacktestFronti
 
 /** 'GetLatestFrontierFailures' parameters type */
 export interface IGetLatestFrontierFailuresParams {
-  errorContains?: string | null | void;
   excludeHttpStatuses?: numberArray | null | void;
   federation?: string | null | void;
-  httpStatuses?: numberArray | null | void;
   key?: string | null | void;
   kind?: string | null | void;
   limit?: NumberOrString | null | void;
@@ -339,7 +337,7 @@ export interface IGetLatestFrontierFailuresQuery {
   result: IGetLatestFrontierFailuresResult;
 }
 
-const getLatestFrontierFailuresIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"excludeHttpStatuses":true,"httpStatuses":true,"errorContains":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":391,"b":401},{"a":433,"b":443}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":453,"b":457},{"a":483,"b":487}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":497,"b":500},{"a":525,"b":528}]},{"name":"excludeHttpStatuses","required":false,"transform":{"type":"scalar"},"locs":[{"a":543,"b":562},{"a":636,"b":655}]},{"name":"httpStatuses","required":false,"transform":{"type":"scalar"},"locs":[{"a":677,"b":689},{"a":727,"b":739}]},{"name":"errorContains","required":false,"transform":{"type":"scalar"},"locs":[{"a":755,"b":768},{"a":815,"b":828}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":880,"b":885}]}],"statement":"SELECT\n  id AS \"id!\",\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  key AS \"key!\",\n  fetch_status AS \"fetch_status!\",\n  process_status AS \"process_status!\",\n  error_count AS \"error_count!\",\n  next_fetch_at,\n  failed_at AS \"failed_at!\",\n  url,\n  http_status,\n  response_error,\n  process_error,\n  failure AS \"failure!\",\n  error_text AS \"error_text!\"\nFROM crawler.frontier_failure\nWHERE (:federation::text IS NULL OR federation = :federation)\n  AND (:kind::text IS NULL OR kind = :kind)\n  AND (:key::text IS NULL OR key = :key)\n  AND (\n    :excludeHttpStatuses::int[] IS NULL\n    OR http_status IS NULL\n    OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))\n  )\n  AND (:httpStatuses::int[] IS NULL OR http_status = ANY(:httpStatuses))\n  AND (\n    :errorContains::text IS NULL\n    OR error_text ILIKE '%' || :errorContains || '%'\n  )\nORDER BY failed_at DESC, id DESC\nLIMIT :limit"};
+const getLatestFrontierFailuresIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"excludeHttpStatuses":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":391,"b":401},{"a":433,"b":443}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":453,"b":457},{"a":483,"b":487}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":497,"b":500},{"a":525,"b":528}]},{"name":"excludeHttpStatuses","required":false,"transform":{"type":"scalar"},"locs":[{"a":543,"b":562},{"a":636,"b":655}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":709,"b":714}]}],"statement":"SELECT\n  id AS \"id!\",\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  key AS \"key!\",\n  fetch_status AS \"fetch_status!\",\n  process_status AS \"process_status!\",\n  error_count AS \"error_count!\",\n  next_fetch_at,\n  failed_at AS \"failed_at!\",\n  url,\n  http_status,\n  response_error,\n  process_error,\n  failure AS \"failure!\",\n  error_text AS \"error_text!\"\nFROM crawler.frontier_failure\nWHERE (:federation::text IS NULL OR federation = :federation)\n  AND (:kind::text IS NULL OR kind = :kind)\n  AND (:key::text IS NULL OR key = :key)\n  AND (\n    :excludeHttpStatuses::int[] IS NULL\n    OR http_status IS NULL\n    OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))\n  )\nORDER BY failed_at DESC, id DESC\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -368,11 +366,6 @@ const getLatestFrontierFailuresIR: any = {"usedParamSet":{"federation":true,"kin
  *     :excludeHttpStatuses::int[] IS NULL
  *     OR http_status IS NULL
  *     OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))
- *   )
- *   AND (:httpStatuses::int[] IS NULL OR http_status = ANY(:httpStatuses))
- *   AND (
- *     :errorContains::text IS NULL
- *     OR error_text ILIKE '%' || :errorContains || '%'
  *   )
  * ORDER BY failed_at DESC, id DESC
  * LIMIT :limit

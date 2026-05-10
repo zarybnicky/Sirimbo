@@ -160,11 +160,6 @@ WHERE (:federation::text IS NULL OR federation = :federation)
     OR http_status IS NULL
     OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))
   )
-  AND (:httpStatuses::int[] IS NULL OR http_status = ANY(:httpStatuses))
-  AND (
-    :errorContains::text IS NULL
-    OR error_text ILIKE '%' || :errorContains || '%'
-  )
 ORDER BY failed_at DESC, id DESC
 LIMIT :limit;
 
