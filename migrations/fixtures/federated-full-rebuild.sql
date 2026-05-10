@@ -108,9 +108,9 @@ CREATE TYPE federated.gender AS ENUM (
 );
 
 CREATE TABLE federated.person (
-  id             text NOT NULL GENERATED ALWAYS AS (federation || ':' || external_id) STORED PRIMARY KEY,
+  id             text NOT NULL GENERATED ALWAYS AS (federation || ':' || external_id::text) STORED PRIMARY KEY,
   federation     text NOT NULL REFERENCES federated.federation(code),
-  external_id    text NOT NULL,
+  external_id    bigint NOT NULL,
   canonical_name text,
   first_name     text,
   last_name      text,
@@ -181,16 +181,15 @@ CREATE TYPE federated.person_license_status AS ENUM (
 CREATE TABLE federated.person_license (
   person_id      text NOT NULL REFERENCES federated.person(id) ON DELETE CASCADE,
   federation     text NOT NULL REFERENCES federated.federation(code),
-  source_kind    text NOT NULL,
   kind           federated.person_license_kind NOT NULL,
   discipline     federated.person_license_discipline NOT NULL DEFAULT 'general',
   grade          text,
   valid_until    date,
   status         federated.person_license_status NOT NULL DEFAULT 'unknown',
   created_at     timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (person_id, source_kind, kind, discipline)
+  PRIMARY KEY (person_id, kind, discipline)
 );
-CREATE INDEX ON federated.person_license (federation, source_kind, person_id);
+CREATE INDEX ON federated.person_license (federation, person_id);
 
 CREATE TYPE federated.competitor_role AS ENUM (
   'lead',
@@ -210,9 +209,9 @@ CREATE TYPE federated.official_role AS ENUM (
 -- immutable, federations create a new competitor entry if the composition changes
 -- updates happen only when, e.g. federations merge duplicate athlete records
 CREATE TABLE federated.competitor (
-  id              text NOT NULL GENERATED ALWAYS AS (federation || ':' || external_id) STORED PRIMARY KEY,
+  id              text NOT NULL GENERATED ALWAYS AS (federation || ':' || external_id::text) STORED PRIMARY KEY,
   federation      text NOT NULL REFERENCES federated.federation(code),
-  external_id     text NOT NULL,
+  external_id     bigint NOT NULL,
   competitor_type federated.competitor_type NOT NULL,
   age_group       text,
   name            text,
@@ -379,36 +378,25 @@ CREATE TABLE federated.competition_round (
   scoring_method   federated.scoring_method NOT NULL,
   created_at       timestamptz NOT NULL DEFAULT now(),
   UNIQUE (competition_id, round_key),
-  UNIQUE (id, competition_id)
+  UNIQUE (id, competition_id),
+  UNIQUE (id, dance_program_id)
 );
 CREATE INDEX ON federated.competition_round (competition_id, round_key);
 CREATE INDEX ON federated.competition_round (dance_program_id);
 
 
 CREATE TABLE federated.round_dance (
-  round_id   bigint NOT NULL REFERENCES federated.competition_round(id) ON DELETE CASCADE,
-  dance_code text   NOT NULL REFERENCES federated.dance(code),
-  dance_order int NOT NULL,
+  round_id         bigint NOT NULL,
+  dance_program_id bigint NOT NULL,
+  dance_code       text   NOT NULL,
+  dance_order      int    NOT NULL,
   PRIMARY KEY (round_id, dance_order),
-  UNIQUE (round_id, dance_order, dance_code)
+  UNIQUE (round_id, dance_order, dance_code),
+  FOREIGN KEY (round_id, dance_program_id)
+    REFERENCES federated.competition_round (id, dance_program_id) ON DELETE CASCADE,
+  FOREIGN KEY (dance_program_id, dance_code)
+    REFERENCES federated.dance_program_dance (program_id, dance_code)
 );
-CREATE INDEX ON federated.round_dance (round_id);
-
-CREATE FUNCTION federated.tg_round_dance__dance_program() RETURNS TRIGGER LANGUAGE plpgsql AS $$
-begin
-  IF NOT EXISTS (
-    SELECT 1
-    FROM federated.competition_round cr
-    JOIN federated.dance_program_dance dpd ON dpd.program_id = cr.dance_program_id
-    WHERE cr.id = NEW.round_id AND dpd.dance_code = NEW.dance_code
-  ) THEN
-    RAISE EXCEPTION 'Round dance % not in round dance program %', NEW.dance_code, NEW.round_id;
-  END IF;
-  RETURN NEW;
-END;
-$$;
-create trigger _100_round_dance__dance_program before insert on federated.round_dance
-  for each row execute function federated.tg_round_dance__dance_program();
 
 CREATE TABLE federated.competition_entry (
   competition_id  bigint  NOT NULL REFERENCES federated.competition(id),
@@ -458,17 +446,19 @@ CREATE TYPE federated.score_component AS ENUM (
 );
 
 -- Judge scores per dance (round × dance × judge × competitor × component)
+-- This is a denormalized analytics fact table. Scalar parent FKs are omitted
+-- where the composite FKs below already validate the denormalized values.
 CREATE TABLE federated.judge_score (
-  federation      text   NOT NULL REFERENCES federated.federation(code),
+  federation      text   NOT NULL,
   event_date      date   NOT NULL,
-  event_id        bigint NOT NULL REFERENCES federated.event(id),
-  competition_id  bigint NOT NULL REFERENCES federated.competition(id),
-  category_id     bigint NOT NULL REFERENCES federated.category(id),
-  round_id        bigint NOT NULL REFERENCES federated.competition_round(id) ON DELETE CASCADE,
+  event_id        bigint NOT NULL,
+  competition_id  bigint NOT NULL,
+  category_id     bigint NOT NULL,
+  round_id        bigint NOT NULL,
   dance_order     int    NOT NULL,
-  dance_code      text   NOT NULL REFERENCES federated.dance(code),
-  judge_person_id text   NOT NULL REFERENCES federated.person(id),
-  competitor_id   text   NOT NULL REFERENCES federated.competitor(id),
+  dance_code      text   NOT NULL,
+  judge_person_id bigint NOT NULL,
+  competitor_id   bigint NOT NULL,
   component       federated.score_component NOT NULL,
   score           numeric(10,3) NOT NULL,   -- 0/1, 1..6, AJS values, numeric scores...
   raw_score       text,                     -- original symbol/string
@@ -483,13 +473,16 @@ CREATE TABLE federated.judge_score (
   FOREIGN KEY (competition_id, category_id)
     REFERENCES federated.competition (id, category_id) ON UPDATE CASCADE,
   FOREIGN KEY (federation, competition_id)
-    REFERENCES federated.competition (federation,id) ON UPDATE CASCADE
+    REFERENCES federated.competition (federation,id) ON UPDATE CASCADE,
+  FOREIGN KEY (federation, judge_person_id)
+    REFERENCES federated.person (federation, external_id),
+  FOREIGN KEY (federation, competitor_id)
+    REFERENCES federated.competitor (federation, external_id)
 );
 
 CREATE INDEX ON federated.judge_score (federation, judge_person_id, event_date);
 CREATE INDEX ON federated.judge_score (federation, competitor_id, event_date);
 CREATE INDEX ON federated.judge_score (federation, category_id, event_date);
-CREATE INDEX ON federated.judge_score (round_id);
 
 CREATE TABLE federated.competition_result (
   competition_id bigint NOT NULL REFERENCES federated.competition(id),
@@ -541,11 +534,11 @@ CREATE INDEX ON federated.ranklist_entry (competitor_id);
 CREATE INDEX ON federated.ranklist_entry (snapshot_id, ranking);
 
 create or replace function public.csts_athlete(idt int) returns text as $$
-  select canonical_name from federated.person where federation = 'csts' and external_id = idt::text;
+  select canonical_name from federated.person where federation = 'csts' and external_id = idt;
 $$ language sql stable;
 
 create or replace function public.wdsf_athlete(min int) returns text as $$
-  select canonical_name from federated.person where federation = 'wdsf' and external_id = min::text;
+  select canonical_name from federated.person where federation = 'wdsf' and external_id = min;
 $$ language sql stable;
 
 grant all on function public.csts_athlete to anonymous;
@@ -568,7 +561,8 @@ from federated.person p
        join federated.competitor on competitor.id = cp.competitor_id
        join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id
        join federated.category on ccp.category_id = category.id
-where p.federation = 'csts' and p.external_id = in_person.csts_id;
+where p.federation = 'csts'
+  and p.external_id = nullif(regexp_replace(in_person.csts_id, '\D', '', 'g'), '')::bigint;
 $$ language sql stable;
 
 comment on function public.person_csts_progress is '@simpleCollections only';

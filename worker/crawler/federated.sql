@@ -3,7 +3,7 @@ INSERT INTO federated.person (federation, external_id, canonical_name, gender)
 SELECT federation, external_id, canonical_name, gender
 FROM unnest(
   :federation::text[],
-  :externalId::text[],
+  :externalId::bigint[],
   :canonicalName::text[],
   :gender::federated.gender[]
 ) AS i (federation, external_id, canonical_name, gender)
@@ -16,7 +16,7 @@ WITH input AS (
     external_id, canonical_name, gender, kind, discipline,
     grade, valid_until, status
   FROM unnest(
-    :externalId::text[],
+    :externalId::bigint[],
     :canonicalName::text[],
     :gender::federated.gender[],
     :kind::federated.person_license_kind[],
@@ -35,9 +35,8 @@ WITH input AS (
   ON CONFLICT (id) DO NOTHING
 ), source AS (
   SELECT DISTINCT ON (federation, external_id, kind, discipline)
-    federation || ':' || external_id AS person_id,
+    federation || ':' || external_id::text AS person_id,
     federation,
-    :scopeSourceKind::text AS source_kind,
     kind,
     discipline,
     nullif(grade, '') AS grade,
@@ -48,14 +47,20 @@ WITH input AS (
 ), scope AS (
   SELECT person_id
   FROM unnest(:scopePersonId::text[]) AS scope(person_id)
+), managed AS (
+  SELECT kind, discipline
+  FROM unnest(
+    :managedKind::federated.person_license_kind[],
+    :managedDiscipline::federated.person_license_discipline[]
+  ) AS managed(kind, discipline)
 ), upserted AS (
   INSERT INTO federated.person_license (
-    person_id, federation, source_kind, kind, discipline, grade, valid_until, status
+    person_id, federation, kind, discipline, grade, valid_until, status
   )
   SELECT
-    person_id, federation, source_kind, kind, discipline, grade, valid_until, status
+    person_id, federation, kind, discipline, grade, valid_until, status
   FROM source
-  ON CONFLICT (person_id, source_kind, kind, discipline) DO UPDATE SET
+  ON CONFLICT (person_id, kind, discipline) DO UPDATE SET
     grade = EXCLUDED.grade,
     valid_until = EXCLUDED.valid_until,
     status = EXCLUDED.status
@@ -67,16 +72,80 @@ WITH input AS (
 )
 DELETE FROM federated.person_license t
 WHERE t.federation = :scopeFederation
-  AND t.source_kind = :scopeSourceKind
   AND (
-    NOT EXISTS (SELECT 1 FROM scope)
-    OR EXISTS (SELECT 1 FROM scope WHERE scope.person_id = t.person_id)
+    EXISTS (SELECT 1 FROM scope WHERE scope.person_id = t.person_id)
+    OR (
+      NOT EXISTS (SELECT 1 FROM scope)
+      AND EXISTS (
+        SELECT 1
+        FROM managed
+        WHERE managed.kind = t.kind
+          AND managed.discipline = t.discipline
+      )
+    )
   )
   AND NOT EXISTS (
     SELECT 1
     FROM source s
     WHERE s.person_id = t.person_id
-      AND s.source_kind = t.source_kind
+      AND s.kind = t.kind
+      AND s.discipline = t.discipline
+  );
+
+/* @name ReplacePersonLicensesForPerson */
+WITH input AS (
+  SELECT
+    :federation::text AS federation,
+    external_id, canonical_name, gender, kind, discipline,
+    grade, valid_until, status
+  FROM unnest(
+    :externalId::bigint[],
+    :canonicalName::text[],
+    :gender::federated.gender[],
+    :kind::federated.person_license_kind[],
+    :discipline::federated.person_license_discipline[],
+    :grade::text[],
+    :validUntil::text[],
+    :status::federated.person_license_status[]
+  ) AS input(
+    external_id, canonical_name, gender, kind, discipline,
+    grade, valid_until, status
+  )
+), source AS (
+  SELECT DISTINCT ON (federation, external_id, kind, discipline)
+    federation || ':' || external_id::text AS person_id,
+    federation,
+    kind,
+    discipline,
+    nullif(grade, '') AS grade,
+    nullif(valid_until, '')::date AS valid_until,
+    status
+  FROM input
+  ORDER BY federation, external_id, kind, discipline
+), upserted AS (
+  INSERT INTO federated.person_license (
+    person_id, federation, kind, discipline, grade, valid_until, status
+  )
+  SELECT
+    person_id, federation, kind, discipline, grade, valid_until, status
+  FROM source
+  ON CONFLICT (person_id, kind, discipline) DO UPDATE SET
+    grade = EXCLUDED.grade,
+    valid_until = EXCLUDED.valid_until,
+    status = EXCLUDED.status
+  WHERE
+       federated.person_license.grade IS DISTINCT FROM EXCLUDED.grade
+    OR federated.person_license.valid_until IS DISTINCT FROM EXCLUDED.valid_until
+    OR federated.person_license.status IS DISTINCT FROM EXCLUDED.status
+  RETURNING 1
+)
+DELETE FROM federated.person_license t
+WHERE t.federation = :federation
+  AND t.person_id = :personId
+  AND NOT EXISTS (
+    SELECT 1
+    FROM source s
+    WHERE s.person_id = t.person_id
       AND s.kind = t.kind
       AND s.discipline = t.discipline
   );
@@ -97,7 +166,7 @@ SELECT
   CAST(NULLIF(medical_checkup_expiration, '') AS date)
 FROM unnest(
   :federation::text[],
-  :externalId::text[],
+  :externalId::bigint[],
   :canonicalName::text[],
   :firstName::text[],
   :lastName::text[],
@@ -175,7 +244,7 @@ INSERT INTO federated.competitor (federation, external_id, competitor_type, name
 SELECT input.federation, input.external_id, input.competitor_type, input.name
 FROM unnest(
   :federation::text[],
-  :externalId::text[],
+  :externalId::bigint[],
   :type::federated.competitor_type[],
   :label::text[]
 ) AS input(federation, external_id, competitor_type, name)
@@ -183,10 +252,10 @@ ON CONFLICT (id) DO NOTHING;
 
 /* @name EnsureCompetitorsWithComponents */
 WITH competitor_input AS (
-  SELECT federation, external_id, federation || ':' || external_id AS id, competitor_type, name
+  SELECT federation, external_id, federation || ':' || external_id::text AS id, competitor_type, name
   FROM unnest(
     :federation::text[],
-    :externalId::text[],
+    :externalId::bigint[],
     :type::federated.competitor_type[],
     :label::text[]
   ) AS input(federation, external_id, competitor_type, name)
@@ -203,7 +272,7 @@ WITH competitor_input AS (
     :componentCompetitorId::text[],
     :personId::text[],
     :personFederation::text[],
-    :personExternalId::text[],
+    :personExternalId::bigint[],
     :personCanonicalName::text[],
     :personGender::federated.gender[],
     :componentRole::federated.competitor_role[]
@@ -236,7 +305,7 @@ INSERT INTO federated.competitor (federation, external_id, competitor_type, name
 SELECT input.federation, input.external_id, input.competitor_type, input.name
 FROM unnest(
   :federation::text[],
-  :externalId::text[],
+  :externalId::bigint[],
   :type::federated.competitor_type[],
   :label::text[]
 ) AS input(federation, external_id, competitor_type, name)
@@ -821,13 +890,14 @@ WHERE rd.round_id = rounds.id;
 
 /* @name InsertRoundDetails */
 WITH inserted_dances AS (
-  INSERT INTO federated.round_dance (round_id, dance_code, dance_order)
-  SELECT round_id, dance_code, dance_order
+  INSERT INTO federated.round_dance (round_id, dance_program_id, dance_code, dance_order)
+  SELECT input.round_id, cr.dance_program_id, input.dance_code, input.dance_order
   FROM unnest(
     :danceRoundId::bigint[],
     :danceCode::text[],
     :danceOrder::int[]
   ) AS input(round_id, dance_code, dance_order)
+  JOIN federated.competition_round cr ON cr.id = input.round_id
 ), inserted_judges AS (
   INSERT INTO federated.competition_round_judge (
     round_id, person_judge_id, judge_index, judge_label
@@ -865,23 +935,18 @@ INSERT INTO federated.judge_score (
   judge_person_id, competitor_id, component, score, raw_score
 )
 SELECT
-  federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,
+  :scoreFederation::text, :scoreEventDate::date, :scoreEventId::bigint, :scoreCompetitionId::bigint,
+  :scoreCategoryId::bigint, round_id, dance_order, dance_code,
   judge_person_id, competitor_id, component, score, raw_score
 FROM unnest(
-  :scoreFederation::text[],
-  :scoreEventDate::date[],
-  :scoreEventId::bigint[],
-  :scoreCompetitionId::bigint[],
-  :scoreCategoryId::bigint[],
   :scoreRoundId::bigint[],
   :scoreDanceOrder::int[],
   :scoreDanceCode::text[],
-  :scoreJudgePersonId::text[],
-  :scoreCompetitorId::text[],
+  :scoreJudgePersonId::bigint[],
+  :scoreCompetitorId::bigint[],
   :scoreComponent::federated.score_component[],
   :score::numeric(10,3)[],
   :rawScore::text[]
 ) AS input(
-  federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,
-  judge_person_id, competitor_id, component, score, raw_score
+  round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score, raw_score
 );

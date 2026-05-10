@@ -28,10 +28,7 @@ export const sztsScrutineerIndex = sztsLicenseIndexLoader(
 export const sztsJudgeIndex = sztsLicenseIndexLoader(
   'https://szts.ksis.eu/menu.php?akcia=CZR',
   'judgeIndex',
-  [
-    { kind: 'adjudicator', gradeColumn: 5, statusColumn: 7 },
-    { kind: 'trainer', gradeColumn: 6, statusColumn: 7 },
-  ],
+  [{ kind: 'adjudicator', gradeColumn: 5, statusColumn: 7 }],
 );
 
 function sztsPersonIndexLoader(url: string): HtmlLoader {
@@ -139,8 +136,9 @@ function sztsLicenseIndexLoader(
       await mergePersonLicenses.run(
         {
           scopeFederation: 'szts',
-          scopeSourceKind: sourceKind,
           scopePersonId: [],
+          managedKind: licenseColumns.map((columns) => columns.kind),
+          managedDiscipline: licenseColumns.map(() => 'general' as person_license_discipline),
           ...licenses.params,
         },
         client,

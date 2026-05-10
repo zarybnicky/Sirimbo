@@ -107,8 +107,9 @@ function cstsPersonIndexLoader(
       await mergePersonLicenses.run(
         {
           scopeFederation: 'csts',
-          scopeSourceKind: sourceKind,
           scopePersonId: [],
+          managedKind: licenseBlocks.map((block) => block.kind),
+          managedDiscipline: licenseBlocks.map((block) => block.discipline),
           ...licenses.params,
         },
         client,

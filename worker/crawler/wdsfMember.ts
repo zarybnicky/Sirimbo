@@ -1,6 +1,6 @@
 import type { JsonLoader } from './types.ts';
 import {
-  mergePersonLicenses,
+  replacePersonLicensesForPerson,
   upsertPeopleDetailed,
   type gender,
   type person_license_discipline,
@@ -160,11 +160,10 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
       }
     }
 
-    await mergePersonLicenses.run(
+    await replacePersonLicensesForPerson.run(
       {
-        scopeFederation: 'wdsf',
-        scopeSourceKind: 'member',
-        scopePersonId: [`wdsf:${member.id}`],
+        federation: 'wdsf',
+        personId: `wdsf:${member.id}`,
         ...licenses.params,
       },
       client,

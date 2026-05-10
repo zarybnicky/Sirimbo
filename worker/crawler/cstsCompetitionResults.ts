@@ -324,26 +324,16 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
     'danceResults',
   ]);
   const judgeScores = makePgtypedCollection<{
-    scoreFederation: string;
-    scoreEventDate: string;
-    scoreEventId: string;
-    scoreCompetitionId: string;
-    scoreCategoryId: string;
     scoreRoundId: string;
     scoreDanceOrder: number;
     scoreDanceCode: DanceCode;
-    scoreJudgePersonId: string;
-    scoreCompetitorId: string;
+    scoreJudgePersonId: number;
+    scoreCompetitorId: number;
     scoreComponent: score_component;
     score: number;
     rawScore: string;
   }>(
     [
-      'scoreFederation',
-      'scoreEventDate',
-      'scoreEventId',
-      'scoreCompetitionId',
-      'scoreCategoryId',
       'scoreRoundId',
       'scoreDanceOrder',
       'scoreDanceCode',
@@ -398,12 +388,11 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
       });
       judgeScores.add(
         ...scoresForRound({
-          context,
           roundId: id,
           round,
           detail,
           panel,
-          competitorId,
+          competitorId: competitor.competitorId,
         }),
       );
     }
@@ -416,6 +405,11 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
         ...roundDances.params,
         ...roundJudges.params,
         ...roundResults.params,
+        scoreFederation: 'csts',
+        scoreEventDate: context.startDate.toISOString().slice(0, 10),
+        scoreEventId: context.eventId,
+        scoreCompetitionId: context.id,
+        scoreCategoryId: context.categoryId,
         ...judgeScores.params,
       },
       client,
@@ -487,31 +481,20 @@ function scoringMethod(result: Result, round: Round): scoring_method {
 }
 
 function scoresForRound(args: {
-  context: {
-    id: string;
-    eventId: string;
-    categoryId: string;
-    startDate: Date;
-  };
   roundId: string;
   round: Round;
   detail: ResultCompetitor['rounds'][number];
   panel: ReturnType<typeof panelForRound>;
-  competitorId: string;
+  competitorId: number;
 }) {
-  const { context, roundId, round, detail, panel, competitorId } = args;
+  const { roundId, round, detail, panel, competitorId } = args;
 
   const rows: Array<{
-    scoreFederation: string;
-    scoreEventDate: string;
-    scoreEventId: string;
-    scoreCompetitionId: string;
-    scoreCategoryId: string;
     scoreRoundId: string;
     scoreDanceOrder: number;
     scoreDanceCode: DanceCode;
-    scoreJudgePersonId: string;
-    scoreCompetitorId: string;
+    scoreJudgePersonId: number;
+    scoreCompetitorId: number;
     scoreComponent: score_component;
     score: number;
     rawScore: string;
@@ -525,15 +508,10 @@ function scoresForRound(args: {
       const parsed = parseCstsScoreToken(raw);
       if (!parsed) continue;
       rows.push({
-        scoreFederation: 'csts',
-        scoreEventDate: context.startDate.toISOString().slice(0, 10),
-        scoreEventId: context.eventId,
-        scoreCompetitionId: context.id,
-        scoreCategoryId: context.categoryId,
         scoreRoundId: roundId,
         scoreDanceOrder: danceIndex + 1,
         scoreDanceCode: round.dances[danceIndex],
-        scoreJudgePersonId: `csts:${judge.id}`,
+        scoreJudgePersonId: judge.id,
         scoreCompetitorId: competitorId,
         scoreComponent: parsed.component,
         score: parsed.score,

@@ -54,7 +54,7 @@ export type stringArray = (string)[];
 /** 'EnsurePeople' parameters type */
 export interface IEnsurePeopleParams {
   canonicalName?: stringArray | null | void;
-  externalId?: stringArray | null | void;
+  externalId?: NumberOrStringArray | null | void;
   federation?: stringArray | null | void;
   gender?: genderArray | null | void;
 }
@@ -68,7 +68,7 @@ export interface IEnsurePeopleQuery {
   result: IEnsurePeopleResult;
 }
 
-const ensurePeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":149,"b":159}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":172,"b":182}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":195,"b":208}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":227}]}],"statement":"INSERT INTO federated.person (federation, external_id, canonical_name, gender)\nSELECT federation, external_id, canonical_name, gender\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :canonicalName::text[],\n  :gender::federated.gender[]\n) AS i (federation, external_id, canonical_name, gender)\nON CONFLICT (id) DO NOTHING"};
+const ensurePeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":149,"b":159}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":172,"b":182}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":197,"b":210}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":223,"b":229}]}],"statement":"INSERT INTO federated.person (federation, external_id, canonical_name, gender)\nSELECT federation, external_id, canonical_name, gender\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :canonicalName::text[],\n  :gender::federated.gender[]\n) AS i (federation, external_id, canonical_name, gender)\nON CONFLICT (id) DO NOTHING"};
 
 /**
  * Query generated from SQL:
@@ -77,7 +77,7 @@ const ensurePeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true
  * SELECT federation, external_id, canonical_name, gender
  * FROM unnest(
  *   :federation::text[],
- *   :externalId::text[],
+ *   :externalId::bigint[],
  *   :canonicalName::text[],
  *   :gender::federated.gender[]
  * ) AS i (federation, external_id, canonical_name, gender)
@@ -91,13 +91,14 @@ export const ensurePeople = new PreparedQuery<IEnsurePeopleParams,IEnsurePeopleR
 export interface IMergePersonLicensesParams {
   canonicalName?: stringArray | null | void;
   discipline?: person_license_disciplineArray | null | void;
-  externalId?: stringArray | null | void;
+  externalId?: NumberOrStringArray | null | void;
   gender?: genderArray | null | void;
   grade?: stringArray | null | void;
   kind?: person_license_kindArray | null | void;
+  managedDiscipline?: person_license_disciplineArray | null | void;
+  managedKind?: person_license_kindArray | null | void;
   scopeFederation?: string | null | void;
   scopePersonId?: stringArray | null | void;
-  scopeSourceKind?: string | null | void;
   status?: person_license_statusArray | null | void;
   validUntil?: stringArray | null | void;
 }
@@ -111,7 +112,7 @@ export interface IMergePersonLicensesQuery {
   result: IMergePersonLicensesResult;
 }
 
-const mergePersonLicensesIR: any = {"usedParamSet":{"scopeFederation":true,"externalId":true,"canonicalName":true,"gender":true,"kind":true,"discipline":true,"grade":true,"validUntil":true,"status":true,"scopeSourceKind":true,"scopePersonId":true},"params":[{"name":"scopeFederation","required":false,"transform":{"type":"scalar"},"locs":[{"a":29,"b":44},{"a":1969,"b":1984}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":176,"b":186}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":201,"b":214}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":229,"b":235}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":262,"b":266}]},{"name":"discipline","required":false,"transform":{"type":"scalar"},"locs":[{"a":306,"b":316}]},{"name":"grade","required":false,"transform":{"type":"scalar"},"locs":[{"a":362,"b":367}]},{"name":"validUntil","required":false,"transform":{"type":"scalar"},"locs":[{"a":382,"b":392}]},{"name":"status","required":false,"transform":{"type":"scalar"},"locs":[{"a":407,"b":413}]},{"name":"scopeSourceKind","required":false,"transform":{"type":"scalar"},"locs":[{"a":923,"b":938},{"a":2008,"b":2023}]},{"name":"scopePersonId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1194,"b":1207}]}],"statement":"WITH input AS (\n  SELECT\n    :scopeFederation::text AS federation,\n    external_id, canonical_name, gender, kind, discipline,\n    grade, valid_until, status\n  FROM unnest(\n    :externalId::text[],\n    :canonicalName::text[],\n    :gender::federated.gender[],\n    :kind::federated.person_license_kind[],\n    :discipline::federated.person_license_discipline[],\n    :grade::text[],\n    :validUntil::text[],\n    :status::federated.person_license_status[]\n  ) AS input(\n    external_id, canonical_name, gender, kind, discipline,\n    grade, valid_until, status\n  )\n), inserted_person AS (\n  INSERT INTO federated.person (federation, external_id, canonical_name, gender)\n  SELECT DISTINCT federation, external_id, canonical_name, gender\n  FROM input\n  ON CONFLICT (id) DO NOTHING\n), source AS (\n  SELECT DISTINCT ON (federation, external_id, kind, discipline)\n    federation || ':' || external_id AS person_id,\n    federation,\n    :scopeSourceKind::text AS source_kind,\n    kind,\n    discipline,\n    nullif(grade, '') AS grade,\n    nullif(valid_until, '')::date AS valid_until,\n    status\n  FROM input\n  ORDER BY federation, external_id, kind, discipline\n), scope AS (\n  SELECT person_id\n  FROM unnest(:scopePersonId::text[]) AS scope(person_id)\n), upserted AS (\n  INSERT INTO federated.person_license (\n    person_id, federation, source_kind, kind, discipline, grade, valid_until, status\n  )\n  SELECT\n    person_id, federation, source_kind, kind, discipline, grade, valid_until, status\n  FROM source\n  ON CONFLICT (person_id, source_kind, kind, discipline) DO UPDATE SET\n    grade = EXCLUDED.grade,\n    valid_until = EXCLUDED.valid_until,\n    status = EXCLUDED.status\n  WHERE\n       federated.person_license.grade IS DISTINCT FROM EXCLUDED.grade\n    OR federated.person_license.valid_until IS DISTINCT FROM EXCLUDED.valid_until\n    OR federated.person_license.status IS DISTINCT FROM EXCLUDED.status\n  RETURNING 1\n)\nDELETE FROM federated.person_license t\nWHERE t.federation = :scopeFederation\n  AND t.source_kind = :scopeSourceKind\n  AND (\n    NOT EXISTS (SELECT 1 FROM scope)\n    OR EXISTS (SELECT 1 FROM scope WHERE scope.person_id = t.person_id)\n  )\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.person_id = t.person_id\n      AND s.source_kind = t.source_kind\n      AND s.kind = t.kind\n      AND s.discipline = t.discipline\n  )"};
+const mergePersonLicensesIR: any = {"usedParamSet":{"scopeFederation":true,"externalId":true,"canonicalName":true,"gender":true,"kind":true,"discipline":true,"grade":true,"validUntil":true,"status":true,"scopePersonId":true,"managedKind":true,"managedDiscipline":true},"params":[{"name":"scopeFederation","required":false,"transform":{"type":"scalar"},"locs":[{"a":29,"b":44},{"a":2098,"b":2113}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":176,"b":186}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":203,"b":216}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":231,"b":237}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":264,"b":268}]},{"name":"discipline","required":false,"transform":{"type":"scalar"},"locs":[{"a":308,"b":318}]},{"name":"grade","required":false,"transform":{"type":"scalar"},"locs":[{"a":364,"b":369}]},{"name":"validUntil","required":false,"transform":{"type":"scalar"},"locs":[{"a":384,"b":394}]},{"name":"status","required":false,"transform":{"type":"scalar"},"locs":[{"a":409,"b":415}]},{"name":"scopePersonId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1159,"b":1172}]},{"name":"managedKind","required":false,"transform":{"type":"scalar"},"locs":[{"a":1264,"b":1275}]},{"name":"managedDiscipline","required":false,"transform":{"type":"scalar"},"locs":[{"a":1315,"b":1332}]}],"statement":"WITH input AS (\n  SELECT\n    :scopeFederation::text AS federation,\n    external_id, canonical_name, gender, kind, discipline,\n    grade, valid_until, status\n  FROM unnest(\n    :externalId::bigint[],\n    :canonicalName::text[],\n    :gender::federated.gender[],\n    :kind::federated.person_license_kind[],\n    :discipline::federated.person_license_discipline[],\n    :grade::text[],\n    :validUntil::text[],\n    :status::federated.person_license_status[]\n  ) AS input(\n    external_id, canonical_name, gender, kind, discipline,\n    grade, valid_until, status\n  )\n), inserted_person AS (\n  INSERT INTO federated.person (federation, external_id, canonical_name, gender)\n  SELECT DISTINCT federation, external_id, canonical_name, gender\n  FROM input\n  ON CONFLICT (id) DO NOTHING\n), source AS (\n  SELECT DISTINCT ON (federation, external_id, kind, discipline)\n    federation || ':' || external_id::text AS person_id,\n    federation,\n    kind,\n    discipline,\n    nullif(grade, '') AS grade,\n    nullif(valid_until, '')::date AS valid_until,\n    status\n  FROM input\n  ORDER BY federation, external_id, kind, discipline\n), scope AS (\n  SELECT person_id\n  FROM unnest(:scopePersonId::text[]) AS scope(person_id)\n), managed AS (\n  SELECT kind, discipline\n  FROM unnest(\n    :managedKind::federated.person_license_kind[],\n    :managedDiscipline::federated.person_license_discipline[]\n  ) AS managed(kind, discipline)\n), upserted AS (\n  INSERT INTO federated.person_license (\n    person_id, federation, kind, discipline, grade, valid_until, status\n  )\n  SELECT\n    person_id, federation, kind, discipline, grade, valid_until, status\n  FROM source\n  ON CONFLICT (person_id, kind, discipline) DO UPDATE SET\n    grade = EXCLUDED.grade,\n    valid_until = EXCLUDED.valid_until,\n    status = EXCLUDED.status\n  WHERE\n       federated.person_license.grade IS DISTINCT FROM EXCLUDED.grade\n    OR federated.person_license.valid_until IS DISTINCT FROM EXCLUDED.valid_until\n    OR federated.person_license.status IS DISTINCT FROM EXCLUDED.status\n  RETURNING 1\n)\nDELETE FROM federated.person_license t\nWHERE t.federation = :scopeFederation\n  AND (\n    EXISTS (SELECT 1 FROM scope WHERE scope.person_id = t.person_id)\n    OR (\n      NOT EXISTS (SELECT 1 FROM scope)\n      AND EXISTS (\n        SELECT 1\n        FROM managed\n        WHERE managed.kind = t.kind\n          AND managed.discipline = t.discipline\n      )\n    )\n  )\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.person_id = t.person_id\n      AND s.kind = t.kind\n      AND s.discipline = t.discipline\n  )"};
 
 /**
  * Query generated from SQL:
@@ -122,7 +123,7 @@ const mergePersonLicensesIR: any = {"usedParamSet":{"scopeFederation":true,"exte
  *     external_id, canonical_name, gender, kind, discipline,
  *     grade, valid_until, status
  *   FROM unnest(
- *     :externalId::text[],
+ *     :externalId::bigint[],
  *     :canonicalName::text[],
  *     :gender::federated.gender[],
  *     :kind::federated.person_license_kind[],
@@ -141,9 +142,8 @@ const mergePersonLicensesIR: any = {"usedParamSet":{"scopeFederation":true,"exte
  *   ON CONFLICT (id) DO NOTHING
  * ), source AS (
  *   SELECT DISTINCT ON (federation, external_id, kind, discipline)
- *     federation || ':' || external_id AS person_id,
+ *     federation || ':' || external_id::text AS person_id,
  *     federation,
- *     :scopeSourceKind::text AS source_kind,
  *     kind,
  *     discipline,
  *     nullif(grade, '') AS grade,
@@ -154,14 +154,20 @@ const mergePersonLicensesIR: any = {"usedParamSet":{"scopeFederation":true,"exte
  * ), scope AS (
  *   SELECT person_id
  *   FROM unnest(:scopePersonId::text[]) AS scope(person_id)
+ * ), managed AS (
+ *   SELECT kind, discipline
+ *   FROM unnest(
+ *     :managedKind::federated.person_license_kind[],
+ *     :managedDiscipline::federated.person_license_discipline[]
+ *   ) AS managed(kind, discipline)
  * ), upserted AS (
  *   INSERT INTO federated.person_license (
- *     person_id, federation, source_kind, kind, discipline, grade, valid_until, status
+ *     person_id, federation, kind, discipline, grade, valid_until, status
  *   )
  *   SELECT
- *     person_id, federation, source_kind, kind, discipline, grade, valid_until, status
+ *     person_id, federation, kind, discipline, grade, valid_until, status
  *   FROM source
- *   ON CONFLICT (person_id, source_kind, kind, discipline) DO UPDATE SET
+ *   ON CONFLICT (person_id, kind, discipline) DO UPDATE SET
  *     grade = EXCLUDED.grade,
  *     valid_until = EXCLUDED.valid_until,
  *     status = EXCLUDED.status
@@ -173,16 +179,22 @@ const mergePersonLicensesIR: any = {"usedParamSet":{"scopeFederation":true,"exte
  * )
  * DELETE FROM federated.person_license t
  * WHERE t.federation = :scopeFederation
- *   AND t.source_kind = :scopeSourceKind
  *   AND (
- *     NOT EXISTS (SELECT 1 FROM scope)
- *     OR EXISTS (SELECT 1 FROM scope WHERE scope.person_id = t.person_id)
+ *     EXISTS (SELECT 1 FROM scope WHERE scope.person_id = t.person_id)
+ *     OR (
+ *       NOT EXISTS (SELECT 1 FROM scope)
+ *       AND EXISTS (
+ *         SELECT 1
+ *         FROM managed
+ *         WHERE managed.kind = t.kind
+ *           AND managed.discipline = t.discipline
+ *       )
+ *     )
  *   )
  *   AND NOT EXISTS (
  *     SELECT 1
  *     FROM source s
  *     WHERE s.person_id = t.person_id
- *       AND s.source_kind = t.source_kind
  *       AND s.kind = t.kind
  *       AND s.discipline = t.discipline
  *   )
@@ -191,11 +203,100 @@ const mergePersonLicensesIR: any = {"usedParamSet":{"scopeFederation":true,"exte
 export const mergePersonLicenses = new PreparedQuery<IMergePersonLicensesParams,IMergePersonLicensesResult>(mergePersonLicensesIR);
 
 
+/** 'ReplacePersonLicensesForPerson' parameters type */
+export interface IReplacePersonLicensesForPersonParams {
+  canonicalName?: stringArray | null | void;
+  discipline?: person_license_disciplineArray | null | void;
+  externalId?: NumberOrStringArray | null | void;
+  federation?: string | null | void;
+  gender?: genderArray | null | void;
+  grade?: stringArray | null | void;
+  kind?: person_license_kindArray | null | void;
+  personId?: string | null | void;
+  status?: person_license_statusArray | null | void;
+  validUntil?: stringArray | null | void;
+}
+
+/** 'ReplacePersonLicensesForPerson' return type */
+export type IReplacePersonLicensesForPersonResult = void;
+
+/** 'ReplacePersonLicensesForPerson' query type */
+export interface IReplacePersonLicensesForPersonQuery {
+  params: IReplacePersonLicensesForPersonParams;
+  result: IReplacePersonLicensesForPersonResult;
+}
+
+const replacePersonLicensesForPersonIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true,"kind":true,"discipline":true,"grade":true,"validUntil":true,"status":true,"personId":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":29,"b":39},{"a":1585,"b":1595}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":171,"b":181}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":211}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":226,"b":232}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":263}]},{"name":"discipline","required":false,"transform":{"type":"scalar"},"locs":[{"a":303,"b":313}]},{"name":"grade","required":false,"transform":{"type":"scalar"},"locs":[{"a":359,"b":364}]},{"name":"validUntil","required":false,"transform":{"type":"scalar"},"locs":[{"a":379,"b":389}]},{"name":"status","required":false,"transform":{"type":"scalar"},"locs":[{"a":404,"b":410}]},{"name":"personId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1617,"b":1625}]}],"statement":"WITH input AS (\n  SELECT\n    :federation::text AS federation,\n    external_id, canonical_name, gender, kind, discipline,\n    grade, valid_until, status\n  FROM unnest(\n    :externalId::bigint[],\n    :canonicalName::text[],\n    :gender::federated.gender[],\n    :kind::federated.person_license_kind[],\n    :discipline::federated.person_license_discipline[],\n    :grade::text[],\n    :validUntil::text[],\n    :status::federated.person_license_status[]\n  ) AS input(\n    external_id, canonical_name, gender, kind, discipline,\n    grade, valid_until, status\n  )\n), source AS (\n  SELECT DISTINCT ON (federation, external_id, kind, discipline)\n    federation || ':' || external_id::text AS person_id,\n    federation,\n    kind,\n    discipline,\n    nullif(grade, '') AS grade,\n    nullif(valid_until, '')::date AS valid_until,\n    status\n  FROM input\n  ORDER BY federation, external_id, kind, discipline\n), upserted AS (\n  INSERT INTO federated.person_license (\n    person_id, federation, kind, discipline, grade, valid_until, status\n  )\n  SELECT\n    person_id, federation, kind, discipline, grade, valid_until, status\n  FROM source\n  ON CONFLICT (person_id, kind, discipline) DO UPDATE SET\n    grade = EXCLUDED.grade,\n    valid_until = EXCLUDED.valid_until,\n    status = EXCLUDED.status\n  WHERE\n       federated.person_license.grade IS DISTINCT FROM EXCLUDED.grade\n    OR federated.person_license.valid_until IS DISTINCT FROM EXCLUDED.valid_until\n    OR federated.person_license.status IS DISTINCT FROM EXCLUDED.status\n  RETURNING 1\n)\nDELETE FROM federated.person_license t\nWHERE t.federation = :federation\n  AND t.person_id = :personId\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.person_id = t.person_id\n      AND s.kind = t.kind\n      AND s.discipline = t.discipline\n  )"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH input AS (
+ *   SELECT
+ *     :federation::text AS federation,
+ *     external_id, canonical_name, gender, kind, discipline,
+ *     grade, valid_until, status
+ *   FROM unnest(
+ *     :externalId::bigint[],
+ *     :canonicalName::text[],
+ *     :gender::federated.gender[],
+ *     :kind::federated.person_license_kind[],
+ *     :discipline::federated.person_license_discipline[],
+ *     :grade::text[],
+ *     :validUntil::text[],
+ *     :status::federated.person_license_status[]
+ *   ) AS input(
+ *     external_id, canonical_name, gender, kind, discipline,
+ *     grade, valid_until, status
+ *   )
+ * ), source AS (
+ *   SELECT DISTINCT ON (federation, external_id, kind, discipline)
+ *     federation || ':' || external_id::text AS person_id,
+ *     federation,
+ *     kind,
+ *     discipline,
+ *     nullif(grade, '') AS grade,
+ *     nullif(valid_until, '')::date AS valid_until,
+ *     status
+ *   FROM input
+ *   ORDER BY federation, external_id, kind, discipline
+ * ), upserted AS (
+ *   INSERT INTO federated.person_license (
+ *     person_id, federation, kind, discipline, grade, valid_until, status
+ *   )
+ *   SELECT
+ *     person_id, federation, kind, discipline, grade, valid_until, status
+ *   FROM source
+ *   ON CONFLICT (person_id, kind, discipline) DO UPDATE SET
+ *     grade = EXCLUDED.grade,
+ *     valid_until = EXCLUDED.valid_until,
+ *     status = EXCLUDED.status
+ *   WHERE
+ *        federated.person_license.grade IS DISTINCT FROM EXCLUDED.grade
+ *     OR federated.person_license.valid_until IS DISTINCT FROM EXCLUDED.valid_until
+ *     OR federated.person_license.status IS DISTINCT FROM EXCLUDED.status
+ *   RETURNING 1
+ * )
+ * DELETE FROM federated.person_license t
+ * WHERE t.federation = :federation
+ *   AND t.person_id = :personId
+ *   AND NOT EXISTS (
+ *     SELECT 1
+ *     FROM source s
+ *     WHERE s.person_id = t.person_id
+ *       AND s.kind = t.kind
+ *       AND s.discipline = t.discipline
+ *   )
+ * ```
+ */
+export const replacePersonLicensesForPerson = new PreparedQuery<IReplacePersonLicensesForPersonParams,IReplacePersonLicensesForPersonResult>(replacePersonLicensesForPersonIR);
+
+
 /** 'UpsertPeopleDetailed' parameters type */
 export interface IUpsertPeopleDetailedParams {
   ageGroup?: stringArray | null | void;
   canonicalName?: stringArray | null | void;
-  externalId?: stringArray | null | void;
+  externalId?: NumberOrStringArray | null | void;
   federation?: stringArray | null | void;
   firstName?: stringArray | null | void;
   gender?: genderArray | null | void;
@@ -213,7 +314,7 @@ export interface IUpsertPeopleDetailedQuery {
   result: IUpsertPeopleDetailedResult;
 }
 
-const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"firstName":true,"lastName":true,"gender":true,"nationality":true,"ageGroup":true,"medicalCheckupExpiration":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":407,"b":417}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":430,"b":440}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":453,"b":466}]},{"name":"firstName","required":false,"transform":{"type":"scalar"},"locs":[{"a":479,"b":488}]},{"name":"lastName","required":false,"transform":{"type":"scalar"},"locs":[{"a":501,"b":509}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":522,"b":528}]},{"name":"nationality","required":false,"transform":{"type":"scalar"},"locs":[{"a":553,"b":564}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":577,"b":585}]},{"name":"medicalCheckupExpiration","required":false,"transform":{"type":"scalar"},"locs":[{"a":598,"b":622}]}],"statement":"INSERT INTO federated.person (\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration\n)\nSELECT\n  federation,\n  external_id,\n  nullif(canonical_name, ''),\n  nullif(first_name, ''),\n  nullif(last_name, ''),\n  gender,\n  nullif(nationality, ''),\n  nullif(age_group, ''),\n  CAST(NULLIF(medical_checkup_expiration, '') AS date)\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :canonicalName::text[],\n  :firstName::text[],\n  :lastName::text[],\n  :gender::federated.gender[],\n  :nationality::text[],\n  :ageGroup::text[],\n  :medicalCheckupExpiration::text[]\n) AS input(\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration)\nON CONFLICT (id)\n  DO UPDATE SET\n    canonical_name = COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name),\n    first_name = EXCLUDED.first_name,\n    last_name = EXCLUDED.last_name,\n    gender = CASE\n      WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n      THEN EXCLUDED.gender\n      ELSE federated.person.gender\n    END,\n    nationality = EXCLUDED.nationality,\n    age_group = EXCLUDED.age_group,\n    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration\n  WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)\n     OR federated.person.first_name IS DISTINCT FROM EXCLUDED.first_name\n     OR federated.person.last_name IS DISTINCT FROM EXCLUDED.last_name\n     OR federated.person.gender IS DISTINCT FROM CASE\n          WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n          THEN EXCLUDED.gender\n          ELSE federated.person.gender\n        END\n     OR federated.person.nationality IS DISTINCT FROM EXCLUDED.nationality\n     OR federated.person.age_group IS DISTINCT FROM EXCLUDED.age_group\n     OR federated.person.medical_checkup_expiration IS DISTINCT FROM EXCLUDED.medical_checkup_expiration"};
+const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"firstName":true,"lastName":true,"gender":true,"nationality":true,"ageGroup":true,"medicalCheckupExpiration":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":407,"b":417}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":430,"b":440}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":455,"b":468}]},{"name":"firstName","required":false,"transform":{"type":"scalar"},"locs":[{"a":481,"b":490}]},{"name":"lastName","required":false,"transform":{"type":"scalar"},"locs":[{"a":503,"b":511}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":524,"b":530}]},{"name":"nationality","required":false,"transform":{"type":"scalar"},"locs":[{"a":555,"b":566}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":579,"b":587}]},{"name":"medicalCheckupExpiration","required":false,"transform":{"type":"scalar"},"locs":[{"a":600,"b":624}]}],"statement":"INSERT INTO federated.person (\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration\n)\nSELECT\n  federation,\n  external_id,\n  nullif(canonical_name, ''),\n  nullif(first_name, ''),\n  nullif(last_name, ''),\n  gender,\n  nullif(nationality, ''),\n  nullif(age_group, ''),\n  CAST(NULLIF(medical_checkup_expiration, '') AS date)\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :canonicalName::text[],\n  :firstName::text[],\n  :lastName::text[],\n  :gender::federated.gender[],\n  :nationality::text[],\n  :ageGroup::text[],\n  :medicalCheckupExpiration::text[]\n) AS input(\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration)\nON CONFLICT (id)\n  DO UPDATE SET\n    canonical_name = COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name),\n    first_name = EXCLUDED.first_name,\n    last_name = EXCLUDED.last_name,\n    gender = CASE\n      WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n      THEN EXCLUDED.gender\n      ELSE federated.person.gender\n    END,\n    nationality = EXCLUDED.nationality,\n    age_group = EXCLUDED.age_group,\n    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration\n  WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)\n     OR federated.person.first_name IS DISTINCT FROM EXCLUDED.first_name\n     OR federated.person.last_name IS DISTINCT FROM EXCLUDED.last_name\n     OR federated.person.gender IS DISTINCT FROM CASE\n          WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n          THEN EXCLUDED.gender\n          ELSE federated.person.gender\n        END\n     OR federated.person.nationality IS DISTINCT FROM EXCLUDED.nationality\n     OR federated.person.age_group IS DISTINCT FROM EXCLUDED.age_group\n     OR federated.person.medical_checkup_expiration IS DISTINCT FROM EXCLUDED.medical_checkup_expiration"};
 
 /**
  * Query generated from SQL:
@@ -233,7 +334,7 @@ const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"external
  *   CAST(NULLIF(medical_checkup_expiration, '') AS date)
  * FROM unnest(
  *   :federation::text[],
- *   :externalId::text[],
+ *   :externalId::bigint[],
  *   :canonicalName::text[],
  *   :firstName::text[],
  *   :lastName::text[],
@@ -375,7 +476,7 @@ export const upsertCategories = new PreparedQuery<IUpsertCategoriesParams,IUpser
 
 /** 'EnsureCompetitors' parameters type */
 export interface IEnsureCompetitorsParams {
-  externalId?: stringArray | null | void;
+  externalId?: NumberOrStringArray | null | void;
   federation?: stringArray | null | void;
   label?: stringArray | null | void;
   type?: competitor_typeArray | null | void;
@@ -390,7 +491,7 @@ export interface IEnsureCompetitorsQuery {
   result: IEnsureCompetitorsResult;
 }
 
-const ensureCompetitorsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (id) DO NOTHING"};
+const ensureCompetitorsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":223,"b":227}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":261,"b":266}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (id) DO NOTHING"};
 
 /**
  * Query generated from SQL:
@@ -399,7 +500,7 @@ const ensureCompetitorsIR: any = {"usedParamSet":{"federation":true,"externalId"
  * SELECT input.federation, input.external_id, input.competitor_type, input.name
  * FROM unnest(
  *   :federation::text[],
- *   :externalId::text[],
+ *   :externalId::bigint[],
  *   :type::federated.competitor_type[],
  *   :label::text[]
  * ) AS input(federation, external_id, competitor_type, name)
@@ -413,11 +514,11 @@ export const ensureCompetitors = new PreparedQuery<IEnsureCompetitorsParams,IEns
 export interface IEnsureCompetitorsWithComponentsParams {
   componentCompetitorId?: stringArray | null | void;
   componentRole?: competitor_roleArray | null | void;
-  externalId?: stringArray | null | void;
+  externalId?: NumberOrStringArray | null | void;
   federation?: stringArray | null | void;
   label?: stringArray | null | void;
   personCanonicalName?: stringArray | null | void;
-  personExternalId?: stringArray | null | void;
+  personExternalId?: NumberOrStringArray | null | void;
   personFederation?: stringArray | null | void;
   personGender?: genderArray | null | void;
   personId?: stringArray | null | void;
@@ -433,16 +534,16 @@ export interface IEnsureCompetitorsWithComponentsQuery {
   result: IEnsureCompetitorsWithComponentsResult;
 }
 
-const ensureCompetitorsWithComponentsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true,"componentCompetitorId":true,"personId":true,"personFederation":true,"personExternalId":true,"personCanonicalName":true,"personGender":true,"componentRole":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":142,"b":152}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":167,"b":177}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":192,"b":196}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":232,"b":237}]},{"name":"componentCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":718,"b":739}]},{"name":"personId","required":false,"transform":{"type":"scalar"},"locs":[{"a":754,"b":762}]},{"name":"personFederation","required":false,"transform":{"type":"scalar"},"locs":[{"a":777,"b":793}]},{"name":"personExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":808,"b":824}]},{"name":"personCanonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":839,"b":858}]},{"name":"personGender","required":false,"transform":{"type":"scalar"},"locs":[{"a":873,"b":885}]},{"name":"componentRole","required":false,"transform":{"type":"scalar"},"locs":[{"a":912,"b":925}]}],"statement":"WITH competitor_input AS (\n  SELECT federation, external_id, federation || ':' || external_id AS id, competitor_type, name\n  FROM unnest(\n    :federation::text[],\n    :externalId::text[],\n    :type::federated.competitor_type[],\n    :label::text[]\n  ) AS input(federation, external_id, competitor_type, name)\n), inserted_competitor AS (\n  INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\n  SELECT federation, external_id, competitor_type, name\n  FROM competitor_input\n  ON CONFLICT (id) DO NOTHING\n), component_input AS (\n  SELECT\n    component_competitor_id, person_id, person_federation, person_external_id,\n    person_canonical_name, person_gender, component_role\n  FROM unnest(\n    :componentCompetitorId::text[],\n    :personId::text[],\n    :personFederation::text[],\n    :personExternalId::text[],\n    :personCanonicalName::text[],\n    :personGender::federated.gender[],\n    :componentRole::federated.competitor_role[]\n  ) AS input(\n    component_competitor_id, person_id, person_federation, person_external_id,\n    person_canonical_name, person_gender, component_role\n  )\n), target_component AS (\n  SELECT component_input.*\n  FROM component_input\n  JOIN competitor_input ON competitor_input.id = component_input.component_competitor_id\n  WHERE NOT EXISTS (\n    SELECT 1\n    FROM federated.competitor_component component\n    WHERE component.competitor_id = component_input.component_competitor_id\n  )\n), inserted_person AS (\n  INSERT INTO federated.person (federation, external_id, canonical_name, gender)\n  SELECT DISTINCT person_federation, person_external_id, person_canonical_name, person_gender\n  FROM target_component\n  ON CONFLICT (id) DO NOTHING\n)\nINSERT INTO federated.competitor_component (competitor_id, person_id, role)\nSELECT component_competitor_id, person_id, component_role\nFROM target_component\nON CONFLICT (competitor_id, person_id) DO NOTHING"};
+const ensureCompetitorsWithComponentsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true,"componentCompetitorId":true,"personId":true,"personFederation":true,"personExternalId":true,"personCanonicalName":true,"personGender":true,"componentRole":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":148,"b":158}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":173,"b":183}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":200,"b":204}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":240,"b":245}]},{"name":"componentCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":726,"b":747}]},{"name":"personId","required":false,"transform":{"type":"scalar"},"locs":[{"a":762,"b":770}]},{"name":"personFederation","required":false,"transform":{"type":"scalar"},"locs":[{"a":785,"b":801}]},{"name":"personExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":816,"b":832}]},{"name":"personCanonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":849,"b":868}]},{"name":"personGender","required":false,"transform":{"type":"scalar"},"locs":[{"a":883,"b":895}]},{"name":"componentRole","required":false,"transform":{"type":"scalar"},"locs":[{"a":922,"b":935}]}],"statement":"WITH competitor_input AS (\n  SELECT federation, external_id, federation || ':' || external_id::text AS id, competitor_type, name\n  FROM unnest(\n    :federation::text[],\n    :externalId::bigint[],\n    :type::federated.competitor_type[],\n    :label::text[]\n  ) AS input(federation, external_id, competitor_type, name)\n), inserted_competitor AS (\n  INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\n  SELECT federation, external_id, competitor_type, name\n  FROM competitor_input\n  ON CONFLICT (id) DO NOTHING\n), component_input AS (\n  SELECT\n    component_competitor_id, person_id, person_federation, person_external_id,\n    person_canonical_name, person_gender, component_role\n  FROM unnest(\n    :componentCompetitorId::text[],\n    :personId::text[],\n    :personFederation::text[],\n    :personExternalId::bigint[],\n    :personCanonicalName::text[],\n    :personGender::federated.gender[],\n    :componentRole::federated.competitor_role[]\n  ) AS input(\n    component_competitor_id, person_id, person_federation, person_external_id,\n    person_canonical_name, person_gender, component_role\n  )\n), target_component AS (\n  SELECT component_input.*\n  FROM component_input\n  JOIN competitor_input ON competitor_input.id = component_input.component_competitor_id\n  WHERE NOT EXISTS (\n    SELECT 1\n    FROM federated.competitor_component component\n    WHERE component.competitor_id = component_input.component_competitor_id\n  )\n), inserted_person AS (\n  INSERT INTO federated.person (federation, external_id, canonical_name, gender)\n  SELECT DISTINCT person_federation, person_external_id, person_canonical_name, person_gender\n  FROM target_component\n  ON CONFLICT (id) DO NOTHING\n)\nINSERT INTO federated.competitor_component (competitor_id, person_id, role)\nSELECT component_competitor_id, person_id, component_role\nFROM target_component\nON CONFLICT (competitor_id, person_id) DO NOTHING"};
 
 /**
  * Query generated from SQL:
  * ```
  * WITH competitor_input AS (
- *   SELECT federation, external_id, federation || ':' || external_id AS id, competitor_type, name
+ *   SELECT federation, external_id, federation || ':' || external_id::text AS id, competitor_type, name
  *   FROM unnest(
  *     :federation::text[],
- *     :externalId::text[],
+ *     :externalId::bigint[],
  *     :type::federated.competitor_type[],
  *     :label::text[]
  *   ) AS input(federation, external_id, competitor_type, name)
@@ -459,7 +560,7 @@ const ensureCompetitorsWithComponentsIR: any = {"usedParamSet":{"federation":tru
  *     :componentCompetitorId::text[],
  *     :personId::text[],
  *     :personFederation::text[],
- *     :personExternalId::text[],
+ *     :personExternalId::bigint[],
  *     :personCanonicalName::text[],
  *     :personGender::federated.gender[],
  *     :componentRole::federated.competitor_role[]
@@ -493,7 +594,7 @@ export const ensureCompetitorsWithComponents = new PreparedQuery<IEnsureCompetit
 
 /** 'UpsertCompetitorsDetailed' parameters type */
 export interface IUpsertCompetitorsDetailedParams {
-  externalId?: stringArray | null | void;
+  externalId?: NumberOrStringArray | null | void;
   federation?: stringArray | null | void;
   label?: stringArray | null | void;
   type?: competitor_typeArray | null | void;
@@ -508,7 +609,7 @@ export interface IUpsertCompetitorsDetailedQuery {
   result: IUpsertCompetitorsDetailedResult;
 }
 
-const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (id) DO UPDATE\n  SET competitor_type = EXCLUDED.competitor_type,\n      name = CASE\n        WHEN EXCLUDED.name <> '' THEN EXCLUDED.name\n        ELSE federated.competitor.name\n      END\n  WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type\n     OR (\n       EXCLUDED.name <> ''\n       AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name\n     )"};
+const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":223,"b":227}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":261,"b":266}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (id) DO UPDATE\n  SET competitor_type = EXCLUDED.competitor_type,\n      name = CASE\n        WHEN EXCLUDED.name <> '' THEN EXCLUDED.name\n        ELSE federated.competitor.name\n      END\n  WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type\n     OR (\n       EXCLUDED.name <> ''\n       AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name\n     )"};
 
 /**
  * Query generated from SQL:
@@ -517,7 +618,7 @@ const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"ext
  * SELECT input.federation, input.external_id, input.competitor_type, input.name
  * FROM unnest(
  *   :federation::text[],
- *   :externalId::text[],
+ *   :externalId::bigint[],
  *   :type::federated.competitor_type[],
  *   :label::text[]
  * ) AS input(federation, external_id, competitor_type, name)
@@ -1574,16 +1675,16 @@ export interface IInsertRoundDetailsParams {
   resultCompetitorId?: stringArray | null | void;
   resultRoundId?: NumberOrStringArray | null | void;
   score?: NumberOrStringArray | null | void;
-  scoreCategoryId?: NumberOrStringArray | null | void;
-  scoreCompetitionId?: NumberOrStringArray | null | void;
-  scoreCompetitorId?: stringArray | null | void;
+  scoreCategoryId?: NumberOrString | null | void;
+  scoreCompetitionId?: NumberOrString | null | void;
+  scoreCompetitorId?: NumberOrStringArray | null | void;
   scoreComponent?: score_componentArray | null | void;
   scoreDanceCode?: stringArray | null | void;
   scoreDanceOrder?: numberArray | null | void;
-  scoreEventDate?: DateOrStringArray | null | void;
-  scoreEventId?: NumberOrStringArray | null | void;
-  scoreFederation?: stringArray | null | void;
-  scoreJudgePersonId?: stringArray | null | void;
+  scoreEventDate?: DateOrString | null | void;
+  scoreEventId?: NumberOrString | null | void;
+  scoreFederation?: string | null | void;
+  scoreJudgePersonId?: NumberOrStringArray | null | void;
   scoreRoundId?: NumberOrStringArray | null | void;
 }
 
@@ -1596,19 +1697,20 @@ export interface IInsertRoundDetailsQuery {
   result: IInsertRoundDetailsResult;
 }
 
-const insertRoundDetailsIR: any = {"usedParamSet":{"danceRoundId":true,"danceCode":true,"danceOrder":true,"judgeRoundId":true,"personJudgeId":true,"judgeIndex":true,"judgeLabel":true,"resultRoundId":true,"resultCompetitorId":true,"overallRanking":true,"overallRankingTo":true,"qualifiedNext":true,"overallScore":true,"danceResults":true,"scoreFederation":true,"scoreEventDate":true,"scoreEventId":true,"scoreCompetitionId":true,"scoreCategoryId":true,"scoreRoundId":true,"scoreDanceOrder":true,"scoreDanceCode":true,"scoreJudgePersonId":true,"scoreCompetitorId":true,"scoreComponent":true,"score":true,"rawScore":true},"params":[{"name":"danceRoundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":160,"b":172}]},{"name":"danceCode","required":false,"transform":{"type":"scalar"},"locs":[{"a":189,"b":198}]},{"name":"danceOrder","required":false,"transform":{"type":"scalar"},"locs":[{"a":213,"b":223}]},{"name":"judgeRoundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":506,"b":518}]},{"name":"personJudgeId","required":false,"transform":{"type":"scalar"},"locs":[{"a":535,"b":548}]},{"name":"judgeIndex","required":false,"transform":{"type":"scalar"},"locs":[{"a":563,"b":573}]},{"name":"judgeLabel","required":false,"transform":{"type":"scalar"},"locs":[{"a":587,"b":597}]},{"name":"resultRoundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1097,"b":1110}]},{"name":"resultCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1127,"b":1145}]},{"name":"overallRanking","required":false,"transform":{"type":"scalar"},"locs":[{"a":1160,"b":1174}]},{"name":"overallRankingTo","required":false,"transform":{"type":"scalar"},"locs":[{"a":1188,"b":1204}]},{"name":"qualifiedNext","required":false,"transform":{"type":"scalar"},"locs":[{"a":1218,"b":1231}]},{"name":"overallScore","required":false,"transform":{"type":"scalar"},"locs":[{"a":1249,"b":1261}]},{"name":"danceResults","required":false,"transform":{"type":"scalar"},"locs":[{"a":1285,"b":1297}]},{"name":"scoreFederation","required":false,"transform":{"type":"scalar"},"locs":[{"a":1822,"b":1837}]},{"name":"scoreEventDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":1850,"b":1864}]},{"name":"scoreEventId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1877,"b":1889}]},{"name":"scoreCompetitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1904,"b":1922}]},{"name":"scoreCategoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1937,"b":1952}]},{"name":"scoreRoundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1967,"b":1979}]},{"name":"scoreDanceOrder","required":false,"transform":{"type":"scalar"},"locs":[{"a":1994,"b":2009}]},{"name":"scoreDanceCode","required":false,"transform":{"type":"scalar"},"locs":[{"a":2021,"b":2035}]},{"name":"scoreJudgePersonId","required":false,"transform":{"type":"scalar"},"locs":[{"a":2048,"b":2066}]},{"name":"scoreCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":2079,"b":2096}]},{"name":"scoreComponent","required":false,"transform":{"type":"scalar"},"locs":[{"a":2109,"b":2123}]},{"name":"score","required":false,"transform":{"type":"scalar"},"locs":[{"a":2157,"b":2162}]},{"name":"rawScore","required":false,"transform":{"type":"scalar"},"locs":[{"a":2184,"b":2192}]}],"statement":"WITH inserted_dances AS (\n  INSERT INTO federated.round_dance (round_id, dance_code, dance_order)\n  SELECT round_id, dance_code, dance_order\n  FROM unnest(\n    :danceRoundId::bigint[],\n    :danceCode::text[],\n    :danceOrder::int[]\n  ) AS input(round_id, dance_code, dance_order)\n), inserted_judges AS (\n  INSERT INTO federated.competition_round_judge (\n    round_id, person_judge_id, judge_index, judge_label\n  )\n  SELECT round_id, person_judge_id, judge_index, nullif(judge_label, '')\n  FROM unnest(\n    :judgeRoundId::bigint[],\n    :personJudgeId::text[],\n    :judgeIndex::int[],\n    :judgeLabel::text[]\n  ) AS input(round_id, person_judge_id, judge_index, judge_label)\n), inserted_results AS (\n  INSERT INTO federated.competition_round_result (\n    round_id, competitor_id, overall_ranking, overall_ranking_to, qualified_next, overall_score, dance_results\n  )\n  SELECT\n    round_id, competitor_id, overall_ranking, overall_ranking_to, qualified_next, overall_score, CASE\n      WHEN dance_results = '' THEN NULL\n      ELSE string_to_array(dance_results, ',')::real[]\n    END\n  FROM unnest(\n    :resultRoundId::bigint[],\n    :resultCompetitorId::text[],\n    :overallRanking::int[],\n    :overallRankingTo::int[],\n    :qualifiedNext::boolean[],\n    :overallScore::numeric(10,3)[],\n    :danceResults::text[]\n  ) AS input(\n    round_id, competitor_id, overall_ranking, overall_ranking_to, qualified_next, overall_score, dance_results\n  )\n)\nINSERT INTO federated.judge_score (\n  federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,\n  judge_person_id, competitor_id, component, score, raw_score\n)\nSELECT\n  federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,\n  judge_person_id, competitor_id, component, score, raw_score\nFROM unnest(\n  :scoreFederation::text[],\n  :scoreEventDate::date[],\n  :scoreEventId::bigint[],\n  :scoreCompetitionId::bigint[],\n  :scoreCategoryId::bigint[],\n  :scoreRoundId::bigint[],\n  :scoreDanceOrder::int[],\n  :scoreDanceCode::text[],\n  :scoreJudgePersonId::text[],\n  :scoreCompetitorId::text[],\n  :scoreComponent::federated.score_component[],\n  :score::numeric(10,3)[],\n  :rawScore::text[]\n) AS input(\n  federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,\n  judge_person_id, competitor_id, component, score, raw_score\n)"};
+const insertRoundDetailsIR: any = {"usedParamSet":{"danceRoundId":true,"danceCode":true,"danceOrder":true,"judgeRoundId":true,"personJudgeId":true,"judgeIndex":true,"judgeLabel":true,"resultRoundId":true,"resultCompetitorId":true,"overallRanking":true,"overallRankingTo":true,"qualifiedNext":true,"overallScore":true,"danceResults":true,"scoreFederation":true,"scoreEventDate":true,"scoreEventId":true,"scoreCompetitionId":true,"scoreCategoryId":true,"scoreRoundId":true,"scoreDanceOrder":true,"scoreDanceCode":true,"scoreJudgePersonId":true,"scoreCompetitorId":true,"scoreComponent":true,"score":true,"rawScore":true},"params":[{"name":"danceRoundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":217,"b":229}]},{"name":"danceCode","required":false,"transform":{"type":"scalar"},"locs":[{"a":246,"b":255}]},{"name":"danceOrder","required":false,"transform":{"type":"scalar"},"locs":[{"a":270,"b":280}]},{"name":"judgeRoundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":627,"b":639}]},{"name":"personJudgeId","required":false,"transform":{"type":"scalar"},"locs":[{"a":656,"b":669}]},{"name":"judgeIndex","required":false,"transform":{"type":"scalar"},"locs":[{"a":684,"b":694}]},{"name":"judgeLabel","required":false,"transform":{"type":"scalar"},"locs":[{"a":708,"b":718}]},{"name":"resultRoundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1218,"b":1231}]},{"name":"resultCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1248,"b":1266}]},{"name":"overallRanking","required":false,"transform":{"type":"scalar"},"locs":[{"a":1281,"b":1295}]},{"name":"overallRankingTo","required":false,"transform":{"type":"scalar"},"locs":[{"a":1309,"b":1325}]},{"name":"qualifiedNext","required":false,"transform":{"type":"scalar"},"locs":[{"a":1339,"b":1352}]},{"name":"overallScore","required":false,"transform":{"type":"scalar"},"locs":[{"a":1370,"b":1382}]},{"name":"danceResults","required":false,"transform":{"type":"scalar"},"locs":[{"a":1406,"b":1418}]},{"name":"scoreFederation","required":false,"transform":{"type":"scalar"},"locs":[{"a":1768,"b":1783}]},{"name":"scoreEventDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":1792,"b":1806}]},{"name":"scoreEventId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1815,"b":1827}]},{"name":"scoreCompetitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1838,"b":1856}]},{"name":"scoreCategoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1869,"b":1884}]},{"name":"scoreRoundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":2007,"b":2019}]},{"name":"scoreDanceOrder","required":false,"transform":{"type":"scalar"},"locs":[{"a":2034,"b":2049}]},{"name":"scoreDanceCode","required":false,"transform":{"type":"scalar"},"locs":[{"a":2061,"b":2075}]},{"name":"scoreJudgePersonId","required":false,"transform":{"type":"scalar"},"locs":[{"a":2088,"b":2106}]},{"name":"scoreCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":2121,"b":2138}]},{"name":"scoreComponent","required":false,"transform":{"type":"scalar"},"locs":[{"a":2153,"b":2167}]},{"name":"score","required":false,"transform":{"type":"scalar"},"locs":[{"a":2201,"b":2206}]},{"name":"rawScore","required":false,"transform":{"type":"scalar"},"locs":[{"a":2228,"b":2236}]}],"statement":"WITH inserted_dances AS (\n  INSERT INTO federated.round_dance (round_id, dance_program_id, dance_code, dance_order)\n  SELECT input.round_id, cr.dance_program_id, input.dance_code, input.dance_order\n  FROM unnest(\n    :danceRoundId::bigint[],\n    :danceCode::text[],\n    :danceOrder::int[]\n  ) AS input(round_id, dance_code, dance_order)\n  JOIN federated.competition_round cr ON cr.id = input.round_id\n), inserted_judges AS (\n  INSERT INTO federated.competition_round_judge (\n    round_id, person_judge_id, judge_index, judge_label\n  )\n  SELECT round_id, person_judge_id, judge_index, nullif(judge_label, '')\n  FROM unnest(\n    :judgeRoundId::bigint[],\n    :personJudgeId::text[],\n    :judgeIndex::int[],\n    :judgeLabel::text[]\n  ) AS input(round_id, person_judge_id, judge_index, judge_label)\n), inserted_results AS (\n  INSERT INTO federated.competition_round_result (\n    round_id, competitor_id, overall_ranking, overall_ranking_to, qualified_next, overall_score, dance_results\n  )\n  SELECT\n    round_id, competitor_id, overall_ranking, overall_ranking_to, qualified_next, overall_score, CASE\n      WHEN dance_results = '' THEN NULL\n      ELSE string_to_array(dance_results, ',')::real[]\n    END\n  FROM unnest(\n    :resultRoundId::bigint[],\n    :resultCompetitorId::text[],\n    :overallRanking::int[],\n    :overallRankingTo::int[],\n    :qualifiedNext::boolean[],\n    :overallScore::numeric(10,3)[],\n    :danceResults::text[]\n  ) AS input(\n    round_id, competitor_id, overall_ranking, overall_ranking_to, qualified_next, overall_score, dance_results\n  )\n)\nINSERT INTO federated.judge_score (\n  federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,\n  judge_person_id, competitor_id, component, score, raw_score\n)\nSELECT\n  :scoreFederation::text, :scoreEventDate::date, :scoreEventId::bigint, :scoreCompetitionId::bigint,\n  :scoreCategoryId::bigint, round_id, dance_order, dance_code,\n  judge_person_id, competitor_id, component, score, raw_score\nFROM unnest(\n  :scoreRoundId::bigint[],\n  :scoreDanceOrder::int[],\n  :scoreDanceCode::text[],\n  :scoreJudgePersonId::bigint[],\n  :scoreCompetitorId::bigint[],\n  :scoreComponent::federated.score_component[],\n  :score::numeric(10,3)[],\n  :rawScore::text[]\n) AS input(\n  round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score, raw_score\n)"};
 
 /**
  * Query generated from SQL:
  * ```
  * WITH inserted_dances AS (
- *   INSERT INTO federated.round_dance (round_id, dance_code, dance_order)
- *   SELECT round_id, dance_code, dance_order
+ *   INSERT INTO federated.round_dance (round_id, dance_program_id, dance_code, dance_order)
+ *   SELECT input.round_id, cr.dance_program_id, input.dance_code, input.dance_order
  *   FROM unnest(
  *     :danceRoundId::bigint[],
  *     :danceCode::text[],
  *     :danceOrder::int[]
  *   ) AS input(round_id, dance_code, dance_order)
+ *   JOIN federated.competition_round cr ON cr.id = input.round_id
  * ), inserted_judges AS (
  *   INSERT INTO federated.competition_round_judge (
  *     round_id, person_judge_id, judge_index, judge_label
@@ -1646,25 +1748,20 @@ const insertRoundDetailsIR: any = {"usedParamSet":{"danceRoundId":true,"danceCod
  *   judge_person_id, competitor_id, component, score, raw_score
  * )
  * SELECT
- *   federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,
+ *   :scoreFederation::text, :scoreEventDate::date, :scoreEventId::bigint, :scoreCompetitionId::bigint,
+ *   :scoreCategoryId::bigint, round_id, dance_order, dance_code,
  *   judge_person_id, competitor_id, component, score, raw_score
  * FROM unnest(
- *   :scoreFederation::text[],
- *   :scoreEventDate::date[],
- *   :scoreEventId::bigint[],
- *   :scoreCompetitionId::bigint[],
- *   :scoreCategoryId::bigint[],
  *   :scoreRoundId::bigint[],
  *   :scoreDanceOrder::int[],
  *   :scoreDanceCode::text[],
- *   :scoreJudgePersonId::text[],
- *   :scoreCompetitorId::text[],
+ *   :scoreJudgePersonId::bigint[],
+ *   :scoreCompetitorId::bigint[],
  *   :scoreComponent::federated.score_component[],
  *   :score::numeric(10,3)[],
  *   :rawScore::text[]
  * ) AS input(
- *   federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,
- *   judge_person_id, competitor_id, component, score, raw_score
+ *   round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score, raw_score
  * )
  * ```
  */
