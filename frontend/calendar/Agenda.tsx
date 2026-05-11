@@ -100,7 +100,19 @@ function Agenda({ events }: ViewProps): React.ReactNode {
 
           <div className="flex justify-start flex-wrap gap-2">
             {dateEntry.competitions.map((calendarEvent) => (
-              <CompetitionBlock key={calendarEvent.id} calendarEvent={calendarEvent} />
+              <div
+                key={calendarEvent.id}
+                className={cardCls({
+                  className:
+                    'min-w-[200px] w-72 rounded-lg border-green-7 bg-green-2 p-3',
+                })}
+              >
+                <CompetitionEventContent
+                  title={calendarEvent.title}
+                  location={calendarEvent.eventLocation}
+                  entries={calendarEvent.items}
+                />
+              </div>
             ))}
             {dateEntry.groups.map((calendarEvent) => (
               <GroupLesson
@@ -114,26 +126,6 @@ function Agenda({ events }: ViewProps): React.ReactNode {
           </div>
         </React.Fragment>
       ))}
-    </div>
-  );
-}
-
-function CompetitionBlock({
-  calendarEvent,
-}: {
-  calendarEvent: CalendarCompetitionEvent;
-}) {
-  return (
-    <div
-      className={cardCls({
-        className: 'min-w-[200px] w-72 rounded-lg border-green-7 bg-green-2 p-3',
-      })}
-    >
-      <CompetitionEventContent
-        title={calendarEvent.title}
-        location={calendarEvent.eventLocation}
-        entries={calendarEvent.items}
-      />
     </div>
   );
 }

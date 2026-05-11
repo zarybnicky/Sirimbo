@@ -87,7 +87,9 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
         ))}
       </div>
 
-      <CompetitionWeekPanel cohortId={cohort.id} />
+      {cohort.cohortMembershipsList.some((x) => x.person?.cstsId) && (
+        <CompetitionWeekPanel cohortId={cohort.id} />
+      )}
     </>
   );
 }
@@ -103,13 +105,14 @@ function CategoryList({
   } | null;
   discipline: string;
 }) {
-  if (!person?.cstsId) return (
-    <div className="flex justify-center">
-      <div className="px-2 border-2 border-neutral-8 rounded-full text-neutral-9 text-xs">
-                                                                                                            ? chybí IDT
+  if (!person?.cstsId)
+    return (
+      <div className="flex justify-center">
+        <div className="px-2 border-2 border-neutral-8 rounded-full text-neutral-9 text-xs">
+          ? chybí IDT
+        </div>
       </div>
-    </div>
-  );
+    );
   if (!person?.cstsProgressList) return null;
   const item = getBestCstsProgress(person.cstsProgressList, discipline);
   if (!item) return null;

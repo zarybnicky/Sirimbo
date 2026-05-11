@@ -12,10 +12,7 @@ import { formatDefaultEventName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { tenantConfigAtom } from '@/ui/state/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
-import {
-  CompetitionEventContent,
-  formatCompetitionEntryLine,
-} from '@/ui/Competitions';
+import { CompetitionEventContent } from '@/ui/Competitions';
 
 function formatTrainerLabel(name: string | undefined, useInitials: boolean): string {
   if (!name) return '';
@@ -45,10 +42,7 @@ type TimeGridEventProps = {
   resource?: Resource;
 };
 
-function TimeGridEvent({
-  event,
-  ...props
-}: TimeGridEventProps) {
+function TimeGridEvent({ event, ...props }: TimeGridEventProps) {
   return event.kind === 'competition' ? (
     <CompetitionTimeGridEvent event={event} {...props} />
   ) : (
@@ -105,13 +99,14 @@ function InstanceTimeGridEvent({
 
   const title =
     event.instance.name || (event.event ? formatDefaultEventName(event.event) : '-');
-  let label = startsBeforeDay && startsAfterDay
-    ? 'Celý den'
-    : startsBeforeDay
-      ? ` – ${shortTimeIntl.format(event.end)}`
-      : startsAfterDay
-        ? `${shortTimeIntl.format(event.start)} – `
-        : shortTimeIntl.format(event.start);
+  let label =
+    startsBeforeDay && startsAfterDay
+      ? 'Celý den'
+      : startsBeforeDay
+        ? ` – ${shortTimeIntl.format(event.end)}`
+        : startsAfterDay
+          ? `${shortTimeIntl.format(event.start)} – `
+          : shortTimeIntl.format(event.start);
   for (const trainer of event.instance.trainersList ?? []) {
     const trainerLabel = formatTrainerLabel(trainer.person?.name, useTrainerInitials);
     if (trainerLabel) label += `, ${trainerLabel}`;
@@ -210,12 +205,7 @@ function CompetitionTimeGridEvent({
         height: `${style.height}%`,
         left: `${style.xOffset}%`,
       }}
-      title={event.items
-        .map(
-          (item) =>
-            `${item.kind === 'report' ? 'Výsl.' : 'Sout.'} ${formatCompetitionEntryLine(item)}`,
-        )
-        .join('\n')}
+      title={event.title}
       className={cn(
         className,
         'rbc-event absolute max-h-full min-h-[20px] overflow-y-auto border border-green-7 bg-green-3 p-2 text-green-12',

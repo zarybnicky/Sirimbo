@@ -7,7 +7,7 @@ import { CompetitionWeekPanel } from '@/ui/Competitions';
 import { TabMenu } from '@/ui/TabMenu';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/ui/Layout';
-import { useQueryParam, withDefault, StringParam } from 'use-query-params';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -21,11 +21,15 @@ export default function DashboardPage() {
   const tabs = React.useMemo(
     () => [
       { id: 'myLessons', title: 'Moje události', contents: () => <MyEventsList /> },
-      {
-        id: 'competitions',
-        title: 'Soutěže',
-        contents: () => <CompetitionWeekPanel allowOnlyMine />,
-      },
+      ...(auth.persons.some((x) => x.cstsId)
+        ? [
+            {
+              id: 'competitions',
+              title: 'Soutěže',
+              contents: () => <CompetitionWeekPanel allowOnlyMine />,
+            },
+          ]
+        : []),
       { id: 'myAnnouncements', title: 'Aktuality', contents: () => <MyAnnouncements /> },
       {
         id: 'stickyAnnouncements',
@@ -33,7 +37,7 @@ export default function DashboardPage() {
         contents: () => <StickyAnnouncements />,
       },
     ],
-    [],
+    [auth.persons],
   );
 
   if (!authLoading && auth.user && auth.personIds.length === 0) {
@@ -51,11 +55,9 @@ export default function DashboardPage() {
         <div className="hidden xl:grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-8">
             <MyEventsList />
-            <CompetitionWeekPanel allowOnlyMine />
+            {auth.persons.some((x) => x.cstsId) && <CompetitionWeekPanel allowOnlyMine />}
           </div>
-          <div className="flex flex-col gap-8">
-            <MyAnnouncements />
-          </div>
+          <MyAnnouncements />
           <StickyAnnouncements />
         </div>
       </div>

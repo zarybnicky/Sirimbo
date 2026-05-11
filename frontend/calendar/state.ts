@@ -1,7 +1,6 @@
 import { atom } from 'jotai';
 import { selectAtom } from 'jotai/utils';
 import type {
-  CalendarEvent,
   CalendarInstanceEvent,
   DragAction,
   DragDirection,

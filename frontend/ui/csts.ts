@@ -13,24 +13,26 @@ export function formatCstsCategoryName(
         ageGroup?: string | null;
         class?: string | null;
         discipline?: string | null;
+        series?: string | null;
       }
     | null
     | undefined,
 ) {
   if (!category) return '';
-  const ageGroup =
-    category.ageGroup?.toLowerCase() === 'adult' ? 'Dospělí' : category.ageGroup;
-  const disciplineKey = category.discipline?.toLowerCase();
-  const discipline =
-    disciplineKey === 'standard'
-      ? 'STT'
-      : disciplineKey === 'latin'
-        ? 'LAT'
-        : disciplineKey === 'dancesport'
-          ? null
-          : category.discipline;
+  const { ageGroup, discipline, series } = category;
 
-  return [ageGroup, formatCstsClass(category.class), discipline]
+  return [
+    series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : '',
+    ageGroup?.toLowerCase() === 'adult'
+      ? 'Dospělí'
+      : category.ageGroup?.replace('_', ' '),
+    formatCstsClass(category.class),
+    discipline?.toLowerCase() === 'standard'
+      ? 'STT'
+      : discipline?.toLowerCase() === 'latin'
+        ? 'LAT'
+        : discipline,
+  ]
     .filter(Boolean)
     .join(' ');
 }

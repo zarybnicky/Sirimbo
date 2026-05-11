@@ -2,26 +2,16 @@ import {
   CompetitionBriefDocument,
   CompetitionReportDocument,
 } from '@/graphql/Federation';
-import {
-  competitionEntryKey,
-  competitionEntryName,
-  type CompetitionEntry,
-} from '@/ui/Competitions';
+import { type CompetitionEntry, competitionEntryKey } from '@/ui/Competitions';
 import {
   EventInstanceRangeDocument,
   type EventInstanceRangeQuery,
   type EventInstanceRangeQueryVariables,
 } from '@/graphql/Event';
-import { formatCstsCategoryName } from '@/ui/csts';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery } from 'urql';
-import type {
-  CalendarEvent,
-  CalendarInstanceEvent,
-  DateRange,
-  Resource,
-} from './types';
+import type { CalendarEvent, CalendarInstanceEvent, DateRange, Resource } from './types';
 import { CalendarView } from '@/calendar/CalendarViews';
 import { localDateKey } from '@/calendar/localizer';
 
@@ -106,7 +96,14 @@ function mapInstancesToCalendar(
       eventResourceIds.push('');
       put({ resourceId: '', resourceTitle: '-' });
     }
-    events.push({ kind: 'event', event, instance, resourceIds: eventResourceIds, start, end });
+    events.push({
+      kind: 'event',
+      event,
+      instance,
+      resourceIds: eventResourceIds,
+      start,
+      end,
+    });
   }
 
   const resources = [...resourceMap.values()].toSorted((a, b) =>
@@ -205,10 +202,10 @@ export function useCalendarData(
     const competitionsByEvent = new Map<string, CompetitionBucket>();
     const seen = new Set<string>();
     const addCompetition = (item: CompetitionEntry) => {
-      if (!item.competitionDate) return;
       const key = competitionEntryKey(item);
-      if (seen.has(key)) return;
+      if (!item.competitionDate || seen.has(key)) return;
       seen.add(key);
+
       const eventKey = `${item.competitionDate}:${item.eventId ?? ''}`;
       const competition = competitionsByEvent.get(eventKey) ?? {
         date: item.competitionDate,
@@ -223,39 +220,28 @@ export function useCalendarData(
     for (const row of reportData?.competitionReportList ?? []) {
       addCompetition({ ...row, kind: 'report' });
     }
-
     for (const row of briefData?.competitionBriefList ?? []) {
       addCompetition({ ...row, kind: 'brief' });
     }
 
     const competitions: CalendarEvent[] = [...competitionsByEvent.values()].map(
-      (competition) => {
-        const start = new Date(`${competition.date}T00:00:00`);
-        const end = new Date(add(start, 1, 'day').getTime() - 1);
-        return {
-          kind: 'competition',
-          id: `competition:${competition.date}:${competition.items[0]?.eventId ?? 'unknown'}`,
-          title: competition.title,
-          eventLocation: competition.eventLocation,
-          start,
-          end,
-          resourceIds:
-            effectiveGroupBy === 'none' ? [] : [competitionResource.resourceId],
-          isDraggable: false,
-          isResizable: false,
-          items: competition.items.toSorted((a, b) => {
-            const byKind = a.kind.localeCompare(b.kind);
-            return (
-              byKind ||
-              competitionEntryName(a).localeCompare(competitionEntryName(b), 'cs') ||
-              formatCstsCategoryName(a.category).localeCompare(
-                formatCstsCategoryName(b.category),
-                'cs',
-              )
-            );
-          }),
-        };
-      },
+      ({ date, items, title, eventLocation }) => ({
+        kind: 'competition',
+        id: `competition:${date}:${items[0]?.eventId ?? 'unknown'}`,
+        title,
+        eventLocation,
+        start: new Date(`${date}T00:00:00`),
+        end: new Date(`${date}T23:59:00`),
+        resourceIds: effectiveGroupBy === 'none' ? [] : [competitionResource.resourceId],
+        isDraggable: false,
+        isResizable: false,
+        items: items.toSorted(
+          (a, b) =>
+            a.kind.localeCompare(b.kind) ||
+            (a.competitorName ?? '').localeCompare(b.competitorName ?? '', 'cs') ||
+            (a.category?.name ?? '').localeCompare(b.category?.name ?? '', 'cs'),
+        ),
+      }),
     );
 
     return {

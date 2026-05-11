@@ -21,30 +21,34 @@ export function WeekPicker({ title, startDate, onChange }: WeekPickerProps) {
 
   return (
     <div>
-      <h4 className="mb-2 text-2xl tracking-wide">
-        {title} ({getWeek(startDate, { weekStartsOn: 1 })}. týden)
-      </h4>
+      <div className="flex justify-between items-center">
+        <h4 className="text-2xl tracking-wide">
+          {title} ({getWeek(startDate, { weekStartsOn: 1 })}. týden)
+        </h4>
+        <div>
+          <button
+            type="button"
+            className="px-1.5 shadow-none text-neutral-11"
+            onClick={setPrevWeek}
+          >
+            <ChevronLeft />
+          </button>
+          <button
+            type="button"
+            className="px-1.5 shadow-none text-neutral-11"
+            onClick={setNextWeek}
+          >
+            <ChevronRight />
+          </button>
+        </div>
+      </div>
 
       <div className="mb-2 flex items-center">
-        <button
-          type="button"
-          className="px-1.5 shadow-none text-neutral-11"
-          onClick={setPrevWeek}
-        >
-          <ChevronLeft />
-        </button>
         <div className="text-neutral-11">
           {fullDateFormatter
             .formatRange(startDate, endOf(startDate, 'week', 1))
             .replace(' – ', ' – ')}
         </div>
-        <button
-          type="button"
-          className="px-1.5 shadow-none text-neutral-11"
-          onClick={setNextWeek}
-        >
-          <ChevronRight />
-        </button>
       </div>
     </div>
   );

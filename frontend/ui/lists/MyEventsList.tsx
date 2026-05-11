@@ -10,7 +10,6 @@ import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { cardCls } from '../style';
-import { useAuth } from '../use-auth';
 
 type EventPair = { event: EventFragment; instance: EventInstanceWithTrainerFragment };
 
@@ -56,11 +55,10 @@ export function MyEventsList() {
     <div className="flex flex-col">
       <WeekPicker title="Moje události" startDate={startDate} onChange={setStartDate} />
 
-      {fetching ? (
-        <div className="text-neutral-11">Načítám...</div>
-      ) : data?.list?.length ? null : (
-        <div className="text-neutral-11">Žádné nadcházející akce</div>
-      )}
+      <div className="text-sm text-neutral-9">
+        {fetching ? 'Načítám...' : ''}
+        {!fetching && !data?.list?.length ? 'Žádné nadcházející akce' : ''}
+      </div>
 
       <div className="flex flex-wrap flex-col gap-x-2">
         {eventsPerDay.map(([date, _, location, eventInstances]) => (

@@ -66,14 +66,14 @@ export function PersonView({ id }: { id: string }) {
           title: <>Platby</>,
           contents: () => <PersonPaymentsView key="payments" id={id} />,
         },
-        {
-          id: 'competitions',
-          title: <>Soutěže</>,
-          contents: () => (
-            <CompetitionWeekPanel personIds={[id]} />
-          ),
-        },
       );
+    }
+    if (isAdminOrCurrentPerson && item.cstsId) {
+      tabs.push({
+        id: 'competitions',
+        title: <>Soutěže</>,
+        contents: () => <CompetitionWeekPanel personIds={[id]} />,
+      });
     }
     if (isAdminOrCurrentPerson && isCurrentTenantTrainer) {
       tabs.push({

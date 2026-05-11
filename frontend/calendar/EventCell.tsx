@@ -9,10 +9,6 @@ import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
-import {
-  competitionEntryKey,
-  formatCompetitionEntryLine,
-} from '@/ui/Competitions';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -23,10 +19,7 @@ type EventCellProps = {
   resource?: Resource;
 };
 
-function EventCell({
-  event,
-  ...props
-}: EventCellProps) {
+function EventCell({ event, ...props }: EventCellProps) {
   return event.kind === 'competition' ? (
     <CompetitionEventCell event={event} {...props} />
   ) : (
@@ -53,7 +46,9 @@ function CompetitionEventCell({
         },
       )}
     >
-      <CompetitionContent event={event} />
+      <div className="space-y-0.5 px-1 py-0.5 text-[0.68rem] leading-tight">
+        <div className="font-semibold">{event.title}</div>
+      </div>
     </div>
   );
 }
@@ -161,23 +156,6 @@ function InstanceEventCell({
         <EventSummary offsetButtons event={event.event} instance={instance} />
       </PopoverContent>
     </Popover>
-  );
-}
-
-function CompetitionContent({ event }: { event: Extract<CalendarEvent, { kind: 'competition' }> }) {
-  return (
-    <div className="space-y-0.5 px-1 py-0.5 text-[0.68rem] leading-tight">
-      <div className="font-semibold">{event.title}</div>
-      {event.items.slice(0, 3).map((item) => (
-        <div key={competitionEntryKey(item)} className="truncate">
-          {item.kind === 'report' ? 'Výsl.' : 'Sout.'}{' '}
-          {formatCompetitionEntryLine(item)}
-        </div>
-      ))}
-      {event.items.length > 3 ? (
-        <div className="text-green-11">+{event.items.length - 3}</div>
-      ) : null}
-    </div>
   );
 }
 
