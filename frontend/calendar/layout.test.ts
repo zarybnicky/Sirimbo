@@ -30,6 +30,7 @@ function ev(
 ): CalendarEvent {
   const id = String(nextId++);
   return {
+    kind: 'event',
     start: new Date(`${DAY}T${start}`),
     end: new Date(`${DAY}T${end}`),
     resourceIds: [],
@@ -45,6 +46,9 @@ function ev(
 function layout(events: CalendarEvent[], eps = 5) {
   return layoutEvents(events, metrics(), eps);
 }
+
+const eventId = (event: CalendarEvent) =>
+  event.kind === 'event' ? event.instance.id : event.id;
 
 type Style = { top: number; width: number; height: number; xOffset: number };
 
@@ -247,7 +251,9 @@ describe('rank and type priority', () => {
       ev('10:00', '11:00', { trainers: ['a'] }),
       ev('10:00', '11:00', { trainers: ['b'] }),
     ]);
-    const group = result.find((r) => r.event.instance.type === 'GROUP');
+    const group = result.find(
+      (r) => r.event.kind === 'event' && r.event.instance.type === 'GROUP',
+    );
     expect(group!.style.xOffset).toBe(0);
   });
 
@@ -267,6 +273,7 @@ describe('rank and type priority', () => {
     const trainerOffset = (trainerId: string, hour: number) => {
       const r = result.find(
         (r) =>
+          r.event.kind === 'event' &&
           r.event.instance.trainersList?.some(
             (t: any) => t.personId === trainerId,
           ) && r.event.start.getHours() === hour,
@@ -301,6 +308,7 @@ describe('rank and type priority', () => {
     const offsetOf = (trainerId: string, hour: number) => {
       const r = result.find(
         (r) =>
+          r.event.kind === 'event' &&
           r.event.instance.trainersList?.some(
             (t: any) => t.personId === trainerId,
           ) && r.event.start.getHours() === hour,
@@ -502,7 +510,7 @@ describe('full afternoon schedule', () => {
       for (let j = i + 1; j < result.length; j++) {
         expect(
           visuallyOverlaps(result[i]!.style, result[j]!.style),
-          `${result[i]!.event.instance.id} and ${result[j]!.event.instance.id} overlap`,
+          `${eventId(result[i]!.event)} and ${eventId(result[j]!.event)} overlap`,
         ).toBe(false);
       }
     }
@@ -655,12 +663,20 @@ describe('degenerate cases', () => {
     }
     // A should always be in the same column
     const aOffsets = result
-      .filter((r) => r.event.instance.trainersList?.some((t: any) => t.personId === 'A'))
+      .filter(
+        (r) =>
+          r.event.kind === 'event' &&
+          r.event.instance.trainersList?.some((t: any) => t.personId === 'A'),
+      )
       .map((r) => r.style.xOffset);
     expect(new Set(aOffsets).size).toBe(1);
     // B should always be in the same column
     const bOffsets = result
-      .filter((r) => r.event.instance.trainersList?.some((t: any) => t.personId === 'B'))
+      .filter(
+        (r) =>
+          r.event.kind === 'event' &&
+          r.event.instance.trainersList?.some((t: any) => t.personId === 'B'),
+      )
       .map((r) => r.style.xOffset);
     expect(new Set(bOffsets).size).toBe(1);
   });

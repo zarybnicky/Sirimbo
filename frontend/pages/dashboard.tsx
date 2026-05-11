@@ -3,6 +3,7 @@ import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import * as React from 'react';
 import { MyAnnouncements, StickyAnnouncements } from '@/ui/Announcements';
 import { MyEventsList } from '@/ui/lists/MyEventsList';
+import { CompetitionWeekPanel } from '@/ui/Competitions';
 import { TabMenu } from '@/ui/TabMenu';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/ui/Layout';
@@ -20,6 +21,11 @@ export default function DashboardPage() {
   const tabs = React.useMemo(
     () => [
       { id: 'myLessons', title: 'Moje události', contents: () => <MyEventsList /> },
+      {
+        id: 'competitions',
+        title: 'Soutěže',
+        contents: () => <CompetitionWeekPanel allowOnlyMine />,
+      },
       { id: 'myAnnouncements', title: 'Aktuality', contents: () => <MyAnnouncements /> },
       {
         id: 'stickyAnnouncements',
@@ -43,8 +49,13 @@ export default function DashboardPage() {
         </div>
 
         <div className="hidden xl:grid grid-cols-3 gap-4">
-          <MyEventsList />
-          <MyAnnouncements />
+          <div className="flex flex-col gap-8">
+            <MyEventsList />
+            <CompetitionWeekPanel allowOnlyMine />
+          </div>
+          <div className="flex flex-col gap-8">
+            <MyAnnouncements />
+          </div>
           <StickyAnnouncements />
         </div>
       </div>

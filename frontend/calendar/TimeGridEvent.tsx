@@ -12,6 +12,10 @@ import { formatDefaultEventName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { tenantConfigAtom } from '@/ui/state/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
+import {
+  CompetitionEventContent,
+  formatCompetitionEntryLine,
+} from '@/ui/Competitions';
 
 function formatTrainerLabel(name: string | undefined, useInitials: boolean): string {
   if (!name) return '';
@@ -42,13 +46,24 @@ type TimeGridEventProps = {
 };
 
 function TimeGridEvent({
+  event,
+  ...props
+}: TimeGridEventProps) {
+  return event.kind === 'competition' ? (
+    <CompetitionTimeGridEvent event={event} {...props} />
+  ) : (
+    <InstanceTimeGridEvent event={event} {...props} />
+  );
+}
+
+function InstanceTimeGridEvent({
   style,
   className,
   event,
   isBackgroundEvent,
   slotMetrics,
   resource,
-}: TimeGridEventProps) {
+}: TimeGridEventProps & { event: Extract<CalendarEvent, { kind: 'event' }> }) {
   const { useTrainerInitials } = useAtomValue(tenantConfigAtom);
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
@@ -90,38 +105,19 @@ function TimeGridEvent({
 
   const title =
     event.instance.name || (event.event ? formatDefaultEventName(event.event) : '-');
-  const label = React.useMemo(() => {
-    let label = '';
-    if (startsBeforeDay && startsAfterDay) {
-      label += 'Celý den';
-    } else if (startsBeforeDay) {
-      label += ` – ${shortTimeIntl.format(event.end)}`;
-    } else if (startsAfterDay) {
-      label += `${shortTimeIntl.format(event.start)} – `;
-    } else {
-      label += shortTimeIntl.format(event.start);
-    }
-
-    const trainers = event.instance.trainersList ?? [];
-    for (const trainer of trainers) {
-      const trainerLabel = formatTrainerLabel(trainer.person?.name, useTrainerInitials);
-      if (!trainerLabel) continue;
-      label += `, ${trainerLabel}`;
-    }
-
-    const location = event.instance.location?.name || event.instance.locationText || '';
-    if (location) label += `, ${location}`;
-
-    return label;
-  }, [
-    event.end,
-    event.instance.location?.name,
-    event.instance.locationText,
-    event.instance.trainersList,
-    event.start,
-    slotMetrics,
-    useTrainerInitials,
-  ]);
+  let label = startsBeforeDay && startsAfterDay
+    ? 'Celý den'
+    : startsBeforeDay
+      ? ` – ${shortTimeIntl.format(event.end)}`
+      : startsAfterDay
+        ? `${shortTimeIntl.format(event.start)} – `
+        : shortTimeIntl.format(event.start);
+  for (const trainer of event.instance.trainersList ?? []) {
+    const trainerLabel = formatTrainerLabel(trainer.person?.name, useTrainerInitials);
+    if (trainerLabel) label += `, ${trainerLabel}`;
+  }
+  const location = event.instance.location?.name || event.instance.locationText || '';
+  if (location) label += `, ${location}`;
 
   return (
     <Popover modal>
@@ -198,6 +194,39 @@ function TimeGridEvent({
         <EventSummary offsetButtons event={event.event} instance={event.instance} />
       </PopoverContent>
     </Popover>
+  );
+}
+
+function CompetitionTimeGridEvent({
+  style,
+  className,
+  event,
+}: TimeGridEventProps & { event: Extract<CalendarEvent, { kind: 'competition' }> }) {
+  return (
+    <div
+      style={{
+        top: `${style.top}%`,
+        width: `${style.width}%`,
+        height: `${style.height}%`,
+        left: `${style.xOffset}%`,
+      }}
+      title={event.items
+        .map(
+          (item) =>
+            `${item.kind === 'report' ? 'Výsl.' : 'Sout.'} ${formatCompetitionEntryLine(item)}`,
+        )
+        .join('\n')}
+      className={cn(
+        className,
+        'rbc-event absolute max-h-full min-h-[20px] overflow-y-auto border border-green-7 bg-green-3 p-2 text-green-12',
+      )}
+    >
+      <CompetitionEventContent
+        title={event.title}
+        location={event.eventLocation}
+        entries={event.items}
+      />
+    </div>
   );
 }
 

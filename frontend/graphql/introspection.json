@@ -2607,34 +2607,19 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionBriefRecord",
+        "name": "CompetitionParticipationRecord",
         "fields": [
           {
-            "name": "ageGroup",
+            "name": "category",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "categoryName",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "OBJECT",
+              "name": "Category",
+              "ofType": null
             },
             "args": []
           },
           {
             "name": "checkInEnd",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "class",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -2667,6 +2652,14 @@
           },
           {
             "name": "competitorName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitorType",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -2685,14 +2678,6 @@
             "args": []
           },
           {
-            "name": "discipline",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "eventId",
             "type": {
               "kind": "SCALAR",
@@ -2717,7 +2702,7 @@
             "args": []
           },
           {
-            "name": "personId",
+            "name": "federatedPersonId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -2725,22 +2710,7 @@
             "args": []
           },
           {
-            "name": "personName",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CompetitionReportRecord",
-        "fields": [
-          {
-            "name": "ageGroup",
+            "name": "federation",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -2748,79 +2718,7 @@
             "args": []
           },
           {
-            "name": "categoryName",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "class",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "competitionDate",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "competitionId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "competitorId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "competitorName",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "discipline",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "eventId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "eventLocation",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "eventName",
+            "name": "hasResult",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -2877,14 +2775,6 @@
           },
           {
             "name": "rankingTo",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "series",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -13197,7 +13087,7 @@
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CompetitionBriefRecord",
+                  "name": "CompetitionParticipationRecord",
                   "ofType": null
                 }
               }
@@ -13212,6 +13102,13 @@
               },
               {
                 "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "pCohortId",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -13251,7 +13148,7 @@
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CompetitionReportRecord",
+                  "name": "CompetitionParticipationRecord",
                   "ofType": null
                 }
               }
@@ -13266,6 +13163,13 @@
               },
               {
                 "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "pCohortId",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"

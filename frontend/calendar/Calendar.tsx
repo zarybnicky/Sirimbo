@@ -16,7 +16,7 @@ import {
   participantIdsFilterAtom,
   trainerIdsFilterAtom,
 } from './state';
-import type { CalendarEvent, InteractionInfo, SlotInfo } from './types';
+import type { CalendarEvent, CalendarInstanceEvent, InteractionInfo, SlotInfo } from './types';
 import { Spinner } from '@/ui/Spinner';
 import { EventFormType } from '@/ui/event-form/types';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
@@ -80,10 +80,11 @@ function slotToEventForm(
   }
   if (def.trainers?.[0] && def.locationId === 'none') {
     const thisTrainer = def.trainers[0].personId!;
-    let closestPrev: CalendarEvent | undefined;
+    let closestPrev: CalendarInstanceEvent | undefined;
     const thisInstance = def.instances?.[0];
     if (thisInstance?.since && thisInstance.until) {
       for (const event of events) {
+        if (event.kind !== 'event') continue;
         if (!event.instance.since.startsWith(thisInstance.since.slice(0, 10))) continue;
         if (!event.instance.trainersList?.some((x) => x.personId === thisTrainer))
           continue;
@@ -123,8 +124,9 @@ export function Calendar() {
       onlyMine,
       trainerIds,
       participantIds,
+      myPersonIds: auth.personIds,
     }),
-    [onlyMine, trainerIds, participantIds],
+    [auth.personIds, onlyMine, trainerIds, participantIds],
   );
 
   const { fetching, range, events, resources } = useCalendarData(
@@ -133,10 +135,9 @@ export function Calendar() {
     filters,
     groupBy,
   );
-
   const [, moveEvent] = useMutation(MoveEventInstanceDocument);
   const onMove = React.useCallback(
-    async ({ instance }: CalendarEvent, info: InteractionInfo) => {
+    async ({ instance }: CalendarInstanceEvent, info: InteractionInfo) => {
       const [type, resourceId] = parseResourceKey(info.resource?.resourceId);
 
       await moveEvent({
@@ -154,7 +155,7 @@ export function Calendar() {
   );
 
   const onResize = React.useCallback(
-    async ({ instance }: CalendarEvent, { start, end }: InteractionInfo) => {
+    async ({ instance }: CalendarInstanceEvent, { start, end }: InteractionInfo) => {
       await moveEvent({
         input: {
           id: instance.id,

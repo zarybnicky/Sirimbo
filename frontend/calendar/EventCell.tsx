@@ -9,6 +9,10 @@ import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
+import {
+  competitionEntryKey,
+  formatCompetitionEntryLine,
+} from '@/ui/Competitions';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -20,13 +24,48 @@ type EventCellProps = {
 };
 
 function EventCell({
+  event,
+  ...props
+}: EventCellProps) {
+  return event.kind === 'competition' ? (
+    <CompetitionEventCell event={event} {...props} />
+  ) : (
+    <InstanceEventCell event={event} {...props} />
+  );
+}
+
+function CompetitionEventCell({
+  style,
+  className,
+  event,
+  continuesPrior,
+  continuesAfter,
+}: EventCellProps & { event: Extract<CalendarEvent, { kind: 'competition' }> }) {
+  return (
+    <div
+      style={style}
+      className={cn(
+        className,
+        'rbc-event relative overflow-hidden border border-green-7 bg-green-3 text-green-12',
+        {
+          'rounded-l-none': continuesPrior,
+          'rounded-r-none': continuesAfter,
+        },
+      )}
+    >
+      <CompetitionContent event={event} />
+    </div>
+  );
+}
+
+function InstanceEventCell({
   style,
   className,
   event,
   continuesPrior,
   continuesAfter,
   resource,
-}: EventCellProps) {
+}: EventCellProps & { event: Extract<CalendarEvent, { kind: 'event' }> }) {
   const { instance } = event;
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
@@ -122,6 +161,23 @@ function EventCell({
         <EventSummary offsetButtons event={event.event} instance={instance} />
       </PopoverContent>
     </Popover>
+  );
+}
+
+function CompetitionContent({ event }: { event: Extract<CalendarEvent, { kind: 'competition' }> }) {
+  return (
+    <div className="space-y-0.5 px-1 py-0.5 text-[0.68rem] leading-tight">
+      <div className="font-semibold">{event.title}</div>
+      {event.items.slice(0, 3).map((item) => (
+        <div key={competitionEntryKey(item)} className="truncate">
+          {item.kind === 'report' ? 'Výsl.' : 'Sout.'}{' '}
+          {formatCompetitionEntryLine(item)}
+        </div>
+      ))}
+      {event.items.length > 3 ? (
+        <div className="text-green-11">+{event.items.length - 3}</div>
+      ) : null}
+    </div>
   );
 }
 

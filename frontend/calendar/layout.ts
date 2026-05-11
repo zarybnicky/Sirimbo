@@ -18,6 +18,7 @@ function overlaps(a: Item, b: Item, epsMs: number) {
 }
 
 function trainerKeyOf(it: Item): string {
+  if (it.event.kind !== 'event') return '';
   const trainers = it.event.instance.trainersList;
   if (!trainers || trainers.length === 0) return '';
   return trainers
@@ -65,6 +66,9 @@ export function layoutEvents(
   let nextGroupRank = -1;
 
   const rankKeyOf = (it: Item): string => {
+    if (it.event.kind === 'competition') {
+      return `competition:${it.event.id}`;
+    }
     if (it.event.instance.type !== 'LESSON') {
       return `type:${it.event.instance.eventId}`;
     }
@@ -78,7 +82,7 @@ export function layoutEvents(
     for (const it of group) {
       const key = rankKeyOf(it);
       if (key && !eventRank.has(key)) {
-        if (it.event.instance.type !== 'LESSON') {
+        if (it.event.kind === 'competition' || it.event.instance.type !== 'LESSON') {
           eventRank.set(key, nextGroupRank--);
         } else {
           eventRank.set(key, nextTrainerRank++);

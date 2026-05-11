@@ -70,6 +70,10 @@ export function format(value: string | Date, format: string) {
   return dateFnsFormat(new Date(value), format, { locale: cs });
 }
 
+export function localDateKey(date: Date) {
+  return dateFnsFormat(date, 'yyyy-MM-dd');
+}
+
 export const shortTimeIntl = new Intl.DateTimeFormat('cs-CZ', {
   timeStyle: 'short',
 });

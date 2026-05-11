@@ -11,6 +11,7 @@ import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
+import { CompetitionWeekPanel } from '@/ui/Competitions';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -22,6 +23,7 @@ function CouplePage() {
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
   const item = data?.couple;
   const actions = useActions(coupleActions, item);
+  const personIds = [item?.man?.id, item?.woman?.id].filter(Boolean) as string[];
 
   if (!item) return null;
 
@@ -77,6 +79,12 @@ function CouplePage() {
             showDate
           />
         ))}
+
+        {personIds.length > 0 ? (
+          <div className="mt-6">
+            <CompetitionWeekPanel personIds={personIds} />
+          </div>
+        ) : null}
       </WithSidebar>
     </Layout>
   );

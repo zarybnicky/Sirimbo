@@ -1,40 +1,48 @@
-query Competitions {
-  competitionBriefList {
-    ageGroup
-    categoryName
+query CompetitionBrief($since: Date, $until: Date, $personIds: [BigInt], $cohortId: BigInt) {
+  competitionBriefList(pCohortId: $cohortId, pPersonIds: $personIds, pSince: $since, pUntil: $until) {
+    eventId
+    eventName
+    eventLocation
+    competitionId
+    competitionDate
+    competitorId
+    competitorName
+    personId
+    personName
     checkInEnd
-    class
-    competitionDate
-    competitionId
-    competitorId
-    competitorName
     dances
-    discipline
-    eventId
-    eventLocation
-    eventName
-    personId
-    personName
+    category {
+      name
+      class
+      series
+      ageGroup
+      discipline
+    }
   }
-  competitionReportList {
-    ageGroup
-    categoryName
-    class
-    competitionDate
+}
+
+query CompetitionReport($since: Date, $until: Date, $personIds: [BigInt], $cohortId: BigInt) {
+  competitionReportList(pCohortId: $cohortId, pPersonIds: $personIds, pSince: $since, pUntil: $until) {
+    eventId
+    eventName
+    eventLocation
     competitionId
+    competitionDate
     competitorId
     competitorName
-    discipline
-    eventId
-    eventLocation
-    eventName
-    isFinal
-    participants
     personId
     personName
-    pointGain
+    participants
     ranking
     rankingTo
-    series
+    pointGain
+    isFinal
+    category {
+      name
+      class
+      series
+      ageGroup
+      discipline
+    }
   }
 }

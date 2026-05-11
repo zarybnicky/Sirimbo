@@ -12,7 +12,7 @@ import Selection, {
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
 import { diff, format, range } from './localizer';
-import type { CalendarEvent, Resource } from './types';
+import type { CalendarEvent, CalendarInstanceEvent, Resource } from './types';
 import { useAuth } from '@/ui/use-auth';
 import {
   dragListenersAtom,
@@ -28,6 +28,9 @@ import { cn } from '@/lib/cn';
 import { layoutEvents } from '@/calendar/layout';
 
 const EMPTY = {};
+
+const calendarEventKey = (event: CalendarEvent) =>
+  event.kind === 'event' ? event.instance.id : event.id;
 
 type DayColumnProps = {
   date: Date;
@@ -48,7 +51,7 @@ type BackgroundSelectionState = {
   endDate?: Date;
 };
 type EventSelectionState = {
-  event?: CalendarEvent;
+  event?: CalendarInstanceEvent;
   top?: number;
   height?: number;
 };
@@ -384,7 +387,7 @@ function DayColumn({
         {backgroundEventsInRange.map(({ event, style }) => (
           <TimeGridEvent
             isBackgroundEvent
-            key={event.instance.id}
+            key={calendarEventKey(event)}
             style={style}
             event={event}
             resource={resource}
@@ -393,7 +396,7 @@ function DayColumn({
         ))}
         {eventsInRange.map(({ event, style }) => (
           <TimeGridEvent
-            key={event.instance.id}
+            key={calendarEventKey(event)}
             style={style}
             event={event}
             resource={resource}

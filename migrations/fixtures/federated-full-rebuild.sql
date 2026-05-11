@@ -568,163 +568,222 @@ $$ language sql stable;
 comment on function public.person_csts_progress is '@simpleCollections only';
 grant all on function public.person_csts_progress to anonymous;
 
-drop function if exists competition_brief;
-CREATE OR REPLACE FUNCTION public.competition_brief(
-  p_person_ids text[] DEFAULT null,
-  p_since date DEFAULT null,
-  p_until date DEFAULT null
-)
-RETURNS TABLE (
-  person_id         text,
-  person_name       text,
-  competitor_id     text,
-  competitor_name   text,
-  event_id          bigint,
-  event_name        text,
-  event_location    text,
-  competition_id    bigint,
-  competition_date  date,
-  check_in_end      time,
-  category_name     text,
-  discipline        text,
-  age_group         text,
-  class             text,
-  dances            text[]
-)
-LANGUAGE sql STABLE AS $$
-  WITH params AS (
-    SELECT
-      coalesce(p_since, date_trunc('week', now())::date + 5) AS since,
-      coalesce(p_until, date_trunc('week', now())::date + 6) AS until,
-      coalesce(p_person_ids, (
-        select array_agg('csts:' || regexp_replace(person.csts_id, '\D', '', 'g'))
-        from public.current_tenant_membership join public.person on person_id = person.id
-        where csts_id is not null
-      )) as person_ids
-  )
-  SELECT
-    p.id                                   AS person_id,
-    coalesce(p.canonical_name, concat_ws(' ', p.first_name, p.last_name)) AS person_name,
-    c.id                                   AS competitor_id,
-    c.name                                 AS competitor_name,
-    e.id                                   AS event_id,
-    e.name                                 AS event_name,
-    coalesce(e.location, e.city)           AS event_location,
-    comp.id                                AS competition_id,
-    comp.start_date                        AS competition_date,
-    comp.check_in_end,
-    cat.name                               AS category_name,
-    cat.discipline,
-    cat.age_group,
-    cat.class,
-    array_agg(DISTINCT d.name ORDER BY d.name) AS dances
-  FROM params
-  CROSS JOIN federated.competitor_component cc
-  JOIN federated.person p ON p.id = cc.person_id
-  JOIN federated.competitor c ON c.id = cc.competitor_id
-  JOIN federated.competition_entry ce
-    ON ce.competitor_id = c.id
-   AND NOT ce.cancelled
-  JOIN federated.competition comp ON comp.id = ce.competition_id
-  JOIN federated.event e ON e.id = comp.event_id
-  JOIN federated.category cat ON cat.id = comp.category_id
-  LEFT JOIN federated.dance_program_dance dpd
-    ON dpd.program_id = cat.base_dance_program_id
-  LEFT JOIN federated.dance d ON d.code = dpd.dance_code
-  WHERE cc.person_id = ANY(params.person_ids)
-    AND comp.start_date BETWEEN params.since AND params.until
-  GROUP BY
-    p.id, p.canonical_name, p.first_name, p.last_name,
-    c.id, c.name,
-    e.id, e.name, e.location, e.city,
-    comp.id, comp.start_date, comp.check_in_end,
-    cat.name, cat.discipline, cat.age_group, cat.class
-  ORDER BY
-    comp.start_date,
-    comp.check_in_end NULLS LAST,
-    person_name,
-    cat.discipline,
-    cat.class;
-$$;
-comment on function public.competition_brief is '@simpleCollections only';
-grant all on function public.competition_brief to anonymous;
+drop function if exists public.competition_brief(text[], date, date);
+drop function if exists public.competition_report(text[], date, date);
+drop function if exists public.competition_brief(date, date, bigint, bigint[]);
+drop function if exists public.competition_report(date, date, bigint, bigint[]);
+drop type if exists public.competition_participation_record;
 
-drop function if exists competition_report;
-CREATE OR REPLACE FUNCTION public.competition_report(
-  p_person_ids text[] DEFAULT null,
-  p_since date DEFAULT null,
-  p_until date DEFAULT null
-)
-RETURNS TABLE (
-  person_id         text,
-  person_name       text,
-  competitor_id     text,
-  competitor_name   text,
-  event_name        text,
-  event_location    text,
-  event_id          bigint,
-  competition_id    bigint,
-  competition_date  date,
-  category_name     text,
-  series            text,
-  discipline        text,
-  age_group         text,
-  class             text,
-  participants      integer,
-  ranking           integer,
-  ranking_to        integer,
-  point_gain        numeric(10,3),
-  is_final          boolean
-)
-LANGUAGE sql STABLE AS $$
-  WITH params AS (
-    SELECT
-      coalesce(p_since, date_trunc('week', now())::date - 7 + 5) AS since,
-      coalesce(p_until, date_trunc('week', now())::date - 7 + 6) AS until,
-      coalesce(p_person_ids, (
-        select array_agg('csts:' || regexp_replace(person.csts_id, '\D', '', 'g'))
-        from public.current_tenant_membership join public.person on person_id = person.id
-        where csts_id is not null
-      )) as person_ids
+create type public.competition_participation_record as (
+  person_id bigint,
+  person_name text,
+  federation text,
+  federated_person_id text,
+  competitor_id text,
+  competitor_name text,
+  competitor_type federated.competitor_type,
+  event_id bigint,
+  event_name text,
+  event_location text,
+  competition_id bigint,
+  competition_date date,
+  check_in_end time,
+  category federated.category,
+  dances text[],
+  participants integer,
+  ranking integer,
+  ranking_to integer,
+  point_gain numeric(10,3),
+  is_final boolean,
+  has_result boolean
+);
+
+create or replace function public.competition_brief(
+  p_since date default null,
+  p_until date default null,
+  p_cohort_id bigint default null,
+  p_person_ids bigint[] default null
+) returns setof public.competition_participation_record
+language sql stable as $$
+  with params as (
+    select
+      coalesce(p_since, date_trunc('week', now())::date + 5) as since,
+      coalesce(p_until, date_trunc('week', now())::date + 7) as until
+  ),
+  scoped_people as (
+    select distinct p.id, p.name, p.csts_id, p.wdsf_id
+    from public.current_tenant_membership tm
+    join public.person p on p.id = tm.person_id
+    where (p_person_ids is null or p.id = any(p_person_ids))
+      and (
+        p_cohort_id is null
+        or exists (
+          select 1
+          from public.current_cohort_membership cm
+          where cm.person_id = p.id
+            and cm.cohort_id = p_cohort_id
+        )
+      )
+  ),
+  federated_people as (
+    select
+      sp.id as person_id,
+      sp.name as person_name,
+      fp.id as federated_person_id,
+      fp.federation
+    from scoped_people sp
+    cross join lateral (
+      values
+        ('csts'::text, nullif(regexp_replace(sp.csts_id, '\D', '', 'g'), '')::bigint),
+        ('wdsf'::text, nullif(regexp_replace(sp.wdsf_id, '\D', '', 'g'), '')::bigint)
+    ) ids(federation, external_id)
+    join federated.person fp
+      on fp.federation = ids.federation
+     and fp.external_id = ids.external_id
   )
-  SELECT
-    p.id                                   AS person_id,
-    coalesce(p.canonical_name, concat_ws(' ', p.first_name, p.last_name)) AS person_name,
-    c.id                                   AS competitor_id,
-    c.name                                 AS competitor_name,
-    e.name                                 AS event_name,
-    coalesce(e.location, e.city)           AS event_location,
-    e.id                                   AS event_id,
-    comp.id                                AS competition_id,
-    comp.start_date                        AS competition_date,
-    cat.name                               AS category_name,
-    cat.series,
+  select
+    fp.person_id,
+    fp.person_name,
+    fp.federation,
+    fp.federated_person_id,
+    c.id as competitor_id,
+    c.name as competitor_name,
+    c.competitor_type,
+    e.id as event_id,
+    e.name as event_name,
+    coalesce(e.location, e.city) as event_location,
+    comp.id as competition_id,
+    comp.start_date as competition_date,
+    comp.check_in_end,
+    cat as category,
+    dances.dances,
+    comp.participants_total as participants,
+    null::integer as ranking,
+    null::integer as ranking_to,
+    null::numeric(10,3) as point_gain,
+    null::boolean as is_final,
+    false as has_result
+  from params
+  join federated.competition comp
+    on comp.start_date >= params.since
+   and comp.start_date < params.until
+  join federated.event e on e.id = comp.event_id
+  join federated.category cat on cat.id = comp.category_id
+  join federated.competition_entry ce
+    on ce.competition_id = comp.id
+   and not ce.cancelled
+  join federated.competitor c on c.id = ce.competitor_id
+  join federated.competitor_component cc on cc.competitor_id = c.id
+  join federated_people fp on fp.federated_person_id = cc.person_id
+  left join lateral (
+    select coalesce(array_agg(d.name order by dpd.dance_order), '{}'::text[]) as dances
+    from federated.dance_program_dance dpd
+    join federated.dance d on d.code = dpd.dance_code
+    where dpd.program_id = cat.base_dance_program_id
+  ) dances on true
+  order by
+    comp.start_date,
+    comp.check_in_end nulls last,
+    fp.person_name,
     cat.discipline,
-    cat.age_group,
     cat.class,
-    comp.participants_total                AS participants,
+    c.name;
+$$;
+
+comment on function public.competition_brief(date, date, bigint, bigint[]) is '@simpleCollections only';
+grant all on function public.competition_brief(date, date, bigint, bigint[]) to anonymous;
+
+create or replace function public.competition_report(
+  p_since date default null,
+  p_until date default null,
+  p_cohort_id bigint default null,
+  p_person_ids bigint[] default null
+) returns setof public.competition_participation_record
+language sql stable as $$
+  with params as (
+    select
+      coalesce(p_since, date_trunc('week', now())::date - 2) as since,
+      coalesce(p_until, date_trunc('week', now())::date) as until
+  ),
+  scoped_people as (
+    select distinct p.id, p.name, p.csts_id, p.wdsf_id
+    from public.current_tenant_membership tm
+    join public.person p on p.id = tm.person_id
+    where (p_person_ids is null or p.id = any(p_person_ids))
+      and (
+        p_cohort_id is null
+        or exists (
+          select 1
+          from public.current_cohort_membership cm
+          where cm.person_id = p.id
+            and cm.cohort_id = p_cohort_id
+        )
+      )
+  ),
+  federated_people as (
+    select
+      sp.id as person_id,
+      sp.name as person_name,
+      fp.id as federated_person_id,
+      fp.federation
+    from scoped_people sp
+    cross join lateral (
+      values
+        ('csts'::text, nullif(regexp_replace(sp.csts_id, '\D', '', 'g'), '')::bigint),
+        ('wdsf'::text, nullif(regexp_replace(sp.wdsf_id, '\D', '', 'g'), '')::bigint)
+    ) ids(federation, external_id)
+    join federated.person fp
+      on fp.federation = ids.federation
+     and fp.external_id = ids.external_id
+  )
+  select
+    fp.person_id,
+    fp.person_name,
+    fp.federation,
+    fp.federated_person_id,
+    c.id as competitor_id,
+    c.name as competitor_name,
+    c.competitor_type,
+    e.id as event_id,
+    e.name as event_name,
+    coalesce(e.location, e.city) as event_location,
+    comp.id as competition_id,
+    comp.start_date as competition_date,
+    comp.check_in_end,
+    cat as category,
+    dances.dances,
+    comp.participants_total as participants,
     cr.ranking,
     cr.ranking_to,
     cr.point_gain,
-    cr.is_final
-  FROM params
-  CROSS JOIN federated.competitor_component cc
-  JOIN federated.person p ON p.id = cc.person_id
-  JOIN federated.competitor c ON c.id = cc.competitor_id
-  JOIN federated.competition_result cr ON cr.competitor_id = c.id
-  JOIN federated.competition comp ON comp.id = cr.competition_id
-  JOIN federated.event e ON e.id = comp.event_id
-  JOIN federated.category cat ON cat.id = comp.category_id
-  WHERE cc.person_id = ANY(params.person_ids)
-    AND comp.start_date BETWEEN params.since AND params.until
-  ORDER BY
+    cr.is_final,
+    true as has_result
+  from params
+  join federated.competition comp
+    on comp.start_date >= params.since
+   and comp.start_date < params.until
+  join federated.event e on e.id = comp.event_id
+  join federated.category cat on cat.id = comp.category_id
+  join federated.competition_result cr on cr.competition_id = comp.id
+  join federated.competitor c on c.id = cr.competitor_id
+  join federated.competitor_component cc on cc.competitor_id = c.id
+  join federated_people fp on fp.federated_person_id = cc.person_id
+  left join lateral (
+    select coalesce(array_agg(d.name order by dpd.dance_order), '{}'::text[]) as dances
+    from federated.dance_program_dance dpd
+    join federated.dance d on d.code = dpd.dance_code
+    where dpd.program_id = cat.base_dance_program_id
+  ) dances on true
+  order by
     comp.start_date,
-    person_name,
+    fp.person_name,
     cat.discipline,
     cat.class,
-    cr.ranking;
+    cr.ranking,
+    c.name;
 $$;
-comment on function public.competition_report is '@simpleCollections only';
-grant all on function public.competition_report to anonymous;
+
+comment on function public.competition_report(date, date, bigint, bigint[]) is '@simpleCollections only';
+grant all on function public.competition_report(date, date, bigint, bigint[]) to anonymous;
 
 select graphile_worker.add_job('frontier_process', json_build_object('isFullRebuild', true));

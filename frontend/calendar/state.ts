@@ -2,6 +2,7 @@ import { atom } from 'jotai';
 import { selectAtom } from 'jotai/utils';
 import type {
   CalendarEvent,
+  CalendarInstanceEvent,
   DragAction,
   DragDirection,
   InteractionInfo,
@@ -27,13 +28,13 @@ export const isDraggingAtom = atom(false);
 
 export type DragSubject = null | {
   action: DragAction;
-  event?: CalendarEvent | null;
+  event?: CalendarInstanceEvent | null;
   direction?: DragDirection | null;
 };
 export const dragSubjectAtom = atom<DragSubject>(null);
 export const dragListenersAtom = atom<{
-  onMove?: (event: CalendarEvent, info: InteractionInfo) => void;
-  onResize?: (event: CalendarEvent, info: InteractionInfo) => void;
+  onMove?: (event: CalendarInstanceEvent, info: InteractionInfo) => void;
+  onResize?: (event: CalendarInstanceEvent, info: InteractionInfo) => void;
   onSelectSlot?: (slot: SlotInfo) => void;
   onDrillDown?: (date: Date) => void;
 }>({});

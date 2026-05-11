@@ -15,6 +15,7 @@ import { personActions } from '@/lib/actions/person';
 import { useActions } from '@/lib/actions';
 import { tenantIdAtom } from '@/ui/state/auth';
 import { useAtomValue } from 'jotai';
+import { CompetitionWeekPanel } from '@/ui/Competitions';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
@@ -64,6 +65,13 @@ export function PersonView({ id }: { id: string }) {
           id: 'payment',
           title: <>Platby</>,
           contents: () => <PersonPaymentsView key="payments" id={id} />,
+        },
+        {
+          id: 'competitions',
+          title: <>Soutěže</>,
+          contents: () => (
+            <CompetitionWeekPanel personIds={[id]} />
+          ),
         },
       );
     }

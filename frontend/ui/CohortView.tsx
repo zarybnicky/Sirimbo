@@ -15,6 +15,7 @@ import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
+import { CompetitionWeekPanel } from '@/ui/Competitions';
 
 type CohortWithMembers = NonNullable<CohortWithMembersQuery['entity']>;
 
@@ -85,6 +86,8 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
           </div>
         ))}
       </div>
+
+      <CompetitionWeekPanel cohortId={cohort.id} />
     </>
   );
 }

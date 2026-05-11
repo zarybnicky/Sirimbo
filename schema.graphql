@@ -1346,44 +1346,28 @@ enum CohortsOrderBy {
   TENANT_ID_DESC
 }
 
-type CompetitionBriefRecord {
-  ageGroup: String
-  categoryName: String
+type CompetitionParticipationRecord {
+  category: Category
   checkInEnd: Time
-  class: String
   competitionDate: Date
   competitionId: BigInt
   competitorId: String
   competitorName: String
+  competitorType: CompetitorType
   dances: [String]
-  discipline: String
   eventId: BigInt
   eventLocation: String
   eventName: String
-  personId: String
-  personName: String
-}
-
-type CompetitionReportRecord {
-  ageGroup: String
-  categoryName: String
-  class: String
-  competitionDate: Date
-  competitionId: BigInt
-  competitorId: String
-  competitorName: String
-  discipline: String
-  eventId: BigInt
-  eventLocation: String
-  eventName: String
+  federatedPersonId: String
+  federation: String
+  hasResult: Boolean
   isFinal: Boolean
   participants: Int
-  personId: String
+  personId: BigInt
   personName: String
   pointGain: BigFloat
   ranking: Int
   rankingTo: Int
-  series: String
 }
 
 enum CompetitorType {
@@ -6719,20 +6703,22 @@ type Query {
 
     """Skip the first `n` values."""
     offset: Int
-    pPersonIds: [String]
+    pCohortId: BigInt
+    pPersonIds: [BigInt]
     pSince: Date
     pUntil: Date
-  ): [CompetitionBriefRecord!]
+  ): [CompetitionParticipationRecord!]
   competitionReportList(
     """Only read the first `n` values of the set."""
     first: Int
 
     """Skip the first `n` values."""
     offset: Int
-    pPersonIds: [String]
+    pCohortId: BigInt
+    pPersonIds: [BigInt]
     pSince: Date
     pUntil: Date
-  ): [CompetitionReportRecord!]
+  ): [CompetitionParticipationRecord!]
 
   """Get a single `Couple`."""
   couple(id: BigInt!): Couple

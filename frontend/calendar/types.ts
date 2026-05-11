@@ -1,13 +1,12 @@
 import type { EventFragment, EventInstanceWithTrainerFragment } from '@/graphql/Event';
+import type { CompetitionEntry } from '@/ui/Competitions';
 
 export type DateRange = {
   since: Date;
   until: Date;
 };
 
-export interface CalendarEvent {
-  event: EventFragment;
-  instance: EventInstanceWithTrainerFragment;
+type CalendarItemBase = {
   start: Date;
   end: Date;
   resourceIds: readonly string[];
@@ -15,7 +14,23 @@ export interface CalendarEvent {
   isResizable?: boolean;
   __isPreview?: boolean;
   sourceResource?: Resource;
-}
+};
+
+export type CalendarInstanceEvent = CalendarItemBase & {
+  kind: 'event';
+  event: EventFragment;
+  instance: EventInstanceWithTrainerFragment;
+};
+
+export type CalendarCompetitionEvent = CalendarItemBase & {
+  kind: 'competition';
+  id: string;
+  title: string;
+  eventLocation: string | null;
+  items: CompetitionEntry[];
+};
+
+export type CalendarEvent = CalendarInstanceEvent | CalendarCompetitionEvent;
 
 export interface Resource {
   resourceId: string;

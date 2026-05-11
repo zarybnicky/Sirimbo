@@ -4,19 +4,26 @@ import { formatEventType, formatWeekDay } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
-import type { CalendarEvent, ViewProps } from '@/calendar/types';
+import type {
+  CalendarCompetitionEvent,
+  CalendarInstanceEvent,
+  ViewProps,
+} from '@/calendar/types';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
 import { useAuth } from '@/ui/use-auth';
+import { CompetitionEventContent } from '@/ui/Competitions';
 import { cardCls } from '@/ui/style';
 import { EventFormType } from '@/ui/event-form/types';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
+import { localDateKey } from '@/calendar/localizer';
 
 type MapItem = {
-  lessons: Map<string, CalendarEvent[]>;
-  groups: CalendarEvent[];
+  competitions: CalendarCompetitionEvent[];
+  lessons: Map<string, CalendarInstanceEvent[]>;
+  groups: CalendarInstanceEvent[];
 };
 
 const preventDefault = (e: Event) => e.preventDefault();
@@ -25,10 +32,20 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   const dataByDay = React.useMemo(() => {
     const map = new Map<string, MapItem>();
     for (const calendarEvent of events) {
-      const { instance } = calendarEvent;
+      const date = localDateKey(startOf(calendarEvent.start, 'day'));
+      const mapItem: MapItem = map.get(date) ?? {
+        competitions: [],
+        groups: [],
+        lessons: new Map(),
+      };
 
-      const date = startOf(new Date(instance.since), 'day').toISOString();
-      const mapItem: MapItem = map.get(date) ?? { groups: [], lessons: new Map() };
+      if (calendarEvent.kind === 'competition') {
+        mapItem.competitions.push(calendarEvent);
+        map.set(date, mapItem);
+        continue;
+      }
+
+      const { instance } = calendarEvent;
       if (instance.type === 'LESSON') {
         const trainers = instance.trainersList ?? [];
         const key = trainers
@@ -48,6 +65,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
         [
           date,
           {
+            competitions: itemMap.competitions,
             groups: itemMap.groups.toSorted(
               (x, y) => x.start.getTime() - y.start.getTime(),
             ),
@@ -77,10 +95,13 @@ function Agenda({ events }: ViewProps): React.ReactNode {
       {dataByDay.map(([date, dateEntry]) => (
         <React.Fragment key={date}>
           <div className="text-2xl tracking-wide mt-8 mb-2">
-            {formatWeekDay(new Date(date))}
+            {formatWeekDay(new Date(`${date}T00:00:00`))}
           </div>
 
           <div className="flex justify-start flex-wrap gap-2">
+            {dateEntry.competitions.map((calendarEvent) => (
+              <CompetitionBlock key={calendarEvent.id} calendarEvent={calendarEvent} />
+            ))}
             {dateEntry.groups.map((calendarEvent) => (
               <GroupLesson
                 key={calendarEvent.instance.id}
@@ -97,7 +118,27 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   );
 }
 
-function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
+function CompetitionBlock({
+  calendarEvent,
+}: {
+  calendarEvent: CalendarCompetitionEvent;
+}) {
+  return (
+    <div
+      className={cardCls({
+        className: 'min-w-[200px] w-72 rounded-lg border-green-7 bg-green-2 p-3',
+      })}
+    >
+      <CompetitionEventContent
+        title={calendarEvent.title}
+        location={calendarEvent.eventLocation}
+        entries={calendarEvent.items}
+      />
+    </div>
+  );
+}
+
+function GroupLesson({ calendarEvent }: { calendarEvent: CalendarInstanceEvent }) {
   const { event, instance } = calendarEvent;
 
   return (
@@ -142,10 +183,10 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarEvent }) {
   );
 }
 
-function LessonGroup({ items }: { items: CalendarEvent[] }) {
+function LessonGroup({ items }: { items: CalendarInstanceEvent[] }) {
   const auth = useAuth();
 
-  const locLabel = (it: CalendarEvent) =>
+  const locLabel = (it: CalendarInstanceEvent) =>
     it.instance.location?.name || it.instance.locationText || '-';
 
   const nextEvent: Partial<EventFormType> = React.useMemo(() => {

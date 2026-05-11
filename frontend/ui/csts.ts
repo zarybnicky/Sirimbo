@@ -7,6 +7,34 @@ export function formatCstsClass(value: string | null | undefined) {
   return !value ? null : value === 'S' ? 'M' : value;
 }
 
+export function formatCstsCategoryName(
+  category:
+    | {
+        ageGroup?: string | null;
+        class?: string | null;
+        discipline?: string | null;
+      }
+    | null
+    | undefined,
+) {
+  if (!category) return '';
+  const ageGroup =
+    category.ageGroup?.toLowerCase() === 'adult' ? 'Dospělí' : category.ageGroup;
+  const disciplineKey = category.discipline?.toLowerCase();
+  const discipline =
+    disciplineKey === 'standard'
+      ? 'STT'
+      : disciplineKey === 'latin'
+        ? 'LAT'
+        : disciplineKey === 'dancesport'
+          ? null
+          : category.discipline;
+
+  return [ageGroup, formatCstsClass(category.class), discipline]
+    .filter(Boolean)
+    .join(' ');
+}
+
 export function getBestCstsProgress<T extends CstsProgressRecordFragment>(
   progressList: readonly T[] | null | undefined,
   discipline: string,
