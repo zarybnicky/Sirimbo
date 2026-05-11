@@ -98,7 +98,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
             {formatWeekDay(new Date(`${date}T00:00:00`))}
           </div>
 
-          <div className="flex justify-start flex-wrap gap-2">
+          <div className="flex justify-start flex-wrap gap-2 opacity-90">
             {dateEntry.competitions.map((calendarEvent) => (
               <div
                 key={calendarEvent.id}

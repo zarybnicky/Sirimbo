@@ -123,11 +123,13 @@ function CategoryList({
         {[
           formatAgeGroup(person.birthDate),
           formatCstsClass(item.category?.class),
-          item.category?.discipline === 'Standard'
-            ? 'STT'
-            : item.category?.discipline === 'Latin'
-              ? 'LAT'
-              : item.category?.discipline,
+          item.category?.discipline === 'Standard_Latin'
+            ? 'STT+LAT'
+            : item.category?.discipline === 'Standard'
+              ? 'STT'
+              : item.category?.discipline === 'Latin'
+                ? 'LAT'
+                : item.category?.discipline,
         ]
           .filter(Boolean)
           .join(' ')}

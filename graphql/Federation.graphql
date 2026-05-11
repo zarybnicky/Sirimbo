@@ -1,3 +1,14 @@
+fragment CompetitionCategory on Category {
+  id
+  name
+  class
+  series
+  ageGroup
+  discipline
+  competitorType
+}
+
+
 query CompetitionBrief($since: Date, $until: Date, $personIds: [BigInt], $cohortId: BigInt) {
   competitionBriefList(pCohortId: $cohortId, pPersonIds: $personIds, pSince: $since, pUntil: $until) {
     eventId
@@ -10,13 +21,8 @@ query CompetitionBrief($since: Date, $until: Date, $personIds: [BigInt], $cohort
     personId
     personName
     checkInEnd
-    dances
     category {
-      name
-      class
-      series
-      ageGroup
-      discipline
+      ...CompetitionCategory
     }
   }
 }
@@ -38,11 +44,7 @@ query CompetitionReport($since: Date, $until: Date, $personIds: [BigInt], $cohor
     pointGain
     isFinal
     category {
-      name
-      class
-      series
-      ageGroup
-      discipline
+      ...CompetitionCategory
     }
   }
 }

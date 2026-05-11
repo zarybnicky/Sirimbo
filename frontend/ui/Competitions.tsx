@@ -4,7 +4,6 @@ import {
   CompetitionReportDocument,
   type CompetitionReportQuery,
 } from '@/graphql/Federation';
-import { cn } from '@/lib/cn';
 import { formatCstsCategoryName } from '@/ui/csts';
 import { numericDateFormatter } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
@@ -117,37 +116,38 @@ function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
 
 function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry[] }) {
   return (
-    <section className="flex flex-col gap-5">
+    <>
       {groupByDayEvent(entries).map((day) => (
-        <section key={day.key} className="space-y-3">
-          <h5 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
-            {numericDateFormatter.format(new Date(`${day.competitionDate}T00:00:00`))}
-          </h5>
+        <React.Fragment key={day.key}>
           {day.eventGroups.map((event) => (
-            <section key={event.key} className="space-y-2">
-              <div className="min-w-0">
-                <h6 className="text-sm font-semibold leading-tight text-neutral-12">
-                  {event.eventName ?? ''}
-                </h6>
-                <div className="truncate text-xs text-neutral-10">
+            <section key={event.key} className="flex flex-col gap-1 justify-start">
+              <div className="min-w-0 pt-2">
+                <h6 className="text-xs text-neutral-11">
                   {event.eventLocation ?? ''}
+                  {', '}
+                  {numericDateFormatter.format(
+                    new Date(`${day.competitionDate}T00:00:00`),
+                  )}
+                </h6>
+                <div className="text-sm font-semibold leading-tight text-neutral-12">
+                  {event.eventName ?? ''}
                 </div>
               </div>
-              <div className="space-y-2">
-                {event.competitorGroups.map((group) => (
-                  <article
-                    key={group.key}
-                    className={cardCls({ className: 'rounded-lg border-neutral-6 py-2' })}
-                  >
-                    <CompetitionCompetitorGroup group={group} />
-                  </article>
-                ))}
-              </div>
+              {event.competitorGroups.map((group) => (
+                <article
+                  key={group.key}
+                  className={cardCls({
+                    className: 'rounded-lg border-neutral-6 p-2 pb-1',
+                  })}
+                >
+                  <CompetitionCompetitorGroup group={group} />
+                </article>
+              ))}
             </section>
           ))}
-        </section>
+        </React.Fragment>
       ))}
-    </section>
+    </>
   );
 }
 
@@ -171,7 +171,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
   return (
     <>
       <div className="flex items-start justify-between gap-3 min-w-0 pb-1">
-        <h5 className="break-words text-sm font-bold leading-tight text-neutral-12">
+        <h5 className="break-words text-sm font-medium leading-tight text-neutral-12">
           {group.competitorName}
         </h5>
       </div>
@@ -179,7 +179,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
         {briefEntries.map((entry) => (
           <div
             key={competitionEntryKey(entry)}
-            className="grid grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-2 py-1.5 text-xs"
+            className="grid grid-cols-[4rem_minmax(0,1fr)] items-start gap-2 py-1.5 text-xs"
           >
             <div className="font-semibold tabular-nums text-neutral-11">
               {entry.checkInEnd ? entry.checkInEnd.split(':').slice(0, 2).join(':') : ''}
@@ -197,25 +197,22 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
         {reportEntries.map((entry) => (
           <div
             key={competitionEntryKey(entry)}
-            className="grid grid-cols-[3.5rem_minmax(0,1fr)_auto] items-center gap-2 py-1.5 text-xs"
+            className="grid grid-cols-[4rem_minmax(0,1fr)_auto] items-center gap-2 py-1.5 text-xs"
           >
-            <div
-              className={cn(
-                'text-sm font-bold tabular-nums leading-none',
-                entry.ranking && entry.ranking <= 3
-                  ? 'text-accent-11'
-                  : 'text-neutral-11',
-              )}
-            >
-              {formatRank(entry)}
-              {` / ${entry.participants ?? ''}`}
+            <div className="font-semibold tabular-nums leading-none text-neutral-11">
+              <span
+                className={entry.ranking && entry.ranking <= 3 ? 'text-accent-11' : ''}
+              >
+                {formatRank(entry)}
+              </span>
+              {` z ${entry.participants ?? ''}`}
             </div>
             <div className="flex min-w-0 items-center gap-1.5 truncate font-semibold text-neutral-12">
               {formatCstsCategoryName(entry.category)}
             </div>
             <div className="flex min-w-20 items-baseline justify-end gap-1 font-semibold tabular-nums text-green-11">
               {Number(entry.pointGain ?? 0) > 0 || entry.isFinal
-                ? `+${Number(entry.pointGain ?? 0).toString()}${entry.isFinal ? 'F' : null}`
+                ? `+${Number(entry.pointGain ?? 0).toString()}b ${entry.isFinal ? 'F' : ''}`
                 : ''}
             </div>
           </div>
@@ -268,6 +265,7 @@ export function CompetitionWeekPanel({
   const auth = useAuth();
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
   const [onlyMine, setOnlyMine] = React.useState(allowOnlyMine);
+  const myPersonIds = React.useMemo(() => new Set(auth.personIds), [auth.personIds]);
   const { mode, variables } = React.useMemo(() => {
     const weekUntil = add(startDate, 1, 'week');
     const today = startOf(new Date(), 'day');
@@ -298,37 +296,51 @@ export function CompetitionWeekPanel({
   const [{ data: briefData, fetching: fetchingBrief }] = useQuery({
     query: CompetitionBriefDocument,
     variables: variables.brief,
-    pause: mode !== 'past',
+    pause: mode === 'past',
   });
   const [{ data: reportData, fetching: fetchingReport }] = useQuery({
     query: CompetitionReportDocument,
     variables: variables.report,
-    pause: mode !== 'future',
+    pause: mode === 'future',
   });
-  const briefs = React.useMemo<CompetitionBriefEntry[]>(
-    () =>
-      mode !== 'past'
-        ? briefData?.competitionBriefList?.map((entry) => ({
-            ...entry,
-            kind: 'brief',
-          })) || []
-        : [],
-    [briefData?.competitionBriefList, mode],
-  );
-  const reports = React.useMemo<CompetitionReportEntry[]>(
-    () =>
-      mode !== 'future'
-        ? reportData?.competitionReportList?.map((entry) => ({
-            ...entry,
-            kind: 'report',
-          })) || []
-        : [],
-    [mode, reportData?.competitionReportList],
-  );
+  const briefs = React.useMemo<CompetitionBriefEntry[]>(() => {
+    if (mode === 'past') return [];
+    const all = (briefData?.competitionBriefList || []).map(
+      (x) => ({ ...x, kind: 'brief' }) satisfies CompetitionBriefEntry,
+    );
+    return onlyMine
+      ? all.filter((entry) => entry.personId && myPersonIds.has(entry.personId))
+      : all;
+  }, [briefData?.competitionBriefList, mode, myPersonIds, onlyMine]);
+
+  const reports = React.useMemo<CompetitionReportEntry[]>(() => {
+    if (mode === 'future') return [];
+    const all = (reportData?.competitionReportList || []).map(
+      (x) => ({ ...x, kind: 'report' }) satisfies CompetitionReportEntry,
+    );
+    return onlyMine
+      ? all.filter((entry) => entry.personId && myPersonIds.has(entry.personId))
+      : all;
+  }, [mode, myPersonIds, onlyMine, reportData?.competitionReportList]);
+
+  const locations = React.useMemo(() => {
+    const locations = new Set<string>();
+    if (mode !== 'past')
+      for (const x of briefData?.competitionBriefList ?? [])
+        if (x.eventLocation) locations.add(x.eventLocation);
+    if (mode !== 'future')
+      for (const x of reportData?.competitionReportList ?? [])
+        if (x.eventLocation) locations.add(x.eventLocation);
+    return [...locations];
+  }, [briefData?.competitionBriefList, mode, reportData?.competitionReportList]);
+
+  const fetching = fetchingReport || fetchingBrief;
+  const hasVisibleEntries = briefs.length > 0 || reports.length > 0;
 
   return (
     <section className="flex flex-col relative">
       <WeekPicker title="Soutěže" startDate={startDate} onChange={setStartDate} />
+
       {allowOnlyMine && (
         <div className="absolute top-7 right-0">
           <Checkbox
@@ -342,21 +354,29 @@ export function CompetitionWeekPanel({
       )}
 
       <div className="text-sm text-neutral-9">
-        {fetchingReport || fetchingBrief ? 'Načítám...' : ''}
-        {!fetchingReport && !fetchingBrief && briefs.length === 0 && reports.length === 0
-          ? 'Žádné soutěže'
-          : ''}
+        {fetching ? 'Načítám...' : ''}
+        {!fetching && !hasVisibleEntries ? 'Žádné soutěže tento týden. ' : ''}
+        {!fetching && !hasVisibleEntries && onlyMine && locations.length > 0 && (
+          <a
+            className="underline text-accent-12"
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              setOnlyMine(false);
+            }}
+          >
+            Další soutěže s klubovou účastí: {locations.join(', ')}.
+          </a>
+        )}
       </div>
 
       {mode === 'current' ? (
-        <div className="mt-2 space-y-4">
+        <div className="flex flex-col gap-4">
           <CompetitionPanelFrame entries={reports} />
           <CompetitionPanelFrame entries={briefs} />
         </div>
       ) : (
-        <div className="mt-2">
-          <CompetitionPanelFrame entries={mode === 'past' ? reports : briefs} />
-        </div>
+        <CompetitionPanelFrame entries={mode === 'past' ? reports : briefs} />
       )}
     </section>
   );

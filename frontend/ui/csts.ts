@@ -25,13 +25,21 @@ export function formatCstsCategoryName(
     series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : '',
     ageGroup?.toLowerCase() === 'adult'
       ? 'Dospělí'
-      : category.ageGroup?.replace('_', ' '),
+      : ageGroup?.toLowerCase() === 'youth'
+        ? 'Mládež'
+        : ageGroup?.toLowerCase() === 'juvenile_ii'
+          ? 'Děti 2'
+          : ageGroup?.toLowerCase() === 'juvenile_i'
+            ? 'Děti 1'
+            : category.ageGroup?.replace('_', ' '),
     formatCstsClass(category.class),
-    discipline?.toLowerCase() === 'standard'
-      ? 'STT'
-      : discipline?.toLowerCase() === 'latin'
-        ? 'LAT'
-        : discipline,
+    discipline === 'Standard_Latin'
+      ? 'STT+LAT'
+      : discipline?.toLowerCase() === 'standard'
+        ? 'STT'
+        : discipline?.toLowerCase() === 'latin'
+          ? 'LAT'
+          : discipline,
   ]
     .filter(Boolean)
     .join(' ');
