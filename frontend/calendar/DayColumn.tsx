@@ -383,7 +383,7 @@ function DayColumn({
         </div>
       ))}
 
-      <div className="absolute inset-0 mr-[20px]">
+      <div className="absolute inset-0 mr-[4px] md:mr-[8px] lg:mr-[16px]">
         {backgroundEventsInRange.map(({ event, style }) => (
           <TimeGridEvent
             isBackgroundEvent
