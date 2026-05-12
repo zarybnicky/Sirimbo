@@ -61,6 +61,7 @@ function toCompetitionEntry(item: CompetitionItem): CompetitionEntry {
     eventLocation: item.competitionEventLocation,
     competitionId: item.competitionId,
     competitionDate: item.competitionDate,
+    competitionType: item.competitionType,
     competitorId: item.competitorName ?? item.personId,
     competitorName: item.competitorName,
     personId: item.personId,
@@ -95,7 +96,7 @@ export function ActivityTimeline({
   const [mode, setMode] = React.useState<TimelineMode>('future');
   const [pages, setPages] = React.useState(1);
   const [filters, setFilters] = React.useState<TimelineFilter[]>(() =>
-    FILTERS.map(([value]) => value),
+    FILTERS.map(([value]) => value).filter(x => cohortId ? x !== 'LESSON' : true),
   );
   const scopeKey = `${cohortId ?? ''}:${personIds?.join(',') ?? ''}`;
   const range = React.useMemo(() => rangeFor(mode, pages), [mode, pages]);
@@ -320,7 +321,7 @@ function TimelineEventButton({
       instance={instance}
       viewer="auto"
       suffix={
-        mode === 'past' && instance.type !== 'LESSON' ? <AttendanceSummary compact={isCohort} items={items} /> : undefined
+        (mode === 'past' || isCohort) && (instance.type !== 'LESSON' || isCohort) ? <AttendanceSummary compact={isCohort && instance.type !== 'LESSON'} items={items} /> : undefined
       }
     />
   );
@@ -397,7 +398,7 @@ function CompetitionTimelineCard({ items }: { items: CompetitionItem[] }) {
   return (
     <div
       className={cardCls({
-        className: 'min-w-[200px] w-72 rounded-lg border-green-7 bg-green-2 p-3',
+        className: 'w-full rounded-lg border-green-7 bg-green-2 p-3',
       })}
     >
       <CompetitionEventContent

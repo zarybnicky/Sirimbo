@@ -32,14 +32,8 @@ const Form = z.object({
   birthDate: z.string().nullish(),
   email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),
-  cstsId: z
-    .string()
-    .regex(/[0-9]{8}/, 'Neplatné IDT')
-    .nullish(),
-  wdsfId: z
-    .string()
-    .regex(/[0-9]{8}/, 'Neplatný MIN')
-    .nullish(),
+  cstsId: z.number().int().positive().nullable().optional(),
+  wdsfId: z.number().int().positive().nullable().optional(),
   taxIdentificationNumber: z
     .string()
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
@@ -135,6 +129,7 @@ export function CreateMembershipApplicationForm({
         <TextFieldElement
           control={control}
           name="wdsfId"
+          type="number"
           label="WDSF MIN"
           placeholder="10000000"
         />

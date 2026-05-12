@@ -1,5 +1,129 @@
 do $$
 begin
+  if to_regtype('federated.competition_type') is null then
+    create type federated.competition_type as enum (
+      'cup',
+      'ranking',
+      'league',
+      'championship',
+      'top_level',
+      'super_league',
+      'g_cup',
+      'unknown'
+    );
+  end if;
+end
+$$;
+
+create or replace function app_private.normalize_name(text) returns text as $$
+  select lower(public.unaccent('public.unaccent', $1));
+$$ language sql immutable parallel safe strict;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_enum e
+    join pg_type t on t.oid = e.enumtypid
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'federated'
+      and t.typname = 'competition_type'
+      and e.enumlabel = 'unknown'
+  ) then
+    alter type federated.competition_type add value 'unknown';
+  end if;
+end
+$$;
+
+alter table federated.competition
+  add column if not exists competition_type federated.competition_type;
+
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'federated'
+      and table_name = 'competition'
+      and column_name = 'competition_type'
+      and udt_schema <> 'federated'
+  ) then
+    alter table federated.competition
+      alter column competition_type type federated.competition_type
+      using case competition_type::text
+        when 'Cup' then 'cup'
+        when 'Ranking' then 'ranking'
+        when 'League' then 'league'
+        when 'Championship' then 'championship'
+        when 'TopLevel' then 'top_level'
+        when 'SuperLeague' then 'super_league'
+        when 'GCup' then 'g_cup'
+        when 'cup' then 'cup'
+        when 'ranking' then 'ranking'
+        when 'league' then 'league'
+        when 'championship' then 'championship'
+        when 'top_level' then 'top_level'
+        when 'super_league' then 'super_league'
+        when 'g_cup' then 'g_cup'
+        when 'Unknown' then 'unknown'
+        when 'unknown' then 'unknown'
+        else null
+      end::federated.competition_type;
+  end if;
+end
+$$;
+
+comment on column federated.competition.competition_type is
+  'Federation-provided competition type/grade, for example CSTS Cup, Ranking, League, Championship.';
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_attribute a on a.attrelid = t.typrelid
+    where t.oid = 'public.competition_participation_record'::regtype
+      and a.attname = 'competition_type'
+      and not a.attisdropped
+  ) then
+    alter type public.competition_participation_record
+      add attribute competition_type federated.competition_type;
+  elsif exists (
+    select 1
+    from pg_type t
+    join pg_attribute a on a.attrelid = t.typrelid
+    where t.oid = 'public.competition_participation_record'::regtype
+      and a.attname = 'competition_type'
+      and a.atttypid <> 'federated.competition_type'::regtype
+      and not a.attisdropped
+  ) then
+    alter type public.competition_participation_record
+      alter attribute competition_type type federated.competition_type cascade;
+  end if;
+end
+$$;
+
+drop function if exists public.activity_timeline(
+  timestamptz,
+  timestamptz,
+  bigint[],
+  bigint,
+  public.activity_timeline_kind[],
+  public.event_type[]
+);
+
+drop function if exists public.activity_timeline(
+  timestamptz,
+  timestamptz,
+  bigint[],
+  bigint,
+  public.activity_timeline_kind[]
+);
+
+drop view if exists public.activity_timeline_item;
+
+do $$
+begin
   if to_regtype('public.activity_timeline_kind') is null then
     create type public.activity_timeline_kind as enum (
       'EVENT_ATTENDANCE',
@@ -37,15 +161,16 @@ select
   null::integer as ranking,
   null::integer as ranking_to,
   null::numeric(10, 3) as point_gain,
-  null::boolean as is_final
+  null::boolean as is_final,
+  null::federated.competition_type as competition_type
 where false;
 
 comment on view public.activity_timeline_item is $$
 @primaryKey id
 @interface mode:single type:kind
 @type EVENT_ATTENDANCE name:ActivityEventAttendance attributes:event_attendance_id,event_instance_id
-@type COMPETITION_BRIEF name:ActivityCompetitionBrief attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,check_in_end,category,dances,participants
-@type COMPETITION_RESULT name:ActivityCompetitionResult attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,dances,participants,ranking,ranking_to,point_gain,is_final
+@type COMPETITION_BRIEF name:ActivityCompetitionBrief attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,check_in_end,category,dances,participants,competition_type
+@type COMPETITION_RESULT name:ActivityCompetitionResult attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,dances,participants,ranking,ranking_to,point_gain,is_final,competition_type
 @foreignKey (person_id) references person (id)|@fieldName person|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @foreignKey (event_attendance_id) references event_attendance (id)|@fieldName eventAttendance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @foreignKey (event_instance_id) references event_instance (id)|@fieldName eventInstance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
@@ -140,7 +265,8 @@ begin
         null::integer as ranking,
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
-        null::boolean as is_final
+        null::boolean as is_final,
+        null::federated.competition_type as competition_type
       from public.event_attendance ea
       join public.event_instance ei on ei.id = ea.instance_id
       join public.person p on p.id = ea.person_id
@@ -185,7 +311,8 @@ begin
         cr.ranking,
         cr.ranking_to,
         cr.point_gain,
-        cr.is_final
+        cr.is_final,
+        cr.competition_type
       from (
         select *
         from public.competition_report(
@@ -251,7 +378,8 @@ begin
         null::integer as ranking,
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
-        null::boolean as is_final
+        null::boolean as is_final,
+        cb.competition_type
       from (
         select *
         from public.competition_brief(
@@ -296,10 +424,116 @@ grant all on function public.activity_timeline(
   public.event_type[]
 ) to anonymous;
 
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'person'
+      and column_name = 'csts_id'
+      and data_type <> 'integer'
+  ) then
+    alter table public.person
+      alter column csts_id type integer
+      using nullif(regexp_replace(csts_id::text, '\D', '', 'g'), '')::integer;
+  end if;
+
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'person'
+      and column_name = 'wdsf_id'
+      and data_type <> 'integer'
+  ) then
+    alter table public.person
+      alter column wdsf_id type integer
+      using nullif(regexp_replace(wdsf_id::text, '\D', '', 'g'), '')::integer;
+  end if;
+
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'membership_application'
+      and column_name = 'csts_id'
+      and data_type <> 'integer'
+  ) then
+    alter table public.membership_application
+      alter column csts_id type integer
+      using nullif(regexp_replace(csts_id::text, '\D', '', 'g'), '')::integer;
+  end if;
+
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'membership_application'
+      and column_name = 'wdsf_id'
+      and data_type <> 'integer'
+  ) then
+    alter table public.membership_application
+      alter column wdsf_id type integer
+      using nullif(regexp_replace(wdsf_id::text, '\D', '', 'g'), '')::integer;
+  end if;
+end
+$$;
+
+drop function if exists public.person_csts_candidates(public.person, integer);
+drop function if exists public.person_csts_candidates(public.person, integer, real);
+
+do $$
+begin
+  if exists (
+    select 1
+    from pg_attribute a
+    join pg_class c on c.oid = a.attrelid
+    join pg_namespace n on n.oid = c.relnamespace
+    join pg_attrdef d on d.adrelid = a.attrelid and d.adnum = a.attnum
+    join pg_depend dep on dep.objid = d.oid
+    join pg_proc p on p.oid = dep.refobjid
+    join pg_namespace pn on pn.oid = p.pronamespace
+    where n.nspname = 'federated'
+      and c.relname = 'person'
+      and a.attname = 'search_name'
+      and pn.nspname = 'federated'
+      and p.proname = 'normalize_name'
+  ) then
+    alter table federated.person drop column search_name;
+  end if;
+
+  if exists (
+    select 1
+    from pg_attribute a
+    join pg_class c on c.oid = a.attrelid
+    join pg_namespace n on n.oid = c.relnamespace
+    join pg_attrdef d on d.adrelid = a.attrelid and d.adnum = a.attnum
+    join pg_depend dep on dep.objid = d.oid
+    join pg_proc p on p.oid = dep.refobjid
+    join pg_namespace pn on pn.oid = p.pronamespace
+    where n.nspname = 'public'
+      and c.relname = 'person'
+      and a.attname = 'search_name'
+      and pn.nspname = 'federated'
+      and p.proname = 'normalize_name'
+  ) then
+    alter table public.person drop column search_name;
+  end if;
+end
+$$;
+
+alter table federated.person
+  add column if not exists search_name text generated always as (
+    app_private.normalize_name(coalesce(canonical_name, public.immutable_concat_ws(' ', first_name, last_name)))
+  ) stored;
+
+create index if not exists idx_person_search_name_trgm
+  on federated.person using gin (search_name public.gin_trgm_ops);
 
 alter table public.person
   add column if not exists search_name text generated always as (
-    federated.normalize_name(public.immutable_concat_ws(' ', first_name, last_name))
+    app_private.normalize_name(public.immutable_concat_ws(' ', first_name, last_name))
   ) stored;
 
 comment on column public.person.search_name is '@omit';
@@ -311,6 +545,8 @@ create index if not exists federated_person_csts_search_name_trgm_idx
 create index if not exists person_csts_id_idx
   on public.person (csts_id)
   where csts_id is not null;
+
+drop function if exists federated.normalize_name(text);
 
 create or replace function public.person_csts_progress(in_person public.person) returns table (
   competitor_name text,
@@ -334,9 +570,6 @@ $$ language sql stable;
 
 comment on function public.person_csts_progress is '@simpleCollections only';
 grant all on function public.person_csts_progress to anonymous;
-
-drop function if exists public.person_csts_candidates(public.person, integer);
-drop function if exists public.person_csts_candidates(public.person, integer, real);
 
 create or replace function public.person_csts_candidates(in_person public.person, "limit" integer default 10, threshold real default 0.4) returns table (
   id integer,

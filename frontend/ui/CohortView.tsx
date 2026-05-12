@@ -97,7 +97,7 @@ function CategoryList({
   discipline,
 }: {
   person?: {
-    cstsId?: string | null;
+    cstsId?: number | null;
     birthDate?: string | null;
     cstsProgressList?: CstsProgressRecordFragment[] | null;
   } | null;

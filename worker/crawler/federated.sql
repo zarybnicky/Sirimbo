@@ -614,15 +614,16 @@ WITH event AS (
     :checkInEnd::text[],
     :completedAt::text[],
     :registrationFee::text[],
-    :excusedTotal::int[]
+    :excusedTotal::int[],
+    :competitionType::federated.competition_type[]
   ) AS input(
     external_id, category_id, start_date, end_date, participants_total,
-    check_in_end, completed_at, registration_fee, excused_total
+    check_in_end, completed_at, registration_fee, excused_total, competition_type
   )
 )
 INSERT INTO federated.competition (
   federation, external_id, event_id, category_id, start_date, end_date, participants_total,
-  check_in_end, completed_at, registration_fee, excused_total
+  check_in_end, completed_at, registration_fee, excused_total, competition_type
 )
 SELECT
   :federation,
@@ -635,7 +636,8 @@ SELECT
   nullif(input.check_in_end, '')::time,
   nullif(input.completed_at, '')::timestamptz,
   nullif(input.registration_fee, '')::numeric(10,3),
-  input.excused_total
+  input.excused_total,
+  input.competition_type
 FROM input
 CROSS JOIN event
 ON CONFLICT (federation, external_id) DO UPDATE
@@ -647,7 +649,8 @@ ON CONFLICT (federation, external_id) DO UPDATE
       check_in_end = EXCLUDED.check_in_end,
       completed_at = EXCLUDED.completed_at,
       registration_fee = EXCLUDED.registration_fee,
-      excused_total = EXCLUDED.excused_total;
+      excused_total = EXCLUDED.excused_total,
+      competition_type = EXCLUDED.competition_type;
 
 /* @name MergeEventOfficials */
 WITH event AS (

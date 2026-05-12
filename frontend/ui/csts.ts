@@ -37,6 +37,26 @@ export function formatCstsCategoryName(category?: CompetitionCategoryFragment | 
     .join(' ');
 }
 
+export function formatCstsCompetitionType(value: CompetitionType | null | undefined) {
+  switch (value) {
+    case 'CUP':
+      return 'Cup';
+    case 'LEAGUE':
+      return 'TL';
+    case 'CHAMPIONSHIP':
+      return 'MČR';
+    case 'TOP_LEVEL':
+      return 'TopLevel';
+    case 'SUPER_LEAGUE':
+      return 'STL';
+    case 'G_CUP':
+      return 'G-Cup';
+    default:
+    case 'RANKING':
+      return null;
+  }
+}
+
 export function getBestCstsProgress<T extends CstsProgressRecordFragment>(
   progressList: readonly T[] | null | undefined,
   discipline: string,

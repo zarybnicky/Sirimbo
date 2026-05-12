@@ -67,7 +67,7 @@ export async function exportNsa(client: Client) {
       '[TRENEREM_DO]': '',
       '[TRENER_CETNOST]': x.isTrainer ? '3' : '',
       '[TRENER_DRUH_SPORTU]': x.isTrainer ? '66.1' : '',
-      '[EXT_ID]': x.cstsId || '',
+      '[EXT_ID]': x.cstsId?.toString() || '',
       '[SVAZ_ICO_SKTJ]': '',
     });
   }

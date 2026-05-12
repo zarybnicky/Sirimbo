@@ -33,14 +33,8 @@ const Form = z.object({
   suffixTitle: z.string().prefault(''),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED']),
   birthDate: z.string().nullish(),
-  cstsId: z
-    .string()
-    .regex(/^$|\d{8}/, 'Neplatné IDT')
-    .nullish(),
-  wdsfId: z
-    .string()
-    .regex(/^$|\d{8}/, 'Neplatný MIN')
-    .nullish(),
+  cstsId: z.number().int().positive().nullable().optional(),
+  wdsfId: z.number().int().positive().nullable().optional(),
   taxIdentificationNumber: z
     .string()
     .regex(/^$|\d{9,10}/, 'Neplatné rodné číslo')
@@ -258,6 +252,7 @@ export function CreatePersonDialog() {
             <TextFieldElement
               control={control}
               name="wdsfId"
+              type="number"
               label="WDSF MIN"
               placeholder="10000000"
             />

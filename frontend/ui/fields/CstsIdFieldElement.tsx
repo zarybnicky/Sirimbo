@@ -14,16 +14,17 @@ export function CstsIdFieldElement<T extends FieldValues>({
   label = 'ČSTS IDT',
   placeholder = '10000000',
   wrapperClassName,
+  type = 'number',
   ...props
 }: CstsIdFieldElementProps<T>) {
-  const value = useWatch({ control: control!, name }) as string | undefined;
+  const value = useWatch({ control: control!, name }) as number | string | undefined;
 
   const idt = React.useMemo(() => {
-    if (!value) {
+    if (value === null || value === undefined || value === '') {
       return Number.NaN;
     }
 
-    const parsed = Number.parseInt(value, 10);
+    const parsed = typeof value === 'number' ? value : Number.parseInt(value, 10);
     return Number.isNaN(parsed) ? Number.NaN : parsed;
   }, [value]);
 
@@ -40,6 +41,7 @@ export function CstsIdFieldElement<T extends FieldValues>({
         name={name}
         label={label}
         placeholder={placeholder}
+        type={type}
         {...props}
       />
       {query.data ? (

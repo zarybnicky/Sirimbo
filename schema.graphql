@@ -138,6 +138,7 @@ type ActivityCompetitionBrief implements ActivityTimelineItem {
   competitionEventLocation: String
   competitionEventName: String
   competitionId: BigInt
+  competitionType: CompetitionType
   competitorId: String
   competitorName: String
   competitorType: CompetitorType
@@ -165,6 +166,7 @@ type ActivityCompetitionResult implements ActivityTimelineItem {
   competitionEventLocation: String
   competitionEventName: String
   competitionId: BigInt
+  competitionType: CompetitionType
   competitorId: String
   competitorName: String
   competitorType: CompetitorType
@@ -1456,6 +1458,7 @@ type CompetitionParticipationRecord {
   checkInEnd: Time
   competitionDate: Date
   competitionId: BigInt
+  competitionType: CompetitionType
   competitorId: String
   competitorName: String
   competitorType: CompetitorType
@@ -1473,6 +1476,17 @@ type CompetitionParticipationRecord {
   pointGain: BigFloat
   ranking: Int
   rankingTo: Int
+}
+
+enum CompetitionType {
+  CHAMPIONSHIP
+  CUP
+  G_CUP
+  LEAGUE
+  RANKING
+  SUPER_LEAGUE
+  TOP_LEVEL
+  UNKNOWN
 }
 
 enum CompetitorType {
@@ -4638,7 +4652,7 @@ type MembershipApplication {
   birthDate: Date
   createdAt: Datetime!
   createdBy: BigInt!
-  cstsId: String
+  cstsId: Int
   email: String
   firstName: String!
   gender: GenderType!
@@ -4658,7 +4672,7 @@ type MembershipApplication {
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
   user: User
-  wdsfId: String
+  wdsfId: Int
 }
 
 """
@@ -4679,7 +4693,7 @@ input MembershipApplicationCondition {
   createdBy: BigInt
 
   """Checks for equality with the object’s `cstsId` field."""
-  cstsId: String
+  cstsId: Int
 
   """Checks for equality with the object’s `email` field."""
   email: String
@@ -4730,7 +4744,7 @@ input MembershipApplicationCondition {
   updatedAt: Datetime
 
   """Checks for equality with the object’s `wdsfId` field."""
-  wdsfId: String
+  wdsfId: Int
 }
 
 """An input for mutations affecting `MembershipApplication`"""
@@ -4739,7 +4753,7 @@ input MembershipApplicationInput {
   birthDate: Date
   createdAt: Datetime
   createdBy: BigInt!
-  cstsId: String
+  cstsId: Int
   email: String
   firstName: String!
   gender: GenderType!
@@ -4756,7 +4770,7 @@ input MembershipApplicationInput {
   taxIdentificationNumber: String
   tenantId: BigInt
   updatedAt: Datetime
-  wdsfId: String
+  wdsfId: Int
 }
 
 """
@@ -4767,7 +4781,7 @@ input MembershipApplicationPatch {
   birthDate: Date
   createdAt: Datetime
   createdBy: BigInt
-  cstsId: String
+  cstsId: Int
   email: String
   firstName: String
   gender: GenderType
@@ -4784,7 +4798,7 @@ input MembershipApplicationPatch {
   taxIdentificationNumber: String
   tenantId: BigInt
   updatedAt: Datetime
-  wdsfId: String
+  wdsfId: Int
 }
 
 """A `MembershipApplication` edge in the connection."""
@@ -6046,6 +6060,7 @@ type Person {
     offset: Int
     threshold: Float
   ): [PersonCstsCandidatesRecord!]
+  cstsId: Int
   cstsProgressList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -6297,7 +6312,7 @@ type Person {
     """The method to use when ordering `UserProxy`."""
     orderBy: [UserProxiesOrderBy!]
   ): [UserProxy!]!
-  wdsfId: String
+  wdsfId: Int
   weeklyAttendanceList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -6324,7 +6339,7 @@ input PersonCondition {
   createdAt: Datetime
 
   """Checks for equality with the object’s `cstsId` field."""
-  cstsId: String
+  cstsId: Int
 
   """Checks for equality with the object’s `email` field."""
   email: String
@@ -6377,7 +6392,7 @@ input PersonCondition {
   updatedAt: Datetime
 
   """Checks for equality with the object’s `wdsfId` field."""
-  wdsfId: String
+  wdsfId: Int
 }
 
 type PersonCstsCandidatesRecord {
@@ -6400,7 +6415,7 @@ input PersonInput {
   bio: String
   birthDate: Date
   createdAt: Datetime
-  cstsId: String
+  cstsId: Int
   email: String
   externalIds: [String]
   firstName: String!
@@ -6415,7 +6430,7 @@ input PersonInput {
   suffixTitle: String
   taxIdentificationNumber: String
   updatedAt: Datetime
-  wdsfId: String
+  wdsfId: Int
 }
 
 type PersonInvitation {
@@ -6529,7 +6544,7 @@ input PersonPatch {
   bio: String
   birthDate: Date
   createdAt: Datetime
-  cstsId: String
+  cstsId: Int
   email: String
   externalIds: [String]
   firstName: String
@@ -6544,7 +6559,7 @@ input PersonPatch {
   suffixTitle: String
   taxIdentificationNumber: String
   updatedAt: Datetime
-  wdsfId: String
+  wdsfId: Int
 }
 
 type PersonWeeklyAttendanceRecord {

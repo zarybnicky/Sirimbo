@@ -29,6 +29,7 @@ fragment ActivityTimelineItem on ActivityTimelineItem {
     competitionEventLocation
     competitionId
     competitionDate
+    competitionType
     checkInEnd
     category {
       ...CompetitionCategory
@@ -44,6 +45,7 @@ fragment ActivityTimelineItem on ActivityTimelineItem {
     competitionEventLocation
     competitionId
     competitionDate
+    competitionType
     category {
       ...CompetitionCategory
     }

@@ -166,6 +166,7 @@ export type ActivityCompetitionBrief = ActivityTimelineItem & {
   competitionEventLocation: Maybe<Scalars['String']['output']>;
   competitionEventName: Maybe<Scalars['String']['output']>;
   competitionId: Maybe<Scalars['BigInt']['output']>;
+  competitionType: Maybe<CompetitionType>;
   competitorId: Maybe<Scalars['String']['output']>;
   competitorName: Maybe<Scalars['String']['output']>;
   competitorType: Maybe<CompetitorType>;
@@ -191,6 +192,7 @@ export type ActivityCompetitionResult = ActivityTimelineItem & {
   competitionEventLocation: Maybe<Scalars['String']['output']>;
   competitionEventName: Maybe<Scalars['String']['output']>;
   competitionId: Maybe<Scalars['BigInt']['output']>;
+  competitionType: Maybe<CompetitionType>;
   competitorId: Maybe<Scalars['String']['output']>;
   competitorName: Maybe<Scalars['String']['output']>;
   competitorType: Maybe<CompetitorType>;
@@ -1264,6 +1266,7 @@ export type CompetitionParticipationRecord = {
   checkInEnd: Maybe<Scalars['Time']['output']>;
   competitionDate: Maybe<Scalars['Date']['output']>;
   competitionId: Maybe<Scalars['BigInt']['output']>;
+  competitionType: Maybe<CompetitionType>;
   competitorId: Maybe<Scalars['String']['output']>;
   competitorName: Maybe<Scalars['String']['output']>;
   competitorType: Maybe<CompetitorType>;
@@ -1282,6 +1285,16 @@ export type CompetitionParticipationRecord = {
   ranking: Maybe<Scalars['Int']['output']>;
   rankingTo: Maybe<Scalars['Int']['output']>;
 };
+
+export type CompetitionType =
+  | 'CHAMPIONSHIP'
+  | 'CUP'
+  | 'G_CUP'
+  | 'LEAGUE'
+  | 'RANKING'
+  | 'SUPER_LEAGUE'
+  | 'TOP_LEVEL'
+  | 'UNKNOWN';
 
 export type CompetitorType =
   | 'COUPLE'
@@ -3906,7 +3919,7 @@ export type MembershipApplication = {
   birthDate: Maybe<Scalars['Date']['output']>;
   createdAt: Scalars['Datetime']['output'];
   createdBy: Scalars['BigInt']['output'];
-  cstsId: Maybe<Scalars['String']['output']>;
+  cstsId: Maybe<Scalars['Int']['output']>;
   email: Maybe<Scalars['String']['output']>;
   firstName: Scalars['String']['output'];
   gender: GenderType;
@@ -3925,7 +3938,7 @@ export type MembershipApplication = {
   updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `User` that is related to this `MembershipApplication`. */
   user: Maybe<User>;
-  wdsfId: Maybe<Scalars['String']['output']>;
+  wdsfId: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -3942,7 +3955,7 @@ export type MembershipApplicationCondition = {
   /** Checks for equality with the object’s `createdBy` field. */
   createdBy?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `cstsId` field. */
-  cstsId?: InputMaybe<Scalars['String']['input']>;
+  cstsId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `email` field. */
   email?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `firstName` field. */
@@ -3976,7 +3989,7 @@ export type MembershipApplicationCondition = {
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `wdsfId` field. */
-  wdsfId?: InputMaybe<Scalars['String']['input']>;
+  wdsfId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** An input for mutations affecting `MembershipApplication` */
@@ -3985,7 +3998,7 @@ export type MembershipApplicationInput = {
   birthDate?: InputMaybe<Scalars['Date']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   createdBy: Scalars['BigInt']['input'];
-  cstsId?: InputMaybe<Scalars['String']['input']>;
+  cstsId?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firstName: Scalars['String']['input'];
   gender: GenderType;
@@ -4002,7 +4015,7 @@ export type MembershipApplicationInput = {
   taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  wdsfId?: InputMaybe<Scalars['String']['input']>;
+  wdsfId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Represents an update to a `MembershipApplication`. Fields that are set will be updated. */
@@ -4011,7 +4024,7 @@ export type MembershipApplicationPatch = {
   birthDate?: InputMaybe<Scalars['Date']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   createdBy?: InputMaybe<Scalars['BigInt']['input']>;
-  cstsId?: InputMaybe<Scalars['String']['input']>;
+  cstsId?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<GenderType>;
@@ -4028,7 +4041,7 @@ export type MembershipApplicationPatch = {
   taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  wdsfId?: InputMaybe<Scalars['String']['input']>;
+  wdsfId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A `MembershipApplication` edge in the connection. */
@@ -5154,7 +5167,8 @@ export type Person = {
   /** Reads and enables pagination through a set of `Couple`. */
   couplesByWomanIdList: Array<Couple>;
   createdAt: Scalars['Datetime']['output'];
-  cstsId: Maybe<Scalars['String']['output']>;
+  cstsCandidatesList: Maybe<Array<PersonCstsCandidatesRecord>>;
+  cstsId: Maybe<Scalars['Int']['output']>;
   cstsProgressList: Maybe<Array<PersonCstsProgressRecord>>;
   email: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EventAttendance`. */
@@ -5200,7 +5214,7 @@ export type Person = {
   updatedAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `UserProxy`. */
   userProxiesList: Array<UserProxy>;
-  wdsfId: Maybe<Scalars['String']['output']>;
+  wdsfId: Maybe<Scalars['Int']['output']>;
   weeklyAttendanceList: Maybe<Array<PersonWeeklyAttendanceRecord>>;
 };
 
@@ -5246,6 +5260,14 @@ export type PersonCouplesByWomanIdListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouplesOrderBy>>;
+};
+
+
+export type PersonCstsCandidatesListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  threshold?: InputMaybe<Scalars['Float']['input']>;
 };
 
 
@@ -5376,7 +5398,7 @@ export type PersonCondition = {
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `cstsId` field. */
-  cstsId?: InputMaybe<Scalars['String']['input']>;
+  cstsId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `email` field. */
   email?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalIds` field. */
@@ -5410,7 +5432,15 @@ export type PersonCondition = {
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `wdsfId` field. */
-  wdsfId?: InputMaybe<Scalars['String']['input']>;
+  wdsfId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type PersonCstsCandidatesRecord = {
+  __typename?: 'PersonCstsCandidatesRecord';
+  ageGroup: Maybe<Scalars['String']['output']>;
+  id: Maybe<Scalars['Int']['output']>;
+  name: Maybe<Scalars['String']['output']>;
+  similarity: Maybe<Scalars['Float']['output']>;
 };
 
 export type PersonCstsProgressRecord = {
@@ -5427,7 +5457,7 @@ export type PersonInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   birthDate?: InputMaybe<Scalars['Date']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  cstsId?: InputMaybe<Scalars['String']['input']>;
+  cstsId?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   firstName: Scalars['String']['input'];
@@ -5442,7 +5472,7 @@ export type PersonInput = {
   suffixTitle?: InputMaybe<Scalars['String']['input']>;
   taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  wdsfId?: InputMaybe<Scalars['String']['input']>;
+  wdsfId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type PersonInvitation = {
@@ -5538,7 +5568,7 @@ export type PersonPatch = {
   bio?: InputMaybe<Scalars['String']['input']>;
   birthDate?: InputMaybe<Scalars['Date']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  cstsId?: InputMaybe<Scalars['String']['input']>;
+  cstsId?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   firstName?: InputMaybe<Scalars['String']['input']>;
@@ -5553,7 +5583,7 @@ export type PersonPatch = {
   suffixTitle?: InputMaybe<Scalars['String']['input']>;
   taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  wdsfId?: InputMaybe<Scalars['String']['input']>;
+  wdsfId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type PersonWeeklyAttendanceRecord = {
@@ -9065,6 +9095,7 @@ export type GraphCacheKeysConfig = {
   PeopleConnection?: (data: WithTypename<PeopleConnection>) => null | string,
   PeopleEdge?: (data: WithTypename<PeopleEdge>) => null | string,
   Person?: (data: WithTypename<Person>) => null | string,
+  PersonCstsCandidatesRecord?: (data: WithTypename<PersonCstsCandidatesRecord>) => null | string,
   PersonCstsProgressRecord?: (data: WithTypename<PersonCstsProgressRecord>) => null | string,
   PersonInvitation?: (data: WithTypename<PersonInvitation>) => null | string,
   PersonWeeklyAttendanceRecord?: (data: WithTypename<PersonWeeklyAttendanceRecord>) => null | string,
@@ -9240,6 +9271,7 @@ export type GraphCacheResolvers = {
     competitionEventLocation?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
     competitionEventName?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
     competitionId?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['BigInt'] | string>,
+    competitionType?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, CompetitionType | string>,
     competitorId?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
     competitorName?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
     competitorType?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, CompetitorType | string>,
@@ -9262,6 +9294,7 @@ export type GraphCacheResolvers = {
     competitionEventLocation?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
     competitionEventName?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
     competitionId?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['BigInt'] | string>,
+    competitionType?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, CompetitionType | string>,
     competitorId?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
     competitorName?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
     competitorType?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, CompetitorType | string>,
@@ -9508,6 +9541,7 @@ export type GraphCacheResolvers = {
     checkInEnd?: GraphCacheResolver<WithTypename<CompetitionParticipationRecord>, Record<string, never>, Scalars['Time'] | string>,
     competitionDate?: GraphCacheResolver<WithTypename<CompetitionParticipationRecord>, Record<string, never>, Scalars['Date'] | string>,
     competitionId?: GraphCacheResolver<WithTypename<CompetitionParticipationRecord>, Record<string, never>, Scalars['BigInt'] | string>,
+    competitionType?: GraphCacheResolver<WithTypename<CompetitionParticipationRecord>, Record<string, never>, CompetitionType | string>,
     competitorId?: GraphCacheResolver<WithTypename<CompetitionParticipationRecord>, Record<string, never>, Scalars['String'] | string>,
     competitorName?: GraphCacheResolver<WithTypename<CompetitionParticipationRecord>, Record<string, never>, Scalars['String'] | string>,
     competitorType?: GraphCacheResolver<WithTypename<CompetitionParticipationRecord>, Record<string, never>, CompetitorType | string>,
@@ -10058,7 +10092,7 @@ export type GraphCacheResolvers = {
     birthDate?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Date'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Datetime'] | string>,
     createdBy?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['BigInt'] | string>,
-    cstsId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
+    cstsId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Int'] | string>,
     email?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     firstName?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>,
     gender?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, GenderType | string>,
@@ -10076,7 +10110,7 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Datetime'] | string>,
     user?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, WithTypename<User> | string>,
-    wdsfId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['String'] | string>
+    wdsfId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Int'] | string>
   },
   MembershipApplicationsEdge?: {
     cursor?: GraphCacheResolver<WithTypename<MembershipApplicationsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
@@ -10168,7 +10202,8 @@ export type GraphCacheResolvers = {
     couplesByManIdList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByManIdListArgs, Array<WithTypename<Couple> | string>>,
     couplesByWomanIdList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByWomanIdListArgs, Array<WithTypename<Couple> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime'] | string>,
-    cstsId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
+    cstsCandidatesList?: GraphCacheResolver<WithTypename<Person>, PersonCstsCandidatesListArgs, Array<WithTypename<PersonCstsCandidatesRecord> | string>>,
+    cstsId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Int'] | string>,
     cstsProgressList?: GraphCacheResolver<WithTypename<Person>, PersonCstsProgressListArgs, Array<WithTypename<PersonCstsProgressRecord> | string>>,
     email?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
     eventAttendancesList?: GraphCacheResolver<WithTypename<Person>, PersonEventAttendancesListArgs, Array<WithTypename<EventAttendance> | string>>,
@@ -10202,8 +10237,14 @@ export type GraphCacheResolvers = {
     tenantTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     updatedAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime'] | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<Person>, PersonUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
-    wdsfId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String'] | string>,
+    wdsfId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Int'] | string>,
     weeklyAttendanceList?: GraphCacheResolver<WithTypename<Person>, PersonWeeklyAttendanceListArgs, Array<WithTypename<PersonWeeklyAttendanceRecord> | string>>
+  },
+  PersonCstsCandidatesRecord?: {
+    ageGroup?: GraphCacheResolver<WithTypename<PersonCstsCandidatesRecord>, Record<string, never>, Scalars['String'] | string>,
+    id?: GraphCacheResolver<WithTypename<PersonCstsCandidatesRecord>, Record<string, never>, Scalars['Int'] | string>,
+    name?: GraphCacheResolver<WithTypename<PersonCstsCandidatesRecord>, Record<string, never>, Scalars['String'] | string>,
+    similarity?: GraphCacheResolver<WithTypename<PersonCstsCandidatesRecord>, Record<string, never>, Scalars['Float'] | string>
   },
   PersonCstsProgressRecord?: {
     category?: GraphCacheResolver<WithTypename<PersonCstsProgressRecord>, Record<string, never>, WithTypename<Category> | string>,
@@ -10979,6 +11020,7 @@ export type GraphCacheUpdaters = {
     competitionEventLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
     competitionEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
     competitionId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    competitionType?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
     competitorId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
     competitorName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
     competitorType?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
@@ -11001,6 +11043,7 @@ export type GraphCacheUpdaters = {
     competitionEventLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     competitionEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     competitionId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    competitionType?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     competitorId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     competitorName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     competitorType?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
@@ -11247,6 +11290,7 @@ export type GraphCacheUpdaters = {
     checkInEnd?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipationRecord>>, Record<string, never>>,
     competitionDate?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipationRecord>>, Record<string, never>>,
     competitionId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipationRecord>>, Record<string, never>>,
+    competitionType?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipationRecord>>, Record<string, never>>,
     competitorId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipationRecord>>, Record<string, never>>,
     competitorName?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipationRecord>>, Record<string, never>>,
     competitorType?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipationRecord>>, Record<string, never>>,
@@ -11907,6 +11951,7 @@ export type GraphCacheUpdaters = {
     couplesByManIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByManIdListArgs>,
     couplesByWomanIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByWomanIdListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    cstsCandidatesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCstsCandidatesListArgs>,
     cstsId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     cstsProgressList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCstsProgressListArgs>,
     email?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
@@ -11943,6 +11988,12 @@ export type GraphCacheUpdaters = {
     userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonUserProxiesListArgs>,
     wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     weeklyAttendanceList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonWeeklyAttendanceListArgs>
+  },
+  PersonCstsCandidatesRecord?: {
+    ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonCstsCandidatesRecord>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonCstsCandidatesRecord>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonCstsCandidatesRecord>>, Record<string, never>>,
+    similarity?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonCstsCandidatesRecord>>, Record<string, never>>
   },
   PersonCstsProgressRecord?: {
     category?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonCstsProgressRecord>>, Record<string, never>>,

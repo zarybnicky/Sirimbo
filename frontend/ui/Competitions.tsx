@@ -4,7 +4,7 @@ import {
   CompetitionReportDocument,
   type CompetitionReportQuery,
 } from '@/graphql/Federation';
-import { formatCstsCategoryName } from '@/ui/csts';
+import { formatCstsCategoryName, formatCstsCompetitionType } from '@/ui/csts';
 import { numericDateFormatter } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { cardCls } from '@/ui/style';
@@ -186,9 +186,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
             </div>
             <div className="flex min-w-0 items-center gap-1.5">
               <span className="h-3 w-1 rounded-sm" aria-hidden />
-              <span className="truncate font-semibold text-neutral-12">
-                {formatCstsCategoryName(entry.category)}
-              </span>
+              <CompetitionCategoryLine entry={entry} />
             </div>
           </div>
         ))}
@@ -207,9 +205,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
               </span>
               {` z ${entry.participants ?? ''}`}
             </div>
-            <div className="flex min-w-0 items-center gap-1.5 truncate font-semibold text-neutral-12">
-              {formatCstsCategoryName(entry.category)}
-            </div>
+            <CompetitionCategoryLine entry={entry} />
             <div className="flex min-w-20 items-baseline justify-end gap-1 font-semibold tabular-nums text-green-11">
               {Number(entry.pointGain ?? 0) > 0 || entry.isFinal
                 ? `+${Number(entry.pointGain ?? 0).toString()}b ${entry.isFinal ? 'F' : ''}`
@@ -219,6 +215,21 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
         ))}
       </div>
     </>
+  );
+}
+
+function CompetitionCategoryLine({ entry }: { entry: CompetitionEntry }) {
+  const competitionType = formatCstsCompetitionType(entry.competitionType);
+
+  return (
+    <div className="flex min-w-0 items-center gap-1.5 font-semibold text-neutral-12">
+      {competitionType ? (
+        <span className="shrink-0 rounded border border-accent-6 bg-accent-3 px-1 py-px text-[10px] uppercase leading-none text-accent-11">
+          {competitionType}
+        </span>
+      ) : null}
+      <span className="truncate">{formatCstsCategoryName(entry.category)}</span>
+    </div>
   );
 }
 

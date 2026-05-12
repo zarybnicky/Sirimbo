@@ -37,8 +37,8 @@ type PersonInput = {
   bio?: string;
   tax_identification_number?: string;
   national_id_number?: string;
-  csts_id?: string;
-  wdsf_id?: string;
+  csts_id?: number;
+  wdsf_id?: number;
   external_ids?: string[];
 };
 
@@ -197,8 +197,6 @@ const EXTRA_TEXT_FIELDS = [
   'bio',
   'tax_identification_number',
   'national_id_number',
-  'csts_id',
-  'wdsf_id',
 ] as const satisfies readonly PersonField[];
 
 const OPTIONAL_FIELDS = [
@@ -206,6 +204,8 @@ const OPTIONAL_FIELDS = [
   'nationality',
   'birth_date',
   ...EXTRA_TEXT_FIELDS,
+  'csts_id',
+  'wdsf_id',
   'external_ids',
 ] as const satisfies readonly PersonField[];
 
@@ -325,7 +325,25 @@ const FIELD_PARSERS: Partial<Record<PersonField, FieldParser>> = {
     const ids = collectList(value, { sort: true });
     return ids.length ? ids : undefined;
   },
+  csts_id: (value) => normaliseFederationId(value) ?? undefined,
+  wdsf_id: (value) => normaliseFederationId(value) ?? undefined,
 };
+
+function normaliseFederationId(value: string | undefined): number | null {
+  if (!value) {
+    return null;
+  }
+
+  const digits = value.replaceAll(/\D/g, '');
+  if (!digits) {
+    return null;
+  }
+
+  const parsed = Number.parseInt(digits, 10);
+  return Number.isInteger(parsed) && parsed > 0 && parsed <= 2_147_483_647
+    ? parsed
+    : null;
+}
 
 function normaliseGender(value: string | undefined): string | null {
   if (!value) {

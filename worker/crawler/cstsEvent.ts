@@ -3,6 +3,7 @@ import type { JsonLoader } from './types.ts';
 import {
   type AgeGroup,
   ageGroup,
+  type CompetitionType,
   competitionType,
   competitorType,
   cstsCompetitionClass,
@@ -18,6 +19,7 @@ import { upsertFrontierKeys } from './crawler.queries.ts';
 import {
   ensurePeople,
   mergeEventOfficials,
+  type competition_type,
   type gender,
   type official_role,
   upsertCompetitions,
@@ -157,6 +159,7 @@ export const cstsEvent: JsonLoader<Response> = {
       completedAt: string;
       registrationFee: string;
       excusedTotal: number;
+      competitionType: competition_type;
     }>([
       'externalId',
       'categoryId',
@@ -167,6 +170,7 @@ export const cstsEvent: JsonLoader<Response> = {
       'completedAt',
       'registrationFee',
       'excusedTotal',
+      'competitionType',
     ]);
 
     for (const [index, competition] of event.competitions.entries()) {
@@ -182,6 +186,7 @@ export const cstsEvent: JsonLoader<Response> = {
         completedAt: competition.completedAt ?? '',
         registrationFee: competition.registrationFee.toString(),
         excusedTotal: competition.excused,
+        competitionType: mapCompetitionType(competition.grade),
       });
     }
     if (competitions.length) {
@@ -249,4 +254,25 @@ export const cstsEvent: JsonLoader<Response> = {
 
 function officialDisciplines(discipline?: 'Standard' | 'Latin' | ('Standard' | 'Latin')[]) {
   return discipline == null ? [''] : Array.isArray(discipline) ? discipline : [discipline];
+}
+
+function mapCompetitionType(type: CompetitionType): competition_type {
+  switch (type) {
+    case 'Unknown':
+      return 'unknown';
+    case 'Cup':
+      return 'cup';
+    case 'Ranking':
+      return 'ranking';
+    case 'League':
+      return 'league';
+    case 'Championship':
+      return 'championship';
+    case 'TopLevel':
+      return 'top_level';
+    case 'SuperLeague':
+      return 'super_league';
+    case 'GCup':
+      return 'g_cup';
+  }
 }

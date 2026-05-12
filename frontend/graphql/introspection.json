@@ -436,6 +436,14 @@
             "args": []
           },
           {
+            "name": "competitionType",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "competitorId",
             "type": {
               "kind": "SCALAR",
@@ -609,6 +617,14 @@
           },
           {
             "name": "competitionId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionType",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -3223,6 +3239,14 @@
           },
           {
             "name": "competitionId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionType",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -11780,6 +11804,50 @@
             "args": []
           },
           {
+            "name": "cstsCandidatesList",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PersonCstsCandidatesRecord",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "threshold",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "cstsId",
             "type": {
               "kind": "SCALAR",
@@ -12720,6 +12788,45 @@
                 }
               }
             ]
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PersonCstsCandidatesRecord",
+        "fields": [
+          {
+            "name": "ageGroup",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "similarity",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
           }
         ],
         "interfaces": []

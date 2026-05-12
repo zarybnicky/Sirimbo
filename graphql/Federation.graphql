@@ -16,6 +16,7 @@ query CompetitionBrief($since: Date, $until: Date, $personIds: [BigInt], $cohort
     eventLocation
     competitionId
     competitionDate
+    competitionType
     competitorId
     competitorName
     personId
@@ -34,6 +35,7 @@ query CompetitionReport($since: Date, $until: Date, $personIds: [BigInt], $cohor
     eventLocation
     competitionId
     competitionDate
+    competitionType
     competitorId
     competitorName
     personId

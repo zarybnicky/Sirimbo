@@ -15,7 +15,7 @@ grant usage on schema federated to anonymous;
 GRANT SELECT ON ALL TABLES IN SCHEMA federated TO anonymous;
 ALTER DEFAULT PRIVILEGES IN SCHEMA federated GRANT SELECT ON TABLES TO anonymous;
 
-CREATE OR REPLACE FUNCTION federated.normalize_name(text) RETURNS text AS $$
+CREATE OR REPLACE FUNCTION app_private.normalize_name(text) RETURNS text AS $$
   SELECT lower(public.unaccent('public.unaccent', $1));
 $$ LANGUAGE sql IMMUTABLE PARALLEL SAFE STRICT;
 
@@ -115,7 +115,7 @@ CREATE TABLE federated.person (
   first_name     text,
   last_name      text,
   search_name    text GENERATED ALWAYS AS (
-    federated.normalize_name(coalesce(canonical_name, public.immutable_concat_ws(' ', first_name, last_name)))
+    app_private.normalize_name(coalesce(canonical_name, public.immutable_concat_ws(' ', first_name, last_name)))
   ) STORED,
   gender         federated.gender,
   dob            date,
@@ -204,6 +204,17 @@ CREATE TYPE federated.official_role AS ENUM (
   'invigilator',
   'scrutineer',
   'lead_scrutineer'
+);
+
+CREATE TYPE federated.competition_type AS ENUM (
+  'cup',
+  'ranking',
+  'league',
+  'championship',
+  'top_level',
+  'super_league',
+  'g_cup',
+  'unknown'
 );
 
 -- immutable, federations create a new competitor entry if the composition changes
@@ -342,6 +353,7 @@ CREATE TABLE federated.competition (
   participants_total integer,
   excused_total integer,
   completed_at timestamptz,
+  competition_type federated.competition_type,
   UNIQUE (federation, external_id),
   UNIQUE (federation, id),
   UNIQUE (id, event_id),
@@ -544,6 +556,17 @@ $$ language sql stable;
 grant all on function public.csts_athlete to anonymous;
 grant all on function public.wdsf_athlete to anonymous;
 
+alter table public.person
+  add column if not exists search_name text generated always as (
+    app_private.normalize_name(public.immutable_concat_ws(' ', first_name, last_name))
+  ) stored;
+
+comment on column public.person.search_name is '@omit';
+
+create index if not exists person_csts_id_idx
+  on public.person (csts_id)
+  where csts_id is not null;
+
 drop function if exists public.person_csts_progress;
 create or replace function public.person_csts_progress(in_person public.person) returns table (
   competitor_name text,
@@ -562,11 +585,65 @@ from federated.person p
        join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id
        join federated.category on ccp.category_id = category.id
 where p.federation = 'csts'
-  and p.external_id = nullif(regexp_replace(in_person.csts_id, '\D', '', 'g'), '')::bigint;
+  and p.external_id = in_person.csts_id::bigint;
 $$ language sql stable;
 
 comment on function public.person_csts_progress is '@simpleCollections only';
 grant all on function public.person_csts_progress to anonymous;
+
+drop function if exists public.person_csts_candidates(public.person, integer);
+drop function if exists public.person_csts_candidates(public.person, integer, real);
+
+create or replace function public.person_csts_candidates(in_person public.person, "limit" integer default 10, threshold real default 0.4) returns table (
+  id integer,
+  name text,
+  age_group text,
+  similarity real
+) as $$
+  with params as (
+    select
+      greatest(0.3::real, least(coalesce(threshold, 0.4), 1::real)) as effective_threshold,
+      greatest(0, least(coalesce($2, 10), 50)) as effective_limit
+  ),
+  scored_candidates as (
+    select
+      fp.external_id::integer as id,
+      fp.canonical_name as name,
+      fp.age_group,
+      score.name_score,
+      case
+        when in_person.birth_date is not null and fp.dob is not null and fp.dob = in_person.birth_date then 1
+        else 0
+      end as dob_score
+    from params
+    join federated.person fp on true
+    cross join lateral (
+      select public.similarity(fp.search_name, in_person.search_name) as name_score
+    ) score
+    where in_person.search_name is not null
+      and fp.federation = 'csts'
+      and fp.external_id between 0 and 2147483647
+      and fp.search_name % in_person.search_name
+      and score.name_score >= params.effective_threshold
+      and not exists (
+        select 1
+        from public.person existing
+        where existing.id <> in_person.id
+          and existing.csts_id = fp.external_id::integer
+      )
+  )
+  select scored_candidates.id, scored_candidates.name, scored_candidates.age_group, scored_candidates.name_score
+  from scored_candidates
+  order by
+    scored_candidates.dob_score desc,
+    scored_candidates.name_score desc,
+    scored_candidates.name,
+    scored_candidates.id
+  limit (select effective_limit from params);
+$$ language sql stable;
+
+comment on function public.person_csts_candidates is '@simpleCollections only';
+grant all on function public.person_csts_candidates to anonymous;
 
 drop function if exists public.competition_brief(text[], date, date);
 drop function if exists public.competition_report(text[], date, date);
@@ -595,7 +672,8 @@ create type public.competition_participation_record as (
   ranking_to integer,
   point_gain numeric(10,3),
   is_final boolean,
-  has_result boolean
+  has_result boolean,
+  competition_type federated.competition_type
 );
 
 create or replace function public.competition_brief(
@@ -634,8 +712,8 @@ language sql stable as $$
     from scoped_people sp
     cross join lateral (
       values
-        ('csts'::text, nullif(regexp_replace(sp.csts_id, '\D', '', 'g'), '')::bigint),
-        ('wdsf'::text, nullif(regexp_replace(sp.wdsf_id, '\D', '', 'g'), '')::bigint)
+        ('csts'::text, sp.csts_id::bigint),
+        ('wdsf'::text, sp.wdsf_id::bigint)
     ) ids(federation, external_id)
     join federated.person fp
       on fp.federation = ids.federation
@@ -662,7 +740,8 @@ language sql stable as $$
     null::integer as ranking_to,
     null::numeric(10,3) as point_gain,
     null::boolean as is_final,
-    false as has_result
+    false as has_result,
+    comp.competition_type
   from params
   join federated.competition comp
     on comp.start_date >= params.since
@@ -729,8 +808,8 @@ language sql stable as $$
     from scoped_people sp
     cross join lateral (
       values
-        ('csts'::text, nullif(regexp_replace(sp.csts_id, '\D', '', 'g'), '')::bigint),
-        ('wdsf'::text, nullif(regexp_replace(sp.wdsf_id, '\D', '', 'g'), '')::bigint)
+        ('csts'::text, sp.csts_id::bigint),
+        ('wdsf'::text, sp.wdsf_id::bigint)
     ) ids(federation, external_id)
     join federated.person fp
       on fp.federation = ids.federation
@@ -757,7 +836,8 @@ language sql stable as $$
     cr.ranking_to,
     cr.point_gain,
     cr.is_final,
-    true as has_result
+    true as has_result,
+    comp.competition_type
   from params
   join federated.competition comp
     on comp.start_date >= params.since
@@ -785,5 +865,318 @@ $$;
 
 comment on function public.competition_report(date, date, bigint, bigint[]) is '@simpleCollections only';
 grant all on function public.competition_report(date, date, bigint, bigint[]) to anonymous;
+
+drop function if exists public.activity_timeline(
+  timestamptz,
+  timestamptz,
+  bigint[],
+  bigint,
+  public.activity_timeline_kind[],
+  public.event_type[]
+);
+
+drop function if exists public.activity_timeline(
+  timestamptz,
+  timestamptz,
+  bigint[],
+  bigint,
+  public.activity_timeline_kind[]
+);
+
+drop view if exists public.activity_timeline_item;
+
+do $$
+begin
+  if to_regtype('public.activity_timeline_kind') is null then
+    create type public.activity_timeline_kind as enum (
+      'EVENT_ATTENDANCE',
+      'COMPETITION_BRIEF',
+      'COMPETITION_RESULT'
+    );
+  end if;
+end
+$$;
+
+create or replace view public.activity_timeline_item as
+select
+  null::text as id,
+  null::public.activity_timeline_kind as kind,
+  null::timestamptz as sort_at,
+  null::date as activity_date,
+  null::bigint as person_id,
+  null::text as person_name,
+  null::bigint as event_attendance_id,
+  null::bigint as event_instance_id,
+  null::text as federation,
+  null::text as federated_person_id,
+  null::text as competitor_id,
+  null::text as competitor_name,
+  null::federated.competitor_type as competitor_type,
+  null::bigint as competition_event_id,
+  null::text as competition_event_name,
+  null::text as competition_event_location,
+  null::bigint as competition_id,
+  null::date as competition_date,
+  null::time as check_in_end,
+  null::federated.category as category,
+  null::text[] as dances,
+  null::integer as participants,
+  null::integer as ranking,
+  null::integer as ranking_to,
+  null::numeric(10, 3) as point_gain,
+  null::boolean as is_final,
+  null::federated.competition_type as competition_type
+where false;
+
+comment on view public.activity_timeline_item is $$
+@primaryKey id
+@interface mode:single type:kind
+@type EVENT_ATTENDANCE name:ActivityEventAttendance attributes:event_attendance_id,event_instance_id
+@type COMPETITION_BRIEF name:ActivityCompetitionBrief attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,check_in_end,category,dances,participants,competition_type
+@type COMPETITION_RESULT name:ActivityCompetitionResult attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,dances,participants,ranking,ranking_to,point_gain,is_final,competition_type
+@foreignKey (person_id) references person (id)|@fieldName person|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@foreignKey (event_attendance_id) references event_attendance (id)|@fieldName eventAttendance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@foreignKey (event_instance_id) references event_instance (id)|@fieldName eventInstance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+$$;
+
+grant select on public.activity_timeline_item to anonymous;
+
+create or replace function public.activity_timeline(
+  p_since timestamptz,
+  p_until timestamptz,
+  p_person_ids bigint[] default null,
+  p_cohort_id bigint default null,
+  p_kinds public.activity_timeline_kind[] default null,
+  p_event_types public.event_type[] default null
+) returns setof public.activity_timeline_item
+language plpgsql
+stable
+as $$
+declare
+  include_event_attendance boolean;
+  include_competition_brief boolean;
+  include_competition_result boolean;
+begin
+  if p_since is null or p_until is null or p_until <= p_since then
+    return;
+  end if;
+
+  if p_person_ids is null and p_cohort_id is null then
+    return;
+  end if;
+
+  if cardinality(p_kinds) = 0 then
+    return;
+  end if;
+
+  include_event_attendance =
+    (p_kinds is null or 'EVENT_ATTENDANCE'::public.activity_timeline_kind = any(p_kinds))
+    and (p_event_types is null or cardinality(p_event_types) > 0);
+  include_competition_brief =
+    p_kinds is null or 'COMPETITION_BRIEF'::public.activity_timeline_kind = any(p_kinds);
+  include_competition_result =
+    p_kinds is null or 'COMPETITION_RESULT'::public.activity_timeline_kind = any(p_kinds);
+
+  if include_event_attendance then
+    return query
+      with scoped_people as (
+        select distinct p.id
+        from public.person p
+        where (p_person_ids is not null and p.id = any(p_person_ids))
+           or (
+             p_cohort_id is not null
+             and exists (
+               select 1
+               from public.current_cohort_membership cm
+               where cm.person_id = p.id
+                 and cm.cohort_id = p_cohort_id
+             )
+           )
+      )
+      select
+        ('event_attendance:' || ea.id)::text as id,
+        'EVENT_ATTENDANCE'::public.activity_timeline_kind as kind,
+        ei.since as sort_at,
+        ei.since::date as activity_date,
+        ea.person_id,
+        p.name as person_name,
+        ea.id as event_attendance_id,
+        ei.id as event_instance_id,
+        null::text as federation,
+        null::text as federated_person_id,
+        null::text as competitor_id,
+        null::text as competitor_name,
+        null::federated.competitor_type as competitor_type,
+        null::bigint as competition_event_id,
+        null::text as competition_event_name,
+        null::text as competition_event_location,
+        null::bigint as competition_id,
+        null::date as competition_date,
+        null::time as check_in_end,
+        null::federated.category as category,
+        null::text[] as dances,
+        null::integer as participants,
+        null::integer as ranking,
+        null::integer as ranking_to,
+        null::numeric(10, 3) as point_gain,
+        null::boolean as is_final,
+        null::federated.competition_type as competition_type
+      from public.event_attendance ea
+      join public.event_instance ei on ei.id = ea.instance_id
+      join public.person p on p.id = ea.person_id
+      join scoped_people sp on sp.id = ea.person_id
+      where ea.status <> 'cancelled'
+        and ei.since >= p_since
+        and ei.since < p_until
+        and (p_event_types is null or ei.type = any(p_event_types));
+  end if;
+
+  if include_competition_result then
+    return query
+      select
+        (
+          'competition_result:' ||
+          coalesce(cr.competition_id::text, '') || ':' ||
+          coalesce(cr.competitor_id, '') || ':' ||
+          coalesce(cr.person_id::text, '') || ':' ||
+          coalesce((cr.category).id::text, '')
+        )::text as id,
+        'COMPETITION_RESULT'::public.activity_timeline_kind as kind,
+        ((cr.competition_date + time '12:00')::timestamp)::timestamptz as sort_at,
+        cr.competition_date as activity_date,
+        cr.person_id,
+        cr.person_name,
+        null::bigint as event_attendance_id,
+        null::bigint as event_instance_id,
+        cr.federation,
+        cr.federated_person_id,
+        cr.competitor_id,
+        cr.competitor_name,
+        cr.competitor_type,
+        cr.event_id as competition_event_id,
+        cr.event_name as competition_event_name,
+        cr.event_location as competition_event_location,
+        cr.competition_id,
+        cr.competition_date,
+        null::time as check_in_end,
+        cr.category,
+        cr.dances,
+        cr.participants,
+        cr.ranking,
+        cr.ranking_to,
+        cr.point_gain,
+        cr.is_final,
+        cr.competition_type
+      from (
+        select *
+        from public.competition_report(
+          p_since::date,
+          p_until::date,
+          p_cohort_id,
+          p_person_ids
+        )
+      ) as cr
+      where cr.competition_date is not null
+        and ((cr.competition_date + time '12:00')::timestamp)::timestamptz >= p_since
+        and ((cr.competition_date + time '12:00')::timestamp)::timestamptz < p_until;
+  end if;
+
+  if include_competition_brief then
+    return query
+      with reports as (
+        select
+          cr.person_id,
+          cr.competition_id,
+          cr.competitor_id,
+          (cr.category).id as category_id
+        from (
+          select *
+          from public.competition_report(
+            p_since::date,
+            p_until::date,
+            p_cohort_id,
+            p_person_ids
+          )
+        ) as cr
+        where include_competition_result
+      )
+      select
+        (
+          'competition_brief:' ||
+          coalesce(cb.competition_id::text, '') || ':' ||
+          coalesce(cb.competitor_id, '') || ':' ||
+          coalesce(cb.person_id::text, '') || ':' ||
+          coalesce((cb.category).id::text, '')
+        )::text as id,
+        'COMPETITION_BRIEF'::public.activity_timeline_kind as kind,
+        ((cb.competition_date + coalesce(cb.check_in_end, time '12:00'))::timestamp)::timestamptz as sort_at,
+        cb.competition_date as activity_date,
+        cb.person_id,
+        cb.person_name,
+        null::bigint as event_attendance_id,
+        null::bigint as event_instance_id,
+        cb.federation,
+        cb.federated_person_id,
+        cb.competitor_id,
+        cb.competitor_name,
+        cb.competitor_type,
+        cb.event_id as competition_event_id,
+        cb.event_name as competition_event_name,
+        cb.event_location as competition_event_location,
+        cb.competition_id,
+        cb.competition_date,
+        cb.check_in_end,
+        cb.category,
+        cb.dances,
+        cb.participants,
+        null::integer as ranking,
+        null::integer as ranking_to,
+        null::numeric(10, 3) as point_gain,
+        null::boolean as is_final,
+        cb.competition_type
+      from (
+        select *
+        from public.competition_brief(
+          p_since::date,
+          p_until::date,
+          p_cohort_id,
+          p_person_ids
+        )
+      ) as cb
+      where cb.competition_date is not null
+        and ((cb.competition_date + coalesce(cb.check_in_end, time '12:00'))::timestamp)::timestamptz >= p_since
+        and ((cb.competition_date + coalesce(cb.check_in_end, time '12:00'))::timestamp)::timestamptz < p_until
+        and not exists (
+          select 1
+          from reports r
+          where r.person_id is not distinct from cb.person_id
+            and r.competition_id is not distinct from cb.competition_id
+            and r.competitor_id is not distinct from cb.competitor_id
+            and r.category_id is not distinct from (cb.category).id
+        );
+  end if;
+end;
+$$;
+
+comment on function public.activity_timeline(
+  timestamptz,
+  timestamptz,
+  bigint[],
+  bigint,
+  public.activity_timeline_kind[],
+  public.event_type[]
+) is $$
+@behavior +queryField:resource:list -queryField:resource:connection
+$$;
+
+grant all on function public.activity_timeline(
+  timestamptz,
+  timestamptz,
+  bigint[],
+  bigint,
+  public.activity_timeline_kind[],
+  public.event_type[]
+) to anonymous;
 
 select graphile_worker.add_job('frontier_process', json_build_object('isFullRebuild', true));
