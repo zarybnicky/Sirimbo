@@ -19,5 +19,6 @@ CREATE TYPE public.competition_participation_record AS (
 	ranking_to integer,
 	point_gain numeric(10,3),
 	is_final boolean,
-	has_result boolean
+	has_result boolean,
+	competition_type federated.competition_type
 );

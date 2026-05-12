@@ -30,8 +30,8 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     from scoped_people sp
     cross join lateral (
       values
-        ('csts'::text, nullif(regexp_replace(sp.csts_id, '\D', '', 'g'), '')::bigint),
-        ('wdsf'::text, nullif(regexp_replace(sp.wdsf_id, '\D', '', 'g'), '')::bigint)
+        ('csts'::text, sp.csts_id::bigint),
+        ('wdsf'::text, sp.wdsf_id::bigint)
     ) ids(federation, external_id)
     join federated.person fp
       on fp.federation = ids.federation
@@ -58,7 +58,8 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     null::integer as ranking_to,
     null::numeric(10,3) as point_gain,
     null::boolean as is_final,
-    false as has_result
+    false as has_result,
+    comp.competition_type
   from params
   join federated.competition comp
     on comp.start_date >= params.since

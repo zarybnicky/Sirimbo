@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict tLaWu3vmrt9Y3oiV6Tt1ZozkSDroUXxOj8OMDOVc9TCeloVuMjEX5AvoUxQ5xQX
+\restrict bvFmM66NWPKoivJtxZJlfdFn4xyzn9DNVQBaLJxZajb2FItAVqfKwGQ6gJoJKlS
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -163,6 +163,22 @@ CREATE TYPE crawler.process_status AS ENUM (
 
 
 --
+-- Name: competition_type; Type: TYPE; Schema: federated; Owner: -
+--
+
+CREATE TYPE federated.competition_type AS ENUM (
+    'cup',
+    'ranking',
+    'league',
+    'championship',
+    'top_level',
+    'super_league',
+    'g_cup',
+    'unknown'
+);
+
+
+--
 -- Name: competitor_role; Type: TYPE; Schema: federated; Owner: -
 --
 
@@ -305,6 +321,17 @@ CREATE TYPE federated.scoring_method AS ENUM (
 
 
 --
+-- Name: activity_timeline_kind; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.activity_timeline_kind AS ENUM (
+    'EVENT_ATTENDANCE',
+    'COMPETITION_BRIEF',
+    'COMPETITION_RESULT'
+);
+
+
+--
 -- Name: address_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -435,7 +462,8 @@ CREATE TYPE public.competition_participation_record AS (
 	ranking_to integer,
 	point_gain numeric(10,3),
 	is_final boolean,
-	has_result boolean
+	has_result boolean,
+	competition_type federated.competition_type
 );
 
 
@@ -1470,6 +1498,17 @@ $$;
 
 
 --
+-- Name: normalize_name(text); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.normalize_name(text) RETURNS text
+    LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
+    AS $_$
+  select lower(public.unaccent('public.unaccent', $1));
+$_$;
+
+
+--
 -- Name: queue_announcement_notifications(bigint); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2352,17 +2391,6 @@ $$;
 
 
 --
--- Name: normalize_name(text); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.normalize_name(text) RETURNS text
-    LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-    AS $_$
-  SELECT lower(public.unaccent('public.unaccent', $1));
-$_$;
-
-
---
 -- Name: account; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2456,6 +2484,281 @@ CREATE FUNCTION public.account_liabilities(a public.account, since timestamp wit
            WHERE (((account_liabilities.a).id = posting.account_id) AND (posting.amount < 0.0) AND (transaction.effective_date >= account_liabilities.since) AND (transaction.effective_date <= account_liabilities.until))
            GROUP BY posting.account_id) s;
 END;
+
+
+--
+-- Name: activity_timeline_item; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.activity_timeline_item AS
+ SELECT NULL::text AS id,
+    NULL::public.activity_timeline_kind AS kind,
+    NULL::timestamp with time zone AS sort_at,
+    NULL::date AS activity_date,
+    NULL::bigint AS person_id,
+    NULL::text AS person_name,
+    NULL::bigint AS event_attendance_id,
+    NULL::bigint AS event_instance_id,
+    NULL::text AS federation,
+    NULL::text AS federated_person_id,
+    NULL::text AS competitor_id,
+    NULL::text AS competitor_name,
+    NULL::federated.competitor_type AS competitor_type,
+    NULL::bigint AS competition_event_id,
+    NULL::text AS competition_event_name,
+    NULL::text AS competition_event_location,
+    NULL::bigint AS competition_id,
+    NULL::date AS competition_date,
+    NULL::time without time zone AS check_in_end,
+    NULL::federated.category AS category,
+    NULL::text[] AS dances,
+    NULL::integer AS participants,
+    NULL::integer AS ranking,
+    NULL::integer AS ranking_to,
+    NULL::numeric(10,3) AS point_gain,
+    NULL::boolean AS is_final,
+    NULL::federated.competition_type AS competition_type
+  WHERE false;
+
+
+--
+-- Name: VIEW activity_timeline_item; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.activity_timeline_item IS '
+@primaryKey id
+@interface mode:single type:kind
+@type EVENT_ATTENDANCE name:ActivityEventAttendance attributes:event_attendance_id,event_instance_id
+@type COMPETITION_BRIEF name:ActivityCompetitionBrief attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,check_in_end,category,dances,participants,competition_type
+@type COMPETITION_RESULT name:ActivityCompetitionResult attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,dances,participants,ranking,ranking_to,point_gain,is_final,competition_type
+@foreignKey (person_id) references person (id)|@fieldName person|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@foreignKey (event_attendance_id) references event_attendance (id)|@fieldName eventAttendance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@foreignKey (event_instance_id) references event_instance (id)|@fieldName eventInstance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+';
+
+
+--
+-- Name: activity_timeline(timestamp with time zone, timestamp with time zone, bigint[], bigint, public.activity_timeline_kind[], public.event_type[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[] DEFAULT NULL::bigint[], p_cohort_id bigint DEFAULT NULL::bigint, p_kinds public.activity_timeline_kind[] DEFAULT NULL::public.activity_timeline_kind[], p_event_types public.event_type[] DEFAULT NULL::public.event_type[]) RETURNS SETOF public.activity_timeline_item
+    LANGUAGE plpgsql STABLE
+    AS $$
+declare
+  include_event_attendance boolean;
+  include_competition_brief boolean;
+  include_competition_result boolean;
+begin
+  if p_since is null or p_until is null or p_until <= p_since then
+    return;
+  end if;
+
+  if p_person_ids is null and p_cohort_id is null then
+    return;
+  end if;
+
+  if cardinality(p_kinds) = 0 then
+    return;
+  end if;
+
+  include_event_attendance =
+    (p_kinds is null or 'EVENT_ATTENDANCE'::public.activity_timeline_kind = any(p_kinds))
+    and (p_event_types is null or cardinality(p_event_types) > 0);
+  include_competition_brief =
+    p_kinds is null or 'COMPETITION_BRIEF'::public.activity_timeline_kind = any(p_kinds);
+  include_competition_result =
+    p_kinds is null or 'COMPETITION_RESULT'::public.activity_timeline_kind = any(p_kinds);
+
+  if include_event_attendance then
+    return query
+      with scoped_people as (
+        select distinct p.id
+        from public.person p
+        where (p_person_ids is not null and p.id = any(p_person_ids))
+           or (
+             p_cohort_id is not null
+             and exists (
+               select 1
+               from public.current_cohort_membership cm
+               where cm.person_id = p.id
+                 and cm.cohort_id = p_cohort_id
+             )
+           )
+      )
+      select
+        ('event_attendance:' || ea.id)::text as id,
+        'EVENT_ATTENDANCE'::public.activity_timeline_kind as kind,
+        ei.since as sort_at,
+        ei.since::date as activity_date,
+        ea.person_id,
+        p.name as person_name,
+        ea.id as event_attendance_id,
+        ei.id as event_instance_id,
+        null::text as federation,
+        null::text as federated_person_id,
+        null::text as competitor_id,
+        null::text as competitor_name,
+        null::federated.competitor_type as competitor_type,
+        null::bigint as competition_event_id,
+        null::text as competition_event_name,
+        null::text as competition_event_location,
+        null::bigint as competition_id,
+        null::date as competition_date,
+        null::time as check_in_end,
+        null::federated.category as category,
+        null::text[] as dances,
+        null::integer as participants,
+        null::integer as ranking,
+        null::integer as ranking_to,
+        null::numeric(10, 3) as point_gain,
+        null::boolean as is_final,
+        null::federated.competition_type as competition_type
+      from public.event_attendance ea
+      join public.event_instance ei on ei.id = ea.instance_id
+      join public.person p on p.id = ea.person_id
+      join scoped_people sp on sp.id = ea.person_id
+      where ea.status <> 'cancelled'
+        and ei.since >= p_since
+        and ei.since < p_until
+        and (p_event_types is null or ei.type = any(p_event_types));
+  end if;
+
+  if include_competition_result then
+    return query
+      select
+        (
+          'competition_result:' ||
+          coalesce(cr.competition_id::text, '') || ':' ||
+          coalesce(cr.competitor_id, '') || ':' ||
+          coalesce(cr.person_id::text, '') || ':' ||
+          coalesce((cr.category).id::text, '')
+        )::text as id,
+        'COMPETITION_RESULT'::public.activity_timeline_kind as kind,
+        ((cr.competition_date + time '12:00')::timestamp)::timestamptz as sort_at,
+        cr.competition_date as activity_date,
+        cr.person_id,
+        cr.person_name,
+        null::bigint as event_attendance_id,
+        null::bigint as event_instance_id,
+        cr.federation,
+        cr.federated_person_id,
+        cr.competitor_id,
+        cr.competitor_name,
+        cr.competitor_type,
+        cr.event_id as competition_event_id,
+        cr.event_name as competition_event_name,
+        cr.event_location as competition_event_location,
+        cr.competition_id,
+        cr.competition_date,
+        null::time as check_in_end,
+        cr.category,
+        cr.dances,
+        cr.participants,
+        cr.ranking,
+        cr.ranking_to,
+        cr.point_gain,
+        cr.is_final,
+        cr.competition_type
+      from (
+        select *
+        from public.competition_report(
+          p_since::date,
+          p_until::date,
+          p_cohort_id,
+          p_person_ids
+        )
+      ) as cr
+      where cr.competition_date is not null
+        and ((cr.competition_date + time '12:00')::timestamp)::timestamptz >= p_since
+        and ((cr.competition_date + time '12:00')::timestamp)::timestamptz < p_until;
+  end if;
+
+  if include_competition_brief then
+    return query
+      with reports as (
+        select
+          cr.person_id,
+          cr.competition_id,
+          cr.competitor_id,
+          (cr.category).id as category_id
+        from (
+          select *
+          from public.competition_report(
+            p_since::date,
+            p_until::date,
+            p_cohort_id,
+            p_person_ids
+          )
+        ) as cr
+        where include_competition_result
+      )
+      select
+        (
+          'competition_brief:' ||
+          coalesce(cb.competition_id::text, '') || ':' ||
+          coalesce(cb.competitor_id, '') || ':' ||
+          coalesce(cb.person_id::text, '') || ':' ||
+          coalesce((cb.category).id::text, '')
+        )::text as id,
+        'COMPETITION_BRIEF'::public.activity_timeline_kind as kind,
+        ((cb.competition_date + coalesce(cb.check_in_end, time '12:00'))::timestamp)::timestamptz as sort_at,
+        cb.competition_date as activity_date,
+        cb.person_id,
+        cb.person_name,
+        null::bigint as event_attendance_id,
+        null::bigint as event_instance_id,
+        cb.federation,
+        cb.federated_person_id,
+        cb.competitor_id,
+        cb.competitor_name,
+        cb.competitor_type,
+        cb.event_id as competition_event_id,
+        cb.event_name as competition_event_name,
+        cb.event_location as competition_event_location,
+        cb.competition_id,
+        cb.competition_date,
+        cb.check_in_end,
+        cb.category,
+        cb.dances,
+        cb.participants,
+        null::integer as ranking,
+        null::integer as ranking_to,
+        null::numeric(10, 3) as point_gain,
+        null::boolean as is_final,
+        cb.competition_type
+      from (
+        select *
+        from public.competition_brief(
+          p_since::date,
+          p_until::date,
+          p_cohort_id,
+          p_person_ids
+        )
+      ) as cb
+      where cb.competition_date is not null
+        and ((cb.competition_date + coalesce(cb.check_in_end, time '12:00'))::timestamp)::timestamptz >= p_since
+        and ((cb.competition_date + coalesce(cb.check_in_end, time '12:00'))::timestamp)::timestamptz < p_until
+        and not exists (
+          select 1
+          from reports r
+          where r.person_id is not distinct from cb.person_id
+            and r.competition_id is not distinct from cb.competition_id
+            and r.competitor_id is not distinct from cb.competitor_id
+            and r.category_id is not distinct from (cb.category).id
+        );
+  end if;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[], p_cohort_id bigint, p_kinds public.activity_timeline_kind[], p_event_types public.event_type[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[], p_cohort_id bigint, p_kinds public.activity_timeline_kind[], p_event_types public.event_type[]) IS '
+@behavior +queryField:resource:list -queryField:resource:connection
+';
 
 
 --
@@ -2651,8 +2954,8 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     from scoped_people sp
     cross join lateral (
       values
-        ('csts'::text, nullif(regexp_replace(sp.csts_id, '\D', '', 'g'), '')::bigint),
-        ('wdsf'::text, nullif(regexp_replace(sp.wdsf_id, '\D', '', 'g'), '')::bigint)
+        ('csts'::text, sp.csts_id::bigint),
+        ('wdsf'::text, sp.wdsf_id::bigint)
     ) ids(federation, external_id)
     join federated.person fp
       on fp.federation = ids.federation
@@ -2679,7 +2982,8 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     null::integer as ranking_to,
     null::numeric(10,3) as point_gain,
     null::boolean as is_final,
-    false as has_result
+    false as has_result,
+    comp.competition_type
   from params
   join federated.competition comp
     on comp.start_date >= params.since
@@ -2751,8 +3055,8 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     from scoped_people sp
     cross join lateral (
       values
-        ('csts'::text, nullif(regexp_replace(sp.csts_id, '\D', '', 'g'), '')::bigint),
-        ('wdsf'::text, nullif(regexp_replace(sp.wdsf_id, '\D', '', 'g'), '')::bigint)
+        ('csts'::text, sp.csts_id::bigint),
+        ('wdsf'::text, sp.wdsf_id::bigint)
     ) ids(federation, external_id)
     join federated.person fp
       on fp.federation = ids.federation
@@ -2779,7 +3083,8 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     cr.ranking_to,
     cr.point_gain,
     cr.is_final,
-    true as has_result
+    true as has_result,
+    comp.competition_type
   from params
   join federated.competition comp
     on comp.start_date >= params.since
@@ -2835,8 +3140,8 @@ CREATE TABLE public.person (
     nationality text NOT NULL,
     tax_identification_number text,
     national_id_number text,
-    csts_id text,
-    wdsf_id text,
+    csts_id integer,
+    wdsf_id integer,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     legacy_user_id bigint,
@@ -2852,7 +3157,8 @@ CASE
 END])) STORED NOT NULL,
     address public.address_domain,
     external_ids text[],
-    note text DEFAULT ''::text NOT NULL
+    note text DEFAULT ''::text NOT NULL,
+    search_name text GENERATED ALWAYS AS (app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name]))) STORED
 );
 
 
@@ -2868,6 +3174,13 @@ COMMENT ON TABLE public.person IS '@omit create';
 --
 
 COMMENT ON COLUMN public.person.legacy_user_id IS '@omit';
+
+
+--
+-- Name: COLUMN person.search_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person.search_name IS '@omit';
 
 
 --
@@ -4584,6 +4897,64 @@ $$;
 
 
 --
+-- Name: person_csts_candidates(public.person, integer, real); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_csts_candidates(in_person public.person, "limit" integer DEFAULT 10, threshold real DEFAULT 0.4) RETURNS TABLE(id integer, name text, age_group text, similarity real)
+    LANGUAGE sql STABLE
+    AS $_$
+  with params as (
+    select
+      greatest(0.3::real, least(coalesce(threshold, 0.4), 1::real)) as effective_threshold,
+      greatest(0, least(coalesce($2, 10), 50)) as effective_limit
+  ),
+  scored_candidates as (
+    select
+      fp.external_id::integer as id,
+      fp.canonical_name as name,
+      fp.age_group,
+      score.name_score,
+      case
+        when in_person.birth_date is not null and fp.dob is not null and fp.dob = in_person.birth_date then 1
+        else 0
+      end as dob_score
+      -- Future year-of-birth range scoring belongs here once federated.person.yob_range exists.
+    from params
+    join federated.person fp on true
+    cross join lateral (
+      select public.similarity(fp.search_name, in_person.search_name) as name_score
+    ) score
+    where in_person.search_name is not null
+      and fp.federation = 'csts'
+      and fp.external_id between 0 and 2147483647
+      and fp.search_name % in_person.search_name
+      and score.name_score >= params.effective_threshold
+      and not exists (
+        select 1
+        from public.person existing
+        where existing.id <> in_person.id
+          and existing.csts_id = fp.external_id::integer
+      )
+  )
+  select scored_candidates.id, scored_candidates.name, scored_candidates.age_group, scored_candidates.name_score
+  from scored_candidates
+  order by
+    scored_candidates.dob_score desc,
+    scored_candidates.name_score desc,
+    scored_candidates.name,
+    scored_candidates.id
+  limit (select effective_limit from params);
+$_$;
+
+
+--
+-- Name: FUNCTION person_csts_candidates(in_person public.person, "limit" integer, threshold real); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.person_csts_candidates(in_person public.person, "limit" integer, threshold real) IS '@simpleCollections only';
+
+
+--
 -- Name: person_csts_progress(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4601,7 +4972,7 @@ from federated.person p
        join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id
        join federated.category on ccp.category_id = category.id
 where p.federation = 'csts'
-  and p.external_id = nullif(regexp_replace(in_person.csts_id, '\D', '', 'g'), '')::bigint;
+  and p.external_id = in_person.csts_id::bigint;
 $$;
 
 
@@ -4872,8 +5243,8 @@ CREATE TABLE public.membership_application (
     nationality text NOT NULL,
     tax_identification_number text,
     national_id_number text,
-    csts_id text,
-    wdsf_id text,
+    csts_id integer,
+    wdsf_id integer,
     prefix_title text,
     suffix_title text,
     bio text,
@@ -6758,8 +7129,16 @@ CREATE TABLE federated.competition (
     participants_total integer,
     excused_total integer,
     completed_at timestamp with time zone,
+    competition_type federated.competition_type,
     CONSTRAINT competition_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
+
+
+--
+-- Name: COLUMN competition.competition_type; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.competition.competition_type IS 'Federation-provided competition type/grade, for example CSTS Cup, Ranking, League, Championship.';
 
 
 --
@@ -7107,14 +7486,14 @@ CREATE TABLE federated.person (
     canonical_name text,
     first_name text,
     last_name text,
-    search_name text GENERATED ALWAYS AS (federated.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED,
     gender federated.gender,
     dob date,
     nationality text,
     age_group text,
     medical_checkup_expiration date,
     medical_checkup_type text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    search_name text GENERATED ALWAYS AS (app_private.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED
 );
 
 
@@ -9784,6 +10163,13 @@ CREATE INDEX event_range_idx ON federated.event USING gist (range);
 
 
 --
+-- Name: federated_person_csts_search_name_trgm_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX federated_person_csts_search_name_trgm_idx ON federated.person USING gin (search_name public.gin_trgm_ops) WHERE (federation = 'csts'::text);
+
+
+--
 -- Name: idx_person_search_name_trgm; Type: INDEX; Schema: federated; Owner: -
 --
 
@@ -10502,6 +10888,13 @@ CREATE INDEX payment_recipient_tenant_id_idx ON public.payment_recipient USING b
 --
 
 CREATE INDEX payment_tenant_id_idx ON public.payment USING btree (tenant_id);
+
+
+--
+-- Name: person_csts_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX person_csts_id_idx ON public.person USING btree (csts_id) WHERE (csts_id IS NOT NULL);
 
 
 --
@@ -14145,6 +14538,20 @@ GRANT ALL ON FUNCTION public.account_liabilities(a public.account, since timesta
 
 
 --
+-- Name: TABLE activity_timeline_item; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.activity_timeline_item TO anonymous;
+
+
+--
+-- Name: FUNCTION activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[], p_cohort_id bigint, p_kinds public.activity_timeline_kind[], p_event_types public.event_type[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[], p_cohort_id bigint, p_kinds public.activity_timeline_kind[], p_event_types public.event_type[]) TO anonymous;
+
+
+--
 -- Name: TABLE cohort; Type: ACL; Schema: public; Owner: -
 --
 
@@ -14618,6 +15025,13 @@ GRANT ALL ON FUNCTION public.person_all_couples(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_csts_candidates(in_person public.person, "limit" integer, threshold real); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_csts_candidates(in_person public.person, "limit" integer, threshold real) TO anonymous;
 
 
 --
@@ -15486,5 +15900,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict tLaWu3vmrt9Y3oiV6Tt1ZozkSDroUXxOj8OMDOVc9TCeloVuMjEX5AvoUxQ5xQX
+\unrestrict bvFmM66NWPKoivJtxZJlfdFn4xyzn9DNVQBaLJxZajb2FItAVqfKwGQ6gJoJKlS
 

@@ -12,7 +12,7 @@ from federated.person p
        join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id
        join federated.category on ccp.category_id = category.id
 where p.federation = 'csts'
-  and p.external_id = nullif(regexp_replace(in_person.csts_id, '\D', '', 'g'), '')::bigint;
+  and p.external_id = in_person.csts_id::bigint;
 $$;
 
 COMMENT ON FUNCTION public.person_csts_progress(in_person public.person) IS '@simpleCollections only';

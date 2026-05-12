@@ -11,8 +11,11 @@ CREATE TABLE federated.competition (
     participants_total integer,
     excused_total integer,
     completed_at timestamp with time zone,
+    competition_type federated.competition_type,
     CONSTRAINT competition_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
+
+COMMENT ON COLUMN federated.competition.competition_type IS 'Federation-provided competition type/grade, for example CSTS Cup, Ranking, League, Championship.';
 
 GRANT SELECT ON TABLE federated.competition TO anonymous;
 

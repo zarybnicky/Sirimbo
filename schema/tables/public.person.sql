@@ -7,8 +7,8 @@ CREATE TABLE public.person (
     nationality text NOT NULL,
     tax_identification_number text,
     national_id_number text,
-    csts_id text,
-    wdsf_id text,
+    csts_id integer,
+    wdsf_id integer,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     legacy_user_id bigint,
@@ -24,11 +24,13 @@ CASE
 END])) STORED NOT NULL,
     address public.address_domain,
     external_ids text[],
-    note text DEFAULT ''::text NOT NULL
+    note text DEFAULT ''::text NOT NULL,
+    search_name text GENERATED ALWAYS AS (app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name]))) STORED
 );
 
 COMMENT ON TABLE public.person IS '@omit create';
 COMMENT ON COLUMN public.person.legacy_user_id IS '@omit';
+COMMENT ON COLUMN public.person.search_name IS '@omit';
 
 GRANT ALL ON TABLE public.person TO anonymous;
 ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;
@@ -42,3 +44,5 @@ CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((id IN (
    FROM app_private.visible_person_ids() v(person_id))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+CREATE INDEX person_csts_id_idx ON public.person USING btree (csts_id) WHERE (csts_id IS NOT NULL);

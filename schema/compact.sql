@@ -118,6 +118,8 @@ CREATE TABLE federated.event (
     REFERENCES federated.federation_club (federation, id)
 );
 
+CREATE TYPE federated.competition_type AS ENUM ('cup', 'ranking', 'league', 'championship', 'top_level', 'super_league', 'g_cup', 'unknown');
+
 CREATE TABLE federated.competition (
   id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   federation text NOT NULL REFERENCES federated.federation (code),
@@ -131,6 +133,7 @@ CREATE TABLE federated.competition (
   participants_total int,
   excused_total int,
   completed_at timestamp with time zone,
+  competition_type federated.competition_type,
   CHECK (
     end_date IS NULL
       OR end_date >= start_date
@@ -213,7 +216,6 @@ CREATE TABLE federated.person (
   canonical_name text,
   first_name text,
   last_name text,
-  search_name text GENERATED ALWAYS AS (federated.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED,
   gender federated.gender,
   dob date,
   nationality text,
@@ -221,6 +223,7 @@ CREATE TABLE federated.person (
   medical_checkup_expiration date,
   medical_checkup_type text,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
+  search_name text GENERATED ALWAYS AS (app_private.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED,
   UNIQUE (federation, external_id)
 );
 
@@ -403,8 +406,8 @@ CREATE TABLE public.person (
   nationality text NOT NULL,
   tax_identification_number text,
   national_id_number text,
-  csts_id text,
-  wdsf_id text,
+  csts_id int,
+  wdsf_id int,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   legacy_user_id bigint,
@@ -419,7 +422,8 @@ CREATE TABLE public.person (
   END])) STORED NOT NULL,
   address public.address_domain,
   external_ids text[],
-  note text DEFAULT ''::text NOT NULL
+  note text DEFAULT ''::text NOT NULL,
+  search_name text GENERATED ALWAYS AS (app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name]))) STORED
 );
 
 CREATE TYPE public.relationship_status AS ENUM ('pending', 'active', 'expired');
@@ -1134,8 +1138,8 @@ CREATE TABLE public.membership_application (
   nationality text NOT NULL,
   tax_identification_number text,
   national_id_number text,
-  csts_id text,
-  wdsf_id text,
+  csts_id int,
+  wdsf_id int,
   prefix_title text,
   suffix_title text,
   bio text,
@@ -1342,11 +1346,13 @@ CREATE TABLE crawler.rate_limit_rule (
   CHECK (per_interval > '00:00:00'::interval)
 );
 
+CREATE TYPE public.activity_timeline_kind AS ENUM ('EVENT_ATTENDANCE', 'COMPETITION_BRIEF', 'COMPETITION_RESULT');
+
 CREATE TYPE public.announcement_audience_type_input AS (id bigint, cohort_id bigint, audience_role public.announcement_audience_role);
 
 CREATE TYPE public.announcement_type_input AS (id bigint, title text, body text, is_locked boolean, is_visible boolean, is_sticky boolean, scheduled_since timestamp with time zone, scheduled_until timestamp with time zone);
 
-CREATE TYPE public.competition_participation_record AS (person_id bigint, person_name text, federation text, federated_person_id text, competitor_id text, competitor_name text, competitor_type federated.competitor_type, event_id bigint, event_name text, event_location text, competition_id bigint, competition_date date, check_in_end time, category federated.category, dances text[], participants int, ranking int, ranking_to int, point_gain numeric(10, 3), is_final boolean, has_result boolean);
+CREATE TYPE public.competition_participation_record AS (person_id bigint, person_name text, federation text, federated_person_id text, competitor_id text, competitor_name text, competitor_type federated.competitor_type, event_id bigint, event_name text, event_location text, competition_id bigint, competition_date date, check_in_end time, category federated.category, dances text[], participants int, ranking int, ranking_to int, point_gain numeric(10, 3), is_final boolean, has_result boolean, competition_type federated.competition_type);
 
 CREATE TYPE public.event_instance_trainer_type_input AS (id bigint, person_id bigint);
 
