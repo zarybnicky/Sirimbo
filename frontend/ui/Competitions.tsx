@@ -175,7 +175,6 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
           {group.competitorName}
         </h5>
       </div>
-      <div className="divide-y divide-neutral-4">
         {briefEntries.map((entry) => (
           <div
             key={competitionEntryKey(entry)}
@@ -190,8 +189,6 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
             </div>
           </div>
         ))}
-      </div>
-      <div className="divide-y divide-neutral-4">
         {reportEntries.map((entry) => (
           <div
             key={competitionEntryKey(entry)}
@@ -213,7 +210,6 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
             </div>
           </div>
         ))}
-      </div>
     </>
   );
 }
@@ -241,15 +237,15 @@ export function CompetitionEventContent({
         {title}
       </div>
       {location ? (
-        <div className="mb-2 truncate text-xs leading-tight text-green-11">
+        <div className="truncate text-xs leading-tight text-green-11">
           {location}
         </div>
       ) : null}
-      <div className="space-y-1">
+      <div>
         {groupByCompetitor(entries).map((group) => (
           <div
             key={group.key}
-            className="border-t border-green-6 py-2 first:border-t-0 first:pt-0 last:pb-0"
+            className="border-t border-green-6 pt-2 first:border-t-0"
           >
             <CompetitionCompetitorGroup group={group} />
           </div>
@@ -360,6 +356,7 @@ export function CompetitionWeekPanel({
       <div className="text-sm text-neutral-9">
         {fetching ? 'Načítám...' : ''}
         {!fetching && !hasVisibleEntries ? 'Žádné soutěže tento týden. ' : ''}
+        <br/>
         {!fetching && !hasVisibleEntries && onlyMine && locations.length > 0 && (
           <a
             className="underline text-accent-12"
