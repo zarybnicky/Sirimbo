@@ -28,7 +28,12 @@ import {
   queueCrawlerSchedule,
   queueFrontierRefetch,
 } from './crawler.queries.ts';
-import { buildStatusSnapshot, type CrawlerStatusRow, sortBacklogRows, type StatusProblem, } from './statusSnapshot.ts';
+import {
+  buildStatusSnapshot,
+  type CrawlerStatusRow,
+  sortBacklogRows,
+  type StatusProblem,
+} from './statusSnapshot.ts';
 import { fetchResponse } from './fetch.ts';
 import { loaderFor, LOADERS } from './handlers.ts';
 import type { JsonLoader } from './types.ts';

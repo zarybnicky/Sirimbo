@@ -4,7 +4,7 @@ import {
   CompetitionReportDocument,
   type CompetitionReportQuery,
 } from '@/graphql/Federation';
-import { formatCstsCategoryName, formatCstsCompetitionType } from '@/ui/csts';
+import { formatCstsCategoryName } from '@/ui/csts';
 import { numericDateFormatter } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { cardCls } from '@/ui/style';
@@ -219,16 +219,9 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
 }
 
 function CompetitionCategoryLine({ entry }: { entry: CompetitionEntry }) {
-  const competitionType = formatCstsCompetitionType(entry.competitionType);
-
   return (
     <div className="flex min-w-0 items-center gap-1.5 font-semibold text-neutral-12">
-      {competitionType ? (
-        <span className="shrink-0 rounded border border-accent-6 bg-accent-3 px-1 py-px text-[10px] uppercase leading-none text-accent-11">
-          {competitionType}
-        </span>
-      ) : null}
-      <span className="truncate">{formatCstsCategoryName(entry.category)}</span>
+      {formatCstsCategoryName(entry.category, entry.competitionType)}
     </div>
   );
 }

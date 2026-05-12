@@ -9,35 +9,49 @@ export function formatCstsClass(value: string | null | undefined) {
   return !value || value === 'Open' ? null : value === 'S' ? 'M' : value;
 }
 
-export function formatCstsCategoryName(category?: CompetitionCategoryFragment | null) {
+function formatCstsAgeGroup(ageGroup: string) {
+  return ageGroup?.toLowerCase() === 'adult'
+    ? 'Dospělí'
+    : ageGroup?.toLowerCase() === 'youth'
+      ? 'Mládež'
+      : ageGroup?.toLowerCase() === 'juvenile_ii'
+        ? 'Děti 2'
+        : ageGroup?.toLowerCase() === 'juvenile_i'
+          ? 'Děti 1'
+          : ageGroup?.replace('_', ' ');
+}
+
+export function formatCstsCategoryName(
+  category: CompetitionCategoryFragment | null | undefined,
+  competitionType: CompetitionType | null | undefined,
+) {
   if (!category) return '';
-  const { ageGroup, discipline, series } = category;
+  const { discipline, series, competitorType } = category;
 
   return [
+    formatCstsCompetitionType(competitionType),
     series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : series,
-    ageGroup?.toLowerCase() === 'adult'
-      ? 'Dospělí'
-      : ageGroup?.toLowerCase() === 'youth'
-        ? 'Mládež'
-        : ageGroup?.toLowerCase() === 'juvenile_ii'
-          ? 'Děti 2'
-          : ageGroup?.toLowerCase() === 'juvenile_i'
-            ? 'Děti 1'
-            : category.ageGroup?.replace('_', ' '),
+    formatCstsAgeGroup(category.ageGroup),
     formatCstsClass(category.class),
     discipline === 'Standard_Latin'
       ? 'STT+LAT'
-      : discipline?.toLowerCase() === 'standard'
-        ? 'STT'
-        : discipline?.toLowerCase() === 'latin'
-          ? 'LAT'
-          : discipline,
+      : discipline === 'TenDance'
+        ? '10T'
+        : discipline?.toLowerCase() === 'standard' && competitorType === 'SOLO'
+          ? 'SoSTT'
+          : discipline?.toLowerCase() === 'latin' && competitorType === 'SOLO'
+            ? 'SoLAT'
+            : discipline?.toLowerCase() === 'standard'
+              ? 'STT'
+              : discipline?.toLowerCase() === 'latin'
+                ? 'LAT'
+                : discipline,
   ]
     .filter(Boolean)
     .join(' ');
 }
 
-export function formatCstsCompetitionType(value: CompetitionType | null | undefined) {
+function formatCstsCompetitionType(value: CompetitionType | null | undefined) {
   switch (value) {
     case 'CUP':
       return 'Cup';
