@@ -303,6 +303,68 @@ const getBacktestFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"
 export const getBacktestFrontierResponses = new PreparedQuery<IGetBacktestFrontierResponsesParams,IGetBacktestFrontierResponsesResult>(getBacktestFrontierResponsesIR);
 
 
+/** 'GetReprocessFrontierResponses' parameters type */
+export interface IGetReprocessFrontierResponsesParams {
+  federation?: string | null | void;
+  key?: string | null | void;
+  kind?: string | null | void;
+  limit?: NumberOrString | null | void;
+}
+
+/** 'GetReprocessFrontierResponses' return type */
+export interface IGetReprocessFrontierResponsesResult {
+  content: Json;
+  federation: string;
+  fetched_at: Date;
+  http_status: number | null;
+  id: string;
+  key: string;
+  kind: string;
+  url: string;
+}
+
+/** 'GetReprocessFrontierResponses' query type */
+export interface IGetReprocessFrontierResponsesQuery {
+  params: IGetReprocessFrontierResponsesParams;
+  result: IGetReprocessFrontierResponsesResult;
+}
+
+const getReprocessFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":529,"b":539},{"a":573,"b":583}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":593,"b":597},{"a":625,"b":629}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":639,"b":642},{"a":669,"b":672}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":759,"b":764}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url AS \"url!\",\n  jr.http_status,\n  jr.fetched_at AS \"fetched_at!\",\n  jrc.content AS \"content!\"\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n    AND jr.error IS NULL\n    AND (jr.http_status IS NULL OR jr.http_status < 400)\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND f.fetch_status = 'ok'\nORDER BY f.discovered_at, f.last_fetched_at, f.id\nLIMIT :limit"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *   f.id AS "id!",
+ *   f.federation AS "federation!",
+ *   f.kind AS "kind!",
+ *   f.key AS "key!",
+ *   jr.url AS "url!",
+ *   jr.http_status,
+ *   jr.fetched_at AS "fetched_at!",
+ *   jrc.content AS "content!"
+ * FROM crawler.frontier f
+ * JOIN LATERAL (
+ *   SELECT jr.*
+ *   FROM crawler.json_response jr
+ *   WHERE jr.frontier_id = f.id
+ *     AND jr.error IS NULL
+ *     AND (jr.http_status IS NULL OR jr.http_status < 400)
+ *   ORDER BY jr.fetched_at DESC
+ *   LIMIT 1
+ * ) jr ON true
+ * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
+ * WHERE (:federation::text IS NULL OR f.federation = :federation)
+ *   AND (:kind::text IS NULL OR f.kind = :kind)
+ *   AND (:key::text IS NULL OR f.key = :key)
+ *   AND f.fetch_status = 'ok'
+ * ORDER BY f.discovered_at, f.last_fetched_at, f.id
+ * LIMIT :limit
+ * ```
+ */
+export const getReprocessFrontierResponses = new PreparedQuery<IGetReprocessFrontierResponsesParams,IGetReprocessFrontierResponsesResult>(getReprocessFrontierResponsesIR);
+
+
 /** 'GetLatestFrontierFailures' parameters type */
 export interface IGetLatestFrontierFailuresParams {
   excludeHttpStatuses?: numberArray | null | void;

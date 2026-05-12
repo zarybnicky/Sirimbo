@@ -134,6 +134,34 @@ JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE f.federation = :federation
   AND f.kind = :kind;
 
+/* @name GetReprocessFrontierResponses */
+SELECT
+  f.id AS "id!",
+  f.federation AS "federation!",
+  f.kind AS "kind!",
+  f.key AS "key!",
+  jr.url AS "url!",
+  jr.http_status,
+  jr.fetched_at AS "fetched_at!",
+  jrc.content AS "content!"
+FROM crawler.frontier f
+JOIN LATERAL (
+  SELECT jr.*
+  FROM crawler.json_response jr
+  WHERE jr.frontier_id = f.id
+    AND jr.error IS NULL
+    AND (jr.http_status IS NULL OR jr.http_status < 400)
+  ORDER BY jr.fetched_at DESC
+  LIMIT 1
+) jr ON true
+JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
+WHERE (:federation::text IS NULL OR f.federation = :federation)
+  AND (:kind::text IS NULL OR f.kind = :kind)
+  AND (:key::text IS NULL OR f.key = :key)
+  AND f.fetch_status = 'ok'
+ORDER BY f.discovered_at, f.last_fetched_at, f.id
+LIMIT :limit;
+
 /* @name GetLatestFrontierFailures */
 SELECT
   id AS "id!",

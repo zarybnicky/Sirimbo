@@ -11,6 +11,7 @@ import type {
   IGetCrawlerScheduleStatusResult,
   IGetFrontierDetailResult,
   IGetFrontierFailureGroupsResult,
+  IGetReprocessFrontierResponsesResult,
 } from './crawler.queries.ts';
 import {
   getBacktestFrontierKinds,
@@ -23,15 +24,11 @@ import {
   getFrontierFailureGroups,
   getLatestFrontierFailures,
   getLatestFrontierResponse,
+  getReprocessFrontierResponses,
   queueCrawlerSchedule,
   queueFrontierRefetch,
 } from './crawler.queries.ts';
-import {
-  buildStatusSnapshot,
-  type CrawlerStatusRow,
-  sortBacklogRows,
-  type StatusProblem,
-} from './statusSnapshot.ts';
+import { buildStatusSnapshot, type CrawlerStatusRow, sortBacklogRows, type StatusProblem, } from './statusSnapshot.ts';
 import { fetchResponse } from './fetch.ts';
 import { loaderFor, LOADERS } from './handlers.ts';
 import type { JsonLoader } from './types.ts';
@@ -40,12 +37,19 @@ import { formatException } from './error.ts';
 const pool = new Pool();
 const REQUEST_CACHE_DIR = resolve(import.meta.dirname, '..', '.requests');
 
-type OutputOptions = { json?: boolean; };
+type OutputOptions = { json?: boolean };
 type ScopeTarget = {
   federation?: string;
   kind?: string;
 };
 type DetailLine = { label: string; value: unknown };
+type ReprocessOptions = {
+  keepGoing?: boolean;
+  limit?: string;
+};
+type ReprocessStats = { count: number; errors: number; ms: number };
+const REPROCESS_BATCH_SIZE = 25;
+const REPROCESS_PROGRESS_EVERY = 100;
 
 function formatDate(value: Date | string | null | undefined) {
   if (!value) return '-';
@@ -493,10 +497,7 @@ function frontierTableRows(rows: CrawlerStatusRow[]) {
   }));
 }
 
-function printStatusFrontiers(
-  rows: CrawlerStatusRow[],
-  expanded = false,
-) {
+function printStatusFrontiers(rows: CrawlerStatusRow[], expanded = false) {
   printSection('Frontiers');
 
   const stable = rows
@@ -769,10 +770,7 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
 
   const [frontierRows, failureGroups, workerJobRows, scheduleRows] = await Promise.all([
     getCrawlerFrontierStatus.run({ federation, kind, allowRefetch }, pool),
-    getFrontierFailureGroups.run(
-      { federation, kind, excludeHttpStatuses: null },
-      pool,
-    ),
+    getFrontierFailureGroups.run({ federation, kind, excludeHttpStatuses: null }, pool),
     getCrawlerWorkerJobStatus.run(undefined, pool),
     getCrawlerScheduleStatus.run(undefined, pool),
   ]);
@@ -789,10 +787,9 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
   const visibleFrontiers = options.frontiers
     ? snapshot.frontiers
     : snapshot.frontiers.filter((row) => !row.is_stable);
-  const visibleBacklog =
-    [...snapshot.frontiers]
-      .filter((row) => row.fetch_due > 0 || row.process_ready > 0)
-      .sort(sortBacklogRows);
+  const visibleBacklog = [...snapshot.frontiers]
+    .filter((row) => row.fetch_due > 0 || row.process_ready > 0)
+    .sort(sortBacklogRows);
   const suggestedCommands = statusCommands(
     snapshot.filter,
     snapshot.failures,
@@ -958,8 +955,14 @@ async function queueRefetch(target: string, options: RefetchOptions) {
     return;
   }
 
-  const label = isExact ? 'frontier row' : options.all ? 'frontier rows' : 'failed frontier rows';
-  console.log(`Queued ${rows.length} ${label}` + (limit == null ? '' : ` (limit ${limit})`));
+  const label = isExact
+    ? 'frontier row'
+    : options.all
+      ? 'frontier rows'
+      : 'failed frontier rows';
+  console.log(
+    `Queued ${rows.length} ${label}` + (limit == null ? '' : ` (limit ${limit})`),
+  );
   if (scheduled) console.log(`Queued frontier_schedule job`);
   printTable(
     rows.slice(0, 50).map((row) => ({
@@ -968,7 +971,8 @@ async function queueRefetch(target: string, options: RefetchOptions) {
       target: formatFrontierTarget(row.federation, row.kind, row.key),
     })),
   );
-  if (rows.length > 50) console.log(`Showing 50 of ${rows.length}; use --json for all rows.`);
+  if (rows.length > 50)
+    console.log(`Showing 50 of ${rows.length}; use --json for all rows.`);
 }
 
 function queryText(query: unknown) {
@@ -1012,7 +1016,139 @@ function logClientQueries(client: PoolClient): PoolClient {
   });
 }
 
-async function loadCached(federation: string, kind: string, key: string, shouldCommit: boolean) {
+async function validateReprocessFrontier(
+  client: PoolClient,
+  row: IGetReprocessFrontierResponsesResult,
+  options: ReprocessOptions,
+) {
+  await client.query('SAVEPOINT crawler_reprocess_frontier');
+
+  try {
+    const loader = loaderFor(row.federation, row.kind);
+    const content =
+      loader.mode === 'json'
+        ? zx.deepLoose(loader.schema).parse(row.content, { reportInput: true })
+        : row.content;
+    await loader.load(client, content);
+    await client.query('RELEASE SAVEPOINT crawler_reprocess_frontier');
+    return true;
+  } catch (e) {
+    await client.query('ROLLBACK TO SAVEPOINT crawler_reprocess_frontier');
+    await client.query('RELEASE SAVEPOINT crawler_reprocess_frontier');
+
+    console.error(
+      `Reprocess failed for frontier ${row.id} ` +
+        `(${formatFrontierTarget(row.federation, row.kind, row.key)})`,
+    );
+    console.error(`response: ${row.url}`);
+    console.error(formatException(e));
+    if (!options.keepGoing) {
+      console.error('Stopping after first failure; use --keep-going to collect more.');
+    }
+    return false;
+  }
+}
+
+async function reprocessCached(target: string | undefined, options: ReprocessOptions) {
+  const parsed = parseTarget(target);
+  const limit = parseOptionalLimit(options.limit);
+  const selectClient = await pool.connect();
+  const processClient = await pool.connect();
+  const stats = new Map<string, ReprocessStats>();
+  const counts = { processed: 0, failures: 0 };
+  const started = performance.now();
+  let inTransaction = false;
+
+  try {
+    const cursor = getReprocessFrontierResponses.stream(
+      { ...parsed, limit },
+      {
+        query: selectClient.query,
+        stream: (query, bindings) => selectClient.query(new Cursor(query, bindings)),
+      },
+    );
+
+    await processClient.query('BEGIN');
+    inTransaction = true;
+
+    let shouldStop = false;
+    while (!shouldStop) {
+      const rows = await cursor.read(REPROCESS_BATCH_SIZE);
+      if (rows.length === 0) break;
+
+      for (const row of rows) {
+        const rowStarted = performance.now();
+        const ok = await validateReprocessFrontier(processClient, row, options);
+        const ms = performance.now() - rowStarted;
+        const kindStats = stats.get(loaderKey(row.federation, row.kind)) ?? {
+          count: 0,
+          errors: 0,
+          ms: 0,
+        };
+        kindStats.count += 1;
+        kindStats.ms += ms;
+        if (!ok) kindStats.errors += 1;
+        stats.set(loaderKey(row.federation, row.kind), kindStats);
+
+        if (ok) {
+          counts.processed += 1;
+        } else {
+          counts.failures += 1;
+          shouldStop = !options.keepGoing;
+          if (shouldStop) break;
+        }
+
+        const total = counts.processed + counts.failures;
+        if (total % REPROCESS_PROGRESS_EVERY === 0) {
+          process.stdout.write(
+            `\rValidated ${counts.processed}/${total} responses so far; ` +
+              `${counts.failures} failures; ` +
+              `${Math.round(performance.now() - started)}ms\x1b[K`,
+          );
+        }
+      }
+    }
+
+    await processClient.query('ROLLBACK');
+    inTransaction = false;
+  } catch (e) {
+    if (inTransaction) await processClient.query('ROLLBACK');
+    throw e;
+  } finally {
+    processClient.release();
+    selectClient.release();
+  }
+
+  process.stdout.write('\n');
+  if (stats.size > 0) {
+    printTable(
+      [...stats.entries()]
+        .sort((a, b) => b[1].ms - a[1].ms)
+        .map(([kind, row]) => ({
+          kind,
+          ok: row.count - row.errors,
+          errors: row.errors,
+          total: row.count,
+          ms: Math.round(row.ms),
+        })),
+    );
+  }
+
+  const total = counts.processed + counts.failures;
+  console.log(
+    `Validated ${counts.processed}/${total} responses in ` +
+      `${Math.round(performance.now() - started)}ms; ` +
+      `${counts.failures} failures; rolled back`,
+  );
+  if (counts.failures > 0) process.exitCode = 1;
+}
+
+async function loadCached(
+  federation: string,
+  kind: string,
+  key: string,
+  shouldCommit: boolean,
+) {
   const { loader, path } = await ensureCached(federation, kind, key);
   const body = await readFile(path, 'utf8');
   const raw = JSON.parse(body);
@@ -1120,6 +1256,14 @@ cli
   .action((target: string | undefined, options: { verbose?: boolean }) => {
     const parsed = parseScopeTarget(target);
     return backtestSchemas(parsed?.federation, parsed?.kind, options);
+  });
+
+cli
+  .command('reprocess [target]', 'Dry-run loader processing for stored OK responses')
+  .option('--keep-going', 'Continue after load failures')
+  .option('-n, --limit <limit>', 'Maximum responses to validate')
+  .action((target: string | undefined, options: ReprocessOptions) => {
+    return reprocessCached(target, options);
   });
 
 cli
