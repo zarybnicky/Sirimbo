@@ -114,7 +114,7 @@ query PersonMemberships($id: BigInt!) {
 }
 
 query FullPersonList {
-  people {
+  people(condition: { membership: {} }) {
     nodes {
       ...Person
     }
@@ -122,12 +122,14 @@ query FullPersonList {
 }
 
 query PersonAccounts {
-  filteredPeopleList {
-    ...PersonBasic
-    accountsList {
-      id
-      balance
-      currency
+  people(condition: { membership: {} }) {
+    nodes {
+      ...PersonBasic
+      accountsList {
+        id
+        balance
+        currency
+      }
     }
   }
 }
@@ -148,26 +150,39 @@ query UnpaidPayments {
   }
 }
 
-query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipState: String) {
-  filteredPeopleList(inCohorts: $inCohorts, isTrainer: $isTrainer, isAdmin: $isAdmin, membershipState: $membershipState) {
-    ...Person
-    externalIds
-    cohortMembershipsList {
-      id
-      cohort {
-        id
-        name
+query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipState: PersonMembershipState) {
+  people(
+    condition: {
+      membership: {
+        inCohorts: $inCohorts
+        isTrainer: $isTrainer
+        isAdmin: $isAdmin
+        state: $membershipState
       }
     }
-    activeCouplesList {
-      ...Couple
+  ) {
+    nodes {
+      ...Person
+      externalIds
+      cohortMembershipsList {
+        id
+        cohort {
+          id
+          name
+        }
+      }
+      activeCouplesList {
+        ...Couple
+      }
     }
   }
 }
 
 query PersonWithLinksList {
-  filteredPeopleList {
-    ...PersonWithLinks
+  people(condition: { membership: {} }) {
+    nodes {
+      ...PersonWithLinks
+    }
   }
 }
 

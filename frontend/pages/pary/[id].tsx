@@ -1,7 +1,6 @@
 import { Layout } from '@/ui/Layout';
 import { CoupleDocument } from '@/graphql/Memberships';
 import { CoupleList } from '@/ui/lists/CoupleList';
-import { EventButton } from '@/ui/EventButton';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { formatLongCoupleName, formatOpenDateRange } from '@/ui/format';
@@ -11,7 +10,7 @@ import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
-import { CompetitionWeekPanel } from '@/ui/Competitions';
+import { ActivityTimeline } from '@/ui/ActivityTimeline';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -69,20 +68,9 @@ function CouplePage() {
           <div>{item.status === 'ACTIVE' ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
         </div>
 
-        <h2>Poslední události</h2>
-        {item.eventInstancesList?.map((instance) => (
-          <EventButton
-            key={item.id}
-            event={instance.event!}
-            instance={instance}
-            viewer="couple"
-            showDate
-          />
-        ))}
-
         {personIds.length > 0 ? (
           <div className="mt-6">
-            <CompetitionWeekPanel personIds={personIds} />
+            <ActivityTimeline personIds={personIds} />
           </div>
         ) : null}
       </WithSidebar>

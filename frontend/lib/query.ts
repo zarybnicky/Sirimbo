@@ -380,7 +380,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       createPerson(_result, _args, cache, _info) {
         for (const field of cache
           .inspectFields('Query')
-          .filter((field) => field.fieldName.includes('filteredPeopleList')))
+          .filter((field) => field.fieldName === 'people'))
           cache.invalidate('Query', field.fieldKey);
       },
 

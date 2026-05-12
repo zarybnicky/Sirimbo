@@ -129,6 +129,111 @@ enum AccountsOrderBy {
   UPDATED_AT_DESC
 }
 
+type ActivityCompetitionBrief implements ActivityTimelineItem {
+  activityDate: Date
+  category: Category
+  checkInEnd: Time
+  competitionDate: Date
+  competitionEventId: BigInt
+  competitionEventLocation: String
+  competitionEventName: String
+  competitionId: BigInt
+  competitorId: String
+  competitorName: String
+  competitorType: CompetitorType
+  dances: [String]
+  federatedPersonId: String
+  federation: String
+  id: String!
+  kind: ActivityTimelineKind
+  participants: Int
+
+  """
+  Reads a single `Person` that is related to this `ActivityTimelineItem`.
+  """
+  person: Person
+  personId: BigInt
+  personName: String
+  sortAt: Datetime
+}
+
+type ActivityCompetitionResult implements ActivityTimelineItem {
+  activityDate: Date
+  category: Category
+  competitionDate: Date
+  competitionEventId: BigInt
+  competitionEventLocation: String
+  competitionEventName: String
+  competitionId: BigInt
+  competitorId: String
+  competitorName: String
+  competitorType: CompetitorType
+  dances: [String]
+  federatedPersonId: String
+  federation: String
+  id: String!
+  isFinal: Boolean
+  kind: ActivityTimelineKind
+  participants: Int
+
+  """
+  Reads a single `Person` that is related to this `ActivityTimelineItem`.
+  """
+  person: Person
+  personId: BigInt
+  personName: String
+  pointGain: BigFloat
+  ranking: Int
+  rankingTo: Int
+  sortAt: Datetime
+}
+
+type ActivityEventAttendance implements ActivityTimelineItem {
+  activityDate: Date
+
+  """
+  Reads a single `EventAttendance` that is related to this `ActivityTimelineItem`.
+  """
+  eventAttendance: EventAttendance
+  eventAttendanceId: BigInt
+
+  """
+  Reads a single `EventInstance` that is related to this `ActivityTimelineItem`.
+  """
+  eventInstance: EventInstance
+  eventInstanceId: BigInt
+  id: String!
+  kind: ActivityTimelineKind
+
+  """
+  Reads a single `Person` that is related to this `ActivityTimelineItem`.
+  """
+  person: Person
+  personId: BigInt
+  personName: String
+  sortAt: Datetime
+}
+
+interface ActivityTimelineItem {
+  activityDate: Date
+  id: String!
+  kind: ActivityTimelineKind
+
+  """
+  Reads a single `Person` that is related to this `ActivityTimelineItem`.
+  """
+  person: Person
+  personId: BigInt
+  personName: String
+  sortAt: Datetime
+}
+
+enum ActivityTimelineKind {
+  COMPETITION_BRIEF
+  COMPETITION_RESULT
+  EVENT_ATTENDANCE
+}
+
 type AddressDomain {
   city: String
   conscriptionNumber: String
@@ -6231,6 +6336,11 @@ input PersonCondition {
   """Checks for equality with the object’s `lastName` field."""
   lastName: String
 
+  """
+  Filters people by tenant membership, cohort membership, trainer status, and administrator status.
+  """
+  membership: PersonMembershipCondition
+
   """Checks for equality with the object’s `name` field."""
   name: String
 
@@ -6371,6 +6481,31 @@ enum PersonInvitationsOrderBy {
   USED_AT_DESC
 }
 
+"""Filters people by current or former tenant membership state."""
+input PersonMembershipCondition {
+  """
+  Cohort IDs to match. An empty list means people without a matching cohort membership.
+  """
+  inCohorts: [BigInt!]
+
+  """
+  Whether the person has an administrator relationship in the selected state.
+  """
+  isAdmin: Boolean
+
+  """Whether the person has a trainer relationship in the selected state."""
+  isTrainer: Boolean
+
+  """The membership state to filter by. Defaults to CURRENT."""
+  state: PersonMembershipState
+}
+
+"""Which tenant membership state a person membership filter targets."""
+enum PersonMembershipState {
+  CURRENT
+  FORMER
+}
+
 """
 Represents an update to a `Person`. Fields that are set will be updated.
 """
@@ -6502,6 +6637,19 @@ type Query {
     """The method to use when ordering `Account`."""
     orderBy: [AccountsOrderBy!]
   ): [Account!]
+  activityTimelineList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    pCohortId: BigInt
+    pEventTypes: [EventType]
+    pKinds: [ActivityTimelineKind]
+    pPersonIds: [BigInt]
+    pSince: Datetime
+    pUntil: Datetime
+  ): [ActivityTimelineItem!]
 
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualities(

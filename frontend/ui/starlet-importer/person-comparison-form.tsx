@@ -110,7 +110,7 @@ export function PersonComparisonForm() {
   const { courses } = useAtomValue(starletSettingsAtom);
   const [{ data: personQuery }] = useQuery({ query: PersonListDocument });
   const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
-  const persons = personQuery?.filteredPeopleList;
+  const persons = personQuery?.people?.nodes;
   const cohorts = cohortQuery?.cohortsList;
 
   const [coursesWithStudents, setCoursesWithStudents] = useState<CleanedCourse[]>([]);

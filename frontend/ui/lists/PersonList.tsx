@@ -50,11 +50,11 @@ export function PersonList() {
       inCohorts: cohort === 'none' ? [] : cohort ? [cohort] : null,
       isAdmin: !!isAdmin || null,
       isTrainer: !!isTrainer || null,
-      membershipState: includeFormer ? 'former' : 'current',
+      membershipState: includeFormer ? 'FORMER' : 'CURRENT',
     },
   });
   const nodes = React.useMemo(() => {
-    return (data?.filteredPeopleList || [])
+    return (data?.people?.nodes || [])
       .toSorted((a, b) =>
         `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
       )

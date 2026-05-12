@@ -8,7 +8,7 @@ export async function exportNsa(client: Client) {
   if (result.error) throw result.error;
   const data = result.data!;
 
-  const inputs = (data.filteredPeopleList || []).filter((x) => x.isMember || x.isTrainer);
+  const inputs = (data.people?.nodes || []).filter((x) => x.isMember || x.isTrainer);
   inputs.sort((x, y) =>
     `${x.isTrainer} ${x.lastName} ${x.firstName}`.localeCompare(
       `${y.isTrainer} ${y.lastName} ${y.firstName}`,

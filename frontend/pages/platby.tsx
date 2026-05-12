@@ -82,7 +82,7 @@ function AccountOverview() {
       >
         Přehled plateb 2023
       </button>
-      {(data?.filteredPeopleList || [])
+      {(data?.people?.nodes || [])
         .toSorted((a, b) =>
           `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
         )

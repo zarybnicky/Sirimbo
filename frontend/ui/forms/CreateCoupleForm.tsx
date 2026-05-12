@@ -21,7 +21,7 @@ export function CreateCoupleForm({ person: initialPerson }: { person?: PersonBas
   const [{ data }] = useQuery({ query: PersonListDocument });
   const men = React.useMemo(
     () =>
-      (data?.filteredPeopleList || [])
+      (data?.people?.nodes || [])
         .filter((x) => x.gender === 'MAN')
         .toSorted((a, b) =>
           `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
@@ -35,7 +35,7 @@ export function CreateCoupleForm({ person: initialPerson }: { person?: PersonBas
   );
   const women = React.useMemo(
     () =>
-      (data?.filteredPeopleList || [])
+      (data?.people?.nodes || [])
         .filter((x) => x.gender === 'WOMAN')
         .toSorted((a, b) =>
           `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),

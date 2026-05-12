@@ -21,10 +21,10 @@ export function ParticipantFilter() {
       inCohorts: null,
       isAdmin: null,
       isTrainer: null,
-      membershipState: 'current',
+      membershipState: 'CURRENT',
     },
   });
-  const available = (data?.filteredPeopleList || [])
+  const available = (data?.people?.nodes || [])
     .filter(isTruthy)
     .toSorted((a, b) =>
       `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),

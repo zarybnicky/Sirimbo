@@ -56,6 +56,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/skolni-krouzky">
     | StaticRoute<"/starlet-import">
     | StaticRoute<"/tanecni-klub">
+    | StaticRoute<"/tools">
     | StaticRoute<"/treneri">
     | StaticRoute<"/treninkove-programy">
     | DynamicRoute<"/treninkove-programy/[id]", { "id": string }>

@@ -8,14 +8,13 @@ import { formatAgeGroup } from '@/ui/format';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { TabMenu } from '@/ui/TabMenu';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
-import { PersonAttendanceView } from '@/ui/PersonAttendanceView';
 import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
 import { PersonWorkReportView } from '@/ui/PersonWorkReportView';
 import { personActions } from '@/lib/actions/person';
 import { useActions } from '@/lib/actions';
 import { tenantIdAtom } from '@/ui/state/auth';
 import { useAtomValue } from 'jotai';
-import { CompetitionWeekPanel } from '@/ui/Competitions';
+import { ActivityTimeline } from '@/ui/ActivityTimeline';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
@@ -57,9 +56,9 @@ export function PersonView({ id }: { id: string }) {
     if (isAdminOrCurrentPerson) {
       tabs.push(
         {
-          id: 'events',
-          title: <>Účasti</>,
-          contents: () => <PersonAttendanceView id={id} />,
+          id: 'activity',
+          title: <>Aktivita</>,
+          contents: () => <ActivityTimeline personIds={[id]} />,
         },
         {
           id: 'payment',
@@ -67,13 +66,6 @@ export function PersonView({ id }: { id: string }) {
           contents: () => <PersonPaymentsView key="payments" id={id} />,
         },
       );
-    }
-    if (isAdminOrCurrentPerson && item.cstsId) {
-      tabs.push({
-        id: 'competitions',
-        title: <>Soutěže</>,
-        contents: () => <CompetitionWeekPanel personIds={[id]} />,
-      });
     }
     if (isAdminOrCurrentPerson && isCurrentTenantTrainer) {
       tabs.push({

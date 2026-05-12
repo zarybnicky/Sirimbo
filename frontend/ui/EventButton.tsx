@@ -24,6 +24,7 @@ type Props = {
   showDate?: boolean;
   viewer: 'auto' | 'trainer' | 'couple';
   attendance?: 'inline';
+  suffix?: React.ReactNode;
 };
 
 type NonEmptyArray<T> = [T, ...T[]];
@@ -36,7 +37,14 @@ const labels: { [key in AttendanceType]: LucideIcon } = {
   CANCELLED: OctagonMinus,
 };
 
-export function EventButton({ event, instance, viewer, showDate, attendance }: Props) {
+export function EventButton({
+  event,
+  instance,
+  viewer,
+  showDate,
+  attendance,
+  suffix,
+}: Props) {
   const auth = useAuth();
 
   const registrations = event.eventRegistrations.nodes || [];
@@ -53,7 +61,7 @@ export function EventButton({ event, instance, viewer, showDate, attendance }: P
       ? true
       : viewer === 'trainer'
         ? false
-        : trainerIds.filter((id) => auth.isMyPerson(id)).length === 0;
+        : !trainerIds.some((id) => auth.isMyPerson(id));
 
   const showInlineAttendance =
     attendance === 'inline' &&
@@ -84,7 +92,7 @@ export function EventButton({ event, instance, viewer, showDate, attendance }: P
         <PopoverTrigger asChild>
           <div
             className={cn(
-              'group grow flex items-center gap-3 p-2.5 rounded-lg',
+              'group grow flex min-w-0 items-center gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
               event?.type === 'LESSON' &&
                 !event.isLocked &&
@@ -96,7 +104,7 @@ export function EventButton({ event, instance, viewer, showDate, attendance }: P
             <div className="text-neutral-11">
               {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
             </div>
-            <div className={cn('grow', instance.isCancelled ? 'line-through' : '')}>
+            <div className={cn('min-w-0 grow', instance.isCancelled ? 'line-through' : '')}>
               {event.name ||
                 (showTrainer ? (
                   `${formatEventType(instance.type)}: ${instanceTrainers}`
@@ -113,6 +121,7 @@ export function EventButton({ event, instance, viewer, showDate, attendance }: P
                   'VOLNO'
                 ))}
             </div>
+            {suffix ? <div className="shrink-0">{suffix}</div> : null}
             <ConflictsInstanceBadge instanceId={instance.id} className="text-accent-11" />
             {duration < 210 && <div className="text-neutral-11">{duration}&apos;</div>}
           </div>

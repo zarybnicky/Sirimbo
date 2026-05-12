@@ -156,6 +156,95 @@ export type AccountsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
+export type ActivityCompetitionBrief = ActivityTimelineItem & {
+  __typename?: 'ActivityCompetitionBrief';
+  activityDate: Maybe<Scalars['Date']['output']>;
+  category: Maybe<Category>;
+  checkInEnd: Maybe<Scalars['Time']['output']>;
+  competitionDate: Maybe<Scalars['Date']['output']>;
+  competitionEventId: Maybe<Scalars['BigInt']['output']>;
+  competitionEventLocation: Maybe<Scalars['String']['output']>;
+  competitionEventName: Maybe<Scalars['String']['output']>;
+  competitionId: Maybe<Scalars['BigInt']['output']>;
+  competitorId: Maybe<Scalars['String']['output']>;
+  competitorName: Maybe<Scalars['String']['output']>;
+  competitorType: Maybe<CompetitorType>;
+  dances: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  federatedPersonId: Maybe<Scalars['String']['output']>;
+  federation: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  kind: Maybe<ActivityTimelineKind>;
+  participants: Maybe<Scalars['Int']['output']>;
+  /** Reads a single `Person` that is related to this `ActivityTimelineItem`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  personName: Maybe<Scalars['String']['output']>;
+  sortAt: Maybe<Scalars['Datetime']['output']>;
+};
+
+export type ActivityCompetitionResult = ActivityTimelineItem & {
+  __typename?: 'ActivityCompetitionResult';
+  activityDate: Maybe<Scalars['Date']['output']>;
+  category: Maybe<Category>;
+  competitionDate: Maybe<Scalars['Date']['output']>;
+  competitionEventId: Maybe<Scalars['BigInt']['output']>;
+  competitionEventLocation: Maybe<Scalars['String']['output']>;
+  competitionEventName: Maybe<Scalars['String']['output']>;
+  competitionId: Maybe<Scalars['BigInt']['output']>;
+  competitorId: Maybe<Scalars['String']['output']>;
+  competitorName: Maybe<Scalars['String']['output']>;
+  competitorType: Maybe<CompetitorType>;
+  dances: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  federatedPersonId: Maybe<Scalars['String']['output']>;
+  federation: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  isFinal: Maybe<Scalars['Boolean']['output']>;
+  kind: Maybe<ActivityTimelineKind>;
+  participants: Maybe<Scalars['Int']['output']>;
+  /** Reads a single `Person` that is related to this `ActivityTimelineItem`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  personName: Maybe<Scalars['String']['output']>;
+  pointGain: Maybe<Scalars['BigFloat']['output']>;
+  ranking: Maybe<Scalars['Int']['output']>;
+  rankingTo: Maybe<Scalars['Int']['output']>;
+  sortAt: Maybe<Scalars['Datetime']['output']>;
+};
+
+export type ActivityEventAttendance = ActivityTimelineItem & {
+  __typename?: 'ActivityEventAttendance';
+  activityDate: Maybe<Scalars['Date']['output']>;
+  /** Reads a single `EventAttendance` that is related to this `ActivityTimelineItem`. */
+  eventAttendance: Maybe<EventAttendance>;
+  eventAttendanceId: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `EventInstance` that is related to this `ActivityTimelineItem`. */
+  eventInstance: Maybe<EventInstance>;
+  eventInstanceId: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['String']['output'];
+  kind: Maybe<ActivityTimelineKind>;
+  /** Reads a single `Person` that is related to this `ActivityTimelineItem`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  personName: Maybe<Scalars['String']['output']>;
+  sortAt: Maybe<Scalars['Datetime']['output']>;
+};
+
+export type ActivityTimelineItem = {
+  activityDate: Maybe<Scalars['Date']['output']>;
+  id: Scalars['String']['output'];
+  kind: Maybe<ActivityTimelineKind>;
+  /** Reads a single `Person` that is related to this `ActivityTimelineItem`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  personName: Maybe<Scalars['String']['output']>;
+  sortAt: Maybe<Scalars['Datetime']['output']>;
+};
+
+export type ActivityTimelineKind =
+  | 'COMPETITION_BRIEF'
+  | 'COMPETITION_RESULT'
+  | 'EVENT_ATTENDANCE';
+
 export type AddressDomain = {
   __typename?: 'AddressDomain';
   city: Maybe<Scalars['String']['output']>;
@@ -5300,6 +5389,8 @@ export type PersonCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `lastName` field. */
   lastName?: InputMaybe<Scalars['String']['input']>;
+  /** Filters people by tenant membership, cohort membership, trainer status, and administrator status. */
+  membership?: InputMaybe<PersonMembershipCondition>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `nationalIdNumber` field. */
@@ -5424,6 +5515,23 @@ export type PersonInvitationsOrderBy =
   | 'USED_AT_ASC'
   | 'USED_AT_DESC';
 
+/** Filters people by current or former tenant membership state. */
+export type PersonMembershipCondition = {
+  /** Cohort IDs to match. An empty list means people without a matching cohort membership. */
+  inCohorts?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  /** Whether the person has an administrator relationship in the selected state. */
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Whether the person has a trainer relationship in the selected state. */
+  isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The membership state to filter by. Defaults to CURRENT. */
+  state?: InputMaybe<PersonMembershipState>;
+};
+
+/** Which tenant membership state a person membership filter targets. */
+export type PersonMembershipState =
+  | 'CURRENT'
+  | 'FORMER';
+
 /** Represents an update to a `Person`. Fields that are set will be updated. */
 export type PersonPatch = {
   address?: InputMaybe<AddressDomainInput>;
@@ -5531,6 +5639,7 @@ export type Query = {
   __typename?: 'Query';
   /** Reads a set of `Account`. */
   accountsList: Maybe<Array<Account>>;
+  activityTimelineList: Maybe<Array<ActivityTimelineItem>>;
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualities: Maybe<AktualitiesConnection>;
   /** Get a single `Aktuality`. */
@@ -5693,6 +5802,19 @@ export type QueryAccountsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AccountsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryActivityTimelineListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  pCohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  pEventTypes?: InputMaybe<Array<InputMaybe<EventType>>>;
+  pKinds?: InputMaybe<Array<InputMaybe<ActivityTimelineKind>>>;
+  pPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  pSince?: InputMaybe<Scalars['Datetime']['input']>;
+  pUntil?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 
@@ -8836,6 +8958,9 @@ export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __type
 
 export type GraphCacheKeysConfig = {
   Account?: (data: WithTypename<Account>) => null | string,
+  ActivityCompetitionBrief?: (data: WithTypename<ActivityCompetitionBrief>) => null | string,
+  ActivityCompetitionResult?: (data: WithTypename<ActivityCompetitionResult>) => null | string,
+  ActivityEventAttendance?: (data: WithTypename<ActivityEventAttendance>) => null | string,
   AddressDomain?: (data: WithTypename<AddressDomain>) => null | string,
   AktualitiesConnection?: (data: WithTypename<AktualitiesConnection>) => null | string,
   AktualitiesEdge?: (data: WithTypename<AktualitiesEdge>) => null | string,
@@ -9003,6 +9128,7 @@ export type GraphCacheKeysConfig = {
 export type GraphCacheResolvers = {
   Query?: {
     accountsList?: GraphCacheResolver<WithTypename<Query>, QueryAccountsListArgs, Array<WithTypename<Account> | string>>,
+    activityTimelineList?: GraphCacheResolver<WithTypename<Query>, QueryActivityTimelineListArgs, Array<WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | string>>,
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
     announcement?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementArgs, WithTypename<Announcement> | string>,
@@ -9104,6 +9230,68 @@ export type GraphCacheResolvers = {
     postingsList?: GraphCacheResolver<WithTypename<Account>, AccountPostingsListArgs, Array<WithTypename<Posting> | string>>,
     tenantId?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigInt'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  ActivityCompetitionBrief?: {
+    activityDate?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['Date'] | string>,
+    category?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, WithTypename<Category> | string>,
+    checkInEnd?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['Time'] | string>,
+    competitionDate?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['Date'] | string>,
+    competitionEventId?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['BigInt'] | string>,
+    competitionEventLocation?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
+    competitionEventName?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
+    competitionId?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['BigInt'] | string>,
+    competitorId?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
+    competitorName?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
+    competitorType?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, CompetitorType | string>,
+    dances?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Array<Scalars['String'] | string>>,
+    federatedPersonId?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
+    federation?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
+    id?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
+    kind?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, ActivityTimelineKind | string>,
+    participants?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['Int'] | string>,
+    person?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['BigInt'] | string>,
+    personName?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['String'] | string>,
+    sortAt?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  ActivityCompetitionResult?: {
+    activityDate?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['Date'] | string>,
+    category?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, WithTypename<Category> | string>,
+    competitionDate?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['Date'] | string>,
+    competitionEventId?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['BigInt'] | string>,
+    competitionEventLocation?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
+    competitionEventName?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
+    competitionId?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['BigInt'] | string>,
+    competitorId?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
+    competitorName?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
+    competitorType?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, CompetitorType | string>,
+    dances?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Array<Scalars['String'] | string>>,
+    federatedPersonId?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
+    federation?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
+    id?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
+    isFinal?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['Boolean'] | string>,
+    kind?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, ActivityTimelineKind | string>,
+    participants?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['Int'] | string>,
+    person?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['BigInt'] | string>,
+    personName?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String'] | string>,
+    pointGain?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['BigFloat'] | string>,
+    ranking?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['Int'] | string>,
+    rankingTo?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['Int'] | string>,
+    sortAt?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  ActivityEventAttendance?: {
+    activityDate?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, Scalars['Date'] | string>,
+    eventAttendance?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, WithTypename<EventAttendance> | string>,
+    eventAttendanceId?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, Scalars['BigInt'] | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventInstanceId?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, Scalars['BigInt'] | string>,
+    id?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, Scalars['String'] | string>,
+    kind?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, ActivityTimelineKind | string>,
+    person?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, Scalars['BigInt'] | string>,
+    personName?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, Scalars['String'] | string>,
+    sortAt?: GraphCacheResolver<WithTypename<ActivityEventAttendance>, Record<string, never>, Scalars['Datetime'] | string>
   },
   AddressDomain?: {
     city?: GraphCacheResolver<WithTypename<AddressDomain>, Record<string, never>, Scalars['String'] | string>,
@@ -10591,6 +10779,7 @@ export type GraphCacheOptimisticUpdaters = {
 export type GraphCacheUpdaters = {
   Query?: {
     accountsList?: GraphCacheUpdateResolver<{ accountsList: Maybe<Array<WithTypename<Account>>> }, QueryAccountsListArgs>,
+    activityTimelineList?: GraphCacheUpdateResolver<{ activityTimelineList: Maybe<Array<WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance>>> }, QueryActivityTimelineListArgs>,
     aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
     aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
     announcement?: GraphCacheUpdateResolver<{ announcement: Maybe<WithTypename<Announcement>> }, QueryAnnouncementArgs>,
@@ -10780,6 +10969,68 @@ export type GraphCacheUpdaters = {
     postingsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPostingsListArgs>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>
+  },
+  ActivityCompetitionBrief?: {
+    activityDate?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    category?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    checkInEnd?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    competitionDate?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    competitionEventId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    competitionEventLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    competitionEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    competitionId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    competitorId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    competitorName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    competitorType?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    dances?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    federatedPersonId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    federation?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    participants?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    personName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
+    sortAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>
+  },
+  ActivityCompetitionResult?: {
+    activityDate?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    category?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    competitionDate?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    competitionEventId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    competitionEventLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    competitionEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    competitionId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    competitorId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    competitorName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    competitorType?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    dances?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    federatedPersonId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    federation?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    isFinal?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    participants?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    personName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    pointGain?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    rankingTo?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    sortAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>
+  },
+  ActivityEventAttendance?: {
+    activityDate?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    eventAttendance?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    eventAttendanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    eventInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    personName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>,
+    sortAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityEventAttendance>>, Record<string, never>>
   },
   AddressDomain?: {
     city?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,

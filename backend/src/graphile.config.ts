@@ -25,7 +25,12 @@ const preset: GraphileConfig.Preset = {
   ],
 
   disablePlugins: ['NodePlugin'],
-  plugins: [...filePlugin, currentUserPlugin, ...personMembershipConditionPlugin, OTELPlugin],
+  plugins: [
+    ...filePlugin,
+    currentUserPlugin,
+    ...personMembershipConditionPlugin,
+    OTELPlugin,
+  ],
 
   grafast: {
     async context(ctx) {

@@ -1,0 +1,76 @@
+fragment ActivityTimelineItem on ActivityTimelineItem {
+  __typename
+  id
+  sortAt
+  activityDate
+  personId
+  person {
+    name
+    firstName
+  }
+  ... on ActivityEventAttendance {
+    eventAttendance {
+      id
+      status
+    }
+    eventInstance {
+      ...EventInstanceWithTrainer
+      event {
+        ...Event
+      }
+    }
+  }
+  ... on ActivityCompetitionBrief {
+    federation
+    competitorName
+    competitorType
+    competitionEventId
+    competitionEventName
+    competitionEventLocation
+    competitionId
+    competitionDate
+    checkInEnd
+    category {
+      ...CompetitionCategory
+    }
+    participants
+  }
+  ... on ActivityCompetitionResult {
+    federation
+    competitorName
+    competitorType
+    competitionEventId
+    competitionEventName
+    competitionEventLocation
+    competitionId
+    competitionDate
+    category {
+      ...CompetitionCategory
+    }
+    participants
+    ranking
+    rankingTo
+    pointGain
+    isFinal
+  }
+}
+
+query ActivityTimeline(
+  $since: Datetime
+  $until: Datetime
+  $personIds: [BigInt]
+  $cohortId: BigInt
+  $kinds: [ActivityTimelineKind]
+  $eventTypes: [EventType]
+) {
+  activityTimelineList(
+    pSince: $since
+    pUntil: $until
+    pPersonIds: $personIds
+    pCohortId: $cohortId
+    pKinds: $kinds
+    pEventTypes: $eventTypes
+  ) {
+    ...ActivityTimelineItem
+  }
+}

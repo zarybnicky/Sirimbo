@@ -27,7 +27,7 @@ export async function exportCohort(client: Client, ids: string[], name?: string)
     column.alignment = { horizontal: 'center' };
   }
 
-  const people = (data.filteredPeopleList || []).toSorted((a, b) =>
+  const people = (data.people?.nodes || []).toSorted((a, b) =>
     `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
   );
   for (const x of people) {
