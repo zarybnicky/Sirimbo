@@ -187,7 +187,7 @@ export const seriesType: { [key in SeriesType]: number } = {
   Caribbean: 4,
 };
 
-type CompetitionType =
+export type CompetitionType =
   | 'Unknown'
   | 'Cup'
   | 'Ranking'

@@ -6037,7 +6037,15 @@ type Person {
     orderBy: [CouplesOrderBy!]
   ): [Couple!]!
   createdAt: Datetime!
-  cstsId: String
+  cstsCandidatesList(
+    """Only read the first `n` values of the set."""
+    first: Int
+    limit: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    threshold: Float
+  ): [PersonCstsCandidatesRecord!]
   cstsProgressList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -6370,6 +6378,13 @@ input PersonCondition {
 
   """Checks for equality with the object’s `wdsfId` field."""
   wdsfId: String
+}
+
+type PersonCstsCandidatesRecord {
+  ageGroup: String
+  id: Int
+  name: String
+  similarity: Float
 }
 
 type PersonCstsProgressRecord {

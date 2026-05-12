@@ -178,6 +178,26 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, 
   }
 }
 
+query MissingCstsIdCandidates {
+  people(
+    condition: { cstsId: null, membership: {} }
+    orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
+  ) {
+    nodes {
+      id
+      name
+      birthDate
+      cstsId
+      cstsCandidatesList(limit: 10, threshold: 0.4) {
+        id
+        name
+        ageGroup
+        similarity
+      }
+    }
+  }
+}
+
 query PersonWithLinksList {
   people(condition: { membership: {} }) {
     nodes {
@@ -206,6 +226,15 @@ mutation UpdatePerson($input: UpdatePersonInput!) {
   updatePerson(input: $input) {
     person {
       ...Person
+    }
+  }
+}
+
+mutation UpdatePersonCstsId($input: UpdatePersonInput!) {
+  updatePerson(input: $input) {
+    person {
+      id
+      cstsId
     }
   }
 }

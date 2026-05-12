@@ -1,28 +1,20 @@
+import type { CompetitionType } from '@/graphql';
 import type { CstsProgressRecordFragment } from '@/graphql/Cohorts';
+import type { CompetitionCategoryFragment } from '@/graphql/Federation';
 
 const hiddenCategoryClasses = new Set(['Novice', 'Bronze', 'Silver', 'Gold', 'Entry']);
 const classOrder = ['E', 'D', 'C', 'B', 'A', 'M'];
 
 export function formatCstsClass(value: string | null | undefined) {
-  return !value ? null : value === 'S' ? 'M' : value;
+  return !value || value === 'Open' ? null : value === 'S' ? 'M' : value;
 }
 
-export function formatCstsCategoryName(
-  category:
-    | {
-        ageGroup?: string | null;
-        class?: string | null;
-        discipline?: string | null;
-        series?: string | null;
-      }
-    | null
-    | undefined,
-) {
+export function formatCstsCategoryName(category?: CompetitionCategoryFragment | null) {
   if (!category) return '';
   const { ageGroup, discipline, series } = category;
 
   return [
-    series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : '',
+    series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : series,
     ageGroup?.toLowerCase() === 'adult'
       ? 'Dospělí'
       : ageGroup?.toLowerCase() === 'youth'

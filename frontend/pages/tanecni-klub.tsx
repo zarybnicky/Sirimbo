@@ -18,6 +18,7 @@ import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { tenantLocationActions } from '@/lib/actions/tenantLocation';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionRow } from '@/ui/ActionRow';
+import { CstsIdBackfillWidget } from '@/ui/CstsIdBackfillWidget';
 
 export default function ClubPage() {
   const auth = useAuth();
@@ -152,6 +153,8 @@ export default function ClubPage() {
               ))}
             </>
           )}
+
+          <CstsIdBackfillWidget />
         </>
       )}
     </Layout>
