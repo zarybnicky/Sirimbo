@@ -1,0 +1,23 @@
+CREATE TYPE federated.person_license_discipline AS ENUM (
+    'general',
+    'standard',
+    'latin',
+    'breaking',
+    'hiphop',
+    'caribbean',
+    'stage',
+    'smooth',
+    'disco',
+    'solo_syncro_choreo',
+    'ten_dance',
+    'show_dance_standard',
+    'show_dance_latin',
+    'formation_standard',
+    'formation_latin',
+    'pd_standard',
+    'pd_latin',
+    'pd_ten_dance',
+    'pd_show_dance_standard',
+    'pd_show_dance_latin',
+    'unknown'
+);

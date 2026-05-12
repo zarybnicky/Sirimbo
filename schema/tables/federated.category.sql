@@ -6,6 +6,7 @@ CREATE TABLE federated.category (
     age_group text NOT NULL,
     gender_group text DEFAULT 'mixed'::text NOT NULL,
     class text NOT NULL,
+    competitor_type federated.competitor_type DEFAULT 'couple'::federated.competitor_type NOT NULL,
     base_dance_program_id bigint
 );
 
@@ -14,6 +15,6 @@ GRANT SELECT ON TABLE federated.category TO anonymous;
 ALTER TABLE ONLY federated.category
     ADD CONSTRAINT category_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY federated.category
-    ADD CONSTRAINT category_series_discipline_age_group_gender_group_class_key UNIQUE (series, discipline, age_group, gender_group, class);
+    ADD CONSTRAINT category_series_discipline_age_group_gender_group_class_com_key UNIQUE (series, discipline, age_group, gender_group, class, competitor_type);
 ALTER TABLE ONLY federated.category
     ADD CONSTRAINT category_base_dance_program_id_fkey FOREIGN KEY (base_dance_program_id) REFERENCES federated.dance_program(id);

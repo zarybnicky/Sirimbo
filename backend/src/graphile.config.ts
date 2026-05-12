@@ -7,6 +7,7 @@ import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
 import 'postgraphile/grafserv/express/v4';
 import filePlugin from './plugins/file.ts';
 import currentUserPlugin from './plugins/current-user.ts';
+import personMembershipConditionPlugin from './plugins/person-membership-condition.ts';
 import { makePgService } from 'postgraphile/@dataplan/pg/adaptors/pg';
 import { JWT_SECRET } from './auth.ts';
 import { OTELPlugin } from './postgraphile-otel.ts';
@@ -24,7 +25,7 @@ const preset: GraphileConfig.Preset = {
   ],
 
   disablePlugins: ['NodePlugin'],
-  plugins: [...filePlugin, currentUserPlugin, OTELPlugin],
+  plugins: [...filePlugin, currentUserPlugin, ...personMembershipConditionPlugin, OTELPlugin],
 
   grafast: {
     async context(ctx) {

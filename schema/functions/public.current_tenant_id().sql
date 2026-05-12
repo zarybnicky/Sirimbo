@@ -6,8 +6,4 @@ $$;
 
 COMMENT ON FUNCTION public.current_tenant_id() IS '@omit';
 
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
 GRANT ALL ON FUNCTION public.current_tenant_id() TO anonymous;

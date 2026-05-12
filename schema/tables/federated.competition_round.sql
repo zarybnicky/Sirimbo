@@ -16,6 +16,8 @@ ALTER TABLE ONLY federated.competition_round
 ALTER TABLE ONLY federated.competition_round
     ADD CONSTRAINT competition_round_id_competition_id_key UNIQUE (id, competition_id);
 ALTER TABLE ONLY federated.competition_round
+    ADD CONSTRAINT competition_round_id_dance_program_id_key UNIQUE (id, dance_program_id);
+ALTER TABLE ONLY federated.competition_round
     ADD CONSTRAINT competition_round_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY federated.competition_round
     ADD CONSTRAINT competition_round_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id);

@@ -1,6 +1,6 @@
 CREATE TABLE federated.ranklist_entry (
     snapshot_id bigint NOT NULL,
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     ranking integer NOT NULL,
     ranking_to integer,
     points numeric(10,3),

@@ -1,3 +1,384 @@
+CREATE TABLE federated.dance (
+  code text NOT NULL PRIMARY KEY,
+  name text NOT NULL,
+  discipline text NOT NULL
+);
+
+CREATE TABLE federated.dance_program (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  code text UNIQUE,
+  name text NOT NULL,
+  discipline text,
+  is_default boolean DEFAULT false NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TYPE federated.competitor_type AS ENUM ('couple', 'solo', 'duo', 'trio', 'formation', 'group', 'team');
+
+CREATE TABLE federated.category (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name text NOT NULL,
+  series text NOT NULL,
+  discipline text NOT NULL,
+  age_group text NOT NULL,
+  gender_group text DEFAULT 'mixed'::text NOT NULL,
+  class text NOT NULL,
+  competitor_type federated.competitor_type DEFAULT CAST('couple' AS federated.competitor_type) NOT NULL,
+  base_dance_program_id bigint REFERENCES federated.dance_program (id),
+  UNIQUE (series, discipline, age_group, gender_group, class, competitor_type)
+);
+
+CREATE TABLE federated.dance_program_dance (
+  program_id bigint NOT NULL REFERENCES federated.dance_program (id)
+    ON DELETE CASCADE,
+  dance_code text NOT NULL REFERENCES federated.dance (code),
+  dance_order int NOT NULL,
+  PRIMARY KEY (program_id, dance_code),
+  UNIQUE (program_id, dance_order)
+);
+
+CREATE TABLE federated.federation (
+  code text NOT NULL PRIMARY KEY,
+  name text NOT NULL
+);
+
+CREATE TABLE federated.competitor (
+  id text GENERATED ALWAYS AS ((federation || ':'::text) || external_id::text) STORED NOT NULL PRIMARY KEY,
+  federation text NOT NULL REFERENCES federated.federation (code),
+  external_id bigint NOT NULL,
+  competitor_type federated.competitor_type NOT NULL,
+  age_group text,
+  name text,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  UNIQUE (federation, external_id)
+);
+
+CREATE TABLE federated.competitor_category_progress (
+  competitor_id text NOT NULL REFERENCES federated.competitor (id),
+  category_id bigint NOT NULL REFERENCES federated.category (id),
+  points numeric(10, 3) DEFAULT 0 NOT NULL,
+  domestic_finals int DEFAULT 0 NOT NULL,
+  foreign_finals int DEFAULT 0 NOT NULL,
+  PRIMARY KEY (competitor_id, category_id)
+);
+
+CREATE TABLE federated.federation_club (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  federation text NOT NULL REFERENCES federated.federation (code),
+  external_id text NOT NULL,
+  name text NOT NULL,
+  city text,
+  country text,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  UNIQUE (federation, external_id),
+  UNIQUE (federation, id)
+);
+
+CREATE TABLE federated.competitor_club_affiliation (
+  competitor_id text NOT NULL REFERENCES federated.competitor (id),
+  club_id bigint NOT NULL REFERENCES federated.federation_club (id),
+  valid_from date NOT NULL,
+  valid_to date,
+  CHECK (
+    valid_to IS NULL
+      OR valid_to >= valid_from
+  ),
+  EXCLUDE USING gist (competitor_id WITH =, club_id WITH =, (daterange(valid_from, COALESCE(valid_to, 'infinity'::date), '[)'::text)) WITH &&),
+  PRIMARY KEY (competitor_id, club_id, valid_from)
+);
+
+CREATE TABLE federated.event (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  federation text NOT NULL REFERENCES federated.federation (code),
+  external_id text NOT NULL,
+  name text,
+  start_date date NOT NULL,
+  end_date date,
+  location text,
+  city text,
+  country text,
+  street_address text,
+  postal_code text,
+  address_note text,
+  geo_reference text,
+  floor_size text,
+  contact_name text,
+  contact_phone text,
+  contact_email text,
+  website_url text,
+  organizing_club_id bigint REFERENCES federated.federation_club (id),
+  range daterange GENERATED ALWAYS AS (daterange(start_date, (COALESCE(end_date, start_date)) + 1, '[)'::text)) STORED,
+  CHECK (
+    end_date IS NULL
+      OR end_date >= start_date
+  ),
+  UNIQUE (federation, external_id),
+  UNIQUE (federation, id),
+  FOREIGN KEY(federation, organizing_club_id)
+    REFERENCES federated.federation_club (federation, id)
+);
+
+CREATE TABLE federated.competition (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  federation text NOT NULL REFERENCES federated.federation (code),
+  external_id text NOT NULL,
+  event_id bigint NOT NULL REFERENCES federated.event (id),
+  category_id bigint NOT NULL REFERENCES federated.category (id),
+  start_date date NOT NULL,
+  end_date date,
+  check_in_end time,
+  registration_fee numeric(10, 3),
+  participants_total int,
+  excused_total int,
+  completed_at timestamp with time zone,
+  CHECK (
+    end_date IS NULL
+      OR end_date >= start_date
+  ),
+  UNIQUE (federation, external_id),
+  UNIQUE (federation, id),
+  UNIQUE (id, category_id),
+  UNIQUE (id, event_id),
+  FOREIGN KEY(federation, event_id)
+    REFERENCES federated.event (federation, id)
+);
+
+CREATE TABLE federated.competition_entry (
+  competition_id bigint NOT NULL REFERENCES federated.competition (id),
+  competitor_id text NOT NULL REFERENCES federated.competitor (id),
+  cancelled boolean DEFAULT false NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  PRIMARY KEY (competition_id, competitor_id)
+);
+
+CREATE TABLE federated.competition_result (
+  competition_id bigint NOT NULL REFERENCES federated.competition (id),
+  competitor_id text NOT NULL REFERENCES federated.competitor (id),
+  start_number text,
+  ranking int NOT NULL,
+  ranking_to int,
+  point_gain numeric(10, 3),
+  final_gain numeric(10, 3),
+  is_final boolean,
+  completion_status text,
+  last_round text,
+  last_dance text,
+  CHECK (
+    ranking_to IS NULL
+      OR ranking_to >= ranking
+  ),
+  UNIQUE (competition_id, start_number),
+  PRIMARY KEY (competition_id, competitor_id)
+);
+
+CREATE TYPE federated.scoring_method AS ENUM ('skating_marks', 'skating_places', 'ajs-3.0');
+
+CREATE TABLE federated.competition_round (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  competition_id bigint NOT NULL REFERENCES federated.competition (id),
+  round_label text,
+  round_key text NOT NULL,
+  round_index int,
+  dance_program_id bigint NOT NULL REFERENCES federated.dance_program (id),
+  scoring_method federated.scoring_method NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  UNIQUE (competition_id, round_key),
+  UNIQUE (id, competition_id),
+  UNIQUE (id, dance_program_id)
+);
+
+CREATE TABLE federated.competition_round_result (
+  round_id bigint NOT NULL REFERENCES federated.competition_round (id)
+    ON DELETE CASCADE,
+  competitor_id text NOT NULL REFERENCES federated.competitor (id),
+  overall_ranking int,
+  overall_ranking_to int,
+  qualified_next boolean,
+  overall_score numeric(10, 3),
+  dance_results real[],
+  CHECK (
+    overall_ranking IS NULL
+      OR overall_ranking_to IS NULL
+      OR overall_ranking_to >= overall_ranking
+  ),
+  PRIMARY KEY (round_id, competitor_id)
+);
+
+CREATE TYPE federated.gender AS ENUM ('male', 'female', 'other', 'unknown');
+
+CREATE TABLE federated.person (
+  id text GENERATED ALWAYS AS ((federation || ':'::text) || external_id::text) STORED NOT NULL PRIMARY KEY,
+  federation text NOT NULL REFERENCES federated.federation (code),
+  external_id bigint NOT NULL,
+  canonical_name text,
+  first_name text,
+  last_name text,
+  search_name text GENERATED ALWAYS AS (federated.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED,
+  gender federated.gender,
+  dob date,
+  nationality text,
+  age_group text,
+  medical_checkup_expiration date,
+  medical_checkup_type text,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  UNIQUE (federation, external_id)
+);
+
+CREATE TYPE federated.official_role AS ENUM ('adjudicator', 'chairperson', 'invigilator', 'scrutineer', 'lead_scrutineer');
+
+CREATE TABLE federated.competition_official (
+  competition_id bigint NOT NULL REFERENCES federated.competition (id)
+    ON DELETE CASCADE,
+  person_id text NOT NULL REFERENCES federated.person (id),
+  role federated.official_role NOT NULL,
+  PRIMARY KEY (competition_id, person_id, role)
+);
+
+CREATE TABLE federated.competition_round_judge (
+  round_id bigint NOT NULL REFERENCES federated.competition_round (id)
+    ON DELETE CASCADE,
+  person_judge_id text NOT NULL REFERENCES federated.person (id),
+  judge_index int NOT NULL,
+  judge_label text,
+  PRIMARY KEY (round_id, person_judge_id),
+  UNIQUE (round_id, judge_index)
+);
+
+CREATE TYPE federated.competitor_role AS ENUM ('lead', 'follow', 'member', 'substitute');
+
+CREATE TABLE federated.competitor_component (
+  competitor_id text NOT NULL REFERENCES federated.competitor (id)
+    ON DELETE CASCADE,
+  person_id text NOT NULL REFERENCES federated.person (id),
+  role federated.competitor_role NOT NULL,
+  PRIMARY KEY (competitor_id, person_id)
+);
+
+CREATE TABLE federated.event_official (
+  event_id bigint NOT NULL REFERENCES federated.event (id)
+    ON DELETE CASCADE,
+  person_id text NOT NULL REFERENCES federated.person (id),
+  role federated.official_role NOT NULL,
+  discipline text DEFAULT ''::text NOT NULL,
+  grade text,
+  PRIMARY KEY (event_id, person_id, role, discipline)
+);
+
+CREATE TABLE federated.person_club_membership (
+  person_id text NOT NULL REFERENCES federated.person (id),
+  club_id bigint NOT NULL REFERENCES federated.federation_club (id),
+  valid_from date NOT NULL,
+  valid_to date,
+  CHECK (
+    valid_to IS NULL
+      OR valid_to >= valid_from
+  ),
+  EXCLUDE USING gist (person_id WITH =, club_id WITH =, (daterange(valid_from, COALESCE(valid_to, 'infinity'::date), '[)'::text)) WITH &&),
+  PRIMARY KEY (person_id, club_id, valid_from)
+);
+
+CREATE TYPE federated.person_license_kind AS ENUM ('athlete', 'trainer', 'adjudicator', 'chairperson', 'invigilator', 'scrutineer', 'lead_scrutineer', 'examiner', 'dj', 'head_judge', 'official');
+
+CREATE TYPE federated.person_license_discipline AS ENUM ('general', 'standard', 'latin', 'breaking', 'hiphop', 'caribbean', 'stage', 'smooth', 'disco', 'solo_syncro_choreo', 'ten_dance', 'show_dance_standard', 'show_dance_latin', 'formation_standard', 'formation_latin', 'pd_standard', 'pd_latin', 'pd_ten_dance', 'pd_show_dance_standard', 'pd_show_dance_latin', 'unknown');
+
+CREATE TYPE federated.person_license_status AS ENUM ('active', 'expired', 'revoked', 'resting', 'retired', 'aspiring', 'suspended', 'unknown');
+
+CREATE TABLE federated.person_license (
+  person_id text NOT NULL REFERENCES federated.person (id)
+    ON DELETE CASCADE,
+  federation text NOT NULL REFERENCES federated.federation (code),
+  kind federated.person_license_kind NOT NULL,
+  discipline federated.person_license_discipline DEFAULT CAST('general' AS federated.person_license_discipline) NOT NULL,
+  grade text,
+  valid_until date,
+  status federated.person_license_status DEFAULT CAST('unknown' AS federated.person_license_status) NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  PRIMARY KEY (person_id, kind, discipline)
+);
+
+CREATE TABLE federated.ranklist (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  federation text NOT NULL REFERENCES federated.federation (code),
+  category_id bigint NOT NULL REFERENCES federated.category (id),
+  name text NOT NULL,
+  UNIQUE (federation, category_id)
+);
+
+CREATE TABLE federated.ranklist_snapshot (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  ranklist_id bigint NOT NULL REFERENCES federated.ranklist (id),
+  kind text DEFAULT 'default'::text NOT NULL,
+  as_of_date date NOT NULL,
+  UNIQUE (ranklist_id, as_of_date, kind)
+);
+
+CREATE TABLE federated.ranklist_entry (
+  snapshot_id bigint NOT NULL REFERENCES federated.ranklist_snapshot (id),
+  competitor_id text NOT NULL REFERENCES federated.competitor (id),
+  ranking int NOT NULL,
+  ranking_to int,
+  points numeric(10, 3),
+  CHECK (
+    ranking_to IS NULL
+      OR ranking_to >= ranking
+  ),
+  PRIMARY KEY (snapshot_id, competitor_id)
+);
+
+CREATE TABLE federated.round_dance (
+  round_id bigint NOT NULL,
+  dance_program_id bigint NOT NULL,
+  dance_code text NOT NULL,
+  dance_order int NOT NULL,
+  PRIMARY KEY (round_id, dance_order),
+  UNIQUE (round_id, dance_order, dance_code),
+  FOREIGN KEY(dance_program_id, dance_code)
+    REFERENCES federated.dance_program_dance (program_id, dance_code),
+  FOREIGN KEY(round_id, dance_program_id)
+    REFERENCES federated.competition_round (id, dance_program_id)
+    ON DELETE CASCADE
+);
+
+CREATE TYPE federated.score_component AS ENUM ('mark', 'places', 'ajs_tq', 'ajs_mm', 'ajs_ps', 'ajs_cp', 'ajs_reduction');
+
+CREATE TABLE federated.judge_score (
+  federation text NOT NULL,
+  event_date date NOT NULL,
+  event_id bigint NOT NULL,
+  competition_id bigint NOT NULL,
+  category_id bigint NOT NULL,
+  round_id bigint NOT NULL,
+  dance_order int NOT NULL,
+  dance_code text NOT NULL,
+  judge_person_id bigint NOT NULL,
+  competitor_id bigint NOT NULL,
+  component federated.score_component NOT NULL,
+  score numeric(10, 3) NOT NULL,
+  raw_score text,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  PRIMARY KEY (round_id, dance_order, judge_person_id, competitor_id, component),
+  FOREIGN KEY(competition_id, category_id)
+    REFERENCES federated.competition (id, category_id)
+    ON UPDATE CASCADE,
+  FOREIGN KEY(competition_id, event_id)
+    REFERENCES federated.competition (id, event_id)
+    ON UPDATE CASCADE,
+  FOREIGN KEY(federation, competition_id)
+    REFERENCES federated.competition (federation, id)
+    ON UPDATE CASCADE,
+  FOREIGN KEY(federation, competitor_id)
+    REFERENCES federated.competitor (federation, external_id),
+  FOREIGN KEY(federation, judge_person_id)
+    REFERENCES federated.person (federation, external_id),
+  FOREIGN KEY(round_id, competition_id)
+    REFERENCES federated.competition_round (id, competition_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY(round_id, dance_order, dance_code)
+    REFERENCES federated.round_dance (round_id, dance_order, dance_code)
+    ON DELETE CASCADE
+);
+
 CREATE TYPE public.gender_type AS ENUM ('man', 'woman', 'unspecified');
 
 CREATE TYPE public.address_type AS (street text, conscription_number text, orientation_number text, district text, city text, region text, postal_code text);
@@ -800,338 +1181,6 @@ CREATE TABLE public.user_proxy (
   EXCLUDE USING gist (user_id WITH =, person_id WITH =, active_range WITH &&)
 );
 
-CREATE TYPE federated.competitor_type AS ENUM ('couple', 'solo', 'duo', 'formation', 'team');
-
-CREATE TABLE federated.competitor (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  competitor_type federated.competitor_type NOT NULL,
-  name text,
-  component_sig text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  UNIQUE (competitor_type, component_sig)
-);
-
-CREATE TABLE federated.dance (
-  code text NOT NULL PRIMARY KEY,
-  name text NOT NULL,
-  discipline text NOT NULL
-);
-
-CREATE TABLE federated.dance_program (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  code text UNIQUE,
-  name text NOT NULL,
-  discipline text,
-  is_default boolean DEFAULT false NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE federated.category (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  name text NOT NULL,
-  series text NOT NULL,
-  discipline text NOT NULL,
-  age_group text NOT NULL,
-  gender_group text DEFAULT 'mixed'::text NOT NULL,
-  class text NOT NULL,
-  base_dance_program_id bigint REFERENCES federated.dance_program (id),
-  UNIQUE (series, discipline, age_group, gender_group, class)
-);
-
-CREATE TABLE federated.dance_program_dance (
-  program_id bigint NOT NULL REFERENCES federated.dance_program (id)
-    ON DELETE CASCADE,
-  dance_code text NOT NULL REFERENCES federated.dance (code),
-  dance_order int NOT NULL,
-  PRIMARY KEY (program_id, dance_code),
-  UNIQUE (program_id, dance_order)
-);
-
-CREATE TABLE federated.federation (
-  code text NOT NULL PRIMARY KEY,
-  name text NOT NULL
-);
-
-CREATE TABLE federated.competitor_category_progress (
-  federation text NOT NULL REFERENCES federated.federation (code),
-  competitor_id bigint NOT NULL REFERENCES federated.competitor (id),
-  category_id bigint NOT NULL REFERENCES federated.category (id),
-  points numeric(10, 3) DEFAULT 0 NOT NULL,
-  domestic_finale int DEFAULT 0 NOT NULL,
-  foreign_finale int DEFAULT 0 NOT NULL,
-  PRIMARY KEY (federation, competitor_id, category_id)
-);
-
-CREATE TABLE federated.federation_category (
-  federation text NOT NULL REFERENCES federated.federation (code),
-  external_id text,
-  category_id bigint NOT NULL REFERENCES federated.category (id),
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  UNIQUE (federation, external_id),
-  PRIMARY KEY (federation, category_id)
-);
-
-CREATE TABLE federated.federation_club (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  federation text NOT NULL REFERENCES federated.federation (code),
-  external_id text NOT NULL,
-  name text NOT NULL,
-  city text,
-  country text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  UNIQUE (federation, external_id),
-  UNIQUE (federation, id)
-);
-
-CREATE TABLE federated.competitor_club_affiliation (
-  competitor_id bigint NOT NULL REFERENCES federated.competitor (id),
-  club_id bigint NOT NULL REFERENCES federated.federation_club (id),
-  valid_from date NOT NULL,
-  valid_to date,
-  CHECK (
-    valid_to IS NULL
-      OR valid_to >= valid_from
-  ),
-  EXCLUDE USING gist (competitor_id WITH =, club_id WITH =, (daterange(valid_from, COALESCE(valid_to, 'infinity'::date), '[)'::text)) WITH &&),
-  PRIMARY KEY (competitor_id, club_id, valid_from)
-);
-
-CREATE TABLE federated.event (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  federation text NOT NULL REFERENCES federated.federation (code),
-  external_id text NOT NULL,
-  name text,
-  start_date date NOT NULL,
-  end_date date,
-  location text,
-  country text,
-  organizing_club_id bigint REFERENCES federated.federation_club (id),
-  range daterange GENERATED ALWAYS AS (daterange(start_date, (COALESCE(end_date, start_date)) + 1, '[)'::text)) STORED,
-  CHECK (
-    end_date IS NULL
-      OR end_date >= start_date
-  ),
-  UNIQUE (federation, external_id),
-  UNIQUE (federation, id),
-  FOREIGN KEY(federation, organizing_club_id)
-    REFERENCES federated.federation_club (federation, id)
-);
-
-CREATE TABLE federated.competition (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  federation text NOT NULL REFERENCES federated.federation (code),
-  external_id text NOT NULL,
-  event_id bigint NOT NULL REFERENCES federated.event (id),
-  category_id bigint NOT NULL REFERENCES federated.category (id),
-  start_date date NOT NULL,
-  end_date date,
-  CHECK (
-    end_date IS NULL
-      OR end_date >= start_date
-  ),
-  UNIQUE (federation, external_id),
-  UNIQUE (federation, id),
-  UNIQUE (id, category_id),
-  UNIQUE (id, event_id),
-  FOREIGN KEY(federation, event_id)
-    REFERENCES federated.event (federation, id)
-);
-
-CREATE TABLE federated.competition_entry (
-  competition_id bigint NOT NULL REFERENCES federated.competition (id),
-  competitor_id bigint NOT NULL REFERENCES federated.competitor (id),
-  cancelled boolean DEFAULT false NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  PRIMARY KEY (competition_id, competitor_id)
-);
-
-CREATE TABLE federated.competition_result (
-  competition_id bigint NOT NULL REFERENCES federated.competition (id),
-  competitor_id bigint NOT NULL REFERENCES federated.competitor (id),
-  start_number text,
-  ranking int NOT NULL,
-  ranking_to int,
-  point_gain numeric(10, 3),
-  final_gain numeric(10, 3),
-  CHECK (
-    ranking_to IS NULL
-      OR ranking_to >= ranking
-  ),
-  UNIQUE (competition_id, start_number),
-  PRIMARY KEY (competition_id, competitor_id)
-);
-
-CREATE TYPE federated.scoring_method AS ENUM ('skating_marks', 'skating_places', 'ajs-3.0');
-
-CREATE TABLE federated.competition_round (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  competition_id bigint NOT NULL REFERENCES federated.competition (id),
-  round_label text,
-  round_key text NOT NULL,
-  round_index int,
-  dance_program_id bigint NOT NULL REFERENCES federated.dance_program (id),
-  scoring_method federated.scoring_method NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  UNIQUE (competition_id, round_key),
-  UNIQUE (id, competition_id)
-);
-
-CREATE TABLE federated.competition_round_result (
-  round_id bigint NOT NULL REFERENCES federated.competition_round (id),
-  competitor_id bigint NOT NULL REFERENCES federated.competitor (id),
-  overall_ranking int NOT NULL,
-  overall_ranking_to int,
-  qualified_next boolean,
-  overall_score numeric(10, 3),
-  CHECK (
-    overall_ranking_to IS NULL
-      OR overall_ranking_to >= overall_ranking
-  ),
-  PRIMARY KEY (round_id, competitor_id)
-);
-
-CREATE TABLE federated.federation_competitor (
-  federation text NOT NULL REFERENCES federated.federation (code),
-  external_id text NOT NULL,
-  competitor_id bigint REFERENCES federated.competitor (id),
-  age_group text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  UNIQUE (federation, competitor_id),
-  PRIMARY KEY (federation, external_id)
-);
-
-CREATE TYPE federated.gender AS ENUM ('male', 'female', 'other', 'unknown');
-
-CREATE TABLE federated.person (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  canonical_name text,
-  first_name text,
-  last_name text,
-  search_name text GENERATED ALWAYS AS (federated.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED,
-  gender federated.gender,
-  dob date,
-  nationality text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE federated.athlete (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  person_id bigint NOT NULL UNIQUE REFERENCES federated.person (id),
-  created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE federated.athlete_club_membership (
-  athlete_id bigint NOT NULL REFERENCES federated.athlete (id),
-  club_id bigint NOT NULL REFERENCES federated.federation_club (id),
-  valid_from date NOT NULL,
-  valid_to date,
-  CHECK (
-    valid_to IS NULL
-      OR valid_to >= valid_from
-  ),
-  EXCLUDE USING gist (athlete_id WITH =, club_id WITH =, (daterange(valid_from, COALESCE(valid_to, 'infinity'::date), '[)'::text)) WITH &&),
-  PRIMARY KEY (athlete_id, club_id, valid_from)
-);
-
-CREATE TYPE federated.competitor_role AS ENUM ('lead', 'follow', 'member', 'substitute');
-
-CREATE TABLE federated.competitor_component (
-  competitor_id bigint NOT NULL REFERENCES federated.competitor (id)
-    ON DELETE CASCADE,
-  athlete_id bigint NOT NULL REFERENCES federated.athlete (id),
-  role federated.competitor_role NOT NULL,
-  PRIMARY KEY (competitor_id, athlete_id)
-);
-
-CREATE TABLE federated.federation_athlete (
-  federation text NOT NULL REFERENCES federated.federation (code),
-  external_id text NOT NULL,
-  athlete_id bigint REFERENCES federated.athlete (id),
-  age_group text,
-  medical_checkup_expiration date,
-  medical_checkup_type text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  PRIMARY KEY (federation, external_id)
-);
-
-CREATE TABLE federated.judge (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  person_id bigint NOT NULL UNIQUE REFERENCES federated.person (id),
-  created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE federated.federation_judge (
-  federation text NOT NULL REFERENCES federated.federation (code),
-  external_id text NOT NULL,
-  judge_id bigint REFERENCES federated.judge (id),
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  PRIMARY KEY (federation, external_id)
-);
-
-CREATE TABLE federated.ranklist (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  federation text NOT NULL REFERENCES federated.federation (code),
-  category_id bigint NOT NULL REFERENCES federated.category (id),
-  name text NOT NULL,
-  UNIQUE (federation, category_id)
-);
-
-CREATE TABLE federated.ranklist_snapshot (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  ranklist_id bigint NOT NULL REFERENCES federated.ranklist (id),
-  kind text DEFAULT 'default'::text NOT NULL,
-  as_of_date date NOT NULL,
-  UNIQUE (ranklist_id, as_of_date, kind)
-);
-
-CREATE TABLE federated.ranklist_entry (
-  snapshot_id bigint NOT NULL REFERENCES federated.ranklist_snapshot (id),
-  competitor_id bigint NOT NULL REFERENCES federated.competitor (id),
-  ranking int NOT NULL,
-  ranking_to int,
-  points numeric(10, 3),
-  CHECK (
-    ranking_to IS NULL
-      OR ranking_to >= ranking
-  ),
-  PRIMARY KEY (snapshot_id, competitor_id)
-);
-
-CREATE TABLE federated.round_dance (
-  round_id bigint NOT NULL REFERENCES federated.competition_round (id),
-  dance_code text NOT NULL REFERENCES federated.dance (code),
-  PRIMARY KEY (round_id, dance_code)
-);
-
-CREATE TYPE federated.score_component AS ENUM ('mark', 'places', 'ajs_tq', 'ajs_mm', 'ajs_ps', 'ajs_cp');
-
-CREATE TABLE federated.judge_score (
-  federation text NOT NULL REFERENCES federated.federation (code),
-  event_date date NOT NULL,
-  event_id bigint NOT NULL REFERENCES federated.event (id),
-  competition_id bigint NOT NULL REFERENCES federated.competition (id),
-  category_id bigint NOT NULL REFERENCES federated.category (id),
-  round_id bigint NOT NULL REFERENCES federated.competition_round (id),
-  dance_code text NOT NULL REFERENCES federated.dance (code),
-  judge_id bigint NOT NULL REFERENCES federated.judge (id),
-  competitor_id bigint NOT NULL REFERENCES federated.competitor (id),
-  component federated.score_component NOT NULL,
-  score numeric(10, 3) NOT NULL,
-  raw_score text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  PRIMARY KEY (round_id, dance_code, judge_id, competitor_id, component),
-  FOREIGN KEY(competition_id, category_id)
-    REFERENCES federated.competition (id, category_id),
-  FOREIGN KEY(competition_id, event_id)
-    REFERENCES federated.competition (id, event_id),
-  FOREIGN KEY(federation, competition_id)
-    REFERENCES federated.competition (federation, id),
-  FOREIGN KEY(round_id, competition_id)
-    REFERENCES federated.competition_round (id, competition_id),
-  FOREIGN KEY(round_id, dance_code)
-    REFERENCES federated.round_dance (round_id, dance_code)
-);
-
 CREATE TABLE app_private.platby_category (
   pc_id bigint NOT NULL PRIMARY KEY,
   pc_name text NOT NULL,
@@ -1293,13 +1342,11 @@ CREATE TABLE crawler.rate_limit_rule (
   CHECK (per_interval > '00:00:00'::interval)
 );
 
-CREATE TYPE federated.competitor_category_progress_input AS (category_id bigint, points numeric(10, 3), domestic_finale int, foreign_finale int);
-
-CREATE TYPE federated.competitor_component_input AS (athlete_id bigint, role federated.competitor_role);
-
 CREATE TYPE public.announcement_audience_type_input AS (id bigint, cohort_id bigint, audience_role public.announcement_audience_role);
 
 CREATE TYPE public.announcement_type_input AS (id bigint, title text, body text, is_locked boolean, is_visible boolean, is_sticky boolean, scheduled_since timestamp with time zone, scheduled_until timestamp with time zone);
+
+CREATE TYPE public.competition_participation_record AS (person_id bigint, person_name text, federation text, federated_person_id text, competitor_id text, competitor_name text, competitor_type federated.competitor_type, event_id bigint, event_name text, event_location text, competition_id bigint, competition_date date, check_in_end time, category federated.category, dances text[], participants int, ranking int, ranking_to int, point_gain numeric(10, 3), is_final boolean, has_result boolean);
 
 CREATE TYPE public.event_instance_trainer_type_input AS (id bigint, person_id bigint);
 

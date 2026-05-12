@@ -6,6 +6,11 @@ CREATE TABLE federated.competition (
     category_id bigint NOT NULL,
     start_date date NOT NULL,
     end_date date,
+    check_in_end time without time zone,
+    registration_fee numeric(10,3),
+    participants_total integer,
+    excused_total integer,
+    completed_at timestamp with time zone,
     CONSTRAINT competition_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 

@@ -5,14 +5,14 @@ select
   competitor.name as competitor_name,
   row(category.*) as category,
   ccp.points,
-  ccp.domestic_finale + ccp.foreign_finale as finals
-from federated.federation_athlete fa
-       join federated.athlete on athlete.id = fa.athlete_id
-       join federated.competitor_component cp on cp.athlete_id = athlete.id
+  ccp.domestic_finals + ccp.foreign_finals as finals
+from federated.person p
+       join federated.competitor_component cp on cp.person_id = p.id
        join federated.competitor on competitor.id = cp.competitor_id
-       join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id and fa.federation = ccp.federation
+       join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id
        join federated.category on ccp.category_id = category.id
-where fa.federation = 'csts' and fa.external_id = in_person.csts_id;
+where p.federation = 'csts'
+  and p.external_id = nullif(regexp_replace(in_person.csts_id, '\D', '', 'g'), '')::bigint;
 $$;
 
 COMMENT ON FUNCTION public.person_csts_progress(in_person public.person) IS '@simpleCollections only';

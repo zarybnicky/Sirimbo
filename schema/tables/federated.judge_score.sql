@@ -5,8 +5,9 @@ CREATE TABLE federated.judge_score (
     competition_id bigint NOT NULL,
     category_id bigint NOT NULL,
     round_id bigint NOT NULL,
+    dance_order integer NOT NULL,
     dance_code text NOT NULL,
-    judge_id bigint NOT NULL,
+    judge_person_id bigint NOT NULL,
     competitor_id bigint NOT NULL,
     component federated.score_component NOT NULL,
     score numeric(10,3) NOT NULL,
@@ -17,34 +18,22 @@ CREATE TABLE federated.judge_score (
 GRANT SELECT ON TABLE federated.judge_score TO anonymous;
 
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_pkey PRIMARY KEY (round_id, dance_code, judge_id, competitor_id, component);
+    ADD CONSTRAINT judge_score_pkey PRIMARY KEY (round_id, dance_order, judge_person_id, competitor_id, component);
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_category_id_fkey FOREIGN KEY (category_id) REFERENCES federated.category(id);
+    ADD CONSTRAINT judge_score_competition_id_category_id_fkey FOREIGN KEY (competition_id, category_id) REFERENCES federated.competition(id, category_id) ON UPDATE CASCADE;
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competition_id_category_id_fkey FOREIGN KEY (competition_id, category_id) REFERENCES federated.competition(id, category_id);
+    ADD CONSTRAINT judge_score_competition_id_event_id_fkey FOREIGN KEY (competition_id, event_id) REFERENCES federated.competition(id, event_id) ON UPDATE CASCADE;
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competition_id_event_id_fkey FOREIGN KEY (competition_id, event_id) REFERENCES federated.competition(id, event_id);
+    ADD CONSTRAINT judge_score_federation_competition_id_fkey FOREIGN KEY (federation, competition_id) REFERENCES federated.competition(federation, id) ON UPDATE CASCADE;
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id);
+    ADD CONSTRAINT judge_score_federation_competitor_id_fkey FOREIGN KEY (federation, competitor_id) REFERENCES federated.competitor(federation, external_id);
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
+    ADD CONSTRAINT judge_score_federation_judge_person_id_fkey FOREIGN KEY (federation, judge_person_id) REFERENCES federated.person(federation, external_id);
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_dance_code_fkey FOREIGN KEY (dance_code) REFERENCES federated.dance(code);
+    ADD CONSTRAINT judge_score_round_id_competition_id_fkey FOREIGN KEY (round_id, competition_id) REFERENCES federated.competition_round(id, competition_id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_event_id_fkey FOREIGN KEY (event_id) REFERENCES federated.event(id);
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_federation_competition_id_fkey FOREIGN KEY (federation, competition_id) REFERENCES federated.competition(federation, id);
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_judge_id_fkey FOREIGN KEY (judge_id) REFERENCES federated.judge(id);
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_round_id_competition_id_fkey FOREIGN KEY (round_id, competition_id) REFERENCES federated.competition_round(id, competition_id);
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_round_id_dance_code_fkey FOREIGN KEY (round_id, dance_code) REFERENCES federated.round_dance(round_id, dance_code);
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id);
+    ADD CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey FOREIGN KEY (round_id, dance_order, dance_code) REFERENCES federated.round_dance(round_id, dance_order, dance_code) ON DELETE CASCADE;
 
 CREATE INDEX judge_score_federation_category_id_event_date_idx ON federated.judge_score USING btree (federation, category_id, event_date);
 CREATE INDEX judge_score_federation_competitor_id_event_date_idx ON federated.judge_score USING btree (federation, competitor_id, event_date);
-CREATE INDEX judge_score_federation_judge_id_event_date_idx ON federated.judge_score USING btree (federation, judge_id, event_date);
+CREATE INDEX judge_score_federation_judge_person_id_event_date_idx ON federated.judge_score USING btree (federation, judge_person_id, event_date);

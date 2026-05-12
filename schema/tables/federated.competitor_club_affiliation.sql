@@ -1,5 +1,5 @@
 CREATE TABLE federated.competitor_club_affiliation (
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     club_id bigint NOT NULL,
     valid_from date NOT NULL,
     valid_to date,

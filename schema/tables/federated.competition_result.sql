@@ -1,11 +1,15 @@
 CREATE TABLE federated.competition_result (
     competition_id bigint NOT NULL,
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     start_number text,
     ranking integer NOT NULL,
     ranking_to integer,
     point_gain numeric(10,3),
     final_gain numeric(10,3),
+    is_final boolean,
+    completion_status text,
+    last_round text,
+    last_dance text,
     CONSTRAINT competition_result_check CHECK (((ranking_to IS NULL) OR (ranking_to >= ranking)))
 );
 

@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 19bXLxnVjIGzfsWhjXLOHg5Q2W8gcbck9MD2ZFCsrZUSoaaBQhJPII5Mhv4tDwx
+\restrict tLaWu3vmrt9Y3oiV6Tt1ZozkSDroUXxOj8OMDOVc9TCeloVuMjEX5AvoUxQ5xQX
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -83,6 +83,20 @@ COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings
 
 
 --
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
+--
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -149,18 +163,6 @@ CREATE TYPE crawler.process_status AS ENUM (
 
 
 --
--- Name: competitor_category_progress_input; Type: TYPE; Schema: federated; Owner: -
---
-
-CREATE TYPE federated.competitor_category_progress_input AS (
-	category_id bigint,
-	points numeric(10,3),
-	domestic_finale integer,
-	foreign_finale integer
-);
-
-
---
 -- Name: competitor_role; Type: TYPE; Schema: federated; Owner: -
 --
 
@@ -173,16 +175,6 @@ CREATE TYPE federated.competitor_role AS ENUM (
 
 
 --
--- Name: competitor_component_input; Type: TYPE; Schema: federated; Owner: -
---
-
-CREATE TYPE federated.competitor_component_input AS (
-	athlete_id bigint,
-	role federated.competitor_role
-);
-
-
---
 -- Name: competitor_type; Type: TYPE; Schema: federated; Owner: -
 --
 
@@ -190,7 +182,9 @@ CREATE TYPE federated.competitor_type AS ENUM (
     'couple',
     'solo',
     'duo',
+    'trio',
     'formation',
+    'group',
     'team'
 );
 
@@ -208,6 +202,83 @@ CREATE TYPE federated.gender AS ENUM (
 
 
 --
+-- Name: official_role; Type: TYPE; Schema: federated; Owner: -
+--
+
+CREATE TYPE federated.official_role AS ENUM (
+    'adjudicator',
+    'chairperson',
+    'invigilator',
+    'scrutineer',
+    'lead_scrutineer'
+);
+
+
+--
+-- Name: person_license_discipline; Type: TYPE; Schema: federated; Owner: -
+--
+
+CREATE TYPE federated.person_license_discipline AS ENUM (
+    'general',
+    'standard',
+    'latin',
+    'breaking',
+    'hiphop',
+    'caribbean',
+    'stage',
+    'smooth',
+    'disco',
+    'solo_syncro_choreo',
+    'ten_dance',
+    'show_dance_standard',
+    'show_dance_latin',
+    'formation_standard',
+    'formation_latin',
+    'pd_standard',
+    'pd_latin',
+    'pd_ten_dance',
+    'pd_show_dance_standard',
+    'pd_show_dance_latin',
+    'unknown'
+);
+
+
+--
+-- Name: person_license_kind; Type: TYPE; Schema: federated; Owner: -
+--
+
+CREATE TYPE federated.person_license_kind AS ENUM (
+    'athlete',
+    'trainer',
+    'adjudicator',
+    'chairperson',
+    'invigilator',
+    'scrutineer',
+    'lead_scrutineer',
+    'examiner',
+    'dj',
+    'head_judge',
+    'official'
+);
+
+
+--
+-- Name: person_license_status; Type: TYPE; Schema: federated; Owner: -
+--
+
+CREATE TYPE federated.person_license_status AS ENUM (
+    'active',
+    'expired',
+    'revoked',
+    'resting',
+    'retired',
+    'aspiring',
+    'suspended',
+    'unknown'
+);
+
+
+--
 -- Name: score_component; Type: TYPE; Schema: federated; Owner: -
 --
 
@@ -217,7 +288,8 @@ CREATE TYPE federated.score_component AS ENUM (
     'ajs_tq',
     'ajs_mm',
     'ajs_ps',
-    'ajs_cp'
+    'ajs_cp',
+    'ajs_reduction'
 );
 
 
@@ -314,6 +386,56 @@ CREATE TYPE public.attendance_type AS ENUM (
     'attended',
     'not-excused',
     'cancelled'
+);
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: category; Type: TABLE; Schema: federated; Owner: -
+--
+
+CREATE TABLE federated.category (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    series text NOT NULL,
+    discipline text NOT NULL,
+    age_group text NOT NULL,
+    gender_group text DEFAULT 'mixed'::text NOT NULL,
+    class text NOT NULL,
+    competitor_type federated.competitor_type DEFAULT 'couple'::federated.competitor_type NOT NULL,
+    base_dance_program_id bigint
+);
+
+
+--
+-- Name: competition_participation_record; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.competition_participation_record AS (
+	person_id bigint,
+	person_name text,
+	federation text,
+	federated_person_id text,
+	competitor_id text,
+	competitor_name text,
+	competitor_type federated.competitor_type,
+	event_id bigint,
+	event_name text,
+	event_location text,
+	competition_id bigint,
+	competition_date date,
+	check_in_end time without time zone,
+	category federated.category,
+	dances text[],
+	participants integer,
+	ranking integer,
+	ranking_to integer,
+	point_gain numeric(10,3),
+	is_final boolean,
+	has_result boolean
 );
 
 
@@ -489,10 +611,6 @@ $$;
 
 COMMENT ON FUNCTION public.current_tenant_id() IS '@omit';
 
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: -
@@ -2234,96 +2352,6 @@ $$;
 
 
 --
--- Name: competitor_component_sig(federated.competitor_component_input[]); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.competitor_component_sig(in_components federated.competitor_component_input[]) RETURNS text
-    LANGUAGE sql IMMUTABLE PARALLEL SAFE
-    AS $$
-  SELECT
-    CASE
-      WHEN in_components IS NULL OR cardinality(in_components) = 0 THEN NULL
-      ELSE (
-        SELECT jsonb_agg(jsonb_build_array(athlete_id, role::text) ORDER BY athlete_id, role::text)::text
-        FROM (
-          SELECT DISTINCT ON (athlete_id) athlete_id, role
-          FROM unnest(in_components) AS c (athlete_id, role)
-          ORDER BY athlete_id, role
-        ) t
-      )
-  END
-$$;
-
-
---
--- Name: merge_competitor(bigint, bigint); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.merge_competitor(in_old bigint, in_keep bigint) RETURNS void
-    LANGUAGE plpgsql
-    SET search_path TO 'federated', 'pg_temp'
-    AS $$
-BEGIN
-  IF in_old IS NULL OR in_keep IS NULL OR in_old = in_keep THEN
-    RETURN;
-  END IF;
-
-  -- Tables where UPDATE is not safe (competitor_id part of PK/unique)
-  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled, created_at)
-  SELECT competition_id, in_keep, cancelled, created_at
-  FROM federated.competition_entry WHERE competitor_id = in_old
-  ON CONFLICT DO NOTHING;
-
-  INSERT INTO federated.competition_round_result (round_id, competitor_id, overall_ranking, overall_ranking_to, qualified_next, overall_score)
-  SELECT round_id, in_keep, overall_ranking, overall_ranking_to, qualified_next, overall_score
-  FROM federated.competition_round_result WHERE competitor_id = in_old
-  ON CONFLICT DO NOTHING;
-
-  INSERT INTO federated.competition_result (competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain)
-  SELECT competition_id, in_keep, start_number, ranking, ranking_to, point_gain, final_gain
-  FROM federated.competition_result WHERE competitor_id = in_old
-  ON CONFLICT DO NOTHING;
-
-  INSERT INTO federated.judge_score (federation, event_date, event_id, competition_id, category_id, round_id, dance_code, judge_id, competitor_id, component, score, raw_score)
-  SELECT federation, event_date, event_id, competition_id, category_id, round_id, dance_code, judge_id, in_keep, component, score, raw_score
-  FROM federated.judge_score WHERE competitor_id = in_old
-  ON CONFLICT DO NOTHING;
-
-  INSERT INTO federated.ranklist_entry (snapshot_id, competitor_id, ranking, ranking_to, points)
-  SELECT snapshot_id, in_keep, ranking, ranking_to, points
-  FROM federated.ranklist_entry WHERE competitor_id = in_old
-  ON CONFLICT DO NOTHING;
-
-  INSERT INTO federated.competitor_category_progress (federation, competitor_id, category_id, points, domestic_finale, foreign_finale)
-  SELECT federation, in_keep, category_id, points, domestic_finale, foreign_finale
-  FROM federated.competitor_category_progress WHERE competitor_id = in_old
-  ON CONFLICT DO NOTHING;
-
-  INSERT INTO federated.competitor_club_affiliation (competitor_id, club_id, valid_from, valid_to)
-  SELECT in_keep, club_id, valid_from, valid_to
-  FROM federated.competitor_club_affiliation WHERE competitor_id = in_old
-  ON CONFLICT DO NOTHING;
-
-  INSERT INTO federated.federation_competitor (federation, external_id, competitor_id, age_group)
-  SELECT federation, external_id, in_keep, age_group
-  FROM federated.federation_competitor WHERE competitor_id = in_old
-  ON CONFLICT DO NOTHING;
-
-  DELETE FROM federated.competition_entry WHERE competitor_id = in_old;
-  DELETE FROM federated.competition_round_result WHERE competitor_id = in_old;
-  DELETE FROM federated.competition_result WHERE competitor_id = in_old;
-  DELETE FROM federated.judge_score WHERE competitor_id = in_old;
-  DELETE FROM federated.ranklist_entry WHERE competitor_id = in_old;
-  DELETE FROM federated.competitor_category_progress WHERE competitor_id = in_old;
-  DELETE FROM federated.competitor_club_affiliation WHERE competitor_id = in_old;
-  DELETE FROM federated.federation_competitor WHERE competitor_id = in_old;
-
-  DELETE FROM federated.competitor WHERE id = in_old;
-END;
-$$;
-
-
---
 -- Name: normalize_name(text); Type: FUNCTION; Schema: federated; Owner: -
 --
 
@@ -2332,335 +2360,6 @@ CREATE FUNCTION federated.normalize_name(text) RETURNS text
     AS $_$
   SELECT lower(public.unaccent('public.unaccent', $1));
 $_$;
-
-
---
--- Name: replace_competitor_category_progress(text, bigint, federated.competitor_category_progress_input[]); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.replace_competitor_category_progress(in_federation text, in_competitor_id bigint, in_entries federated.competitor_category_progress_input[] DEFAULT '{}'::federated.competitor_category_progress_input[]) RETURNS void
-    LANGUAGE plpgsql
-    SET search_path TO 'federated', 'pg_temp'
-    AS $$
-begin
-  delete from federated.competitor_category_progress
-  where federation = in_federation
-    and competitor_id = in_competitor_id;
-
-  insert into federated.competitor_category_progress (
-    federation,
-    competitor_id,
-    category_id,
-    points,
-    domestic_finale,
-    foreign_finale
-  )
-  select
-    in_federation,
-    in_competitor_id,
-    (entry).category_id,
-    coalesce((entry).points, 0),
-    coalesce((entry).domestic_finale, 0),
-    coalesce((entry).foreign_finale, 0)
-  from unnest(coalesce(in_entries, '{}'::federated.competitor_category_progress_input[])) as entry
-  where (entry).category_id is not null;
-end;
-$$;
-
-
---
--- Name: tg_round_dance__dance_program(); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.tg_round_dance__dance_program() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  IF NOT EXISTS (
-    SELECT 1
-    FROM federated.competition_round cr
-    JOIN federated.dance_program_dance dpd ON dpd.program_id = cr.dance_program_id
-    WHERE cr.id = NEW.round_id AND dpd.dance_code = NEW.dance_code
-  ) THEN
-    RAISE EXCEPTION 'Round dance % not in round dance program %', NEW.dance_code, NEW.round_id;
-  END IF;
-  RETURN NEW;
-END;
-$$;
-
-
---
--- Name: upsert_athlete(text, text, text, federated.gender); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.upsert_athlete(in_federation text, in_external_id text, in_canonical_name text, in_gender federated.gender) RETURNS bigint
-    LANGUAGE plpgsql
-    SET search_path TO 'federated', 'pg_temp'
-    AS $$
-DECLARE
-  v_person_id  bigint;
-  v_athlete_id bigint;
-BEGIN
-  -- Ensure the mapping row exists and lock it (even if athlete_id is NULL).
-  INSERT INTO federated.federation_athlete (federation, external_id, athlete_id)
-  VALUES (in_federation, in_external_id, NULL)
-  ON CONFLICT (federation, external_id) DO NOTHING;
-
-  SELECT athlete_id
-  INTO v_athlete_id
-  FROM federated.federation_athlete
-  WHERE federation=in_federation AND external_id=in_external_id
-    FOR UPDATE;
-
-  -- If no mapping, create person + athlete
-  IF v_athlete_id IS NULL THEN
-    INSERT INTO person (canonical_name, gender)
-    VALUES (in_canonical_name, in_gender)
-    RETURNING id INTO v_person_id;
-
-    INSERT INTO athlete (person_id)
-    VALUES (v_person_id)
-    RETURNING id INTO v_athlete_id;
-
-    UPDATE federated.federation_athlete
-    SET athlete_id = v_athlete_id
-    WHERE federation = in_federation
-      AND external_id = in_external_id;
-  END IF;
-
-  RETURN v_athlete_id;
-END;
-$$;
-
-
---
--- Name: upsert_category(text, text, text, text, text, text); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.upsert_category(in_series text, in_discipline text, in_age_group text, in_gender_group text, in_class text, in_name text DEFAULT NULL::text) RETURNS bigint
-    LANGUAGE sql
-    SET search_path TO 'federated', 'pg_temp'
-    AS $$
-  INSERT INTO federated.category (
-    series,
-    discipline,
-    age_group,
-    gender_group,
-    class,
-    name
-  )
-  VALUES (
-    in_series,
-    in_discipline,
-    in_age_group,
-    in_gender_group,
-    in_class,
-    COALESCE(
-      in_name,
-      concat_ws(' ', in_series, in_discipline, in_age_group, in_class)
-    )
-  )
-  ON CONFLICT (series, discipline, age_group, gender_group, class)
-    DO UPDATE SET name = EXCLUDED.name
-RETURNING id;
-$$;
-
-
---
--- Name: upsert_competitor(text, text, federated.competitor_type, text, federated.competitor_component_input[]); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.upsert_competitor(in_federation text, in_external_id text, in_type federated.competitor_type, in_label text, in_components federated.competitor_component_input[]) RETURNS bigint
-    LANGUAGE plpgsql
-    SET search_path TO 'federated', 'pg_temp'
-    AS $$
-DECLARE
-  v_competitor_id bigint;
-  v_sig text;
-  v_competitor_id_by_sig bigint;
-BEGIN
-  if in_federation is null or in_external_id is null or in_type is null then
-    raise exception 'Missing argument to upsert_competitor';
-  end if;
-
-  -- Ensure the mapping row exists and lock it (even if we don't have a competitor yet).
-  INSERT INTO federated.federation_competitor (federation, external_id, competitor_id)
-  VALUES (in_federation, in_external_id, NULL)
-  ON CONFLICT (federation, external_id) DO NOTHING;
-
-  SELECT competitor_id
-  INTO v_competitor_id
-  FROM federated.federation_competitor
-  WHERE federation = in_federation
-    AND external_id = in_external_id
-    FOR UPDATE;
-
-  -- signature is null if in_components is null or empty
-  v_sig = federated.competitor_component_sig(in_components);
-
-  IF v_sig IS NOT NULL THEN
-    SELECT c.id
-    INTO v_competitor_id_by_sig
-    FROM federated.competitor c
-    WHERE c.competitor_type = in_type
-      AND c.component_sig = v_sig;
-
-    -- if mapping exists but points elsewhere, merge old -> canonical
-    IF v_competitor_id_by_sig IS NOT NULL AND v_competitor_id IS NOT NULL AND v_competitor_id_by_sig <> v_competitor_id THEN
-      PERFORM federated.merge_competitor(v_competitor_id, v_competitor_id_by_sig);
-      v_competitor_id := v_competitor_id_by_sig;
-    END IF;
-
-    -- if mapping is missing, reuse link
-    IF v_competitor_id IS NULL AND v_competitor_id_by_sig IS NOT NULL THEN
-      v_competitor_id := v_competitor_id_by_sig;
-    END IF;
-  END IF;
-
-  -- create if still missing (dedupe by unique (type,sig) when sig known)
-  IF v_competitor_id IS NULL THEN
-    IF v_sig IS NOT NULL THEN
-      INSERT INTO federated.competitor (competitor_type, name, component_sig)
-      VALUES (in_type, in_label, v_sig)
-      ON CONFLICT (competitor_type, component_sig)
-        DO UPDATE SET name = EXCLUDED.name
-      RETURNING id INTO v_competitor_id;
-    ELSE
-      INSERT INTO federated.competitor (competitor_type, name)
-      VALUES (in_type, in_label)
-      RETURNING id INTO v_competitor_id;
-    END IF;
-  END IF;
-
-  -- re-label if necessary
-  if in_label is not null then
-    UPDATE federated.competitor SET name = in_label WHERE id = v_competitor_id AND name IS DISTINCT FROM in_label;
-  end if;
-
-  -- if in_components provided and differ from existing ones, update them
-  IF v_sig IS NOT NULL AND v_competitor_id_by_sig IS NULL THEN
-    WITH src AS MATERIALIZED (
-      SELECT
-        (c).athlete_id AS athlete_id,
-        min((c).role)  AS role
-      FROM unnest(in_components) AS c
-      GROUP BY 1
-    ), upserted AS (
-      INSERT INTO federated.competitor_component (competitor_id, athlete_id, role)
-        SELECT v_competitor_id, s.athlete_id, s.role
-        FROM src s
-        ON CONFLICT (competitor_id, athlete_id) DO UPDATE SET role = EXCLUDED.role
-        WHERE federated.competitor_component.role IS DISTINCT FROM EXCLUDED.role
-        RETURNING 1
-    ), deleted AS (
-      DELETE FROM federated.competitor_component t
-        WHERE t.competitor_id = v_competitor_id
-          AND NOT EXISTS (SELECT 1 FROM src s WHERE s.athlete_id = t.athlete_id)
-             RETURNING 1
-    )
-    UPDATE federated.competitor c
-    SET component_sig = v_sig
-    WHERE c.id = v_competitor_id
-      AND (SELECT count(*) FROM upserted) >= 0
-      AND (SELECT count(*) FROM deleted)  >= 0;
-  END IF;
-
-  -- Update the already-locked mapping row (cheap).
-  UPDATE federated.federation_competitor
-  SET competitor_id = v_competitor_id
-  WHERE federation = in_federation
-    AND external_id = in_external_id
-    AND competitor_id IS DISTINCT FROM v_competitor_id;
-
-  RETURN v_competitor_id;
-END;
-$$;
-
-
---
--- Name: upsert_competitor_category_progress(text, bigint, bigint, numeric, integer, integer); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.upsert_competitor_category_progress(in_federation text, in_competitor_id bigint, in_category_id bigint, in_points numeric, in_domestic_finale integer, in_foreign_finale integer) RETURNS void
-    LANGUAGE sql
-    SET search_path TO 'federated', 'pg_temp'
-    AS $$
-  INSERT INTO federated.competitor_category_progress (
-    federation,
-    competitor_id,
-    category_id,
-    points,
-    domestic_finale,
-    foreign_finale
-  )
-  VALUES (
-    in_federation,
-    in_competitor_id,
-    in_category_id,
-    in_points,
-    in_domestic_finale,
-    in_foreign_finale
-  )
-  ON CONFLICT (federation, competitor_id, category_id)
-    DO UPDATE
-    SET points          = EXCLUDED.points,
-        domestic_finale = EXCLUDED.domestic_finale,
-        foreign_finale  = EXCLUDED.foreign_finale;
-$$;
-
-
---
--- Name: upsert_ranklist_snapshot(text, bigint, text, date, text, jsonb); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.upsert_ranklist_snapshot(in_federation text, in_category_id bigint, in_ranklist_name text, in_as_of_date date, in_kind text DEFAULT 'default'::text, in_entries jsonb DEFAULT '[]'::jsonb) RETURNS bigint
-    LANGUAGE plpgsql
-    SET search_path TO 'federated', 'pg_temp'
-    AS $$
-DECLARE
-  v_ranklist_id  bigint;
-  v_snapshot_id  bigint;
-BEGIN
-  INSERT INTO federated.ranklist (federation, category_id, name)
-  VALUES (in_federation, in_category_id, in_ranklist_name)
-  ON CONFLICT (federation, category_id)
-    DO UPDATE SET name = EXCLUDED.name
-  RETURNING id INTO v_ranklist_id;
-
-  -- 2) upsert snapshot
-  INSERT INTO federated.ranklist_snapshot (ranklist_id, as_of_date, kind)
-  VALUES (v_ranklist_id, in_as_of_date, COALESCE(in_kind, 'default'))
-  ON CONFLICT (ranklist_id, as_of_date, kind)
-    DO UPDATE SET kind = EXCLUDED.kind
-  RETURNING id INTO v_snapshot_id;
-
-  -- 3) replace entries for this snapshot (so removals are reflected too)
-  DELETE FROM federated.ranklist_entry
-  WHERE snapshot_id = v_snapshot_id;
-
-  INSERT INTO federated.ranklist_entry (
-    snapshot_id,
-    competitor_id,
-    ranking,
-    ranking_to,
-    points
-  )
-  SELECT
-    v_snapshot_id,
-    e.competitor_id,
-    e.ranking,
-    e.ranking_to,
-    e.points
-  FROM jsonb_to_recordset(COALESCE(in_entries, '[]'::jsonb)) AS e(
-    competitor_id bigint,
-    ranking integer,
-    ranking_to integer,
-    points numeric(10,3)
-  );
-
-  RETURN v_snapshot_id;
-END;
-$$;
 
 
 --
@@ -2914,6 +2613,204 @@ CREATE FUNCTION public.change_password(new_pass text) RETURNS void
     AS $$
   update users set u_pass = new_pass where id = current_user_id();
 $$;
+
+
+--
+-- Name: competition_brief(date, date, bigint, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_until date DEFAULT NULL::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
+    LANGUAGE sql STABLE
+    AS $$
+  with params as (
+    select
+      coalesce(p_since, date_trunc('week', now())::date + 5) as since,
+      coalesce(p_until, date_trunc('week', now())::date + 7) as until
+  ),
+  scoped_people as (
+    select distinct p.id, p.name, p.csts_id, p.wdsf_id
+    from public.current_tenant_membership tm
+    join public.person p on p.id = tm.person_id
+    where (p_person_ids is null or p.id = any(p_person_ids))
+      and (
+        p_cohort_id is null
+        or exists (
+          select 1
+          from public.current_cohort_membership cm
+          where cm.person_id = p.id
+            and cm.cohort_id = p_cohort_id
+        )
+      )
+  ),
+  federated_people as (
+    select
+      sp.id as person_id,
+      sp.name as person_name,
+      fp.id as federated_person_id,
+      fp.federation
+    from scoped_people sp
+    cross join lateral (
+      values
+        ('csts'::text, nullif(regexp_replace(sp.csts_id, '\D', '', 'g'), '')::bigint),
+        ('wdsf'::text, nullif(regexp_replace(sp.wdsf_id, '\D', '', 'g'), '')::bigint)
+    ) ids(federation, external_id)
+    join federated.person fp
+      on fp.federation = ids.federation
+     and fp.external_id = ids.external_id
+  )
+  select
+    fp.person_id,
+    fp.person_name,
+    fp.federation,
+    fp.federated_person_id,
+    c.id as competitor_id,
+    c.name as competitor_name,
+    c.competitor_type,
+    e.id as event_id,
+    e.name as event_name,
+    coalesce(e.location, e.city) as event_location,
+    comp.id as competition_id,
+    comp.start_date as competition_date,
+    comp.check_in_end,
+    cat as category,
+    dances.dances,
+    comp.participants_total as participants,
+    null::integer as ranking,
+    null::integer as ranking_to,
+    null::numeric(10,3) as point_gain,
+    null::boolean as is_final,
+    false as has_result
+  from params
+  join federated.competition comp
+    on comp.start_date >= params.since
+   and comp.start_date < params.until
+  join federated.event e on e.id = comp.event_id
+  join federated.category cat on cat.id = comp.category_id
+  join federated.competition_entry ce
+    on ce.competition_id = comp.id
+   and not ce.cancelled
+  join federated.competitor c on c.id = ce.competitor_id
+  join federated.competitor_component cc on cc.competitor_id = c.id
+  join federated_people fp on fp.federated_person_id = cc.person_id
+  left join lateral (
+    select coalesce(array_agg(d.name order by dpd.dance_order), '{}'::text[]) as dances
+    from federated.dance_program_dance dpd
+    join federated.dance d on d.code = dpd.dance_code
+    where dpd.program_id = cat.base_dance_program_id
+  ) dances on true
+  order by
+    comp.start_date,
+    comp.check_in_end nulls last,
+    fp.person_name,
+    cat.discipline,
+    cat.class,
+    c.name;
+$$;
+
+
+--
+-- Name: FUNCTION competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@simpleCollections only';
+
+
+--
+-- Name: competition_report(date, date, bigint, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_until date DEFAULT NULL::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
+    LANGUAGE sql STABLE
+    AS $$
+  with params as (
+    select
+      coalesce(p_since, date_trunc('week', now())::date - 2) as since,
+      coalesce(p_until, date_trunc('week', now())::date) as until
+  ),
+  scoped_people as (
+    select distinct p.id, p.name, p.csts_id, p.wdsf_id
+    from public.current_tenant_membership tm
+    join public.person p on p.id = tm.person_id
+    where (p_person_ids is null or p.id = any(p_person_ids))
+      and (
+        p_cohort_id is null
+        or exists (
+          select 1
+          from public.current_cohort_membership cm
+          where cm.person_id = p.id
+            and cm.cohort_id = p_cohort_id
+        )
+      )
+  ),
+  federated_people as (
+    select
+      sp.id as person_id,
+      sp.name as person_name,
+      fp.id as federated_person_id,
+      fp.federation
+    from scoped_people sp
+    cross join lateral (
+      values
+        ('csts'::text, nullif(regexp_replace(sp.csts_id, '\D', '', 'g'), '')::bigint),
+        ('wdsf'::text, nullif(regexp_replace(sp.wdsf_id, '\D', '', 'g'), '')::bigint)
+    ) ids(federation, external_id)
+    join federated.person fp
+      on fp.federation = ids.federation
+     and fp.external_id = ids.external_id
+  )
+  select
+    fp.person_id,
+    fp.person_name,
+    fp.federation,
+    fp.federated_person_id,
+    c.id as competitor_id,
+    c.name as competitor_name,
+    c.competitor_type,
+    e.id as event_id,
+    e.name as event_name,
+    coalesce(e.location, e.city) as event_location,
+    comp.id as competition_id,
+    comp.start_date as competition_date,
+    comp.check_in_end,
+    cat as category,
+    dances.dances,
+    comp.participants_total as participants,
+    cr.ranking,
+    cr.ranking_to,
+    cr.point_gain,
+    cr.is_final,
+    true as has_result
+  from params
+  join federated.competition comp
+    on comp.start_date >= params.since
+   and comp.start_date < params.until
+  join federated.event e on e.id = comp.event_id
+  join federated.category cat on cat.id = comp.category_id
+  join federated.competition_result cr on cr.competition_id = comp.id
+  join federated.competitor c on c.id = cr.competitor_id
+  join federated.competitor_component cc on cc.competitor_id = c.id
+  join federated_people fp on fp.federated_person_id = cc.person_id
+  left join lateral (
+    select coalesce(array_agg(d.name order by dpd.dance_order), '{}'::text[]) as dances
+    from federated.dance_program_dance dpd
+    join federated.dance d on d.code = dpd.dance_code
+    where dpd.program_id = cat.base_dance_program_id
+  ) dances on true
+  order by
+    comp.start_date,
+    fp.person_name,
+    cat.discipline,
+    cat.class,
+    cr.ranking,
+    c.name;
+$$;
+
+
+--
+-- Name: FUNCTION competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@simpleCollections only';
 
 
 --
@@ -3374,11 +3271,7 @@ $$;
 CREATE FUNCTION public.csts_athlete(idt integer) RETURNS text
     LANGUAGE sql STABLE
     AS $$
-select canonical_name
-from federated.person
-       join federated.athlete on person.id = athlete.person_id
-       join federated.federation_athlete on athlete.id = federation_athlete.athlete_id
-where federation = 'csts' and external_id = idt::text;
+  select canonical_name from federated.person where federation = 'csts' and external_id = idt;
 $$;
 
 
@@ -4691,22 +4584,6 @@ $$;
 
 
 --
--- Name: category; Type: TABLE; Schema: federated; Owner: -
---
-
-CREATE TABLE federated.category (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    series text NOT NULL,
-    discipline text NOT NULL,
-    age_group text NOT NULL,
-    gender_group text DEFAULT 'mixed'::text NOT NULL,
-    class text NOT NULL,
-    base_dance_program_id bigint
-);
-
-
---
 -- Name: person_csts_progress(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4717,14 +4594,14 @@ select
   competitor.name as competitor_name,
   row(category.*) as category,
   ccp.points,
-  ccp.domestic_finale + ccp.foreign_finale as finals
-from federated.federation_athlete fa
-       join federated.athlete on athlete.id = fa.athlete_id
-       join federated.competitor_component cp on cp.athlete_id = athlete.id
+  ccp.domestic_finals + ccp.foreign_finals as finals
+from federated.person p
+       join federated.competitor_component cp on cp.person_id = p.id
        join federated.competitor on competitor.id = cp.competitor_id
-       join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id and fa.federation = ccp.federation
+       join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id
        join federated.category on ccp.category_id = category.id
-where fa.federation = 'csts' and fa.external_id = in_person.csts_id;
+where p.federation = 'csts'
+  and p.external_id = nullif(regexp_replace(in_person.csts_id, '\D', '', 'g'), '')::bigint;
 $$;
 
 
@@ -6232,11 +6109,7 @@ COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@omit'
 CREATE FUNCTION public.wdsf_athlete(min integer) RETURNS text
     LANGUAGE sql STABLE
     AS $$
-select canonical_name
-from federated.person
-       join federated.athlete on person.id = athlete.person_id
-       join federated.federation_athlete on athlete.id = federation_athlete.athlete_id
-where federation = 'wdsf' and external_id = min::text;
+  select canonical_name from federated.person where federation = 'wdsf' and external_id = min;
 $$;
 
 
@@ -6855,44 +6728,6 @@ CREATE TABLE crawler.rate_limit_rule (
 
 
 --
--- Name: athlete; Type: TABLE; Schema: federated; Owner: -
---
-
-CREATE TABLE federated.athlete (
-    id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: athlete_club_membership; Type: TABLE; Schema: federated; Owner: -
---
-
-CREATE TABLE federated.athlete_club_membership (
-    athlete_id bigint NOT NULL,
-    club_id bigint NOT NULL,
-    valid_from date NOT NULL,
-    valid_to date,
-    CONSTRAINT athlete_club_membership_check CHECK (((valid_to IS NULL) OR (valid_to >= valid_from)))
-);
-
-
---
--- Name: athlete_id_seq; Type: SEQUENCE; Schema: federated; Owner: -
---
-
-ALTER TABLE federated.athlete ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME federated.athlete_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
 -- Name: category_id_seq; Type: SEQUENCE; Schema: federated; Owner: -
 --
 
@@ -6918,6 +6753,11 @@ CREATE TABLE federated.competition (
     category_id bigint NOT NULL,
     start_date date NOT NULL,
     end_date date,
+    check_in_end time without time zone,
+    registration_fee numeric(10,3),
+    participants_total integer,
+    excused_total integer,
+    completed_at timestamp with time zone,
     CONSTRAINT competition_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 
@@ -6928,7 +6768,7 @@ CREATE TABLE federated.competition (
 
 CREATE TABLE federated.competition_entry (
     competition_id bigint NOT NULL,
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     cancelled boolean DEFAULT false NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -6949,17 +6789,32 @@ ALTER TABLE federated.competition ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTI
 
 
 --
+-- Name: competition_official; Type: TABLE; Schema: federated; Owner: -
+--
+
+CREATE TABLE federated.competition_official (
+    competition_id bigint NOT NULL,
+    person_id text NOT NULL,
+    role federated.official_role NOT NULL
+);
+
+
+--
 -- Name: competition_result; Type: TABLE; Schema: federated; Owner: -
 --
 
 CREATE TABLE federated.competition_result (
     competition_id bigint NOT NULL,
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     start_number text,
     ranking integer NOT NULL,
     ranking_to integer,
     point_gain numeric(10,3),
     final_gain numeric(10,3),
+    is_final boolean,
+    completion_status text,
+    last_round text,
+    last_dance text,
     CONSTRAINT competition_result_check CHECK (((ranking_to IS NULL) OR (ranking_to >= ranking)))
 );
 
@@ -6995,17 +6850,30 @@ ALTER TABLE federated.competition_round ALTER COLUMN id ADD GENERATED ALWAYS AS 
 
 
 --
+-- Name: competition_round_judge; Type: TABLE; Schema: federated; Owner: -
+--
+
+CREATE TABLE federated.competition_round_judge (
+    round_id bigint NOT NULL,
+    person_judge_id text NOT NULL,
+    judge_index integer NOT NULL,
+    judge_label text
+);
+
+
+--
 -- Name: competition_round_result; Type: TABLE; Schema: federated; Owner: -
 --
 
 CREATE TABLE federated.competition_round_result (
     round_id bigint NOT NULL,
-    competitor_id bigint NOT NULL,
-    overall_ranking integer NOT NULL,
+    competitor_id text NOT NULL,
+    overall_ranking integer,
     overall_ranking_to integer,
     qualified_next boolean,
     overall_score numeric(10,3),
-    CONSTRAINT competition_round_result_check CHECK (((overall_ranking_to IS NULL) OR (overall_ranking_to >= overall_ranking)))
+    dance_results real[],
+    CONSTRAINT competition_round_result_check CHECK (((overall_ranking IS NULL) OR (overall_ranking_to IS NULL) OR (overall_ranking_to >= overall_ranking)))
 );
 
 
@@ -7014,10 +6882,12 @@ CREATE TABLE federated.competition_round_result (
 --
 
 CREATE TABLE federated.competitor (
-    id bigint NOT NULL,
+    id text GENERATED ALWAYS AS (((federation || ':'::text) || (external_id)::text)) STORED NOT NULL,
+    federation text NOT NULL,
+    external_id bigint NOT NULL,
     competitor_type federated.competitor_type NOT NULL,
+    age_group text,
     name text,
-    component_sig text,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
@@ -7027,12 +6897,11 @@ CREATE TABLE federated.competitor (
 --
 
 CREATE TABLE federated.competitor_category_progress (
-    federation text NOT NULL,
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     category_id bigint NOT NULL,
     points numeric(10,3) DEFAULT 0 NOT NULL,
-    domestic_finale integer DEFAULT 0 NOT NULL,
-    foreign_finale integer DEFAULT 0 NOT NULL
+    domestic_finals integer DEFAULT 0 NOT NULL,
+    foreign_finals integer DEFAULT 0 NOT NULL
 );
 
 
@@ -7041,7 +6910,7 @@ CREATE TABLE federated.competitor_category_progress (
 --
 
 CREATE TABLE federated.competitor_club_affiliation (
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     club_id bigint NOT NULL,
     valid_from date NOT NULL,
     valid_to date,
@@ -7054,23 +6923,9 @@ CREATE TABLE federated.competitor_club_affiliation (
 --
 
 CREATE TABLE federated.competitor_component (
-    competitor_id bigint NOT NULL,
-    athlete_id bigint NOT NULL,
+    competitor_id text NOT NULL,
+    person_id text NOT NULL,
     role federated.competitor_role NOT NULL
-);
-
-
---
--- Name: competitor_id_seq; Type: SEQUENCE; Schema: federated; Owner: -
---
-
-ALTER TABLE federated.competitor ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME federated.competitor_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
 );
 
 
@@ -7136,7 +6991,17 @@ CREATE TABLE federated.event (
     start_date date NOT NULL,
     end_date date,
     location text,
+    city text,
     country text,
+    street_address text,
+    postal_code text,
+    address_note text,
+    geo_reference text,
+    floor_size text,
+    contact_name text,
+    contact_phone text,
+    contact_email text,
+    website_url text,
     organizing_club_id bigint,
     range daterange GENERATED ALWAYS AS (daterange(start_date, (COALESCE(end_date, start_date) + 1), '[)'::text)) STORED,
     CONSTRAINT event_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
@@ -7158,39 +7023,25 @@ ALTER TABLE federated.event ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
+-- Name: event_official; Type: TABLE; Schema: federated; Owner: -
+--
+
+CREATE TABLE federated.event_official (
+    event_id bigint NOT NULL,
+    person_id text NOT NULL,
+    role federated.official_role NOT NULL,
+    discipline text DEFAULT ''::text NOT NULL,
+    grade text
+);
+
+
+--
 -- Name: federation; Type: TABLE; Schema: federated; Owner: -
 --
 
 CREATE TABLE federated.federation (
     code text NOT NULL,
     name text NOT NULL
-);
-
-
---
--- Name: federation_athlete; Type: TABLE; Schema: federated; Owner: -
---
-
-CREATE TABLE federated.federation_athlete (
-    federation text NOT NULL,
-    external_id text NOT NULL,
-    athlete_id bigint,
-    age_group text,
-    medical_checkup_expiration date,
-    medical_checkup_type text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: federation_category; Type: TABLE; Schema: federated; Owner: -
---
-
-CREATE TABLE federated.federation_category (
-    federation text NOT NULL,
-    external_id text,
-    category_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -7224,56 +7075,6 @@ ALTER TABLE federated.federation_club ALTER COLUMN id ADD GENERATED ALWAYS AS ID
 
 
 --
--- Name: federation_competitor; Type: TABLE; Schema: federated; Owner: -
---
-
-CREATE TABLE federated.federation_competitor (
-    federation text NOT NULL,
-    external_id text NOT NULL,
-    competitor_id bigint,
-    age_group text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: federation_judge; Type: TABLE; Schema: federated; Owner: -
---
-
-CREATE TABLE federated.federation_judge (
-    federation text NOT NULL,
-    external_id text NOT NULL,
-    judge_id bigint,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: judge; Type: TABLE; Schema: federated; Owner: -
---
-
-CREATE TABLE federated.judge (
-    id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: judge_id_seq; Type: SEQUENCE; Schema: federated; Owner: -
---
-
-ALTER TABLE federated.judge ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME federated.judge_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
 -- Name: judge_score; Type: TABLE; Schema: federated; Owner: -
 --
 
@@ -7284,8 +7085,9 @@ CREATE TABLE federated.judge_score (
     competition_id bigint NOT NULL,
     category_id bigint NOT NULL,
     round_id bigint NOT NULL,
+    dance_order integer NOT NULL,
     dance_code text NOT NULL,
-    judge_id bigint NOT NULL,
+    judge_person_id bigint NOT NULL,
     competitor_id bigint NOT NULL,
     component federated.score_component NOT NULL,
     score numeric(10,3) NOT NULL,
@@ -7299,7 +7101,9 @@ CREATE TABLE federated.judge_score (
 --
 
 CREATE TABLE federated.person (
-    id bigint NOT NULL,
+    id text GENERATED ALWAYS AS (((federation || ':'::text) || (external_id)::text)) STORED NOT NULL,
+    federation text NOT NULL,
+    external_id bigint NOT NULL,
     canonical_name text,
     first_name text,
     last_name text,
@@ -7307,21 +7111,39 @@ CREATE TABLE federated.person (
     gender federated.gender,
     dob date,
     nationality text,
+    age_group text,
+    medical_checkup_expiration date,
+    medical_checkup_type text,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
 --
--- Name: person_id_seq; Type: SEQUENCE; Schema: federated; Owner: -
+-- Name: person_club_membership; Type: TABLE; Schema: federated; Owner: -
 --
 
-ALTER TABLE federated.person ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME federated.person_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
+CREATE TABLE federated.person_club_membership (
+    person_id text NOT NULL,
+    club_id bigint NOT NULL,
+    valid_from date NOT NULL,
+    valid_to date,
+    CONSTRAINT person_club_membership_check CHECK (((valid_to IS NULL) OR (valid_to >= valid_from)))
+);
+
+
+--
+-- Name: person_license; Type: TABLE; Schema: federated; Owner: -
+--
+
+CREATE TABLE federated.person_license (
+    person_id text NOT NULL,
+    federation text NOT NULL,
+    kind federated.person_license_kind NOT NULL,
+    discipline federated.person_license_discipline DEFAULT 'general'::federated.person_license_discipline NOT NULL,
+    grade text,
+    valid_until date,
+    status federated.person_license_status DEFAULT 'unknown'::federated.person_license_status NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -7343,7 +7165,7 @@ CREATE TABLE federated.ranklist (
 
 CREATE TABLE federated.ranklist_entry (
     snapshot_id bigint NOT NULL,
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     ranking integer NOT NULL,
     ranking_to integer,
     points numeric(10,3),
@@ -7397,18 +7219,10 @@ ALTER TABLE federated.ranklist_snapshot ALTER COLUMN id ADD GENERATED ALWAYS AS 
 
 CREATE TABLE federated.round_dance (
     round_id bigint NOT NULL,
-    dance_code text NOT NULL
+    dance_program_id bigint NOT NULL,
+    dance_code text NOT NULL,
+    dance_order integer NOT NULL
 );
-
-
---
--- Name: round_judge; Type: VIEW; Schema: federated; Owner: -
---
-
-CREATE VIEW federated.round_judge AS
- SELECT DISTINCT round_id,
-    judge_id
-   FROM federated.judge_score;
 
 
 --
@@ -8705,38 +8519,6 @@ ALTER TABLE ONLY crawler.rate_limit_rule
 
 
 --
--- Name: athlete_club_membership athlete_club_membership_athlete_id_club_id_daterange_excl; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.athlete_club_membership
-    ADD CONSTRAINT athlete_club_membership_athlete_id_club_id_daterange_excl EXCLUDE USING gist (athlete_id WITH =, club_id WITH =, daterange(valid_from, COALESCE(valid_to, 'infinity'::date), '[)'::text) WITH &&);
-
-
---
--- Name: athlete_club_membership athlete_club_membership_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.athlete_club_membership
-    ADD CONSTRAINT athlete_club_membership_pkey PRIMARY KEY (athlete_id, club_id, valid_from);
-
-
---
--- Name: athlete athlete_person_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.athlete
-    ADD CONSTRAINT athlete_person_id_key UNIQUE (person_id);
-
-
---
--- Name: athlete athlete_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.athlete
-    ADD CONSTRAINT athlete_pkey PRIMARY KEY (id);
-
-
---
 -- Name: category category_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -8745,11 +8527,11 @@ ALTER TABLE ONLY federated.category
 
 
 --
--- Name: category category_series_discipline_age_group_gender_group_class_key; Type: CONSTRAINT; Schema: federated; Owner: -
+-- Name: category category_series_discipline_age_group_gender_group_class_com_key; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.category
-    ADD CONSTRAINT category_series_discipline_age_group_gender_group_class_key UNIQUE (series, discipline, age_group, gender_group, class);
+    ADD CONSTRAINT category_series_discipline_age_group_gender_group_class_com_key UNIQUE (series, discipline, age_group, gender_group, class, competitor_type);
 
 
 --
@@ -8793,6 +8575,14 @@ ALTER TABLE ONLY federated.competition
 
 
 --
+-- Name: competition_official competition_official_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competition_official
+    ADD CONSTRAINT competition_official_pkey PRIMARY KEY (competition_id, person_id, role);
+
+
+--
 -- Name: competition competition_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -8833,6 +8623,30 @@ ALTER TABLE ONLY federated.competition_round
 
 
 --
+-- Name: competition_round competition_round_id_dance_program_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competition_round
+    ADD CONSTRAINT competition_round_id_dance_program_id_key UNIQUE (id, dance_program_id);
+
+
+--
+-- Name: competition_round_judge competition_round_judge_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competition_round_judge
+    ADD CONSTRAINT competition_round_judge_pkey PRIMARY KEY (round_id, person_judge_id);
+
+
+--
+-- Name: competition_round_judge competition_round_judge_round_id_judge_index_key; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competition_round_judge
+    ADD CONSTRAINT competition_round_judge_round_id_judge_index_key UNIQUE (round_id, judge_index);
+
+
+--
 -- Name: competition_round competition_round_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -8853,7 +8667,7 @@ ALTER TABLE ONLY federated.competition_round_result
 --
 
 ALTER TABLE ONLY federated.competitor_category_progress
-    ADD CONSTRAINT competitor_category_progress_pkey PRIMARY KEY (federation, competitor_id, category_id);
+    ADD CONSTRAINT competitor_category_progress_pkey PRIMARY KEY (competitor_id, category_id);
 
 
 --
@@ -8873,19 +8687,19 @@ ALTER TABLE ONLY federated.competitor_club_affiliation
 
 
 --
--- Name: competitor competitor_competitor_type_component_sig_key; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.competitor
-    ADD CONSTRAINT competitor_competitor_type_component_sig_key UNIQUE (competitor_type, component_sig);
-
-
---
 -- Name: competitor_component competitor_component_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competitor_component
-    ADD CONSTRAINT competitor_component_pkey PRIMARY KEY (competitor_id, athlete_id);
+    ADD CONSTRAINT competitor_component_pkey PRIMARY KEY (competitor_id, person_id);
+
+
+--
+-- Name: competitor competitor_federation_external_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competitor
+    ADD CONSTRAINT competitor_federation_external_id_key UNIQUE (federation, external_id);
 
 
 --
@@ -8953,35 +8767,19 @@ ALTER TABLE ONLY federated.event
 
 
 --
+-- Name: event_official event_official_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.event_official
+    ADD CONSTRAINT event_official_pkey PRIMARY KEY (event_id, person_id, role, discipline);
+
+
+--
 -- Name: event event_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_pkey PRIMARY KEY (id);
-
-
---
--- Name: federation_athlete federation_athlete_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_athlete
-    ADD CONSTRAINT federation_athlete_pkey PRIMARY KEY (federation, external_id);
-
-
---
--- Name: federation_category federation_category_federation_external_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_category
-    ADD CONSTRAINT federation_category_federation_external_id_key UNIQUE (federation, external_id);
-
-
---
--- Name: federation_category federation_category_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_category
-    ADD CONSTRAINT federation_category_pkey PRIMARY KEY (federation, category_id);
 
 
 --
@@ -9009,30 +8807,6 @@ ALTER TABLE ONLY federated.federation_club
 
 
 --
--- Name: federation_competitor federation_competitor_federation_competitor_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_competitor
-    ADD CONSTRAINT federation_competitor_federation_competitor_id_key UNIQUE (federation, competitor_id);
-
-
---
--- Name: federation_competitor federation_competitor_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_competitor
-    ADD CONSTRAINT federation_competitor_pkey PRIMARY KEY (federation, external_id);
-
-
---
--- Name: federation_judge federation_judge_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_judge
-    ADD CONSTRAINT federation_judge_pkey PRIMARY KEY (federation, external_id);
-
-
---
 -- Name: federation federation_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -9041,27 +8815,43 @@ ALTER TABLE ONLY federated.federation
 
 
 --
--- Name: judge judge_person_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge
-    ADD CONSTRAINT judge_person_id_key UNIQUE (person_id);
-
-
---
--- Name: judge judge_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge
-    ADD CONSTRAINT judge_pkey PRIMARY KEY (id);
-
-
---
 -- Name: judge_score judge_score_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_pkey PRIMARY KEY (round_id, dance_code, judge_id, competitor_id, component);
+    ADD CONSTRAINT judge_score_pkey PRIMARY KEY (round_id, dance_order, judge_person_id, competitor_id, component);
+
+
+--
+-- Name: person_club_membership person_club_membership_person_id_club_id_daterange_excl; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person_club_membership
+    ADD CONSTRAINT person_club_membership_person_id_club_id_daterange_excl EXCLUDE USING gist (person_id WITH =, club_id WITH =, daterange(valid_from, COALESCE(valid_to, 'infinity'::date), '[)'::text) WITH &&);
+
+
+--
+-- Name: person_club_membership person_club_membership_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person_club_membership
+    ADD CONSTRAINT person_club_membership_pkey PRIMARY KEY (person_id, club_id, valid_from);
+
+
+--
+-- Name: person person_federation_external_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person
+    ADD CONSTRAINT person_federation_external_id_key UNIQUE (federation, external_id);
+
+
+--
+-- Name: person_license person_license_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person_license
+    ADD CONSTRAINT person_license_pkey PRIMARY KEY (person_id, kind, discipline);
 
 
 --
@@ -9117,7 +8907,15 @@ ALTER TABLE ONLY federated.ranklist_snapshot
 --
 
 ALTER TABLE ONLY federated.round_dance
-    ADD CONSTRAINT round_dance_pkey PRIMARY KEY (round_id, dance_code);
+    ADD CONSTRAINT round_dance_pkey PRIMARY KEY (round_id, dance_order);
+
+
+--
+-- Name: round_dance round_dance_round_id_dance_order_dance_code_key; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.round_dance
+    ADD CONSTRAINT round_dance_round_id_dance_order_dance_code_key UNIQUE (round_id, dance_order, dance_code);
 
 
 --
@@ -9807,7 +9605,7 @@ CREATE INDEX frontier_federation_kind_next_fetch_at_idx ON crawler.frontier USIN
 -- Name: frontier_process_pending_ok_pick_idx; Type: INDEX; Schema: crawler; Owner: -
 --
 
-CREATE INDEX frontier_process_pending_ok_pick_idx ON crawler.frontier USING btree (last_fetched_at, discovered_at, id) WHERE ((process_status = 'pending'::crawler.process_status) AND (fetch_status = 'ok'::crawler.fetch_status));
+CREATE INDEX frontier_process_pending_ok_pick_idx ON crawler.frontier USING btree (discovered_at, last_fetched_at, id) WHERE ((process_status = 'pending'::crawler.process_status) AND (fetch_status = 'ok'::crawler.fetch_status));
 
 
 --
@@ -9825,24 +9623,17 @@ CREATE INDEX json_response_frontier_fetched_desc_idx ON crawler.json_response US
 
 
 --
--- Name: athlete_club_membership_athlete_id_valid_from_valid_to_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE INDEX athlete_club_membership_athlete_id_valid_from_valid_to_idx ON federated.athlete_club_membership USING btree (athlete_id, valid_from, valid_to);
-
-
---
--- Name: athlete_club_membership_club_id_valid_from_valid_to_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE INDEX athlete_club_membership_club_id_valid_from_valid_to_idx ON federated.athlete_club_membership USING btree (club_id, valid_from, valid_to);
-
-
---
 -- Name: competition_category_id_idx; Type: INDEX; Schema: federated; Owner: -
 --
 
 CREATE INDEX competition_category_id_idx ON federated.competition USING btree (category_id);
+
+
+--
+-- Name: competition_entry_competition_id_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX competition_entry_competition_id_idx ON federated.competition_entry USING btree (competition_id);
 
 
 --
@@ -9857,6 +9648,20 @@ CREATE INDEX competition_entry_competitor_id_idx ON federated.competition_entry 
 --
 
 CREATE INDEX competition_event_id_idx ON federated.competition USING btree (event_id);
+
+
+--
+-- Name: competition_official_competition_id_role_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX competition_official_competition_id_role_idx ON federated.competition_official USING btree (competition_id, role);
+
+
+--
+-- Name: competition_official_person_id_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX competition_official_person_id_idx ON federated.competition_official USING btree (person_id);
 
 
 --
@@ -9888,6 +9693,13 @@ CREATE INDEX competition_round_dance_program_id_idx ON federated.competition_rou
 
 
 --
+-- Name: competition_round_judge_judge; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX competition_round_judge_judge ON federated.competition_round_judge USING btree (person_judge_id);
+
+
+--
 -- Name: competition_round_result_competitor_id_idx; Type: INDEX; Schema: federated; Owner: -
 --
 
@@ -9916,10 +9728,10 @@ CREATE INDEX competitor_club_affiliation_club_id_valid_from_valid_to_idx ON fede
 
 
 --
--- Name: competitor_component_athlete_id_idx; Type: INDEX; Schema: federated; Owner: -
+-- Name: competitor_component_person_id_idx; Type: INDEX; Schema: federated; Owner: -
 --
 
-CREATE INDEX competitor_component_athlete_id_idx ON federated.competitor_component USING btree (athlete_id);
+CREATE INDEX competitor_component_person_id_idx ON federated.competitor_component USING btree (person_id);
 
 
 --
@@ -9937,10 +9749,31 @@ CREATE INDEX dance_program_dance_program_id_idx ON federated.dance_program_dance
 
 
 --
+-- Name: event_federation_location_country_range_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX event_federation_location_country_range_idx ON federated.event USING gist (federation, location, country, range);
+
+
+--
 -- Name: event_federation_start_date_idx; Type: INDEX; Schema: federated; Owner: -
 --
 
 CREATE INDEX event_federation_start_date_idx ON federated.event USING btree (federation, start_date);
+
+
+--
+-- Name: event_official_event_id_role_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX event_official_event_id_role_idx ON federated.event_official USING btree (event_id, role);
+
+
+--
+-- Name: event_official_person_id_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX event_official_person_id_idx ON federated.event_official USING btree (person_id);
 
 
 --
@@ -9951,38 +9784,10 @@ CREATE INDEX event_range_idx ON federated.event USING gist (range);
 
 
 --
--- Name: federation_athlete_athlete_id_idx; Type: INDEX; Schema: federated; Owner: -
+-- Name: idx_person_search_name_trgm; Type: INDEX; Schema: federated; Owner: -
 --
 
-CREATE INDEX federation_athlete_athlete_id_idx ON federated.federation_athlete USING btree (athlete_id);
-
-
---
--- Name: federation_athlete_federation_athlete_id_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE UNIQUE INDEX federation_athlete_federation_athlete_id_idx ON federated.federation_athlete USING btree (federation, athlete_id) WHERE (athlete_id IS NOT NULL);
-
-
---
--- Name: federation_category_category_id_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE INDEX federation_category_category_id_idx ON federated.federation_category USING btree (category_id);
-
-
---
--- Name: federation_judge_federation_judge_id_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE UNIQUE INDEX federation_judge_federation_judge_id_idx ON federated.federation_judge USING btree (federation, judge_id) WHERE (judge_id IS NOT NULL);
-
-
---
--- Name: federation_judge_judge_id_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE INDEX federation_judge_judge_id_idx ON federated.federation_judge USING btree (judge_id);
+CREATE INDEX idx_person_search_name_trgm ON federated.person USING gin (search_name public.gin_trgm_ops);
 
 
 --
@@ -10000,10 +9805,31 @@ CREATE INDEX judge_score_federation_competitor_id_event_date_idx ON federated.ju
 
 
 --
--- Name: judge_score_federation_judge_id_event_date_idx; Type: INDEX; Schema: federated; Owner: -
+-- Name: judge_score_federation_judge_person_id_event_date_idx; Type: INDEX; Schema: federated; Owner: -
 --
 
-CREATE INDEX judge_score_federation_judge_id_event_date_idx ON federated.judge_score USING btree (federation, judge_id, event_date);
+CREATE INDEX judge_score_federation_judge_person_id_event_date_idx ON federated.judge_score USING btree (federation, judge_person_id, event_date);
+
+
+--
+-- Name: person_club_membership_club_id_valid_from_valid_to_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX person_club_membership_club_id_valid_from_valid_to_idx ON federated.person_club_membership USING btree (club_id, valid_from, valid_to);
+
+
+--
+-- Name: person_club_membership_person_id_valid_from_valid_to_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX person_club_membership_person_id_valid_from_valid_to_idx ON federated.person_club_membership USING btree (person_id, valid_from, valid_to);
+
+
+--
+-- Name: person_license_federation_person_id_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX person_license_federation_person_id_idx ON federated.person_license USING btree (federation, person_id);
 
 
 --
@@ -10018,13 +9844,6 @@ CREATE INDEX ranklist_entry_competitor_id_idx ON federated.ranklist_entry USING 
 --
 
 CREATE INDEX ranklist_entry_snapshot_id_ranking_idx ON federated.ranklist_entry USING btree (snapshot_id, ranking);
-
-
---
--- Name: round_dance_round_id_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE INDEX round_dance_round_id_idx ON federated.round_dance USING btree (round_id);
 
 
 --
@@ -10945,13 +10764,6 @@ CREATE INDEX users_tenant_id_idx ON public.users USING btree (tenant_id);
 
 
 --
--- Name: round_dance _100_round_dance__dance_program; Type: TRIGGER; Schema: federated; Owner: -
---
-
-CREATE TRIGGER _100_round_dance__dance_program BEFORE INSERT ON federated.round_dance FOR EACH ROW EXECUTE FUNCTION federated.tg_round_dance__dance_program();
-
-
---
 -- Name: event_attendance _100_event_id; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -11544,30 +11356,6 @@ ALTER TABLE ONLY crawler.json_response
 
 
 --
--- Name: athlete_club_membership athlete_club_membership_athlete_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.athlete_club_membership
-    ADD CONSTRAINT athlete_club_membership_athlete_id_fkey FOREIGN KEY (athlete_id) REFERENCES federated.athlete(id);
-
-
---
--- Name: athlete_club_membership athlete_club_membership_club_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.athlete_club_membership
-    ADD CONSTRAINT athlete_club_membership_club_id_fkey FOREIGN KEY (club_id) REFERENCES federated.federation_club(id);
-
-
---
--- Name: athlete athlete_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.athlete
-    ADD CONSTRAINT athlete_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
-
-
---
 -- Name: category category_base_dance_program_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -11624,6 +11412,22 @@ ALTER TABLE ONLY federated.competition
 
 
 --
+-- Name: competition_official competition_official_competition_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competition_official
+    ADD CONSTRAINT competition_official_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id) ON DELETE CASCADE;
+
+
+--
+-- Name: competition_official competition_official_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competition_official
+    ADD CONSTRAINT competition_official_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
+
+
+--
 -- Name: competition_result competition_result_competition_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -11656,6 +11460,22 @@ ALTER TABLE ONLY federated.competition_round
 
 
 --
+-- Name: competition_round_judge competition_round_judge_person_judge_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competition_round_judge
+    ADD CONSTRAINT competition_round_judge_person_judge_id_fkey FOREIGN KEY (person_judge_id) REFERENCES federated.person(id);
+
+
+--
+-- Name: competition_round_judge competition_round_judge_round_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competition_round_judge
+    ADD CONSTRAINT competition_round_judge_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id) ON DELETE CASCADE;
+
+
+--
 -- Name: competition_round_result competition_round_result_competitor_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -11668,7 +11488,7 @@ ALTER TABLE ONLY federated.competition_round_result
 --
 
 ALTER TABLE ONLY federated.competition_round_result
-    ADD CONSTRAINT competition_round_result_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id);
+    ADD CONSTRAINT competition_round_result_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id) ON DELETE CASCADE;
 
 
 --
@@ -11688,14 +11508,6 @@ ALTER TABLE ONLY federated.competitor_category_progress
 
 
 --
--- Name: competitor_category_progress competitor_category_progress_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.competitor_category_progress
-    ADD CONSTRAINT competitor_category_progress_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
-
-
---
 -- Name: competitor_club_affiliation competitor_club_affiliation_club_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -11712,19 +11524,27 @@ ALTER TABLE ONLY federated.competitor_club_affiliation
 
 
 --
--- Name: competitor_component competitor_component_athlete_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.competitor_component
-    ADD CONSTRAINT competitor_component_athlete_id_fkey FOREIGN KEY (athlete_id) REFERENCES federated.athlete(id);
-
-
---
 -- Name: competitor_component competitor_component_competitor_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competitor_component
     ADD CONSTRAINT competitor_component_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id) ON DELETE CASCADE;
+
+
+--
+-- Name: competitor_component competitor_component_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competitor_component
+    ADD CONSTRAINT competitor_component_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
+
+
+--
+-- Name: competitor competitor_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competitor
+    ADD CONSTRAINT competitor_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
 
 
 --
@@ -11760,43 +11580,27 @@ ALTER TABLE ONLY federated.event
 
 
 --
+-- Name: event_official event_official_event_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.event_official
+    ADD CONSTRAINT event_official_event_id_fkey FOREIGN KEY (event_id) REFERENCES federated.event(id) ON DELETE CASCADE;
+
+
+--
+-- Name: event_official event_official_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.event_official
+    ADD CONSTRAINT event_official_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
+
+
+--
 -- Name: event event_organizing_club_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_organizing_club_id_fkey FOREIGN KEY (organizing_club_id) REFERENCES federated.federation_club(id);
-
-
---
--- Name: federation_athlete federation_athlete_athlete_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_athlete
-    ADD CONSTRAINT federation_athlete_athlete_id_fkey FOREIGN KEY (athlete_id) REFERENCES federated.athlete(id);
-
-
---
--- Name: federation_athlete federation_athlete_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_athlete
-    ADD CONSTRAINT federation_athlete_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
-
-
---
--- Name: federation_category federation_category_category_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_category
-    ADD CONSTRAINT federation_category_category_id_fkey FOREIGN KEY (category_id) REFERENCES federated.category(id);
-
-
---
--- Name: federation_category federation_category_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_category
-    ADD CONSTRAINT federation_category_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
 
 
 --
@@ -11808,59 +11612,11 @@ ALTER TABLE ONLY federated.federation_club
 
 
 --
--- Name: federation_competitor federation_competitor_competitor_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_competitor
-    ADD CONSTRAINT federation_competitor_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
-
-
---
--- Name: federation_competitor federation_competitor_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_competitor
-    ADD CONSTRAINT federation_competitor_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
-
-
---
--- Name: federation_judge federation_judge_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_judge
-    ADD CONSTRAINT federation_judge_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
-
-
---
--- Name: federation_judge federation_judge_judge_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.federation_judge
-    ADD CONSTRAINT federation_judge_judge_id_fkey FOREIGN KEY (judge_id) REFERENCES federated.judge(id);
-
-
---
--- Name: judge judge_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge
-    ADD CONSTRAINT judge_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
-
-
---
--- Name: judge_score judge_score_category_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_category_id_fkey FOREIGN KEY (category_id) REFERENCES federated.category(id);
-
-
---
 -- Name: judge_score judge_score_competition_id_category_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competition_id_category_id_fkey FOREIGN KEY (competition_id, category_id) REFERENCES federated.competition(id, category_id);
+    ADD CONSTRAINT judge_score_competition_id_category_id_fkey FOREIGN KEY (competition_id, category_id) REFERENCES federated.competition(id, category_id) ON UPDATE CASCADE;
 
 
 --
@@ -11868,39 +11624,7 @@ ALTER TABLE ONLY federated.judge_score
 --
 
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competition_id_event_id_fkey FOREIGN KEY (competition_id, event_id) REFERENCES federated.competition(id, event_id);
-
-
---
--- Name: judge_score judge_score_competition_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id);
-
-
---
--- Name: judge_score judge_score_competitor_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
-
-
---
--- Name: judge_score judge_score_dance_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_dance_code_fkey FOREIGN KEY (dance_code) REFERENCES federated.dance(code);
-
-
---
--- Name: judge_score judge_score_event_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_event_id_fkey FOREIGN KEY (event_id) REFERENCES federated.event(id);
+    ADD CONSTRAINT judge_score_competition_id_event_id_fkey FOREIGN KEY (competition_id, event_id) REFERENCES federated.competition(id, event_id) ON UPDATE CASCADE;
 
 
 --
@@ -11908,23 +11632,23 @@ ALTER TABLE ONLY federated.judge_score
 --
 
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_federation_competition_id_fkey FOREIGN KEY (federation, competition_id) REFERENCES federated.competition(federation, id);
+    ADD CONSTRAINT judge_score_federation_competition_id_fkey FOREIGN KEY (federation, competition_id) REFERENCES federated.competition(federation, id) ON UPDATE CASCADE;
 
 
 --
--- Name: judge_score judge_score_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
-
-
---
--- Name: judge_score judge_score_judge_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+-- Name: judge_score judge_score_federation_competitor_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_judge_id_fkey FOREIGN KEY (judge_id) REFERENCES federated.judge(id);
+    ADD CONSTRAINT judge_score_federation_competitor_id_fkey FOREIGN KEY (federation, competitor_id) REFERENCES federated.competitor(federation, external_id);
+
+
+--
+-- Name: judge_score judge_score_federation_judge_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.judge_score
+    ADD CONSTRAINT judge_score_federation_judge_person_id_fkey FOREIGN KEY (federation, judge_person_id) REFERENCES federated.person(federation, external_id);
 
 
 --
@@ -11932,23 +11656,55 @@ ALTER TABLE ONLY federated.judge_score
 --
 
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_round_id_competition_id_fkey FOREIGN KEY (round_id, competition_id) REFERENCES federated.competition_round(id, competition_id);
+    ADD CONSTRAINT judge_score_round_id_competition_id_fkey FOREIGN KEY (round_id, competition_id) REFERENCES federated.competition_round(id, competition_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: judge_score judge_score_round_id_dance_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_round_id_dance_code_fkey FOREIGN KEY (round_id, dance_code) REFERENCES federated.round_dance(round_id, dance_code);
-
-
---
--- Name: judge_score judge_score_round_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+-- Name: judge_score judge_score_round_id_dance_order_dance_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id);
+    ADD CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey FOREIGN KEY (round_id, dance_order, dance_code) REFERENCES federated.round_dance(round_id, dance_order, dance_code) ON DELETE CASCADE;
+
+
+--
+-- Name: person_club_membership person_club_membership_club_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person_club_membership
+    ADD CONSTRAINT person_club_membership_club_id_fkey FOREIGN KEY (club_id) REFERENCES federated.federation_club(id);
+
+
+--
+-- Name: person_club_membership person_club_membership_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person_club_membership
+    ADD CONSTRAINT person_club_membership_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
+
+
+--
+-- Name: person person_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person
+    ADD CONSTRAINT person_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+
+
+--
+-- Name: person_license person_license_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person_license
+    ADD CONSTRAINT person_license_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+
+
+--
+-- Name: person_license person_license_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person_license
+    ADD CONSTRAINT person_license_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id) ON DELETE CASCADE;
 
 
 --
@@ -11992,19 +11748,19 @@ ALTER TABLE ONLY federated.ranklist_snapshot
 
 
 --
--- Name: round_dance round_dance_dance_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+-- Name: round_dance round_dance_dance_program_id_dance_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.round_dance
-    ADD CONSTRAINT round_dance_dance_code_fkey FOREIGN KEY (dance_code) REFERENCES federated.dance(code);
+    ADD CONSTRAINT round_dance_dance_program_id_dance_code_fkey FOREIGN KEY (dance_program_id, dance_code) REFERENCES federated.dance_program_dance(program_id, dance_code);
 
 
 --
--- Name: round_dance round_dance_round_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+-- Name: round_dance round_dance_round_id_dance_program_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.round_dance
-    ADD CONSTRAINT round_dance_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id);
+    ADD CONSTRAINT round_dance_round_id_dance_program_id_fkey FOREIGN KEY (round_id, dance_program_id) REFERENCES federated.competition_round(id, dance_program_id) ON DELETE CASCADE;
 
 
 --
@@ -14186,6 +13942,13 @@ GRANT ALL ON SCHEMA wdsf TO postgres;
 
 
 --
+-- Name: TABLE category; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.category TO anonymous;
+
+
+--
 -- Name: FUNCTION current_tenant_id(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -14435,6 +14198,20 @@ GRANT ALL ON FUNCTION public.cancel_registration(registration_id bigint) TO anon
 --
 
 GRANT ALL ON FUNCTION public.change_password(new_pass text) TO anonymous;
+
+
+--
+-- Name: FUNCTION competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) TO anonymous;
+
+
+--
+-- Name: FUNCTION competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) TO anonymous;
 
 
 --
@@ -14841,13 +14618,6 @@ GRANT ALL ON FUNCTION public.person_all_couples(p public.person) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
-
-
---
--- Name: TABLE category; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.category TO anonymous;
 
 
 --
@@ -15265,20 +15035,6 @@ GRANT SELECT,USAGE ON SEQUENCE app_private.platby_raw_pr_id_seq TO anonymous;
 
 
 --
--- Name: TABLE athlete; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.athlete TO anonymous;
-
-
---
--- Name: TABLE athlete_club_membership; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.athlete_club_membership TO anonymous;
-
-
---
 -- Name: TABLE competition; Type: ACL; Schema: federated; Owner: -
 --
 
@@ -15293,6 +15049,13 @@ GRANT SELECT ON TABLE federated.competition_entry TO anonymous;
 
 
 --
+-- Name: TABLE competition_official; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competition_official TO anonymous;
+
+
+--
 -- Name: TABLE competition_result; Type: ACL; Schema: federated; Owner: -
 --
 
@@ -15304,6 +15067,13 @@ GRANT SELECT ON TABLE federated.competition_result TO anonymous;
 --
 
 GRANT SELECT ON TABLE federated.competition_round TO anonymous;
+
+
+--
+-- Name: TABLE competition_round_judge; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competition_round_judge TO anonymous;
 
 
 --
@@ -15370,6 +15140,13 @@ GRANT SELECT ON TABLE federated.event TO anonymous;
 
 
 --
+-- Name: TABLE event_official; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.event_official TO anonymous;
+
+
+--
 -- Name: TABLE federation; Type: ACL; Schema: federated; Owner: -
 --
 
@@ -15377,45 +15154,10 @@ GRANT SELECT ON TABLE federated.federation TO anonymous;
 
 
 --
--- Name: TABLE federation_athlete; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.federation_athlete TO anonymous;
-
-
---
--- Name: TABLE federation_category; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.federation_category TO anonymous;
-
-
---
 -- Name: TABLE federation_club; Type: ACL; Schema: federated; Owner: -
 --
 
 GRANT SELECT ON TABLE federated.federation_club TO anonymous;
-
-
---
--- Name: TABLE federation_competitor; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.federation_competitor TO anonymous;
-
-
---
--- Name: TABLE federation_judge; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.federation_judge TO anonymous;
-
-
---
--- Name: TABLE judge; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.judge TO anonymous;
 
 
 --
@@ -15430,6 +15172,20 @@ GRANT SELECT ON TABLE federated.judge_score TO anonymous;
 --
 
 GRANT SELECT ON TABLE federated.person TO anonymous;
+
+
+--
+-- Name: TABLE person_club_membership; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.person_club_membership TO anonymous;
+
+
+--
+-- Name: TABLE person_license; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.person_license TO anonymous;
 
 
 --
@@ -15458,13 +15214,6 @@ GRANT SELECT ON TABLE federated.ranklist_snapshot TO anonymous;
 --
 
 GRANT SELECT ON TABLE federated.round_dance TO anonymous;
-
-
---
--- Name: TABLE round_judge; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.round_judge TO anonymous;
 
 
 --
@@ -15737,5 +15486,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 19bXLxnVjIGzfsWhjXLOHg5Q2W8gcbck9MD2ZFCsrZUSoaaBQhJPII5Mhv4tDwx
+\unrestrict tLaWu3vmrt9Y3oiV6Tt1ZozkSDroUXxOj8OMDOVc9TCeloVuMjEX5AvoUxQ5xQX
 

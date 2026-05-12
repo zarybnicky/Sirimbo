@@ -1,0 +1,23 @@
+CREATE TYPE public.competition_participation_record AS (
+	person_id bigint,
+	person_name text,
+	federation text,
+	federated_person_id text,
+	competitor_id text,
+	competitor_name text,
+	competitor_type federated.competitor_type,
+	event_id bigint,
+	event_name text,
+	event_location text,
+	competition_id bigint,
+	competition_date date,
+	check_in_end time without time zone,
+	category federated.category,
+	dances text[],
+	participants integer,
+	ranking integer,
+	ranking_to integer,
+	point_gain numeric(10,3),
+	is_final boolean,
+	has_result boolean
+);
