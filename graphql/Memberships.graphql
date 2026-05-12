@@ -101,8 +101,10 @@ fragment UserProxy on UserProxy {
 }
 
 query CoupleList {
-  couplesList {
-    ...Couple
+  getCurrentTenant {
+    couplesList {
+      ...Couple
+    }
   }
 }
 
