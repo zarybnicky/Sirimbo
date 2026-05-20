@@ -68,21 +68,6 @@ fragment PersonWithLinks on Person {
   }
 }
 
-query PersonAttendance($id: BigInt!) {
-  person(id: $id) {
-    ...Person
-    eventAttendancesList: recentAttendanceList {
-      ...EventAttendance
-      instance {
-        ...EventInstanceWithTrainer
-        event {
-          ...Event
-        }
-      }
-    }
-  }
-}
-
 query PersonPayments($id: BigInt!) {
   person(id: $id) {
     ...Person
