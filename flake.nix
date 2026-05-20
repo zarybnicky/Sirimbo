@@ -20,6 +20,25 @@
     overlays.default = final: prev: {
       graphile-migrate = final.callPackage ./nix/graphile-migrate {};
 
+      ruian-csv-adr-st = final.fetchzip {
+        name = "ruian-csv-adr-st-20260430";
+        url = "https://vdp.cuzk.gov.cz/vymenny_format/csv/20260430_OB_ADR_csv.zip";
+        hash = "sha256-HO+N/A1gxibvS1je0lFu6UniH4Fm/gRUUAY7LRnp/aA=";
+        stripRoot = false;
+      };
+
+      ruian-address-cache = final.runCommand "ruian-address-cache-20260430.duckdb" {
+        nativeBuildInputs = [ final.duckdb final.iconv ];
+      } ''
+        mkdir csv
+        for input in ${final.ruian-csv-adr-st}/CSV/*_ADR.csv; do
+          iconv -f CP1250 -t UTF-8 "$input" > "csv/$(basename "$input")"
+        done
+
+        export RUIAN_CSV_GLOB="$PWD/csv/*_ADR.csv"
+        duckdb -bail "$out" -f ${./nix/ruian-address-cache.sql}
+      '';
+
       rozpisovnik-worker = final.callPackage ./nix/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./worker/package.json;
         workspaceFolders = [ "worker" ];
@@ -62,6 +81,7 @@
         env = {
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
           PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
+          RUIAN_ADDRESS_SOURCE = pkgs.ruian-address-cache;
         };
         shellHook = ''
           unset PYTHONPATH
@@ -75,7 +95,9 @@
         graphile-migrate
         rozpisovnik-api
         rozpisovnik-worker
-        rozpisovnik-migrations;
+        rozpisovnik-migrations
+        ruian-csv-adr-st
+        ruian-address-cache;
     });
 
     checks = forAllSystems (pkgs: {

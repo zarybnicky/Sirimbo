@@ -284,6 +284,7 @@ in {
           SMTP_USER = cfg.smtp.user;
           SMTP_PASS = cfg.smtp.pass;
           WDSF_AUTH = cfg.wdsfAuth;
+          RUIAN_ADDRESS_SOURCE = toString pkgs.ruian-address-cache;
 
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
           OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";

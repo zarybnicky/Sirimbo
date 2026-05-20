@@ -4,4 +4,16 @@ import { chdir } from 'node:process';
 
 chdir(import.meta.dirname);
 
+const acceptsJobs = !process.argv.some(
+  (arg) =>
+    ['--help', '--version', '--schema-only'].includes(arg) ||
+    arg === '--cleanup' ||
+    arg.startsWith('--cleanup='),
+);
+
+if (acceptsJobs) {
+  const { initializeEventVenueLocationCache } = await import('./crawler/eventVenueLocation.ts');
+  await initializeEventVenueLocationCache();
+}
+
 await import('graphile-worker/dist/cli.js');

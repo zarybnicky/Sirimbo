@@ -319,6 +319,10 @@ CREATE TABLE federated.event (
   range       daterange GENERATED ALWAYS AS (
     daterange(start_date, (coalesce(end_date, start_date) + 1), '[)')
   ) STORED,
+  venue_lat double precision,
+  venue_lng double precision,
+  venue_location_source text,
+  venue_location_ref text,
   UNIQUE (federation, external_id),
   UNIQUE (federation, id),
   FOREIGN KEY (federation, organizing_club_id)

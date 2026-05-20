@@ -42,3 +42,9 @@ $_$;
 COMMENT ON FUNCTION public.person_csts_candidates(in_person public.person, "limit" integer, threshold real) IS '@simpleCollections only';
 
 GRANT ALL ON FUNCTION public.person_csts_candidates(in_person public.person, "limit" integer, threshold real) TO anonymous;
+
+alter table federated.event
+  add column if not exists venue_lat double precision,
+  add column if not exists venue_lng double precision,
+  add column if not exists venue_location_source text,
+  add column if not exists venue_location_ref text;

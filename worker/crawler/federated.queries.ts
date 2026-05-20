@@ -1047,6 +1047,56 @@ const upsertEventsDetailedIR: any = {"usedParamSet":{"federation":true,"external
 export const upsertEventsDetailed = new PreparedQuery<IUpsertEventsDetailedParams,IUpsertEventsDetailedResult>(upsertEventsDetailedIR);
 
 
+/** 'UpdateEventVenueLocations' parameters type */
+export interface IUpdateEventVenueLocationsParams {
+  externalId?: stringArray | null | void;
+  federation?: stringArray | null | void;
+  lat?: stringArray | null | void;
+  lng?: stringArray | null | void;
+  ref?: stringArray | null | void;
+  source?: stringArray | null | void;
+}
+
+/** 'UpdateEventVenueLocations' return type */
+export type IUpdateEventVenueLocationsResult = void;
+
+/** 'UpdateEventVenueLocations' query type */
+export interface IUpdateEventVenueLocationsQuery {
+  params: IUpdateEventVenueLocationsParams;
+  result: IUpdateEventVenueLocationsResult;
+}
+
+const updateEventVenueLocationsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"lat":true,"lng":true,"source":true,"ref":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":257,"b":267}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":282,"b":292}]},{"name":"lat","required":false,"transform":{"type":"scalar"},"locs":[{"a":307,"b":310}]},{"name":"lng","required":false,"transform":{"type":"scalar"},"locs":[{"a":325,"b":328}]},{"name":"source","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":349}]},{"name":"ref","required":false,"transform":{"type":"scalar"},"locs":[{"a":364,"b":367}]}],"statement":"UPDATE federated.event e\nSET venue_lat = nullif(input.lat, '')::double precision,\n    venue_lng = nullif(input.lng, '')::double precision,\n    venue_location_source = nullif(input.source, ''),\n    venue_location_ref = nullif(input.ref, '')\nFROM unnest(\n    :federation::text[],\n    :externalId::text[],\n    :lat::text[],\n    :lng::text[],\n    :source::text[],\n    :ref::text[]\n  ) AS input(federation, external_id, lat, lng, source, ref)\nWHERE e.federation = input.federation\n  AND e.external_id = input.external_id\n  AND (\n    e.venue_lat IS DISTINCT FROM nullif(input.lat, '')::double precision\n    OR e.venue_lng IS DISTINCT FROM nullif(input.lng, '')::double precision\n    OR e.venue_location_source IS DISTINCT FROM nullif(input.source, '')\n    OR e.venue_location_ref IS DISTINCT FROM nullif(input.ref, '')\n  )"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE federated.event e
+ * SET venue_lat = nullif(input.lat, '')::double precision,
+ *     venue_lng = nullif(input.lng, '')::double precision,
+ *     venue_location_source = nullif(input.source, ''),
+ *     venue_location_ref = nullif(input.ref, '')
+ * FROM unnest(
+ *     :federation::text[],
+ *     :externalId::text[],
+ *     :lat::text[],
+ *     :lng::text[],
+ *     :source::text[],
+ *     :ref::text[]
+ *   ) AS input(federation, external_id, lat, lng, source, ref)
+ * WHERE e.federation = input.federation
+ *   AND e.external_id = input.external_id
+ *   AND (
+ *     e.venue_lat IS DISTINCT FROM nullif(input.lat, '')::double precision
+ *     OR e.venue_lng IS DISTINCT FROM nullif(input.lng, '')::double precision
+ *     OR e.venue_location_source IS DISTINCT FROM nullif(input.source, '')
+ *     OR e.venue_location_ref IS DISTINCT FROM nullif(input.ref, '')
+ *   )
+ * ```
+ */
+export const updateEventVenueLocations = new PreparedQuery<IUpdateEventVenueLocationsParams,IUpdateEventVenueLocationsResult>(updateEventVenueLocationsIR);
+
+
 /** 'GetAllDancePrograms' parameters type */
 export type IGetAllDanceProgramsParams = void;
 

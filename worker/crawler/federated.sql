@@ -551,6 +551,29 @@ ON CONFLICT (federation, external_id) DO UPDATE
       website_url = EXCLUDED.website_url,
       organizing_club_id = COALESCE(EXCLUDED.organizing_club_id, federated.event.organizing_club_id);
 
+/* @name UpdateEventVenueLocations */
+UPDATE federated.event e
+SET venue_lat = nullif(input.lat, '')::double precision,
+    venue_lng = nullif(input.lng, '')::double precision,
+    venue_location_source = nullif(input.source, ''),
+    venue_location_ref = nullif(input.ref, '')
+FROM unnest(
+    :federation::text[],
+    :externalId::text[],
+    :lat::text[],
+    :lng::text[],
+    :source::text[],
+    :ref::text[]
+  ) AS input(federation, external_id, lat, lng, source, ref)
+WHERE e.federation = input.federation
+  AND e.external_id = input.external_id
+  AND (
+    e.venue_lat IS DISTINCT FROM nullif(input.lat, '')::double precision
+    OR e.venue_lng IS DISTINCT FROM nullif(input.lng, '')::double precision
+    OR e.venue_location_source IS DISTINCT FROM nullif(input.source, '')
+    OR e.venue_location_ref IS DISTINCT FROM nullif(input.ref, '')
+  );
+
 /* @name GetAllDancePrograms */
 SELECT id, code FROM federated.dance_program;
 

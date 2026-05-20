@@ -2,15 +2,19 @@ import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import { upsertFrontierKeys } from './crawler.queries.ts';
 import { endOfMonth } from 'date-fns';
-import { upsertEventsDetailed } from './federated.queries.ts';
+import { updateEventVenueLocations, upsertEventsDetailed } from './federated.queries.ts';
+import { resolveEventVenueLocations } from './eventVenueLocation.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
 
 const rangeKeyRe = /^(\d{4})-(\d{2})$/;
 const text = z.string().transform((value) => value.trim());
-const optionalText = z.string().nullish().transform((value) => {
-  const text = value?.trim();
-  return text ?? '';
-});
+const optionalText = z
+  .string()
+  .nullish()
+  .transform((value) => {
+    const text = value?.trim();
+    return text ?? '';
+  });
 
 function parseRangeKey(key: string) {
   const match = rangeKeyRe.exec(key);
@@ -149,12 +153,36 @@ export const cstsEventIndex: JsonLoader<Response> = {
       ],
       ['federation', 'externalId'],
     );
-
-    for (const event of parsed.collection) {
+    const venueLocations = makePgtypedCollection<{
+      federation: string;
+      externalId: string;
+      lat: string;
+      lng: string;
+      source: string;
+      ref: string;
+    }>(
+      ['federation', 'externalId', 'lat', 'lng', 'source', 'ref'],
+      ['federation', 'externalId'],
+    );
+    const eventLocationInputs = parsed.collection.map((event) => {
       const competitionEvent = event.eventCompetitions.find((x) => x)!;
+      return {
+        country: 'Czechia',
+        city: competitionEvent.city,
+        streetAddress: competitionEvent.street,
+        postalCode: competitionEvent.zipCode,
+        geoReference: competitionEvent.gps,
+      };
+    });
+    const eventLocations = await resolveEventVenueLocations(eventLocationInputs);
+
+    for (const [index, event] of parsed.collection.entries()) {
+      const competitionEvent = event.eventCompetitions.find((x) => x)!;
+      const externalId = event.id.toString();
+      const location = eventLocations[index];
       events.add({
         federation: 'csts',
-        externalId: event.id.toString(),
+        externalId,
         name: competitionEvent.name,
         startDate: competitionEvent.date,
         endDate: event.dateTo,
@@ -172,13 +200,21 @@ export const cstsEventIndex: JsonLoader<Response> = {
         websiteUrl: competitionEvent.promoterWeb || competitionEvent.promoterPropagation,
         organizingClubId: '',
       });
+      venueLocations.add({
+        federation: 'csts',
+        externalId,
+        lat: location ? String(location.lat) : '',
+        lng: location ? String(location.lng) : '',
+        source: location?.source ?? '',
+        ref: location?.ref ?? '',
+      });
     }
-    if (events.length) await upsertEventsDetailed.run(events.params, client);
+    if (events.length) {
+      await upsertEventsDetailed.run(events.params, client);
+      await updateEventVenueLocations.run(venueLocations.params, client);
+    }
 
     const keys = parsed.collection.map((x) => String(x.id));
-    await upsertFrontierKeys.run(
-      { federation: 'csts', kind: 'event', keys },
-      client,
-    );
+    await upsertFrontierKeys.run({ federation: 'csts', kind: 'event', keys }, client);
   },
 };

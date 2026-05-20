@@ -663,6 +663,9 @@ importers:
 
   worker:
     dependencies:
+      '@duckdb/node-api':
+        specifier: 1.5.2-r.1
+        version: 1.5.2-r.1
       '@hyperdx/node-opentelemetry':
         specifier: ^0.10.2
         version: 0.10.2
@@ -708,6 +711,9 @@ importers:
       pg-cursor:
         specifier: ^2.15.3
         version: 2.15.3(pg@8.16.3)
+      proj4:
+        specifier: ^2.20.8
+        version: 2.20.8
       uglify-js:
         specifier: ^3.19.3
         version: 3.19.3
@@ -1760,6 +1766,42 @@ packages:
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
+
+  '@duckdb/node-api@1.5.2-r.1':
+    resolution: {integrity: sha512-OzBBnS0JGXMoS5mzKNY/Ylr7SshcRQiLFIoxQ4AlePwJ2fNeDL/fbHu/knjxUrXwW1fJBTUgwWftmxDdnZZb3A==}
+
+  '@duckdb/node-bindings-darwin-arm64@1.5.2-r.1':
+    resolution: {integrity: sha512-v35FyKOb8EJCvaiPF7k0gvKiJTXR7PPQDNoWR0Gu+YSX5O9b+DIguzt1348Of3HebHy6ATSMzlUekaVA9YXu+g==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@duckdb/node-bindings-darwin-x64@1.5.2-r.1':
+    resolution: {integrity: sha512-SU9dIJ1BluKkkGxi4UsP4keqkkstB2YDySF9KcYu3EZKIVM3FTv2zc7XO38dXnHOq6+F3WqhWWZvD+XU945p7A==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@duckdb/node-bindings-linux-arm64@1.5.2-r.1':
+    resolution: {integrity: sha512-3Tra9xM3aM3denaER4KhJ6//6PpmPbik9ECBQ+sh9PyKaEgHw/0kAcKnLm5EzWUnXF0qYmZlewvkCrse8KmOYw==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@duckdb/node-bindings-linux-x64@1.5.2-r.1':
+    resolution: {integrity: sha512-pcQvZRHiIfJ9cq8parkSQczQHEml/IeGfnDCMAbEgD6+jaV9Y9Y5Ph1kP9aR+bm6him1S5ZIEr3kZbihjKnWbA==}
+    cpu: [x64]
+    os: [linux]
+
+  '@duckdb/node-bindings-win32-arm64@1.5.2-r.1':
+    resolution: {integrity: sha512-Ji8tym+N3LkrhVt0Up3bsacD/kpg4/JXFJQqxswiYvBaNCQOk+D+aiVS0GN5pcqvmnG7V7TpsDRzkLEFaWp1vw==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@duckdb/node-bindings-win32-x64@1.5.2-r.1':
+    resolution: {integrity: sha512-5XqcqC+4R8ghBEEbnc2a0sqfz1zyPBRb9YcmIWfiuDoCYSYFbKhmHcEyNftZDHcwCoLOHXnUin45jraex4STqQ==}
+    cpu: [x64]
+    os: [win32]
+
+  '@duckdb/node-bindings@1.5.2-r.1':
+    resolution: {integrity: sha512-bUg3bLVj70YVku6fKyQJS8ASORl7kM7YFVFznsEB9pWbtazPj+ME2x2FUk0WiTzjJdutjzSSGXF066mB4bGGZA==}
 
   '@emnapi/core@1.7.1':
     resolution: {integrity: sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg==}
@@ -8793,6 +8835,9 @@ packages:
     resolution: {integrity: sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==}
     engines: {node: '>= 0.6'}
 
+  mgrs@1.0.0:
+    resolution: {integrity: sha512-awNbTOqCxK1DBGjalK3xqWIstBZgN6fxsMSiXLs9/spqWkF2pAhb2rrYCFSsr1/tT7PhcDGjZndG8SWYn0byYA==}
+
   micromark-core-commonmark@2.0.3:
     resolution: {integrity: sha512-RDBrHEMSxVFLg6xvnXmb1Ayr2WzLAWjeSATAoxwKYJV94TeNavgoIdA0a9ytzDSVzBy2YKFK+emCPOEibLeCrg==}
 
@@ -9724,6 +9769,9 @@ packages:
   progress@2.0.3:
     resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
     engines: {node: '>=0.4.0'}
+
+  proj4@2.20.8:
+    resolution: {integrity: sha512-1C8sfT4xY4PAPwk0MroFBTGF4R4bzDXdmPQTGYVLsoNssrZ9odzObxS2dTeGBty8jW8KO7h16C1Hs2JP+ctfFw==}
 
   promise@7.3.1:
     resolution: {integrity: sha512-nolQXZ/4L+bP/UGlkfaIujX9BKxGwmQ9OT4mOt5yvy8iK1h3wqTEJCijzGANTCCl9nWjY41juyAn2K3Q1hLLTg==}
@@ -10849,10 +10897,12 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   valid-data-url@3.0.1:
@@ -11068,6 +11118,9 @@ packages:
   winston-transport@4.9.0:
     resolution: {integrity: sha512-8drMJ4rkgaPo1Me4zD/3WLfI/zPdA9o2IipKODunnGDcuqbHwjsbB79ylv04LCGGzU0xQ6vTznOMpQGaLhhm6A==}
     engines: {node: '>= 12.0.0'}
+
+  wkt-parser@1.5.5:
+    resolution: {integrity: sha512-/zMYi94/7D7fxcOSlVmWn6vnOMj3Gq5d1xvVjaYOS9n6h0qOJ4I7YYVxBWYcH1vq9+suhqzXkn05Yx47zQNUIA==}
 
   wonka@6.3.5:
     resolution: {integrity: sha512-SSil+ecw6B4/Dm7Pf2sAshKQ5hWFvfyGlfPbEd6A14dOH6VDjrmbY86u6nZvy9omGwwIPFR8V41+of1EezgoUw==}
@@ -13524,6 +13577,37 @@ snapshots:
       - supports-color
 
   '@discoveryjs/json-ext@0.5.7': {}
+
+  '@duckdb/node-api@1.5.2-r.1':
+    dependencies:
+      '@duckdb/node-bindings': 1.5.2-r.1
+
+  '@duckdb/node-bindings-darwin-arm64@1.5.2-r.1':
+    optional: true
+
+  '@duckdb/node-bindings-darwin-x64@1.5.2-r.1':
+    optional: true
+
+  '@duckdb/node-bindings-linux-arm64@1.5.2-r.1':
+    optional: true
+
+  '@duckdb/node-bindings-linux-x64@1.5.2-r.1':
+    optional: true
+
+  '@duckdb/node-bindings-win32-arm64@1.5.2-r.1':
+    optional: true
+
+  '@duckdb/node-bindings-win32-x64@1.5.2-r.1':
+    optional: true
+
+  '@duckdb/node-bindings@1.5.2-r.1':
+    optionalDependencies:
+      '@duckdb/node-bindings-darwin-arm64': 1.5.2-r.1
+      '@duckdb/node-bindings-darwin-x64': 1.5.2-r.1
+      '@duckdb/node-bindings-linux-arm64': 1.5.2-r.1
+      '@duckdb/node-bindings-linux-x64': 1.5.2-r.1
+      '@duckdb/node-bindings-win32-arm64': 1.5.2-r.1
+      '@duckdb/node-bindings-win32-x64': 1.5.2-r.1
 
   '@emnapi/core@1.7.1':
     dependencies:
@@ -22081,6 +22165,8 @@ snapshots:
 
   methods@1.1.2: {}
 
+  mgrs@1.0.0: {}
+
   micromark-core-commonmark@2.0.3:
     dependencies:
       decode-named-character-reference: 1.2.0
@@ -23316,6 +23402,11 @@ snapshots:
   process@0.11.10: {}
 
   progress@2.0.3: {}
+
+  proj4@2.20.8:
+    dependencies:
+      mgrs: 1.0.0
+      wkt-parser: 1.5.5
 
   promise@7.3.1:
     dependencies:
@@ -24931,6 +25022,8 @@ snapshots:
       logform: 2.7.0
       readable-stream: 3.6.2
       triple-beam: 1.4.1
+
+  wkt-parser@1.5.5: {}
 
   wonka@6.3.5: {}
 
