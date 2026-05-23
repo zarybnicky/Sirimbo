@@ -6,14 +6,17 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import deMorgan from 'eslint-plugin-de-morgan';
 import { fixupPluginRules } from '@eslint/compat';
 import reactHookForm from 'eslint-plugin-react-hook-form';
+import { importX } from 'eslint-plugin-import-x'
 
-// eslint-disable-next-line import/no-unused-modules
+// eslint-disable-next-line import-x/no-unused-modules
 export default defineConfig([
   ...nextVitals,
   ...nextTs,
   ...tailwind.configs['flat/recommended'],
   eslintPluginUnicorn.configs.recommended,
   deMorgan.configs.recommended,
+  importX.flatConfigs.recommended,
+  importX.flatConfigs.typescript,
 
   {
     plugins: {
@@ -66,11 +69,22 @@ export default defineConfig([
       '@typescript-eslint/triple-slash-reference': 'off',
       'tailwindcss/classnames-order': 'off',
 
-      'import/no-unused-modules': [
+      'import/no-anonymous-default-export': 'off',
+      'import/no-unused-modules': 'off',
+      'import/named': 'off',
+      'import/namespace': 'off',
+      'import/default': 'off',
+
+      'import-x/no-named-as-default': 'off',
+      'import-x/no-named-as-default-member': 'off',
+      'import-x/no-unused-modules': [
         'warn',
         {
           unusedExports: true,
-          ignoreExports: ['pages/**'],
+          ignoreExports: [
+            'pages/**',
+            'graphql/*.ts',
+          ],
           ignoreUnusedTypeExports: true,
         },
       ],
@@ -90,9 +104,6 @@ export default defineConfig([
       'unicorn/prefer-add-event-listener': 'warn',
       'unicorn/prefer-ternary': 'off',
       'unicorn/prefer-global-this': 'off',
-      'import/named': 'off',
-      'import/namespace': 'off',
-      'import/default': 'off',
     },
   },
 

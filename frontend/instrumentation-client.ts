@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// eslint-disable-next-line import/no-unused-modules
+// eslint-disable-next-line import-x/no-unused-modules
 export const onRouterTransitionStart = async (...args: [any, any]) => {
   if (process.env.NODE_ENV === "production") {
     captureRouterTransitionStart(...args);

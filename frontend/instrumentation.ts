@@ -1,6 +1,6 @@
 import { init, captureRequestError } from '@sentry/nextjs';
 
-// eslint-disable-next-line import/no-unused-modules
+// eslint-disable-next-line import-x/no-unused-modules
 export async function register() {
   if (process.env.NODE_ENV === "production") {
     const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
@@ -16,7 +16,7 @@ export async function register() {
   }
 }
 
-// eslint-disable-next-line import/no-unused-modules
+// eslint-disable-next-line import-x/no-unused-modules
 export const onRequestError = async (...args: [any, any, any]) => {
   if (process.env.NODE_ENV === "production") {
     captureRequestError(...args);

@@ -1,4 +1,4 @@
-/* eslint-disable import/no-unused-modules */
+/* eslint-disable import-x/no-unused-modules */
 
 declare module '*.png' {
   const value: string;

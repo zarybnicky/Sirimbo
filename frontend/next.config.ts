@@ -13,7 +13,7 @@ const compose =
   (config: NextConfig): NextConfig =>
     plugins.reduceRight((acc, fn) => fn(acc), config);
 
-// eslint-disable-next-line import/no-unused-modules
+// eslint-disable-next-line import-x/no-unused-modules
 export default compose(
   nextRoutes(),
   createMDX({

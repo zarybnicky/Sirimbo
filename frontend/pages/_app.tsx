@@ -14,7 +14,6 @@ import type { AppProps, NextWebVitalsMetric } from 'next/app';
 import Router from 'next/router';
 import { event } from 'nextjs-google-analytics';
 import NProgress from 'nprogress';
-import * as React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
