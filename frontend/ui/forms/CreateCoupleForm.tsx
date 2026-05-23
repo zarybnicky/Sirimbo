@@ -15,7 +15,11 @@ const Form = z.object({
   woman: z.string(),
 });
 
-export function CreateCoupleForm({ person: initialPerson }: { person?: PersonBasicFragment }) {
+export function CreateCoupleForm({
+  person: initialPerson,
+}: {
+  person?: PersonBasicFragment;
+}) {
   const { onSuccess } = useFormResult();
   const doCreate = useMutation(CreateCoupleDocument)[1];
   const [{ data }] = useQuery({ query: PersonListDocument });

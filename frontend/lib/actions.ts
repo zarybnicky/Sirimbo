@@ -59,8 +59,6 @@ export type ResolvedAction<Id extends string = string> = {
     }
 );
 
-// ── Define / Pick / Omit ─────────────────────────────────────────────
-
 export const defineActions =
   <T>() =>
   <const A extends readonly Action<T>[]>(
@@ -69,24 +67,6 @@ export const defineActions =
     actions;
 
 type IdOf<A extends readonly { id: string }[]> = A[number]['id'];
-
-export function pickActions<
-  A extends readonly { id: string }[],
-  const K extends readonly IdOf<A>[],
->(a: A, ids: K) {
-  const s = new Set<string>(ids);
-  return a.filter((x) => s.has(x.id)) as Extract<A[number], { id: K[number] }>[];
-}
-
-export function omitActions<
-  A extends readonly { id: string }[],
-  const K extends readonly IdOf<A>[],
->(a: A, ids: K) {
-  const s = new Set<string>(ids);
-  return a.filter((x) => !s.has(x.id)) as Exclude<A[number], { id: K[number] }>[];
-}
-
-// ── Internals ────────────────────────────────────────────────────────
 
 function resolveOne<T>(a: Action<T>, ctx: ActionContext<T>): ResolvedAction {
   const base = {

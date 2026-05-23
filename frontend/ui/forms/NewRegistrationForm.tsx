@@ -9,7 +9,7 @@ import { useAuth } from '@/ui/use-auth';
 import { CheckCircle, Circle } from 'lucide-react';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { z } from 'zod';
@@ -47,14 +47,14 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
     persons: new Set<string | null>(),
   });
 
-  const { watch, register, control, handleSubmit, setValue } = useForm({
+  const { register, control, handleSubmit, setValue } = useForm({
     resolver: zodResolver(Form),
   });
   const { fields: fieldsInitial, append } = useFieldArray({
     control,
     name: 'registrations',
   });
-  const watchFieldArray = watch('registrations');
+  const watchFieldArray = useWatch({control, name: 'registrations' });
   const fields = fieldsInitial.map((field, index) => {
     return {
       ...field,

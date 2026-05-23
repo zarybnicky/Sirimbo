@@ -274,9 +274,8 @@ describe('rank and type priority', () => {
       const r = result.find(
         (r) =>
           r.event.kind === 'event' &&
-          r.event.instance.trainersList?.some(
-            (t: any) => t.personId === trainerId,
-          ) && r.event.start.getHours() === hour,
+          r.event.instance.trainersList?.some((t: any) => t.personId === trainerId) &&
+          r.event.start.getHours() === hour,
       );
       return r!.style.xOffset;
     };
@@ -309,9 +308,8 @@ describe('rank and type priority', () => {
       const r = result.find(
         (r) =>
           r.event.kind === 'event' &&
-          r.event.instance.trainersList?.some(
-            (t: any) => t.personId === trainerId,
-          ) && r.event.start.getHours() === hour,
+          r.event.instance.trainersList?.some((t: any) => t.personId === trainerId) &&
+          r.event.start.getHours() === hour,
       );
       return r!.style.xOffset;
     };
@@ -383,8 +381,7 @@ describe('randomized', () => {
         const endHour = startHour + Math.floor((startMin + duration) / 60);
         const endMin = (startMin + duration) % 60;
         const type = types[Math.floor(Math.random() * types.length)]!;
-        const trainer =
-          trainerPool[Math.floor(Math.random() * trainerPool.length)]!;
+        const trainer = trainerPool[Math.floor(Math.random() * trainerPool.length)]!;
 
         const sh = String(startHour).padStart(2, '0');
         const sm = String(startMin).padStart(2, '0');
@@ -404,10 +401,9 @@ describe('randomized', () => {
 
       // Invariant 1: no overflow
       for (const { style } of result) {
-        expect(
-          style.xOffset,
-          `trial ${trial}: negative xOffset`,
-        ).toBeGreaterThanOrEqual(0);
+        expect(style.xOffset, `trial ${trial}: negative xOffset`).toBeGreaterThanOrEqual(
+          0,
+        );
         expect(
           style.xOffset + style.width,
           `trial ${trial}: overflow past 100%`,
@@ -546,8 +542,7 @@ describe('full afternoon schedule', () => {
 
     // A and D both teach at 16:45 — their relative order should match
     const aBeforeD_14 = order14.indexOf('A') < order14.indexOf('D');
-    const aBeforeD_17 =
-      styleOf(a4).xOffset < styleOf(d3).xOffset;
+    const aBeforeD_17 = styleOf(a4).xOffset < styleOf(d3).xOffset;
     expect(aBeforeD_14).toBe(aBeforeD_17);
   });
 
@@ -572,13 +567,7 @@ describe('full afternoon schedule', () => {
 
   test('concurrent events get fair width at peak', () => {
     // At ~14:15 we have: fialova, a1, b1, c1, d1 = 5 concurrent
-    const peak = [
-      styleOf(fialova),
-      styleOf(a1),
-      styleOf(b1),
-      styleOf(c1),
-      styleOf(d1),
-    ];
+    const peak = [styleOf(fialova), styleOf(a1), styleOf(b1), styleOf(c1), styleOf(d1)];
     const minWidth = Math.min(...peak.map((s) => s.width));
     const maxWidth = Math.max(...peak.map((s) => s.width));
     // Round-robin: ratio between widest and narrowest ≤ 2:1

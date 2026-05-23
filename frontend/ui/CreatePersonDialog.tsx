@@ -2,9 +2,17 @@
 
 import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
-import { RadioButtonGroupElement, VerticalCheckboxButtonGroupElement, } from '@/ui/fields/RadioButtonGroupElement';
+import {
+  RadioButtonGroupElement,
+  VerticalCheckboxButtonGroupElement,
+} from '@/ui/fields/RadioButtonGroupElement';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
-import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuTrigger, } from '@/ui/dropdown';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';

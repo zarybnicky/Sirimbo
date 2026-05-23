@@ -7,10 +7,7 @@ import {
 } from '@/graphql/ActivityTimeline';
 import type { ActivityTimelineKind, AttendanceType, EventType } from '@/graphql';
 import { cn } from '@/lib/cn';
-import {
-  CompetitionEventContent,
-  type CompetitionEntry,
-} from '@/ui/Competitions';
+import { CompetitionEventContent, type CompetitionEntry } from '@/ui/Competitions';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/InstanceAttendanceView';
 import { formatWeekDay } from '@/ui/format';
@@ -96,14 +93,15 @@ export function ActivityTimeline({
   const [mode, setMode] = React.useState<TimelineMode>('future');
   const [pages, setPages] = React.useState(1);
   const [filters, setFilters] = React.useState<TimelineFilter[]>(() =>
-    FILTERS.map(([value]) => value).filter(x => cohortId ? x !== 'LESSON' : true),
+    FILTERS.map(([value]) => value).filter((x) => (cohortId ? x !== 'LESSON' : true)),
   );
   const scopeKey = `${cohortId ?? ''}:${personIds?.join(',') ?? ''}`;
   const range = React.useMemo(() => rangeFor(mode, pages), [mode, pages]);
   const hasScope = Boolean(cohortId || personIds?.length);
-  const eventTypes = filters.filter((value): value is EventType => value !== 'COMPETITION');
-  const kinds: ActivityTimelineKind[] =
-    eventTypes.length > 0 ? ['EVENT_ATTENDANCE'] : [];
+  const eventTypes = filters.filter(
+    (value): value is EventType => value !== 'COMPETITION',
+  );
+  const kinds: ActivityTimelineKind[] = eventTypes.length > 0 ? ['EVENT_ATTENDANCE'] : [];
   if (filters.includes('COMPETITION')) {
     kinds.push('COMPETITION_BRIEF', 'COMPETITION_RESULT');
   }
@@ -176,26 +174,26 @@ export function ActivityTimeline({
           ))}
         </div>
 
-      <div className="mb-2 mt-1 flex flex-wrap gap-1">
-        {FILTERS.map(([filter, label]) => (
-          <button
-            key={filter}
-            type="button"
-            aria-pressed={filters.includes(filter)}
-            className={buttonCls({
-              variant: filters.includes(filter) ? 'outline' : 'none',
-              size: 'xs',
-              className: cn(
-                !filters.includes(filter) &&
-                  'border border-neutral-6 bg-neutral-1 text-neutral-11 hover:bg-neutral-3',
-              ),
-            })}
-            onClick={() => toggleFilter(filter)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+        <div className="mb-2 mt-1 flex flex-wrap gap-1">
+          {FILTERS.map(([filter, label]) => (
+            <button
+              key={filter}
+              type="button"
+              aria-pressed={filters.includes(filter)}
+              className={buttonCls({
+                variant: filters.includes(filter) ? 'outline' : 'none',
+                size: 'xs',
+                className: cn(
+                  !filters.includes(filter) &&
+                    'border border-neutral-6 bg-neutral-1 text-neutral-11 hover:bg-neutral-3',
+                ),
+              })}
+              onClick={() => toggleFilter(filter)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="text-sm text-neutral-9">
@@ -321,7 +319,12 @@ function TimelineEventButton({
       instance={instance}
       viewer="auto"
       suffix={
-        (mode === 'past' || isCohort) && (instance.type !== 'LESSON' || isCohort) ? <AttendanceSummary compact={isCohort && instance.type !== 'LESSON'} items={items} /> : undefined
+        (mode === 'past' || isCohort) && (instance.type !== 'LESSON' || isCohort) ? (
+          <AttendanceSummary
+            compact={isCohort && instance.type !== 'LESSON'}
+            items={items}
+          />
+        ) : undefined
       }
     />
   );

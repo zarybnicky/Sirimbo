@@ -16,7 +16,12 @@ import {
   participantIdsFilterAtom,
   trainerIdsFilterAtom,
 } from './state';
-import type { CalendarEvent, CalendarInstanceEvent, InteractionInfo, SlotInfo } from './types';
+import type {
+  CalendarEvent,
+  CalendarInstanceEvent,
+  InteractionInfo,
+  SlotInfo,
+} from './types';
 import { Spinner } from '@/ui/Spinner';
 import { EventFormType } from '@/ui/event-form/types';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';

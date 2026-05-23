@@ -20,11 +20,10 @@ export async function exportNsa(client: Client) {
   const rows: Record<string, string>[] = [];
   for (const x of inputs) {
     const isTrainer = x.isTrainer;
-    const isAthlete = x.cohortMembershipsList.some(x => x.cohort?.isVisible);
+    const isAthlete = x.cohortMembershipsList.some((x) => x.cohort?.isVisible);
     const isCzech = x.nationality === '203';
 
-    if (!isTrainer && !isAthlete)
-      continue;
+    if (!isTrainer && !isAthlete) continue;
 
     const athleteSince = x.tenantMembershipsList
       .map((y) => Date.parse(y.since))
@@ -48,7 +47,8 @@ export async function exportNsa(client: Client) {
           703: 'SVK',
           348: 'HUN',
         }[x.nationality] || '',
-      '[DATUM_NAROZENI]': (isCzech || !x.birthDate) ? '' : formatNsaDate(Date.parse(x.birthDate)),
+      '[DATUM_NAROZENI]':
+        isCzech || !x.birthDate ? '' : formatNsaDate(Date.parse(x.birthDate)),
       '[POHLAVI]': x.gender === 'MAN' ? 'M' : 'Ž',
       '[NAZEV_OBCE]': isCzech ? '' : x.address?.city || '',
       '[NAZEV_CASTI_OBCE]': isCzech ? '' : x.address?.district || '',

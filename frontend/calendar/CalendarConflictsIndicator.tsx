@@ -19,7 +19,7 @@ import { calendarConflictsAtom, type CalendarInstanceConflict } from './state';
 import { DateRange } from './types';
 
 type Props = {
-  range: DateRange
+  range: DateRange;
 };
 
 export function CalendarConflictsIndicator({ range }: Props) {

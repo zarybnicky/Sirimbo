@@ -44,7 +44,7 @@ interface PendingState {
 
 // Phase tracker: keeps a continuously advancing beat phase synced to onsets
 interface PhaseTracker {
-  update: (beatsPerMin: number, onsetTime: number, now: number) => void;
+  update: (beatsPerMin: number, onsetTime: number) => void;
   getPhase: (now: number) => number; // 0..bpb (fractional beat position in bar)
   getBeatInterval: () => number;     // ms per beat
   reset: () => void;
@@ -160,7 +160,7 @@ function createOnsetAnalyzer(): OnsetAnalyzer {
     if (filtered.length < 2) return null;
 
     const avgInterval = filtered.reduce((a, b) => a + b, 0) / filtered.length;
-    const bpm = 60000 / avgInterval;
+    const bpm = 60_000 / avgInterval;
     if (bpm < 30 || bpm > 400) return null;
 
     const sd = Math.sqrt(filtered.reduce((x, v) => x + (v - avgInterval) ** 2, 0) / filtered.length);
@@ -168,7 +168,7 @@ function createOnsetAnalyzer(): OnsetAnalyzer {
 
     s.bpmBuffer.push(bpm);
     if (s.bpmBuffer.length > 20) s.bpmBuffer.shift();
-    const sorted = [...s.bpmBuffer].sort((a, b) => a - b);
+    const sorted = [...s.bpmBuffer].toSorted((a, b) => a - b);
 
     return {
       rawBpm: Math.round(sorted[Math.floor(sorted.length / 2)]! * 10) / 10,
@@ -193,9 +193,9 @@ function createPhaseTracker(bpb: number): PhaseTracker {
   let anchorTime = 0;     // timestamp of last phase anchor
   let anchorPhase = 0;    // phase at anchor (0..bpb)
 
-  function update(beatsPerMin: number, onsetTime: number, now: number): void {
+  function update(beatsPerMin: number, onsetTime: number): void {
     if (beatsPerMin <= 0) return;
-    beatInterval = 60000 / beatsPerMin;
+    beatInterval = 60_000 / beatsPerMin;
 
     if (anchorTime === 0) {
       // First sync: anchor at beat 0
@@ -236,9 +236,9 @@ function createPhaseTracker(bpb: number): PhaseTracker {
 
 function arrayMinMax(arr: number[]): [number, number] {
   let min = Infinity, max = -Infinity;
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i]! < min) min = arr[i]!;
-    if (arr[i]! > max) max = arr[i]!;
+  for (const element of arr) {
+    if (element! < min) min = element!;
+    if (element! > max) max = element!;
   }
   return [min, max];
 }
@@ -461,7 +461,7 @@ export default function TempoDetector() {
   const stopAudio = useCallback(() => {
     startIdRef.current++;
     if (rafRef.current !== null) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
-    if (streamRef.current) { streamRef.current.getTracks().forEach((t) => t.stop()); streamRef.current = null; }
+    if (streamRef.current) { for (const t of streamRef.current.getTracks()) t.stop(); streamRef.current = null; }
     if (audioCtxRef.current) { audioCtxRef.current.close(); audioCtxRef.current = null; }
     analyzerRef.current = null;
   }, []);
@@ -475,7 +475,7 @@ export default function TempoDetector() {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       if (startIdRef.current !== id) {
-        stream.getTracks().forEach((t) => t.stop());
+        for (const t of stream.getTracks()) t.stop();
         return;
       }
       streamRef.current = stream;
@@ -528,7 +528,7 @@ export default function TempoDetector() {
           // Sync phase tracker on new onsets
           const lastOnset = analyzerRef.current!.getLastOnset();
           if (lastOnset > lastOnsetRef.current && c.beatsPerMin > 0) {
-            phaseRef.current!.update(c.beatsPerMin, lastOnset, now);
+            phaseRef.current!.update(c.beatsPerMin, lastOnset);
             lastOnsetRef.current = lastOnset;
           }
         }
@@ -569,12 +569,14 @@ export default function TempoDetector() {
 
   // Re-map when dance changes
   useEffect(() => {
-    setAlgo((prev) => {
-      if (prev.raw <= 0) return prev;
-      const c = octaveCorrectToBars(prev.raw, dance);
-      return { ...prev, bars: c.barsPerMin, factor: c.factor, beats: c.beatsPerMin };
+    setTimeout(() => {
+      setAlgo((prev) => {
+        if (prev.raw <= 0) return prev;
+        const c = octaveCorrectToBars(prev.raw, dance);
+        return { ...prev, bars: c.barsPerMin, factor: c.factor, beats: c.beatsPerMin };
+      });
+      setHist([]);
     });
-    setHist([]);
   }, [dance]);
 
   // Tap tempo
@@ -590,7 +592,7 @@ export default function TempoDetector() {
     const intervals: number[] = [];
     for (let i = 1; i < tapTimes.length; i++) intervals.push(tapTimes[i]! - tapTimes[i - 1]!);
     const avg = intervals.reduce((a, b) => a + b, 0) / intervals.length;
-    return octaveCorrectToBars(60000 / avg, dance).barsPerMin;
+    return octaveCorrectToBars(60_000 / avg, dance).barsPerMin;
   }, [tapTimes, dance]);
 
   const tapInRange = tapBars !== null && tapBars >= dance.bMin && tapBars <= dance.bMax;

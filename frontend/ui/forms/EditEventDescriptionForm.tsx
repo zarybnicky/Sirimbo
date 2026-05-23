@@ -48,32 +48,34 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
     id: string;
     title: React.ReactNode;
     contents: () => React.ReactNode;
-  }> = event?.event ? [
-    {
-      id: 'summary',
-      title: 'Shrnutí',
-      contents: () => (
-        <RichTextEditor
-          name="summary"
-          initialState={values.summary || event.event?.summary}
-          control={control}
-          key="summary"
-        />
-      ),
-    },
-    {
-      id: 'description',
-      title: 'Dlouhý popis',
-      contents: () => (
-        <RichTextEditor
-          name="description"
-          initialState={values.description || event.event?.description}
-          control={control}
-          key="description"
-        />
-      ),
-    },
-  ] : [];
+  }> = event?.event
+    ? [
+        {
+          id: 'summary',
+          title: 'Shrnutí',
+          contents: () => (
+            <RichTextEditor
+              name="summary"
+              initialState={values.summary || event.event?.summary}
+              control={control}
+              key="summary"
+            />
+          ),
+        },
+        {
+          id: 'description',
+          title: 'Dlouhý popis',
+          contents: () => (
+            <RichTextEditor
+              name="description"
+              initialState={values.description || event.event?.description}
+              control={control}
+              key="description"
+            />
+          ),
+        },
+      ]
+    : [];
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>

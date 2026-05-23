@@ -104,7 +104,9 @@ export function EventButton({
             <div className="text-neutral-11">
               {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
             </div>
-            <div className={cn('min-w-0 grow', instance.isCancelled ? 'line-through' : '')}>
+            <div
+              className={cn('min-w-0 grow', instance.isCancelled ? 'line-through' : '')}
+            >
               {event.name ||
                 (showTrainer ? (
                   `${formatEventType(instance.type)}: ${instanceTrainers}`

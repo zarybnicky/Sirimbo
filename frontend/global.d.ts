@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unused-modules */
+
 declare module '*.png' {
   const value: string;
   export default value;
@@ -23,6 +25,7 @@ declare module '*.pdf' {
   export default value;
 }
 
+// eslint-disable-next-line unicorn/require-module-specifiers
 export {};
 
 declare global {

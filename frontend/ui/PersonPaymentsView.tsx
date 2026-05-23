@@ -183,16 +183,13 @@ function AccountPaymentsTable({ account }: { account: Account }) {
     baseRows
       .map((row) => row.transaction.payment)
       .filter(
-        (
-          payment,
-        ): payment is NonNullable<PostingRow['transaction']['payment']> => !!payment,
+        (payment): payment is NonNullable<PostingRow['transaction']['payment']> =>
+          !!payment,
       ),
   );
   const transactionActionMap = useActionMap(
     transactionActions,
-    baseRows
-      .filter((row) => !row.transaction.payment)
-      .map((row) => row.transaction),
+    baseRows.filter((row) => !row.transaction.payment).map((row) => row.transaction),
   );
 
   const columns = React.useMemo(() => {

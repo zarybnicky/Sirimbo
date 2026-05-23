@@ -52,7 +52,8 @@ function formatDuration(minutes: number) {
   return `${hoursFormatter.format(minutes / 60)} h`;
 }
 
-const toMonthKey = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+const toMonthKey = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
 export function PersonWorkReportView({ id }: { id: string }) {
   const router = useRouter();
@@ -149,9 +150,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
 
     for (const month of byKey.values()) {
       month.groupRows.sort((a, b) => a.instance.since.localeCompare(b.instance.since));
-      month.privateRows.sort((a, b) =>
-        a.instance.since.localeCompare(b.instance.since),
-      );
+      month.privateRows.sort((a, b) => a.instance.since.localeCompare(b.instance.since));
     }
 
     return [...byKey.values()];
@@ -174,63 +173,63 @@ export function PersonWorkReportView({ id }: { id: string }) {
 
       <section className="prose prose-accent max-w-none">
         <h3>Měsíce</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Měsíc</th>
-                <th className="text-right">Vedené</th>
-                <th className="text-right">Individuálky</th>
-                <th className="text-right">Celkem</th>
-              </tr>
-            </thead>
-            <tbody>
-              {monthReports.map((month) => {
-                const groupMinutes = month.groupRows.reduce(
-                  (total, row) => total + row.durationMinutes,
-                  0,
-                );
-                const privateMinutes = month.privateRows.reduce(
-                  (total, row) => total + row.durationMinutes,
-                  0,
-                );
-                const rowCount = month.groupRows.length + month.privateRows.length;
+        <table>
+          <thead>
+            <tr>
+              <th>Měsíc</th>
+              <th className="text-right">Vedené</th>
+              <th className="text-right">Individuálky</th>
+              <th className="text-right">Celkem</th>
+            </tr>
+          </thead>
+          <tbody>
+            {monthReports.map((month) => {
+              const groupMinutes = month.groupRows.reduce(
+                (total, row) => total + row.durationMinutes,
+                0,
+              );
+              const privateMinutes = month.privateRows.reduce(
+                (total, row) => total + row.durationMinutes,
+                0,
+              );
+              const rowCount = month.groupRows.length + month.privateRows.length;
 
-                return (
-                  <tr
-                    key={month.key}
-                    className={month.key === selectedMonth?.key ? 'bg-accent-3/50' : ''}
-                  >
-                    <td>
-                      <Link
-                        href={{
-                          pathname: router.pathname,
-                          query: {
-                            ...router.query,
-                            tab: 'workReport',
-                            workReportMonth: month.key,
-                          },
-                        }}
-                      >
-                        {month.label}
-                      </Link>
-                    </td>
-                    <td className="whitespace-nowrap text-right tabular-nums">
-                      {numberFormatter.format(month.groupRows.length)} /{' '}
-                      {formatDuration(groupMinutes)}
-                    </td>
-                    <td className="whitespace-nowrap text-right tabular-nums">
-                      {numberFormatter.format(month.privateRows.length)} /{' '}
-                      {formatDuration(privateMinutes)}
-                    </td>
-                    <td className="whitespace-nowrap text-right tabular-nums">
-                      {numberFormatter.format(rowCount)} /{' '}
-                      {formatDuration(groupMinutes + privateMinutes)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+              return (
+                <tr
+                  key={month.key}
+                  className={month.key === selectedMonth?.key ? 'bg-accent-3/50' : ''}
+                >
+                  <td>
+                    <Link
+                      href={{
+                        pathname: router.pathname,
+                        query: {
+                          ...router.query,
+                          tab: 'workReport',
+                          workReportMonth: month.key,
+                        },
+                      }}
+                    >
+                      {month.label}
+                    </Link>
+                  </td>
+                  <td className="whitespace-nowrap text-right tabular-nums">
+                    {numberFormatter.format(month.groupRows.length)} /{' '}
+                    {formatDuration(groupMinutes)}
+                  </td>
+                  <td className="whitespace-nowrap text-right tabular-nums">
+                    {numberFormatter.format(month.privateRows.length)} /{' '}
+                    {formatDuration(privateMinutes)}
+                  </td>
+                  <td className="whitespace-nowrap text-right tabular-nums">
+                    {numberFormatter.format(rowCount)} /{' '}
+                    {formatDuration(groupMinutes + privateMinutes)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </section>
 
       {fetching && !data ? (
@@ -242,9 +241,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
           <h3>{selectedMonth.label}</h3>
 
           {selectedRows.length === 0 && !fetching && !error ? (
-            <p>
-              V tomto měsíci nic neproběhlo
-            </p>
+            <p>V tomto měsíci nic neproběhlo</p>
           ) : null}
 
           {(
@@ -259,51 +256,51 @@ export function PersonWorkReportView({ id }: { id: string }) {
             return (
               <React.Fragment key={rowsKey}>
                 <h4>{title}</h4>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Termín</th>
-                        <th>Událost</th>
-                        <th>Místo</th>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Termín</th>
+                      <th>Událost</th>
+                      <th>Místo</th>
+                      {reportTypes[rowsKey] === 'GROUP' ? (
+                        <th className="text-right">Účast</th>
+                      ) : null}
+                      <th className="text-right">Délka</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row) => (
+                      <tr key={row.instance.id}>
+                        <td className="whitespace-nowrap">
+                          {dateTimeFormatter.format(new Date(row.instance.since))}
+                        </td>
+                        <td>
+                          <Link
+                            href={{
+                              pathname: '/akce/[id]/termin/[instance]',
+                              query: {
+                                id: row.instance.event.id,
+                                instance: row.instance.id,
+                              },
+                            }}
+                          >
+                            {row.title}
+                          </Link>
+                        </td>
+                        <td>{row.location}</td>
                         {reportTypes[rowsKey] === 'GROUP' ? (
-                          <th className="text-right">Účast</th>
-                        ) : null}
-                        <th className="text-right">Délka</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rows.map((row) => (
-                        <tr key={row.instance.id}>
-                          <td className="whitespace-nowrap">
-                            {dateTimeFormatter.format(new Date(row.instance.since))}
-                          </td>
-                          <td>
-                            <Link
-                              href={{
-                                pathname: '/akce/[id]/termin/[instance]',
-                                query: {
-                                  id: row.instance.event.id,
-                                  instance: row.instance.id,
-                                },
-                              }}
-                            >
-                              {row.title}
-                            </Link>
-                          </td>
-                          <td>{row.location}</td>
-                          {reportTypes[rowsKey] === 'GROUP' ? (
-                            <td className="whitespace-nowrap text-right tabular-nums">
-                              {numberFormatter.format(row.attended)} /{' '}
-                              {numberFormatter.format(row.total)}
-                            </td>
-                          ) : null}
                           <td className="whitespace-nowrap text-right tabular-nums">
-                            {formatDuration(row.durationMinutes)}
+                            {numberFormatter.format(row.attended)} /{' '}
+                            {numberFormatter.format(row.total)}
                           </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                        ) : null}
+                        <td className="whitespace-nowrap text-right tabular-nums">
+                          {formatDuration(row.durationMinutes)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </React.Fragment>
             );
           })}

@@ -38,10 +38,7 @@ export function DatePickerElement<T extends FieldValues>({
   valueMode = 'date-object',
 }: DateRangeInputProps<T> & Extras) {
   const { field, fieldState } = useController<T>({ control, name });
-  const inputValue = formatDatePickerValue(
-    field.value as Date | string | null | undefined,
-    valueMode,
-  );
+  const inputValue = formatDatePickerValue(field.value as Date | string | null, valueMode);
 
   return (
     <div className={className}>
@@ -62,7 +59,10 @@ export function DatePickerElement<T extends FieldValues>({
         {clearable && inputValue && (
           <button
             type="button"
-            className={buttonCls({ variant: 'none', className: 'shrink-0 px-2 shadow-none' })}
+            className={buttonCls({
+              variant: 'none',
+              className: 'shrink-0 px-2 shadow-none',
+            })}
             aria-label="Vymazat datum"
             title="Vymazat datum"
             onClick={() => {

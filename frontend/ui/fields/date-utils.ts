@@ -1,10 +1,8 @@
 const DATE_INPUT_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
-const pad = (value: number) => value.toString().padStart(2, '0');
+export type DatePickerMode = 'date-object' | 'date' | 'datetime';
 
-export type DatePickerValueMode = 'date-object' | 'date' | 'datetime';
-
-export function formatDateInputValue(value: Date | string | null | undefined) {
+function formatDateInputValue(value: Date | string | null) {
   if (!value) return '';
 
   const date = value instanceof Date ? value : new Date(value);
@@ -12,18 +10,16 @@ export function formatDateInputValue(value: Date | string | null | undefined) {
 
   return [
     date.getUTCFullYear(),
-    pad(date.getUTCMonth() + 1),
-    pad(date.getUTCDate()),
+    (date.getUTCMonth() + 1).toString().padStart(2, '0'),
+    date.getUTCDate().toString().padStart(2, '0'),
   ].join('-');
 }
 
-export function parseDateInputValue(value: string) {
+function parseDateInputValue(value: string) {
   const match = DATE_INPUT_RE.exec(value);
   if (!match) return null;
 
-  const yearText = match[1];
-  const monthText = match[2];
-  const dayText = match[3];
+  const [, yearText, monthText, dayText] = match;
   if (!yearText || !monthText || !dayText) return null;
 
   const year = Number.parseInt(yearText, 10);
@@ -43,8 +39,8 @@ export function parseDateInputValue(value: string) {
 }
 
 export function formatDatePickerValue(
-  value: Date | string | null | undefined,
-  valueMode: DatePickerValueMode,
+  value: Date | string | null,
+  valueMode: DatePickerMode,
 ) {
   if (valueMode === 'date') {
     if (!value) return '';
@@ -56,7 +52,7 @@ export function formatDatePickerValue(
   return formatDateInputValue(value);
 }
 
-export function parseDatePickerValue(value: string, valueMode: DatePickerValueMode) {
+export function parseDatePickerValue(value: string, valueMode: DatePickerMode) {
   if (!value) return null;
 
   if (valueMode === 'date') {

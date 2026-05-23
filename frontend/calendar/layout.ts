@@ -101,7 +101,7 @@ export function layoutEvents(
 
     for (const it of group) {
       const key = rankKeyOf(it);
-      const rank = key ? eventRank.get(key) ?? 0 : 0;
+      const rank = key ? (eventRank.get(key) ?? 0) : 0;
       const target = Math.max(0, rank);
 
       // Find the free lane closest to this event's preferred position.

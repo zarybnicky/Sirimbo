@@ -93,12 +93,7 @@ export default React.memo(function TimeGrid({
                     <div className="rbc-header">{resource.resourceTitle}</div>
                   </div>
                 )}
-                <div
-                  className={cn(
-                    'rbc-row',
-                    grid.days.length <= 1 && 'hidden',
-                  )}
-                >
+                <div className={cn('rbc-row', grid.days.length <= 1 && 'hidden')}>
                   {grid.days.map((date) => (
                     <DayButton key={+date} today={today} date={date} />
                   ))}

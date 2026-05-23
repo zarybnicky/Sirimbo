@@ -22,7 +22,9 @@ export function CstsIdBackfillWidget() {
   const updatePersonCstsId = useMutation(UpdatePersonCstsIdDocument)[1];
   const [pending, setPending] = React.useState<string | null>(null);
   const [mutationError, setMutationError] = React.useState<Error | null>(null);
-  const [selectedByPerson, setSelectedByPerson] = React.useState<Record<string, Candidate>>({});
+  const [selectedByPerson, setSelectedByPerson] = React.useState<
+    Record<string, Candidate>
+  >({});
 
   const people = React.useMemo(
     () =>
@@ -99,7 +101,9 @@ export function CstsIdBackfillWidget() {
       {fetching && !data ? (
         <div className="text-sm text-neutral-11">Načítám kandidáty...</div>
       ) : people.length === 0 ? (
-        <div className="text-sm text-neutral-11">Všichni aktuální členové mají ČSTS IDT vyplněné.</div>
+        <div className="text-sm text-neutral-11">
+          Všichni aktuální členové mají ČSTS IDT vyplněné.
+        </div>
       ) : (
         <div className="grid gap-2">
           {people.map((person) => {
@@ -113,7 +117,9 @@ export function CstsIdBackfillWidget() {
               >
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                   <div className="font-bold">{person.name}</div>
-                  <div className="text-neutral-11">{formatBirthInfo(person.birthDate)}</div>
+                  <div className="text-neutral-11">
+                    {formatBirthInfo(person.birthDate)}
+                  </div>
                 </div>
 
                 {selectedCandidate ? (
@@ -124,8 +130,12 @@ export function CstsIdBackfillWidget() {
                       </div>
                       <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-accent-11">
                         <span>{selectedCandidate.name ?? 'bez jména'}</span>
-                        {selectedCandidate.ageGroup ? <span>{selectedCandidate.ageGroup}</span> : null}
-                        <span>Shoda {formatSimilarity(selectedCandidate.similarity)}</span>
+                        {selectedCandidate.ageGroup ? (
+                          <span>{selectedCandidate.ageGroup}</span>
+                        ) : null}
+                        <span>
+                          Shoda {formatSimilarity(selectedCandidate.similarity)}
+                        </span>
                       </div>
                     </div>
                     <button
@@ -151,11 +161,17 @@ export function CstsIdBackfillWidget() {
                             className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-neutral-2 px-2 py-1.5"
                           >
                             <div className="min-w-0">
-                              <div className="truncate font-medium">{candidate.name ?? 'bez jména'}</div>
+                              <div className="truncate font-medium">
+                                {candidate.name ?? 'bez jména'}
+                              </div>
                               <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-11">
                                 <span>IDT {candidate.id}</span>
-                                {candidate.ageGroup ? <span>{candidate.ageGroup}</span> : null}
-                                <span>Shoda {formatSimilarity(candidate.similarity)}</span>
+                                {candidate.ageGroup ? (
+                                  <span>{candidate.ageGroup}</span>
+                                ) : null}
+                                <span>
+                                  Shoda {formatSimilarity(candidate.similarity)}
+                                </span>
                               </div>
                             </div>
                             <button
@@ -186,7 +202,9 @@ export function CstsIdBackfillWidget() {
 
 function formatBirthInfo(value: string | null) {
   if (!value) return 'bez data narození';
-  return [new Date(value).getFullYear(), formatAgeGroup(value)].filter(Boolean).join(' · ');
+  return [new Date(value).getFullYear(), formatAgeGroup(value)]
+    .filter(Boolean)
+    .join(' · ');
 }
 
 function formatSimilarity(value: number | null) {

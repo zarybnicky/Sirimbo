@@ -6,12 +6,7 @@
     forAllSystems = fn: nixpkgs.lib.genAttrs allSystems (system: fn (import nixpkgs {
       inherit system;
       config.allowUnfree = true;
-      overlays = [
-        self.overlays.default
-        (final: prev: {
-          nix = final.nixVersions.git;
-        })
-      ];
+      overlays = [ self.overlays.default ];
     }));
 
   in {

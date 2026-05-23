@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/prefer-module */
+
 /** @type {import('tailwindcss').Config} */
 // eslint-disable-next-line import/no-anonymous-default-export, import/no-unused-modules
 export default {

@@ -175,41 +175,39 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
           {group.competitorName}
         </h5>
       </div>
-        {briefEntries.map((entry) => (
-          <div
-            key={competitionEntryKey(entry)}
-            className="grid grid-cols-[4rem_minmax(0,1fr)] items-start gap-2 py-1.5 text-xs"
-          >
-            <div className="font-semibold tabular-nums text-neutral-11">
-              {entry.checkInEnd ? entry.checkInEnd.split(':').slice(0, 2).join(':') : ''}
-            </div>
-            <div className="flex min-w-0 items-center gap-1.5">
-              <span className="h-3 w-1 rounded-sm" aria-hidden />
-              <CompetitionCategoryLine entry={entry} />
-            </div>
+      {briefEntries.map((entry) => (
+        <div
+          key={competitionEntryKey(entry)}
+          className="grid grid-cols-[4rem_minmax(0,1fr)] items-start gap-2 py-1.5 text-xs"
+        >
+          <div className="font-semibold tabular-nums text-neutral-11">
+            {entry.checkInEnd ? entry.checkInEnd.split(':').slice(0, 2).join(':') : ''}
           </div>
-        ))}
-        {reportEntries.map((entry) => (
-          <div
-            key={competitionEntryKey(entry)}
-            className="grid grid-cols-[4rem_minmax(0,1fr)_auto] items-center gap-2 py-1.5 text-xs"
-          >
-            <div className="font-semibold tabular-nums leading-none text-neutral-11">
-              <span
-                className={entry.ranking && entry.ranking <= 3 ? 'text-accent-11' : ''}
-              >
-                {formatRank(entry)}
-              </span>
-              {` z ${entry.participants ?? ''}`}
-            </div>
+          <div className="flex min-w-0 items-center gap-1.5">
+            <span className="h-3 w-1 rounded-sm" aria-hidden />
             <CompetitionCategoryLine entry={entry} />
-            <div className="flex min-w-20 items-baseline justify-end gap-1 font-semibold tabular-nums text-green-11">
-              {Number(entry.pointGain ?? 0) > 0 || entry.isFinal
-                ? `+${Number(entry.pointGain ?? 0).toString()}b ${entry.isFinal ? 'F' : ''}`
-                : ''}
-            </div>
           </div>
-        ))}
+        </div>
+      ))}
+      {reportEntries.map((entry) => (
+        <div
+          key={competitionEntryKey(entry)}
+          className="grid grid-cols-[4rem_minmax(0,1fr)_auto] items-center gap-2 py-1.5 text-xs"
+        >
+          <div className="font-semibold tabular-nums leading-none text-neutral-11">
+            <span className={entry.ranking && entry.ranking <= 3 ? 'text-accent-11' : ''}>
+              {formatRank(entry)}
+            </span>
+            {` z ${entry.participants ?? ''}`}
+          </div>
+          <CompetitionCategoryLine entry={entry} />
+          <div className="flex min-w-20 items-baseline justify-end gap-1 font-semibold tabular-nums text-green-11">
+            {Number(entry.pointGain ?? 0) > 0 || entry.isFinal
+              ? `+${Number(entry.pointGain ?? 0).toString()}b ${entry.isFinal ? 'F' : ''}`
+              : ''}
+          </div>
+        </div>
+      ))}
     </>
   );
 }
@@ -237,16 +235,11 @@ export function CompetitionEventContent({
         {title}
       </div>
       {location ? (
-        <div className="truncate text-xs leading-tight text-green-11">
-          {location}
-        </div>
+        <div className="truncate text-xs leading-tight text-green-11">{location}</div>
       ) : null}
       <div>
         {groupByCompetitor(entries).map((group) => (
-          <div
-            key={group.key}
-            className="border-t border-green-6 pt-2 first:border-t-0"
-          >
+          <div key={group.key} className="border-t border-green-6 pt-2 first:border-t-0">
             <CompetitionCompetitorGroup group={group} />
           </div>
         ))}
@@ -356,7 +349,7 @@ export function CompetitionWeekPanel({
       <div className="text-sm text-neutral-9">
         {fetching ? 'Načítám...' : ''}
         {!fetching && !hasVisibleEntries ? 'Žádné soutěže tento týden. ' : ''}
-        <br/>
+        <br />
         {!fetching && !hasVisibleEntries && onlyMine && locations.length > 0 && (
           <a
             className="underline text-accent-12"

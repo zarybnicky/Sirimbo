@@ -48,6 +48,7 @@ export default function UploadPage() {
         const image = await new Promise<HTMLImageElement>((resolve, reject) => {
           const img = new Image();
           img.addEventListener('load', () => resolve(img));
+          // eslint-disable-next-line unicorn/prefer-add-event-listener
           img.onerror = (...args) => reject(args);
           img.src = objectURL;
         });
@@ -130,6 +131,7 @@ export default function UploadPage() {
         URL.revokeObjectURL(file.objectURL);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!auth.user) {
@@ -177,7 +179,9 @@ export default function UploadPage() {
           {newFiles.map((image) => (
             <div className="flex" key={image.file.name}>
               <div>{image.file.name}</div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={image.objectURL} draggable={false} alt="" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 width={image.width}
                 draggable={false}

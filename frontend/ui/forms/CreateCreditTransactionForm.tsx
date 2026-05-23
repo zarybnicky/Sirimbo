@@ -11,7 +11,7 @@ import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
@@ -27,7 +27,7 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
     pause: !personId,
   });
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit, watch } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: {
       date: new Date(),
       amount: 0,
@@ -54,11 +54,11 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
     });
     onSuccess();
   });
+  const amount = useWatch({ control, name: 'amount' }) || 0;
 
   if (!person) return null;
 
   const balance = Number.parseFloat(person.accountsList.find(Boolean)?.balance ?? '0');
-  const amount = watch('amount') || 0;
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <DatePickerElement
