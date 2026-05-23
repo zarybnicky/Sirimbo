@@ -4,6 +4,7 @@
 node_modules/
 build
 .obsidian
+.codex
 
 /backend/dist
 /backend/sql
