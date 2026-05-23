@@ -4,7 +4,7 @@ import { TextField } from '@/ui/fields/text';
 import {
   formatDatePickerValue,
   parseDatePickerValue,
-  type DatePickerValueMode,
+  type DatePickerMode,
 } from '@/ui/fields/date-utils';
 import { X } from 'lucide-react';
 import * as React from 'react';
@@ -15,7 +15,7 @@ import {
   useController,
 } from 'react-hook-form';
 
-type DateRangeInputProps<T extends FieldValues> = {
+type DateInputProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
 };
@@ -25,7 +25,7 @@ type Extras = {
   label?: React.ReactNode;
   helperText?: React.ReactNode;
   clearable?: boolean;
-  valueMode?: DatePickerValueMode;
+  valueMode?: DatePickerMode;
 };
 
 export function DatePickerElement<T extends FieldValues>({
@@ -36,7 +36,7 @@ export function DatePickerElement<T extends FieldValues>({
   helperText,
   clearable = false,
   valueMode = 'date-object',
-}: DateRangeInputProps<T> & Extras) {
+}: DateInputProps<T> & Extras) {
   const { field, fieldState } = useController<T>({ control, name });
   const inputValue = formatDatePickerValue(field.value as Date | string | null, valueMode);
 
