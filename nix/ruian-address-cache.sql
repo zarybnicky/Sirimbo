@@ -15,11 +15,7 @@ SELECT
   normalize_ruian_text(coalesce("Název obce", '')) AS municipality_norm,
   "Souřadnice X"::FLOAT AS x,
   "Souřadnice Y"::FLOAT AS y
-FROM read_csv_auto(
-  getenv('RUIAN_CSV_GLOB'),
-  delim=';',
-  union_by_name=true
-)
+FROM read_csv_auto(getenv('RUIAN_CSV_GLOB'), delim=';')
 WHERE "Kód ADM" IS NOT NULL
   AND "PSČ" IS NOT NULL
   AND "Číslo domovní" IS NOT NULL
