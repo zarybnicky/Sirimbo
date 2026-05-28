@@ -9,7 +9,7 @@ export function ArticlePublicList() {
   const [page, setPage] = React.useState(1);
   const [{ data }] = useQuery({
     query: ArticlesDocument,
-    variables: { first: 12, offset: (page - 1) * 12 },
+    variables: { first: 12, offset: (page - 1) * 12, visibleOnly: true },
   });
   return (
     <>

@@ -66,7 +66,7 @@ export default compose(
       },
       {
         source: '/tancirna',
-        destination: '/clanky/470/olymp-dance-night-2026',
+        destination: '/clanky/475/olymp-dance-night-vol-2',
         permanent: false,
       },
       {

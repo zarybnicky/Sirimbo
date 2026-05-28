@@ -17,8 +17,10 @@ query Article($id: BigInt!) {
   }
 }
 
-query Articles($first: Int, $offset: Int) {
-  aktualities(first: $first, offset: $offset, orderBy: [CREATED_AT_DESC]) {
+query Articles($first: Int, $offset: Int, $visibleOnly: Boolean) {
+  aktualities(first: $first, offset: $offset, orderBy: [CREATED_AT_DESC], condition:  {
+     isVisible: $visibleOnly
+  }) {
     totalCount
     nodes {
       ...Article

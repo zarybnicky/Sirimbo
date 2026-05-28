@@ -21,21 +21,10 @@ export function ArticleList() {
   const auth = useAuth();
 
   const [{ data }] = useQuery({ query: ArticlesDocument });
-
-  const nodes = React.useMemo(() => {
-    return (data?.aktualities?.nodes || []).map((item) => ({
-      id: item.id,
-      title: item.atJmeno,
-      subtitle: item.createdAt ? fullDateFormatter.format(new Date(item.createdAt)) : '',
-      href: {
-        pathname: '/aktuality/[id]',
-        query: { id: item.id },
-      },
-    }));
-  }, [data]);
+  const nodes = React.useMemo(() => data?.aktualities?.nodes || [], [data]);
 
   const [search, setSearch] = React.useState('');
-  const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
+  const fuzzy = useFuzzySearch(nodes, ['id', 'atJmeno'], search);
 
   return (
     <div className="flex flex-col h-full">
@@ -67,21 +56,25 @@ export function ArticleList() {
         {fuzzy.map((item) => (
           <Link
             key={item.id}
-            href={item.href}
+            href={{
+              pathname: '/aktuality/[id]',
+              query: { id: item.id },
+            }}
             className={buttonCls({
               variant: currentId === item.id ? 'primary' : 'outline',
               display: 'none',
               className: 'pl-5 m-1 mt-0 grid',
             })}
           >
-            <div>{item.title}</div>
+            <div>{item.atJmeno}</div>
             <div
               className={cn(
                 'text-sm',
                 currentId === item.id ? 'text-white' : 'text-neutral-11',
               )}
             >
-              {item.subtitle}
+              {item.createdAt ? fullDateFormatter.format(new Date(item.createdAt)) : ''}
+              {item.isVisible ? '' : ', skrytý'}
             </div>
           </Link>
         ))}

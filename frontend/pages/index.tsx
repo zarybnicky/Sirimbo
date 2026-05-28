@@ -20,7 +20,7 @@ export default function HomePage() {
 
   const [{ data }] = useQuery({
     query: ArticlesDocument,
-    variables: { first: 6, offset: 0 },
+    variables: { first: 6, offset: 0, visibleOnly: true },
   });
   const heroData = useMemo(() => data?.aktualities?.nodes?.slice(0, 3) || [], [data]);
   const restData = useMemo(() => data?.aktualities?.nodes?.slice(3) || [], [data]);
