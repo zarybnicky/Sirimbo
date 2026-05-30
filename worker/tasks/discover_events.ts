@@ -1,6 +1,7 @@
 import type { JobHelpers, Task } from 'graphile-worker';
 import { upsertFrontierKeys } from '../crawler/crawler.queries.ts';
 import { cstsEventIndex } from '../crawler/cstsEventIndex.ts';
+import { wdsfCompetitionIndex } from '../crawler/wdsfCompetitionIndex.ts';
 
 async function checkCstsEvents(month: Date): Promise<string | null> {
   const key = month.toISOString().slice(0, 7);
@@ -19,11 +20,29 @@ async function checkCstsEvents(month: Date): Promise<string | null> {
   return key;
 }
 
+async function checkWdsfCompetitions(month: Date): Promise<string | null> {
+  const key = month.toISOString().slice(0, 7);
+  const { url, init } = wdsfCompetitionIndex.buildRequest(key);
+  try {
+    const response = await fetch(url, init);
+    if (!response.ok) return null;
+
+    const raw = await response.json();
+    const parsed = wdsfCompetitionIndex.schema.safeParse(raw, { reportInput: true });
+    if (!parsed.success || parsed.data.length === 0) return null;
+  } catch (e) {
+    console.error(e);
+  }
+
+  return key;
+}
+
 export const discover_events: Task<'discover_events'> = async (
   _payload,
   helpers,
 ) => {
   await discoverMonths('csts', 'eventIndex', checkCstsEvents, helpers);
+  await discoverMonths('wdsf', 'competitionIndex', checkWdsfCompetitions, helpers);
 };
 
 async function discoverMonths(

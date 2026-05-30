@@ -22,6 +22,8 @@ import {
   sztsScrutineerIndex,
   sztsTrainerIndex,
 } from './sztsPersonIndex.ts';
+import { wdsfCompetitionIndex } from './wdsfCompetitionIndex.ts';
+import { wdsfCompetition } from './wdsfCompetition.ts';
 
 export type LoaderIds = {
   [F in keyof typeof LOADERS]: {
@@ -43,12 +45,12 @@ export const LOADERS = {
     // https://services.worlddancesport.org/api/1/person/10116109
     member: wdsfMember,
 
-    // modifiedsince, worldranking
-    // computed merging of competitions into events, by location + same/adjacent date???
-    // scraping by week, maybe?, or maybe from HTML
     // https://www.worlddancesport.org/Calendar/Competitions?Month=2&Year=2026 => /Events/Voesendorf-Vienna-Austria-21022026-22022026-8685
     // https://services.worlddancesport.org/api/1/competition?from=2025/11/01
+    competitionIndex: wdsfCompetitionIndex,
     // https://services.worlddancesport.org/api/1/competition/64306
+    competition: wdsfCompetition,
+
     // https://services.worlddancesport.org/api/1/participant?competitionId=64306
     // https://services.worlddancesport.org/api/1/official?competitionId=64306 - includes letters of judges
     // https://services.worlddancesport.org/api/1/couple

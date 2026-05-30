@@ -78,7 +78,7 @@ function printTable(
     return;
   }
 
-  const columns = Object.keys(rows[0]);
+  const columns = Object.keys(rows[0]).filter(x => x !== 'details');
   const widths = Object.fromEntries(
     columns.map((column) => [
       column,
