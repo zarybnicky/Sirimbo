@@ -1,0 +1,4981 @@
+{
+  "Waltz": [
+    {
+      "name": "Closed Change on RF",
+      "name_czech": "Uzavřená změna Pn",
+      "source": [
+        "WDSF 1",
+        "Plam. 1"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Closed Change on LF",
+      "name_czech": "Uzavřená změny Ln",
+      "source": [
+        "WDSF 2",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Turn",
+      "name_czech": "Otáčka vpravo",
+      "source": [
+        "WDSF 3",
+        "Plam. 3"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Turn",
+      "name_czech": "Otáčka vlevo",
+      "source": [
+        "WDSF 4",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Chasse to R",
+      "name_czech": "Postupová přeměna do P",
+      "source": [
+        "WDSF 5",
+        "Plam. 13"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Whisk",
+      "name_czech": "Zášvih",
+      "source": [
+        "WDSF 6",
+        "Plam. 10"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Back Whisk",
+      "name_czech": "Zášvih vzad",
+      "source": [
+        "WDSF 7",
+        "Plam. 12"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Change",
+      "name_czech": "Změna mimo",
+      "source": [
+        "WDSF 8",
+        "Plam. 5"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Basic Weave",
+      "name_czech": "Základní tkáň",
+      "source": [
+        "WDSF 9",
+        "Plam. 18"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Chasse from PP",
+      "name_czech": "Preměna z PP",
+      "source": [
+        "WDSF 10",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Backward Lock",
+      "name_czech": "Křížení vzad",
+      "source": [
+        "WDSF 11",
+        "Plam. 21"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Natural Turn",
+      "name_czech": "Otevřená otáčka vpravo",
+      "source": [
+        "WDSF 12",
+        "Plam. 25"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hesitation Change",
+      "name_czech": "Změna výdrží",
+      "source": [
+        "WDSF 13",
+        "Plam. 7"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Spin Turn",
+      "name_czech": "Spinová otáčka vpravo",
+      "source": [
+        "WDSF 14",
+        "Plam. 6"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Double Reverse Spin",
+      "name_czech": "Dvojspina vlevo",
+      "source": [
+        "WDSF 15",
+        "Plam. 9"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Telemark",
+      "name_czech": "Telemark",
+      "source": [
+        "WDSF 16",
+        "Plam. Sf-19"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Telemark to PP",
+      "name_czech": "Telemark do PP",
+      "source": [
+        "WDSF 17",
+        "Plam. Sf-18"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Weave from PP",
+      "name_czech": "Tkáň z PP",
+      "source": [
+        "WDSF 18",
+        "Plam. 22"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Impetus",
+      "name_czech": "Náběhová otáčka",
+      "source": [
+        "WDSF 19",
+        "Plam. Sf-08"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Impetus to PP",
+      "name_czech": "Náběhová otáčka do PP",
+      "source": [
+        "WDSF 20",
+        "Plam. Sf-09"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Drag Hesitation",
+      "name_czech": "Výdrž tažením",
+      "source": [
+        "WDSF 21",
+        "Plam. 20"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Spin",
+      "name_czech": "Spina mimo",
+      "source": [
+        "WDSF 22",
+        "Plam. 19"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Turning Lock",
+      "name_czech": "Točené křížení do P",
+      "source": [
+        "WDSF 23",
+        "Plam. 23"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Turning Lock",
+      "name_czech": "Točené křížení do L",
+      "source": [
+        "WDSF 24",
+        "Plam. 23"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Wing",
+      "name_czech": "Uzavřené převedení",
+      "source": [
+        "WDSF 25",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Wing from PP",
+      "name_czech": "Převedení z PP",
+      "source": [
+        "WDSF 26",
+        "Plam. 15"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Cross Hesitation from PP",
+      "name_czech": "Výdrž napříč z PP",
+      "source": [
+        "WDSF 27",
+        "Plam. 16"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Pivot",
+      "name_czech": "Pivota vlevo",
+      "source": [
+        "WDSF 28",
+        "Plam. Qs-13"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Fallaway Natural Turn",
+      "name_czech": "Spádná otáčka vpravo",
+      "source": [
+        "WDSF 29",
+        "Plam. 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Running Weave from PP",
+      "name_czech": "Běžená tkáň z PP",
+      "source": [
+        "WDSF 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Running Spin Turn",
+      "name_czech": "Běžená spinová otáčka",
+      "source": [
+        "WDSF 31",
+        "Plam. 32"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Overturned Running Spin Turn",
+      "name_czech": "Přetočená běžená spinová otáčka",
+      "source": [
+        "WDSF 32"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Running Cross Chasse",
+      "name_czech": "Běžená přeměna napříč",
+      "source": [
+        "WDSF 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Fallaway Reverse and Slip Pivot",
+      "name_czech": "Spádná otáčka vlevo a vkluzná pivota",
+      "source": [
+        "WDSF 34"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Hover Corte",
+      "name_czech": "Vznosný překrut",
+      "source": [
+        "WDSF 37"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Curved Feather",
+      "name_czech": "Zahnutý pérový krok",
+      "source": [
+        "WDSF Sf-36"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Running Finish",
+      "name_czech": "Běžené zakončení",
+      "source": [
+        "WDSF Qs-10"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Swivel",
+      "name_czech": "Výkrut mimo",
+      "source": [
+        "WDSF Sf-27"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Chasse to L",
+      "name_czech": "Postupová přeměna do L",
+      "source": [
+        "WDSF Qs-05"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Bounce Fallaway and Weave Ending",
+      "name_czech": "Houpavá spádná otáčka a tkáňové zakončení",
+      "source": [
+        "WDSF Sf-40x1)"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Quick Open Reverse",
+      "name_czech": "Rychlá otevřená otáčka vlevo",
+      "source": [
+        "WDSF Sf-42",
+        "Plam. 24"
+      ],
+      "for_class": [
+        "C"
+      ]
+    }
+  ],
+  "Tango": [
+    {
+      "name": "Tango Walk (see Tango Specific Principles - TSP)",
+      "name_czech": "Tangová chůze (viz Specifické principy Tanga)",
+      "source": [
+        "WDSF TSP"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Tap - Alternative Entries to PP",
+      "name_czech": "Příklep - Alternativní vstup do PP",
+      "source": [
+        "WDSF 1"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Side Step",
+      "name_czech": "Postupový úkrok",
+      "source": [
+        "WDSF 2",
+        "Plam. 1"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Brush Tap",
+      "name_czech": "Přítahový příklep",
+      "source": [
+        "WDSF 3",
+        "Plam. 21"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Link",
+      "name_czech": "Postupová spojka",
+      "source": [
+        "WDSF 4",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Closed Promenade",
+      "name_czech": "Zavřená promenáda",
+      "source": [
+        "WDSF 5",
+        "Plam. 6"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Promenade",
+      "name_czech": "Otevřená promenáda",
+      "source": [
+        "WDSF 6",
+        "Plam. 7"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Back Corte",
+      "name_czech": "Překrut vzad",
+      "source": [
+        "WDSF 7",
+        "Plam. 8"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Basic Reverse Turn",
+      "name_czech": "Základní otáčka vlevo",
+      "source": [
+        "WDSF 8",
+        "Plam. 23"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Reverse Turn",
+      "name_czech": "Otevřená otáčka vlevo",
+      "source": [
+        "WDSF 9",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Rock on LF",
+      "name_czech": "Kolébky na Ln",
+      "source": [
+        "WDSF 10",
+        "Plam. 9"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Rock on RF",
+      "name_czech": "Kolébky na Pn",
+      "source": [
+        "WDSF 11",
+        "Plam. 10"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Rock Turn",
+      "name_czech": "Kolébková otáčka vpravo",
+      "source": [
+        "WDSF 12",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Twist Turn from PP",
+      "name_czech": "Twistová otáčka vpravo z PP",
+      "source": [
+        "WDSF 13",
+        "Plam. 12"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Turn from PP",
+      "name_czech": "Otáčka vpravo z PP",
+      "source": [
+        "WDSF 14",
+        "Plam. 13"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade Link turned to R",
+      "name_czech": "Promenádní spojka točená do P",
+      "source": [
+        "WDSF 15",
+        "Plam. 14"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade Link turned to L",
+      "name_czech": "Promenádní spojka točená do L",
+      "source": [
+        "WDSF 16",
+        "Plam. 14"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Back Open Promenade",
+      "name_czech": "Promenáda otevřená vzad",
+      "source": [
+        "WDSF 17",
+        "Plam. 22"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Fallaway in Promenade",
+      "name_czech": "Spádná promenáda",
+      "source": [
+        "WDSF 18",
+        "Plam. 22"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Whisk",
+      "name_czech": "Zášvih",
+      "source": [
+        "WDSF 19",
+        "Plam. Wa-10"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Back Whisk",
+      "name_czech": "Zášvih vzad",
+      "source": [
+        "WDSF 20",
+        "Plam. Wa-12"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Side Step Reverse Turn",
+      "name_czech": "Otáčka vlevo postupovým úkrokem",
+      "source": [
+        "WDSF 21",
+        "Plam. 5"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Four Step",
+      "name_czech": "Čtyřkrok",
+      "source": [
+        "WDSF 22",
+        "Plam. 16"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Fallaway Four Step",
+      "name_czech": "Spádný čtyrkrok",
+      "source": [
+        "WDSF 23",
+        "Plam. 24"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Swivel - method 1: • after Open Finish and Turning to R",
+      "name_czech": "Výkrut mimo – metoda 1: • po otevřeném zakončení a točený do P",
+      "source": [
+        "WDSF 24",
+        "Plam. 18"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Swivel - method 2: • Turning to L",
+      "name_czech": "Výkrut mimo – metoda 2: • točený do L",
+      "source": [
+        "WDSF 25"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Swivel - method 3: • Reverse Outside Swivel",
+      "name_czech": "Výkrut mimo – metoda 3: • obrácený výkrut mimo",
+      "source": [
+        "WDSF 26",
+        "Plam. 19"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Four Step Change",
+      "name_czech": "Změna čtyřkrokem",
+      "source": [
+        "WDSF 27",
+        "Plam. 27"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Five Step",
+      "name_czech": "Pětikrok",
+      "source": [
+        "WDSF 28",
+        "Plam. 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Mini Five Step",
+      "name_czech": "Minipětikrok",
+      "source": [
+        "WDSF 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Quick Reverse Turn",
+      "name_czech": "Rychlá otáčka vlevo",
+      "source": [
+        "WDSF 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Fallaway Reverse and Slip Pivot",
+      "name_czech": "Spádná vlevo a vkluzná pivota",
+      "source": [
+        "WDSF 31",
+        "Plam. Sf-22"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Telemark to PP",
+      "name_czech": "Telemark do PP",
+      "source": [
+        "WDSF 32",
+        "Plam. Sf-18"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Open Natural Turn",
+      "name_czech": "Otevřená otáčka vpravo",
+      "source": [
+        "WDSF 33",
+        "Plam. Wa-25"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Spin",
+      "name_czech": "Spina mimo",
+      "source": [
+        "WDSF 34"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Twist Turn",
+      "name_czech": "Twistová otáčka vpravo",
+      "source": [
+        "WDSF 35"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chase",
+      "name_czech": "Obchvat",
+      "source": [
+        "WDSF 36",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chase Alternative Ending: • Chase, Chasse",
+      "name_czech": "Obchvat – alternativní zakončení: • obchvat, přeměna",
+      "source": [
+        "WDSF 37"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chase Alternative Ending - method 1: • Whisk, fwd step to PP",
+      "name_czech": "Obchvat – alternat.zakončení metodou 1: • Zášvih, krok vpřed do PP",
+      "source": [
+        "WDSF 37",
+        "Plam. 25"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chase Alternative Ending - method 2: • Whisk, Promenade Link",
+      "name_czech": "Obchvat – alternat. zakončení metodou 2: • Zášvih, promenádní spojka",
+      "source": [
+        "WDSF 37",
+        "Plam. 26"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chase Alternative Ending - method 3: • Whisk, close step to PP",
+      "name_czech": "Obchvat – alternat. zakončení metodou 3: • Zášvih, přísun do PP",
+      "source": [
+        "WDSF 37"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chase Alternative Ending - method 4: • Progresive Link",
+      "name_czech": "Obchvat – alternat. zakončení metodou 4: • Postupová spojka",
+      "source": [
+        "WDSF 37"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Pivot",
+      "name_czech": "Pivota vlevo",
+      "source": [
+        "WDSF 42",
+        "Plam. Qs-31"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "In – Out (type of Sudden Movement without Pressure, see TSP)",
+      "name_czech": "Dovnitř – Ven (druh překvapivých pohybů bez tlaku partnera – viz TSP)",
+      "source": [
+        "WDSF TSP"
+      ],
+      "for_class": [
+        "C"
+      ]
+    }
+  ],
+  "Valčík": [
+    {
+      "name": "Natural Turn",
+      "name_czech": "Otáčka vpravo",
+      "source": [
+        "WDSF 1",
+        "Plam. 1"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Turn",
+      "name_czech": "Otáčka vlevo",
+      "source": [
+        "WDSF 2",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "RF Forward Change Step - Natural to Reverse",
+      "name_czech": "Změna vpřed Pn – zprava doleva",
+      "source": [
+        "WDSF 3",
+        "Plam. 3"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "LF Forward Change Step - Reverse to Natural",
+      "name_czech": "Změna vpřed Ln – zleva doprava",
+      "source": [
+        "WDSF 4",
+        "Plam. 3"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "LF Backward Change Step - Natural to Reverse",
+      "name_czech": "Změna vzad Ln – zprava doleva",
+      "source": [
+        "WDSF 5",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "RF Backward Change Step - Reverse to Natural",
+      "name_czech": "Změna vzad Pn – zleva doprava",
+      "source": [
+        "WDSF 6",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    }
+  ],
+  "Slowfoxtrot": [
+    {
+      "name": "Feather Step",
+      "name_czech": "Pérový krok",
+      "source": [
+        "WDSF 1",
+        "Plam. 1"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Three Step",
+      "name_czech": "Trojkrok",
+      "source": [
+        "WDSF 2",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Feather Finish",
+      "name_czech": "Pérové zakončení",
+      "source": [
+        "WDSF 3",
+        "Plam. část 4"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Feather Ending",
+      "name_czech": "Pérové uzavření",
+      "source": [
+        "WDSF 4",
+        "Plam. 20"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Hover Feather",
+      "name_czech": "Vznosný pérový krok",
+      "source": [
+        "WDSF 5",
+        "Plam. 12"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Turn",
+      "name_czech": "Otáčka vpravo",
+      "source": [
+        "WDSF 6",
+        "Plam. 3"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Turn",
+      "name_czech": "Otáčka vlevo",
+      "source": [
+        "WDSF 7",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Basic Weave",
+      "name_czech": "Základní tkáň",
+      "source": [
+        "WDSF 8",
+        "Plam. 10"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Weave",
+      "name_czech": "Tkáň vpravo",
+      "source": [
+        "WDSF 9"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Change of Direction",
+      "name_czech": "Změna směru",
+      "source": [
+        "WDSF 10",
+        "Plam. 5"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Heel Pull Finish",
+      "name_czech": "zakončení patovým stažením",
+      "source": [
+        "WDSF 11",
+        "Plam. část 3"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Whisk",
+      "name_czech": "Zášvih",
+      "source": [
+        "WDSF 12",
+        "Plam. Wa-10"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Back Whisk",
+      "name_czech": "Zášvih vzad",
+      "source": [
+        "WDSF 13",
+        "Plam. Wa-12"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Open Natural Turn",
+      "name_czech": "Otevřená otáčka vpravo",
+      "source": [
+        "WDSF 14",
+        "Plam. Wa-25"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Double Reverse Spin",
+      "name_czech": "Dvojspina vlevo",
+      "source": [
+        "WDSF 15",
+        "Plam. Wa-09"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Telemark",
+      "name_czech": "Telemark",
+      "source": [
+        "WDSF 16",
+        "Plam. 19"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Telemark to PP",
+      "name_czech": "Otevřený telemark",
+      "source": [
+        "WDSF 17",
+        "Plam. 18"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Hover Telemark",
+      "name_czech": "Vznosný telemark",
+      "source": [
+        "WDSF 18",
+        "Plam. 13"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Hover Telemark to PP",
+      "name_czech": "Vznosný telemark do PP",
+      "source": [
+        "WDSF 19",
+        "Plam. pozn.13"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural telemark",
+      "name_czech": "Telemark vpravo",
+      "source": [
+        "WDSF 20",
+        "Plam. 14"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Hover Telemark",
+      "name_czech": "Vznosný telemark vpravo",
+      "source": [
+        "WDSF 21",
+        "Plam. 25"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Impetus",
+      "name_czech": "Náběhová otáčka",
+      "source": [
+        "WDSF 22",
+        "Plam. 8"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Impets to PP",
+      "name_czech": "Otevřená náběhová otáčka",
+      "source": [
+        "WDSF 23",
+        "Plam. 9"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Weave from PP",
+      "name_czech": "Tkáň z PP",
+      "source": [
+        "WDSF 24",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Hover Cross",
+      "name_czech": "Vznosné krížení",
+      "source": [
+        "WDSF 25",
+        "Plam. 24"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Top Spin",
+      "name_czech": "Vrcholová spina",
+      "source": [
+        "WDSF 26",
+        "Plam. 17"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Swivel",
+      "name_czech": "Výkrut mimo",
+      "source": [
+        "WDSF 27",
+        "Plam. 18"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Spin",
+      "name_czech": "Spina mimo",
+      "source": [
+        "WDSF 28",
+        "Plam. Wa-19"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Wave",
+      "name_czech": "Vlna vlevo",
+      "source": [
+        "WDSF 29",
+        "Plam. 6"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Twist Turn",
+      "name_czech": "Twistová otáčka vpravo",
+      "source": [
+        "WDSF 30",
+        "Plam. 15"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Twist Turn with Natural Weave",
+      "name_czech": "Twistová otáčka vpravo a Tkáň vpravo",
+      "source": [
+        "WDSF 31",
+        "Plam. 16"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Twist Turn with Impetus and Feather Finish",
+      "name_czech": "Twistová otáčka vpravo, Náběhová otáčka a Pérové zakončení",
+      "source": [
+        "WDSF 32"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Twist turn with Impetus to PP",
+      "name_czech": "Twistová otáčka vpravo a Náběhová otáčka do PP",
+      "source": [
+        "WDSF 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Zig Zag from PP",
+      "name_czech": "Klikatina vpravo z PP",
+      "source": [
+        "WDSF 34",
+        "Plam. 23"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Curved Three Step",
+      "name_czech": "Zahnutý trojkrok",
+      "source": [
+        "WDSF 35",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Curved Feather",
+      "name_czech": "Zahnutý pérový krok",
+      "source": [
+        "WDSF 36",
+        "Plam. 21"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Curved Feather from PP",
+      "name_czech": "Zahnutý pérový krok z PP",
+      "source": [
+        "WDSF 37"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Back Feather",
+      "name_czech": "Pérový krok vzad",
+      "source": [
+        "WDSF 38",
+        "Plam. 21"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Fallaway Reverse and Slip Pivot",
+      "name_czech": "Spádná vlevo a vkluzná pivota",
+      "source": [
+        "WDSF 39",
+        "Plam. 22"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Bounce Fallaway and Weave Ending",
+      "name_czech": "Houpavá spádná otáčka a tkáňové zakončení",
+      "source": [
+        "WDSF 40",
+        "Plam. 27"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Running Weave from PP",
+      "name_czech": "Běžená tkáň z PP",
+      "source": [
+        "WDSF 41"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Quick Open Reverse Turn",
+      "name_czech": "Rychlá otevřená otáčka vlevo",
+      "source": [
+        "WDSF 42"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Extended Reverse Wave",
+      "name_czech": "Prodloužená vlna vlevo",
+      "source": [
+        "WDSF 43",
+        "Plam. 7"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Pivot",
+      "name_czech": "Pivota vlevo",
+      "source": [
+        "WDSF 44",
+        "Plam. Qs-13"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Hover Corte",
+      "name_czech": "Vznosný překrut",
+      "source": [
+        "WDSF Wa-37",
+        "Plam. Wa-31"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Chasse to R",
+      "name_czech": "Postupová přeměna do P",
+      "source": [
+        "WDSF Wa-05",
+        "Plam. Wa-13"
+      ],
+      "for_class": [
+        "C"
+      ]
+    }
+  ],
+  "Quickstep": [
+    {
+      "name": "Natural Turn",
+      "name_czech": "Otáčka vpravo",
+      "source": [
+        "WDSF 2",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Turn",
+      "name_czech": "Otáčka vlevo přeměnou",
+      "source": [
+        "WDSF 3",
+        "Plam. 15"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Chasse to R",
+      "name_czech": "Postupová přeměna v P",
+      "source": [
+        "WDSF 4",
+        "Plam. 19"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Chasse to L",
+      "name_czech": "Postupová přemena",
+      "source": [
+        "WDSF 5",
+        "Plam. 5"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Cross Chasse",
+      "name_czech": "Přeměna napříč",
+      "source": [
+        "WDSF 6",
+        "Plam. 12"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Quarter Turn to R",
+      "name_czech": "Čtvrtotáčka vpravo",
+      "source": [
+        "WDSF 7",
+        "Plam. 1"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Quarter Turn to L",
+      "name_czech": "Čtvrtotáčka vlevo",
+      "source": [
+        "WDSF 8",
+        "Plam. 1"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Change",
+      "name_czech": "Změna mimo",
+      "source": [
+        "WDSF 9",
+        "Plam. Wa-05"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Pivot",
+      "name_czech": "Pivota vpravo",
+      "source": [
+        "WDSF 10"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Running Finish",
+      "name_czech": "Otáčka vpravo, Křížení vzad a Běžené zakončení",
+      "source": [
+        "WDSF 11",
+        "Plam. 31"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Backward Lock",
+      "name_czech": "Křížení vzad",
+      "source": [
+        "WDSF 12",
+        "Plam. 8"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Forward Lock",
+      "name_czech": "Křížení vpřed",
+      "source": [
+        "WDSF 13",
+        "Plam. 7"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Natural Turn",
+      "name_czech": "Otevřená otáčka vpravo",
+      "source": [
+        "WDSF 14",
+        "Plam. Wa-25"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Spin Turn",
+      "name_czech": "Spinová otáčka vpravo",
+      "source": [
+        "WDSF 15",
+        "Plam. 6"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hesitation Change",
+      "name_czech": "Změna výdrží",
+      "source": [
+        "WDSF 16"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Double Reverse Spin",
+      "name_czech": "Dvojspina vlevo",
+      "source": [
+        "WDSF 17",
+        "Plam. Wa-09"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Impetus",
+      "name_czech": "Náběhová otáčka",
+      "source": [
+        "WDSF 18",
+        "Plam. 27"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Impetus to PP",
+      "name_czech": "Otevřená náběhová otáčka",
+      "source": [
+        "WDSF 19",
+        "Plam. 28"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Telemark",
+      "name_czech": "Telemark",
+      "source": [
+        "WDSF 20",
+        "Plam. 25"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Telemark to PP",
+      "name_czech": "Otevřený telemark",
+      "source": [
+        "WDSF 21",
+        "Plam. 26"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Whisk",
+      "name_czech": "Zášvih",
+      "source": [
+        "WDSF 22",
+        "Plam. Wa-10"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Back Whisk",
+      "name_czech": "Zášvih vzad",
+      "source": [
+        "WDSF 23",
+        "Plam. Wa-12"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Reverse Turn",
+      "name_czech": "Rychlá otevřená vlevo",
+      "source": [
+        "WDSF 24",
+        "Plam. 16"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Tipple Chasse to R - at the corner",
+      "name_czech": "Kolísavá přeměna do P – v rohu",
+      "source": [
+        "WDSF 25",
+        "Plam. 9"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Tipple Chasse to R - along LOD",
+      "name_czech": "Kolísavá přeměna do P – podél ST",
+      "source": [
+        "WDSF 26",
+        "Plam. 10"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Tipple Chasse to L",
+      "name_czech": "Kolísavá přeměna do L",
+      "source": [
+        "WDSF 27",
+        "Plam. 24"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Four Quick Run",
+      "name_czech": "Běh 4rychlými kroky",
+      "source": [
+        "WDSF 28",
+        "Plam. 20"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Zig Zag",
+      "name_czech": "Klikatina",
+      "source": [
+        "WDSF 29",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "V6",
+      "name_czech": "V-6",
+      "source": [
+        "WDSF 30",
+        "Plam. 32"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Spin",
+      "name_czech": "Spina mimo",
+      "source": [
+        "WDSF 31",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Pivot",
+      "name_czech": "Pivota vlevo",
+      "source": [
+        "WDSF 32",
+        "Plam. 13"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Turning Lock",
+      "name_czech": "Točené křížení vpravo",
+      "source": [
+        "WDSF 33",
+        "Plam. pozn.3 Wa-23"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Drag Hesitation",
+      "name_czech": "Výdrž tažením",
+      "source": [
+        "WDSF 34",
+        "Plam. Wa-20"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Cross Swivel",
+      "name_czech": "Výkrut napříč",
+      "source": [
+        "WDSF 35",
+        "Plam. 17"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Fishtail",
+      "name_czech": "Rybí ocas",
+      "source": [
+        "WDSF 36",
+        "Plam. 18"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Running Natural Turn",
+      "name_czech": "Bežená otáčka vpravo",
+      "source": [
+        "WDSF 37",
+        "Plam. 23"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Running Cross Chasse",
+      "name_czech": "Běžená přeměna napříč",
+      "source": [
+        "WDSF 38"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Six Quick Run",
+      "name_czech": "Běh 6 rychlými kroky",
+      "source": [
+        "WDSF 39",
+        "Plam. 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Tipsy to R",
+      "name_czech": "Tipsy do P",
+      "source": [
+        "WDSF 40",
+        "Plam. 35"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Tipsy to L",
+      "name_czech": "Tipsy do L",
+      "source": [
+        "WDSF 41",
+        "Plam. 35"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Rumba Cross",
+      "name_czech": "Rumbové křížení",
+      "source": [
+        "WDSF 42",
+        "Plam. 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Hover Corte",
+      "name_czech": "Vznosná korta/Vznosný překrut",
+      "source": [
+        "WDSF 43",
+        "Plam. 21"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Weave from PP",
+      "name_czech": "Tkáň z PP",
+      "source": [
+        "WDSF Wa-18",
+        "Plam. Wa-22"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Fallaway Turn",
+      "name_czech": "Spádná otáčka vpravo",
+      "source": [
+        "WDSF Wa-29",
+        "Plam. Wa-30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Wing",
+      "name_czech": "Převedení",
+      "source": [
+        "WDSF Wa-25",
+        "Plam. Wa-29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Wing from PP",
+      "name_czech": "Převedení z PP",
+      "source": [
+        "WDSF Wa-26",
+        "Plam. Wa-15"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Curved Feather",
+      "name_czech": "Zahnutý pérový krok",
+      "source": [
+        "WDSF Sf-36",
+        "Plam. Sf-21"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Running Spin Turn",
+      "name_czech": "Běžená spinová otáčka",
+      "source": [
+        "WDSF Wa-31",
+        "Plam. Wa-32"
+      ],
+      "for_class": [
+        "C"
+      ]
+    }
+  ],
+  "Samba": [
+    {
+      "name": "Natural Basic Movement",
+      "name_czech": "Základní pohyb - vpravo",
+      "source": [
+        "WDSF 1",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Basic Movement",
+      "name_czech": "Základní pohyb - vlevo",
+      "source": [
+        "WDSF 2",
+        "Plam. 3"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Basic Movement",
+      "name_czech": "Postupová základní pohyb",
+      "source": [
+        "WDSF 3",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Side Basic Movement to L",
+      "name_czech": "Základní pohyb stranou do L",
+      "source": [
+        "WDSF 4",
+        "Plam. 5"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Side Basic Movement To R",
+      "name_czech": "Základní pohyb stranou do P",
+      "source": [
+        "WDSF 5",
+        "Plam. 5"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Outside Basic",
+      "name_czech": "Základní pohyb mimo",
+      "source": [
+        "WDSF 5",
+        "Plam. 6"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Samba Whisk to L",
+      "name_czech": "Sambové zášvihy do L",
+      "source": [
+        "WDSF 3",
+        "Plam. 7"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Samba Whisk to R",
+      "name_czech": "Sambové zášvihy do P",
+      "source": [
+        "WDSF 4",
+        "Plam. 7"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Stationary Samba Walks",
+      "name_czech": "Sambová chůze na místě",
+      "source": [
+        "WDSF 5",
+        "Plam. 10"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade Samba Walks",
+      "name_czech": "Promenádní sambová chůze",
+      "source": [
+        "WDSF 6",
+        "Plam. 8"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Side Samba Walk",
+      "name_czech": "Sambový krok stranou",
+      "source": [
+        "WDSF 7",
+        "Plam. 9"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Turn",
+      "name_czech": "Otáčka vlevo",
+      "source": [
+        "WDSF 8",
+        "Plam. 12"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade to Counter Promenade Botafogos",
+      "name_czech": "Promenádní botafoga",
+      "source": [
+        "WDSF 8",
+        "Plam. 17"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Side Samba Chasse",
+      "name_czech": "Stranové sambové přeměny",
+      "source": [
+        "WDSF 9"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Travelling Botafogo Forward",
+      "name_czech": "Postupové botafogo vpřed",
+      "source": [
+        "WDSF 10",
+        "Plam. 14"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Travelling Botafogo Backward to Promenade Position",
+      "name_czech": "Postupové botafoga vzad do PP",
+      "source": [
+        "WDSF 11",
+        "Plam. 14"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Criss Cross Botafogos",
+      "name_czech": "Botafoga křížem krážem (Křížená botafoga)",
+      "source": [
+        "WDSF 12",
+        "Plam. 20"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Criss Cross Volta to R",
+      "name_czech": "Volta Křížem krážem do P (Křížené volty do P)",
+      "source": [
+        "WDSF 12",
+        "Plam. 32"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Criss Cross Volta to L",
+      "name_czech": "Volta Křížem krážem do L (Křížené volty do L)",
+      "source": [
+        "WDSF 13",
+        "Plam. 32"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Travelling Volta to R",
+      "name_czech": "Postupové volty do P",
+      "source": [
+        "WDSF 14",
+        "Plam. 25"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Travelling Volta to L",
+      "name_czech": "Postupové volty do L",
+      "source": [
+        "WDSF 15",
+        "Plam. 26"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Underarm Turn Turning R",
+      "name_czech": "Podtáčka pod rukou v P",
+      "source": [
+        "WDSF 16",
+        "Plam. 22"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Underarm Turn Turning L",
+      "name_czech": "Podtáčka pod rukou v L",
+      "source": [
+        "WDSF 17",
+        "Plam. 24"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Solo Spot Volta Turning L",
+      "name_czech": "Solová voltová otáčka v L",
+      "source": [
+        "WDSF 17"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Solo Spot Volta Turning R",
+      "name_czech": "Solová voltová otáčka v P",
+      "source": [
+        "WDSF 17"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Continuous Solo Spot Volta Turning L",
+      "name_czech": "Pokračující solová voltová otáčka v L",
+      "source": [
+        "WDSF 17"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Continuous Solo Spot Volta Turning R",
+      "name_czech": "Pokračující solová voltová otáčka v P",
+      "source": [
+        "WDSF 17"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Maypole - Lady turning R",
+      "name_czech": "Májka – D točí do P",
+      "source": [
+        "WDSF 18",
+        "Plam. 33"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Maypole - Lady Turning L",
+      "name_czech": "Májka – D točí do L",
+      "source": [
+        "WDSF 19",
+        "Plam. 33"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Cruzados Walks",
+      "name_czech": "Cruzado chůze",
+      "source": [
+        "WDSF 17",
+        "Plam. 44"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Cruzados Locks",
+      "name_czech": "Cruzado křížení",
+      "source": [
+        "WDSF 18",
+        "Plam. 43"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Continuous Cruzados Lock",
+      "name_czech": "Pokračující cruzado křízení",
+      "source": [
+        "WDSF 18"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Dropped Volta",
+      "name_czech": "Klesná volta",
+      "source": [
+        "WDSF 19"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Circular Voltas Turning R",
+      "name_czech": "Kruhové volty točené do P",
+      "source": [
+        "WDSF 20",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Circular Voltas Turning L",
+      "name_czech": "Kruhové volty točené do L",
+      "source": [
+        "WDSF 21",
+        "Plam. 30"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Solo Circular Voltas Turning R",
+      "name_czech": "Solové kruhové volty točené do P",
+      "source": [
+        "WDSF 21"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Solo Circular Voltas Turning L",
+      "name_czech": "Solové kruhové volty točené do L",
+      "source": [
+        "WDSF 21"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Same Foot Botafogos",
+      "name_czech": "Botafoga stejnou nohou",
+      "source": [
+        "WDSF 22",
+        "Plam. 36"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Samba Locks Lady on L Side",
+      "name_czech": "Sambová křížení – F na L straně",
+      "source": [
+        "WDSF 23",
+        "Plam. 38"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Samba Locks Lady on R Side",
+      "name_czech": "Sambová křížení – F na P straně",
+      "source": [
+        "WDSF 24",
+        "Plam. 37"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Roll",
+      "name_czech": "Valení vpravo",
+      "source": [
+        "WDSF 23",
+        "Plam. 15"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Roll",
+      "name_czech": "Valení vlevo",
+      "source": [
+        "WDSF 24"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Close Rocks",
+      "name_czech": "Uzavřené kolébky",
+      "source": [
+        "WDSF 25",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Open Rocks",
+      "name_czech": "Otevřené kolébky",
+      "source": [
+        "WDSF 26",
+        "Plam. 16"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Backward Rocks",
+      "name_czech": "Kolébky vzad",
+      "source": [
+        "WDSF 27",
+        "Plam. 18"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Plait",
+      "name_czech": "Pletenec",
+      "source": [
+        "WDSF 28",
+        "Plam. 19"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Corta Jaca",
+      "name_czech": "Korta Jaca",
+      "source": [
+        "WDSF 29",
+        "Plam. 13"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Same Position Corta Jaca",
+      "name_czech": "Korta Jaca ve stejném postavení",
+      "source": [
+        "WDSF 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Double Spiral Turn (Three Step Turn)",
+      "name_czech": "Dvojitá spirálová otáčka (Trojkroková otočka)",
+      "source": [
+        "WDSF 31"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade to Counter Promenade Runs",
+      "name_czech": "Běhy z promenády do obrácené promenády",
+      "source": [
+        "WDSF 32",
+        "Plam. 42"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Drag",
+      "name_czech": "Tažení",
+      "source": [
+        "WDSF 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Rolling off the Arm",
+      "name_czech": "Odvalení z paže",
+      "source": [
+        "WDSF 34",
+        "Plam. 45"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Carioca Runs",
+      "name_czech": "Karioka běhy",
+      "source": [
+        "WDSF 35"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Argentine Crosses",
+      "name_czech": "Argentinská křížení",
+      "source": [
+        "WDSF 36",
+        "Plam. 39"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Rhytm Bounce",
+      "name_czech": "Rytmické houpání",
+      "source": [
+        "WDSF 1",
+        "Plam. 41"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Foot Change Method 1",
+      "name_czech": "Metoda 1 změny chodidla",
+      "source": [
+        "WDSF 25",
+        "Plam. 46"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Foot Change Method 2",
+      "name_czech": "Metoda 2 změny chodidla",
+      "source": [
+        "WDSF 25",
+        "Plam. 46"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Foot Change Method 3",
+      "name_czech": "Metoda 3 změny chodidla",
+      "source": [
+        "WDSF 25",
+        "Plam. 46"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    }
+  ],
+  "Chacha": [
+    {
+      "name": "Time Step",
+      "name_czech": "Časový krok",
+      "source": [
+        "WDSF 1",
+        "Plam. 1"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Close Basic Movement",
+      "name_czech": "Uzavřený základní pohyb",
+      "source": [
+        "WDSF 2",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Basic Movement",
+      "name_czech": "Otevřený základní pohyb",
+      "source": [
+        "WDSF 3",
+        "Plam. 3"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "New York to P",
+      "name_czech": "New York do P",
+      "source": [
+        "WDSF 4",
+        "Plam. 10"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "New York to L",
+      "name_czech": "New York do L",
+      "source": [
+        "WDSF 5",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hand to Hand to R",
+      "name_czech": "Ruka k ruce do P",
+      "source": [
+        "WDSF 6",
+        "Plam. 17"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hand to Hand to L",
+      "name_czech": "Ruka k ruce do L",
+      "source": [
+        "WDSF 7",
+        "Plam. 17"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Spot Turn to R",
+      "name_czech": "Otáčka na místě do P",
+      "source": [
+        "WDSF 8",
+        "Plam. 12"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Spot Turn to L",
+      "name_czech": "Otáčka na místě do L",
+      "source": [
+        "WDSF 9",
+        "Plam. 14"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Underarm Turn Turning R",
+      "name_czech": "Podtáčka pod rukou v P",
+      "source": [
+        "WDSF 10",
+        "Plam. 13"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Underarm Turn Turning L",
+      "name_czech": "Podtáčka pod rukou v L",
+      "source": [
+        "WDSF 11",
+        "Plam. 15"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Three Cha Cha Chas to R",
+      "name_czech": "3x cha cha do P",
+      "source": [
+        "WDSF 12"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Three Cha Cha Chas to L",
+      "name_czech": "3x cha cha do L",
+      "source": [
+        "WDSF 13"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Shoulder to Shoulder",
+      "name_czech": "Rameno k rameni",
+      "source": [
+        "WDSF 14",
+        "Plam. 16"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Aida",
+      "name_czech": "Aida",
+      "source": [
+        "WDSF 15",
+        "Plam. 42"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Fan",
+      "name_czech": "Vějíř",
+      "source": [
+        "WDSF 16",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Hip Twist",
+      "name_czech": "Otevřený twist kyčlí",
+      "source": [
+        "WDSF 17",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Hip Twist to Chasse",
+      "name_czech": "Otevřený twist kyčlí do přeměny",
+      "source": [
+        "WDSF 18",
+        "Plam. 30"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Close Hip twist",
+      "name_czech": "Uzavřený twist kyčlí",
+      "source": [
+        "WDSF 19",
+        "Plam. 23"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Close Hip Twist to Chasse",
+      "name_czech": "Uzavřený twist kyčlí do přeměny",
+      "source": [
+        "WDSF 20",
+        "Plam. 24"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hockey Stick",
+      "name_czech": "Hokejka",
+      "source": [
+        "WDSF 21",
+        "Plam. 8"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hockey Stick to Chasse",
+      "name_czech": "Hokejka točená do přeměny",
+      "source": [
+        "WDSF 22",
+        "Plam. 9"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Alemana",
+      "name_czech": "Alemana",
+      "source": [
+        "WDSF 23",
+        "Plam. 25"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Alemana from Open Opposing Position",
+      "name_czech": "Alemana z Otevřeného opozičního postavení",
+      "source": [
+        "WDSF 24",
+        "Plam. 26"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Top",
+      "name_czech": "Káča vpravo",
+      "source": [
+        "WDSF 25",
+        "Plam. 18"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Cross Basic",
+      "name_czech": "Křížený základ",
+      "source": [
+        "WDSF 26",
+        "Plam. 33"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Cross Basic with Turn",
+      "name_czech": "Křížený základ s otočkou",
+      "source": [
+        "WDSF 27"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Cross basic to Open Opposing Position",
+      "name_czech": "Křížený základ do Otevřeného opozičního postavení",
+      "source": [
+        "WDSF 28"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "MCF - Simple foot change",
+      "name_czech": "Metody změny chodidla",
+      "source": [
+        "WDSF 29",
+        "Plam. 43"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Split Cuban Break to R",
+      "name_czech": "Rozdvojené kubánské přerušení do P",
+      "source": [
+        "WDSF 30",
+        "Plam. 36"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Split Cuban Break to L",
+      "name_czech": "Rozdvojené kubánské přerušení do L",
+      "source": [
+        "WDSF 31",
+        "Plam. 37"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Cuban Breaks to R",
+      "name_czech": "Kubánské přerušení do P",
+      "source": [
+        "WDSF 32",
+        "Plam. 34"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Cuban Breaks to L",
+      "name_czech": "Kubánské přerušení do L",
+      "source": [
+        "WDSF 33",
+        "Plam. 35"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Close Hip Twist spiral",
+      "name_czech": "Spirálový uzavřený twist kyčlí",
+      "source": [
+        "WDSF 35",
+        "Plam. 31"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Open Hip Twist Spiral",
+      "name_czech": "Spirálový otevřený twist kyčlí",
+      "source": [
+        "WDSF 36",
+        "Plam. 32"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Turkish Towel",
+      "name_czech": "Turecký ručník",
+      "source": [
+        "WDSF 37",
+        "Plam. 38"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Sweetheart",
+      "name_czech": "Miláček",
+      "source": [
+        "WDSF 38",
+        "Plam. 39"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Follow my Leader",
+      "name_czech": "Následuj mého vedení",
+      "source": [
+        "WDSF 39",
+        "Plam. 40"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Syncopated Open Hip Twist",
+      "name_czech": "Synkopovaný otevřený švih kyčlí",
+      "source": [
+        "WDSF 40"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Curl",
+      "name_czech": "Lokna",
+      "source": [
+        "WDSF 41",
+        "Plam. 41"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Rope Spinning",
+      "name_czech": "Laso",
+      "source": [
+        "WDSF 42",
+        "Plam. 21"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Overturned Lock Ending",
+      "name_czech": "Přetočené křížené zakončení",
+      "source": [
+        "WDSF 43"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Continuous Overturned Lock",
+      "name_czech": "Pokračující přetočené křízení",
+      "source": [
+        "WDSF 44"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Swivel from Overturned Lock",
+      "name_czech": "Výkrut z přetočeného křížení",
+      "source": [
+        "WDSF 45"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Swivel Hip twist",
+      "name_czech": "Švih kyčlí výkrutem",
+      "source": [
+        "WDSF 46"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Swivels",
+      "name_czech": "Výkruty",
+      "source": [
+        "WDSF 47"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "4 Walks and Whisks",
+      "name_czech": "4 kroky a zášvihy",
+      "source": [
+        "WDSF 48"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Advanced Method of Changing Feets",
+      "name_czech": "Pokročilé metody změny chodidel",
+      "source": [
+        "WDSF 29,49"
+      ],
+      "for_class": [
+        "C"
+      ]
+    }
+  ],
+  "Rumba": [
+    {
+      "name": "Close Basic Movement",
+      "name_czech": "Uzavřený základní pohyb",
+      "source": [
+        "WDSF 1",
+        "Plam. 1"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Basic Movement",
+      "name_czech": "Otevřený základní pohyb",
+      "source": [
+        "WDSF 2"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "New York to Right",
+      "name_czech": "New York do P",
+      "source": [
+        "WDSF 3",
+        "Plam. 9"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "New York to Left",
+      "name_czech": "New York do L",
+      "source": [
+        "WDSF 4",
+        "Plam. 10"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hand to Hand to Right",
+      "name_czech": "Ruka k ruce do P",
+      "source": [
+        "WDSF 5",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hand to Hand to Left",
+      "name_czech": "Ruka k ruce do L",
+      "source": [
+        "WDSF 6",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Spot Turn to Right",
+      "name_czech": "Otáčka na místě do P",
+      "source": [
+        "WDSF 7",
+        "Plam. 7"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Spot Turn to Left",
+      "name_czech": "Otáčka na místě do L",
+      "source": [
+        "WDSF 8",
+        "Plam. 5"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Underarm Turn Turning Right",
+      "name_czech": "Podtočení pod paží v P",
+      "source": [
+        "WDSF 9",
+        "Plam. 6"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Underarm Turn Turning Left",
+      "name_czech": "Podtočení pod paží v L",
+      "source": [
+        "WDSF 10",
+        "Plam. 8"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Side Walks and Cucarachas",
+      "name_czech": "Kroky stranou a Kukarača",
+      "source": [
+        "WDSF 11",
+        "Plam. 12"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Fan",
+      "name_czech": "Vějíř",
+      "source": [
+        "WDSF 12",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Hip Twist",
+      "name_czech": "Otevřený twist kyčlí",
+      "source": [
+        "WDSF 13",
+        "Plam. 23"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Open Hip Twist Finished to Side",
+      "name_czech": "Otevřený twist kyčlí ukončený do strany",
+      "source": [
+        "WDSF 14",
+        "Plam. 24"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hockey Stick",
+      "name_czech": "Hokejka",
+      "source": [
+        "WDSF 15",
+        "Plam. 3"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hockey Stick Finished to Side",
+      "name_czech": "Hokejka ukončená do strany",
+      "source": [
+        "WDSF 16",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Opening Out",
+      "name_czech": "Otevření v P a v L",
+      "source": [
+        "WDSF 17",
+        "Plam. 26"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Shoulder to Shoulder",
+      "name_czech": "Rameno k rameni",
+      "source": [
+        "WDSF 18",
+        "Plam. 13"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Alternative Basic Movement",
+      "name_czech": "Alternativní základní pohyb",
+      "source": [
+        "WDSF 19"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Close Hip Twist",
+      "name_czech": "Uzavřený twist kyčlí",
+      "source": [
+        "WDSF 20",
+        "Plam. 15"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Close Hip Twist Finished to Side",
+      "name_czech": "Uzavřený twist kyčlí ukončený do strany",
+      "source": [
+        "WDSF 21",
+        "Plam. 16"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Alemana",
+      "name_czech": "Alemana",
+      "source": [
+        "WDSF 22",
+        "Plam. 19"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Alemana Finished to Side",
+      "name_czech": "Alemana ukončená do strany",
+      "source": [
+        "WDSF 23",
+        "Plam. 21"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Forward Walks",
+      "name_czech": "Postupová chůze",
+      "source": [
+        "WDSF 24"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Progressive Forward Walks to Fan",
+      "name_czech": "Postupová chůze do vějíře",
+      "source": [
+        "WDSF 25"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Aida",
+      "name_czech": "Aida",
+      "source": [
+        "WDSF 26",
+        "Plam. 27"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Continuous Hip Twist",
+      "name_czech": "Pokračující twist kyčlí",
+      "source": [
+        "WDSF 27",
+        "Plam. 41"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Cuban Rocks",
+      "name_czech": "Kubánské kolébky",
+      "source": [
+        "WDSF 28",
+        "Plam. 34"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Fencing to Spin",
+      "name_czech": "Šermování do spiny",
+      "source": [
+        "WDSF 29",
+        "Plam. 25"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Continuous Circular Hip Twist",
+      "name_czech": "Pokračující kruhový twist kyčlí",
+      "source": [
+        "WDSF 30",
+        "Plam. 42"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Syncopated Open Hip Twist",
+      "name_czech": "Synkopovaný otevřený švih kyčlí",
+      "source": [
+        "WDSF 31"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Top",
+      "name_czech": "Káča vpravo",
+      "source": [
+        "WDSF 32",
+        "Plam. 14"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Top",
+      "name_czech": "Káča vlevo",
+      "source": [
+        "WDSF 33",
+        "Plam. 17"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Curl",
+      "name_czech": "Lokna",
+      "source": [
+        "WDSF 34",
+        "Plam. 31"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Curl Finished to Side",
+      "name_czech": "Lokna ukončená do strany",
+      "source": [
+        "WDSF 35",
+        "Plam. 32"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Spiral",
+      "name_czech": "Spirála",
+      "source": [
+        "WDSF 36",
+        "Plam. 28"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Spiral Finished to Side",
+      "name_czech": "Spirála ukončená do strany",
+      "source": [
+        "WDSF 37",
+        "Plam. 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Spiral to Fan",
+      "name_czech": "Spirála do vějíře",
+      "source": [
+        "WDSF 38",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Three Alemanas",
+      "name_czech": "Tři alemany",
+      "source": [
+        "WDSF 39",
+        "Plam. 37"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Sliding Doors",
+      "name_czech": "Posuvné dveře",
+      "source": [
+        "WDSF 40",
+        "Plam. 36"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Advanced Sliding Doors",
+      "name_czech": "Pokročilé posuvné dveře",
+      "source": [
+        "WDSF 41"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Three Threes",
+      "name_czech": "Tři trojky",
+      "source": [
+        "WDSF 42"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Three Threes to Fan",
+      "name_czech": "Tři trojky do vějíře",
+      "source": [
+        "WDSF 43",
+        "Plam. 38"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Rope Spinning",
+      "name_czech": "Laso",
+      "source": [
+        "WDSF 44",
+        "Plam. 39"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Swivels",
+      "name_czech": "Výkruty",
+      "source": [
+        "WDSF 44",
+        "Plam. 35"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Overturned Basic",
+      "name_czech": "Přetočený základ",
+      "source": [
+        "WDSF 45"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Forward and backward Walks Amalgations",
+      "name_czech": "Seskupení kroků vpřed a vzad",
+      "source": [
+        "WDSF 46"
+      ],
+      "for_class": [
+        "C"
+      ]
+    }
+  ],
+  "Paso Doble": [
+    {
+      "name": "Basic Movement",
+      "name_czech": "Základní pohyb",
+      "source": [
+        "WDSF 1",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Sur Place",
+      "name_czech": "Na místě",
+      "source": [
+        "WDSF 2",
+        "Plam. 3"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chasses to R",
+      "name_czech": "Přeměny vpravo",
+      "source": [
+        "WDSF 3",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Drag",
+      "name_czech": "Tažení",
+      "source": [
+        "WDSF 4"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chasses to L",
+      "name_czech": "Přeměny vlevo",
+      "source": [
+        "WDSF 5",
+        "Plam. 5"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Attack",
+      "name_czech": "Útok",
+      "source": [
+        "WDSF 6",
+        "Plam. 9"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Huit",
+      "name_czech": "Osmička",
+      "source": [
+        "WDSF 7",
+        "Plam. 8"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Separation",
+      "name_czech": "Oddálení",
+      "source": [
+        "WDSF 8",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Natural Twist Turn",
+      "name_czech": "Twistová otáčka",
+      "source": [
+        "WDSF 9",
+        "Plam. 13"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade",
+      "name_czech": "Promenáda",
+      "source": [
+        "WDSF 10",
+        "Plam. 14"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Closed promenade",
+      "name_czech": "Promenádní uzavření",
+      "source": [
+        "WDSF 11",
+        "Plam. 16"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade Link",
+      "name_czech": "Promenádní spojka",
+      "source": [
+        "WDSF 12"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Sixteen",
+      "name_czech": "Šestnáctka",
+      "source": [
+        "WDSF 13",
+        "Plam. 12"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade to Counter Promenade",
+      "name_czech": "Promenádou do obrácené promenády",
+      "source": [
+        "WDSF 14",
+        "Plam. 15"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Grand Circle",
+      "name_czech": "Velký kruh",
+      "source": [
+        "WDSF 15",
+        "Plam. 17"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Banderillas",
+      "name_czech": "Šipky",
+      "source": [
+        "WDSF 16",
+        "Plam. 19"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Fallaway Reverse",
+      "name_czech": "Spádná otáčka vlevo",
+      "source": [
+        "WDSF 17",
+        "Plam. 26"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Fallaway Whisk",
+      "name_czech": "Spádný zášvih",
+      "source": [
+        "WDSF 18",
+        "Plam. 21"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Spanish Lines",
+      "name_czech": "Španělská linie",
+      "source": [
+        "WDSF 19",
+        "Plam. 27"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "La Passe",
+      "name_czech": "Míjení",
+      "source": [
+        "WDSF 20",
+        "Plam. 18"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Syncopated Separation",
+      "name_czech": "Synkopované oddálení",
+      "source": [
+        "WDSF 21",
+        "Plam. 20"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Flamenco Taps",
+      "name_czech": "Flamengové poklepy",
+      "source": [
+        "WDSF 22",
+        "Plam. 32"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Twists",
+      "name_czech": "Twisty",
+      "source": [
+        "WDSF 23",
+        "Plam. 28"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chasse Cape",
+      "name_czech": "Šátková přemena",
+      "source": [
+        "WDSF 24",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chasse Cape Ending 1",
+      "name_czech": "Šátková přemena – zakončení 1",
+      "source": [
+        "WDSF 25",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chasse Cape Ending 2",
+      "name_czech": "Šátková přemena – zakončení 2",
+      "source": [
+        "WDSF 26",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chasse Cape Ending 3",
+      "name_czech": "Šátková přemena – zakončení 3",
+      "source": [
+        "WDSF 27",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Travelling Spins from PP",
+      "name_czech": "Postupové spiny z PP",
+      "source": [
+        "WDSF 25",
+        "Plam. 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Travelling Spins from CPP",
+      "name_czech": "Postupové spiny z OPP",
+      "source": [
+        "WDSF 26",
+        "Plam. 31"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Syncopated Coup de Pique",
+      "name_czech": "Synkopované bodnutí pikou",
+      "source": [
+        "WDSF 27",
+        "Plam. 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Separation with Lady’s Caping Walks",
+      "name_czech": "Oddálení se šátkovou chůzi dámy",
+      "source": [
+        "WDSF 28",
+        "Plam. 24"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Farol",
+      "name_czech": "Sloup",
+      "source": [
+        "WDSF 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Fregolina",
+      "name_czech": "Fregolina",
+      "source": [
+        "WDSF 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Syncopated Chasse",
+      "name_czech": "Synkopovaná přeměna",
+      "source": [
+        "WDSF 31",
+        "Plam. 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Left Foot Variation",
+      "name_czech": "Variace na levou nohu",
+      "source": [
+        "WDSF 31",
+        "Plam. 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Coup de Pique (changing from LF to RF)",
+      "name_czech": "Bodnutí pikou - se změnou z Ln na Pn",
+      "source": [
+        "WDSF 31",
+        "Plam. 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Coup de Pique (changing from RF to LF )",
+      "name_czech": "Bodnutí pikou - se změnou z Pn na Ln",
+      "source": [
+        "WDSF 31",
+        "Plam. 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    }
+  ],
+  "Jive": [
+    {
+      "name": "Basic in Place",
+      "name_czech": "Základ na místě",
+      "source": [
+        "WDSF 1",
+        "Plam. 1"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Basic in Fallaway",
+      "name_czech": "Spádný základ",
+      "source": [
+        "WDSF 2",
+        "Plam. 2"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Change of Place from R to L",
+      "name_czech": "Změna míst z P do L",
+      "source": [
+        "WDSF 3",
+        "Plam. 3"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Change of Place from L to R",
+      "name_czech": "Změna míst z L do P",
+      "source": [
+        "WDSF 4",
+        "Plam. 5"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "American spin",
+      "name_czech": "Americká spina",
+      "source": [
+        "WDSF 5",
+        "Plam. 12"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Change of Place behind the Back",
+      "name_czech": "Výměna míst za zády",
+      "source": [
+        "WDSF 6",
+        "Plam. 8"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Link",
+      "name_czech": "Spojka",
+      "source": [
+        "WDSF 7",
+        "Plam. 7"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Whip",
+      "name_czech": "Bič",
+      "source": [
+        "WDSF 8",
+        "Plam. 9"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade Walks - Slow",
+      "name_czech": "Promenádní chůze – S",
+      "source": [
+        "WDSF 9",
+        "Plam. 10"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Promenade Walks - Quick",
+      "name_czech": "Promenádní chůze – Q",
+      "source": [
+        "WDSF 10",
+        "Plam. 11"
+      ],
+      "for_class": [
+        "E",
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Fallaway Throwaway",
+      "name_czech": "Spádné odhození",
+      "source": [
+        "WDSF 11",
+        "Plam. 17"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Change of Place from R to L with Double Spin",
+      "name_czech": "Změna míst z P do L s dvojitou spinou",
+      "source": [
+        "WDSF 12",
+        "Plam. 4"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Overturned Change of Place from L to R",
+      "name_czech": "Pretočená změna míst z L do P",
+      "source": [
+        "WDSF 13",
+        "Plam. 6"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Double Cross Whip",
+      "name_czech": "Dvojitý křížený bič",
+      "source": [
+        "WDSF 14",
+        "Plam. 13"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Throwaway Whip",
+      "name_czech": "Bič s odhozením",
+      "source": [
+        "WDSF 15",
+        "Plam. 15"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Reverse Whip",
+      "name_czech": "Bič vlevo",
+      "source": [
+        "WDSF 16",
+        "Plam. 16"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Curly Whip",
+      "name_czech": "Vlnivý bič",
+      "source": [
+        "WDSF 17",
+        "Plam. 14"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Overturned Fallaway Throwaway",
+      "name_czech": "Přetočené spádné odhození",
+      "source": [
+        "WDSF 18",
+        "Plam. 18"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Stop and Go",
+      "name_czech": "Stůj a jdi",
+      "source": [
+        "WDSF 19",
+        "Plam. 20"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Hip Bump",
+      "name_czech": "Úder kyčlí",
+      "source": [
+        "WDSF 20",
+        "Plam. 30"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Windmill",
+      "name_czech": "Větrný mlýn",
+      "source": [
+        "WDSF 21",
+        "Plam. 21"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Mooch",
+      "name_czech": "Flákání",
+      "source": [
+        "WDSF 22"
+      ],
+      "for_class": [
+        "D",
+        "C"
+      ]
+    },
+    {
+      "name": "Spanish Arms",
+      "name_czech": "Španělské paže",
+      "source": [
+        "WDSF 23",
+        "Plam. 24"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chicken Walks",
+      "name_czech": "Kuřecí chůze",
+      "source": [
+        "WDSF 24",
+        "Plam. 22"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Rolling off the Arm",
+      "name_czech": "Odvalení z paže",
+      "source": [
+        "WDSF 25",
+        "Plam. 23"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Simple Spin",
+      "name_czech": "Jednoduchá spina",
+      "source": [
+        "WDSF 26",
+        "Plam. 27"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Rock to Simple Spin",
+      "name_czech": "Kolébka do jednoduché spiny",
+      "source": [
+        "WDSF 27"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Flicks into Break",
+      "name_czech": "Střihy do přerušení",
+      "source": [
+        "WDSF 28",
+        "Plam. 29"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Toe Heel Swivels",
+      "name_czech": "Výkruty špička pata",
+      "source": [
+        "WDSF 29",
+        "Plam. 28"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Sugar Push",
+      "name_czech": "Jemné postrčení",
+      "source": [
+        "WDSF 30"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Miami Special",
+      "name_czech": "Miami Special",
+      "source": [
+        "WDSF 31"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Shoulder Spin",
+      "name_czech": "Spina z ramene",
+      "source": [
+        "WDSF 32"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chugging",
+      "name_czech": "Kodrcání",
+      "source": [
+        "WDSF 33"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Chugging by ISTD",
+      "name_czech": "Kodrcání ISTD",
+      "source": [
+        "DTV-NF-7"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Catapult",
+      "name_czech": "Katapult",
+      "source": [
+        "WDSF 34"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Ball Change (see Jive Specific Principles = JSP)",
+      "name_czech": "Změna bříška (viz Specifické principy Jive)",
+      "source": [
+        "WDSF JSP",
+        "Plam. 19"
+      ],
+      "for_class": [
+        "C"
+      ]
+    },
+    {
+      "name": "Stalking Walks, Flicks into Break",
+      "name_czech": "Plíživé kroky, střihy do přerušení",
+      "source": [
+        "DTV-NF-9"
+      ],
+      "for_class": [
+        "C"
+      ]
+    }
+  ],
+  "Polka": [
+    {
+      "name": null,
+      "name_czech": "Otáčka vpravo",
+      "source": [
+        "Polka 1"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Otáčka vlevo",
+      "source": [
+        "Polka 2"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Přeměny v promenádě",
+      "source": [
+        "Polka 3"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Přeměny stranou",
+      "source": [
+        "Polka 4"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Podtáčka tanečnice",
+      "source": [
+        "Polka 5"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Rejdovačka",
+      "source": [
+        "Polka 6"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Kvapík",
+      "source": [
+        "Polka 7"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Dvojpolka",
+      "source": [
+        "Polka 8"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Rej",
+      "source": [
+        "Polka 9"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Obkročák",
+      "source": [
+        "Polka 10"
+      ],
+      "for_class": [
+        "E",
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Otáčka vpravo - ve stínové pozici",
+      "source": [
+        "Polka 1"
+      ],
+      "for_class": [
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Podtáčka tanečnice - zrychlená",
+      "source": [
+        "Polka 5"
+      ],
+      "for_class": [
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Kvapíková polka",
+      "source": [
+        "Polka 7"
+      ],
+      "for_class": [
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Dvojpolka - s výměnou míst, s točeným převedením",
+      "source": [
+        "Polka 8"
+      ],
+      "for_class": [
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Náskok a rozběh",
+      "source": [
+        "Polka 11"
+      ],
+      "for_class": [
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Přešvih",
+      "source": [
+        "Polka 12"
+      ],
+      "for_class": [
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Kolečko",
+      "source": [
+        "Polka 13"
+      ],
+      "for_class": [
+        "D"
+      ]
+    },
+    {
+      "name": null,
+      "name_czech": "Obkročák - rychlý",
+      "source": [
+        "Polka 10"
+      ],
+      "for_class": [
+        "D"
+      ]
+    }
+  ]
+}

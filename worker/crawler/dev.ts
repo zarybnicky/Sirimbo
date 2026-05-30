@@ -46,13 +46,13 @@ type ReprocessOptions = {
 
 type CrawlerStatusRow = IGetCrawlerFrontierStatusResult & {
   target: string;
-  has_loader: boolean;
-  is_stable: boolean;
+  hasLoader: boolean;
+  isStable: boolean;
 };
 
 function frontierPriority(row: CrawlerStatusRow) {
   return (
-    (row.has_loader ? 0 : 1_000_000) +
+    (row.hasLoader ? 0 : 1_000_000) +
     row.process_error * 100_000 +
     row.fetch_error * 10_000 +
     row.fetch_transient * 1_000 +
@@ -494,8 +494,13 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
     .map((row) => ({
       ...row,
       target: [row.federation, row.kind].join(':'),
-      has_loader: !!loaderFor(row.federation, row.kind),
-      is_stable: row.total === row.done,
+      hasLoader: !!loaderFor(row.federation, row.kind),
+      isStable:
+        row.total === row.done &&
+        row.fetch_due === 0 &&
+        row.fetch_error === 0 &&
+        row.fetch_transient === 0 &&
+        row.process_error === 0,
     }))
     .toSorted((a, b) => frontierPriority(b) - frontierPriority(a) || a.target.localeCompare(b.target));
 
@@ -509,15 +514,15 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
       targets: sum.targets + 1,
       done: sum.done + row.done,
       due: sum.due + row.fetch_due,
-      missing_loaders: sum.missing_loaders + (row.has_loader ? 0 : 1),
+      missing_loaders: sum.missing_loaders + (row.hasLoader ? 0 : 1),
     }),
     { targets: 0, done: 0, due: 0, missing_loaders: 0 },
   );
 
   printTable([
-    ...frontiers.filter((row) => options.full || !row.is_stable).map((row) => ({
+    ...frontiers.filter((row) => options.full || !row.isStable).map((row) => ({
       target: row.target,
-      loader: row.has_loader ? '' : 'no',
+      loader: row.hasLoader ? '' : 'no',
       done: row.done > 0 ? row.done : '',
       due: row.fetch_due > 0 ? row.fetch_due : '',
       'fetch errors': fetchErrorCell(row),
@@ -539,7 +544,7 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
     console.log();
     console.log('Done:');
     const byFederation = new Map<string, { kind: string, total: number; }[]>();
-    for (const row of frontiers.filter((row) => row.is_stable)) {
+    for (const row of frontiers.filter((row) => row.isStable)) {
       const { federation, kind, total } = row;
       const slot = byFederation.get(federation) ?? byFederation.set(federation, []).get(federation)!;
       slot.push({ kind, total });
@@ -715,7 +720,7 @@ function logClientQueries(client: PoolClient): PoolClient {
 async function validateReprocessFrontier(
   client: PoolClient,
   row: IGetReprocessFrontierResponsesResult,
-  options: ReprocessOptions,
+  options: { keepGoing?: boolean; },
 ) {
   await client.query('SAVEPOINT crawler_reprocess_frontier');
 
