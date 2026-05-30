@@ -297,7 +297,7 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
         endDate: [c.date],
         location: [c.location.trim()],
         country: [c.country.trim()],
-        name: [[c.location.trim(), c.country.trim()].join(' ')],
+        name: [[c.location.trim(), c.country.trim()].filter(Boolean).join(', ')],
       },
       client,
     );

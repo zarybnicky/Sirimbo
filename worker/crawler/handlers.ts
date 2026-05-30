@@ -24,6 +24,7 @@ import {
 } from './sztsPersonIndex.ts';
 import { wdsfCompetitionIndex } from './wdsfCompetitionIndex.ts';
 import { wdsfCompetition } from './wdsfCompetition.ts';
+import { wdsfParticipantIndex } from './wdsfParticipantIndex.ts';
 
 export type LoaderIds = {
   [F in keyof typeof LOADERS]: {
@@ -52,6 +53,8 @@ export const LOADERS = {
     competition: wdsfCompetition,
 
     // https://services.worlddancesport.org/api/1/participant?competitionId=64306
+    participantIndex: wdsfParticipantIndex,
+
     // https://services.worlddancesport.org/api/1/official?competitionId=64306 - includes letters of judges
     // https://services.worlddancesport.org/api/1/couple
     // https://services.worlddancesport.org/api/1/participant?coupleId=rls-1912
