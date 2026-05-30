@@ -35,11 +35,6 @@ WITH frontiers AS (
     count(*) FILTER (WHERE process_status = 'error')::int AS process_error,
     count(*) FILTER (WHERE process_status = 'pending' AND fetch_status = 'ok')::int
       AS process_ready,
-    min(last_fetched_at) FILTER (WHERE process_status = 'pending' AND fetch_status = 'ok')
-      AS oldest_process_ready_at,
-    (array_agg(id ORDER BY last_fetched_at NULLS FIRST, discovered_at, id)
-      FILTER (WHERE process_status = 'pending' AND fetch_status = 'ok'))[1]
-      AS sample_process_id,
     max(last_fetched_at) AS latest
   FROM frontiers f
   GROUP BY federation, kind
@@ -49,13 +44,7 @@ WITH frontiers AS (
   WHERE (:federation::text IS NULL OR df.federation = :federation)
     AND (:kind::text IS NULL OR df.kind = :kind)
 ), due_status AS (
-  SELECT
-    federation,
-    kind,
-    count(*)::int AS fetch_due,
-    min(due_at) AS oldest_due_at,
-    (array_agg(id ORDER BY due_at, last_fetched_at NULLS FIRST, id))[1] AS sample_due_id,
-    (array_agg(key ORDER BY due_at, last_fetched_at NULLS FIRST, id))[1] AS sample_due_key
+  SELECT federation, kind, count(*)::int AS fetch_due
   FROM due_fetch
   GROUP BY federation, kind
 ), fetch_jobs AS (
@@ -82,20 +71,9 @@ SELECT
   fs.process_error AS "process_error!",
   fs.latest,
   coalesce(ds.fetch_due, 0)::int AS "fetch_due!",
-  ds.oldest_due_at,
-  ds.sample_due_id,
-  ds.sample_due_key,
   fs.process_ready AS "process_ready!",
-  fs.oldest_process_ready_at,
-  fs.sample_process_id,
   coalesce(fj.queued_fetch, 0)::int AS "queued_fetch!",
-  coalesce(fj.locked_fetch, 0)::int AS "locked_fetch!",
-  (coalesce(fj.queued_fetch, 0) + coalesce(fj.locked_fetch, 0))::int
-    AS "scheduled_fetch!",
-  greatest(
-    coalesce(ds.fetch_due, 0) - coalesce(fj.queued_fetch, 0) - coalesce(fj.locked_fetch, 0),
-    0
-  )::int AS "unscheduled_fetch!"
+  coalesce(fj.locked_fetch, 0)::int AS "locked_fetch!"
 FROM frontier_status fs
 LEFT JOIN due_status ds USING (federation, kind)
 LEFT JOIN fetch_jobs fj USING (federation, kind)
@@ -232,52 +210,12 @@ SELECT
   error_fingerprint AS "error_fingerprint!",
   count(*)::int AS "count!",
   max(failed_at) AS "latest_failed_at!",
-  (array_agg(id ORDER BY failed_at DESC, id DESC) FILTER (WHERE sample_rank = 1))[1]
-    AS "sample_id!",
-  (array_agg(key ORDER BY failed_at DESC, id DESC) FILTER (WHERE sample_rank = 1))[1]
-    AS "sample_key!",
   string_agg(id::text || ':' || key, ', ' ORDER BY failed_at DESC, id DESC)
     FILTER (WHERE sample_rank <= 5) AS "samples!"
 FROM ranked
 GROUP BY federation, kind, failure, http_status, error_fingerprint
 ORDER BY count(*) DESC, max(failed_at) DESC
 LIMIT :limit;
-
-/* @name GetCrawlerWorkerJobStatus */
-WITH jobs AS (
-  SELECT
-    'frontier_fetch' AS task_identifier,
-    count(*) FILTER (WHERE state = 'ready')::int AS ready,
-    count(*) FILTER (WHERE state = 'delayed')::int AS delayed,
-    count(*) FILTER (WHERE state = 'locked')::int AS locked,
-    count(*) FILTER (WHERE state = 'failed')::int AS failed,
-    max(job_updated_at) FILTER (WHERE state = 'failed') AS latest_failed_at
-  FROM crawler.frontier_fetch_job
-  UNION ALL
-  SELECT
-    task_identifier,
-    count(*) FILTER (
-      WHERE locked_at IS NULL AND run_at <= now() AND attempts < max_attempts
-    )::int AS ready,
-    count(*) FILTER (
-      WHERE locked_at IS NULL AND run_at > now() AND attempts < max_attempts
-    )::int AS delayed,
-    count(*) FILTER (WHERE locked_at IS NOT NULL)::int AS locked,
-    count(*) FILTER (WHERE attempts >= max_attempts)::int AS failed,
-    max(updated_at) FILTER (WHERE attempts >= max_attempts) AS latest_failed_at
-  FROM graphile_worker.jobs
-  WHERE task_identifier IN ('frontier_schedule', 'frontier_process')
-  GROUP BY task_identifier
-)
-SELECT
-  task_identifier AS "task_identifier!",
-  ready AS "ready!",
-  delayed AS "delayed!",
-  locked AS "locked!",
-  failed AS "failed!",
-  latest_failed_at
-FROM jobs
-ORDER BY task_identifier;
 
 /* @name GetCrawlerFrontierJobs */
 WITH jobs AS (
@@ -342,7 +280,7 @@ ORDER BY
   j.job_id DESC
 LIMIT :limit;
 
-/* @name GetCrawlerScheduleStatus */
+/* @name GetScheduleStatus */
 WITH fetch_jobs AS (
   SELECT
     host,
@@ -570,7 +508,7 @@ WHERE id = :id::bigint;
 /* @name RescheduleFrontier */
 UPDATE crawler.frontier SET next_fetch_at = :nextRetryAt WHERE id = :id::bigint;
 
-/* @name QueueFrontierRefetch */
+/* @name QueueRefetch */
 WITH selected AS (
   SELECT f.id
   FROM crawler.frontier f

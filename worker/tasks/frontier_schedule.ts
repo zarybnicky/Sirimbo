@@ -1,6 +1,6 @@
 import type { Task } from 'graphile-worker';
 import {
-  getCrawlerScheduleStatus,
+  getScheduleStatus,
   getNextPendingProcess,
   getOutstandingJobCountForTask,
   getPendingFetch,
@@ -54,14 +54,14 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
   await withPgClient(async (client) => {
     await upsertFrontiers.run(seedFrontierParams, client);
 
-    const scheduleRows = await getCrawlerScheduleStatus.run(undefined, client);
+    const scheduleRows = await getScheduleStatus.run(undefined, client);
     const now = new Date();
     const byHost = new Map<string, { spacingMs: number; queueTailAt: Date }>();
 
     for (const row of scheduleRows) {
       byHost.set(row.host, {
         spacingMs: row.spacing ?? 50,
-        queueTailAt: row.queue_tail_at && row.queue_tail_at > now ? row.queue_tail_at : now,
+        queueTailAt: new Date(Math.max(row.queue_tail_at?.getTime() ?? now.getTime(), now.getTime())),
       });
     }
 

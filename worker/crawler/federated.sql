@@ -479,8 +479,8 @@ FROM unnest(
 )
 ON CONFLICT (federation, external_id) DO UPDATE
   SET name = COALESCE(EXCLUDED.name, federated.event.name),
-      start_date = EXCLUDED.start_date,
-      end_date = COALESCE(EXCLUDED.end_date, federated.event.end_date),
+      start_date = LEAST(EXCLUDED.start_date, federated.event.start_date),
+      end_date = GREATEST(EXCLUDED.end_date, federated.event.end_date),
       location = COALESCE(EXCLUDED.location, federated.event.location),
       city = COALESCE(EXCLUDED.city, federated.event.city),
       country = COALESCE(EXCLUDED.country, federated.event.country),

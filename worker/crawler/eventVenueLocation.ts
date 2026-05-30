@@ -3,8 +3,8 @@ import process from 'node:process';
 import {
   DuckDBConnection,
   DuckDBInstance,
-  listValue,
   type DuckDBValue,
+  listValue,
 } from '@duckdb/node-api';
 import proj4 from 'proj4';
 
@@ -60,12 +60,7 @@ let ruianDbPromise: Promise<{ connection: DuckDBConnection; sourcePath: string }
   null;
 
 export async function initializeEventVenueLocationCache() {
-  const started = performance.now();
-  const { sourcePath } = await getRuianDb();
-  console.log(
-    `[eventVenueLocation] RUIAN address DB ready: ${sourcePath} ` +
-      `(${Math.round(performance.now() - started)}ms)`,
-  );
+  await getRuianDb();
 }
 
 export async function resolveEventVenueLocations(events: EventVenueLocationInput[]) {

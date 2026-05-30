@@ -214,7 +214,8 @@ CREATE TYPE federated.competition_type AS ENUM (
   'top_level',
   'super_league',
   'g_cup',
-  'unknown'
+  'unknown',
+  'open'
 );
 
 -- immutable, federations create a new competitor entry if the composition changes

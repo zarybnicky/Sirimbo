@@ -8,7 +8,7 @@ import { Pool, type PoolClient } from 'pg';
 import Cursor from 'pg-cursor';
 import { zx } from '@traversable/zod';
 import type {
-  IGetCrawlerScheduleStatusResult,
+  IGetCrawlerFrontierStatusResult,
   IGetFrontierDetailResult,
   IGetFrontierFailureGroupsResult,
   IGetReprocessFrontierResponsesResult,
@@ -18,22 +18,14 @@ import {
   getBacktestFrontierResponses,
   getCrawlerFrontierJobs,
   getCrawlerFrontierStatus,
-  getCrawlerScheduleStatus,
-  getCrawlerWorkerJobStatus,
   getFrontierDetail,
   getFrontierFailureGroups,
   getLatestFrontierFailures,
   getLatestFrontierResponse,
   getReprocessFrontierResponses,
   queueCrawlerSchedule,
-  queueFrontierRefetch,
+  queueRefetch,
 } from './crawler.queries.ts';
-import {
-  buildStatusSnapshot,
-  type CrawlerStatusRow,
-  sortBacklogRows,
-  type StatusProblem,
-} from './statusSnapshot.ts';
 import { fetchResponse } from './fetch.ts';
 import { loaderFor, LOADERS } from './handlers.ts';
 import type { JsonLoader } from './types.ts';
@@ -47,14 +39,29 @@ type ScopeTarget = {
   federation?: string;
   kind?: string;
 };
-type DetailLine = { label: string; value: unknown };
 type ReprocessOptions = {
   keepGoing?: boolean;
   limit?: string;
 };
-type ReprocessStats = { count: number; errors: number; ms: number };
-const REPROCESS_BATCH_SIZE = 25;
-const REPROCESS_PROGRESS_EVERY = 100;
+
+type CrawlerStatusRow = IGetCrawlerFrontierStatusResult & {
+  target: string;
+  has_loader: boolean;
+  is_stable: boolean;
+};
+
+function frontierPriority(row: CrawlerStatusRow) {
+  return (
+    (row.has_loader ? 0 : 1_000_000) +
+    row.process_error * 100_000 +
+    row.fetch_error * 10_000 +
+    row.fetch_transient * 1_000 +
+    row.process_ready * 100 +
+    row.fetch_due * 10 +
+    row.fetch_pending
+  );
+}
+
 
 function formatDate(value: Date | string | null | undefined) {
   if (!value) return '-';
@@ -63,36 +70,8 @@ function formatDate(value: Date | string | null | undefined) {
   return date.toISOString().replace(/\.\d{3}Z$/, 'Z');
 }
 
-function printTable(rows: Array<Record<string, unknown>>) {
-  if (rows.length === 0) {
-    console.log('(none)');
-    return;
-  }
-
-  const columns = Object.keys(rows[0]);
-  const widths = Object.fromEntries(
-    columns.map((column) => [
-      column,
-      Math.max(column.length, ...rows.map((row) => String(row[column] ?? '').length)),
-    ]),
-  );
-
-  const printRow = (row: Record<string, unknown>) => {
-    console.log(
-      columns
-        .map((column) => String(row[column] ?? '').padEnd(widths[column]))
-        .join('  '),
-    );
-  };
-
-  printRow(Object.fromEntries(columns.map((column) => [column, column])));
-  console.log(columns.map((column) => '-'.repeat(widths[column])).join('  '));
-  for (const row of rows) printRow(row);
-}
-
-function printTableWithDetails(
-  rows: Array<Record<string, unknown>>,
-  detailForRow: (index: number) => DetailLine[],
+function printTable(
+  rows: Array<Record<string, unknown> & { details?: { label: string; value: string; }[] }>,
 ) {
   if (rows.length === 0) {
     console.log('(none)');
@@ -106,16 +85,17 @@ function printTableWithDetails(
       Math.max(column.length, ...rows.map((row) => String(row[column] ?? '').length)),
     ]),
   );
+
   const rowText = (row: Record<string, unknown>) =>
     columns.map((column) => String(row[column] ?? '').padEnd(widths[column])).join('  ');
 
   console.log(rowText(Object.fromEntries(columns.map((column) => [column, column]))));
   console.log(columns.map((column) => '-'.repeat(widths[column])).join('  '));
 
-  rows.forEach((row, index) => {
+  rows.forEach((row) => {
     console.log(rowText(row));
 
-    for (const { label, value } of detailForRow(index)) {
+    for (const { label, value } of row.details || []) {
       const lines = String(value ?? '').split('\n');
       console.log(`  ${label}: ${lines[0] ?? ''}`);
       const indent = ' '.repeat(label.length + 4);
@@ -124,71 +104,27 @@ function printTableWithDetails(
   });
 }
 
-function printSection(title: string) {
-  console.log();
-  console.log(title);
-}
-
-function truncate(value: unknown, max: number) {
-  const text = String(value ?? '');
-  if (text.length <= max) return text;
-  return `${text.slice(0, Math.max(0, max - 3))}...`;
-}
-
-function formatDetailText(value: unknown, full?: boolean, max = 500) {
-  const text = String(value ?? '');
-  return full ? text : truncate(text.replace(/\s+/g, ' '), max);
-}
-
-function detailLines(...lines: Array<DetailLine | null | undefined>) {
-  return lines.filter((line): line is DetailLine => line != null);
+function truncate(text: string, max: number) {
+  return text.length <= max ? text : `${text.slice(0, Math.max(0, max - 3))}...`;
 }
 
 function formattedDetail(label: string, value: unknown, full?: boolean) {
   if (value == null || value === '') return null;
   const text = typeof value === 'string' ? value : JSON.stringify(value);
-  return { label, value: formatDetailText(text, full) };
-}
-
-function formatFrontierTarget(
-  federation: string | null | undefined,
-  kind: string | null | undefined,
-  key?: string | null,
-) {
-  const federationText = String(federation ?? '');
-  const kindText = String(kind ?? '');
-  const keyText = String(key ?? '');
-  return keyText
-    ? `${federationText}:${kindText}:${keyText}`
-    : `${federationText}:${kindText}`;
-}
-
-function scheduleRow(row: IGetCrawlerScheduleStatusResult) {
   return {
-    host: row.host,
-    limit:
-      row.max_requests && row.per_interval
-        ? `${row.max_requests}/${row.per_interval}`
-        : '-',
-    spacing: row.spacing ?? '-',
-    queued: row.queued,
-    ready: row.ready,
-    delayed: row.delayed,
-    locked: row.locked,
-    available: formatDate(row.next_available_at),
-    next: formatDate(row.next_run_at),
-    tail: formatDate(row.queue_tail_at),
+    label,
+    value: full ? text : truncate(text.replace(/\s+/g, ' '), 500),
   };
 }
 
 function failureGroupRow(row: IGetFrontierFailureGroupsResult) {
   return {
     count: row.count,
-    latest: formatDate(row.latest_failed_at),
+    kind: [row.federation, row.kind].join(':'),
     failure: row.failure,
-    kind: formatFrontierTarget(row.federation, row.kind),
-    http: row.http_status ?? '-',
+    http: row.http_status ?? '',
     error: truncate(row.error_fingerprint, 90),
+    latest: formatDate(row.latest_failed_at),
     samples: truncate(row.samples, 80),
   };
 }
@@ -431,12 +367,8 @@ function loaderEntries() {
 
 type StatusOptions = {
   json?: boolean;
-  frontiers?: boolean;
+  full?: boolean;
 };
-
-function numericCell(value: number | null | undefined) {
-  return value && value > 0 ? value : '-';
-}
 
 function fetchErrorCell(row: Pick<CrawlerStatusRow, 'fetch_error' | 'fetch_transient'>) {
   const errors = row.fetch_error;
@@ -444,91 +376,7 @@ function fetchErrorCell(row: Pick<CrawlerStatusRow, 'fetch_error' | 'fetch_trans
   if (errors > 0 && transient > 0) return `${errors} (+${transient} transient)`;
   if (errors > 0) return errors;
   if (transient > 0) return `+${transient} transient`;
-  return '-';
-}
-
-function frontierFooter(rows: CrawlerStatusRow[]) {
-  const totals = rows.reduce(
-    (sum, row) => ({
-      kinds: sum.kinds + 1,
-      total: sum.total + row.total,
-      done: sum.done + row.done,
-      due: sum.due + row.fetch_due,
-      fetch_error: sum.fetch_error + row.fetch_error,
-      fetch_transient: sum.fetch_transient + row.fetch_transient,
-      process_ready: sum.process_ready + row.process_ready,
-      process_error: sum.process_error + row.process_error,
-      missing_loaders: sum.missing_loaders + (row.has_loader ? 0 : 1),
-    }),
-    {
-      kinds: 0,
-      total: 0,
-      done: 0,
-      due: 0,
-      fetch_error: 0,
-      fetch_transient: 0,
-      process_ready: 0,
-      process_error: 0,
-      missing_loaders: 0,
-    },
-  );
-
-  return {
-    kind: `${totals.kinds} kinds`,
-    loader: totals.missing_loaders > 0 ? `${totals.missing_loaders} missing` : 'ok',
-    total: totals.total,
-    done: totals.done,
-    due: numericCell(totals.due),
-    'fetch errors': fetchErrorCell(totals),
-    'process ready': numericCell(totals.process_ready),
-    'process errors': numericCell(totals.process_error),
-    latest: '',
-    keys: '',
-  };
-}
-
-function frontierTableRows(rows: CrawlerStatusRow[]) {
-  return rows.map((row) => ({
-    kind: row.target,
-    loader: row.has_loader ? 'yes' : 'no',
-    total: row.total,
-    done: row.done,
-    due: numericCell(row.fetch_due),
-    'fetch errors': fetchErrorCell(row),
-    'process ready': numericCell(row.process_ready),
-    'process errors': numericCell(row.process_error),
-    latest: formatDate(row.latest),
-    keys: row.keys,
-  }));
-}
-
-function printStatusFrontiers(rows: CrawlerStatusRow[], expanded = false) {
-  printSection('Frontiers');
-
-  const stable = rows
-    .filter((row) => row.is_stable)
-    .sort((a, b) => a.target.localeCompare(b.target));
-  const active = rows.filter((row) => !row.is_stable);
-  const visibleRows = expanded ? rows : active;
-
-  printTable([...frontierTableRows(visibleRows), frontierFooter(rows)]);
-  if (expanded) {
-    if (rows.length > visibleRows.length) {
-      console.log(`Showing ${visibleRows.length} of ${rows.length} frontier kinds.`);
-    }
-    return;
-  }
-
-  if (active.length > visibleRows.length) {
-    console.log(
-      `Showing ${visibleRows.length} of ${active.length} active frontier kinds.`,
-    );
-  }
-  if (stable.length > 0) {
-    console.log(
-      `done: ${stable.map((row) => `${row.target} (${row.total})`).join(', ')}`,
-    );
-  }
+  return '';
 }
 
 async function showFailures(
@@ -550,66 +398,38 @@ async function showFailures(
       { federation, kind, limit, excludeHttpStatuses },
       pool,
     );
-
     if (options.json) {
       console.log(JSON.stringify(groups, null, 2));
       return;
     }
-
     printTable(groups.map(failureGroupRow));
     return;
   }
 
   const rows = await getLatestFrontierFailures.run(
-    {
-      federation,
-      kind,
-      key: null,
-      limit,
-      excludeHttpStatuses,
-    },
+    { federation, kind, limit, excludeHttpStatuses },
     pool,
   );
-  const displayRows = rows.map((row) => {
-    const details = detailLines(
-      formattedDetail('fetch', row.response_error, options.full),
-      formattedDetail('process', row.process_error, options.full),
-    );
-
-    if (details.length === 0) {
-      details.push({
-        label: 'error',
-        value:
-          row.error_text ||
-          (row.process_status === 'error'
-            ? 'Processing failed without a stored error'
-            : '-'),
-      });
-    }
-
-    return { ...row, details };
-  });
-
   if (options.json) {
-    console.log(JSON.stringify(displayRows, null, 2));
+    console.log(JSON.stringify(rows, null, 2));
     return;
   }
-
-  const short = (value: unknown, max: number) =>
-    options.full ? String(value ?? '') : truncate(value, max);
-
-  printTableWithDetails(
-    displayRows.map((row) => ({
+  printTable(
+    rows.map((row) => ({
       failed: formatDate(row.failed_at),
       failure: row.failure,
       id: row.id,
-      kind: formatFrontierTarget(row.federation, row.kind, row.key),
+      kind: [row.federation, row.kind, row.key].join(':'),
       http: row.http_status ?? '-',
       errors: row.error_count,
       next: formatDate(row.next_fetch_at),
-      url: short(row.url, 80) || '-',
+      url: row.url || '-',
+      details: [
+        formattedDetail('fetch', row.response_error, options.full) ||
+          formattedDetail('process', row.process_error, options.full) ||
+          {label: 'error', value: row.error_text}
+      ],
     })),
-    (index) => displayRows[index].details,
   );
 }
 
@@ -621,18 +441,13 @@ type JobOptions = {
   full?: boolean;
 };
 
-function jobStateFromOptions(options: JobOptions): 'failed' | 'active' | null {
-  const selected = [options.failed, options.active].filter(Boolean).length;
-  if (selected > 1) throw new Error('Use only one of --failed or --active');
-  if (options.failed) return 'failed';
-  if (options.active) return 'active';
-  return null;
-}
-
 async function showJobs(targetText: string | undefined, options: JobOptions) {
   const target = parseScopeTarget(targetText);
   const limit = parseLimit(options.limit, 20);
-  const state = jobStateFromOptions(options);
+
+  const selected = [options.failed, options.active].filter(Boolean).length;
+  if (selected > 1) throw new Error('Use only one of --failed or --active');
+  const state = options.failed ? 'failed' : options.active ? 'active' : null
   const rows = await getCrawlerFrontierJobs.run(
     { federation: target?.federation, kind: target?.kind, state, limit },
     pool,
@@ -643,25 +458,11 @@ async function showJobs(targetText: string | undefined, options: JobOptions) {
     return;
   }
 
-  printSection(`Frontier jobs (${state ?? 'all'})`);
-  const short = (value: unknown, max: number) =>
-    options.full ? String(value ?? '') : truncate(value, max);
-  const displayRows = rows.map((row) => {
-    const details = detailLines(
-      formattedDetail('job', row.job_error, options.full),
-      formattedDetail('fetch', row.response_error, options.full),
-      formattedDetail('process', row.process_error, options.full),
-      formattedDetail('content', row.response_content, options.full),
-    );
-
-    return { ...row, details };
-  });
-
-  printTableWithDetails(
-    displayRows.map((row) => ({
+  printTable(
+    rows.map((row) => ({
       state: row.state,
       job: row.job_id,
-      target: short(formatFrontierTarget(row.federation, row.kind, row.frontier_key), 42),
+      target: [row.federation, row.kind, row.frontier_key].join(':'),
       frontier: row.frontier_id,
       attempts: `${row.attempts}/${row.max_attempts}`,
       run: formatDate(row.run_at),
@@ -670,179 +471,90 @@ async function showJobs(targetText: string | undefined, options: JobOptions) {
       process: row.process_status,
       http: row.response_http_status ?? '-',
       updated: formatDate(row.job_updated_at),
-    })),
-    (index) => displayRows[index].details,
-  );
-}
-
-function printStatusProblems(rows: StatusProblem[]) {
-  printSection('Problems');
-  printTable(
-    rows.map((row) => ({
-      severity: row.severity,
-      code: row.code,
-      kind: row.kind ?? row.task ?? '-',
-      host: row.host ?? '-',
-      count: row.count,
-      at: formatDate(row.at),
-      sample: row.sample_id ?? '-',
-      message: truncate(row.message, 90),
+      details: [
+        formattedDetail('job', row.job_error, options.full),
+        formattedDetail('fetch', row.response_error, options.full),
+        formattedDetail('process', row.process_error, options.full),
+        formattedDetail('content', row.response_content, options.full),
+      ].filter(x => x !== null),
     })),
   );
-}
-
-function printStatusBacklog(rows: CrawlerStatusRow[]) {
-  printSection('Backlog');
-  printTable(
-    rows.map((row) => ({
-      kind: formatFrontierTarget(row.federation, row.kind),
-      host: row.host ?? '-',
-      due: row.fetch_due,
-      unscheduled: row.unscheduled_fetch,
-      queued: row.queued_fetch,
-      locked: row.locked_fetch,
-      process: row.process_ready,
-      oldest: formatDate(row.oldest_due_at),
-    })),
-  );
-}
-
-function printCommands(commands: string[]) {
-  printSection('Next commands');
-  if (commands.length === 0) {
-    console.log('(none)');
-    return;
-  }
-  for (const command of commands) console.log(command);
-}
-
-function statusCommands(
-  filter: ScopeTarget,
-  failures: IGetFrontierFailureGroupsResult[],
-  problems: StatusProblem[],
-) {
-  const scope =
-    filter.federation && filter.kind
-      ? `${filter.federation}:${filter.kind}`
-      : (filter.federation ?? '');
-  const commands = [`pnpm crawler failures ${scope}`];
-
-  if (
-    problems.some(
-      (problem) => problem.code === 'worker_failure' && problem.task === 'frontier_fetch',
-    )
-  ) {
-    commands.push(`pnpm crawler jobs --failed ${scope}`);
-  }
-
-  const sampleProblem = problems.find((problem) => problem.sample_id);
-  if (sampleProblem?.sample_id) {
-    commands.push(`pnpm crawler explain ${sampleProblem.sample_id}`);
-  }
-
-  const failureSample = failures.find((failure) => failure.sample_id);
-  if (failureSample?.sample_id && failureSample.sample_id !== sampleProblem?.sample_id) {
-    commands.push(`pnpm crawler explain ${failureSample.sample_id}`);
-  }
-
-  const failure = failures.find((row) => row.federation && row.kind);
-  if (failure) {
-    const target = `${failure.federation}:${failure.kind}`;
-    commands.push(`pnpm crawler refetch ${target}`);
-  }
-
-  const refetchProblem = problems.find(
-    (problem) =>
-      problem.kind &&
-      problem.host &&
-      problem.sample_key != null &&
-      problem.code !== 'unknown_loader',
-  );
-  if (refetchProblem?.kind && refetchProblem.sample_key != null) {
-    const target = refetchProblem.sample_key
-      ? `${refetchProblem.kind}:${refetchProblem.sample_key}`
-      : refetchProblem.kind;
-    commands.push(`pnpm crawler refetch ${target}`);
-  }
-
-  return [...new Set(commands)];
 }
 
 async function showStatus(target: ScopeTarget | undefined, options: StatusOptions) {
   const allowRefetch = process.env.CRAWLER_DISABLE_REFETCH !== 'true';
-  const generatedAt = new Date();
   const { federation, kind } = target ?? {};
 
-  const [frontierRows, failureGroups, workerJobRows, scheduleRows] = await Promise.all([
+  const [frontierRows, failures] = await Promise.all([
     getCrawlerFrontierStatus.run({ federation, kind, allowRefetch }, pool),
     getFrontierFailureGroups.run({ federation, kind, excludeHttpStatuses: null }, pool),
-    getCrawlerWorkerJobStatus.run(undefined, pool),
-    getCrawlerScheduleStatus.run(undefined, pool),
   ]);
 
-  const snapshot = buildStatusSnapshot({
-    generatedAt,
-    filter: { federation, kind },
-    frontierRows,
-    failureGroups,
-    workerJobs: workerJobRows,
-    scheduleRows,
-  });
-
-  const visibleFrontiers = options.frontiers
-    ? snapshot.frontiers
-    : snapshot.frontiers.filter((row) => !row.is_stable);
-  const visibleBacklog = [...snapshot.frontiers]
-    .filter((row) => row.fetch_due > 0 || row.process_ready > 0)
-    .sort(sortBacklogRows);
-  const suggestedCommands = statusCommands(
-    snapshot.filter,
-    snapshot.failures,
-    snapshot.problems,
-  );
+  const frontiers = frontierRows
+    .map((row) => ({
+      ...row,
+      target: [row.federation, row.kind].join(':'),
+      has_loader: !!loaderFor(row.federation, row.kind),
+      is_stable: row.total === row.done,
+    }))
+    .toSorted((a, b) => frontierPriority(b) - frontierPriority(a) || a.target.localeCompare(b.target));
 
   if (options.json) {
-    const output = options.frontiers
-      ? {
-          generated_at: snapshot.generated_at,
-          filter: snapshot.filter,
-          frontiers: visibleFrontiers,
-        }
-      : {
-          ...snapshot,
-          problems: snapshot.problems,
-          frontiers: snapshot.failures,
-          backlog: visibleBacklog,
-          failures: snapshot.failures,
-          schedule: snapshot.schedule,
-          suggested_commands: suggestedCommands,
-        };
-    console.log(JSON.stringify(output, null, 2));
+    console.log(JSON.stringify({ frontiers, failures }, null, 2));
     return;
   }
 
-  console.log(
-    [
-      `Crawler status ${snapshot.generated_at}`,
-      federation ? `filter ${federation}${kind ? `:${kind}` : ''}` : null,
-    ]
-      .filter(Boolean)
-      .join('  '),
+  const totals = frontiers.reduce(
+    (sum, row) => ({
+      targets: sum.targets + 1,
+      done: sum.done + row.done,
+      due: sum.due + row.fetch_due,
+      missing_loaders: sum.missing_loaders + (row.has_loader ? 0 : 1),
+    }),
+    { targets: 0, done: 0, due: 0, missing_loaders: 0 },
   );
 
-  if (options.frontiers) {
-    printStatusFrontiers(snapshot.frontiers, true);
-    return;
-  }
+  printTable([
+    ...frontiers.filter((row) => options.full || !row.is_stable).map((row) => ({
+      target: row.target,
+      loader: row.has_loader ? '' : 'no',
+      done: row.done > 0 ? row.done : '',
+      due: row.fetch_due > 0 ? row.fetch_due : '',
+      'fetch errors': fetchErrorCell(row),
+      'process errors': row.process_error > 0 ? row.process_error : '',
+      'process': row.process_ready > 0 ? row.process_ready : '',
+      'queued': row.queued_fetch > 0 ? row.queued_fetch : '',
+      'locked': row.locked_fetch > 0 ? row.locked_fetch : '',
+      keys: row.keys,
+    })),
+    {
+      target: `${totals.targets} total`,
+      loader: totals.missing_loaders > 0 ? `${totals.missing_loaders} missing` : '',
+      done: totals.done > 0 ? totals.done : '',
+      due: totals.due > 0 ? totals.due : '',
+    },
+  ]);
 
-  printStatusProblems(snapshot.problems);
-  printStatusFrontiers(snapshot.frontiers);
-  printStatusBacklog(visibleBacklog);
-  printSection('Failure groups');
-  printTable(snapshot.failures.map(failureGroupRow));
-  printSection('Schedule');
-  printTable(snapshot.schedule.map(scheduleRow));
-  printCommands(suggestedCommands);
+  if (!options.full) {
+    console.log();
+    console.log('Done:');
+    const byFederation = new Map<string, { kind: string, total: number; }[]>();
+    for (const row of frontiers.filter((row) => row.is_stable)) {
+      const { federation, kind, total } = row;
+      const slot = byFederation.get(federation) ?? byFederation.set(federation, []).get(federation)!;
+      slot.push({ kind, total });
+    }
+    for (const [fed, kinds] of [...byFederation.entries()].toSorted((a, b) => a[0].localeCompare(b[0]))) {
+      const kindsReport = kinds
+        .toSorted((a, b) => b.total - a.total || a.kind.localeCompare(b.kind))
+        .map(x => x.total === 1 ? x.kind : `${x.kind} (${x.total})`)
+        .join(', ');
+      console.log(`${fed}: ${kindsReport}`);
+    }
+  }
+  console.log();
+  console.log('Failures');
+  printTable(failures.map(failureGroupRow));
 }
 
 function explainState(row: IGetFrontierDetailResult) {
@@ -932,7 +644,7 @@ type RefetchOptions = {
   limit?: string;
 };
 
-async function queueRefetch(target: string, options: RefetchOptions) {
+async function refetch(target: string, options: RefetchOptions) {
   const parsed = parseTarget(target);
   if (!parsed) throw new Error('Target must be federation[:kind[:key]]');
   const isExact = parsed.key != null;
@@ -940,44 +652,23 @@ async function queueRefetch(target: string, options: RefetchOptions) {
     throw new Error(`Unknown loader ${parsed.federation}:${parsed.kind}`);
   }
 
-  const limit = isExact ? 1 : parseOptionalLimit(options.limit);
-  const rows = await queueFrontierRefetch.run(
+  const rows = await queueRefetch.run(
     {
       federation: parsed.federation,
       kind: parsed.kind ?? null,
       key: parsed.key ?? null,
       includeOk: options.all ?? false,
-      limit,
     },
     pool,
   );
-  const scheduled = rows.length > 0;
-  if (scheduled) await queueCrawlerSchedule.run(undefined, pool);
+  if (rows.length > 0) await queueCrawlerSchedule.run(undefined, pool);
   if (isExact && rows.length === 0) throw new Error(`Frontier ${target} not found`);
 
   if (options.json) {
-    console.log(JSON.stringify({ scheduled, rows }, null, 2));
-    return;
+    console.log(JSON.stringify(rows, null, 2));
+  } else {
+    console.log(`Queued ${rows.length} rows`);
   }
-
-  const label = isExact
-    ? 'frontier row'
-    : options.all
-      ? 'frontier rows'
-      : 'failed frontier rows';
-  console.log(
-    `Queued ${rows.length} ${label}` + (limit == null ? '' : ` (limit ${limit})`),
-  );
-  if (scheduled) console.log(`Queued frontier_schedule job`);
-  printTable(
-    rows.slice(0, 50).map((row) => ({
-      action: 'refetch queued',
-      id: row.id,
-      target: formatFrontierTarget(row.federation, row.kind, row.key),
-    })),
-  );
-  if (rows.length > 50)
-    console.log(`Showing 50 of ${rows.length}; use --json for all rows.`);
 }
 
 function queryText(query: unknown) {
@@ -1042,8 +733,7 @@ async function validateReprocessFrontier(
     await client.query('RELEASE SAVEPOINT crawler_reprocess_frontier');
 
     console.error(
-      `Reprocess failed for frontier ${row.id} ` +
-        `(${formatFrontierTarget(row.federation, row.kind, row.key)})`,
+      `Reprocess failed for frontier ${row.id} (${[row.federation, row.kind, row.key].join(':')})`,
     );
     console.error(`response: ${row.url}`);
     console.error(formatException(e));
@@ -1059,7 +749,7 @@ async function reprocessCached(target: string | undefined, options: ReprocessOpt
   const limit = parseOptionalLimit(options.limit);
   const selectClient = await pool.connect();
   const processClient = await pool.connect();
-  const stats = new Map<string, ReprocessStats>();
+  const stats = new Map<string, { count: number; errors: number; ms: number }>();
   const counts = { processed: 0, failures: 0 };
   const started = performance.now();
   let inTransaction = false;
@@ -1078,7 +768,7 @@ async function reprocessCached(target: string | undefined, options: ReprocessOpt
 
     let shouldStop = false;
     while (!shouldStop) {
-      const rows = await cursor.read(REPROCESS_BATCH_SIZE);
+      const rows = await cursor.read(25);
       if (rows.length === 0) break;
 
       for (const row of rows) {
@@ -1104,7 +794,7 @@ async function reprocessCached(target: string | undefined, options: ReprocessOpt
         }
 
         const total = counts.processed + counts.failures;
-        if (total % REPROCESS_PROGRESS_EVERY === 0) {
+        if (total % 100 === 0) {
           process.stdout.write(
             `\rValidated ${counts.processed}/${total} responses so far; ` +
               `${counts.failures} failures; ` +
@@ -1190,15 +880,15 @@ cli.command('list', 'List crawler loaders').action(() => {
 cli
   .command('', 'Show crawler health status')
   .option('--json', 'Print JSON')
+  .option('--full', 'Do not abbreviate done frontiers')
   .action((options: StatusOptions) => {
     return showStatus(undefined, options);
   });
 
 cli
   .command('status [target]', 'Show crawler health status')
-  .option('--frontiers', 'Show the expanded frontier kind table')
-  .option('-n, --limit <limit>', 'Maximum rows to show per list section')
   .option('--json', 'Print JSON')
+  .option('--full', 'Do not abbreviate done frontiers')
   .action((target: string | undefined, options: StatusOptions) => {
     return showStatus(parseScopeTarget(target), options);
   });
@@ -1249,11 +939,10 @@ cli.command('fetch <target>', 'Fetch and cache a response').action((target: stri
 });
 
 cli
-  .command('refetch <target>', 'Queue federation:kind[:key] for immediate re-fetch')
+  .command('refetch <target>', 'Queue federation[:kind[:key]] for immediate re-fetch')
   .option('--all', 'Include OK rows when refetching a scoped federation[:kind] target')
-  .option('-n, --limit <limit>', 'Maximum scoped rows to include')
   .option('--json', 'Print JSON for scoped-row selections')
-  .action((target: string, options: RefetchOptions) => queueRefetch(target, options));
+  .action((target: string, options: RefetchOptions) => refetch(target, options));
 
 cli
   .command('backtest [target]', 'Strict-validate cached JSON responses for a loader')

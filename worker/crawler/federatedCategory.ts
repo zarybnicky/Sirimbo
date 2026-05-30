@@ -43,14 +43,14 @@ async function refreshCache(client: PoolClient): Promise<void> {
 export async function getFederatedCategoryId(
   client: PoolClient,
   params: CategoryParams,
-): Promise<string | undefined> {
-  return (await getFederatedCategoryIds(client, [params]))[0];
+): Promise<string> {
+  return (await getFederatedCategoryIds(client, [params]))[0]!;
 }
 
 export async function getFederatedCategoryIds(
   client: PoolClient,
   params: readonly CategoryParams[],
-): Promise<(string | undefined)[]> {
+): Promise<string[]> {
   if (params.length === 0) return [];
 
   if (Date.now() - cacheTime > CACHE_TTL_MS) {
@@ -88,5 +88,5 @@ export async function getFederatedCategoryIds(
     }
   }
 
-  return params.map((item) => categoryCache.get(categoryKey(item)));
+  return params.map((item) => categoryCache.get(categoryKey(item))!);
 }
