@@ -26,18 +26,6 @@ import { wdsfCompetitionIndex } from './wdsfCompetitionIndex.ts';
 import { wdsfCompetition } from './wdsfCompetition.ts';
 import { wdsfParticipantIndex } from './wdsfParticipantIndex.ts';
 
-export type LoaderIds = {
-  [F in keyof typeof LOADERS]: {
-    federation: F;
-    kind: keyof (typeof LOADERS)[F];
-  };
-}[keyof typeof LOADERS];
-
-export function loaderFor(federation: string, kind: string): Loader {
-  const LOADER_MAP: Record<string, Record<string, Loader>> = LOADERS;
-  return LOADER_MAP[federation]?.[kind];
-}
-
 export const LOADERS = {
   wdsf: {
     // https://services.worlddancesport.org/api/1/person
@@ -176,3 +164,51 @@ export const LOADERS = {
     // https://baza.taniec-nowoczesny.pl/reg/LIVE/2025/20251108_Elblag_ZTN/PZST_category_60001159.json?_cb=1764631931521
   },
 };
+
+type Loaders = typeof LOADERS;
+
+export type LoaderIds = {
+  [F in keyof Loaders]: {
+    federation: F;
+    kind: keyof (Loaders)[F];
+  };
+}[keyof Loaders];
+
+export type LoaderEntry<I extends LoaderIds = LoaderIds> =
+  I extends { federation: infer F; kind: infer K }
+    ? F extends keyof Loaders
+      ? K extends keyof Loaders[F]
+        ? {
+            federation: F;
+            kind: K;
+            loader: Loaders[F][K];
+          }
+        : never
+      : never
+    : never;
+
+const entries = <T extends object>(value: T) =>
+  Object.entries(value) as {
+    [K in Extract<keyof T, string>]: [K, T[K]];
+  }[Extract<keyof T, string>][];
+
+export const ALL_LOADERS = entries(LOADERS)
+  .flatMap(<F extends keyof Loaders & string>([federation, kinds]: [F, Loaders[F]]) =>
+    entries(kinds).map(
+      ([kind, loader]) => ({ federation, kind, loader })
+    ) as LoaderEntry<Extract<LoaderIds, { federation: F }>>[]
+  ) satisfies LoaderEntry[];
+
+export function loaderFor(federation: string, kind: string): Loader | undefined {
+  const LOADER_MAP: Record<string, Record<string, Loader>> = LOADERS;
+  return LOADER_MAP[federation]?.[kind];
+}
+
+export function loadersFor(federation?: string | null, kind?: string | null): {
+  federation: string; kind: string; loader: Loader
+}[] {
+  if (!federation) return ALL_LOADERS;
+  if (!kind) return ALL_LOADERS.filter(x => x.federation === federation);
+  const loader = loaderFor(federation, kind);
+  return loader ? [{ federation, kind, loader } as any] : [];
+}

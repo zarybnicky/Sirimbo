@@ -1,6 +1,3 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
 import process from 'node:process';
 import { deepStrictEqual } from 'node:assert/strict';
 import { cac } from 'cac';
@@ -8,51 +5,42 @@ import { Pool, type PoolClient } from 'pg';
 import Cursor from 'pg-cursor';
 import { zx } from '@traversable/zod';
 import type {
-  IGetCrawlerFrontierStatusResult,
+  IGetCrawlerStatusResult,
   IGetFrontierDetailResult,
-  IGetFrontierFailureGroupsResult,
-  IGetReprocessFrontierResponsesResult,
+  IGetFrontierResponsesResult,
 } from './crawler.queries.ts';
 import {
-  getBacktestFrontierKinds,
   getBacktestFrontierResponses,
-  getCrawlerFrontierJobs,
-  getCrawlerFrontierStatus,
+  getCrawlerJobs,
+  getCrawlerStatus,
   getFrontierDetail,
   getFrontierFailureGroups,
+  getFrontierResponses,
   getLatestFrontierFailures,
   getLatestFrontierResponse,
-  getReprocessFrontierResponses,
   queueCrawlerSchedule,
   queueRefetch,
 } from './crawler.queries.ts';
-import { fetchResponse } from './fetch.ts';
-import { loaderFor, LOADERS } from './handlers.ts';
+import { ALL_LOADERS, loaderFor, LOADERS, loadersFor } from './handlers.ts';
 import type { JsonLoader } from './types.ts';
 import { formatException } from './error.ts';
 
 const pool = new Pool();
-const REQUEST_CACHE_DIR = resolve(import.meta.dirname, '..', '.requests');
 
 type OutputOptions = { json?: boolean };
-type ScopeTarget = {
-  federation?: string;
-  kind?: string;
-};
-type ReprocessOptions = {
+type ProcessOptions = {
   keepGoing?: boolean;
   limit?: string;
+  verbose?: boolean;
 };
 
-type CrawlerStatusRow = IGetCrawlerFrontierStatusResult & {
+type CrawlerStatusRow = IGetCrawlerStatusResult & {
   target: string;
-  hasLoader: boolean;
   isStable: boolean;
 };
 
 function frontierPriority(row: CrawlerStatusRow) {
   return (
-    (row.hasLoader ? 0 : 1_000_000) +
     row.process_error * 100_000 +
     row.fetch_error * 10_000 +
     row.fetch_transient * 1_000 +
@@ -71,7 +59,7 @@ function formatDate(value: Date | string | null | undefined) {
 }
 
 function printTable(
-  rows: Array<Record<string, unknown> & { details?: { label: string; value: string; }[] }>,
+  rows: Array<Record<string, unknown> & { details?: Record<string, string | null> }>,
 ) {
   if (rows.length === 0) {
     console.log('(none)');
@@ -92,59 +80,38 @@ function printTable(
   console.log(rowText(Object.fromEntries(columns.map((column) => [column, column]))));
   console.log(columns.map((column) => '-'.repeat(widths[column])).join('  '));
 
-  rows.forEach((row) => {
+  rows.forEach(({ details, ...row }) => {
     console.log(rowText(row));
-
-    for (const { label, value } of row.details || []) {
-      const lines = String(value ?? '').split('\n');
-      console.log(`  ${label}: ${lines[0] ?? ''}`);
-      const indent = ' '.repeat(label.length + 4);
-      for (const line of lines.slice(1)) console.log(`${indent}${line}`);
+    if (!details) return;
+    for (const [label, value] of Object.entries(details)) {
+      if (!value) continue;
+      const realLabel = label ? `${label}: ` : '  ';
+      const lines = value.split('\n');
+      console.log(`${realLabel}${lines[0] ?? ''}`);
+      const indent = ' '.repeat(realLabel.length);
+      for (const line of lines.slice(1)) console.log(`  ${indent}${line}`);
     }
   });
 }
 
-function truncate(text: string, max: number) {
+function truncate(text: string | null, max: number) {
+  if (!text) return null;
+  text = text.replace(/\s+/g, ' ');
   return text.length <= max ? text : `${text.slice(0, Math.max(0, max - 3))}...`;
 }
 
-function formattedDetail(label: string, value: unknown, full?: boolean) {
-  if (value == null || value === '') return null;
-  const text = typeof value === 'string' ? value : JSON.stringify(value);
-  return {
-    label,
-    value: full ? text : truncate(text.replace(/\s+/g, ' '), 500),
-  };
-}
-
-function failureGroupRow(row: IGetFrontierFailureGroupsResult) {
-  return {
-    count: row.count,
-    kind: [row.federation, row.kind].join(':'),
-    failure: row.failure,
-    http: row.http_status ?? '',
-    error: truncate(row.error_fingerprint, 90),
-    latest: formatDate(row.latest_failed_at),
-    samples: truncate(row.samples, 80),
-  };
-}
-
-function parseLimit(value: unknown, fallback: number) {
-  const limit = Number(value ?? fallback);
+function parseLimit(value: unknown) {
+  if (!value) return null;
+  const limit = Number(value);
   if (!Number.isInteger(limit) || limit < 1) {
     throw new Error('Limit must be a positive integer');
   }
   return limit;
 }
 
-function parseOptionalLimit(value: unknown) {
-  if (value == null || value === false || value === '') return null;
-  return parseLimit(value, 1);
-}
-
 function parseHttpStatuses(value: unknown) {
   const codes = (Array.isArray(value) ? value : [value])
-    .filter((part) => part != null && part !== false)
+    .filter(Boolean)
     .flatMap((part) => String(part).split(','))
     .map((part) => part.trim())
     .filter(Boolean);
@@ -160,74 +127,27 @@ function parseHttpStatuses(value: unknown) {
   });
 }
 
-function parseTarget(target: string | undefined) {
-  if (target == null) return undefined;
+type Target
+   = { scope: 'frontier'; id: null; federation: string; kind: string; key: string; }
+   | { scope: 'frontier'; id: string; federation: null; kind: null; key: null; }
+   | { scope: 'kind'; federation: string; kind: string; key: null; }
+   | { scope: 'federation'; federation: string; kind: null; key: null; }
+   | { scope: 'none'; federation: null; kind: null; key: null; };
+
+function parseTarget(target: string | undefined): Target {
+  if (!target)
+    return { scope: 'none', federation: null, kind: null, key: null };
+  if (/^\d+$/.test(target)) {
+    return { scope: 'frontier', id: target, federation: null, kind: null, key: null };
+  }
 
   const [federation, kind, ...keyParts] = target.split(':');
-  if (!federation || kind === '')
-    throw new Error('Target must be federation[:kind[:key]]');
-
-  return {
-    federation,
-    kind,
-    key: keyParts.length > 0 ? keyParts.join(':') : undefined,
-  };
-}
-
-function parseScopeTarget(target: string | undefined): ScopeTarget | undefined {
-  const parsed = parseTarget(target);
-  if (!parsed) return undefined;
-  if (parsed.key != null) throw new Error('Target must be federation[:kind]');
-  return { federation: parsed.federation, kind: parsed.kind };
-}
-
-function parseKindTarget(target: string | undefined) {
-  const parsed = parseTarget(target);
-  if (!parsed?.kind) throw new Error('Target must be federation:kind[:key]');
-  return {
-    federation: parsed.federation,
-    kind: parsed.kind,
-    key: parsed.key,
-  };
-}
-
-function parseExactTarget(target: string) {
-  const parsed = parseKindTarget(target);
-  return { federation: parsed.federation, kind: parsed.kind, key: parsed.key ?? '' };
-}
-
-function parseExplainTarget(target: string) {
-  if (/^\d+$/.test(target)) {
-    return { id: target, federation: null, kind: null, key: null };
-  }
-
-  const { federation, kind, key } = parseExactTarget(target);
-  return { id: null, federation, kind, key };
-}
-
-async function ensureCached(
-  federation: string,
-  kind: string,
-  key: string,
-  overwrite?: boolean,
-) {
-  const loader = loaderFor(federation, kind);
-  if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
-
-  const path = resolve(REQUEST_CACHE_DIR, `${federation}:${kind}:${key}`);
-  if (existsSync(path) && !overwrite) {
-    console.log(`Using ${path}`);
-    return { loader, path };
-  }
-
-  const { url, init = {} } = loader.buildRequest(key);
-  const result = await fetchResponse(loader, url, init, { mode: 'strict' });
-  console.log(`Fetched ${url} (${result.httpStatus}, ${result.fetchStatus})`);
-  if (result.error) throw new Error(result.error);
-
-  await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, `${JSON.stringify(result.content, null, 2)}`, 'utf8');
-  return { loader, path };
+  const key = keyParts.length > 0 ? keyParts.join(':') : undefined;
+  if (key)
+    return { scope: 'frontier', id: null, federation, kind, key };
+  if (kind)
+    return { scope: 'kind', federation, kind, key: null };
+  return { scope: 'federation', federation, kind: null, key: null };
 }
 
 async function backtestJsonResponses(
@@ -286,128 +206,63 @@ async function backtestJsonResponses(
   return count;
 }
 
-async function backtestSchemas(
-  federation: string | undefined,
-  kind: string | undefined,
-  options: { verbose?: boolean },
-) {
-  if (federation || kind) {
-    if (!federation || !kind) throw new Error('Usage: backtest <federation:kind>');
-    const loader = loaderFor(federation, kind);
-    if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
-    if (loader.mode !== 'json') {
-      throw new Error(`Backtest only supports JSON loaders (${federation}:${kind})`);
-    }
+async function backtestSchemas(target: string | undefined, options: { verbose?: boolean }) {
+  const { scope, federation, kind } = parseTarget(target);
+  if (scope === 'frontier')
+    throw new Error('Target must be federation[:kind]');
+  const loaders = loadersFor(federation, kind);
 
-    const count = await backtestJsonResponses(federation, kind, loader, {
-      verbose: options.verbose,
-    });
-    console.log(`Validated ${count} responses of type ${federation}:${kind}`);
-    return;
-  }
-
-  let total = 0;
-  let jsonLoaders = 0;
-  let skippedTextLoaders = 0;
-  let warnings = 0;
   const frontierKinds = new Set<string>();
 
-  for (const row of await getBacktestFrontierKinds.run(undefined, pool)) {
-    const { federation, kind } = row;
-    frontierKinds.add(loaderKey(federation, kind));
+  for (const { federation, kind, loader } of loaders) {
+    const target = [federation, kind].join(':');
+    frontierKinds.add(target);
 
-    const loader = loaderFor(federation, kind);
-    if (!loader) {
-      warnings++;
-      console.warn(
-        `Warning: no loader for ${federation}:${kind} (${row.total} frontiers)`,
-      );
-      continue;
-    }
     if (loader.mode !== 'json') {
-      skippedTextLoaders++;
-      console.log(`Skipping text loader ${federation}:${kind} (${row.total} frontiers)`);
+      console.log(`Skipping text loader ${target}`);
       continue;
     }
 
-    const count = await backtestJsonResponses(federation, kind, loader, {
-      verbose: options.verbose,
-    });
-    jsonLoaders++;
-    total += count;
-    console.log(`Validated ${count} responses of type ${federation}:${kind}`);
+    const count = await backtestJsonResponses(federation, kind, loader, options);
+    console.log(`Validated ${count} responses of type ${target}`);
   }
 
-  for (const { federation, kind, loader } of loaderEntries()) {
-    if (frontierKinds.has(loaderKey(federation, kind))) continue;
-
-    warnings++;
-    console.warn(
-      `Warning: loader ${federation}:${kind} (${loader.mode}) has no frontiers`,
-    );
+  for (const { federation, kind } of ALL_LOADERS) {
+    const target = [federation, kind].join(':');
+    if (frontierKinds.has(target)) continue;
+    console.warn(`Warning: loader ${target} has no frontiers`);
   }
-
-  console.log(
-    `Validated ${total} responses across ${jsonLoaders} JSON loaders` +
-      `; skipped ${skippedTextLoaders} text loaders; warnings ${warnings}`,
-  );
-}
-
-function loaderKey(federation: string, kind: string) {
-  return `${federation}:${kind}`;
-}
-
-function loaderEntries() {
-  return Object.entries(LOADERS).flatMap(([federation, kinds]) =>
-    Object.entries(kinds)
-      .sort(([left], [right]) => left.localeCompare(right))
-      .map(([kind, loader]) => ({ federation, kind, loader })),
-  );
 }
 
 type StatusOptions = {
   json?: boolean;
-  full?: boolean;
+  all?: boolean;
 };
 
 function fetchErrorCell(row: Pick<CrawlerStatusRow, 'fetch_error' | 'fetch_transient'>) {
   const errors = row.fetch_error;
   const transient = row.fetch_transient;
-  if (errors > 0 && transient > 0) return `${errors} (+${transient} transient)`;
+  if (errors > 0 && transient > 0) return `${errors} (+${transient} temp)`;
   if (errors > 0) return errors;
-  if (transient > 0) return `+${transient} transient`;
+  if (transient > 0) return `${transient} temp`;
   return '';
 }
 
 async function showFailures(
-  target: ScopeTarget | undefined,
+  target: string | undefined,
   options: {
     json?: boolean;
     limit?: string;
     full?: boolean;
-    group?: boolean;
     excludeCode?: string | string[];
   },
 ) {
   const excludeHttpStatuses = parseHttpStatuses(options.excludeCode);
-  const limit = parseLimit(options.limit, options.group ? 50 : 20);
-  const { federation, kind } = target ?? {};
-
-  if (options.group) {
-    const groups = await getFrontierFailureGroups.run(
-      { federation, kind, limit, excludeHttpStatuses },
-      pool,
-    );
-    if (options.json) {
-      console.log(JSON.stringify(groups, null, 2));
-      return;
-    }
-    printTable(groups.map(failureGroupRow));
-    return;
-  }
+  const limit = parseLimit(options.limit) ?? 20;
+  const parsed = parseTarget(target);
 
   const rows = await getLatestFrontierFailures.run(
-    { federation, kind, limit, excludeHttpStatuses },
+    { ...parsed, limit, excludeHttpStatuses },
     pool,
   );
   if (options.json) {
@@ -424,11 +279,7 @@ async function showFailures(
       errors: row.error_count,
       next: formatDate(row.next_fetch_at),
       url: row.url || '-',
-      details: [
-        formattedDetail('fetch', row.response_error, options.full) ||
-          formattedDetail('process', row.process_error, options.full) ||
-          {label: 'error', value: row.error_text}
-      ],
+      details: { '': row.error_text },
     })),
   );
 }
@@ -442,13 +293,13 @@ type JobOptions = {
 };
 
 async function showJobs(targetText: string | undefined, options: JobOptions) {
-  const target = parseScopeTarget(targetText);
-  const limit = parseLimit(options.limit, 20);
+  const target = targetText ? parseTarget(targetText) : null;
+  const limit = parseLimit(options.limit) ?? 20;
 
-  const selected = [options.failed, options.active].filter(Boolean).length;
-  if (selected > 1) throw new Error('Use only one of --failed or --active');
+  if (options.failed && options.active)
+    throw new Error('Use only one of --failed or --active');
   const state = options.failed ? 'failed' : options.active ? 'active' : null
-  const rows = await getCrawlerFrontierJobs.run(
+  const rows = await getCrawlerJobs.run(
     { federation: target?.federation, kind: target?.kind, state, limit },
     pool,
   );
@@ -471,22 +322,25 @@ async function showJobs(targetText: string | undefined, options: JobOptions) {
       process: row.process_status,
       http: row.response_http_status ?? '-',
       updated: formatDate(row.job_updated_at),
-      details: [
-        formattedDetail('job', row.job_error, options.full),
-        formattedDetail('fetch', row.response_error, options.full),
-        formattedDetail('process', row.process_error, options.full),
-        formattedDetail('content', row.response_content, options.full),
-      ].filter(x => x !== null),
+      details: {
+        job: options.full ? row.job_error : truncate(row.job_error, 500),
+        fetch: options.full ? row.response_error : truncate(row.response_error, 500),
+        process: options.full ? row.process_error : truncate(row.process_error, 500),
+        content: options.full ? JSON.stringify(row.response_content) : null,
+      },
     })),
   );
 }
 
-async function showStatus(target: ScopeTarget | undefined, options: StatusOptions) {
+async function showStatus(target: string | undefined, options: StatusOptions) {
   const allowRefetch = process.env.CRAWLER_DISABLE_REFETCH !== 'true';
-  const { federation, kind } = target ?? {};
+  const parsed = parseTarget(target);
+  if (parsed.scope !== 'kind' && parsed.scope !== 'federation' && parsed.scope !== 'none')
+    throw new Error('Must target more than a single frontier')
+  const { federation, kind } = parsed;
 
   const [frontierRows, failures] = await Promise.all([
-    getCrawlerFrontierStatus.run({ federation, kind, allowRefetch }, pool),
+    getCrawlerStatus.run({ federation, kind, allowRefetch }, pool),
     getFrontierFailureGroups.run({ federation, kind, excludeHttpStatuses: null }, pool),
   ]);
 
@@ -494,7 +348,6 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
     .map((row) => ({
       ...row,
       target: [row.federation, row.kind].join(':'),
-      hasLoader: !!loaderFor(row.federation, row.kind),
       isStable:
         row.total === row.done &&
         row.fetch_due === 0 &&
@@ -514,15 +367,13 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
       targets: sum.targets + 1,
       done: sum.done + row.done,
       due: sum.due + row.fetch_due,
-      missing_loaders: sum.missing_loaders + (row.hasLoader ? 0 : 1),
     }),
-    { targets: 0, done: 0, due: 0, missing_loaders: 0 },
+    { targets: 0, done: 0, due: 0 },
   );
 
   printTable([
-    ...frontiers.filter((row) => options.full || !row.isStable).map((row) => ({
+    ...frontiers.filter((row) => options.all || !row.isStable).map((row) => ({
       target: row.target,
-      loader: row.hasLoader ? '' : 'no',
       done: row.done > 0 ? row.done : '',
       due: row.fetch_due > 0 ? row.fetch_due : '',
       'fetch errors': fetchErrorCell(row),
@@ -534,13 +385,24 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
     })),
     {
       target: `${totals.targets} total`,
-      loader: totals.missing_loaders > 0 ? `${totals.missing_loaders} missing` : '',
       done: totals.done > 0 ? totals.done : '',
       due: totals.due > 0 ? totals.due : '',
     },
   ]);
 
-  if (!options.full) {
+  const knownLoaders = new Set(ALL_LOADERS.map(x => x.federation + ':' + x.kind));
+  const knownTargets = new Set(frontiers.map(x => x.target));
+  const problems = [
+    ...knownTargets.difference(knownLoaders).entries().map(([row]) => `${row} has no loader`),
+    ...knownLoaders.difference(knownTargets).entries().map(([row]) => `${row} has no frontiers`),
+  ];
+  if (problems.length > 0) {
+    console.log();
+    for (const problem of problems)
+      console.warn(`Warning: ${problem}`);
+  }
+
+  if (!options.all) {
     console.log();
     console.log('Done:');
     const byFederation = new Map<string, { kind: string, total: number; }[]>();
@@ -559,7 +421,14 @@ async function showStatus(target: ScopeTarget | undefined, options: StatusOption
   }
   console.log();
   console.log('Failures');
-  printTable(failures.map(failureGroupRow));
+  printTable(failures.map(row => ({
+    count: row.count,
+    kind: [row.federation, row.kind].join(':'),
+    failure: row.failure,
+    http: row.http_status ?? '',
+    samples: truncate(row.samples, 80),
+    details: { '': row.error_fingerprint },
+  })));
 }
 
 function explainState(row: IGetFrontierDetailResult) {
@@ -579,7 +448,9 @@ function explainState(row: IGetFrontierDetailResult) {
 }
 
 async function explainFrontier(target: string, options: OutputOptions) {
-  const parsed = parseExplainTarget(target);
+  const parsed = parseTarget(target);
+  if (parsed.scope !== 'frontier')
+    throw new Error('Must target a single frontier by ID or path');
   const [row] = await getFrontierDetail.run(parsed, pool);
   if (!row) throw new Error(`Frontier ${target} not found`);
 
@@ -632,15 +503,16 @@ async function explainFrontier(target: string, options: OutputOptions) {
 }
 
 async function showLatestResponse(target: string) {
-  const parsed = parseExplainTarget(target);
+  const parsed = parseTarget(target);
+  if (parsed.scope !== 'frontier')
+    throw new Error('Must target a single frontier by ID or path');
   const [row] = await getLatestFrontierResponse.run(parsed, pool);
   if (!row) throw new Error(`Response for ${target} not found`);
 
-  console.log(
-    row.json_content == null
-      ? (row.text_content ?? '')
-      : JSON.stringify(row.json_content, null, 2),
-  );
+  if (typeof row.content === 'string')
+    console.log(row.content);
+  else
+    console.log(JSON.stringify(row.content, null, 2));
 }
 
 type RefetchOptions = {
@@ -651,39 +523,18 @@ type RefetchOptions = {
 
 async function refetch(target: string, options: RefetchOptions) {
   const parsed = parseTarget(target);
-  if (!parsed) throw new Error('Target must be federation[:kind[:key]]');
-  const isExact = parsed.key != null;
-  if (isExact && (!parsed.kind || !loaderFor(parsed.federation, parsed.kind))) {
-    throw new Error(`Unknown loader ${parsed.federation}:${parsed.kind}`);
-  }
-
   const rows = await queueRefetch.run(
-    {
-      federation: parsed.federation,
-      kind: parsed.kind ?? null,
-      key: parsed.key ?? null,
-      includeOk: options.all ?? false,
-    },
+    { ...parsed, includeOk: options.all ?? false },
     pool,
   );
   if (rows.length > 0) await queueCrawlerSchedule.run(undefined, pool);
-  if (isExact && rows.length === 0) throw new Error(`Frontier ${target} not found`);
+  if (parsed.key && rows.length === 0) throw new Error(`Frontier ${target} not found`);
 
   if (options.json) {
     console.log(JSON.stringify(rows, null, 2));
   } else {
     console.log(`Queued ${rows.length} rows`);
   }
-}
-
-function queryText(query: unknown) {
-  const text =
-    typeof query === 'string'
-      ? query
-      : query && typeof query === 'object' && 'text' in query
-        ? query.text
-        : '<unknown query>';
-  return String(text).replace(/\s+/g, ' ').trim();
 }
 
 function logClientQueries(client: PoolClient): PoolClient {
@@ -696,7 +547,14 @@ function logClientQueries(client: PoolClient): PoolClient {
 
       return async (...args: unknown[]) => {
         const started = performance.now();
-        const text = queryText(args[0]);
+        const query = args[0];
+        const queryText =
+          typeof query === 'string'
+            ? query
+            : query && typeof query === 'object' && 'text' in query
+            ? query.text
+            : '<unknown query>';
+        const text = String(queryText).replace(/\s+/g, ' ').trim();
         try {
           const result = await (
             target.query as (
@@ -717,28 +575,29 @@ function logClientQueries(client: PoolClient): PoolClient {
   });
 }
 
-async function validateReprocessFrontier(
+async function processFrontier(
   client: PoolClient,
-  row: IGetReprocessFrontierResponsesResult,
+  row: IGetFrontierResponsesResult,
   options: { keepGoing?: boolean; },
 ) {
-  await client.query('SAVEPOINT crawler_reprocess_frontier');
+  await client.query('SAVEPOINT bulk_process');
 
   try {
     const loader = loaderFor(row.federation, row.kind);
+    if (!loader) throw new Error(`Unknown loader ${row.federation}:${row.kind}`);
     const content =
       loader.mode === 'json'
         ? zx.deepLoose(loader.schema).parse(row.content, { reportInput: true })
         : row.content;
     await loader.load(client, content);
-    await client.query('RELEASE SAVEPOINT crawler_reprocess_frontier');
+    await client.query('RELEASE SAVEPOINT bulk_process');
     return true;
   } catch (e) {
-    await client.query('ROLLBACK TO SAVEPOINT crawler_reprocess_frontier');
-    await client.query('RELEASE SAVEPOINT crawler_reprocess_frontier');
+    await client.query('ROLLBACK TO SAVEPOINT bulk_process');
+    await client.query('RELEASE SAVEPOINT bulk_process');
 
     console.error(
-      `Reprocess failed for frontier ${row.id} (${[row.federation, row.kind, row.key].join(':')})`,
+      `Processing failed for frontier ${row.id} (${[row.federation, row.kind, row.key].join(':')})`,
     );
     console.error(`response: ${row.url}`);
     console.error(formatException(e));
@@ -749,18 +608,20 @@ async function validateReprocessFrontier(
   }
 }
 
-async function reprocessCached(target: string | undefined, options: ReprocessOptions) {
+async function processLatest(target: string, options: ProcessOptions) {
   const parsed = parseTarget(target);
-  const limit = parseOptionalLimit(options.limit);
+  const limit = parseLimit(options.limit);
   const selectClient = await pool.connect();
-  const processClient = await pool.connect();
+  const processClient = options.verbose
+    ? logClientQueries(await pool.connect())
+    : await pool.connect();
   const stats = new Map<string, { count: number; errors: number; ms: number }>();
   const counts = { processed: 0, failures: 0 };
   const started = performance.now();
   let inTransaction = false;
 
   try {
-    const cursor = getReprocessFrontierResponses.stream(
+    const cursor = getFrontierResponses.stream(
       { ...parsed, limit },
       {
         query: selectClient.query,
@@ -777,18 +638,18 @@ async function reprocessCached(target: string | undefined, options: ReprocessOpt
       if (rows.length === 0) break;
 
       for (const row of rows) {
+        const target = [row.federation, row.kind].join(':');
         const rowStarted = performance.now();
-        const ok = await validateReprocessFrontier(processClient, row, options);
-        const ms = performance.now() - rowStarted;
-        const kindStats = stats.get(loaderKey(row.federation, row.kind)) ?? {
+        const ok = await processFrontier(processClient, row, options);
+        const kindStats = stats.get(target) ?? {
           count: 0,
           errors: 0,
           ms: 0,
         };
         kindStats.count += 1;
-        kindStats.ms += ms;
+        kindStats.ms += performance.now() - rowStarted;
         if (!ok) kindStats.errors += 1;
-        stats.set(loaderKey(row.federation, row.kind), kindStats);
+        stats.set(target, kindStats);
 
         if (ok) {
           counts.processed += 1;
@@ -843,34 +704,6 @@ async function reprocessCached(target: string | undefined, options: ReprocessOpt
   if (counts.failures > 0) process.exitCode = 1;
 }
 
-async function loadCached(
-  federation: string,
-  kind: string,
-  key: string,
-  shouldCommit: boolean,
-) {
-  const { loader, path } = await ensureCached(federation, kind, key);
-  const body = await readFile(path, 'utf8');
-  const raw = JSON.parse(body);
-
-  const content =
-    loader.mode === 'json'
-      ? zx.deepLoose(loader.schema).parse(raw, { reportInput: true })
-      : raw;
-  const client = logClientQueries(await pool.connect());
-  try {
-    await client.query('BEGIN');
-    await loader.load(client, content);
-    await client.query(shouldCommit ? 'COMMIT' : 'ROLLBACK');
-    console.log(`${shouldCommit ? 'Committed' : 'Rolled back'} ${path}`);
-  } catch (e) {
-    await client.query('ROLLBACK');
-    throw e;
-  } finally {
-    client.release();
-  }
-}
-
 const cli = cac('crawler');
 
 cli.command('list', 'List crawler loaders').action(() => {
@@ -885,24 +718,19 @@ cli.command('list', 'List crawler loaders').action(() => {
 cli
   .command('', 'Show crawler health status')
   .option('--json', 'Print JSON')
-  .option('--full', 'Do not abbreviate done frontiers')
-  .action((options: StatusOptions) => {
-    return showStatus(undefined, options);
-  });
+  .option('--all', 'Do not abbreviate done frontiers')
+  .action((options: StatusOptions) => showStatus(undefined, options));
 
 cli
   .command('status [target]', 'Show crawler health status')
   .option('--json', 'Print JSON')
-  .option('--full', 'Do not abbreviate done frontiers')
-  .action((target: string | undefined, options: StatusOptions) => {
-    return showStatus(parseScopeTarget(target), options);
-  });
+  .option('--all', 'Do not abbreviate done frontiers')
+  .action((target: string | undefined, options: StatusOptions) => showStatus(target, options));
 
 cli
   .command('failures [target]', 'Show latest failed frontier rows')
   .option('-n, --limit <limit>', 'Maximum rows to show', { default: '20' })
   .option('--exclude-code <codes>', 'Hide HTTP status codes, comma-separated')
-  .option('--group', 'Group failures by kind, stage, HTTP status, and error fingerprint')
   .option('--full', 'Do not truncate long keys or URLs')
   .option('--json', 'Print JSON')
   .action(
@@ -912,11 +740,10 @@ cli
         json?: boolean;
         limit?: string;
         full?: boolean;
-        group?: boolean;
         excludeCode?: string | string[];
       },
     ) => {
-      return showFailures(parseScopeTarget(target), options);
+      return showFailures(target, options);
     },
   );
 
@@ -938,11 +765,6 @@ cli
   .command('response <target>', 'Print the latest stored response for a frontier')
   .action((target: string) => showLatestResponse(target));
 
-cli.command('fetch <target>', 'Fetch and cache a response').action((target: string) => {
-  const { federation, kind, key } = parseExactTarget(target);
-  return ensureCached(federation, kind, key, true);
-});
-
 cli
   .command('refetch <target>', 'Queue federation[:kind[:key]] for immediate re-fetch')
   .option('--all', 'Include OK rows when refetching a scoped federation[:kind] target')
@@ -950,28 +772,17 @@ cli
   .action((target: string, options: RefetchOptions) => refetch(target, options));
 
 cli
-  .command('backtest [target]', 'Strict-validate cached JSON responses for a loader')
+  .command('backtest [target]', 'Validate latest JSON responses for a loader')
   .option('-v, --verbose', 'Include full input in schema failure logs')
   .action((target: string | undefined, options: { verbose?: boolean }) => {
-    const parsed = parseScopeTarget(target);
-    return backtestSchemas(parsed?.federation, parsed?.kind, options);
+    return backtestSchemas(target, options);
   });
-
 cli
-  .command('reprocess [target]', 'Dry-run loader processing for stored OK responses')
-  .option('--keep-going', 'Continue after load failures')
+  .command('load <target>', 'Re-run loaders for stored OK responses')
+  .option('--keep-going', 'Continue after failures')
+  .option('-v, --verbose', 'Log loader queries')
   .option('-n, --limit <limit>', 'Maximum responses to validate')
-  .action((target: string | undefined, options: ReprocessOptions) => {
-    return reprocessCached(target, options);
-  });
-
-cli
-  .command('load <target>', 'Load a cached response')
-  .option('--commit', 'Commit instead of rolling back')
-  .action((target: string, options: { commit?: boolean }) => {
-    const { federation, kind, key } = parseExactTarget(target);
-    return loadCached(federation, kind, key, Boolean(options.commit));
-  });
+  .action((target: string, options: ProcessOptions) => processLatest(target, options));
 
 cli.help();
 

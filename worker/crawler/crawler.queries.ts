@@ -53,15 +53,15 @@ const getFrontierForUpdateIR: any = {"usedParamSet":{"id":true},"params":[{"name
 export const getFrontierForUpdate = new PreparedQuery<IGetFrontierForUpdateParams,IGetFrontierForUpdateResult>(getFrontierForUpdateIR);
 
 
-/** 'GetCrawlerFrontierStatus' parameters type */
-export interface IGetCrawlerFrontierStatusParams {
+/** 'GetCrawlerStatus' parameters type */
+export interface IGetCrawlerStatusParams {
   allowRefetch?: boolean | null | void;
   federation?: string | null | void;
   kind?: string | null | void;
 }
 
-/** 'GetCrawlerFrontierStatus' return type */
-export interface IGetCrawlerFrontierStatusResult {
+/** 'GetCrawlerStatus' return type */
+export interface IGetCrawlerStatusResult {
   done: number;
   federation: string;
   fetch_due: number;
@@ -78,13 +78,13 @@ export interface IGetCrawlerFrontierStatusResult {
   total: number;
 }
 
-/** 'GetCrawlerFrontierStatus' query type */
-export interface IGetCrawlerFrontierStatusQuery {
-  params: IGetCrawlerFrontierStatusParams;
-  result: IGetCrawlerFrontierStatusResult;
+/** 'GetCrawlerStatus' query type */
+export interface IGetCrawlerStatusQuery {
+  params: IGetCrawlerStatusParams;
+  result: IGetCrawlerStatusResult;
 }
 
-const getCrawlerFrontierStatusIR: any = {"usedParamSet":{"federation":true,"kind":true,"allowRefetch":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":287},{"a":321,"b":331},{"a":1342,"b":1352},{"a":1387,"b":1397},{"a":1810,"b":1820},{"a":1852,"b":1862}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":347},{"a":375,"b":379},{"a":1409,"b":1413},{"a":1442,"b":1446},{"a":1874,"b":1878},{"a":1904,"b":1908}]},{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":1306,"b":1318}]}],"statement":"WITH frontiers AS (\n  SELECT\n    f.*,\n    row_number() OVER (\n      PARTITION BY f.federation, f.kind\n      ORDER BY\n        CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,\n        f.discovered_at DESC,\n        f.id\n    ) AS key_rank\n  FROM crawler.frontier f\n  WHERE (:federation::text IS NULL OR f.federation = :federation)\n    AND (:kind::text IS NULL OR f.kind = :kind)\n), frontier_status AS (\n  SELECT\n    federation,\n    kind,\n    count(*)::int AS total,\n    coalesce(\n      string_agg(key, ', ' ORDER BY key_rank) FILTER (WHERE key <> '' AND key_rank <= 3)\n        || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,\n      '-'\n    ) AS keys,\n    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,\n    count(*) FILTER (WHERE fetch_status = 'transient')::int AS fetch_transient,\n    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,\n    count(*) FILTER (WHERE process_status = 'ok')::int AS done,\n    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,\n    count(*) FILTER (WHERE process_status = 'pending' AND fetch_status = 'ok')::int\n      AS process_ready,\n    max(last_fetched_at) AS latest\n  FROM frontiers f\n  GROUP BY federation, kind\n), due_fetch AS (\n  SELECT df.*\n  FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df\n  WHERE (:federation::text IS NULL OR df.federation = :federation)\n    AND (:kind::text IS NULL OR df.kind = :kind)\n), due_status AS (\n  SELECT federation, kind, count(*)::int AS fetch_due\n  FROM due_fetch\n  GROUP BY federation, kind\n), fetch_jobs AS (\n  SELECT\n    federation,\n    kind,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued_fetch,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked_fetch\n  FROM crawler.frontier_fetch_job\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n    AND state IN ('ready', 'delayed', 'locked')\n  GROUP BY federation, kind\n)\nSELECT\n  fs.federation AS \"federation!\",\n  fs.kind AS \"kind!\",\n  fs.total AS \"total!\",\n  fs.keys AS \"keys!\",\n  fs.fetch_pending AS \"fetch_pending!\",\n  fs.fetch_transient AS \"fetch_transient!\",\n  fs.fetch_error AS \"fetch_error!\",\n  fs.done AS \"done!\",\n  fs.process_error AS \"process_error!\",\n  fs.latest,\n  coalesce(ds.fetch_due, 0)::int AS \"fetch_due!\",\n  fs.process_ready AS \"process_ready!\",\n  coalesce(fj.queued_fetch, 0)::int AS \"queued_fetch!\",\n  coalesce(fj.locked_fetch, 0)::int AS \"locked_fetch!\"\nFROM frontier_status fs\nLEFT JOIN due_status ds USING (federation, kind)\nLEFT JOIN fetch_jobs fj USING (federation, kind)\nORDER BY fs.federation, fs.kind"};
+const getCrawlerStatusIR: any = {"usedParamSet":{"federation":true,"kind":true,"allowRefetch":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":287},{"a":321,"b":331},{"a":1342,"b":1352},{"a":1387,"b":1397},{"a":1810,"b":1820},{"a":1852,"b":1862}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":347},{"a":375,"b":379},{"a":1409,"b":1413},{"a":1442,"b":1446},{"a":1874,"b":1878},{"a":1904,"b":1908}]},{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":1306,"b":1318}]}],"statement":"WITH frontiers AS (\n  SELECT\n    f.*,\n    row_number() OVER (\n      PARTITION BY f.federation, f.kind\n      ORDER BY\n        CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,\n        f.discovered_at DESC,\n        f.id\n    ) AS key_rank\n  FROM crawler.frontier f\n  WHERE (:federation::text IS NULL OR f.federation = :federation)\n    AND (:kind::text IS NULL OR f.kind = :kind)\n), frontier_status AS (\n  SELECT\n    federation,\n    kind,\n    count(*)::int AS total,\n    coalesce(\n      string_agg(key, ', ' ORDER BY key_rank) FILTER (WHERE key <> '' AND key_rank <= 3)\n        || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,\n      '-'\n    ) AS keys,\n    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,\n    count(*) FILTER (WHERE fetch_status = 'transient')::int AS fetch_transient,\n    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,\n    count(*) FILTER (WHERE process_status = 'ok')::int AS done,\n    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,\n    count(*) FILTER (WHERE process_status = 'pending' AND fetch_status = 'ok')::int\n      AS process_ready,\n    max(last_fetched_at) AS latest\n  FROM frontiers f\n  GROUP BY federation, kind\n), due_fetch AS (\n  SELECT df.*\n  FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df\n  WHERE (:federation::text IS NULL OR df.federation = :federation)\n    AND (:kind::text IS NULL OR df.kind = :kind)\n), due_status AS (\n  SELECT federation, kind, count(*)::int AS fetch_due\n  FROM due_fetch\n  GROUP BY federation, kind\n), fetch_jobs AS (\n  SELECT\n    federation,\n    kind,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued_fetch,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked_fetch\n  FROM crawler.frontier_fetch_job\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n    AND state IN ('ready', 'delayed', 'locked')\n  GROUP BY federation, kind\n)\nSELECT\n  fs.federation AS \"federation!\",\n  fs.kind AS \"kind!\",\n  fs.total AS \"total!\",\n  fs.keys AS \"keys!\",\n  fs.fetch_pending AS \"fetch_pending!\",\n  fs.fetch_transient AS \"fetch_transient!\",\n  fs.fetch_error AS \"fetch_error!\",\n  fs.done AS \"done!\",\n  fs.process_error AS \"process_error!\",\n  fs.latest,\n  coalesce(ds.fetch_due, 0)::int AS \"fetch_due!\",\n  fs.process_ready AS \"process_ready!\",\n  coalesce(fj.queued_fetch, 0)::int AS \"queued_fetch!\",\n  coalesce(fj.locked_fetch, 0)::int AS \"locked_fetch!\"\nFROM frontier_status fs\nLEFT JOIN due_status ds USING (federation, kind)\nLEFT JOIN fetch_jobs fj USING (federation, kind)\nORDER BY fs.federation, fs.kind"};
 
 /**
  * Query generated from SQL:
@@ -164,7 +164,7 @@ const getCrawlerFrontierStatusIR: any = {"usedParamSet":{"federation":true,"kind
  * ORDER BY fs.federation, fs.kind
  * ```
  */
-export const getCrawlerFrontierStatus = new PreparedQuery<IGetCrawlerFrontierStatusParams,IGetCrawlerFrontierStatusResult>(getCrawlerFrontierStatusIR);
+export const getCrawlerStatus = new PreparedQuery<IGetCrawlerStatusParams,IGetCrawlerStatusResult>(getCrawlerStatusIR);
 
 
 /** 'QueueCrawlerSchedule' parameters type */
@@ -198,36 +198,6 @@ const queueCrawlerScheduleIR: any = {"usedParamSet":{},"params":[],"statement":"
  * ```
  */
 export const queueCrawlerSchedule = new PreparedQuery<IQueueCrawlerScheduleParams,IQueueCrawlerScheduleResult>(queueCrawlerScheduleIR);
-
-
-/** 'GetBacktestFrontierKinds' parameters type */
-export type IGetBacktestFrontierKindsParams = void;
-
-/** 'GetBacktestFrontierKinds' return type */
-export interface IGetBacktestFrontierKindsResult {
-  federation: string;
-  kind: string;
-  total: number;
-}
-
-/** 'GetBacktestFrontierKinds' query type */
-export interface IGetBacktestFrontierKindsQuery {
-  params: IGetBacktestFrontierKindsParams;
-  result: IGetBacktestFrontierKindsResult;
-}
-
-const getBacktestFrontierKindsIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT federation AS \"federation!\", kind AS \"kind!\", count(*)::int AS \"total!\"\nFROM crawler.frontier\nGROUP BY federation, kind\nORDER BY federation, kind"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT federation AS "federation!", kind AS "kind!", count(*)::int AS "total!"
- * FROM crawler.frontier
- * GROUP BY federation, kind
- * ORDER BY federation, kind
- * ```
- */
-export const getBacktestFrontierKinds = new PreparedQuery<IGetBacktestFrontierKindsParams,IGetBacktestFrontierKindsResult>(getBacktestFrontierKindsIR);
 
 
 /** 'GetBacktestFrontierResponses' parameters type */
@@ -274,16 +244,17 @@ const getBacktestFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"
 export const getBacktestFrontierResponses = new PreparedQuery<IGetBacktestFrontierResponsesParams,IGetBacktestFrontierResponsesResult>(getBacktestFrontierResponsesIR);
 
 
-/** 'GetReprocessFrontierResponses' parameters type */
-export interface IGetReprocessFrontierResponsesParams {
+/** 'GetFrontierResponses' parameters type */
+export interface IGetFrontierResponsesParams {
   federation?: string | null | void;
+  id?: NumberOrString | null | void;
   key?: string | null | void;
   kind?: string | null | void;
   limit?: NumberOrString | null | void;
 }
 
-/** 'GetReprocessFrontierResponses' return type */
-export interface IGetReprocessFrontierResponsesResult {
+/** 'GetFrontierResponses' return type */
+export interface IGetFrontierResponsesResult {
   content: Json;
   federation: string;
   fetched_at: Date;
@@ -294,13 +265,13 @@ export interface IGetReprocessFrontierResponsesResult {
   url: string;
 }
 
-/** 'GetReprocessFrontierResponses' query type */
-export interface IGetReprocessFrontierResponsesQuery {
-  params: IGetReprocessFrontierResponsesParams;
-  result: IGetReprocessFrontierResponsesResult;
+/** 'GetFrontierResponses' query type */
+export interface IGetFrontierResponsesQuery {
+  params: IGetFrontierResponsesParams;
+  result: IGetFrontierResponsesResult;
 }
 
-const getReprocessFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":529,"b":539},{"a":573,"b":583}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":593,"b":597},{"a":625,"b":629}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":639,"b":642},{"a":669,"b":672}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":759,"b":764}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url AS \"url!\",\n  jr.http_status,\n  jr.fetched_at AS \"fetched_at!\",\n  jrc.content AS \"content!\"\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n    AND jr.error IS NULL\n    AND (jr.http_status IS NULL OR jr.http_status < 400)\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND f.fetch_status = 'ok'\nORDER BY f.discovered_at, f.last_fetched_at, f.id\nLIMIT :limit"};
+const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":529,"b":539},{"a":573,"b":583}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":593,"b":597},{"a":625,"b":629}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":639,"b":642},{"a":669,"b":672}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":682,"b":684},{"a":712,"b":714}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":801,"b":806}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url AS \"url!\",\n  jr.http_status,\n  jr.fetched_at AS \"fetched_at!\",\n  jrc.content AS \"content!\"\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n    AND jr.error IS NULL\n    AND (jr.http_status IS NULL OR jr.http_status < 400)\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND (:id::bigint IS NULL OR f.id = :id)\n  AND f.fetch_status = 'ok'\nORDER BY f.discovered_at, f.last_fetched_at, f.id\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -328,18 +299,20 @@ const getReprocessFrontierResponsesIR: any = {"usedParamSet":{"federation":true,
  * WHERE (:federation::text IS NULL OR f.federation = :federation)
  *   AND (:kind::text IS NULL OR f.kind = :kind)
  *   AND (:key::text IS NULL OR f.key = :key)
+ *   AND (:id::bigint IS NULL OR f.id = :id)
  *   AND f.fetch_status = 'ok'
  * ORDER BY f.discovered_at, f.last_fetched_at, f.id
  * LIMIT :limit
  * ```
  */
-export const getReprocessFrontierResponses = new PreparedQuery<IGetReprocessFrontierResponsesParams,IGetReprocessFrontierResponsesResult>(getReprocessFrontierResponsesIR);
+export const getFrontierResponses = new PreparedQuery<IGetFrontierResponsesParams,IGetFrontierResponsesResult>(getFrontierResponsesIR);
 
 
 /** 'GetLatestFrontierFailures' parameters type */
 export interface IGetLatestFrontierFailuresParams {
   excludeHttpStatuses?: numberArray | null | void;
   federation?: string | null | void;
+  id?: NumberOrString | null | void;
   key?: string | null | void;
   kind?: string | null | void;
   limit?: NumberOrString | null | void;
@@ -370,7 +343,7 @@ export interface IGetLatestFrontierFailuresQuery {
   result: IGetLatestFrontierFailuresResult;
 }
 
-const getLatestFrontierFailuresIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"excludeHttpStatuses":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":391,"b":401},{"a":433,"b":443}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":453,"b":457},{"a":483,"b":487}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":497,"b":500},{"a":525,"b":528}]},{"name":"excludeHttpStatuses","required":false,"transform":{"type":"scalar"},"locs":[{"a":543,"b":562},{"a":636,"b":655}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":709,"b":714}]}],"statement":"SELECT\n  id AS \"id!\",\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  key AS \"key!\",\n  fetch_status AS \"fetch_status!\",\n  process_status AS \"process_status!\",\n  error_count AS \"error_count!\",\n  next_fetch_at,\n  failed_at AS \"failed_at!\",\n  url,\n  http_status,\n  response_error,\n  process_error,\n  failure AS \"failure!\",\n  error_text AS \"error_text!\"\nFROM crawler.frontier_failure\nWHERE (:federation::text IS NULL OR federation = :federation)\n  AND (:kind::text IS NULL OR kind = :kind)\n  AND (:key::text IS NULL OR key = :key)\n  AND (\n    :excludeHttpStatuses::int[] IS NULL\n    OR http_status IS NULL\n    OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))\n  )\nORDER BY failed_at DESC, id DESC\nLIMIT :limit"};
+const getLatestFrontierFailuresIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true,"excludeHttpStatuses":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":391,"b":401},{"a":433,"b":443}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":453,"b":457},{"a":483,"b":487}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":497,"b":500},{"a":525,"b":528}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":538,"b":540},{"a":566,"b":568}]},{"name":"excludeHttpStatuses","required":false,"transform":{"type":"scalar"},"locs":[{"a":583,"b":602},{"a":676,"b":695}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":749,"b":754}]}],"statement":"SELECT\n  id AS \"id!\",\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  key AS \"key!\",\n  fetch_status AS \"fetch_status!\",\n  process_status AS \"process_status!\",\n  error_count AS \"error_count!\",\n  next_fetch_at,\n  failed_at AS \"failed_at!\",\n  url,\n  http_status,\n  response_error,\n  process_error,\n  failure AS \"failure!\",\n  error_text AS \"error_text!\"\nFROM crawler.frontier_failure\nWHERE (:federation::text IS NULL OR federation = :federation)\n  AND (:kind::text IS NULL OR kind = :kind)\n  AND (:key::text IS NULL OR key = :key)\n  AND (:id::bigint IS NULL OR id = :id)\n  AND (\n    :excludeHttpStatuses::int[] IS NULL\n    OR http_status IS NULL\n    OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))\n  )\nORDER BY failed_at DESC, id DESC\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -395,6 +368,7 @@ const getLatestFrontierFailuresIR: any = {"usedParamSet":{"federation":true,"kin
  * WHERE (:federation::text IS NULL OR federation = :federation)
  *   AND (:kind::text IS NULL OR kind = :kind)
  *   AND (:key::text IS NULL OR key = :key)
+ *   AND (:id::bigint IS NULL OR id = :id)
  *   AND (
  *     :excludeHttpStatuses::int[] IS NULL
  *     OR http_status IS NULL
@@ -423,7 +397,6 @@ export interface IGetFrontierFailureGroupsResult {
   federation: string;
   http_status: number | null;
   kind: string;
-  latest_failed_at: Date;
   samples: string;
 }
 
@@ -433,7 +406,7 @@ export interface IGetFrontierFailureGroupsQuery {
   result: IGetFrontierFailureGroupsResult;
 }
 
-const getFrontierFailureGroupsIR: any = {"usedParamSet":{"federation":true,"kind":true,"excludeHttpStatuses":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":213,"b":223},{"a":255,"b":265}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":281},{"a":307,"b":311}]},{"name":"excludeHttpStatuses","required":false,"transform":{"type":"scalar"},"locs":[{"a":330,"b":349},{"a":427,"b":446}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1279,"b":1284}]}],"statement":"WITH failures AS (\n  SELECT\n    id,\n    federation,\n    kind,\n    key,\n    failed_at,\n    http_status,\n    failure,\n    coalesce(nullif(error_text, ''), '-') AS error_text\n  FROM crawler.frontier_failure\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n    AND (\n      :excludeHttpStatuses::int[] IS NULL\n      OR http_status IS NULL\n      OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))\n    )\n), fingerprinted AS (\n  SELECT\n    *,\n    left(regexp_replace(error_text, '\\s+', ' ', 'g'), 180) AS error_fingerprint\n  FROM failures\n), ranked AS (\n  SELECT\n    *,\n    row_number() OVER (\n      PARTITION BY federation, kind, failure, http_status, error_fingerprint\n      ORDER BY failed_at DESC, id DESC\n    ) AS sample_rank\n  FROM fingerprinted\n)\nSELECT\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  failure AS \"failure!\",\n  http_status,\n  error_fingerprint AS \"error_fingerprint!\",\n  count(*)::int AS \"count!\",\n  max(failed_at) AS \"latest_failed_at!\",\n  string_agg(id::text || ':' || key, ', ' ORDER BY failed_at DESC, id DESC)\n    FILTER (WHERE sample_rank <= 5) AS \"samples!\"\nFROM ranked\nGROUP BY federation, kind, failure, http_status, error_fingerprint\nORDER BY count(*) DESC, max(failed_at) DESC\nLIMIT :limit"};
+const getFrontierFailureGroupsIR: any = {"usedParamSet":{"federation":true,"kind":true,"excludeHttpStatuses":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":213,"b":223},{"a":255,"b":265}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":281},{"a":307,"b":311}]},{"name":"excludeHttpStatuses","required":false,"transform":{"type":"scalar"},"locs":[{"a":330,"b":349},{"a":427,"b":446}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1238,"b":1243}]}],"statement":"WITH failures AS (\n  SELECT\n    id,\n    federation,\n    kind,\n    key,\n    failed_at,\n    http_status,\n    failure,\n    coalesce(nullif(error_text, ''), '-') AS error_text\n  FROM crawler.frontier_failure\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n    AND (\n      :excludeHttpStatuses::int[] IS NULL\n      OR http_status IS NULL\n      OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))\n    )\n), fingerprinted AS (\n  SELECT\n    *,\n    left(regexp_replace(error_text, '\\s+', ' ', 'g'), 180) AS error_fingerprint\n  FROM failures\n), ranked AS (\n  SELECT\n    *,\n    row_number() OVER (\n      PARTITION BY federation, kind, failure, http_status, error_fingerprint\n      ORDER BY failed_at DESC, id DESC\n    ) AS sample_rank\n  FROM fingerprinted\n)\nSELECT\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  failure AS \"failure!\",\n  http_status,\n  error_fingerprint AS \"error_fingerprint!\",\n  count(*)::int AS \"count!\",\n  string_agg(id::text || ':' || key, ', ' ORDER BY failed_at DESC, id DESC)\n    FILTER (WHERE sample_rank <= 5) AS \"samples!\"\nFROM ranked\nGROUP BY federation, kind, failure, http_status, error_fingerprint\nORDER BY count(*) DESC, max(failed_at) DESC\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -477,7 +450,6 @@ const getFrontierFailureGroupsIR: any = {"usedParamSet":{"federation":true,"kind
  *   http_status,
  *   error_fingerprint AS "error_fingerprint!",
  *   count(*)::int AS "count!",
- *   max(failed_at) AS "latest_failed_at!",
  *   string_agg(id::text || ':' || key, ', ' ORDER BY failed_at DESC, id DESC)
  *     FILTER (WHERE sample_rank <= 5) AS "samples!"
  * FROM ranked
@@ -489,16 +461,16 @@ const getFrontierFailureGroupsIR: any = {"usedParamSet":{"federation":true,"kind
 export const getFrontierFailureGroups = new PreparedQuery<IGetFrontierFailureGroupsParams,IGetFrontierFailureGroupsResult>(getFrontierFailureGroupsIR);
 
 
-/** 'GetCrawlerFrontierJobs' parameters type */
-export interface IGetCrawlerFrontierJobsParams {
+/** 'GetCrawlerJobs' parameters type */
+export interface IGetCrawlerJobsParams {
   federation?: string | null | void;
   kind?: string | null | void;
   limit?: NumberOrString | null | void;
   state?: string | null | void;
 }
 
-/** 'GetCrawlerFrontierJobs' return type */
-export interface IGetCrawlerFrontierJobsResult {
+/** 'GetCrawlerJobs' return type */
+export interface IGetCrawlerJobsResult {
   attempts: number;
   federation: string;
   fetch_status: fetch_status;
@@ -519,13 +491,13 @@ export interface IGetCrawlerFrontierJobsResult {
   state: string;
 }
 
-/** 'GetCrawlerFrontierJobs' query type */
-export interface IGetCrawlerFrontierJobsQuery {
-  params: IGetCrawlerFrontierJobsParams;
-  result: IGetCrawlerFrontierJobsResult;
+/** 'GetCrawlerJobs' query type */
+export interface IGetCrawlerJobsQuery {
+  params: IGetCrawlerJobsParams;
+  result: IGetCrawlerJobsResult;
 }
 
-const getCrawlerFrontierJobsIR: any = {"usedParamSet":{"state":true,"federation":true,"kind":true,"limit":true},"params":[{"name":"state","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":297},{"a":321,"b":326},{"a":377,"b":382}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":439,"b":449},{"a":483,"b":493}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":505,"b":509},{"a":537,"b":541}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1694,"b":1699}]}],"statement":"WITH jobs AS (\n  SELECT\n    j.*,\n    (\n      j.state = 'failed'\n      OR j.job_error IS NOT NULL\n      OR j.process_error IS NOT NULL\n      OR j.fetch_status IN ('error', 'transient')\n      OR j.process_status = 'error'\n    ) AS needs_detail\n  FROM crawler.frontier_fetch_job j\n  WHERE (\n    :state::text IS NULL\n    OR (:state::text = 'failed' AND j.state = 'failed')\n    OR (:state::text = 'active' AND j.state <> 'failed')\n  )\n    AND (:federation::text IS NULL OR j.federation = :federation)\n    AND (:kind::text IS NULL OR j.kind = :kind)\n)\nSELECT\n  j.job_id AS \"job_id!\",\n  j.run_at AS \"run_at!\",\n  j.locked_at,\n  j.attempts AS \"attempts!\",\n  j.max_attempts AS \"max_attempts!\",\n  j.job_error,\n  j.job_updated_at AS \"job_updated_at!\",\n  j.frontier_id AS \"frontier_id!\",\n  j.federation AS \"federation!\",\n  j.kind AS \"kind!\",\n  j.frontier_key AS \"frontier_key!\",\n  j.fetch_status AS \"fetch_status!\",\n  j.process_status AS \"process_status!\",\n  response.http_status AS response_http_status,\n  response.error AS response_error,\n  CASE\n    WHEN j.needs_detail OR response.error IS NOT NULL THEN response.content\n  END AS response_content,\n  j.process_error,\n  j.state AS \"state!\"\nFROM jobs j\nLEFT JOIN LATERAL (\n  SELECT jr.http_status, jr.error, jrc.content\n  FROM crawler.json_response jr\n  LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash\n  WHERE jr.frontier_id = j.frontier_id\n    AND (j.needs_detail OR jr.error IS NOT NULL)\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) response ON true\nORDER BY\n  CASE j.state\n    WHEN 'failed' THEN 0\n    WHEN 'locked' THEN 1\n    WHEN 'ready' THEN 2\n    ELSE 3\n  END,\n  j.job_updated_at DESC,\n  j.run_at,\n  j.job_id DESC\nLIMIT :limit"};
+const getCrawlerJobsIR: any = {"usedParamSet":{"state":true,"federation":true,"kind":true,"limit":true},"params":[{"name":"state","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":297},{"a":321,"b":326},{"a":377,"b":382}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":439,"b":449},{"a":483,"b":493}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":505,"b":509},{"a":537,"b":541}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1694,"b":1699}]}],"statement":"WITH jobs AS (\n  SELECT\n    j.*,\n    (\n      j.state = 'failed'\n      OR j.job_error IS NOT NULL\n      OR j.process_error IS NOT NULL\n      OR j.fetch_status IN ('error', 'transient')\n      OR j.process_status = 'error'\n    ) AS needs_detail\n  FROM crawler.frontier_fetch_job j\n  WHERE (\n    :state::text IS NULL\n    OR (:state::text = 'failed' AND j.state = 'failed')\n    OR (:state::text = 'active' AND j.state <> 'failed')\n  )\n    AND (:federation::text IS NULL OR j.federation = :federation)\n    AND (:kind::text IS NULL OR j.kind = :kind)\n)\nSELECT\n  j.job_id AS \"job_id!\",\n  j.run_at AS \"run_at!\",\n  j.locked_at,\n  j.attempts AS \"attempts!\",\n  j.max_attempts AS \"max_attempts!\",\n  j.job_error,\n  j.job_updated_at AS \"job_updated_at!\",\n  j.frontier_id AS \"frontier_id!\",\n  j.federation AS \"federation!\",\n  j.kind AS \"kind!\",\n  j.frontier_key AS \"frontier_key!\",\n  j.fetch_status AS \"fetch_status!\",\n  j.process_status AS \"process_status!\",\n  response.http_status AS response_http_status,\n  response.error AS response_error,\n  CASE\n    WHEN j.needs_detail OR response.error IS NOT NULL THEN response.content\n  END AS response_content,\n  j.process_error,\n  j.state AS \"state!\"\nFROM jobs j\nLEFT JOIN LATERAL (\n  SELECT jr.http_status, jr.error, jrc.content\n  FROM crawler.json_response jr\n  LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash\n  WHERE jr.frontier_id = j.frontier_id\n    AND (j.needs_detail OR jr.error IS NOT NULL)\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) response ON true\nORDER BY\n  CASE j.state\n    WHEN 'failed' THEN 0\n    WHEN 'locked' THEN 1\n    WHEN 'ready' THEN 2\n    ELSE 3\n  END,\n  j.job_updated_at DESC,\n  j.run_at,\n  j.job_id DESC\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -593,7 +565,7 @@ const getCrawlerFrontierJobsIR: any = {"usedParamSet":{"state":true,"federation"
  * LIMIT :limit
  * ```
  */
-export const getCrawlerFrontierJobs = new PreparedQuery<IGetCrawlerFrontierJobsParams,IGetCrawlerFrontierJobsResult>(getCrawlerFrontierJobsIR);
+export const getCrawlerJobs = new PreparedQuery<IGetCrawlerJobsParams,IGetCrawlerJobsResult>(getCrawlerJobsIR);
 
 
 /** 'GetScheduleStatus' parameters type */
@@ -761,8 +733,7 @@ export interface IGetLatestFrontierResponseParams {
 
 /** 'GetLatestFrontierResponse' return type */
 export interface IGetLatestFrontierResponseResult {
-  json_content: Json;
-  text_content: string | null;
+  content: Json;
 }
 
 /** 'GetLatestFrontierResponse' query type */
@@ -771,7 +742,7 @@ export interface IGetLatestFrontierResponseQuery {
   result: IGetLatestFrontierResponseResult;
 }
 
-const getLatestFrontierResponseIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":68},{"a":101,"b":103},{"a":123,"b":125}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":180,"b":190}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":193,"b":197}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":200,"b":203}]}],"statement":"WITH target AS (\n  SELECT f.id\n  FROM crawler.frontier f\n  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))\n), latest AS (\n  SELECT\n    jr.fetched_at,\n    jrc.content AS json_content,\n    NULL::text AS text_content\n  FROM target\n  JOIN LATERAL (\n    SELECT fetched_at, content_hash\n    FROM crawler.json_response jr\n    WHERE jr.frontier_id = target.id\n    ORDER BY jr.fetched_at DESC\n    LIMIT 1\n  ) jr ON true\n  LEFT JOIN crawler.json_response_cache jrc USING (content_hash)\n)\nSELECT\n  json_content,\n  text_content\nFROM latest\nORDER BY fetched_at DESC\nLIMIT 1"};
+const getLatestFrontierResponseIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":68},{"a":101,"b":103},{"a":123,"b":125}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":180,"b":190}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":193,"b":197}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":200,"b":203}]}],"statement":"WITH target AS (\n  SELECT f.id\n  FROM crawler.frontier f\n  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))\n), latest AS (\n  SELECT\n    jr.fetched_at,\n    jrc.content AS content\n  FROM target\n  JOIN LATERAL (\n    SELECT fetched_at, content_hash\n    FROM crawler.json_response jr\n    WHERE jr.frontier_id = target.id\n    ORDER BY jr.fetched_at DESC\n    LIMIT 1\n  ) jr ON true\n  LEFT JOIN crawler.json_response_cache jrc USING (content_hash)\n)\nSELECT\n  content\nFROM latest\nORDER BY fetched_at DESC\nLIMIT 1"};
 
 /**
  * Query generated from SQL:
@@ -784,8 +755,7 @@ const getLatestFrontierResponseIR: any = {"usedParamSet":{"id":true,"federation"
  * ), latest AS (
  *   SELECT
  *     jr.fetched_at,
- *     jrc.content AS json_content,
- *     NULL::text AS text_content
+ *     jrc.content AS content
  *   FROM target
  *   JOIN LATERAL (
  *     SELECT fetched_at, content_hash
@@ -797,8 +767,7 @@ const getLatestFrontierResponseIR: any = {"usedParamSet":{"id":true,"federation"
  *   LEFT JOIN crawler.json_response_cache jrc USING (content_hash)
  * )
  * SELECT
- *   json_content,
- *   text_content
+ *   content
  * FROM latest
  * ORDER BY fetched_at DESC
  * LIMIT 1
@@ -1182,6 +1151,7 @@ export const rescheduleFrontier = new PreparedQuery<IRescheduleFrontierParams,IR
 /** 'QueueRefetch' parameters type */
 export interface IQueueRefetchParams {
   federation?: string | null | void;
+  id?: NumberOrString | null | void;
   includeOk?: boolean | null | void;
   key?: string | null | void;
   kind?: string | null | void;
@@ -1202,7 +1172,7 @@ export interface IQueueRefetchQuery {
   result: IQueueRefetchResult;
 }
 
-const queueRefetchIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"includeOk":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":138,"b":148}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":159,"b":163},{"a":191,"b":195}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":207,"b":210},{"a":237,"b":240},{"a":259,"b":262}]},{"name":"includeOk","required":false,"transform":{"type":"scalar"},"locs":[{"a":300,"b":309}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":455,"b":460}]}],"statement":"WITH selected AS (\n  SELECT f.id\n  FROM crawler.frontier f\n  LEFT JOIN crawler.frontier_failure ff ON ff.id = f.id\n  WHERE f.federation = :federation\n    AND (:kind::text IS NULL OR f.kind = :kind)\n    AND (:key::text IS NULL OR f.key = :key)\n    AND (\n      :key::text IS NOT NULL\n      OR coalesce(:includeOk::boolean, false)\n      OR ff.id IS NOT NULL\n    )\n  ORDER BY coalesce(ff.failed_at, f.last_fetched_at, f.discovered_at) DESC, f.id DESC\n  LIMIT :limit\n), frontier AS (\n  UPDATE crawler.frontier f\n  SET fetch_status = 'pending',\n      process_status = 'pending',\n      last_process_error = NULL,\n      last_process_error_at = NULL,\n      error_count = 0,\n      next_fetch_at = now()\n  WHERE f.id IN (SELECT id FROM selected)\n  RETURNING f.id, f.federation, f.kind, f.key\n)\nSELECT id AS \"id!\", federation AS \"federation!\", kind AS \"kind!\", key AS \"key!\"\nFROM frontier"};
+const queueRefetchIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true,"includeOk":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":138,"b":148}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":159,"b":163},{"a":191,"b":195}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":207,"b":210},{"a":237,"b":240},{"a":303,"b":306}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":252,"b":254},{"a":282,"b":284},{"a":335,"b":337}]},{"name":"includeOk","required":false,"transform":{"type":"scalar"},"locs":[{"a":375,"b":384}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":530,"b":535}]}],"statement":"WITH selected AS (\n  SELECT f.id\n  FROM crawler.frontier f\n  LEFT JOIN crawler.frontier_failure ff ON ff.id = f.id\n  WHERE f.federation = :federation\n    AND (:kind::text IS NULL OR f.kind = :kind)\n    AND (:key::text IS NULL OR f.key = :key)\n    AND (:id::bigint IS NULL OR f.id = :id)\n    AND (\n      :key::text IS NOT NULL\n      OR :id::text IS NOT NULL\n      OR coalesce(:includeOk::boolean, false)\n      OR ff.id IS NOT NULL\n    )\n  ORDER BY coalesce(ff.failed_at, f.last_fetched_at, f.discovered_at) DESC, f.id DESC\n  LIMIT :limit\n), frontier AS (\n  UPDATE crawler.frontier f\n  SET fetch_status = 'pending',\n      process_status = 'pending',\n      last_process_error = NULL,\n      last_process_error_at = NULL,\n      error_count = 0,\n      next_fetch_at = now()\n  WHERE f.id IN (SELECT id FROM selected)\n  RETURNING f.id, f.federation, f.kind, f.key\n)\nSELECT id AS \"id!\", federation AS \"federation!\", kind AS \"kind!\", key AS \"key!\"\nFROM frontier"};
 
 /**
  * Query generated from SQL:
@@ -1214,8 +1184,10 @@ const queueRefetchIR: any = {"usedParamSet":{"federation":true,"kind":true,"key"
  *   WHERE f.federation = :federation
  *     AND (:kind::text IS NULL OR f.kind = :kind)
  *     AND (:key::text IS NULL OR f.key = :key)
+ *     AND (:id::bigint IS NULL OR f.id = :id)
  *     AND (
  *       :key::text IS NOT NULL
+ *       OR :id::text IS NOT NULL
  *       OR coalesce(:includeOk::boolean, false)
  *       OR ff.id IS NOT NULL
  *     )

@@ -4,7 +4,7 @@ FROM crawler.frontier
 WHERE id = :id::bigint
 FOR UPDATE;
 
-/* @name GetCrawlerFrontierStatus */
+/* @name GetCrawlerStatus */
 WITH frontiers AS (
   SELECT
     f.*,
@@ -90,12 +90,6 @@ SELECT (
   )
 ).id AS "job_id!";
 
-/* @name GetBacktestFrontierKinds */
-SELECT federation AS "federation!", kind AS "kind!", count(*)::int AS "total!"
-FROM crawler.frontier
-GROUP BY federation, kind
-ORDER BY federation, kind;
-
 /* @name GetBacktestFrontierResponses */
 SELECT f.id, jr.url, jr.http_status, jrc.content
 FROM crawler.frontier f
@@ -112,7 +106,7 @@ JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE f.federation = :federation
   AND f.kind = :kind;
 
-/* @name GetReprocessFrontierResponses */
+/* @name GetFrontierResponses */
 SELECT
   f.id AS "id!",
   f.federation AS "federation!",
@@ -136,6 +130,7 @@ JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE (:federation::text IS NULL OR f.federation = :federation)
   AND (:kind::text IS NULL OR f.kind = :kind)
   AND (:key::text IS NULL OR f.key = :key)
+  AND (:id::bigint IS NULL OR f.id = :id)
   AND f.fetch_status = 'ok'
 ORDER BY f.discovered_at, f.last_fetched_at, f.id
 LIMIT :limit;
@@ -161,6 +156,7 @@ FROM crawler.frontier_failure
 WHERE (:federation::text IS NULL OR federation = :federation)
   AND (:kind::text IS NULL OR kind = :kind)
   AND (:key::text IS NULL OR key = :key)
+  AND (:id::bigint IS NULL OR id = :id)
   AND (
     :excludeHttpStatuses::int[] IS NULL
     OR http_status IS NULL
@@ -209,7 +205,6 @@ SELECT
   http_status,
   error_fingerprint AS "error_fingerprint!",
   count(*)::int AS "count!",
-  max(failed_at) AS "latest_failed_at!",
   string_agg(id::text || ':' || key, ', ' ORDER BY failed_at DESC, id DESC)
     FILTER (WHERE sample_rank <= 5) AS "samples!"
 FROM ranked
@@ -217,7 +212,7 @@ GROUP BY federation, kind, failure, http_status, error_fingerprint
 ORDER BY count(*) DESC, max(failed_at) DESC
 LIMIT :limit;
 
-/* @name GetCrawlerFrontierJobs */
+/* @name GetCrawlerJobs */
 WITH jobs AS (
   SELECT
     j.*,
@@ -363,8 +358,7 @@ WITH target AS (
 ), latest AS (
   SELECT
     jr.fetched_at,
-    jrc.content AS json_content,
-    NULL::text AS text_content
+    jrc.content AS content
   FROM target
   JOIN LATERAL (
     SELECT fetched_at, content_hash
@@ -376,8 +370,7 @@ WITH target AS (
   LEFT JOIN crawler.json_response_cache jrc USING (content_hash)
 )
 SELECT
-  json_content,
-  text_content
+  content
 FROM latest
 ORDER BY fetched_at DESC
 LIMIT 1;
@@ -516,8 +509,10 @@ WITH selected AS (
   WHERE f.federation = :federation
     AND (:kind::text IS NULL OR f.kind = :kind)
     AND (:key::text IS NULL OR f.key = :key)
+    AND (:id::bigint IS NULL OR f.id = :id)
     AND (
       :key::text IS NOT NULL
+      OR :id::text IS NOT NULL
       OR coalesce(:includeOk::boolean, false)
       OR ff.id IS NOT NULL
     )
