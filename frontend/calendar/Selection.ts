@@ -53,7 +53,7 @@ export function pointInBox(box: BoxSize, { x, y }: { x: number; y: number }) {
   return y >= box.top && y <= box.bottom && x >= box.left && x <= box.right;
 }
 
-const isTouchEvent = (e: any): e is TouchEvent => 'touches' in e && e.touches.length > 0;
+const isTouchEvent = (e: any): e is TouchEvent => 'touches' in e && e.touches.length > 0 && e.touches[0];
 function getEventCoordinates(e: TouchEvent | DragEvent | MouseEvent) {
   const target = isTouchEvent(e) ? e.touches[0]! : e;
   return {
