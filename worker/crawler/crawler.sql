@@ -283,7 +283,6 @@ WITH fetch_jobs AS (
     count(*) FILTER (WHERE state = 'ready')::int AS ready,
     count(*) FILTER (WHERE state = 'delayed')::int AS delayed,
     count(*) FILTER (WHERE state = 'locked')::int AS locked,
-    min(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS next_run_at,
     max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at
   FROM crawler.frontier_fetch_job
   WHERE host IS NOT NULL
@@ -299,8 +298,7 @@ SELECT
   COALESCE(fj.ready, 0)::int AS "ready!",
   COALESCE(fj.delayed, 0)::int AS "delayed!",
   COALESCE(fj.locked, 0)::int AS "locked!",
-  fj.next_run_at,
-  fj.queue_tail_at
+  GREATEST(fj.queue_tail_at, NOW() + COALESCE(fj.queued, 0) * spacing) as queue_tail_at
 FROM crawler.rate_limit_rule r
 FULL JOIN fetch_jobs fj USING (host)
 ORDER BY host;

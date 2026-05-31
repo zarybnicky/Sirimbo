@@ -2,6 +2,17 @@ import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import { upsertFrontierKeys } from './crawler.queries.ts';
 
+const status = z.enum([
+  'Disqualified',
+  'Registered',
+  'Present',
+  'Unknown',
+  'Provisional',
+  'Excused',
+  'Withdrawn',
+  'Noshow',
+]);
+
 export const schema = z.array(
   z.discriminatedUnion('Kind', [
     z.object({
@@ -13,7 +24,7 @@ export const schema = z.array(
       TeamCountryXmlName: z.string().optional(),
       id: z.number(),
       number: z.number(),
-      status: z.string(),
+      status,
       nationalreference: z.string().nullish(),
     }),
     z.object({
@@ -23,9 +34,9 @@ export const schema = z.array(
       ),
       id: z.number(),
       name: z.string(),
-      country: z.string(),
+      country: z.string().nullable(),
       number: z.number(),
-      status: z.string(),
+      status,
       nationalreference: z.string().nullish(),
     })
   ]),
@@ -44,16 +55,23 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
     },
   }),
   revalidatePeriod: '7d',
+  mapResponseToStatus({ httpStatus }) {
+    if (httpStatus === 404) return 'gone';
+    if (httpStatus === 500) return 'error';
+    return undefined;
+  },
   async load(client, parsed) {
     // Competitor reference needs to be fron link
     // participant Id == marks
     // name can serve as a backup competitor name
 
+    const withResults = parsed.filter(x => x.status === 'Present').map(x => x.id.toString());
+    if (withResults.length === 0) return;
     await upsertFrontierKeys.run(
       {
         federation: 'wdsf',
         kind: 'participant',
-        keys: parsed.map((p) => String(p.id)),
+        keys: withResults,
       },
       client,
     );

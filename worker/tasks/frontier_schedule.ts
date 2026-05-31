@@ -56,13 +56,12 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
 
     const scheduleRows = await getScheduleStatus.run(undefined, client);
     const now = new Date();
-    const byHost = new Map<string, { spacingMs: number; queueTailAt: Date }>();
+    const spacingMs = new Map<string, number>();
+    const queueTail = new Map<string, Date>();
 
     for (const row of scheduleRows) {
-      byHost.set(row.host, {
-        spacingMs: row.spacing ?? 50,
-        queueTailAt: new Date(Math.max(row.queue_tail_at?.getTime() ?? now.getTime(), now.getTime())),
-      });
+      spacingMs.set(row.host, row.spacing ?? 50);
+      queueTail.set(row.host, new Date(Math.max(row.queue_tail_at?.getTime() ?? now.getTime(), now.getTime())));
     }
 
     const outstanding = scheduleRows.reduce((total, row) => total + row.queued + row.locked, 0);
@@ -74,16 +73,17 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
       { capacity, allowRefetch, ...fetchLoaderParams },
       client,
     );
+    console.log(capacity, allowRefetch, fetchLoaderParams);
+    console.log(spacingMs, queueTail, pendingIds);
     let scheduled = 0;
     for (const { id, federation, kind, key } of pendingIds) {
       const loader = loaderFor(federation, kind);
       if (!loader) continue;
       const { host } = loader.buildRequest(key).url;
-      const slot =
-        byHost.get(host) ??
-        byHost.set(host, { spacingMs: 50, queueTailAt: now }).get(host)!;
-      const runAt = new Date(slot.queueTailAt.getTime() + slot.spacingMs);
-      slot.queueTailAt = runAt;
+      const runAt = new Date(
+        (queueTail.get(host) ?? now).getTime() + (spacingMs.get(host) ?? 50)
+      );
+      queueTail.set(host, runAt);
 
       const jobKey = `fetch:${host}:${id}`;
       await addJob(

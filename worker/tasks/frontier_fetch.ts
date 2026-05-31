@@ -69,7 +69,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     init,
   );
 
-  if (error) {
+  if (error && (fetchStatus === 'error' || fetchStatus === 'transient')) {
     logger.warn(`Fetch error in ${frontier.id}, URL ${url} (${error})`);
   }
 

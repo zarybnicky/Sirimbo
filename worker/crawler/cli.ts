@@ -27,13 +27,6 @@ import { formatException } from './error.ts';
 
 const pool = new Pool();
 
-type OutputOptions = { json?: boolean };
-type ProcessOptions = {
-  keepGoing?: boolean;
-  limit?: string;
-  verbose?: boolean;
-};
-
 type CrawlerStatusRow = IGetCrawlerStatusResult & {
   target: string;
   isStable: boolean;
@@ -50,12 +43,8 @@ function frontierPriority(row: CrawlerStatusRow) {
   );
 }
 
-
-function formatDate(value: Date | string | null | undefined) {
-  if (!value) return '-';
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) return String(value);
-  return date.toISOString().replace(/\.\d{3}Z$/, 'Z');
+function formatDate(date: Date | null | undefined) {
+  return date ? date.toISOString().replace(/\.\d{3}Z$/, 'Z') : '-';
 }
 
 function printTable(
@@ -66,7 +55,7 @@ function printTable(
     return;
   }
 
-  const columns = Object.keys(rows[0]).filter(x => x !== 'details');
+  const columns = Object.keys(rows[0]).filter((x) => x !== 'details');
   const widths = Object.fromEntries(
     columns.map((column) => [
       column,
@@ -127,26 +116,23 @@ function parseHttpStatuses(value: unknown) {
   });
 }
 
-type Target
-   = { scope: 'frontier'; id: null; federation: string; kind: string; key: string; }
-   | { scope: 'frontier'; id: string; federation: null; kind: null; key: null; }
-   | { scope: 'kind'; federation: string; kind: string; key: null; }
-   | { scope: 'federation'; federation: string; kind: null; key: null; }
-   | { scope: 'none'; federation: null; kind: null; key: null; };
+type Target =
+  | { scope: 'frontier'; id: null; federation: string; kind: string; key: string }
+  | { scope: 'frontier'; id: string; federation: null; kind: null; key: null }
+  | { scope: 'kind'; federation: string; kind: string; key: null }
+  | { scope: 'federation'; federation: string; kind: null; key: null }
+  | { scope: 'none'; federation: null; kind: null; key: null };
 
 function parseTarget(target: string | undefined): Target {
-  if (!target)
-    return { scope: 'none', federation: null, kind: null, key: null };
+  if (!target) return { scope: 'none', federation: null, kind: null, key: null };
   if (/^\d+$/.test(target)) {
     return { scope: 'frontier', id: target, federation: null, kind: null, key: null };
   }
 
   const [federation, kind, ...keyParts] = target.split(':');
   const key = keyParts.length > 0 ? keyParts.join(':') : undefined;
-  if (key)
-    return { scope: 'frontier', id: null, federation, kind, key };
-  if (kind)
-    return { scope: 'kind', federation, kind, key: null };
+  if (key) return { scope: 'frontier', id: null, federation, kind, key };
+  if (kind) return { scope: 'kind', federation, kind, key: null };
   return { scope: 'federation', federation, kind: null, key: null };
 }
 
@@ -206,10 +192,12 @@ async function backtestJsonResponses(
   return count;
 }
 
-async function backtestSchemas(target: string | undefined, options: { verbose?: boolean }) {
+async function backtestSchemas(
+  target: string | undefined,
+  options: { verbose?: boolean },
+) {
   const { scope, federation, kind } = parseTarget(target);
-  if (scope === 'frontier')
-    throw new Error('Target must be federation[:kind]');
+  if (scope === 'frontier') throw new Error('Target must be federation[:kind]');
   const loaders = loadersFor(federation, kind);
 
   const frontierKinds = new Set<string>();
@@ -298,7 +286,7 @@ async function showJobs(targetText: string | undefined, options: JobOptions) {
 
   if (options.failed && options.active)
     throw new Error('Use only one of --failed or --active');
-  const state = options.failed ? 'failed' : options.active ? 'active' : null
+  const state = options.failed ? 'failed' : options.active ? 'active' : null;
   const rows = await getCrawlerJobs.run(
     { federation: target?.federation, kind: target?.kind, state, limit },
     pool,
@@ -336,7 +324,7 @@ async function showStatus(target: string | undefined, options: StatusOptions) {
   const allowRefetch = process.env.CRAWLER_DISABLE_REFETCH !== 'true';
   const parsed = parseTarget(target);
   if (parsed.scope !== 'kind' && parsed.scope !== 'federation' && parsed.scope !== 'none')
-    throw new Error('Must target more than a single frontier')
+    throw new Error('Must target more than a single frontier');
   const { federation, kind } = parsed;
 
   const [frontierRows, failures] = await Promise.all([
@@ -355,7 +343,10 @@ async function showStatus(target: string | undefined, options: StatusOptions) {
         row.fetch_transient === 0 &&
         row.process_error === 0,
     }))
-    .toSorted((a, b) => frontierPriority(b) - frontierPriority(a) || a.target.localeCompare(b.target));
+    .toSorted(
+      (a, b) =>
+        frontierPriority(b) - frontierPriority(a) || a.target.localeCompare(b.target),
+    );
 
   if (options.json) {
     console.log(JSON.stringify({ frontiers, failures }, null, 2));
@@ -372,17 +363,19 @@ async function showStatus(target: string | undefined, options: StatusOptions) {
   );
 
   printTable([
-    ...frontiers.filter((row) => options.all || !row.isStable).map((row) => ({
-      target: row.target,
-      done: row.done > 0 ? row.done : '',
-      due: row.fetch_due > 0 ? row.fetch_due : '',
-      'fetch errors': fetchErrorCell(row),
-      'process errors': row.process_error > 0 ? row.process_error : '',
-      'process': row.process_ready > 0 ? row.process_ready : '',
-      'queued': row.queued_fetch > 0 ? row.queued_fetch : '',
-      'locked': row.locked_fetch > 0 ? row.locked_fetch : '',
-      keys: row.keys,
-    })),
+    ...frontiers
+      .filter((row) => options.all || !row.isStable)
+      .map((row) => ({
+        target: row.target,
+        done: row.done > 0 ? row.done : '',
+        due: row.fetch_due > 0 ? row.fetch_due : '',
+        'fetch errors': fetchErrorCell(row),
+        'process errors': row.process_error > 0 ? row.process_error : '',
+        process: row.process_ready > 0 ? row.process_ready : '',
+        queued: row.queued_fetch > 0 ? row.queued_fetch : '',
+        locked: row.locked_fetch > 0 ? row.locked_fetch : '',
+        keys: row.keys,
+      })),
     {
       target: `${totals.targets} total`,
       done: totals.done > 0 ? totals.done : '',
@@ -390,45 +383,55 @@ async function showStatus(target: string | undefined, options: StatusOptions) {
     },
   ]);
 
-  const knownLoaders = new Set(ALL_LOADERS.map(x => x.federation + ':' + x.kind));
-  const knownTargets = new Set(frontiers.map(x => x.target));
+  const knownLoaders = new Set(ALL_LOADERS.map((x) => x.federation + ':' + x.kind));
+  const knownTargets = new Set(frontiers.map((x) => x.target));
   const problems = [
-    ...knownTargets.difference(knownLoaders).entries().map(([row]) => `${row} has no loader`),
-    ...knownLoaders.difference(knownTargets).entries().map(([row]) => `${row} has no frontiers`),
+    ...knownTargets
+      .difference(knownLoaders)
+      .entries()
+      .map(([row]) => `${row} has no loader`),
+    ...knownLoaders
+      .difference(knownTargets)
+      .entries()
+      .map(([row]) => `${row} has no frontiers`),
   ];
   if (problems.length > 0) {
     console.log();
-    for (const problem of problems)
-      console.warn(`Warning: ${problem}`);
+    for (const problem of problems) console.warn(`Warning: ${problem}`);
   }
 
   if (!options.all) {
     console.log();
     console.log('Done:');
-    const byFederation = new Map<string, { kind: string, total: number; }[]>();
+    const byFederation = new Map<string, { kind: string; total: number }[]>();
     for (const row of frontiers.filter((row) => row.isStable)) {
       const { federation, kind, total } = row;
-      const slot = byFederation.get(federation) ?? byFederation.set(federation, []).get(federation)!;
+      const slot =
+        byFederation.get(federation) ?? byFederation.set(federation, []).get(federation)!;
       slot.push({ kind, total });
     }
-    for (const [fed, kinds] of [...byFederation.entries()].toSorted((a, b) => a[0].localeCompare(b[0]))) {
+    for (const [fed, kinds] of [...byFederation.entries()].toSorted((a, b) =>
+      a[0].localeCompare(b[0]),
+    )) {
       const kindsReport = kinds
         .toSorted((a, b) => b.total - a.total || a.kind.localeCompare(b.kind))
-        .map(x => x.total === 1 ? x.kind : `${x.kind} (${x.total})`)
+        .map((x) => (x.total === 1 ? x.kind : `${x.kind} (${x.total})`))
         .join(', ');
       console.log(`${fed}: ${kindsReport}`);
     }
   }
   console.log();
   console.log('Failures');
-  printTable(failures.map(row => ({
-    count: row.count,
-    kind: [row.federation, row.kind].join(':'),
-    failure: row.failure,
-    http: row.http_status ?? '',
-    samples: truncate(row.samples, 80),
-    details: { '': row.error_fingerprint },
-  })));
+  printTable(
+    failures.map((row) => ({
+      count: row.count,
+      kind: [row.federation, row.kind].join(':'),
+      failure: row.failure,
+      http: row.http_status ?? '',
+      samples: truncate(row.samples, 80),
+      details: { '': row.error_fingerprint },
+    })),
+  );
 }
 
 function explainState(row: IGetFrontierDetailResult) {
@@ -447,7 +450,7 @@ function explainState(row: IGetFrontierDetailResult) {
   return 'no obvious issue';
 }
 
-async function explainFrontier(target: string, options: OutputOptions) {
+async function explainFrontier(target: string, options: { json?: boolean }) {
   const parsed = parseTarget(target);
   if (parsed.scope !== 'frontier')
     throw new Error('Must target a single frontier by ID or path');
@@ -509,10 +512,8 @@ async function showLatestResponse(target: string) {
   const [row] = await getLatestFrontierResponse.run(parsed, pool);
   if (!row) throw new Error(`Response for ${target} not found`);
 
-  if (typeof row.content === 'string')
-    console.log(row.content);
-  else
-    console.log(JSON.stringify(row.content, null, 2));
+  if (typeof row.content === 'string') console.log(row.content);
+  else console.log(JSON.stringify(row.content, null, 2));
 }
 
 type RefetchOptions = {
@@ -552,8 +553,8 @@ function logClientQueries(client: PoolClient): PoolClient {
           typeof query === 'string'
             ? query
             : query && typeof query === 'object' && 'text' in query
-            ? query.text
-            : '<unknown query>';
+              ? query.text
+              : '<unknown query>';
         const text = String(queryText).replace(/\s+/g, ' ').trim();
         try {
           const result = await (
@@ -578,7 +579,7 @@ function logClientQueries(client: PoolClient): PoolClient {
 async function processFrontier(
   client: PoolClient,
   row: IGetFrontierResponsesResult,
-  options: { keepGoing?: boolean; },
+  options: { keepGoing?: boolean },
 ) {
   await client.query('SAVEPOINT bulk_process');
 
@@ -608,7 +609,15 @@ async function processFrontier(
   }
 }
 
-async function processLatest(target: string, options: ProcessOptions) {
+async function processLatest(
+  target: string,
+  options: {
+    keepGoing?: boolean;
+    limit?: string;
+    verbose?: boolean;
+    commit?: boolean;
+  },
+) {
   const parsed = parseTarget(target);
   const limit = parseLimit(options.limit);
   const selectClient = await pool.connect();
@@ -670,7 +679,7 @@ async function processLatest(target: string, options: ProcessOptions) {
       }
     }
 
-    await processClient.query('ROLLBACK');
+    await processClient.query(options.commit ? 'COMMIT' : 'ROLLBACK');
     inTransaction = false;
   } catch (e) {
     if (inTransaction) await processClient.query('ROLLBACK');
@@ -725,7 +734,9 @@ cli
   .command('status [target]', 'Show crawler health status')
   .option('--json', 'Print JSON')
   .option('--all', 'Do not abbreviate done frontiers')
-  .action((target: string | undefined, options: StatusOptions) => showStatus(target, options));
+  .action((target: string | undefined, options: StatusOptions) =>
+    showStatus(target, options),
+  );
 
 cli
   .command('failures [target]', 'Show latest failed frontier rows')
@@ -759,7 +770,9 @@ cli
 cli
   .command('explain <target>', 'Explain one frontier row by id or federation:kind[:key]')
   .option('--json', 'Print JSON')
-  .action((target: string, options: OutputOptions) => explainFrontier(target, options));
+  .action((target: string, options: { json?: boolean }) =>
+    explainFrontier(target, options),
+  );
 
 cli
   .command('response <target>', 'Print the latest stored response for a frontier')
@@ -778,11 +791,22 @@ cli
     return backtestSchemas(target, options);
   });
 cli
-  .command('load <target>', 'Re-run loaders for stored OK responses')
+  .command('process <target>', 'Re-run loaders for stored OK responses')
   .option('--keep-going', 'Continue after failures')
+  .option('--commit', 'Don\'t rollback everything in the end')
   .option('-v, --verbose', 'Log loader queries')
   .option('-n, --limit <limit>', 'Maximum responses to validate')
-  .action((target: string, options: ProcessOptions) => processLatest(target, options));
+  .action(
+    (
+      target: string,
+      options: {
+        keepGoing?: boolean;
+        limit?: string;
+        verbose?: boolean;
+        commit?: boolean;
+      },
+    ) => processLatest(target, options),
+  );
 
 cli.help();
 

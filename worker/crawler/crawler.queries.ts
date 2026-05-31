@@ -578,7 +578,6 @@ export interface IGetScheduleStatusResult {
   locked: number;
   max_requests: number | null;
   next_available_at: Date | null;
-  next_run_at: Date | null;
   per_interval: string | null;
   queue_tail_at: Date | null;
   queued: number;
@@ -592,7 +591,7 @@ export interface IGetScheduleStatusQuery {
   result: IGetScheduleStatusResult;
 }
 
-const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WITH fetch_jobs AS (\n  SELECT\n    host,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,\n    count(*) FILTER (WHERE state = 'ready')::int AS ready,\n    count(*) FILTER (WHERE state = 'delayed')::int AS delayed,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked,\n    min(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS next_run_at,\n    max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at\n  FROM crawler.frontier_fetch_job\n  WHERE host IS NOT NULL\n  GROUP BY host\n)\nSELECT\n  COALESCE(r.host, fj.host) AS \"host!\",\n  r.max_requests AS \"max_requests?\",\n  r.per_interval::text AS \"per_interval?\",\n  (extract(epoch from r.spacing) * 1000)::int AS \"spacing?\",\n  r.next_available_at AS \"next_available_at?\",\n  COALESCE(fj.queued, 0)::int AS \"queued!\",\n  COALESCE(fj.ready, 0)::int AS \"ready!\",\n  COALESCE(fj.delayed, 0)::int AS \"delayed!\",\n  COALESCE(fj.locked, 0)::int AS \"locked!\",\n  fj.next_run_at,\n  fj.queue_tail_at\nFROM crawler.rate_limit_rule r\nFULL JOIN fetch_jobs fj USING (host)\nORDER BY host"};
+const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WITH fetch_jobs AS (\n  SELECT\n    host,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,\n    count(*) FILTER (WHERE state = 'ready')::int AS ready,\n    count(*) FILTER (WHERE state = 'delayed')::int AS delayed,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked,\n    max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at\n  FROM crawler.frontier_fetch_job\n  WHERE host IS NOT NULL\n  GROUP BY host\n)\nSELECT\n  COALESCE(r.host, fj.host) AS \"host!\",\n  r.max_requests AS \"max_requests?\",\n  r.per_interval::text AS \"per_interval?\",\n  (extract(epoch from r.spacing) * 1000)::int AS \"spacing?\",\n  r.next_available_at AS \"next_available_at?\",\n  COALESCE(fj.queued, 0)::int AS \"queued!\",\n  COALESCE(fj.ready, 0)::int AS \"ready!\",\n  COALESCE(fj.delayed, 0)::int AS \"delayed!\",\n  COALESCE(fj.locked, 0)::int AS \"locked!\",\n  GREATEST(fj.queue_tail_at, NOW() + COALESCE(fj.queued, 0) * spacing) as queue_tail_at\nFROM crawler.rate_limit_rule r\nFULL JOIN fetch_jobs fj USING (host)\nORDER BY host"};
 
 /**
  * Query generated from SQL:
@@ -604,7 +603,6 @@ const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
  *     count(*) FILTER (WHERE state = 'ready')::int AS ready,
  *     count(*) FILTER (WHERE state = 'delayed')::int AS delayed,
  *     count(*) FILTER (WHERE state = 'locked')::int AS locked,
- *     min(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS next_run_at,
  *     max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at
  *   FROM crawler.frontier_fetch_job
  *   WHERE host IS NOT NULL
@@ -620,8 +618,7 @@ const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
  *   COALESCE(fj.ready, 0)::int AS "ready!",
  *   COALESCE(fj.delayed, 0)::int AS "delayed!",
  *   COALESCE(fj.locked, 0)::int AS "locked!",
- *   fj.next_run_at,
- *   fj.queue_tail_at
+ *   GREATEST(fj.queue_tail_at, NOW() + COALESCE(fj.queued, 0) * spacing) as queue_tail_at
  * FROM crawler.rate_limit_rule r
  * FULL JOIN fetch_jobs fj USING (host)
  * ORDER BY host

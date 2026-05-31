@@ -40,6 +40,7 @@ const competitionType = [
   'EU CHAMPIONSHIP',
   'SUB CHAMPIONSHIP',
   'CONTINENTAL CHAMPIONSHIP',
+  'NORTH AMERICA CHAMPIONSHIP',
   'SOUTH AMERICAN CHAMPIONSHIP',
   'INT TEAM MATCH',
   'PD TNS',
@@ -84,11 +85,12 @@ const competitionType = [
   'WRRC WORLD CUP',
   'WDSG',
   'SMOOTH OPEN',
-  'CUSTOM',
   'CLOSED',
   'GAMES QUALIFIER',
   'WORLD DANCE LEAGUE',
   'OLYMP',
+  'CUSTOM',
+  'UNKNOWN',
 ] as const;
 
 const mapCompetitionType = (type: (typeof competitionType)[number]): competition_type => {
