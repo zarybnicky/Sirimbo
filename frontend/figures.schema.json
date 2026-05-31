@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/dance-figures-catalog.schema.json",
+  "title": "Dance Figures Catalog",
+  "description": "Validates a YAML/JSON dance-figure catalog. The compact shape is a top-level mapping from dance names to figure arrays. For future expansion, a dance may also be represented as an object with figures, notes, and metadata.",
+  "type": "object",
+  "minProperties": 1,
+  "propertyNames": {
+    "type": "string",
+    "minLength": 1,
+    "not": {
+      "enum": ["$schema", "$id", "$defs"]
+    }
+  },
+  "properties": {
+    "_meta": {
+      "$ref": "#/$defs/catalogMetadata"
+    }
+  },
+  "additionalProperties": {
+    "$ref": "#/$defs/danceSection"
+  },
+  "$defs": {
+    "catalogMetadata": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "title": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "description": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_documents": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/reference"
+          }
+        },
+        "notes": {
+          "$ref": "#/$defs/notes"
+        }
+      },
+      "patternProperties": {
+        "^x_[A-Za-z0-9_]+$": true
+      },
+      "additionalProperties": false
+    },
+    "danceSection": {
+      "description": "Either the current compact form, which is a list of figures, or an expanded dance object for future notes/metadata.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/figureList"
+        },
+        {
+          "type": "object",
+          "required": ["figures"],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "name_czech": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "discipline": {
+              "type": "string",
+              "enum": ["standard", "latin", "national", "other"]
+            },
+            "figures": {
+              "$ref": "#/$defs/figureList"
+            },
+            "notes": {
+              "$ref": "#/$defs/notes"
+            },
+            "references": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/reference"
+              }
+            },
+            "wdsf": {
+              "$ref": "#/$defs/wdsfDanceMetadata"
+            }
+          },
+          "patternProperties": {
+            "^x_[A-Za-z0-9_]+$": true
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "figureList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/figure"
+      }
+    },
+    "figure": {
+      "type": "object",
+      "required": ["name", "name_czech", "source", "for_class"],
+      "properties": {
+        "name": {
+          "description": "English figure name. Use null only when the source document does not provide an English name, as in the current Polka table.",
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "name_czech": {
+          "description": "Czech figure name.",
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "description": "Compact source labels, such as 'WDSF 1', 'Plam. 1', 'Polka 1', or another source label retained from the catalog.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "for_class": {
+          "description": "Czech competition classes in which the figure is allowed by this catalog.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/classCode"
+          }
+        },
+        "id": {
+          "description": "Optional stable machine-readable identifier for the figure, useful for APIs and cross-references.",
+          "$ref": "#/$defs/id"
+        },
+        "number": {
+          "description": "Optional row/order number from the source table.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "aliases": {
+          "description": "Optional alternate names or spellings.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "notes": {
+          "$ref": "#/$defs/notes"
+        },
+        "references": {
+          "description": "Optional structured references for cases where compact source strings are not enough.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/reference"
+          }
+        },
+        "wdsf": {
+          "description": "Optional WDSF-specific metadata to be filled later from the WDSF syllabus or technical books.",
+          "$ref": "#/$defs/wdsfFigureMetadata"
+        }
+      },
+      "patternProperties": {
+        "^x_[A-Za-z0-9_]+$": true
+      },
+      "additionalProperties": false
+    },
+    "classCode": {
+      "type": "string",
+      "enum": ["E", "D", "C"]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._/-][a-z0-9]+)*$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/note"
+      }
+    },
+    "note": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        {
+          "type": "object",
+          "required": ["text"],
+          "properties": {
+            "text": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "lang": {
+              "type": "string",
+              "enum": ["cs", "en"]
+            },
+            "source": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          },
+          "patternProperties": {
+            "^x_[A-Za-z0-9_]+$": true
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "reference": {
+      "type": "object",
+      "required": ["source"],
+      "properties": {
+        "source": {
+          "description": "Source family or document, e.g. WDSF, Plamínek/Landsfeld, DTV-NF, Polka ČSTS.",
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "dance": {
+          "description": "Dance code or name used by the referenced source, when different from the current section.",
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "figure_number": {
+          "description": "Figure number, code, or other locator in the referenced source.",
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "note": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "patternProperties": {
+        "^x_[A-Za-z0-9_]+$": true
+      },
+      "additionalProperties": false
+    },
+    "wdsfDanceMetadata": {
+      "type": "object",
+      "properties": {
+        "source_document": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "syllabus_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "technical_book": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "patternProperties": {
+        "^x_[A-Za-z0-9_]+$": true
+      },
+      "additionalProperties": false
+    },
+    "wdsfFigureMetadata": {
+      "type": "object",
+      "properties": {
+        "figure_number": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "technical_book": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "level": {
+          "description": "Optional WDSF syllabus level or grouping, if you decide to model it later.",
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "permitted_entry": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "permitted_exit": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "rhythms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x_[A-Za-z0-9_]+$": true
+      },
+      "additionalProperties": false
+    }
+  }
+}

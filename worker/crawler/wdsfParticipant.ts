@@ -99,20 +99,20 @@ export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
     return;
 
     // entry + competition-level result
-    const cancelled = /not\s*present|absent/i.test(p.status ?? '');
-    await upsertCompetitionEntry.run({ competitionId, competitorId, cancelled }, client);
-    await upsertCompetitionResult.run(
-      {
-        competitionId,
-        competitorId,
-        startNumber: p.number ?? null,
-        ranking: p.rank ?? null,
-        rankingTo: null,
-        pointGain: p.points ?? null,
-        finalGain: p.final ?? null,
-      },
-      client,
-    );
+    // const cancelled = /not\s*present|absent/i.test(p.status ?? '');
+    // await upsertCompetitionEntry.run({ competitionId, competitorId, cancelled }, client);
+    // await upsertCompetitionResult.run(
+    //   {
+    //     competitionId,
+    //     competitorId,
+    //     startNumber: p.number ?? null,
+    //     ranking: p.rank ?? null,
+    //     rankingTo: null,
+    //     pointGain: p.points ?? null,
+    //     finalGain: p.final ?? null,
+    //   },
+    //   client,
+    // );
 
     const rounds = p.rounds ?? [];
     if (rounds.length === 0) return;
@@ -150,28 +150,14 @@ export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
 
       const danceCodesInOrder: string[] = [];
       for (const d of dances) {
-        const mapped = mapDanceNameToCode(d.name ?? null);
-        danceCodesInOrder.push(mapped.code);
-
-        // for round_dance
+        danceCodesInOrder.push(d.name);
         pairRoundKeys.push(roundKey);
-        pairDanceCodes.push(mapped.code);
-
-        // for dance upsert
-        if (!danceMeta.has(mapped.code)) {
-          danceMeta.set(mapped.code, {
-            name: mapped.displayName,
-            discipline:
-              mapped.discipline !== 'unknown' ? mapped.discipline : cat.discipline,
-          });
-        }
+        pairDanceCodes.push(d.name);
       }
-
-      const scoringMethod = detectScoringMethod((dances[0]!.scores ?? [])[0]);
 
       roundKeysRaw.push(roundKey);
       roundLabelsRaw.push(roundLabel);
-      scoringMethodsRaw.push(scoringMethod);
+      scoringMethodsRaw.push('skating_marks');
       roundDanceCodesInOrder.push(danceCodesInOrder);
 
       // collect judge scores
@@ -181,18 +167,13 @@ export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
         const scores = d.scores ?? [];
 
         for (const s of scores) {
-          const adjudicator = extractAdjudicatorId(s);
-          if (!adjudicator) continue;
-          adjudicators.add(adjudicator);
+          adjudicators.add(s.adjudicator.toString()); // Wrong ID, competition-local
 
-          for (const c of parseScoreComponents(s)) {
-            scoreRoundKeys.push(roundKey);
-            scoreDanceCodes.push(danceCode);
-            scoreJudgeIds.push(adjudicator);
-            scoreComponents.push(c.component);
-            scoreValues.push(c.score);
-            scoreRaw.push(c.raw ?? null);
-          }
+          scoreRoundKeys.push(roundKey);
+          scoreDanceCodes.push(danceCode);
+          scoreJudgeIds.push(s.adjudicator.toString());
+          scoreComponents.push('mark'); // wrong
+          scoreValues.push(1);
         }
       }
     }
@@ -200,103 +181,101 @@ export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
     if (roundKeysRaw.length === 0) return;
 
     // ---- Ensure dances exist BEFORE dance_program_dance inserts
-    {
-      const codes: string[] = [];
-      const names: string[] = [];
-      const disciplines: string[] = [];
-      for (const [code, meta] of danceMeta.entries()) {
-        codes.push(code);
-        names.push(meta.name);
-        disciplines.push(meta.discipline);
-      }
-      await upsertDances.run({ codes, names, disciplines }, client);
-    }
+    // {
+    //   const codes: string[] = [];
+    //   const names: string[] = [];
+    //   const disciplines: string[] = [];
+    //   for (const [code, meta] of danceMeta.entries()) {
+    //     codes.push(code);
+    //     names.push(meta.name);
+    //     disciplines.push(meta.discipline);
+    //   }
+    //   await upsertDances.run({ codes, names, disciplines }, client);
+    // }
 
     // ---- Pass 2: create dance programs per round (still per-round; low complexity)
-    const danceProgramIds: number[] = [];
-    for (let i = 0; i < roundDanceCodesInOrder.length; i++) {
-      const dpId = await ensureDanceProgramForDances.run(
-        {
-          danceCodesInOrder: roundDanceCodesInOrder[i]!,
-          discipline: cat.discipline,
-        },
-        client,
-      );
-      danceProgramIds.push(dpId);
-    }
+    // const danceProgramIds: number[] = [];
+    // for (let i = 0; i < roundDanceCodesInOrder.length; i++) {
+    //   const dpId = await ensureDanceProgramForDances.run(
+    //     {
+    //       danceCodesInOrder: roundDanceCodesInOrder[i]!,
+    //       discipline: cat.discipline,
+    //     },
+    //     client,
+    //   );
+    //   danceProgramIds.push(dpId);
+    // }
 
     // ---- Batch upsert rounds + round_dance
-    const roundIdByKey = await upsertRoundsAndRoundDances.run(
-      {
-        competitionId,
-        roundKeys: roundKeysRaw,
-        roundLabels: roundLabelsRaw,
-        roundIndexes: roundKeysRaw.map(() => null),
-        danceProgramIds,
-        scoringMethods: scoringMethodsRaw,
-        roundKeys: pairRoundKeys,
-        danceCodes: pairDanceCodes,
-      },
-      client,
-    );
+    // const roundIdByKey = await upsertRoundsAndRoundDances.run(
+    //   {
+    //     competitionId,
+    //     roundLabels: roundLabelsRaw,
+    //     roundIndexes: roundKeysRaw.map(() => null),
+    //     danceProgramIds,
+    //     scoringMethods: scoringMethodsRaw,
+    //     roundKeys: pairRoundKeys,
+    //     danceCodes: pairDanceCodes,
+    //   },
+    //   client,
+    // );
 
     // ---- Batch round results (optional but cheap)
-    const roundIdsInOrder = roundKeysRaw
-      .map((k) => roundIdByKey.get(k) ?? null)
-      .filter((x): x is number => typeof x === 'number');
+    // const roundIdsInOrder = roundKeysRaw
+    //   .map((k) => roundIdByKey.get(k) ?? null)
+    //   .filter((x): x is number => typeof x === 'number');
 
-    await upsertCompetitionRoundResults.run(
-      {
-        roundIds: roundIdsInOrder,
-        competitorId,
-        overallRanking: roundIdsInOrder.map(() => p.rank ?? null),
-        overallRankingTo: roundIdsInOrder.map(() => null),
-        qualifiedNext: roundIdsInOrder.map((_, i) => i < roundIdsInOrder.length - 1),
-        overallScore: roundIdsInOrder.map(() => null),
-      },
-      client,
-    );
+    // await upsertCompetitionRoundResults.run(
+    //   {
+    //     roundIds: roundIdsInOrder,
+    //     competitorId,
+    //     overallRanking: roundIdsInOrder.map(() => p.rank ?? null),
+    //     overallRankingTo: roundIdsInOrder.map(() => null),
+    //     qualifiedNext: roundIdsInOrder.map((_, i) => i < roundIdsInOrder.length - 1),
+    //     overallScore: roundIdsInOrder.map(() => null),
+    //   },
+    //   client,
+    // );
 
     // ---- Judges: one call per participant
-    const adjudicatorList = [...adjudicators];
-    if (adjudicatorList.length > 0) {
-      await ensureJudges.run({ federation: 'wdsf', adjudicatorList }, client);
-    }
+    // const adjudicatorList = [...adjudicators];
+    // if (adjudicatorList.length > 0) {
+    //   await ensureJudges.run({ federation: 'wdsf', adjudicatorList }, client);
+    // }
 
     // ---- Scores: map roundKey -> roundId then bulk insert
-    const scoreRoundIds: number[] = [];
-    const scoreDanceCodes2: string[] = [];
-    const scoreJudgeIds2: string[] = [];
-    const scoreComponents2: score_component[] = [];
-    const scoreValues2: number[] = [];
-    const scoreRaw2: string[] = [];
+    // const scoreRoundIds: number[] = [];
+    // const scoreDanceCodes2: string[] = [];
+    // const scoreJudgeIds2: string[] = [];
+    // const scoreComponents2: score_component[] = [];
+    // const scoreValues2: number[] = [];
+    // const scoreRaw2: string[] = [];
 
-    for (let i = 0; i < scoreRoundKeys.length; i++) {
-      const rk = scoreRoundKeys[i]!;
-      const rid = roundIdByKey.get(rk);
-      if (!rid) continue; // should not happen, but keeps idempotency safe
+    // for (let i = 0; i < scoreRoundKeys.length; i++) {
+    //   const rk = scoreRoundKeys[i]!;
+    //   const rid = roundIdByKey.get(rk);
+    //   if (!rid) continue; // should not happen, but keeps idempotency safe
 
-      scoreRoundIds.push(rid);
-      scoreDanceCodes2.push(scoreDanceCodes[i]!);
-      scoreJudgeIds2.push(scoreJudgeIds[i]!);
-      scoreComponents2.push(scoreComponents[i]!);
-      scoreValues2.push(scoreValues[i]!);
-      scoreRaw2.push((scoreRaw[i] ?? null) as string);
-    }
+    //   scoreRoundIds.push(rid);
+    //   scoreDanceCodes2.push(scoreDanceCodes[i]!);
+    //   scoreJudgeIds2.push(scoreJudgeIds[i]!);
+    //   scoreComponents2.push(scoreComponents[i]!);
+    //   scoreValues2.push(scoreValues[i]!);
+    //   scoreRaw2.push((scoreRaw[i] ?? null) as string);
+    // }
 
-    await upsertJudgeScores.run(
-      {
-        federation: 'wdsf',
-        competitionId,
-        competitorId,
-        roundId: scoreRoundIds,
-        danceCode: scoreDanceCodes2,
-        judgeId: scoreJudgeIds2,
-        component: scoreComponents2,
-        score: scoreValues2,
-        rawScore: scoreRaw2,
-      },
-      client,
-    );
+    // await upsertJudgeScores.run(
+    //   {
+    //     federation: 'wdsf',
+    //     competitionId,
+    //     competitorId,
+    //     roundId: scoreRoundIds,
+    //     danceCode: scoreDanceCodes2,
+    //     judgeId: scoreJudgeIds2,
+    //     component: scoreComponents2,
+    //     score: scoreValues2,
+    //   },
+    //   client,
+    // );
   },
 };
