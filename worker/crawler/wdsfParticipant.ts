@@ -29,13 +29,16 @@ const schema = z.object( {
   id: z.number(),
   number: z.number().optional(),
   status: z.enum([
-    'Present'
+    'Present',
+    'Excused',
   ]),
   basepoints: z.string(),
   rank: z.string(),
   points: z.number().optional(),
   final: z.number().optional(),
-  coupleId: z.string(),
+  coupleId: z.string().optional(),
+  personId: z.string().optional(),
+  PerformanceName: z.string().nullish(),
   name: z.string(),
   country: z.string().nullish(),
   nationalreference: z.string().nullable(),
