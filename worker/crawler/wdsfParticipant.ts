@@ -37,11 +37,11 @@ const schema = z.object( {
   points: z.number().optional(),
   final: z.number().optional(),
   coupleId: z.string().optional(),
-  personId: z.string().optional(),
+  personId: z.number().optional(),
   PerformanceName: z.string().nullish(),
   name: z.string(),
   country: z.string().nullish(),
-  nationalreference: z.string().nullable(),
+  nationalreference: z.string().nullish(),
   rounds: z.array(
     z.object({
       name: z.string(),
