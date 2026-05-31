@@ -10,7 +10,6 @@ import type {
   IGetFrontierResponsesResult,
 } from './crawler.queries.ts';
 import {
-  getBacktestFrontierResponses,
   getCrawlerJobs,
   getCrawlerStatus,
   getFrontierDetail,
@@ -147,7 +146,7 @@ async function backtestJsonResponses(
   const conn = await pool.connect();
   let count = 0;
   try {
-    const cursor = getBacktestFrontierResponses.stream(
+    const cursor = getFrontierResponses.stream(
       { federation, kind },
       {
         query: conn.query,
@@ -213,12 +212,6 @@ async function backtestSchemas(
 
     const count = await backtestJsonResponses(federation, kind, loader, options);
     console.log(`Validated ${count} responses of type ${target}`);
-  }
-
-  for (const { federation, kind } of ALL_LOADERS) {
-    const target = [federation, kind].join(':');
-    if (frontierKinds.has(target)) continue;
-    console.warn(`Warning: loader ${target} has no frontiers`);
   }
 }
 

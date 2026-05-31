@@ -25,6 +25,7 @@ import {
 import { wdsfCompetitionIndex } from './wdsfCompetitionIndex.ts';
 import { wdsfCompetition } from './wdsfCompetition.ts';
 import { wdsfParticipantIndex } from './wdsfParticipantIndex.ts';
+import { wdsfParticipant } from './wdsfParticipant.ts';
 
 export const LOADERS = {
   wdsf: {
@@ -42,11 +43,12 @@ export const LOADERS = {
 
     // https://services.worlddancesport.org/api/1/participant?competitionId=64306
     participantIndex: wdsfParticipantIndex,
+    // https://services.worlddancesport.org/api/1/participant/2313241 = results!
+    participant: wdsfParticipant,
 
     // https://services.worlddancesport.org/api/1/official?competitionId=64306 - includes letters of judges
     // https://services.worlddancesport.org/api/1/couple
     // https://services.worlddancesport.org/api/1/participant?coupleId=rls-1912
-    // https://services.worlddancesport.org/api/1/participant/2313241?format=json = results!
     // https://services.worlddancesport.org/api/1/ranking?ageGroup=???&discipline=???&division=???
     // https://services.worlddancesport.org/api/1/country
     // https://services.worlddancesport.org/api/1/age - includes divisions? or disciplines?

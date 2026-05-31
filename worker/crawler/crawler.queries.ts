@@ -200,50 +200,6 @@ const queueCrawlerScheduleIR: any = {"usedParamSet":{},"params":[],"statement":"
 export const queueCrawlerSchedule = new PreparedQuery<IQueueCrawlerScheduleParams,IQueueCrawlerScheduleResult>(queueCrawlerScheduleIR);
 
 
-/** 'GetBacktestFrontierResponses' parameters type */
-export interface IGetBacktestFrontierResponsesParams {
-  federation?: string | null | void;
-  kind?: string | null | void;
-}
-
-/** 'GetBacktestFrontierResponses' return type */
-export interface IGetBacktestFrontierResponsesResult {
-  content: Json;
-  http_status: number | null;
-  id: string;
-  url: string;
-}
-
-/** 'GetBacktestFrontierResponses' query type */
-export interface IGetBacktestFrontierResponsesQuery {
-  params: IGetBacktestFrontierResponsesParams;
-  result: IGetBacktestFrontierResponsesResult;
-}
-
-const getBacktestFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":397,"b":407}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":424,"b":428}]}],"statement":"SELECT f.id, jr.url, jr.http_status, jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n    AND jr.error IS NULL\n    AND (jr.http_status IS NULL OR jr.http_status < 400)\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n  ) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.federation = :federation\n  AND f.kind = :kind"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT f.id, jr.url, jr.http_status, jrc.content
- * FROM crawler.frontier f
- * JOIN LATERAL (
- *   SELECT jr.*
- *   FROM crawler.json_response jr
- *   WHERE jr.frontier_id = f.id
- *     AND jr.error IS NULL
- *     AND (jr.http_status IS NULL OR jr.http_status < 400)
- *   ORDER BY jr.fetched_at DESC
- *   LIMIT 1
- *   ) jr ON true
- * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
- * WHERE f.federation = :federation
- *   AND f.kind = :kind
- * ```
- */
-export const getBacktestFrontierResponses = new PreparedQuery<IGetBacktestFrontierResponsesParams,IGetBacktestFrontierResponsesResult>(getBacktestFrontierResponsesIR);
-
-
 /** 'GetFrontierResponses' parameters type */
 export interface IGetFrontierResponsesParams {
   federation?: string | null | void;
@@ -578,6 +534,7 @@ export interface IGetScheduleStatusResult {
   locked: number;
   max_requests: number | null;
   next_available_at: Date | null;
+  next_run_at: Date | null;
   per_interval: string | null;
   queue_tail_at: Date | null;
   queued: number;
@@ -591,7 +548,7 @@ export interface IGetScheduleStatusQuery {
   result: IGetScheduleStatusResult;
 }
 
-const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WITH fetch_jobs AS (\n  SELECT\n    host,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,\n    count(*) FILTER (WHERE state = 'ready')::int AS ready,\n    count(*) FILTER (WHERE state = 'delayed')::int AS delayed,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked,\n    max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at\n  FROM crawler.frontier_fetch_job\n  WHERE host IS NOT NULL\n  GROUP BY host\n)\nSELECT\n  COALESCE(r.host, fj.host) AS \"host!\",\n  r.max_requests AS \"max_requests?\",\n  r.per_interval::text AS \"per_interval?\",\n  (extract(epoch from r.spacing) * 1000)::int AS \"spacing?\",\n  r.next_available_at AS \"next_available_at?\",\n  COALESCE(fj.queued, 0)::int AS \"queued!\",\n  COALESCE(fj.ready, 0)::int AS \"ready!\",\n  COALESCE(fj.delayed, 0)::int AS \"delayed!\",\n  COALESCE(fj.locked, 0)::int AS \"locked!\",\n  GREATEST(fj.queue_tail_at, NOW() + COALESCE(fj.queued, 0) * spacing) as queue_tail_at\nFROM crawler.rate_limit_rule r\nFULL JOIN fetch_jobs fj USING (host)\nORDER BY host"};
+const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WITH fetch_jobs AS (\n  SELECT\n    host,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,\n    count(*) FILTER (WHERE state = 'ready')::int AS ready,\n    count(*) FILTER (WHERE state = 'delayed')::int AS delayed,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked,\n    min(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS next_run_at,\n    max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at\n  FROM crawler.frontier_fetch_job\n  WHERE host IS NOT NULL\n  GROUP BY host\n)\nSELECT\n  COALESCE(r.host, fj.host) AS \"host!\",\n  r.max_requests AS \"max_requests?\",\n  r.per_interval::text AS \"per_interval?\",\n  (extract(epoch from r.spacing) * 1000)::int AS \"spacing?\",\n  r.next_available_at AS \"next_available_at?\",\n  COALESCE(fj.queued, 0)::int AS \"queued!\",\n  COALESCE(fj.ready, 0)::int AS \"ready!\",\n  COALESCE(fj.delayed, 0)::int AS \"delayed!\",\n  COALESCE(fj.locked, 0)::int AS \"locked!\",\n  fj.next_run_at,\n  fj.queue_tail_at\nFROM crawler.rate_limit_rule r\nFULL JOIN fetch_jobs fj USING (host)\nORDER BY host"};
 
 /**
  * Query generated from SQL:
@@ -603,6 +560,7 @@ const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
  *     count(*) FILTER (WHERE state = 'ready')::int AS ready,
  *     count(*) FILTER (WHERE state = 'delayed')::int AS delayed,
  *     count(*) FILTER (WHERE state = 'locked')::int AS locked,
+ *     min(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS next_run_at,
  *     max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at
  *   FROM crawler.frontier_fetch_job
  *   WHERE host IS NOT NULL
@@ -618,7 +576,8 @@ const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
  *   COALESCE(fj.ready, 0)::int AS "ready!",
  *   COALESCE(fj.delayed, 0)::int AS "delayed!",
  *   COALESCE(fj.locked, 0)::int AS "locked!",
- *   GREATEST(fj.queue_tail_at, NOW() + COALESCE(fj.queued, 0) * spacing) as queue_tail_at
+ *   fj.next_run_at,
+ *   fj.queue_tail_at
  * FROM crawler.rate_limit_rule r
  * FULL JOIN fetch_jobs fj USING (host)
  * ORDER BY host

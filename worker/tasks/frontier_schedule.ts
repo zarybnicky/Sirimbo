@@ -73,8 +73,6 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
       { capacity, allowRefetch, ...fetchLoaderParams },
       client,
     );
-    console.log(capacity, allowRefetch, fetchLoaderParams);
-    console.log(spacingMs, queueTail, pendingIds);
     let scheduled = 0;
     for (const { id, federation, kind, key } of pendingIds) {
       const loader = loaderFor(federation, kind);

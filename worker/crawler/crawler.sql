@@ -90,22 +90,6 @@ SELECT (
   )
 ).id AS "job_id!";
 
-/* @name GetBacktestFrontierResponses */
-SELECT f.id, jr.url, jr.http_status, jrc.content
-FROM crawler.frontier f
-JOIN LATERAL (
-  SELECT jr.*
-  FROM crawler.json_response jr
-  WHERE jr.frontier_id = f.id
-    AND jr.error IS NULL
-    AND (jr.http_status IS NULL OR jr.http_status < 400)
-  ORDER BY jr.fetched_at DESC
-  LIMIT 1
-  ) jr ON true
-JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
-WHERE f.federation = :federation
-  AND f.kind = :kind;
-
 /* @name GetFrontierResponses */
 SELECT
   f.id AS "id!",
@@ -283,6 +267,7 @@ WITH fetch_jobs AS (
     count(*) FILTER (WHERE state = 'ready')::int AS ready,
     count(*) FILTER (WHERE state = 'delayed')::int AS delayed,
     count(*) FILTER (WHERE state = 'locked')::int AS locked,
+    min(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS next_run_at,
     max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at
   FROM crawler.frontier_fetch_job
   WHERE host IS NOT NULL
@@ -298,7 +283,8 @@ SELECT
   COALESCE(fj.ready, 0)::int AS "ready!",
   COALESCE(fj.delayed, 0)::int AS "delayed!",
   COALESCE(fj.locked, 0)::int AS "locked!",
-  GREATEST(fj.queue_tail_at, NOW() + COALESCE(fj.queued, 0) * spacing) as queue_tail_at
+  fj.next_run_at,
+  fj.queue_tail_at
 FROM crawler.rate_limit_rule r
 FULL JOIN fetch_jobs fj USING (host)
 ORDER BY host;
