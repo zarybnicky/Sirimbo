@@ -8,10 +8,5 @@ trim_trailing_whitespace = true
 indent_size = 2
 indent_style = space
 
-[*.json, *.ts, *.tsx]
-indent_style = space
-indent_size = 2
-
-[*.py]
-indent_size = 2
-indent_style = space
+[**.min.js]
+indent_style = ignore

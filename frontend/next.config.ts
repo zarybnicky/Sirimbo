@@ -41,6 +41,13 @@ export default compose(
     scrollRestoration: true,
   },
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  outputFileTracingRoot: `${import.meta.dirname}/../..`,
+  outputFileTracingIncludes: {
+    "/*": [
+      "node_modules/sharp/**/*",
+      "node_modules/@img/**/*",
+    ],
+  },
 
   images: {
     remotePatterns: [
