@@ -31,6 +31,12 @@ const schema = z.object( {
   status: z.enum([
     'Present',
     'Excused',
+    'Registered',
+    'Noshow',
+    'Provisional',
+    'Withdrawn',
+    'Unknown',
+    'Disqualified',
   ]),
   basepoints: z.string(),
   rank: z.string(),
