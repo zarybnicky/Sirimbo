@@ -199,8 +199,8 @@ export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
     const personLink = p.link.find(x => x.rel === 'http://services.worlddancesport.org/rel/participant/person');
 
     let competitorType: competitor_type = 'solo';
-    let competitorName: string | null = null;
-    let competitorId: string | null = null;
+    let competitorName: string | undefined | null = null;
+    let competitorId: string | undefined | null = null;
 
     if (coupleLink) {
       competitorType = 'couple';
@@ -209,7 +209,7 @@ export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
     } else if (teamLink) {
       competitorType = 'team';
       competitorName = p.Team;
-      competitorId = p.teamId;
+      competitorId = p.teamId?.toString();
     } else if (personLink) {
       competitorType = 'solo';
       throw new Error('Need to get competitor ID from MIN. Are the IDs overlapping? ' + personLink);
