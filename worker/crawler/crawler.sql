@@ -105,9 +105,8 @@ JOIN LATERAL (
   SELECT jr.*
   FROM crawler.json_response jr
   WHERE jr.frontier_id = f.id
-    AND jr.error IS NULL
     AND (jr.http_status IS NULL OR jr.http_status < 400)
-  ORDER BY jr.fetched_at DESC
+  ORDER BY case when jr.error is null then 0 else 1 end asc, jr.fetched_at DESC
   LIMIT 1
 ) jr ON true
 JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
@@ -115,7 +114,7 @@ WHERE (:federation::text IS NULL OR f.federation = :federation)
   AND (:kind::text IS NULL OR f.kind = :kind)
   AND (:key::text IS NULL OR f.key = :key)
   AND (:id::bigint IS NULL OR f.id = :id)
-  AND f.fetch_status = 'ok'
+  AND (:allowErrors OR f.fetch_status = 'ok')
 ORDER BY f.discovered_at, f.last_fetched_at, f.id
 LIMIT :limit;
 
@@ -189,8 +188,7 @@ SELECT
   http_status,
   error_fingerprint AS "error_fingerprint!",
   count(*)::int AS "count!",
-  string_agg(id::text || ':' || key, ', ' ORDER BY failed_at DESC, id DESC)
-    FILTER (WHERE sample_rank <= 5) AS "samples!"
+  string_agg(key, ', ' ORDER BY failed_at DESC, id DESC) FILTER (WHERE sample_rank <= 5) AS "samples!"
 FROM ranked
 GROUP BY federation, kind, failure, http_status, error_fingerprint
 ORDER BY count(*) DESC, max(failed_at) DESC

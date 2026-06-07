@@ -147,7 +147,7 @@ async function backtestJsonResponses(
   let count = 0;
   try {
     const cursor = getFrontierResponses.stream(
-      { federation, kind },
+      { federation, kind, allowErrors: false },
       {
         query: conn.query,
         stream: (query, bindings) => conn.query(new Cursor(query, bindings)),
@@ -581,7 +581,7 @@ async function processFrontier(
     if (!loader) throw new Error(`Unknown loader ${row.federation}:${row.kind}`);
     const content =
       loader.mode === 'json'
-        ? zx.deepLoose(loader.schema).parse(row.content, { reportInput: true })
+        ? zx.deepStrict(loader.schema).parse(row.content, { reportInput: true })
         : row.content;
     await loader.load(client, content);
     await client.query('RELEASE SAVEPOINT bulk_process');
@@ -624,7 +624,7 @@ async function processLatest(
 
   try {
     const cursor = getFrontierResponses.stream(
-      { ...parsed, limit },
+      { ...parsed, limit, allowErrors: true },
       {
         query: selectClient.query,
         stream: (query, bindings) => selectClient.query(new Cursor(query, bindings)),

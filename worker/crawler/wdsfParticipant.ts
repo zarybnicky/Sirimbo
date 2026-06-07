@@ -16,12 +16,117 @@ const Link = z.object( {
   type: z.string().optional(),
 });
 
-const Scores = z.object({
-  rank: z.number().optional(),
-  kind: z.enum(['mark', 'final']),
-  adjudicator: z.number(),
+const scoreCommon = {
   link: z.array(Link),
-});
+  adjudicator: z.number(),
+};
+
+const onScaleCommon = {
+  ...scoreCommon,
+  tq: z.number(),
+  mm: z.number(),
+  ps: z.number(),
+  cp: z.number(),
+  reduction: z.number(),
+  set: z.boolean().optional(),
+};
+
+const Score = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal('mark'),
+    set: z.boolean().optional(),
+    ...scoreCommon,
+  }),
+  z.object({
+    kind: z.literal("final"),
+    rank: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
+    kind: z.literal("onScale3"),
+    ...onScaleCommon,
+  }),
+  z.object({
+    kind: z.literal("onScale2"),
+    ...onScaleCommon,
+  }),
+  z.object({
+    kind: z.literal("onScaleSkating"),
+    ...onScaleCommon,
+  }),
+  z.object({
+    kind: z.literal("onScaleDisco3"),
+    c: z.number(),
+    p: z.number(),
+    t: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
+    kind: z.literal("onScaleTcps"),
+    c: z.number(),
+    p: z.number(),
+    t: z.number(),
+    s: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
+    kind: z.literal("breakingseed"),
+    rank: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
+    kind: z.literal("breakingseedbyscore"),
+    isIgnored: z.boolean(),
+    isTieBreak: z.boolean(),
+    score: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
+    kind: z.literal("wdsfbreaking"),
+    mode: z.enum([
+      'Preliminary',
+    ]),
+    isred: z.boolean().optional(),
+    branch: z.number(),
+    routine: z.number(),
+    subround: z.number(),
+    execution: z.number(),
+    technique: z.number(),
+    musicality: z.number(),
+    vocabulary: z.number(),
+    originality: z.number(),
+    misbehaviour: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
+    kind: z.literal("trivium"),
+    mode: z.enum([
+      'RoundRobin',
+      'TopX',
+    ]),
+    isred: z.boolean().optional(),
+    bite: z.number(),
+    form: z.number(),
+    branch: z.number(),
+    crash1: z.number(),
+    crash2: z.number(),
+    crash3: z.number(),
+    repeat: z.number(),
+    variety: z.number(),
+    subround: z.number(),
+    execution: z.number(),
+    technique: z.number(),
+    confidence: z.number(),
+    creativity: z.number(),
+    musicality: z.number(),
+    vocabulary: z.number().optional(),
+    personality: z.number(),
+    spontaneity: z.number(),
+    misbehaviour: z.number(),
+    performativity: z.number(),
+    ...scoreCommon,
+  }),
+]);
 
 const schema = z.object( {
   link: z.array(Link),
@@ -44,8 +149,11 @@ const schema = z.object( {
   final: z.number().optional(),
   coupleId: z.string().optional(),
   personId: z.number().optional(),
+  teamId: z.number().optional(),
   PerformanceName: z.string().nullish(),
-  name: z.string(),
+  TeamCountryXmlName: z.string().nullish(),
+  Team: z.string().nullish(),
+  name: z.string().optional(),
   country: z.string().nullish(),
   nationalreference: z.string().nullish(),
   rounds: z.array(
@@ -57,7 +165,7 @@ const schema = z.object( {
         z.object({
           name: z.string(),
           isGroupDance: z.boolean(),
-          scores: z.array(Scores),
+          scores: z.array(Score),
         }),
       ),
     }),
@@ -91,14 +199,17 @@ export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
     const personLink = p.link.find(x => x.rel === 'http://services.worlddancesport.org/rel/participant/person');
 
     let competitorType: competitor_type = 'solo';
+    let competitorName: string | null = null;
     let competitorId: string | null = null;
 
     if (coupleLink) {
       competitorType = 'couple';
+      competitorName = p.name;
       competitorId = coupleLink.href.replace('https://services.worlddancesport.org/api/1/couple/rls-', '');
     } else if (teamLink) {
       competitorType = 'team';
-      throw new Error('Teams not supported. Are IDs overlapping? ' + teamLink)
+      competitorName = p.Team;
+      competitorId = p.teamId;
     } else if (personLink) {
       competitorType = 'solo';
       throw new Error('Need to get competitor ID from MIN. Are the IDs overlapping? ' + personLink);

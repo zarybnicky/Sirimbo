@@ -202,6 +202,7 @@ export const queueCrawlerSchedule = new PreparedQuery<IQueueCrawlerScheduleParam
 
 /** 'GetFrontierResponses' parameters type */
 export interface IGetFrontierResponsesParams {
+  allowErrors?: boolean | null | void;
   federation?: string | null | void;
   id?: NumberOrString | null | void;
   key?: string | null | void;
@@ -227,7 +228,7 @@ export interface IGetFrontierResponsesQuery {
   result: IGetFrontierResponsesResult;
 }
 
-const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":529,"b":539},{"a":573,"b":583}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":593,"b":597},{"a":625,"b":629}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":639,"b":642},{"a":669,"b":672}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":682,"b":684},{"a":712,"b":714}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":801,"b":806}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url AS \"url!\",\n  jr.http_status,\n  jr.fetched_at AS \"fetched_at!\",\n  jrc.content AS \"content!\"\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n    AND jr.error IS NULL\n    AND (jr.http_status IS NULL OR jr.http_status < 400)\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND (:id::bigint IS NULL OR f.id = :id)\n  AND f.fetch_status = 'ok'\nORDER BY f.discovered_at, f.last_fetched_at, f.id\nLIMIT :limit"};
+const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true,"allowErrors":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":554,"b":564},{"a":598,"b":608}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":618,"b":622},{"a":650,"b":654}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":664,"b":667},{"a":694,"b":697}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":707,"b":709},{"a":737,"b":739}]},{"name":"allowErrors","required":false,"transform":{"type":"scalar"},"locs":[{"a":749,"b":760}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":844,"b":849}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url AS \"url!\",\n  jr.http_status,\n  jr.fetched_at AS \"fetched_at!\",\n  jrc.content AS \"content!\"\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n    AND (jr.http_status IS NULL OR jr.http_status < 400)\n  ORDER BY case when jr.error is null then 0 else 1 end asc, jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND (:id::bigint IS NULL OR f.id = :id)\n  AND (:allowErrors OR f.fetch_status = 'ok')\nORDER BY f.discovered_at, f.last_fetched_at, f.id\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -246,9 +247,8 @@ const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":tr
  *   SELECT jr.*
  *   FROM crawler.json_response jr
  *   WHERE jr.frontier_id = f.id
- *     AND jr.error IS NULL
  *     AND (jr.http_status IS NULL OR jr.http_status < 400)
- *   ORDER BY jr.fetched_at DESC
+ *   ORDER BY case when jr.error is null then 0 else 1 end asc, jr.fetched_at DESC
  *   LIMIT 1
  * ) jr ON true
  * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
@@ -256,7 +256,7 @@ const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":tr
  *   AND (:kind::text IS NULL OR f.kind = :kind)
  *   AND (:key::text IS NULL OR f.key = :key)
  *   AND (:id::bigint IS NULL OR f.id = :id)
- *   AND f.fetch_status = 'ok'
+ *   AND (:allowErrors OR f.fetch_status = 'ok')
  * ORDER BY f.discovered_at, f.last_fetched_at, f.id
  * LIMIT :limit
  * ```
@@ -362,7 +362,7 @@ export interface IGetFrontierFailureGroupsQuery {
   result: IGetFrontierFailureGroupsResult;
 }
 
-const getFrontierFailureGroupsIR: any = {"usedParamSet":{"federation":true,"kind":true,"excludeHttpStatuses":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":213,"b":223},{"a":255,"b":265}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":281},{"a":307,"b":311}]},{"name":"excludeHttpStatuses","required":false,"transform":{"type":"scalar"},"locs":[{"a":330,"b":349},{"a":427,"b":446}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1238,"b":1243}]}],"statement":"WITH failures AS (\n  SELECT\n    id,\n    federation,\n    kind,\n    key,\n    failed_at,\n    http_status,\n    failure,\n    coalesce(nullif(error_text, ''), '-') AS error_text\n  FROM crawler.frontier_failure\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n    AND (\n      :excludeHttpStatuses::int[] IS NULL\n      OR http_status IS NULL\n      OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))\n    )\n), fingerprinted AS (\n  SELECT\n    *,\n    left(regexp_replace(error_text, '\\s+', ' ', 'g'), 180) AS error_fingerprint\n  FROM failures\n), ranked AS (\n  SELECT\n    *,\n    row_number() OVER (\n      PARTITION BY federation, kind, failure, http_status, error_fingerprint\n      ORDER BY failed_at DESC, id DESC\n    ) AS sample_rank\n  FROM fingerprinted\n)\nSELECT\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  failure AS \"failure!\",\n  http_status,\n  error_fingerprint AS \"error_fingerprint!\",\n  count(*)::int AS \"count!\",\n  string_agg(id::text || ':' || key, ', ' ORDER BY failed_at DESC, id DESC)\n    FILTER (WHERE sample_rank <= 5) AS \"samples!\"\nFROM ranked\nGROUP BY federation, kind, failure, http_status, error_fingerprint\nORDER BY count(*) DESC, max(failed_at) DESC\nLIMIT :limit"};
+const getFrontierFailureGroupsIR: any = {"usedParamSet":{"federation":true,"kind":true,"excludeHttpStatuses":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":213,"b":223},{"a":255,"b":265}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":281},{"a":307,"b":311}]},{"name":"excludeHttpStatuses","required":false,"transform":{"type":"scalar"},"locs":[{"a":330,"b":349},{"a":427,"b":446}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1215,"b":1220}]}],"statement":"WITH failures AS (\n  SELECT\n    id,\n    federation,\n    kind,\n    key,\n    failed_at,\n    http_status,\n    failure,\n    coalesce(nullif(error_text, ''), '-') AS error_text\n  FROM crawler.frontier_failure\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n    AND (\n      :excludeHttpStatuses::int[] IS NULL\n      OR http_status IS NULL\n      OR NOT (http_status = ANY(:excludeHttpStatuses::int[]))\n    )\n), fingerprinted AS (\n  SELECT\n    *,\n    left(regexp_replace(error_text, '\\s+', ' ', 'g'), 180) AS error_fingerprint\n  FROM failures\n), ranked AS (\n  SELECT\n    *,\n    row_number() OVER (\n      PARTITION BY federation, kind, failure, http_status, error_fingerprint\n      ORDER BY failed_at DESC, id DESC\n    ) AS sample_rank\n  FROM fingerprinted\n)\nSELECT\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  failure AS \"failure!\",\n  http_status,\n  error_fingerprint AS \"error_fingerprint!\",\n  count(*)::int AS \"count!\",\n  string_agg(key, ', ' ORDER BY failed_at DESC, id DESC) FILTER (WHERE sample_rank <= 5) AS \"samples!\"\nFROM ranked\nGROUP BY federation, kind, failure, http_status, error_fingerprint\nORDER BY count(*) DESC, max(failed_at) DESC\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -406,8 +406,7 @@ const getFrontierFailureGroupsIR: any = {"usedParamSet":{"federation":true,"kind
  *   http_status,
  *   error_fingerprint AS "error_fingerprint!",
  *   count(*)::int AS "count!",
- *   string_agg(id::text || ':' || key, ', ' ORDER BY failed_at DESC, id DESC)
- *     FILTER (WHERE sample_rank <= 5) AS "samples!"
+ *   string_agg(key, ', ' ORDER BY failed_at DESC, id DESC) FILTER (WHERE sample_rank <= 5) AS "samples!"
  * FROM ranked
  * GROUP BY federation, kind, failure, http_status, error_fingerprint
  * ORDER BY count(*) DESC, max(failed_at) DESC
