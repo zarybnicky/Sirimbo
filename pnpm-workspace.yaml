@@ -6,6 +6,7 @@ packages:
   - wdsf
   - e2e
 
+injectWorkspacePackages: false
 nodeLinker: isolated
 
 supportedArchitectures:
