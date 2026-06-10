@@ -54,8 +54,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "CohortSubscription",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -174,8 +174,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "PaymentRecipient",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -244,8 +244,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Posting",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -297,8 +297,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Posting",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -1045,8 +1045,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "AktualitiesEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -1063,8 +1063,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Aktuality",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -1077,8 +1077,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -1115,8 +1115,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Aktuality",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -1267,8 +1267,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "AnnouncementAudiencesConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -1549,8 +1549,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "AnnouncementAudiencesEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -1567,8 +1567,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "AnnouncementAudience",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -1581,8 +1581,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -1619,8 +1619,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "AnnouncementAudience",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -1642,8 +1642,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "AnnouncementsEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -1660,8 +1660,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Announcement",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -1674,8 +1674,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -1712,8 +1712,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Announcement",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -1909,8 +1909,8 @@
               "ofType": {
                 "kind": "LIST",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "AttachmentDirectoriesEdge",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -1936,8 +1936,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -1993,8 +1993,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "AttachmentsEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -2011,8 +2011,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Attachment",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -2025,8 +2025,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -2063,8 +2063,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Attachment",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -2233,8 +2233,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "AnnouncementAudiencesConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -2322,8 +2322,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "CohortMembership",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -2375,8 +2375,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "CohortSubscription",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -2450,8 +2450,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventTargetCohort",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -2580,8 +2580,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "ScoreboardManualAdjustment",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -2651,8 +2651,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Cohort",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -2777,8 +2777,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "CohortGroupsEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -2795,8 +2795,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "CohortGroup",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -2809,8 +2809,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -2847,8 +2847,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "CohortGroup",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -3076,8 +3076,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Interval",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -3092,8 +3092,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Payment",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -3141,8 +3141,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Price",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -3198,8 +3198,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Cohort",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -3476,8 +3476,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "EventInstance",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -3524,8 +3524,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventRegistrationsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -3596,8 +3596,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventRegistration",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -5866,8 +5866,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventExternalRegistration",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -5919,8 +5919,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventInstance",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -5968,8 +5968,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventRegistrationsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -6040,8 +6040,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventRegistration",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -6093,8 +6093,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventTargetCohort",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -6146,8 +6146,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventTrainer",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -6288,8 +6288,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "EventRegistration",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -6329,8 +6329,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Person",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -6559,8 +6559,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventAttendance",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -6769,8 +6769,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "EventInstanceApproxPriceRecord",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -6832,8 +6832,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventAttendance",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -6896,8 +6896,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventInstanceTrainer",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -7034,8 +7034,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Payment",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -7083,8 +7083,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "DatetimeRange",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -7130,8 +7130,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "TenantTrainer",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -7325,8 +7325,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventInstance",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -7454,8 +7454,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventLessonDemand",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -7626,8 +7626,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventAttendance",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -7690,8 +7690,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventLessonDemand",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -7770,8 +7770,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Payment",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -7886,8 +7886,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventRegistrationsEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -7904,8 +7904,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventRegistration",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -7918,8 +7918,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -7956,8 +7956,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventRegistration",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -8026,8 +8026,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventRegistrationsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -8098,8 +8098,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventRegistration",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -8222,8 +8222,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventLessonDemand",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -8362,8 +8362,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventsEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -8380,8 +8380,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Event",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -8394,8 +8394,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -8432,8 +8432,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Event",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -8539,8 +8539,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "FormResponsesEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -8557,8 +8557,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "FormResponse",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -8571,8 +8571,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -8609,8 +8609,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "FormResponse",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -8982,8 +8982,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "MembershipApplication",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -10978,8 +10978,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "PaymentDebtor",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -11031,8 +11031,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "PaymentRecipient",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -11110,8 +11110,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "TransactionsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -11397,8 +11397,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "PeopleEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -11415,8 +11415,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Person",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -11429,8 +11429,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -11467,8 +11467,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Person",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -11490,8 +11490,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Account",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -11541,8 +11541,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Couple",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -11580,8 +11580,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Couple",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -11642,8 +11642,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "CohortMembership",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -11695,8 +11695,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Couple",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -11748,8 +11748,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Couple",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -11810,8 +11810,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "PersonCstsCandidatesRecord",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -11862,8 +11862,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "PersonCstsProgressRecord",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -11902,8 +11902,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventAttendance",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -11955,8 +11955,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventInstanceTrainer",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12004,8 +12004,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventRegistrationsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -12076,8 +12076,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventRegistration",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12129,8 +12129,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventTrainer",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12310,8 +12310,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "PaymentDebtor",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12363,8 +12363,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "PersonInvitation",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12433,8 +12433,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "EventAttendance",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -12465,8 +12465,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "ScoreboardManualAdjustment",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12537,8 +12537,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "TenantAdministrator",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12590,8 +12590,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "TenantMembership",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12643,8 +12643,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "TenantTrainer",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12707,8 +12707,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "UserProxy",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -12766,8 +12766,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "PersonWeeklyAttendanceRecord",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -13145,8 +13145,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Account",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -13195,8 +13195,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "INTERFACE",
                   "name": "ActivityTimelineItem",
+                  "kind": "INTERFACE",
                   "ofType": null
                 }
               }
@@ -13761,8 +13761,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "CohortMembership",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -13811,8 +13811,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Cohort",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -13861,8 +13861,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "CompetitionParticipationRecord",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -13922,8 +13922,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "CompetitionParticipationRecord",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -14003,8 +14003,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Couple",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -14069,8 +14069,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Dokumenty",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -14249,8 +14249,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "EventInstance",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -14327,8 +14327,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "EventInstance",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -14377,8 +14377,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "EventOverlapsConflict",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -14421,8 +14421,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "EventOverlapsConflict",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -14530,8 +14530,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Person",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -14754,8 +14754,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "MembershipApplication",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -14940,8 +14940,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "PaymentDebtor",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15010,8 +15010,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "PaymentRecipient",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15060,8 +15060,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Payment",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15175,8 +15175,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Person",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15205,8 +15205,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Person",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15235,8 +15235,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Person",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15325,8 +15325,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "PersonInvitation",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15373,8 +15373,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Query",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -15395,8 +15395,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "ScoreboardRecord",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15466,8 +15466,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "ScoreboardManualAdjustment",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15601,8 +15601,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "TenantAdministrator",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15701,8 +15701,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "TenantLocation",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15771,8 +15771,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "TenantMembership",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15841,8 +15841,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "TenantSetting",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15911,8 +15911,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "TenantTrainer",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -15961,8 +15961,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Tenant",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -16011,8 +16011,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "TrainerGroupAttendanceCompletion",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -16190,8 +16190,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "UserProxy",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -16356,8 +16356,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "EventRegistration",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -16903,8 +16903,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "SystemAdminTenantsEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -16921,8 +16921,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "SystemAdminTenantsRecord",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -16935,8 +16935,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -16973,8 +16973,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "SystemAdminTenantsRecord",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -17170,8 +17170,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Account",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -17228,8 +17228,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "AktualitiesConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -17296,8 +17296,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "AnnouncementAudiencesConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -17364,8 +17364,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "AnnouncementsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -17443,8 +17443,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "CohortGroupsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -17515,8 +17515,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "CohortMembership",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -17568,8 +17568,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "CohortSubscription",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -17621,8 +17621,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Cohort",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -17672,8 +17672,8 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
-                  "kind": "OBJECT",
                   "name": "Couple",
+                  "kind": "OBJECT",
                   "ofType": null
                 }
               }
@@ -17737,8 +17737,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Dokumenty",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -17790,8 +17790,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventAttendance",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -17843,8 +17843,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventExternalRegistration",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -17896,8 +17896,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventInstanceTrainer",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -17949,8 +17949,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventInstance",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18002,8 +18002,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventLessonDemand",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18051,8 +18051,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventRegistrationsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -18123,8 +18123,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventRegistration",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18176,8 +18176,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventTargetCohort",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18229,8 +18229,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventTrainer",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18278,8 +18278,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -18346,8 +18346,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "FormResponsesConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -18429,8 +18429,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "MembershipApplication",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18507,8 +18507,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "PaymentDebtor",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18560,8 +18560,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "PaymentRecipient",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18613,8 +18613,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Payment",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18666,8 +18666,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "PersonInvitation",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18719,8 +18719,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Posting",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18772,8 +18772,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "ScoreboardManualAdjustment",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18825,8 +18825,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "TenantAdministrator",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18878,8 +18878,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "TenantLocation",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18931,8 +18931,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "TenantMembership",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -18993,8 +18993,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "TenantSetting",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -19046,8 +19046,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "TenantTrainer",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -19095,8 +19095,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "TransactionsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -19163,8 +19163,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "UsersConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -19404,8 +19404,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventInstance",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -19453,8 +19453,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "EventsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -19729,8 +19729,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "TenantSetting",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -19985,8 +19985,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Tenant",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -20157,8 +20157,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Posting",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -20250,8 +20250,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "TransactionsEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -20268,8 +20268,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Transaction",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -20282,8 +20282,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -20320,8 +20320,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "Transaction",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -21507,8 +21507,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "AktualitiesConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -21575,8 +21575,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "AttachmentsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -21643,8 +21643,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "AnnouncementsConnection",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -21726,8 +21726,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "Dokumenty",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -21779,8 +21779,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "EventExternalRegistration",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -21867,8 +21867,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "MembershipApplication",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -21977,8 +21977,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "UserProxy",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -22144,8 +22144,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "UsersEdge",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -22162,8 +22162,8 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "OBJECT",
                     "name": "User",
+                    "kind": "OBJECT",
                     "ofType": null
                   }
                 }
@@ -22176,8 +22176,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "PageInfo",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },
@@ -22214,8 +22214,8 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "kind": "OBJECT",
                 "name": "User",
+                "kind": "OBJECT",
                 "ofType": null
               }
             },

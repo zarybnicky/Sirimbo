@@ -2,6 +2,7 @@ import nextRoutes from 'nextjs-routes/config';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 import createMDX from '@next/mdx';
+import path from "node:path";
 
 type NextConfig = import('next').NextConfig;
 type NextPlugin = (config: NextConfig) => NextConfig;
@@ -41,7 +42,7 @@ export default compose(
     scrollRestoration: true,
   },
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-  outputFileTracingRoot: `${import.meta.dirname}/../..`,
+  outputFileTracingRoot: path.join(import.meta.dirname, '..'),
   outputFileTracingIncludes: {
     "/*": [
       "node_modules/sharp/**/*",

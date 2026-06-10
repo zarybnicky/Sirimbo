@@ -6,7 +6,6 @@ import { setNewTenant, storeRef } from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
-import { Analytics } from '@vercel/analytics/react';
 import { createStore, Provider } from 'jotai';
 import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
@@ -20,7 +19,6 @@ import { z } from 'zod';
 import { cs } from 'zod/locales';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { getCookie, setCookie } from 'cookies-next/client';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import 'core-js/actual/array/to-reversed';
 import 'core-js/actual/array/to-sorted';
@@ -84,14 +82,12 @@ function App({
       <Provider store={storeRef.current}>
         <ConfirmProvider>
           <Tracking />
-          <Analytics />
           <Component {...pageProps} />
           <UpdateNotifier />
           <FillYourProfileReminder />
           <ErrorNotifier />
           <UserRefresher />
           <ToastContainer limit={3} />
-          <SpeedInsights />
         </ConfirmProvider>
       </Provider>
     </QueryParamProvider>

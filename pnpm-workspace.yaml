@@ -6,6 +6,14 @@ packages:
   - wdsf
   - e2e
 
-injectWorkspacePackages: true
+nodeLinker: isolated
 
-nodeLinker: hoisted
+supportedArchitectures:
+  os:
+    - linux
+    - current
+  cpu:
+    - x64
+    - current
+  libc:
+    - glibc

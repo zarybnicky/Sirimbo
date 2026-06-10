@@ -147,7 +147,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
                 Právě probíhá ↗︎
               </Link>
             </div>
-            {auth.isSystemAdmin && <TenantSelect />}
+            {isMounted && auth.isSystemAdmin && <TenantSelect />}
           </div>
         </div>
       </nav>

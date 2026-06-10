@@ -1,7 +1,7 @@
 {
   stdenv,
   nodejs_24,
-  pnpm_9,
+  pnpm_10,
   lib,
   packageJSON,
   workspaceFolders,
@@ -16,6 +16,8 @@
   ...
 }:
 let
+  nodejs = nodejs_24;
+  pnpm = pnpm_10;
   inWorkspace =
     path: type:
     let
@@ -42,22 +44,21 @@ stdenv.mkDerivation (finalAttrs: {
     src = lib.cleanSource ./..;
     filter = inWorkspace;
   };
-  buildInputs = [
-    nodejs_24
-  ];
+  buildInputs = [ nodejs ];
   nativeBuildInputs = [
-    nodejs_24
-    pnpm_9.configHook
+    nodejs
+    pnpm.configHook
   ];
   pnpmWorkspaces = workspaceFolders;
-  pnpmDeps = pnpm_9.fetchDeps {
+  pnpmDeps = pnpm.fetchDeps {
+    inherit nodejs;
     inherit (finalAttrs)
       pname
       version
       src
       pnpmWorkspaces
       ;
-    fetcherVersion = 2;
+    fetcherVersion = 3;
     hash = pnpmDepsHash;
   };
 

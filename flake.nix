@@ -2,7 +2,7 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
 
   outputs = { self, nixpkgs, ... }: let
-    allSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ];
+    allSystems = [ "x86_64-linux" "aarch64-darwin" ];
     forAllSystems = fn: nixpkgs.lib.genAttrs allSystems (system: fn (import nixpkgs {
       inherit system;
       config.allowUnfree = true;
@@ -43,7 +43,7 @@
           nodePackages.prettier
           nodemon
           graphile-migrate
-          pnpm_9
+          pnpm_10
           nodejs_24
           postgresql_18
           sqlfluff

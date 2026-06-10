@@ -108,6 +108,7 @@ const shouldTrace = false;
 export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
+  preferGetMethod: false,
   exchanges: shouldTrace
     ? [errorEmitter(errorTarget), tracingExchange, fetchExchange]
     : typeof window === 'undefined'
