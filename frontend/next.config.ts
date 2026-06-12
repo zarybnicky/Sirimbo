@@ -145,6 +145,7 @@ export default compose(
           destination: `${externalServer ?? ''}/galerie/:path*`,
         },
         { source: '/federated/:path*', destination: `${postgrestServer}/:path*` },
+        { source: '/rpc/:path*', destination: `${postgrestServer}/rpc/:path*` },
         { source: '/graphql', destination: `${graphqlServer}/graphql` },
         { source: '/starlet/graphql', destination: `${graphqlServer}/graphql` },
         { source: '/graphiql', destination: `${graphqlServer}/graphiql` },
