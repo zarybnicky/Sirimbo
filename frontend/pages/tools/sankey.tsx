@@ -9,6 +9,7 @@ const KIND_LABEL = {
   dropout: 'dropout',
   inactive: 'inactive',
   return: 'return',
+  axis: 'axis',
 };
 const KIND_ORDER = ['entry', 'flow', 'dropout', 'inactive', 'return'];
 const STATE_ORDER = { active: 0, inactive: 1, hidden: 9 };
