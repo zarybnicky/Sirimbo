@@ -1,8 +1,9 @@
 import React from "react";
 import * as Plot from '@observablehq/plot';
+import { ExtendedFeatureCollection } from "d3";
 
 export default function EventMap() {
-  const [cz, setCz] = React.useState<object | null>(null);
+  const [cz, setCz] = React.useState<ExtendedFeatureCollection | null>(null);
   const [events, setEvents] = React.useState<Array<{ start_date: string; venue_lat: number; venue_lng: number; }> | null>(null);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -24,7 +25,7 @@ export default function EventMap() {
         type: "azimuthal-equidistant",
         domain: cz,
         inset: 5,
-        rotate: [-20],
+        rotate: [-20, 0],
       },
       axis: null,
       color: {
