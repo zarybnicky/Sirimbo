@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ascending, max, min, range, scaleOrdinal, schemeTableau10 } from 'd3';
 import { sankey, sankeyLinkHorizontal } from 'd3-sankey';
 import type { SankeyNode as D3SankeyNode, SankeyLink as D3SankeyLink } from 'd3-sankey';
+import { origin } from '@/lib/query';
 
 const KIND_LABEL = {
   entry: 'entry',
@@ -224,7 +225,7 @@ export function CompetitionSankey({
       setError(null);
 
       try {
-        const response = await fetch('/rpc/competition_sankey_links', {
+        const response = await fetch(`${origin}/rpc/competition_sankey_links`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
