@@ -1,5 +1,4 @@
-import range from 'lodash.range';
-import React, { type JSX } from 'react';
+import { type JSX } from 'react';
 import { eventLevels, type Segment } from './common';
 import type { DateSlotMetrics } from './DateSlotMetrics';
 import EventCell from './EventCell';
@@ -39,9 +38,13 @@ function EventEndingRow({
     const key = `_lvl_${current}`;
     const gap = Math.max(0, segment.left - lastEnd);
 
-    const exactlyOneEvent = range(segment.left, segment.left + segment.span).every(
-      (s) => eventsInSlot(segments, s) === 1,
-    );
+    let exactlyOneEvent = true;
+    for (let slot = segment.left; slot < segment.left + segment.span; slot++) {
+      if (eventsInSlot(segments, slot) !== 1) {
+        exactlyOneEvent = false;
+        break;
+      }
+    }
     if (!exactlyOneEvent) {
       const closureCurrent = current;
       if (gap) {

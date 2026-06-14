@@ -254,7 +254,7 @@ importers:
         version: 13.8.0(react@19.2.3)
       '@mdx-js/loader':
         specifier: ^3.1.1
-        version: 3.1.1(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))
+        version: 3.1.1(webpack@5.102.1(@swc/core@1.15.0))
       '@mdx-js/react':
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.2.8)(react@19.2.3)
@@ -263,7 +263,7 @@ importers:
         version: 16.1.3
       '@next/mdx':
         specifier: ^16.2.4
-        version: 16.2.4(@mdx-js/loader@3.1.1(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2)))(@mdx-js/react@3.1.1(@types/react@19.2.8)(react@19.2.3))
+        version: 16.2.4(@mdx-js/loader@3.1.1(webpack@5.102.1(@swc/core@1.15.0)))(@mdx-js/react@3.1.1(@types/react@19.2.8)(react@19.2.3))
       '@observablehq/plot':
         specifier: ^0.6.17
         version: 0.6.17
@@ -290,10 +290,10 @@ importers:
         version: 1.1.2(@types/react@19.2.8)(react@19.2.3)
       '@sentry/nextjs':
         specifier: ~10.22.0
-        version: 10.22.0(@opentelemetry/context-async-hooks@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(next@16.1.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))
+        version: 10.22.0(@opentelemetry/context-async-hooks@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(next@16.1.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(webpack@5.102.1(@swc/core@1.15.0))
       '@serwist/next':
         specifier: ^9.5.0
-        version: 9.5.0(@serwist/cli@9.5.0(@types/node@24.10.1)(esbuild@0.27.2)(typescript@5.9.3))(next@16.1.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(typescript@5.9.3)(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))
+        version: 9.5.0(@serwist/cli@9.5.0(@types/node@24.10.1)(typescript@5.9.3))(next@16.1.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(typescript@5.9.3)(webpack@5.102.1(@swc/core@1.15.0))
       '@serwist/window':
         specifier: ^9.5.0
         version: 9.5.0(typescript@5.9.3)
@@ -375,12 +375,6 @@ importers:
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
-      lodash.chunk:
-        specifier: ^4.2.0
-        version: 4.2.0
-      lodash.range:
-        specifier: ^3.2.0
-        version: 3.2.0
       lucide-react:
         specifier: ~0.552.0
         version: 0.552.0(react@19.2.3)
@@ -507,7 +501,7 @@ importers:
         version: 3.2.0(graphql@16.14.2)
       '@serwist/cli':
         specifier: ^9.5.0
-        version: 9.5.0(@types/node@24.10.1)(esbuild@0.27.2)(typescript@5.9.3)
+        version: 9.5.0(@types/node@24.10.1)(typescript@5.9.3)
       '@swc/core':
         specifier: 1.15.0
         version: 1.15.0
@@ -544,12 +538,6 @@ importers:
       '@types/leaflet':
         specifier: ^1.9.21
         version: 1.9.21
-      '@types/lodash.chunk':
-        specifier: ^4.2.9
-        version: 4.2.9
-      '@types/lodash.range':
-        specifier: ^3.2.9
-        version: 3.2.9
       '@types/node':
         specifier: ~24.10.1
         version: 24.10.1
@@ -615,10 +603,10 @@ importers:
         version: 8.48.1(eslint@9.39.1(jiti@1.21.7))(typescript@5.9.3)
       vitest:
         specifier: ^4.1.0
-        version: 4.1.0(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(vite@8.0.1(@types/node@24.10.1)(esbuild@0.27.2)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1))
+        version: 4.1.0(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(vite@8.0.1(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1))
       webpack:
         specifier: ~5.102.1
-        version: 5.102.1(@swc/core@1.15.0)(esbuild@0.27.2)
+        version: 5.102.1(@swc/core@1.15.0)
       windy-radix-typography:
         specifier: ~0.2.1
         version: 0.2.1(@tailwindcss/typography@0.5.19(tailwindcss@3.4.18(yaml@2.8.1)))(tailwindcss@3.4.18(yaml@2.8.1))
@@ -1529,162 +1517,6 @@ packages:
   '@envelop/types@5.2.1':
     resolution: {integrity: sha512-CsFmA3u3c2QoLDTfEpGr4t25fjMU31nyvse7IzWTvb0ZycuPjMjb0fjlheh+PbhBYb9YLugnT2uY6Mwcg1o+Zg==}
     engines: {node: '>=18.0.0'}
-
-  '@esbuild/aix-ppc64@0.27.2':
-    resolution: {integrity: sha512-GZMB+a0mOMZs4MpDbj8RJp4cw+w1WV5NYD6xzgvzUJ5Ek2jerwfO2eADyI6ExDSUED+1X8aMbegahsJi+8mgpw==}
-    engines: {node: '>=18'}
-    cpu: [ppc64]
-    os: [aix]
-
-  '@esbuild/android-arm64@0.27.2':
-    resolution: {integrity: sha512-pvz8ZZ7ot/RBphf8fv60ljmaoydPU12VuXHImtAs0XhLLw+EXBi2BLe3OYSBslR4rryHvweW5gmkKFwTiFy6KA==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [android]
-
-  '@esbuild/android-arm@0.27.2':
-    resolution: {integrity: sha512-DVNI8jlPa7Ujbr1yjU2PfUSRtAUZPG9I1RwW4F4xFB1Imiu2on0ADiI/c3td+KmDtVKNbi+nffGDQMfcIMkwIA==}
-    engines: {node: '>=18'}
-    cpu: [arm]
-    os: [android]
-
-  '@esbuild/android-x64@0.27.2':
-    resolution: {integrity: sha512-z8Ank4Byh4TJJOh4wpz8g2vDy75zFL0TlZlkUkEwYXuPSgX8yzep596n6mT7905kA9uHZsf/o2OJZubl2l3M7A==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [android]
-
-  '@esbuild/darwin-arm64@0.27.2':
-    resolution: {integrity: sha512-davCD2Zc80nzDVRwXTcQP/28fiJbcOwvdolL0sOiOsbwBa72kegmVU0Wrh1MYrbuCL98Omp5dVhQFWRKR2ZAlg==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@esbuild/darwin-x64@0.27.2':
-    resolution: {integrity: sha512-ZxtijOmlQCBWGwbVmwOF/UCzuGIbUkqB1faQRf5akQmxRJ1ujusWsb3CVfk/9iZKr2L5SMU5wPBi1UWbvL+VQA==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [darwin]
-
-  '@esbuild/freebsd-arm64@0.27.2':
-    resolution: {integrity: sha512-lS/9CN+rgqQ9czogxlMcBMGd+l8Q3Nj1MFQwBZJyoEKI50XGxwuzznYdwcav6lpOGv5BqaZXqvBSiB/kJ5op+g==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [freebsd]
-
-  '@esbuild/freebsd-x64@0.27.2':
-    resolution: {integrity: sha512-tAfqtNYb4YgPnJlEFu4c212HYjQWSO/w/h/lQaBK7RbwGIkBOuNKQI9tqWzx7Wtp7bTPaGC6MJvWI608P3wXYA==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [freebsd]
-
-  '@esbuild/linux-arm64@0.27.2':
-    resolution: {integrity: sha512-hYxN8pr66NsCCiRFkHUAsxylNOcAQaxSSkHMMjcpx0si13t1LHFphxJZUiGwojB1a/Hd5OiPIqDdXONia6bhTw==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [linux]
-
-  '@esbuild/linux-arm@0.27.2':
-    resolution: {integrity: sha512-vWfq4GaIMP9AIe4yj1ZUW18RDhx6EPQKjwe7n8BbIecFtCQG4CfHGaHuh7fdfq+y3LIA2vGS/o9ZBGVxIDi9hw==}
-    engines: {node: '>=18'}
-    cpu: [arm]
-    os: [linux]
-
-  '@esbuild/linux-ia32@0.27.2':
-    resolution: {integrity: sha512-MJt5BRRSScPDwG2hLelYhAAKh9imjHK5+NE/tvnRLbIqUWa+0E9N4WNMjmp/kXXPHZGqPLxggwVhz7QP8CTR8w==}
-    engines: {node: '>=18'}
-    cpu: [ia32]
-    os: [linux]
-
-  '@esbuild/linux-loong64@0.27.2':
-    resolution: {integrity: sha512-lugyF1atnAT463aO6KPshVCJK5NgRnU4yb3FUumyVz+cGvZbontBgzeGFO1nF+dPueHD367a2ZXe1NtUkAjOtg==}
-    engines: {node: '>=18'}
-    cpu: [loong64]
-    os: [linux]
-
-  '@esbuild/linux-mips64el@0.27.2':
-    resolution: {integrity: sha512-nlP2I6ArEBewvJ2gjrrkESEZkB5mIoaTswuqNFRv/WYd+ATtUpe9Y09RnJvgvdag7he0OWgEZWhviS1OTOKixw==}
-    engines: {node: '>=18'}
-    cpu: [mips64el]
-    os: [linux]
-
-  '@esbuild/linux-ppc64@0.27.2':
-    resolution: {integrity: sha512-C92gnpey7tUQONqg1n6dKVbx3vphKtTHJaNG2Ok9lGwbZil6DrfyecMsp9CrmXGQJmZ7iiVXvvZH6Ml5hL6XdQ==}
-    engines: {node: '>=18'}
-    cpu: [ppc64]
-    os: [linux]
-
-  '@esbuild/linux-riscv64@0.27.2':
-    resolution: {integrity: sha512-B5BOmojNtUyN8AXlK0QJyvjEZkWwy/FKvakkTDCziX95AowLZKR6aCDhG7LeF7uMCXEJqwa8Bejz5LTPYm8AvA==}
-    engines: {node: '>=18'}
-    cpu: [riscv64]
-    os: [linux]
-
-  '@esbuild/linux-s390x@0.27.2':
-    resolution: {integrity: sha512-p4bm9+wsPwup5Z8f4EpfN63qNagQ47Ua2znaqGH6bqLlmJ4bx97Y9JdqxgGZ6Y8xVTixUnEkoKSHcpRlDnNr5w==}
-    engines: {node: '>=18'}
-    cpu: [s390x]
-    os: [linux]
-
-  '@esbuild/linux-x64@0.27.2':
-    resolution: {integrity: sha512-uwp2Tip5aPmH+NRUwTcfLb+W32WXjpFejTIOWZFw/v7/KnpCDKG66u4DLcurQpiYTiYwQ9B7KOeMJvLCu/OvbA==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [linux]
-
-  '@esbuild/netbsd-arm64@0.27.2':
-    resolution: {integrity: sha512-Kj6DiBlwXrPsCRDeRvGAUb/LNrBASrfqAIok+xB0LxK8CHqxZ037viF13ugfsIpePH93mX7xfJp97cyDuTZ3cw==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [netbsd]
-
-  '@esbuild/netbsd-x64@0.27.2':
-    resolution: {integrity: sha512-HwGDZ0VLVBY3Y+Nw0JexZy9o/nUAWq9MlV7cahpaXKW6TOzfVno3y3/M8Ga8u8Yr7GldLOov27xiCnqRZf0tCA==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [netbsd]
-
-  '@esbuild/openbsd-arm64@0.27.2':
-    resolution: {integrity: sha512-DNIHH2BPQ5551A7oSHD0CKbwIA/Ox7+78/AWkbS5QoRzaqlev2uFayfSxq68EkonB+IKjiuxBFoV8ESJy8bOHA==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [openbsd]
-
-  '@esbuild/openbsd-x64@0.27.2':
-    resolution: {integrity: sha512-/it7w9Nb7+0KFIzjalNJVR5bOzA9Vay+yIPLVHfIQYG/j+j9VTH84aNB8ExGKPU4AzfaEvN9/V4HV+F+vo8OEg==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [openbsd]
-
-  '@esbuild/openharmony-arm64@0.27.2':
-    resolution: {integrity: sha512-LRBbCmiU51IXfeXk59csuX/aSaToeG7w48nMwA6049Y4J4+VbWALAuXcs+qcD04rHDuSCSRKdmY63sruDS5qag==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [openharmony]
-
-  '@esbuild/sunos-x64@0.27.2':
-    resolution: {integrity: sha512-kMtx1yqJHTmqaqHPAzKCAkDaKsffmXkPHThSfRwZGyuqyIeBvf08KSsYXl+abf5HDAPMJIPnbBfXvP2ZC2TfHg==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [sunos]
-
-  '@esbuild/win32-arm64@0.27.2':
-    resolution: {integrity: sha512-Yaf78O/B3Kkh+nKABUF++bvJv5Ijoy9AN1ww904rOXZFLWVc5OLOfL56W+C8F9xn5JQZa3UX6m+IktJnIb1Jjg==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [win32]
-
-  '@esbuild/win32-ia32@0.27.2':
-    resolution: {integrity: sha512-Iuws0kxo4yusk7sw70Xa2E2imZU5HoixzxfGCdxwBdhiDgt9vX9VUCBhqcwY7/uh//78A1hMkkROMJq9l27oLQ==}
-    engines: {node: '>=18'}
-    cpu: [ia32]
-    os: [win32]
-
-  '@esbuild/win32-x64@0.27.2':
-    resolution: {integrity: sha512-sRdU18mcKf7F+YgheI/zGf5alZatMUTKj/jNS6l744f9u3WFu4v7twcUI9vu4mknF4Y9aDlblIie0IM+5xxaqQ==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [win32]
 
   '@eslint-community/eslint-utils@4.9.0':
     resolution: {integrity: sha512-ayVFHdtZ+hsq1t2Dy24wCmGXGe4q9Gu3smhLYALJrr473ZH27MsnSL+LKUlimp4BWJqMDMLmPpx/Q9R3OAlL4g==}
@@ -5355,15 +5187,6 @@ packages:
   '@types/leaflet@1.9.21':
     resolution: {integrity: sha512-TbAd9DaPGSnzp6QvtYngntMZgcRk+igFELwR2N99XZn7RXUdKgsXMR+28bUO0rPsWp8MIu/f47luLIQuSLYv/w==}
 
-  '@types/lodash.chunk@4.2.9':
-    resolution: {integrity: sha512-Z9VtFUSnmT0No/QymqfG9AGbfOA4O5qB/uyP89xeZBqDAsKsB4gQFTqt7d0pHjbsTwtQ4yZObQVHuKlSOhIJ5Q==}
-
-  '@types/lodash.range@3.2.9':
-    resolution: {integrity: sha512-JNStPShiaR3ROKIAgtzChBhouPBCJxMI/Fj7Xa1cG51A2EMRyosvtL4fiGXOFiQddaxjZmNVYkZGsDRt8fFKPg==}
-
-  '@types/lodash@4.17.21':
-    resolution: {integrity: sha512-FOvQ0YPD5NOfPgMzJihoT+Za5pdkDJWcbpuj1DjaKZIr/gxodQjY/uWEFlTNqW2ugXHUiL8lRQgw63dzKHZdeQ==}
-
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
 
@@ -6937,11 +6760,6 @@ packages:
 
   esast-util-from-js@2.0.1:
     resolution: {integrity: sha512-8Ja+rNJ0Lt56Pcf3TAmpBZjmx8ZcK5Ts4cAzIOjsjevg9oSXJnl6SUQ2EevU8tv3h6ZLWmoKL5H4fgWvdvfETw==}
-
-  esbuild@0.27.2:
-    resolution: {integrity: sha512-HyNQImnsOC7X9PMNaCIeAm4ISCQXs5a5YasTXVliKv4uuBo1dKrG0A+uQS8M5eXjVMnLg3WgXaKvprHlFJQffw==}
-    engines: {node: '>=18'}
-    hasBin: true
 
   escalade@3.2.0:
     resolution: {integrity: sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==}
@@ -8523,9 +8341,6 @@ packages:
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
 
-  lodash.chunk@4.2.0:
-    resolution: {integrity: sha512-ZzydJKfUHJwHa+hF5X66zLFCBrWn5GeF28OHEr4WVWtNDXlQ/IjWKPBiikqKo2ne0+v6JgCgJ0GzJp8k8bHC7w==}
-
   lodash.defaults@4.2.0:
     resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
 
@@ -8583,9 +8398,6 @@ packages:
 
   lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
-
-  lodash.range@3.2.0:
-    resolution: {integrity: sha512-Fgkb7SinmuzqgIhNhAElo0BL/R1rHCnhwSZf78omqSwvWqD0kD2ssOAutQonDKH/ldS8BxA72ORYI09qAY9CYg==}
 
   lodash.sortby@4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
@@ -12792,8 +12604,6 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.3.0
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-paste-from-office@47.3.0':
     dependencies:
@@ -12815,8 +12625,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-restricted-editing@47.3.0':
     dependencies:
@@ -12826,8 +12634,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-select-all@47.3.0':
     dependencies:
@@ -13061,84 +12867,6 @@ snapshots:
     dependencies:
       '@whatwg-node/promise-helpers': 1.3.2
       tslib: 2.8.1
-
-  '@esbuild/aix-ppc64@0.27.2':
-    optional: true
-
-  '@esbuild/android-arm64@0.27.2':
-    optional: true
-
-  '@esbuild/android-arm@0.27.2':
-    optional: true
-
-  '@esbuild/android-x64@0.27.2':
-    optional: true
-
-  '@esbuild/darwin-arm64@0.27.2':
-    optional: true
-
-  '@esbuild/darwin-x64@0.27.2':
-    optional: true
-
-  '@esbuild/freebsd-arm64@0.27.2':
-    optional: true
-
-  '@esbuild/freebsd-x64@0.27.2':
-    optional: true
-
-  '@esbuild/linux-arm64@0.27.2':
-    optional: true
-
-  '@esbuild/linux-arm@0.27.2':
-    optional: true
-
-  '@esbuild/linux-ia32@0.27.2':
-    optional: true
-
-  '@esbuild/linux-loong64@0.27.2':
-    optional: true
-
-  '@esbuild/linux-mips64el@0.27.2':
-    optional: true
-
-  '@esbuild/linux-ppc64@0.27.2':
-    optional: true
-
-  '@esbuild/linux-riscv64@0.27.2':
-    optional: true
-
-  '@esbuild/linux-s390x@0.27.2':
-    optional: true
-
-  '@esbuild/linux-x64@0.27.2':
-    optional: true
-
-  '@esbuild/netbsd-arm64@0.27.2':
-    optional: true
-
-  '@esbuild/netbsd-x64@0.27.2':
-    optional: true
-
-  '@esbuild/openbsd-arm64@0.27.2':
-    optional: true
-
-  '@esbuild/openbsd-x64@0.27.2':
-    optional: true
-
-  '@esbuild/openharmony-arm64@0.27.2':
-    optional: true
-
-  '@esbuild/sunos-x64@0.27.2':
-    optional: true
-
-  '@esbuild/win32-arm64@0.27.2':
-    optional: true
-
-  '@esbuild/win32-ia32@0.27.2':
-    optional: true
-
-  '@esbuild/win32-x64@0.27.2':
-    optional: true
 
   '@eslint-community/eslint-utils@4.9.0(eslint@9.39.1(jiti@1.21.7))':
     dependencies:
@@ -14303,12 +14031,12 @@ snapshots:
 
   '@js-sdsl/ordered-map@4.4.2': {}
 
-  '@mdx-js/loader@3.1.1(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))':
+  '@mdx-js/loader@3.1.1(webpack@5.102.1(@swc/core@1.15.0))':
     dependencies:
       '@mdx-js/mdx': 3.1.1
       source-map: 0.7.6
     optionalDependencies:
-      webpack: 5.102.1(@swc/core@1.15.0)(esbuild@0.27.2)
+      webpack: 5.102.1(@swc/core@1.15.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -14449,11 +14177,11 @@ snapshots:
     dependencies:
       fast-glob: 3.3.1
 
-  '@next/mdx@16.2.4(@mdx-js/loader@3.1.1(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2)))(@mdx-js/react@3.1.1(@types/react@19.2.8)(react@19.2.3))':
+  '@next/mdx@16.2.4(@mdx-js/loader@3.1.1(webpack@5.102.1(@swc/core@1.15.0)))(@mdx-js/react@3.1.1(@types/react@19.2.8)(react@19.2.3))':
     dependencies:
       source-map: 0.7.6
     optionalDependencies:
-      '@mdx-js/loader': 3.1.1(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))
+      '@mdx-js/loader': 3.1.1(webpack@5.102.1(@swc/core@1.15.0))
       '@mdx-js/react': 3.1.1(@types/react@19.2.8)(react@19.2.3)
 
   '@next/swc-darwin-arm64@16.1.3':
@@ -16494,7 +16222,7 @@ snapshots:
 
   '@sentry/core@8.55.0': {}
 
-  '@sentry/nextjs@10.22.0(@opentelemetry/context-async-hooks@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(next@16.1.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))':
+  '@sentry/nextjs@10.22.0(@opentelemetry/context-async-hooks@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(next@16.1.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(webpack@5.102.1(@swc/core@1.15.0))':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.38.0
@@ -16506,7 +16234,7 @@ snapshots:
       '@sentry/opentelemetry': 10.22.0(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.38.0)
       '@sentry/react': 10.22.0(react@19.2.3)
       '@sentry/vercel-edge': 10.22.0
-      '@sentry/webpack-plugin': 4.6.1(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))
+      '@sentry/webpack-plugin': 4.6.1(webpack@5.102.1(@swc/core@1.15.0))
       next: 16.1.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       resolve: 1.22.8
       rollup: 4.53.3
@@ -16606,12 +16334,12 @@ snapshots:
       '@opentelemetry/resources': 2.2.0(@opentelemetry/api@1.9.0)
       '@sentry/core': 10.22.0
 
-  '@sentry/webpack-plugin@4.6.1(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))':
+  '@sentry/webpack-plugin@4.6.1(webpack@5.102.1(@swc/core@1.15.0))':
     dependencies:
       '@sentry/bundler-plugin-core': 4.6.1
       unplugin: 1.0.1
       uuid: 9.0.1
-      webpack: 5.102.1(@swc/core@1.15.0)(esbuild@0.27.2)
+      webpack: 5.102.1(@swc/core@1.15.0)
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -16627,7 +16355,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  '@serwist/cli@9.5.0(@types/node@24.10.1)(esbuild@0.27.2)(typescript@5.9.3)':
+  '@serwist/cli@9.5.0(@types/node@24.10.1)(typescript@5.9.3)':
     dependencies:
       '@inquirer/prompts': 8.1.0(@types/node@24.10.1)
       '@serwist/build': 9.5.0(typescript@5.9.3)
@@ -16641,17 +16369,15 @@ snapshots:
       stringify-object: 6.0.0
       update-notifier: 7.3.1
       zod: 4.3.5
-    optionalDependencies:
-      esbuild: 0.27.2
     transitivePeerDependencies:
       - '@types/node'
       - typescript
 
-  '@serwist/next@9.5.0(@serwist/cli@9.5.0(@types/node@24.10.1)(esbuild@0.27.2)(typescript@5.9.3))(next@16.1.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(typescript@5.9.3)(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))':
+  '@serwist/next@9.5.0(@serwist/cli@9.5.0(@types/node@24.10.1)(typescript@5.9.3))(next@16.1.3(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(typescript@5.9.3)(webpack@5.102.1(@swc/core@1.15.0))':
     dependencies:
       '@serwist/build': 9.5.0(typescript@5.9.3)
       '@serwist/utils': 9.5.0
-      '@serwist/webpack-plugin': 9.5.0(typescript@5.9.3)(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))
+      '@serwist/webpack-plugin': 9.5.0(typescript@5.9.3)(webpack@5.102.1(@swc/core@1.15.0))
       '@serwist/window': 9.5.0(typescript@5.9.3)
       browserslist: 4.28.1
       glob: 10.5.0
@@ -16662,14 +16388,14 @@ snapshots:
       serwist: 9.5.0(typescript@5.9.3)
       zod: 4.3.5
     optionalDependencies:
-      '@serwist/cli': 9.5.0(@types/node@24.10.1)(esbuild@0.27.2)(typescript@5.9.3)
+      '@serwist/cli': 9.5.0(@types/node@24.10.1)(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
       - webpack
 
   '@serwist/utils@9.5.0': {}
 
-  '@serwist/webpack-plugin@9.5.0(typescript@5.9.3)(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))':
+  '@serwist/webpack-plugin@9.5.0(typescript@5.9.3)(webpack@5.102.1(@swc/core@1.15.0))':
     dependencies:
       '@serwist/build': 9.5.0(typescript@5.9.3)
       '@serwist/utils': 9.5.0
@@ -16677,7 +16403,7 @@ snapshots:
       zod: 4.3.5
     optionalDependencies:
       typescript: 5.9.3
-      webpack: 5.102.1(@swc/core@1.15.0)(esbuild@0.27.2)
+      webpack: 5.102.1(@swc/core@1.15.0)
 
   '@serwist/window@9.5.0(typescript@5.9.3)':
     dependencies:
@@ -17577,16 +17303,6 @@ snapshots:
     dependencies:
       '@types/geojson': 7946.0.16
 
-  '@types/lodash.chunk@4.2.9':
-    dependencies:
-      '@types/lodash': 4.17.21
-
-  '@types/lodash.range@3.2.9':
-    dependencies:
-      '@types/lodash': 4.17.21
-
-  '@types/lodash@4.17.21': {}
-
   '@types/mdast@4.0.4':
     dependencies:
       '@types/unist': 3.0.3
@@ -17970,13 +17686,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.0(vite@8.0.1(@types/node@24.10.1)(esbuild@0.27.2)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1))':
+  '@vitest/mocker@4.1.0(vite@8.0.1(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1))':
     dependencies:
       '@vitest/spy': 4.1.0
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.0.1(@types/node@24.10.1)(esbuild@0.27.2)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1)
+      vite: 8.0.1(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1)
 
   '@vitest/pretty-format@4.1.0':
     dependencies:
@@ -19454,36 +19170,6 @@ snapshots:
       acorn: 8.15.0
       esast-util-from-estree: 2.0.0
       vfile-message: 4.0.3
-
-  esbuild@0.27.2:
-    optionalDependencies:
-      '@esbuild/aix-ppc64': 0.27.2
-      '@esbuild/android-arm': 0.27.2
-      '@esbuild/android-arm64': 0.27.2
-      '@esbuild/android-x64': 0.27.2
-      '@esbuild/darwin-arm64': 0.27.2
-      '@esbuild/darwin-x64': 0.27.2
-      '@esbuild/freebsd-arm64': 0.27.2
-      '@esbuild/freebsd-x64': 0.27.2
-      '@esbuild/linux-arm': 0.27.2
-      '@esbuild/linux-arm64': 0.27.2
-      '@esbuild/linux-ia32': 0.27.2
-      '@esbuild/linux-loong64': 0.27.2
-      '@esbuild/linux-mips64el': 0.27.2
-      '@esbuild/linux-ppc64': 0.27.2
-      '@esbuild/linux-riscv64': 0.27.2
-      '@esbuild/linux-s390x': 0.27.2
-      '@esbuild/linux-x64': 0.27.2
-      '@esbuild/netbsd-arm64': 0.27.2
-      '@esbuild/netbsd-x64': 0.27.2
-      '@esbuild/openbsd-arm64': 0.27.2
-      '@esbuild/openbsd-x64': 0.27.2
-      '@esbuild/openharmony-arm64': 0.27.2
-      '@esbuild/sunos-x64': 0.27.2
-      '@esbuild/win32-arm64': 0.27.2
-      '@esbuild/win32-ia32': 0.27.2
-      '@esbuild/win32-x64': 0.27.2
-    optional: true
 
   escalade@3.2.0: {}
 
@@ -21401,8 +21087,6 @@ snapshots:
 
   lodash.camelcase@4.3.0: {}
 
-  lodash.chunk@4.2.0: {}
-
   lodash.defaults@4.2.0: {}
 
   lodash.difference@4.5.0: {}
@@ -21440,8 +21124,6 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lodash.once@4.1.1: {}
-
-  lodash.range@3.2.0: {}
 
   lodash.sortby@4.7.0: {}
 
@@ -24038,17 +23720,16 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
 
-  terser-webpack-plugin@5.3.15(@swc/core@1.15.0)(esbuild@0.27.2)(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2)):
+  terser-webpack-plugin@5.3.15(@swc/core@1.15.0)(webpack@5.102.1(@swc/core@1.15.0)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
       terser: 5.44.1
-      webpack: 5.102.1(@swc/core@1.15.0)(esbuild@0.27.2)
+      webpack: 5.102.1(@swc/core@1.15.0)
     optionalDependencies:
       '@swc/core': 1.15.0
-      esbuild: 0.27.2
 
   terser@5.44.1:
     dependencies:
@@ -24427,7 +24108,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@8.0.1(@types/node@24.10.1)(esbuild@0.27.2)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1):
+  vite@8.0.1(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.3
@@ -24436,16 +24117,15 @@ snapshots:
       tinyglobby: 0.2.15
     optionalDependencies:
       '@types/node': 24.10.1
-      esbuild: 0.27.2
       fsevents: 2.3.3
       jiti: 1.21.7
       terser: 5.44.1
       yaml: 2.8.1
 
-  vitest@4.1.0(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(vite@8.0.1(@types/node@24.10.1)(esbuild@0.27.2)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1)):
+  vitest@4.1.0(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(vite@8.0.1(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1)):
     dependencies:
       '@vitest/expect': 4.1.0
-      '@vitest/mocker': 4.1.0(vite@8.0.1(@types/node@24.10.1)(esbuild@0.27.2)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1))
+      '@vitest/mocker': 4.1.0(vite@8.0.1(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1))
       '@vitest/pretty-format': 4.1.0
       '@vitest/runner': 4.1.0
       '@vitest/snapshot': 4.1.0
@@ -24462,7 +24142,7 @@ snapshots:
       tinyexec: 1.0.4
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vite: 8.0.1(@types/node@24.10.1)(esbuild@0.27.2)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1)
+      vite: 8.0.1(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
@@ -24534,7 +24214,7 @@ snapshots:
 
   webpack-virtual-modules@0.5.0: {}
 
-  webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2):
+  webpack@5.102.1(@swc/core@1.15.0):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
@@ -24558,7 +24238,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.0
-      terser-webpack-plugin: 5.3.15(@swc/core@1.15.0)(esbuild@0.27.2)(webpack@5.102.1(@swc/core@1.15.0)(esbuild@0.27.2))
+      terser-webpack-plugin: 5.3.15(@swc/core@1.15.0)(webpack@5.102.1(@swc/core@1.15.0))
       watchpack: 2.4.4
       webpack-sources: 3.3.3
     transitivePeerDependencies:

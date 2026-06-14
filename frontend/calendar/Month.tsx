@@ -1,4 +1,3 @@
-import chunk from 'lodash.chunk';
 import React from 'react';
 import DateContentRow from './DateContentRow';
 import { ceil, diff, format, inEventRange, range } from './localizer';
@@ -7,7 +6,21 @@ import { startOf } from 'date-arithmetic';
 
 function MonthView({ range: { since, until }, events }: ViewProps) {
   const today = new Date();
-  const weeks = chunk(range(since, until, 'day'), 7);
+  const weeks = React.useMemo(() => {
+    const days = range(since, until, 'day');
+    return Array.from({ length: Math.ceil(days.length / 7) }, (_, i) => days.slice(i * 7, i * 7 + 7));
+  }, [since, until]);
+  const weekEvents = React.useMemo(() => {
+    const monthEvents = events.filter((e) => e.kind !== 'event' || e.instance.type !== 'LESSON');
+    return weeks.map((week) => {
+      const start = week[0];
+      const end = week.at(-1);
+      if (!start || !end) return [];
+      return monthEvents
+        .filter((event) => inEventRange(event, { start, end }))
+        .toSorted(sortEvents);
+    });
+  }, [weeks, events]);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   return (
@@ -17,15 +30,13 @@ function MonthView({ range: { since, until }, events }: ViewProps) {
       ref={containerRef}
     >
       <div className="rbc-row flex" role="row">
-        {range(weeks[0]?.[0]!, weeks[0]?.[weeks[0]?.length - 1]!, 'day').map(
-          (day, idx) => (
-            <div key={`header_${idx}`} className="rbc-header">
-              <span role="columnheader" aria-sort="none">
-                {format(day, 'cccc')}
-              </span>
-            </div>
-          ),
-        )}
+        {(weeks[0] ?? []).map((day, idx) => (
+          <div key={`header_${idx}`} className="rbc-header">
+            <span role="columnheader" aria-sort="none">
+              {format(day, 'cccc')}
+            </span>
+          </div>
+        ))}
       </div>
 
       {weeks.map((week, weekIdx) => (
@@ -34,10 +45,7 @@ function MonthView({ range: { since, until }, events }: ViewProps) {
           range={week}
           date={today}
           containerRef={containerRef}
-          events={events
-            .filter((e) => e.kind !== 'event' || e.instance.type !== 'LESSON')
-            .filter((e) => inEventRange(e, { start: week[0]!, end: week.at(-1)! }))
-            .toSorted(sortEvents)}
+          events={weekEvents[weekIdx] ?? []}
         />
       ))}
     </div>
