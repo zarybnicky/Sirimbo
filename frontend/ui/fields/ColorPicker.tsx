@@ -1,14 +1,14 @@
 import { TextField } from '@/ui/fields/text';
 import { FieldLabel } from '@/ui/form';
 import React from 'react';
-import { HexColorPicker } from 'react-colorful';
 import {
   type Control,
   type FieldPathByValue,
   type FieldValues,
   useController,
 } from 'react-hook-form';
-import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
+
+const hexColorPattern = /^#[\dA-Fa-f]{6}$/;
 
 export function ColorPicker<
   T extends FieldValues,
@@ -18,25 +18,30 @@ export function ColorPicker<
   >,
 >({ name, control, label }: { name: TPath; control?: Control<T>; label?: string }) {
   const { field } = useController<T, TPath>({ name, control });
+  const colorValue =
+    typeof field.value === 'string' && hexColorPattern.test(field.value)
+      ? field.value
+      : '#000000';
 
   return (
-    <div className="relative">
-      <FieldLabel htmlFor={name}>{label}</FieldLabel>
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <div className="w-16 h-8 border" style={{ backgroundColor: field.value }} />
-        </PopoverTrigger>
-
-        <PopoverContent align="start" className="flex flex-col gap-4">
-          <HexColorPicker
-            style={{ width: 300 }}
-            color={field.value}
-            onChange={(value) => field.onChange(value)}
-          />
-          <TextField name={name} value={field.value} onChange={field.onChange} />
-        </PopoverContent>
-      </Popover>
+    <div>
+      <FieldLabel htmlFor={`${name}-color`}>{label}</FieldLabel>
+      <div className="flex items-center gap-3">
+        <input
+          id={`${name}-color`}
+          type="color"
+          className="h-9 w-14 rounded-md border border-accent-7 bg-accent-2 p-1"
+          value={colorValue}
+          onBlur={field.onBlur}
+          onChange={(event) => field.onChange(event.currentTarget.value)}
+        />
+        <TextField
+          name={name}
+          value={field.value ?? ''}
+          onBlur={field.onBlur}
+          onChange={(event) => field.onChange(event.currentTarget.value)}
+        />
+      </div>
     </div>
   );
 }

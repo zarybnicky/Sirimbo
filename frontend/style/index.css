@@ -220,6 +220,31 @@
 }
 
 @layer utilities {
+  .scrollbar {
+    --scrollbar-thumb: hsl(var(--accent-7));
+    --scrollbar-track: hsl(var(--neutral-2));
+
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    scrollbar-width: thin;
+  }
+
+  @supports not (scrollbar-color: auto) {
+    .scrollbar::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border: 2px solid var(--scrollbar-track);
+      border-radius: 9999px;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+  }
+
   .bg-neutral-0, .bg-accent-0 {
     background-color: white;
   }
@@ -277,10 +302,6 @@ body {
   to {
     height: 0;
   }
-}
-
-.scrollbar {
-  @apply scrollbar-thin scrollbar-track-accent-6 scrollbar-thumb-neutral-11/40 hover:scrollbar-thumb-neutral-11/70;
 }
 
 .glider-contain {
