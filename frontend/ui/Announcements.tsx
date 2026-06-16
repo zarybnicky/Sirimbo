@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { Check, ListFilter } from 'lucide-react';
-import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
@@ -98,26 +97,32 @@ export function MyAnnouncements() {
           Aktuality
         </h1>
 
-        <ToggleGroupPrimitive.Root
-          value={state}
-          onValueChange={(value) => value && setState(value)}
-          type="single"
-        >
-          {options.map(({ label, id }) => (
-            <ToggleGroupPrimitive.Item
-              key={`group-item-${id}-${label}`}
-              value={id}
-              className={cn(
-                'group data-[state=on]:bg-neutral-5 bg-neutral-3 text-neutral-11',
-                'border-y px-2 py-1 text-sm first:rounded-l-xl first:border-x last:rounded-r-xl last:border-x',
-                'border-neutral-5 data-[state=on]:border-neutral-8',
-                'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-neutral-8',
-              )}
-            >
-              {label}
-            </ToggleGroupPrimitive.Item>
+        <div className="inline-flex">
+          {options.map(({ label, id }, index) => (
+            <label key={id} className="relative">
+              <input
+                className="peer sr-only"
+                type="radio"
+                name="announcement-state"
+                value={id}
+                checked={state === id}
+                onChange={() => setState(id)}
+              />
+              <span
+                className={cn(
+                  'block cursor-pointer bg-neutral-3 px-2 py-1 text-sm text-neutral-11',
+                  'border-y border-l border-neutral-5',
+                  'peer-checked:border-neutral-8 peer-checked:bg-neutral-5',
+                  'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-neutral-8',
+                  index === 0 && 'rounded-l-xl',
+                  index === options.length - 1 && 'rounded-r-xl border-r',
+                )}
+              >
+                {label}
+              </span>
+            </label>
           ))}
-        </ToggleGroupPrimitive.Root>
+        </div>
         <AnnouncementSortControls sort={sort} onChange={setSort} className="mb-3" />
       </div>
 

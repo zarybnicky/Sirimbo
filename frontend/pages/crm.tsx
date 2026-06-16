@@ -6,7 +6,6 @@ import { TitleBar } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
-import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
 
 export default function CrmPage() {
@@ -57,27 +56,35 @@ export default function CrmPage() {
           </button>
         </TitleBar>
 
-        <ToggleGroupPrimitive.Root
-          value={state || types[0]}
-          onValueChange={setState}
-          type="single"
-          className="grow"
-        >
-          {types.map((type) => (
-            <ToggleGroupPrimitive.Item
+        <div className="grow">
+          {types.map((type, index) => (
+            <label
               key={`group-item-${type}`}
-              value={type}
-              className={cn(
-                'group data-[state=on]:bg-accent-5 bg-accent-3 text-accent-11',
-                'border-y px-2 py-1 text-sm first:rounded-l-xl first:border-x last:rounded-r-xl last:border-x',
-                'border-accent-5 data-[state=on]:border-accent-8',
-                'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-8',
-              )}
+              className="relative inline-block"
             >
-              {type}
-            </ToggleGroupPrimitive.Item>
+              <input
+                className="peer sr-only"
+                type="radio"
+                name="crm-form-response-type"
+                value={type}
+                checked={(state || types[0]) === type}
+                onChange={() => setState(type)}
+              />
+              <span
+                className={cn(
+                  'block cursor-pointer bg-accent-3 px-2 py-1 text-sm text-accent-11',
+                  'border-y border-l border-accent-5',
+                  'peer-checked:border-accent-8 peer-checked:bg-accent-5',
+                  'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-accent-8',
+                  index === 0 && 'rounded-l-xl',
+                  index === types.length - 1 && 'rounded-r-xl border-r',
+                )}
+              >
+                {type}
+              </span>
+            </label>
           ))}
-        </ToggleGroupPrimitive.Root>
+        </div>
 
         <table className="w-full text-sm text-left text-neutral-12 mt-3">
           <thead>

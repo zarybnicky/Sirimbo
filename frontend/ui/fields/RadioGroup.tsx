@@ -5,12 +5,14 @@ import {
   useController,
 } from 'react-hook-form';
 import { cn } from '@/lib/cn';
+import { FieldHelper } from '@/ui/form';
 
 type RadioProps = {
   label: React.ReactNode;
   name: string;
-  isSelected: boolean;
-  onChange: () => void;
+  checked: boolean;
+  onBlur: React.FocusEventHandler<HTMLInputElement>;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
   value: string;
   isDisabled?: boolean;
 };
@@ -18,40 +20,30 @@ type RadioProps = {
 function Radio({
   label,
   name,
-  isSelected,
+  checked,
+  onBlur,
   onChange,
   value,
   isDisabled = false,
 }: RadioProps) {
   return (
-    <label className={cn('flex items-center', { 'opacity-50': isDisabled })}>
-      <div
-        style={{ width: '0.8em', height: '0.8em' }}
-        className="ring-2 ring-accent-8 rounded-full relative"
-      >
-        <div
-          className={cn('size-full transition-colors rounded-full', {
-            'hover:bg-accent-5': !isSelected && !isDisabled,
-            'focus-within:ring-2 focus-within:ring-accent-9': !isDisabled,
-          })}
-        >
-          {isSelected && (
-            <div
-              style={{ width: '70%', height: '70%', top: '15%', left: '15%' }}
-              className="bg-accent-9 rounded-full absolute"
-            />
-          )}
-          <input
-            disabled={isDisabled}
-            type="radio"
-            name={name}
-            value={value}
-            className="opacity-0"
-            onChange={onChange}
-          />
-        </div>
-      </div>
-      <span className="ml-2.5 text-sm">{label}</span>
+    <label
+      className={cn('flex items-center gap-2.5 text-sm text-neutral-12', {
+        'cursor-pointer': !isDisabled,
+        'cursor-not-allowed opacity-50': isDisabled,
+      })}
+    >
+      <input
+        disabled={isDisabled}
+        type="radio"
+        name={name}
+        value={value}
+        checked={checked}
+        className="size-3 shrink-0 border-2 border-accent-8 bg-accent-2 text-accent-9 focus:ring-2 focus:ring-accent-9 focus:ring-offset-0 disabled:cursor-not-allowed"
+        onBlur={onBlur}
+        onChange={onChange}
+      />
+      <span>{label}</span>
     </label>
   );
 }
@@ -77,7 +69,7 @@ export function RadioGroup<T extends FieldValues>({
   control,
   isDisabled,
 }: RadioGroupProps<T>) {
-  const { field } = useController<T>({ name, control });
+  const { field, fieldState } = useController<T>({ name, control });
   return (
     <div className={cn('space-y-4 ml-1', { 'opacity-50': isDisabled })}>
       <label htmlFor={name} className="block text-sm text-neutral-10 mt-1 -mb-1 -ml-1">
@@ -87,13 +79,15 @@ export function RadioGroup<T extends FieldValues>({
         <Radio
           key={opt.value}
           value={opt.value}
-          isSelected={field.value === opt.value}
+          checked={field.value === opt.value}
           name={name}
           label={opt.label}
+          onBlur={field.onBlur}
           onChange={field.onChange}
           isDisabled={opt.isDisabled || isDisabled}
         />
       ))}
+      <FieldHelper error={fieldState.error} />
     </div>
   );
 }
