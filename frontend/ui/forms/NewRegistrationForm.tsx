@@ -1,6 +1,6 @@
 import { type EventFragment, RegisterToEventDocument } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
-import { NumberFieldElement } from '@/ui/fields/number';
+import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';
 import { formatCoupleName, numericDateFormatter } from '@/ui/format';
@@ -214,9 +214,11 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
                           className="flex items-center flex-wrap gap-2"
                         >
                           <div className="grow">{trainer.name}</div>
-                          <NumberFieldElement
+                          <TextFieldElement
                             control={control}
                             name={`registrations.${index}.lessons.${trainerIndex}.lessonCount`}
+                            type="number"
+                            className="w-20 shrink-0"
                             min={0}
                             max={trainer.lessonsRemaining ?? Number.MAX_SAFE_INTEGER}
                           />

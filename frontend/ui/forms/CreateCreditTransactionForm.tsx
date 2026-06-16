@@ -1,11 +1,10 @@
 import { PersonPaymentsDocument } from '@/graphql/Person';
 import { CreateCreditTransactionDocument } from '@/graphql/Payment';
 import { DatePickerElement } from '@/ui/fields/date';
-import { NumberFieldElement } from '@/ui/fields/number';
 import { TextFieldElement } from '@/ui/fields/text';
 import { useFormResult } from '@/ui/form';
 import { moneyFormatter } from '@/ui/format';
-import { buttonCls, buttonGroupCls, typographyCls } from '@/ui/style';
+import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -87,18 +86,17 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
           </button>
         </div>
 
-        <div>
-          <label className={typographyCls({ variant: 'label' })}>Částka</label>
-          <NumberFieldElement
-            control={control}
-            name="amount"
-            style={{ minWidth: '4rem' }}
-            step={0.01}
-            min={0.01}
-            max={Number.MAX_SAFE_INTEGER}
-            required
-          />
-        </div>
+        <TextFieldElement
+          control={control}
+          name="amount"
+          label="Částka"
+          className="w-24"
+          type="number"
+          step={0.01}
+          min={0.01}
+          max={Number.MAX_SAFE_INTEGER}
+          required
+        />
 
         <div className="text-right m-3">
           <div>
