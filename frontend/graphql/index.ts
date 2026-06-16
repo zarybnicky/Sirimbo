@@ -3591,7 +3591,7 @@ export type EventTrainer = {
   /** Reads and enables pagination through a set of `EventLessonDemand`. */
   eventLessonDemandsByTrainerIdList: Array<EventLessonDemand>;
   id: Scalars['BigInt']['output'];
-  lessonsOffered: Scalars['Int']['output'];
+  lessonsOffered: Maybe<Scalars['Int']['output']>;
   lessonsRemaining: Maybe<Scalars['Int']['output']>;
   name: Maybe<Scalars['String']['output']>;
   /** Reads a single `Person` that is related to this `EventTrainer`. */

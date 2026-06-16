@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict bvFmM66NWPKoivJtxZJlfdFn4xyzn9DNVQBaLJxZajb2FItAVqfKwGQ6gJoJKlS
+\restrict 9bcEo8Db7dh2q4SI5jXbT9lTx0PiCDhvczTEwv5n2dFKvi8Jg1Ld6XxsZHOX4kh
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -2391,6 +2391,132 @@ $$;
 
 
 --
+-- Name: class_rank(text); Type: FUNCTION; Schema: federated; Owner: -
+--
+
+CREATE FUNCTION federated.class_rank(class text) RETURNS integer
+    LANGUAGE sql IMMUTABLE
+    AS $$
+  select case class
+    when 'M' then 16
+    when 'S' then 16
+    when 'A' then 15
+    when 'B' then 14
+    when 'C' then 13
+    when 'D' then 12
+    when 'E' then 11
+    when 'Gold' then 4
+    when 'Silver' then 3
+    when 'Bronze' then 2
+    when 'Novice' then 1
+    else 0
+  end;
+$$;
+
+
+--
+-- Name: competition_sankey_links(integer, integer, text[], text[], boolean); Type: FUNCTION; Schema: federated; Owner: -
+--
+
+CREATE FUNCTION federated.competition_sankey_links(p_first_year integer, p_last_year integer, p_classes text[], p_disciplines text[], p_by_school_year boolean DEFAULT false) RETURNS TABLE(from_year integer, from_state text, from_class text, to_year integer, to_state text, to_class text, discipline text, kind text, value integer)
+    LANGUAGE sql STABLE
+    AS $$
+with base as (
+    select
+        cm.person_id,
+        (extract(year from comp.start_date) - case when p_by_school_year and extract(month from comp.start_date) < 9 then 1 else 0 end) as period_year,
+        c.discipline as discipline,
+        c.class as class,
+        federated.class_rank(c.class) as class_rank,
+        comp.start_date date,
+        comp.category_id,
+        cr.competitor_id
+    from federated.competition_result cr
+    join federated.competition comp on cr.competition_id = comp.id
+    join federated.competitor_component cm on cm.competitor_id = cr.competitor_id
+    join federated.category c on c.id = comp.category_id
+    where (p_disciplines is null or c.discipline = any (p_disciplines))
+      and (p_classes is null or c.class = any(p_classes))
+),
+bounds as (
+    select
+        coalesce(p_first_year, min(period_year) - 1) as first_year,
+        coalesce(p_last_year, max(period_year)) as last_year
+    from base
+),
+observed as (
+    select r.person_id, r.period_year, r.discipline, r.class
+    from (
+        select
+            b.*,
+            row_number() over (
+                partition by b.person_id, b.period_year, b.discipline
+                order by b.class_rank desc nulls last, b.date desc nulls last, b.category_id , b.competitor_id
+              ) as rn
+        from base b, bounds x
+        where x.last_year is not null and b.period_year <= x.last_year
+    ) r
+    where r.rn = 1
+),
+windowed as (
+    select
+        o.*,
+        row_number() over person_timeline as observed_n,
+        lead(o.period_year) over person_timeline as next_year,
+        lead(o.class) over person_timeline as next_class
+    from observed o
+    window person_timeline as (partition by o.person_id, o.discipline order by o.period_year)
+),
+person_links(from_year, from_state, from_class, to_year, to_state, to_class, discipline, kind) as (
+    select
+        w.period_year - 1,
+        'inactive',
+        w.class,
+        w.period_year,
+        'active',
+        w.class,
+        w.discipline,
+        'entry'
+    from windowed w
+    where w.observed_n = 1
+
+    union all
+
+    select
+        y.from_year,
+        case when y.from_year = w.period_year then 'active' else 'inactive' end,
+        w.class,
+        y.from_year + 1,
+        case when w.next_year = y.from_year + 1 then 'active' else 'inactive' end,
+        case when w.next_year = y.from_year + 1 then w.next_class else w.class end,
+        w.discipline,
+        case
+            when w.next_year = w.period_year + 1 then 'flow'
+            when y.from_year = w.period_year then 'dropout'
+            when w.next_year = y.from_year + 1 then 'return'
+            else 'inactive'
+        end
+    from windowed w
+    cross join bounds x
+    cross join lateral generate_series(w.period_year, coalesce(w.next_year, case when w.period_year < x.last_year then x.last_year else w.period_year end) - 1) as y(from_year)
+    where w.next_year is not null or w.period_year < x.last_year
+)
+select pl.from_year, pl.from_state, pl.from_class, pl.to_year, pl.to_state, pl.to_class, pl.discipline, pl.kind, count(*)::integer as value
+from person_links pl, bounds x
+where pl.from_year >= x.first_year and pl.to_year <= x.last_year
+group by pl.from_year, pl.from_state, pl.from_class, pl.to_year, pl.to_state, pl.to_class, pl.discipline, pl.kind
+order by
+    pl.from_year,
+    pl.discipline,
+    coalesce(array_position(array['entry','flow','dropout','inactive','return']::text[], pl.kind), 99),
+    pl.from_state,
+    pl.from_class,
+    pl.to_state,
+    pl.to_class;
+$$;
+
+
+--
 -- Name: account; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4232,11 +4358,17 @@ $$;
 CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  select (
-    select coalesce(sum(lessons_offered), 0) from event_trainer et where et.event_id = e.id
-  ) - (
-    select coalesce(sum(lesson_count), 0) from event_registration er join event_lesson_demand eld on eld.registration_id = er.id where er.event_id = e.id
-  );
+  select case
+    when exists (
+      select 1 from event_trainer et
+      where et.event_id = e.id and et.lessons_offered is null
+    ) then null
+    else (
+      select coalesce(sum(lessons_offered), 0) from event_trainer et where et.event_id = e.id
+    ) - (
+      select coalesce(sum(lesson_count), 0) from event_registration er join event_lesson_demand eld on eld.registration_id = er.id where er.event_id = e.id
+    )
+  end;
 $$;
 
 
@@ -4268,7 +4400,7 @@ CREATE TABLE public.event_trainer (
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    lessons_offered integer DEFAULT 0 NOT NULL
+    lessons_offered integer DEFAULT 0
 );
 
 
@@ -4288,10 +4420,13 @@ COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete
 CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) RETURNS integer
     LANGUAGE sql STABLE
     AS $$
-  select e.lessons_offered - (
-    select coalesce(sum(lesson_count), 0)
-    from event_lesson_demand where trainer_id = e.id
-  );
+  select case
+    when e.lessons_offered is null then null
+    else e.lessons_offered - (
+      select coalesce(sum(lesson_count), 0)
+      from event_lesson_demand where trainer_id = e.id
+    )
+  end;
 $$;
 
 
@@ -4929,12 +5064,6 @@ CREATE FUNCTION public.person_csts_candidates(in_person public.person, "limit" i
       and fp.external_id between 0 and 2147483647
       and fp.search_name % in_person.search_name
       and score.name_score >= params.effective_threshold
-      and not exists (
-        select 1
-        from public.person existing
-        where existing.id <> in_person.id
-          and existing.csts_id = fp.external_id::integer
-      )
   )
   select scored_candidates.id, scored_candidates.name, scored_candidates.age_group, scored_candidates.name_score
   from scored_candidates
@@ -5522,11 +5651,14 @@ CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigi
     AS $_$
 declare
   v_event event;
+  v_trainer event_trainer;
   registration event_registration;
   lesson_demand event_lesson_demand;
+  other_lessons bigint;
 begin
   select * into registration from event_registration where id = $1;
   select * into v_event from event where id = registration.event_id;
+  select * into v_trainer from event_trainer where id = $2 and event_id = registration.event_id;
 
   if v_event is null then
     raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
@@ -5534,10 +5666,25 @@ begin
   if v_event.is_locked = true then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
+  if v_trainer is null then
+    raise exception 'TRAINER_NOT_FOUND' using errcode = '28000';
+  end if;
 
   if $3 = 0 then
     delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = $2;
     return null;
+  end if;
+  if v_trainer.lessons_offered = 0 then
+    raise exception 'LESSONS_NOT_OFFERED' using errcode = '28000';
+  end if;
+  if v_trainer.lessons_offered is not null then
+    select coalesce(sum(eld.lesson_count), 0) into other_lessons
+    from event_lesson_demand eld
+    where eld.trainer_id = $2 and eld.registration_id <> registration.id;
+
+    if $3 > v_trainer.lessons_offered - other_lessons then
+      raise exception 'LESSON_LIMIT_EXCEEDED' using errcode = '22023';
+    end if;
   end if;
 
   INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
@@ -6400,9 +6547,9 @@ begin
   foreach trainer in array coalesce(trainers, '{}'::event_trainer_type_input[]) loop
     if trainer.id is null then
       insert into event_trainer (event_id, person_id, lessons_offered)
-      values (v_event.id, trainer.person_id, coalesce(trainer.lessons_offered, 0))
+      values (v_event.id, trainer.person_id, trainer.lessons_offered)
       on conflict (event_id, person_id) do update
-        set lessons_offered = coalesce(trainer.lessons_offered, 0);
+        set lessons_offered = trainer.lessons_offered;
     elsif trainer.person_id is null then
       delete from event_trainer where id=trainer.id;
     else
@@ -7383,6 +7530,10 @@ CREATE TABLE federated.event (
     website_url text,
     organizing_club_id bigint,
     range daterange GENERATED ALWAYS AS (daterange(start_date, (COALESCE(end_date, start_date) + 1), '[)'::text)) STORED,
+    venue_lat double precision,
+    venue_lng double precision,
+    venue_location_source text,
+    venue_location_ref text,
     CONSTRAINT event_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 
@@ -15900,5 +16051,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict bvFmM66NWPKoivJtxZJlfdFn4xyzn9DNVQBaLJxZajb2FItAVqfKwGQ6gJoJKlS
+\unrestrict 9bcEo8Db7dh2q4SI5jXbT9lTx0PiCDhvczTEwv5n2dFKvi8Jg1Ld6XxsZHOX4kh
 

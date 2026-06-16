@@ -22,7 +22,6 @@ declare module "nextjs-routes" {
     | StaticRoute<"/aktuality">
     | DynamicRoute<"/aktuality/[id]", { "id": string }>
     | StaticRoute<"/aktuality/add">
-    | StaticRoute<"/bpm">
     | StaticRoute<"/bpm2">
     | StaticRoute<"/clanky">
     | DynamicRoute<"/clanky/[id]", { "id": string }>
@@ -57,6 +56,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/starlet-import">
     | StaticRoute<"/tanecni-klub">
     | StaticRoute<"/tools">
+    | StaticRoute<"/tools/bpm">
     | StaticRoute<"/tools/map">
     | StaticRoute<"/tools/sankey">
     | StaticRoute<"/treneri">

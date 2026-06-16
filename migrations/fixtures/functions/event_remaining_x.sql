@@ -1,9 +1,12 @@
 
 CREATE or replace FUNCTION event_trainer_lessons_remaining(e event_trainer) RETURNS integer AS $$
-  select e.lessons_offered - (
-    select coalesce(sum(lesson_count), 0)
-    from event_lesson_demand where trainer_id = e.id
-  );
+  select case
+    when e.lessons_offered is null then null
+    else e.lessons_offered - (
+      select coalesce(sum(lesson_count), 0)
+      from event_lesson_demand where trainer_id = e.id
+    )
+  end;
 $$ LANGUAGE sql STABLE;
 
 CREATE or replace FUNCTION event_remaining_person_spots(e event) RETURNS integer AS $$
@@ -17,11 +20,17 @@ CREATE or replace FUNCTION event_remaining_person_spots(e event) RETURNS integer
 $$ LANGUAGE sql STABLE security definer;
 
 CREATE or replace FUNCTION event_remaining_lessons(e event) RETURNS integer AS $$
-  select (
-    select coalesce(sum(lessons_offered), 0) from event_trainer et where et.event_id = e.id
-  ) - (
-    select coalesce(sum(lesson_count), 0) from event_registration er join event_lesson_demand eld on eld.registration_id = er.id where er.event_id = e.id
-  );
+  select case
+    when exists (
+      select 1 from event_trainer et
+      where et.event_id = e.id and et.lessons_offered is null
+    ) then null
+    else (
+      select coalesce(sum(lessons_offered), 0) from event_trainer et where et.event_id = e.id
+    ) - (
+      select coalesce(sum(lesson_count), 0) from event_registration er join event_lesson_demand eld on eld.registration_id = er.id where er.event_id = e.id
+    )
+  end;
 $$ LANGUAGE sql STABLE security definer;
 
 GRANT ALL ON FUNCTION event_trainer_lessons_remaining(e event_trainer) TO anonymous;

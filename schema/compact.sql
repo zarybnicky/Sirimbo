@@ -108,6 +108,10 @@ CREATE TABLE federated.event (
   website_url text,
   organizing_club_id bigint REFERENCES federated.federation_club (id),
   range daterange GENERATED ALWAYS AS (daterange(start_date, (COALESCE(end_date, start_date)) + 1, '[)'::text)) STORED,
+  venue_lat double precision,
+  venue_lng double precision,
+  venue_location_source text,
+  venue_location_ref text,
   CHECK (
     end_date IS NULL
       OR end_date >= start_date
@@ -822,7 +826,7 @@ CREATE TABLE public.event_trainer (
     ON DELETE CASCADE,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  lessons_offered int DEFAULT 0 NOT NULL,
+  lessons_offered int DEFAULT 0,
   UNIQUE (event_id, person_id)
 );
 

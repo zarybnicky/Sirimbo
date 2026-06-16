@@ -2,7 +2,6 @@ import type { EventFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { RichTextView } from '@/ui/RichTextView';
 import { formatEventType, formatOpenDateRange } from '@/ui/format';
-import * as React from 'react';
 
 export function BasicEventInfo({ event }: { event: EventFragment }) {
   return (
@@ -30,13 +29,17 @@ export function BasicEventInfo({ event }: { event: EventFragment }) {
       {event.eventTrainersList.length > 0 && (
         <>
           <dt>Trenéři</dt>
-          {event.eventTrainersList.map((trainer) => (
-            <dd key={trainer.id}>
-              {trainer.name}
-              {trainer.lessonsOffered > 0 &&
-                ` (zbývá ${trainer.lessonsRemaining} z ${trainer.lessonsOffered} lekcí)`}
-            </dd>
-          ))}
+          {event.eventTrainersList.map((trainer) => {
+            const lessonsOffered = trainer.lessonsOffered as number | null;
+            return (
+              <dd key={trainer.id}>
+                {trainer.name}
+                {lessonsOffered === null ? ' (bez omezení)' :
+                  lessonsOffered === 0 ? '' :
+                    ` (zbývá ${trainer.lessonsRemaining ?? 0} z ${lessonsOffered} lekcí)`}
+              </dd>
+            );
+          })}
         </>
       )}
 

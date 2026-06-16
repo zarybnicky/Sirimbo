@@ -57,14 +57,29 @@ export function MyRegistrationForm({
     }
     return myLessons;
   }, [registration]);
+  const lessonTrainers = event.eventTrainersList.filter(
+    (trainer) =>
+      (trainer.lessonsOffered as number | null) !== 0 ||
+      (myLessons[trainer.id] ?? 0) > 0,
+  );
 
   const changeLessonCount = React.useCallback(
-    async (diff: number, trainer: { id: string; lessonsRemaining: number | null }) => {
-      let lessonCount = (myLessons[trainer.id] ?? 0) + diff;
-      lessonCount = Math.min(
-        lessonCount,
-        (myLessons[trainer.id] ?? 0) + (trainer.lessonsRemaining ?? 0),
-      );
+    async (
+      diff: number,
+      trainer: {
+        id: string;
+        lessonsOffered: number | null;
+        lessonsRemaining: number | null;
+      },
+    ) => {
+      const currentLessonCount = myLessons[trainer.id] ?? 0;
+      let lessonCount = currentLessonCount + diff;
+      if (diff > 0 && trainer.lessonsOffered !== null) {
+        lessonCount = Math.min(
+          lessonCount,
+          currentLessonCount + Math.max(trainer.lessonsRemaining ?? 0, 0),
+        );
+      }
       lessonCount = Math.max(lessonCount, 0);
       await setMutation({
         input: { registrationId: registration.id, trainerId: trainer.id, lessonCount },
@@ -96,31 +111,45 @@ export function MyRegistrationForm({
         </>
       )}
 
-      <fieldset>
-        <legend>Požadavky na lekce</legend>
-        {event.eventTrainersList.map((trainer) => (
-          <div key={trainer.id} className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              className="text-accent-9 disabled:text-accent-7"
-              onClick={() => changeLessonCount(-1, trainer)}
-              disabled={fetching || !myLessons[trainer.id]}
-            >
-              <Minus className="size-5" />
-            </button>
-            <div className="text-xl tabular-nums">{myLessons[trainer.id] ?? 0}x</div>
-            <button
-              type="button"
-              className="text-accent-9 disabled:text-accent-7"
-              onClick={() => changeLessonCount(1, trainer)}
-              disabled={fetching || (trainer.lessonsRemaining ?? 0) < 1}
-            >
-              <Plus className="size-5" />
-            </button>
-            <div className="grow">{trainer.name}</div>
-          </div>
-        ))}
-      </fieldset>
+      {lessonTrainers.length > 0 && (
+        <fieldset>
+          <legend>Požadavky na lekce</legend>
+          {lessonTrainers.map((trainer) => {
+            const lessonsOffered = trainer.lessonsOffered as number | null;
+            const canAddLesson =
+              lessonsOffered === null ||
+              (lessonsOffered > 0 && (trainer.lessonsRemaining ?? 0) > 0);
+
+            return (
+              <div key={trainer.id} className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className="text-accent-9 disabled:text-accent-7"
+                  onClick={() => changeLessonCount(-1, trainer)}
+                  disabled={fetching || !myLessons[trainer.id]}
+                >
+                  <Minus className="size-5" />
+                </button>
+                <div className="text-xl tabular-nums">
+                  {myLessons[trainer.id] ?? 0}x
+                </div>
+                <button
+                  type="button"
+                  className="text-accent-9 disabled:text-accent-7"
+                  onClick={() => changeLessonCount(1, trainer)}
+                  disabled={fetching || !canAddLesson}
+                >
+                  <Plus className="size-5" />
+                </button>
+                <div className="grow">{trainer.name}</div>
+                {lessonsOffered === null && (
+                  <div className="text-sm text-neutral-10">bez omezení</div>
+                )}
+              </div>
+            );
+          })}
+        </fieldset>
+      )}
     </form>
   );
 }

@@ -1,6 +1,5 @@
 import process from 'node:process';
-import { parse } from '@pgsql/parser/v17';
-import { deparse } from 'pgsql-parser';
+import { parse, deparse } from 'pgsql-parser';
 import type {
   ColumnDef,
   Constraint,

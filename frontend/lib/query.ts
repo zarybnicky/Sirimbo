@@ -261,10 +261,17 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       setLessonDemand(_result, args, cache, _info) {
+        const eventId = cache.resolve(
+          { __typename: 'EventRegistration', id: args.input.registrationId },
+          'eventId',
+        );
         cache.invalidate({
           __typename: 'EventRegistration',
           id: args.input.registrationId,
         });
+        if (typeof eventId === 'string') {
+          cache.invalidate({ __typename: 'Event', id: eventId });
+        }
       },
 
       cancelRegistration(_result, args, cache, _info) {

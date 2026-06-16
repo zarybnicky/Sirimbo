@@ -4286,7 +4286,7 @@ type EventTrainer {
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]!
   id: BigInt!
-  lessonsOffered: Int!
+  lessonsOffered: Int
   lessonsRemaining: Int
   name: String
 

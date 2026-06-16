@@ -27,12 +27,6 @@ CREATE FUNCTION public.person_csts_candidates(in_person public.person, "limit" i
       and fp.external_id between 0 and 2147483647
       and fp.search_name % in_person.search_name
       and score.name_score >= params.effective_threshold
-      and not exists (
-        select 1
-        from public.person existing
-        where existing.id <> in_person.id
-          and existing.csts_id = fp.external_id::integer
-      )
   )
   select scored_candidates.id, scored_candidates.name, scored_candidates.age_group, scored_candidates.name_score
   from scored_candidates

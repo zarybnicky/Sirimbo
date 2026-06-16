@@ -1,4 +1,3 @@
-import { Combobox } from '@/ui/fields/Combobox';
 import { FileListDocument } from '@/graphql/Documents';
 import { fullDateFormatter } from '@/ui/format';
 import { useQuery } from 'urql';
@@ -17,7 +16,7 @@ const categories = [
 ];
 
 export default function DocumentsPage() {
-  const [category, setCategory] = React.useState<string | null | undefined>();
+  const [category, setCategory] = React.useState('');
 
   const [{ data }] = useQuery({
     query: FileListDocument,
@@ -31,13 +30,18 @@ export default function DocumentsPage() {
       <div className="col-feature py-4 lg:pb-8">
         <NextSeo title="Dokumenty" />
         <TitleBar title="Dokumenty">
-          <Combobox
+          <select
             value={category}
-            align="end"
-            placeholder="všechny dokumenty"
-            options={categories}
-            onChange={setCategory}
-          />
+            onChange={(event) => setCategory(event.currentTarget.value)}
+            className="min-w-44 rounded-md bg-accent-2 border-accent-7 text-accent-12 py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-accent-7 focus:border-accent-8"
+          >
+            <option value="">všechny dokumenty</option>
+            {categories.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </TitleBar>
 
         {data?.dokumentiesList?.map((row, i) => (

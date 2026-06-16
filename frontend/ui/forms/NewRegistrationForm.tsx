@@ -54,13 +54,16 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
     control,
     name: 'registrations',
   });
-  const watchFieldArray = useWatch({control, name: 'registrations' });
+  const watchFieldArray = useWatch({ control, name: 'registrations' });
   const fields = fieldsInitial.map((field, index) => {
     return {
       ...field,
       ...watchFieldArray?.[index],
     };
   });
+  const lessonTrainers = event.eventTrainersList.filter(
+    (trainer) => (trainer.lessonsOffered as number | null) !== 0,
+  );
 
   React.useEffect(() => {
     for (const x of event.myRegistrationsList || []) {
@@ -111,13 +114,17 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
           .filter((x) => x.selected)
           .map((x) => {
             const lessons = x.lessons
-              .map((lesson, trainerIdx) => ({
-                lessonCount: lesson.lessonCount,
-                trainerId: event.eventTrainersList[trainerIdx]!.id,
-              }))
+              .map((lesson, trainerIdx) => {
+                const trainerId = lessonTrainers[trainerIdx]?.id;
+                return typeof lesson.lessonCount === 'number' &&
+                  lesson.lessonCount > 0 &&
+                  trainerId
+                  ? { lessonCount: lesson.lessonCount, trainerId }
+                  : null;
+              })
               .filter(
                 (lesson): lesson is { lessonCount: number; trainerId: string } =>
-                  typeof lesson.lessonCount === 'number' && lesson.lessonCount > 0,
+                  !!lesson,
               );
 
             return {
@@ -206,25 +213,39 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
                         name={`registrations.${index}.note`}
                       />
                     )}
-                    <fieldset>
-                      <legend className="text-neutral-11">Požadavky na lekce</legend>
-                      {event.eventTrainersList.map((trainer, trainerIndex) => (
-                        <div
-                          key={trainer.id}
-                          className="flex items-center flex-wrap gap-2"
-                        >
-                          <div className="grow">{trainer.name}</div>
-                          <TextFieldElement
-                            control={control}
-                            name={`registrations.${index}.lessons.${trainerIndex}.lessonCount`}
-                            type="number"
-                            className="w-20 shrink-0"
-                            min={0}
-                            max={trainer.lessonsRemaining ?? Number.MAX_SAFE_INTEGER}
-                          />
-                        </div>
-                      ))}
-                    </fieldset>
+                    {lessonTrainers.length > 0 && (
+                      <fieldset>
+                        <legend className="text-neutral-11">Požadavky na lekce</legend>
+                        {lessonTrainers.map((trainer, trainerIndex) => {
+                          const lessonsOffered = trainer.lessonsOffered as number | null;
+                          return (
+                            <div
+                              key={trainer.id}
+                              className="flex items-center flex-wrap gap-2"
+                            >
+                              <div className="grow">{trainer.name}</div>
+                              {lessonsOffered === null && (
+                                <div className="text-sm text-neutral-10 shrink-0">
+                                  bez omezení
+                                </div>
+                              )}
+                              <TextFieldElement
+                                control={control}
+                                name={`registrations.${index}.lessons.${trainerIndex}.lessonCount`}
+                                type="number"
+                                className="w-20 shrink-0"
+                                min={0}
+                                max={
+                                  lessonsOffered === null
+                                    ? undefined
+                                    : Math.max(trainer.lessonsRemaining ?? 0, 0)
+                                }
+                              />
+                            </div>
+                          );
+                        })}
+                      </fieldset>
+                    )}
                   </>
                 )}
               </div>

@@ -19,6 +19,10 @@ CREATE TABLE federated.event (
     website_url text,
     organizing_club_id bigint,
     range daterange GENERATED ALWAYS AS (daterange(start_date, (COALESCE(end_date, start_date) + 1), '[)'::text)) STORED,
+    venue_lat double precision,
+    venue_lng double precision,
+    venue_location_source text,
+    venue_location_ref text,
     CONSTRAINT event_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 

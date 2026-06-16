@@ -149,9 +149,9 @@ begin
   foreach trainer in array coalesce(trainers, '{}'::event_trainer_type_input[]) loop
     if trainer.id is null then
       insert into event_trainer (event_id, person_id, lessons_offered)
-      values (v_event.id, trainer.person_id, coalesce(trainer.lessons_offered, 0))
+      values (v_event.id, trainer.person_id, trainer.lessons_offered)
       on conflict (event_id, person_id) do update
-        set lessons_offered = coalesce(trainer.lessons_offered, 0);
+        set lessons_offered = trainer.lessons_offered;
     elsif trainer.person_id is null then
       delete from event_trainer where id=trainer.id;
     else
