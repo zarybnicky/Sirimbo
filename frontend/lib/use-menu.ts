@@ -108,9 +108,6 @@ export function useMemberMenu(): MenuStructItem[] {
         { type: 'link', title: 'Páry', href: '/pary' },
         { type: 'link', title: 'Členové', href: '/clenove' },
         { type: 'link', title: 'Žebříček', href: '/zebricek' },
-        ...(enableHome
-          ? [{ type: 'link', title: 'Dokumenty', href: '/dokumenty' } as MenuLink]
-          : []),
       ],
     },
     {
