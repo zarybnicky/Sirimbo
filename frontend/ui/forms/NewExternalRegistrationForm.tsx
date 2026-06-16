@@ -75,8 +75,20 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
         />
         <TextFieldElement control={control} name="lastName" label="Příjmení" required />
 
-        <TextFieldElement control={control} name="email" type="email" label="E-mail" />
-        <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
+        <TextFieldElement
+          control={control}
+          name="email"
+          type="email"
+          label="E-mail"
+          autoComplete="email"
+        />
+        <TextFieldElement
+          control={control}
+          name="phone"
+          type="tel"
+          label="Telefon"
+          autoComplete="tel"
+        />
 
         <ComboboxElement
           control={control}

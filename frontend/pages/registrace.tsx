@@ -92,7 +92,7 @@ export default function InvitationPage() {
               name="passwd"
               type="password"
               label="Heslo"
-              autoComplete="current-password"
+              autoComplete="new-password"
               required
             />
 
