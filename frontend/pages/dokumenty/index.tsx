@@ -7,12 +7,13 @@ import { NextSeo } from 'next-seo';
 import { Layout } from '@/ui/Layout';
 import { cardCls } from '@/ui/style';
 import React from 'react';
+import { SelectField } from '@/ui/fields/select';
 
 const categories = [
-  { id: '1', label: 'Schůze,\u{00A0}rady' },
-  { id: '2', label: 'Soutěže' },
-  { id: '3', label: 'Soustředění' },
-  { id: '0', label: 'Ostatní' },
+  { value: '1', label: 'Schůze,\u{00A0}rady' },
+  { value: '2', label: 'Soutěže' },
+  { value: '3', label: 'Soustředění' },
+  { value: '0', label: 'Ostatní' },
 ];
 
 export default function DocumentsPage() {
@@ -30,18 +31,13 @@ export default function DocumentsPage() {
       <div className="col-feature py-4 lg:pb-8">
         <NextSeo title="Dokumenty" />
         <TitleBar title="Dokumenty">
-          <select
+          <SelectField
             value={category}
-            onChange={(event) => setCategory(event.currentTarget.value)}
-            className="min-w-44 rounded-md bg-accent-2 border-accent-7 text-accent-12 py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-accent-7 focus:border-accent-8"
-          >
-            <option value="">všechny dokumenty</option>
-            {categories.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            onChange={setCategory}
+            placeholder="všechny dokumenty"
+            options={categories}
+            className="min-w-44"
+          />
         </TitleBar>
 
         {data?.dokumentiesList?.map((row, i) => (
@@ -60,7 +56,7 @@ export default function DocumentsPage() {
                     : ''}
                 </span>
                 <span>
-                  {categories.find((x) => x.id === row.dKategorie.toString())?.label}
+                  {categories.find((x) => x.value === row.dKategorie.toString())?.label}
                 </span>
               </div>
             </a>

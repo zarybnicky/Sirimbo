@@ -1,7 +1,7 @@
 import React from 'react';
-import { Combobox } from '@/ui/fields/Combobox';
 import { TextField } from '@/ui/fields/text';
 import { PeriodPreset, periodLabels } from './periods';
+import { SelectField, type SelectOption } from '@/ui/fields/select';
 
 type ScoreboardPeriodSelectorProps = {
   preset: PeriodPreset;
@@ -29,32 +29,19 @@ export function ScoreboardPeriodSelector({
   const periodOptions = React.useMemo(
     () =>
       Object.entries(periodLabels).map(([value, label]) => ({
-        id: value,
+        value: value as PeriodPreset,
         label,
-      })),
+      })) satisfies SelectOption<PeriodPreset>[],
     [],
-  );
-
-  const handlePresetChange = React.useCallback<
-    React.Dispatch<React.SetStateAction<string | null | undefined>>
-  >(
-    (value) => {
-      const nextValue = typeof value === 'function' ? value(preset) : value;
-      if (typeof nextValue === 'string') {
-        onPresetChange(nextValue as PeriodPreset);
-      }
-    },
-    [onPresetChange, preset],
   );
 
   return (
     <>
-      <Combobox
+      <SelectField
         label="Období"
         value={preset}
-        onChange={handlePresetChange}
+        onChange={onPresetChange}
         options={periodOptions}
-        placeholder="Vyberte období"
       />
 
       {preset === 'custom' ? (
