@@ -128,7 +128,6 @@ export const OTELPlugin: GraphileConfig.Plugin = {
       executeStep(next, event) {
         const stepname = Object.getPrototypeOf(event.step).constructor.name;
         return getTracer().startActiveSpan('ExecuteStep: ' + stepname, (span) => {
-          event.executeDetails.extra.span = span;
           span.setAttribute('step.count', event.executeDetails.count);
           let rslt: ReturnType<typeof next>;
           try {
