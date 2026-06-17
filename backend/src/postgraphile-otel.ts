@@ -11,7 +11,7 @@ declare module 'grafast' {
   }
 }
 
-const tracer = trace.getTracer('postgraphile-otel');
+const getTracer = () => trace.getTracer('postgraphile-otel');
 
 export const OTELPlugin: GraphileConfig.Plugin = {
   name: 'OTELPlugin',
@@ -27,21 +27,21 @@ export const OTELPlugin: GraphileConfig.Plugin = {
         // @ts-expect-error
         const isHttpRequest = parentSpan?.attributes?.['http.method'];
         if (parentSpan && isHttpRequest) {
-          return executeWithSpan(parentSpan);
+          return executeWithSpan(parentSpan, false);
         }
 
-        return tracer.startActiveSpan('GraphQL Request', executeWithSpan);
+        return getTracer().startActiveSpan('GraphQL Request', executeWithSpan);
 
-        function executeWithSpan(span: Span) {
+        function executeWithSpan(span: Span, owned: boolean = true) {
           let rslt: ReturnType<typeof next>;
           try {
             rslt = next();
           } catch (err: any) {
-            onSpanError(span, err, true);
+            onSpanError(span, err, owned);
           }
 
           if (!(rslt instanceof Promise)) {
-            endSpan(span);
+            if (owned) span.end();
             return rslt;
           }
 
@@ -71,7 +71,9 @@ export const OTELPlugin: GraphileConfig.Plugin = {
               return obj;
             })
             .catch((err) => onSpanError(span, err))
-            .finally(() => endSpan(span));
+            .finally(() => {
+              if (owned) span.end();
+            });
         }
       },
     },
@@ -113,19 +115,19 @@ export const OTELPlugin: GraphileConfig.Plugin = {
         return next();
       },
       establishOperationPlan(next) {
-        return tracer.startActiveSpan('EstablishOperationPlan', (span) => {
+        return getTracer().startActiveSpan('EstablishOperationPlan', (span) => {
           try {
             return next();
           } catch (err: any) {
             onSpanError(span, err);
           } finally {
-            endSpan(span);
+            span.end();
           }
         });
       },
       executeStep(next, event) {
         const stepname = Object.getPrototypeOf(event.step).constructor.name;
-        return tracer.startActiveSpan('ExecuteStep: ' + stepname, (span) => {
+        return getTracer().startActiveSpan('ExecuteStep: ' + stepname, (span) => {
           event.executeDetails.extra.span = span;
           span.setAttribute('step.count', event.executeDetails.count);
           let rslt: ReturnType<typeof next>;
@@ -138,14 +140,14 @@ export const OTELPlugin: GraphileConfig.Plugin = {
           if (Array.isArray(rslt)) {
             return Promise.all(rslt)
               .catch((err) => onSpanError(span, err))
-              .finally(() => endSpan(span));
+              .finally(() => span.end());
           }
 
           if (rslt instanceof Promise) {
             return rslt
               .then((items) => Promise.all(items))
               .catch((err) => onSpanError(span, err))
-              .finally(() => endSpan(span));
+              .finally(() => span.end());
           }
 
           return rslt;
@@ -162,12 +164,7 @@ function onSpanError(span: Span, err: any, end = false): never {
     message: err.message,
   });
   if (end) {
-    endSpan(span);
+    span.end();
   }
-
   throw err;
-}
-
-function endSpan(span: Span) {
-  span.end();
 }
