@@ -82,7 +82,7 @@ export const DialogTrigger = Object.assign(
 function DialogPortal({ children, ...props }: DialogPrimitive.DialogPortalProps) {
   return (
     <DialogPrimitive.Portal {...props}>
-      <div className="fixed inset-0 z-40 flex justify-center items-center">
+      <div className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto overscroll-contain p-4 [-webkit-overflow-scrolling:touch] sm:items-center sm:p-6">
         {children}
       </div>
     </DialogPrimitive.Portal>
@@ -116,9 +116,9 @@ export const DialogContent = React.forwardRef<
       ref={ref}
       aria-describedby={undefined}
       className={cn(
-        'fixed z-40 grid w-full gap-4 rounded-b-lg border border-neutral-7 bg-neutral-1 text-neutral-12 p-6 shadow-lg',
+        'relative z-50 grid w-full gap-4 rounded-lg border border-neutral-7 bg-neutral-1 text-neutral-12 p-6 shadow-lg',
         'data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide',
-        'sm:max-w-lg sm:rounded-lg overflow-y-auto max-h-full',
+        'max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain touch-pan-y sm:max-h-[calc(100dvh-3rem)] sm:max-w-lg',
         className,
       )}
       {...props}

@@ -30,7 +30,6 @@ declare module "nextjs-routes" {
     | DynamicRoute<"/clenove/[id]", { "id": string }>
     | StaticRoute<"/crm">
     | StaticRoute<"/dashboard">
-    | StaticRoute<"/dokumenty">
     | StaticRoute<"/galerie">
     | StaticRoute<"/galerie-mistru">
     | StaticRoute<"/kde-trenujeme">
