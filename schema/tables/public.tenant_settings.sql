@@ -4,7 +4,8 @@ CREATE TABLE public.tenant_settings (
 );
 
 COMMENT ON TABLE public.tenant_settings IS '@simpleCollections only
-@omit create,delete';
+@omit create,delete
+@behavior -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.tenant_settings TO anonymous;
 ALTER TABLE public.tenant_settings ENABLE ROW LEVEL SECURITY;

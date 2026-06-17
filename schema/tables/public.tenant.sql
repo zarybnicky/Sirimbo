@@ -10,7 +10,7 @@ CREATE TABLE public.tenant (
 );
 
 COMMENT ON TABLE public.tenant IS '@omit create,delete
-@behavior -singularRelation:resource:single
+@behavior -singularRelation:resource:single -query:resource:list -query:resource:connection
 @simpleCollections only';
 
 GRANT ALL ON TABLE public.tenant TO anonymous;

@@ -69,7 +69,9 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
-        null::federated.competition_type as competition_type
+        null::federated.competition_type as competition_type,
+        null::text as competition_event_external_id,
+        null::text as competition_external_id
       from public.event_attendance ea
       join public.event_instance ei on ei.id = ea.instance_id
       join public.person p on p.id = ea.person_id
@@ -115,7 +117,9 @@ begin
         cr.ranking_to,
         cr.point_gain,
         cr.is_final,
-        cr.competition_type
+        cr.competition_type,
+        cr.event_external_id as competition_event_external_id,
+        cr.competition_external_id
       from (
         select *
         from public.competition_report(
@@ -182,7 +186,9 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
-        cb.competition_type
+        cb.competition_type,
+        cb.event_external_id as competition_event_external_id,
+        cb.competition_external_id
       from (
         select *
         from public.competition_brief(

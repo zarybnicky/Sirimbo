@@ -12,7 +12,8 @@ CREATE TABLE public.cohort_membership (
     CONSTRAINT cohort_membership_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.cohort_membership TO anonymous;

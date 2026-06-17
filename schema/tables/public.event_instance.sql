@@ -21,7 +21,8 @@ CREATE TABLE public.event_instance (
 );
 
 COMMENT ON TABLE public.event_instance IS '@omit create,delete
-@simpleCollections only';
+@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.event_instance TO anonymous;
 ALTER TABLE public.event_instance ENABLE ROW LEVEL SECURITY;

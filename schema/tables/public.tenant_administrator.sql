@@ -13,7 +13,8 @@ CREATE TABLE public.tenant_administrator (
     CONSTRAINT tenant_administrator_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only';
+COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 COMMENT ON COLUMN public.tenant_administrator.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.tenant_administrator TO anonymous;

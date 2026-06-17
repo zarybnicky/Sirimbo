@@ -16,7 +16,8 @@ CREATE TABLE public.payment (
 );
 
 COMMENT ON TABLE public.payment IS '@omit create
-@simpleCollections only';
+@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.payment TO anonymous;
 ALTER TABLE public.payment ENABLE ROW LEVEL SECURITY;

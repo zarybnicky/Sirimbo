@@ -10,7 +10,8 @@ CREATE TABLE public.person_invitation (
 );
 
 COMMENT ON TABLE public.person_invitation IS '@omit update
-@simpleCollections only';
+@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.person_invitation TO anonymous;
 ALTER TABLE public.person_invitation ENABLE ROW LEVEL SECURITY;

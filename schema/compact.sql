@@ -1356,7 +1356,7 @@ CREATE TYPE public.announcement_audience_type_input AS (id bigint, cohort_id big
 
 CREATE TYPE public.announcement_type_input AS (id bigint, title text, body text, is_locked boolean, is_visible boolean, is_sticky boolean, scheduled_since timestamp with time zone, scheduled_until timestamp with time zone);
 
-CREATE TYPE public.competition_participation_record AS (person_id bigint, person_name text, federation text, federated_person_id text, competitor_id text, competitor_name text, competitor_type federated.competitor_type, event_id bigint, event_name text, event_location text, competition_id bigint, competition_date date, check_in_end time, category federated.category, dances text[], participants int, ranking int, ranking_to int, point_gain numeric(10, 3), is_final boolean, has_result boolean, competition_type federated.competition_type);
+CREATE TYPE public.competition_participation_record AS (person_id bigint, person_name text, federation text, federated_person_id text, competitor_id text, competitor_name text, competitor_type federated.competitor_type, event_id bigint, event_name text, event_location text, competition_id bigint, competition_date date, check_in_end time, category federated.category, dances text[], participants int, ranking int, ranking_to int, point_gain numeric(10, 3), is_final boolean, has_result boolean, competition_type federated.competition_type, event_external_id text, competition_external_id text);
 
 CREATE TYPE public.event_instance_trainer_type_input AS (id bigint, person_id bigint);
 
@@ -1375,6 +1375,10 @@ CREATE TYPE public.event_type_input AS (id bigint, name text, summary text, desc
 CREATE TYPE public.jwt_token AS (exp int, user_id bigint, tenant_id bigint, username text, email text, my_person_ids bigint[], my_tenant_ids bigint[], my_cohort_ids bigint[], my_couple_ids bigint[], is_member boolean, is_trainer boolean, is_admin boolean, is_system_admin boolean);
 
 CREATE TYPE public.login_result AS (usr public.users, jwt public.jwt_token);
+
+CREATE TYPE public.quick_event_registration_input AS (person_id bigint, couple_id bigint);
+
+CREATE TYPE public.quick_event_input AS (since timestamp with time zone, until timestamp with time zone, type public.event_type, location_id bigint, location_text text, trainer_person_ids bigint[], registrations public.quick_event_registration_input[]);
 
 CREATE TYPE public.register_to_event_type AS (event_id bigint, person_id bigint, couple_id bigint, note text, lessons public.event_lesson_demand[]);
 

@@ -12,7 +12,8 @@ CREATE TABLE public.couple (
     CONSTRAINT couple_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.couple IS '@simpleCollections only';
+COMMENT ON TABLE public.couple IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 COMMENT ON COLUMN public.couple.legacy_pary_id IS '@omit';
 COMMENT ON COLUMN public.couple.active_range IS '@omit';
 

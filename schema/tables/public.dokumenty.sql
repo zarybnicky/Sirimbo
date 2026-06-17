@@ -11,8 +11,7 @@ CREATE TABLE public.dokumenty (
     d_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
 );
 
-COMMENT ON TABLE public.dokumenty IS '@simpleCollections only
-@omit create,update,delete';
+COMMENT ON TABLE public.dokumenty IS '@omit';
 
 GRANT ALL ON TABLE public.dokumenty TO anonymous;
 ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;

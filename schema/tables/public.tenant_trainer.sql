@@ -24,7 +24,8 @@ CREATE TABLE public.tenant_trainer (
     CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';
+COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.tenant_trainer TO anonymous;

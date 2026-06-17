@@ -11,7 +11,8 @@ CREATE TABLE public.user_proxy (
     CONSTRAINT user_proxy_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.user_proxy IS '@simpleCollections only';
+COMMENT ON TABLE public.user_proxy IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 COMMENT ON COLUMN public.user_proxy.active_range IS '@omit';
 
 GRANT ALL ON TABLE public.user_proxy TO anonymous;

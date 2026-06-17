@@ -9,7 +9,8 @@ CREATE TABLE public.tenant_location (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.tenant_location IS '@simpleCollections only';
+COMMENT ON TABLE public.tenant_location IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.tenant_location TO anonymous;
 ALTER TABLE public.tenant_location ENABLE ROW LEVEL SECURITY;

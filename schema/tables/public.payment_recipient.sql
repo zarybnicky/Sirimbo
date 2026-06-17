@@ -7,7 +7,8 @@ CREATE TABLE public.payment_recipient (
 );
 
 COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
-@simpleCollections only';
+@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.payment_recipient TO anonymous;
 ALTER TABLE public.payment_recipient ENABLE ROW LEVEL SECURITY;

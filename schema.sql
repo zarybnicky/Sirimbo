@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 9bcEo8Db7dh2q4SI5jXbT9lTx0PiCDhvczTEwv5n2dFKvi8Jg1Ld6XxsZHOX4kh
+\restrict F1d3c56wZzXE72Q9X2N91MdEpf89YeArJrt0WNzjn0buCMRRujMWBBhH5NcxUE3
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -463,7 +463,9 @@ CREATE TYPE public.competition_participation_record AS (
 	point_gain numeric(10,3),
 	is_final boolean,
 	has_result boolean,
-	competition_type federated.competition_type
+	competition_type federated.competition_type,
+	event_external_id text,
+	competition_external_id text
 );
 
 
@@ -721,6 +723,31 @@ CREATE DOMAIN public.price AS public.price_type
 
 
 --
+-- Name: quick_event_registration_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.quick_event_registration_input AS (
+	person_id bigint,
+	couple_id bigint
+);
+
+
+--
+-- Name: quick_event_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.quick_event_input AS (
+	since timestamp with time zone,
+	until timestamp with time zone,
+	type public.event_type,
+	location_id bigint,
+	location_text text,
+	trainer_person_ids bigint[],
+	registrations public.quick_event_registration_input[]
+);
+
+
+--
 -- Name: event_lesson_demand; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -876,7 +903,8 @@ CREATE TABLE public.event_instance (
 --
 
 COMMENT ON TABLE public.event_instance IS '@omit create,delete
-@simpleCollections only';
+@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -933,7 +961,8 @@ CREATE TABLE public.payment (
 --
 
 COMMENT ON TABLE public.payment IS '@omit create
-@simpleCollections only';
+@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -1204,7 +1233,8 @@ CREATE TABLE public.tenant_trainer (
 -- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only';
+COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -1674,7 +1704,8 @@ CREATE TABLE public.cohort_membership (
 -- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only';
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -2643,7 +2674,9 @@ CREATE VIEW public.activity_timeline_item AS
     NULL::integer AS ranking_to,
     NULL::numeric(10,3) AS point_gain,
     NULL::boolean AS is_final,
-    NULL::federated.competition_type AS competition_type
+    NULL::federated.competition_type AS competition_type,
+    NULL::text AS competition_event_external_id,
+    NULL::text AS competition_external_id
   WHERE false;
 
 
@@ -2655,8 +2688,8 @@ COMMENT ON VIEW public.activity_timeline_item IS '
 @primaryKey id
 @interface mode:single type:kind
 @type EVENT_ATTENDANCE name:ActivityEventAttendance attributes:event_attendance_id,event_instance_id
-@type COMPETITION_BRIEF name:ActivityCompetitionBrief attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,check_in_end,category,dances,participants,competition_type
-@type COMPETITION_RESULT name:ActivityCompetitionResult attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,dances,participants,ranking,ranking_to,point_gain,is_final,competition_type
+@type COMPETITION_BRIEF name:ActivityCompetitionBrief attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,check_in_end,category,dances,participants,competition_type,competition_event_external_id,competition_external_id
+@type COMPETITION_RESULT name:ActivityCompetitionResult attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,dances,participants,ranking,ranking_to,point_gain,is_final,competition_type,competition_event_external_id,competition_external_id
 @foreignKey (person_id) references person (id)|@fieldName person|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @foreignKey (event_attendance_id) references event_attendance (id)|@fieldName eventAttendance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @foreignKey (event_instance_id) references event_instance (id)|@fieldName eventInstance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
@@ -2739,7 +2772,9 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
-        null::federated.competition_type as competition_type
+        null::federated.competition_type as competition_type,
+        null::text as competition_event_external_id,
+        null::text as competition_external_id
       from public.event_attendance ea
       join public.event_instance ei on ei.id = ea.instance_id
       join public.person p on p.id = ea.person_id
@@ -2785,7 +2820,9 @@ begin
         cr.ranking_to,
         cr.point_gain,
         cr.is_final,
-        cr.competition_type
+        cr.competition_type,
+        cr.event_external_id as competition_event_external_id,
+        cr.competition_external_id
       from (
         select *
         from public.competition_report(
@@ -2852,7 +2889,9 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
-        cb.competition_type
+        cb.competition_type,
+        cb.event_external_id as competition_event_external_id,
+        cb.competition_external_id
       from (
         select *
         from public.competition_brief(
@@ -3109,7 +3148,9 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     null::numeric(10,3) as point_gain,
     null::boolean as is_final,
     false as has_result,
-    comp.competition_type
+    comp.competition_type,
+    e.external_id as event_external_id,
+    comp.external_id as competition_external_id
   from params
   join federated.competition comp
     on comp.start_date >= params.since
@@ -3210,7 +3251,9 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     cr.point_gain,
     cr.is_final,
     true as has_result,
-    comp.competition_type
+    comp.competition_type,
+    e.external_id as event_external_id,
+    comp.external_id as competition_external_id
   from params
   join federated.competition comp
     on comp.start_date >= params.since
@@ -3361,7 +3404,8 @@ CREATE TABLE public.couple (
 -- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.couple IS '@simpleCollections only';
+COMMENT ON TABLE public.couple IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -4448,70 +4492,6 @@ END;
 
 
 --
--- Name: filtered_people(boolean, boolean, bigint[], text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[] DEFAULT NULL::bigint[], membership_state text DEFAULT 'current'::text) RETURNS SETOF public.person
-    LANGUAGE sql STABLE
-    AS $$
-  select p.* from (
-    select tm.person_id from tenant_membership tm
-    where lower(coalesce(membership_state,'current')) = 'former' and tm.tenant_id = (select current_tenant_id()) and tm.status = 'expired'
-      and not exists(select 1 from current_tenant_membership a where a.person_id = tm.person_id)
-    union
-    select tm.person_id from current_tenant_membership tm
-    where lower(coalesce(membership_state,'current')) = 'current'
-    union
-    select tt.person_id from current_tenant_trainer tt
-    where lower(coalesce(membership_state,'current')) = 'current'
-    union
-    select ta.person_id from current_tenant_administrator ta
-    where lower(coalesce(membership_state,'current')) = 'current'
-  ) vis
-  join person p on p.id=vis.person_id
-  where (
-    lower(coalesce(membership_state,'current')) = 'former' and (
-      in_cohorts is null or (
-        cardinality(in_cohorts) = 0 and not exists(
-          select 1 from cohort_membership cm where cm.person_id = p.id and cm.tenant_id = (select current_tenant_id()) and cm.status = 'expired')
-      ) or (
-        cardinality(in_cohorts) > 0 and exists(
-          select 1 from cohort_membership cm where cm.person_id = p.id and cm.tenant_id = (select current_tenant_id()) and cm.status = 'expired' and cm.cohort_id = any(in_cohorts))
-      )
-    ) and (
-      is_trainer is null or is_trainer = exists(
-        select 1 from tenant_trainer tt where tt.person_id = p.id and tt.tenant_id = (select current_tenant_id()) and tt.status = 'expired')
-    ) and (
-      is_admin is null or is_admin = exists(
-        select 1 from tenant_administrator ta where ta.person_id = p.id and ta.tenant_id = (select current_tenant_id()) and ta.status = 'expired')
-    )
-  ) or (
-    lower(coalesce(membership_state,'current')) = 'current' and (
-      in_cohorts is null or (
-        cardinality(in_cohorts) = 0 and not exists(
-          select 1 from current_cohort_membership cm where cm.person_id = p.id)
-      ) or (
-        cardinality(in_cohorts) > 0 and exists(
-          select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = any(in_cohorts))
-      )
-    ) and (
-      is_trainer is null or is_trainer = exists(
-        select 1 from current_tenant_trainer tt where tt.person_id = p.id)
-    ) and (
-      is_admin is null or is_admin = exists(
-        select 1 from current_tenant_administrator ta where ta.person_id = p.id))
-    );
-$$;
-
-
---
--- Name: FUNCTION filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[], membership_state text); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[], membership_state text) IS '@simpleCollections only';
-
-
---
 -- Name: tenant; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4532,7 +4512,7 @@ CREATE TABLE public.tenant (
 --
 
 COMMENT ON TABLE public.tenant IS '@omit create,delete
-@behavior -singularRelation:resource:single
+@behavior -singularRelation:resource:single -query:resource:list -query:resource:connection
 @simpleCollections only';
 
 
@@ -5236,6 +5216,63 @@ COMMENT ON FUNCTION public.person_weekly_attendance(p public.person) IS '@simple
 
 
 --
+-- Name: quick_create_events(public.quick_event_input[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.quick_create_events(events public.quick_event_input[]) RETURNS SETOF public.event
+    LANGUAGE plpgsql
+    AS $$
+declare
+  quick_event public.quick_event_input;
+  created_event public.event;
+  created_ids bigint[] := array[]::bigint[];
+begin
+  foreach quick_event in array coalesce(events, '{}'::public.quick_event_input[]) loop
+    insert into public.event (
+      name,
+      description,
+      type,
+      location_id,
+      location_text,
+      capacity,
+      is_visible
+    )
+    values (
+      '',
+      '',
+      coalesce(quick_event.type, 'lesson'::public.event_type),
+      quick_event.location_id,
+      coalesce(quick_event.location_text, ''),
+      case when coalesce(quick_event.type, 'lesson'::public.event_type) = 'lesson' then 2 else 0 end,
+      true
+    )
+    returning * into created_event;
+
+    insert into public.event_instance (event_id, since, until, is_cancelled)
+    values (created_event.id, quick_event.since, quick_event.until, false);
+
+    insert into public.event_trainer (event_id, person_id, lessons_offered)
+    select distinct created_event.id, input.person_id, 0
+    from unnest(coalesce(quick_event.trainer_person_ids, '{}'::bigint[])) as input(person_id)
+    where input.person_id is not null
+    on conflict (event_id, person_id) do nothing;
+
+    insert into public.event_registration (event_id, person_id, couple_id)
+    select created_event.id, input.person_id, input.couple_id
+    from unnest(
+      coalesce(quick_event.registrations, '{}'::public.quick_event_registration_input[])
+    ) as input(person_id, couple_id)
+    on conflict (event_id, person_id, couple_id) do nothing;
+
+    created_ids := created_ids || created_event.id;
+  end loop;
+
+  return query select * from public.event where id = any (created_ids) order by id;
+end;
+$$;
+
+
+--
 -- Name: refresh_jwt(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -5915,7 +5952,8 @@ CREATE TABLE public.tenant_administrator (
 -- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only';
+COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -5980,7 +6018,8 @@ CREATE TABLE public.tenant_membership (
 -- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_membership IS '@simpleCollections only';
+COMMENT ON TABLE public.tenant_membership IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -6304,6 +6343,50 @@ $_$;
 
 
 --
+-- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS public.event_instance
+    LANGUAGE plpgsql
+    AS $$
+declare
+  updated_instance public.event_instance;
+begin
+  update public.event_instance
+  set
+    since = p_since,
+    until = p_until,
+    name = p_name,
+    type = p_type,
+    location_id = p_location_id,
+    location_text = coalesce(p_location_text, ''),
+    is_visible = coalesce(p_is_visible, is_visible),
+    is_public = coalesce(p_is_public, is_public),
+    is_cancelled = p_is_cancelled
+  where id = p_instance_id
+  returning * into updated_instance;
+
+  if not found then
+    raise exception 'event instance % not found', p_instance_id;
+  end if;
+
+  if p_trainer_person_ids is not null then
+    delete from public.event_instance_trainer
+    where instance_id = p_instance_id;
+
+    insert into public.event_instance_trainer (instance_id, person_id)
+    select distinct p_instance_id, input.person_id
+    from unnest(p_trainer_person_ids) as input(person_id)
+    where input.person_id is not null
+    on conflict (instance_id, person_id) do nothing;
+  end if;
+
+  return updated_instance;
+end;
+$$;
+
+
+--
 -- Name: tenant_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6318,7 +6401,8 @@ CREATE TABLE public.tenant_settings (
 --
 
 COMMENT ON TABLE public.tenant_settings IS '@simpleCollections only
-@omit create,delete';
+@omit create,delete
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -8125,8 +8209,7 @@ CREATE TABLE public.dokumenty (
 -- Name: TABLE dokumenty; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.dokumenty IS '@simpleCollections only
-@omit create,update,delete';
+COMMENT ON TABLE public.dokumenty IS '@omit';
 
 
 --
@@ -8463,7 +8546,8 @@ CREATE TABLE public.payment_recipient (
 --
 
 COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
-@simpleCollections only';
+@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -8515,7 +8599,8 @@ CREATE TABLE public.person_invitation (
 --
 
 COMMENT ON TABLE public.person_invitation IS '@omit update
-@simpleCollections only';
+@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -8567,7 +8652,8 @@ CREATE TABLE public.scoreboard_manual_adjustment (
 -- Name: TABLE scoreboard_manual_adjustment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.scoreboard_manual_adjustment IS '@simpleCollections only';
+COMMENT ON TABLE public.scoreboard_manual_adjustment IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -8637,7 +8723,8 @@ CREATE TABLE public.tenant_location (
 -- Name: TABLE tenant_location; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_location IS '@simpleCollections only';
+COMMENT ON TABLE public.tenant_location IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -8718,7 +8805,8 @@ CREATE TABLE public.user_proxy (
 -- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.user_proxy IS '@simpleCollections only';
+COMMENT ON TABLE public.user_proxy IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
 
 
 --
@@ -15018,13 +15106,6 @@ GRANT ALL ON FUNCTION public.event_trainer_name(t public.event_trainer) TO anony
 
 
 --
--- Name: FUNCTION filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[], membership_state text); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.filtered_people(is_trainer boolean, is_admin boolean, in_cohorts bigint[], membership_state text) TO anonymous;
-
-
---
 -- Name: TABLE tenant; Type: ACL; Schema: public; Owner: -
 --
 
@@ -15239,6 +15320,13 @@ GRANT ALL ON FUNCTION public.person_recent_attendance(p public.person) TO anonym
 --
 
 GRANT ALL ON FUNCTION public.person_weekly_attendance(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION quick_create_events(events public.quick_event_input[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.quick_create_events(events public.quick_event_input[]) TO anonymous;
 
 
 --
@@ -15478,6 +15566,13 @@ GRANT ALL ON FUNCTION public.trainer_group_attendance_completion(since timestamp
 --
 
 GRANT ALL ON FUNCTION public.update_event_attendance(instance_id bigint, person_id bigint, status public.attendance_type, note text) TO anonymous;
+
+
+--
+-- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[]) TO anonymous;
 
 
 --
@@ -16051,5 +16146,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 9bcEo8Db7dh2q4SI5jXbT9lTx0PiCDhvczTEwv5n2dFKvi8Jg1Ld6XxsZHOX4kh
+\unrestrict F1d3c56wZzXE72Q9X2N91MdEpf89YeArJrt0WNzjn0buCMRRujMWBBhH5NcxUE3
 

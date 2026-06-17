@@ -59,7 +59,9 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     cr.point_gain,
     cr.is_final,
     true as has_result,
-    comp.competition_type
+    comp.competition_type,
+    e.external_id as event_external_id,
+    comp.external_id as competition_external_id
   from params
   join federated.competition comp
     on comp.start_date >= params.since
