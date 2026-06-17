@@ -51,6 +51,10 @@ const Score = z.discriminatedUnion("kind", [
     ...onScaleCommon,
   }),
   z.object({
+    kind: z.literal("onScale"),
+    ...onScaleCommon,
+  }),
+  z.object({
     kind: z.literal("onScaleSkating"),
     ...onScaleCommon,
   }),
