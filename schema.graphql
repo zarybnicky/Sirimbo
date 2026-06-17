@@ -713,11 +713,6 @@ type ArchiveCohortPayload {
 
   """Reads a single `CohortGroup` that is related to this `Cohort`."""
   cohortGroup: CohortGroup
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 type Attachment {
@@ -886,11 +881,6 @@ type CancelRegistrationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 type Category {
@@ -922,11 +912,6 @@ type ChangePasswordPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 type Cohort {
@@ -1524,11 +1509,6 @@ type ConfirmMembershipApplicationPayload {
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PeopleEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 type Couple {
@@ -1714,11 +1694,6 @@ type CreateAktualityPayload {
   """
   clientMutationId: String
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """Reads a single `User` that is related to this `Aktuality`."""
   user: User
 }
@@ -1751,11 +1726,6 @@ type CreateAttachmentPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `User` that is related to this `Attachment`."""
   user: User
@@ -1801,11 +1771,6 @@ type CreateCohortMembershipPayload {
 
   """Reads a single `Person` that is related to this `CohortMembership`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """The output of our create `Cohort` mutation."""
@@ -1821,11 +1786,6 @@ type CreateCohortPayload {
 
   """Reads a single `CohortGroup` that is related to this `Cohort`."""
   cohortGroup: CohortGroup
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the create `Couple` mutation."""
@@ -1853,11 +1813,6 @@ type CreateCouplePayload {
 
   """Reads a single `Person` that is related to this `Couple`."""
   man: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `Person` that is related to this `Couple`."""
   woman: Person
@@ -1887,11 +1842,6 @@ type CreateCreditTransactionForPersonPayload {
 
   """Reads a single `Payment` that is related to this `Transaction`."""
   payment: Payment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
   transaction: Transaction
 
   """An edge for our `Transaction`. May be used by Relay 1."""
@@ -1930,11 +1880,6 @@ type CreateEventExternalRegistrationPayload {
   eventExternalRegistration: EventExternalRegistration
 
   """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """
   Reads a single `User` that is related to this `EventExternalRegistration`.
   """
   user: User
@@ -1962,11 +1907,6 @@ type CreateMembershipApplicationPayload {
 
   """The `MembershipApplication` that was created by this mutation."""
   membershipApplication: MembershipApplication
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
   user: User
@@ -2013,11 +1953,6 @@ type CreatePersonInvitationPayload {
 
   """The `PersonInvitation` that was created by this mutation."""
   personInvitation: PersonInvitation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """The output of our `createPerson` mutation."""
@@ -2034,11 +1969,6 @@ type CreatePersonPayload {
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PeopleEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the create `ScoreboardManualAdjustment` mutation."""
@@ -2071,11 +2001,6 @@ type CreateScoreboardManualAdjustmentPayload {
   """
   person: Person
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `ScoreboardManualAdjustment` that was created by this mutation."""
   scoreboardManualAdjustment: ScoreboardManualAdjustment
 }
@@ -2103,11 +2028,6 @@ type CreateTenantAdministratorPayload {
   """Reads a single `Person` that is related to this `TenantAdministrator`."""
   person: Person
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `TenantAdministrator` that was created by this mutation."""
   tenantAdministrator: TenantAdministrator
 }
@@ -2131,11 +2051,6 @@ type CreateTenantLocationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """The `TenantLocation` that was created by this mutation."""
   tenantLocation: TenantLocation
@@ -2164,11 +2079,6 @@ type CreateTenantMembershipPayload {
   """Reads a single `Person` that is related to this `TenantMembership`."""
   person: Person
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `TenantMembership` that was created by this mutation."""
   tenantMembership: TenantMembership
 }
@@ -2196,11 +2106,6 @@ type CreateTenantTrainerPayload {
   """Reads a single `Person` that is related to this `TenantTrainer`."""
   person: Person
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `TenantTrainer` that was created by this mutation."""
   tenantTrainer: TenantTrainer
 }
@@ -2227,11 +2132,6 @@ type CreateUserProxyPayload {
 
   """Reads a single `Person` that is related to this `UserProxy`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `User` that is related to this `UserProxy`."""
   user: User
@@ -2322,11 +2222,6 @@ type DeleteAktualityPayload {
   """
   clientMutationId: String
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """Reads a single `User` that is related to this `Aktuality`."""
   user: User
 }
@@ -2360,11 +2255,6 @@ type DeleteAnnouncementPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `deleteCohortByTenantIdAndId` mutation."""
@@ -2414,11 +2304,6 @@ type DeleteCohortMembershipPayload {
 
   """Reads a single `Person` that is related to this `CohortMembership`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """The output of our delete `Cohort` mutation."""
@@ -2434,11 +2319,6 @@ type DeleteCohortPayload {
 
   """Reads a single `CohortGroup` that is related to this `Cohort`."""
   cohortGroup: CohortGroup
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `deleteCouple` mutation."""
@@ -2464,11 +2344,6 @@ type DeleteCouplePayload {
 
   """Reads a single `Person` that is related to this `Couple`."""
   man: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `Person` that is related to this `Couple`."""
   woman: Person
@@ -2499,11 +2374,6 @@ type DeleteEventExternalRegistrationPayload {
 
   """The `EventExternalRegistration` that was deleted by this mutation."""
   eventExternalRegistration: EventExternalRegistration
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """
   Reads a single `User` that is related to this `EventExternalRegistration`.
@@ -2543,11 +2413,6 @@ type DeleteEventInstancePayload {
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
   location: TenantLocation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `deleteMembershipApplication` mutation."""
@@ -2570,11 +2435,6 @@ type DeleteMembershipApplicationPayload {
 
   """The `MembershipApplication` that was deleted by this mutation."""
   membershipApplication: MembershipApplication
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
   user: User
@@ -2620,11 +2480,6 @@ type DeletePaymentPayload {
 
   """The `Payment` that was deleted by this mutation."""
   payment: Payment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `deletePerson` mutation."""
@@ -2671,11 +2526,6 @@ type DeletePersonInvitationPayload {
 
   """The `PersonInvitation` that was deleted by this mutation."""
   personInvitation: PersonInvitation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """The output of our delete `Person` mutation."""
@@ -2694,11 +2544,6 @@ type DeletePersonPayload {
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PeopleEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `deleteScoreboardManualAdjustment` mutation."""
@@ -2729,11 +2574,6 @@ type DeleteScoreboardManualAdjustmentPayload {
   """
   person: Person
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `ScoreboardManualAdjustment` that was deleted by this mutation."""
   scoreboardManualAdjustment: ScoreboardManualAdjustment
 }
@@ -2758,11 +2598,6 @@ type DeleteTenantAdministratorPayload {
 
   """Reads a single `Person` that is related to this `TenantAdministrator`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """The `TenantAdministrator` that was deleted by this mutation."""
   tenantAdministrator: TenantAdministrator
@@ -2797,11 +2632,6 @@ type DeleteTenantLocationPayload {
   """
   clientMutationId: String
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `TenantLocation` that was deleted by this mutation."""
   tenantLocation: TenantLocation
 }
@@ -2827,11 +2657,6 @@ type DeleteTenantMembershipPayload {
   """Reads a single `Person` that is related to this `TenantMembership`."""
   person: Person
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `TenantMembership` that was deleted by this mutation."""
   tenantMembership: TenantMembership
 }
@@ -2856,11 +2681,6 @@ type DeleteTenantTrainerPayload {
 
   """Reads a single `Person` that is related to this `TenantTrainer`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """The `TenantTrainer` that was deleted by this mutation."""
   tenantTrainer: TenantTrainer
@@ -2898,11 +2718,6 @@ type DeleteTransactionPayload {
   """Reads a single `Payment` that is related to this `Transaction`."""
   payment: Payment
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `Transaction` that was deleted by this mutation."""
   transaction: Transaction
 
@@ -2933,11 +2748,6 @@ type DeleteUserProxyPayload {
 
   """Reads a single `Person` that is related to this `UserProxy`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `User` that is related to this `UserProxy`."""
   user: User
@@ -2975,11 +2785,6 @@ type DetachEventInstancePayload {
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `editRegistration` mutation."""
@@ -3016,11 +2821,6 @@ type EditRegistrationPayload {
 
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """
   Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
@@ -4534,11 +4334,6 @@ type LogInAsPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
   result: Result
 }
 
@@ -4560,11 +4355,6 @@ type LoginPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
   result: Result
 }
 
@@ -4819,11 +4609,6 @@ type MoveEventInstancePayload {
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
   location: TenantLocation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """
@@ -5485,11 +5270,6 @@ type OtpLoginPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
   result: Result
 }
 
@@ -6763,23 +6543,6 @@ type Query {
   """Get a single `CohortMembership`."""
   cohortMembership(id: BigInt!): CohortMembership
 
-  """Reads a set of `CohortMembership`."""
-  cohortMembershipsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CohortMembershipCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `CohortMembership`."""
-    orderBy: [CohortMembershipsOrderBy!]
-  ): [CohortMembership!]
-
   """Reads a set of `Cohort`."""
   cohortsList(
     """
@@ -6821,23 +6584,6 @@ type Query {
 
   """Get a single `Couple`."""
   couple(id: BigInt!): Couple
-
-  """Reads a set of `Couple`."""
-  couplesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CoupleCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Couple`."""
-    orderBy: [CouplesOrderBy!]
-  ): [Couple!]
   cstsAthlete(idt: Int): String
 
   """Get a single `Event`."""
@@ -6864,23 +6610,6 @@ type Query {
     participantIds: [BigInt]
     startRange: Datetime
     trainerIds: [BigInt]
-  ): [EventInstance!]
-
-  """Reads a set of `EventInstance`."""
-  eventInstancesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!]
   ): [EventInstance!]
   eventOverlapsAttendeeReportList(
     """Only read the first `n` values of the set."""
@@ -6929,17 +6658,6 @@ type Query {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventsConnection
-  filteredPeopleList(
-    """Only read the first `n` values of the set."""
-    first: Int
-    inCohorts: [BigInt]
-    isAdmin: Boolean
-    isTrainer: Boolean
-    membershipState: String
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [Person!]
 
   """Get a single `FormResponse`."""
   formResponse(id: BigInt!): FormResponse
@@ -7050,40 +6768,6 @@ type Query {
   """Get a single `PaymentRecipient`."""
   paymentRecipient(id: BigInt!): PaymentRecipient
 
-  """Reads a set of `PaymentRecipient`."""
-  paymentRecipientsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PaymentRecipientCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `PaymentRecipient`."""
-    orderBy: [PaymentRecipientsOrderBy!]
-  ): [PaymentRecipient!]
-
-  """Reads a set of `Payment`."""
-  paymentsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PaymentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!]
-  ): [Payment!]
-
   """Reads and enables pagination through a set of `Person`."""
   people(
     """Read all values in the set after (below) this cursor."""
@@ -7142,29 +6826,6 @@ type Query {
 
   """Get a single `PersonInvitation`."""
   personInvitationByAccessToken(accessToken: UUID!): PersonInvitation
-
-  """Reads a set of `PersonInvitation`."""
-  personInvitationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PersonInvitationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `PersonInvitation`."""
-    orderBy: [PersonInvitationsOrderBy!]
-  ): [PersonInvitation!]
-
-  """
-  Exposes the root query type nested one level down. This is helpful for Relay 1
-  which can only query top level fields if they are in a particular form.
-  """
-  query: Query!
   refreshJwt: JwtToken
   scoreboardEntriesList(
     cohortId: BigInt
@@ -7180,23 +6841,6 @@ type Query {
 
   """Get a single `ScoreboardManualAdjustment`."""
   scoreboardManualAdjustment(id: BigInt!): ScoreboardManualAdjustment
-
-  """Reads a set of `ScoreboardManualAdjustment`."""
-  scoreboardManualAdjustmentsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ScoreboardManualAdjustmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `ScoreboardManualAdjustment`."""
-    orderBy: [ScoreboardManualAdjustmentsOrderBy!]
-  ): [ScoreboardManualAdjustment!]
 
   """
   Lists tenants with aggregate membership, staffing, and recent session statistics for system administrators.
@@ -7227,122 +6871,20 @@ type Query {
   """Get a single `TenantAdministrator`."""
   tenantAdministrator(id: BigInt!): TenantAdministrator
 
-  """Reads a set of `TenantAdministrator`."""
-  tenantAdministratorsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantAdministratorCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `TenantAdministrator`."""
-    orderBy: [TenantAdministratorsOrderBy!]
-  ): [TenantAdministrator!]
-
   """Get a single `TenantLocation`."""
   tenantLocation(id: BigInt!): TenantLocation
 
   """Get a single `TenantLocation`."""
   tenantLocationByTenantIdAndId(id: BigInt!, tenantId: BigInt!): TenantLocation
 
-  """Reads a set of `TenantLocation`."""
-  tenantLocationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantLocationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `TenantLocation`."""
-    orderBy: [TenantLocationsOrderBy!]
-  ): [TenantLocation!]
-
   """Get a single `TenantMembership`."""
   tenantMembership(id: BigInt!): TenantMembership
-
-  """Reads a set of `TenantMembership`."""
-  tenantMembershipsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantMembershipCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `TenantMembership`."""
-    orderBy: [TenantMembershipsOrderBy!]
-  ): [TenantMembership!]
 
   """Get a single `TenantSetting`."""
   tenantSetting(tenantId: BigInt!): TenantSetting
 
-  """Reads a set of `TenantSetting`."""
-  tenantSettingsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantSettingCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `TenantSetting`."""
-    orderBy: [TenantSettingsOrderBy!]
-  ): [TenantSetting!]
-
   """Get a single `TenantTrainer`."""
   tenantTrainer(id: BigInt!): TenantTrainer
-
-  """Reads a set of `TenantTrainer`."""
-  tenantTrainersList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantTrainerCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `TenantTrainer`."""
-    orderBy: [TenantTrainersOrderBy!]
-  ): [TenantTrainer!]
-
-  """Reads a set of `Tenant`."""
-  tenantsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Tenant`."""
-    orderBy: [TenantsOrderBy!]
-  ): [Tenant!]
   trainerGroupAttendanceCompletionList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -7390,23 +6932,6 @@ type Query {
 
   """Get a single `User`."""
   user(id: BigInt!): User
-
-  """Reads a set of `UserProxy`."""
-  userProxiesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserProxyCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `UserProxy`."""
-    orderBy: [UserProxiesOrderBy!]
-  ): [UserProxy!]
 
   """Get a single `UserProxy`."""
   userProxy(id: BigInt!): UserProxy
@@ -7460,11 +6985,6 @@ type RegisterToEventManyPayload {
   """
   clientMutationId: String
   eventRegistrations: [EventRegistration!]
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """An input for mutations affecting `RegisterToEventType`"""
@@ -7496,11 +7016,6 @@ type RegisterUsingInvitationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
   result: Result
 }
 
@@ -7522,11 +7037,6 @@ type RegisterWithoutInvitationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
   result: Result
 }
 
@@ -7556,11 +7066,6 @@ type RejectMembershipApplicationPayload {
     orderBy: [MembershipApplicationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): MembershipApplicationsEdge
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """Reads a single `User` that is related to this `MembershipApplication`."""
   user: User
 }
@@ -7588,11 +7093,6 @@ type ResetPasswordPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 type Result {
@@ -7752,11 +7252,6 @@ type SetLessonDemandPayload {
   ): EventLessonDemandsEdge
 
   """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """
   Reads a single `EventRegistration` that is related to this `EventLessonDemand`.
   """
   registration: EventRegistration
@@ -7786,11 +7281,6 @@ type SubmitFormPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `syncCohortMemberships` mutation."""
@@ -7811,11 +7301,6 @@ type SyncCohortMembershipsPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """A connection to a list of `SystemAdminTenantsRecord` values."""
@@ -7887,11 +7372,6 @@ type SystemAdminUpdateTenantPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
   tenant: Tenant
 
   """An edge for our `Tenant`. May be used by Relay 1."""
@@ -8702,35 +8182,6 @@ enum TenantAdministratorsOrderBy {
   UPDATED_AT_DESC
 }
 
-"""
-A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input TenantCondition {
-  """Checks for equality with the object’s `address` field."""
-  address: AddressDomainInput
-
-  """Checks for equality with the object’s `bankAccount` field."""
-  bankAccount: String
-
-  """Checks for equality with the object’s `czDic` field."""
-  czDic: String
-
-  """Checks for equality with the object’s `czIco` field."""
-  czIco: String
-
-  """Checks for equality with the object’s `description` field."""
-  description: String
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-
-  """Checks for equality with the object’s `origins` field."""
-  origins: [String]
-}
-
 type TenantLocation {
   address: AddressDomain
   createdAt: Datetime!
@@ -9424,11 +8875,6 @@ type UpdateAktualityPayload {
   """
   clientMutationId: String
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """Reads a single `User` that is related to this `Aktuality`."""
   user: User
 }
@@ -9467,11 +8913,6 @@ type UpdateAnnouncementPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `updateCohortByTenantIdAndId` mutation."""
@@ -9536,11 +8977,6 @@ type UpdateCohortMembershipPayload {
 
   """Reads a single `Person` that is related to this `CohortMembership`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """The output of our update `Cohort` mutation."""
@@ -9556,11 +8992,6 @@ type UpdateCohortPayload {
 
   """Reads a single `CohortGroup` that is related to this `Cohort`."""
   cohortGroup: CohortGroup
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `updateCouple` mutation."""
@@ -9591,11 +9022,6 @@ type UpdateCouplePayload {
 
   """Reads a single `Person` that is related to this `Couple`."""
   man: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `Person` that is related to this `Couple`."""
   woman: Person
@@ -9636,11 +9062,6 @@ type UpdateEventAttendancePayload {
 
   """Reads a single `Person` that is related to this `EventAttendance`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """
   Reads a single `EventRegistration` that is related to this `EventAttendance`.
@@ -9731,11 +9152,6 @@ type UpdateEventInstancePayload {
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
   location: TenantLocation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """The output of our update `Event` mutation."""
@@ -9757,11 +9173,6 @@ type UpdateEventPayload {
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `updateMembershipApplication` mutation."""
@@ -9789,11 +9200,6 @@ type UpdateMembershipApplicationPayload {
 
   """The `MembershipApplication` that was updated by this mutation."""
   membershipApplication: MembershipApplication
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
   user: User
@@ -9849,11 +9255,6 @@ type UpdatePaymentPayload {
 
   """The `Payment` that was updated by this mutation."""
   payment: Payment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `updatePerson` mutation."""
@@ -9887,11 +9288,6 @@ type UpdatePersonPayload {
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PeopleEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `updateScoreboardManualAdjustment` mutation."""
@@ -9927,11 +9323,6 @@ type UpdateScoreboardManualAdjustmentPayload {
   """
   person: Person
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `ScoreboardManualAdjustment` that was updated by this mutation."""
   scoreboardManualAdjustment: ScoreboardManualAdjustment
 }
@@ -9961,11 +9352,6 @@ type UpdateTenantAdministratorPayload {
 
   """Reads a single `Person` that is related to this `TenantAdministrator`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """The `TenantAdministrator` that was updated by this mutation."""
   tenantAdministrator: TenantAdministrator
@@ -10025,11 +9411,6 @@ type UpdateTenantLocationPayload {
   """
   clientMutationId: String
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `TenantLocation` that was updated by this mutation."""
   tenantLocation: TenantLocation
 }
@@ -10060,11 +9441,6 @@ type UpdateTenantMembershipPayload {
   """Reads a single `Person` that is related to this `TenantMembership`."""
   person: Person
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `TenantMembership` that was updated by this mutation."""
   tenantMembership: TenantMembership
 }
@@ -10076,11 +9452,6 @@ type UpdateTenantPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """The `Tenant` that was updated by this mutation."""
   tenant: Tenant
@@ -10109,11 +9480,6 @@ type UpdateTenantSettingPayload {
   """
   clientMutationId: String
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `TenantSetting` that was updated by this mutation."""
   tenantSetting: TenantSetting
 }
@@ -10136,11 +9502,6 @@ type UpdateTenantSettingsKeyPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
   tenantSetting: TenantSetting
 
   """An edge for our `TenantSetting`. May be used by Relay 1."""
@@ -10176,11 +9537,6 @@ type UpdateTenantTrainerPayload {
   """Reads a single `Person` that is related to this `TenantTrainer`."""
   person: Person
 
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
   """The `TenantTrainer` that was updated by this mutation."""
   tenantTrainer: TenantTrainer
 }
@@ -10210,11 +9566,6 @@ type UpdateUserProxyPayload {
 
   """Reads a single `Person` that is related to this `UserProxy`."""
   person: Person
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 
   """Reads a single `User` that is related to this `UserProxy`."""
   user: User
@@ -10253,11 +9604,6 @@ type UpsertAnnouncementPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 """All input for the `upsertEvent` mutation."""
@@ -10291,11 +9637,6 @@ type UpsertEventPayload {
 
   """Reads a single `TenantLocation` that is related to this `Event`."""
   location: TenantLocation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
 }
 
 type User {

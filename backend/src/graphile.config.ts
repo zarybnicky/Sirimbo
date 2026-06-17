@@ -24,7 +24,7 @@ const preset: GraphileConfig.Preset = {
     }),
   ],
 
-  disablePlugins: ['NodePlugin'],
+  disablePlugins: ['NodePlugin', 'QueryQueryPlugin', 'MutationPayloadQueryPlugin'],
   plugins: [
     ...filePlugin,
     currentUserPlugin,
