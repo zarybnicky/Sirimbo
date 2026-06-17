@@ -29,38 +29,20 @@ export function InstanceListElement({
   const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
   const isCamp = type === 'CAMP';
 
-  const addInstancePlusWeek = React.useCallback(() => {
+  const addInstance = React.useCallback((weeks: 1 | 2) => {
     const { since, until } = (instances || []).findLast((x) => !!x.since) ?? {};
     if (!since || !until) {
+      const nextSince = new Date();
       append({
-        since: new Date().toISOString(),
-        until: add(new Date(), 45, 'minutes').toISOString(),
+        since: nextSince.toISOString(),
+        until: add(nextSince, 45, 'minutes').toISOString(),
         isCancelled: false,
         trainers: [],
       });
     } else {
       append({
-        since: add(new Date(since), 1, 'week').toISOString(),
-        until: add(new Date(until), 1, 'week').toISOString(),
-        isCancelled: false,
-        trainers: [],
-      });
-    }
-  }, [append, instances]);
-
-  const addInstancePlus2Weeks = React.useCallback(() => {
-    const { since, until } = (instances || []).findLast((x) => !!x.since) ?? {};
-    if (!since || !until) {
-      append({
-        since: new Date().toISOString(),
-        until: add(new Date(), 45, 'minutes').toISOString(),
-        isCancelled: false,
-        trainers: [],
-      });
-    } else {
-      append({
-        since: add(new Date(since), 2, 'week').toISOString(),
-        until: add(new Date(until), 2, 'week').toISOString(),
+        since: add(new Date(since), weeks, 'week').toISOString(),
+        until: add(new Date(until), weeks, 'week').toISOString(),
         isCancelled: false,
         trainers: [],
       });
@@ -78,7 +60,7 @@ export function InstanceListElement({
           <button
             type="button"
             className={buttonCls({ size: 'xs', variant: 'outline' })}
-            onClick={addInstancePlusWeek}
+            onClick={() => addInstance(1)}
           >
             <Plus /> 1&nbsp;týden
           </button>
@@ -86,7 +68,7 @@ export function InstanceListElement({
           <button
             type="button"
             className={buttonCls({ size: 'xs', variant: 'outline' })}
-            onClick={addInstancePlus2Weeks}
+            onClick={() => addInstance(2)}
           >
             <Plus /> 2&nbsp;týdny
           </button>
@@ -179,7 +161,7 @@ function isSameDay(a: Date, b: Date) {
   );
 }
 
-function DateTimeRangeController<T extends FieldValues>({
+export function DateTimeRangeController<T extends FieldValues>({
   control,
   nameSince,
   nameUntil,

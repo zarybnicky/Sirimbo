@@ -4070,6 +4070,7 @@ export type Mutation = {
   login: Maybe<LoginPayload>;
   moveEventInstance: Maybe<MoveEventInstancePayload>;
   otpLogin: Maybe<OtpLoginPayload>;
+  quickCreateEvents: Maybe<QuickCreateEventsPayload>;
   registerToEventMany: Maybe<RegisterToEventManyPayload>;
   registerUsingInvitation: Maybe<RegisterUsingInvitationPayload>;
   registerWithoutInvitation: Maybe<RegisterWithoutInvitationPayload>;
@@ -4101,6 +4102,7 @@ export type Mutation = {
   updateEventInstance: Maybe<UpdateEventInstancePayload>;
   /** Updates a single `EventInstance` using a unique key and a patch. */
   updateEventInstanceByTenantIdAndIdAndEventId: Maybe<UpdateEventInstancePayload>;
+  updateEventInstanceDetails: Maybe<UpdateEventInstanceDetailsPayload>;
   /** Updates a single `MembershipApplication` using a unique key and a patch. */
   updateMembershipApplication: Maybe<UpdateMembershipApplicationPayload>;
   /** Updates a single `Payment` using a unique key and a patch. */
@@ -4428,6 +4430,12 @@ export type MutationOtpLoginArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationQuickCreateEventsArgs = {
+  input: QuickCreateEventsInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationRegisterToEventManyArgs = {
   input: RegisterToEventManyInput;
 };
@@ -4544,6 +4552,12 @@ export type MutationUpdateEventInstanceArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateEventInstanceByTenantIdAndIdAndEventIdArgs = {
   input: UpdateEventInstanceByTenantIdAndIdAndEventIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEventInstanceDetailsArgs = {
+  input: UpdateEventInstanceDetailsInput;
 };
 
 
@@ -6147,6 +6161,44 @@ export type QueryUsersArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryWdsfAthleteArgs = {
   min?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** All input for the `quickCreateEvents` mutation. */
+export type QuickCreateEventsInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  events?: InputMaybe<Array<InputMaybe<QuickEventInputRecordInput>>>;
+};
+
+/** The output of our `quickCreateEvents` mutation. */
+export type QuickCreateEventsPayload = {
+  __typename?: 'QuickCreateEventsPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  events: Maybe<Array<Event>>;
+};
+
+/** An input for mutations affecting `QuickEventInputRecord` */
+export type QuickEventInputRecordInput = {
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  locationText?: InputMaybe<Scalars['String']['input']>;
+  registrations?: InputMaybe<Array<InputMaybe<QuickEventRegistrationInputRecordInput>>>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  trainerPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  type?: InputMaybe<EventType>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `QuickEventRegistrationInputRecord` */
+export type QuickEventRegistrationInputRecordInput = {
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** All input for the `registerToEventMany` mutation. */
@@ -7819,6 +7871,49 @@ export type UpdateEventInstanceByTenantIdAndIdAndEventIdInput = {
   tenantId: Scalars['BigInt']['input'];
 };
 
+/** All input for the `updateEventInstanceDetails` mutation. */
+export type UpdateEventInstanceDetailsInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  pIsCancelled?: InputMaybe<Scalars['Boolean']['input']>;
+  pIsPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  pIsVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  pLocationId?: InputMaybe<Scalars['BigInt']['input']>;
+  pLocationText?: InputMaybe<Scalars['String']['input']>;
+  pName?: InputMaybe<Scalars['String']['input']>;
+  pSince?: InputMaybe<Scalars['Datetime']['input']>;
+  pTrainerPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  pType?: InputMaybe<EventType>;
+  pUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** The output of our `updateEventInstanceDetails` mutation. */
+export type UpdateEventInstanceDetailsPayload = {
+  __typename?: 'UpdateEventInstanceDetailsPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Event` that is related to this `EventInstance`. */
+  event: Maybe<Event>;
+  eventInstance: Maybe<EventInstance>;
+  /** An edge for our `EventInstance`. May be used by Relay 1. */
+  eventInstanceEdge: Maybe<EventInstancesEdge>;
+  /** Reads a single `TenantLocation` that is related to this `EventInstance`. */
+  location: Maybe<TenantLocation>;
+};
+
+
+/** The output of our `updateEventInstanceDetails` mutation. */
+export type UpdateEventInstanceDetailsPayloadEventInstanceEdgeArgs = {
+  orderBy?: Array<EventInstancesOrderBy>;
+};
+
 /** All input for the `updateEventInstance` mutation. */
 export type UpdateEventInstanceInput = {
   /**
@@ -8645,6 +8740,7 @@ export type GraphCacheKeysConfig = {
   PersonWeeklyAttendanceRecord?: (data: WithTypename<PersonWeeklyAttendanceRecord>) => null | string,
   Posting?: (data: WithTypename<Posting>) => null | string,
   Price?: (data: WithTypename<Price>) => null | string,
+  QuickCreateEventsPayload?: (data: WithTypename<QuickCreateEventsPayload>) => null | string,
   RegisterToEventManyPayload?: (data: WithTypename<RegisterToEventManyPayload>) => null | string,
   RegisterUsingInvitationPayload?: (data: WithTypename<RegisterUsingInvitationPayload>) => null | string,
   RegisterWithoutInvitationPayload?: (data: WithTypename<RegisterWithoutInvitationPayload>) => null | string,
@@ -8678,6 +8774,7 @@ export type GraphCacheKeysConfig = {
   UpdateCohortPayload?: (data: WithTypename<UpdateCohortPayload>) => null | string,
   UpdateCouplePayload?: (data: WithTypename<UpdateCouplePayload>) => null | string,
   UpdateEventAttendancePayload?: (data: WithTypename<UpdateEventAttendancePayload>) => null | string,
+  UpdateEventInstanceDetailsPayload?: (data: WithTypename<UpdateEventInstanceDetailsPayload>) => null | string,
   UpdateEventInstancePayload?: (data: WithTypename<UpdateEventInstancePayload>) => null | string,
   UpdateEventPayload?: (data: WithTypename<UpdateEventPayload>) => null | string,
   UpdateMembershipApplicationPayload?: (data: WithTypename<UpdateMembershipApplicationPayload>) => null | string,
@@ -9753,6 +9850,10 @@ export type GraphCacheResolvers = {
     amount?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     currency?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  QuickCreateEventsPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<QuickCreateEventsPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    events?: GraphCacheResolver<WithTypename<QuickCreateEventsPayload>, Record<string, never>, Array<WithTypename<Event> | string>>
+  },
   RegisterToEventManyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RegisterToEventManyPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     eventRegistrations?: GraphCacheResolver<WithTypename<RegisterToEventManyPayload>, Record<string, never>, Array<WithTypename<EventRegistration> | string>>
@@ -10037,6 +10138,13 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<UpdateEventAttendancePayload>, Record<string, never>, WithTypename<Person> | string>,
     registration?: GraphCacheResolver<WithTypename<UpdateEventAttendancePayload>, Record<string, never>, WithTypename<EventRegistration> | string>
   },
+  UpdateEventInstanceDetailsPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateEventInstanceDetailsPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    event?: GraphCacheResolver<WithTypename<UpdateEventInstanceDetailsPayload>, Record<string, never>, WithTypename<Event> | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<UpdateEventInstanceDetailsPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventInstanceEdge?: GraphCacheResolver<WithTypename<UpdateEventInstanceDetailsPayload>, UpdateEventInstanceDetailsPayloadEventInstanceEdgeArgs, WithTypename<EventInstancesEdge> | string>,
+    location?: GraphCacheResolver<WithTypename<UpdateEventInstanceDetailsPayload>, Record<string, never>, WithTypename<TenantLocation> | string>
+  },
   UpdateEventInstancePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateEventInstancePayload>, Record<string, never>, Scalars['String']['output'] | string>,
     event?: GraphCacheResolver<WithTypename<UpdateEventInstancePayload>, Record<string, never>, WithTypename<Event> | string>,
@@ -10215,6 +10323,7 @@ export type GraphCacheOptimisticUpdaters = {
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
   otpLogin?: GraphCacheOptimisticMutationResolver<MutationOtpLoginArgs, Maybe<WithTypename<OtpLoginPayload>>>,
+  quickCreateEvents?: GraphCacheOptimisticMutationResolver<MutationQuickCreateEventsArgs, Maybe<WithTypename<QuickCreateEventsPayload>>>,
   registerToEventMany?: GraphCacheOptimisticMutationResolver<MutationRegisterToEventManyArgs, Maybe<WithTypename<RegisterToEventManyPayload>>>,
   registerUsingInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterUsingInvitationArgs, Maybe<WithTypename<RegisterUsingInvitationPayload>>>,
   registerWithoutInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterWithoutInvitationArgs, Maybe<WithTypename<RegisterWithoutInvitationPayload>>>,
@@ -10235,6 +10344,7 @@ export type GraphCacheOptimisticUpdaters = {
   updateEventByTenantIdAndId?: GraphCacheOptimisticMutationResolver<MutationUpdateEventByTenantIdAndIdArgs, Maybe<WithTypename<UpdateEventPayload>>>,
   updateEventInstance?: GraphCacheOptimisticMutationResolver<MutationUpdateEventInstanceArgs, Maybe<WithTypename<UpdateEventInstancePayload>>>,
   updateEventInstanceByTenantIdAndIdAndEventId?: GraphCacheOptimisticMutationResolver<MutationUpdateEventInstanceByTenantIdAndIdAndEventIdArgs, Maybe<WithTypename<UpdateEventInstancePayload>>>,
+  updateEventInstanceDetails?: GraphCacheOptimisticMutationResolver<MutationUpdateEventInstanceDetailsArgs, Maybe<WithTypename<UpdateEventInstanceDetailsPayload>>>,
   updateMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationUpdateMembershipApplicationArgs, Maybe<WithTypename<UpdateMembershipApplicationPayload>>>,
   updatePayment?: GraphCacheOptimisticMutationResolver<MutationUpdatePaymentArgs, Maybe<WithTypename<UpdatePaymentPayload>>>,
   updatePaymentByTenantIdAndId?: GraphCacheOptimisticMutationResolver<MutationUpdatePaymentByTenantIdAndIdArgs, Maybe<WithTypename<UpdatePaymentPayload>>>,
@@ -10374,6 +10484,7 @@ export type GraphCacheUpdaters = {
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
     otpLogin?: GraphCacheUpdateResolver<{ otpLogin: Maybe<WithTypename<OtpLoginPayload>> }, MutationOtpLoginArgs>,
+    quickCreateEvents?: GraphCacheUpdateResolver<{ quickCreateEvents: Maybe<WithTypename<QuickCreateEventsPayload>> }, MutationQuickCreateEventsArgs>,
     registerToEventMany?: GraphCacheUpdateResolver<{ registerToEventMany: Maybe<WithTypename<RegisterToEventManyPayload>> }, MutationRegisterToEventManyArgs>,
     registerUsingInvitation?: GraphCacheUpdateResolver<{ registerUsingInvitation: Maybe<WithTypename<RegisterUsingInvitationPayload>> }, MutationRegisterUsingInvitationArgs>,
     registerWithoutInvitation?: GraphCacheUpdateResolver<{ registerWithoutInvitation: Maybe<WithTypename<RegisterWithoutInvitationPayload>> }, MutationRegisterWithoutInvitationArgs>,
@@ -10394,6 +10505,7 @@ export type GraphCacheUpdaters = {
     updateEventByTenantIdAndId?: GraphCacheUpdateResolver<{ updateEventByTenantIdAndId: Maybe<WithTypename<UpdateEventPayload>> }, MutationUpdateEventByTenantIdAndIdArgs>,
     updateEventInstance?: GraphCacheUpdateResolver<{ updateEventInstance: Maybe<WithTypename<UpdateEventInstancePayload>> }, MutationUpdateEventInstanceArgs>,
     updateEventInstanceByTenantIdAndIdAndEventId?: GraphCacheUpdateResolver<{ updateEventInstanceByTenantIdAndIdAndEventId: Maybe<WithTypename<UpdateEventInstancePayload>> }, MutationUpdateEventInstanceByTenantIdAndIdAndEventIdArgs>,
+    updateEventInstanceDetails?: GraphCacheUpdateResolver<{ updateEventInstanceDetails: Maybe<WithTypename<UpdateEventInstanceDetailsPayload>> }, MutationUpdateEventInstanceDetailsArgs>,
     updateMembershipApplication?: GraphCacheUpdateResolver<{ updateMembershipApplication: Maybe<WithTypename<UpdateMembershipApplicationPayload>> }, MutationUpdateMembershipApplicationArgs>,
     updatePayment?: GraphCacheUpdateResolver<{ updatePayment: Maybe<WithTypename<UpdatePaymentPayload>> }, MutationUpdatePaymentArgs>,
     updatePaymentByTenantIdAndId?: GraphCacheUpdateResolver<{ updatePaymentByTenantIdAndId: Maybe<WithTypename<UpdatePaymentPayload>> }, MutationUpdatePaymentByTenantIdAndIdArgs>,
@@ -11394,6 +11506,10 @@ export type GraphCacheUpdaters = {
     amount?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>
   },
+  QuickCreateEventsPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<QuickCreateEventsPayload>>, Record<string, never>>,
+    events?: GraphCacheUpdateResolver<Maybe<WithTypename<QuickCreateEventsPayload>>, Record<string, never>>
+  },
   RegisterToEventManyPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventManyPayload>>, Record<string, never>>,
     eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterToEventManyPayload>>, Record<string, never>>
@@ -11677,6 +11793,13 @@ export type GraphCacheUpdaters = {
     instance?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>,
     registration?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventAttendancePayload>>, Record<string, never>>
+  },
+  UpdateEventInstanceDetailsPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstanceDetailsPayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstanceDetailsPayload>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstanceDetailsPayload>>, Record<string, never>>,
+    eventInstanceEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstanceDetailsPayload>>, UpdateEventInstanceDetailsPayloadEventInstanceEdgeArgs>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstanceDetailsPayload>>, Record<string, never>>
   },
   UpdateEventInstancePayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateEventInstancePayload>>, Record<string, never>>,

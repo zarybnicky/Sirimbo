@@ -13,7 +13,7 @@ import {
   UpdateEventInstanceDocument,
 } from '@/graphql/Event';
 import { type ActionContext, defineActions } from '@/lib/actions';
-import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { QuickInstanceEditForm } from '@/ui/event-form/QuickEventForms';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
@@ -37,7 +37,7 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     label: 'Upravit',
     icon: Pencil,
     visible: canManageInstance,
-    render: ({ item }) => <UpsertEventForm eventId={item.eventId} />,
+    render: ({ item }) => <QuickInstanceEditForm instance={item} />,
     dialogProps: {
       className: 'sm:max-w-xl',
       onOpenAutoFocus: preventDefault,

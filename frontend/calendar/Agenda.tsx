@@ -1,7 +1,7 @@
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
 import { formatEventType, formatWeekDay } from '@/ui/format';
-import { add, startOf } from 'date-arithmetic';
+import { startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
 import type {
@@ -11,14 +11,14 @@ import type {
 } from '@/calendar/types';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { QuickEventCreateForm } from '@/ui/event-form/QuickEventForms';
 import { useAuth } from '@/ui/use-auth';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { cardCls } from '@/ui/style';
-import { EventFormType } from '@/ui/event-form/types';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import { localDateKey } from '@/calendar/localizer';
+import { quickDefaultsAfterLessonGroup } from '@/calendar/quickEventDefaults';
 
 type MapItem = {
   competitions: CalendarCompetitionEvent[];
@@ -181,32 +181,10 @@ function LessonGroup({ items }: { items: CalendarInstanceEvent[] }) {
   const locLabel = (it: CalendarInstanceEvent) =>
     it.instance.location?.name || it.instance.locationText || '-';
 
-  const nextEvent: Partial<EventFormType> = React.useMemo(() => {
-    const last = items.at(-1);
-    const lastEnd = last?.end ?? new Date();
-    return {
-      instances: [
-        {
-          itemId: null,
-          since: lastEnd.toISOString(),
-          until: add(lastEnd, 45, 'minutes').toISOString(),
-          isCancelled: false,
-          trainers: [],
-        },
-      ],
-      isVisible: true,
-      type: 'LESSON',
-      capacity: 2,
-      locationId: last?.instance?.location?.id,
-      locationText: last?.instance?.locationText,
-      trainers:
-        last?.instance.trainersList?.map(({ personId }) => ({
-          itemId: null,
-          personId,
-          lessonsOffered: 0,
-        })) || [],
-    };
-  }, [items]);
+  const nextEventDefaults = React.useMemo(
+    () => quickDefaultsAfterLessonGroup(items),
+    [items],
+  );
 
   return (
     <div
@@ -224,7 +202,7 @@ function LessonGroup({ items }: { items: CalendarInstanceEvent[] }) {
             className="absolute top-1 right-0"
           />
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            <UpsertEventForm initialValue={nextEvent} />
+            <QuickEventCreateForm defaults={nextEventDefaults} />
           </DialogContent>
         </Dialog>
       )}

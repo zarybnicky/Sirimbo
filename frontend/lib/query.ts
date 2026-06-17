@@ -10,7 +10,7 @@ import type {
 } from '@/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
-import { cacheExchange } from '@urql/exchange-graphcache';
+import { type Cache, cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { TypedEventTarget } from 'typescript-event-target';
 import type {
@@ -43,6 +43,14 @@ const errorEmitter = (errorTarget: ErrorEventTarget) =>
   });
 
 const noopExchange: Exchange = ({ forward }) => forward;
+
+function invalidateQueryFields(cache: Cache, fieldNameParts: string[]) {
+  for (const field of cache.inspectFields('Query')) {
+    if (fieldNameParts.some((part) => field.fieldName.includes(part))) {
+      cache.invalidate('Query', field.fieldName, field.arguments);
+    }
+  }
+}
 
 const refocusReloadExchange: Exchange =
   ({ client, forward }) =>
@@ -341,11 +349,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       detachEventInstance(_result, args, cache, _info) {
         if (args.input.pInstanceId)
           cache.invalidate({ __typename: 'EventInstance', id: args.input.pInstanceId });
-        for (const field of cache
-          .inspectFields('Query')
-          .filter((field) => field.fieldName.includes('eventInstances'))) {
-          cache.invalidate('Query', field.fieldName, field.arguments);
-        }
+        invalidateQueryFields(cache, ['eventInstances']);
       },
       deleteEventInstance(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
@@ -355,34 +359,17 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         if (instanceId) {
           cache.invalidate({ __typename: 'EventInstance', id: instanceId });
         }
-        for (const field of cache
-          .inspectFields('Query')
-          .filter((field) => field.fieldName.includes('eventInstances'))) {
-          cache.invalidate('Query', field.fieldName, field.arguments);
-        }
-        for (const field of cache
-          .inspectFields('Query')
-          .filter((field) => field.fieldName.includes('eventOverlaps'))) {
-          cache.invalidate('Query', field.fieldName, field.arguments);
-        }
+        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
       },
       moveEventInstance(_result, _args, cache, _info) {
-        for (const field of cache
-          .inspectFields('Query')
-          .filter((field) => field.fieldName.includes('eventOverlaps'))) {
-          cache.invalidate('Query', field.fieldName, field.arguments);
-        }
+        invalidateQueryFields(cache, ['eventOverlaps']);
       },
       deleteEventExternalRegistration(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventExternalRegistration', id: args.input.id });
       },
 
       createAttachment(_result, _args, cache, _info) {
-        for (const field of cache
-          .inspectFields('Query')
-          .filter((field) => field.fieldName.includes('attachments'))) {
-          cache.invalidate('Query', field.fieldName, field.arguments);
-        }
+        invalidateQueryFields(cache, ['attachments']);
       },
 
       createPerson(_result, _args, cache, _info) {
@@ -402,15 +389,21 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       upsertEvent(_result, args, cache, _info) {
         if (!args.input.info?.id) {
-          for (const field of cache
-            .inspectFields('Query')
-            .filter((field) => field.fieldName.includes('eventInstances')))
-            cache.invalidate('Query', field.fieldName, field.arguments);
+          invalidateQueryFields(cache, ['eventInstances']);
         }
-        for (const field of cache
-          .inspectFields('Query')
-          .filter((field) => field.fieldName.includes('eventOverlaps')))
-          cache.invalidate('Query', field.fieldName, field.arguments);
+        invalidateQueryFields(cache, ['eventOverlaps']);
+      },
+
+      quickCreateEvents(_result, _args, cache, _info) {
+        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
+      },
+
+      updateEventInstanceDetails(result, _args, cache, _info) {
+        const instanceId = result.updateEventInstanceDetails?.eventInstance?.id;
+        if (instanceId) {
+          cache.invalidate({ __typename: 'EventInstance', id: instanceId });
+        }
+        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
       },
 
       createPersonInvitation(_result, args, cache, _info) {
@@ -439,10 +432,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           cache.invalidate('Query', field.fieldName, field.arguments);
       },
       updatePayment(_result, _args, cache) {
-        for (const field of cache
-          .inspectFields('Query')
-          .filter((field) => field.fieldName.includes('paymentDebtorsList')))
-          cache.invalidate('Query', field.fieldName, field.arguments);
+        invalidateQueryFields(cache, ['paymentDebtorsList']);
       },
 
       login(result, _args, cache, _info) {

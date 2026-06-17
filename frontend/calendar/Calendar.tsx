@@ -1,10 +1,9 @@
 import { MoveEventInstanceDocument } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent } from '@/ui/dialog';
-import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
+import { QuickEventCreateForm } from '@/ui/event-form/QuickEventForms';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { add } from 'date-arithmetic';
 import { useAtomValue, useSetAtom } from 'jotai';
 import React from 'react';
 import { useMutation } from 'urql';
@@ -17,13 +16,11 @@ import {
   trainerIdsFilterAtom,
 } from './state';
 import type {
-  CalendarEvent,
   CalendarInstanceEvent,
   InteractionInfo,
   SlotInfo,
 } from './types';
 import { Spinner } from '@/ui/Spinner';
-import { EventFormType } from '@/ui/event-form/types';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
 import { CalendarViewKey, CalendarViews } from '@/calendar/CalendarViews';
 import { useCalendarData } from '@/calendar/useCalendarData';
@@ -32,84 +29,14 @@ import { GroupByPicker } from '@/calendar/GroupByPicker';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import { CalendarDatePicker } from '@/calendar/CalendarDatePicker';
 import { ParticipantFilter } from '@/calendar/ParticipantFilter';
+import {
+  parseResourceKey,
+  quickDefaultsFromSlot,
+  type QuickEventCreateDefaults,
+} from '@/calendar/quickEventDefaults';
 
 const emptyArray: readonly [] = [];
 const preventDefault = (e: Event) => e.preventDefault();
-
-function parseResourceKey(key: string | undefined) {
-  const pos = key?.indexOf(':') ?? -1;
-  if (!key || pos === -1) return ['', ''] as const;
-  return [key.slice(0, pos), key.slice(pos + 1)] as const;
-}
-
-function slotToEventForm(
-  slot: SlotInfo,
-  events: CalendarEvent[],
-  persons: { id: string; isTrainer: boolean | null }[],
-  onlyMine: null | boolean,
-) {
-  const end = slot.action === 'click' ? add(slot.start, 45, 'minutes') : slot.end;
-
-  const def: Partial<EventFormType> = {
-    instances: [
-      {
-        itemId: null,
-        since: slot.start.toISOString(),
-        until: end.toISOString(),
-        isCancelled: false,
-        trainers: [],
-      },
-    ],
-    isVisible: true,
-    type: 'LESSON',
-    capacity: 2,
-    locationId: 'none',
-  };
-
-  const [type, resourceId] = parseResourceKey(slot.resource?.resourceId);
-  if (type === 'person' && resourceId) {
-    def.trainers = [{ itemId: null, personId: resourceId, lessonsOffered: 0 }];
-  } else if (onlyMine && !slot.resource) {
-    const trainer = persons.find((x) => x.isTrainer);
-    if (trainer) {
-      def.trainers = [{ itemId: null, personId: trainer.id, lessonsOffered: 0 }];
-    }
-  }
-
-  if (type === 'location' && resourceId) {
-    def.locationId = resourceId;
-  }
-  if (type === 'locationText' && resourceId) {
-    def.locationId = 'other';
-    def.locationText = resourceId;
-  }
-  if (def.trainers?.[0] && def.locationId === 'none') {
-    const thisTrainer = def.trainers[0].personId!;
-    let closestPrev: CalendarInstanceEvent | undefined;
-    const thisInstance = def.instances?.[0];
-    if (thisInstance?.since && thisInstance.until) {
-      for (const event of events) {
-        if (event.kind !== 'event') continue;
-        if (!event.instance.since.startsWith(thisInstance.since.slice(0, 10))) continue;
-        if (!event.instance.trainersList?.some((x) => x.personId === thisTrainer))
-          continue;
-        if (event.instance.until.slice(11, 19) > thisInstance.since.slice(11, 19))
-          continue;
-        if (!closestPrev || closestPrev.start < event.start) {
-          closestPrev = event;
-        }
-      }
-    }
-    if (closestPrev?.instance?.locationText) {
-      def.locationId = 'other';
-      def.locationText = closestPrev.instance.locationText;
-    }
-    if (closestPrev?.instance?.location?.id) {
-      def.locationId = closestPrev.instance.location.id;
-    }
-  }
-  return def;
-}
 
 export function Calendar() {
   const auth = useAuth();
@@ -172,12 +99,12 @@ export function Calendar() {
     [moveEvent],
   );
 
-  const [creating, setCreating] = React.useState<undefined | Partial<EventFormType>>();
+  const [creating, setCreating] = React.useState<QuickEventCreateDefaults>();
 
   const onSelectSlot = React.useCallback(
     (slot: SlotInfo) => {
-      const def = slotToEventForm(slot, events, auth.persons, onlyMine);
-      setTimeout(() => setCreating((prev) => prev || def));
+      const defaults = quickDefaultsFromSlot(slot, events, auth.persons, onlyMine);
+      setTimeout(() => setCreating((prev) => prev || defaults));
     },
     [onlyMine, auth.persons, events],
   );
@@ -232,7 +159,7 @@ export function Calendar() {
           modal={false}
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            <UpsertEventForm initialValue={creating} />
+            {creating && <QuickEventCreateForm defaults={creating} />}
           </DialogContent>
         </Dialog>
       )}

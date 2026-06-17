@@ -1,10 +1,8 @@
 import { EventDocument, UpsertEventDocument } from '@/graphql/Event';
-import {
-  RadioButtonGroupElement,
-  type RadioButtonGroupItem,
-} from '@/ui/fields/RadioButtonGroupElement';
+import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { CohortListElement } from '@/ui/event-form/CohortListElement';
 import { InstanceListElement } from '@/ui/event-form/InstanceListElement';
+import { eventLocationInput, LocationField } from '@/ui/event-form/LocationField';
 import { ParticipantListElement } from '@/ui/event-form/ParticipantListElement';
 import { TrainerListElement } from '@/ui/event-form/TrainerListField';
 import { EventForm } from '@/ui/event-form/types';
@@ -47,7 +45,7 @@ export function UpsertEventForm({
   });
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
 
-  const { reset, control, handleSubmit, setValue, getValues } = useForm<
+  const { reset, control, handleSubmit, setValue } = useForm<
     z.input<typeof EventForm>,
     unknown,
     z.infer<typeof EventForm>
@@ -58,17 +56,6 @@ export function UpsertEventForm({
       isLocked: initialValue.isLocked ?? lockEventsByDefault,
     },
   });
-
-  const locationOptions = React.useMemo(() => {
-    return [
-      { id: 'none', label: 'Žádné' } as RadioButtonGroupItem,
-      ...(tenant?.tenant?.tenantLocationsList || []).map((x) => ({
-        id: x.id,
-        label: x.name,
-      })),
-      { id: 'other', label: 'Jiné...' },
-    ];
-  }, [tenant]);
 
   React.useEffect(() => {
     if (eventId && !initializedRef.current) {
@@ -122,7 +109,6 @@ export function UpsertEventForm({
   const trainers = useWatch({ control, name: 'trainers' });
   const instances = useWatch({ control, name: 'instances' });
   const registrations = useWatch({ control, name: 'registrations' });
-  const locationId = useWatch({ control, name: 'locationId' });
   const registrantCount = (registrations || []).reduce(
     (n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0),
     0,
@@ -151,12 +137,6 @@ export function UpsertEventForm({
   }, [instances, trainers, tenant?.tenant?.tenantTrainersList]);
 
   React.useEffect(() => {
-    if (locationId !== 'other' && getValues('locationText')) {
-      setValue('locationText', '');
-    }
-  }, [getValues, setValue, locationId]);
-
-  React.useEffect(() => {
     setValue('capacity', type === 'LESSON' ? 2 : 0);
   }, [setValue, type]);
 
@@ -169,11 +149,7 @@ export function UpsertEventForm({
           summary: values.summary,
           description: values.description,
           type: values.type,
-          locationId:
-            !values.locationId || ['none', 'other'].includes(values.locationId)
-              ? null
-              : values.locationId,
-          locationText: values.locationId === 'none' ? '' : values.locationText,
+          ...eventLocationInput(values),
           capacity: values.capacity,
           isVisible: values.isVisible,
           isPublic: values.isPublic,
@@ -228,19 +204,7 @@ export function UpsertEventForm({
       />
 
       <TextFieldElement control={control} name="name" label="Název (nepovinný)" />
-      <RadioButtonGroupElement
-        control={control}
-        name="locationId"
-        options={locationOptions}
-        label="Místo konání"
-      />
-      {locationId === 'other' && (
-        <TextFieldElement
-          control={control}
-          name="locationText"
-          placeholder="Místo konání"
-        />
-      )}
+      <LocationField control={control} />
       {type !== 'LESSON' && (
         <TextFieldElement
           control={control}

@@ -4981,6 +4981,12 @@ type Mutation {
     """
     input: OtpLoginInput!
   ): OtpLoginPayload
+  quickCreateEvents(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: QuickCreateEventsInput!
+  ): QuickCreateEventsPayload
   registerToEventMany(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5125,6 +5131,12 @@ type Mutation {
     """
     input: UpdateEventInstanceByTenantIdAndIdAndEventIdInput!
   ): UpdateEventInstancePayload
+  updateEventInstanceDetails(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEventInstanceDetailsInput!
+  ): UpdateEventInstanceDetailsPayload
 
   """
   Updates a single `MembershipApplication` using a unique key and a patch.
@@ -6965,6 +6977,43 @@ type Query {
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersConnection
   wdsfAthlete(min: Int): String
+}
+
+"""All input for the `quickCreateEvents` mutation."""
+input QuickCreateEventsInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  events: [QuickEventInputRecordInput]
+}
+
+"""The output of our `quickCreateEvents` mutation."""
+type QuickCreateEventsPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  events: [Event!]
+}
+
+"""An input for mutations affecting `QuickEventInputRecord`"""
+input QuickEventInputRecordInput {
+  locationId: BigInt
+  locationText: String
+  registrations: [QuickEventRegistrationInputRecordInput]
+  since: Datetime
+  trainerPersonIds: [BigInt]
+  type: EventType
+  until: Datetime
+}
+
+"""An input for mutations affecting `QuickEventRegistrationInputRecord`"""
+input QuickEventRegistrationInputRecordInput {
+  coupleId: BigInt
+  personId: BigInt
 }
 
 """All input for the `registerToEventMany` mutation."""
@@ -9117,6 +9166,50 @@ input UpdateEventInstanceByTenantIdAndIdAndEventIdInput {
   """
   patch: EventInstancePatch!
   tenantId: BigInt!
+}
+
+"""All input for the `updateEventInstanceDetails` mutation."""
+input UpdateEventInstanceDetailsInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  pInstanceId: BigInt
+  pIsCancelled: Boolean
+  pIsPublic: Boolean
+  pIsVisible: Boolean
+  pLocationId: BigInt
+  pLocationText: String
+  pName: String
+  pSince: Datetime
+  pTrainerPersonIds: [BigInt]
+  pType: EventType
+  pUntil: Datetime
+}
+
+"""The output of our `updateEventInstanceDetails` mutation."""
+type UpdateEventInstanceDetailsPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Event` that is related to this `EventInstance`."""
+  event: Event
+  eventInstance: EventInstance
+
+  """An edge for our `EventInstance`. May be used by Relay 1."""
+  eventInstanceEdge(
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EventInstancesEdge
+
+  """
+  Reads a single `TenantLocation` that is related to this `EventInstance`.
+  """
+  location: TenantLocation
 }
 
 """All input for the `updateEventInstance` mutation."""

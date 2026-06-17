@@ -67,10 +67,16 @@ fragment EventInstanceWithTrainer on EventInstance {
   eventId
   name
   type
+  isVisible
+  isPublic
   locationText
   location {
     id
     name
+  }
+  eventInstanceTrainersByInstanceIdList {
+    id
+    personId
   }
   trainersList {
     id
@@ -140,10 +146,6 @@ fragment EventFull on Event {
   ...EventAttendanceSummary
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstanceWithTrainer
-    eventInstanceTrainersByInstanceIdList {
-      id
-      personId
-    }
   }
 }
 
@@ -270,6 +272,28 @@ mutation UpsertEvent($input: UpsertEventInput!) {
       ...Event
       eventInstancesList(orderBy: SINCE_ASC) {
         ...EventInstanceWithTrainer
+      }
+    }
+  }
+}
+
+mutation QuickCreateEvents($input: QuickCreateEventsInput!) {
+  quickCreateEvents(input: $input) {
+    events {
+      ...Event
+      eventInstancesList(orderBy: SINCE_ASC) {
+        ...EventInstanceWithTrainer
+      }
+    }
+  }
+}
+
+mutation UpdateEventInstanceDetails($input: UpdateEventInstanceDetailsInput!) {
+  updateEventInstanceDetails(input: $input) {
+    eventInstance {
+      ...EventInstanceWithTrainer
+      event {
+        ...Event
       }
     }
   }

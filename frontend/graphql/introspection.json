@@ -9547,6 +9547,26 @@
             ]
           },
           {
+            "name": "quickCreateEvents",
+            "type": {
+              "kind": "OBJECT",
+              "name": "QuickCreateEventsPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "registerToEventMany",
             "type": {
               "kind": "OBJECT",
@@ -9931,6 +9951,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "UpdateEventInstancePayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateEventInstanceDetails",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateEventInstanceDetailsPayload",
               "ofType": null
             },
             "args": [
@@ -14980,6 +15020,36 @@
       },
       {
         "kind": "OBJECT",
+        "name": "QuickCreateEventsPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "events",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "Event",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "RegisterToEventManyPayload",
         "fields": [
           {
@@ -19142,6 +19212,74 @@
             "type": {
               "kind": "OBJECT",
               "name": "EventRegistration",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateEventInstanceDetailsPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventInstance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventInstanceEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstancesEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "location",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocation",
               "ofType": null
             },
             "args": []

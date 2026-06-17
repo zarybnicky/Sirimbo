@@ -16,17 +16,17 @@ import { rankItem } from '@tanstack/match-sorter-utils';
 type Item = { id: string | null; label: string };
 type ComboboxProps = {
   value: string | null | undefined;
-  onChange: React.Dispatch<React.SetStateAction<string | null | undefined>>;
+  onChange: (value: string | null | undefined) => void;
   options?: Item[];
   placeholder: string;
   className?: string;
   label?: React.ReactNode;
-  helperText?: React.ReactNode;
 } & Omit<Popover.PopoverContentProps, 'onChange'>;
 
 type ComboboxElementProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
+  helperText?: React.ReactNode;
 } & Omit<ComboboxProps, 'value' | 'onChange'>;
 
 export function ComboboxElement<T extends FieldValues>({
@@ -35,6 +35,7 @@ export function ComboboxElement<T extends FieldValues>({
   options = [],
   label,
   placeholder,
+  helperText,
   ...props
 }: ComboboxElementProps<T>) {
   const { field, fieldState } = useController<T>({ name, control });
@@ -48,7 +49,7 @@ export function ComboboxElement<T extends FieldValues>({
         placeholder={placeholder}
         {...props}
       />
-      <FieldHelper error={fieldState.error} />
+      <FieldHelper error={fieldState.error} helperText={helperText} />
     </>
   );
 }
@@ -109,8 +110,9 @@ export function ComboboxButton({
   options = [],
   placeholder,
   className,
+  buttonClassName,
   ...props
-}: Omit<ComboboxProps, 'label'>) {
+}: Omit<ComboboxProps, 'label'> & { buttonClassName?: string }) {
   const [open, setOpen] = React.useState(false);
   const realOnChange = React.useCallback(
     (x: string | null | undefined) => {
@@ -125,7 +127,10 @@ export function ComboboxButton({
       <Popover.Trigger asChild>
         <button
           type="button"
-          className={buttonCls({ variant: open ? 'primary' : 'outline', size: 'sm' })}
+          className={cn(
+            buttonCls({ variant: open ? 'primary' : 'outline', size: 'sm' }),
+            buttonClassName,
+          )}
         >
           {value ? options.find((item) => item.id === value)?.label : placeholder}
           <ChevronDown />
