@@ -3,6 +3,7 @@ import {
   UpdatePersonCstsIdDocument,
   type MissingCstsIdCandidatesQuery,
 } from '@/graphql/Person';
+import { CstsPersonSourceLink } from '@/ui/CstsPersonSourceLink';
 import { formatAgeGroup } from '@/ui/format';
 import { buttonCls, typographyCls } from '@/ui/style';
 import { Check, Undo2 } from 'lucide-react';
@@ -125,8 +126,14 @@ export function CstsIdBackfillWidget() {
                 {selectedCandidate ? (
                   <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-accent-2 px-2 py-1.5 text-accent-12">
                     <div className="min-w-0">
-                      <div className="truncate font-medium">
-                        Vyplněno: IDT {selectedCandidate.id}
+                      <div className="flex min-w-0 items-center gap-1 font-medium">
+                        <span className="truncate">
+                          Vyplněno: IDT {selectedCandidate.id}
+                        </span>
+                        <CstsPersonSourceLink
+                          idt={selectedCandidate.id}
+                          className="text-accent-11 hover:text-accent-12"
+                        />
                       </div>
                       <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-accent-11">
                         <span>{selectedCandidate.name ?? 'bez jména'}</span>
@@ -161,8 +168,11 @@ export function CstsIdBackfillWidget() {
                             className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-neutral-2 px-2 py-1.5"
                           >
                             <div className="min-w-0">
-                              <div className="truncate font-medium">
-                                {candidate.name ?? 'bez jména'}
+                              <div className="flex min-w-0 items-center gap-1 font-medium">
+                                <span className="truncate">
+                                  {candidate.name ?? 'bez jména'}
+                                </span>
+                                <CstsPersonSourceLink idt={candidate.id} />
                               </div>
                               <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-11">
                                 <span>IDT {candidate.id}</span>

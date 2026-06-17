@@ -134,9 +134,11 @@ type ActivityCompetitionBrief implements ActivityTimelineItem {
   category: Category
   checkInEnd: Time
   competitionDate: Date
+  competitionEventExternalId: String
   competitionEventId: BigInt
   competitionEventLocation: String
   competitionEventName: String
+  competitionExternalId: String
   competitionId: BigInt
   competitionType: CompetitionType
   competitorId: String
@@ -162,9 +164,11 @@ type ActivityCompetitionResult implements ActivityTimelineItem {
   activityDate: Date
   category: Category
   competitionDate: Date
+  competitionEventExternalId: String
   competitionEventId: BigInt
   competitionEventLocation: String
   competitionEventName: String
+  competitionExternalId: String
   competitionId: BigInt
   competitionType: CompetitionType
   competitorId: String
@@ -1442,12 +1446,14 @@ type CompetitionParticipationRecord {
   category: Category
   checkInEnd: Time
   competitionDate: Date
+  competitionExternalId: String
   competitionId: BigInt
   competitionType: CompetitionType
   competitorId: String
   competitorName: String
   competitorType: CompetitorType
   dances: [String]
+  eventExternalId: String
   eventId: BigInt
   eventLocation: String
   eventName: String

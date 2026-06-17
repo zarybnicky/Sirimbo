@@ -4,13 +4,19 @@ import {
   CompetitionReportDocument,
   type CompetitionReportQuery,
 } from '@/graphql/Federation';
-import { formatCstsCategoryName } from '@/ui/csts';
+import {
+  CSTS_COMPETITION_CALENDAR_URL,
+  cstsCompetitionResultUrl,
+  formatCstsCategoryName,
+} from '@/ui/csts';
+import { cn } from '@/lib/cn';
 import { numericDateFormatter } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { cardCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { add, startOf } from 'date-arithmetic';
+import { ExternalLink } from 'lucide-react';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
@@ -44,6 +50,17 @@ function formatRank(row: Pick<CompetitionReportEntry, 'ranking' | 'rankingTo'>) 
   return row.rankingTo && row.rankingTo !== row.ranking
     ? `${row.ranking}-${row.rankingTo}.`
     : `${row.ranking}.`;
+}
+
+function cstsResultSourceUrl(entry: CompetitionReportEntry) {
+  if (entry.federation !== 'csts') return null;
+  return cstsCompetitionResultUrl(entry.eventExternalId, entry.competitionExternalId);
+}
+
+function cstsUpcomingCalendarUrl(entries: readonly CompetitionEntry[]) {
+  return entries.some((entry) => entry.federation === 'csts' && entry.kind === 'brief')
+    ? CSTS_COMPETITION_CALENDAR_URL
+    : null;
 }
 
 export function competitionEntryKey(entry: CompetitionEntry) {
@@ -105,6 +122,7 @@ function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
           key: eventKey,
           eventName: entries[0]?.eventName ?? '',
           eventLocation: entries[0]?.eventLocation ?? '',
+          sourceUrl: cstsUpcomingCalendarUrl(entries),
           competitorGroups: groupByCompetitor(entries),
         }))
         .toSorted((a, b) => {
@@ -130,7 +148,9 @@ function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry
                   )}
                 </h6>
                 <div className="text-sm font-semibold leading-tight text-neutral-12">
-                  {event.eventName ?? ''}
+                  <CompetitionSourceName href={event.sourceUrl}>
+                    {event.eventName ?? ''}
+                  </CompetitionSourceName>
                 </div>
               </div>
               {event.competitorGroups.map((group) => (
@@ -192,7 +212,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
       {reportEntries.map((entry) => (
         <div
           key={competitionEntryKey(entry)}
-          className="grid grid-cols-[4rem_minmax(0,1fr)_auto] items-center gap-2 py-1.5 text-xs"
+          className="grid grid-cols-[4rem_minmax(0,1fr)_min-content] items-center gap-2 py-1.5 text-xs"
         >
           <div className="font-semibold tabular-nums leading-none text-neutral-11">
             <span className={entry.ranking && entry.ranking <= 3 ? 'text-accent-11' : ''}>
@@ -201,7 +221,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
             {` z ${entry.participants ?? ''}`}
           </div>
           <CompetitionCategoryLine entry={entry} />
-          <div className="flex min-w-20 items-baseline justify-end gap-1 font-semibold tabular-nums text-green-11">
+          <div className="justify-self-end whitespace-nowrap font-semibold tabular-nums text-green-11">
             {Number(entry.pointGain ?? 0) > 0 || entry.isFinal
               ? `+${Number(entry.pointGain ?? 0).toString()}b ${entry.isFinal ? 'F' : ''}`
               : ''}
@@ -213,9 +233,21 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
 }
 
 function CompetitionCategoryLine({ entry }: { entry: CompetitionEntry }) {
+  const sourceUrl = entry.kind === 'report' ? cstsResultSourceUrl(entry) : null;
+  const name = formatCstsCategoryName(entry.category, entry.competitionType);
+
   return (
     <div className="flex min-w-0 items-center gap-1.5 font-semibold text-neutral-12">
-      {formatCstsCategoryName(entry.category, entry.competitionType)}
+      {sourceUrl ? (
+        <CompetitionSourceName
+          href={sourceUrl}
+          className="text-accent-12 hover:text-accent-11"
+        >
+          {name}
+        </CompetitionSourceName>
+      ) : (
+        <span className="min-w-0">{name}</span>
+      )}
     </div>
   );
 }
@@ -229,10 +261,17 @@ export function CompetitionEventContent({
   location?: string | null;
   entries: readonly CompetitionEntry[];
 }) {
+  const sourceUrl = cstsUpcomingCalendarUrl(entries);
+
   return (
     <>
       <div className="mb-1 text-sm font-semibold leading-tight text-green-11">
-        {title}
+        <CompetitionSourceName
+          href={sourceUrl}
+          className="text-green-11 hover:text-green-12"
+        >
+          {title}
+        </CompetitionSourceName>
       </div>
       {location ? (
         <div className="truncate text-xs leading-tight text-green-11">{location}</div>
@@ -245,6 +284,33 @@ export function CompetitionEventContent({
         ))}
       </div>
     </>
+  );
+}
+
+function CompetitionSourceName({
+  href,
+  children,
+  className,
+}: {
+  href?: string | null;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  if (!href) return <span className="min-w-0">{children}</span>;
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className={cn(
+        'inline-flex min-w-0 items-center gap-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        className,
+      )}
+    >
+      <span className="min-w-0">{children}</span>
+      <ExternalLink className="size-3 shrink-0" aria-hidden="true" />
+    </a>
   );
 }
 

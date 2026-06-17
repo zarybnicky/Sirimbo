@@ -1,4 +1,5 @@
 import { CstsPersonDocument } from '@/graphql/Person';
+import { CstsPersonSourceLink } from '@/ui/CstsPersonSourceLink';
 import { TextFieldElement, type TextFieldElementProps } from '@/ui/fields/text';
 import React from 'react';
 import { type FieldValues, useWatch } from 'react-hook-form';
@@ -46,7 +47,13 @@ export function CstsIdFieldElement<T extends FieldValues>({
       />
       {query.data ? (
         query.data.cstsAthlete ? (
-          <span className="text-green-9">{query.data.cstsAthlete}</span>
+          <span className="inline-flex items-center gap-1 text-green-9">
+            <span>{query.data.cstsAthlete}</span>
+            <CstsPersonSourceLink
+              idt={idt}
+              className="text-green-9 hover:text-green-11"
+            />
+          </span>
         ) : (
           <span className="text-accent-9">Nenalezeno</span>
         )

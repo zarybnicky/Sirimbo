@@ -404,6 +404,14 @@
             "args": []
           },
           {
+            "name": "competitionEventExternalId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "competitionEventId",
             "type": {
               "kind": "SCALAR",
@@ -421,6 +429,14 @@
           },
           {
             "name": "competitionEventName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionExternalId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -592,6 +608,14 @@
             "args": []
           },
           {
+            "name": "competitionEventExternalId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "competitionEventId",
             "type": {
               "kind": "SCALAR",
@@ -609,6 +633,14 @@
           },
           {
             "name": "competitionEventName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionExternalId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -3211,6 +3243,14 @@
             "args": []
           },
           {
+            "name": "competitionExternalId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "competitionId",
             "type": {
               "kind": "SCALAR",
@@ -3258,6 +3298,14 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "eventExternalId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },

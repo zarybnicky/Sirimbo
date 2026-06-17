@@ -4,6 +4,33 @@ import type { CompetitionCategoryFragment } from '@/graphql/Federation';
 
 const hiddenCategoryClasses = new Set(['Novice', 'Bronze', 'Silver', 'Gold', 'Entry']);
 const classOrder = ['E', 'D', 'C', 'B', 'A', 'M'];
+const CSTS_BASE_URL = 'https://www.csts.cz/dancesport';
+const numericIdPattern = /^\d+$/;
+
+export const CSTS_COMPETITION_CALENDAR_URL = `${CSTS_BASE_URL}/kalendar_akci`;
+
+function cstsPathPart(value: number | string | null | undefined, pattern?: RegExp) {
+  if (value === null || value === undefined || value === '') return null;
+  if (typeof value === 'number' && !Number.isFinite(value)) return null;
+  const text = String(value).trim();
+  return text && (!pattern || pattern.test(text)) ? encodeURIComponent(text) : null;
+}
+
+export function cstsPersonUrl(idt: number | string | null | undefined) {
+  const id = cstsPathPart(idt, numericIdPattern);
+  return id ? `${CSTS_BASE_URL}/evidence/lide/${id}/osobni_udaje` : null;
+}
+
+export function cstsCompetitionResultUrl(
+  eventId: number | string | null | undefined,
+  competitionId: number | string | null | undefined,
+) {
+  const event = cstsPathPart(eventId);
+  const competition = cstsPathPart(competitionId);
+  return event && competition
+    ? `${CSTS_BASE_URL}/vysledky_soutezi/event/${event}/competition/${competition}`
+    : null;
+}
 
 export function formatCstsClass(value: string | null | undefined) {
   return !value || value === 'Open' ? null : value === 'S' ? 'M' : value;

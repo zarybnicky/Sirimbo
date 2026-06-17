@@ -54,11 +54,14 @@ function competitionEventKey(item: CompetitionItem) {
 function toCompetitionEntry(item: CompetitionItem): CompetitionEntry {
   const base = {
     eventId: item.competitionEventId,
+    eventExternalId: item.competitionEventExternalId,
     eventName: item.competitionEventName,
     eventLocation: item.competitionEventLocation,
     competitionId: item.competitionId,
+    competitionExternalId: item.competitionExternalId,
     competitionDate: item.competitionDate,
     competitionType: item.competitionType,
+    federation: item.federation,
     competitorId: item.competitorName ?? item.personId,
     competitorName: item.competitorName,
     personId: item.personId,

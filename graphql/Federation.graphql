@@ -11,10 +11,13 @@ fragment CompetitionCategory on Category {
 
 query CompetitionBrief($since: Date, $until: Date, $personIds: [BigInt], $cohortId: BigInt) {
   competitionBriefList(pCohortId: $cohortId, pPersonIds: $personIds, pSince: $since, pUntil: $until) {
+    federation
     eventId
+    eventExternalId
     eventName
     eventLocation
     competitionId
+    competitionExternalId
     competitionDate
     competitionType
     competitorId
@@ -30,10 +33,13 @@ query CompetitionBrief($since: Date, $until: Date, $personIds: [BigInt], $cohort
 
 query CompetitionReport($since: Date, $until: Date, $personIds: [BigInt], $cohortId: BigInt) {
   competitionReportList(pCohortId: $cohortId, pPersonIds: $personIds, pSince: $since, pUntil: $until) {
+    federation
     eventId
+    eventExternalId
     eventName
     eventLocation
     competitionId
+    competitionExternalId
     competitionDate
     competitionType
     competitorId

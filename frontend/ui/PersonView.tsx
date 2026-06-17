@@ -15,6 +15,7 @@ import { useActions } from '@/lib/actions';
 import { tenantIdAtom } from '@/ui/state/auth';
 import { useAtomValue } from 'jotai';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { CstsPersonSourceLink } from '@/ui/CstsPersonSourceLink';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
@@ -79,11 +80,31 @@ export function PersonView({ id }: { id: string }) {
 
   if (!item) return null;
 
+  const subtitleParts = [categoryProgress, item.phone, item.email].filter(
+    (value): value is string => Boolean(value),
+  );
+  const hasSubtitle = subtitleParts.length > 0 || Boolean(item.cstsId);
+
   return (
     <>
       <PageHeader
         title={item.name}
-        subtitle={[categoryProgress, item.phone, item.email].filter(Boolean).join(' · ')}
+        subtitle={
+          hasSubtitle ? (
+            <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1">
+              {subtitleParts.map((part, index) => (
+                <React.Fragment key={part}>
+                  {index > 0 ? <span aria-hidden="true">·</span> : null}
+                  <span>{part}</span>
+                </React.Fragment>
+              ))}
+              <CstsPersonSourceLink
+                idt={item.cstsId}
+                className="text-accent-12 hover:text-accent-11"
+              />
+            </span>
+          ) : undefined
+        }
         actions={actions}
       />
 
