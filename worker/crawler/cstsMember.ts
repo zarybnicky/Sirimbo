@@ -266,7 +266,8 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     points: number;
     domesticFinals: number;
     foreignFinals: number;
-  }>(['competitorId', 'categoryId', 'points', 'domesticFinals', 'foreignFinals']);
+  }>(['competitorId', 'categoryId', 'points', 'domesticFinals', 'foreignFinals'],
+    ['competitorId', 'categoryId']);
   progress.add(...progressByCompetitor.values().flatMap((x) => x.values()));
   if (progress.length) {
     await mergeCompetitorProgress.run(progress.params, client);
