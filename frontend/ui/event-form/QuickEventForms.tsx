@@ -28,7 +28,6 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { DateTimeRangeController } from './InstanceListElement';
-import { InstanceTrainerListElement } from './InstanceTrainerListField';
 import { eventLocationInput, LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListField';
@@ -228,7 +227,7 @@ export function QuickEventCreateForm({
               return (
                 <div
                   key={key}
-                  className="grid gap-2 text-sm sm:grid-cols-[auto_1fr] sm:items-center"
+                  className="flex gap-2 text-sm flex-wrap justify-between items-center"
                 >
                   <span className="text-neutral-11">
                     {shortTimeFormatter.format(range.since)} -{' '}
@@ -377,7 +376,7 @@ export function QuickInstanceEditForm({
         nameUntil="instances.0.until"
         isCamp={type === 'CAMP'}
       />
-      <InstanceTrainerListElement control={control} index={0} />
+      <TrainerListElement control={control} name="trainers" />
       <LocationField control={control} />
       <CheckboxElement
         control={control}

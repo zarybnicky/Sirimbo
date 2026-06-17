@@ -55,7 +55,7 @@ export function TitleActionsRow<Id extends string = string>({
 }: TitleActionsRowProps<Id> &
   Omit<Partial<NonNullable<Parameters<typeof typographyCls>[0]>>, 'class'>) {
   return (
-    <div className="flex justify-between gap-4 items-center">
+    <div className="flex flex-wrap-reverse justify-between gap-4 items-center">
       <div className="min-w-0">
         <h1
           className={typographyCls({
@@ -68,7 +68,7 @@ export function TitleActionsRow<Id extends string = string>({
         </h1>
       </div>
 
-      {actions && <ActionGroup primary={primary} groups={groups} actions={actions} />}
+      {actions && <ActionGroup className="ml-auto" primary={primary} groups={groups} actions={actions} />}
     </div>
   );
 }

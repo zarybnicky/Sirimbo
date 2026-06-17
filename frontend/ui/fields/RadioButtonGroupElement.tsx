@@ -39,8 +39,8 @@ export function RadioButtonGroupElement<T extends FieldValues>({
   return (
     <div className={cn('relative', className)}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <div className="inline-flex rounded-xl shadow-md">
-        {options.map(({ label, id, disabled }, index) => (
+      <div className="flex flex-wrap gap-1 rounded-xl">
+        {options.map(({ label, id, disabled }) => (
           <label key={id} className="relative">
             <input
               className="peer sr-only"
@@ -55,13 +55,12 @@ export function RadioButtonGroupElement<T extends FieldValues>({
             <span
               className={cn(
                 'block cursor-pointer bg-neutral-1 px-2.5 py-2 text-sm text-accent-11',
-                'border-y border-l border-accent-7',
+                'border border-accent-7',
                 'peer-checked:border-accent-10 peer-checked:bg-accent-9 peer-checked:text-white',
                 'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-accent-10',
                 'peer-disabled:cursor-not-allowed peer-disabled:border-neutral-6 peer-disabled:text-neutral-11',
                 'peer-disabled:peer-checked:border-neutral-10 peer-disabled:peer-checked:bg-neutral-9 peer-disabled:peer-checked:text-white',
-                index === 0 && 'rounded-l-xl',
-                index === options.length - 1 && 'rounded-r-xl border-r',
+                'rounded-xl',
               )}
             >
               {label}

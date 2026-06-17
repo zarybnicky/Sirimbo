@@ -80,9 +80,7 @@ export function PersonView({ id }: { id: string }) {
 
   if (!item) return null;
 
-  const subtitleParts = [categoryProgress, item.phone, item.email].filter(
-    (value): value is string => Boolean(value),
-  );
+  const subtitleParts = [categoryProgress, item.phone, item.email].filter(Boolean);
   const hasSubtitle = subtitleParts.length > 0 || Boolean(item.cstsId);
 
   return (

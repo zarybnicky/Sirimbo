@@ -127,7 +127,7 @@ export function Calendar() {
           <ViewPicker view={viewInput} setView={setView} />
           <button
             type="button"
-            className={buttonCls({ variant: onlyMine ? 'primary' : 'outline' })}
+            className={buttonCls({ variant: onlyMine ? 'primary' : 'outline', size: 'sm' })}
             onClick={() => setOnlyMine((x) => !x)}
           >
             Pouze moje

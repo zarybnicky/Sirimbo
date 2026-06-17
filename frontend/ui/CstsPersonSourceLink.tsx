@@ -20,7 +20,7 @@ export function CstsPersonSourceLink({
       aria-label="Otevřít osobu na ČSTS"
       title="Otevřít osobu na ČSTS"
       className={cn(
-        'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm text-neutral-9 hover:text-accent-11 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        'inline-flex size-5 items-center justify-center rounded-sm text-neutral-9 hover:text-accent-11 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >
