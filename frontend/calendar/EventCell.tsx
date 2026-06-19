@@ -64,6 +64,7 @@ function CompetitionEventCell({
   return (
     <div
       style={style}
+      title={event.title}
       className={cn(
         className,
         'rbc-event relative overflow-hidden border border-green-7 bg-green-3 text-green-12',
@@ -73,8 +74,8 @@ function CompetitionEventCell({
         },
       )}
     >
-      <div className="space-y-0.5 px-1 py-0.5 text-[0.68rem] leading-tight">
-        <div className="font-semibold">{event.title}</div>
+      <div className="rbc-event-content px-1 py-0.5 text-[0.68rem] font-semibold leading-tight">
+        {event.title}
       </div>
     </div>
   );
