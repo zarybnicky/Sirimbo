@@ -4,6 +4,9 @@ import { add, eq, startOf } from 'date-arithmetic';
 import { useAtomValue } from 'jotai';
 import React from 'react';
 import DayColumn from './DayColumn';
+import { getSlotMetrics as getDateSlotMetrics } from './DateSlotMetrics';
+import EventEndingRow from './EventEndingRow';
+import EventRow from './EventRow';
 import TimeGutter from './TimeGutter';
 import { diff, format, inEventRange, merge, range } from './localizer';
 import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
@@ -64,9 +67,19 @@ export default React.memo(function TimeGrid({
     content.scrollTop = (content.scrollHeight - content.clientHeight) * ratio;
   }, [focusedTime, minTime, maxTime]);
 
+  const birthdayEvents = React.useMemo(
+    () => events.filter((event) => event.kind === 'birthday'),
+    [events],
+  );
+  const timedEvents = React.useMemo(
+    () => events.filter((event) => event.kind !== 'birthday'),
+    [events],
+  );
+  const hasBirthdayEvents = birthdayEvents.length > 0;
+
   const grid = React.useMemo(
-    () => buildGrid(range, resources, events, backgroundEvents),
-    [range, resources, events, backgroundEvents],
+    () => buildGrid(range, resources, timedEvents, backgroundEvents),
+    [range, resources, timedEvents, backgroundEvents],
   );
 
   return (
@@ -98,6 +111,9 @@ export default React.memo(function TimeGrid({
                     <DayButton key={+date} today={today} date={date} />
                   ))}
                 </div>
+                {hasBirthdayEvents && (
+                  <AllDayEventLane range={grid.days} events={birthdayEvents} />
+                )}
               </div>
             ))
           : grid.days.map((date) => (
@@ -115,6 +131,12 @@ export default React.memo(function TimeGrid({
                     </div>
                   ))}
                 </div>
+                {hasBirthdayEvents && (
+                  <AllDayEventLane
+                    range={[date]}
+                    events={birthdayEvents.filter((event) => eq(event.start, date, 'day'))}
+                  />
+                )}
               </div>
             ))}
       </div>
@@ -165,6 +187,41 @@ export default React.memo(function TimeGrid({
     </div>
   );
 });
+
+function AllDayEventLane({
+  range,
+  events,
+}: {
+  range: readonly Date[];
+  events: readonly CalendarEvent[];
+}) {
+  const [expanded, setExpanded] = React.useState(false);
+  const slotMetrics = React.useMemo(
+    () =>
+      getDateSlotMetrics({
+        range: [...range],
+        events: [...events],
+        maxRows: expanded ? Number.POSITIVE_INFINITY : 2,
+        minRows: 1,
+      }),
+    [range, events, expanded],
+  );
+
+  return (
+    <div className="border-t border-neutral-6 bg-neutral-1/70 py-0.5">
+      {slotMetrics.levels.map((segments, idx) => (
+        <EventRow key={idx} segments={segments} slotMetrics={slotMetrics} />
+      ))}
+      {slotMetrics.extra.length > 0 && (
+        <EventEndingRow
+          segments={slotMetrics.extra}
+          slotMetrics={slotMetrics}
+          onShowMore={() => setExpanded(true)}
+        />
+      )}
+    </div>
+  );
+}
 
 function buildGrid(
   { since, until }: DateRange,

@@ -5,7 +5,6 @@ import Selection, {
   type Bounds,
   getBoundsForNode,
   getSlotAtX,
-  isEvent,
   pointInBox,
 } from './Selection';
 import { useAuth } from '@/ui/use-auth';
@@ -29,6 +28,26 @@ type SelectingState = {
 };
 const EMPTY = { selecting: false };
 
+function isInteractiveCalendarTarget(
+  node: HTMLElement,
+  point: { clientX: number; clientY: number },
+) {
+  const target = document.elementFromPoint(point.clientX, point.clientY);
+  if (!target || !node.contains(target)) return false;
+
+  return !!target.closest(
+    [
+      '.rbc-event',
+      '.rbc-show-more',
+      'button',
+      'a',
+      '[role="button"]',
+      '[data-radix-popper-content-wrapper]',
+      '[role="dialog"]',
+    ].join(','),
+  );
+}
+
 function BackgroundCells({
   rowRef,
   range,
@@ -45,7 +64,8 @@ function BackgroundCells({
 
     const selector = new Selection(() => rowRef.current, {
       shouldSelect(point) {
-        return !isEvent(cellRef.current!, point);
+        const row = rowRef.current;
+        return !!row && !isInteractiveCalendarTarget(row, point);
       },
     });
 
@@ -106,12 +126,8 @@ function BackgroundCells({
 
     selector.addEventListener('click', ({ detail: point }) => {
       setState(() => {
-        const target = document.elementFromPoint(point.clientX, point.clientY)!;
-        if (isEvent(cellRef.current!, point)) {
-          return EMPTY;
-        }
-        const showMore = target.closest('.rbc-show-more');
-        if (showMore && cellRef.current!.contains(showMore)) {
+        const row = rowRef.current;
+        if (!row || isInteractiveCalendarTarget(row, point)) {
           return EMPTY;
         }
         const rowBox = getBoundsForNode(cellRef.current!);

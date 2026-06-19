@@ -15,10 +15,12 @@ function EventEndingRow({
   segments,
   slotMetrics,
   resource,
+  onShowMore,
 }: {
   segments: Segment[];
   slotMetrics: DateSlotMetrics;
   resource?: Resource;
+  onShowMore?: (date: Date) => void;
 }) {
   const { onDrillDown } = useAtomValue(dragListenersAtom);
   const { slots } = slotMetrics;
@@ -65,7 +67,9 @@ function EventEndingRow({
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                onDrillDown?.(slotMetrics.getDateForSlot(closureCurrent - 1));
+                const date = slotMetrics.getDateForSlot(closureCurrent - 1);
+                if (onShowMore) onShowMore(date);
+                else onDrillDown?.(date);
               }}
             >
               {`+${count} dalších`}

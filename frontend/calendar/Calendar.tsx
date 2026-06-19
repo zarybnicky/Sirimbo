@@ -109,10 +109,18 @@ export function Calendar() {
     [onlyMine, auth.persons, events],
   );
 
+  const onDrillDown = React.useCallback(
+    (date: Date) => {
+      setDate(date);
+      setView('day');
+    },
+    [setView],
+  );
+
   React.useEffect(() => {
-    setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown: setDate });
+    setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown });
     return () => setDragListeners({});
-  }, [onMove, onResize, onSelectSlot, setDate, setDragListeners]);
+  }, [onMove, onResize, onSelectSlot, onDrillDown, setDragListeners]);
 
   return (
     <div

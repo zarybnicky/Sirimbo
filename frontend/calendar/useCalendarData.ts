@@ -203,7 +203,6 @@ export function useCalendarData(
   const [{ data: birthdayData, fetching: birthdaysFetching }] = useQuery({
     query: BirthdayPeopleDocument,
     variables: birthdayRange,
-    pause: !view.showBirthdays,
   });
 
   React.useEffect(() => {
@@ -265,14 +264,12 @@ export function useCalendarData(
         ),
       }),
     );
-    const birthdays = view.showBirthdays
-      ? mapBirthdayPeopleToCalendar(
-          birthdayData?.people?.nodes ?? [],
-          birthdayRange.since,
-          birthdayRange.until,
-          birthdayPersonIds,
-        )
-      : [];
+    const birthdays = mapBirthdayPeopleToCalendar(
+      birthdayData?.people?.nodes ?? [],
+      birthdayRange.since,
+      birthdayRange.until,
+      birthdayPersonIds,
+    );
 
     return {
       events: [...schedule.events, ...competitions, ...birthdays],
@@ -290,7 +287,6 @@ export function useCalendarData(
     data?.list,
     effectiveGroupBy,
     reportData?.competitionReportList,
-    view.showBirthdays,
   ]);
 
   return {
