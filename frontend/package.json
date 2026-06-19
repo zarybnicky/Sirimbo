@@ -29,7 +29,7 @@
     "@radix-ui/react-use-layout-effect": "~1.1.1",
     "@sentry/nextjs": "~10.22.0",
     "@serwist/next": "^9.5.0",
-    "@serwist/window": "^9.5.0",
+    "@serwist/window": "^9.5.11",
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@types/mdx": "^2.0.13",
     "@urql/core": "^6.0.0",
