@@ -13,6 +13,7 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { tenantConfigAtom } from '@/ui/state/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import { CompetitionEventContent } from '@/ui/Competitions';
+import { Cake } from 'lucide-react';
 
 function formatTrainerLabel(name: string | undefined, useInitials: boolean): string {
   if (!name) return '';
@@ -43,11 +44,11 @@ type TimeGridEventProps = {
 };
 
 function TimeGridEvent({ event, ...props }: TimeGridEventProps) {
-  return event.kind === 'competition' ? (
-    <CompetitionTimeGridEvent event={event} {...props} />
-  ) : (
-    <InstanceTimeGridEvent event={event} {...props} />
-  );
+  if (event.kind === 'birthday') return <BirthdayTimeGridEvent event={event} {...props} />;
+  if (event.kind === 'competition') {
+    return <CompetitionTimeGridEvent event={event} {...props} />;
+  }
+  return <InstanceTimeGridEvent event={event} {...props} />;
 }
 
 function InstanceTimeGridEvent({
@@ -216,6 +217,31 @@ function CompetitionTimeGridEvent({
         location={event.eventLocation}
         entries={event.items}
       />
+    </div>
+  );
+}
+
+function BirthdayTimeGridEvent({
+  style,
+  className,
+  event,
+}: TimeGridEventProps & { event: Extract<CalendarEvent, { kind: 'birthday' }> }) {
+  return (
+    <div
+      style={{
+        top: `${style.top}%`,
+        width: `${style.width}%`,
+        height: `${style.height}%`,
+        left: `${style.xOffset}%`,
+      }}
+      title={`Narozeniny: ${event.person.name}`}
+      className={cn(
+        className,
+        'rbc-event absolute flex max-h-full min-h-[20px] items-start gap-1 overflow-hidden border border-neutral-6 bg-neutral-2 p-2 text-neutral-12',
+      )}
+    >
+      <Cake className="mt-0.5 size-3 shrink-0 text-accent-11" />
+      <span className="truncate text-xs font-semibold">{event.person.name}</span>
     </div>
   );
 }

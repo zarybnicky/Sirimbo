@@ -69,6 +69,9 @@ export function layoutEvents(
     if (it.event.kind === 'competition') {
       return `competition:${it.event.id}`;
     }
+    if (it.event.kind === 'birthday') {
+      return `birthday:${it.event.id}`;
+    }
     if (it.event.instance.type !== 'LESSON') {
       return `type:${it.event.instance.eventId}`;
     }
@@ -82,7 +85,7 @@ export function layoutEvents(
     for (const it of group) {
       const key = rankKeyOf(it);
       if (key && !eventRank.has(key)) {
-        if (it.event.kind === 'competition' || it.event.instance.type !== 'LESSON') {
+        if (it.event.kind !== 'event' || it.event.instance.type !== 'LESSON') {
           eventRank.set(key, nextGroupRank--);
         } else {
           eventRank.set(key, nextTrainerRank++);

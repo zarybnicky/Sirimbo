@@ -163,6 +163,25 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, 
   }
 }
 
+query BirthdayPeople($since: Date!, $until: Date!) {
+  people(
+    condition: {
+      membership: { state: CURRENT }
+      externalIds: null
+      birthDateInRange: { since: $since, until: $until }
+    }
+    orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
+  ) {
+    nodes {
+      id
+      name
+      firstName
+      lastName
+      birthDate
+    }
+  }
+}
+
 query MissingCstsIdCandidates {
   people(
     condition: { cstsId: null, membership: {} }

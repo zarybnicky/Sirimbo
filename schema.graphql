@@ -6042,6 +6042,17 @@ type Person {
 }
 
 """
+Filters people by annual birthday occurrence in a date range. The range is since-inclusive and until-exclusive.
+"""
+input PersonBirthDateRangeCondition {
+  """Inclusive start date."""
+  since: Date!
+
+  """Exclusive end date."""
+  until: Date!
+}
+
+"""
 A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input PersonCondition {
@@ -6053,6 +6064,11 @@ input PersonCondition {
 
   """Checks for equality with the object’s `birthDate` field."""
   birthDate: Date
+
+  """
+  Filters people whose next annual birthday occurrence falls inside the date range.
+  """
+  birthDateInRange: PersonBirthDateRangeCondition
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime

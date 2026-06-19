@@ -125,6 +125,7 @@ export function Calendar() {
         <div className="flex gap-2 flex-wrap items-start">
           <CalendarDatePicker date={date} setDate={setDate} view={view} />
           <ViewPicker view={viewInput} setView={setView} />
+          {!onlyMine && view.supportsGrouping && <GroupByPicker />}
           <button
             type="button"
             className={buttonCls({ variant: onlyMine ? 'primary' : 'outline', size: 'sm' })}
@@ -132,7 +133,6 @@ export function Calendar() {
           >
             Pouze moje
           </button>
-          {!onlyMine && view.supportsGrouping && <GroupByPicker />}
           <TrainerFilter />
           <ParticipantFilter />
           {fetching && <Spinner />}

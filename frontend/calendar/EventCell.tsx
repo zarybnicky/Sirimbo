@@ -9,6 +9,7 @@ import { selectAtom } from 'jotai/utils';
 import { formatDefaultEventName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
+import { Cake } from 'lucide-react';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -20,10 +21,36 @@ type EventCellProps = {
 };
 
 function EventCell({ event, ...props }: EventCellProps) {
-  return event.kind === 'competition' ? (
-    <CompetitionEventCell event={event} {...props} />
-  ) : (
-    <InstanceEventCell event={event} {...props} />
+  if (event.kind === 'birthday') return <BirthdayEventCell event={event} {...props} />;
+  if (event.kind === 'competition') return <CompetitionEventCell event={event} {...props} />;
+  return <InstanceEventCell event={event} {...props} />;
+}
+
+function BirthdayEventCell({
+  style,
+  className,
+  event,
+  continuesPrior,
+  continuesAfter,
+}: EventCellProps & { event: Extract<CalendarEvent, { kind: 'birthday' }> }) {
+  return (
+    <div
+      style={style}
+      title={`Narozeniny: ${event.person.name}`}
+      className={cn(
+        className,
+        'rbc-event relative overflow-hidden border border-neutral-6 bg-neutral-2 text-neutral-12',
+        {
+          'rounded-l-none': continuesPrior,
+          'rounded-r-none': continuesAfter,
+        },
+      )}
+    >
+      <div className="flex items-center gap-1 px-1 py-0.5 text-[0.68rem] font-semibold leading-tight">
+        <Cake className="size-3 shrink-0 text-accent-11" />
+        <span className="truncate">{event.person.name}</span>
+      </div>
+    </div>
   );
 }
 

@@ -8,12 +8,14 @@ import {
   type EventInstanceRangeQuery,
   type EventInstanceRangeQueryVariables,
 } from '@/graphql/Event';
+import { BirthdayPeopleDocument } from '@/graphql/Person';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery } from 'urql';
 import type { CalendarEvent, CalendarInstanceEvent, DateRange, Resource } from './types';
 import { CalendarView } from '@/calendar/CalendarViews';
 import { localDateKey } from '@/calendar/localizer';
+import { mapBirthdayPeopleToCalendar } from '@/calendar/birthdays';
 
 export type CalendarGroupBy = 'none' | 'trainer' | 'room';
 export type CalendarFilters = {
@@ -142,6 +144,15 @@ export function useCalendarData(
     requestPolicy: 'cache-and-network',
   });
   const effectiveGroupBy = filters.onlyMine ? 'none' : groupBy;
+  const birthdayRange = React.useMemo(() => {
+    const since = startOf(range.since, 'day');
+    const until = add(startOf(range.until, 'day'), 1, 'day');
+
+    return {
+      since: localDateKey(since),
+      until: localDateKey(until),
+    };
+  }, [range.since, range.until]);
   const competitionRanges = React.useMemo(() => {
     const since = startOf(range.since, 'day');
     const until = add(startOf(range.until, 'day'), 1, 'day');
@@ -182,6 +193,17 @@ export function useCalendarData(
         }
       : {},
     pause: !competitionRanges.brief,
+  });
+  const birthdayPersonIds =
+    filters.participantIds.length > 0
+      ? filters.participantIds
+      : filters.onlyMine
+        ? filters.myPersonIds
+        : undefined;
+  const [{ data: birthdayData, fetching: birthdaysFetching }] = useQuery({
+    query: BirthdayPeopleDocument,
+    variables: birthdayRange,
+    pause: !view.showBirthdays,
   });
 
   React.useEffect(() => {
@@ -243,9 +265,17 @@ export function useCalendarData(
         ),
       }),
     );
+    const birthdays = view.showBirthdays
+      ? mapBirthdayPeopleToCalendar(
+          birthdayData?.people?.nodes ?? [],
+          birthdayRange.since,
+          birthdayRange.until,
+          birthdayPersonIds,
+        )
+      : [];
 
     return {
-      events: [...schedule.events, ...competitions],
+      events: [...schedule.events, ...competitions, ...birthdays],
       resources:
         effectiveGroupBy !== 'none' && competitions.length > 0
           ? [...schedule.resources, competitionResource]
@@ -253,15 +283,20 @@ export function useCalendarData(
     };
   }, [
     briefData?.competitionBriefList,
+    birthdayData?.people?.nodes,
+    birthdayPersonIds,
+    birthdayRange.since,
+    birthdayRange.until,
     data?.list,
     effectiveGroupBy,
     reportData?.competitionReportList,
+    view.showBirthdays,
   ]);
 
   return {
     range,
     events,
     resources,
-    fetching,
+    fetching: fetching || birthdaysFetching,
   };
 }

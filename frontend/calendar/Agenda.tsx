@@ -5,10 +5,12 @@ import { startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
 import type {
+  CalendarBirthdayEvent,
   CalendarCompetitionEvent,
   CalendarInstanceEvent,
   ViewProps,
 } from '@/calendar/types';
+import { Cake } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { QuickEventCreateForm } from '@/ui/event-form/QuickEventForms';
@@ -21,6 +23,7 @@ import { localDateKey } from '@/calendar/localizer';
 import { quickDefaultsAfterLessonGroup } from '@/calendar/quickEventDefaults';
 
 type MapItem = {
+  birthdays: CalendarBirthdayEvent[];
   competitions: CalendarCompetitionEvent[];
   lessons: Map<string, CalendarInstanceEvent[]>;
   groups: CalendarInstanceEvent[];
@@ -34,10 +37,17 @@ function Agenda({ events }: ViewProps): React.ReactNode {
     for (const calendarEvent of events) {
       const date = localDateKey(startOf(calendarEvent.start, 'day'));
       const mapItem: MapItem = map.get(date) ?? {
+        birthdays: [],
         competitions: [],
         groups: [],
         lessons: new Map(),
       };
+
+      if (calendarEvent.kind === 'birthday') {
+        mapItem.birthdays.push(calendarEvent);
+        map.set(date, mapItem);
+        continue;
+      }
 
       if (calendarEvent.kind === 'competition') {
         mapItem.competitions.push(calendarEvent);
@@ -65,6 +75,11 @@ function Agenda({ events }: ViewProps): React.ReactNode {
         [
           date,
           {
+            birthdays: itemMap.birthdays.toSorted(
+              (x, y) =>
+                x.person.lastName.localeCompare(y.person.lastName, 'cs') ||
+                x.person.firstName.localeCompare(y.person.firstName, 'cs'),
+            ),
             competitions: itemMap.competitions,
             groups: itemMap.groups.toSorted(
               (x, y) => x.start.getTime() - y.start.getTime(),
@@ -92,41 +107,68 @@ function Agenda({ events }: ViewProps): React.ReactNode {
         </div>
       )}
 
-      {dataByDay.map(([date, dateEntry]) => (
-        <React.Fragment key={date}>
-          <div className="text-2xl tracking-wide mt-8 mb-2">
-            {formatWeekDay(new Date(`${date}T00:00:00`))}
-          </div>
+      {dataByDay.map(([date, dateEntry]) => {
+        const hasEventCards =
+          dateEntry.competitions.length > 0 ||
+          dateEntry.groups.length > 0 ||
+          dateEntry.lessons.length > 0;
 
-          <div className="flex justify-start flex-wrap gap-2 opacity-90">
-            {dateEntry.competitions.map((calendarEvent) => (
-              <div
-                key={calendarEvent.id}
-                className={cardCls({
-                  className:
-                    'min-w-[200px] w-72 rounded-lg border-green-7 bg-green-2 p-3',
-                })}
-              >
-                <CompetitionEventContent
-                  title={calendarEvent.title}
-                  location={calendarEvent.eventLocation}
-                  entries={calendarEvent.items}
-                />
+        return (
+          <React.Fragment key={date}>
+            <div className="mt-8 mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+              <div className="text-2xl tracking-wide">
+                {formatWeekDay(new Date(`${date}T00:00:00`))}
               </div>
-            ))}
-            {dateEntry.groups.map((calendarEvent) => (
-              <GroupLesson
-                key={calendarEvent.instance.id}
-                calendarEvent={calendarEvent}
-              />
-            ))}
-            {dateEntry.lessons.map(([ids, items]) => (
-              <LessonGroup key={ids} items={items} />
-            ))}
-          </div>
-        </React.Fragment>
-      ))}
+              {dateEntry.birthdays.map((calendarEvent) => (
+                <BirthdayChip key={calendarEvent.id} calendarEvent={calendarEvent} />
+              ))}
+            </div>
+
+            {hasEventCards && (
+              <div className="flex justify-start flex-wrap gap-2 opacity-90">
+                {dateEntry.competitions.map((calendarEvent) => (
+                  <div
+                    key={calendarEvent.id}
+                    className={cardCls({
+                      className:
+                        'min-w-[200px] w-72 rounded-lg border-green-7 bg-green-2 p-3',
+                    })}
+                  >
+                    <CompetitionEventContent
+                      title={calendarEvent.title}
+                      location={calendarEvent.eventLocation}
+                      entries={calendarEvent.items}
+                    />
+                  </div>
+                ))}
+                {dateEntry.groups.map((calendarEvent) => (
+                  <GroupLesson
+                    key={calendarEvent.instance.id}
+                    calendarEvent={calendarEvent}
+                  />
+                ))}
+                {dateEntry.lessons.map(([ids, items]) => (
+                  <LessonGroup key={ids} items={items} />
+                ))}
+              </div>
+            )}
+          </React.Fragment>
+        );
+      })}
     </div>
+  );
+}
+
+function BirthdayChip({ calendarEvent }: { calendarEvent: CalendarBirthdayEvent }) {
+  return (
+    <Link
+      href={{ pathname: '/clenove/[id]', query: { id: calendarEvent.person.id } }}
+      title={`Narozeniny: ${calendarEvent.person.name}`}
+      className="inline-flex max-w-full items-center gap-1 rounded border border-neutral-6 bg-neutral-2 px-2 py-1 text-sm text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
+    >
+      <Cake className="size-3.5 shrink-0 text-accent-11" />
+      <span className="truncate">{calendarEvent.person.name}</span>
+    </Link>
   );
 }
 

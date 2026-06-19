@@ -13,6 +13,7 @@ export type CalendarView = {
   nav: (d: Date, dir: -1 | 1) => Date;
   label: (range: DateRange) => string;
   supportsGrouping: boolean;
+  showBirthdays: boolean;
 };
 
 export const CalendarViews = {
@@ -25,6 +26,7 @@ export const CalendarViews = {
     nav: (d: Date, dir: -1 | 1) => add(d, dir, 'month'),
     label: ({ since }) => format(since, 'MMMM yyyy'),
     supportsGrouping: false,
+    showBirthdays: true,
   },
   week: {
     component: TimeGrid,
@@ -36,6 +38,7 @@ export const CalendarViews = {
     label: ({ since, until }) =>
       fullDateFormatter.formatRange(since, until).replace(' – ', ' – '),
     supportsGrouping: true,
+    showBirthdays: false,
   },
   work_week: {
     component: TimeGrid,
@@ -47,6 +50,7 @@ export const CalendarViews = {
     label: ({ since, until }) =>
       fullDateFormatter.formatRange(since, until).replace(' – ', ' – '),
     supportsGrouping: true,
+    showBirthdays: false,
   },
   day: {
     component: TimeGrid,
@@ -57,6 +61,7 @@ export const CalendarViews = {
     nav: (d: Date, dir: -1 | 1) => add(d, dir, 'day'),
     label: ({ since }) => format(since, 'cccc dd. MM. yyyy'),
     supportsGrouping: true,
+    showBirthdays: false,
   },
   agenda: {
     component: Agenda,
@@ -68,6 +73,7 @@ export const CalendarViews = {
     label: ({ since, until }) =>
       fullDateFormatter.formatRange(since, until).replace(' – ', ' – '),
     supportsGrouping: false,
+    showBirthdays: true,
   },
 } as const satisfies Record<string, CalendarView>;
 

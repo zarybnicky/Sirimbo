@@ -5244,6 +5244,14 @@ export type PersonWeeklyAttendanceListArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Filters people by annual birthday occurrence in a date range. The range is since-inclusive and until-exclusive. */
+export type PersonBirthDateRangeCondition = {
+  /** Inclusive start date. */
+  since: Scalars['Date']['input'];
+  /** Exclusive end date. */
+  until: Scalars['Date']['input'];
+};
+
 /** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PersonCondition = {
   /** Checks for equality with the object’s `address` field. */
@@ -5252,6 +5260,8 @@ export type PersonCondition = {
   bio?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `birthDate` field. */
   birthDate?: InputMaybe<Scalars['Date']['input']>;
+  /** Filters people whose next annual birthday occurrence falls inside the date range. */
+  birthDateInRange?: InputMaybe<PersonBirthDateRangeCondition>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `cstsId` field. */
