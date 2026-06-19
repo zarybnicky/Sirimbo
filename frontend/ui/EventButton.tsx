@@ -14,28 +14,8 @@ import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import { buttonCls } from '@/ui/style';
 import * as React from 'react';
 import Link from 'next/link';
-import type { AttendanceType } from '@/graphql';
-import { Check, HelpCircle, LucideIcon, OctagonMinus, X } from 'lucide-react';
+import { Check, HelpCircle, X } from 'lucide-react';
 import { canManageInstance } from '@/lib/actions/eventInstance';
-
-type Props = {
-  event: EventFragment;
-  instance: EventInstanceWithTrainerFragment;
-  showDate?: boolean;
-  viewer: 'auto' | 'trainer' | 'couple';
-  attendance?: 'inline';
-  suffix?: React.ReactNode;
-};
-
-type NonEmptyArray<T> = [T, ...T[]];
-const isNonEmpty = <T,>(array: Array<T>): array is NonEmptyArray<T> => array.length > 0;
-
-const labels: { [key in AttendanceType]: LucideIcon } = {
-  ATTENDED: Check,
-  UNKNOWN: HelpCircle,
-  NOT_EXCUSED: X,
-  CANCELLED: OctagonMinus,
-};
 
 export function EventButton({
   event,
@@ -44,7 +24,14 @@ export function EventButton({
   showDate,
   attendance,
   suffix,
-}: Props) {
+}: {
+  event: EventFragment;
+  instance: EventInstanceWithTrainerFragment;
+  showDate?: boolean;
+  viewer: 'auto' | 'trainer' | 'couple';
+  attendance?: 'inline';
+  suffix?: React.ReactNode;
+}) {
   const auth = useAuth();
 
   const registrations = event.eventRegistrations.nodes || [];
@@ -67,11 +54,6 @@ export function EventButton({
     attendance === 'inline' &&
     event.type === 'GROUP' &&
     canManageInstance({ auth, item: instance });
-
-  const stats = JSON.parse(instance.stats) as Record<
-    'TOTAL' | 'UNKNOWN' | 'ATTENDED' | 'NOT_EXCUSED',
-    number
-  >;
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
@@ -110,7 +92,7 @@ export function EventButton({
               {event.name ||
                 (showTrainer ? (
                   `${formatEventType(instance.type)}: ${instanceTrainers}`
-                ) : isNonEmpty(registrations) ? (
+                ) : registrations.length > 0 ? (
                   <>
                     {registrations.slice(0, 2).map((x, i) => (
                       <div key={x.id}>
@@ -125,41 +107,93 @@ export function EventButton({
             </div>
             {suffix ? <div className="shrink-0">{suffix}</div> : null}
             <ConflictsInstanceBadge instanceId={instance.id} className="text-accent-11" />
+            {showInlineAttendance && <InlineAttendanceStats stats={instance.stats} />}
             {duration < 210 && <div className="text-neutral-11">{duration}&apos;</div>}
           </div>
         </PopoverTrigger>
 
         <PopoverContent align="start">
           <EventSummary offsetButtons event={event} instance={instance} />
+          {showInlineAttendance && (
+            <div className="mt-2">
+              <Link
+                className={buttonCls({
+                  size: 'sm',
+                  variant: 'outline',
+                  className: 'inline-flex items-center',
+                })}
+                href={{
+                  pathname: '/akce/[id]/termin/[instance]',
+                  query: {
+                    id: event.id,
+                    instance: instance.id,
+                  },
+                }}
+              >
+                Docházka
+              </Link>
+            </div>
+          )}
         </PopoverContent>
       </Popover>
+    </div>
+  );
+}
 
-      {showInlineAttendance && (
-        <Link
-          className={buttonCls({
-            size: 'sm',
-            variant: 'outline',
-            className: 'ml-6 mb-2 inline-flex self-start items-center',
-          })}
-          href={{
-            pathname: '/akce/[id]/termin/[instance]',
-            query: {
-              id: event.id,
-              instance: instance.id,
-            },
-          }}
+type AttendanceStats = Record<'TOTAL' | 'UNKNOWN' | 'ATTENDED' | 'NOT_EXCUSED', number>;
+
+function InlineAttendanceStats({ stats: input }: { stats: any; }) {
+  const parsed = typeof input === 'string' ? JSON.parse(input) : input;
+  const record = parsed && typeof parsed === 'object' ? (parsed as Partial<AttendanceStats>) : {};
+  const stats = {
+    TOTAL: record.TOTAL ?? 0,
+    UNKNOWN: record.UNKNOWN ?? 0,
+    ATTENDED: record.ATTENDED ?? 0,
+    NOT_EXCUSED: record.NOT_EXCUSED ?? 0,
+  };
+
+  const items = [
+    {
+      key: 'ATTENDED',
+      label: 'přítomno',
+      value: stats.ATTENDED,
+      className: 'bg-green-3 text-green-11',
+      Icon: Check,
+    },
+    {
+      key: 'NOT_EXCUSED',
+      label: 'neomluveno',
+      value: stats.NOT_EXCUSED,
+      className: 'bg-[#fbe4e8] text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]',
+      Icon: X,
+    },
+    {
+      key: 'UNKNOWN',
+      label: 'nezadáno',
+      value: stats.UNKNOWN,
+      className: 'bg-neutral-2 text-neutral-11',
+      Icon: HelpCircle,
+    },
+  ];
+
+  return (
+    <div
+      aria-label={`Docházka: přítomno ${stats.ATTENDED}, neomluveno ${stats.NOT_EXCUSED}, nezadáno ${stats.UNKNOWN}`}
+      className="inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums"
+    >
+      {items.map(({ key, label, value, className, Icon }) => (
+        <span
+          key={key}
+          title={label}
+          className={cn(
+            'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
+            className,
+          )}
         >
-          <span>Docházka ({stats.TOTAL})</span>
-          <span className="inline-flex items-center tabular-nums -my-2 -mr-2">
-            <span className="bg-green-3 text-sm px-1 rounded-l-xl text-green-11">
-              <labels.ATTENDED className="inline" /> {stats.ATTENDED}
-            </span>
-            <span className=" bg-[#fbe4e8] text-sm px-1 rounded-r-xl  text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]">
-              {stats.NOT_EXCUSED} <labels.NOT_EXCUSED className="inline" />
-            </span>
-          </span>
-        </Link>
-      )}
+          <Icon className="size-3 shrink-0" aria-hidden="true" />
+          <span>{value}</span>
+        </span>
+      ))}
     </div>
   );
 }

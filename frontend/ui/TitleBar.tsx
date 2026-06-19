@@ -33,45 +33,14 @@ export function TitleBar({
   );
 }
 
-type TitleActionsRowProps<Id extends string = string> = {
-  title?: React.ReactNode | null;
+type PageHeaderProps<Id extends string = string> = {
   actions?: ResolvedAction<Id>[];
   primary?: Id | readonly Id[];
   groups?: Record<'add', Id[]>;
-};
-type PageHeaderProps<Id extends string = string> = TitleActionsRowProps<Id> & {
   breadcrumbs?: { label: string; href?: LinkProps['href'] }[];
   title: string;
   subtitle?: React.ReactNode;
 };
-
-export function TitleActionsRow<Id extends string = string>({
-  title,
-  actions,
-  primary,
-  groups,
-  variant = 'heading',
-  ...typography
-}: TitleActionsRowProps<Id> &
-  Omit<Partial<NonNullable<Parameters<typeof typographyCls>[0]>>, 'class'>) {
-  return (
-    <div className="flex flex-wrap-reverse justify-between gap-4 items-center">
-      <div className="min-w-0">
-        <h1
-          className={typographyCls({
-            variant,
-            spacing: variant === 'heading' ? 'topLevel' : undefined,
-            ...typography,
-          })}
-        >
-          {title}
-        </h1>
-      </div>
-
-      {actions && <ActionGroup className="ml-auto" primary={primary} groups={groups} actions={actions} />}
-    </div>
-  );
-}
 
 export function PageHeader<Id extends string = string>({
   breadcrumbs,
@@ -117,14 +86,16 @@ export function PageHeader<Id extends string = string>({
         </nav>
       )}
 
-      <TitleActionsRow
-        variant="heading"
-        spacing="default"
-        title={title}
-        actions={actions}
-        primary={primary}
-        groups={groups}
-      />
+      <div className="flex flex-wrap-reverse justify-between gap-2 items-center">
+        <div className="min-w-0">
+          <h1 className={typographyCls({ variant: 'heading', spacing: 'default' })}>
+            {title}
+          </h1>
+        </div>
+
+        {actions && <ActionGroup className="ml-auto" primary={primary} groups={groups} actions={actions} />}
+      </div>
+
       {subtitle && <p className="my-2 text-sm text-accent-12">{subtitle}</p>}
     </div>
   );

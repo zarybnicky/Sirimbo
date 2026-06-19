@@ -1,10 +1,10 @@
 import type { AnnouncementFragment } from '@/graphql/Announcement';
 import { AnnouncementMeta, useAnnouncementActions } from '@/ui/AnnouncementShared';
-import { TitleActionsRow } from '@/ui/TitleBar';
 import React from 'react';
-import { cardCls } from './style';
+import { cardCls, typographyCls } from './style';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import { RichTextView } from '@/ui/RichTextView';
+import { ActionGroup } from './ActionGroup';
 
 interface Props {
   item: AnnouncementFragment;
@@ -33,19 +33,19 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
       onClick={expanded ? undefined : open}
       className={cardCls({ className: expanded ? '' : 'cursor-pointer' })}
     >
-      <TitleActionsRow
-        title={
-          expanded ? (
+      <div className="flex justify-between gap-2 items-start">
+        <h3 className={typographyCls({ className: 'min-w-0', variant: 'cardHeading' })}>
+          {expanded ? (
             <div className="cursor-pointer" onClick={() => setExpanded(false)}>
               {item.title}
             </div>
           ) : (
             item.title
-          )
-        }
-        variant="cardHeading"
-        actions={actions}
-      />
+          )}
+        </h3>
+
+        {actions && <ActionGroup className="ml-auto" actions={actions} />}
+      </div>
 
       <AnnouncementMeta item={item} />
 
