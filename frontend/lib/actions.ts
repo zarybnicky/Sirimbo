@@ -5,6 +5,7 @@ import { Client, TypedDocumentNode, useClient } from 'urql';
 import { NextRouter, useRouter } from 'next/router';
 import type { ConfirmOptions } from '@/ui/Confirm';
 import { DialogContent } from '@/ui/dialog';
+import type { LinkProps } from 'next/link';
 
 export type ActionContext<T> = {
   auth: AuthState;
@@ -20,6 +21,7 @@ export type ActionContext<T> = {
 type Resolvable<T, V> = V | ((ctx: ActionContext<T>) => V);
 type Icon = ComponentType<{ className?: string }>;
 type DialogBody<T> = ComponentType<ActionContext<T>>;
+type Href = LinkProps['href'];
 
 const resolve = <T, V>(v: Resolvable<T, V>, ctx: ActionContext<T>): V =>
   typeof v === 'function' ? (v as (c: ActionContext<T>) => V)(ctx) : v;
@@ -40,6 +42,9 @@ export type Action<T, Id extends string = string> = {
       render: DialogBody<T> | (() => Promise<{ default: DialogBody<T> }>);
       dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
     }
+  | {
+      href: Resolvable<T, Href>;
+    }
 );
 
 export type ResolvedAction<Id extends string = string> = {
@@ -56,6 +61,9 @@ export type ResolvedAction<Id extends string = string> = {
   | {
       render: () => React.ReactNode;
       dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
+    }
+  | {
+      href: Href;
     }
 );
 
@@ -82,6 +90,13 @@ function resolveOne<T>(a: Action<T>, ctx: ActionContext<T>): ResolvedAction {
       ...base,
       confirm: a.confirm ? resolve(a.confirm, ctx) : undefined,
       execute: () => a.execute(ctx),
+    };
+  }
+
+  if ('href' in a) {
+    return {
+      ...base,
+      href: resolve(a.href, ctx),
     };
   }
 

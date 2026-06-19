@@ -11,11 +11,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { useAuth } from '@/ui/use-auth';
 import { diff } from 'date-arithmetic';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
-import { buttonCls } from '@/ui/style';
 import * as React from 'react';
-import Link from 'next/link';
 import { Check, HelpCircle, X } from 'lucide-react';
-import { canManageInstance } from '@/lib/actions/eventInstance';
+import { canManageInstance, eventInstanceActions } from '@/lib/actions/eventInstance';
+import { useActions } from '@/lib/actions';
+import { ActionGroup } from './ActionGroup';
 
 export function EventButton({
   event,
@@ -49,6 +49,8 @@ export function EventButton({
       : viewer === 'trainer'
         ? false
         : !trainerIds.some((id) => auth.isMyPerson(id));
+
+  const actions = useActions(eventInstanceActions.filter(x => ['eventInstance.edit', 'eventInstance.attendance'].includes(x.id)), instance);
 
   const showInlineAttendance =
     attendance === 'inline' &&
@@ -112,28 +114,9 @@ export function EventButton({
           </div>
         </PopoverTrigger>
 
-        <PopoverContent align="start">
+        <PopoverContent align="start" className="flex flex-col gap-2">
           <EventSummary offsetButtons event={event} instance={instance} />
-          {showInlineAttendance && (
-            <div className="mt-2">
-              <Link
-                className={buttonCls({
-                  size: 'sm',
-                  variant: 'outline',
-                  className: 'inline-flex items-center',
-                })}
-                href={{
-                  pathname: '/akce/[id]/termin/[instance]',
-                  query: {
-                    id: event.id,
-                    instance: instance.id,
-                  },
-                }}
-              >
-                Docházka
-              </Link>
-            </div>
-          )}
+          <ActionGroup primary={['eventInstance.edit', 'eventInstance.attendance']} actions={actions} />
         </PopoverContent>
       </Popover>
     </div>
@@ -144,56 +127,44 @@ type AttendanceStats = Record<'TOTAL' | 'UNKNOWN' | 'ATTENDED' | 'NOT_EXCUSED', 
 
 function InlineAttendanceStats({ stats: input }: { stats: any; }) {
   const parsed = typeof input === 'string' ? JSON.parse(input) : input;
-  const record = parsed && typeof parsed === 'object' ? (parsed as Partial<AttendanceStats>) : {};
-  const stats = {
-    TOTAL: record.TOTAL ?? 0,
-    UNKNOWN: record.UNKNOWN ?? 0,
-    ATTENDED: record.ATTENDED ?? 0,
-    NOT_EXCUSED: record.NOT_EXCUSED ?? 0,
-  };
-
-  const items = [
-    {
-      key: 'ATTENDED',
-      label: 'přítomno',
-      value: stats.ATTENDED,
-      className: 'bg-green-3 text-green-11',
-      Icon: Check,
-    },
-    {
-      key: 'NOT_EXCUSED',
-      label: 'neomluveno',
-      value: stats.NOT_EXCUSED,
-      className: 'bg-[#fbe4e8] text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]',
-      Icon: X,
-    },
-    {
-      key: 'UNKNOWN',
-      label: 'nezadáno',
-      value: stats.UNKNOWN,
-      className: 'bg-neutral-2 text-neutral-11',
-      Icon: HelpCircle,
-    },
-  ];
+  const stats = parsed && typeof parsed === 'object' ? (parsed as Partial<AttendanceStats>) : {};
 
   return (
     <div
-      aria-label={`Docházka: přítomno ${stats.ATTENDED}, neomluveno ${stats.NOT_EXCUSED}, nezadáno ${stats.UNKNOWN}`}
       className="inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums"
     >
-      {items.map(({ key, label, value, className, Icon }) => (
         <span
-          key={key}
-          title={label}
+          title="zůčastnilo se"
           className={cn(
             'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
-            className,
+            'bg-green-3 text-green-11',
           )}
         >
-          <Icon className="size-3 shrink-0" aria-hidden="true" />
-          <span>{value}</span>
+          <Check className="size-3 shrink-0" aria-hidden="true" />
+          <span>{stats.ATTENDED ?? 0}</span>
         </span>
-      ))}
+        <span
+          title="nezúčastnilo se"
+          className={cn(
+            'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
+            'bg-[#fbe4e8] text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]',
+          )}
+        >
+          <X className="size-3 shrink-0" aria-hidden="true" />
+          <span>{stats.NOT_EXCUSED ?? 0}</span>
+        </span>
+      {typeof stats.UNKNOWN === 'number' && stats.UNKNOWN > 0 && (
+        <span
+          title="nezadáno"
+          className={cn(
+            'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
+            'bg-neutral-2 text-neutral-11',
+          )}
+        >
+          <HelpCircle className="size-3 shrink-0" aria-hidden="true" />
+          <span>{stats.UNKNOWN}</span>
+        </span>
+      )}
     </div>
   );
 }

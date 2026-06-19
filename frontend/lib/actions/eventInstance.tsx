@@ -67,6 +67,18 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     },
   },
   {
+    id: 'eventInstance.attendance',
+    label: 'Docházka',
+    visible: canManageInstance,
+    href: ({ item }) => ({
+      pathname: '/akce/[id]/termin/[instance]',
+      query: {
+        id: item.eventId,
+        instance: item.id,
+      },
+    }),
+  },
+  {
     id: 'eventInstance.detach',
     label: 'Oddělit termín',
     icon: GitBranch,

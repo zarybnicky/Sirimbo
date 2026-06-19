@@ -17,7 +17,6 @@ import { eventInstanceActions } from '@/lib/actions/eventInstance';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
 import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
 

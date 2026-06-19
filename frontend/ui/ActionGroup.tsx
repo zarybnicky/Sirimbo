@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   DropdownMenuButton,
   DropdownMenuContent,
+  DropdownMenuLink,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { useConfirm } from '@/ui/Confirm';
@@ -12,6 +13,7 @@ import type { ResolvedAction } from '@/lib/actions';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
 import { ChevronDown, Plus } from 'lucide-react';
+import Link from 'next/link';
 
 type BucketKey = 'add' | 'more';
 
@@ -107,6 +109,7 @@ export function ActionGroup<Id extends string = string>({
 
   const fire = async (action: ResolvedAction<Id>) => {
     if ('render' in action) return setDialogAction(action);
+    if (!('execute' in action)) return;
     if (action.confirm) {
       try {
         await confirm(
@@ -132,16 +135,27 @@ export function ActionGroup<Id extends string = string>({
       onClick={(e) => e.stopPropagation()}
     >
       {primaryActions.map((a) => (
-        <button
-          key={a.id}
-          type="button"
-          disabled={pending === a.id}
-          className={buttonCls({ variant: 'outline', size: 'sm' })}
-          onClick={() => fire(a)}
-        >
-          {a.icon && <a.icon className="size-4" />}
-          {a.label}
-        </button>
+        'href' in a ? (
+          <Link
+            key={a.id}
+            href={a.href}
+            className={buttonCls({ variant: 'outline', size: 'sm' })}
+          >
+            {a.icon && <a.icon className="size-4" />}
+            {a.label}
+          </Link>
+        ) : (
+          <button
+            key={a.id}
+            type="button"
+            disabled={pending === a.id}
+            className={buttonCls({ variant: 'outline', size: 'sm' })}
+            onClick={() => fire(a)}
+          >
+            {a.icon && <a.icon className="size-4" />}
+            {a.label}
+          </button>
+        )
       ))}
       {buckets.map(({ key, items }) => (
         <DropdownMenu key={key}>
@@ -161,15 +175,26 @@ export function ActionGroup<Id extends string = string>({
 
           <DropdownMenuContent align={align ?? (variant === 'toolbar' ? 'end' : 'start')}>
             {items.map((a) => (
-              <DropdownMenuButton
-                key={a.id}
-                disabled={pending === a.id}
-                onSelect={() => fire(a)}
-                className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
-              >
-                {a.icon && <a.icon className="size-4" />}
-                {a.label}
-              </DropdownMenuButton>
+              'href' in a ? (
+                <DropdownMenuLink
+                  key={a.id}
+                  href={a.href}
+                  className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
+                >
+                  {a.icon && <a.icon className="size-4" />}
+                  {a.label}
+                </DropdownMenuLink>
+              ) : (
+                <DropdownMenuButton
+                  key={a.id}
+                  disabled={pending === a.id}
+                  onSelect={() => fire(a)}
+                  className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
+                >
+                  {a.icon && <a.icon className="size-4" />}
+                  {a.label}
+                </DropdownMenuButton>
+              )
             ))}
           </DropdownMenuContent>
         </DropdownMenu>

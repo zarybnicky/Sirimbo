@@ -8,10 +8,11 @@ export const paymentActions = defineActions<{ id: string; status: PaymentStatus 
     id: 'payment.detail',
     label: 'Detail',
     icon: Info,
-    visible: () => true,
-    execute: async ({ item, router }) => {
-      await router.push({ pathname: '/platby/[id]', query: { id: item.id } });
-    },
+    visible: true,
+    href: ({ item }) => ({
+      pathname: '/platby/[id]',
+      query: { id: item.id },
+    }),
   },
   {
     id: 'payment.markAsPaid',
