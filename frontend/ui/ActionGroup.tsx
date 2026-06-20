@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useRef, useState } from 'react';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
 import {
@@ -98,6 +98,7 @@ export function ActionGroup<Id extends string = string>({
     { render: () => React.ReactNode }
   > | null>(null);
   const [pending, setPending] = useState<Id | null>(null);
+  const openingDialogFromDropdown = useRef(false);
 
   if (actions.length === 0) return null;
 
@@ -107,8 +108,14 @@ export function ActionGroup<Id extends string = string>({
     variant,
   });
 
-  const fire = async (action: ResolvedAction<Id>) => {
-    if ('render' in action) return setDialogAction(action);
+  const fire = async (
+    action: ResolvedAction<Id>,
+    { fromDropdown = false }: { fromDropdown?: boolean } = {},
+  ) => {
+    if ('render' in action) {
+      openingDialogFromDropdown.current = fromDropdown;
+      return setDialogAction(action);
+    }
     if (!('execute' in action)) return;
     if (action.confirm) {
       try {
@@ -173,7 +180,14 @@ export function ActionGroup<Id extends string = string>({
             <DropdownMenuTrigger.CornerDots className="relative top-0 right-0" />
           )}
 
-          <DropdownMenuContent align={align ?? (variant === 'toolbar' ? 'end' : 'start')}>
+          <DropdownMenuContent
+            align={align ?? (variant === 'toolbar' ? 'end' : 'start')}
+            onCloseAutoFocus={(event) => {
+              if (!openingDialogFromDropdown.current) return;
+              openingDialogFromDropdown.current = false;
+              event.preventDefault();
+            }}
+          >
             {items.map((a) => (
               'href' in a ? (
                 <DropdownMenuLink
@@ -188,7 +202,7 @@ export function ActionGroup<Id extends string = string>({
                 <DropdownMenuButton
                   key={a.id}
                   disabled={pending === a.id}
-                  onSelect={() => fire(a)}
+                  onSelect={() => fire(a, { fromDropdown: true })}
                   className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
                 >
                   {a.icon && <a.icon className="size-4" />}
@@ -201,7 +215,11 @@ export function ActionGroup<Id extends string = string>({
       ))}
 
       {dialogAction && (
-        <Dialog open onOpenChange={() => setDialogAction(null)}>
+        <Dialog
+          open
+          modal={dialogAction.modal}
+          onOpenChange={() => setDialogAction(null)}
+        >
           <DialogContent {...dialogAction.dialogProps}>
             <Suspense fallback={<Spinner />}>{dialogAction.render()}</Suspense>
           </DialogContent>

@@ -40,6 +40,7 @@ export type Action<T, Id extends string = string> = {
     }
   | {
       render: DialogBody<T> | (() => Promise<{ default: DialogBody<T> }>);
+      modal?: boolean;
       dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
     }
   | {
@@ -60,6 +61,7 @@ export type ResolvedAction<Id extends string = string> = {
     }
   | {
       render: () => React.ReactNode;
+      modal?: boolean;
       dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
     }
   | {
@@ -107,6 +109,7 @@ function resolveOne<T>(a: Action<T>, ctx: ActionContext<T>): ResolvedAction {
 
   return {
     ...base,
+    modal: a.modal,
     dialogProps: a.dialogProps,
     render: () => React.createElement(Body, ctx),
   };

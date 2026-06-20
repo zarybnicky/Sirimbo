@@ -266,11 +266,16 @@
 .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
   flex-wrap: wrap !important;
 }
+.ck-body-wrapper {
+  pointer-events: auto;
+}
 html,
 body {
   --ck-border-radius: .5rem;
   --ck-color-base-border: hsl(var(--accent-9));
   --ck-color-toolbar-border: hsl(var(--accent-9));
+  --ck-z-default: 50;
+  --ck-z-panel: calc(var(--ck-z-default) + 999);
 }
 
 .PopoverContent {

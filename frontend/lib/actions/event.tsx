@@ -31,9 +31,11 @@ export const eventActions = defineActions<EventFragment>()([
       auth.isAdmin ||
       (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
     render: ({ item }) => <EditEventDescriptionForm id={item.id} />,
+    modal: false,
     dialogProps: {
       className: 'sm:max-w-xl',
       onPointerDownOutside: (e) => e.preventDefault(),
+      onInteractOutside: (e) => e.preventDefault(),
     },
   },
   {
