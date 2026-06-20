@@ -16,6 +16,7 @@ import { tenantIdAtom } from '@/ui/state/auth';
 import { useAtomValue } from 'jotai';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { CstsPersonSourceLink } from '@/ui/CstsPersonSourceLink';
+import { Facebook, Globe, Instagram, Music2 } from 'lucide-react';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
@@ -82,6 +83,48 @@ export function PersonView({ id }: { id: string }) {
 
   const subtitleParts = [categoryProgress, item.phone, item.email].filter(Boolean);
   const hasSubtitle = subtitleParts.length > 0 || Boolean(item.cstsId);
+  const facebookUrl =
+    item.facebookUrl?.startsWith('https://') || item.facebookUrl?.startsWith('http://')
+      ? item.facebookUrl
+      : null;
+  const websiteUrl =
+    item.websiteUrl?.startsWith('https://') || item.websiteUrl?.startsWith('http://')
+      ? item.websiteUrl
+      : null;
+  const socialLinks = [
+    {
+      id: 'instagram',
+      label: 'Instagram',
+      text: item.instagramUsername ? `@${item.instagramUsername}` : 'Instagram',
+      href: item.instagramUsername
+        ? `https://www.instagram.com/${encodeURIComponent(item.instagramUsername)}`
+        : null,
+      Icon: Instagram,
+    },
+    {
+      id: 'tiktok',
+      label: 'TikTok',
+      text: item.tiktokUsername ? `@${item.tiktokUsername}` : 'TikTok',
+      href: item.tiktokUsername
+        ? `https://www.tiktok.com/@${encodeURIComponent(item.tiktokUsername)}`
+        : null,
+      Icon: Music2,
+    },
+    {
+      id: 'facebook',
+      label: 'Facebook',
+      text: 'Facebook',
+      href: facebookUrl,
+      Icon: Facebook,
+    },
+    {
+      id: 'website',
+      label: 'Web',
+      text: 'Web',
+      href: websiteUrl,
+      Icon: Globe,
+    },
+  ].filter((link) => link.href);
 
   return (
     <>
@@ -105,6 +148,24 @@ export function PersonView({ id }: { id: string }) {
         }
         actions={actions}
       />
+
+      {socialLinks.length > 0 && (
+        <div className="-mt-2 mb-4 flex flex-wrap gap-2">
+          {socialLinks.map(({ id, label, text, href, Icon }) => (
+            <a
+              key={id}
+              href={href!}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Otevřít ${label}`}
+              className="inline-flex min-h-8 items-center gap-1.5 rounded-md border border-neutral-5 bg-neutral-2 px-2.5 py-1 text-sm text-neutral-12 hover:border-accent-7 hover:bg-accent-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+            >
+              <Icon className="size-4 shrink-0" aria-hidden="true" />
+              <span>{text}</span>
+            </a>
+          ))}
+        </div>
+      )}
 
       <TabMenu selected={tab} onSelect={setTab} options={tabs} />
     </>

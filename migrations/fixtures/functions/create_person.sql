@@ -20,7 +20,11 @@ begin
       bio,
       email,
       phone,
-      external_ids
+      external_ids,
+      instagram_username,
+      tiktok_username,
+      facebook_url,
+      website_url
     ) values (
       p.first_name,
       p.last_name,
@@ -36,7 +40,11 @@ begin
       p.bio,
       p.email,
       p.phone,
-      p.external_ids
+      p.external_ids,
+      p.instagram_username,
+      p.tiktok_username,
+      p.facebook_url,
+      p.website_url
     ) returning * into p;
   else
     select * into p from person where person.id=person_id;

@@ -11757,6 +11757,14 @@
             "args": []
           },
           {
+            "name": "facebookUrl",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "firstName",
             "type": {
               "kind": "NON_NULL",
@@ -11794,6 +11802,14 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "instagramUsername",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -12260,6 +12276,14 @@
             ]
           },
           {
+            "name": "tiktokUsername",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "updatedAt",
             "type": {
               "kind": "NON_NULL",
@@ -12325,6 +12349,14 @@
           },
           {
             "name": "wdsfId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "websiteUrl",
             "type": {
               "kind": "SCALAR",
               "name": "Any"

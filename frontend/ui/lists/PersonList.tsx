@@ -75,7 +75,18 @@ export function PersonList() {
 
   const fuzzy = useFuzzySearch(
     nodes,
-    ['id', 'name', 'cohort', 'phone', 'email', 'yearOfBirth'],
+    [
+      'id',
+      'name',
+      'cohort',
+      'phone',
+      'email',
+      'instagramUsername',
+      'tiktokUsername',
+      'facebookUrl',
+      'websiteUrl',
+      'yearOfBirth',
+    ],
     search || '',
   );
 
@@ -139,7 +150,7 @@ export function PersonList() {
         <TextField
           type="search"
           className="w-full mt-2"
-          placeholder="Jméno, email, telefon"
+          placeholder="Jméno, email, telefon, sociální sítě"
           value={search || ''}
           onChange={(e) => setSearch(e.currentTarget.value)}
         />

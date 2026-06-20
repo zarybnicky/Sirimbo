@@ -5650,12 +5650,16 @@ enum PeopleOrderBy {
   CSTS_ID_DESC
   EMAIL_ASC
   EMAIL_DESC
+  FACEBOOK_URL_ASC
+  FACEBOOK_URL_DESC
   FIRST_NAME_ASC
   FIRST_NAME_DESC
   GENDER_ASC
   GENDER_DESC
   ID_ASC
   ID_DESC
+  INSTAGRAM_USERNAME_ASC
+  INSTAGRAM_USERNAME_DESC
   LAST_NAME_ASC
   LAST_NAME_DESC
   NAME_ASC
@@ -5677,10 +5681,14 @@ enum PeopleOrderBy {
   SUFFIX_TITLE_DESC
   TAX_IDENTIFICATION_NUMBER_ASC
   TAX_IDENTIFICATION_NUMBER_DESC
+  TIKTOK_USERNAME_ASC
+  TIKTOK_USERNAME_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
   WDSF_ID_ASC
   WDSF_ID_DESC
+  WEBSITE_URL_ASC
+  WEBSITE_URL_DESC
 }
 
 type Person {
@@ -5886,10 +5894,12 @@ type Person {
     orderBy: [EventTrainersOrderBy!]
   ): [EventTrainer!]!
   externalIds: [String]
+  facebookUrl: String
   firstName: String!
   gender: GenderType!
   hasAccess: Boolean
   id: BigInt!
+  instagramUsername: String
   isAdmin: Boolean
   isMember: Boolean
   isTrainer: Boolean
@@ -6013,6 +6023,7 @@ type Person {
     """The method to use when ordering `TenantTrainer`."""
     orderBy: [TenantTrainersOrderBy!]
   ): [TenantTrainer!]!
+  tiktokUsername: String
   updatedAt: Datetime!
 
   """Reads and enables pagination through a set of `UserProxy`."""
@@ -6032,6 +6043,7 @@ type Person {
     orderBy: [UserProxiesOrderBy!]
   ): [UserProxy!]!
   wdsfId: Int
+  websiteUrl: String
   weeklyAttendanceList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -6082,6 +6094,9 @@ input PersonCondition {
   """Checks for equality with the object’s `externalIds` field."""
   externalIds: [String]
 
+  """Checks for equality with the object’s `facebookUrl` field."""
+  facebookUrl: String
+
   """Checks for equality with the object’s `firstName` field."""
   firstName: String
 
@@ -6090,6 +6105,9 @@ input PersonCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `instagramUsername` field."""
+  instagramUsername: String
 
   """Checks for equality with the object’s `lastName` field."""
   lastName: String
@@ -6123,11 +6141,17 @@ input PersonCondition {
   """Checks for equality with the object’s `taxIdentificationNumber` field."""
   taxIdentificationNumber: String
 
+  """Checks for equality with the object’s `tiktokUsername` field."""
+  tiktokUsername: String
+
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
 
   """Checks for equality with the object’s `wdsfId` field."""
   wdsfId: Int
+
+  """Checks for equality with the object’s `websiteUrl` field."""
+  websiteUrl: String
 }
 
 type PersonCstsCandidatesRecord {
@@ -6153,8 +6177,10 @@ input PersonInput {
   cstsId: Int
   email: String
   externalIds: [String]
+  facebookUrl: String
   firstName: String!
   gender: GenderType!
+  instagramUsername: String
   lastName: String!
   name: String
   nationalIdNumber: String
@@ -6164,8 +6190,10 @@ input PersonInput {
   prefixTitle: String
   suffixTitle: String
   taxIdentificationNumber: String
+  tiktokUsername: String
   updatedAt: Datetime
   wdsfId: Int
+  websiteUrl: String
 }
 
 type PersonInvitation {
@@ -6282,8 +6310,10 @@ input PersonPatch {
   cstsId: Int
   email: String
   externalIds: [String]
+  facebookUrl: String
   firstName: String
   gender: GenderType
+  instagramUsername: String
   lastName: String
   name: String
   nationalIdNumber: String
@@ -6293,8 +6323,10 @@ input PersonPatch {
   prefixTitle: String
   suffixTitle: String
   taxIdentificationNumber: String
+  tiktokUsername: String
   updatedAt: Datetime
   wdsfId: Int
+  websiteUrl: String
 }
 
 type PersonWeeklyAttendanceRecord {

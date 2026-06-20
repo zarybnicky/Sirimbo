@@ -4975,12 +4975,16 @@ export type PeopleOrderBy =
   | 'CSTS_ID_DESC'
   | 'EMAIL_ASC'
   | 'EMAIL_DESC'
+  | 'FACEBOOK_URL_ASC'
+  | 'FACEBOOK_URL_DESC'
   | 'FIRST_NAME_ASC'
   | 'FIRST_NAME_DESC'
   | 'GENDER_ASC'
   | 'GENDER_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'INSTAGRAM_USERNAME_ASC'
+  | 'INSTAGRAM_USERNAME_DESC'
   | 'LAST_NAME_ASC'
   | 'LAST_NAME_DESC'
   | 'NAME_ASC'
@@ -5002,10 +5006,14 @@ export type PeopleOrderBy =
   | 'SUFFIX_TITLE_DESC'
   | 'TAX_IDENTIFICATION_NUMBER_ASC'
   | 'TAX_IDENTIFICATION_NUMBER_DESC'
+  | 'TIKTOK_USERNAME_ASC'
+  | 'TIKTOK_USERNAME_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC'
   | 'WDSF_ID_ASC'
-  | 'WDSF_ID_DESC';
+  | 'WDSF_ID_DESC'
+  | 'WEBSITE_URL_ASC'
+  | 'WEBSITE_URL_DESC';
 
 export type Person = {
   __typename?: 'Person';
@@ -5039,10 +5047,12 @@ export type Person = {
   /** Reads and enables pagination through a set of `EventTrainer`. */
   eventTrainersList: Array<EventTrainer>;
   externalIds: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  facebookUrl: Maybe<Scalars['String']['output']>;
   firstName: Scalars['String']['output'];
   gender: GenderType;
   hasAccess: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['BigInt']['output'];
+  instagramUsername: Maybe<Scalars['String']['output']>;
   isAdmin: Maybe<Scalars['Boolean']['output']>;
   isMember: Maybe<Scalars['Boolean']['output']>;
   isTrainer: Maybe<Scalars['Boolean']['output']>;
@@ -5068,10 +5078,12 @@ export type Person = {
   tenantMembershipsList: Array<TenantMembership>;
   /** Reads and enables pagination through a set of `TenantTrainer`. */
   tenantTrainersList: Array<TenantTrainer>;
+  tiktokUsername: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `UserProxy`. */
   userProxiesList: Array<UserProxy>;
   wdsfId: Maybe<Scalars['Int']['output']>;
+  websiteUrl: Maybe<Scalars['String']['output']>;
   weeklyAttendanceList: Maybe<Array<PersonWeeklyAttendanceRecord>>;
 };
 
@@ -5270,12 +5282,16 @@ export type PersonCondition = {
   email?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalIds` field. */
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Checks for equality with the object’s `facebookUrl` field. */
+  facebookUrl?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `firstName` field. */
   firstName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `gender` field. */
   gender?: InputMaybe<GenderType>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `instagramUsername` field. */
+  instagramUsername?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `lastName` field. */
   lastName?: InputMaybe<Scalars['String']['input']>;
   /** Filters people by tenant membership, cohort membership, trainer status, and administrator status. */
@@ -5296,10 +5312,14 @@ export type PersonCondition = {
   suffixTitle?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `taxIdentificationNumber` field. */
   taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `tiktokUsername` field. */
+  tiktokUsername?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `wdsfId` field. */
   wdsfId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `websiteUrl` field. */
+  websiteUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PersonCstsCandidatesRecord = {
@@ -5327,8 +5347,10 @@ export type PersonInput = {
   cstsId?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  facebookUrl?: InputMaybe<Scalars['String']['input']>;
   firstName: Scalars['String']['input'];
   gender: GenderType;
+  instagramUsername?: InputMaybe<Scalars['String']['input']>;
   lastName: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
@@ -5338,8 +5360,10 @@ export type PersonInput = {
   prefixTitle?: InputMaybe<Scalars['String']['input']>;
   suffixTitle?: InputMaybe<Scalars['String']['input']>;
   taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
+  tiktokUsername?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   wdsfId?: InputMaybe<Scalars['Int']['input']>;
+  websiteUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PersonInvitation = {
@@ -5438,8 +5462,10 @@ export type PersonPatch = {
   cstsId?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  facebookUrl?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<GenderType>;
+  instagramUsername?: InputMaybe<Scalars['String']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   nationalIdNumber?: InputMaybe<Scalars['String']['input']>;
@@ -5449,8 +5475,10 @@ export type PersonPatch = {
   prefixTitle?: InputMaybe<Scalars['String']['input']>;
   suffixTitle?: InputMaybe<Scalars['String']['input']>;
   taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
+  tiktokUsername?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   wdsfId?: InputMaybe<Scalars['Int']['input']>;
+  websiteUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PersonWeeklyAttendanceRecord = {
@@ -9800,10 +9828,12 @@ export type GraphCacheResolvers = {
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Person>, PersonEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
     eventTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonEventTrainersListArgs, Array<WithTypename<EventTrainer> | string>>,
     externalIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
+    facebookUrl?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     firstName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     gender?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, GenderType | string>,
     hasAccess?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    instagramUsername?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     isAdmin?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isMember?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isTrainer?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -9823,9 +9853,11 @@ export type GraphCacheResolvers = {
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
     tenantTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
+    tiktokUsername?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<Person>, PersonUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
     wdsfId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Int']['output'] | string>,
+    websiteUrl?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     weeklyAttendanceList?: GraphCacheResolver<WithTypename<Person>, PersonWeeklyAttendanceListArgs, Array<WithTypename<PersonWeeklyAttendanceRecord> | string>>
   },
   PersonCstsCandidatesRecord?: {
@@ -11462,10 +11494,12 @@ export type GraphCacheUpdaters = {
     eventRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventRegistrationsListArgs>,
     eventTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventTrainersListArgs>,
     externalIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    facebookUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     gender?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     hasAccess?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    instagramUsername?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isAdmin?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isMember?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
@@ -11485,9 +11519,11 @@ export type GraphCacheUpdaters = {
     tenantAdministratorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantAdministratorsListArgs>,
     tenantMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantMembershipsListArgs>,
     tenantTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantTrainersListArgs>,
+    tiktokUsername?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonUserProxiesListArgs>,
     wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    websiteUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     weeklyAttendanceList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonWeeklyAttendanceListArgs>
   },
   PersonCstsCandidatesRecord?: {

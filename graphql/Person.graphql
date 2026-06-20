@@ -22,6 +22,10 @@ fragment Person on Person {
   isMember
   prefixTitle
   suffixTitle
+  instagramUsername
+  tiktokUsername
+  facebookUrl
+  websiteUrl
   address {
     city
     region

@@ -15,6 +15,50 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RichTextEditor } from '@/ui/fields/richtext';
 
+const socialUsernamePattern = /^[A-Za-z0-9._]+$/;
+const instagramUsername = z.preprocess(
+  (value) => {
+    if (typeof value !== 'string') return null;
+    const raw = value.trim();
+    if (!raw) return null;
+    const marker = 'instagram.com/';
+    const platformIndex = raw.toLowerCase().indexOf(marker);
+    const text = platformIndex >= 0 ? raw.slice(platformIndex + marker.length) : raw;
+    return text.replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null;
+  },
+  z
+    .string()
+    .max(64)
+    .refine((value) => socialUsernamePattern.test(value), 'Zadejte platné uživatelské jméno')
+    .nullable(),
+);
+const tiktokUsername = z.preprocess(
+  (value) => {
+    if (typeof value !== 'string') return null;
+    const raw = value.trim();
+    if (!raw) return null;
+    const marker = 'tiktok.com/';
+    const platformIndex = raw.toLowerCase().indexOf(marker);
+    const text = platformIndex >= 0 ? raw.slice(platformIndex + marker.length) : raw;
+    return text.replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null;
+  },
+  z
+    .string()
+    .max(64)
+    .refine((value) => socialUsernamePattern.test(value), 'Zadejte platné uživatelské jméno')
+    .nullable(),
+);
+const url = z.preprocess(
+  (value) => (typeof value === 'string' && value.trim() ? value.trim() : null),
+  z
+    .url('Zadejte platnou URL adresu')
+    .refine(
+      (value) => value.startsWith('https://') || value.startsWith('http://'),
+      'Zadejte HTTP(S) URL',
+    )
+    .nullable(),
+);
+
 const Form = z.object({
   prefixTitle: z.string().prefault(''),
   firstName: z.string(),
@@ -24,6 +68,10 @@ const Form = z.object({
   birthDate: z.string().nullish(),
   email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),
+  instagramUsername,
+  tiktokUsername,
+  facebookUrl: url,
+  websiteUrl: url,
   cstsId: z.number().int().positive().nullable().optional(),
   wdsfId: z.number().int().positive().nullable().optional(),
   taxIdentificationNumber: z
@@ -82,6 +130,34 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
 
       <TextFieldElement control={control} name="email" type="email" label="E-mail" />
       <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
+      <TextFieldElement
+        control={control}
+        name="instagramUsername"
+        label="Instagram"
+        placeholder="uzivatel"
+        helperText="Uživatelské jméno bez @"
+      />
+      <TextFieldElement
+        control={control}
+        name="tiktokUsername"
+        label="TikTok"
+        placeholder="uzivatel"
+        helperText="Uživatelské jméno bez @"
+      />
+      <TextFieldElement
+        control={control}
+        name="facebookUrl"
+        type="url"
+        label="Facebook"
+        placeholder="https://www.facebook.com/..."
+      />
+      <TextFieldElement
+        control={control}
+        name="websiteUrl"
+        type="url"
+        label="Web"
+        placeholder="https://..."
+      />
 
       <DatePickerElement
         control={control}

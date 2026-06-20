@@ -34,6 +34,34 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+const socialUsernamePattern = /^[A-Za-z0-9._]+$/;
+const instagramUsername = z.preprocess(
+  (value) => normalizeUsername(value, 'instagram'),
+  z
+    .string()
+    .max(64)
+    .refine((value) => socialUsernamePattern.test(value), 'Zadejte platné uživatelské jméno')
+    .nullable(),
+);
+const tiktokUsername = z.preprocess(
+  (value) => normalizeUsername(value, 'tiktok'),
+  z
+    .string()
+    .max(64)
+    .refine((value) => socialUsernamePattern.test(value), 'Zadejte platné uživatelské jméno')
+    .nullable(),
+);
+const url = z.preprocess(
+  (value) => (typeof value === 'string' && value.trim() ? value.trim() : null),
+  z
+    .url('Zadejte platnou URL adresu')
+    .refine(
+      (value) => value.startsWith('https://') || value.startsWith('http://'),
+      'Zadejte HTTP(S) URL',
+    )
+    .nullable(),
+);
+
 const Form = z.object({
   prefixTitle: z.string().prefault(''),
   firstName: z.string(),
@@ -51,6 +79,10 @@ const Form = z.object({
   bio: z.string().prefault(''),
   email: z.email().optional(),
   phone: z.string().optional(),
+  instagramUsername,
+  tiktokUsername,
+  facebookUrl: url,
+  websiteUrl: url,
   personId: z.string().nullish().prefault(null),
   isMember: z.boolean().prefault(false),
   isTrainer: z.boolean().prefault(false),
@@ -111,6 +143,10 @@ export function CreatePersonDialog() {
       setValue('gender', person.gender);
       setValue('phone', person.phone || undefined);
       setValue('email', person.email || undefined);
+      setValue('instagramUsername', person.instagramUsername || null);
+      setValue('tiktokUsername', person.tiktokUsername || null);
+      setValue('facebookUrl', person.facebookUrl || null);
+      setValue('websiteUrl', person.websiteUrl || null);
       setValue('sendInvitation', false);
       setValue('cohortIds', person.cohortIds?.filter(isTruthy) ?? []);
       setCohortPickerOpen((person.cohortIds?.filter(isTruthy) ?? []).length > 0);
@@ -138,6 +174,10 @@ export function CreatePersonDialog() {
       setValue('sendInvitation', false);
       setValue('nationality', '203');
       setValue('joinDate', new Date());
+      setValue('instagramUsername', null);
+      setValue('tiktokUsername', null);
+      setValue('facebookUrl', null);
+      setValue('websiteUrl', null);
       // eslint-disable-next-line react-hook-form/no-nested-object-setvalue
       setValue('cohortIds', []);
       setCohortPickerOpen(false);
@@ -289,6 +329,34 @@ export function CreatePersonDialog() {
               label="E-mail"
               type="email"
             />
+            <TextFieldElement
+              control={control}
+              name="instagramUsername"
+              label="Instagram"
+              placeholder="uzivatel"
+              helperText="Uživatelské jméno bez @"
+            />
+            <TextFieldElement
+              control={control}
+              name="tiktokUsername"
+              label="TikTok"
+              placeholder="uzivatel"
+              helperText="Uživatelské jméno bez @"
+            />
+            <TextFieldElement
+              control={control}
+              name="facebookUrl"
+              type="url"
+              label="Facebook"
+              placeholder="https://www.facebook.com/..."
+            />
+            <TextFieldElement
+              control={control}
+              name="websiteUrl"
+              type="url"
+              label="Web"
+              placeholder="https://..."
+            />
           </fieldset>
 
           <div className="grid lg:grid-cols-2 gap-2">
@@ -354,4 +422,16 @@ export function CreatePersonDialog() {
       </DialogContent>
     </Dialog>
   );
+}
+
+function normalizeUsername(value: unknown, platform: 'instagram' | 'tiktok') {
+  if (typeof value !== 'string') return null;
+
+  const raw = value.trim();
+  if (!raw) return null;
+
+  const marker = `${platform}.com/`;
+  const platformIndex = raw.toLowerCase().indexOf(marker);
+  const text = platformIndex >= 0 ? raw.slice(platformIndex + marker.length) : raw;
+  return text.replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null;
 }
