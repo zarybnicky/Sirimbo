@@ -70,7 +70,7 @@ function CouplePage() {
 
         {personIds.length > 0 ? (
           <div className="mt-6">
-            <ActivityTimeline personIds={personIds} />
+            <ActivityTimeline personIds={personIds} includeJudging />
           </div>
         ) : null}
       </WithSidebar>

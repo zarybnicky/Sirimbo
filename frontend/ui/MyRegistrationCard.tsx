@@ -5,7 +5,6 @@ import {
 } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { dateTimeFormatter, formatRegistrant } from '@/ui/format';
-import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';

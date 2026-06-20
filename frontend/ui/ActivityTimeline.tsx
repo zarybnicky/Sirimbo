@@ -4,10 +4,12 @@ import {
   type ActivityTimelineItem_ActivityEventAttendance_Fragment,
   type ActivityTimelineItem_ActivityCompetitionBrief_Fragment,
   type ActivityTimelineItem_ActivityCompetitionResult_Fragment,
+  type ActivityTimelineItem_ActivityJudging_Fragment,
 } from '@/graphql/ActivityTimeline';
 import type { ActivityTimelineKind, AttendanceType, EventType } from '@/graphql';
 import { cn } from '@/lib/cn';
 import { CompetitionEventContent, type CompetitionEntry } from '@/ui/Competitions';
+import { formatCstsCategoryName } from '@/ui/csts';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/InstanceAttendanceView';
 import { formatWeekDay } from '@/ui/format';
@@ -15,17 +17,19 @@ import { buttonCls, cardCls } from '@/ui/style';
 import { add, subtract } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
+import { CstsResultsLink } from './csts-links';
 
 type TimelineMode = 'future' | 'past';
-type TimelineFilter = EventType | 'COMPETITION';
+type TimelineFilter = EventType | 'COMPETITION' | 'JUDGING';
 type TimelineItem = NonNullable<ActivityTimelineItemFragment>;
 type EventAttendanceItem = ActivityTimelineItem_ActivityEventAttendance_Fragment;
 type CompetitionItem =
   | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
   | ActivityTimelineItem_ActivityCompetitionResult_Fragment;
+type JudgingItem = ActivityTimelineItem_ActivityJudging_Fragment;
 
 const RANGE_WEEKS = 8;
-const FILTERS = [
+const BASE_FILTERS = [
   ['GROUP', 'Společná'],
   ['LESSON', 'Lekce'],
   ['CAMP', 'Soustředění'],
@@ -33,6 +37,10 @@ const FILTERS = [
   ['HOLIDAY', 'Prázdniny'],
   ['COMPETITION', 'Soutěže'],
 ] as const satisfies ReadonlyArray<readonly [TimelineFilter, string]>;
+const JUDGING_FILTER = ['JUDGING', 'Porota'] as const satisfies readonly [
+  TimelineFilter,
+  string,
+];
 
 function rangeFor(mode: TimelineMode, pages: number) {
   const now = new Date();
@@ -43,6 +51,15 @@ function rangeFor(mode: TimelineMode, pages: number) {
 }
 
 function competitionEventKey(item: CompetitionItem) {
+  return [
+    item.competitionEventId ?? '',
+    item.competitionDate ?? '',
+    item.competitionEventName ?? '',
+    item.competitionEventLocation ?? '',
+  ].join(':');
+}
+
+function judgingEventKey(item: JudgingItem) {
   return [
     item.competitionEventId ?? '',
     item.competitionDate ?? '',
@@ -89,27 +106,47 @@ function toCompetitionEntry(item: CompetitionItem): CompetitionEntry {
 export function ActivityTimeline({
   personIds,
   cohortId,
+  includeJudging = false,
 }: {
   personIds?: string[];
   cohortId?: string;
+  includeJudging?: boolean;
 }) {
   const [mode, setMode] = React.useState<TimelineMode>('future');
   const [pages, setPages] = React.useState(1);
+  const availableFilters = React.useMemo(
+    () => (includeJudging ? [...BASE_FILTERS, JUDGING_FILTER] : BASE_FILTERS),
+    [includeJudging],
+  );
   const [filters, setFilters] = React.useState<TimelineFilter[]>(() =>
-    FILTERS.map(([value]) => value).filter((x) => (cohortId ? x !== 'LESSON' : true)),
+    availableFilters
+      .map(([value]) => value)
+      .filter((x) => (cohortId ? x !== 'LESSON' : true)),
   );
   const scopeKey = `${cohortId ?? ''}:${personIds?.join(',') ?? ''}`;
   const range = React.useMemo(() => rangeFor(mode, pages), [mode, pages]);
   const hasScope = Boolean(cohortId || personIds?.length);
   const eventTypes = filters.filter(
-    (value): value is EventType => value !== 'COMPETITION',
+    (value): value is EventType => value !== 'COMPETITION' && value !== 'JUDGING',
   );
   const kinds: ActivityTimelineKind[] = eventTypes.length > 0 ? ['EVENT_ATTENDANCE'] : [];
   if (filters.includes('COMPETITION')) {
     kinds.push('COMPETITION_BRIEF', 'COMPETITION_RESULT');
   }
+  if (filters.includes('JUDGING')) {
+    kinds.push('JUDGING');
+  }
 
   React.useEffect(() => setPages(1), [scopeKey]);
+  React.useEffect(() => {
+    setFilters((value) =>
+      value.filter(
+        (filter) =>
+          availableFilters.some(([availableFilter]) => availableFilter === filter) &&
+          (!cohortId || filter !== 'LESSON'),
+      ),
+    );
+  }, [availableFilters, cohortId]);
 
   const toggleFilter = (filter: TimelineFilter) => {
     setPages(1);
@@ -178,7 +215,7 @@ export function ActivityTimeline({
         </div>
 
         <div className="mb-2 mt-1 flex flex-wrap gap-1">
-          {FILTERS.map(([filter, label]) => (
+          {availableFilters.map(([filter, label]) => (
             <button
               key={filter}
               type="button"
@@ -247,24 +284,29 @@ function TimelineDay({
 }) {
   const eventGroups = new Map<string, EventAttendanceItem[]>();
   const competitionGroups = new Map<string, CompetitionItem[]>();
+  const judgingGroups = new Map<string, JudgingItem[]>();
 
   for (const item of items) {
     if (item.__typename === 'ActivityEventAttendance' && item.eventInstance) {
       const key = item.eventInstance.id;
       eventGroups.set(key, [...(eventGroups.get(key) ?? []), item]);
-    } else if (item.__typename !== 'ActivityEventAttendance') {
+    } else if (
+      item.__typename === 'ActivityCompetitionBrief' ||
+      item.__typename === 'ActivityCompetitionResult'
+    ) {
       const key = competitionEventKey(item);
       competitionGroups.set(key, [...(competitionGroups.get(key) ?? []), item]);
+    } else if (item.__typename === 'ActivityJudging') {
+      const key = judgingEventKey(item);
+      judgingGroups.set(key, [...(judgingGroups.get(key) ?? []), item]);
     }
   }
 
   const eventRows = [...eventGroups.values()].toSorted((a, b) =>
     (a[0]?.eventInstance?.since ?? '').localeCompare(b[0]?.eventInstance?.since ?? ''),
   );
-  const competitionCards = [...competitionGroups.entries()].map(([key, groupItems]) => ({
-    key,
-    items: groupItems,
-  }));
+  const competitionCards = [...competitionGroups.entries()].map(([key, items]) => ({ key, items }));
+  const judgingCards = [...judgingGroups.entries()].map(([key, items]) => ({ key, items }));
 
   return (
     <section>
@@ -280,6 +322,13 @@ function TimelineDay({
           <div className="flex flex-wrap justify-start gap-2 opacity-90">
             {competitionCards.map(({ key, items }) => (
               <CompetitionTimelineCard key={`competition:${key}`} items={items} />
+            ))}
+          </div>
+        ) : null}
+        {judgingCards.length > 0 ? (
+          <div className="flex flex-wrap justify-start gap-2 opacity-90">
+            {judgingCards.map(({ key, items }) => (
+              <JudgingTimelineCard key={`judging:${key}`} items={items} />
             ))}
           </div>
         ) : null}
@@ -322,7 +371,7 @@ function TimelineEventButton({
       instance={instance}
       viewer="auto"
       suffix={
-        (mode === 'past' || isCohort) && (instance.type !== 'LESSON' || isCohort) ? (
+        ((mode === 'past' && instance.type !== 'LESSON') || isCohort) ? (
           <AttendanceSummary
             compact={isCohort && instance.type !== 'LESSON'}
             items={items}
@@ -376,7 +425,7 @@ function AttendanceSummary({
     <div className="inline-flex items-center justify-end gap-3 text-sm">
       {items
         .toSorted((a, b) =>
-          (a.person?.name ?? '').localeCompare(b.person?.name ?? '', 'cs'),
+          (a.person?.name ?? '').localeCompare(b.person?.name ?? ''),
         )
         .map((item) => {
           const status = item.eventAttendance?.status;
@@ -412,6 +461,48 @@ function CompetitionTimelineCard({ items }: { items: CompetitionItem[] }) {
         location={first.competitionEventLocation}
         entries={items.map(toCompetitionEntry)}
       />
+    </div>
+  );
+}
+
+function JudgingTimelineCard({ items }: { items: JudgingItem[] }) {
+  const first = items[0];
+  if (!first) return null;
+
+  const competitionRows = items
+    .filter((item) => item.competitionId)
+    .toSorted((a, b) => (a.competitionId ?? '').localeCompare(b.competitionId ?? ''));
+
+  return (
+    <div
+      className={cardCls({
+        className: 'w-full rounded-lg border-accent-6 bg-accent-2 p-3',
+      })}
+    >
+      <div className="mb-1 text-sm font-semibold leading-tight text-accent-11">
+        {first.competitionEventName ?? 'Porota'}
+      </div>
+      {first.competitionEventLocation ? (
+        <div className="text-xs leading-tight text-accent-11">
+          {first.competitionEventLocation}
+        </div>
+      ) : null}
+      {competitionRows.length === 0 ? (
+        <div className="mt-2 text-xs font-semibold text-neutral-12">Porota</div>
+      ) : (
+        <div className="mt-2 flex flex-col items-start gap-1">
+          {competitionRows.map((item) => (
+            <CstsResultsLink
+              key={item.id}
+              className="text-xs text-neutral-12"
+              eventId={item.competitionEventExternalId}
+              competitionId={item.competitionExternalId}
+            >
+              {formatCstsCategoryName(item.category, item.competitionType)}
+            </CstsResultsLink>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

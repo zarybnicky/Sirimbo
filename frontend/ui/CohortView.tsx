@@ -16,7 +16,6 @@ import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { CstsPersonSourceLink } from '@/ui/CstsPersonSourceLink';
 
 type CohortWithMembers = NonNullable<CohortWithMembersQuery['entity']>;
 
@@ -70,7 +69,6 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
                   >
                     {membership.person.name}
                   </Link>
-                  <CstsPersonSourceLink idt={membership.person.cstsId} />
                 </span>
               ) : (
                 '?'

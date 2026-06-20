@@ -15,7 +15,7 @@ import { useActions } from '@/lib/actions';
 import { tenantIdAtom } from '@/ui/state/auth';
 import { useAtomValue } from 'jotai';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { CstsPersonSourceLink } from '@/ui/CstsPersonSourceLink';
+import { CstsPersonLink } from '@/ui/csts-links';
 import { Facebook, Globe, Instagram, Music2 } from 'lucide-react';
 
 export function PersonView({ id }: { id: string }) {
@@ -60,7 +60,7 @@ export function PersonView({ id }: { id: string }) {
         {
           id: 'activity',
           title: <>Aktivita</>,
-          contents: () => <ActivityTimeline personIds={[id]} />,
+          contents: () => <ActivityTimeline personIds={[id]} includeJudging />,
         },
         {
           id: 'payment',
@@ -81,7 +81,14 @@ export function PersonView({ id }: { id: string }) {
 
   if (!item) return null;
 
-  const subtitleParts = [categoryProgress, item.phone, item.email].filter(Boolean);
+  const subtitleParts = [
+    categoryProgress,
+    item.phone,
+    item.email,
+    item.cstsId && (
+      <CstsPersonLink idt={item.cstsId} className="text-accent-12 hover:text-accent-11">ČSTS</CstsPersonLink>
+    ),
+  ].filter(Boolean);
   const hasSubtitle = subtitleParts.length > 0 || Boolean(item.cstsId);
   const facebookUrl =
     item.facebookUrl?.startsWith('https://') || item.facebookUrl?.startsWith('http://')
@@ -134,15 +141,11 @@ export function PersonView({ id }: { id: string }) {
           hasSubtitle ? (
             <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1">
               {subtitleParts.map((part, index) => (
-                <React.Fragment key={part}>
+                <React.Fragment key={index}>
                   {index > 0 ? <span aria-hidden="true">·</span> : null}
                   <span>{part}</span>
                 </React.Fragment>
               ))}
-              <CstsPersonSourceLink
-                idt={item.cstsId}
-                className="text-accent-12 hover:text-accent-11"
-              />
             </span>
           ) : undefined
         }

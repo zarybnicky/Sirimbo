@@ -45,7 +45,7 @@ export function mapBirthdayPeopleToCalendar(
   return events.toSorted(
     (a, b) =>
       a.date.localeCompare(b.date) ||
-      a.person.lastName.localeCompare(b.person.lastName, 'cs') ||
-      a.person.firstName.localeCompare(b.person.firstName, 'cs'),
+      a.person.lastName.localeCompare(b.person.lastName) ||
+      a.person.firstName.localeCompare(b.person.firstName),
   );
 }

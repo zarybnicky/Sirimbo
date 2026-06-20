@@ -220,6 +220,31 @@ type ActivityEventAttendance implements ActivityTimelineItem {
   sortAt: Datetime
 }
 
+type ActivityJudging implements ActivityTimelineItem {
+  activityDate: Date
+  category: Category
+  competitionDate: Date
+  competitionEventExternalId: String
+  competitionEventId: BigInt
+  competitionEventLocation: String
+  competitionEventName: String
+  competitionExternalId: String
+  competitionId: BigInt
+  competitionType: CompetitionType
+  federatedPersonId: String
+  federation: String
+  id: String!
+  kind: ActivityTimelineKind
+
+  """
+  Reads a single `Person` that is related to this `ActivityTimelineItem`.
+  """
+  person: Person
+  personId: BigInt
+  personName: String
+  sortAt: Datetime
+}
+
 interface ActivityTimelineItem {
   activityDate: Date
   id: String!
@@ -238,6 +263,7 @@ enum ActivityTimelineKind {
   COMPETITION_BRIEF
   COMPETITION_RESULT
   EVENT_ATTENDANCE
+  JUDGING
 }
 
 type AddressDomain {

@@ -59,6 +59,20 @@ fragment ActivityTimelineItem on ActivityTimelineItem {
     pointGain
     isFinal
   }
+  ... on ActivityJudging {
+    federation
+    competitionEventId
+    competitionEventExternalId
+    competitionEventName
+    competitionEventLocation
+    competitionId
+    competitionExternalId
+    competitionDate
+    competitionType
+    category {
+      ...CompetitionCategory
+    }
+  }
 }
 
 query ActivityTimeline(

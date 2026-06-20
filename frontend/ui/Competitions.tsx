@@ -4,11 +4,7 @@ import {
   CompetitionReportDocument,
   type CompetitionReportQuery,
 } from '@/graphql/Federation';
-import {
-  CSTS_COMPETITION_CALENDAR_URL,
-  cstsCompetitionResultUrl,
-  formatCstsCategoryName,
-} from '@/ui/csts';
+import { formatCstsCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
 import { numericDateFormatter } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
@@ -54,12 +50,16 @@ function formatRank(row: Pick<CompetitionReportEntry, 'ranking' | 'rankingTo'>) 
 
 function cstsResultSourceUrl(entry: CompetitionReportEntry) {
   if (entry.federation !== 'csts') return null;
-  return cstsCompetitionResultUrl(entry.eventExternalId, entry.competitionExternalId);
+  const event = Number(entry.eventExternalId);
+  const competition = Number(entry.competitionExternalId);
+  return event && competition
+    ? `https://www.csts.cz/dancesport/vysledky_soutezi/event/${event}/competition/${competition}`
+    : null;
 }
 
 function cstsUpcomingCalendarUrl(entries: readonly CompetitionEntry[]) {
   return entries.some((entry) => entry.federation === 'csts' && entry.kind === 'brief')
-    ? CSTS_COMPETITION_CALENDAR_URL
+    ? `https://www.csts.cz/dancesport/kalendar_akci`
     : null;
 }
 
@@ -94,9 +94,7 @@ function groupByCompetitor(rows: readonly CompetitionEntry[] | null | undefined)
     groups.set(groupKey, group);
   }
 
-  return [...groups.values()].toSorted((a, b) =>
-    a.competitorName.localeCompare(b.competitorName, 'cs'),
-  );
+  return [...groups.values()].toSorted((a, b) => a.competitorName.localeCompare(b.competitorName));
 }
 
 function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
@@ -125,10 +123,7 @@ function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
           sourceUrl: cstsUpcomingCalendarUrl(entries),
           competitorGroups: groupByCompetitor(entries),
         }))
-        .toSorted((a, b) => {
-          const byName = a.eventName.localeCompare(b.eventName, 'cs');
-          return byName || a.eventLocation.localeCompare(b.eventLocation, 'cs');
-        }),
+        .toSorted((a, b) => a.eventName.localeCompare(b.eventName) || a.eventLocation.localeCompare(b.eventLocation)),
     }));
 }
 
@@ -177,7 +172,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
     .toSorted((a, b) => {
       return (
         (a.checkInEnd ?? '').localeCompare(b.checkInEnd ?? '') ||
-        (a.category?.name ?? '').localeCompare(b.category?.name ?? '', 'cs')
+        (a.category?.name ?? '').localeCompare(b.category?.name ?? '')
       );
     });
   const reportEntries = group.entries
@@ -185,7 +180,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
     .toSorted(
       (a, b) =>
         (a.ranking ?? Number.MAX_SAFE_INTEGER) - (b.ranking ?? Number.MAX_SAFE_INTEGER) ||
-        (a.category?.name ?? '').localeCompare(b.category?.name ?? '', 'cs'),
+        (a.category?.name ?? '').localeCompare(b.category?.name ?? ''),
     );
 
   return (

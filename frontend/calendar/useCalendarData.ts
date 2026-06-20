@@ -259,8 +259,8 @@ export function useCalendarData(
         items: items.toSorted(
           (a, b) =>
             a.kind.localeCompare(b.kind) ||
-            (a.competitorName ?? '').localeCompare(b.competitorName ?? '', 'cs') ||
-            (a.category?.name ?? '').localeCompare(b.category?.name ?? '', 'cs'),
+            (a.competitorName ?? '').localeCompare(b.competitorName ?? '') ||
+            (a.category?.name ?? '').localeCompare(b.category?.name ?? ''),
         ),
       }),
     );

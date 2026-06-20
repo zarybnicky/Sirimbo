@@ -77,8 +77,8 @@ function Agenda({ events }: ViewProps): React.ReactNode {
           {
             birthdays: itemMap.birthdays.toSorted(
               (x, y) =>
-                x.person.lastName.localeCompare(y.person.lastName, 'cs') ||
-                x.person.firstName.localeCompare(y.person.firstName, 'cs'),
+                x.person.lastName.localeCompare(y.person.lastName) ||
+                x.person.firstName.localeCompare(y.person.firstName),
             ),
             competitions: itemMap.competitions,
             groups: itemMap.groups.toSorted(

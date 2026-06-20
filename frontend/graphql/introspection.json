@@ -921,6 +921,167 @@
         ]
       },
       {
+        "kind": "OBJECT",
+        "name": "ActivityJudging",
+        "fields": [
+          {
+            "name": "activityDate",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "category",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Category",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "competitionDate",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionEventExternalId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionEventId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionEventLocation",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionEventName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionExternalId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "competitionType",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "federatedPersonId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "federation",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "kind",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "person",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Person",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "personId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "personName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "sortAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "ActivityTimelineItem"
+          }
+        ]
+      },
+      {
         "kind": "INTERFACE",
         "name": "ActivityTimelineItem",
         "fields": [
@@ -998,6 +1159,10 @@
           {
             "kind": "OBJECT",
             "name": "ActivityEventAttendance"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ActivityJudging"
           }
         ]
       },
