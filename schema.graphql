@@ -129,6 +129,20 @@ enum AccountsOrderBy {
   UPDATED_AT_DESC
 }
 
+type ActivityBirthday implements ActivityTimelineItem {
+  activityDate: Date
+  id: String!
+  kind: ActivityTimelineKind
+
+  """
+  Reads a single `Person` that is related to this `ActivityTimelineItem`.
+  """
+  person: Person
+  personId: BigInt
+  personName: String
+  sortAt: Datetime
+}
+
 type ActivityCompetitionBrief implements ActivityTimelineItem {
   activityDate: Date
   category: Category
@@ -260,6 +274,7 @@ interface ActivityTimelineItem {
 }
 
 enum ActivityTimelineKind {
+  BIRTHDAY
   COMPETITION_BRIEF
   COMPETITION_RESULT
   EVENT_ATTENDANCE

@@ -237,12 +237,10 @@ function TenantTurnover() {
         const postings = [...account.postings]
           .filter(
             (posting): posting is TenantPosting & { transaction: TenantTransaction } =>
-              Boolean(posting.transaction),
+              !!posting.transaction,
           )
           .toSorted((a, b) =>
-            (b.transaction.effectiveDate || '').localeCompare(
-              a.transaction.effectiveDate || '',
-            ),
+            (b.transaction.effectiveDate).localeCompare(a.transaction.effectiveDate),
           );
 
         if (postings.length === 0) {

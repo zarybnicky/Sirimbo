@@ -428,8 +428,7 @@ async function showStatus(target: string | undefined, options: StatusOptions) {
 }
 
 function explainState(row: IGetFrontierDetailResult) {
-  const hasLoader = Boolean(loaderFor(row.federation, row.kind));
-  if (!hasLoader) return 'unknown loader';
+  if (!loaderFor(row.federation, row.kind)) return 'unknown loader';
   if (row.process_status === 'error') return 'processing failed';
   if (row.fetch_status === 'error') return 'fetch failed';
   if (row.fetch_status === 'transient') return 'transient fetch failure; retry scheduled';
@@ -454,7 +453,7 @@ async function explainFrontier(target: string, options: { json?: boolean }) {
   const expectedUrl = loader?.buildRequest(row.key).url.toString();
   const result = {
     ...row,
-    has_loader: Boolean(loader),
+    has_loader: !!loader,
     expected_url: expectedUrl,
     state: explainState(row),
   };

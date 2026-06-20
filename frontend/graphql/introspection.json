@@ -368,6 +368,78 @@
       },
       {
         "kind": "OBJECT",
+        "name": "ActivityBirthday",
+        "fields": [
+          {
+            "name": "activityDate",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "kind",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "person",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Person",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "personId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "personName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "sortAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "ActivityTimelineItem"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
         "name": "ActivityCompetitionBrief",
         "fields": [
           {
@@ -1148,6 +1220,10 @@
         ],
         "interfaces": [],
         "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "ActivityBirthday"
+          },
           {
             "kind": "OBJECT",
             "name": "ActivityCompetitionBrief"

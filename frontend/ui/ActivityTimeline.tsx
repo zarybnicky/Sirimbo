@@ -8,19 +8,21 @@ import {
 } from '@/graphql/ActivityTimeline';
 import type { ActivityTimelineKind, AttendanceType, EventType } from '@/graphql';
 import { cn } from '@/lib/cn';
-import { CompetitionEventContent, type CompetitionEntry } from '@/ui/Competitions';
+import { CompetitionEventContent } from '@/ui/Competitions';
 import { formatCstsCategoryName } from '@/ui/csts';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/InstanceAttendanceView';
 import { formatWeekDay } from '@/ui/format';
 import { buttonCls, cardCls } from '@/ui/style';
 import { add, subtract } from 'date-arithmetic';
+import { Cake } from 'lucide-react';
+import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { CstsResultsLink } from './csts-links';
 
 type TimelineMode = 'future' | 'past';
-type TimelineFilter = EventType | 'COMPETITION' | 'JUDGING';
+type TimelineFilter = EventType | 'COMPETITION' | 'JUDGING' | 'BIRTHDAY';
 type TimelineItem = NonNullable<ActivityTimelineItemFragment>;
 type EventAttendanceItem = ActivityTimelineItem_ActivityEventAttendance_Fragment;
 type CompetitionItem =
@@ -36,6 +38,7 @@ const BASE_FILTERS = [
   ['RESERVATION', 'Nabídka'],
   ['HOLIDAY', 'Prázdniny'],
   ['COMPETITION', 'Soutěže'],
+  ['BIRTHDAY', 'Narozeniny'],
 ] as const satisfies ReadonlyArray<readonly [TimelineFilter, string]>;
 const JUDGING_FILTER = ['JUDGING', 'Porota'] as const satisfies readonly [
   TimelineFilter,
@@ -48,59 +51,6 @@ function rangeFor(mode: TimelineMode, pages: number) {
   return mode === 'future'
     ? { since: now, until: add(now, weeks, 'week') }
     : { since: subtract(now, weeks, 'week'), until: now };
-}
-
-function competitionEventKey(item: CompetitionItem) {
-  return [
-    item.competitionEventId ?? '',
-    item.competitionDate ?? '',
-    item.competitionEventName ?? '',
-    item.competitionEventLocation ?? '',
-  ].join(':');
-}
-
-function judgingEventKey(item: JudgingItem) {
-  return [
-    item.competitionEventId ?? '',
-    item.competitionDate ?? '',
-    item.competitionEventName ?? '',
-    item.competitionEventLocation ?? '',
-  ].join(':');
-}
-
-function toCompetitionEntry(item: CompetitionItem): CompetitionEntry {
-  const base = {
-    eventId: item.competitionEventId,
-    eventExternalId: item.competitionEventExternalId,
-    eventName: item.competitionEventName,
-    eventLocation: item.competitionEventLocation,
-    competitionId: item.competitionId,
-    competitionExternalId: item.competitionExternalId,
-    competitionDate: item.competitionDate,
-    competitionType: item.competitionType,
-    federation: item.federation,
-    competitorId: item.competitorName ?? item.personId,
-    competitorName: item.competitorName,
-    personId: item.personId,
-    personName: item.person?.name ?? null,
-    category: item.category,
-  };
-
-  return item.__typename === 'ActivityCompetitionResult'
-    ? {
-        ...base,
-        kind: 'report',
-        participants: item.participants,
-        ranking: item.ranking,
-        rankingTo: item.rankingTo,
-        pointGain: item.pointGain,
-        isFinal: item.isFinal,
-      }
-    : {
-        ...base,
-        kind: 'brief',
-        checkInEnd: item.checkInEnd,
-      };
 }
 
 export function ActivityTimeline({
@@ -125,9 +75,9 @@ export function ActivityTimeline({
   );
   const scopeKey = `${cohortId ?? ''}:${personIds?.join(',') ?? ''}`;
   const range = React.useMemo(() => rangeFor(mode, pages), [mode, pages]);
-  const hasScope = Boolean(cohortId || personIds?.length);
   const eventTypes = filters.filter(
-    (value): value is EventType => value !== 'COMPETITION' && value !== 'JUDGING',
+    (value): value is EventType =>
+      value !== 'COMPETITION' && value !== 'JUDGING' && value !== 'BIRTHDAY',
   );
   const kinds: ActivityTimelineKind[] = eventTypes.length > 0 ? ['EVENT_ATTENDANCE'] : [];
   if (filters.includes('COMPETITION')) {
@@ -135,6 +85,9 @@ export function ActivityTimeline({
   }
   if (filters.includes('JUDGING')) {
     kinds.push('JUDGING');
+  }
+  if (filters.includes('BIRTHDAY')) {
+    kinds.push('BIRTHDAY');
   }
 
   React.useEffect(() => setPages(1), [scopeKey]);
@@ -167,7 +120,6 @@ export function ActivityTimeline({
       kinds,
       eventTypes,
     },
-    pause: !hasScope,
     requestPolicy: 'cache-and-network',
   });
 
@@ -253,7 +205,7 @@ export function ActivityTimeline({
             date={date}
             items={dayItems}
             mode={mode}
-            isCohort={Boolean(cohortId)}
+            isCohort={!!cohortId}
           />
         ))}
       </div>
@@ -282,9 +234,11 @@ function TimelineDay({
   mode: TimelineMode;
   isCohort: boolean;
 }) {
-  const eventGroups = new Map<string, EventAttendanceItem[]>();
-  const competitionGroups = new Map<string, CompetitionItem[]>();
-  const judgingGroups = new Map<string, JudgingItem[]>();
+  const eventGroups = new Map<string, [EventAttendanceItem, ...EventAttendanceItem[]]>();
+  const competitionGroups = new Map<string, [CompetitionItem, ...CompetitionItem[]]>();
+  const judgingGroups = new Map<string, [JudgingItem, ...JudgingItem[]]>();
+
+  const birthdayItems = items.filter(x => x.__typename === 'ActivityBirthday');
 
   for (const item of items) {
     if (item.__typename === 'ActivityEventAttendance' && item.eventInstance) {
@@ -294,10 +248,10 @@ function TimelineDay({
       item.__typename === 'ActivityCompetitionBrief' ||
       item.__typename === 'ActivityCompetitionResult'
     ) {
-      const key = competitionEventKey(item);
+      const key = item.competitionEventId!;
       competitionGroups.set(key, [...(competitionGroups.get(key) ?? []), item]);
     } else if (item.__typename === 'ActivityJudging') {
-      const key = judgingEventKey(item);
+      const key = item.competitionEventId!;
       judgingGroups.set(key, [...(judgingGroups.get(key) ?? []), item]);
     }
   }
@@ -305,8 +259,6 @@ function TimelineDay({
   const eventRows = [...eventGroups.values()].toSorted((a, b) =>
     (a[0]?.eventInstance?.since ?? '').localeCompare(b[0]?.eventInstance?.since ?? ''),
   );
-  const competitionCards = [...competitionGroups.entries()].map(([key, items]) => ({ key, items }));
-  const judgingCards = [...judgingGroups.entries()].map(([key, items]) => ({ key, items }));
 
   return (
     <section>
@@ -318,67 +270,102 @@ function TimelineDay({
             : 'Minulé'}
       </h4>
       <div className="flex flex-col gap-2">
-        {competitionCards.length > 0 ? (
+        {birthdayItems.length > 0 && (
+          <div className={cardCls({ className: 'bg-neutral-2' })}>
+            <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-neutral-12">
+              <Cake className="size-4 text-accent-11" />
+              Narozeniny
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {birthdayItems.map((item) => (
+                <Link
+                  key={item.id}
+                  href={{ pathname: '/clenove/[id]', query: { id: item.personId!} }}
+                  className="rounded border border-neutral-6 bg-neutral-1 px-2 py-1 text-sm text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
+                >
+                  {item.person?.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {competitionGroups.size > 0 ? (
           <div className="flex flex-wrap justify-start gap-2 opacity-90">
-            {competitionCards.map(({ key, items }) => (
-              <CompetitionTimelineCard key={`competition:${key}`} items={items} />
+            {competitionGroups.entries().map(([key, items]) => (
+              <div
+                key={`competition:${key}`}
+                className={cardCls({
+                  className: 'w-full rounded-lg border-green-7 bg-green-2 p-3',
+                })}
+              >
+                <CompetitionEventContent
+                  title={items[0].competitionEventName ?? ''}
+                  location={items[0].competitionEventLocation}
+                  entries={items}
+                />
+              </div>
             ))}
           </div>
         ) : null}
-        {judgingCards.length > 0 ? (
+
+        {judgingGroups.size > 0 ? (
           <div className="flex flex-wrap justify-start gap-2 opacity-90">
-            {judgingCards.map(({ key, items }) => (
-              <JudgingTimelineCard key={`judging:${key}`} items={items} />
+            {judgingGroups.entries().map(([key, items]) => (
+              <div
+                key={`judging:${key}`}
+                className={cardCls({
+                  className: 'w-full rounded-lg border-accent-6 bg-accent-2 p-3',
+                })}
+              >
+                <div className="mb-1 text-sm font-semibold leading-tight text-accent-11">
+                  {items[0].competitionEventName}
+                </div>
+                <div className="text-xs leading-tight text-accent-11">
+                  {items[0].competitionEventLocation}
+                </div>
+                <div className="mt-2 flex flex-col items-start gap-1">
+                  {items
+                    .filter(x => x.competitionId)
+                    .toSorted((a, b) => (a.competitionId ?? '').localeCompare(b.competitionId ?? ''))
+                    .map((item) => (
+                      <CstsResultsLink
+                        key={item.id}
+                        className="text-xs text-neutral-12"
+                        eventId={item.competitionEventExternalId}
+                        competitionId={item.competitionExternalId}
+                      >
+                        {formatCstsCategoryName(item.category, item.competitionType)}
+                      </CstsResultsLink>
+                    ))}
+                </div>
+              </div>
             ))}
           </div>
         ) : null}
+
         {eventRows.length > 0 ? (
-          <div
-            className={cardCls({ className: 'rounded-lg border-neutral-6 border p-0' })}
-          >
-            {eventRows.map((rowItems) => (
-              <TimelineEventButton
-                mode={mode}
-                key={rowItems[0]!.eventInstance!.id}
-                items={rowItems}
-                isCohort={isCohort}
+          <div className={cardCls({ className: 'rounded-lg border-neutral-6 border p-0' })}>
+            {eventRows.map((items) => (
+              <EventButton
+                key={items[0].id}
+                event={items[0].eventInstance?.event!}
+                instance={items[0].eventInstance!}
+                viewer="auto"
+                suffix={
+                  ((mode === 'past' && items[0].eventInstance?.type !== 'LESSON') || isCohort) ? (
+                    <AttendanceSummary
+                      compact={isCohort && items[0].eventInstance?.type !== 'LESSON'}
+                      items={items}
+                    />
+                  ) : undefined
+                }
               />
             ))}
           </div>
         ) : null}
       </div>
     </section>
-  );
-}
-
-function TimelineEventButton({
-  isCohort,
-  items,
-  mode,
-}: {
-  mode: TimelineMode;
-  isCohort: boolean;
-  items: EventAttendanceItem[];
-}) {
-  const instance = items[0]?.eventInstance;
-  const event = instance?.event;
-
-  if (!instance || !event) return null;
-
-  return (
-    <EventButton
-      event={event}
-      instance={instance}
-      viewer="auto"
-      suffix={
-        ((mode === 'past' && instance.type !== 'LESSON') || isCohort) ? (
-          <AttendanceSummary
-            compact={isCohort && instance.type !== 'LESSON'}
-            items={items}
-          />
-        ) : undefined
-      }
-    />
   );
 }
 
@@ -424,9 +411,7 @@ function AttendanceSummary({
   return (
     <div className="inline-flex items-center justify-end gap-3 text-sm">
       {items
-        .toSorted((a, b) =>
-          (a.person?.name ?? '').localeCompare(b.person?.name ?? ''),
-        )
+        .toSorted((a, b) => (a.person?.name ?? '').localeCompare(b.person?.name ?? ''))
         .map((item) => {
           const status = item.eventAttendance?.status;
           const Icon = status ? attendanceIcons[status] : null;
@@ -442,67 +427,6 @@ function AttendanceSummary({
             </div>
           );
         })}
-    </div>
-  );
-}
-
-function CompetitionTimelineCard({ items }: { items: CompetitionItem[] }) {
-  const first = items[0];
-  if (!first) return null;
-
-  return (
-    <div
-      className={cardCls({
-        className: 'w-full rounded-lg border-green-7 bg-green-2 p-3',
-      })}
-    >
-      <CompetitionEventContent
-        title={first.competitionEventName ?? ''}
-        location={first.competitionEventLocation}
-        entries={items.map(toCompetitionEntry)}
-      />
-    </div>
-  );
-}
-
-function JudgingTimelineCard({ items }: { items: JudgingItem[] }) {
-  const first = items[0];
-  if (!first) return null;
-
-  const competitionRows = items
-    .filter((item) => item.competitionId)
-    .toSorted((a, b) => (a.competitionId ?? '').localeCompare(b.competitionId ?? ''));
-
-  return (
-    <div
-      className={cardCls({
-        className: 'w-full rounded-lg border-accent-6 bg-accent-2 p-3',
-      })}
-    >
-      <div className="mb-1 text-sm font-semibold leading-tight text-accent-11">
-        {first.competitionEventName ?? 'Porota'}
-      </div>
-      {first.competitionEventLocation ? (
-        <div className="text-xs leading-tight text-accent-11">
-          {first.competitionEventLocation}
-        </div>
-      ) : null}
-      {competitionRows.length === 0 ? (
-        <div className="mt-2 text-xs font-semibold text-neutral-12">Porota</div>
-      ) : (
-        <div className="mt-2 flex flex-col items-start gap-1">
-          {competitionRows.map((item) => (
-            <CstsResultsLink
-              key={item.id}
-              className="text-xs text-neutral-12"
-              eventId={item.competitionEventExternalId}
-              competitionId={item.competitionExternalId}
-            >
-              {formatCstsCategoryName(item.category, item.competitionType)}
-            </CstsResultsLink>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import {
-  CompetitionBriefDocument,
-  type CompetitionBriefQuery,
-  CompetitionReportDocument,
-  type CompetitionReportQuery,
-} from '@/graphql/Federation';
+  ActivityTimelineDocument,
+  type ActivityTimelineItem_ActivityCompetitionBrief_Fragment,
+  type ActivityTimelineItem_ActivityCompetitionResult_Fragment,
+} from '@/graphql/ActivityTimeline';
+import type { ActivityTimelineKind } from '@/graphql';
 import { formatCstsCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
 import { numericDateFormatter } from '@/ui/format';
@@ -16,12 +16,10 @@ import { ExternalLink } from 'lucide-react';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
-type BriefRow = NonNullable<CompetitionBriefQuery['competitionBriefList']>[number];
-type ReportRow = NonNullable<CompetitionReportQuery['competitionReportList']>[number];
-
-export type CompetitionBriefEntry = BriefRow & { kind: 'brief' };
-export type CompetitionReportEntry = ReportRow & { kind: 'report' };
-export type CompetitionEntry = CompetitionBriefEntry | CompetitionReportEntry;
+type TimelineCompetitionItem =
+  | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
+  | ActivityTimelineItem_ActivityCompetitionResult_Fragment;
+export type CompetitionEntry = TimelineCompetitionItem;
 
 type CompetitorGroup = {
   key: string;
@@ -41,16 +39,16 @@ function toLocalDateInput(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-function formatRank(row: Pick<CompetitionReportEntry, 'ranking' | 'rankingTo'>) {
+function formatRank(row: Pick<ActivityTimelineItem_ActivityCompetitionResult_Fragment, 'ranking' | 'rankingTo'>) {
   if (!row.ranking) return '';
   return row.rankingTo && row.rankingTo !== row.ranking
     ? `${row.ranking}-${row.rankingTo}.`
     : `${row.ranking}.`;
 }
 
-function cstsResultSourceUrl(entry: CompetitionReportEntry) {
+function cstsResultSourceUrl(entry: ActivityTimelineItem_ActivityCompetitionResult_Fragment) {
   if (entry.federation !== 'csts') return null;
-  const event = Number(entry.eventExternalId);
+  const event = Number(entry.competitionEventExternalId);
   const competition = Number(entry.competitionExternalId);
   return event && competition
     ? `https://www.csts.cz/dancesport/vysledky_soutezi/event/${event}/competition/${competition}`
@@ -58,39 +56,30 @@ function cstsResultSourceUrl(entry: CompetitionReportEntry) {
 }
 
 function cstsUpcomingCalendarUrl(entries: readonly CompetitionEntry[]) {
-  return entries.some((entry) => entry.federation === 'csts' && entry.kind === 'brief')
+  return entries.some(
+    (entry) => entry.federation === 'csts' && entry.__typename === 'ActivityCompetitionBrief',
+  )
     ? `https://www.csts.cz/dancesport/kalendar_akci`
     : null;
 }
 
-export function competitionEntryKey(entry: CompetitionEntry) {
-  return [
-    entry.kind,
-    entry.eventId ?? '',
-    entry.competitionDate ?? '',
-    entry.competitionId ?? '',
-    entry.competitorId ?? '',
-    entry.category?.name ?? '',
-  ].join(':');
-}
-
-function groupByCompetitor(rows: readonly CompetitionEntry[] | null | undefined) {
+function groupByCompetitor(items: readonly CompetitionEntry[] | null | undefined) {
   const seen = new Set<string>();
   const groups = new Map<string, CompetitorGroup>();
 
-  for (const row of rows ?? []) {
-    const dedupeKey = competitionEntryKey(row);
+  for (const item of items ?? []) {
+    const dedupeKey = `${item.competitionId}:${item.competitorId}`;
     if (seen.has(dedupeKey)) continue;
     seen.add(dedupeKey);
 
-    const groupKey = row.competitorId ?? '';
+    const groupKey = item.competitorId ?? '';
     const group = groups.get(groupKey) ?? {
       key: groupKey,
-      competitorName: row.competitorName ?? '',
-      entries: [] as CompetitionEntry[],
+      competitorName: item.competitorName ?? '',
+      entries: [],
     };
 
-    group.entries.push(row);
+    group.entries.push(item);
     groups.set(groupKey, group);
   }
 
@@ -102,7 +91,7 @@ function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
 
   for (const row of rows ?? []) {
     const dayKey = row.competitionDate ?? '';
-    const eventKey = `${row.eventId ?? ''}:${row.eventName ?? ''}:${row.eventLocation ?? ''}`;
+    const eventKey = `${row.competitionEventId}:${row.competitionEventName}:${row.competitionEventLocation}`;
     const day = days.get(dayKey) ?? new Map<string, CompetitionEntry[]>();
     const entries = day.get(eventKey) ?? [];
     entries.push(row);
@@ -118,8 +107,8 @@ function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
       eventGroups: [...events.entries()]
         .map(([eventKey, entries]) => ({
           key: eventKey,
-          eventName: entries[0]?.eventName ?? '',
-          eventLocation: entries[0]?.eventLocation ?? '',
+          eventName: entries[0]?.competitionEventName ?? '',
+          eventLocation: entries[0]?.competitionEventLocation ?? '',
           sourceUrl: cstsUpcomingCalendarUrl(entries),
           competitorGroups: groupByCompetitor(entries),
         }))
@@ -168,7 +157,7 @@ function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry
 
 function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
   const briefEntries = group.entries
-    .filter((entry) => entry.kind === 'brief')
+    .filter((entry) => entry.__typename === 'ActivityCompetitionBrief')
     .toSorted((a, b) => {
       return (
         (a.checkInEnd ?? '').localeCompare(b.checkInEnd ?? '') ||
@@ -176,7 +165,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
       );
     });
   const reportEntries = group.entries
-    .filter((entry) => entry.kind === 'report')
+    .filter((entry) => entry.__typename === 'ActivityCompetitionResult')
     .toSorted(
       (a, b) =>
         (a.ranking ?? Number.MAX_SAFE_INTEGER) - (b.ranking ?? Number.MAX_SAFE_INTEGER) ||
@@ -192,7 +181,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
       </div>
       {briefEntries.map((entry) => (
         <div
-          key={competitionEntryKey(entry)}
+          key={entry.id}
           className="competition-entry-row grid grid-cols-[3rem_minmax(0,1fr)] items-start gap-2 py-1.5 text-xs"
         >
           <div className="font-semibold tabular-nums text-neutral-11">
@@ -206,7 +195,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
       ))}
       {reportEntries.map((entry) => (
         <div
-          key={competitionEntryKey(entry)}
+          key={entry.id}
           className="competition-entry-row grid grid-cols-[3rem_minmax(0,1fr)_min-content] items-center gap-2 py-1.5 text-xs"
         >
           <div className="font-semibold tabular-nums leading-none text-neutral-11">
@@ -228,21 +217,18 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
 }
 
 function CompetitionCategoryLine({ entry }: { entry: CompetitionEntry }) {
-  const sourceUrl = entry.kind === 'report' ? cstsResultSourceUrl(entry) : null;
+  const sourceUrl =
+    entry.__typename === 'ActivityCompetitionResult' ? cstsResultSourceUrl(entry) : null;
   const name = formatCstsCategoryName(entry.category, entry.competitionType);
 
   return (
     <div className="flex min-w-0 items-center gap-1.5 font-semibold text-neutral-12">
-      {sourceUrl ? (
-        <CompetitionSourceName
-          href={sourceUrl}
-          className="text-accent-12 hover:text-accent-11"
-        >
-          {name}
-        </CompetitionSourceName>
-      ) : (
-        <span className="min-w-0">{name}</span>
-      )}
+      <CompetitionSourceName
+        href={sourceUrl}
+        className="text-accent-12 hover:text-accent-11"
+      >
+        {name}
+      </CompetitionSourceName>
     </div>
   );
 }
@@ -256,13 +242,11 @@ export function CompetitionEventContent({
   location?: string | null;
   entries: readonly CompetitionEntry[];
 }) {
-  const sourceUrl = cstsUpcomingCalendarUrl(entries);
-
   return (
     <>
       <div className="mb-1 text-sm font-semibold leading-tight text-green-11">
         <CompetitionSourceName
-          href={sourceUrl}
+          href={cstsUpcomingCalendarUrl(entries)}
           className="text-green-11 hover:text-green-12"
         >
           {title}
@@ -320,75 +304,70 @@ export function CompetitionWeekPanel({
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
   const [onlyMine, setOnlyMine] = React.useState(allowOnlyMine);
   const myPersonIds = React.useMemo(() => new Set(auth.personIds), [auth.personIds]);
-  const { mode, variables } = React.useMemo(() => {
+  const { mode, todayKey, variables } = React.useMemo(() => {
     const weekUntil = add(startDate, 1, 'week');
     const today = startOf(new Date(), 'day');
-    const tomorrow = add(today, 1, 'day');
     const mode = weekUntil <= today ? 'past' : startDate > today ? 'future' : 'current';
 
     return {
       mode,
+      todayKey: toLocalDateInput(today),
       variables: {
-        brief: {
-          since: toLocalDateInput(mode === 'current' ? today : startDate),
-          until: toLocalDateInput(weekUntil),
-          personIds,
-          cohortId,
-        },
-        report: {
-          since: toLocalDateInput(
-            mode === 'current' ? add(startDate, -1, 'week') : startDate,
-          ),
-          until: toLocalDateInput(mode === 'current' ? tomorrow : weekUntil),
-          personIds,
-          cohortId,
-        },
+        since: startDate.toISOString(),
+        until: weekUntil.toISOString(),
+        personIds,
+        cohortId,
+        kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT'] satisfies ActivityTimelineKind[],
       },
     };
   }, [cohortId, personIds, startDate]);
 
-  const [{ data: briefData, fetching: fetchingBrief }] = useQuery({
-    query: CompetitionBriefDocument,
-    variables: variables.brief,
-    pause: mode === 'past',
+  const [{ data, fetching }] = useQuery({
+    query: ActivityTimelineDocument,
+    variables,
+    requestPolicy: 'cache-and-network',
   });
-  const [{ data: reportData, fetching: fetchingReport }] = useQuery({
-    query: CompetitionReportDocument,
-    variables: variables.report,
-    pause: mode === 'future',
-  });
-  const briefs = React.useMemo<CompetitionBriefEntry[]>(() => {
-    if (mode === 'past') return [];
-    const all = (briefData?.competitionBriefList || []).map(
-      (x) => ({ ...x, kind: 'brief' }) satisfies CompetitionBriefEntry,
-    );
-    return onlyMine
-      ? all.filter((entry) => entry.personId && myPersonIds.has(entry.personId))
-      : all;
-  }, [briefData?.competitionBriefList, mode, myPersonIds, onlyMine]);
 
-  const reports = React.useMemo<CompetitionReportEntry[]>(() => {
-    if (mode === 'future') return [];
-    const all = (reportData?.competitionReportList || []).map(
-      (x) => ({ ...x, kind: 'report' }) satisfies CompetitionReportEntry,
-    );
-    return onlyMine
-      ? all.filter((entry) => entry.personId && myPersonIds.has(entry.personId))
-      : all;
-  }, [mode, myPersonIds, onlyMine, reportData?.competitionReportList]);
+  const { briefs, reports, locations } = React.useMemo(() => {
+    const entries = (data?.activityTimelineList ?? [])
+      .filter(
+        (
+          item,
+        ): item is
+          | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
+          | ActivityTimelineItem_ActivityCompetitionResult_Fragment =>
+          item.__typename === 'ActivityCompetitionBrief' ||
+          item.__typename === 'ActivityCompetitionResult',
+      );
 
-  const locations = React.useMemo(() => {
+    const isRelevant = (entry: CompetitionEntry) =>
+      (entry.__typename === 'ActivityCompetitionBrief'
+        ? mode !== 'past' &&
+          (mode !== 'current' || (entry.competitionDate ?? '') >= todayKey)
+        : mode !== 'future');
+    const visible = (entry: CompetitionEntry) =>
+      isRelevant(entry) && (!onlyMine || myPersonIds.has(entry.personId ?? '-'));
+
     const locations = new Set<string>();
-    if (mode !== 'past')
-      for (const x of briefData?.competitionBriefList ?? [])
-        if (x.eventLocation) locations.add(x.eventLocation);
-    if (mode !== 'future')
-      for (const x of reportData?.competitionReportList ?? [])
-        if (x.eventLocation) locations.add(x.eventLocation);
-    return [...locations];
-  }, [briefData?.competitionBriefList, mode, reportData?.competitionReportList]);
+    for (const entry of entries) {
+      if (isRelevant(entry) && entry.competitionEventLocation) {
+        locations.add(entry.competitionEventLocation);
+      }
+    }
 
-  const fetching = fetchingReport || fetchingBrief;
+    return {
+      briefs: entries.filter(
+        (entry): entry is ActivityTimelineItem_ActivityCompetitionBrief_Fragment =>
+          entry.__typename === 'ActivityCompetitionBrief' && visible(entry),
+      ),
+      reports: entries.filter(
+        (entry): entry is ActivityTimelineItem_ActivityCompetitionResult_Fragment =>
+          entry.__typename === 'ActivityCompetitionResult' && visible(entry),
+      ),
+      locations: [...locations],
+    };
+  }, [data?.activityTimelineList, mode, myPersonIds, onlyMine, todayKey]);
+
   const hasVisibleEntries = briefs.length > 0 || reports.length > 0;
 
   return (

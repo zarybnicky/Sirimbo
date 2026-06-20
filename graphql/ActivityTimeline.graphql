@@ -5,8 +5,10 @@ fragment ActivityTimelineItem on ActivityTimelineItem {
   activityDate
   personId
   person {
+    id
     name
     firstName
+    lastName
   }
   ... on ActivityEventAttendance {
     eventAttendance {
@@ -22,6 +24,7 @@ fragment ActivityTimelineItem on ActivityTimelineItem {
   }
   ... on ActivityCompetitionBrief {
     federation
+    competitorId
     competitorName
     competitorType
     competitionEventId
@@ -40,6 +43,7 @@ fragment ActivityTimelineItem on ActivityTimelineItem {
   }
   ... on ActivityCompetitionResult {
     federation
+    competitorId
     competitorName
     competitorType
     competitionEventId

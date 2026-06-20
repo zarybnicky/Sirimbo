@@ -30,19 +30,15 @@ export type CalendarCompetitionEvent = CalendarItemBase & {
   items: CompetitionEntry[];
 };
 
-export type CalendarBirthdayPerson = {
-  id: string;
-  name: string;
-  firstName: string;
-  lastName: string;
-  birthDate: string | null;
-};
-
 export type CalendarBirthdayEvent = CalendarItemBase & {
   kind: 'birthday';
   id: string;
-  person: CalendarBirthdayPerson;
-  birthDate: string;
+  person: {
+    id: string;
+    name: string;
+    firstName: string;
+    lastName: string;
+  };
   date: string;
 };
 

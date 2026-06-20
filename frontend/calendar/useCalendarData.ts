@@ -1,21 +1,15 @@
-import {
-  CompetitionBriefDocument,
-  CompetitionReportDocument,
-} from '@/graphql/Federation';
-import { type CompetitionEntry, competitionEntryKey } from '@/ui/Competitions';
+import { ActivityTimelineDocument } from '@/graphql/ActivityTimeline';
+import { type CompetitionEntry } from '@/ui/Competitions';
 import {
   EventInstanceRangeDocument,
   type EventInstanceRangeQuery,
   type EventInstanceRangeQueryVariables,
 } from '@/graphql/Event';
-import { BirthdayPeopleDocument } from '@/graphql/Person';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery } from 'urql';
 import type { CalendarEvent, CalendarInstanceEvent, DateRange, Resource } from './types';
 import { CalendarView } from '@/calendar/CalendarViews';
-import { localDateKey } from '@/calendar/localizer';
-import { mapBirthdayPeopleToCalendar } from '@/calendar/birthdays';
 
 export type CalendarGroupBy = 'none' | 'trainer' | 'room';
 export type CalendarFilters = {
@@ -25,7 +19,6 @@ export type CalendarFilters = {
   myPersonIds: string[];
 };
 
-const getResourceKey = (type: string, id: string) => `${type}:${id}`;
 const competitionResource: Resource = {
   resourceId: '__competition__',
   resourceTitle: 'Soutěže',
@@ -66,53 +59,47 @@ function mapInstancesToCalendar(
 
     const start = new Date(instance.since);
     const end = new Date(instance.until);
-
-    const eventResourceIds: string[] = [];
+    const resourceIds: string[] = [];
 
     if (groupBy === 'trainer') {
       for (const trainer of instance.trainersList ?? []) {
         const id = trainer.personId;
         if (!id) continue;
-        eventResourceIds.push(getResourceKey('person', id));
+        const resourceId = `person:${id}`;
+        resourceIds.push(resourceId);
         put({
-          resourceId: getResourceKey('person', id),
+          resourceId,
           resourceTitle: trainer.person?.name || '',
         });
       }
     } else if (groupBy === 'room') {
       if (event.location?.id) {
-        eventResourceIds.push(getResourceKey('location', event.location.id));
+        const resourceId = `location:${event.location.id}`;
+        resourceIds.push(resourceId);
         put({
-          resourceId: getResourceKey('location', event.location.id),
+          resourceId,
           resourceTitle: event.location.name,
         });
       } else if (event.locationText) {
-        eventResourceIds.push(getResourceKey('locationText', event.locationText));
+        const resourceId = `locationText:${event.locationText}`;
+        resourceIds.push(resourceId);
         put({
-          resourceId: getResourceKey('locationText', event.locationText),
+          resourceId,
           resourceTitle: event.locationText,
         });
       }
     }
-    if (groupBy !== 'none' && eventResourceIds.length === 0) {
-      eventResourceIds.push('');
+    if (groupBy !== 'none' && resourceIds.length === 0) {
+      resourceIds.push('');
       put({ resourceId: '', resourceTitle: '-' });
     }
-    events.push({
-      kind: 'event',
-      event,
-      instance,
-      resourceIds: eventResourceIds,
-      start,
-      end,
-    });
+    events.push({ kind: 'event', event, instance, resourceIds, start, end });
   }
 
-  const resources = [...resourceMap.values()].toSorted((a, b) =>
-    a.resourceTitle.localeCompare(b.resourceTitle),
-  );
-
-  return { events, resources };
+  return {
+    events,
+    resources: [...resourceMap.values()].toSorted((a, b) => a.resourceTitle.localeCompare(b.resourceTitle)),
+  };
 }
 
 export function useCalendarData(
@@ -144,65 +131,25 @@ export function useCalendarData(
     requestPolicy: 'cache-and-network',
   });
   const effectiveGroupBy = filters.onlyMine ? 'none' : groupBy;
-  const birthdayRange = React.useMemo(() => {
-    const since = startOf(range.since, 'day');
-    const until = add(startOf(range.until, 'day'), 1, 'day');
-
-    return {
-      since: localDateKey(since),
-      until: localDateKey(until),
-    };
-  }, [range.since, range.until]);
-  const competitionRanges = React.useMemo(() => {
-    const since = startOf(range.since, 'day');
-    const until = add(startOf(range.until, 'day'), 1, 'day');
-    const today = startOf(new Date(), 'day');
-    const tomorrow = add(today, 1, 'day');
-    const reportUntil = new Date(Math.min(until.getTime(), tomorrow.getTime()));
-    const briefSince = new Date(Math.max(since.getTime(), today.getTime()));
-
-    return {
-      report: since < reportUntil ? { since, until: reportUntil } : null,
-      brief: briefSince < until ? { since: briefSince, until } : null,
-    };
-  }, [range.since, range.until]);
-  const competitionPersonIds =
+  const factRange = React.useMemo(() => ({
+    since: startOf(range.since, 'day').toISOString(),
+    until: add(startOf(range.until, 'day'), 1, 'day').toISOString(),
+  }), [range.since, range.until]);
+  const factPersonIds =
     filters.participantIds.length > 0
       ? filters.participantIds
       : filters.onlyMine
         ? filters.myPersonIds
         : undefined;
-  const [{ data: reportData }] = useQuery({
-    query: CompetitionReportDocument,
-    variables: competitionRanges.report
-      ? {
-          since: localDateKey(competitionRanges.report.since),
-          until: localDateKey(competitionRanges.report.until),
-          personIds: competitionPersonIds,
-        }
-      : {},
-    pause: !competitionRanges.report,
-  });
-  const [{ data: briefData }] = useQuery({
-    query: CompetitionBriefDocument,
-    variables: competitionRanges.brief
-      ? {
-          since: localDateKey(competitionRanges.brief.since),
-          until: localDateKey(competitionRanges.brief.until),
-          personIds: competitionPersonIds,
-        }
-      : {},
-    pause: !competitionRanges.brief,
-  });
-  const birthdayPersonIds =
-    filters.participantIds.length > 0
-      ? filters.participantIds
-      : filters.onlyMine
-        ? filters.myPersonIds
-        : undefined;
-  const [{ data: birthdayData, fetching: birthdaysFetching }] = useQuery({
-    query: BirthdayPeopleDocument,
-    variables: birthdayRange,
+  const [{ data: activityData, fetching: activityFetching }] = useQuery({
+    query: ActivityTimelineDocument,
+    variables: {
+      since: factRange.since,
+      until: factRange.until,
+      personIds: factPersonIds,
+      kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT', 'BIRTHDAY'],
+    },
+    requestPolicy: 'cache-and-network',
   });
 
   React.useEffect(() => {
@@ -222,33 +169,53 @@ export function useCalendarData(
     const schedule = mapInstancesToCalendar(data?.list ?? null, effectiveGroupBy);
     const competitionsByEvent = new Map<string, CompetitionBucket>();
     const seen = new Set<string>();
+    const birthdays: CalendarEvent[] = [];
     const addCompetition = (item: CompetitionEntry) => {
-      const key = competitionEntryKey(item);
-      if (!item.competitionDate || seen.has(key)) return;
-      seen.add(key);
+      if (!item.competitionDate || seen.has(`${item.competitionId}:${item.competitorId}`)) return;
+      seen.add(`${item.competitionId}:${item.competitorId}`);
 
-      const eventKey = `${item.competitionDate}:${item.eventId ?? ''}`;
+      const eventKey = `${item.competitionDate}:${item.competitionEventId ?? ''}`;
       const competition = competitionsByEvent.get(eventKey) ?? {
         date: item.competitionDate,
-        title: item.eventName ?? 'Soutěže',
-        eventLocation: item.eventLocation,
+        title: item.competitionEventName!,
+        eventLocation: item.competitionEventLocation,
         items: [],
       };
       competition.items.push(item);
       competitionsByEvent.set(eventKey, competition);
     };
 
-    for (const row of reportData?.competitionReportList ?? []) {
-      addCompetition({ ...row, kind: 'report' });
-    }
-    for (const row of briefData?.competitionBriefList ?? []) {
-      addCompetition({ ...row, kind: 'brief' });
+    for (const item of activityData?.activityTimelineList ?? []) {
+      if (
+        item.__typename === 'ActivityCompetitionBrief' ||
+        item.__typename === 'ActivityCompetitionResult'
+      ) {
+        addCompetition(item);
+      } else if (item.__typename === 'ActivityBirthday') {
+        const date = item.activityDate!;
+        birthdays.push({
+          kind: 'birthday',
+          id: item.id,
+          person: {
+            id: item.personId!,
+            name: item.person?.name!,
+            firstName: item.person?.firstName!,
+            lastName: item.person?.lastName!,
+          },
+          date,
+          start: new Date(`${date}T00:00:00`),
+          end: new Date(`${date}T23:59:00`),
+          resourceIds: [],
+          isDraggable: false,
+          isResizable: false,
+        });
+      }
     }
 
     const competitions: CalendarEvent[] = [...competitionsByEvent.values()].map(
       ({ date, items, title, eventLocation }) => ({
         kind: 'competition',
-        id: `competition:${date}:${items[0]?.eventId ?? 'unknown'}`,
+        id: `competition:${date}:${items[0]?.competitionEventId ?? 'unknown'}`,
         title,
         eventLocation,
         start: new Date(`${date}T00:00:00`),
@@ -258,17 +225,11 @@ export function useCalendarData(
         isResizable: false,
         items: items.toSorted(
           (a, b) =>
-            a.kind.localeCompare(b.kind) ||
+            a.__typename.localeCompare(b.__typename) ||
             (a.competitorName ?? '').localeCompare(b.competitorName ?? '') ||
             (a.category?.name ?? '').localeCompare(b.category?.name ?? ''),
         ),
       }),
-    );
-    const birthdays = mapBirthdayPeopleToCalendar(
-      birthdayData?.people?.nodes ?? [],
-      birthdayRange.since,
-      birthdayRange.until,
-      birthdayPersonIds,
     );
 
     return {
@@ -279,20 +240,15 @@ export function useCalendarData(
           : schedule.resources,
     };
   }, [
-    briefData?.competitionBriefList,
-    birthdayData?.people?.nodes,
-    birthdayPersonIds,
-    birthdayRange.since,
-    birthdayRange.until,
+    activityData?.activityTimelineList,
     data?.list,
     effectiveGroupBy,
-    reportData?.competitionReportList,
   ]);
 
   return {
     range,
     events,
     resources,
-    fetching: fetching || birthdaysFetching,
+    fetching: fetching || activityFetching,
   };
 }

@@ -89,7 +89,6 @@ export function PersonView({ id }: { id: string }) {
       <CstsPersonLink idt={item.cstsId} className="text-accent-12 hover:text-accent-11">ČSTS</CstsPersonLink>
     ),
   ].filter(Boolean);
-  const hasSubtitle = subtitleParts.length > 0 || Boolean(item.cstsId);
   const facebookUrl =
     item.facebookUrl?.startsWith('https://') || item.facebookUrl?.startsWith('http://')
       ? item.facebookUrl
@@ -138,7 +137,7 @@ export function PersonView({ id }: { id: string }) {
       <PageHeader
         title={item.name}
         subtitle={
-          hasSubtitle ? (
+          subtitleParts.length > 0 ? (
             <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1">
               {subtitleParts.map((part, index) => (
                 <React.Fragment key={index}>

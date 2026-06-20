@@ -150,6 +150,18 @@ export type AccountsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
+export type ActivityBirthday = ActivityTimelineItem & {
+  __typename?: 'ActivityBirthday';
+  activityDate: Maybe<Scalars['Date']['output']>;
+  id: Scalars['String']['output'];
+  kind: Maybe<ActivityTimelineKind>;
+  /** Reads a single `Person` that is related to this `ActivityTimelineItem`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  personName: Maybe<Scalars['String']['output']>;
+  sortAt: Maybe<Scalars['Datetime']['output']>;
+};
+
 export type ActivityCompetitionBrief = ActivityTimelineItem & {
   __typename?: 'ActivityCompetitionBrief';
   activityDate: Maybe<Scalars['Date']['output']>;
@@ -264,6 +276,7 @@ export type ActivityTimelineItem = {
 };
 
 export type ActivityTimelineKind =
+  | 'BIRTHDAY'
   | 'COMPETITION_BRIEF'
   | 'COMPETITION_RESULT'
   | 'EVENT_ATTENDANCE'
@@ -8696,6 +8709,7 @@ export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __type
 
 export type GraphCacheKeysConfig = {
   Account?: (data: WithTypename<Account>) => null | string,
+  ActivityBirthday?: (data: WithTypename<ActivityBirthday>) => null | string,
   ActivityCompetitionBrief?: (data: WithTypename<ActivityCompetitionBrief>) => null | string,
   ActivityCompetitionResult?: (data: WithTypename<ActivityCompetitionResult>) => null | string,
   ActivityEventAttendance?: (data: WithTypename<ActivityEventAttendance>) => null | string,
@@ -8869,7 +8883,7 @@ export type GraphCacheKeysConfig = {
 export type GraphCacheResolvers = {
   Query?: {
     accountsList?: GraphCacheResolver<WithTypename<Query>, QueryAccountsListArgs, Array<WithTypename<Account> | string>>,
-    activityTimelineList?: GraphCacheResolver<WithTypename<Query>, QueryActivityTimelineListArgs, Array<WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging> | string>>,
+    activityTimelineList?: GraphCacheResolver<WithTypename<Query>, QueryActivityTimelineListArgs, Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging> | string>>,
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
     announcement?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementArgs, WithTypename<Announcement> | string>,
@@ -8953,6 +8967,15 @@ export type GraphCacheResolvers = {
     postingsList?: GraphCacheResolver<WithTypename<Account>, AccountPostingsListArgs, Array<WithTypename<Posting> | string>>,
     tenantId?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['Datetime']['output'] | string>
+  },
+  ActivityBirthday?: {
+    activityDate?: GraphCacheResolver<WithTypename<ActivityBirthday>, Record<string, never>, Scalars['Date']['output'] | string>,
+    id?: GraphCacheResolver<WithTypename<ActivityBirthday>, Record<string, never>, Scalars['String']['output'] | string>,
+    kind?: GraphCacheResolver<WithTypename<ActivityBirthday>, Record<string, never>, ActivityTimelineKind | string>,
+    person?: GraphCacheResolver<WithTypename<ActivityBirthday>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<ActivityBirthday>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    personName?: GraphCacheResolver<WithTypename<ActivityBirthday>, Record<string, never>, Scalars['String']['output'] | string>,
+    sortAt?: GraphCacheResolver<WithTypename<ActivityBirthday>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
   ActivityCompetitionBrief?: {
     activityDate?: GraphCacheResolver<WithTypename<ActivityCompetitionBrief>, Record<string, never>, Scalars['Date']['output'] | string>,
@@ -10465,7 +10488,7 @@ export type GraphCacheOptimisticUpdaters = {
 export type GraphCacheUpdaters = {
   Query?: {
     accountsList?: GraphCacheUpdateResolver<{ accountsList: Maybe<Array<WithTypename<Account>>> }, QueryAccountsListArgs>,
-    activityTimelineList?: GraphCacheUpdateResolver<{ activityTimelineList: Maybe<Array<WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging>>> }, QueryActivityTimelineListArgs>,
+    activityTimelineList?: GraphCacheUpdateResolver<{ activityTimelineList: Maybe<Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging>>> }, QueryActivityTimelineListArgs>,
     aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
     aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
     announcement?: GraphCacheUpdateResolver<{ announcement: Maybe<WithTypename<Announcement>> }, QueryAnnouncementArgs>,
@@ -10639,6 +10662,15 @@ export type GraphCacheUpdaters = {
     postingsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPostingsListArgs>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>
+  },
+  ActivityBirthday?: {
+    activityDate?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityBirthday>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityBirthday>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityBirthday>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityBirthday>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityBirthday>>, Record<string, never>>,
+    personName?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityBirthday>>, Record<string, never>>,
+    sortAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityBirthday>>, Record<string, never>>
   },
   ActivityCompetitionBrief?: {
     activityDate?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionBrief>>, Record<string, never>>,
