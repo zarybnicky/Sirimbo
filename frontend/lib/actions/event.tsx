@@ -33,7 +33,7 @@ export const eventActions = defineActions<EventFragment>()([
     render: ({ item }) => <EditEventDescriptionForm id={item.id} />,
     dialogProps: {
       className: 'sm:max-w-xl',
-      onOpenAutoFocus: preventDefault,
+      onPointerDownOutside: (e) => e.preventDefault(),
     },
   },
   {
