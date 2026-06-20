@@ -193,7 +193,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
       {briefEntries.map((entry) => (
         <div
           key={competitionEntryKey(entry)}
-          className="grid grid-cols-[4rem_minmax(0,1fr)] items-start gap-2 py-1.5 text-xs"
+          className="competition-entry-row grid grid-cols-[3rem_minmax(0,1fr)] items-start gap-2 py-1.5 text-xs"
         >
           <div className="font-semibold tabular-nums text-neutral-11">
             {entry.checkInEnd ? entry.checkInEnd.split(':').slice(0, 2).join(':') : ''}
@@ -207,7 +207,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
       {reportEntries.map((entry) => (
         <div
           key={competitionEntryKey(entry)}
-          className="grid grid-cols-[4rem_minmax(0,1fr)_min-content] items-center gap-2 py-1.5 text-xs"
+          className="competition-entry-row grid grid-cols-[3rem_minmax(0,1fr)_min-content] items-center gap-2 py-1.5 text-xs"
         >
           <div className="font-semibold tabular-nums leading-none text-neutral-11">
             <span className={entry.ranking && entry.ranking <= 3 ? 'text-accent-11' : ''}>

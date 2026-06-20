@@ -214,3 +214,16 @@
 .rbc-is-dragging .rbc-event:not(.rbc-dragged-event):not(.rbc-drag-preview) {
   opacity: .50;
 }
+
+.competition-time-grid-event {
+  container: competition-time-grid-event / inline-size;
+}
+
+@container competition-time-grid-event (max-width: 99px) {
+  .competition-entry-row {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .competition-entry-row + .competition-entry-row {
+    margin-block-start: 0.125rem;
+  }
+}
