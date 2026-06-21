@@ -15,14 +15,15 @@ import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import Link from 'next/link';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
-import { validate } from 'uuid';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+
+const InvitationToken = z.uuid();
 
 const Form = z.object({
   email: z.email(),
   passwd: z.string(),
-  token: z.string(),
+  token: InvitationToken,
 });
 
 export default function InvitationPage() {
@@ -34,7 +35,7 @@ export default function InvitationPage() {
     resolver: zodResolver(Form),
   });
 
-  const isValidToken = validate(token);
+  const isValidToken = InvitationToken.safeParse(token).success;
   const [{ data, fetching }] = useQuery({
     query: InvitationInfoDocument,
     variables: { token },

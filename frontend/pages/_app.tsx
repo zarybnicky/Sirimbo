@@ -23,7 +23,6 @@ import { getCookie, setCookie } from 'cookies-next/client';
 import 'core-js/actual/array/to-reversed';
 import 'core-js/actual/array/to-sorted';
 
-import 'glider-js/glider.min.css';
 import 'nprogress/nprogress.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-data-grid/lib/styles.css';

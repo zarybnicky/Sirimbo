@@ -351,12 +351,6 @@ importers:
       file-saver:
         specifier: ~2.0.5
         version: 2.0.5
-      fuzzysort:
-        specifier: ^3.1.0
-        version: 3.1.0
-      glider-js:
-        specifier: ~1.7.9
-        version: 1.7.9
       graphql:
         specifier: ^16.14.0
         version: 16.14.2
@@ -462,9 +456,6 @@ importers:
       use-query-params:
         specifier: ^2.2.2
         version: 2.2.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      uuid:
-        specifier: ^14.0.0
-        version: 14.0.0
       wonka:
         specifier: ^6.3.5
         version: 6.3.5
@@ -514,9 +505,6 @@ importers:
       '@types/file-saver':
         specifier: ~2.0.7
         version: 2.0.7
-      '@types/glider-js':
-        specifier: ~1.7.12
-        version: 1.7.12
       '@types/iban':
         specifier: ~0.0.35
         version: 0.0.35
@@ -5268,9 +5256,6 @@ packages:
   '@types/geojson@7946.0.16':
     resolution: {integrity: sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==}
 
-  '@types/glider-js@1.7.12':
-    resolution: {integrity: sha512-DJXE0DN/4664o6N1O0VKhe8IKaU8qf3VVJMFCo7jqZb0WbV8pLc8ChYw2uoiLKA7IM8Z0PP/GHbn40h0S0qd0g==}
-
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
@@ -7382,9 +7367,6 @@ packages:
   get-value@3.0.1:
     resolution: {integrity: sha512-mKZj9JLQrwMBtj5wxi6MH8Z5eSKaERpAwjg43dPtlGI1ZVEgH/qC7T8/6R2OBSUA+zzHBZgICsVJaEIV2tKTDA==}
     engines: {node: '>=6.0'}
-
-  glider-js@1.7.9:
-    resolution: {integrity: sha512-22r7EZ8cd4HWsM+pvNResu1h9tvJmAlrMBO2CbdJ9mhsYF/UllJEdvq8OuJDBgYcD0aja51vzRb/TbT7BCAaig==}
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -10785,10 +10767,6 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
-  uuid@14.0.0:
-    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
-    hasBin: true
-
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
@@ -12439,6 +12417,8 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.3.0
       '@ckeditor/ckeditor5-engine': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-essentials@47.3.0':
     dependencies:
@@ -12671,6 +12651,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-minimap@47.3.0':
     dependencies:
@@ -12679,6 +12661,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-page-break@47.3.0':
     dependencies:
@@ -12688,6 +12672,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       '@ckeditor/ckeditor5-widget': 47.3.0
       ckeditor5: 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-paragraph@47.3.0':
     dependencies:
@@ -12696,6 +12682,8 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.3.0
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-paste-from-office@47.3.0':
     dependencies:
@@ -12717,6 +12705,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-restricted-editing@47.3.0':
     dependencies:
@@ -12726,6 +12716,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-select-all@47.3.0':
     dependencies:
@@ -17416,8 +17408,6 @@ snapshots:
 
   '@types/geojson@7946.0.16': {}
 
-  '@types/glider-js@1.7.12': {}
-
   '@types/hast@3.0.4':
     dependencies:
       '@types/unist': 3.0.3
@@ -20052,8 +20042,6 @@ snapshots:
   get-value@3.0.1:
     dependencies:
       isobject: 3.0.1
-
-  glider-js@1.7.9: {}
 
   glob-parent@5.1.2:
     dependencies:
@@ -24243,8 +24231,6 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   utils-merge@1.0.1: {}
-
-  uuid@14.0.0: {}
 
   uuid@8.3.2: {}
 

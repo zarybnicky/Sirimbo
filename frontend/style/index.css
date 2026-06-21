@@ -309,34 +309,6 @@ body {
   }
 }
 
-.glider-contain {
-  grid-column: full;
-}
-.glider-dots {
-  margin-top: 1rem !important;
-}
-.glider-dot {
-  border-radius: 0;
-  width: 50px;
-  height: 9px;
-}
-.glider-dot.active {
-  background-color: hsl(var(--accent-9));
-}
-.glider-prev,
-.glider-next {
-  position: absolute;
-}
-.glider-prev {
-  left: 1rem;
-  top: calc(50% - 2rem);
-}
-.glider-next {
-  right: 1rem;
-  top: calc(50% - 2rem);
-}
-
-
 .animated.circle {
   stroke-dasharray: 1000;
   stroke-dashoffset: 0;
