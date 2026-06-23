@@ -1,14 +1,16 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import {
+  ensureCompetitors,
+  ensurePeople,
+  getCompetitionContext,
+  mergeCompetitorComponents,
+  upsertCompetitionEntries,
+  upsertCompetitionResults,
   type competitor_type,
-  type score_component,
-  type scoring_method,
-  // upsertCompetitionRoundResults,
-  // upsertCompetitor,
-  // upsertJudgeScores,
-  // upsertRoundsAndRoundDances,
+  type gender,
 } from './federated.queries.ts';
+import type { PoolClient } from 'pg';
 
 const Link = z.object( {
   href: z.string(),
@@ -59,10 +61,25 @@ const Score = z.discriminatedUnion("kind", [
     ...onScaleCommon,
   }),
   z.object({
+    kind: z.literal("onScaleIdo"),
+    c: z.number(),
+    i: z.number(),
+    s: z.number(),
+    t: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
     kind: z.literal("onScaleDisco3"),
     c: z.number(),
     p: z.number(),
     t: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
+    kind: z.literal("onScaleMtc"),
+    m: z.number(),
+    t: z.number(),
+    c: z.number(),
     ...scoreCommon,
   }),
   z.object({
@@ -89,6 +106,8 @@ const Score = z.discriminatedUnion("kind", [
     kind: z.literal("wdsfbreaking"),
     mode: z.enum([
       'Preliminary',
+      'RoundRobin',
+      'TopX',
     ]),
     isred: z.boolean().optional(),
     branch: z.number(),
@@ -105,6 +124,7 @@ const Score = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("trivium"),
     mode: z.enum([
+      'Preliminary',
       'RoundRobin',
       'TopX',
     ]),
@@ -176,6 +196,15 @@ const schema = z.object( {
   ),
 });
 
+type Participant = z.infer<typeof schema>;
+
+type ResolvedCompetitor = {
+  externalId: string;
+  type: competitor_type;
+  label: string;
+  personExternalId?: string;
+};
+
 export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
   mode: 'json',
   schema,
@@ -190,216 +219,137 @@ export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
   }),
   revalidatePeriod: '7d',
   load: async (client, p) => {
-    const competitionLink = p.link.find(x => x.rel === 'http://services.worlddancesport.org/rel/participant/competition');
-    if (!competitionLink)
-      throw new Error('Missing competition link');
-    const competitionId = Number.parseInt(
-      competitionLink.href.replace('https://services.worlddancesport.org/api/1/competition/', '')
-    );
-
-    // competitor linkage via links
-    const coupleLink = p.link.find(x => x.rel === 'http://services.worlddancesport.org/rel/participant/couple');
-    const teamLink = p.link.find(x => x.rel === 'http://services.worlddancesport.org/rel/participant/team');
-    const personLink = p.link.find(x => x.rel === 'http://services.worlddancesport.org/rel/participant/person');
-
-    let competitorType: competitor_type = 'solo';
-    let competitorName: string | undefined | null = null;
-    let competitorId: string | undefined | null = null;
-
-    if (coupleLink) {
-      competitorType = 'couple';
-      competitorName = p.name;
-      competitorId = coupleLink.href.replace('https://services.worlddancesport.org/api/1/couple/rls-', '');
-    } else if (teamLink) {
-      competitorType = 'team';
-      competitorName = p.Team;
-      competitorId = p.teamId?.toString();
-    } else if (personLink) {
-      competitorType = 'solo';
-      throw new Error('Need to get competitor ID from MIN. Are the IDs overlapping? ' + personLink);
-    }
-    if (!competitorId) return;
-
-    return;
-
-    // entry + competition-level result
-    // const cancelled = /not\s*present|absent/i.test(p.status ?? '');
-    // await upsertCompetitionEntry.run({ competitionId, competitorId, cancelled }, client);
-    // await upsertCompetitionResult.run(
-    //   {
-    //     competitionId,
-    //     competitorId,
-    //     startNumber: p.number ?? null,
-    //     ranking: p.rank ?? null,
-    //     rankingTo: null,
-    //     pointGain: p.points ?? null,
-    //     finalGain: p.final ?? null,
-    //   },
-    //   client,
-    // );
-
-    const rounds = p.rounds ?? [];
-    if (rounds.length === 0) return;
-
-    // ---- Pass 1: gather dances/round structure/scores WITHOUT DB writes that require dances existing
-    const danceMeta = new Map<string, { name: string; discipline: string }>();
-
-    // We keep per-round danceCodesInOrder in memory so we can create dance_program_ids later.
-    const roundKeysRaw: string[] = [];
-    const roundLabelsRaw: string[] = [];
-    const scoringMethodsRaw: scoring_method[] = [];
-    const roundDanceCodesInOrder: string[][] = [];
-
-    // flattened round_key x dance_code pairs for round_dance insert
-    const pairRoundKeys: string[] = [];
-    const pairDanceCodes: string[] = [];
-
-    // score rows keyed by round_key (later mapped to round_id)
-    const scoreRoundKeys: string[] = [];
-    const scoreDanceCodes: string[] = [];
-    const scoreJudgeIds: string[] = [];
-    const scoreComponents: score_component[] = [];
-    const scoreValues: number[] = [];
-    const scoreRaw: (string | null)[] = [];
-
-    const adjudicators = new Set<string>();
-
-    for (let roundIdx = 0; roundIdx < rounds.length; roundIdx++) {
-      const r = rounds[roundIdx]!;
-      const dances = r.dances ?? [];
-      if (dances.length === 0) continue;
-
-      const roundKey = r.name.toUpperCase() || String(roundIdx + 1);
-      const roundLabel = r.name ?? null;
-
-      const danceCodesInOrder: string[] = [];
-      for (const d of dances) {
-        danceCodesInOrder.push(d.name);
-        pairRoundKeys.push(roundKey);
-        pairDanceCodes.push(d.name);
-      }
-
-      roundKeysRaw.push(roundKey);
-      roundLabelsRaw.push(roundLabel);
-      scoringMethodsRaw.push('skating_marks');
-      roundDanceCodesInOrder.push(danceCodesInOrder);
-
-      // collect judge scores
-      for (let di = 0; di < dances.length; di++) {
-        const d = dances[di]!;
-        const danceCode = danceCodesInOrder[di]!;
-        const scores = d.scores ?? [];
-
-        for (const s of scores) {
-          adjudicators.add(s.adjudicator.toString()); // Wrong ID, competition-local
-
-          scoreRoundKeys.push(roundKey);
-          scoreDanceCodes.push(danceCode);
-          scoreJudgeIds.push(s.adjudicator.toString());
-          scoreComponents.push('mark'); // wrong
-          scoreValues.push(1);
-        }
-      }
-    }
-
-    if (roundKeysRaw.length === 0) return;
-
-    // ---- Ensure dances exist BEFORE dance_program_dance inserts
-    // {
-    //   const codes: string[] = [];
-    //   const names: string[] = [];
-    //   const disciplines: string[] = [];
-    //   for (const [code, meta] of danceMeta.entries()) {
-    //     codes.push(code);
-    //     names.push(meta.name);
-    //     disciplines.push(meta.discipline);
-    //   }
-    //   await upsertDances.run({ codes, names, disciplines }, client);
-    // }
-
-    // ---- Pass 2: create dance programs per round (still per-round; low complexity)
-    // const danceProgramIds: number[] = [];
-    // for (let i = 0; i < roundDanceCodesInOrder.length; i++) {
-    //   const dpId = await ensureDanceProgramForDances.run(
-    //     {
-    //       danceCodesInOrder: roundDanceCodesInOrder[i]!,
-    //       discipline: cat.discipline,
-    //     },
-    //     client,
-    //   );
-    //   danceProgramIds.push(dpId);
-    // }
-
-    // ---- Batch upsert rounds + round_dance
-    // const roundIdByKey = await upsertRoundsAndRoundDances.run(
-    //   {
-    //     competitionId,
-    //     roundLabels: roundLabelsRaw,
-    //     roundIndexes: roundKeysRaw.map(() => null),
-    //     danceProgramIds,
-    //     scoringMethods: scoringMethodsRaw,
-    //     roundKeys: pairRoundKeys,
-    //     danceCodes: pairDanceCodes,
-    //   },
-    //   client,
-    // );
-
-    // ---- Batch round results (optional but cheap)
-    // const roundIdsInOrder = roundKeysRaw
-    //   .map((k) => roundIdByKey.get(k) ?? null)
-    //   .filter((x): x is number => typeof x === 'number');
-
-    // await upsertCompetitionRoundResults.run(
-    //   {
-    //     roundIds: roundIdsInOrder,
-    //     competitorId,
-    //     overallRanking: roundIdsInOrder.map(() => p.rank ?? null),
-    //     overallRankingTo: roundIdsInOrder.map(() => null),
-    //     qualifiedNext: roundIdsInOrder.map((_, i) => i < roundIdsInOrder.length - 1),
-    //     overallScore: roundIdsInOrder.map(() => null),
-    //   },
-    //   client,
-    // );
-
-    // ---- Judges: one call per participant
-    // const adjudicatorList = [...adjudicators];
-    // if (adjudicatorList.length > 0) {
-    //   await ensureJudges.run({ federation: 'wdsf', adjudicatorList }, client);
-    // }
-
-    // ---- Scores: map roundKey -> roundId then bulk insert
-    // const scoreRoundIds: number[] = [];
-    // const scoreDanceCodes2: string[] = [];
-    // const scoreJudgeIds2: string[] = [];
-    // const scoreComponents2: score_component[] = [];
-    // const scoreValues2: number[] = [];
-    // const scoreRaw2: string[] = [];
-
-    // for (let i = 0; i < scoreRoundKeys.length; i++) {
-    //   const rk = scoreRoundKeys[i]!;
-    //   const rid = roundIdByKey.get(rk);
-    //   if (!rid) continue; // should not happen, but keeps idempotency safe
-
-    //   scoreRoundIds.push(rid);
-    //   scoreDanceCodes2.push(scoreDanceCodes[i]!);
-    //   scoreJudgeIds2.push(scoreJudgeIds[i]!);
-    //   scoreComponents2.push(scoreComponents[i]!);
-    //   scoreValues2.push(scoreValues[i]!);
-    //   scoreRaw2.push((scoreRaw[i] ?? null) as string);
-    // }
-
-    // await upsertJudgeScores.run(
-    //   {
-    //     federation: 'wdsf',
-    //     competitionId,
-    //     competitorId,
-    //     roundId: scoreRoundIds,
-    //     danceCode: scoreDanceCodes2,
-    //     judgeId: scoreJudgeIds2,
-    //     component: scoreComponents2,
-    //     score: scoreValues2,
-    //   },
-    //   client,
-    // );
+    await loadWdsfParticipant(client, p);
   },
 };
+
+async function loadWdsfParticipant(client: PoolClient, p: Participant) {
+  const competitionLink = p.link.find(
+    (link) => link.rel === 'http://services.worlddancesport.org/rel/participant/competition',
+  );
+  const competitionExternalId = competitionLink
+    ? new URL(competitionLink.href).pathname.match(/^\/api\/1\/competition\/([0-9]+)$/i)?.[1]
+    : undefined;
+  if (!competitionExternalId) {
+    throw new Error(`Missing WDSF competition link for participant ${p.id}`);
+  }
+  if (competitionExternalId !== p.competitionId.toString()) {
+    throw new Error(
+      `Participant ${p.id} competition mismatch: payload=${p.competitionId}, link=${competitionExternalId}`,
+    );
+  }
+
+  const [context] = await getCompetitionContext.run(
+    { federation: 'wdsf', externalId: competitionExternalId },
+    client,
+  );
+  if (!context) throw new Error(`Competition wdsf:${competitionExternalId} is missing`);
+
+  const competitor = resolveCompetitor(p);
+  if (!competitor) return;
+
+  const competitorId = `wdsf:${competitor.externalId}`;
+  await ensureCompetitors.run(
+    {
+      federation: ['wdsf'],
+      externalId: [competitor.externalId],
+      type: [competitor.type],
+      label: [competitor.label],
+    },
+    client,
+  );
+
+  if (competitor.personExternalId) {
+    await ensurePeople.run(
+      {
+        federation: ['wdsf'],
+        externalId: [competitor.personExternalId],
+        canonicalName: [competitor.label],
+        gender: ['unknown' satisfies gender],
+      },
+      client,
+    );
+    await mergeCompetitorComponents.run(
+      {
+        competitorId: [competitorId],
+        personId: [`wdsf:${competitor.personExternalId}`],
+        role: ['member'],
+      },
+      client,
+    );
+  }
+
+  await upsertCompetitionEntries.run(
+    {
+      competitionId: context.id,
+      competitorId: [competitorId],
+      cancelled: [p.status === 'Excused' || p.status === 'Noshow' || p.status === 'Withdrawn'],
+    },
+    client,
+  );
+
+  const ranking = parsePositiveRank(p.rank);
+  if (ranking) {
+    const lastRound = p.rounds.at(-1);
+    const lastDance = lastRound?.dances.at(-1);
+    await upsertCompetitionResults.run(
+      {
+        competitionId: context.id,
+        competitorId: [competitorId],
+        startNumber: [p.number?.toString() ?? ''],
+        ranking: [ranking],
+        rankingTo: [ranking],
+        pointGain: [p.points?.toString() ?? ''],
+        finalGain: [p.final?.toString() ?? ''],
+        isFinal: [p.rounds.some((round) => /^f(inal)?$/i.test(round.name))],
+        completionStatus: [p.status],
+        lastRound: [lastRound?.name ?? ''],
+        lastDance: [lastDance?.name ?? ''],
+      },
+      client,
+    );
+  }
+}
+
+function resolveCompetitor(p: Participant): ResolvedCompetitor | null {
+  const couple = p.link.find((x) => x.rel === 'http://services.worlddancesport.org/rel/participant/couple');
+  if (couple) {
+    const externalId = couple.href
+      .replace('https://services.worlddancesport.org/api/1/couple/rls-', '')
+      .replace('https://services.worlddancesport.org/api/1/couple/wdsf-', '');
+    return {
+      externalId,
+      type: 'couple',
+      label: p.name?.trim() ?? '',
+    };
+  }
+
+  const team = p.link.find((x) => x.rel === 'http://services.worlddancesport.org/rel/participant/team');
+  if (team) {
+    const externalId = team.href.replace('https://services.worlddancesport.org/api/1/team/', '');
+    return {
+      externalId,
+      type: 'team',
+      label: (p.Team ?? p.name)?.trim() ?? '',
+    };
+  }
+
+  const athlete = p.link.find((x) => x.rel === 'http://services.worlddancesport.org/rel/participant/athlete');
+  if (athlete) {
+    const externalId = athlete.href.replace('https://services.worlddancesport.org/api/1/person/', '');
+    return {
+      externalId,
+      type: 'solo',
+      label: (p.PerformanceName ?? p.name)?.trim() ?? '',
+      personExternalId: externalId,
+    };
+  }
+
+  return null;
+}
+
+function parsePositiveRank(rank: string) {
+  if (!/^[0-9]+$/.test(rank)) return null;
+  const parsed = Number.parseInt(rank, 10);
+  return parsed > 0 ? parsed : null;
+}

@@ -461,3 +461,13 @@ $$;
 comment on function activity_timeline is '@behavior +queryField:resource:list -queryField:resource:connection';
 grant all on function activity_timeline to anonymous;
 select verify_function('activity_timeline');
+
+alter table federated.competition_official
+  add column if not exists external_id text;
+
+create index if not exists competition_official_competition_id_external_id_idx
+  on federated.competition_official (competition_id, external_id)
+  where external_id is not null;
+
+alter table federated.competition_result
+  drop constraint if exists competition_result_competition_id_start_number_key;

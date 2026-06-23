@@ -355,12 +355,15 @@ CREATE INDEX ON federated.competition (category_id);
 
 CREATE TABLE federated.competition_official (
   competition_id bigint NOT NULL REFERENCES federated.competition(id) ON DELETE CASCADE,
+  external_id    text,
   person_id      text   NOT NULL REFERENCES federated.person(id),
   role           federated.official_role NOT NULL,
   PRIMARY KEY (competition_id, person_id, role)
 );
 CREATE INDEX ON federated.competition_official (person_id);
 CREATE INDEX ON federated.competition_official (competition_id, role);
+CREATE INDEX ON federated.competition_official (competition_id, external_id)
+  WHERE external_id IS NOT NULL;
 
 CREATE TYPE federated.scoring_method AS ENUM (
   'skating_marks',
@@ -497,7 +500,6 @@ CREATE TABLE federated.competition_result (
   last_round     text,
   last_dance     text,
   PRIMARY KEY (competition_id, competitor_id),
-  UNIQUE (competition_id, start_number),
   CHECK (ranking_to IS NULL OR ranking_to >= ranking)
 );
 

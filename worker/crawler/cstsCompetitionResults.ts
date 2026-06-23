@@ -174,16 +174,18 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
 
   const competitionOfficials = makePgtypedCollection<{
     competitionExternalId: string;
+    externalId: string;
     personId: string;
     role: official_role;
   }>(
-    ['competitionExternalId', 'personId', 'role'],
+    ['competitionExternalId', 'externalId', 'personId', 'role'],
     ['competitionExternalId', 'personId', 'role'],
   );
   for (const official of result.officials) {
     if (!official.id) continue;
     competitionOfficials.add({
       competitionExternalId: result.competitionId.toString(),
+      externalId: official.id.toString(),
       personId: `csts:${official.id}`,
       role: mapOfficialRole(official.type),
     });

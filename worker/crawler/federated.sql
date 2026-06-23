@@ -716,26 +716,29 @@ WHERE t.event_id IN (SELECT id FROM event)
 
 /* @name MergeCompetitionOfficials */
 WITH input AS (
-  SELECT competition_external_id, person_id, role
+  SELECT competition_external_id, nullif(external_id, '') AS external_id, person_id, role
   FROM unnest(
     :competitionExternalId::text[],
+    :externalId::text[],
     :personId::text[],
     :role::federated.official_role[]
-  ) AS input(competition_external_id, person_id, role)
+  ) AS input(competition_external_id, external_id, person_id, role)
 ), competitions AS (
   SELECT id, external_id
   FROM federated.competition
   WHERE federation = :federation
     AND external_id IN (SELECT unnest(:scopeCompetitionExternalId::text[]))
 ), source AS (
-  SELECT competitions.id AS competition_id, input.person_id, input.role
+  SELECT competitions.id AS competition_id, input.external_id, input.person_id, input.role
   FROM input
   JOIN competitions ON competitions.external_id = input.competition_external_id
 ), inserted_official AS (
-  INSERT INTO federated.competition_official (competition_id, person_id, role)
-  SELECT s.competition_id, s.person_id, s.role
+  INSERT INTO federated.competition_official (competition_id, external_id, person_id, role)
+  SELECT s.competition_id, s.external_id, s.person_id, s.role
   FROM source s
-  ON CONFLICT (competition_id, person_id, role) DO NOTHING
+  ON CONFLICT (competition_id, person_id, role) DO UPDATE
+    SET external_id = EXCLUDED.external_id
+    WHERE federated.competition_official.external_id IS DISTINCT FROM EXCLUDED.external_id
 )
 DELETE FROM federated.competition_official t
 WHERE t.competition_id IN (SELECT id FROM competitions)
@@ -792,6 +795,21 @@ WHERE t.competition_id IN (SELECT id FROM competitions)
     WHERE s.competition_id = t.competition_id
       AND s.competitor_id = t.competitor_id
   );
+
+/* @name UpsertCompetitionEntries */
+WITH source AS (
+  SELECT :competitionId::bigint AS competition_id, competitor_id, cancelled
+  FROM unnest(
+    :competitorId::text[],
+    :cancelled::boolean[]
+  ) AS input(competitor_id, cancelled)
+)
+INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
+SELECT competition_id, competitor_id, cancelled
+FROM source
+ON CONFLICT (competition_id, competitor_id) DO UPDATE
+  SET cancelled = EXCLUDED.cancelled
+  WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled;
 
 /* @name MergeCompetitionResults */
 WITH source AS (
@@ -857,6 +875,63 @@ WHERE t.competition_id = :competitionId
     FROM source s
     WHERE s.competitor_id = t.competitor_id
   );
+
+/* @name UpsertCompetitionResults */
+WITH source AS (
+  SELECT
+    competitor_id,
+    nullif(start_number, '') AS start_number,
+    ranking,
+    ranking_to,
+    nullif(point_gain, '')::numeric(10,3) AS point_gain,
+    nullif(final_gain, '')::numeric(10,3) AS final_gain,
+    is_final,
+    nullif(completion_status, '') AS completion_status,
+    nullif(last_round, '') AS last_round,
+    nullif(last_dance, '') AS last_dance
+  FROM unnest(
+    :competitorId::text[],
+    :startNumber::text[],
+    :ranking::int[],
+    :rankingTo::int[],
+    :pointGain::text[],
+    :finalGain::text[],
+    :isFinal::boolean[],
+    :completionStatus::text[],
+    :lastRound::text[],
+    :lastDance::text[]
+  ) AS input(
+    competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
+    is_final, completion_status, last_round, last_dance
+  )
+)
+INSERT INTO federated.competition_result (
+  competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
+  is_final, completion_status, last_round, last_dance
+)
+SELECT
+  :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,
+  s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance
+FROM source s
+ON CONFLICT (competition_id, competitor_id) DO UPDATE
+  SET start_number = EXCLUDED.start_number,
+      ranking = EXCLUDED.ranking,
+      ranking_to = EXCLUDED.ranking_to,
+      point_gain = EXCLUDED.point_gain,
+      final_gain = EXCLUDED.final_gain,
+      is_final = EXCLUDED.is_final,
+      completion_status = EXCLUDED.completion_status,
+      last_round = EXCLUDED.last_round,
+      last_dance = EXCLUDED.last_dance
+  WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number
+     OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking
+     OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to
+     OR federated.competition_result.point_gain IS DISTINCT FROM EXCLUDED.point_gain
+     OR federated.competition_result.final_gain IS DISTINCT FROM EXCLUDED.final_gain
+     OR federated.competition_result.is_final IS DISTINCT FROM EXCLUDED.is_final
+     OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status
+     OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round
+     OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance;
 
 /* @name UpsertCompetitionRounds */
 WITH input AS (

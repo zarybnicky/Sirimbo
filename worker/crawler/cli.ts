@@ -700,7 +700,7 @@ async function processLatest(
   console.log(
     `Validated ${counts.processed}/${total} responses in ` +
       `${Math.round(performance.now() - started)}ms; ` +
-      `${counts.failures} failures; rolled back`,
+      `${counts.failures} failures; ${options.commit ? 'committed' : 'rolled back'}`,
   );
   if (counts.failures > 0) process.exitCode = 1;
 }
