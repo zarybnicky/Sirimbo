@@ -45,15 +45,13 @@ export function CstsIdFieldElement<T extends FieldValues>({
         type={type}
         {...props}
       />
-      {query.data ? (
-        query.data.cstsAthlete ? (
-          <CstsPersonLink idt={idt} className="text-green-9 hover:text-green-11">
-            {query.data.cstsAthlete}
-          </CstsPersonLink>
-        ) : (
-          <span className="text-accent-9">Nenalezeno</span>
-        )
-      ) : null}
+      {!query.data ? null : !query.data.cstsAthlete ? (
+        <span className="text-accent-9">Nenalezeno</span>
+      ) : (
+        <CstsPersonLink idt={idt} className="text-green-9 hover:text-green-11">
+          {query.data.cstsAthlete}
+        </CstsPersonLink>
+      )}
     </div>
   );
 }

@@ -86,22 +86,17 @@ export function PersonView({ id }: { id: string }) {
     item.phone,
     item.email,
     item.cstsId && (
-      <CstsPersonLink idt={item.cstsId} className="text-accent-12 hover:text-accent-11">ČSTS</CstsPersonLink>
+      <CstsPersonLink idt={item.cstsId} className="text-accent-12 hover:text-accent-11">
+        ČSTS
+      </CstsPersonLink>
     ),
   ].filter(Boolean);
-  const facebookUrl =
-    item.facebookUrl?.startsWith('https://') || item.facebookUrl?.startsWith('http://')
-      ? item.facebookUrl
-      : null;
-  const websiteUrl =
-    item.websiteUrl?.startsWith('https://') || item.websiteUrl?.startsWith('http://')
-      ? item.websiteUrl
-      : null;
+
   const socialLinks = [
     {
       id: 'instagram',
       label: 'Instagram',
-      text: item.instagramUsername ? `@${item.instagramUsername}` : 'Instagram',
+      text: item.instagramUsername ? `@${item.instagramUsername}` : null,
       href: item.instagramUsername
         ? `https://www.instagram.com/${encodeURIComponent(item.instagramUsername)}`
         : null,
@@ -110,7 +105,7 @@ export function PersonView({ id }: { id: string }) {
     {
       id: 'tiktok',
       label: 'TikTok',
-      text: item.tiktokUsername ? `@${item.tiktokUsername}` : 'TikTok',
+      text: item.tiktokUsername ? `@${item.tiktokUsername}` : null,
       href: item.tiktokUsername
         ? `https://www.tiktok.com/@${encodeURIComponent(item.tiktokUsername)}`
         : null,
@@ -120,14 +115,21 @@ export function PersonView({ id }: { id: string }) {
       id: 'facebook',
       label: 'Facebook',
       text: 'Facebook',
-      href: facebookUrl,
+      href:
+        item.facebookUrl?.startsWith('https://') ||
+        item.facebookUrl?.startsWith('http://')
+          ? item.facebookUrl
+          : null,
       Icon: Facebook,
     },
     {
       id: 'website',
       label: 'Web',
       text: 'Web',
-      href: websiteUrl,
+      href:
+        item.websiteUrl?.startsWith('https://') || item.websiteUrl?.startsWith('http://')
+          ? item.websiteUrl
+          : null,
       Icon: Globe,
     },
   ].filter((link) => link.href);
@@ -138,12 +140,9 @@ export function PersonView({ id }: { id: string }) {
         title={item.name}
         subtitle={
           subtitleParts.length > 0 ? (
-            <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1">
+            <span className="inline-flex flex-wrap items-center gap-y-1 [&>*:not(:last-child)]:after:content-['•'] [&>*]:after:mx-1.5 [&>*]:after:text-neutral-9">
               {subtitleParts.map((part, index) => (
-                <React.Fragment key={index}>
-                  {index > 0 ? <span aria-hidden="true">·</span> : null}
-                  <span>{part}</span>
-                </React.Fragment>
+                <span key={index}>{part}</span>
               ))}
             </span>
           ) : undefined

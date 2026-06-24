@@ -34,23 +34,6 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-const socialUsernamePattern = /^[A-Za-z0-9._]+$/;
-const instagramUsername = z.preprocess(
-  (value) => normalizeUsername(value, 'instagram'),
-  z
-    .string()
-    .max(64)
-    .refine((value) => socialUsernamePattern.test(value), 'Zadejte platné uživatelské jméno')
-    .nullable(),
-);
-const tiktokUsername = z.preprocess(
-  (value) => normalizeUsername(value, 'tiktok'),
-  z
-    .string()
-    .max(64)
-    .refine((value) => socialUsernamePattern.test(value), 'Zadejte platné uživatelské jméno')
-    .nullable(),
-);
 const url = z.preprocess(
   (value) => (typeof value === 'string' && value.trim() ? value.trim() : null),
   z
@@ -61,6 +44,13 @@ const url = z.preprocess(
     )
     .nullable(),
 );
+
+function normalizeUsername(value: unknown, platform: 'instagram.com' | 'tiktok.com') {
+  if (typeof value !== 'string') return null;
+  const i = value.toLowerCase().indexOf(`${platform}/`);
+  const text = i !== -1 ? value.slice(i + platform.length + 1) : value;
+  return text.trim().replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null;
+}
 
 const Form = z.object({
   prefixTitle: z.string().prefault(''),
@@ -79,8 +69,14 @@ const Form = z.object({
   bio: z.string().prefault(''),
   email: z.email().optional(),
   phone: z.string().optional(),
-  instagramUsername,
-  tiktokUsername,
+  instagramUsername: z.preprocess(
+    (value) => normalizeUsername(value, 'instagram.com'),
+    z.string().max(64).nullable(),
+  ),
+  tiktokUsername: z.preprocess(
+    (value) => normalizeUsername(value, 'tiktok.com'),
+    z.string().max(64).nullable(),
+  ),
   facebookUrl: url,
   websiteUrl: url,
   personId: z.string().nullish().prefault(null),
@@ -216,7 +212,7 @@ export function CreatePersonDialog() {
       });
       toast.success('Přidáno.');
       setOpen(null);
-      router.replace({
+      await router.replace({
         pathname: '/clenove/[id]',
         query: { id },
       });
@@ -334,14 +330,12 @@ export function CreatePersonDialog() {
               name="instagramUsername"
               label="Instagram"
               placeholder="uzivatel"
-              helperText="Uživatelské jméno bez @"
             />
             <TextFieldElement
               control={control}
               name="tiktokUsername"
               label="TikTok"
               placeholder="uzivatel"
-              helperText="Uživatelské jméno bez @"
             />
             <TextFieldElement
               control={control}
@@ -422,16 +416,4 @@ export function CreatePersonDialog() {
       </DialogContent>
     </Dialog>
   );
-}
-
-function normalizeUsername(value: unknown, platform: 'instagram' | 'tiktok') {
-  if (typeof value !== 'string') return null;
-
-  const raw = value.trim();
-  if (!raw) return null;
-
-  const marker = `${platform}.com/`;
-  const platformIndex = raw.toLowerCase().indexOf(marker);
-  const text = platformIndex >= 0 ? raw.slice(platformIndex + marker.length) : raw;
-  return text.replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null;
 }

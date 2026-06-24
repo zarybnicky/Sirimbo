@@ -15,39 +15,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RichTextEditor } from '@/ui/fields/richtext';
 
-const socialUsernamePattern = /^[A-Za-z0-9._]+$/;
-const instagramUsername = z.preprocess(
-  (value) => {
-    if (typeof value !== 'string') return null;
-    const raw = value.trim();
-    if (!raw) return null;
-    const marker = 'instagram.com/';
-    const platformIndex = raw.toLowerCase().indexOf(marker);
-    const text = platformIndex >= 0 ? raw.slice(platformIndex + marker.length) : raw;
-    return text.replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null;
-  },
-  z
-    .string()
-    .max(64)
-    .refine((value) => socialUsernamePattern.test(value), 'Zadejte platné uživatelské jméno')
-    .nullable(),
-);
-const tiktokUsername = z.preprocess(
-  (value) => {
-    if (typeof value !== 'string') return null;
-    const raw = value.trim();
-    if (!raw) return null;
-    const marker = 'tiktok.com/';
-    const platformIndex = raw.toLowerCase().indexOf(marker);
-    const text = platformIndex >= 0 ? raw.slice(platformIndex + marker.length) : raw;
-    return text.replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null;
-  },
-  z
-    .string()
-    .max(64)
-    .refine((value) => socialUsernamePattern.test(value), 'Zadejte platné uživatelské jméno')
-    .nullable(),
-);
 const url = z.preprocess(
   (value) => (typeof value === 'string' && value.trim() ? value.trim() : null),
   z
@@ -59,6 +26,13 @@ const url = z.preprocess(
     .nullable(),
 );
 
+function normalizeUsername(value: unknown, platform: 'instagram.com' | 'tiktok.com') {
+  if (typeof value !== 'string') return null;
+  const i = value.toLowerCase().indexOf(`${platform}/`);
+  const text = i !== -1 ? value.slice(i + platform.length + 1) : value;
+  return text.trim().replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null;
+}
+
 const Form = z.object({
   prefixTitle: z.string().prefault(''),
   firstName: z.string(),
@@ -68,8 +42,14 @@ const Form = z.object({
   birthDate: z.string().nullish(),
   email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),
-  instagramUsername,
-  tiktokUsername,
+  instagramUsername: z.preprocess(
+    (value) => normalizeUsername(value, 'instagram.com'),
+    z.string().max(64).nullable(),
+  ),
+  tiktokUsername: z.preprocess(
+    (value) => normalizeUsername(value, 'tiktok.com'),
+    z.string().max(64).nullable(),
+  ),
   facebookUrl: url,
   websiteUrl: url,
   cstsId: z.number().int().positive().nullable().optional(),
