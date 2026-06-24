@@ -60,8 +60,13 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
     const queueTail = new Map<string, Date>();
 
     for (const row of scheduleRows) {
+      const earliestRunAt = Math.max(
+        now.getTime(),
+        row.next_available_at?.getTime() ?? now.getTime(),
+        row.queue_tail_at?.getTime() ?? now.getTime(),
+      );
       spacingMs.set(row.host, row.spacing ?? 50);
-      queueTail.set(row.host, new Date(Math.max(row.queue_tail_at?.getTime() ?? now.getTime(), now.getTime())));
+      queueTail.set(row.host, new Date(earliestRunAt));
     }
 
     const outstanding = scheduleRows.reduce((total, row) => total + row.queued + row.locked, 0);

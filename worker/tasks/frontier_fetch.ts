@@ -45,10 +45,12 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
           `Over-scheduled for host ${host}, rescheduling in ${allowed_at!.getTime() - Date.now()} ms`,
         );
         await rescheduleFrontier.run({ id, nextRetryAt: allowed_at }, client);
+        await client.query(
+          "SELECT graphile_worker.add_job('frontier_fetch', json_build_object('id', $1::text), run_at => $2::timestamptz, job_key => $3::text, job_key_mode => 'replace')",
+          [id, allowed_at, `fetch:${host}:${id}`],
+        );
         await client.query('COMMIT');
         committed = true;
-        const jobKey = `fetch:${host}:${id}`;
-        await helpers.addJob('frontier_fetch', { id }, { jobKey, runAt: allowed_at! });
         return;
       }
       await client.query('COMMIT');
