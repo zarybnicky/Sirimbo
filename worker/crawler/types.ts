@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { fetch_status, IGetFrontierForUpdateResult } from './crawler.queries.ts';
 import type { PoolClient } from 'pg';
 import type { RequestInit } from 'impit';
+import type { LoaderResult } from './effects.ts';
 
 export type FrontierRow = IGetFrontierForUpdateResult;
 
@@ -18,7 +19,7 @@ interface LoaderBase<T> {
   mapResponseToStatus?: (args: MapperArgs<T>) => fetch_status | undefined;
   cleanResponse?: (url: URL, parsed: T, raw: unknown) => T;
   revalidatePeriod: string;
-  load: (client: PoolClient, parsed: T) => Promise<void>;
+  load: (client: PoolClient, parsed: T) => Promise<LoaderResult>;
 }
 
 export interface JsonLoader<T = unknown> extends LoaderBase<T> {

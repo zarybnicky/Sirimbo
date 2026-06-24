@@ -7,6 +7,11 @@ import {
 import { loaderFor } from '../crawler/handlers.ts';
 import { zx } from '@traversable/zod';
 import { formatException } from '../crawler/error.ts';
+import {
+  createLoaderEffects,
+  flushLoaderEffects,
+  mergeLoaderEffects,
+} from '../crawler/effects.ts';
 
 type ProcessorStats = { count: number; ms: number; errors: number };
 
@@ -50,6 +55,7 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
       }
 
       const successfulBatch: Array<{ federation: string; kind: string; ms: number }> = [];
+      const effects = createLoaderEffects();
       let failedFrontier: (typeof frontiers)[number] | null = null;
       let failedAt = 0;
 
@@ -68,7 +74,7 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
               reportInput: true,
             });
           }
-          await loader.load(client, content);
+          mergeLoaderEffects(effects, await loader.load(client, content));
 
           successfulBatch.push({
             federation,
@@ -76,6 +82,8 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
             ms: performance.now() - failedAt,
           });
         }
+
+        await flushLoaderEffects(client, effects);
 
         const ids = frontiers.map((f) => f.id);
         await markFrontiersProcessSuccess.run({ ids }, client);

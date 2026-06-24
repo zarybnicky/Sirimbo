@@ -23,6 +23,12 @@ import {
 import { ALL_LOADERS, loaderFor, LOADERS, loadersFor } from './handlers.ts';
 import type { JsonLoader } from './types.ts';
 import { formatException } from './error.ts';
+import {
+  createLoaderEffects,
+  flushLoaderEffects,
+  mergeLoaderEffects,
+  type LoaderResult,
+} from './effects.ts';
 
 const pool = new Pool();
 
@@ -572,7 +578,7 @@ async function processFrontier(
   client: PoolClient,
   row: IGetFrontierResponsesResult,
   options: { keepGoing?: boolean },
-) {
+): Promise<{ ok: true; effects: LoaderResult } | { ok: false }> {
   await client.query('SAVEPOINT bulk_process');
 
   try {
@@ -582,9 +588,9 @@ async function processFrontier(
       loader.mode === 'json'
         ? zx.deepStrict(loader.schema).parse(row.content, { reportInput: true })
         : row.content;
-    await loader.load(client, content);
+    const effects = await loader.load(client, content);
     await client.query('RELEASE SAVEPOINT bulk_process');
-    return true;
+    return { ok: true, effects };
   } catch (e) {
     await client.query('ROLLBACK TO SAVEPOINT bulk_process');
     await client.query('RELEASE SAVEPOINT bulk_process');
@@ -597,7 +603,7 @@ async function processFrontier(
     if (!options.keepGoing) {
       console.error('Stopping after first failure; use --keep-going to collect more.');
     }
-    return false;
+    return { ok: false };
   }
 }
 
@@ -632,6 +638,7 @@ async function processLatest(
 
     await processClient.query('BEGIN');
     inTransaction = true;
+    const effects = createLoaderEffects();
 
     let shouldStop = false;
     while (!shouldStop) {
@@ -641,7 +648,7 @@ async function processLatest(
       for (const row of rows) {
         const target = [row.federation, row.kind].join(':');
         const rowStarted = performance.now();
-        const ok = await processFrontier(processClient, row, options);
+        const result = await processFrontier(processClient, row, options);
         const kindStats = stats.get(target) ?? {
           count: 0,
           errors: 0,
@@ -649,11 +656,12 @@ async function processLatest(
         };
         kindStats.count += 1;
         kindStats.ms += performance.now() - rowStarted;
-        if (!ok) kindStats.errors += 1;
+        if (!result.ok) kindStats.errors += 1;
         stats.set(target, kindStats);
 
-        if (ok) {
+        if (result.ok) {
           counts.processed += 1;
+          mergeLoaderEffects(effects, result.effects);
         } else {
           counts.failures += 1;
           shouldStop = !options.keepGoing;
@@ -671,6 +679,7 @@ async function processLatest(
       }
     }
 
+    await flushLoaderEffects(processClient, effects);
     await processClient.query(options.commit ? 'COMMIT' : 'ROLLBACK');
     inTransaction = false;
   } catch (e) {

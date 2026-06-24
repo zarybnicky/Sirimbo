@@ -1,15 +1,17 @@
-type PgtypedArrays<T extends Record<string, unknown>> = {
+export type PgtypedArrays<T extends Record<string, unknown>> = {
   [K in keyof T]: T[K][];
+};
+
+export type PgtypedCollection<T extends Record<string, unknown>> = {
+  add(...items: T[]): void;
+  readonly params: PgtypedArrays<T>;
+  readonly length: number;
 };
 
 export function makePgtypedCollection<T extends Record<string, unknown>>(
   keys: readonly (keyof T)[],
   dedupBy?: readonly (keyof T)[],
-): {
-  add(...items: T[]): void;
-  readonly params: PgtypedArrays<T>;
-  readonly length: number;
-} {
+): PgtypedCollection<T> {
   const params = Object.fromEntries(
     keys.map((k) => [k, [] as unknown[]]),
   ) as PgtypedArrays<T>;

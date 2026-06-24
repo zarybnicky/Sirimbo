@@ -3,14 +3,25 @@ import type { JsonLoader } from './types.ts';
 import {
   ensureCompetitors,
   ensurePeople,
+  getCompetitionAdjudicatorMap,
   getCompetitionContext,
+  type IGetCompetitionContextResult,
   mergeCompetitorComponents,
+  type score_component,
+  type scoring_method,
   upsertCompetitionEntries,
+  upsertCompetitionRoundJudges,
   upsertCompetitionResults,
+  upsertCompetitionRoundsNonDestructive,
+  upsertJudgeScores,
+  upsertRoundDances,
   type competitor_type,
   type gender,
 } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
+import { danceCode, type DanceCode, getDanceProgramIds } from './danceProgram.ts';
+import { makePgtypedCollection } from './pgtypedCollection.ts';
+import { createLoaderEffects, type LoaderResult } from './effects.ts';
 
 const Link = z.object( {
   href: z.string(),
@@ -66,6 +77,7 @@ const Score = z.discriminatedUnion("kind", [
     i: z.number(),
     s: z.number(),
     t: z.number(),
+    reduction: z.number().optional(),
     ...scoreCommon,
   }),
   z.object({
@@ -197,6 +209,34 @@ const schema = z.object( {
 });
 
 type Participant = z.infer<typeof schema>;
+type Round = Participant['rounds'][number];
+type Score = Round['dances'][number]['scores'][number];
+type ScoreRow = {
+  component: score_component;
+  score: number;
+  rawScore: string;
+};
+type SupportedScore = {
+  adjudicatorExternalId: string;
+  rows: ScoreRow[];
+};
+type SupportedDance = {
+  code: DanceCode;
+  order: number;
+  scores: SupportedScore[];
+};
+type SupportedRound = {
+  key: string;
+  label: string;
+  index: number;
+  dances: SupportedDance[];
+  scoringMethod: scoring_method;
+};
+type Adjudicator = {
+  personId: string;
+  personExternalId: string;
+  judgeIndex: number;
+};
 
 type ResolvedCompetitor = {
   externalId: string;
@@ -205,7 +245,7 @@ type ResolvedCompetitor = {
   personExternalId?: string;
 };
 
-export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
+export const wdsfParticipant: JsonLoader<Participant> = {
   mode: 'json',
   schema,
   buildRequest: (key: string) => ({
@@ -218,12 +258,13 @@ export const wdsfParticipant: JsonLoader<z.infer<typeof schema>> = {
     },
   }),
   revalidatePeriod: '7d',
-  load: async (client, p) => {
-    await loadWdsfParticipant(client, p);
-  },
+  load: loadWdsfParticipant,
 };
 
-async function loadWdsfParticipant(client: PoolClient, p: Participant) {
+async function loadWdsfParticipant(
+  client: PoolClient,
+  p: Participant,
+): Promise<LoaderResult> {
   const competitionLink = p.link.find(
     (link) => link.rel === 'http://services.worlddancesport.org/rel/participant/competition',
   );
@@ -309,6 +350,167 @@ async function loadWdsfParticipant(client: PoolClient, p: Participant) {
       client,
     );
   }
+
+  return loadWdsfRoundDetails(client, context, p, competitor);
+}
+
+async function loadWdsfRoundDetails(
+  client: PoolClient,
+  context: IGetCompetitionContextResult,
+  participant: Participant,
+  competitor: ResolvedCompetitor,
+): Promise<LoaderResult> {
+  const rounds = supportedRounds(participant.rounds);
+  if (rounds.length === 0) return;
+
+  const adjudicatorExternalIds = [
+    ...new Set(
+      rounds.flatMap((round) =>
+        round.dances.flatMap((dance) =>
+          dance.scores.map((score) => score.adjudicatorExternalId),
+        ),
+      ),
+    ),
+  ];
+  const adjudicatorRows = adjudicatorExternalIds.length
+    ? await getCompetitionAdjudicatorMap.run(
+        { competitionId: context.id, officialExternalId: adjudicatorExternalIds },
+        client,
+      )
+    : [];
+  const missingAdjudicators: string[] = [];
+  const adjudicatorByExternalId = new Map<string, Adjudicator>();
+  for (const row of adjudicatorRows) {
+    if (!row.personId || !row.personExternalId || row.judgeIndex == null) {
+      missingAdjudicators.push(row.officialExternalId);
+      continue;
+    }
+    adjudicatorByExternalId.set(row.officialExternalId, {
+      personId: row.personId,
+      personExternalId: row.personExternalId,
+      judgeIndex: row.judgeIndex,
+    });
+  }
+  if (missingAdjudicators.length > 0) {
+    throw new Error(
+      `Missing WDSF adjudicator mapping for competition ${participant.competitionId}, participant ${participant.id}: ${missingAdjudicators.join(', ')}`,
+    );
+  }
+
+  const danceProgramIds = await getDanceProgramIds(
+    client,
+    rounds.map((round) => round.dances.map((dance) => dance.code)),
+  );
+  const roundRows = await upsertCompetitionRoundsNonDestructive.run(
+    {
+      competitionId: context.id,
+      roundKey: rounds.map((round) => round.key),
+      roundLabel: rounds.map((round) => round.label),
+      roundIndex: rounds.map((round) => round.index),
+      danceProgramId: danceProgramIds,
+      scoringMethod: rounds.map((round) => round.scoringMethod),
+    },
+    client,
+  );
+  const roundIdByKey = new Map(roundRows.map((round) => [round.roundKey, round.id]));
+
+  const roundDances = makePgtypedCollection<{
+    roundId: string;
+    danceCode: DanceCode;
+    danceOrder: number;
+  }>(['roundId', 'danceCode', 'danceOrder'], ['roundId', 'danceOrder']);
+  const roundJudges = makePgtypedCollection<{
+    roundId: string;
+    personJudgeId: string;
+    judgeIndex: number;
+    judgeLabel: string;
+  }>(['roundId', 'personJudgeId', 'judgeIndex', 'judgeLabel'], ['roundId', 'personJudgeId']);
+  const judgeScores = makePgtypedCollection<{
+    roundId: string;
+    danceOrder: number;
+    danceCode: DanceCode;
+    judgePersonId: string;
+    competitorId: string;
+    component: score_component;
+    score: number;
+    rawScore: string;
+  }>(
+    [
+      'roundId',
+      'danceOrder',
+      'danceCode',
+      'judgePersonId',
+      'competitorId',
+      'component',
+      'score',
+      'rawScore',
+    ],
+    ['roundId', 'danceOrder', 'judgePersonId', 'competitorId', 'component'],
+  );
+
+  for (const round of rounds) {
+    const roundId = roundIdByKey.get(round.key);
+    if (!roundId) {
+      throw new Error(
+        `Missing WDSF round mapping for competition ${participant.competitionId}, participant ${participant.id}, round ${round.key}`,
+      );
+    }
+
+    for (const dance of round.dances) {
+      roundDances.add({
+        roundId,
+        danceCode: dance.code,
+        danceOrder: dance.order,
+      });
+
+      for (const score of dance.scores) {
+        const adjudicator = adjudicatorByExternalId.get(score.adjudicatorExternalId);
+        if (!adjudicator) {
+          throw new Error(
+            `Missing WDSF adjudicator mapping for competition ${participant.competitionId}, participant ${participant.id}: ${score.adjudicatorExternalId}`,
+          );
+        }
+
+        roundJudges.add({
+          roundId,
+          personJudgeId: adjudicator.personId,
+          judgeIndex: adjudicator.judgeIndex,
+          judgeLabel: score.adjudicatorExternalId,
+        });
+        for (const row of score.rows) {
+          judgeScores.add({
+            roundId,
+            danceOrder: dance.order,
+            danceCode: dance.code,
+            judgePersonId: adjudicator.personExternalId,
+            competitorId: competitor.externalId,
+            component: row.component,
+            score: row.score,
+            rawScore: row.rawScore,
+          });
+        }
+      }
+    }
+  }
+
+  if (roundDances.length) await upsertRoundDances.run(roundDances.params, client);
+  if (roundJudges.length) await upsertCompetitionRoundJudges.run(roundJudges.params, client);
+  if (judgeScores.length) {
+    await upsertJudgeScores.run(
+      {
+        federation: 'wdsf',
+        eventDate: context.startDate.toISOString().slice(0, 10),
+        eventId: context.eventId,
+        competitionId: context.id,
+        categoryId: context.categoryId,
+        ...judgeScores.params,
+      },
+      client,
+    );
+  }
+  const effects = createLoaderEffects();
+  effects.roundResultRefreshes.add({ competitionId: context.id });
+  return effects;
 }
 
 function resolveCompetitor(p: Participant): ResolvedCompetitor | null {
@@ -352,4 +554,90 @@ function parsePositiveRank(rank: string) {
   if (!/^[0-9]+$/.test(rank)) return null;
   const parsed = Number.parseInt(rank, 10);
   return parsed > 0 ? parsed : null;
+}
+
+function supportedRounds(rounds: Round[]): SupportedRound[] {
+  return rounds
+    .map((round, roundIndex) => {
+      const hasAnyScores = round.dances.some((dance) => dance.scores.length > 0);
+      const dances = round.dances.map((dance, danceIndex) => ({
+        code: danceCode.parse(dance.name),
+        order: danceIndex + 1,
+        scores: dance.scores
+          .map((score) => ({
+            adjudicatorExternalId: score.adjudicator.toString(),
+            rows: scoreRows(score),
+          }))
+          .filter((score) => score.rows.length > 0),
+      }));
+      const hasSupportedScores = dances.some((dance) => dance.scores.length > 0);
+      if (hasAnyScores && !hasSupportedScores) {
+        return null;
+      }
+      if (!hasSupportedScores && !dances.some((dance) => dance.code !== 'OT')) {
+        return null;
+      }
+
+      return {
+        key: round.name,
+        label: round.name,
+        index: roundIndex + 1,
+        dances,
+        scoringMethod: roundScoringMethod(round),
+      };
+    })
+    .filter((round): round is NonNullable<typeof round> => round != null);
+}
+
+function roundScoringMethod(round: Round): scoring_method {
+  if (
+    round.dances.some((dance) =>
+      dance.scores.some((score) =>
+        score.kind === 'onScale' ||
+        score.kind === 'onScale2' ||
+        score.kind === 'onScale3' ||
+        score.kind === 'onScaleSkating',
+      ),
+    )
+  ) {
+    return 'ajs-3.0';
+  }
+  if (round.dances.some((dance) => dance.scores.some((score) => score.kind === 'final'))) {
+    return 'skating_places';
+  }
+  return 'skating_marks';
+}
+
+function scoreRows(score: Score): ScoreRow[] {
+  switch (score.kind) {
+    case 'mark':
+      return [{
+        component: 'mark',
+        score: score.set === false ? 0 : 1,
+        rawScore: score.set === false ? 'set=false' : 'mark',
+      }];
+    case 'final':
+      return [scoreRow('places', score.rank)];
+    case 'onScale':
+    case 'onScale2':
+    case 'onScale3':
+    case 'onScaleSkating':
+      return [
+        scoreRow('ajs_tq', score.tq),
+        scoreRow('ajs_mm', score.mm),
+        scoreRow('ajs_ps', score.ps),
+        scoreRow('ajs_cp', score.cp),
+        scoreRow('ajs_reduction', score.reduction),
+      ];
+    default:
+      return [];
+  }
+}
+
+function scoreRow(component: score_component, score: number): ScoreRow {
+  return {
+    component,
+    score,
+    rawScore: score.toString(),
+  };
 }

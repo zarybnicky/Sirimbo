@@ -12,7 +12,7 @@ import type { PoolClient } from 'pg';
 const PERSON_REL = 'http://services.worlddancesport.org/rel/official/person';
 const COMPETITION_REL = 'http://services.worlddancesport.org/rel/official/competition';
 const OFFICIAL_NAME =
-  /^\s*(Adjudicator|Chairperson|Scrutiny|DJ)(?:\s*\(([^)]*)\))?\s+(.+)\s*$/;
+  /^\s*(Adjudicator|Chairperson|Scrutiny|DJ|Head Judge|Invigilator)(?:\s*\(([^)]*)\))?\s+(.+)\s*$/;
 
 export const schema = z.array(
   z.object({
@@ -24,7 +24,13 @@ export const schema = z.array(
 );
 
 type Official = z.infer<typeof schema>[number];
-type WdsfOfficialRole = 'Adjudicator' | 'Chairperson' | 'Scrutiny' | 'DJ';
+type WdsfOfficialRole =
+  | 'Adjudicator'
+  | 'Chairperson'
+  | 'Scrutiny'
+  | 'DJ'
+  | 'Head Judge'
+  | 'Invigilator';
 
 export type ParsedWdsfOfficial = {
   officialExternalId: string;
@@ -166,7 +172,10 @@ function mapWdsfOfficialRole(role: WdsfOfficialRole): official_role | null {
       return 'chairperson';
     case 'Scrutiny':
       return 'scrutineer';
+    case 'Invigilator':
+      return 'invigilator';
     case 'DJ':
+    case 'Head Judge':
       return null;
   }
 }
