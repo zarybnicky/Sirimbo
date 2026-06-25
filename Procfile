@@ -1,6 +1,6 @@
-backend: pnpm -C backend run start
-web: pnpm -C frontend run dev
 migrate: pnpm graphile-migrate watch
+web: pnpm -C frontend run dev
+backend: pnpm -C backend run start
 worker: pnpm -C worker run start -- -j 5
 
 schema: trap 'pkill -CHLD tmux' 0; pnpm run schema -- --watch

@@ -40,7 +40,7 @@ const preset: GraphileConfig.Preset = {
     explain: isDevelopment,
   },
   grafserv: {
-    port: Number.parseInt(process.env.PORT || '5000', 10),
+    port: Number.parseInt(process.env.PORT || '5200', 10),
     watch: !process.env.POSTGRAPHILE_DONT_WATCH,
     graphiql: isDevelopment,
   },

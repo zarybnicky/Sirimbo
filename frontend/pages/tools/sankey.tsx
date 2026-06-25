@@ -225,7 +225,7 @@ export function CompetitionSankey({
       setError(null);
 
       try {
-        const response = await fetch(`${origin}/rpc/competition_sankey_links`, {
+        const response = await fetch(`/rpc/competition_sankey_links`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',

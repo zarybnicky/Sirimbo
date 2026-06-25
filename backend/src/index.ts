@@ -67,7 +67,7 @@ serv.addTo(app, server).catch((e) => {
   process.exit(1);
 });
 
-server.listen(preset.grafserv?.port ?? 5000, () => {
+server.listen(preset.grafserv?.port ?? 5200, () => {
   const address = server.address();
   if (address === null) {
   } else if (typeof address === 'string') {

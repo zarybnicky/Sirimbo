@@ -41,7 +41,7 @@
       domain = "olymp-test";
       debug = true;
       ssl = false;
-      port = 5000;
+      port = 5200;
       postgrestPort = 5050;
       database = "olymp";
       jwtSecret = "1111111111";
