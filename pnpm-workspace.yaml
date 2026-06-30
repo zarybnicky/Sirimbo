@@ -3,7 +3,6 @@ packages:
   - graphql
   - worker
   - backend
-  - wdsf
   - e2e
 
 injectWorkspacePackages: false
