@@ -8,6 +8,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { StarletImporter } from '@/ui/starlet-importer';
 import { useRouter } from 'next/router';
 import { tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
+import { NextSeo } from 'next-seo';
 
 export default function StarletImportPage() {
   const router = useRouter();
@@ -45,6 +46,7 @@ export default function StarletImportPage() {
 
   return (
     <Layout requireAdmin>
+      <NextSeo title="Nastavení importu" />
       <PageHeader title="Nastavení importu" />
       <StarletImporter />
     </Layout>

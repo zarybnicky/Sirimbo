@@ -2,10 +2,12 @@ import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
 import { Layout } from '@/ui/Layout';
 import { cn } from '@/lib/cn';
+import { NextSeo } from 'next-seo';
 
 export default function GalleryPage() {
   return (
     <Layout showTopMenu>
+      <NextSeo title="Galerie" />
       <PageHeader title="Galerie" />
 
       <div className="col-feature my-16 grid gap-16 px-4 md:grid-cols-2">

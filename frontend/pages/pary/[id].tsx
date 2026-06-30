@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { NextSeo } from 'next-seo';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -25,11 +26,13 @@ function CouplePage() {
   const personIds = [item?.man?.id, item?.woman?.id].filter(Boolean) as string[];
 
   if (!item) return null;
+  const title = formatLongCoupleName(item);
 
   return (
     <Layout requireMember>
       <WithSidebar sidebar={<CoupleList />}>
-        <PageHeader title={formatLongCoupleName(item)} actions={actions} />
+        <NextSeo title={title} />
+        <PageHeader title={title} actions={actions} />
 
         <div className="mb-2">
           <div>

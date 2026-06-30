@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { PageHeader } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
+import { NextSeo } from 'next-seo';
 
 export default function OchranaOsobnichUdajuPage() {
   return (
     <Layout showTopMenu>
+      <NextSeo title="Ochrana osobních údajů" />
       <PageHeader title="Ochrana osobních údajů" />
 
       <div className="prose prose-accent">

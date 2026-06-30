@@ -7,6 +7,7 @@ import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
+import { NextSeo } from 'next-seo';
 
 export default function CrmPage() {
   const client = useClient();
@@ -46,6 +47,7 @@ export default function CrmPage() {
   return (
     <Layout requireAdmin>
       <div className="container col-feature">
+        <NextSeo title="Odeslané formuláře" />
         <TitleBar title="Odeslané formuláře">
           <button
             type="button"

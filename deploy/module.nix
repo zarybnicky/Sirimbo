@@ -47,17 +47,6 @@ in
       default = "production";
       description = "Sentry environment exposed to the frontend container runtime";
     };
-
-    runnerLabels = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [
-        "nixos"
-        "deploy"
-        "sirimbo"
-        "frontend"
-      ];
-      description = "Labels assigned to the GitHub runner";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -143,7 +132,7 @@ in
       name = "${config.networking.hostName}-rozpisovnik-web";
       url = "https://github.com/zarybnicky/Sirimbo";
       replace = true;
-      extraLabels = cfg.runnerLabels;
+      extraLabels = ["nixos" "deploy" "rozpisovnik"];
       extraPackages = with pkgs; [
         argocd
         git

@@ -2,10 +2,12 @@ import Image from 'next/image';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
+import { NextSeo } from 'next-seo';
 
 export default function OKlubuPage() {
   return (
     <Layout showTopMenu>
+      <NextSeo title="Olymp v tanečním světě" />
       <PageHeader title="Olymp v tanečním světě" />
 
       <div className="prose prose-accent mb-8">

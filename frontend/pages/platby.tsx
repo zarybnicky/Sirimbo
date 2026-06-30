@@ -21,6 +21,7 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionRow } from '@/ui/ActionRow';
+import { NextSeo } from 'next-seo';
 
 type TenantAccountPage = NonNullable<TenantTurnoverPageQuery['accountsList']>[number];
 type TenantPosting = TenantAccountPage['postingsList'][number];
@@ -63,6 +64,7 @@ export default function PaymentsPage() {
 
   return (
     <Layout requireAdmin>
+      <NextSeo title="Platby" />
       <PageHeader title="Platby" />
       <TabMenu selected={tab} onSelect={setTab} options={tabs} />
     </Layout>

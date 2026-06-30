@@ -2,10 +2,12 @@ import { PageHeader } from '@/ui/TitleBar';
 import { ServiceCard } from '@/ui/ServiceCard';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
+import { NextSeo } from 'next-seo';
 
 export default function GalerieMistruPage() {
   return (
     <Layout showTopMenu>
+      <NextSeo title="Galerie mistrů" />
       <PageHeader title="Galerie mistrů" />
 
       <div className="col-popout">

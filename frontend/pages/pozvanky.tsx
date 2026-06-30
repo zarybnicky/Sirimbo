@@ -14,6 +14,7 @@ import { PageHeader } from '@/ui/TitleBar';
 import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
+import { NextSeo } from 'next-seo';
 
 export default function InvitationOverviewPage() {
   const [{ data: withAnotherAccount }] = useQuery({
@@ -49,6 +50,7 @@ export default function InvitationOverviewPage() {
 
   return (
     <Layout requireAdmin>
+      <NextSeo title="Přehled pozvánek" />
       <PageHeader title="Přehled pozvánek" />
 
       <div className="prose prose-accent">

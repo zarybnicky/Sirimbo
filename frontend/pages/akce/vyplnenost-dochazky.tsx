@@ -6,6 +6,7 @@ import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceRepo
 import { isTruthy } from '@/lib/truthyFilter';
 import { computeRange } from '@/scoreboard/periods';
 import { fullDateFormatter } from '@/ui/format';
+import { NextSeo } from 'next-seo';
 
 const numberFormatter = new Intl.NumberFormat('cs-CZ');
 const percentFormatter = new Intl.NumberFormat('cs-CZ', {
@@ -75,6 +76,7 @@ export default function TrainerAttendanceReportPage() {
   return (
     <Layout requireAdmin>
       <div className="container col-feature space-y-6 py-6">
+        <NextSeo title="Vyplněnost docházky" />
         <PageHeader title="Vyplněnost docházky" />
 
         <section className="space-y-2 text-sm text-neutral-10">

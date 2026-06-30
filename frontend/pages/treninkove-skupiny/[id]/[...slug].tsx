@@ -9,6 +9,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 import { Spinner } from '@/ui/Spinner';
+import { NextSeo } from 'next-seo';
 
 const QueryParams = z.object({
   id: zRouterString,
@@ -57,6 +58,7 @@ function TrainingCohortPage() {
 
   return (
     <Layout hideTopMenuIfLoggedIn>
+      <NextSeo title={cohort.name} />
       <WithSidebar sidebar={<CohortList />}>
         <CohortView cohort={cohort} />
       </WithSidebar>

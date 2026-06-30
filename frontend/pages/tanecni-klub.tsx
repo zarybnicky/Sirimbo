@@ -19,6 +19,7 @@ import { tenantLocationActions } from '@/lib/actions/tenantLocation';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionRow } from '@/ui/ActionRow';
 import { CstsIdBackfillWidget } from '@/ui/CstsIdBackfillWidget';
+import { NextSeo } from 'next-seo';
 
 export default function ClubPage() {
   const auth = useAuth();
@@ -54,6 +55,7 @@ export default function ClubPage() {
 
   return (
     <Layout requireMember>
+      <NextSeo title="Klub" />
       <PageHeader title="Klub" actions={tenantActions} />
 
       <RichTextView value={tenant.tenant.description} />

@@ -5,10 +5,12 @@ import Link from 'next/link';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
+import { NextSeo } from 'next-seo';
 
 export default function TrainingProgramPage() {
   return (
     <Layout hideTopMenuIfLoggedIn>
+      <NextSeo title="Tréninkové programy" />
       <PageHeader title="Tréninkové programy" />
       <TrainingPrograms />
       <div className="my-8">

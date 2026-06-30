@@ -9,6 +9,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 import { slugify } from '@/lib/slugify';
+import { NextSeo } from 'next-seo';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -26,6 +27,7 @@ export default function PaymentPage() {
 
   return (
     <Layout requireAdmin>
+      <NextSeo title={`Detail platby ${id ?? ''}`} />
       <PageHeader title={`Detail platby ${id ?? ''}`} />
       <div className="space-y-6">
         {fetching && <p>Načítám…</p>}

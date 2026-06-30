@@ -10,6 +10,7 @@ import { PageHeader } from '@/ui/TitleBar';
 import React from 'react';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import { RichTextView } from '@/ui/RichTextView';
+import { NextSeo } from 'next-seo';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -37,6 +38,7 @@ export default function AnnouncementPage() {
     <Layout requireMember>
       <WithSidebar sidebar={<AnnouncementList />}>
         <div className="py-4 lg:py-8">
+          <NextSeo title={pageTitle} />
           <PageHeader
             title={pageTitle}
             breadcrumbs={[{ label: 'Nástěnka', href: '/nastenka' }, { label: pageTitle }]}

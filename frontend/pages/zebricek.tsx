@@ -8,6 +8,7 @@ import { computeRange, PeriodPreset } from '@/scoreboard/periods';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import { Combobox } from '@/ui/fields/Combobox';
 import { fullDateFormatter } from '@/ui/format';
+import { NextSeo } from 'next-seo';
 
 export default function ScoreboardPage() {
   const [selectedCohortId, setSelectedCohortId] = React.useState<
@@ -43,6 +44,7 @@ export default function ScoreboardPage() {
 
   return (
     <Layout requireMember>
+      <NextSeo title="Žebříček aktivity" />
       <PageHeader title="Žebříček aktivity" />
 
       <div className="prose prose-accent space-y-8">

@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import { NextSeo } from 'next-seo';
 import { typographyCls } from '@/ui/style';
 import Link, { LinkProps } from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
@@ -19,7 +18,6 @@ export function TitleBar({
 }: TitleBarProps & Parameters<typeof typographyCls>[0]) {
   return (
     <div className="mb-4 flex gap-2 flex-wrap grow-0 h-min justify-between items-baseline relative">
-      {title && variant === 'heading' && <NextSeo title={title} />}
       <h1
         className={typographyCls({
           spacing: variant === 'heading' ? 'topLevel' : 'default',
@@ -54,8 +52,6 @@ export function PageHeader<Id extends string = string>({
 
   return (
     <div className="my-4">
-      {title && <NextSeo title={title} />}
-
       {parent?.href && (
         <nav className="mb-2 text-sm text-neutral-7">
           <Link

@@ -2,10 +2,12 @@ import { ExhibitionRequestForm } from '@/ui/forms/ExhibitionRequestForm';
 import { PageHeader } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import { NextSeo } from 'next-seo';
 
 export default function Vystoupeni() {
   return (
     <Layout showTopMenu>
+      <NextSeo title="Taneční vystoupení" />
       <PageHeader title="Taneční vystoupení" />
 
       <div>

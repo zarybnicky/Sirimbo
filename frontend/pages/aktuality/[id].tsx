@@ -5,6 +5,8 @@ import { NextSeo } from 'next-seo';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { z } from 'zod';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { useQuery } from 'urql';
+import { ArticleDocument } from '@/graphql/Articles';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -13,9 +15,16 @@ const QueryParams = z.object({
 export default function ArticlePage() {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
+  const [{ data }] = useQuery({
+    query: ArticleDocument,
+    variables: { id },
+    pause: !id,
+  });
+  const title = data?.aktuality?.atJmeno || 'Aktuality';
+
   return (
     <Layout requireTrainer>
-      <NextSeo title="Aktuality" />
+      <NextSeo title={title} />
       <WithSidebar sidebar={<ArticleList />}>
         <ArticleForm id={id} />
       </WithSidebar>

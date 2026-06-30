@@ -1,10 +1,12 @@
 import { PageHeader } from '@/ui/TitleBar';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
+import { NextSeo } from 'next-seo';
 
 export default function ContactPage() {
   return (
     <Layout hideTopMenuIfLoggedIn>
+      <NextSeo title="Kontakt" />
       <PageHeader title="Kontakt" />
       <div className="prose prose-accent">
         <h2>Fakturační údaje:</h2>

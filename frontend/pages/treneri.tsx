@@ -3,10 +3,12 @@ import { Layout } from '@/ui/Layout';
 import * as React from 'react';
 import { typographyCls } from '@/ui/style';
 import Image from 'next/image';
+import { NextSeo } from 'next-seo';
 
 export default function TrainersPage() {
   return (
     <Layout showTopMenu>
+      <NextSeo title="Naši trenéři" />
       <PageHeader title="Naši trenéři" />
 
       <div className="mb-12">

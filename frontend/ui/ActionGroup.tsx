@@ -1,3 +1,5 @@
+'use client';
+
 import React, { Suspense, useRef, useState } from 'react';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';

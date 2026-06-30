@@ -15,6 +15,7 @@ import { useActionMap } from '@/lib/actions';
 import { cohortActions } from '@/lib/actions/cohort';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { slugify } from '@/lib/slugify';
+import { NextSeo } from 'next-seo';
 
 export default function TrainingGroupsPage() {
   const auth = useAuth();
@@ -34,19 +35,22 @@ export default function TrainingGroupsPage() {
   return wrap(
     <div className={cn(auth.user ? 'col-full-width p-4' : 'col-popout')}>
       {auth.user && (
-        <TitleBar title="Tréninkové skupiny">
-          {auth.isTrainerOrAdmin && (
-            <button
-              type="button"
-              className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() =>
-                exportCohort(client, cohorts?.cohortsList?.map((x) => x.id) || [])
-              }
-            >
-              Export všech
-            </button>
-          )}
-        </TitleBar>
+        <>
+          <NextSeo title="Tréninkové skupiny" />
+          <TitleBar title="Tréninkové skupiny">
+            {auth.isTrainerOrAdmin && (
+              <button
+                type="button"
+                className={buttonCls({ size: 'sm', variant: 'outline' })}
+                onClick={() =>
+                  exportCohort(client, cohorts?.cohortsList?.map((x) => x.id) || [])
+                }
+              >
+                Export všech
+              </button>
+            )}
+          </TitleBar>
+        </>
       )}
 
       <div className={cn('pl-8', auth.user ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>

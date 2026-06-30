@@ -13,6 +13,7 @@ import { Spinner } from '@/ui/Spinner';
 import { useActionMap } from '@/lib/actions';
 import { cohortActions } from '@/lib/actions/cohort';
 import { ActionGroup } from '@/ui/ActionGroup';
+import { NextSeo } from 'next-seo';
 
 const QueryParams = z.object({
   id: zRouterString,
@@ -60,6 +61,7 @@ function TrainingGroupPage() {
 
   return (
     <Layout hideTopMenuIfLoggedIn>
+      <NextSeo title={item.name} />
       <PageHeader title={item.name} />
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />

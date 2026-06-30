@@ -15,6 +15,7 @@ import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
 import { LockKeyhole } from 'lucide-react';
 import { useActions } from '@/lib/actions';
+import { NextSeo } from 'next-seo';
 
 type Tabs = TabMenuProps['options'];
 
@@ -77,6 +78,7 @@ export default function ProfilePage() {
 
   return (
     <Layout requireUser>
+      <NextSeo title="Můj profil" />
       <PageHeader title="Můj profil" actions={actions} />
 
       <div className="max-w-full">

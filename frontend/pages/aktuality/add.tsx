@@ -7,7 +7,7 @@ import { WithSidebar } from '@/ui/WithSidebar';
 function Page() {
   return (
     <Layout requireTrainer>
-      <NextSeo title="Aktuality" />
+      <NextSeo title="Nový článek" />
       <WithSidebar sidebar={<ArticleList />}>
         <ArticleForm />;
       </WithSidebar>

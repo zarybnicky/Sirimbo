@@ -3,10 +3,12 @@ import * as React from 'react';
 import Image from 'next/image';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
+import { NextSeo } from 'next-seo';
 
 export default function LocationsPage() {
   return (
     <Layout showTopMenu>
+      <NextSeo title="Kde trénujeme" />
       <PageHeader title="Kde trénujeme" />
 
       <div className="mt-8 mb-16 space-y-4">

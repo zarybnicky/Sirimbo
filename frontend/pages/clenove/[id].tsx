@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { CornerLeftUp } from 'lucide-react';
 import { z } from 'zod';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { NextSeo } from 'next-seo';
+import { useQuery } from 'urql';
+import { PersonMembershipsDocument } from '@/graphql/Person';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -14,9 +17,15 @@ const QueryParams = z.object({
 function PersonPage() {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
+  const [{ data }] = useQuery({
+    query: PersonMembershipsDocument,
+    variables: { id },
+    pause: !id,
+  });
 
   return (
     <Layout requireMember>
+      <NextSeo title={data?.person?.name || 'Člen'} />
       <WithSidebar sidebar={<PersonList />}>
         <div className="lg:hidden pt-4">
           <Link href="/clenove" className="flex gap-2">

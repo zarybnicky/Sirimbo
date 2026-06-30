@@ -3,10 +3,12 @@ import Image from 'next/image';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
+import { NextSeo } from 'next-seo';
 
 export default function SkolniKrouzkyPage() {
   return (
     <Layout showTopMenu>
+      <NextSeo title="Olymp Dance" />
       <PageHeader title="Olymp Dance" />
 
       <div className="mt-6 prose prose-accent">
