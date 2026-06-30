@@ -1,0 +1,49 @@
+name: Frontend image
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ${{ vars.LOCAL_DOCKER_REGISTRY || '127.0.0.1:5000' }}
+  IMAGE_NAME: rozpisovnik/web
+  NEXT_PUBLIC_GRAPHQL_BACKEND: ${{ vars.NEXT_PUBLIC_GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz' }}
+  NEXT_PUBLIC_SENTRY_DSN: ${{ vars.NEXT_PUBLIC_SENTRY_DSN || '' }}
+  NEXT_PUBLIC_SENTRY_ENVIRONMENT: ${{ vars.NEXT_PUBLIC_SENTRY_ENVIRONMENT || 'production' }}
+
+jobs:
+  build:
+    runs-on:
+      - self-hosted
+      - deploy
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and push frontend image
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cache_name="${GITHUB_REF_NAME//\//-}"
+          cache_ref="${REGISTRY}/${IMAGE_NAME}:buildcache-${cache_name}"
+          image_ref="${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA}"
+
+          docker buildx inspect --bootstrap
+          docker buildx build \
+            --file deploy/Dockerfile \
+            --target runner \
+            --platform linux/amd64 \
+            --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND="${NEXT_PUBLIC_GRAPHQL_BACKEND}" \
+            --build-arg NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
+            --build-arg NEXT_PUBLIC_SENTRY_ENVIRONMENT="${NEXT_PUBLIC_SENTRY_ENVIRONMENT}" \
+            --build-arg NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA="${GITHUB_SHA}" \
+            --cache-from "type=registry,ref=${cache_ref}" \
+            --cache-to "type=registry,ref=${cache_ref},mode=max" \
+            --tag "${image_ref}" \
+            --push \
+            .

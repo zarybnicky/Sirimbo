@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: 127.0.0.1:5000/rozpisovnik/web
+  tag: dev
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  nodePort: 30080
+
+runtime:
+  graphqlBackend: https://api.rozpisovnik.cz
+  sentryDsn: ""
+  sentryEnvironment: production

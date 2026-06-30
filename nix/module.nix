@@ -2,6 +2,10 @@
   cfg = config.services.olymp;
   pkgName = "tkolymp.cz";
 in {
+  imports = [
+    ../deploy/module.nix
+  ];
+
   options.services.olymp = {
     user = lib.mkOption {
       type = lib.types.str;

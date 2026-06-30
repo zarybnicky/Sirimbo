@@ -1,0 +1,63 @@
+# Keep the Docker build context focused on the frontend package.
+*
+
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+
+!patches/
+!patches/**
+
+!deploy/
+!deploy/Dockerfile
+
+!frontend/
+!frontend/**
+
+# Local dependency/build output.
+**/node_modules
+**/.next
+**/dist
+**/build
+**/.cache
+**/.turbo
+**/.eslintcache
+*.tsbuildinfo
+
+# Secrets and local environment.
+.env*
+**/.env*
+.sentryclirc
+frontend/sentry.properties
+
+# Generated frontend service-worker artifacts.
+frontend/public/sw.js
+frontend/public/sw.js.map
+frontend/public/swe-worker-*.js
+frontend/public/swe-worker-*.js.map
+
+# Repository and editor metadata.
+.git
+.gitignore
+.vscode
+.idea
+.direnv
+.devenv
+.DS_Store
+
+# Local test/dev artifacts.
+e2e/.auth
+playwright-report
+test-results
+.requests
+.tmp
+result
+ruian
+olymp.psql
+olymp.dump
+*.db
+.dolt
+.beads
+
+# Copied deployment examples may include local state under nested ignores.
+deploy-exam-proctor/local

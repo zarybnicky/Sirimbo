@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rozpisovnik-web
+  labels:
+    app.kubernetes.io/name: rozpisovnik-web
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app.kubernetes.io/name: rozpisovnik-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
