@@ -97,6 +97,8 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
     return undefined;
   },
   async load(client, member) {
+    // TODO(wdsf): Persist parsed member fields we currently drop: nickname,
+    // yearOfBirth, nationalReference, and WDSF license blocking dates.
     await upsertPeopleDetailed.run(
       {
         federation: ['wdsf'],
@@ -105,7 +107,7 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
         firstName: [member.name],
         lastName: [member.surname ?? ''],
         gender: [wdsfGender(member.sex)],
-        nationality: [member.nationality ?? ''],
+        nationality: [member.nationality ?? member.country ?? ''],
         ageGroup: [member.ageGroup ?? ''],
         medicalCheckupExpiration: [''],
       },

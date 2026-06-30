@@ -1,6 +1,5 @@
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
-import VyhodyImage from '@/public/images/2022-09-MCRDruzstev.jpg';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
 
@@ -32,7 +31,13 @@ export default function VyhodyClenstvi() {
         </ul>
       </div>
       <div className="col-feature mb-8 ">
-        <Image alt="" src={VyhodyImage} sizes="100vw" />
+        <Image
+          alt=""
+          src="/images/2022-09-MCRDruzstev.jpg"
+          width={5211}
+          height={3474}
+          sizes="100vw"
+        />
       </div>
     </Layout>
   );

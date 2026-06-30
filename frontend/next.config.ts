@@ -38,6 +38,7 @@ export default compose(
   devIndicators: false,
 
   output: 'standalone',
+  bundlePagesRouterDependencies: true,
   experimental: {
     scrollRestoration: true,
   },

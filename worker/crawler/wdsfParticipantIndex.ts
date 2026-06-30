@@ -64,14 +64,16 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
     // Competitor reference needs to be fron link
     // participant Id == marks
     // name can serve as a backup competitor name
+    // TODO(wdsf): Use parsed names, countries, national references, and team
+    // metadata to seed competitor/couple/team loaders instead of dropping them.
 
-    const withResults = parsed.filter(x => x.status === 'Present').map(x => x.id.toString());
-    if (withResults.length === 0) return;
+    const participantIds = parsed.map(x => x.id.toString());
+    if (participantIds.length === 0) return;
     await upsertFrontierKeys.run(
       {
         federation: 'wdsf',
         kind: 'participant',
-        keys: withResults,
+        keys: participantIds,
       },
       client,
     );

@@ -95,9 +95,67 @@ const competitionType = [
 
 const mapCompetitionType = (type: (typeof competitionType)[number]): competition_type => {
   switch (type) {
+    case 'OPEN':
+    case 'INTERNATIONAL OPEN':
+    case 'WORLD OPEN':
+    case 'WORLD OPEN NS':
+      return 'ranking';
     default:
+      if (type.includes('CUP')) return 'cup';
+      if (
+        type.includes('CHAMPIONSHIP') ||
+        type === 'DSE NT CH' ||
+        type === 'DSE CHILDREN T CH' ||
+        type === 'URBAN WCH' ||
+        type === 'URBAN CONT CH' ||
+        type === 'DS FESTIVAL CH'
+      ) {
+        return 'championship';
+      }
       return 'unknown';
   }
+};
+
+const mapCompetitorType = (
+  c: Pick<z.infer<typeof schema>, 'danceform' | 'discipline'>,
+): competitor_type => {
+  switch (c.danceform) {
+    case 'M':
+    case 'F':
+    case '1 M':
+    case '1 F':
+    case 'SOLO':
+    case '1 VS 1':
+    case 'F VS F':
+    case 'M VS M':
+      return 'solo';
+    case 'DUO':
+    case 'DUO F':
+    case 'DUO M':
+    case 'DUO MIX':
+    case '2 VS 2':
+      return 'duo';
+    case 'TRIO X':
+    case 'TRIO F':
+    case '3 VS 3':
+      return 'trio';
+    case 'FORMATION':
+      return 'formation';
+    case 'SMALL TEAM':
+    case 'LARGE TEAM':
+    case 'BIG TEAM':
+    case 'MEGA TEAM':
+    case 'T VS T':
+    case '5 VS 5':
+    case '6 VS 6':
+      return 'team';
+    case '':
+      break;
+  }
+  if (c.discipline.includes('SOLO')) return 'solo';
+  if (c.discipline.includes('FORMATION')) return 'formation';
+  if (c.discipline.includes('TEAM')) return 'team';
+  return 'couple';
 };
 
 const schema = z.object({
@@ -280,9 +338,9 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
   }),
   revalidatePeriod: '30d',
   load: async (client, c) => {
-    const competitorType: competitor_type = c.discipline.includes('SOLO')
-      ? 'solo'
-      : 'couple';
+    // TODO(wdsf): Persist parsed status, coefficient, eventId, lastmodifiedDate,
+    // and link relations, or remove them from the schema.
+    const competitorType = mapCompetitorType(c);
     const categoryId = await getFederatedCategoryId(client, {
       series: c.division,
       discipline: c.discipline,

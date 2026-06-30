@@ -81,6 +81,8 @@ async function loadWdsfOfficialIndex(client: PoolClient, parsed: z.infer<typeof 
   }
   const [competitionExternalId] = competitionExternalIds;
 
+  // TODO(wdsf): Preserve parsed official country and adjudicator labels instead
+  // of only storing person, official external ID, and role.
   const people = makePgtypedCollection<{
     federation: string;
     externalId: string;

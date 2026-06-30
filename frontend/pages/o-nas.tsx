@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import ONasImage from '@/public/images/2023-04-MCRDruzstev.jpg';
 import * as React from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
@@ -29,7 +28,13 @@ export default function OKlubuPage() {
         <p>Působíme v Olomouci a Prostějově. </p>
       </div>
       <div className="col-feature mb-16">
-        <Image alt="" src={ONasImage} sizes="1256px" />
+        <Image
+          alt=""
+          src="/images/2023-04-MCRDruzstev.jpg"
+          width={6373}
+          height={3314}
+          sizes="1256px"
+        />
       </div>
     </Layout>
   );

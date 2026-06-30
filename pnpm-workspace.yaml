@@ -8,13 +8,3 @@ packages:
 
 injectWorkspacePackages: false
 nodeLinker: isolated
-
-supportedArchitectures:
-  os:
-    - linux
-    - current
-  cpu:
-    - x64
-    - current
-  libc:
-    - glibc

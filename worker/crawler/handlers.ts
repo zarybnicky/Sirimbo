@@ -50,6 +50,7 @@ export const LOADERS = {
     // https://services.worlddancesport.org/api/1/official?competitionId=64306 - includes letters of judges
     officialIndex: wdsfOfficialIndex,
 
+    // TODO(wdsf): wdsfCoupleIndex from /api/1/couple and wdsfTeamIndex for team-family entries.
     // https://services.worlddancesport.org/api/1/couple
     // https://services.worlddancesport.org/api/1/participant?coupleId=rls-1912
     // https://services.worlddancesport.org/api/1/ranking?ageGroup=???&discipline=???&division=???

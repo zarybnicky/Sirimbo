@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "type": "module",
-  "bin": "./src/index.cjs",
+  "bin": "./src/index.ts",
   "scripts": {
     "build": "tsc --noEmit",
     "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node src/index.ts\"",

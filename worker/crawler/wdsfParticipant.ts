@@ -289,6 +289,9 @@ async function loadWdsfParticipant(
   const competitor = resolveCompetitor(p);
   if (!competitor) return;
 
+  // TODO(wdsf): Couple/team competitors remain component-less here. Add
+  // wdsfCoupleIndex/wdsfTeamIndex loaders that resolve members and merge
+  // competitor components before relying on WDSF couple/team reports.
   const competitorId = `wdsf:${competitor.externalId}`;
   await ensureCompetitors.run(
     {
@@ -329,6 +332,8 @@ async function loadWdsfParticipant(
     client,
   );
 
+  // TODO(wdsf): Persist parsed participant metadata such as basepoints,
+  // country, nationalreference, and team country.
   const ranking = parsePositiveRank(p.rank);
   if (ranking) {
     const lastRound = p.rounds.at(-1);
@@ -630,6 +635,8 @@ function scoreRows(score: Score): ScoreRow[] {
         scoreRow('ajs_reduction', score.reduction),
       ];
     default:
+      // TODO(wdsf): These score kinds are parsed but discarded. Add score
+      // components/materialization for breaking, Trivium, IDO, Disco, MTC, and TCPS.
       return [];
   }
 }

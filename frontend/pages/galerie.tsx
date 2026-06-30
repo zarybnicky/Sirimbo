@@ -1,7 +1,5 @@
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
-import FacebookImage from '@/public/images/Facebook-202209.jpg';
-import YoutubeImage from '@/public/images/YouTube-Veverka.jpg';
 import { Layout } from '@/ui/Layout';
 import { cn } from '@/lib/cn';
 
@@ -13,7 +11,7 @@ export default function GalleryPage() {
       <div className="col-feature my-16 grid gap-16 px-4 md:grid-cols-2">
         {[
           {
-            image: YoutubeImage,
+            image: '/images/YouTube-Veverka.jpg',
             href: 'https://www.youtube.com/user/TheMamcro',
             label: (
               <>
@@ -24,7 +22,7 @@ export default function GalleryPage() {
             ),
           },
           {
-            image: FacebookImage,
+            image: '/images/Facebook-202209.jpg',
             href: 'https://www.facebook.com/tkolymp/photos_albums?locale=cs_CZ',
             label: (
               <>
