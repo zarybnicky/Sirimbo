@@ -9,7 +9,6 @@ type TenantCatalogEntry = ServerTenantCatalogEntry & {
     SocialIcons: React.ComponentType;
     Footer: React.ComponentType;
     Sponsors: React.ComponentType;
-    TenantSeo: React.ComponentType;
   };
 };
 
@@ -33,9 +32,6 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
         ssr: false,
       }),
       Footer: dynamic(() => import('./olymp/ui').then((x) => x.Footer), { ssr: false }),
-      TenantSeo: dynamic(() => import('./olymp/ui').then((x) => x.TenantSeo), {
-        ssr: false,
-      }),
     },
   },
   2: {
@@ -45,9 +41,6 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
         ssr: false,
       }),
       SidebarLogo: dynamic(() => import('./kometa/ui').then((x) => x.SidebarLogo), {
-        ssr: false,
-      }),
-      TenantSeo: dynamic(() => import('./kometa/ui').then((x) => x.TenantSeo), {
         ssr: false,
       }),
       DesktopLogo: () => null,
@@ -65,9 +58,6 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
       SidebarLogo: dynamic(() => import('./starlet/ui').then((x) => x.SidebarLogo), {
         ssr: false,
       }),
-      TenantSeo: dynamic(() => import('./starlet/ui').then((x) => x.TenantSeo), {
-        ssr: false,
-      }),
       DesktopLogo: () => null,
       SocialIcons: () => null,
       Sponsors: () => null,
@@ -81,9 +71,6 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
         ssr: false,
       }),
       SidebarLogo: dynamic(() => import('./kometa/ui').then((x) => x.SidebarLogo), {
-        ssr: false,
-      }),
-      TenantSeo: dynamic(() => import('./kometa/ui').then((x) => x.TenantSeo), {
         ssr: false,
       }),
       DesktopLogo: () => null,

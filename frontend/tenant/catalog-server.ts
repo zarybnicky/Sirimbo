@@ -38,6 +38,14 @@ export const serverTenantCatalog = {
   },
 };
 
+export function getServerTenant(tenantId: string | number): ServerTenantCatalogEntry {
+  const id = Number.parseInt(String(tenantId));
+  return (
+    Object.values(serverTenantCatalog).find((entry) => entry.id === id) ??
+    serverTenantCatalog[1]
+  );
+}
+
 export const hostToTenantId = new Map<string, string>();
 
 for (const entry of Object.values(serverTenantCatalog)) {

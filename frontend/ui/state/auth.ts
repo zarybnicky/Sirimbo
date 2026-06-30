@@ -64,6 +64,15 @@ const emptyConfig: TenantConfig = {
   shortName: '',
   copyrightLine: '',
   favicon: '',
+  seo: {
+    titleTemplate: '%s',
+    defaultTitle: '',
+    themeColor: '#000',
+    openGraph: { siteName: '' },
+    additionalMetaTags: [
+      { name: 'viewport', content: 'initial-scale=1,width=device-width' },
+    ],
+  },
   enableHome: true,
   enableRegistration: true,
   enableStarletImport: false,

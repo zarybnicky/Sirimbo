@@ -9,6 +9,7 @@ import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
 import { tenantConfigAtom, tenantIdAtom } from './state/auth';
 import { useAtomValue } from 'jotai';
+import { TenantSeo } from '@/tenant/TenantSeo';
 
 type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;
@@ -41,7 +42,6 @@ export const Layout = React.memo(function Layout({
   const authLoading = useAuthLoading();
   const tenantId = useAtomValue(tenantIdAtom);
   const { enableHome } = useAtomValue(tenantConfigAtom);
-  const TenantSeo = useMemo(() => getTenantUi(tenantId, 'TenantSeo'), [tenantId]);
   const Footer = useMemo(() => getTenantUi(tenantId, 'Footer'), [tenantId]);
 
   showTopMenu = showTopMenu && enableHome;
@@ -68,7 +68,7 @@ export const Layout = React.memo(function Layout({
 
   return (
     <>
-      <TenantSeo />
+      <TenantSeo tenantId={tenantId} />
       <Header {...{ isOpen, setIsOpen, showTopMenu }} />
 
       <div className="flex min-h-[calc(100dvh-52px)] md:min-h-[calc(100dvh-68px)]">
