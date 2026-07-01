@@ -22,10 +22,10 @@ declare module "nextjs-routes" {
     | StaticRoute<"/aktuality">
     | DynamicRoute<"/aktuality/[id]", { "id": string }>
     | StaticRoute<"/aktuality/add">
+    | StaticRoute<"/api/health">
     | StaticRoute<"/bpm2">
     | StaticRoute<"/clanky">
-    | DynamicRoute<"/clanky/[id]", { "id": string }>
-    | DynamicRoute<"/clanky/[id]/[...slug]", { "id": string; "slug": string[] }>
+    | DynamicRoute<"/clanky/[id]/[[...slug]]", { "id": string; "slug"?: string[] | undefined }>
     | StaticRoute<"/clenove">
     | DynamicRoute<"/clenove/[id]", { "id": string }>
     | StaticRoute<"/crm">
@@ -139,14 +139,14 @@ declare module "nextjs-routes" {
 
 // prettier-ignore
 declare module "next/link" {
-  import type { Route } from "nextjs-routes";;
+  import type { Route, RouteLiteral } from "nextjs-routes";;
   import type { LinkProps as NextLinkProps } from "next/dist/client/link";
   import type React from "react";
 
   type StaticRoute = Exclude<Route, { query: any }>["pathname"];
 
   export type LinkProps = Omit<NextLinkProps, "href" | "locale"> & {
-    href: Route | StaticRoute | Omit<Route, "pathname">;
+    href: Route | StaticRoute | Omit<Route, "pathname"> | RouteLiteral;
     locale?: false;
   }
 
@@ -223,4 +223,77 @@ declare module "next/router" {
       };
 
   export function useRouter<P extends Route["pathname"]>(): NextRouter<P>;
+}
+
+// prettier-ignore
+declare module "next/navigation" {
+  export * from "next/dist/client/components/navigation";
+  import type { Route, RouteLiteral, RoutedQuery } from "nextjs-routes";
+  import type { AppRouterInstance as NextAppRouterInstance, NavigateOptions, PrefetchOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
+
+  type StaticRoute = Exclude<Route, { query: any }>["pathname"];
+
+  /**
+   * A [Client Component](https://nextjs.org/docs/app/building-your-application/rendering/client-components) hook
+   * that lets you read the current URL's pathname.
+   *
+   * @example
+   * ```ts
+   * "use client"
+   * import { usePathname } from 'next/navigation'
+   *
+   * export default function Page() {
+   *  const pathname = usePathname() // returns "/dashboard" on /dashboard?foo=bar
+   *  // ...
+   * }
+   * ```
+   *
+   * Read more: [Next.js Docs: `usePathname`](https://nextjs.org/docs/app/api-reference/functions/use-pathname)
+   */
+  export const usePathname: () => RouteLiteral;
+
+  type AppRouterInstance = Omit<NextAppRouterInstance, 'push' | 'replace' | 'href'> & {
+    push(href: StaticRoute | RouteLiteral, options?: NavigateOptions): void;
+    replace(href: StaticRoute | RouteLiteral, options?: NavigateOptions): void;
+    prefetch(href: StaticRoute | RouteLiteral, options?: PrefetchOptions): void;
+  }
+
+  /**
+   *
+   * This hook allows you to programmatically change routes inside [Client Component](https://nextjs.org/docs/app/building-your-application/rendering/client-components).
+   *
+   * @example
+   * ```ts
+   * "use client"
+   * import { useRouter } from 'next/navigation'
+   *
+   * export default function Page() {
+   *  const router = useRouter()
+   *  // ...
+   *  router.push('/dashboard') // Navigate to /dashboard
+   * }
+   * ```
+   *
+   * Read more: [Next.js Docs: `useRouter`](https://nextjs.org/docs/app/api-reference/functions/use-router)
+   */
+  export function useRouter(): AppRouterInstance;
+
+  /**
+   * A [Client Component](https://nextjs.org/docs/app/building-your-application/rendering/client-components) hook
+   * that lets you read a route's dynamic params filled in by the current URL.
+   *
+   * @example
+   * ```ts
+   * "use client"
+   * import { useParams } from 'next/navigation'
+   *
+   * export default function Page() {
+   *   // on /dashboard/[team] where pathname is /dashboard/nextjs
+   *   const { team } = useParams() // team === "nextjs"
+   * }
+   * ```
+   *
+   * Read more: [Next.js Docs: `useParams`](https://nextjs.org/docs/app/api-reference/functions/use-params)
+   */
+  export const useParams: <Pathname extends Route["pathname"] = Route["pathname"]>() => RoutedQuery<Pathname>;
 }

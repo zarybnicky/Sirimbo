@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Spinner } from '@/ui/Spinner';
 import { useMutation } from 'urql';
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
-import { LinkProps } from 'next/link';
 import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
 
@@ -42,12 +41,12 @@ export default function OtpPage() {
       }
 
       setStatus('Přesměrovávám...');
-      const redirect = router.query.from;
+      const redirect = router.query?.from as string | undefined;
       const defaultRedirect = enableHome ? '/dashboard' : '/rozpis';
       void router.push(
         !user.otpLogin?.result?.usr?.userProxiesList.length
           ? '/profil'
-          : ((redirect || defaultRedirect) as LinkProps['href']),
+          : (redirect || defaultRedirect) as Parameters<typeof router.push>[0],
       );
     })();
   }, [

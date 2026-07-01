@@ -1,31 +1,35 @@
+'use client';
+
 import { topMenu } from '@/lib/use-menu';
-import { getTenantUi } from '@/tenant/catalog';
 import { AuthButton } from '@/ui/AuthButton';
 import { DesktopMenuItem } from '@/ui/DesktopMenuItem';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { Menu as MenuIcon, User as Account } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useMemo } from 'react';
-import { useAtomValue } from 'jotai';
-import { tenantIdAtom } from './state/auth';
+import { usePathname } from 'next/navigation';
+import React from 'react';
 
 type Props = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  showTopMenu?: boolean;
+  showTopMenu: boolean;
+  desktopLogo: React.ReactNode;
+  mobileLogo: React.ReactNode;
+  socialIcons: React.ReactNode;
 };
 
-export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
-  const { pathname } = useRouter();
+export function Header({
+  isOpen,
+  setIsOpen,
+  showTopMenu,
+  desktopLogo,
+  mobileLogo,
+  socialIcons,
+}: Props) {
+  const pathname = usePathname() || '/';
   const auth = useAuth();
-  const tenantId = useAtomValue(tenantIdAtom);
   const [isMounted, setIsMounted] = React.useState(false);
-
-  const DesktopLogo = useMemo(() => getTenantUi(tenantId, 'DesktopLogo'), [tenantId]);
-  const MobileLogo = useMemo(() => getTenantUi(tenantId, 'MobileLogo'), [tenantId]);
-  const SocialIcons = useMemo(() => getTenantUi(tenantId, 'SocialIcons'), [tenantId]);
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -36,26 +40,26 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
-            <DesktopLogo />
-            {topMenu.map((x) => (
-              <DesktopMenuItem key={x.title} item={x} />
+            {desktopLogo}
+            {topMenu.map((item) => (
+              <DesktopMenuItem key={item.title} item={item} pathname={pathname} />
             ))}
             <AuthButton />
-            <SocialIcons />
+            {socialIcons}
           </div>
         )}
 
         <div className="flex lg:hidden items-stretch justify-between min-h-[48px] md:min-h-[64px] p-2">
           <button
+            type="button"
+            aria-label="Otevřít menu"
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
             onClick={() => setIsOpen(!isOpen)}
           >
             <MenuIcon />
           </button>
 
-          <div className="grow flex items-center">
-            <MobileLogo />
-          </div>
+          <div className="grow flex items-center">{mobileLogo}</div>
 
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}

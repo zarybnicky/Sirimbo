@@ -62,7 +62,7 @@ export default function HomePage() {
               img={x.titlePhotoUrl || ''}
               preview={x.atPreview}
               href={{
-                pathname: '/clanky/[id]/[...slug]',
+                pathname: '/clanky/[id]/[[...slug]]',
                 query: {
                   id: x.id,
                   slug: [slugify(x.atJmeno)],

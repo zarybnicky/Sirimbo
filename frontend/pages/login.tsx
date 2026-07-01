@@ -5,7 +5,6 @@ import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
-import { LinkProps } from 'next/link';
 import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
 
@@ -22,7 +21,7 @@ export default function LoginPage() {
       void router.push(
         !user?.userProxiesList.length
           ? '/profil'
-          : ((redirect || defaultRedirect) as LinkProps['href']),
+          : (redirect || defaultRedirect) as Parameters<typeof router.push>[0],
       );
     },
     [enableHome, router],
@@ -36,8 +35,7 @@ export default function LoginPage() {
     }
 
     if (!authLoading && auth.user) {
-      const destination = personCount === 0 ? '/profil' : '/dashboard';
-      void router.replace(destination);
+      void router.replace(personCount === 0 ? '/profil' : '/dashboard');
     }
   }, [authLoading, auth.user, personCount, router, router.isReady]);
 

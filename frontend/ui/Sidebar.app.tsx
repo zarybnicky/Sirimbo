@@ -1,51 +1,49 @@
+'use client';
+
 import { buildId } from '@/lib/build-id';
-import { type MenuStructItem, topMenu, useMemberMenu } from '@/lib/use-menu';
-import { getTenantUi } from '@/tenant/catalog';
 import { cn } from '@/lib/cn';
-import { authAtom, storeRef, tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
+import { type MenuStructItem, topMenu, useMemberMenu } from '@/lib/use-menu';
+import { authAtom, storeRef, tenantConfigAtom } from '@/ui/state/auth';
 import { SidebarLink, SidebarSection } from '@/ui/SidebarLink';
 import { TenantSelect } from '@/ui/TenantSelect';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom } from 'jotai';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 type SidebarProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  showTopMenu?: boolean;
+  showTopMenu: boolean;
+  sidebarLogo: React.ReactNode;
 };
 
-export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
-  const router = useRouter();
-  const { pathname } = router;
+export function Sidebar({
+  isOpen,
+  setIsOpen,
+  showTopMenu,
+  sidebarLogo,
+}: SidebarProps) {
+  const pathname = usePathname() || '/';
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
-  const tenantId = useAtomValue(tenantIdAtom);
-  const { enableHome, copyrightLine: newCopyrightLine } = useAtomValue(tenantConfigAtom);
+  const { enableHome, copyrightLine: newCopyrightLine } =
+    useAtomValue(tenantConfigAtom);
   const memberMenu = useMemberMenu();
-  const SidebarLogo = React.useMemo(
-    () => getTenantUi(tenantId, 'SidebarLogo'),
-    [tenantId],
-  );
-
   const [copyrightLine, setCopyrightLine] = React.useState('');
-
   const [isMounted, setIsMounted] = React.useState(false);
+
   React.useEffect(() => {
     setIsMounted(true);
     setCopyrightLine(newCopyrightLine);
   }, [newCopyrightLine]);
 
   React.useEffect(() => {
-    const track = () => setIsOpen(false);
-    router.events.on('routeChangeStart', track);
-    return () => router.events.off('routeChangeStart', track);
-  }, [router.events, setIsOpen]);
+    setIsOpen(false);
+  }, [pathname, setIsOpen]);
 
   React.useEffect(() => {
-    if (typeof window === 'undefined') return;
     const updateDetailView = () => {
       if (window.matchMedia('(min-width: 768px)').matches) {
         setIsOpen(false);
@@ -82,7 +80,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           'overflow-y-auto scrollbar max-h-screen min-h-screen',
         )}
       >
-        {!showTopMenu && <SidebarLogo />}
+        {!showTopMenu && sidebarLogo}
         <div className="space-y-1 pt-3 mr-1">
           {auth.user && isMounted ? (
             <>
@@ -126,20 +124,18 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
             </>
           ) : (
             <SidebarLink
-              item={{ type: 'link', title: 'Přihlásit se', href: '/login' }}
               pathname={pathname}
+              item={{ type: 'link', title: 'Přihlásit se', href: '/login' }}
             />
           )}
 
           {enableHome &&
             (showTopMenu ? (
-              topMenu.map((item) => (
-                <SidebarSection key={item.title} item={item} pathname={pathname} />
-              ))
+              topMenu.map((x) => <SidebarSection key={x.title} item={x} pathname={pathname} />)
             ) : (
               <SidebarLink
-                item={{ type: 'link', title: 'Veřejná sekce', href: '/' }}
                 pathname={pathname}
+                item={{ type: 'link', title: 'Veřejná sekce', href: '/' }}
               />
             ))}
 
