@@ -20,7 +20,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
     const mappedData = data.map((x) => ({
       id: x.id,
       href: {
-        pathname: '/clanky/[id]/[...slug]',
+        pathname: '/clanky/[id]/[[...slug]]',
         query: { id: x.id, slug: [slugify(x.atJmeno)] },
       },
       name: x.atJmeno,

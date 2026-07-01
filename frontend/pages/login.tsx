@@ -5,7 +5,6 @@ import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
-import { LinkProps } from 'next/link';
 import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
 
@@ -19,10 +18,11 @@ export default function LoginPage() {
     (user: UserAuthFragment | null) => {
       const redirect = router.query?.from as string | undefined;
       const defaultRedirect = enableHome ? '/dashboard' : '/rozpis';
+      const destination = !user?.userProxiesList.length
+        ? '/profil'
+        : redirect || defaultRedirect;
       void router.push(
-        !user?.userProxiesList.length
-          ? '/profil'
-          : ((redirect || defaultRedirect) as LinkProps['href']),
+        destination as Parameters<typeof router.push>[0],
       );
     },
     [enableHome, router],
