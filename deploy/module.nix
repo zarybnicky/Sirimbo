@@ -5,14 +5,14 @@
   ...
 }:
 let
-  cfg = config.services.rozpisovnik-web;
+  cfg = config.services.olymp.frontend;
 in
 {
-  options.services.rozpisovnik-web = {
+  options.services.olymp.frontend = {
     enable = lib.mkEnableOption "Rozpisovnik frontend via ArgoCD";
 
-    domain = lib.mkOption {
-      type = lib.types.str;
+    domains = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
       description = "Rozpisovnik frontend domain";
     };
 
@@ -22,30 +22,6 @@ in
       type = lib.types.port;
       default = 30080;
       description = "NodePort exposed by the frontend Kubernetes service";
-    };
-
-    imageRepository = lib.mkOption {
-      type = lib.types.str;
-      default = "127.0.0.1:5000/rozpisovnik/web";
-      description = "Frontend image repository used by the Helm chart";
-    };
-
-    graphqlBackend = lib.mkOption {
-      type = lib.types.str;
-      default = "https://api.rozpisovnik.cz";
-      description = "Server-side GraphQL backend URL used by the frontend container";
-    };
-
-    sentryDsn = lib.mkOption {
-      type = lib.types.str;
-      default = "";
-      description = "Sentry DSN exposed to the frontend container runtime";
-    };
-
-    sentryEnvironment = lib.mkOption {
-      type = lib.types.str;
-      default = "production";
-      description = "Sentry environment exposed to the frontend container runtime";
     };
   };
 
@@ -58,7 +34,7 @@ in
       recommendedOptimisation = true;
       recommendedProxySettings = true;
 
-      virtualHosts.${cfg.domain} = {
+      virtualHosts = lib.genAttrs cfg.domains (domain: {
         enableACME = cfg.ssl;
         forceSSL = cfg.ssl;
 
@@ -72,7 +48,7 @@ in
           proxyPass = "http://127.0.0.1:${toString cfg.nodePort}";
           proxyWebsockets = true;
         };
-      };
+      });
     };
 
     my.argocdApps = [
@@ -80,7 +56,7 @@ in
         apiVersion = "argoproj.io/v1alpha1";
         kind = "Application";
         metadata = {
-          name = "rozpisovnik-web";
+          name = "sirimbo";
           namespace = "argocd";
         };
         spec = {
@@ -92,7 +68,7 @@ in
             helm.parameters = [
               {
                 name = "image.repository";
-                value = cfg.imageRepository;
+                value = "127.0.0.1:5000/sirimbo";
               }
               {
                 name = "image.tag";
@@ -104,21 +80,21 @@ in
               }
               {
                 name = "runtime.graphqlBackend";
-                value = cfg.graphqlBackend;
+                value = "https://api.rozpisovnik.cz";
               }
               {
                 name = "runtime.sentryDsn";
-                value = cfg.sentryDsn;
+                value = "https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825";
               }
               {
                 name = "runtime.sentryEnvironment";
-                value = cfg.sentryEnvironment;
+                value = "production";
               }
             ];
           };
           destination = {
             server = "https://kubernetes.default.svc";
-            namespace = "rozpisovnik-web";
+            namespace = "sirimbo";
           };
           syncPolicy.syncOptions = [
             "CreateNamespace=true"
@@ -127,12 +103,12 @@ in
       }
     ];
 
-    services.github-runners."rozpisovnik-web" = {
+    services.github-runners."sirimbo" = {
       enable = true;
-      name = "${config.networking.hostName}-rozpisovnik-web";
+      name = "${config.networking.hostName}-sirimbo";
       url = "https://github.com/zarybnicky/Sirimbo";
       replace = true;
-      extraLabels = ["nixos" "deploy" "rozpisovnik"];
+      extraLabels = ["nixos" "deploy" "sirimbo"];
       extraPackages = with pkgs; [
         argocd
         git

@@ -1,4 +1,4 @@
 apiVersion: v2
-name: rozpisovnik-web
+name: sirimbo
 version: 0.1.0
 type: application

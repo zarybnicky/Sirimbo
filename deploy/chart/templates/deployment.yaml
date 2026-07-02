@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rozpisovnik-web
+  name: sirimbo
   labels:
-    app.kubernetes.io/name: rozpisovnik-web
+    app.kubernetes.io/name: sirimbo
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: rozpisovnik-web
+      app.kubernetes.io/name: sirimbo
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: rozpisovnik-web
+        app.kubernetes.io/name: sirimbo
     spec:
       containers:
-        - name: rozpisovnik-web
+        - name: sirimbo
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
@@ -23,10 +23,8 @@ spec:
               value: {{ .Values.runtime.graphqlBackend | quote }}
             - name: NEXT_PUBLIC_SENTRY_ENVIRONMENT
               value: {{ .Values.runtime.sentryEnvironment | quote }}
-            {{- if .Values.runtime.sentryDsn }}
-            - name: SENTRY_DSN
+            - name: NEXT_PUBLIC_SENTRY_DSN
               value: {{ .Values.runtime.sentryDsn | quote }}
-            {{- end }}
           ports:
             - name: http
               containerPort: 3000
