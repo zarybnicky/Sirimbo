@@ -1,4 +1,4 @@
-name: Frontend image
+name: deploy
 
 on:
   push:
@@ -15,11 +15,11 @@ concurrency:
 
 env:
   NEXT_PUBLIC_GRAPHQL_BACKEND: ${{ vars.NEXT_PUBLIC_GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz' }}
-  NEXT_PUBLIC_SENTRY_DSN: ${{ vars.NEXT_PUBLIC_SENTRY_DSN || '' }}
+  NEXT_PUBLIC_SENTRY_DSN: ${{ vars.NEXT_PUBLIC_SENTRY_DSN || 'https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825' }}
   NEXT_PUBLIC_SENTRY_ENVIRONMENT: ${{ vars.NEXT_PUBLIC_SENTRY_ENVIRONMENT || 'production' }}
 
 jobs:
-  build:
+  deploy:
     runs-on:
       - self-hosted
       - deploy
@@ -27,8 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build and push frontend image
-        shell: bash
+      - name: Push image to local registry
         run: |
           set -euo pipefail
 

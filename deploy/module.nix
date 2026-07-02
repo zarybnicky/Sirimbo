@@ -115,6 +115,8 @@ in
         jq
         kubectl
         skopeo
+        docker
+        docker-buildx
       ];
       extraEnvironment.KUBECONFIG = "/etc/rancher/k3s/argocd-ns.yaml:/etc/rancher/k3s/k3s.yaml";
     };
