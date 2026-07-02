@@ -38,7 +38,7 @@
     "ckeditor5": "^47.3.0",
     "classnames": "~2.5.1",
     "cmdk": "~0.2.1",
-    "cookies-next": "~5.0.2",
+    "cookies-next": "~6.1.1",
     "core-js": "^3.47.0",
     "csv-stringify": "^6.6.0",
     "d3": "^7.9.0",
