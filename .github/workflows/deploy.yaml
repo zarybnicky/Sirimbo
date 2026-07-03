@@ -32,9 +32,9 @@ jobs:
           set -euo pipefail
 
           cache_ref="127.0.0.1:5000/sirimbo:buildcache-${GITHUB_REF_NAME//\//-}"
-          image_ref="127.0.0.1:5000/sirimbo:${GITHUB_SHA}"
 
-          podman build \
+          docker buildx inspect --bootstrap
+          docker buildx build \
             --file deploy/Dockerfile \
             --target runner \
             --platform linux/amd64 \
@@ -42,13 +42,11 @@ jobs:
             --build-arg NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
             --build-arg NEXT_PUBLIC_SENTRY_ENVIRONMENT="${NEXT_PUBLIC_SENTRY_ENVIRONMENT}" \
             --build-arg NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA="${GITHUB_SHA}" \
-            --cache-from "${cache_ref}" \
-            --cache-to "${cache_ref}" \
-            --tag "${image_ref}" \
-            --tls-verify=false \
+            --cache-from "type=registry,ref=${cache_ref}" \
+            --cache-to "type=registry,ref=${cache_ref},mode=max" \
+            --tag "127.0.0.1:5000/sirimbo:${GITHUB_SHA}" \
+            --push \
             .
-
-          podman push --tls-verify=false "${image_ref}"
 
       - name: Deploy exact Git SHA with Argo
         run: |
