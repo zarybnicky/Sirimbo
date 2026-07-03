@@ -103,12 +103,34 @@ in
       }
     ];
 
+    users.users.github-runner = {
+      uid = 1234;
+      isSystemUser = true;
+      group = "github-runner";
+      home = "/var/lib/github-runner";
+      createHome = true;
+      linger = true;
+      subUidRanges = [{ startUid = 100000; count = 65536; }];
+      subGidRanges = [{ startGid = 100000; count = 65536; }];
+    };
+    users.groups.github-runner = {};
+
+    virtualisation.docker.rootless = {
+      enable = true;
+      setSocketVariable = true;
+      daemon.settings = {
+        features.containerd-snapshotter = true;
+      };
+    };
+
     services.github-runners."sirimbo" = {
       enable = true;
       name = "${config.networking.hostName}-sirimbo";
       url = "https://github.com/zarybnicky/Sirimbo";
       replace = true;
-      extraLabels = ["nixos" "deploy" "sirimbo"];
+      user = "github-runner";
+      group = "github-runner";
+      extraLabels = [ "deploy" "sirimbo" ];
       extraPackages = with pkgs; [
         argocd
         git
@@ -116,9 +138,12 @@ in
         kubectl
         skopeo
         docker
-        docker-buildx
       ];
-      extraEnvironment.KUBECONFIG = "/etc/rancher/k3s/argocd-ns.yaml:/etc/rancher/k3s/k3s.yaml";
+      extraEnvironment = {
+        KUBECONFIG = "/etc/rancher/k3s/argocd-ns.yaml:/etc/rancher/k3s/k3s.yaml";
+        DOCKER_HOST = "unix:///run/user/1234/docker.sock";
+        XDG_RUNTIME_DIR = "/run/user/1234";
+      };
     };
   };
 }
