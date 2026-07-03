@@ -103,17 +103,17 @@ in
       }
     ];
 
-    users.users.github-runner = {
+    users.users.github-runner-sirimbo = {
       uid = 1234;
       isSystemUser = true;
-      group = "github-runner";
-      home = "/var/lib/github-runner";
+      group = "github-runner-sirimbo";
+      home = "/var/lib/github-runner-sirimbo";
       createHome = true;
       linger = true;
       subUidRanges = [{ startUid = 100000; count = 65536; }];
       subGidRanges = [{ startGid = 100000; count = 65536; }];
     };
-    users.groups.github-runner = {};
+    users.groups.github-runner-sirimbo = {};
 
     virtualisation.docker.rootless = {
       enable = true;
@@ -128,8 +128,8 @@ in
       name = "${config.networking.hostName}-sirimbo";
       url = "https://github.com/zarybnicky/Sirimbo";
       replace = true;
-      user = "github-runner";
-      group = "github-runner";
+      user = "github-runner-sirimbo";
+      group = "github-runner-sirimbo";
       extraLabels = [ "deploy" "sirimbo" ];
       extraPackages = with pkgs; [
         argocd
