@@ -33,6 +33,8 @@ jobs:
 
           cache_ref="127.0.0.1:5000/sirimbo:buildcache-${GITHUB_REF_NAME//\//-}"
 
+          ls -la /run/user/1234
+
           docker buildx inspect --bootstrap
           docker buildx build \
             --file deploy/Dockerfile \
