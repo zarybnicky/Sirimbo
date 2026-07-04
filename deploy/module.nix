@@ -139,6 +139,9 @@ in
         skopeo
         docker
       ];
+      serviceOverrides = {
+        BindReadOnlyPaths = [ "/run/user/1234/docker.sock" ];
+      };
       extraEnvironment = {
         KUBECONFIG = "/etc/rancher/k3s/argocd-ns.yaml:/etc/rancher/k3s/k3s.yaml";
         DOCKER_HOST = "unix:///run/user/1234/docker.sock";
