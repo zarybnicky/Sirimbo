@@ -54,6 +54,7 @@ jobs:
             --build-arg NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
             --build-arg NEXT_PUBLIC_SENTRY_ENVIRONMENT="${NEXT_PUBLIC_SENTRY_ENVIRONMENT}" \
             --build-arg SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}" \
+            --build-arg SENTRY_RELEASE="${GITHUB_SHA}" \
             --build-arg GITHUB_SHA="${GITHUB_SHA}" \
             --cache-from "type=registry,ref=${cache_ref}" \
             --cache-to "type=registry,ref=${cache_ref},mode=max" \
@@ -66,3 +67,14 @@ jobs:
           set -euo pipefail
           argocd --core app sync sirimbo --timeout 600 --revision "${GITHUB_SHA}" --prune
           argocd --core app wait sirimbo --timeout 600 --sync --health
+
+      - name: Publish Sentry release/deploy metadata
+        uses: getsentry/action-release@v3
+        env:
+          SENTRY_ORG: jakub-zarybnicky
+          SENTRY_PROJECT: olymp
+        with:
+          org: jakub-zarybnicky
+          project: olymp
+          environment: ${{ env.NEXT_PUBLIC_SENTRY_ENVIRONMENT }}
+          ignore_missing: true
