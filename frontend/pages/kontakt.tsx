@@ -1,5 +1,4 @@
 import { PageHeader } from '@/ui/TitleBar';
-import * as React from 'react';
 import { Layout } from '@/ui/Layout';
 import { NextSeo } from 'next-seo';
 
