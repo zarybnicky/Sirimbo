@@ -36,18 +36,16 @@ jobs:
 
           cache_ref="10.0.2.2:5000/sirimbo:buildcache-${GITHUB_REF_NAME//\//-}"
 
-          cat >/tmp/buildkitd.toml <<'EOF'
-          [registry."10.0.2.2:5000"]
-          http = true
-          insecure = true
-          EOF
+          if ! docker buildx inspect ci >/dev/null 2>&1; then
+            cat >/tmp/buildkitd.toml <<'EOF'
+            [registry."10.0.2.2:5000"]
+            http = true
+            insecure = true
+            EOF
+            docker buildx create --name ci --driver docker-container --driver-opt network=host --config /tmp/buildkitd.toml
+          fi
 
-          docker buildx rm ci 2>/dev/null || true
-          rm -f ~/.docker/buildx/instances/ci
-
-          docker buildx create --name ci \
-            --driver docker-container --driver-opt network=host --config /tmp/buildkitd.toml --use
-
+          docker buildx use ci
           docker buildx inspect --bootstrap
           docker buildx build \
             --file deploy/Dockerfile \
