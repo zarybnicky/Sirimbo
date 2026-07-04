@@ -32,8 +32,6 @@ COPY . .
 RUN --mount=type=cache,id=next-web,target=/repo/frontend/.next/cache,sharing=locked \
   pnpm --filter @rozpisovnik/web build
 
-RUN find frontend/.next -name '*.map' -type f -delete
-
 FROM gcr.io/distroless/nodejs24-debian12:nonroot AS runner
 
 WORKDIR /app

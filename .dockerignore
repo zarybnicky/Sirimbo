@@ -1,4 +1,3 @@
-# Keep the Docker build context focused on the frontend package.
 *
 
 !package.json
@@ -58,6 +57,3 @@ olymp.dump
 *.db
 .dolt
 .beads
-
-# Copied deployment examples may include local state under nested ignores.
-deploy-exam-proctor/local

@@ -32,6 +32,12 @@ export default compose(
       org: 'jakub-zarybnicky',
       project: 'olymp',
       authToken: process.env.SENTRY_AUTH_TOKEN,
+      bundleSizeOptimizations: {
+        excludeReplayShadowDom: true,
+      },
+      sourcemaps: {
+        deleteSourcemapsAfterUpload: true,
+      },
     }),
 )({
   reactStrictMode: true,
