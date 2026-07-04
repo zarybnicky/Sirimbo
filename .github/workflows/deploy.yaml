@@ -39,11 +39,11 @@ jobs:
           insecure = true
           EOF
 
+          docker buildx rm ci 2>/dev/null || true
+          rm -f ~/.docker/buildx/instances/ci
+
           docker buildx create --name ci \
-            --driver docker-container \
-            --driver-opt network=host \
-            --config /tmp/buildkitd.toml \
-            --use
+            --driver docker-container --driver-opt network=host --config /tmp/buildkitd.toml --use
 
           docker buildx inspect --bootstrap
           docker buildx build \
