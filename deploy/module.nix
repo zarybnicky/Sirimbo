@@ -141,7 +141,7 @@ in
       ];
       serviceOverrides = {
         PrivateUsers = lib.mkForce false;
-        BindReadOnlyPaths = [ "/run/user" ];
+        ProtectHome = lib.mkForce false;
       };
       extraEnvironment = {
         KUBECONFIG = "/etc/rancher/k3s/argocd-ns.yaml:/etc/rancher/k3s/k3s.yaml";
