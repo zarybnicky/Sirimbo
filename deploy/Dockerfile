@@ -10,6 +10,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN corepack enable && pnpm config set store-dir /pnpm/store
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 FROM base AS deps
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
