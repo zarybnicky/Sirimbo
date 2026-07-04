@@ -27,9 +27,11 @@ export default compose(
   bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' }),
   (cfg: NextConfig) =>
     withSentryConfig(cfg, {
-      tunnelRoute: '/sentry',
       widenClientFileUpload: true,
-      silent: true, // Suppresses all logs
+      tunnelRoute: '/tattletale',
+      org: 'jakub-zarybnicky',
+      project: 'olymp',
+      authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
 )({
   reactStrictMode: true,
