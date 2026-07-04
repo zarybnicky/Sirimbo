@@ -31,10 +31,10 @@ jobs:
         run: |
           set -euo pipefail
 
-          cache_ref="127.0.0.1:5000/sirimbo:buildcache-${GITHUB_REF_NAME//\//-}"
+          cache_ref="10.0.2.2:5000/sirimbo:buildcache-${GITHUB_REF_NAME//\//-}"
 
           cat >/tmp/buildkitd.toml <<'EOF'
-          [registry."127.0.0.1:5000"]
+          [registry."10.0.2.2:5000"]
           http = true
           insecure = true
           EOF
@@ -56,7 +56,7 @@ jobs:
             --build-arg NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA="${GITHUB_SHA}" \
             --cache-from "type=registry,ref=${cache_ref}" \
             --cache-to "type=registry,ref=${cache_ref},mode=max" \
-            --tag "127.0.0.1:5000/sirimbo:${GITHUB_SHA}" \
+            --tag "10.0.2.2:5000/sirimbo:${GITHUB_SHA}" \
             --push \
             .
 
