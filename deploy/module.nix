@@ -122,6 +122,7 @@ in
         features.containerd-snapshotter = true;
       };
     };
+    systemd.user.services.docker.environment.DOCKERD_ROOTLESS_ROOTLESSKIT_DISABLE_HOST_LOOPBACK = "false";
 
     services.github-runners."sirimbo" = {
       enable = true;
