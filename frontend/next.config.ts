@@ -65,7 +65,6 @@ export default compose(
       { protocol: 'https', hostname: 'files.rozpisovnik.cz' },
     ],
     minimumCacheTTL: 2_678_400,
-    unoptimized: true,
     qualities: [75, 90],
   },
 
