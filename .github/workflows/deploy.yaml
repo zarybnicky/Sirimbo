@@ -73,8 +73,7 @@ jobs:
         env:
           SENTRY_ORG: jakub-zarybnicky
           SENTRY_PROJECT: olymp
+          SENTRY_AUTH_TOKEN: ${{ env.SENTRY_AUTH_TOKEN }}
         with:
-          org: jakub-zarybnicky
-          project: olymp
           environment: ${{ env.NEXT_PUBLIC_SENTRY_ENVIRONMENT }}
           ignore_missing: true
