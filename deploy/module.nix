@@ -20,7 +20,7 @@ in
 
     nodePort = lib.mkOption {
       type = lib.types.port;
-      default = 30080;
+      default = 30100;
       description = "NodePort exposed by the frontend Kubernetes service";
     };
   };

@@ -7,7 +7,7 @@ image:
 
 service:
   type: NodePort
-  nodePort: 30080
+  nodePort: 30100
 
 runtime:
   graphqlBackend: https://api.rozpisovnik.cz
