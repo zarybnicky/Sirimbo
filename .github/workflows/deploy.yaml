@@ -53,7 +53,8 @@ jobs:
             --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND="${NEXT_PUBLIC_GRAPHQL_BACKEND}" \
             --build-arg NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
             --build-arg NEXT_PUBLIC_SENTRY_ENVIRONMENT="${NEXT_PUBLIC_SENTRY_ENVIRONMENT}" \
-            --build-arg NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA="${GITHUB_SHA}" \
+            --build-arg SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}" \
+            --build-arg GITHUB_SHA="${GITHUB_SHA}" \
             --cache-from "type=registry,ref=${cache_ref}" \
             --cache-to "type=registry,ref=${cache_ref},mode=max" \
             --tag "10.0.2.2:5000/sirimbo:${GITHUB_SHA}" \
