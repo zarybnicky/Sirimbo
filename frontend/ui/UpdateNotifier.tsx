@@ -1,50 +1,65 @@
 import React, { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
-import { Serwist, SerwistLifecycleEvent } from '@serwist/window';
+import { buildId } from '@/lib/build-id';
+import { Serwist } from '@serwist/window';
 
-const CHECK_MS = 5 * 60 * 1000;
+type DeploymentResponse = {
+  deploymentId?: string | null;
+};
 
 export const UpdateNotifier = React.memo(function UpdateNotifier() {
   const toastRef = useRef<string | number | undefined>(undefined);
 
   useEffect(() => {
-    if (!('serviceWorker' in navigator)) return;
+    const check = async () => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .getRegistration('/')
+          .then((r) => r?.update())
+          .catch(() => {});
+      }
+      try {
+        const currentDeploymentId = document.documentElement.dataset.dplId ?? buildId;
+        if (!currentDeploymentId || currentDeploymentId === 'develop') {
+          return;
+        }
 
-    const serwist = new Serwist('/sw.js', { scope: '/', type: 'classic' });
+        const response = await fetch('/api/deployment', {
+          cache: 'no-store',
+          headers: { Accept: 'application/json' },
+        });
+        if (!response.ok) return;
 
-    const showToast = () => {
-      if (toastRef.current) return;
+        const data = (await response.json()) as DeploymentResponse;
+        const deploymentId = data.deploymentId;
+        if (!deploymentId || deploymentId === 'develop') return;
 
-      toastRef.current = toast.warn(
-        <>
-          <b>Je k dispozici nová verze aplikace.</b> Kliknutím zde ji aktualizujete.
-        </>,
-        {
-          autoClose: false,
-          closeOnClick: true,
-          onClick: () => window.location.reload(),
-          onClose: () => {
-            toastRef.current = undefined;
-          },
-        },
-      );
+        if (deploymentId !== currentDeploymentId) {
+          if (toastRef.current) return;
+
+          toastRef.current = toast.warn(
+            <>
+              <b>Je k dispozici nová verze aplikace.</b> Kliknutím zde ji aktualizujete.
+            </>,
+            {
+              autoClose: false,
+              closeOnClick: true,
+              onClick: () => window.location.reload(),
+              onClose: () => {
+                toastRef.current = undefined;
+              },
+            },
+          );
+        }
+      } catch {
+        // Ignore transient network and deploy-race failures.
+      }
     };
-
-    const onActivated = (event: SerwistLifecycleEvent) => {
-      if (event?.isUpdate) showToast();
-    };
-    // serwist.addEventListener('activated', onActivated);
-
-    const check = () =>
-      navigator.serviceWorker
-        .getRegistration('/')
-        .then((r) => r?.update())
-        .catch(() => {});
 
     let interval: number | undefined;
     const start = () => {
       if (interval || document.visibilityState !== 'visible') return;
-      interval = window.setInterval(check, CHECK_MS);
+      interval = window.setInterval(check, (5 * 60 * 1000));
       void check();
     };
 
@@ -57,20 +72,21 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
     const onVisibility = () =>
       document.visibilityState === 'visible' ? start() : stop();
 
-    void serwist
-      .register()
-      .then(() => {
-        start();
-        document.addEventListener('visibilitychange', onVisibility);
-        window.addEventListener('pagehide', stop);
-      })
-      .catch(() => {});
+    if ('serviceWorker' in navigator) {
+      const serwist = new Serwist('/sw.js', { scope: '/', type: 'classic' });
+      void serwist.register().catch(() => {});
+    }
+
+    start();
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', stop);
+    window.addEventListener('pageshow', start);
 
     return () => {
       stop();
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('pagehide', stop);
-      serwist.removeEventListener('activated', onActivated);
+      window.removeEventListener('pageshow', start);
     };
   }, []);
 

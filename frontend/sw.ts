@@ -1,12 +1,4 @@
-import { defaultCache } from '@serwist/next/worker';
-import {
-  disableDevLogs,
-  Serwist,
-  type PrecacheEntry,
-  Strategy,
-  ExpirationPlugin,
-  NetworkFirst,
-} from 'serwist';
+import { disableDevLogs, Serwist, type PrecacheEntry } from 'serwist';
 
 declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: Array<PrecacheEntry | string> | undefined;
@@ -16,25 +8,6 @@ const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST ?? [],
   skipWaiting: true,
   clientsClaim: false,
-  runtimeCaching: [
-    {
-      matcher: /\/_vercel\/.+\.js$/i,
-      handler: new NetworkFirst({
-        cacheName: 'vercel-static-js-assets',
-        plugins: [
-          new ExpirationPlugin({
-            maxEntries: 64,
-            maxAgeSeconds: 24 * 60 * 60, // 24 hours
-            maxAgeFrom: 'last-used',
-          }),
-        ],
-      }),
-    },
-    ...defaultCache.filter((x) => {
-      if (!(x.handler instanceof Strategy)) return true;
-      return x.handler.cacheName !== 'cross-origin';
-    }),
-  ],
   precacheOptions: {
     cleanupOutdatedCaches: true,
   },
@@ -42,6 +15,41 @@ const serwist = new Serwist({
 serwist.addEventListeners();
 
 disableDevLogs();
+
+const obsoleteRuntimeCaches = new Set([
+  'apis',
+  'google-fonts-stylesheets',
+  'google-fonts-webfonts',
+  'next-data',
+  'next-image',
+  'next-static-js-assets',
+  'pages',
+  'pages-rsc',
+  'pages-rsc-prefetch',
+  'start-url',
+  'static-audio-assets',
+  'static-data-assets',
+  'static-font-assets',
+  'static-image-assets',
+  'static-js-assets',
+  'static-style-assets',
+  'static-video-assets',
+  'vercel-static-js-assets',
+]);
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((cacheNames) =>
+        Promise.all(
+          cacheNames
+            .filter((cacheName) => obsoleteRuntimeCaches.has(cacheName))
+            .map((cacheName) => caches.delete(cacheName)),
+        ),
+      ),
+  );
+});
 
 type PushPayload = {
   title?: string;
