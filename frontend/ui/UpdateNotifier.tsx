@@ -11,6 +11,8 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
   const toastRef = useRef<string | number | undefined>(undefined);
 
   useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') return;
+
     const check = async () => {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker
