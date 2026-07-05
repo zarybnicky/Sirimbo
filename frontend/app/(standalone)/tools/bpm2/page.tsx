@@ -1,3 +1,5 @@
+'use client';
+
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
 
 // ═══════════════════════════════════════════════════════════════════════

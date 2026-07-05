@@ -5,6 +5,7 @@ import { WithSidebar } from '@/ui/WithSidebar';
 import { slugify } from '@/lib/slugify';
 import { useTypedRouter, zRouterString } from '@/ui/useTypedRouter';
 import { CohortView } from '@/ui/CohortView';
+import { useRouter as useCompatRouter } from 'next/compat/router';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
@@ -18,25 +19,36 @@ const QueryParams = z.object({
 
 function TrainingCohortPage() {
   const router = useTypedRouter(QueryParams);
+  const compatRouter = useCompatRouter();
   const idParam = router.query.id || router.query.slug;
+  const replace = React.useCallback(
+    (href: string) => {
+      if (compatRouter) {
+        void compatRouter.replace(href);
+      } else {
+        window.location.replace(href);
+      }
+    },
+    [compatRouter],
+  );
   const [{ data: cohortQuery, fetching: fetchingCohort }] = useQuery({
     query: CohortWithMembersDocument,
     variables: { id: idParam || '0' },
-    pause: !router.isReady || !idParam,
+    pause: !idParam,
   });
   const cohort = cohortQuery?.entity;
 
   React.useEffect(() => {
-    if (!router.isReady || !idParam || fetchingCohort) return;
+    if (!idParam || fetchingCohort) return;
     if (!cohort) {
-      void router.replace('/404');
+      replace('/404');
       return;
     }
     const expectedSlug = slugify(cohort.name);
     if (expectedSlug && router.query.slug !== expectedSlug) {
-      void router.replace(`/treninkove-skupiny/${cohort.id}/${expectedSlug}`);
+      replace(`/treninkove-skupiny/${cohort.id}/${expectedSlug}`);
     }
-  }, [cohort, fetchingCohort, idParam, router]);
+  }, [cohort, fetchingCohort, idParam, replace, router.query.slug]);
 
   if (!cohort) {
     return (

@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useMemo, useState } from 'react';
 import { ascending, max, min, range, scaleOrdinal, schemeTableau10 } from 'd3';
 import { sankey, sankeyLinkHorizontal } from 'd3-sankey';

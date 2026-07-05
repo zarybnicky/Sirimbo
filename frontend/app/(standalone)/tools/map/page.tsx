@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import * as Plot from '@observablehq/plot';
 import { ExtendedFeatureCollection } from "d3";
@@ -16,7 +18,6 @@ export default function EventMap() {
   }, []);
 
   React.useEffect(() => {
-    console.log(cz, events, containerRef);
     if (!cz || !events || !containerRef.current) return;
 
     const months = ['leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec'];

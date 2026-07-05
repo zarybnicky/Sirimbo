@@ -11,6 +11,7 @@ import { cn } from '@/lib/cn';
 import { SubmitButton } from '@/ui/submit';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
@@ -23,6 +24,7 @@ const QueryParams = z.object({
 
 export function AnnouncementList() {
   const router = useTypedRouter(QueryParams);
+  const pathname = usePathname() ?? '';
   const auth = useAuth();
   const [search, setSearch] = React.useState('');
   const [pages, setPages] = React.useState<(number | undefined)[]>([undefined]);
@@ -49,7 +51,7 @@ export function AnnouncementList() {
             href="/nastenka/add"
             className={buttonCls({
               size: 'sm',
-              variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
+              variant: pathname.endsWith('/add') ? 'primary' : 'outline',
             })}
           >
             Přidat příspěvek

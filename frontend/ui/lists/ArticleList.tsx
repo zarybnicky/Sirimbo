@@ -7,6 +7,7 @@ import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
@@ -18,6 +19,7 @@ const QueryParams = z.object({
 export function ArticleList() {
   const router = useTypedRouter(QueryParams);
   const { id: currentId } = router.query;
+  const pathname = usePathname() ?? '';
   const auth = useAuth();
 
   const [{ data }] = useQuery({ query: ArticlesDocument });
@@ -36,7 +38,7 @@ export function ArticleList() {
             href="/aktuality/add"
             className={buttonCls({
               size: 'sm',
-              variant: router.asPath.endsWith('add') ? 'primary' : 'outline',
+              variant: pathname.endsWith('/add') ? 'primary' : 'outline',
             })}
           >
             Vytvořit článek

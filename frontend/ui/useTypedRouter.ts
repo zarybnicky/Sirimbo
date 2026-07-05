@@ -1,12 +1,32 @@
-import { useRouter } from 'next/router';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/compat/router';
+import React from 'react';
 import { z } from 'zod';
 
 export const useTypedRouter = <T extends z.Schema>(schema: T) => {
-  const { query, ...router } = useRouter();
+  const router = useRouter();
+  const params = useParams<Record<string, string | string[]>>();
+  const searchParams = useSearchParams();
+  const query = React.useMemo(() => {
+    if (router) return router.query;
+
+    const nextQuery: Record<string, string | string[]> = {};
+
+    searchParams?.forEach((value, key) => {
+      const current = nextQuery[key];
+      nextQuery[key] =
+        current === undefined
+          ? value
+          : Array.isArray(current)
+            ? [...current, value]
+            : [current, value];
+    });
+
+    return { ...nextQuery, ...params };
+  }, [params, router, searchParams]);
 
   return {
     query: schema.parse(query) as z.infer<typeof schema>,
-    ...router,
   };
 };
 

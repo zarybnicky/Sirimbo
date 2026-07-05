@@ -1,3 +1,5 @@
+'use client';
+
 import {
   EventInstanceRangeDocument,
   type EventInstanceRangeQuery,
@@ -7,7 +9,6 @@ import { cn } from '@/lib/cn';
 import { formatDefaultEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { add } from 'date-arithmetic';
-import Head from 'next/head';
 import React from 'react';
 import { useQuery } from 'urql';
 
@@ -173,11 +174,7 @@ export default function NowPage() {
   );
 
   return (
-    <>
-      <Head>
-        <title>Právě probíhá</title>
-      </Head>
-      <div className="min-h-screen bg-accent-1 text-accent-12">
+    <div className="min-h-screen bg-accent-1 text-accent-12">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-10 lg:px-10">
           <header className="flex flex-col gap-1 border-b border-accent-6 pb-6">
             <p className="text-lg text-accent-11">
@@ -321,7 +318,6 @@ export default function NowPage() {
             </div>
           )}
         </div>
-      </div>
-    </>
+    </div>
   );
 }
