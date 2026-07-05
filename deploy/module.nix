@@ -29,6 +29,12 @@ in
       default = 30100;
       description = "NodePort exposed by the frontend Kubernetes service";
     };
+
+    stagingNodePort = lib.mkOption {
+      type = lib.types.port;
+      default = 30101;
+      description = "NodePort exposed by the frontend staging Kubernetes service";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -65,7 +71,7 @@ in
         '';
 
         locations."/" = {
-          proxyPass = "http://127.0.0.1:30101";
+          proxyPass = "http://127.0.0.1:${toString cfg.stagingNodePort}";
           proxyWebsockets = true;
         };
       });
@@ -145,7 +151,7 @@ in
               }
               {
                 name = "service.nodePort";
-                value = "30101";
+                value = toString cfg.stagingNodePort;
               }
               {
                 name = "runtime.graphqlBackend";
