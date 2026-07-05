@@ -16,6 +16,12 @@ in
       description = "Rozpisovnik frontend domain";
     };
 
+    stagingDomains = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Rozpisovnik frontend staging domains";
+    };
+
     ssl = lib.mkEnableOption "Rozpisovnik frontend enable SSL";
 
     nodePort = lib.mkOption {
@@ -46,6 +52,20 @@ in
 
         locations."/" = {
           proxyPass = "http://127.0.0.1:${toString cfg.nodePort}";
+          proxyWebsockets = true;
+        };
+      }) // lib.genAttrs cfg.stagingDomains (domain: {
+        enableACME = cfg.ssl;
+        forceSSL = cfg.ssl;
+
+        extraConfig = ''
+          ignore_invalid_headers off;
+          client_max_body_size 0;
+          proxy_buffering off;
+        '';
+
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:30101";
           proxyWebsockets = true;
         };
       });
@@ -95,6 +115,55 @@ in
           destination = {
             server = "https://kubernetes.default.svc";
             namespace = "sirimbo";
+          };
+          syncPolicy.syncOptions = [
+            "CreateNamespace=true"
+          ];
+        };
+      }
+      {
+        apiVersion = "argoproj.io/v1alpha1";
+        kind = "Application";
+        metadata = {
+          name = "sirimbo-staging";
+          namespace = "argocd";
+        };
+        spec = {
+          project = "default";
+          source = {
+            repoURL = "https://github.com/zarybnicky/Sirimbo";
+            targetRevision = "staging";
+            path = "deploy/chart";
+            helm.parameters = [
+              {
+                name = "image.repository";
+                value = "127.0.0.1:5000/sirimbo";
+              }
+              {
+                name = "image.tag";
+                value = "$ARGOCD_APP_REVISION";
+              }
+              {
+                name = "service.nodePort";
+                value = "30101";
+              }
+              {
+                name = "runtime.graphqlBackend";
+                value = "https://api.rozpisovnik.cz";
+              }
+              {
+                name = "runtime.sentryDsn";
+                value = "https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825";
+              }
+              {
+                name = "runtime.sentryEnvironment";
+                value = "staging";
+              }
+            ];
+          };
+          destination = {
+            server = "https://kubernetes.default.svc";
+            namespace = "sirimbo-staging";
           };
           syncPolicy.syncOptions = [
             "CreateNamespace=true"
