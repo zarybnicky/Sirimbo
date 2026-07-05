@@ -1,0 +1,67 @@
+name: deploy-staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sirimbo-staging
+  cancel-in-progress: false
+
+env:
+  NEXT_PUBLIC_GRAPHQL_BACKEND: https://api.rozpisovnik.cz
+  NEXT_PUBLIC_SENTRY_DSN: https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825
+  NEXT_PUBLIC_SENTRY_ENVIRONMENT: staging
+
+jobs:
+  deploy:
+    runs-on:
+      - self-hosted
+      - deploy
+      - sirimbo
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push image to local registry
+        run: |
+          set -euo pipefail
+
+          cache_ref="10.0.2.2:5000/sirimbo:buildcache-${GITHUB_REF_NAME//\//-}"
+
+          cat >/tmp/buildkitd.toml <<'EOF'
+          [registry."10.0.2.2:5000"]
+          http = true
+          insecure = true
+          EOF
+          if ! docker buildx inspect ci >/dev/null 2>&1; then
+            docker buildx create --name ci --driver docker-container --driver-opt network=host --config /tmp/buildkitd.toml
+          fi
+
+          docker buildx use ci
+          docker buildx inspect --bootstrap
+          docker buildx build \
+            --file deploy/Dockerfile \
+            --target runner \
+            --platform linux/amd64 \
+            --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND="${NEXT_PUBLIC_GRAPHQL_BACKEND}" \
+            --build-arg NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
+            --build-arg NEXT_PUBLIC_SENTRY_ENVIRONMENT="${NEXT_PUBLIC_SENTRY_ENVIRONMENT}" \
+            --build-arg SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}" \
+            --build-arg SENTRY_RELEASE="${GITHUB_SHA}" \
+            --build-arg GITHUB_SHA="${GITHUB_SHA}" \
+            --cache-from "type=registry,ref=${cache_ref}" \
+            --cache-to "type=registry,ref=${cache_ref},mode=max" \
+            --tag "10.0.2.2:5000/sirimbo:${GITHUB_SHA}" \
+            --push \
+            .
+
+      - name: Deploy exact Git SHA with Argo
+        run: |
+          set -euo pipefail
+          argocd --core app sync sirimbo-staging --timeout 600 --revision "${GITHUB_SHA}" --prune
+          argocd --core app wait sirimbo-staging --timeout 600 --sync --health
