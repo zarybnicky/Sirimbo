@@ -1,7 +1,7 @@
 import { PageHeader } from '@/ui/TitleBar';
 import { Layout } from '@/ui/Layout';
 import React from 'react';
-import { StringParam, useQueryParam } from 'use-query-params';
+import { parseAsString, useQueryState } from 'nuqs';
 import { TabMenu } from '@/ui/TabMenu';
 import { useClient, useQuery } from 'urql';
 import {
@@ -37,7 +37,10 @@ const TURNOVER_PAGE_SIZE = 50;
 const DEPOSIT_PAGE_SIZE = 50;
 
 export default function PaymentsPage() {
-  const [tab, setTab] = useQueryParam('tab', StringParam);
+  const [tab, setTab] = useQueryState(
+    'tab',
+    parseAsString.withOptions({ history: 'push' }),
+  );
 
   const tabs = [
     {

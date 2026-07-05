@@ -7,15 +7,15 @@ import { CompetitionWeekPanel } from '@/ui/Competitions';
 import { TabMenu } from '@/ui/TabMenu';
 import { NextSeo } from 'next-seo';
 import { Layout } from '@/ui/Layout';
-import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { parseAsString, useQueryState } from 'nuqs';
 
 export default function DashboardPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const [variant, setVariant] = useQueryParam(
+  const [variant, setVariant] = useQueryState(
     'tab',
-    withDefault(StringParam, 'myLessons'),
+    parseAsString.withDefault('myLessons').withOptions({ history: 'push' }),
   );
 
   const tabs = React.useMemo(

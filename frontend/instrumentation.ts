@@ -1,7 +1,11 @@
 import { init, captureRequestError } from '@sentry/nextjs';
+import { z } from 'zod';
+import { cs } from 'zod/locales';
 
 // eslint-disable-next-line import-x/no-unused-modules
 export async function register() {
+  z.config(cs());
+
   if (process.env.NODE_ENV === "production") {
     const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
     init({

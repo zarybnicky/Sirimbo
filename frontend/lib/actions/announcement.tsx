@@ -6,6 +6,7 @@ import {
   ToggleAnnouncementStickyDocument,
   ToggleAnnouncementVisibleDocument,
 } from '@/graphql/Announcement';
+import { route } from 'nextjs-routes';
 
 export const announcementActions = defineActions<AnnouncementFragment>()([
   {
@@ -43,9 +44,9 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     confirm: ({ item }) => ({
       description: `Opravdu chcete smazat příspěvek "${item.title}"?`,
     }),
-    execute: async ({ item, mutate, router }) => {
-      await mutate(DeleteAnnouncementDocument, { id: item.id });
-      if (router.pathname === '/nastenka/[id]') {
+    execute: async ({ item: { id }, mutate, router }) => {
+      await mutate(DeleteAnnouncementDocument, { id });
+      if (router.pathname === route({ pathname: '/nastenka/[id]', query: { id } })) {
         await router.replace('/nastenka');
       }
     },

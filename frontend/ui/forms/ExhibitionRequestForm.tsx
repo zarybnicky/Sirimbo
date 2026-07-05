@@ -1,3 +1,5 @@
+'use client';
+
 import { SubmitFormDocument } from '@/graphql/Crm';
 import { RadioGroup } from '@/ui/fields/RadioGroup';
 import { CheckboxElement } from '@/ui/fields/checkbox';

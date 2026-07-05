@@ -8,9 +8,9 @@ import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { useAuth } from '@/ui/use-auth';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
+import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
 import { useQuery } from 'urql';
-import { StringParam, useQueryParam } from 'use-query-params';
 import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
 import { LockKeyhole } from 'lucide-react';
@@ -26,7 +26,10 @@ export default function ProfilePage() {
     query: MyMembershipApplicationsDocument,
     pause: !enableRegistration,
   });
-  const [variant, setVariant] = useQueryParam('person', StringParam);
+  const [variant, setVariant] = useQueryState(
+    'person',
+    parseAsString.withOptions({ history: 'push' }),
+  );
   const actions = useActions(
     [
       {

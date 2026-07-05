@@ -1,13 +1,15 @@
-import Image from 'next/image';
-import * as React from 'react';
-import { Layout } from '@/ui/Layout';
+/* eslint-disable import-x/no-unused-modules */
 import { PageHeader } from '@/ui/TitleBar';
-import { NextSeo } from 'next-seo';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+
+export const metadata: Metadata = {
+  title: 'Olymp v tanečním světě',
+};
 
 export default function OKlubuPage() {
   return (
-    <Layout showTopMenu>
-      <NextSeo title="Olymp v tanečním světě" />
+    <>
       <PageHeader title="Olymp v tanečním světě" />
 
       <div className="prose prose-accent mb-8">
@@ -38,6 +40,6 @@ export default function OKlubuPage() {
           sizes="1256px"
         />
       </div>
-    </Layout>
+    </>
   );
 }

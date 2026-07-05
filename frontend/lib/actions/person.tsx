@@ -10,6 +10,7 @@ import {
   CreateTenantTrainerDocument,
 } from '@/graphql/Memberships';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
+import { route } from 'nextjs-routes';
 
 export const personActions = defineActions<PersonFragment>()([
   {
@@ -91,9 +92,9 @@ export const personActions = defineActions<PersonFragment>()([
     visible: ({ auth, item }) => auth.isAdmin && !item.externalIds,
     confirm: ({ item }) =>
       `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!`,
-    execute: async ({ item, mutate, router }) => {
-      await mutate(DeletePersonDocument, { id: item.id });
-      if (router.pathname === '/clenove/[id]') {
+    execute: async ({ item: { id }, mutate, router }) => {
+      await mutate(DeletePersonDocument, { id });
+      if (router.pathname === route({ pathname: '/clenove/[id]', query: { id } })) {
         await router.replace('/clenove');
       }
     },

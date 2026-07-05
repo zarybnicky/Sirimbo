@@ -1,6 +1,7 @@
 /* eslint-disable import-x/no-unused-modules, tailwindcss/no-custom-classname */
 import { getRequestTenant } from '@/lib/server/tenant';
 import type { Metadata, Viewport } from 'next';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
 
 import 'nprogress/nprogress.css';
@@ -68,7 +69,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang="cs" className={`tenant-${tenant.id}`}>
-      <body className={`tenant-${tenant.id}`}>{children}</body>
+      <body className={`tenant-${tenant.id}`}>
+        <NuqsAdapter>{children}</NuqsAdapter>
+      </body>
     </html>
   );
 }

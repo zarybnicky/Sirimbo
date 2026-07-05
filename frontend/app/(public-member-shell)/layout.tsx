@@ -1,11 +1,15 @@
 /* eslint-disable import-x/no-unused-modules */
 import { getRequestTenant } from '@/lib/server/tenant';
 import { getTenantUi } from '@/tenant/ui';
-import { Providers } from '@/ui/Providers';
 import { Layout } from '@/ui/Layout';
+import { Providers } from '@/ui/Providers';
 import type { ReactNode } from 'react';
 
-export default async function PublicLayout({ children }: { children: ReactNode }) {
+export default async function PublicMemberShellLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const tenant = await getRequestTenant();
   const ui = getTenantUi(tenant.id);
 
@@ -13,7 +17,7 @@ export default async function PublicLayout({ children }: { children: ReactNode }
     <Providers tenantId={String(tenant.id)}>
       <Layout
         includeTenantSeo={false}
-        showTopMenu
+        hideTopMenuIfLoggedIn
         desktopLogo={<ui.DesktopLogo />}
         mobileLogo={<ui.MobileLogo />}
         sidebarLogo={<ui.SidebarLogo />}

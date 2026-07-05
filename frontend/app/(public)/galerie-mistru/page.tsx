@@ -1,13 +1,15 @@
-import { PageHeader } from '@/ui/TitleBar';
+/* eslint-disable import-x/no-unused-modules */
 import { ServiceCard } from '@/ui/ServiceCard';
-import * as React from 'react';
-import { Layout } from '@/ui/Layout';
-import { NextSeo } from 'next-seo';
+import { PageHeader } from '@/ui/TitleBar';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Galerie mistrů',
+};
 
 export default function GalerieMistruPage() {
   return (
-    <Layout showTopMenu>
-      <NextSeo title="Galerie mistrů" />
+    <>
       <PageHeader title="Galerie mistrů" />
 
       <div className="col-popout">
@@ -21,7 +23,7 @@ export default function GalerieMistruPage() {
       <div className="my-16 prose prose-accent text-center">
         <h1>Staň se dalším Mistrem i ty!</h1>
       </div>
-    </Layout>
+    </>
   );
 }
 

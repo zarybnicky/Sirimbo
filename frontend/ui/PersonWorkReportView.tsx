@@ -5,9 +5,8 @@ import {
 } from '@/graphql/Event';
 import { dateTimeFormatter, formatDefaultEventName } from '@/ui/format';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { parseAsString, useQueryStates } from 'nuqs';
 import React from 'react';
-import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { useQuery } from 'urql';
 
 type EventInstance = NonNullable<EventInstanceRangeQuery['list']>[number];
@@ -56,7 +55,6 @@ const toMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
 export function PersonWorkReportView({ id }: { id: string }) {
-  const router = useRouter();
   const reportNow = React.useMemo(() => new Date(), []);
   const currentMonth = React.useMemo(
     () => new Date(reportNow.getFullYear(), reportNow.getMonth(), 1),
@@ -65,9 +63,16 @@ export function PersonWorkReportView({ id }: { id: string }) {
   const currentMonthKey = `${currentMonth.getFullYear()}-${String(
     currentMonth.getMonth() + 1,
   ).padStart(2, '0')}`;
-  const [selectedMonthKey] = useQueryParam(
-    'workReportMonth',
-    withDefault(StringParam, currentMonthKey),
+  const workReportQueryParsers = React.useMemo(
+    () => ({
+      tab: parseAsString,
+      workReportMonth: parseAsString.withDefault(currentMonthKey),
+    }),
+    [currentMonthKey],
+  );
+  const [{ workReportMonth: selectedMonthKey }, setWorkReportQuery] = useQueryStates(
+    workReportQueryParsers,
+    { history: 'push' },
   );
 
   const months = React.useMemo<MonthReport[]>(() => {
@@ -200,18 +205,18 @@ export function PersonWorkReportView({ id }: { id: string }) {
                   className={month.key === selectedMonth?.key ? 'bg-accent-3/50' : ''}
                 >
                   <td>
-                    <Link
-                      href={{
-                        pathname: router.pathname,
-                        query: {
-                          ...router.query,
+                    <button
+                      type="button"
+                      className="text-left text-accent-11 hover:underline"
+                      onClick={() => {
+                        void setWorkReportQuery({
                           tab: 'workReport',
                           workReportMonth: month.key,
-                        },
+                        });
                       }}
                     >
                       {month.label}
-                    </Link>
+                    </button>
                   </td>
                   <td className="whitespace-nowrap text-right tabular-nums">
                     {numberFormatter.format(month.groupRows.length)} /{' '}

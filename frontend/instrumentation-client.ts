@@ -1,6 +1,10 @@
 import { init, captureRouterTransitionStart } from '@sentry/nextjs';
+import { z } from 'zod';
+import { cs } from 'zod/locales';
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
+
+z.config(cs());
 
 if (process.env.NODE_ENV === "production") {
   init({

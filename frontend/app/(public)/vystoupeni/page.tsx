@@ -1,13 +1,16 @@
+/* eslint-disable import-x/no-unused-modules */
+import LiteYouTubeEmbed from '@/ui/LiteYouTubeEmbed';
 import { ExhibitionRequestForm } from '@/ui/forms/ExhibitionRequestForm';
 import { PageHeader } from '@/ui/TitleBar';
-import { Layout } from '@/ui/Layout';
-import LiteYouTubeEmbed from 'react-lite-youtube-embed';
-import { NextSeo } from 'next-seo';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Taneční vystoupení',
+};
 
 export default function Vystoupeni() {
   return (
-    <Layout showTopMenu>
-      <NextSeo title="Taneční vystoupení" />
+    <>
       <PageHeader title="Taneční vystoupení" />
 
       <div>
@@ -44,6 +47,6 @@ export default function Vystoupeni() {
       <div className="mt-8 mb-16">
         <ExhibitionRequestForm />
       </div>
-    </Layout>
+    </>
   );
 }

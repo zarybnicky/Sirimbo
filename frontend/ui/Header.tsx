@@ -1,12 +1,20 @@
-import { topMenu } from '@/lib/use-menu';
+'use client';
+
+import { cn } from '@/lib/cn';
+import { getHrefs, topMenu, type MenuStructItem } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/catalog';
 import { AuthButton } from '@/ui/AuthButton';
-import { DesktopMenuItem } from '@/ui/DesktopMenuItem';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLink,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
-import { Menu as MenuIcon, User as Account } from 'lucide-react';
+import { ChevronDown, Menu as MenuIcon, User as Account } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import React, { useMemo } from 'react';
 import { useAtomValue } from 'jotai';
 import { tenantIdAtom } from './state/auth';
@@ -15,10 +23,20 @@ type Props = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showTopMenu?: boolean;
+  desktopLogo?: React.ReactNode;
+  mobileLogo?: React.ReactNode;
+  socialIcons?: React.ReactNode;
 };
 
-export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
-  const { pathname } = useRouter();
+export function Header({
+  isOpen,
+  setIsOpen,
+  showTopMenu,
+  desktopLogo,
+  mobileLogo,
+  socialIcons,
+}: Props) {
+  const pathname = usePathname();
   const auth = useAuth();
   const tenantId = useAtomValue(tenantIdAtom);
   const [isMounted, setIsMounted] = React.useState(false);
@@ -36,12 +54,12 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
-            <DesktopLogo />
+            {desktopLogo ?? <DesktopLogo />}
             {topMenu.map((x) => (
-              <DesktopMenuItem key={x.title} item={x} />
+              <DesktopMenuItem key={x.title} item={x} pathname={pathname} />
             ))}
             <AuthButton />
-            <SocialIcons />
+            {socialIcons ?? <SocialIcons />}
           </div>
         )}
 
@@ -54,7 +72,7 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
           </button>
 
           <div className="grow flex items-center">
-            <MobileLogo />
+            {mobileLogo ?? <MobileLogo />}
           </div>
 
           <Link
@@ -66,5 +84,51 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
         </div>
       </div>
     </div>
+  );
+}
+
+function DesktopMenuItem({
+  item,
+  pathname,
+}: {
+  item: MenuStructItem;
+  pathname: string;
+}) {
+  const inPath = !!getHrefs(item).some((x) => {
+    const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
+    if (!y) return false;
+    return y === '/' ? pathname === '/' : pathname.startsWith(y);
+  });
+
+  const classes = cn(
+    'flex gap-1 rounded-none transition-colors',
+    'uppercase text-sm font-bold justify-center items-center',
+    'hover:text-white hover:border-b-[3px] border-white data-[state=open]:border-b-[3px]',
+    inPath
+      ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide -mb-px'
+      : 'text-[#f3f3f3] drop-shadow',
+  );
+
+  if (item.type === 'link') {
+    return (
+      <Link href={item.href} className={`${classes} ${item.className}`}>
+        {item.title}
+      </Link>
+    );
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className={`block ${classes}`}>
+        {item.title} <ChevronDown className="size-4" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="center">
+        {item.children.map((child) => (
+          <DropdownMenuLink key={JSON.stringify(child.href)} href={child.href}>
+            {child.title}
+          </DropdownMenuLink>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

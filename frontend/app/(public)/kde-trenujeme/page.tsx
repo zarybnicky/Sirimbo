@@ -1,14 +1,16 @@
+/* eslint-disable import-x/no-unused-modules */
 import { LocationCard } from '@/ui/LocationCard';
-import * as React from 'react';
-import Image from 'next/image';
-import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { NextSeo } from 'next-seo';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+
+export const metadata: Metadata = {
+  title: 'Kde trénujeme',
+};
 
 export default function LocationsPage() {
   return (
-    <Layout showTopMenu>
-      <NextSeo title="Kde trénujeme" />
+    <>
       <PageHeader title="Kde trénujeme" />
 
       <div className="mt-8 mb-16 space-y-4">
@@ -55,6 +57,6 @@ export default function LocationsPage() {
           />
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

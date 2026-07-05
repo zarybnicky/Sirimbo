@@ -24,7 +24,9 @@ import { countries } from '@/lib/countries';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { FieldLabel } from '@/ui/form';
 import { ChevronDown, Plus } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { useRouter as useCompatRouter } from 'next/compat/router';
+import { useRouter as useAppRouter } from 'next/navigation';
+import { route } from 'nextjs-routes';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
@@ -90,7 +92,8 @@ const Form = z.object({
 
 export function CreatePersonDialog() {
   const [open, setOpen] = React.useState<'existing' | 'new' | null>(null);
-  const router = useRouter();
+  const pagesRouter = useCompatRouter();
+  const appRouter = useAppRouter();
   const create = useMutation(CreatePersonDocument)[1];
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
 
@@ -212,10 +215,11 @@ export function CreatePersonDialog() {
       });
       toast.success('Přidáno.');
       setOpen(null);
-      await router.replace({
-        pathname: '/clenove/[id]',
-        query: { id },
-      });
+      if (pagesRouter) {
+        await pagesRouter.replace({pathname: '/clenove/[id]', query: { id } });
+      } else {
+        appRouter.replace(route({ pathname: '/clenove/[id]', query: { id } }));
+      }
     }
   });
 

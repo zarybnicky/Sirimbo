@@ -7,14 +7,13 @@ import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
 import { createStore, Provider } from 'jotai';
-import NextAdapterPages from 'next-query-params/pages';
 import { withUrqlClient } from 'next-urql';
 import type { AppProps, NextWebVitalsMetric } from 'next/app';
 import Router from 'next/router';
 import { event } from 'nextjs-google-analytics';
 import NProgress from 'nprogress';
+import { NuqsAdapter } from 'nuqs/adapters/next/pages';
 import { ToastContainer } from 'react-toastify';
-import { QueryParamProvider } from 'use-query-params';
 import { z } from 'zod';
 import { cs } from 'zod/locales';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
@@ -74,10 +73,7 @@ function App({
   }, []);
 
   return (
-    <QueryParamProvider
-      adapter={NextAdapterPages}
-      options={{ removeDefaultsFromUrl: true }}
-    >
+    <NuqsAdapter>
       <Provider store={storeRef.current}>
         <ConfirmProvider>
           <Tracking />
@@ -89,7 +85,7 @@ function App({
           <ToastContainer limit={3} />
         </ConfirmProvider>
       </Provider>
-    </QueryParamProvider>
+    </NuqsAdapter>
   );
 }
 

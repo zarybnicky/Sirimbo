@@ -1,13 +1,15 @@
+/* eslint-disable import-x/no-unused-modules */
 import { PageHeader } from '@/ui/TitleBar';
+import type { Metadata } from 'next';
 import Image from 'next/image';
-import * as React from 'react';
-import { Layout } from '@/ui/Layout';
-import { NextSeo } from 'next-seo';
+
+export const metadata: Metadata = {
+  title: 'Členství v Olympu',
+};
 
 export default function VyhodyClenstvi() {
   return (
-    <Layout showTopMenu>
-      <NextSeo title="Členství v Olympu" />
+    <>
       <PageHeader title="Členství v Olympu" />
 
       <div className=" prose prose-accent mb-8">
@@ -41,6 +43,6 @@ export default function VyhodyClenstvi() {
           sizes="100vw"
         />
       </div>
-    </Layout>
+    </>
   );
 }

@@ -2,15 +2,27 @@ import React, { type ComponentType, useMemo } from 'react';
 import type { AuthState } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';
-import { NextRouter, useRouter } from 'next/router';
+import { useRouter as useCompatRouter } from 'next/compat/router';
+import { usePathname, useRouter as useAppRouter } from 'next/navigation';
+import { route } from 'nextjs-routes';
+import type { Route, RouteLiteral } from 'nextjs-routes';
 import type { ConfirmOptions } from '@/ui/Confirm';
 import { DialogContent } from '@/ui/dialog';
 import type { LinkProps } from 'next/link';
 
+type StaticRoute = Exclude<Route, { query: unknown }>['pathname'];
+type ActionHref = Route | StaticRoute | RouteLiteral;
+
+export type ActionRouter = {
+  pathname: string;
+  push: (href: ActionHref) => Promise<boolean> | void;
+  replace: (href: ActionHref) => Promise<boolean> | void;
+};
+
 export type ActionContext<T> = {
   auth: AuthState;
   client: Client;
-  router: NextRouter;
+  router: ActionRouter;
   mutate: <D, V extends Record<string, unknown>>(
     doc: TypedDocumentNode<D, V>,
     vars: V,
@@ -122,12 +134,34 @@ function forItem<T, const A extends readonly Action<T>[]>(
   return actions.filter((a) => resolve(a.visible, ctx)).map((a) => resolveOne(a, ctx));
 }
 
-// — Hooks —————————————————————————————————————————————————————————————
+function useActionRouter(): ActionRouter {
+  const router = useCompatRouter();
+  const appRouter = useAppRouter();
+  const pathname = usePathname();
+  const asPath = router?.asPath;
+  const isReady = router?.isReady;
+
+  return useMemo(() => {
+    if (router) {
+      return {
+        pathname: isReady ? (asPath ?? '').split(/[?#]/, 1)[0] || '/' : router.pathname,
+        push: (href) => router.push(href),
+        replace: (href) => router.replace(href),
+      };
+    }
+
+    return {
+      pathname: pathname,
+      push: (href) => appRouter.push(typeof href === 'string' ? href : route(href)),
+      replace: (href) => appRouter.replace(typeof href === 'string' ? href : route(href)),
+    };
+  }, [pathname, appRouter, asPath, isReady, router]);
+}
 
 function useBase() {
   const auth = useAuth();
   const client = useClient();
-  const router = useRouter();
+  const router = useActionRouter();
   return useMemo(() => {
     async function mutate<D, V extends Record<string, unknown>>(
       doc: TypedDocumentNode<D, V>,

@@ -5,7 +5,7 @@ import { formatCstsClass, getBestCstsProgress } from '@/ui/csts';
 import { useQuery } from 'urql';
 import { useAuth } from '@/ui/use-auth';
 import { formatAgeGroup } from '@/ui/format';
-import { StringParam, useQueryParam } from 'use-query-params';
+import { parseAsString, useQueryState } from 'nuqs';
 import { TabMenu } from '@/ui/TabMenu';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
 import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
@@ -26,7 +26,10 @@ export function PersonView({ id }: { id: string }) {
     variables: { id },
     pause: !id,
   });
-  const [tab, setTab] = useQueryParam('tab', StringParam);
+  const [tab, setTab] = useQueryState(
+    'tab',
+    parseAsString.withOptions({ history: 'push' }),
+  );
 
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(id);
   const item = data?.person;

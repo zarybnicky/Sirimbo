@@ -21,9 +21,9 @@ import {
 import { useAuth } from '@/ui/use-auth';
 import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
 import Link from 'next/link';
+import { parseAsString, useQueryState } from 'nuqs';
 import * as React from 'react';
 import { useQuery } from 'urql';
-import { StringParam, useQueryParam } from 'use-query-params';
 import { isTruthy } from '@/lib/truthyFilter';
 import { useActionMap, useActions } from '@/lib/actions';
 import { eventActions, eventExternalRegistrationActions } from '@/lib/actions/event';
@@ -39,7 +39,10 @@ const labels: { [key in AttendanceType]: LucideIcon } = {
 
 export function EventView({ event }: { event: EventFullFragment }) {
   const auth = useAuth();
-  const [variant, setVariant] = useQueryParam('tab', StringParam);
+  const [variant, setVariant] = useQueryState(
+    'tab',
+    parseAsString.withOptions({ history: 'push' }),
+  );
   const actions = useActions(eventActions, event);
 
   const tabs = React.useMemo(() => {

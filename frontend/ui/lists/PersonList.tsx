@@ -12,7 +12,7 @@ import { useSessionStorage } from '@/lib/use-local-storage';
 import { cn } from '@/lib/cn';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
-import { StringParam, useQueryParam } from 'use-query-params';
+import { useQueryState } from 'nuqs';
 import { exportNsa } from '../reports/export-nsa';
 import { CohortListDocument } from '@/graphql/Cohorts';
 
@@ -42,7 +42,7 @@ export function PersonList() {
     ],
     [cohorts],
   );
-  const [tab] = useQueryParam('tab', StringParam);
+  const [tab] = useQueryState('tab');
 
   const [{ data }] = useQuery({
     query: PersonListDocument,

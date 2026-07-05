@@ -1,13 +1,16 @@
-import { PageHeader } from '@/ui/TitleBar';
-import Image from 'next/image';
-import { Layout } from '@/ui/Layout';
+/* eslint-disable import-x/no-unused-modules */
 import { cn } from '@/lib/cn';
-import { NextSeo } from 'next-seo';
+import { PageHeader } from '@/ui/TitleBar';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+
+export const metadata: Metadata = {
+  title: 'Galerie',
+};
 
 export default function GalleryPage() {
   return (
-    <Layout showTopMenu>
-      <NextSeo title="Galerie" />
+    <>
       <PageHeader title="Galerie" />
 
       <div className="col-feature my-16 grid gap-16 px-4 md:grid-cols-2">
@@ -57,6 +60,6 @@ export default function GalleryPage() {
           </a>
         ))}
       </div>
-    </Layout>
+    </>
   );
 }

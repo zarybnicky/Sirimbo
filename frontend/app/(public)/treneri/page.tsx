@@ -1,14 +1,17 @@
-import { PageHeader } from '@/ui/TitleBar';
-import { Layout } from '@/ui/Layout';
-import * as React from 'react';
+/* eslint-disable import-x/no-unused-modules */
 import { typographyCls } from '@/ui/style';
+import { PageHeader } from '@/ui/TitleBar';
+import type { Metadata } from 'next';
 import Image from 'next/image';
-import { NextSeo } from 'next-seo';
+import type { ReactNode } from 'react';
+
+export const metadata: Metadata = {
+  title: 'Naši trenéři',
+};
 
 export default function TrainersPage() {
   return (
-    <Layout showTopMenu>
-      <NextSeo title="Naši trenéři" />
+    <>
       <PageHeader title="Naši trenéři" />
 
       <div className="mb-12">
@@ -49,14 +52,14 @@ export default function TrainersPage() {
           {item.children}
         </TrainerCard>
       ))}
-    </Layout>
+    </>
   );
 }
 
 type TrainerCardProps = {
   image?: string;
   name: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 function TrainerCard(props: TrainerCardProps) {

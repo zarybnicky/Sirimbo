@@ -1,12 +1,14 @@
-import * as React from 'react';
+/* eslint-disable import-x/no-unused-modules */
 import { PageHeader } from '@/ui/TitleBar';
-import { Layout } from '@/ui/Layout';
-import { NextSeo } from 'next-seo';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Ochrana osobních údajů',
+};
 
 export default function OchranaOsobnichUdajuPage() {
   return (
-    <Layout showTopMenu>
-      <NextSeo title="Ochrana osobních údajů" />
+    <>
       <PageHeader title="Ochrana osobních údajů" />
 
       <div className="prose prose-accent">
@@ -170,6 +172,6 @@ export default function OchranaOsobnichUdajuPage() {
         </p>
         <p>Tyto podmínky nabývají účinnosti dnem 1. 9. 2020.</p>
       </div>
-    </Layout>
+    </>
   );
 }

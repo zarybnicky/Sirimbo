@@ -9,7 +9,7 @@ import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
 import { setNewTenant, storeRef } from '@/ui/state/auth';
-import { Tracking } from '@/ui/Tracking.app';
+import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout } from '@/ui/Layout';
-import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { parseAsString, useQueryState } from 'nuqs';
 import { SubmitButton } from '@/ui/submit';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
@@ -30,7 +30,7 @@ export default function InvitationPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const [token] = useQueryParam('token', withDefault(StringParam, ''));
+  const [token] = useQueryState('token', parseAsString.withDefault(''));
   const { setValue, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });

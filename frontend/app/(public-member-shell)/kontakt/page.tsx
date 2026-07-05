@@ -1,11 +1,14 @@
+/* eslint-disable import-x/no-unused-modules */
 import { PageHeader } from '@/ui/TitleBar';
-import { Layout } from '@/ui/Layout';
-import { NextSeo } from 'next-seo';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Kontakt',
+};
 
 export default function ContactPage() {
   return (
-    <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title="Kontakt" />
+    <>
       <PageHeader title="Kontakt" />
       <div className="prose prose-accent">
         <h2>Fakturační údaje:</h2>
@@ -104,6 +107,6 @@ export default function ContactPage() {
           </p>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

@@ -1,14 +1,16 @@
-import { PageHeader } from '@/ui/TitleBar';
-import Image from 'next/image';
-import * as React from 'react';
-import { Layout } from '@/ui/Layout';
+/* eslint-disable import-x/no-unused-modules */
 import { buttonCls } from '@/ui/style';
-import { NextSeo } from 'next-seo';
+import { PageHeader } from '@/ui/TitleBar';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+
+export const metadata: Metadata = {
+  title: 'Olymp Dance',
+};
 
 export default function SkolniKrouzkyPage() {
   return (
-    <Layout showTopMenu>
-      <NextSeo title="Olymp Dance" />
+    <>
       <PageHeader title="Olymp Dance" />
 
       <div className="mt-6 prose prose-accent">
@@ -57,6 +59,6 @@ export default function SkolniKrouzkyPage() {
           sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
-    </Layout>
+    </>
   );
 }

@@ -1,25 +1,34 @@
+'use client';
+
 import { buildId } from '@/lib/build-id';
-import { type MenuStructItem, topMenu, useMemberMenu } from '@/lib/use-menu';
+import {
+  getHrefs,
+  type MenuLink,
+  type MenuStructItem,
+  topMenu,
+  useMemberMenu,
+} from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/catalog';
+import { serverTenantCatalog } from '@/tenant/catalog-server';
 import { cn } from '@/lib/cn';
 import { authAtom, storeRef, tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
-import { SidebarLink, SidebarSection } from '@/ui/SidebarLink';
-import { TenantSelect } from '@/ui/TenantSelect';
 import { useAuth } from '@/ui/use-auth';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 type SidebarProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showTopMenu?: boolean;
+  sidebarLogo?: React.ReactNode;
 };
 
-export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
+export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: SidebarProps) {
   const router = useRouter();
-  const { pathname } = router;
+  const pathname = usePathname();
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
   const tenantId = useAtomValue(tenantIdAtom);
@@ -39,10 +48,16 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   }, [newCopyrightLine]);
 
   React.useEffect(() => {
+    if (!router) return;
     const track = () => setIsOpen(false);
     router.events.on('routeChangeStart', track);
     return () => router.events.off('routeChangeStart', track);
-  }, [router.events, setIsOpen]);
+  }, [router, setIsOpen]);
+
+  React.useEffect(() => {
+    if (router) return;
+    setIsOpen(false);
+  }, [pathname, router, setIsOpen]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -82,7 +97,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           'overflow-y-auto scrollbar max-h-screen min-h-screen',
         )}
       >
-        {!showTopMenu && <SidebarLogo />}
+        {!showTopMenu && (sidebarLogo ?? <SidebarLogo />)}
         <div className="space-y-1 pt-3 mr-1">
           {auth.user && isMounted ? (
             <>
@@ -156,5 +171,79 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
         </div>
       </nav>
     </>
+  );
+}
+
+type SidebarLinkProps = {
+  item: MenuLink;
+  pathname: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+};
+
+function SidebarLink({ item, pathname, onClick }: SidebarLinkProps) {
+  const inPath = !!getHrefs(item).some((x) => {
+    const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
+    if (!y) return false;
+    return y === '/' ? false : pathname.startsWith(y);
+  });
+
+  return (
+    <Link
+      href={item.href}
+      onClick={onClick}
+      className={cn(
+        'rounded-2xl px-3 py-1.5',
+        'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
+        'tracking-wider text-sm',
+        inPath ? 'underline font-bold bg-neutral-11 text-white lg:bg-accent-10' : '',
+        item.className,
+      )}
+    >
+      {item.title}
+    </Link>
+  );
+}
+
+function SidebarSection({
+  item,
+  pathname,
+}: {
+  item: MenuStructItem;
+  pathname: string;
+}) {
+  return item.type === 'link' ? (
+    <SidebarLink item={item} pathname={pathname} />
+  ) : item.children.length > 0 ? (
+    <>
+      <div key={item.title} className="ml-5">
+        <div className="font-bold text-xs uppercase grow mt-4">{item.title}</div>
+      </div>
+      <div className="list-none grid gap-0.5 pb-2">
+        {item.children.map((y) => (
+          <SidebarLink key={y.title} item={y} pathname={pathname} />
+        ))}
+      </div>
+    </>
+  ) : null;
+}
+
+function TenantSelect() {
+  const [tenantId, setTenantId] = useAtom(tenantIdAtom);
+  const onChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      storeRef.resetUrqlClient();
+      setTenantId(e.currentTarget.value);
+    },
+    [setTenantId],
+  );
+
+  return (
+    <select className="text-neutral-12" onChange={onChange} value={tenantId}>
+      {Object.values(serverTenantCatalog).map((x) => (
+        <option key={x.id} value={x.id}>
+          {x.name}
+        </option>
+      ))}
+    </select>
   );
 }

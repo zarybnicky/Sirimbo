@@ -5,9 +5,9 @@ import { QuickEventCreateForm } from '@/ui/event-form/QuickEventForms';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom } from 'jotai';
+import { parseAsBoolean, parseAsStringLiteral, useQueryState } from 'nuqs';
 import React from 'react';
 import { useMutation } from 'urql';
-import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params';
 import {
   dragListenersAtom,
   groupByAtom,
@@ -37,13 +37,21 @@ import {
 
 const emptyArray: readonly [] = [];
 const preventDefault = (e: Event) => e.preventDefault();
+const calendarViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
 
 export function Calendar() {
   const auth = useAuth();
-  const [onlyMine, setOnlyMine] = useQueryParam('my', withDefault(BooleanParam, false));
-  const [viewInput, setView] = useQueryParam('v', withDefault(StringParam, 'agenda'));
-  const view =
-    CalendarViews[(viewInput as CalendarViewKey) ?? ''] ?? CalendarViews.agenda;
+  const [onlyMine, setOnlyMine] = useQueryState(
+    'my',
+    parseAsBoolean.withDefault(false).withOptions({ history: 'push' }),
+  );
+  const [viewInput, setView] = useQueryState(
+    'v',
+    parseAsStringLiteral(calendarViewKeys)
+      .withDefault('agenda')
+      .withOptions({ history: 'push' }),
+  );
+  const view = CalendarViews[viewInput];
   const [date, setDate] = React.useState(new Date());
 
   const isDragging = useAtomValue(isDraggingAtom);
