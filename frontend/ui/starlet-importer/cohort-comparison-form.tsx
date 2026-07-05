@@ -91,9 +91,7 @@ function compare(
           <ul className="my-0">
             <li className="mt-0">
               ✅{' '}
-              <Link
-                href={{ pathname: '/treninkove-skupiny/[id]', query: { id: cohort.id } }}
-              >
+              <Link href={`/treninkove-skupiny/${cohort.id}`}>
                 {cohort.name}
               </Link>
               {!cohort.externalIds?.includes(course[0])
@@ -124,9 +122,7 @@ function compare(
         ❌
         <ul className="my-0">
           <li className="mt-0">
-            <Link
-              href={{ pathname: '/treninkove-skupiny/[id]', query: { id: cohort.id } }}
-            >
+            <Link href={`/treninkove-skupiny/${cohort.id}`}>
               {cohort.name}
             </Link>{' '}
             Tréninková skupina bude archivována

@@ -133,10 +133,7 @@ function Attendance({
           <tr key={instance.id}>
             <td>
               <Link
-                href={{
-                  pathname: '/akce/[id]/termin/[instance]',
-                  query: { id: event.id, instance: instance.id },
-                }}
+                href={`/akce/${event.id}/termin/${instance.id}`}
               >
                 {fullDateFormatter.formatRange(
                   new Date(instance.since),
@@ -177,10 +174,7 @@ function EventInstances({ event }: { event: EventFullFragment }) {
             <tr key={instance.id} className={instance.isCancelled ? 'opacity-50' : ''}>
               <td>
                 <Link
-                  href={{
-                    pathname: '/akce/[id]/termin/[instance]',
-                    query: { id: event.id, instance: instance.id },
-                  }}
+                  href={`/akce/${event.id}/termin/${instance.id}`}
                   className={instance.isCancelled ? 'line-through' : ''}
                 >
                   {formatOpenDateRange(instance)}

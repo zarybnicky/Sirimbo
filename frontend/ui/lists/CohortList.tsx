@@ -11,7 +11,6 @@ import React from 'react';
 import { z } from 'zod';
 import { useQuery } from 'urql';
 import { CohortListDocument } from '@/graphql/Cohorts';
-import type { Route } from 'nextjs-routes';
 import { slugify } from '@/lib/slugify';
 
 const QueryParams = z.object({
@@ -38,10 +37,7 @@ export function CohortList() {
           .filter(Boolean)
           .join(', '),
         colorRgb: x.colorRgb,
-        href: {
-          pathname: '/treninkove-skupiny/[id]/[...slug]',
-          query: { id: x.id, slug: [slugify(x.name)] },
-        } satisfies Route,
+        href: `/treninkove-skupiny/${x.id}/${slugify(x.name)}`,
       })) || [],
     [cohorts?.cohortsList],
   );

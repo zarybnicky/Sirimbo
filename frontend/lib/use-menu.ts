@@ -64,10 +64,7 @@ export function useMemberMenu(): MenuStructItem[] {
     {
       type: 'link',
       title: 'Nástěnka',
-      href: {
-        pathname: '/dashboard',
-        query: { tab: 'myAnnouncements' },
-      },
+      href: '/dashboard?tab=myAnnouncements',
     },
     ...(enableHome
       ? ([
@@ -75,10 +72,7 @@ export function useMemberMenu(): MenuStructItem[] {
             type: 'link',
             title: 'Stálá nástěnka',
             className: 'lg:hidden',
-            href: {
-              pathname: '/dashboard',
-              query: { tab: 'stickyAnnouncements' },
-            },
+            href: '/dashboard?tab=stickyAnnouncements',
           },
         ] as MenuStructItem[])
       : []),
@@ -90,10 +84,7 @@ export function useMemberMenu(): MenuStructItem[] {
         {
           type: 'link',
           title: 'Moje tréninky',
-          href: {
-            pathname: '/dashboard',
-            query: { tab: 'myLessons' },
-          },
+          href: '/dashboard?tab=myLessons',
         },
         { type: 'link', title: 'Kalendář', href: '/rozpis' },
         { type: 'link', title: 'Seznam akcí', href: '/akce' },

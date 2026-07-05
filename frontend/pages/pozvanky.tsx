@@ -65,7 +65,7 @@ export default function InvitationOverviewPage() {
               {withAnotherAccount?.peopleWithoutAccessWithExistingAccountList?.map(
                 (x) => (
                   <li key={x.id}>
-                    <Link href={{ pathname: '/clenove/[id]', query: { id: x.id } }}>
+                    <Link href={`/clenove/${x.id}`}>
                       {x.name}
                     </Link>
                   </li>
@@ -87,7 +87,7 @@ export default function InvitationOverviewPage() {
                 ?.filter((x) => !x.email)
                 .map((x) => (
                   <li key={x.id}>
-                    <Link href={{ pathname: '/clenove/[id]', query: { id: x.id } }}>
+                    <Link href={`/clenove/${x.id}`}>
                       {x.name}
                     </Link>
                     {', vytvořen '}
@@ -120,7 +120,7 @@ export default function InvitationOverviewPage() {
                 ?.filter((x) => x.email)
                 .map((x) => (
                   <li key={x.id}>
-                    <Link href={{ pathname: '/clenove/[id]', query: { id: x.id } }}>
+                    <Link href={`/clenove/${x.id}`}>
                       {x.name}
                     </Link>
                     {', vytvořen '}
@@ -140,7 +140,7 @@ export default function InvitationOverviewPage() {
                 .map((x) => (
                   <li key={x.id}>
                     <div>
-                      <Link href={{ pathname: '/clenove/[id]', query: { id: x.id } }}>
+                      <Link href={`/clenove/${x.id}`}>
                         {x.name}
                       </Link>
                       {', vytvořen '}

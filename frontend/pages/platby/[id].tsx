@@ -93,13 +93,7 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
                 <span>#{payment.cohortSubscription.id}</span>
                 {payment.cohortSubscription.cohort && (
                   <Link
-                    href={{
-                      pathname: '/treninkove-skupiny/[id]/[...slug]',
-                      query: {
-                        id: payment.cohortSubscription.cohort.id,
-                        slug: [slugify(payment.cohortSubscription.cohort.name)],
-                      },
-                    }}
+                    href={`/treninkove-skupiny/${payment.cohortSubscription.cohort.id}/${slugify(payment.cohortSubscription.cohort.name)}`}
                     className="text-sm font-medium text-accent-11 hover:underline"
                   >
                     {payment.cohortSubscription.cohort.name}
@@ -118,10 +112,7 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
                 </span>
                 {payment.eventInstance.event && (
                   <Link
-                    href={{
-                      pathname: '/akce/[id]',
-                      query: { id: payment.eventInstance.event.id },
-                    }}
+                    href={`/akce/${payment.eventInstance.event.id}`}
                     className="text-sm font-medium text-accent-11 hover:underline"
                   >
                     {payment.eventInstance.event.name}
@@ -144,10 +135,7 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
                 <span>#{payment.eventRegistration.id}</span>
                 {payment.eventRegistration.event && (
                   <Link
-                    href={{
-                      pathname: '/akce/[id]',
-                      query: { id: payment.eventRegistration.event.id },
-                    }}
+                    href={`/akce/${payment.eventRegistration.event.id}`}
                     className="text-sm font-medium text-accent-11 hover:underline"
                   >
                     {payment.eventRegistration.event.name}
@@ -266,7 +254,7 @@ function AccountSummary({ account, className }: AccountSummaryProps) {
             <span className="font-semibold text-neutral-12">Osoba:</span>{' '}
             {account.person ? (
               <Link
-                href={{ pathname: '/clenove/[id]', query: { id: account.person.id } }}
+                href={`/clenove/${account.person.id}`}
                 className="font-medium text-accent-11 hover:underline"
               >
                 {account.person.name} (#{account.person.id})

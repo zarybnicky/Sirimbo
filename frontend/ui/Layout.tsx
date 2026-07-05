@@ -59,7 +59,7 @@ export const Layout = React.memo(function Layout({
   const { enableHome } = useAtomValue(tenantConfigAtom);
   const Footer = useMemo(() => getTenantUi(tenantId, 'Footer'), [tenantId]);
   const search = searchParams?.toString() ?? '';
-  const currentUrl = search ? `${pathname}?${search}` : pathname;
+  const currentUrl = search ? `${pathname}?${search}` : pathname ?? '';
 
   showTopMenu = showTopMenu && enableHome;
   if (hideTopMenuIfLoggedIn) {

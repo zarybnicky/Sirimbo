@@ -6,7 +6,6 @@ import {
   ToggleAnnouncementStickyDocument,
   ToggleAnnouncementVisibleDocument,
 } from '@/graphql/Announcement';
-import { route } from 'nextjs-routes';
 
 export const announcementActions = defineActions<AnnouncementFragment>()([
   {
@@ -46,7 +45,7 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     }),
     execute: async ({ item: { id }, mutate, router }) => {
       await mutate(DeleteAnnouncementDocument, { id });
-      if (router.pathname === route({ pathname: '/nastenka/[id]', query: { id } })) {
+      if (router.pathname === `/nastenka/${id}`) {
         await router.replace('/nastenka');
       }
     },

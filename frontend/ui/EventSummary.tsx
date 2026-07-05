@@ -45,7 +45,7 @@ export function EventSummary({
       {offsetButtons && (
         <div className="mt-2 flex flex-col">
           <Link
-            href={{ pathname: '/akce/[id]', query: { id: event.id } }}
+            href={`/akce/${event.id}`}
             className={cn('text-xl', instance.isCancelled ? 'line-through' : 'underline')}
           >
             {instance.name || formatDefaultEventName(event)}

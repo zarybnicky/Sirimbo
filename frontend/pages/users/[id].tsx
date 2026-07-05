@@ -104,10 +104,7 @@ function UserPage() {
                           <p className="font-medium">
                             {proxy.person ? (
                               <Link
-                                href={{
-                                  pathname: '/clenove/[id]',
-                                  query: { id: proxy.person.id },
-                                }}
+                                href={`/clenove/${proxy.person.id}`}
                                 className="underline"
                               >
                                 {proxy.person.name}

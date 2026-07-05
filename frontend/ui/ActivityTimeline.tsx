@@ -280,7 +280,7 @@ function TimelineDay({
               {birthdayItems.map((item) => (
                 <Link
                   key={item.id}
-                  href={{ pathname: '/clenove/[id]', query: { id: item.personId!} }}
+                  href={`/clenove/${item.personId!}`}
                   className="rounded border border-neutral-6 bg-neutral-1 px-2 py-1 text-sm text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
                 >
                   {item.person?.name}

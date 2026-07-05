@@ -36,7 +36,7 @@ export function Header({
   mobileLogo,
   socialIcons,
 }: Props) {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '';
   const auth = useAuth();
   const tenantId = useAtomValue(tenantIdAtom);
   const [isMounted, setIsMounted] = React.useState(false);

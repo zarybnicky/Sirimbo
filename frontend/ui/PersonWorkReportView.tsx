@@ -281,13 +281,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
                         </td>
                         <td>
                           <Link
-                            href={{
-                              pathname: '/akce/[id]/termin/[instance]',
-                              query: {
-                                id: row.instance.event.id,
-                                instance: row.instance.id,
-                              },
-                            }}
+                            href={`/akce/${row.instance.event.id}/termin/${row.instance.id}`}
                           >
                             {row.title}
                           </Link>

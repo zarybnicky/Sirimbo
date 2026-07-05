@@ -24,10 +24,7 @@ interface EventNode {
   title: string;
   date: string;
   subtitle: string;
-  href: {
-    pathname: string;
-    query: { id: string };
-  };
+  href: string;
 }
 
 interface EventListPageProps {
@@ -70,10 +67,7 @@ function EventListPage({ search, currentId }: EventListPageProps) {
         ]
           .filter(Boolean)
           .join(', '),
-        href: {
-          pathname: '/akce/[id]',
-          query: { id: x.id },
-        },
+        href: `/akce/${x.id}`,
       };
     });
     return nodes.toSorted((a, b) => b.date?.localeCompare(a.date));

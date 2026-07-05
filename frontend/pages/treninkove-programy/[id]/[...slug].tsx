@@ -39,13 +39,7 @@ function TrainingGroupPage() {
     }
     const expectedSlug = slugify(item.name);
     if (expectedSlug && router.query.slug !== expectedSlug) {
-      void router.replace({
-        pathname: '/treninkove-programy/[id]/[...slug]',
-        query: {
-          id: item.id,
-          slug: [expectedSlug],
-        },
-      });
+      void router.replace(`/treninkove-programy/${item.id}/${slugify(expectedSlug)}`);
     }
   }, [fetching, idParam, item, router]);
 
@@ -73,10 +67,7 @@ function TrainingGroupPage() {
             <div className="mb-2 flex items-start justify-between gap-3">
               <h5 className="text-xl underline">
                 <Link
-                  href={{
-                    pathname: '/treninkove-skupiny/[id]/[...slug]',
-                    query: { id: item.id, slug: [slugify(item.name)] },
-                  }}
+                  href={`/treninkove-skupiny/${item.id}/${slugify(item.name)}`}
                 >
                   {item.name}
                 </Link>

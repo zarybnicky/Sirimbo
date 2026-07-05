@@ -56,10 +56,7 @@ export function ArticleList() {
         {fuzzy.map((item) => (
           <Link
             key={item.id}
-            href={{
-              pathname: '/aktuality/[id]',
-              query: { id: item.id },
-            }}
+            href={`/aktuality/${item.id}`}
             className={buttonCls({
               variant: currentId === item.id ? 'primary' : 'outline',
               display: 'none',

@@ -71,10 +71,7 @@ export default function ClubPage() {
             ) : (
               <Link
                 className="underline font-bold grow basis-40"
-                href={{
-                  pathname: '/clenove/[id]',
-                  query: { id: item.person?.id },
-                }}
+                href={`/clenove/${item.person.id}`}
               >
                 {item.person?.name}
               </Link>
@@ -113,10 +110,7 @@ export default function ClubPage() {
               ) : (
                 <Link
                   className="underline font-bold text-sm py-1"
-                  href={{
-                    pathname: '/clenove/[id]',
-                    query: { id: data.person?.id },
-                  }}
+                  href={`/clenove/${data.person.id}`}
                 >
                   {data.person?.name}
                 </Link>

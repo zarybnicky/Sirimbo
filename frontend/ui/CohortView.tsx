@@ -62,10 +62,7 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
                 <span className="inline-flex items-center gap-1">
                   <Link
                     className="font-bold underline"
-                    href={{
-                      pathname: '/clenove/[id]',
-                      query: { id: membership.person.id },
-                    }}
+                    href={`/clenove/${membership.person.id}`}
                   >
                     {membership.person.name}
                   </Link>

@@ -34,13 +34,7 @@ function TrainingCohortPage() {
     }
     const expectedSlug = slugify(cohort.name);
     if (expectedSlug && router.query.slug !== expectedSlug) {
-      void router.replace({
-        pathname: '/treninkove-skupiny/[id]/[...slug]',
-        query: {
-          id: cohort.id,
-          slug: [expectedSlug],
-        },
-      });
+      void router.replace(`/treninkove-skupiny/${cohort.id}/${expectedSlug}`);
     }
   }, [cohort, fetchingCohort, idParam, router]);
 

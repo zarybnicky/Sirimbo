@@ -461,7 +461,7 @@ function compare(
           <ul className="my-0">
             <li className="mt-0">
               ✅{' '}
-              <Link href={{ pathname: '/clenove/[id]', query: { id: person.id } }}>
+              <Link href={`/clenove/${person.id}`}>
                 {person.name} ({birthYear})
               </Link>
               {willUpdate ? ' - změnily se detaily osoby, bude aktualizovaná' : ''}
@@ -481,7 +481,7 @@ function compare(
         ❌
         <ul className="my-0">
           <li className="mt-0">
-            <Link href={{ pathname: '/clenove/[id]', query: { id: person.id } }}>
+            <Link href={`/clenove/${person.id}`}>
               {person.name} ({birthYear})
             </Link>{' '}
             Osoba bude archivována

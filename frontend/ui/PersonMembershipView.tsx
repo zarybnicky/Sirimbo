@@ -95,10 +95,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
               <Link
                 className="underline font-bold"
-                href={{
-                  pathname: '/treninkove-skupiny/[id]/[...slug]',
-                  query: { id: item.cohort.id, slug: [slugify(item.cohort.name)] },
-                }}
+                href={`/treninkove-skupiny/${item.cohort.id}/${slugify(item.cohort.name)}`}
               >
                 {item.cohort.name}
               </Link>
@@ -170,7 +167,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between text-sm gap-y-1 sm:gap-x-3">
                 <b className="break-words">
                   <Link
-                    href={{ pathname: '/users/[id]', query: { id: proxy.user.id } }}
+                    href={`/users/${proxy.user.id}`}
                     className="underline"
                   >
                     {[proxy.user.uEmail, proxy.user.uLogin].filter(Boolean).join(', ')}
@@ -221,10 +218,7 @@ function CoupleRow({ item }: { item: CoupleFragment }) {
       <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
         <Link
           className="underline font-bold"
-          href={{
-            pathname: '/pary/[id]',
-            query: { id: item.id },
-          }}
+          href={`/pary/${item.id}`}
         >
           {formatLongCoupleName(item)}
         </Link>

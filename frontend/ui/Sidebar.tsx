@@ -28,7 +28,7 @@ type SidebarProps = {
 
 export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: SidebarProps) {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '';
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
   const tenantId = useAtomValue(tenantIdAtom);

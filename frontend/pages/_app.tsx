@@ -2,7 +2,7 @@ import { configureUrql } from '@/lib/query';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
-import { setNewTenant, storeRef } from '@/ui/state/auth';
+import { storeRef } from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
@@ -16,8 +16,6 @@ import { NuqsAdapter } from 'nuqs/adapters/next/pages';
 import { ToastContainer } from 'react-toastify';
 import { z } from 'zod';
 import { cs } from 'zod/locales';
-import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { getCookie, setCookie } from 'cookies-next/client';
 
 import 'core-js/actual/array/to-reversed';
 import 'core-js/actual/array/to-sorted';
@@ -29,7 +27,6 @@ import '../style/calendar.css';
 import '../style/index.css';
 import '../style/leaflet.css';
 import '../style/lite-youtube-embed.css';
-import { hostToTenantId } from '@/tenant/catalog-server';
 
 NProgress.configure({
   template:
@@ -54,23 +51,6 @@ function App({
     // eslint-disable-next-line react-hooks/immutability
     storeRef.current = createStore();
   }
-
-  useLayoutEffect(() => {
-    const origin = new URL(window.origin);
-    const tenantId = hostToTenantId.get(origin.host);
-    const existing = String(getCookie('tenant_id'));
-
-    if (tenantId !== existing && tenantId) {
-      setCookie('tenant_id', String(tenantId), {
-        path: '/',
-        sameSite: 'lax',
-        secure: origin.protocol === 'https:',
-        domain: origin.host,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
-      });
-    }
-    setNewTenant(String(getCookie('tenant_id')));
-  }, []);
 
   return (
     <NuqsAdapter>

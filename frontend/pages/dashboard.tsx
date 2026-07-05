@@ -21,15 +21,11 @@ export default function DashboardPage() {
   const tabs = React.useMemo(
     () => [
       { id: 'myLessons', title: 'Moje události', contents: () => <MyEventsList /> },
-      ...(auth.persons.some((x) => x.cstsId)
-        ? [
-            {
-              id: 'competitions',
-              title: 'Soutěže',
-              contents: () => <CompetitionWeekPanel allowOnlyMine />,
-            },
-          ]
-        : []),
+      {
+        id: 'competitions',
+        title: 'Soutěže',
+        contents: () => <CompetitionWeekPanel allowOnlyMine />,
+      },
       { id: 'myAnnouncements', title: 'Aktuality', contents: () => <MyAnnouncements /> },
       {
         id: 'stickyAnnouncements',
@@ -55,7 +51,7 @@ export default function DashboardPage() {
         <div className="hidden xl:grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-8">
             <MyEventsList />
-            {auth.persons.some((x) => x.cstsId) && <CompetitionWeekPanel allowOnlyMine />}
+            <CompetitionWeekPanel allowOnlyMine />
           </div>
           <MyAnnouncements />
           <StickyAnnouncements />

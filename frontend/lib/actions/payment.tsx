@@ -9,10 +9,7 @@ export const paymentActions = defineActions<{ id: string; status: PaymentStatus 
     label: 'Detail',
     icon: Info,
     visible: true,
-    href: ({ item }) => ({
-      pathname: '/platby/[id]',
-      query: { id: item.id },
-    }),
+    href: ({ item }) => `/platby/${item.id}`,
   },
   {
     id: 'payment.markAsPaid',

@@ -72,10 +72,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
       const id = res.data?.createAktuality?.aktuality?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({
-          pathname: '/aktuality/[id]',
-          query: { id },
-        });
+        router.replace(`/aktuality/${id}`);
       } else {
         reset();
       }

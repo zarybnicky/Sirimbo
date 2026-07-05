@@ -1,4 +1,3 @@
-import nextRoutes from 'nextjs-routes/config';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 import createMDX from '@next/mdx';
@@ -7,7 +6,6 @@ import path from "node:path";
 type NextConfig = import('next').NextConfig;
 type NextPlugin = (config: NextConfig) => NextConfig;
 type NextRedirect = Awaited<ReturnType<NonNullable<NextConfig['redirects']>>>;
-type NextRewrite = Awaited<ReturnType<NonNullable<NextConfig['rewrites']>>>;
 
 const compose =
   (...plugins: NextPlugin[]) =>
@@ -16,7 +14,6 @@ const compose =
 
 // eslint-disable-next-line import-x/no-unused-modules
 export default compose(
-  nextRoutes(),
   createMDX({
     extension: /\.mdx$/,
     options: {
@@ -44,6 +41,7 @@ export default compose(
   poweredByHeader: false,
   productionBrowserSourceMaps: true,
   devIndicators: false,
+  typedRoutes: true,
 
   output: 'standalone',
   bundlePagesRouterDependencies: true,
@@ -129,24 +127,11 @@ export default compose(
   },
 
   async rewrites() {
-    const rewrites: NextRewrite = [
-      { source: '/f/:id/:name*', destination: '/api/f/:id/:name*' },
-      {
-        source: '/',
-        destination: '/dashboard',
-        missing: [{ type: 'cookie', key: 'tenant_id', value: '1' }],
-      },
-      {
-        source: '/clanky/:path*',
-        destination: '/dashboard',
-        missing: [{ type: 'cookie', key: 'tenant_id', value: '1' }],
-      },
-    ];
     if (process.env.NODE_ENV !== 'production') {
       const graphqlServer = process.env.GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz';
       const externalServer = process.env.EXTERNAL_SERVER_URL || graphqlServer;
       const postgrestServer = process.env.POSTGREST_BACKEND || graphqlServer;
-      rewrites.push(
+      return [
         { source: '/member/download', destination: `${graphqlServer}/member/download` },
         {
           source: '/galerie/:path*',
@@ -157,9 +142,9 @@ export default compose(
         { source: '/graphql', destination: `${graphqlServer}/graphql` },
         { source: '/starlet/graphql', destination: `${graphqlServer}/graphql` },
         { source: '/graphiql', destination: `${graphqlServer}/graphiql` },
-      );
+      ];
     } else {
-      rewrites.push(
+      return [
         {
           source: '/member/download',
           destination: 'https://api.rozpisovnik.cz/member/download',
@@ -168,8 +153,7 @@ export default compose(
           source: '/galerie/:path*',
           destination: 'https://api.rozpisovnik.cz/galerie/:path*',
         },
-      );
+      ];
     }
-    return rewrites;
   },
 });

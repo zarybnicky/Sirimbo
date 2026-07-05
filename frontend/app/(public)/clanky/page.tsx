@@ -64,13 +64,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
         {aktualities?.nodes?.map((item) => (
           <ArticleCard
             key={item.id}
-            href={{
-              pathname: '/clanky/[id]/[[...slug]]',
-              query: {
-                id: item.id,
-                slug: [slugify(item.atJmeno)],
-              },
-            }}
+            href={`/clanky/${item.id}/${slugify(item.atJmeno)}`}
             img={item.titlePhotoUrl ?? undefined}
             header={item.atJmeno}
             preview={item.atPreview}
@@ -82,10 +76,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
         <nav className="flex flex-wrap gap-1 my-4 text-accent-9">
           {currentPage > 1 && (
             <Link
-              href={{
-                pathname: '/clanky',
-                query: currentPage <= 2 ? {} : { page: String(currentPage - 1) },
-              }}
+              href={currentPage <= 2 ? '/clanky' : `/clanky?page=${currentPage - 1}`}
               aria-label="Předchozí stránka"
               className={'w-6 h-10 inline-flex items-center justify-center rounded-full aria-disabled:opacity-40'}
             >
@@ -101,10 +92,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
             ) : (
               <Link
                 key={item}
-                href={{
-                  pathname: '/clanky',
-                  query: item <= 1 ? {} : { page: String(item) },
-                }}
+                href={item <= 1 ? '/clanky' : `/clanky?page=${item}`}
                 aria-current={item === currentPage ? 'page' : undefined}
                 className={cn(
                   item === currentPage ? 'text-white !bg-accent-5' : '',
@@ -118,12 +106,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
 
           {currentPage < totalPages && (
             <Link
-              href={{
-                pathname: '/clanky',
-                query: {
-                  page: String(currentPage + 1),
-                },
-              }}
+              href={`/clanky?page=${currentPage + 1}`}
               aria-label="Další stránka"
               className={'w-6 h-10 inline-flex items-center justify-center rounded-full aria-disabled:opacity-40'}
             >

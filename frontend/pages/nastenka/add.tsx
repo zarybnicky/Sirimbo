@@ -10,10 +10,7 @@ export default function CreateAnnouncementPage() {
   const onSuccess = React.useCallback(
     (id: string | undefined) => {
       if (!id) return;
-      router.push({
-        pathname: '/nastenka/[id]',
-        query: { id },
-      });
+      router.push(`/nastenka/${id}`);
     },
     [router],
   );

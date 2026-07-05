@@ -38,18 +38,23 @@ export const serverTenantCatalog = {
   },
 };
 
-export function getServerTenant(tenantId: string | number): ServerTenantCatalogEntry {
+const serverTenants = Object.values(serverTenantCatalog);
+
+export function parseTenant(
+  tenantId: string | number | null | undefined,
+): ServerTenantCatalogEntry | undefined {
   const id = Number.parseInt(String(tenantId));
-  return (
-    Object.values(serverTenantCatalog).find((entry) => entry.id === id) ??
-    serverTenantCatalog[1]
-  );
+  return serverTenants.find((entry) => entry.id === id);
 }
 
-export const hostToTenantId = new Map<string, string>();
+export function getServerTenant(tenantId: string | number): ServerTenantCatalogEntry {
+  return parseTenant(tenantId) ?? serverTenantCatalog[1];
+}
 
-for (const entry of Object.values(serverTenantCatalog)) {
+export const hostToTenant = new Map<string, ServerTenantCatalogEntry>();
+
+for (const entry of serverTenants) {
   for (const host of entry.hosts) {
-    hostToTenantId.set(host.toLowerCase(), String(entry.id));
+    hostToTenant.set(host.toLowerCase(), entry);
   }
 }

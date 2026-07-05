@@ -160,10 +160,7 @@ export function PersonList() {
         {fuzzy.map((item) => (
           <Link
             key={item.id}
-            href={{
-              pathname: '/clenove/[id]',
-              query: { id: item.id, tab: tab || undefined },
-            }}
+            href={tab ? `/clenove/${item.id}?tab=${tab}` : `/clenove/${item.id}`}
             className={cn(
               'relative p-1.5 pl-5 mb-1 mr-1 rounded-lg grid',
               id === item.id

@@ -7,7 +7,6 @@ import {
 import { defineActions } from '@/lib/actions';
 import { EditCoupleForm } from '@/ui/forms/EditCoupleForm';
 import { formatLongCoupleName } from '@/ui/format';
-import { route } from 'nextjs-routes';
 
 export const coupleActions = defineActions<CoupleFragment>()([
   {
@@ -47,7 +46,7 @@ export const coupleActions = defineActions<CoupleFragment>()([
       'Opravdu chcete pár NENÁVRATNĚ smazat, včetně všech jejich lekcí, ...? Spíše použij variantu ukončení partnerství, ať zůstanou zachována historická data.',
     execute: async ({ item: { id }, mutate, router }) => {
       await mutate(DeleteCoupleDocument, { id });
-      if (router.pathname === route({ pathname: '/pary/[id]', query: { id } })) {
+      if (router.pathname === `/pary/${id}`) {
         await router.replace('/pary');
       }
     },

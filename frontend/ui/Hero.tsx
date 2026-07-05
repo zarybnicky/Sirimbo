@@ -1,3 +1,5 @@
+'use client';
+
 import type { ArticleFragment } from '@/graphql/Articles';
 import { cn } from '@/lib/cn';
 import { slugify } from '@/lib/slugify';
@@ -19,10 +21,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
   const articles = React.useMemo<HeroArticle[]>(() => {
     const mappedData = data.map((x) => ({
       id: x.id,
-      href: {
-        pathname: '/clanky/[id]/[[...slug]]',
-        query: { id: x.id, slug: [slugify(x.atJmeno)] },
-      },
+      href: `/clanky/${x.id}/${slugify(x.atJmeno)}`,
       name: x.atJmeno,
       summary: x.atPreview,
       img: x.titlePhotoUrl || '',
@@ -33,7 +32,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       ...mappedData.filter((x) => x.id === '470'),
       {
         id: '-1',
-        href: 'https://nabor.tkolymp.cz' as LinkProps['href'],
+        href: 'https://nabor.tkolymp.cz',
         name: 'Přijď tančit!',
         summary:
           'Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.',
@@ -41,7 +40,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
         img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837164-0016-DSC_0009%201.jpg',
       },
       ...mappedData.filter((x) => x.id !== '467' && x.id !== '468' && x.id !== '470'),
-    ];
+    ] as HeroArticle[];
   }, [data]);
 
   const scrollerRef = React.useRef<HTMLDivElement>(null);

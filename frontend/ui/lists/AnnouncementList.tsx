@@ -147,10 +147,7 @@ function AnnouncementListPage({
             <AnnouncementAudienceBadges audiences={item.announcementAudiences.nodes} />
           </div>
         ),
-        href: {
-          pathname: '/nastenka/[id]',
-          query: { id: item.id },
-        },
+        href: `/nastenka/${item.id}`,
       };
     });
   }, [data]);

@@ -62,10 +62,7 @@ export default function TrainingGroupsPage() {
             <div className="mb-2 flex items-start justify-between gap-3">
               <h5 className="text-xl underline">
                 <Link
-                  href={{
-                    pathname: '/treninkove-skupiny/[id]/[...slug]',
-                    query: { id: item.id, slug: [slugify(item.name)] },
-                  }}
+                  href={`/treninkove-skupiny/${item.id}/${slugify(item.name)}`}
                 >
                   {item.name}
                 </Link>

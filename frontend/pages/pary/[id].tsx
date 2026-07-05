@@ -42,10 +42,7 @@ function CouplePage() {
             ) : (
               <Link
                 className="underline font-medium"
-                href={{
-                  pathname: '/clenove/[id]',
-                  query: { id: item.man?.id },
-                }}
+                href={`/clenove/${item.man.id}`}
               >
                 {item.man?.name}
               </Link>
@@ -58,10 +55,7 @@ function CouplePage() {
             ) : (
               <Link
                 className="underline font-medium"
-                href={{
-                  pathname: '/clenove/[id]',
-                  query: { id: item.woman?.id },
-                }}
+                href={`/clenove/${item.woman.id}`}
               >
                 {item.woman?.name}
               </Link>

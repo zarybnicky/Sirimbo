@@ -10,7 +10,7 @@ export default async function PublicLayout({ children }: { children: ReactNode }
   const ui = getTenantUi(tenant.id);
 
   return (
-    <Providers tenantId={String(tenant.id)}>
+    <Providers>
       <Layout
         includeTenantSeo={false}
         showTopMenu

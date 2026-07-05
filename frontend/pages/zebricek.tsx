@@ -184,10 +184,7 @@ export default function ScoreboardPage() {
                         <td className="py-1 pr-4">
                           {entry.person ? (
                             <Link
-                              href={{
-                                pathname: '/clenove/[id]',
-                                query: { id: entry.person.id },
-                              }}
+                              href={`/clenove/${entry.person.id}`}
                               className="hover:underline text-inherit"
                             >
                               {entry.person.name}

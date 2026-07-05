@@ -1,9 +1,10 @@
 import { atom, createStore, type PrimitiveAtom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import deepEqual from 'fast-deep-equal';
-import { tenantCatalog } from '@/tenant/catalog';
+import { defaultTenant, parseTenant } from '@/tenant/catalog';
 import type { TenantConfig } from '@/tenant/types';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 
@@ -60,53 +61,64 @@ const storage = {
   },
 };
 
-const emptyConfig: TenantConfig = {
-  shortName: '',
-  copyrightLine: '',
-  favicon: '',
-  seo: {
-    titleTemplate: '%s',
-    defaultTitle: '',
-    themeColor: '#000',
-    openGraph: { siteName: '' },
-    additionalMetaTags: [
-      { name: 'viewport', content: 'initial-scale=1,width=device-width' },
-    ],
+const tenantCookieStorage = {
+  getItem(key: string, initialValue: string) {
+    const tenant = parseTenant(getCookie(key));
+    return tenant ? String(tenant.id) : initialValue;
   },
-  enableHome: true,
-  enableRegistration: true,
-  enableStarletImport: false,
-  useTrainerInitials: false,
-  lockEventsByDefault: false,
+  setItem(key: string, nextValue: string) {
+    if (typeof window === 'undefined') return;
+
+    const tenant = parseTenant(nextValue);
+    if (!tenant) return;
+
+    const tenantId = String(tenant.id);
+    if (String(getCookie(key)) === tenantId) return;
+
+    const { hostname, protocol } = window.location;
+    setCookie(key, tenantId, {
+      path: '/',
+      domain:
+        hostname === 'localhost' || hostname === '127.0.0.1'
+          ? undefined
+          : hostname.replace(/^www\./, ''),
+      sameSite: 'lax',
+      secure: protocol === 'https:',
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
+    });
+  },
+  removeItem(key: string) {
+    deleteCookie(key, { path: '/' });
+  },
 };
-const baseTenantIdAtom = atom<string>(getCookie('tenant_id') ?? '');
-export const tenantConfigAtom = atom<TenantConfig>(
-  tenantCatalog[Number.parseInt(getCookie('tenant_id') ?? '')]?.config ?? emptyConfig,
+
+const baseTenantIdAtom = atomWithStorage(
+  'tenant_id',
+  String(defaultTenant.id),
+  tenantCookieStorage,
+  { getOnInit: true },
 );
+
 export const tenantIdAtom = atom<string, [string], void>(
   (get) => get(baseTenantIdAtom),
   (_get, set, nextValue) => {
-    set(baseTenantIdAtom, nextValue);
-    set(
-      tenantConfigAtom,
-      tenantCatalog[Number.parseInt(nextValue)]?.config ?? emptyConfig,
-    );
+    const tenantId = String((parseTenant(nextValue) ?? defaultTenant).id);
+    set(baseTenantIdAtom, tenantId);
 
-    if (typeof document !== 'undefined') {
-      const root = document.querySelector('body');
-      if (root) {
-        for (const cls of root.classList) {
-          if (cls.includes('tenant-')) root.classList.remove(cls);
-        }
-        root.classList.add(`tenant-${nextValue}`);
-      }
+    if (typeof document === 'undefined') return;
+
+    for (const cls of document.body.classList) {
+      if (cls.includes('tenant-')) document.body.classList.remove(cls);
     }
+    document.body.classList.add(`tenant-${tenantId}`);
   },
 );
-
-export const setNewTenant = (tenantId: string) => {
-  storeRef.current.set(tenantIdAtom, tenantId);
+tenantIdAtom.onMount = (setTenantId) => {
+  setTenantId(tenantCookieStorage.getItem('tenant_id', String(defaultTenant.id)));
 };
+export const tenantConfigAtom = atom<TenantConfig>(
+  (get) => (parseTenant(get(tenantIdAtom)) ?? defaultTenant).config,
+);
 
 export const authLoadingAtom = atom(true);
 

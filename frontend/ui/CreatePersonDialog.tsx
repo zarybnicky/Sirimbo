@@ -26,7 +26,6 @@ import { FieldLabel } from '@/ui/form';
 import { ChevronDown, Plus } from 'lucide-react';
 import { useRouter as useCompatRouter } from 'next/compat/router';
 import { useRouter as useAppRouter } from 'next/navigation';
-import { route } from 'nextjs-routes';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
@@ -216,9 +215,9 @@ export function CreatePersonDialog() {
       toast.success('Přidáno.');
       setOpen(null);
       if (pagesRouter) {
-        await pagesRouter.replace({pathname: '/clenove/[id]', query: { id } });
+        await pagesRouter.replace(`/clenove/${id}`);
       } else {
-        appRouter.replace(route({ pathname: '/clenove/[id]', query: { id } }));
+        appRouter.replace(`/clenove/${id}`);
       }
     }
   });

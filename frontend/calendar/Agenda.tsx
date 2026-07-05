@@ -162,7 +162,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
 function BirthdayChip({ calendarEvent }: { calendarEvent: CalendarBirthdayEvent }) {
   return (
     <Link
-      href={{ pathname: '/clenove/[id]', query: { id: calendarEvent.person.id } }}
+      href={`/clenove/${calendarEvent.person.id}`}
       title={`Narozeniny: ${calendarEvent.person.name}`}
       className="inline-flex max-w-full items-center gap-1 rounded border border-neutral-6 bg-neutral-2 px-2 py-1 text-sm text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
     >
@@ -203,7 +203,7 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarInstanceEvent }
       )}
       <div className="text-sm text-accent-11">{formatEventType(instance.type)}</div>
       <Link
-        href={{ pathname: '/akce/[id]', query: { id: instance.eventId } }}
+        href={`/akce/${instance.eventId}`}
         className={cn(
           'block mb-2 text-xl',
           instance.isCancelled ? 'line-through' : 'underline',

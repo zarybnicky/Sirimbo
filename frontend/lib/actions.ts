@@ -4,19 +4,13 @@ import { useAuth } from '@/ui/use-auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';
 import { useRouter as useCompatRouter } from 'next/compat/router';
 import { usePathname, useRouter as useAppRouter } from 'next/navigation';
-import { route } from 'nextjs-routes';
-import type { Route, RouteLiteral } from 'nextjs-routes';
 import type { ConfirmOptions } from '@/ui/Confirm';
 import { DialogContent } from '@/ui/dialog';
-import type { LinkProps } from 'next/link';
-
-type StaticRoute = Exclude<Route, { query: unknown }>['pathname'];
-type ActionHref = Route | StaticRoute | RouteLiteral;
 
 export type ActionRouter = {
-  pathname: string;
-  push: (href: ActionHref) => Promise<boolean> | void;
-  replace: (href: ActionHref) => Promise<boolean> | void;
+  pathname: string | null;
+  push: (href: string) => Promise<boolean> | void;
+  replace: (href: string) => Promise<boolean> | void;
 };
 
 export type ActionContext<T> = {
@@ -33,7 +27,7 @@ export type ActionContext<T> = {
 type Resolvable<T, V> = V | ((ctx: ActionContext<T>) => V);
 type Icon = ComponentType<{ className?: string }>;
 type DialogBody<T> = ComponentType<ActionContext<T>>;
-type Href = LinkProps['href'];
+type Href = string;
 
 const resolve = <T, V>(v: Resolvable<T, V>, ctx: ActionContext<T>): V =>
   typeof v === 'function' ? (v as (c: ActionContext<T>) => V)(ctx) : v;
@@ -152,8 +146,8 @@ function useActionRouter(): ActionRouter {
 
     return {
       pathname: pathname,
-      push: (href) => appRouter.push(typeof href === 'string' ? href : route(href)),
-      replace: (href) => appRouter.replace(typeof href === 'string' ? href : route(href)),
+      push: appRouter.push,
+      replace: appRouter.replace,
     };
   }, [pathname, appRouter, asPath, isReady, router]);
 }

@@ -43,10 +43,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   return (
     <div className="prose prose-accent max-w-none">
       <Link
-        href={{
-          pathname: '/akce/[id]',
-          query: { id: instance.eventId, tab: 'attendance' },
-        }}
+        href={`/akce/${instance.eventId}?tab=attendance`}
       >
         Zpět na seznam termínů
       </Link>

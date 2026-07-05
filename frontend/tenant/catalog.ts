@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { serverTenantCatalog, ServerTenantCatalogEntry } from './catalog-server';
+import { serverTenantCatalog, type ServerTenantCatalogEntry } from './catalog-server';
 
 type TenantCatalogEntry = ServerTenantCatalogEntry & {
   ui: {
@@ -81,10 +81,18 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
   },
 };
 
+export const defaultTenant = tenantCatalog[2]!;
+
+export function parseTenant(
+  tenantId: string | number | null | undefined,
+): TenantCatalogEntry | undefined {
+  return tenantCatalog[Number.parseInt(String(tenantId), 10)];
+}
+
 export function getTenantUi<K extends keyof TenantCatalogEntry['ui']>(
   tenantId: string,
   key: K,
 ): React.ComponentType {
-  const entry = tenantCatalog[Number.parseInt(tenantId)] || tenantCatalog[1]!;
+  const entry = parseTenant(tenantId) ?? tenantCatalog[1]!;
   return entry.ui[key];
 }

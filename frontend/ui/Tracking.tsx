@@ -12,7 +12,7 @@ export const Tracking = React.memo(function Tracking() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const lastTrackedPath = React.useRef<string>(undefined);
+  const lastTrackedPath = React.useRef<string | null>(null);
   const { facebookPixelId } = useAtomValue(tenantConfigAtom);
   const facebookRef = React.useRef<{
     init: typeof init;
@@ -65,7 +65,7 @@ export const Tracking = React.memo(function Tracking() {
     }
     if (lastTrackedPath.current === path) return;
     lastTrackedPath.current = path;
-    googlePageView({ path });
+    googlePageView({ path: path ?? undefined });
     facebookRef.current?.pageView();
   }, [path, router]);
 

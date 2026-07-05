@@ -310,7 +310,7 @@ function TenantTurnover() {
                       )}
                       {auth.isAdmin && payment?.id && (
                         <Link
-                          href={{ pathname: '/platby/[id]', query: { id: payment.id } }}
+                          href={`/platby/${payment.id}`}
                           className="text-xs font-medium text-accent-11 hover:underline"
                         >
                           Detail platby
@@ -475,7 +475,7 @@ function DepositRow({
         )}
         {showDebug && transaction.payment?.id && (
           <Link
-            href={{ pathname: '/platby/[id]', query: { id: transaction.payment.id } }}
+            href={`/platby/${transaction.payment.id}`}
             className="text-xs font-medium text-accent-11 hover:underline"
           >
             Detail platby
