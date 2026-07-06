@@ -93,6 +93,5 @@ export function getTenantUi<K extends keyof TenantCatalogEntry['ui']>(
   tenantId: string,
   key: K,
 ): React.ComponentType {
-  const entry = parseTenant(tenantId) ?? tenantCatalog[1]!;
-  return entry.ui[key];
+  return (parseTenant(tenantId) ?? defaultTenant).ui[key];
 }

@@ -17,6 +17,7 @@ interface BaseAuthState {
   persons: PersonFragment[];
   couples: CoupleFragment[];
   personIds: string[];
+  isGuest: boolean;
   isMember: boolean;
   isTrainer: boolean;
   isAdmin: boolean;
@@ -35,6 +36,7 @@ const defaultAuthState: BaseAuthState = {
   persons: [],
   couples: [],
   personIds: [],
+  isGuest: false,
   isMember: false,
   isTrainer: false,
   isAdmin: false,
@@ -174,23 +176,48 @@ export const authAtom = atom<
     if (user && token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-      const jwt = base64 ? JSON.parse(atob(base64)) : {};
+      const jwt = (base64 ? JSON.parse(atob(base64)) : {}) as {
+        exp?: number;
+        user_id?: string;
+        tenant_id?: string;
+        username?: string;
+        email?: string;
+        my_person_ids?: string[];
+        my_tenant_ids?: string[];
+        my_cohort_ids?: string[];
+        my_couple_ids?: string[];
+        guest_tenant_ids?: string[];
+        member_tenant_ids?: string[];
+        trainer_tenant_ids?: string[];
+        admin_tenant_ids?: string[];
+        is_member?: boolean;
+        is_trainer?: boolean;
+        is_admin?: boolean;
+        is_system_admin?: boolean;
+      };
 
       const persons =
         user.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) || [];
+
+      const tenantId = get(tenantIdAtom);
+      const isGuest = jwt.guest_tenant_ids?.includes(tenantId) ?? false;
+      const isMember = jwt.member_tenant_ids?.includes(tenantId) ?? jwt.is_member ?? false;
+      const isTrainer = jwt.trainer_tenant_ids?.includes(tenantId) ?? jwt.is_trainer ?? false;
+      const isAdmin = jwt.admin_tenant_ids?.includes(tenantId) ?? jwt.is_admin ?? false;
+      const isSystemAdmin = jwt.is_system_admin ?? false;
 
       nextValue = {
         user,
         persons,
         couples: persons.flatMap((x) => x.allCouplesList || []),
         personIds: persons.map((x) => x.id),
-
         isLoggedIn: !!user?.id,
-        isMember: !!jwt.is_member,
-        isTrainer: !!jwt.is_trainer,
-        isTrainerOrAdmin: !!jwt.is_trainer || !!jwt.is_admin || !!jwt.is_system_admin,
-        isAdmin: !!jwt.is_admin || !!jwt.is_system_admin,
-        isSystemAdmin: !!jwt.is_system_admin,
+        isGuest,
+        isMember,
+        isTrainer,
+        isTrainerOrAdmin: isTrainer || isAdmin,
+        isAdmin: isAdmin || isSystemAdmin,
+        isSystemAdmin,
       };
     }
 
