@@ -14,8 +14,8 @@
     "import:people": "node ./scripts/import_people_from_csv.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.363.0",
-    "@aws-sdk/s3-request-presigner": "3.363.0",
+    "@aws-sdk/client-s3": "3.1080.0",
+    "@aws-sdk/s3-request-presigner": "3.1080.0",
     "@dataplan/json": "~1.0.0",
     "@dataplan/pg": "~1.0.3",
     "@graphile/simplify-inflection": "~8.0.0",
@@ -37,7 +37,7 @@
     "graphql": "^16.14.0",
     "helmet": "~8.1.0",
     "html-to-text": "~9.0.5",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "lru-cache": "^11.2.4",
     "morgan": "~1.10.1",
     "pg": "8.16.3",
