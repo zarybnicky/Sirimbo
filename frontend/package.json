@@ -68,7 +68,7 @@
     "react-dom": "19.2.3",
     "react-dropzone": "^14.3.8",
     "react-facebook-pixel": "~1.0.4",
-    "react-hook-form": "~7.65.0",
+    "react-hook-form": "~7.80.0",
     "react-leaflet": "~4.2.1",
     "react-lite-youtube-embed": "^2.6.0",
     "react-modal-sheet": "^5.2.1",
