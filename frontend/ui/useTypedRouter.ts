@@ -36,11 +36,11 @@ export const zRouterId = z.preprocess(
     .number()
     .optional()
     .transform((x) => (x ? x.toString() : '')),
-);
+).prefault(undefined);
 export const zRouterString = z.preprocess(
   (x) => (Array.isArray(x) ? x[0] : x),
   z.coerce
     .string()
     .optional()
     .transform((x) => x || ''),
-);
+).prefault(undefined);
