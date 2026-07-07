@@ -119,6 +119,7 @@
     "eslint-plugin-react-hook-form": "^0.3.1",
     "eslint-plugin-tailwindcss": "~3.18.2",
     "eslint-plugin-unicorn": "^62.0.0",
+    "node-gyp": "^13.0.1",
     "postcss": "~8.5.6",
     "prettier": "3.6.2",
     "typescript": "~5.9.3",

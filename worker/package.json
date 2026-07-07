@@ -23,7 +23,7 @@
     "date-fns": "~2.30.0",
     "graphile-config": "1.0.1",
     "graphile-worker": "^0.16.6",
-    "handlebars": "^4.7.8",
+    "handlebars": "^4.7.9",
     "helmet": "~8.1.0",
     "html-to-text": "~9.0.5",
     "impit": "^0.14.1",
