@@ -73,7 +73,6 @@
         rozpisovnik-api
         rozpisovnik-worker
         rozpisovnik-migrations
-        ruian-csv-adr-st
         ruian-address-cache;
     });
 
@@ -85,6 +84,27 @@
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
+        ({ lib, ... }: {
+          options.my.argocdApps = lib.mkOption {
+            type = lib.types.listOf lib.types.attrs;
+            default = [];
+          };
+          options.my.seaweedfs.buckets = lib.mkOption {
+            default = {};
+            type = lib.types.attrsOf (lib.types.submodule ({ ... }: {
+              options = {
+                ensure = lib.mkOption {
+                  type = lib.types.bool;
+                  default = false;
+                };
+                helmValues = lib.mkOption {
+                  type = lib.types.listOf lib.types.anything;
+                  default = [];
+                };
+              };
+            }));
+          };
+        })
         self.nixosModules.default
         { nixpkgs.overlays = builtins.attrValues self.overlays; }
         ./nix/container.nix
