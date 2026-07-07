@@ -42,6 +42,7 @@ export default compose(
   productionBrowserSourceMaps: true,
   devIndicators: false,
   typedRoutes: true,
+  transpilePackages: ['html-react-parser'],
 
   output: 'standalone',
   bundlePagesRouterDependencies: true,

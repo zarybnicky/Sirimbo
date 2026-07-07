@@ -28,6 +28,8 @@ npm-debug.log*
 .env.test.local
 .env.production.local
 
+next-env.d.ts
+
 frontend/public/sw.js
 frontend/public/sw.js.map
 frontend/public/swe-worker-*.js
