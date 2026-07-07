@@ -26,3 +26,5 @@ BEGIN
   END IF;
 END
 $$ LANGUAGE plpgsql;
+
+--!include functions/create_jwt_token.sql
