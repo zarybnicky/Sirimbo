@@ -245,7 +245,7 @@ importers:
         version: 11.0.0(ckeditor5@47.3.0)(react@19.2.3)
       '@hookform/resolvers':
         specifier: ~5.4.0
-        version: 5.4.0(react-hook-form@7.65.0(react@19.2.3))
+        version: 5.4.0(react-hook-form@7.80.0(react@19.2.3))
       '@icons-pack/react-simple-icons':
         specifier: ^13.8.0
         version: 13.8.0(react@19.2.3)
@@ -406,8 +406,8 @@ importers:
         specifier: ~1.0.4
         version: 1.0.4
       react-hook-form:
-        specifier: ~7.65.0
-        version: 7.65.0(react@19.2.3)
+        specifier: ~7.80.0
+        version: 7.80.0(react@19.2.3)
       react-leaflet:
         specifier: ~4.2.1
         version: 4.2.1(leaflet@1.9.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -9408,8 +9408,8 @@ packages:
   react-facebook-pixel@1.0.4:
     resolution: {integrity: sha512-givZY8MS0v/mdbRzvcvouBo/j0TtDiu/93f4gIjJXwDDgwlf6bYUiQvb2qcqjluOOD/hIKUQHNYLNsSOnoEklg==}
 
-  react-hook-form@7.65.0:
-    resolution: {integrity: sha512-xtOzDz063WcXvGWaHgLNrNzlsdFgtUWcb32E6WFaGTd7kPZG3EeDusjdZfUsPwKCKVXy1ZlntifaHZ4l8pAsmw==}
+  react-hook-form@7.80.0:
+    resolution: {integrity: sha512-4P+fk6oXsxY+6xSj7Euhc2sumQD8zQqCuVHoJwoyp9EchP+IUW9OESB7uHFJOKsIBQ4MQqYE84INJFqUCYNoOg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -11238,8 +11238,6 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.3.0
       '@ckeditor/ckeditor5-upload': 47.3.0
       ckeditor5: 47.3.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-alignment@47.3.0':
     dependencies:
@@ -11341,8 +11339,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       '@ckeditor/ckeditor5-widget': 47.3.0
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-cloud-services@47.3.0':
     dependencies:
@@ -11393,8 +11389,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-classic@47.3.0':
     dependencies:
@@ -11404,8 +11398,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-decoupled@47.3.0':
     dependencies:
@@ -11415,8 +11407,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-inline@47.3.0':
     dependencies:
@@ -11458,16 +11448,12 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-utils': 47.3.0
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-enter@47.3.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 47.3.0
       '@ckeditor/ckeditor5-engine': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-essentials@47.3.0':
     dependencies:
@@ -11490,8 +11476,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-font@47.3.0':
     dependencies:
@@ -11546,8 +11530,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       '@ckeditor/ckeditor5-widget': 47.3.0
       ckeditor5: 47.3.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-html-embed@47.3.0':
     dependencies:
@@ -11731,8 +11713,6 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.3.0
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-paste-from-office@47.3.0':
     dependencies:
@@ -11779,6 +11759,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.3.0
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-source-editing@47.3.0':
     dependencies:
@@ -11809,6 +11791,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-table@47.3.0':
     dependencies:
@@ -11821,6 +11805,8 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 47.3.0
       ckeditor5: 47.3.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-theme-lark@47.3.0':
     dependencies:
@@ -11896,6 +11882,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.3.0
       ckeditor5: 47.3.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@colordx/core@5.5.0': {}
 
@@ -12769,10 +12757,10 @@ snapshots:
       react-dom: 19.2.3(react@19.2.3)
       use-sync-external-store: 1.6.0(react@19.2.3)
 
-  '@hookform/resolvers@5.4.0(react-hook-form@7.65.0(react@19.2.3))':
+  '@hookform/resolvers@5.4.0(react-hook-form@7.80.0(react@19.2.3))':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.65.0(react@19.2.3)
+      react-hook-form: 7.80.0(react@19.2.3)
 
   '@humanfs/core@0.19.1': {}
 
@@ -21781,7 +21769,7 @@ snapshots:
 
   react-facebook-pixel@1.0.4: {}
 
-  react-hook-form@7.65.0(react@19.2.3):
+  react-hook-form@7.80.0(react@19.2.3):
     dependencies:
       react: 19.2.3
 
