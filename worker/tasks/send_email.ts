@@ -18,7 +18,7 @@ const task: Task<"send_email"> = async (payload) => {
       throw new Error(`Disallowed template name '${template}'`);
     }
     const templateSrc = await promises.readFile(`${import.meta.dirname}/../templates/${template}`, "utf8");
-    const mjmlResult = mjml2html(templateSrc, {
+    const mjmlResult = await mjml2html(templateSrc, {
       preprocessors: [
         (src) => Handlebars.compile(src)(variables)
       ],
