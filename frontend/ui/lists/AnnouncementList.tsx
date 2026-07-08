@@ -71,7 +71,7 @@ export function AnnouncementList() {
       <div className="grow h-full overflow-y-auto scrollbar">
         {pages.map((cursor, index) => (
           <AnnouncementListPage
-            key={cursor}
+            key={cursor || ''}
             cursor={cursor}
             currentId={router.query.id}
             search={search}

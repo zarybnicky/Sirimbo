@@ -44,7 +44,7 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@radix-ui/react-dropdown-menu@2.1.16": "patches/@radix-ui__react-dropdown-menu@2.1.16.patch"
+      "@radix-ui/react-dropdown-menu@2.1.20": "patches/@radix-ui__react-dropdown-menu@2.1.20.patch"
     },
     "onlyBuiltDependencies": [
       "@parcel/watcher",

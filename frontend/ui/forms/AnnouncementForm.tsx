@@ -24,22 +24,18 @@ import { CohortListDocument } from '@/graphql/Cohorts';
 const ROLE_OPTIONS: {
   value: AnnouncementAudienceRole;
   label: string;
-  helperText: string;
 }[] = [
   {
     value: 'MEMBER',
     label: 'Členové',
-    helperText: 'Zobrazit oznámení pouze členům klubu.',
   },
   {
     value: 'TRAINER',
     label: 'Trenéři',
-    helperText: 'Omezit viditelnost na trenéry klubu.',
   },
   {
     value: 'ADMINISTRATOR',
     label: 'Administrátoři',
-    helperText: 'Zobrazit pouze správcům systému.',
   },
 ];
 
@@ -213,12 +209,7 @@ function AnnouncementAudienceEditor({
 
   return (
     <div className="space-y-4 rounded-md border border-neutral-6 bg-neutral-1 p-4">
-      <div>
-        <h3 className="text-sm font-semibold text-neutral-12">Cílové publikum</h3>
-        <p className="text-xs text-neutral-11">
-          Určete, které role nebo skupiny mají oznámení vidět.
-        </p>
-      </div>
+      <h3 className="text-sm font-semibold text-neutral-12">Viditelnost</h3>
 
       <section className="space-y-2">
         <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
