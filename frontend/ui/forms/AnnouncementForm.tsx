@@ -273,7 +273,6 @@ function AudienceRoleCheckboxes({
           checked={field.value?.includes(role.value)}
           value={role.value}
           label={role.label}
-          helperText={role.helperText}
           onChange={(event) => {
             event.stopPropagation();
             toggle(role.value);

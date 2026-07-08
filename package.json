@@ -17,17 +17,17 @@
     "@parcel/watcher": "~2.5.6",
     "@pgsql/types": "~17.6.2",
     "@tsconfig/node24": "~24.0.4",
-    "@types/node": "~25.0.0",
+    "@types/node": "~25.0.10",
     "@urql/exchange-graphcache": "~9.0.1",
     "graphile-migrate": "2.0.0-rc.3",
     "graphql": "~16.14.0",
     "graphql-tag": "~2.12.7",
     "libpg-query": "~17.7.3",
     "pgsql-parser": "^17.9.15",
-    "prettier": "~3.7.4",
+    "prettier": "~3.9.4",
     "prop-types": "~15.8.1",
     "typescript": "~5.9.3",
-    "typescript-language-server": "~5.1.0"
+    "typescript-language-server": "~5.3.0"
   },
   "scripts": {
     "crawler": "node --experimental-strip-types worker/crawler/cli.ts",
@@ -59,7 +59,8 @@
       "unrs-resolver"
     ],
     "overrides": {
-      "@opentelemetry/sdk-trace-base": "2.8.0"
+      "@opentelemetry/sdk-trace-base": "2.8.0",
+      "zod": "4.4.3"
     }
   },
   "packageManager": "pnpm@10.34.1+sha512.b58fbde6dca66a929538021581f648b4570b6ca19b18e7cbd7f2c07a7b24454155388dacdf08f2af3678e88a6d1fe04f9d609df24bf51735a060ea041b374ab7"

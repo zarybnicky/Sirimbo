@@ -16,7 +16,7 @@
     "sql:generate": "pgtyped -c sql.config.json"
   },
   "dependencies": {
-    "@duckdb/node-api": "1.5.2-r.1",
+    "@duckdb/node-api": "1.5.4-r.1",
     "@hyperdx/node-opentelemetry": "^0.11.0",
     "@pgtyped/runtime": "^2.4.2",
     "@traversable/zod": "^0.0.57",
@@ -25,12 +25,12 @@
     "graphile-config": "1.0.1",
     "graphile-worker": "^0.16.6",
     "handlebars": "^4.7.9",
-    "helmet": "~8.1.0",
+    "helmet": "~8.2.0",
     "html-to-text": "~9.0.5",
     "impit": "^0.14.2",
     "mjml": "^5.4.0",
     "nodemailer": "~9.0.3",
-    "pg": "8.16.3",
+    "pg": "8.22.0",
     "pg-cursor": "^2.21.0",
     "proj4": "^2.20.9",
     "uglify-js": "^3.19.3",
@@ -42,15 +42,15 @@
     "@tsconfig/node24": "^24.0.4",
     "@types/html-to-text": "~9.0.4",
     "@types/mjml": "^5.0.0",
-    "@types/node": "^24.10.0",
+    "@types/node": "^24.13.3",
     "@types/nodemailer": "~8.0.1",
-    "@types/pg": "~8.15.6",
+    "@types/pg": "~8.20.0",
     "@types/pg-cursor": "^2.7.2",
     "cac": "^7.0.0",
     "eslint": "^9.39.1",
-    "eslint-plugin-de-morgan": "^2.0.0",
-    "eslint-plugin-import-x": "^4.16.2",
+    "eslint-plugin-de-morgan": "^2.1.2",
+    "eslint-plugin-import-x": "^4.17.1",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.48.1"
+    "typescript-eslint": "^8.63.0"
   }
 }
