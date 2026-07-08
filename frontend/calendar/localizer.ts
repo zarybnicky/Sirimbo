@@ -10,10 +10,8 @@ import {
   gte,
   lte,
 } from 'date-arithmetic';
-// eslint-disable-next-line import-x/no-duplicates
-import dateFnsFormat from 'date-fns/format';
-// eslint-disable-next-line import-x/no-duplicates
-import cs from 'date-fns/locale/cs';
+import { format as dateFnsFormat } from 'date-fns/format';
+import { cs } from 'date-fns/locale/cs';
 
 const MILLI = {
   seconds: 1000,

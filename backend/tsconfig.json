@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
+    "types": ["node", "morgan", "pg", "ws", "jsonwebtoken", "express-http-proxy", "express", "cors", "compression", "cookie-parser"],
     "strict": true,
     "isolatedModules": true,
     "esModuleInterop": true,

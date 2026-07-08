@@ -5,7 +5,6 @@ chdir(import.meta.dirname);
 
 import process from 'process';
 import express from 'express';
-import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import helmet from 'helmet';
@@ -31,9 +30,9 @@ app.use(
 app.use(cookieParser());
 app.use(morgan('tiny'));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.text({ type: 'application/graphql' }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.text({ type: 'application/graphql' }));
 
 installStarletProxy(app);
 

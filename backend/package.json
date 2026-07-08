@@ -23,7 +23,6 @@
     "@hyperdx/node-opentelemetry": "^0.11.0",
     "@opentelemetry/api": "^1.9.1",
     "@types/cookie-parser": "^1.4.10",
-    "body-parser": "~1.20.5",
     "compression": "~1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
@@ -37,7 +36,6 @@
     "graphile-config": "~1.0.1",
     "graphql": "^16.14.0",
     "helmet": "~8.2.0",
-    "html-to-text": "~10.0.0",
     "jsonwebtoken": "^9.0.3",
     "lru-cache": "^11.5.2",
     "morgan": "~1.11.0",
@@ -51,12 +49,10 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@tsconfig/node24": "^24.0.4",
-    "@types/body-parser": "~1.19.6",
     "@types/compression": "~1.8.1",
     "@types/cors": "^2.8.19",
     "@types/express": "~5.0.6",
     "@types/express-http-proxy": "^1.6.7",
-    "@types/html-to-text": "~9.0.4",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "~1.9.10",
     "@types/node": "^24.13.3",
@@ -65,7 +61,7 @@
     "eslint": "^9.39.1",
     "eslint-plugin-de-morgan": "^2.1.2",
     "eslint-plugin-import-x": "^4.17.1",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.63.0"
   }
 }

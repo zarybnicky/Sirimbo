@@ -16,7 +16,8 @@ import { tenantIdAtom } from '@/ui/state/auth';
 import { useAtomValue } from 'jotai';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { CstsPersonLink } from '@/ui/csts-links';
-import { Facebook, Globe, Instagram, Music2 } from 'lucide-react';
+import { Globe, Music2 } from 'lucide-react';
+import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
@@ -103,7 +104,7 @@ export function PersonView({ id }: { id: string }) {
       href: item.instagramUsername
         ? `https://www.instagram.com/${encodeURIComponent(item.instagramUsername)}`
         : null,
-      Icon: Instagram,
+      Icon: SiInstagram,
     },
     {
       id: 'tiktok',
@@ -123,7 +124,7 @@ export function PersonView({ id }: { id: string }) {
         item.facebookUrl?.startsWith('http://')
           ? item.facebookUrl
           : null,
-      Icon: Facebook,
+      Icon: SiFacebook,
     },
     {
       id: 'website',

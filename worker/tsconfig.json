@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
+    "types": ["node", "mjml", "html-to-text", "nodemailer", "pg", "pg-cursor"],
     "noEmit": true,
     "allowJs": true,
     "resolveJsonModule": true,

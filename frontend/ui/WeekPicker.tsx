@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { fullDateFormatter } from '@/ui/format';
-import getWeek from 'date-fns/getWeek';
+import { getWeek } from 'date-fns/getWeek';
 import { add, endOf, subtract } from 'date-arithmetic';
 
 type WeekPickerProps = {
