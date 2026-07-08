@@ -1,4 +1,4 @@
-import type { EventFragment, EventInstanceWithTrainerFragment } from '@/graphql/Event';
+import type { EventInstanceWithTrainerFragment } from '@/graphql/Event';
 import type { CompetitionEntry } from '@/ui/Competitions';
 
 export type DateRange = {
@@ -18,7 +18,6 @@ type CalendarItemBase = {
 
 export type CalendarInstanceEvent = CalendarItemBase & {
   kind: 'event';
-  event: EventFragment;
   instance: EventInstanceWithTrainerFragment;
 };
 

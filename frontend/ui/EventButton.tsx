@@ -1,4 +1,4 @@
-import type { EventFragment, EventInstanceWithTrainerFragment } from '@/graphql/Event';
+import type { EventInstanceWithTrainerFragment } from '@/graphql/Event';
 import { EventSummary } from '@/ui/EventSummary';
 import { cn } from '@/lib/cn';
 import {
@@ -18,14 +18,12 @@ import { useActions } from '@/lib/actions';
 import { ActionGroup } from './ActionGroup';
 
 export function EventButton({
-  event,
   instance,
   viewer,
   showDate,
   attendance,
   suffix,
 }: {
-  event: EventFragment;
   instance: EventInstanceWithTrainerFragment;
   showDate?: boolean;
   viewer: 'auto' | 'trainer' | 'couple';
@@ -34,7 +32,7 @@ export function EventButton({
 }) {
   const auth = useAuth();
 
-  const registrations = event.eventRegistrations.nodes || [];
+  const registrations = instance.registrations.nodes || [];
 
   const start = new Date(instance.since);
   const end = new Date(instance.until);
@@ -54,7 +52,7 @@ export function EventButton({
 
   const showInlineAttendance =
     attendance === 'inline' &&
-    event.type === 'GROUP' &&
+    instance.type === 'GROUP' &&
     canManageInstance({ auth, item: instance });
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
@@ -78,9 +76,9 @@ export function EventButton({
             className={cn(
               'group grow flex min-w-0 items-center gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
-              event?.type === 'LESSON' &&
-                !event.isLocked &&
-                event.capacity > event.eventRegistrations.totalCount * 2
+              instance?.type === 'LESSON' &&
+                !instance.isLocked &&
+                (instance.capacity ?? 0) > instance.registrations.totalCount * 2
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}
@@ -91,7 +89,7 @@ export function EventButton({
             <div
               className={cn('min-w-0 grow', instance.isCancelled ? 'line-through' : '')}
             >
-              {event.name ||
+              {instance.name ||
                 (showTrainer ? (
                   `${formatEventType(instance.type)}: ${instanceTrainers}`
                 ) : registrations.length > 0 ? (
@@ -115,7 +113,7 @@ export function EventButton({
         </PopoverTrigger>
 
         <PopoverContent align="start" className="flex flex-col gap-2">
-          <EventSummary offsetButtons event={event} instance={instance} />
+          <EventSummary offsetButtons instance={instance} />
           <ActionGroup primary={['eventInstance.edit', 'eventInstance.attendance']} actions={actions} />
         </PopoverContent>
       </Popover>

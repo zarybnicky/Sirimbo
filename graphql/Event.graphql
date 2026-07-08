@@ -65,11 +65,17 @@ fragment EventInstance on EventInstance {
 fragment EventInstanceWithTrainer on EventInstance {
   ...EventInstance
   eventId
+  parentId
   name
   type
+  summary
+  capacity
+  capacityUnit
+  isLocked
   isVisible
   isPublic
   locationText
+  remainingPersonSpots
   location {
     id
     name
@@ -88,6 +94,23 @@ fragment EventInstanceWithTrainer on EventInstance {
   }
   managerPersonIds
   stats
+  targetCohortsList {
+    id
+    cohort {
+      id
+      name
+      colorRgb
+    }
+  }
+  myRegistrationsList {
+    ...EventRegistration
+  }
+  registrations(first: 3) {
+    totalCount
+    nodes {
+      ...EventRegistration
+    }
+  }
 }
 
 fragment EventAttendanceSummary on Event {
@@ -262,9 +285,6 @@ query EventInstanceRange(
     parentId: $parentId
   ) {
     ...EventInstanceWithTrainer
-    event {
-      ...Event
-    }
   }
 }
 

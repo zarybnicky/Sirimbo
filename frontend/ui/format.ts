@@ -28,6 +28,29 @@ const names: { [type in EventType]: string } = {
 export const formatEventType = (type: EventType | null | undefined) =>
   type ? names[type] : '';
 
+export const formatDefaultInstanceName = (event: {
+  name: string | null;
+  type: EventType | null;
+  registrations: {
+    nodes: EventRegistrationFragment[] | null;
+  } | null;
+  trainersList: {
+    person: {
+      name?: string | null;
+    } | null;
+  }[] | null;
+}) => {
+  if (event.name) return event.name;
+
+  if (event.type === 'LESSON' && event?.registrations?.nodes && event.registrations.nodes.length > 0)
+    return event.registrations.nodes.map(formatRegistrant).join(', ');
+
+  let name = formatEventType(event.type);
+  if (event.type === 'RESERVATION' && event?.trainersList && event.trainersList.length > 0)
+    name += `: ${event.trainersList.map((x) => x?.person?.name).filter(Boolean).join(', ')}`;
+  return name;
+};
+
 export const formatDefaultEventName = (event: {
   name: string;
   type: EventType;

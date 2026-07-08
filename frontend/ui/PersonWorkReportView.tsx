@@ -3,19 +3,14 @@ import {
   EventInstanceRangeDocument,
   type EventInstanceRangeQuery,
 } from '@/graphql/Event';
-import { dateTimeFormatter, formatDefaultEventName } from '@/ui/format';
+import { dateTimeFormatter, formatDefaultInstanceName } from '@/ui/format';
 import Link from 'next/link';
 import { parseAsString, useQueryStates } from 'nuqs';
 import React from 'react';
 import { useQuery } from 'urql';
 
-type EventInstance = NonNullable<EventInstanceRangeQuery['list']>[number];
-type EventInstanceWithEvent = EventInstance & {
-  event: NonNullable<EventInstance['event']>;
-};
-
 type ReportRow = {
-  instance: EventInstanceWithEvent;
+  instance: NonNullable<EventInstanceRangeQuery['list']>[number];
   title: string;
   location: string;
   durationMinutes: number;
@@ -118,12 +113,11 @@ export function PersonWorkReportView({ id }: { id: string }) {
     const reportNowTime = reportNow.getTime();
 
     for (const instance of data?.list ?? []) {
-      if (!instance.event || instance.isCancelled) continue;
+      if (instance.isCancelled) continue;
       if (new Date(instance.until).getTime() > reportNowTime) continue;
       if (!instance.trainersList?.some((trainer) => trainer.personId === id)) continue;
 
-      const type = instance.type ?? instance.event.type;
-      if (type !== 'GROUP' && type !== 'LESSON') continue;
+      if (instance.type !== 'GROUP' && instance.type !== 'LESSON') continue;
 
       const since = new Date(instance.since);
       const until = new Date(instance.until);
@@ -133,8 +127,8 @@ export function PersonWorkReportView({ id }: { id: string }) {
       const stats =
         typeof instance.stats === 'string' ? JSON.parse(instance.stats) : instance.stats;
       const row: ReportRow = {
-        instance: { ...instance, event: instance.event },
-        title: instance.name || formatDefaultEventName(instance.event),
+        instance,
+        title: instance.name || formatDefaultInstanceName(instance),
         location: instance.location?.name || instance.locationText || '—',
         durationMinutes: Math.max(
           0,
@@ -150,7 +144,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
             : 0,
       };
 
-      month[type === 'GROUP' ? 'groupRows' : 'privateRows'].push(row);
+      month[instance.type === 'GROUP' ? 'groupRows' : 'privateRows'].push(row);
     }
 
     for (const month of byKey.values()) {
@@ -280,9 +274,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
                           {dateTimeFormatter.format(new Date(row.instance.since))}
                         </td>
                         <td>
-                          <Link
-                            href={`/akce/${row.instance.event.id}/termin/${row.instance.id}`}
-                          >
+                          <Link href={`/termin/${row.instance.id}`}>
                             {row.title}
                           </Link>
                         </td>

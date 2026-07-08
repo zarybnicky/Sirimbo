@@ -173,23 +173,23 @@ function BirthdayChip({ calendarEvent }: { calendarEvent: CalendarBirthdayEvent 
 }
 
 function GroupLesson({ calendarEvent }: { calendarEvent: CalendarInstanceEvent }) {
-  const { event, instance } = calendarEvent;
+  const { instance } = calendarEvent;
 
   return (
     <div
       className={cardCls({
         className:
           'relative group min-w-[200px] w-72 rounded-lg border-accent-7 border' +
-          (event.eventTargetCohortsList.length > 0 ? ' pl-5' : ' pl-3'),
+          (instance.targetCohortsList && instance.targetCohortsList.length > 0 ? ' pl-5' : ' pl-3'),
       })}
     >
       <ConflictsInstanceBadge
         instanceId={instance.id}
         className="absolute right-8 top-3 text-accent-11"
       />
-      {event.eventTargetCohortsList.length > 0 && (
+      {instance.targetCohortsList && instance.targetCohortsList.length > 0 && (
         <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
-          {event.eventTargetCohortsList
+          {instance.targetCohortsList
             .map((x) => x.cohort?.colorRgb)
             .filter(isTruthy)
             .map((color) => (
@@ -212,7 +212,7 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarInstanceEvent }
         {instance.name ||
           (instance.trainersList ?? []).map((x) => x.person?.name).join(', ')}
       </Link>
-      <EventSummary event={event} instance={instance} />
+      <EventSummary instance={instance} />
     </div>
   );
 }
@@ -264,7 +264,7 @@ function LessonGroup({ items }: { items: CalendarInstanceEvent[] }) {
             {showHeader && (
               <div className="ml-2.5 mt-1 text-sm text-accent-11">{loc}</div>
             )}
-            <EventButton event={item.event} instance={item.instance} viewer="trainer" />
+            <EventButton instance={item.instance} viewer="trainer" />
           </React.Fragment>
         );
       })}

@@ -6,7 +6,7 @@ import {
   type EventInstanceRangeQueryVariables,
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
-import { formatDefaultEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
+import { formatDefaultInstanceName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { add } from 'date-arithmetic';
 import React from 'react';
@@ -19,7 +19,6 @@ type Instance = NonNullable<EventInstanceRangeQuery['list']>[number];
 
 type EnrichedInstance = {
   instance: Instance;
-  event: NonNullable<Instance['event']>;
   since: Date;
   until: Date;
 };
@@ -88,18 +87,16 @@ function gatherBuckets(
   const buckets = new Map<string, GroupingBucket>();
 
   for (const instance of data?.list ?? []) {
-    if (!instance || instance.isCancelled) continue;
-    const event = instance.event;
-    if (!event || !event.isVisible) continue;
+    if (!instance || instance.isCancelled || !instance.isVisible) continue;
 
     const since = new Date(instance.since);
     const until = new Date(instance.until);
 
-    const locationName = event.location?.name || event.locationText || 'Neurčeno';
-    const locationKey = event.location?.id
-      ? `id:${event.location.id}`
-      : event.locationText
-        ? `txt:${event.locationText}`
+    const locationName = instance.location?.name || instance.locationText || 'Neurčeno';
+    const locationKey = instance.location?.id
+      ? `id:${instance.location.id}`
+      : instance.locationText
+        ? `txt:${instance.locationText}`
         : 'none';
 
     const groups =
@@ -107,7 +104,7 @@ function gatherBuckets(
         ? trainerGroups(instance)
         : [{ key: locationKey, label: locationName }];
 
-    const enriched: EnrichedInstance = { instance, event, since, until };
+    const enriched: EnrichedInstance = { instance, since, until };
 
     for (const group of groups) {
       if (!buckets.has(group.key)) {
@@ -249,7 +246,7 @@ export default function NowPage() {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                      {bucket.current.map(({ event, since, until, instance }) => {
+                      {bucket.current.map(({ since, until, instance }) => {
                         const trainers = formatTrainers(instance);
                         return (
                           <article
@@ -257,10 +254,10 @@ export default function NowPage() {
                             className="rounded-2xl border border-accent-7 bg-accent-3/40 p-4 shadow-inner"
                           >
                             <p className="text-sm uppercase tracking-wide text-accent-11">
-                              {formatEventType(event.type)}
+                              {formatEventType(instance.type)}
                             </p>
                             <h3 className="mt-1 text-2xl font-semibold text-accent-12">
-                              {instance.name || formatDefaultEventName(event)}
+                              {instance.name || formatDefaultInstanceName(instance)}
                             </h3>
                             <p className="mt-2 text-lg text-accent-10">
                               {shortTimeFormatter.formatRange(since, until)}
@@ -284,7 +281,7 @@ export default function NowPage() {
                       </h4>
                       {bucket.upcoming.length > 0 ? (
                         <div className="mt-3 flex flex-col gap-3">
-                          {bucket.upcoming.map(({ event, since, until, instance }) => {
+                          {bucket.upcoming.map(({ since, until, instance }) => {
                             const trainers = formatTrainers(instance);
                             return (
                               <article
@@ -292,7 +289,7 @@ export default function NowPage() {
                                 className="rounded-xl border border-accent-6 bg-accent-2/60 p-3"
                               >
                                 <p className="text-sm font-medium text-accent-12">
-                                  {instance.name || formatDefaultEventName(event)}
+                                  {instance.name || formatDefaultInstanceName(instance)}
                                 </p>
                                 <p className="text-sm text-neutral-9">
                                   {shortTimeFormatter.formatRange(since, until)}

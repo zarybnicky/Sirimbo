@@ -1,13 +1,11 @@
 import {
-  EventFragment,
   EventInstanceApproxPriceDocument,
   EventInstanceWithTrainerFragment,
 } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from '@/lib/cn';
 import {
-  formatDefaultEventName,
-  formatEventType,
+  formatDefaultInstanceName,
   formatRegistrant,
   moneyFormatter,
   shortTimeFormatter,
@@ -21,42 +19,29 @@ import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
 
 export function EventSummary({
-  event,
   instance,
   offsetButtons,
 }: {
-  event: EventFragment;
   instance: EventInstanceWithTrainerFragment;
   offsetButtons?: boolean;
 }) {
   const actions = useActions(eventInstanceActions, instance);
-  const registrationCount = event.eventRegistrations.totalCount;
-  const myRegistrations = event.myRegistrationsList || [];
+  const registrationCount = instance.registrations.totalCount;
+  const myRegistrations = instance.myRegistrationsList || [];
   const start = new Date(instance.since);
   const end = new Date(instance.until);
   const locationLabel = instance.location?.name || instance.locationText;
-
-  const instancesBefore = event.eventInstancesList.filter(
-    (e) => e.since < instance.since,
-  ).length;
 
   return (
     <div className="flex flex-col gap-2 text-sm">
       {offsetButtons && (
         <div className="mt-2 flex flex-col">
           <Link
-            href={`/akce/${event.id}`}
+            href={`/termin/${instance.id}`}
             className={cn('text-xl', instance.isCancelled ? 'line-through' : 'underline')}
           >
-            {instance.name || formatDefaultEventName(event)}
+            {instance.name || formatDefaultInstanceName(instance)}
           </Link>
-
-          <div>
-            {formatEventType(instance.type)}
-            {event.eventInstancesList.length > 1
-              ? ` (${instancesBefore + 1}. z ${event.eventInstancesList.length} opakování)`
-              : ' (jednorázová)'}
-          </div>
         </div>
       )}
 
@@ -87,8 +72,8 @@ export function EventSummary({
       <div className="flex items-center gap-2">
         <Users className="size-5 text-accent-11" />
         <div>
-          {event.eventTargetCohortsList.length > 0 ? (
-            event.eventTargetCohortsList.map((x) => x.cohort?.name).join(', ')
+          {instance.targetCohortsList && instance.targetCohortsList.length > 0 ? (
+            instance.targetCohortsList.map((x) => x.cohort?.name).join(', ')
           ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
           ) : myRegistrations.length > 0 ? (
@@ -105,7 +90,7 @@ export function EventSummary({
                 : []),
             ]
           ) : registrationCount < 6 ? (
-            event.eventRegistrations.nodes.map((x) => (
+            instance.registrations.nodes.map((x) => (
               <div key={x.id}>{formatRegistrant(x)}</div>
             ))
           ) : (
@@ -114,7 +99,7 @@ export function EventSummary({
         </div>
       </div>
 
-      <MyRegistrationsDialog event={event} />
+      <MyRegistrationsDialog instance={instance} />
 
       <div
         className={cn('absolute', offsetButtons ? 'right-9 top-3.5' : 'right-2 top-2')}

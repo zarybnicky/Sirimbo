@@ -70,7 +70,7 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     id: 'eventInstance.attendance',
     label: 'Docházka',
     visible: canManageInstance,
-    href: ({ item }) => `/akce/${item.eventId}/termin/${item.id}`,
+    href: ({ item }) => `/termin/${item.id}`,
   },
   {
     id: 'eventInstance.detach',

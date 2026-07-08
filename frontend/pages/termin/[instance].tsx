@@ -3,12 +3,11 @@ import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { formatDefaultEventName } from '@/ui/format';
-import { EventDocument } from '@/graphql/Event';
+import { formatDefaultInstanceName } from '@/ui/format';
+import { EventInstanceWithAttendanceDocument } from '@/graphql/Event';
 import { EventList } from '@/ui/lists/EventList';
 import { useAuth } from '@/ui/use-auth';
 import { NextSeo } from 'next-seo';
-import * as React from 'react';
 import { useQuery } from 'urql';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
@@ -21,21 +20,26 @@ const QueryParams = z.object({
 function EventInstancePage() {
   const router = useTypedRouter(QueryParams);
   const auth = useAuth();
-  const { id } = router.query;
-  const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
-  const event = data?.event;
+  const { instance: instanceId } = router.query;
+  const [{ data }] = useQuery({
+    query: EventInstanceWithAttendanceDocument,
+    variables: { id: instanceId },
+    pause: !instanceId,
+  });
+  const instance = data?.eventInstance;
+  const title = instance?.name || (instance ? formatDefaultInstanceName(instance) : '');
 
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
+      <NextSeo title={title} />
       <WithSidebar sidebar={<EventList />}>
-        {event && <PageHeader title={event?.name || formatDefaultEventName(event)} />}
         <div
           className={
             auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'
           }
         >
-          {data?.event && <BasicEventInfo event={data.event} />}
+          {instance && <PageHeader title={title} />}
+          {instance && <BasicEventInfo instance={instance} />}
           <InstanceAttendanceView id={router.query.instance} />
         </div>
       </WithSidebar>

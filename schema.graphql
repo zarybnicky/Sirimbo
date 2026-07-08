@@ -3409,6 +3409,13 @@ type EventInstance {
   locationId: BigInt
   locationText: String
   managerPersonIds: [BigInt]!
+  myRegistrationsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [EventRegistration!]
   name: String
 
   """
@@ -3434,9 +3441,38 @@ type EventInstance {
     orderBy: [PaymentsOrderBy!]
   ): [Payment!]!
   range: DatetimeRange!
+
+  """Reads and enables pagination through a set of `EventRegistration`."""
+  registrations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+  ): EventRegistrationsConnection!
+  remainingPersonSpots: Int
   since: Datetime!
   stats: JSON!
   summary: String
+  targetCohortsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [EventTargetCohort!]
   tenantId: BigInt!
   trainersList(
     """Only read the first `n` values of the set."""

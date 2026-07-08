@@ -8,7 +8,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { type DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
-import { formatDefaultEventName } from '@/ui/format';
+import { formatDefaultInstanceName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { tenantConfigAtom } from '@/ui/state/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
@@ -98,8 +98,7 @@ function InstanceTimeGridEvent({
     [setDragSubject, event, isDraggable, isResizable, resource],
   );
 
-  const title =
-    event.instance.name || (event.event ? formatDefaultEventName(event.event) : '-');
+  const title = event.instance.name || formatDefaultInstanceName(event.instance) || '-';
   let label =
     startsBeforeDay && startsAfterDay
       ? 'Celý den'
@@ -133,14 +132,14 @@ function InstanceTimeGridEvent({
           'absolute overflow-hidden max-h-full min-h-[20px] border border-b-transparent',
           {
             'w-full h-full': isResizable,
-            'empty-event': event.event.eventRegistrations.totalCount === 0,
+            'empty-event': event.instance.registrations.totalCount === 0,
             'is-group': event.instance.type === 'GROUP',
             'opacity-75': isBackgroundEvent,
             'rbc-drag-preview': event.__isPreview,
             'rounded-t-none': continuesPrior,
             'rounded-b-none': continuesAfter,
             'rbc-dragged-event': isDragging && currentDragSubject && !event.__isPreview,
-            'pl-3': event.event.eventTargetCohortsList.length > 0,
+            'pl-3': event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0,
           },
         )}
       >
@@ -148,9 +147,9 @@ function InstanceTimeGridEvent({
           instanceId={event.instance.id}
           className="absolute right-1 top-1 text-accent-11 drop-shadow"
         />
-        {event.event.eventTargetCohortsList.length > 0 && (
+        {event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0 && (
           <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-sm inset-y-0 left-0 flex flex-col">
-            {event.event.eventTargetCohortsList
+            {event.instance.targetCohortsList
               .map((x) => x.cohort?.colorRgb)
               .filter(isTruthy)
               .map((color) => (
@@ -187,7 +186,7 @@ function InstanceTimeGridEvent({
       </PopoverTrigger>
 
       <PopoverContent>
-        <EventSummary offsetButtons event={event.event} instance={event.instance} />
+        <EventSummary offsetButtons instance={event.instance} />
       </PopoverContent>
     </Popover>
   );

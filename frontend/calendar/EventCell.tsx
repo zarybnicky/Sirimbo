@@ -6,7 +6,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { type DragSubject, dragSubjectAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
-import { formatDefaultEventName } from '@/ui/format';
+import { formatDefaultInstanceName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import { Cake } from 'lucide-react';
@@ -135,7 +135,7 @@ function InstanceEventCell({
             'rbc-nondraggable': event.isDraggable === false,
             'rbc-drag-preview': event.__isPreview,
             'rbc-dragged-event': !!currentDragSubject && !event.__isPreview,
-            'pl-3': event.event.eventTargetCohortsList.length > 0,
+            'pl-3': event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0,
             relative: true,
           })}
         >
@@ -143,9 +143,9 @@ function InstanceEventCell({
             instanceId={event.instance.id}
             className="absolute right-1 top-1 text-accent-11 drop-shadow"
           />
-          {event.event.eventTargetCohortsList.length > 0 && (
+          {event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0 && (
             <div className="absolute rounded-l-lg overflow-hidden border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
-              {event.event.eventTargetCohortsList
+              {event.instance.targetCohortsList
                 .map((x) => x.cohort?.colorRgb)
                 .filter(isTruthy)
                 .map((color) => (
@@ -168,7 +168,7 @@ function InstanceEventCell({
           <div
             className={`rbc-event-content${instance.isCancelled ? ' line-through' : ''}`}
           >
-            {event.instance.name || formatDefaultEventName(event.event)}
+            {event.instance.name || formatDefaultInstanceName(event.instance)}
           </div>
 
           {!continuesAfter && isResizable && (
@@ -181,7 +181,7 @@ function InstanceEventCell({
       </PopoverTrigger>
 
       <PopoverContent>
-        <EventSummary offsetButtons event={event.event} instance={instance} />
+        <EventSummary offsetButtons instance={instance} />
       </PopoverContent>
     </Popover>
   );

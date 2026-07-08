@@ -34,7 +34,6 @@ function ev(
     start: new Date(`${DAY}T${start}`),
     end: new Date(`${DAY}T${end}`),
     resourceIds: [],
-    event: { id: opts.eventId ?? `ev-${id}` } as any,
     instance: {
       id: `inst-${id}`,
       type: opts.type ?? 'LESSON',

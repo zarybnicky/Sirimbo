@@ -6,7 +6,6 @@ import { EventList } from '@/ui/lists/EventList';
 import { EventView } from '@/ui/EventView';
 import { useAuth } from '@/ui/use-auth';
 import { NextSeo } from 'next-seo';
-import * as React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 

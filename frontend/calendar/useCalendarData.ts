@@ -56,9 +56,6 @@ function mapInstancesToCalendar(
   const put = (resource: Resource) => resourceMap.set(resource.resourceId, resource);
 
   for (const instance of list ?? []) {
-    const { event } = instance ?? {};
-    if (!event) continue;
-
     const start = new Date(instance.since);
     const end = new Date(instance.until);
     const resourceIds: string[] = [];
@@ -75,19 +72,19 @@ function mapInstancesToCalendar(
         });
       }
     } else if (groupBy === 'room') {
-      if (event.location?.id) {
-        const resourceId = `location:${event.location.id}`;
+      if (instance.location?.id) {
+        const resourceId = `location:${instance.location.id}`;
         resourceIds.push(resourceId);
         put({
           resourceId,
-          resourceTitle: event.location.name,
+          resourceTitle: instance.location.name,
         });
-      } else if (event.locationText) {
-        const resourceId = `locationText:${event.locationText}`;
+      } else if (instance.locationText) {
+        const resourceId = `locationText:${instance.locationText}`;
         resourceIds.push(resourceId);
         put({
           resourceId,
-          resourceTitle: event.locationText,
+          resourceTitle: instance.locationText,
         });
       }
     }
@@ -95,7 +92,7 @@ function mapInstancesToCalendar(
       resourceIds.push('');
       put({ resourceId: '', resourceTitle: '-' });
     }
-    events.push({ kind: 'event', event, instance, resourceIds, start, end });
+    events.push({ kind: 'event', instance, resourceIds, start, end });
   }
 
   return {

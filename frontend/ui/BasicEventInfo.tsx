@@ -1,42 +1,36 @@
-import type { EventFragment } from '@/graphql/Event';
+import type { EventInstanceWithTrainerFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { RichTextView } from '@/ui/RichTextView';
-import { formatEventType, formatOpenDateRange } from '@/ui/format';
+import { formatEventType } from '@/ui/format';
 
-export function BasicEventInfo({ event }: { event: EventFragment }) {
+export function BasicEventInfo({ instance }: { instance: EventInstanceWithTrainerFragment }) {
   return (
     <dl className="not-prose gap-2 mb-6">
-      <dd>{formatEventType(event.type)}</dd>
-      <dt>Termíny</dt>
-      <dd>{event.eventInstancesList.map(formatOpenDateRange).join(', ')}</dd>
+      <dd>{formatEventType(instance.type)}</dd>
 
-      {event.capacity > 0 && (
+      {(instance.capacity ?? 0) > 0 && (
         <>
           <dt>Kapacita</dt>
           <dd>
-            Zbývá {event.remainingPersonSpots} míst z {event.capacity}
+            Zbývá {instance.remainingPersonSpots} míst z {instance.capacity}
           </dd>
         </>
       )}
 
-      {!!(event.location?.name || event.locationText) && (
+      {!!(instance.location?.name || instance.locationText) && (
         <>
           <dt>Místo konání</dt>
-          <dd>{event.location?.name || event.locationText}</dd>
+          <dd>{instance.location?.name || instance.locationText}</dd>
         </>
       )}
 
-      {event.eventTrainersList.length > 0 && (
+      {instance.trainersList && instance.trainersList.length > 0 && (
         <>
           <dt>Trenéři</dt>
-          {event.eventTrainersList.map((trainer) => {
-            const lessonsOffered = trainer.lessonsOffered as number | null;
+          {instance.trainersList.map((trainer) => {
             return (
               <dd key={trainer.id}>
-                {trainer.name}
-                {lessonsOffered === null ? ' (bez omezení)' :
-                  lessonsOffered === 0 ? '' :
-                    ` (zbývá ${trainer.lessonsRemaining ?? 0} z ${lessonsOffered} lekcí)`}
+                {trainer.person?.name}
               </dd>
             );
           })}
@@ -44,14 +38,14 @@ export function BasicEventInfo({ event }: { event: EventFragment }) {
       )}
 
       <dt>
-        <MyRegistrationsDialog event={event} />
+        <MyRegistrationsDialog instance={instance} />
       </dt>
 
-      {event.summary?.trim() && (
+      {instance.summary?.trim() && (
         <>
           <dt>Shrnutí</dt>
           <dd>
-            <RichTextView value={event.summary} />
+            <RichTextView value={instance.summary} />
           </dd>
         </>
       )}

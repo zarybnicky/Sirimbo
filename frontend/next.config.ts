@@ -64,6 +64,11 @@ export default compose(
       { source: '/home', destination: '/', permanent: true },
       { source: '/aktualne', destination: '/clanky', permanent: true },
       { source: '/aktualne/:path*', destination: '/clanky/:path*', permanent: true },
+      {
+        source: '/akce/:id/termin/:instance',
+        destination: '/termin/:instance',
+        permanent: true,
+      },
     ];
     const olympSpecificRedirects = [
       {

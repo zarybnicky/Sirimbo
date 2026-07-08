@@ -6,7 +6,7 @@ import {
   EventPaymentsDocument,
   type EventRegistrationsFragment,
 } from '@/graphql/Event';
-import { BasicEventInfo } from '@/ui/BasicEventInfo';
+import { BasicEventInfo } from './BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
 import { Spinner } from '@/ui/Spinner';
 import { TabMenu } from '@/ui/TabMenu';
@@ -112,7 +112,9 @@ export function EventView({ event }: { event: EventFullFragment }) {
     <>
       <PageHeader title={event.name || formatDefaultEventName(event)} actions={actions} />
 
-      <BasicEventInfo event={event} />
+      {event.eventInstancesList[0] && (
+        <BasicEventInfo instance={event.eventInstancesList[0]} />
+      )}
 
       <div className="max-w-full">
         <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
@@ -145,7 +147,7 @@ function Attendance({
           <tr key={instance.id}>
             <td>
               <Link
-                href={`/akce/${event.id}/termin/${instance.id}`}
+                href={`/termin/${instance.id}`}
               >
                 {fullDateFormatter.formatRange(
                   new Date(instance.since),
@@ -186,7 +188,7 @@ function EventInstances({ event }: { event: EventFullFragment }) {
             <tr key={instance.id} className={instance.isCancelled ? 'opacity-50' : ''}>
               <td>
                 <Link
-                  href={`/akce/${event.id}/termin/${instance.id}`}
+                  href={`/termin/${instance.id}`}
                   className={instance.isCancelled ? 'line-through' : ''}
                 >
                   {formatOpenDateRange(instance)}
