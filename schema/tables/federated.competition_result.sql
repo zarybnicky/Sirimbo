@@ -16,8 +16,6 @@ CREATE TABLE federated.competition_result (
 GRANT SELECT ON TABLE federated.competition_result TO anonymous;
 
 ALTER TABLE ONLY federated.competition_result
-    ADD CONSTRAINT competition_result_competition_id_start_number_key UNIQUE (competition_id, start_number);
-ALTER TABLE ONLY federated.competition_result
     ADD CONSTRAINT competition_result_pkey PRIMARY KEY (competition_id, competitor_id);
 ALTER TABLE ONLY federated.competition_result
     ADD CONSTRAINT competition_result_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id);

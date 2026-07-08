@@ -25,7 +25,11 @@ END])) STORED NOT NULL,
     address public.address_domain,
     external_ids text[],
     note text DEFAULT ''::text NOT NULL,
-    search_name text GENERATED ALWAYS AS (app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name]))) STORED
+    search_name text GENERATED ALWAYS AS (app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name]))) STORED,
+    instagram_username text,
+    tiktok_username text,
+    facebook_url text,
+    website_url text
 );
 
 COMMENT ON TABLE public.person IS '@omit create';

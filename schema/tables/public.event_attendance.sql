@@ -8,7 +8,7 @@ CREATE TABLE public.event_attendance (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     registration_id bigint NOT NULL,
-    event_id bigint NOT NULL
+    event_id bigint
 );
 
 COMMENT ON TABLE public.event_attendance IS '@omit create,update,delete
@@ -28,7 +28,7 @@ ALTER TABLE ONLY public.event_attendance
 ALTER TABLE ONLY public.event_attendance
     ADD CONSTRAINT event_attendance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_attendance
-    ADD CONSTRAINT event_attendance_tenant_id_instance_id_event_id_fkey FOREIGN KEY (tenant_id, instance_id, event_id) REFERENCES public.event_instance(tenant_id, id, event_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_attendance_tenant_id_instance_id_fkey FOREIGN KEY (tenant_id, instance_id) REFERENCES public.event_instance(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_attendance
     ADD CONSTRAINT event_attendance_tenant_id_registration_id_event_id_fkey FOREIGN KEY (tenant_id, registration_id, event_id) REFERENCES public.event_registration(tenant_id, id, event_id) ON UPDATE CASCADE ON DELETE CASCADE;
 

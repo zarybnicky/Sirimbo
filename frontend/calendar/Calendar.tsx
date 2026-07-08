@@ -15,14 +15,10 @@ import {
   participantIdsFilterAtom,
   trainerIdsFilterAtom,
 } from './state';
-import type {
-  CalendarInstanceEvent,
-  InteractionInfo,
-  SlotInfo,
-} from './types';
+import type { CalendarInstanceEvent, InteractionInfo, SlotInfo } from './types';
 import { Spinner } from '@/ui/Spinner';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
-import { CalendarViewKey, CalendarViews } from '@/calendar/CalendarViews';
+import { CalendarViews } from '@/calendar/CalendarViews';
 import { useCalendarData } from '@/calendar/useCalendarData';
 import { TrainerFilter } from '@/calendar/TrainerFilter';
 import { GroupByPicker } from '@/calendar/GroupByPicker';
@@ -39,7 +35,7 @@ const emptyArray: readonly [] = [];
 const preventDefault = (e: Event) => e.preventDefault();
 const calendarViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
 
-export function Calendar() {
+export function Calendar({ parentId }: { parentId?: string }) {
   const auth = useAuth();
   const [onlyMine, setOnlyMine] = useQueryState(
     'my',
@@ -65,8 +61,9 @@ export function Calendar() {
       trainerIds,
       participantIds,
       myPersonIds: auth.personIds,
+      parentId,
     }),
-    [auth.personIds, onlyMine, trainerIds, participantIds],
+    [auth.personIds, onlyMine, trainerIds, participantIds, parentId],
   );
 
   const { fetching, range, events, resources } = useCalendarData(

@@ -47,8 +47,8 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     id: 'eventInstance.editDescription',
     label: 'Upravit dlouhý popis',
     icon: NotebookPen,
-    visible: canManageInstance,
-    render: ({ item }) => <EditEventDescriptionForm id={item.eventId} />,
+    visible: ({ item, auth }) => canManageInstance({item, auth}) && !!item.eventId,
+    render: ({ item }) => <EditEventDescriptionForm id={item.eventId!} />,
     dialogProps: {
       className: 'sm:max-w-xl',
     },
@@ -105,17 +105,17 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
   {
     id: 'eventInstance.exportParticipants',
     label: 'Export přihlášených',
-    visible: canManageInstance,
+    visible: ({ item, auth }) => canManageInstance({item, auth}) && !!item.eventId,
     execute: async ({ item, client }) => {
-      await exportEventParticipants(client, item.eventId);
+      await exportEventParticipants(client, item.eventId!);
     },
   },
   {
     id: 'eventInstance.exportRegistrations',
     label: 'Export přihlášek',
-    visible: canManageInstance,
+    visible: ({ item, auth }) => canManageInstance({item, auth}) && !!item.eventId,
     execute: async ({ item, client }) => {
-      await exportEventRegistrations(client, item.eventId);
+      await exportEventRegistrations(client, item.eventId!);
     },
   },
 ]);

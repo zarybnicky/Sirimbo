@@ -29,6 +29,7 @@ import { useActionMap, useActions } from '@/lib/actions';
 import { eventActions, eventExternalRegistrationActions } from '@/lib/actions/event';
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionRow } from '@/ui/ActionRow';
+import { Calendar } from '@/calendar/Calendar';
 
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
@@ -70,6 +71,17 @@ export function EventView({ event }: { event: EventFullFragment }) {
         title: `Přihlášky (${numRegistrations})`,
         contents: () => <Registrations event={event} />,
       });
+    }
+
+    if (event.type === 'CAMP') {
+      const parentId = event.eventInstancesList[0]?.id;
+      if (parentId) {
+        tabs.push({
+          id: 'schedule',
+          title: 'Program',
+          contents: () => <Calendar parentId={parentId} />,
+        });
+      }
     }
 
     if (auth.isTrainerOrAdmin) {

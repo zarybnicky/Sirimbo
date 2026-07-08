@@ -360,7 +360,7 @@ export function QuickInstanceEditForm({
     if (result.data?.updateEventInstanceDetails?.eventInstance?.id) onSuccess();
   });
 
-  if (fullForm) {
+  if (fullForm && instance.eventId) {
     return <UpsertEventForm eventId={instance.eventId} />;
   }
 

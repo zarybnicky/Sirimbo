@@ -2460,6 +2460,11 @@ type DeleteEventInstancePayload {
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
   location: TenantLocation
+
+  """
+  Reads a single `EventInstance` that is related to this `EventInstance`.
+  """
+  parent: EventInstance
 }
 
 """All input for the `deleteMembershipApplication` mutation."""
@@ -3122,6 +3127,11 @@ enum EventAttendancesOrderBy {
   UPDATED_AT_DESC
 }
 
+enum EventCapacityUnit {
+  PEOPLE
+  REGISTRATIONS
+}
+
 """
 A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
@@ -3324,8 +3334,29 @@ type EventInstance {
     """Skip the first `n` values."""
     offset: Int
   ): [EventInstanceApproxPriceRecord!]
+  capacity: Int
+  capacityUnit: EventCapacityUnit
+
+  """Reads and enables pagination through a set of `EventInstance`."""
+  childEventInstancesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstance`."""
+    orderBy: [EventInstancesOrderBy!]
+  ): [EventInstance!]!
   createdAt: Datetime!
   custom: JSON!
+  description: String
+  enableNotes: Boolean
 
   """Reads a single `Event` that is related to this `EventInstance`."""
   event: Event
@@ -3346,7 +3377,7 @@ type EventInstance {
     """The method to use when ordering `EventAttendance`."""
     orderBy: [EventAttendancesOrderBy!]
   ): [EventAttendance!]!
-  eventId: BigInt!
+  eventId: BigInt
 
   """Reads and enables pagination through a set of `EventInstanceTrainer`."""
   eventInstanceTrainersByInstanceIdList(
@@ -3364,8 +3395,10 @@ type EventInstance {
     """The method to use when ordering `EventInstanceTrainer`."""
     orderBy: [EventInstanceTrainersOrderBy!]
   ): [EventInstanceTrainer!]!
+  filesLegacy: String
   id: BigInt!
   isCancelled: Boolean!
+  isLocked: Boolean
   isPublic: Boolean
   isVisible: Boolean
 
@@ -3377,6 +3410,12 @@ type EventInstance {
   locationText: String
   managerPersonIds: [BigInt]!
   name: String
+
+  """
+  Reads a single `EventInstance` that is related to this `EventInstance`.
+  """
+  parent: EventInstance
+  parentId: BigInt
 
   """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
@@ -3397,6 +3436,7 @@ type EventInstance {
   range: DatetimeRange!
   since: Datetime!
   stats: JSON!
+  summary: String
   tenantId: BigInt!
   trainersList(
     """Only read the first `n` values of the set."""
@@ -3420,20 +3460,38 @@ A condition to be used against `EventInstance` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input EventInstanceCondition {
+  """Checks for equality with the object’s `capacity` field."""
+  capacity: Int
+
+  """Checks for equality with the object’s `capacityUnit` field."""
+  capacityUnit: EventCapacityUnit
+
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
   """Checks for equality with the object’s `custom` field."""
   custom: JSON
 
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `enableNotes` field."""
+  enableNotes: Boolean
+
   """Checks for equality with the object’s `eventId` field."""
   eventId: BigInt
+
+  """Checks for equality with the object’s `filesLegacy` field."""
+  filesLegacy: String
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
   """Checks for equality with the object’s `isCancelled` field."""
   isCancelled: Boolean
+
+  """Checks for equality with the object’s `isLocked` field."""
+  isLocked: Boolean
 
   """Checks for equality with the object’s `isPublic` field."""
   isPublic: Boolean
@@ -3453,6 +3511,9 @@ input EventInstanceCondition {
   """Checks for equality with the object’s `name` field."""
   name: String
 
+  """Checks for equality with the object’s `parentId` field."""
+  parentId: BigInt
+
   """Checks for equality with the object’s `range` field."""
   range: DatetimeRangeInput
 
@@ -3461,6 +3522,9 @@ input EventInstanceCondition {
 
   """Checks for equality with the object’s `stats` field."""
   stats: JSON
+
+  """Checks for equality with the object’s `summary` field."""
+  summary: String
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
@@ -3479,20 +3543,28 @@ input EventInstanceCondition {
 Represents an update to a `EventInstance`. Fields that are set will be updated.
 """
 input EventInstancePatch {
+  capacity: Int
+  capacityUnit: EventCapacityUnit
   createdAt: Datetime
   custom: JSON
+  description: String
+  enableNotes: Boolean
   eventId: BigInt
+  filesLegacy: String
   id: BigInt
   isCancelled: Boolean
+  isLocked: Boolean
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
   locationText: String
   managerPersonIds: [BigInt]
   name: String
+  parentId: BigInt
   range: DatetimeRangeInput
   since: Datetime
   stats: JSON
+  summary: String
   tenantId: BigInt
   type: EventType
   until: Datetime
@@ -3588,16 +3660,28 @@ type EventInstancesEdge {
 
 """Methods to use when ordering `EventInstance`."""
 enum EventInstancesOrderBy {
+  CAPACITY_ASC
+  CAPACITY_DESC
+  CAPACITY_UNIT_ASC
+  CAPACITY_UNIT_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   CUSTOM_ASC
   CUSTOM_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  ENABLE_NOTES_ASC
+  ENABLE_NOTES_DESC
   EVENT_ID_ASC
   EVENT_ID_DESC
+  FILES_LEGACY_ASC
+  FILES_LEGACY_DESC
   ID_ASC
   ID_DESC
   IS_CANCELLED_ASC
   IS_CANCELLED_DESC
+  IS_LOCKED_ASC
+  IS_LOCKED_DESC
   IS_PUBLIC_ASC
   IS_PUBLIC_DESC
   IS_VISIBLE_ASC
@@ -3609,12 +3693,16 @@ enum EventInstancesOrderBy {
   NAME_ASC
   NAME_DESC
   NATURAL
+  PARENT_ID_ASC
+  PARENT_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
   STATS_ASC
   STATS_DESC
+  SUMMARY_ASC
+  SUMMARY_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   TYPE_ASC
@@ -4656,6 +4744,11 @@ type MoveEventInstancePayload {
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
   location: TenantLocation
+
+  """
+  Reads a single `EventInstance` that is related to this `EventInstance`.
+  """
+  parent: EventInstance
 }
 
 """
@@ -5169,6 +5262,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateEventInstanceInput!
+  ): UpdateEventInstancePayload
+
+  """Updates a single `EventInstance` using a unique key and a patch."""
+  updateEventInstanceByTenantIdAndId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEventInstanceByTenantIdAndIdInput!
   ): UpdateEventInstancePayload
 
   """Updates a single `EventInstance` using a unique key and a patch."""
@@ -6703,6 +6804,9 @@ type Query {
   eventInstance(id: BigInt!): EventInstance
 
   """Get a single `EventInstance`."""
+  eventInstanceByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventInstance
+
+  """Get a single `EventInstance`."""
   eventInstanceByTenantIdAndIdAndEventId(eventId: BigInt!, id: BigInt!, tenantId: BigInt!): EventInstance
   eventInstancesForRangeList(
     endRange: Datetime
@@ -6714,6 +6818,7 @@ type Query {
     offset: Int
     onlyMine: Boolean
     onlyType: EventType
+    parentId: BigInt
     participantIds: [BigInt]
     startRange: Datetime
     trainerIds: [BigInt]
@@ -9263,6 +9368,22 @@ input UpdateEventInstanceByTenantIdAndIdAndEventIdInput {
   tenantId: BigInt!
 }
 
+"""All input for the `updateEventInstanceByTenantIdAndId` mutation."""
+input UpdateEventInstanceByTenantIdAndIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `EventInstance` being updated.
+  """
+  patch: EventInstancePatch!
+  tenantId: BigInt!
+}
+
 """All input for the `updateEventInstanceDetails` mutation."""
 input UpdateEventInstanceDetailsInput {
   """
@@ -9305,6 +9426,11 @@ type UpdateEventInstanceDetailsPayload {
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
   location: TenantLocation
+
+  """
+  Reads a single `EventInstance` that is related to this `EventInstance`.
+  """
+  parent: EventInstance
 }
 
 """All input for the `updateEventInstance` mutation."""
@@ -9340,6 +9466,11 @@ type UpdateEventInstancePayload {
   Reads a single `TenantLocation` that is related to this `EventInstance`.
   """
   location: TenantLocation
+
+  """
+  Reads a single `EventInstance` that is related to this `EventInstance`.
+  """
+  parent: EventInstance
 }
 
 """The output of our update `Event` mutation."""

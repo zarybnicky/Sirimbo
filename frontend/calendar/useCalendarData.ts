@@ -17,6 +17,7 @@ export type CalendarFilters = {
   trainerIds: string[];
   onlyMine: boolean;
   myPersonIds: string[];
+  parentId?: string;
 };
 
 const competitionResource: Resource = {
@@ -33,7 +34,7 @@ type CompetitionBucket = {
 
 function prepareVariables(
   range: DateRange,
-  { onlyMine, trainerIds, participantIds }: CalendarFilters,
+  { onlyMine, trainerIds, participantIds, parentId }: CalendarFilters,
 ): EventInstanceRangeQueryVariables {
   return {
     start: startOf(range.since, 'day').toISOString(),
@@ -41,6 +42,7 @@ function prepareVariables(
     trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
     participantIds: participantIds.length > 0 ? participantIds : undefined,
     onlyMine,
+    parentId,
   };
 }
 

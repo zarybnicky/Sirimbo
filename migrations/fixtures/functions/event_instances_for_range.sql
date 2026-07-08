@@ -4,12 +4,14 @@ CREATE or replace FUNCTION public.event_instances_for_range(
   end_range timestamp with time zone DEFAULT NULL::timestamp with time zone,
   trainer_ids bigint[] = null,
   participant_ids bigint[] = null,
-  only_mine boolean = false
+  only_mine boolean = false,
+  parent_id bigint = null
 ) RETURNS SETOF event_instance as $$
   select i.*
   from event_instance i
   where i.tenant_id = current_tenant_id()
     and (only_type IS NULL OR i.type = only_type)
+    and (parent_id is null or i.parent_id = parent_id)
     and i.since < coalesce(end_range, 'infinity'::timestamptz)
     and i.until > start_range
     and (trainer_ids is null

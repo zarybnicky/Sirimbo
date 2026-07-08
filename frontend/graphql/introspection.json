@@ -5042,6 +5042,15 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "parent",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -6605,6 +6614,75 @@
             ]
           },
           {
+            "name": "capacity",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "capacityUnit",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "childEventInstancesList",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "EventInstance",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "createdAt",
             "type": {
               "kind": "NON_NULL",
@@ -6623,6 +6701,22 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "description",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "enableNotes",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -6691,11 +6785,8 @@
           {
             "name": "eventId",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -6753,6 +6844,14 @@
             ]
           },
           {
+            "name": "filesLegacy",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "id",
             "type": {
               "kind": "NON_NULL",
@@ -6771,6 +6870,14 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "isLocked",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -6831,6 +6938,23 @@
           },
           {
             "name": "name",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "parent",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "parentId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -6921,6 +7045,14 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "summary",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -8847,6 +8979,15 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "parent",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -10217,6 +10358,26 @@
           },
           {
             "name": "updateEventInstance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateEventInstancePayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateEventInstanceByTenantIdAndId",
             "type": {
               "kind": "OBJECT",
               "name": "UpdateEventInstancePayload",
@@ -13878,6 +14039,36 @@
             ]
           },
           {
+            "name": "eventInstanceByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "eventInstanceByTenantIdAndIdAndEventId",
             "type": {
               "kind": "OBJECT",
@@ -13961,6 +14152,13 @@
               },
               {
                 "name": "onlyType",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "parentId",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -19604,6 +19802,15 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "parent",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -19643,6 +19850,15 @@
             "type": {
               "kind": "OBJECT",
               "name": "TenantLocation",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "parent",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
               "ofType": null
             },
             "args": []

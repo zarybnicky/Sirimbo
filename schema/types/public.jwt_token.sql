@@ -11,5 +11,9 @@ CREATE TYPE public.jwt_token AS (
 	is_member boolean,
 	is_trainer boolean,
 	is_admin boolean,
-	is_system_admin boolean
+	is_system_admin boolean,
+	guest_tenant_ids bigint[],
+	member_tenant_ids bigint[],
+	trainer_tenant_ids bigint[],
+	admin_tenant_ids bigint[]
 );

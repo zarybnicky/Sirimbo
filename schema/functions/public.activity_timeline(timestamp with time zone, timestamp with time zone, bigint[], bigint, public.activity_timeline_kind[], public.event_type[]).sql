@@ -5,12 +5,10 @@ declare
   include_event_attendance boolean;
   include_competition_brief boolean;
   include_competition_result boolean;
+  include_judging boolean;
+  include_birthday boolean;
 begin
   if p_since is null or p_until is null or p_until <= p_since then
-    return;
-  end if;
-
-  if p_person_ids is null and p_cohort_id is null then
     return;
   end if;
 
@@ -19,32 +17,31 @@ begin
   end if;
 
   include_event_attendance =
-    (p_kinds is null or 'EVENT_ATTENDANCE'::public.activity_timeline_kind = any(p_kinds))
+    (p_kinds is null or 'EVENT_ATTENDANCE'::activity_timeline_kind = any(p_kinds))
     and (p_event_types is null or cardinality(p_event_types) > 0);
   include_competition_brief =
-    p_kinds is null or 'COMPETITION_BRIEF'::public.activity_timeline_kind = any(p_kinds);
+    p_kinds is null or 'COMPETITION_BRIEF'::activity_timeline_kind = any(p_kinds);
   include_competition_result =
-    p_kinds is null or 'COMPETITION_RESULT'::public.activity_timeline_kind = any(p_kinds);
+    p_kinds is null or 'COMPETITION_RESULT'::activity_timeline_kind = any(p_kinds);
+  include_judging =
+    p_kinds is null or 'JUDGING'::activity_timeline_kind = any(p_kinds);
+  include_birthday =
+    p_kinds is null or 'BIRTHDAY'::activity_timeline_kind = any(p_kinds);
 
   if include_event_attendance then
     return query
       with scoped_people as (
         select distinct p.id
-        from public.person p
-        where (p_person_ids is not null and p.id = any(p_person_ids))
-           or (
-             p_cohort_id is not null
-             and exists (
-               select 1
-               from public.current_cohort_membership cm
-               where cm.person_id = p.id
-                 and cm.cohort_id = p_cohort_id
-             )
-           )
+        from person p
+        where (exists (select 1 from current_tenant_membership where person_id = p.id)
+           or exists (select 1 from current_tenant_trainer where person_id = p.id)
+           or exists (select 1 from current_tenant_administrator where person_id = p.id))
+          and (p_person_ids is null or p.id = any(p_person_ids))
+          and (p_cohort_id is null or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
       )
       select
         ('event_attendance:' || ea.id)::text as id,
-        'EVENT_ATTENDANCE'::public.activity_timeline_kind as kind,
+        'EVENT_ATTENDANCE'::activity_timeline_kind as kind,
         ei.since as sort_at,
         ei.since::date as activity_date,
         ea.person_id,
@@ -72,14 +69,81 @@ begin
         null::federated.competition_type as competition_type,
         null::text as competition_event_external_id,
         null::text as competition_external_id
-      from public.event_attendance ea
-      join public.event_instance ei on ei.id = ea.instance_id
-      join public.person p on p.id = ea.person_id
+      from event_attendance ea
+      join event_instance ei on ei.id = ea.instance_id
+      join person p on p.id = ea.person_id
       join scoped_people sp on sp.id = ea.person_id
       where ea.status <> 'cancelled'
         and ei.since >= p_since
         and ei.since < p_until
         and (p_event_types is null or ei.type = any(p_event_types));
+  end if;
+
+  if include_birthday then
+    return query
+      with scoped_people as (
+        select distinct p.id, p.name, p.birth_date
+        from person p
+        where (exists (select 1 from current_tenant_membership where person_id = p.id)
+           or exists (select 1 from current_tenant_trainer where person_id = p.id)
+           or exists (select 1 from current_tenant_administrator where person_id = p.id))
+          and (p_person_ids is null or p.id = any(p_person_ids))
+          and (p_cohort_id is null or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
+          and p.birth_date is not null
+      ),
+      birthdays as (
+        select
+          sp.id as person_id,
+          sp.name as person_name,
+          make_date(
+            years.year,
+            extract(month from sp.birth_date)::int,
+            least(
+              extract(day from sp.birth_date)::int,
+              extract(day from (
+                make_date(years.year, extract(month from sp.birth_date)::int, 1)
+                + interval '1 month - 1 day'
+              ))::int
+            )
+          ) as birthday_date
+        from scoped_people sp
+        cross join generate_series(extract(year from p_since)::int, extract(year from p_until)::int) as years(year)
+      )
+      select
+        ('birthday:' || b.person_id || ':' || b.birthday_date)::text as id,
+        'BIRTHDAY'::activity_timeline_kind as kind,
+        ((b.birthday_date + time '12:00')::timestamp)::timestamptz as sort_at,
+        b.birthday_date as activity_date,
+        b.person_id,
+        b.person_name,
+        null::bigint as event_attendance_id,
+        null::bigint as event_instance_id,
+        null::text as federation,
+        null::text as federated_person_id,
+        null::text as competitor_id,
+        null::text as competitor_name,
+        null::federated.competitor_type as competitor_type,
+        null::bigint as competition_event_id,
+        null::text as competition_event_name,
+        null::text as competition_event_location,
+        null::bigint as competition_id,
+        null::date as competition_date,
+        null::time as check_in_end,
+        null::federated.category as category,
+        null::text[] as dances,
+        null::integer as participants,
+        null::integer as ranking,
+        null::integer as ranking_to,
+        null::numeric(10, 3) as point_gain,
+        null::boolean as is_final,
+        null::federated.competition_type as competition_type,
+        null::text as competition_event_external_id,
+        null::text as competition_external_id
+      from birthdays b
+      join person p on p.id = b.person_id
+      where b.birthday_date >= p.birth_date
+        and ((b.birthday_date + time '12:00')::timestamp)::timestamptz >= p_since
+        and ((b.birthday_date + time '12:00')::timestamp)::timestamptz < p_until;
   end if;
 
   if include_competition_result then
@@ -92,7 +156,7 @@ begin
           coalesce(cr.person_id::text, '') || ':' ||
           coalesce((cr.category).id::text, '')
         )::text as id,
-        'COMPETITION_RESULT'::public.activity_timeline_kind as kind,
+        'COMPETITION_RESULT'::activity_timeline_kind as kind,
         ((cr.competition_date + time '12:00')::timestamp)::timestamptz as sort_at,
         cr.competition_date as activity_date,
         cr.person_id,
@@ -121,13 +185,7 @@ begin
         cr.event_external_id as competition_event_external_id,
         cr.competition_external_id
       from (
-        select *
-        from public.competition_report(
-          p_since::date,
-          p_until::date,
-          p_cohort_id,
-          p_person_ids
-        )
+        select * from competition_report(p_since::date, p_until::date, p_cohort_id, p_person_ids)
       ) as cr
       where cr.competition_date is not null
         and ((cr.competition_date + time '12:00')::timestamp)::timestamptz >= p_since
@@ -143,13 +201,7 @@ begin
           cr.competitor_id,
           (cr.category).id as category_id
         from (
-          select *
-          from public.competition_report(
-            p_since::date,
-            p_until::date,
-            p_cohort_id,
-            p_person_ids
-          )
+          select * from competition_report(p_since::date, p_until::date, p_cohort_id, p_person_ids)
         ) as cr
         where include_competition_result
       )
@@ -161,7 +213,7 @@ begin
           coalesce(cb.person_id::text, '') || ':' ||
           coalesce((cb.category).id::text, '')
         )::text as id,
-        'COMPETITION_BRIEF'::public.activity_timeline_kind as kind,
+        'COMPETITION_BRIEF'::activity_timeline_kind as kind,
         ((cb.competition_date + coalesce(cb.check_in_end, time '12:00'))::timestamp)::timestamptz as sort_at,
         cb.competition_date as activity_date,
         cb.person_id,
@@ -190,13 +242,7 @@ begin
         cb.event_external_id as competition_event_external_id,
         cb.competition_external_id
       from (
-        select *
-        from public.competition_brief(
-          p_since::date,
-          p_until::date,
-          p_cohort_id,
-          p_person_ids
-        )
+        select * from competition_brief(p_since::date, p_until::date, p_cohort_id, p_person_ids)
       ) as cb
       where cb.competition_date is not null
         and ((cb.competition_date + coalesce(cb.check_in_end, time '12:00'))::timestamp)::timestamptz >= p_since
@@ -210,11 +256,110 @@ begin
             and r.category_id is not distinct from (cb.category).id
         );
   end if;
+
+  if include_judging then
+    return query
+      with scoped_people as (
+        select distinct p.id, p.name, p.csts_id, p.wdsf_id
+        from person p
+        where (exists (select 1 from current_tenant_membership where person_id = p.id)
+           or exists (select 1 from current_tenant_trainer where person_id = p.id)
+           or exists (select 1 from current_tenant_administrator where person_id = p.id))
+          and (p_person_ids is null or p.id = any(p_person_ids))
+          and (p_cohort_id is null or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
+      ),
+      federated_people as (
+        select
+          sp.id as person_id,
+          sp.name as person_name,
+          fp.id as federated_person_id,
+          fp.federation
+        from scoped_people sp
+        join federated.person fp
+          on (fp.federation = 'csts' and fp.external_id = sp.csts_id)
+          or (fp.federation = 'wdsf' and fp.external_id = sp.wdsf_id)
+      )
+      select distinct
+        ('judging:event:' || e.id || ':' || fp.person_id)::text as id,
+        'JUDGING'::activity_timeline_kind as kind,
+        ((e.start_date + time '12:00')::timestamp)::timestamptz as sort_at,
+        e.start_date as activity_date,
+        fp.person_id,
+        fp.person_name,
+        null::bigint as event_attendance_id,
+        null::bigint as event_instance_id,
+        e.federation,
+        fp.federated_person_id,
+        null::text as competitor_id,
+        null::text as competitor_name,
+        null::federated.competitor_type as competitor_type,
+        e.id as competition_event_id,
+        e.name as competition_event_name,
+        coalesce(e.location, e.city) as competition_event_location,
+        null::bigint as competition_id,
+        e.start_date as competition_date,
+        null::time as check_in_end,
+        null::federated.category as category,
+        null::text[] as dances,
+        null::integer as participants,
+        null::integer as ranking,
+        null::integer as ranking_to,
+        null::numeric(10, 3) as point_gain,
+        null::boolean as is_final,
+        null::federated.competition_type as competition_type,
+        e.external_id as competition_event_external_id,
+        null::text as competition_external_id
+      from federated.event_official eo
+      join federated.event e on e.id = eo.event_id
+      join federated_people fp on fp.federated_person_id = eo.person_id
+      where eo.role = 'adjudicator'
+        and e.start_date >= current_date
+        and ((e.start_date + time '12:00')::timestamp)::timestamptz >= p_since
+        and ((e.start_date + time '12:00')::timestamp)::timestamptz < p_until
+      union all
+      select
+        ('judging:competition:' || c.id || ':' || fp.person_id)::text as id,
+        'JUDGING'::activity_timeline_kind as kind,
+        ((c.start_date + time '12:00')::timestamp)::timestamptz as sort_at,
+        c.start_date as activity_date,
+        fp.person_id,
+        fp.person_name,
+        null::bigint as event_attendance_id,
+        null::bigint as event_instance_id,
+        c.federation,
+        fp.federated_person_id,
+        null::text as competitor_id,
+        null::text as competitor_name,
+        null::federated.competitor_type as competitor_type,
+        e.id as competition_event_id,
+        e.name as competition_event_name,
+        coalesce(e.location, e.city) as competition_event_location,
+        c.id as competition_id,
+        c.start_date as competition_date,
+        null::time as check_in_end,
+        cat as category,
+        null::text[] as dances,
+        null::integer as participants,
+        null::integer as ranking,
+        null::integer as ranking_to,
+        null::numeric(10, 3) as point_gain,
+        null::boolean as is_final,
+        c.competition_type,
+        e.external_id as competition_event_external_id,
+        c.external_id as competition_external_id
+      from federated.competition_official co
+      join federated.competition c on c.id = co.competition_id
+      join federated.event e on e.id = c.event_id
+      join federated.category cat on cat.id = c.category_id
+      join federated_people fp on fp.federated_person_id = co.person_id
+      where co.role = 'adjudicator'
+        and c.start_date < current_date
+        and ((c.start_date + time '12:00')::timestamp)::timestamptz >= p_since
+        and ((c.start_date + time '12:00')::timestamp)::timestamptz < p_until;
+  end if;
 end;
 $$;
 
-COMMENT ON FUNCTION public.activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[], p_cohort_id bigint, p_kinds public.activity_timeline_kind[], p_event_types public.event_type[]) IS '
-@behavior +queryField:resource:list -queryField:resource:connection
-';
+COMMENT ON FUNCTION public.activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[], p_cohort_id bigint, p_kinds public.activity_timeline_kind[], p_event_types public.event_type[]) IS '@behavior +queryField:resource:list -queryField:resource:connection';
 
 GRANT ALL ON FUNCTION public.activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[], p_cohort_id bigint, p_kinds public.activity_timeline_kind[], p_event_types public.event_type[]) TO anonymous;

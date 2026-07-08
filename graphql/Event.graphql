@@ -249,7 +249,8 @@ query EventInstanceRange(
   $type: EventType
   $trainerIds: [BigInt]
   $participantIds: [BigInt]
-  $onlyMine: Boolean
+  $onlyMine: Boolean,
+  $parentId: BigInt
 ) {
   list: eventInstancesForRangeList(
     startRange: $start
@@ -257,7 +258,8 @@ query EventInstanceRange(
     onlyType: $type,
     trainerIds: $trainerIds,
     participantIds: $participantIds,
-    onlyMine: $onlyMine
+    onlyMine: $onlyMine,
+    parentId: $parentId
   ) {
     ...EventInstanceWithTrainer
     event {
