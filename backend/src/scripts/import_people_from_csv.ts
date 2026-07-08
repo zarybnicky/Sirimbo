@@ -418,7 +418,7 @@ function normaliseBirthDate(value: string | undefined): string | null {
     return trimmed;
   }
 
-  const dotMatch = trimmed.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/);
+  const dotMatch = trimmed.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
   if (dotMatch) {
     const [, day, month, year] = dotMatch;
     const normalisedDay = day.padStart(2, '0');

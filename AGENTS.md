@@ -85,11 +85,13 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - For dark themes, Radix automatically inverts the perceptual weight—keep the same numeric semantics.
 
 ## Common tasks & commands
-- Type-check the API: `pnpm --filter @rozpisovnik/backend build`.
-- Frontend checks use `pnpm --filter @rozpisovnik/web typecheck`; the Next build is slow.
+- Run all typechecks: `pnpm -r typecheck`
+- Run all lints: `pnpm -r lint`
+- Type-check/lint the API: `pnpm --filter @rozpisovnik/backend lint`, `pnpm --filter @rozpisovnik/backend typecheck`.
+- Frontend checks use `pnpm --filter @rozpisovnik/web lint`, `pnpm --filter @rozpisovnik/web typecheck`; the Next build is slow.
 - Run queue workers: `pnpm --filter @rozpisovnik/worker start`
 - Run the crawler dev tool: `pnpm crawler --help`
-- Type-check/lint the worker: `pnpm --filter @rozpisovnik/worker lint`
+- Type-check/lint the worker: `pnpm --filter @rozpisovnik/worker lint`, `pnpm --filter @rozpisovnik/worker typecheck`
 - Run Playwright smoke tests: `pnpm --filter @rozpisovnik/e2e test` (defaults to `PLAYWRIGHT_BASE_URL=http://localhost:5100`).
 - Create a new migration: edit `migrations/current/1-current.sql` or add fixtures under `migrations/fixtures/...`; follow `migrations/current/AGENTS.md` and keep scripts idempotent.
 - Don't add GraphQL documents to code; add them to the root `graphql/` folder and run `pnpm schema` or `pnpm schema-starlet` when codegen is needed. Keep generated `frontend/graphql` changes out of the commit unless explicitly requested.

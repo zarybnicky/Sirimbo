@@ -441,6 +441,7 @@ class ResonatorBank {
 //  REACT APP
 // ═══════════════════════════════════════════════════════════════════════
 
+/* eslint-disable import-x/no-unused-modules */
 export default function WDSFLive(): JSX.Element {
   const [recording, setRecording] = useState(false);
   const [elapsed, setElapsed] = useState(0);

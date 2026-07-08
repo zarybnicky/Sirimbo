@@ -12,7 +12,7 @@ type TenantCatalogEntry = ServerTenantCatalogEntry & {
   };
 };
 
-export const tenantCatalog: Record<number, TenantCatalogEntry> = {
+const tenantCatalog: Record<number, TenantCatalogEntry> = {
   1: {
     ...serverTenantCatalog[1],
     ui: {

@@ -4,6 +4,7 @@ import React from "react";
 import * as Plot from '@observablehq/plot';
 import { ExtendedFeatureCollection } from "d3";
 
+/* eslint-disable import-x/no-unused-modules */
 export default function EventMap() {
   const [cz, setCz] = React.useState<ExtendedFeatureCollection | null>(null);
   const [events, setEvents] = React.useState<Array<{ start_date: string; venue_lat: number; venue_lng: number; }> | null>(null);

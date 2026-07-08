@@ -1,6 +1,6 @@
 import * as React from 'react';
 import IBAN from 'iban';
-import QRCode from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 function mkSpayd({ acc, am, msg, ss, vs, ks, cc }: QRPaymentProps) {
   const [num, bank] = acc.split('/') as [string, string];
@@ -35,5 +35,5 @@ interface QRPaymentProps {
 
 export function QRPayment(props: QRPaymentProps) {
   const spayd = mkSpayd(props);
-  return <QRCode value={spayd} level="M" size={256} />;
+  return <QRCodeCanvas value={spayd} level="M" size={256} />;
 }

@@ -4,7 +4,7 @@
 // eslint-disable-next-line import-x/no-unused-modules
 export default {
   content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx}',
     './calendar/**/*.{js,ts,jsx,tsx}',
     './lib/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',

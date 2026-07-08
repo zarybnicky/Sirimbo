@@ -2,7 +2,7 @@
   "name": "@rozpisovnik/graphql",
   "type": "module",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint . --cache"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

@@ -46,7 +46,6 @@ const categories: Category[] = [
   { name: 'Senioři IV', older: { minAge: 65 }, younger: { minAge: 60 } },
 ];
 
-// eslint-disable-next-line import-x/no-unused-modules
 export function AgeCategoryTable() {
   const year = new Date().getFullYear();
 

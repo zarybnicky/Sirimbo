@@ -24,7 +24,7 @@ export const OTELPlugin: GraphileConfig.Plugin = {
         requestDigest.preferJSON = true;
 
         const parentSpan = trace.getActiveSpan();
-        // @ts-expect-error
+        // @ts-expect-error Bad parent types
         const isHttpRequest = parentSpan?.attributes?.['http.method'];
         if (parentSpan && isHttpRequest) {
           return executeWithSpan(parentSpan, false);
@@ -63,7 +63,7 @@ export const OTELPlugin: GraphileConfig.Plugin = {
               ) {
                 span.setStatus({
                   code: SpanStatusCode.ERROR,
-                  // @ts-expect-error
+                  // @ts-expect-error Bad parent types
                   message: obj.json.errors[0]?.['message'] || 'Unknown error',
                 });
               }

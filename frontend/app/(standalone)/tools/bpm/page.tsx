@@ -427,6 +427,7 @@ function Sparkline({ history, dance, height = 36 }: { history: number[]; dance: 
 const ALGO_INIT: AlgoState = { raw: 0, bars: 0, factor: 1, beats: 0, conf: 0 };
 const UI_FLUSH_INTERVAL = 5;
 
+/* eslint-disable import-x/no-unused-modules */
 export default function TempoDetector() {
   const [dance, setDance] = useState<Dance>(DANCES[0]!);
   const [listening, setListening] = useState(false);

@@ -1,6 +1,5 @@
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
-import createMDX from '@next/mdx';
 import path from "node:path";
 
 type NextConfig = import('next').NextConfig;
@@ -14,13 +13,6 @@ const compose =
 
 // eslint-disable-next-line import-x/no-unused-modules
 export default compose(
-  createMDX({
-    extension: /\.mdx$/,
-    options: {
-      remarkPlugins: [['remark-gfm', { strict: true, throwOnError: true }]],
-      rehypePlugins: [],
-    },
-  }),
   bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' }),
   (cfg: NextConfig) =>
     withSentryConfig(cfg, {
@@ -49,7 +41,7 @@ export default compose(
   experimental: {
     scrollRestoration: true,
   },
-  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
   outputFileTracingRoot: path.join(import.meta.dirname, '..'),
   outputFileTracingIncludes: {
     "/*": [

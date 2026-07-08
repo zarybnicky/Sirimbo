@@ -12,16 +12,17 @@ export const useTypedRouter = <T extends z.Schema>(schema: T) => {
 
     const nextQuery: Record<string, string | string[]> = {};
 
-    searchParams?.forEach((value, key) => {
-      const current = nextQuery[key];
-      nextQuery[key] =
+    if (searchParams) {
+      for (const [key, value] of searchParams.entries()) {
+        const current = nextQuery[key];
+        nextQuery[key] =
         current === undefined
           ? value
           : Array.isArray(current)
-            ? [...current, value]
-            : [current, value];
-    });
-
+          ? [...current, value]
+          : [current, value];
+      }
+    }
     return { ...nextQuery, ...params };
   }, [params, router, searchParams]);
 
@@ -36,6 +37,7 @@ export const zRouterId = z.preprocess(
     .number()
     .optional()
     .transform((x) => (x ? x.toString() : '')),
+// eslint-disable-next-line unicorn/no-useless-undefined
 ).prefault(undefined);
 export const zRouterString = z.preprocess(
   (x) => (Array.isArray(x) ? x[0] : x),
@@ -43,4 +45,5 @@ export const zRouterString = z.preprocess(
     .string()
     .optional()
     .transform((x) => x || ''),
+// eslint-disable-next-line unicorn/no-useless-undefined
 ).prefault(undefined);

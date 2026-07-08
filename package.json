@@ -6,22 +6,24 @@
     "node": "24.x"
   },
   "devDependencies": {
-    "@graphql-codegen/add": "~7.0.1",
-    "@graphql-codegen/cli": "~7.1.2",
+    "@graphql-codegen/add": "~7.1.0",
+    "@graphql-codegen/cli": "~7.2.0",
     "@graphql-codegen/near-operation-file-preset": "~5.2.1",
-    "@graphql-codegen/typed-document-node": "~7.0.3",
-    "@graphql-codegen/typescript": "~6.0.2",
-    "@graphql-codegen/typescript-operations": "~6.0.2",
+    "@graphql-codegen/typed-document-node": "~7.1.0",
+    "@graphql-codegen/typescript": "~6.1.0",
+    "@graphql-codegen/typescript-operations": "~6.1.0",
     "@graphql-codegen/typescript-urql-graphcache": "~4.0.2",
     "@graphql-codegen/urql-introspection": "^4.0.1",
-    "@parcel/watcher": "~2.5.1",
+    "@parcel/watcher": "~2.5.6",
     "@pgsql/types": "~17.6.2",
-    "@tsconfig/node24": "~24.0.3",
+    "@tsconfig/node24": "~24.0.4",
     "@types/node": "~25.0.0",
-    "@urql/exchange-graphcache": "~9.0.0",
+    "@urql/exchange-graphcache": "~9.0.1",
     "graphile-migrate": "2.0.0-rc.3",
     "graphql": "~16.14.0",
-    "graphql-tag": "~2.12.6",
+    "graphql-tag": "~2.12.7",
+    "libpg-query": "~17.7.3",
+    "pgsql-parser": "^17.9.15",
     "prettier": "~3.7.4",
     "prop-types": "~15.8.1",
     "typescript": "~5.9.3",
@@ -60,10 +62,5 @@
       "@opentelemetry/sdk-trace-base": "2.8.0"
     }
   },
-  "packageManager": "pnpm@10.34.1+sha512.b58fbde6dca66a929538021581f648b4570b6ca19b18e7cbd7f2c07a7b24454155388dacdf08f2af3678e88a6d1fe04f9d609df24bf51735a060ea041b374ab7",
-  "dependencies": {
-    "@pgsql/parser": "~1.2.1",
-    "libpg-query": "~17.7.3",
-    "pgsql-parser": "~17.9.2"
-  }
+  "packageManager": "pnpm@10.34.1+sha512.b58fbde6dca66a929538021581f648b4570b6ca19b18e7cbd7f2c07a7b24454155388dacdf08f2af3678e88a6d1fe04f9d609df24bf51735a060ea041b374ab7"
 }

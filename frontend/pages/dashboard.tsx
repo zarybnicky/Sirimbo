@@ -33,7 +33,7 @@ export default function DashboardPage() {
         contents: () => <StickyAnnouncements />,
       },
     ],
-    [auth.persons],
+    [],
   );
 
   if (!authLoading && auth.user && auth.personIds.length === 0) {

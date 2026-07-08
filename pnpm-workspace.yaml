@@ -7,3 +7,9 @@ packages:
 
 injectWorkspacePackages: false
 nodeLinker: isolated
+
+peerDependencyRules:
+  allowedVersions:
+    "@graphql-codegen/typescript-urql-graphcache>@urql/exchange-graphcache": "9"
+    "next-urql>urql": "5"
+    "nunjucks>chokidar": "4"

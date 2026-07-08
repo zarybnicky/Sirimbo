@@ -202,8 +202,8 @@ export function ComboboxSearchArea({
             onSelect={(value) => onChange(value.split(/: (.*)/)[0] || null)}
             className={cn(
               'relative flex p-2 cursor-default select-none items-center rounded-sm',
-              'text-sm outline-none aria-selected:bg-accent-7 aria-selected:text-accent-12 text-accent-11',
-              'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+              'text-sm outline-none data-[selected=true]:bg-accent-7 data-[selected=true]:text-accent-12 text-accent-11',
+              'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
             )}
           >
             <Check

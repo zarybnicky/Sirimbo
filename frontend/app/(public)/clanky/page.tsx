@@ -96,7 +96,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
                 aria-current={item === currentPage ? 'page' : undefined}
                 className={cn(
                   item === currentPage ? 'text-white !bg-accent-5' : '',
-                  'w-10 h-10 bg-accent-3 inline-flex items-center justify-center rounded-full border border-accent-6'
+                  'size-10 bg-accent-3 inline-flex items-center justify-center rounded-full border border-accent-6'
                 )}
               >
                 {item}

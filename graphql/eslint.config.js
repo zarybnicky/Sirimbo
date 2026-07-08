@@ -19,7 +19,7 @@ export default defineConfig([
     rules: {
       ...graphqlPlugin.configs['operations-recommended'].rules,
       "@graphql-eslint/known-type-names": "error",
-      "@graphql-eslint/no-one-place-fragments": "warn",
+      "@graphql-eslint/no-one-place-fragments": "off",
 
       "@graphql-eslint/selection-set-depth": ["error", {
         maxDepth: 11,

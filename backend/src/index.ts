@@ -69,10 +69,9 @@ serv.addTo(app, server).catch((e) => {
 
 server.listen(preset.grafserv?.port ?? 5200, () => {
   const address = server.address();
-  if (address === null) {
-  } else if (typeof address === 'string') {
+  if (typeof address === 'string') {
     console.log(`PostGraphile listening on ${address} 🚀`);
-  } else {
+  } else if (address !== null) {
     const href = `http://localhost:${address.port}/graphiql`;
     console.log(`PostGraphiQL available at ${href} 🚀`);
   }

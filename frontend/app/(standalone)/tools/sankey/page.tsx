@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { ascending, max, min, range, scaleOrdinal, schemeTableau10 } from 'd3';
 import { sankey, sankeyLinkHorizontal } from 'd3-sankey';
 import type { SankeyNode as D3SankeyNode, SankeyLink as D3SankeyLink } from 'd3-sankey';
-import { origin } from '@/lib/query';
 
 const KIND_LABEL = {
   entry: 'entry',
@@ -200,6 +199,7 @@ function buildGraph(
   };
 }
 
+// eslint-disable-next-line import-x/no-unused-modules
 export function CompetitionSankey({
   width = 960,
   height = 560,
