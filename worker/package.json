@@ -26,7 +26,7 @@
     "graphile-worker": "^0.16.6",
     "handlebars": "^4.7.9",
     "helmet": "~8.2.0",
-    "html-to-text": "~9.0.5",
+    "html-to-text": "~10.0.0",
     "impit": "^0.14.2",
     "mjml": "^5.4.0",
     "nodemailer": "~9.0.3",
