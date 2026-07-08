@@ -9,8 +9,7 @@
     "start": "next start",
     "lint": "eslint . --cache",
     "typecheck": "tsc --noEmit",
-    "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "test": "vitest"
   },
   "dependencies": {
     "@0no-co/graphql.web": "^1.2.0",
@@ -106,6 +105,7 @@
     "@typescript-eslint/eslint-plugin": "^8.48.1",
     "@typescript-eslint/parser": "^8.48.1",
     "concurrently": "^9.2.1",
+    "esbuild": "^0.27.7",
     "eslint": "^9.39.1",
     "eslint-config-next": "16.2.10",
     "eslint-import-resolver-typescript": "^4.4.4",
