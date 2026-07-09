@@ -222,7 +222,8 @@ create or replace function event_instance_registrations(inst event_instance)
   join event_instance_registration eir
     on eir.legacy_registration_id = er.id
    and eir.instance_id = inst.id
-   and eir.parent_registration_id is null;
+   and eir.parent_registration_id is null
+   and eir.status is distinct from 'cancelled';
 $$;
 grant all on function event_instance_registrations to anonymous;
 
@@ -234,6 +235,7 @@ create or replace function event_instance_my_registrations(inst event_instance)
     on eir.legacy_registration_id = er.id
    and eir.instance_id = inst.id
    and eir.parent_registration_id is null
+   and eir.status is distinct from 'cancelled'
   where er.person_id = any (current_person_ids())
      or er.couple_id = any (current_couple_ids());
 $$;
