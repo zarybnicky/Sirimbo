@@ -1,6 +1,7 @@
 import { Layout } from '@/ui/Layout';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
+import { stripHtml } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { formatDefaultInstanceName } from '@/ui/format';
@@ -28,10 +29,11 @@ function EventInstancePage() {
   });
   const instance = data?.eventInstance;
   const title = instance?.name || (instance ? formatDefaultInstanceName(instance) : '');
+  const description = stripHtml(instance?.summary);
 
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title={title} />
+      <NextSeo title={title} description={description || undefined} />
       <WithSidebar sidebar={<EventList />}>
         <div
           className={

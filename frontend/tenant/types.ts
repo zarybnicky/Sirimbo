@@ -10,18 +10,49 @@ type TenantLinkTag = {
   color?: string;
 };
 
+type TenantOpenGraphImage = {
+  url: string;
+  width?: number;
+  height?: number;
+  alt?: string;
+};
+
 export type TenantSeoConfig = {
   titleTemplate: string;
   defaultTitle: string;
+  description?: string;
   themeColor: string;
   facebook?: {
     appId: string;
   };
   openGraph: {
     siteName: string;
+    locale?: string;
+    type?: string;
+    images?: TenantOpenGraphImage[];
   };
   additionalMetaTags: TenantMetaTag[];
   additionalLinkTags?: TenantLinkTag[];
+};
+
+export type TenantPublicSiteConfig = {
+  origin: string;
+  locale: string;
+  image: TenantOpenGraphImage;
+  organization: {
+    name: string;
+    legalName: string;
+    logo: string;
+    email?: string;
+    telephone?: string;
+    sameAs?: string[];
+    address?: {
+      streetAddress: string;
+      addressLocality: string;
+      postalCode: string;
+      addressCountry: string;
+    };
+  };
 };
 
 export type TenantConfig = {
@@ -29,7 +60,7 @@ export type TenantConfig = {
   copyrightLine: string;
   favicon: string;
   seo: TenantSeoConfig;
-  enableHome: boolean;
+  publicSite?: TenantPublicSiteConfig;
   enableRegistration: boolean;
   enableStarletImport?: boolean;
   useTrainerInitials: boolean;

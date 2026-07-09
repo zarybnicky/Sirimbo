@@ -9,7 +9,10 @@ export default function EventsPage() {
   const auth = useAuth();
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title="Nadcházející akce" />
+      <NextSeo
+        title="Nadcházející akce"
+        description="Přehled nadcházejících akcí, soustředění, kempů, soutěží a dalších klubových událostí."
+      />
       {auth.user ? (
         <WithSidebar sidebar={<EventList />} />
       ) : (

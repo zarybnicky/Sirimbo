@@ -1,10 +1,13 @@
 /* eslint-disable import-x/no-unused-modules */
+import { createPublicPageMetadata } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
-import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: 'Kontakt',
-};
+  description:
+    'Kontakty na TK Olymp Olomouc, fakturační údaje, taneční sály a osoby pro členské příspěvky, ČSTS, Olymp Dance, Pro-Am a klubové vybavení.',
+  path: '/kontakt',
+});
 
 export default function ContactPage() {
   return (

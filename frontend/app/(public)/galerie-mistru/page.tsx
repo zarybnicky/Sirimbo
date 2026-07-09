@@ -1,11 +1,14 @@
 /* eslint-disable import-x/no-unused-modules */
+import { createPublicPageMetadata } from '@/lib/seo';
 import { ServiceCard } from '@/ui/ServiceCard';
 import { PageHeader } from '@/ui/TitleBar';
-import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: 'Galerie mistrů',
-};
+  description:
+    'Přehled mistrů České republiky z TK Olymp Olomouc. Podívejte se na úspěšné taneční páry klubu ve standardních, latinskoamerických a deseti tancích.',
+  path: '/galerie-mistru',
+});
 
 export default function GalerieMistruPage() {
   return (
@@ -21,7 +24,7 @@ export default function GalerieMistruPage() {
       </div>
 
       <div className="my-16 prose prose-accent text-center">
-        <h1>Staň se dalším Mistrem i ty!</h1>
+        <h2>Staň se dalším Mistrem i ty!</h2>
       </div>
     </>
   );

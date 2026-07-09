@@ -13,7 +13,6 @@ export const config: TenantConfig = {
       { name: 'viewport', content: 'initial-scale=1,width=device-width' },
     ],
   },
-  enableHome: false,
   enableRegistration: false,
   enableStarletImport: true,
   useTrainerInitials: true,

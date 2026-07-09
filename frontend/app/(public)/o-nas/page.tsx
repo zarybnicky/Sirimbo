@@ -1,11 +1,14 @@
 /* eslint-disable import-x/no-unused-modules */
+import { createPublicPageMetadata } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
-import type { Metadata } from 'next';
 import Image from 'next/image';
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: 'Olymp v tanečním světě',
-};
+  description:
+    'Poznejte TK Olymp Olomouc, taneční sportovní klub s více než třicetiletou tradicí, Sportovním centrem mládeže a tréninky v Olomouci a Prostějově.',
+  path: '/o-nas',
+});
 
 export default function OKlubuPage() {
   return (
@@ -33,7 +36,7 @@ export default function OKlubuPage() {
       </div>
       <div className="col-feature mb-16">
         <Image
-          alt=""
+          alt="Tým TK Olymp Olomouc na mistrovství České republiky družstev"
           src="/images/2023-04-MCRDruzstev.jpg"
           width={6373}
           height={3314}

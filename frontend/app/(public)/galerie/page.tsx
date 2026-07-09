@@ -1,12 +1,15 @@
 /* eslint-disable import-x/no-unused-modules */
 import { cn } from '@/lib/cn';
+import { createPublicPageMetadata } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
-import type { Metadata } from 'next';
 import Image from 'next/image';
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: 'Galerie',
-};
+  description:
+    'Fotografie a videa TK Olymp Olomouc ze soutěží, vystoupení, tréninků a klubových akcí na YouTube a Facebooku.',
+  path: '/galerie',
+});
 
 export default function GalleryPage() {
   return (
@@ -46,7 +49,7 @@ export default function GalleryPage() {
             className="relative aspect-w-16 aspect-h-9 group"
           >
             <div className="absolute inset-0 border-8 border-accent-7 overflow-hidden">
-              <Image src={item.image} fill alt="" className="object-cover" />
+              <Image src={item.image} fill alt="Galerie TK Olymp" className="object-cover" />
             </div>
             <div
               className={cn(

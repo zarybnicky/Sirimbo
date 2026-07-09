@@ -15,18 +15,55 @@ import '../style/lite-youtube-embed.css';
 export async function generateMetadata(): Promise<Metadata> {
   const tenant = await getRequestTenant();
   const { seo } = tenant.config;
+  const publicSite = tenant.config.publicSite;
   const linkTags = seo.additionalLinkTags ?? [];
   const manifest = linkTags.find((tag) => tag.rel === 'manifest')?.href;
+  const publicImage = publicSite?.image;
 
   return {
+    metadataBase: publicSite ? new URL(publicSite.origin) : undefined,
     title: {
       default: seo.defaultTitle,
       template: seo.titleTemplate,
     },
+    description: seo.description,
+    applicationName: tenant.name,
     manifest,
     openGraph: {
       siteName: seo.openGraph.siteName,
+      type: seo.openGraph.type as 'website' | undefined,
+      locale: seo.openGraph.locale,
+      description: seo.description,
+      images: publicImage ? [publicImage] : seo.openGraph.images,
     },
+    twitter: publicImage
+      ? {
+          card: 'summary_large_image',
+          title: seo.defaultTitle,
+          description: seo.description,
+          images: [publicImage.url],
+        }
+      : undefined,
+    robots: publicSite
+      ? {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+            'max-video-preview': -1,
+          },
+        }
+      : {
+          index: false,
+          follow: false,
+          googleBot: {
+            index: false,
+            follow: false,
+          },
+        },
     facebook: seo.facebook?.appId ? { appId: seo.facebook.appId } : undefined,
     icons: {
       icon: linkTags

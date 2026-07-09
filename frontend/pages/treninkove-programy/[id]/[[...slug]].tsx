@@ -1,4 +1,5 @@
 import { CohortGroupDocument } from '@/graphql/CohortGroup';
+import { stripHtml } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import { RichTextView } from '@/ui/RichTextView';
 import { slugify } from '@/lib/slugify';
@@ -67,7 +68,7 @@ function TrainingGroupPage() {
 
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title={item.name} />
+      <NextSeo title={item.name} description={stripHtml(item.description) || undefined} />
       <PageHeader title={item.name} />
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />

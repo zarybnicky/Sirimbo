@@ -29,7 +29,6 @@ export const config: TenantConfig = {
       },
     ],
   },
-  enableHome: false,
   enableRegistration: true,
   enableStarletImport: false,
   useTrainerInitials: false,

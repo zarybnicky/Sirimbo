@@ -32,7 +32,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
   const tenantId = useAtomValue(tenantIdAtom);
-  const { enableHome, copyrightLine: newCopyrightLine } = useAtomValue(tenantConfigAtom);
+  const { publicSite, copyrightLine: newCopyrightLine } = useAtomValue(tenantConfigAtom);
   const memberMenu = useMemberMenu();
   const SidebarLogo = React.useMemo(
     () => getTenantUi(tenantId, 'SidebarLogo'),
@@ -128,7 +128,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
 
               <Link
                 onClick={signOut}
-                href={enableHome ? '/' : '/dashboard'}
+                href={publicSite ? '/' : '/dashboard'}
                 className={cn(
                   'rounded-2xl px-3 py-1.5',
                   'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
@@ -146,7 +146,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
             />
           )}
 
-          {enableHome &&
+          {publicSite &&
             (showTopMenu ? (
               topMenu.map((item) => (
                 <SidebarSection key={item.title} item={item} pathname={pathname} />

@@ -12,19 +12,19 @@ export default function LoginPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const { enableHome } = useAtomValue(tenantConfigAtom);
+  const { publicSite } = useAtomValue(tenantConfigAtom);
 
   const onSuccess = React.useCallback(
     (user: UserAuthFragment | null) => {
       const redirect = router.query?.from as string | undefined;
-      const defaultRedirect = enableHome ? '/dashboard' : '/rozpis';
+      const defaultRedirect = publicSite ? '/dashboard' : '/rozpis';
       void router.push(
         !user?.userProxiesList.length
           ? '/profil'
           : (redirect || defaultRedirect) as Parameters<typeof router.push>[0],
       );
     },
-    [enableHome, router],
+    [publicSite, router],
   );
 
   const personCount = auth.personIds.length;

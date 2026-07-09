@@ -29,7 +29,7 @@ export function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/clanky/');
 
   let response: NextResponse;
-  if (!tenant.config.enableHome && memberHomePath) {
+  if (!tenant.config.publicSite && memberHomePath) {
     const destination = request.nextUrl.clone();
     destination.pathname = '/dashboard';
     response = NextResponse.rewrite(destination);

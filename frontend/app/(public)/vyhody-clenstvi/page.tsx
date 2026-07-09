@@ -1,11 +1,14 @@
 /* eslint-disable import-x/no-unused-modules */
+import { createPublicPageMetadata } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
-import type { Metadata } from 'next';
 import Image from 'next/image';
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: 'Členství v Olympu',
-};
+  description:
+    'Výhody členství v TK Olymp Olomouc: systematické tréninky, špičkoví trenéři, soutěže, soustředění, klubové zázemí a podpora tanečních párů.',
+  path: '/vyhody-clenstvi',
+});
 
 export default function VyhodyClenstvi() {
   return (
@@ -36,7 +39,7 @@ export default function VyhodyClenstvi() {
       </div>
       <div className="col-feature mb-8 ">
         <Image
-          alt=""
+          alt="Členové TK Olymp Olomouc na mistrovství České republiky družstev"
           src="/images/2022-09-MCRDruzstev.jpg"
           width={5211}
           height={3474}

@@ -10,7 +10,10 @@ import { NextSeo } from 'next-seo';
 export default function TrainingProgramPage() {
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title="Tréninkové programy" />
+      <NextSeo
+        title="Tréninkové programy"
+        description="Tréninkové programy pro začínající, výkonnostní i vrcholové taneční sportovce od dětí po dospělé."
+      />
       <PageHeader title="Tréninkové programy" />
       <TrainingPrograms />
       <div className="my-8">

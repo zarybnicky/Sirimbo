@@ -1,6 +1,8 @@
 /* eslint-disable import-x/no-unused-modules */
 import { ArticlesDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
+import { getRequestTenant } from '@/lib/server/tenant';
+import { createPublicPageMetadata } from '@/lib/seo';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
 import { CallToAction } from '@/ui/CallToAction';
@@ -8,7 +10,20 @@ import { Hero } from '@/ui/Hero';
 import LiteYouTubeEmbed from '@/ui/LiteYouTubeEmbed';
 import { TrainingPrograms } from '@/ui/TrainingPrograms';
 
+export async function generateMetadata() {
+  const tenant = await getRequestTenant();
+  const title = tenant.config.publicSite?.organization.name ?? tenant.name;
+
+  return createPublicPageMetadata({
+    title,
+    description: tenant.config.seo.description ?? title,
+    path: '/',
+    image: tenant.config.publicSite?.image,
+  });
+}
+
 export default async function HomePage() {
+  const tenant = await getRequestTenant();
   const data = await executeGraphql(ArticlesDocument, {
     first: 6,
     offset: 0,
@@ -17,12 +32,19 @@ export default async function HomePage() {
   const articles = data.aktualities?.nodes ?? [];
   const heroData = articles.slice(0, 3);
   const restData = articles.slice(3);
+  const title = tenant.config.publicSite?.organization.name ?? tenant.name;
+  const description = tenant.config.seo.description;
 
   return (
     <>
       <Hero data={heroData} />
 
       <CallToAction url="/" />
+
+      <section className="prose prose-accent my-8">
+        <h1>{title}</h1>
+        {description && <p>{description}</p>}
+      </section>
 
       <TrainingPrograms />
 

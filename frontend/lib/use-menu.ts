@@ -59,14 +59,14 @@ export const topMenu: MenuStructItem[] = [
 ];
 
 export function useMemberMenu(): MenuStructItem[] {
-  const { enableHome, enableStarletImport } = useAtomValue(tenantConfigAtom);
+  const { publicSite, enableStarletImport } = useAtomValue(tenantConfigAtom);
   return [
     {
       type: 'link',
       title: 'Nástěnka',
       href: '/dashboard?tab=myAnnouncements',
     },
-    ...(enableHome
+    ...(publicSite
       ? ([
           {
             type: 'link',
@@ -108,7 +108,7 @@ export function useMemberMenu(): MenuStructItem[] {
         { type: 'link', title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
         { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
         { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
-        ...(enableHome
+        ...(publicSite
           ? ([
               { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
               {

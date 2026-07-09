@@ -1,12 +1,15 @@
 /* eslint-disable import-x/no-unused-modules */
+import { createPublicPageMetadata } from '@/lib/seo';
 import { LocationCard } from '@/ui/LocationCard';
 import { PageHeader } from '@/ui/TitleBar';
-import type { Metadata } from 'next';
 import Image from 'next/image';
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: 'Kde trénujeme',
-};
+  description:
+    'Přehled tanečních sálů TK Olymp v Olomouci: Taneční centrum při FZŠ Holečkova a tělocvična Slovanského gymnázia včetně adres a map.',
+  path: '/kde-trenujeme',
+});
 
 export default function LocationsPage() {
   return (
@@ -29,7 +32,7 @@ export default function LocationsPage() {
         <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
           <Image
             className="object-cover"
-            alt=""
+            alt="Taneční sál v Tanečním centru při FZŠ Holečkova v Olomouci"
             src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
             fill
             sizes=""
@@ -50,7 +53,7 @@ export default function LocationsPage() {
         <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
           <Image
             className="object-cover"
-            alt=""
+            alt="Tělocvična Slovanského gymnázia používaná pro tréninky TK Olymp"
             src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-SGO.jpg"
             fill
             sizes=""

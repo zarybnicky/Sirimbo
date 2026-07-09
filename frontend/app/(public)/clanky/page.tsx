@@ -2,6 +2,7 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { cn } from '@/lib/cn';
 import { executeGraphql } from '@/lib/server/graphql';
+import { createPublicPageMetadata } from '@/lib/seo';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
 import { PageHeader } from '@/ui/TitleBar';
@@ -12,15 +13,30 @@ import Link from 'next/link';
 const pageSize = 12;
 type PageItem = number | 'break';
 
-export const metadata: Metadata = {
-  title: 'Články',
-};
-
 type ArticlesPageProps = {
   searchParams: Promise<{
     page?: string | string[];
   }>;
 };
+
+async function getCurrentPage(searchParams: ArticlesPageProps['searchParams']) {
+  const params = await searchParams;
+  const rawPage = Array.isArray(params.page) ? params.page[0] : params.page;
+  return Math.max(1, Number.parseInt(rawPage ?? '1', 10) || 1);
+}
+
+export async function generateMetadata({
+  searchParams,
+}: ArticlesPageProps): Promise<Metadata> {
+  const currentPage = await getCurrentPage(searchParams);
+
+  return createPublicPageMetadata({
+    title: currentPage > 1 ? `Články - ${currentPage}. stránka` : 'Články',
+    description:
+      'Aktuality, články a pozvánky TK Olymp Olomouc ze světa tanečního sportu, soutěží, soustředění, tréninků a klubových akcí.',
+    path: currentPage > 1 ? `/clanky?page=${currentPage}` : '/clanky',
+  });
+}
 
 function getPageItems(currentPage: number, pageCount: number): PageItem[] {
   const visible = new Set([1, pageCount]);
@@ -46,9 +62,7 @@ function getPageItems(currentPage: number, pageCount: number): PageItem[] {
 }
 
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
-  const params = await searchParams;
-  const rawPage = Array.isArray(params.page) ? params.page[0] : params.page;
-  const currentPage = Math.max(1, Number.parseInt(rawPage ?? '1', 10) || 1);
+  const currentPage = await getCurrentPage(searchParams);
   const { aktualities } = await executeGraphql(ArticlesDocument, {
     first: pageSize,
     offset: (currentPage - 1) * pageSize,

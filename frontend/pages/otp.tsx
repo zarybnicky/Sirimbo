@@ -13,7 +13,7 @@ export default function OtpPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const { enableHome } = useAtomValue(tenantConfigAtom);
+  const { publicSite } = useAtomValue(tenantConfigAtom);
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
   const doSignInWithOtp = useMutation(OtpLoginDocument)[1];
@@ -42,7 +42,7 @@ export default function OtpPage() {
 
       setStatus('Přesměrovávám...');
       const redirect = router.query?.from as string | undefined;
-      const defaultRedirect = enableHome ? '/dashboard' : '/rozpis';
+      const defaultRedirect = publicSite ? '/dashboard' : '/rozpis';
       void router.push(
         !user.otpLogin?.result?.usr?.userProxiesList.length
           ? '/profil'
@@ -51,7 +51,7 @@ export default function OtpPage() {
     })();
   }, [
     doSignInWithOtp,
-    enableHome,
+    publicSite,
     router,
     router.isReady,
     router.query.from,

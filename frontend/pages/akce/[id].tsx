@@ -1,4 +1,5 @@
 import { Layout } from '@/ui/Layout';
+import { stripHtml } from '@/lib/seo';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { EventDocument } from '@/graphql/Event';
@@ -18,10 +19,14 @@ export default function EventPage() {
   const { id } = router.query;
   const auth = useAuth();
   const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
+  const description = stripHtml(data?.event?.summary || data?.event?.description);
 
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
+      <NextSeo
+        title={data?.event?.name || 'Nadcházející akce'}
+        description={description || undefined}
+      />
       <WithSidebar sidebar={<EventList />}>
         <div
           className={

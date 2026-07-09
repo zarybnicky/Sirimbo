@@ -56,12 +56,14 @@ export const Layout = React.memo(function Layout({
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const tenantId = useAtomValue(tenantIdAtom);
-  const { enableHome } = useAtomValue(tenantConfigAtom);
+  const { publicSite } = useAtomValue(tenantConfigAtom);
   const Footer = useMemo(() => getTenantUi(tenantId, 'Footer'), [tenantId]);
   const search = searchParams?.toString() ?? '';
   const currentUrl = search ? `${pathname}?${search}` : pathname ?? '';
+  const protectedPage =
+    requireUser || requireMember || requireAdmin || requireTrainer || requireSystemAdmin;
 
-  showTopMenu = showTopMenu && enableHome;
+  showTopMenu = publicSite ? showTopMenu : false;
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !auth.user;
   }
@@ -85,7 +87,7 @@ export const Layout = React.memo(function Layout({
 
   return (
     <>
-      {includeTenantSeo && <TenantSeo tenantId={tenantId} />}
+      {includeTenantSeo && <TenantSeo tenantId={tenantId} noindex={protectedPage} />}
       <Header
         isOpen={isOpen}
         setIsOpen={setIsOpen}

@@ -1,12 +1,15 @@
 /* eslint-disable import-x/no-unused-modules */
+import { createPublicPageMetadata } from '@/lib/seo';
 import { buttonCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
-import type { Metadata } from 'next';
 import Image from 'next/image';
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: 'Olymp Dance',
-};
+  description:
+    'Olymp Dance přináší taneční kroužky přímo na základní školy v okolí Olomouce a Prostějova. Děti tančí, vystupují a poznávají standardní i latinskoamerické tance.',
+  path: '/skolni-krouzky',
+});
 
 export default function SkolniKrouzkyPage() {
   return (

@@ -7,9 +7,15 @@ export const config: TenantConfig = {
   seo: {
     titleTemplate: '%s · TK Olymp',
     defaultTitle: 'TK Olymp',
+    description:
+      'TK Olymp Olomouc vede děti, mládež i dospělé v tanečním sportu v Olomouci a Prostějově. Nabízíme tréninkové programy, soutěžní tanec i školní kroužky.',
     themeColor: '#000',
     facebook: { appId: '704526480597551' },
-    openGraph: { siteName: 'TK Olymp' },
+    openGraph: {
+      siteName: 'TK Olymp',
+      locale: 'cs_CZ',
+      type: 'website',
+    },
     additionalMetaTags: [
       { name: 'wot-verification', content: 'ec0cf41ab42dae52d3d4' },
       { name: 'msvalidate.01', content: '7BD6C8B5748FC22EF06AB3AE89900885' },
@@ -45,7 +51,34 @@ export const config: TenantConfig = {
       },
     ],
   },
-  enableHome: true,
+  publicSite: {
+    origin: 'https://tkolymp.cz',
+    locale: 'cs-CZ',
+    image: {
+      url: '/images/2023-04-MCRDruzstev.jpg',
+      width: 6373,
+      height: 3314,
+      alt: 'Taneční klub Olymp Olomouc na mistrovství České republiky družstev',
+    },
+    organization: {
+      name: 'TK Olymp Olomouc',
+      legalName: 'Taneční klub Olymp Olomouc, z. s.',
+      logo: '/olymp/android-chrome-512x512.png',
+      email: 'miroslav.hyza@tkolymp.cz',
+      telephone: '+420737545525',
+      sameAs: [
+        'https://www.facebook.com/tkolymp',
+        'https://www.instagram.com/tanecni_klub_olymp',
+        'https://www.youtube.com/user/TheMamcro',
+      ],
+      address: {
+        streetAddress: 'Jiráskova 381/25',
+        addressLocality: 'Olomouc - Hodolany',
+        postalCode: '779 00',
+        addressCountry: 'CZ',
+      },
+    },
+  },
   enableRegistration: true,
   enableStarletImport: false,
   useTrainerInitials: false,
