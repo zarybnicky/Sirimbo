@@ -42,6 +42,12 @@ create index if not exists event_instance_registration_legacy_registration_id_id
 
 create unique index if not exists event_instance_registration_bridge_key
   on event_instance_registration (legacy_registration_id, instance_id, (coalesce(person_id, -1)));
+create unique index if not exists event_instance_registration_unit_key
+  on event_instance_registration (instance_id, couple_id, person_id) nulls not distinct
+  where parent_registration_id is null;
+create unique index if not exists event_instance_registration_person_key
+  on event_instance_registration (parent_registration_id, person_id)
+  where parent_registration_id is not null;
 
 select app_private.drop_policies('public.event_instance_registration');
 
