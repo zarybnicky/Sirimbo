@@ -102,7 +102,9 @@ begin
   on conflict (legacy_registration_id, instance_id, (coalesce(person_id, -1))) do update
     set event_id = excluded.event_id,
         note = excluded.note,
-        target_cohort_id = excluded.target_cohort_id;
+        target_cohort_id = excluded.target_cohort_id,
+        parent_registration_id = excluded.parent_registration_id,
+        couple_id = excluded.couple_id;
 
   -- orphan sweep: rows no longer in the registration x instances product
   -- (registration cancelled, instance removed, couple recomposed).
@@ -112,8 +114,8 @@ begin
       select 1 from event_registration er
       join event_instance ei on ei.event_id = er.event_id
       where er.id = e.legacy_registration_id and ei.id = e.instance_id
-        and (e.person_id is null
-          or e.person_id in (select app_private.event_registration_person_ids(er)))
+        and ((e.person_id is null and er.couple_id is not null)
+          or (e.person_id is not null and e.person_id in (select app_private.event_registration_person_ids(er))))
     );
 end;
 $$;
@@ -166,6 +168,23 @@ create trigger _600_sync_eir_instance_ins after insert on event_instance
   referencing new table as changed_rows for each statement
   execute function app_private.tg_event_instance__sync_eir();
 
+create or replace function app_private.tg_event_instance__reparent_eir() returns trigger
+  language plpgsql security definer as $$
+begin
+  if new.event_id is distinct from old.event_id then
+    perform app_private.sync_eir_registrations(array(
+      select distinct er.id from event_registration er
+      where er.event_id in (old.event_id, new.event_id)));
+  end if;
+  return null;
+end;
+$$;
+select verify_function('app_private.tg_event_instance__reparent_eir', 'public.event_instance');
+
+drop trigger if exists _600_reparent_eir_instance on event_instance;
+create trigger _600_reparent_eir_instance after update of event_id on event_instance
+  for each row execute function app_private.tg_event_instance__reparent_eir();
+
 create or replace function app_private.tg_event_attendance__propagate_status() returns trigger
   language plpgsql security definer as $$
 begin
@@ -181,7 +200,7 @@ $$;
 select verify_function('app_private.tg_event_attendance__propagate_status', 'public.event_attendance');
 
 drop trigger if exists _600_propagate_status on event_attendance;
-create trigger _600_propagate_status after update of status on event_attendance
+create trigger _600_propagate_status after insert or update of status on event_attendance
   for each row execute function app_private.tg_event_attendance__propagate_status();
 
 -- One-time backfill: build every registration's skeleton, then seed native
@@ -225,7 +244,7 @@ create or replace function event_instance_remaining_person_spots(inst event_inst
   returns integer language sql stable security definer as $$
   select inst.capacity
     - (select coalesce(count(*), 0) from event_instance_registration eir
-        where eir.instance_id = inst.id and eir.person_id is not null)
+        where eir.instance_id = inst.id and eir.person_id is not null and eir.status is distinct from 'cancelled')
     - (select coalesce(count(id), 0) from event_external_registration
         where event_id = inst.event_id);
 $$;
