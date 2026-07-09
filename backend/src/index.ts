@@ -38,6 +38,35 @@ installStarletProxy(app);
 
 app.use(authContext());
 
+app.post('/system-admin/test-email', async (req, res) => {
+  await withPgClientAndPgSettings(req, async (client) => {
+    if (req.pgSettings.role !== 'system_admin') {
+      res.status(403).json({ error: 'FORBIDDEN' });
+      return;
+    }
+    try {
+      const options = JSON.stringify({
+        options: {
+          to: req.pgSettings['jwt.claims.email']?.trim(),
+          subject: '[Rozpisovník] Test e-mail',
+          text: [
+            `Sent: ${new Date().toISOString()}`,
+            `User: ${req.pgSettings['jwt.claims.user_id'] || 'unknown'}`,
+          ].join('\n'),
+        },
+      });
+      await client.query({
+        text: 'select graphile_worker.add_job($1, $2::json)',
+        values: ['send_email', options],
+      });
+      res.status(202).json({});
+    } catch (error) {
+      console.error('Failed to enqueue system-admin test email', error);
+      res.status(500).json({ error: 'TEST_EMAIL_FAILED' });
+    }
+  });
+});
+
 app.get('/member/download', async function (req, res) {
   await withPgClientAndPgSettings(req, async (client) => {
     const { rows } = await client.query<{ d_path: string; d_filename: string }>({

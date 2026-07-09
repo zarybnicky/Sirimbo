@@ -132,6 +132,10 @@ export default compose(
       return [
         { source: '/member/download', destination: `${graphqlServer}/member/download` },
         {
+          source: '/system-admin/:path*',
+          destination: `${graphqlServer}/system-admin/:path*`,
+        },
+        {
           source: '/galerie/:path*',
           destination: `${externalServer ?? ''}/galerie/:path*`,
         },
@@ -146,6 +150,10 @@ export default compose(
         {
           source: '/member/download',
           destination: 'https://api.rozpisovnik.cz/member/download',
+        },
+        {
+          source: '/system-admin/:path*',
+          destination: 'https://api.rozpisovnik.cz/system-admin/:path*',
         },
         {
           source: '/galerie/:path*',

@@ -19,6 +19,9 @@ import { SubmitButton } from '@/ui/submit';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
+import { Mail } from 'lucide-react';
+import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
+import { origin } from '@/lib/query';
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = React.useState(false);
@@ -117,6 +120,8 @@ export default function SystemAdminTenantsPage() {
 
         {!fetching && !error && tenants.length > 0 && (
           <div className="mt-6 grid gap-4 lg:grid-cols-[3fr_1fr]">
+            <TestEmailButton />
+
             <div className="rounded-md border border-neutral-6 bg-neutral-1 overflow-auto">
               <DataGrid
                 columns={columns}
@@ -170,6 +175,29 @@ export default function SystemAdminTenantsPage() {
         )}
       </div>
     </Layout>
+  );
+}
+
+function TestEmailButton() {
+  const sendTestEmail = useAsyncCallback(async function () {
+    const response = await fetch(`${origin}/system-admin/test-email`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        Authorization: `Bearer ${storeRef.current.get(tokenAtom)}`,
+        ['x-tenant-id']: storeRef.current.get(tenantIdAtom),
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Nepodařilo se odeslat testovací e-mail.');
+    }
+  });
+
+  return (
+    <SubmitButton loading={sendTestEmail.loading} onClick={sendTestEmail.execute}>
+      <Mail />
+      Poslat testovací e-mail
+    </SubmitButton>
   );
 }
 

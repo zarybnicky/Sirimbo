@@ -30,14 +30,14 @@ namespace GraphileWorker {
     };
 
     send_email: {
-      template: string;
+      template?: string | null;
       options: {
         to: string | string[];
         subject: string;
         html?: string;
         text?: string;
       };
-      variables: {
+      variables?: {
         [varName: string]: any;
       };
     };

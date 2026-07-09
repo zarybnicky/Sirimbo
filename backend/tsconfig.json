@@ -3,6 +3,7 @@
   "compilerOptions": {
     "types": ["node", "morgan", "pg", "ws", "jsonwebtoken", "express-http-proxy", "express", "cors", "compression", "cookie-parser"],
     "strict": true,
+    "noEmit": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "noImplicitReturns": true,
