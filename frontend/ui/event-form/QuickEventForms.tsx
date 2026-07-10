@@ -56,16 +56,9 @@ export function QuickEventCreateForm({
   const createInstances = useMutation(CreateEventInstancesDocument)[1];
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const [splitLessons, setSplitLessons] = React.useState(false);
-  const [splitRegistrationIds, setSplitRegistrationIds] = React.useState<
-    Record<string, string | null>
-  >({});
-  const [fullInitialValue, setFullInitialValue] =
-    React.useState<Partial<EventFormInput> | null>(null);
-  const { control, handleSubmit, getValues } = useForm<
-    EventFormInput,
-    unknown,
-    EventFormType
-  >({
+  const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
+  const [initialValue, setInitialValue] = React.useState<Partial<EventFormInput> | null>(null);
+  const { control, handleSubmit, getValues } = useForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
       type: 'LESSON',
@@ -106,14 +99,9 @@ export function QuickEventCreateForm({
           id: `couple:${couple.id}`,
           label: formatLongCoupleName(couple),
         })),
-      ...(tenant?.tenant?.tenantMembershipsList || []).flatMap((membership) =>
-        membership.status === 'ACTIVE' && membership.person?.id
-          ? [
-              {
-                id: `person:${membership.person.id}`,
-                label: membership.person.name || '?',
-              },
-            ]
+      ...(tenant?.tenant?.tenantMembershipsList || []).flatMap((x) =>
+        x.status === 'ACTIVE' && x.person?.id
+          ? [{ id: `person:${x.person.id}`, label: x.person.name }]
           : [],
       ),
     ],
@@ -124,12 +112,7 @@ export function QuickEventCreateForm({
       <div className="text-sm text-neutral-11">
         Trenéři:{' '}
         {defaults.trainerPersonIds
-          .map(
-            (personId) =>
-              tenant?.tenant?.tenantTrainersList.find(
-                (trainer) => trainer.person?.id === personId,
-              )?.person?.name ?? personId,
-          )
+          .map((id) => tenant?.tenant?.tenantTrainersList.find((x) => x.person?.id === id)?.person?.name)
           .join(', ')}
       </div>
     ) : (
@@ -151,7 +134,7 @@ export function QuickEventCreateForm({
       }));
     if (!splitLessons && values.type === 'LESSON') {
       const registrantCount = selectedRegistrations.reduce(
-        (sum, registration) => sum + (registration.coupleId ? 2 : 1),
+        (sum, r) => sum + (r.coupleId ? 2 : 1),
         0,
       );
       if (registrantCount > 2) throw new Error('Lekce má nejvýš dvě místa');
@@ -166,19 +149,12 @@ export function QuickEventCreateForm({
     const location = eventLocationInput(values);
 
     const events = ranges.map((range) => {
-      const [registrationKind, registrationId] =
-        splitRegistrationIds[range.since.toISOString()]?.split(':') ?? [];
-      const splitRegistration =
-        splitLessons &&
-        registrationId &&
-        (registrationKind === 'person' || registrationKind === 'couple')
-          ? [
-              {
-                personId: registrationKind === 'person' ? registrationId : null,
-                coupleId: registrationKind === 'couple' ? registrationId : null,
-              },
-            ]
-          : [];
+      const [kind, id] =
+        splitIds[range.since.toISOString()]?.split(':') ?? [];
+      const splitRegistration = splitLessons && id && [{
+        personId: kind === 'person' ? id : null,
+        coupleId: kind === 'couple' ? id : null,
+      }] || [];
       return {
         since: range.since.toISOString(),
         until: range.until.toISOString(),
@@ -194,8 +170,8 @@ export function QuickEventCreateForm({
     if (result.data?.quickCreateEventInstances?.eventInstances?.length) onSuccess();
   });
 
-  if (fullInitialValue) {
-    return <UpsertEventForm initialValue={fullInitialValue} />;
+  if (initialValue) {
+    return <UpsertEventForm initialValue={initialValue} />;
   }
 
   return (
@@ -224,7 +200,7 @@ export function QuickEventCreateForm({
           <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
             {lessonRanges.map((range) => {
               const key = range.since.toISOString();
-              const value = splitRegistrationIds[key] ?? null;
+              const value = splitIds[key] ?? null;
               return (
                 <div
                   key={key}
@@ -245,7 +221,7 @@ export function QuickEventCreateForm({
                           : 'border-green-7 bg-green-3 text-green-11 hover:border-green-7 hover:bg-green-3/80'
                       }
                       onChange={(selected) => {
-                        setSplitRegistrationIds((current) => ({
+                        setSplitIds((current) => ({
                           ...current,
                           [key]: selected ?? null,
                         }));
@@ -283,7 +259,7 @@ export function QuickEventCreateForm({
           <button
             type="button"
             className={buttonCls({ variant: 'outline' })}
-            onClick={() => setFullInitialValue(getValues())}
+            onClick={() => setInitialValue(getValues())}
           >
             Více možností
             <ChevronDown />
@@ -356,10 +332,10 @@ export function QuickInstanceEditForm({
     ) {
       setValue(
         'registrations',
-        instance.registrations.nodes.map((registration) => ({
-          itemId: registration.id,
-          personId: registration.personId,
-          coupleId: registration.coupleId,
+        instance.registrations.nodes.map((x) => ({
+          itemId: x.id,
+          personId: x.personId,
+          coupleId: x.coupleId,
         })),
       );
       setRegistrationsReady(true);
@@ -373,20 +349,18 @@ export function QuickInstanceEditForm({
     if (!edited?.since || !edited.until) return;
 
     const nextTrainerIds = edited.trainers
-      .map((trainer) => trainer.personId)
+      .map((x) => x.personId)
       .filter((id): id is string => !!id);
     const currentTrainerIds =
       directTrainers.length > 0
         ? directTrainers.map((trainer) => trainer.personId)
         : effectiveTrainerIds;
-    const sameTrainers =
-      nextTrainerIds.toSorted().join(',') === currentTrainerIds.toSorted().join(',');
     const location = eventLocationInput(values);
     const nextRegistrations = values.registrations
-      .filter((registration) => registration.personId || registration.coupleId)
-      .map((registration) => ({
-        personId: registration.personId || null,
-        coupleId: registration.coupleId || null,
+      .filter((x) => x.personId || x.coupleId)
+      .map((x) => ({
+        personId: x.personId || null,
+        coupleId: x.coupleId || null,
       }));
     const result = await updateInstance({
       input: {
@@ -400,10 +374,10 @@ export function QuickInstanceEditForm({
         pIsVisible: null,
         pIsPublic: null,
         pIsCancelled: edited.isCancelled,
-        pCapacity: values.type === 'LESSON' ? 2 : values.capacity,
-        pCapacityUnit: values.type === 'LESSON' ? 'PEOPLE' : values.capacityUnit,
+        pCapacity: values.type === 'LESSON' ? 2 : 0,
+        pCapacityUnit: 'REGISTRATIONS',
         pIsLocked: values.isLocked,
-        pTrainerPersonIds: sameTrainers ? null : nextTrainerIds,
+        pTrainerPersonIds: nextTrainerIds.toSorted().join(',') === currentTrainerIds.toSorted().join(',') ? null : nextTrainerIds,
         pRegistrations: instance.eventId || !registrationsReady ? null : nextRegistrations,
       },
     });
@@ -429,7 +403,7 @@ export function QuickInstanceEditForm({
       />
       <TrainerListElement control={control} name="trainers" />
       <LocationField control={control} />
-      {type !== 'LESSON' && (
+      {/*type !== 'LESSON' && (
         <>
           <TextFieldElement
             control={control}
@@ -447,7 +421,7 @@ export function QuickInstanceEditForm({
             ]}
           />
         </>
-      )}
+      )*/}
       <CheckboxElement
         control={control}
         name="isLocked"
@@ -457,19 +431,14 @@ export function QuickInstanceEditForm({
         <ParticipantListElement
           control={control}
           name="registrations"
-          existingPeople={registrations.flatMap(({ personId: id, person }) =>
-            id
-              ? [{ id, label: person?.name ?? `Účastník #${id}` }]
+          existingPeople={registrations.flatMap(({ person }) =>
+            person
+              ? [{ id: person.id, label: person.name }]
               : [],
           )}
-          existingCouples={registrations.flatMap(({ coupleId: id, couple }) =>
-            id
-              ? [
-                  {
-                    id,
-                    label: formatLongCoupleName(couple) || `Pár #${id}`,
-                  },
-                ]
+          existingCouples={registrations.flatMap(({ couple }) =>
+            couple
+              ? [{ id: couple.id, label: formatLongCoupleName(couple) }]
               : [],
           )}
         />
@@ -478,11 +447,7 @@ export function QuickInstanceEditForm({
         <div className="text-sm text-neutral-11">Načítám účastníky…</div>
       )}
       <FormError error={registrationsQuery.error} />
-      <CheckboxElement
-        control={control}
-        name="instances.0.isCancelled"
-        label="Zrušený termín"
-      />
+      <CheckboxElement control={control} name="instances.0.isCancelled" label="Zrušeno" />
 
       <div className="flex items-center justify-between gap-2 pt-1">
         {instance.eventId ? (

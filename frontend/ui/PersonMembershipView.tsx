@@ -12,7 +12,6 @@ import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue } from 'jotai';
 import Link from 'next/link';
-import React from 'react';
 import { tenantIdAtom } from '@/ui/state/auth';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';

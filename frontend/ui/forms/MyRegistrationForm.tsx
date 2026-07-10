@@ -57,11 +57,13 @@ export function MyRegistrationForm({
     }
     return myLessons;
   }, [registration]);
-  const lessonTrainers = event.eventTrainersList.filter(
-    (trainer) =>
-      (trainer.lessonsOffered as number | null) !== 0 ||
-      (myLessons[trainer.id] ?? 0) > 0,
-  );
+  const lessonTrainers = event.type === 'CAMP' || event.eventInstancesList.length === 1
+    ? event.eventTrainersList.filter(
+        (trainer) =>
+          (trainer.lessonsOffered as number | null) !== 0 ||
+          (myLessons[trainer.id] ?? 0) > 0,
+      )
+    : [];
 
   const changeLessonCount = React.useCallback(
     async (
