@@ -11,7 +11,7 @@ fragment ActivityTimelineItem on ActivityTimelineItem {
     lastName
   }
   ... on ActivityEventAttendance {
-    eventAttendance {
+    eventInstanceRegistration {
       id
       status
     }

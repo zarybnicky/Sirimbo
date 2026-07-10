@@ -377,7 +377,7 @@ function attendanceCounts(items: EventAttendanceItem[]) {
   };
 
   for (const item of items) {
-    const status = item.eventAttendance?.status;
+    const status = item.eventInstanceRegistration?.status;
     if (status) counts[status] += 1;
   }
 
@@ -412,7 +412,7 @@ function AttendanceSummary({
       {items
         .toSorted((a, b) => (a.person?.name ?? '').localeCompare(b.person?.name ?? ''))
         .map((item) => {
-          const status = item.eventAttendance?.status;
+          const status = item.eventInstanceRegistration?.status;
           const Icon = status ? attendanceIcons[status] : null;
           return (
             <div
