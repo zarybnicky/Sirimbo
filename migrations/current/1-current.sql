@@ -1,1 +1,1 @@
-
+--! include functions/set_event_instance_registration.sql

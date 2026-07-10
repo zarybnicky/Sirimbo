@@ -5434,6 +5434,12 @@ type Mutation {
     """
     input: ResetPasswordInput!
   ): ResetPasswordPayload
+  setEventInstanceRegistration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: SetEventInstanceRegistrationInput!
+  ): SetEventInstanceRegistrationPayload
   setLessonDemand(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7798,6 +7804,65 @@ type ScoreboardRecord {
   personId: BigInt
   ranking: BigInt
   totalScore: BigInt
+}
+
+"""All input for the `setEventInstanceRegistration` mutation."""
+input SetEventInstanceRegistrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  pCoupleId: BigInt
+  pInstanceId: BigInt
+  pIsRegistered: Boolean
+  pPersonId: BigInt
+}
+
+"""The output of our `setEventInstanceRegistration` mutation."""
+type SetEventInstanceRegistrationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Reads a single `Couple` that is related to this `EventInstanceRegistration`.
+  """
+  couple: Couple
+
+  """
+  Reads a single `Event` that is related to this `EventInstanceRegistration`.
+  """
+  event: Event
+  eventInstanceRegistration: EventInstanceRegistration
+
+  """An edge for our `EventInstanceRegistration`. May be used by Relay 1."""
+  eventInstanceRegistrationEdge(
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EventInstanceRegistrationsEdge
+
+  """
+  Reads a single `EventInstance` that is related to this `EventInstanceRegistration`.
+  """
+  instance: EventInstance
+
+  """
+  Reads a single `EventInstanceRegistration` that is related to this `EventInstanceRegistration`.
+  """
+  parentRegistration: EventInstanceRegistration
+
+  """
+  Reads a single `Person` that is related to this `EventInstanceRegistration`.
+  """
+  person: Person
+
+  """
+  Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`.
+  """
+  targetCohort: EventTargetCohort
 }
 
 """All input for the `setLessonDemand` mutation."""

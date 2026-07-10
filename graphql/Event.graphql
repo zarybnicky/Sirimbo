@@ -298,10 +298,12 @@ query EventInstanceRegistrations($id: BigInt!) {
           man {
             id
             name
+            lastName
           }
           woman {
             id
             name
+            lastName
           }
         }
       }
@@ -462,6 +464,22 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
       id
       lessonCount
       trainerId
+    }
+  }
+}
+
+mutation SetEventInstanceRegistration($input: SetEventInstanceRegistrationInput!) {
+  setEventInstanceRegistration(input: $input) {
+    eventInstanceRegistration {
+      id
+      instanceId
+      personId
+      coupleId
+      registrationStatus
+      instance {
+        id
+        remainingPersonSpots
+      }
     }
   }
 }

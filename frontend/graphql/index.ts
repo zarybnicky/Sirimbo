@@ -4331,6 +4331,7 @@ export type Mutation = {
   registerWithoutInvitation: Maybe<RegisterWithoutInvitationPayload>;
   rejectMembershipApplication: Maybe<RejectMembershipApplicationPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
+  setEventInstanceRegistration: Maybe<SetEventInstanceRegistrationPayload>;
   setLessonDemand: Maybe<SetLessonDemandPayload>;
   submitForm: Maybe<SubmitFormPayload>;
   syncCohortMemberships: Maybe<SyncCohortMembershipsPayload>;
@@ -4725,6 +4726,12 @@ export type MutationRejectMembershipApplicationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationSetEventInstanceRegistrationArgs = {
+  input: SetEventInstanceRegistrationInput;
 };
 
 
@@ -6789,6 +6796,50 @@ export type ScoreboardRecord = {
   personId: Maybe<Scalars['BigInt']['output']>;
   ranking: Maybe<Scalars['BigInt']['output']>;
   totalScore: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** All input for the `setEventInstanceRegistration` mutation. */
+export type SetEventInstanceRegistrationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pCoupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  pIsRegistered?: InputMaybe<Scalars['Boolean']['input']>;
+  pPersonId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** The output of our `setEventInstanceRegistration` mutation. */
+export type SetEventInstanceRegistrationPayload = {
+  __typename?: 'SetEventInstanceRegistrationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Couple` that is related to this `EventInstanceRegistration`. */
+  couple: Maybe<Couple>;
+  /** Reads a single `Event` that is related to this `EventInstanceRegistration`. */
+  event: Maybe<Event>;
+  eventInstanceRegistration: Maybe<EventInstanceRegistration>;
+  /** An edge for our `EventInstanceRegistration`. May be used by Relay 1. */
+  eventInstanceRegistrationEdge: Maybe<EventInstanceRegistrationsEdge>;
+  /** Reads a single `EventInstance` that is related to this `EventInstanceRegistration`. */
+  instance: Maybe<EventInstance>;
+  /** Reads a single `EventInstanceRegistration` that is related to this `EventInstanceRegistration`. */
+  parentRegistration: Maybe<EventInstanceRegistration>;
+  /** Reads a single `Person` that is related to this `EventInstanceRegistration`. */
+  person: Maybe<Person>;
+  /** Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`. */
+  targetCohort: Maybe<EventTargetCohort>;
+};
+
+
+/** The output of our `setEventInstanceRegistration` mutation. */
+export type SetEventInstanceRegistrationPayloadEventInstanceRegistrationEdgeArgs = {
+  orderBy?: Array<EventInstanceRegistrationsOrderBy>;
 };
 
 /** All input for the `setLessonDemand` mutation. */
@@ -9125,6 +9176,7 @@ export type GraphCacheKeysConfig = {
   Result?: (data: WithTypename<Result>) => null | string,
   ScoreboardManualAdjustment?: (data: WithTypename<ScoreboardManualAdjustment>) => null | string,
   ScoreboardRecord?: (data: WithTypename<ScoreboardRecord>) => null | string,
+  SetEventInstanceRegistrationPayload?: (data: WithTypename<SetEventInstanceRegistrationPayload>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
   SubmitFormPayload?: (data: WithTypename<SubmitFormPayload>) => null | string,
   SyncCohortMembershipsPayload?: (data: WithTypename<SyncCohortMembershipsPayload>) => null | string,
@@ -10356,6 +10408,17 @@ export type GraphCacheResolvers = {
     ranking?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     totalScore?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
+  SetEventInstanceRegistrationPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    couple?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<Couple> | string>,
+    event?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<Event> | string>,
+    eventInstanceRegistration?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
+    eventInstanceRegistrationEdge?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, SetEventInstanceRegistrationPayloadEventInstanceRegistrationEdgeArgs, WithTypename<EventInstanceRegistrationsEdge> | string>,
+    instance?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    parentRegistration?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
+    person?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<Person> | string>,
+    targetCohort?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<EventTargetCohort> | string>
+  },
   SetLessonDemandPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     eventLessonDemand?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, WithTypename<EventLessonDemand> | string>,
@@ -10787,6 +10850,7 @@ export type GraphCacheOptimisticUpdaters = {
   registerWithoutInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterWithoutInvitationArgs, Maybe<WithTypename<RegisterWithoutInvitationPayload>>>,
   rejectMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationRejectMembershipApplicationArgs, Maybe<WithTypename<RejectMembershipApplicationPayload>>>,
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
+  setEventInstanceRegistration?: GraphCacheOptimisticMutationResolver<MutationSetEventInstanceRegistrationArgs, Maybe<WithTypename<SetEventInstanceRegistrationPayload>>>,
   setLessonDemand?: GraphCacheOptimisticMutationResolver<MutationSetLessonDemandArgs, Maybe<WithTypename<SetLessonDemandPayload>>>,
   submitForm?: GraphCacheOptimisticMutationResolver<MutationSubmitFormArgs, Maybe<WithTypename<SubmitFormPayload>>>,
   syncCohortMemberships?: GraphCacheOptimisticMutationResolver<MutationSyncCohortMembershipsArgs, Maybe<WithTypename<SyncCohortMembershipsPayload>>>,
@@ -10953,6 +11017,7 @@ export type GraphCacheUpdaters = {
     registerWithoutInvitation?: GraphCacheUpdateResolver<{ registerWithoutInvitation: Maybe<WithTypename<RegisterWithoutInvitationPayload>> }, MutationRegisterWithoutInvitationArgs>,
     rejectMembershipApplication?: GraphCacheUpdateResolver<{ rejectMembershipApplication: Maybe<WithTypename<RejectMembershipApplicationPayload>> }, MutationRejectMembershipApplicationArgs>,
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,
+    setEventInstanceRegistration?: GraphCacheUpdateResolver<{ setEventInstanceRegistration: Maybe<WithTypename<SetEventInstanceRegistrationPayload>> }, MutationSetEventInstanceRegistrationArgs>,
     setLessonDemand?: GraphCacheUpdateResolver<{ setLessonDemand: Maybe<WithTypename<SetLessonDemandPayload>> }, MutationSetLessonDemandArgs>,
     submitForm?: GraphCacheUpdateResolver<{ submitForm: Maybe<WithTypename<SubmitFormPayload>> }, MutationSubmitFormArgs>,
     syncCohortMemberships?: GraphCacheUpdateResolver<{ syncCohortMemberships: Maybe<WithTypename<SyncCohortMembershipsPayload>> }, MutationSyncCohortMembershipsArgs>,
@@ -12096,6 +12161,17 @@ export type GraphCacheUpdaters = {
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
     ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
     totalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>
+  },
+  SetEventInstanceRegistrationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,
+    eventInstanceRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,
+    eventInstanceRegistrationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, SetEventInstanceRegistrationPayloadEventInstanceRegistrationEdgeArgs>,
+    instance?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,
+    parentRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,
+    targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>
   },
   SetLessonDemandPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SetLessonDemandPayload>>, Record<string, never>>,

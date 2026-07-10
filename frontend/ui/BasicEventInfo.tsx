@@ -38,7 +38,7 @@ export function BasicEventInfo({ instance }: { instance: EventInstanceWithTraine
       )}
 
       <dt>
-        <MyRegistrationsDialog instance={instance} />
+        <MyRegistrationsDialog instance={instance} allowInstanceRegistration />
       </dt>
 
       {instance.summary?.trim() && (

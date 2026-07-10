@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(26);
+SELECT tap.plan(27);
 
 -- Fixtures
 -- People:
@@ -365,6 +365,32 @@ RESET ROLE;
 
 INSERT INTO couple (id, man_id, woman_id, since) OVERRIDING SYSTEM VALUE
 VALUES (2950001, 2900003, 2900005, now());
+
+SELECT set_config('jwt.claims.my_tenant_ids', '[1000]', true);
+SELECT set_config('jwt.claims.my_person_ids', '[2900005]', true);
+SELECT set_event_instance_registration(
+  (SELECT id FROM _scheduled_lesson), 2900005, null, true
+);
+CREATE TEMP TABLE _self_registration_created ON COMMIT DROP AS
+SELECT event_instance_remaining_person_spots(instance) = 0 AS at_capacity
+FROM event_instance instance
+WHERE id = (SELECT id FROM _scheduled_lesson);
+SELECT set_event_instance_registration(
+  (SELECT id FROM _scheduled_lesson), 2900005, null, false
+);
+
+SELECT tap.ok(
+  (SELECT at_capacity FROM _self_registration_created)
+  AND EXISTS (
+    SELECT 1 FROM event_instance_registration
+    WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+      AND person_id = 2900005
+      AND registration_status = 'cancelled'
+  ),
+  'self-registration respects capacity and can be cancelled'
+);
+
+SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 
 SELECT public.update_event_instance_details(
   instance.id,

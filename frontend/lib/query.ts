@@ -281,6 +281,15 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         }
       },
 
+      setEventInstanceRegistration(_result, args, cache, _info) {
+        if (args.input.pInstanceId) {
+          cache.invalidate({
+            __typename: 'EventInstance',
+            id: args.input.pInstanceId,
+          });
+        }
+      },
+
       cancelRegistration(_result, args, cache, _info) {
         if (args.input.registrationId)
           cache.invalidate({
