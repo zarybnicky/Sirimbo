@@ -88,12 +88,17 @@ than the compat-view swap first envisioned. Where we are:
 
 ### Remaining
 
-- **UI migration onto the mirror (rest)** — the attendance-marking view is done;
-  still to move: the registration surfaces (`NewRegistrationForm` /
-  `MyRegistration*`), `EventView`'s registration/attendance tabs, and
-  `ActivityTimeline`'s event-attendance items (onto the
-  `eventInstanceRegistration` relation). Once nothing reads the `event_attendance`
-  view or `eventRegistration`, drop those relations / the view.
+- **`event_attendance` view — retire.** Both client readers are now on the
+  mirror (`InstanceAttendanceView` + `ActivityTimeline`). What still touches the
+  view: old cached bundles (age out over the rollout window) and the
+  `activity_timeline()` function body (server-side, produces identical rows off
+  the view or the mirror). The drop slice repoints that function body onto the
+  mirror and drops the view, its GraphQL relations, and `update_event_attendance`
+  together — once the rollout window has passed.
+- **Registration surfaces onto the mirror** — `NewRegistrationForm` /
+  `MyRegistration*` and `EventView`'s registration tab still read
+  `eventRegistration`; move them to `eventInstanceRegistration`. Entangled with
+  the write-path flip (register/cancel/edit).
 - **Write-path flip** — `register` / `cancel` / `edit` target the mirror
   directly; drop `event_registration` (→ view or gone) and
   `legacy_registration_id`; promote `unit_key`/`person_key` to the
