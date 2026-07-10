@@ -393,10 +393,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         invalidateQueryFields(cache, ['eventOverlaps']);
       },
 
-      quickCreateEvents(_result, _args, cache, _info) {
-        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
-      },
-
       quickCreateEventInstances(_result, _args, cache, _info) {
         invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
       },

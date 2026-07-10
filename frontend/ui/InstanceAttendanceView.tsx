@@ -44,7 +44,13 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   return (
     <div className="prose prose-accent max-w-none">
       <Link
-        href={instance.eventId ? `/akce/${instance.eventId}?tab=attendance` : '/akce'}
+        href={
+          instance.eventId
+            ? `/akce/${instance.eventId}?tab=attendance`
+            : instance.parentId
+              ? `/termin/${instance.parentId}`
+              : '/rozpis'
+        }
       >
         Zpět na seznam termínů
       </Link>

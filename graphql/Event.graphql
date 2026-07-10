@@ -279,6 +279,36 @@ query EventInstanceWithAttendance($id: BigInt!) {
   }
 }
 
+query EventInstanceRegistrations($id: BigInt!) {
+  eventInstance(id: $id) {
+    id
+    registrations: eventInstanceRegistrationsByInstanceId(
+      condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
+    ) {
+      nodes {
+        id
+        personId
+        person {
+          id
+          name
+        }
+        coupleId
+        couple {
+          id
+          man {
+            id
+            name
+          }
+          woman {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}
+
 query EventList {
   events(condition: { type: CAMP }) {
     totalCount
@@ -329,18 +359,7 @@ mutation UpsertEvent($input: UpsertEventInput!) {
   }
 }
 
-mutation QuickCreateEvents($input: QuickCreateEventsInput!) {
-  quickCreateEvents(input: $input) {
-    events {
-      ...Event
-      eventInstancesList(orderBy: SINCE_ASC) {
-        ...EventInstanceWithTrainer
-      }
-    }
-  }
-}
-
-mutation QuickCreateEventInstances($input: QuickCreateEventInstancesInput!) {
+mutation CreateEventInstances($input: QuickCreateEventInstancesInput!) {
   quickCreateEventInstances(input: $input) {
     eventInstances {
       id

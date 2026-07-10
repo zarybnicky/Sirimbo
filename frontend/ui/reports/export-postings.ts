@@ -1,4 +1,4 @@
-import { formatDefaultEventName, formatEventType } from '@/ui/format';
+import { describePosting } from '@/ui/format';
 import type { PostingFragment } from '@/graphql/Payment';
 import { saveAs } from 'file-saver';
 
@@ -22,20 +22,14 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
       const payment = x.transaction?.payment;
 
       let date = x?.transaction?.effectiveDate;
-      let desc = '';
+      let desc = describePosting(payment, x);
 
-      let event = payment?.eventInstance?.event;
-      if (event) {
-        desc =
-          Number.parseFloat(x.amount || '') < 0
-            ? `${formatEventType(event.type)}: ${event.eventTrainersList.map((x) => x.name).join(', ')}`
-            : formatDefaultEventName(event);
-        date = payment?.eventInstance?.since;
+      if (payment?.eventInstance) {
+        date = payment.eventInstance.since;
       }
 
-      event = payment?.eventRegistration?.event;
+      const event = payment?.eventRegistration?.event;
       if (event) {
-        desc = formatDefaultEventName(event);
         date = event.eventInstancesList?.[0]?.since;
       }
 

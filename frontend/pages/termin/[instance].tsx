@@ -12,6 +12,7 @@ import { NextSeo } from 'next-seo';
 import { useQuery } from 'urql';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
+import { Calendar } from '@/calendar/Calendar';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -42,6 +43,9 @@ function EventInstancePage() {
         >
           {instance && <PageHeader title={title} />}
           {instance && <BasicEventInfo instance={instance} />}
+          {instance?.type === 'CAMP' && (
+            <Calendar parentId={instance.id} initialDate={instance.since} />
+          )}
           <InstanceAttendanceView id={router.query.instance} />
         </div>
       </WithSidebar>

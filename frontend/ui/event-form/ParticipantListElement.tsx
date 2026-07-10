@@ -15,9 +15,13 @@ import { CurrentTenantDocument } from '@/graphql/Tenant';
 export function ParticipantListElement({
   name,
   control,
+  existingPeople = [],
+  existingCouples = [],
 }: {
   control: Control<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>;
   name: 'registrations';
+  existingPeople?: { id: string; label: string }[];
+  existingCouples?: { id: string; label: string }[];
 }) {
   const [open, setOpen] = React.useState<'couple' | 'person' | null>(null);
   const { fields, append, remove, update } = useFieldArray({ name, control });
@@ -112,18 +116,21 @@ export function ParticipantListElement({
       <div
         className={cn('grid gap-x-2 gap-y-1', fields.length > 6 ? ' grid-cols-2' : '')}
       >
-        {fields.map((registration, index) =>
-          !registration.personId && !registration.coupleId ? (
+        {fields.map((registration, index) => {
+          const label = registration.personId
+            ? (possiblePeople.find((x) => x.id === registration.personId)?.label ??
+              existingPeople.find((x) => x.id === registration.personId)?.label)
+            : (possibleCouples.find((x) => x.id === registration.coupleId)?.label ??
+              existingCouples.find((x) => x.id === registration.coupleId)?.label);
+
+          return !registration.personId && !registration.coupleId ? (
             <React.Fragment key={registration.id} />
           ) : (
             <div className="flex items-center gap-2" key={registration.id}>
-              <div className="grow">
-                {registration.personId
-                  ? possiblePeople.find((x) => x.id === registration.personId)?.label
-                  : possibleCouples.find((x) => x.id === registration.coupleId)?.label}
-              </div>
+              <div className="grow">{label}</div>
               <button
                 type="button"
+                aria-label={`Odebrat ${label ?? 'účastníka'}`}
                 className={buttonCls({ size: 'sm', variant: 'outline' })}
                 onClick={() =>
                   registration.itemId
@@ -134,8 +141,8 @@ export function ParticipantListElement({
                 <X />
               </button>
             </div>
-          ),
-        )}
+          );
+        })}
       </div>
     </>
   );

@@ -1,8 +1,8 @@
 import type { EventType } from '@/graphql';
 import {
   type EventInstanceWithTrainerFragment,
-  QuickCreateEventInstancesDocument,
-  QuickCreateEventsDocument,
+  EventInstanceRegistrationsDocument,
+  CreateEventInstancesDocument,
   UpdateEventInstanceDetailsDocument,
 } from '@/graphql/Event';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
@@ -53,8 +53,7 @@ export function QuickEventCreateForm({
   parentId?: string;
 }) {
   const { onSuccess } = useFormResult();
-  const createEvents = useMutation(QuickCreateEventsDocument)[1];
-  const createInstances = useMutation(QuickCreateEventInstancesDocument)[1];
+  const createInstances = useMutation(CreateEventInstancesDocument)[1];
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitRegistrationIds, setSplitRegistrationIds] = React.useState<
@@ -190,16 +189,9 @@ export function QuickEventCreateForm({
       };
     });
 
-    if (parentId) {
-      const result = await createInstances({ input: { events, parentId } });
-      if (result.error) throw result.error;
-      if (result.data?.quickCreateEventInstances?.eventInstances?.length) onSuccess();
-      return;
-    }
-
-    const result = await createEvents({ input: { events } });
+    const result = await createInstances({ input: { events, parentId } });
     if (result.error) throw result.error;
-    if (result.data?.quickCreateEvents?.events?.length) onSuccess();
+    if (result.data?.quickCreateEventInstances?.eventInstances?.length) onSuccess();
   });
 
   if (fullInitialValue) {
@@ -310,6 +302,12 @@ export function QuickInstanceEditForm({
 }) {
   const { onSuccess } = useFormResult();
   const updateInstance = useMutation(UpdateEventInstanceDetailsDocument)[1];
+  const [registrationsReady, setRegistrationsReady] = React.useState(!!instance.eventId);
+  const [registrationsQuery] = useQuery({
+    query: EventInstanceRegistrationsDocument,
+    variables: { id: instance.id },
+    pause: !!instance.eventId,
+  });
   const [fullForm, setFullForm] = React.useState(false);
   const directTrainers = instance.eventInstanceTrainersByInstanceIdList;
   const effectiveTrainerIds = instance.trainersList?.map((trainer) => trainer.personId) ?? [];
@@ -318,13 +316,18 @@ export function QuickInstanceEditForm({
       ? directTrainers.map((trainer) => ({ itemId: trainer.id, personId: trainer.personId }))
       : effectiveTrainerIds.map((personId) => ({ itemId: null, personId }));
 
-  const { control, handleSubmit } = useForm<EventFormInput, unknown, EventFormType>({
+  const { control, handleSubmit, setValue } = useForm<
+    EventFormInput,
+    unknown,
+    EventFormType
+  >({
     resolver: zodResolver(EventForm),
     defaultValues: {
       name: instance.name ?? '',
       type: instance.type ?? 'LESSON',
       locationId: instance.locationText ? 'other' : (instance.location?.id ?? 'none'),
       locationText: instance.locationText ?? '',
+      registrations: [],
       instances: [
         {
           itemId: instance.id,
@@ -336,6 +339,29 @@ export function QuickInstanceEditForm({
       ],
     },
   });
+
+  const registrations =
+    registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
+
+  React.useEffect(() => {
+    const instance = registrationsQuery.data?.eventInstance;
+    if (
+      !registrationsReady &&
+      !registrationsQuery.fetching &&
+      !registrationsQuery.error &&
+      instance
+    ) {
+      setValue(
+        'registrations',
+        instance.registrations.nodes.map((registration) => ({
+          itemId: registration.id,
+          personId: registration.personId,
+          coupleId: registration.coupleId,
+        })),
+      );
+      setRegistrationsReady(true);
+    }
+  }, [registrationsQuery, registrationsReady, setValue]);
 
   const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
 
@@ -353,7 +379,12 @@ export function QuickInstanceEditForm({
     const sameTrainers =
       nextTrainerIds.toSorted().join(',') === currentTrainerIds.toSorted().join(',');
     const location = eventLocationInput(values);
-
+    const nextRegistrations = values.registrations
+      .filter((registration) => registration.personId || registration.coupleId)
+      .map((registration) => ({
+        personId: registration.personId || null,
+        coupleId: registration.coupleId || null,
+      }));
     const result = await updateInstance({
       input: {
         pInstanceId: instance.id,
@@ -367,6 +398,7 @@ export function QuickInstanceEditForm({
         pIsPublic: null,
         pIsCancelled: edited.isCancelled,
         pTrainerPersonIds: sameTrainers ? null : nextTrainerIds,
+        pRegistrations: instance.eventId || !registrationsReady ? null : nextRegistrations,
       },
     });
     if (result.error) throw result.error;
@@ -391,6 +423,31 @@ export function QuickInstanceEditForm({
       />
       <TrainerListElement control={control} name="trainers" />
       <LocationField control={control} />
+      {!instance.eventId && registrationsReady && (
+        <ParticipantListElement
+          control={control}
+          name="registrations"
+          existingPeople={registrations.flatMap(({ personId: id, person }) =>
+            id
+              ? [{ id, label: person?.name ?? `Účastník #${id}` }]
+              : [],
+          )}
+          existingCouples={registrations.flatMap(({ coupleId: id, couple }) =>
+            id
+              ? [
+                  {
+                    id,
+                    label: formatLongCoupleName(couple) || `Pár #${id}`,
+                  },
+                ]
+              : [],
+          )}
+        />
+      )}
+      {!instance.eventId && !registrationsReady && registrationsQuery.fetching && (
+        <div className="text-sm text-neutral-11">Načítám účastníky…</div>
+      )}
+      <FormError error={registrationsQuery.error} />
       <CheckboxElement
         control={control}
         name="instances.0.isCancelled"

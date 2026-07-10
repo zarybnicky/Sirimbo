@@ -204,16 +204,18 @@ export function describePosting(
   if (payment.cohortSubscription) {
     return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;
   }
-  const event = payment.eventInstance?.event || payment.eventRegistration?.event;
-  if (!event) {
+  const instance = payment.eventInstance;
+  const event = instance?.event || payment.eventRegistration?.event;
+  const type = event?.type ?? instance?.type;
+  if (!type) {
     return '';
   }
   if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
     const trainers =
-      payment.eventInstance?.trainersList?.map((x) => x.person?.name) ??
+      instance?.trainersList?.map((x) => x.person?.name) ??
       payment.eventRegistration?.event?.eventTrainersList?.map((x) => x.name) ??
       [];
-    return `${formatEventType(event.type)}: ${trainers.join(', ')}`;
+    return `${formatEventType(type)}: ${trainers.join(', ')}`;
   }
-  return formatDefaultEventName(event);
+  return event ? formatDefaultEventName(event) : instance?.name || formatEventType(type);
 }

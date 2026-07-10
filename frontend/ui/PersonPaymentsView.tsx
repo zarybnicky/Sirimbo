@@ -53,7 +53,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
             <dt>Zpráva</dt>
             <dd>
               {person.firstName} {person.lastName},{' '}
-              {x.payment?.cohortSubscription?.cohort?.name}
+              {x.payment?.cohortSubscription?.cohort?.name ?? describePosting(x.payment)}
             </dd>
             {x.payment?.dueAt && (
               <>
@@ -71,7 +71,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
                 cc={x.price.currency || 'CZK'}
                 ss={x.payment?.specificSymbol}
                 vs={x.payment?.variableSymbol}
-                msg={`${person.firstName} ${person.lastName}, ${x.payment?.cohortSubscription?.cohort?.name}`}
+                msg={`${person.firstName} ${person.lastName}, ${x.payment?.cohortSubscription?.cohort?.name ?? describePosting(x.payment)}`}
               />
             </div>
           )}

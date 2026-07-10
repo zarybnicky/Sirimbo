@@ -1,7 +1,7 @@
 import { Layout } from '@/ui/Layout';
 import type { PaymentQuery } from '@/graphql/Payment';
 import { PaymentDocument } from '@/graphql/Payment';
-import { moneyFormatter, numericDateFormatter } from '@/ui/format';
+import { formatEventType, moneyFormatter, numericDateFormatter } from '@/ui/format';
 import { PageHeader } from '@/ui/TitleBar';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
@@ -110,14 +110,18 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
                   #{payment.eventInstance.id} –{' '}
                   {numericDateFormatter.format(new Date(payment.eventInstance.since))}
                 </span>
-                {payment.eventInstance.event && (
-                  <Link
-                    href={`/akce/${payment.eventInstance.event.id}`}
-                    className="text-sm font-medium text-accent-11 hover:underline"
-                  >
-                    {payment.eventInstance.event.name}
-                  </Link>
-                )}
+                <Link
+                  href={
+                    payment.eventInstance.event
+                      ? `/akce/${payment.eventInstance.event.id}`
+                      : `/termin/${payment.eventInstance.id}`
+                  }
+                  className="text-sm font-medium text-accent-11 hover:underline"
+                >
+                  {payment.eventInstance.event?.name ||
+                    payment.eventInstance.name ||
+                    formatEventType(payment.eventInstance.type)}
+                </Link>
               </p>
               {!!payment.eventInstance.trainersList?.length && (
                 <ul className="ml-4 list-disc">
