@@ -14,6 +14,8 @@ CREATE TABLE public.event_instance_registration (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     attendance_created_at timestamp with time zone,
     attendance_updated_at timestamp with time zone,
+    attendance_note text,
+    registration_status public.event_instance_registration_status DEFAULT 'active'::public.event_instance_registration_status NOT NULL,
     CONSTRAINT event_instance_registration_attendance_state CHECK (((person_id IS NULL) OR ((status IS NOT NULL) AND (attendance_created_at IS NOT NULL) AND (attendance_updated_at IS NOT NULL)))),
     CONSTRAINT event_instance_registration_shape CHECK (
 CASE
@@ -55,7 +57,7 @@ CREATE POLICY view_visible_instance ON public.event_instance_registration FOR SE
    FROM public.event_instance)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-CREATE TRIGGER _200_eir_attendance_timestamps BEFORE INSERT OR UPDATE OF person_id, status, note ON public.event_instance_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg_eir__attendance_timestamps();
+CREATE TRIGGER _200_eir_attendance_timestamps BEFORE INSERT OR UPDATE OF person_id, status, attendance_note ON public.event_instance_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg_eir__attendance_timestamps();
 CREATE TRIGGER _500_eir_refresh_stats_del AFTER DELETE ON public.event_instance_registration REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_eir__refresh_stats_stmt();
 CREATE TRIGGER _500_eir_refresh_stats_ins AFTER INSERT ON public.event_instance_registration REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_eir__refresh_stats_stmt();
 CREATE TRIGGER _500_eir_refresh_stats_upd AFTER UPDATE ON public.event_instance_registration REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_eir__refresh_stats_stmt();

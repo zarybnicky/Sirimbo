@@ -19,7 +19,7 @@ CREATE TABLE public.event_instance (
     stats jsonb DEFAULT '{}'::jsonb NOT NULL,
     parent_id bigint,
     capacity integer,
-    capacity_unit public.event_capacity_unit DEFAULT 'registrations'::public.event_capacity_unit,
+    capacity_unit public.event_capacity_unit DEFAULT 'people'::public.event_capacity_unit NOT NULL,
     description text,
     summary text,
     is_locked boolean,
@@ -46,7 +46,7 @@ ALTER TABLE ONLY public.event_instance
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_instance_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE;
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
@@ -54,10 +54,15 @@ CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING 
 CREATE POLICY current_tenant ON public.event_instance AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY member_view ON public.event_instance FOR SELECT TO member USING (is_visible);
 CREATE POLICY public_view ON public.event_instance FOR SELECT TO anonymous USING (is_public);
-CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app_private.can_trainer_edit_instance(id)) WITH CHECK (true);
+CREATE POLICY trainer_delete ON public.event_instance FOR DELETE TO trainer USING (app_private.can_trainer_edit_instance(id));
+CREATE POLICY trainer_insert ON public.event_instance FOR INSERT TO trainer WITH CHECK (((parent_id IS NULL) OR app_private.can_trainer_edit_instance(parent_id)));
+CREATE POLICY trainer_select ON public.event_instance FOR SELECT TO trainer USING (app_private.can_trainer_edit_instance(id));
+CREATE POLICY trainer_update ON public.event_instance FOR UPDATE TO trainer USING (app_private.can_trainer_edit_instance(id)) WITH CHECK ((app_private.can_trainer_edit_instance(id) OR ((parent_id IS NOT NULL) AND app_private.can_trainer_edit_instance(parent_id))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _200_validate_parent BEFORE INSERT OR UPDATE OF tenant_id, parent_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__validate_parent();
 CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE OF is_cancelled ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
+CREATE TRIGGER _500_refresh_manager_person_ids_from_parent AFTER INSERT OR UPDATE OF parent_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__refresh_manager_person_ids();
 CREATE TRIGGER _600_reparent_eir_instance AFTER UPDATE OF event_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__reparent_eir();
 CREATE TRIGGER _600_sync_eir_instance_ins AFTER INSERT ON public.event_instance REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_instance__sync_eir();
 CREATE TRIGGER _800_event_instance__fill_defaults BEFORE INSERT ON public.event_instance FOR EACH ROW EXECUTE FUNCTION public.tg_event_instance__fill_defaults();

@@ -2,29 +2,23 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
     LANGUAGE sql STABLE
     AS $_$
   with filtered_instances as (
-    select ei.id, ei.event_id
+    select ei.id
     from event_instance ei
-    join event e on e.id = ei.event_id
     where ei.tenant_id = current_tenant_id()
       and not ei.is_cancelled
-      and e.type = 'group'
+      and ei.type = 'group'
       and coalesce(ei.until, ei.since) < coalesce($2, now())
       and ($1 is null or coalesce(ei.since, ei.until) >= $1)
       and ($2 is null or coalesce(ei.until, ei.since) < $2)
   ),
   trainer_instances as (
-    select distinct trainer.person_id, trainer.instance_id
+    select effective_trainer.person_id, fi.id as instance_id
     from filtered_instances fi
-    cross join lateral (
-      select eit.person_id, fi.id as instance_id
-      from event_instance_trainer eit
-      where eit.instance_id = fi.id
-      union
-      select et.person_id, fi.id as instance_id
-      from event_trainer et
-      where et.event_id = fi.event_id
-      and not exists (select 1 from event_instance_trainer where instance_id=fi.id)
-    ) trainer
+    join event_instance instance on instance.id = fi.id
+    cross join lateral app_private.event_instance_trainers_at(
+      instance,
+      instance.since
+    ) effective_trainer
   ),
   attendance_stats as (
     select
@@ -40,6 +34,8 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
       from event_instance_registration eir
       where eir.instance_id = ti.instance_id
         and eir.person_id is not null
+        and eir.registration_status = 'active'
+        and eir.status <> 'cancelled'
     ) stats on true
   ),
   per_trainer as (

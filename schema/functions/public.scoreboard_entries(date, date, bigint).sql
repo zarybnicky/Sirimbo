@@ -11,13 +11,12 @@ CREATE FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigi
       i.id as instance_id,
       i.since,
       i.until,
-      e.id as event_id,
-      e.type as event_type
-    from event_instance i join event e on e.id = i.event_id
+      i.type as event_type
+    from event_instance i
     where not i.is_cancelled
       and i.since >= scoreboard_entries.since::timestamptz
       and i.until  < scoreboard_entries.until::timestamptz
-      and e.type <> 'reservation'
+      and i.type <> 'reservation'
   ),
   member_people as (
     select distinct person_id
@@ -32,13 +31,16 @@ CREATE FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigi
       case when inst.event_type = 'camp'  then 3 + 2 * ((extract(epoch from (inst.until - inst.since)) > 86400)::int) else 0 end as event_score,
       date_trunc('day', inst.since)::date as day
     from instances inst
-    join lateral (select ea.person_id, ea.legacy_registration_id as registration_id, ea.status from event_instance_registration ea where ea.instance_id = inst.instance_id and ea.person_id is not null) ea on true
-    join event_registration er on er.id = ea.registration_id
-    left join lateral (
-      select tc.cohort_id from event_target_cohort tc where tc.id = er.target_cohort_id
-    ) tc on true
+    join event_instance_registration ea
+      on ea.instance_id = inst.instance_id and ea.person_id is not null
+    left join event_instance_registration registration
+      on registration.id = ea.parent_registration_id
+    left join event_target_cohort tc
+      on tc.id = coalesce(ea.target_cohort_id, registration.target_cohort_id)
     where
-      (ea.status = 'attended' or inst.event_type = 'lesson')
+      ea.registration_status = 'active'
+      and ea.status <> 'cancelled'
+      and (ea.status = 'attended' or inst.event_type = 'lesson')
       and ea.person_id = any (select person_id from member_people)
       and (scoreboard_entries.cohort_id is null or tc.cohort_id = scoreboard_entries.cohort_id)
   ),

@@ -4,7 +4,7 @@ CREATE VIEW public.event_attendance WITH (security_invoker='true') AS
     instance_id,
     person_id,
     status,
-    note,
+    attendance_note AS note,
     legacy_registration_id AS registration_id,
     event_id,
     attendance_created_at AS created_at,

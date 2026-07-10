@@ -709,10 +709,9 @@ CREATE TABLE public.event_instance (
   manager_person_ids bigint[] DEFAULT CAST('{}' AS bigint[]) NOT NULL,
   stats jsonb DEFAULT '{}'::jsonb NOT NULL,
   parent_id bigint REFERENCES public.event_instance (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
+    ON UPDATE CASCADE,
   capacity int,
-  capacity_unit public.event_capacity_unit DEFAULT CAST('registrations' AS public.event_capacity_unit),
+  capacity_unit public.event_capacity_unit DEFAULT CAST('people' AS public.event_capacity_unit) NOT NULL,
   description text,
   summary text,
   is_locked boolean,
@@ -772,6 +771,8 @@ CREATE TABLE public.event_target_cohort (
 
 CREATE TYPE public.attendance_type AS ENUM ('unknown', 'attended', 'not-excused', 'cancelled');
 
+CREATE TYPE public.event_instance_registration_status AS ENUM ('active', 'cancelled');
+
 CREATE TABLE public.event_instance_registration (
   id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
@@ -802,6 +803,8 @@ CREATE TABLE public.event_instance_registration (
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   attendance_created_at timestamp with time zone,
   attendance_updated_at timestamp with time zone,
+  attendance_note text,
+  registration_status public.event_instance_registration_status DEFAULT CAST('active' AS public.event_instance_registration_status) NOT NULL,
   CHECK (
     person_id IS NULL
       OR (status IS NOT NULL
