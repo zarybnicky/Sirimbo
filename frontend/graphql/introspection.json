@@ -7644,6 +7644,14 @@
             "args": []
           },
           {
+            "name": "lastAttended",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "note",
             "type": {
               "kind": "SCALAR",
@@ -10944,6 +10952,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "UpdateAnnouncementPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateAttendance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateAttendancePayload",
               "ofType": null
             },
             "args": [
@@ -20419,6 +20447,110 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateAttendancePayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "couple",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Couple",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Event",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventInstanceRegistration",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstanceRegistration",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventInstanceRegistrationEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstanceRegistrationsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "instance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "parentRegistration",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstanceRegistration",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "person",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Person",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "targetCohort",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventTargetCohort",
+              "ofType": null
             },
             "args": []
           }

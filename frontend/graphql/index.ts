@@ -3158,9 +3158,7 @@ export type EventInstancePatch = {
 
 export type EventInstanceRegistration = {
   __typename?: 'EventInstanceRegistration';
-  /** When this person attendance lifecycle began; null on non-person registration rows. */
   attendanceCreatedAt: Maybe<Scalars['Datetime']['output']>;
-  /** When this person attendance status or note last changed; null on non-person registration rows. */
   attendanceUpdatedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Couple` that is related to this `EventInstanceRegistration`. */
   couple: Maybe<Couple>;
@@ -3175,6 +3173,7 @@ export type EventInstanceRegistration = {
   /** Reads a single `EventInstance` that is related to this `EventInstanceRegistration`. */
   instance: Maybe<EventInstance>;
   instanceId: Scalars['BigInt']['output'];
+  lastAttended: Maybe<Scalars['Datetime']['output']>;
   note: Maybe<Scalars['String']['output']>;
   /** Reads a single `EventInstanceRegistration` that is related to this `EventInstanceRegistration`. */
   parentRegistration: Maybe<EventInstanceRegistration>;
@@ -4412,6 +4411,7 @@ export type Mutation = {
   updateAktuality: Maybe<UpdateAktualityPayload>;
   /** Updates a single `Announcement` using a unique key and a patch. */
   updateAnnouncement: Maybe<UpdateAnnouncementPayload>;
+  updateAttendance: Maybe<UpdateAttendancePayload>;
   /** Updates a single `Cohort` using a unique key and a patch. */
   updateCohort: Maybe<UpdateCohortPayload>;
   /** Updates a single `Cohort` using a unique key and a patch. */
@@ -4827,6 +4827,12 @@ export type MutationUpdateAktualityArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAnnouncementArgs = {
   input: UpdateAnnouncementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAttendanceArgs = {
+  input: UpdateAttendanceInput;
 };
 
 
@@ -8110,6 +8116,50 @@ export type UpdateAnnouncementPayloadAnnouncementEdgeArgs = {
   orderBy?: Array<AnnouncementsOrderBy>;
 };
 
+/** All input for the `updateAttendance` mutation. */
+export type UpdateAttendanceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  instanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  status?: InputMaybe<AttendanceType>;
+};
+
+/** The output of our `updateAttendance` mutation. */
+export type UpdateAttendancePayload = {
+  __typename?: 'UpdateAttendancePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Couple` that is related to this `EventInstanceRegistration`. */
+  couple: Maybe<Couple>;
+  /** Reads a single `Event` that is related to this `EventInstanceRegistration`. */
+  event: Maybe<Event>;
+  eventInstanceRegistration: Maybe<EventInstanceRegistration>;
+  /** An edge for our `EventInstanceRegistration`. May be used by Relay 1. */
+  eventInstanceRegistrationEdge: Maybe<EventInstanceRegistrationsEdge>;
+  /** Reads a single `EventInstance` that is related to this `EventInstanceRegistration`. */
+  instance: Maybe<EventInstance>;
+  /** Reads a single `EventInstanceRegistration` that is related to this `EventInstanceRegistration`. */
+  parentRegistration: Maybe<EventInstanceRegistration>;
+  /** Reads a single `Person` that is related to this `EventInstanceRegistration`. */
+  person: Maybe<Person>;
+  /** Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`. */
+  targetCohort: Maybe<EventTargetCohort>;
+};
+
+
+/** The output of our `updateAttendance` mutation. */
+export type UpdateAttendancePayloadEventInstanceRegistrationEdgeArgs = {
+  orderBy?: Array<EventInstanceRegistrationsOrderBy>;
+};
+
 /** All input for the `updateCohortByTenantIdAndId` mutation. */
 export type UpdateCohortByTenantIdAndIdInput = {
   /**
@@ -9202,6 +9252,7 @@ export type GraphCacheKeysConfig = {
   TransactionsEdge?: (data: WithTypename<TransactionsEdge>) => null | string,
   UpdateAktualityPayload?: (data: WithTypename<UpdateAktualityPayload>) => null | string,
   UpdateAnnouncementPayload?: (data: WithTypename<UpdateAnnouncementPayload>) => null | string,
+  UpdateAttendancePayload?: (data: WithTypename<UpdateAttendancePayload>) => null | string,
   UpdateCohortMembershipPayload?: (data: WithTypename<UpdateCohortMembershipPayload>) => null | string,
   UpdateCohortPayload?: (data: WithTypename<UpdateCohortPayload>) => null | string,
   UpdateCouplePayload?: (data: WithTypename<UpdateCouplePayload>) => null | string,
@@ -10011,6 +10062,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     instance?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<EventInstance> | string>,
     instanceId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    lastAttended?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     note?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
     parentRegistration?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
     parentRegistrationId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -10637,6 +10689,17 @@ export type GraphCacheResolvers = {
     author?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, WithTypename<User> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  UpdateAttendancePayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    couple?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<Couple> | string>,
+    event?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<Event> | string>,
+    eventInstanceRegistration?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
+    eventInstanceRegistrationEdge?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, UpdateAttendancePayloadEventInstanceRegistrationEdgeArgs, WithTypename<EventInstanceRegistrationsEdge> | string>,
+    instance?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    parentRegistration?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
+    person?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<Person> | string>,
+    targetCohort?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<EventTargetCohort> | string>
+  },
   UpdateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     cohort?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, WithTypename<Cohort> | string>,
@@ -10861,6 +10924,7 @@ export type GraphCacheOptimisticUpdaters = {
   systemAdminUpdateTenant?: GraphCacheOptimisticMutationResolver<MutationSystemAdminUpdateTenantArgs, Maybe<WithTypename<SystemAdminUpdateTenantPayload>>>,
   updateAktuality?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
   updateAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpdateAnnouncementArgs, Maybe<WithTypename<UpdateAnnouncementPayload>>>,
+  updateAttendance?: GraphCacheOptimisticMutationResolver<MutationUpdateAttendanceArgs, Maybe<WithTypename<UpdateAttendancePayload>>>,
   updateCohort?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortArgs, Maybe<WithTypename<UpdateCohortPayload>>>,
   updateCohortByTenantIdAndId?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortByTenantIdAndIdArgs, Maybe<WithTypename<UpdateCohortPayload>>>,
   updateCohortMembership?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortMembershipArgs, Maybe<WithTypename<UpdateCohortMembershipPayload>>>,
@@ -11026,6 +11090,7 @@ export type GraphCacheUpdaters = {
     systemAdminUpdateTenant?: GraphCacheUpdateResolver<{ systemAdminUpdateTenant: Maybe<WithTypename<SystemAdminUpdateTenantPayload>> }, MutationSystemAdminUpdateTenantArgs>,
     updateAktuality?: GraphCacheUpdateResolver<{ updateAktuality: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityArgs>,
     updateAnnouncement?: GraphCacheUpdateResolver<{ updateAnnouncement: Maybe<WithTypename<UpdateAnnouncementPayload>> }, MutationUpdateAnnouncementArgs>,
+    updateAttendance?: GraphCacheUpdateResolver<{ updateAttendance: Maybe<WithTypename<UpdateAttendancePayload>> }, MutationUpdateAttendanceArgs>,
     updateCohort?: GraphCacheUpdateResolver<{ updateCohort: Maybe<WithTypename<UpdateCohortPayload>> }, MutationUpdateCohortArgs>,
     updateCohortByTenantIdAndId?: GraphCacheUpdateResolver<{ updateCohortByTenantIdAndId: Maybe<WithTypename<UpdateCohortPayload>> }, MutationUpdateCohortByTenantIdAndIdArgs>,
     updateCohortMembership?: GraphCacheUpdateResolver<{ updateCohortMembership: Maybe<WithTypename<UpdateCohortMembershipPayload>> }, MutationUpdateCohortMembershipArgs>,
@@ -11763,6 +11828,7 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     instance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     instanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
+    lastAttended?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     note?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     parentRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     parentRegistrationId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
@@ -12388,6 +12454,17 @@ export type GraphCacheUpdaters = {
     announcementEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, UpdateAnnouncementPayloadAnnouncementEdgeArgs>,
     author?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, Record<string, never>>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, Record<string, never>>
+  },
+  UpdateAttendancePayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAttendancePayload>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAttendancePayload>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAttendancePayload>>, Record<string, never>>,
+    eventInstanceRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAttendancePayload>>, Record<string, never>>,
+    eventInstanceRegistrationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAttendancePayload>>, UpdateAttendancePayloadEventInstanceRegistrationEdgeArgs>,
+    instance?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAttendancePayload>>, Record<string, never>>,
+    parentRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAttendancePayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAttendancePayload>>, Record<string, never>>,
+    targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAttendancePayload>>, Record<string, never>>
   },
   UpdateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateCohortMembershipPayload>>, Record<string, never>>,

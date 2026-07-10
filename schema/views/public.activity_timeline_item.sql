@@ -40,6 +40,7 @@ COMMENT ON VIEW public.activity_timeline_item IS '
 @type BIRTHDAY name:ActivityBirthday
 @foreignKey (person_id) references person (id)|@fieldName person|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @foreignKey (event_attendance_id) references event_attendance (id)|@fieldName eventAttendance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@foreignKey (event_attendance_id) references event_instance_registration (id)|@fieldName eventInstanceRegistration|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @foreignKey (event_instance_id) references event_instance (id)|@fieldName eventInstance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 ';

@@ -800,6 +800,14 @@ CREATE TABLE public.event_instance_registration (
   note text,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  attendance_created_at timestamp with time zone,
+  attendance_updated_at timestamp with time zone,
+  CHECK (
+    person_id IS NULL
+      OR (status IS NOT NULL
+      AND attendance_created_at IS NOT NULL
+      AND attendance_updated_at IS NOT NULL)
+  ),
   CHECK (
     CASE
       WHEN parent_registration_id IS NULL THEN (couple_id IS NOT NULL
@@ -840,32 +848,6 @@ CREATE TABLE public.event_registration (
   UNIQUE NULLS NOT DISTINCT (event_id, person_id, couple_id),
   FOREIGN KEY(tenant_id, event_id)
     REFERENCES public.event (tenant_id, id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-);
-
-CREATE TABLE public.event_attendance (
-  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  instance_id bigint NOT NULL,
-  person_id bigint NOT NULL REFERENCES public.person (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  status public.attendance_type DEFAULT CAST('unknown' AS public.attendance_type) NOT NULL,
-  note text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  registration_id bigint NOT NULL,
-  event_id bigint,
-  UNIQUE (registration_id, instance_id, person_id),
-  FOREIGN KEY(tenant_id, instance_id)
-    REFERENCES public.event_instance (tenant_id, id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  FOREIGN KEY(tenant_id, registration_id, event_id)
-    REFERENCES public.event_registration (tenant_id, id, event_id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );

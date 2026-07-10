@@ -1,26 +1,31 @@
 CREATE FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) RETURNS void
-    LANGUAGE sql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'pg_temp'
     AS $$
-  with v as (
-    select jsonb_build_object(
-      'TOTAL', agg.person_total,
-      'UNKNOWN', agg.unknown_count,
-      'ATTENDED', agg.attended_count,
-      'NOT_EXCUSED', agg.not_excused_count
-    ) as stats
-    from (
-      select
-        count(*) filter (where ea.status <> 'cancelled')::int as person_total,
-        count(*) filter (where ea.status = 'unknown')::int as unknown_count,
-        count(*) filter (where ea.status = 'attended')::int as attended_count,
-        count(*) filter (where ea.status = 'not-excused')::int as not_excused_count
-      from public.event_attendance ea
-      where ea.instance_id = p_instance_id
-    ) agg
+declare
+  v_stats jsonb;
+begin
+  perform 1 from public.event_instance ei where ei.id = p_instance_id for no key update;
+  if not found then
+    return;
+  end if;
+
+  select jsonb_build_object(
+    'TOTAL', count(*) filter (where eir.status <> 'cancelled')::int,
+    'UNKNOWN', count(*) filter (where eir.status = 'unknown')::int,
+    'ATTENDED', count(*) filter (where eir.status = 'attended')::int,
+    'NOT_EXCUSED', count(*) filter (where eir.status = 'not-excused')::int
   )
-  update public.event_instance ei set stats = v.stats from v
-  where ei.id = p_instance_id and ei.stats is distinct from v.stats;
+  into v_stats
+  from public.event_instance_registration eir
+  where eir.instance_id = p_instance_id
+    and eir.person_id is not null;
+
+  update public.event_instance ei
+  set stats = v_stats
+  where ei.id = p_instance_id
+    and ei.stats is distinct from v_stats;
+end;
 $$;
 
-GRANT ALL ON FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) TO anonymous;
+REVOKE ALL ON FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) FROM PUBLIC;

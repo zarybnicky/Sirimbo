@@ -57,7 +57,6 @@ CREATE POLICY public_view ON public.event_instance FOR SELECT TO anonymous USING
 CREATE POLICY trainer_same_tenant ON public.event_instance TO trainer USING (app_private.can_trainer_edit_instance(id)) WITH CHECK (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-CREATE TRIGGER _500_create_attendance AFTER INSERT ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__create_attendance();
 CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE OF is_cancelled ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 CREATE TRIGGER _600_reparent_eir_instance AFTER UPDATE OF event_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__reparent_eir();
 CREATE TRIGGER _600_sync_eir_instance_ins AFTER INSERT ON public.event_instance REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_instance__sync_eir();

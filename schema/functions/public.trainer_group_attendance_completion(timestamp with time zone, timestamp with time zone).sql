@@ -36,9 +36,10 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
     left join lateral (
       select
         count(*) as attendance_count,
-        count(*) filter (where ea.status = 'unknown') as unknown_count
-      from event_attendance ea
-      where ea.instance_id = ti.instance_id
+        count(*) filter (where eir.status = 'unknown') as unknown_count
+      from event_instance_registration eir
+      where eir.instance_id = ti.instance_id
+        and eir.person_id is not null
     ) stats on true
   ),
   per_trainer as (

@@ -2,10 +2,11 @@ CREATE FUNCTION public.event_registration_last_attended(reg public.event_registr
     LANGUAGE sql STABLE
     AS $$
   select max(event_instance.since)
-  from event_attendance
-  join event_instance on event_instance.id = event_attendance.instance_id
-  where event_attendance.registration_id = reg.id
-    and event_attendance.status = 'attended'
+  from public.event_instance_registration eir
+  join public.event_instance on event_instance.id = eir.instance_id
+  where eir.legacy_registration_id = reg.id
+    and eir.person_id is not null
+    and eir.status = 'attended'
 $$;
 
 GRANT ALL ON FUNCTION public.event_registration_last_attended(reg public.event_registration) TO anonymous;
