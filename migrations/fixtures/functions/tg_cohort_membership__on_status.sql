@@ -23,20 +23,21 @@ begin
     ),
     future_att AS (
       -- Capture future attendance rows with their pre-update status
-      SELECT ea.id, ea.registration_id,
-             (ea.status IN ('unknown', 'not-excused', 'cancelled')) AS will_be_cancelled
-      FROM event_attendance ea
-      JOIN event_instance ei ON ei.id = ea.instance_id
-      JOIN affected a ON a.registration_id = ea.registration_id
-      WHERE ei.since > NEW.until
+      SELECT eir.id, eir.legacy_registration_id AS registration_id,
+             (eir.status IN ('unknown', 'not-excused', 'cancelled')) AS will_be_cancelled
+      FROM event_instance_registration eir
+      JOIN event_instance ei ON ei.id = eir.instance_id
+      JOIN affected a ON a.registration_id = eir.legacy_registration_id
+      WHERE eir.person_id IS NOT NULL
+        AND ei.since > NEW.until
     ),
     upd AS (
-      UPDATE event_attendance ea
+      UPDATE event_instance_registration eir
         SET status = 'cancelled'
         FROM future_att fa
-        WHERE ea.id = fa.id
-          AND ea.status IN ('unknown', 'not-excused')
-        RETURNING ea.registration_id
+        WHERE eir.id = fa.id
+          AND eir.status IN ('unknown', 'not-excused')
+        RETURNING eir.legacy_registration_id AS registration_id
     ),
     deletable AS (
       -- Delete registrations where:
@@ -49,11 +50,12 @@ begin
       HAVING count(*) > 0
          AND bool_and(fa.will_be_cancelled)
          AND NOT EXISTS (
-           SELECT 1 FROM event_attendance ea2
-           JOIN event_instance ei2 ON ei2.id = ea2.instance_id
-           WHERE ea2.registration_id = fa.registration_id
+           SELECT 1 FROM event_instance_registration eir2
+           JOIN event_instance ei2 ON ei2.id = eir2.instance_id
+           WHERE eir2.legacy_registration_id = fa.registration_id
+             AND eir2.person_id IS NOT NULL
              AND ei2.since <= NEW.until
-             AND ea2.status NOT IN ('unknown', 'cancelled')
+             AND eir2.status NOT IN ('unknown', 'cancelled')
          )
     )
     DELETE FROM event_registration er

@@ -26,7 +26,7 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
           return;
         }
 
-        const response = await fetch('/api/deployment', {
+        const response = await fetch('/api/health', {
           cache: 'no-store',
           headers: { Accept: 'application/json' },
         });

@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(8);
+SELECT tap.plan(18);
 
 -- Fixtures
 -- People:
@@ -59,11 +59,12 @@ INSERT INTO cohort_membership (id, tenant_id, cohort_id, person_id, since, statu
 -- Attendance:
 --   Alice:   past=attended, future=unknown  → registration survives (attended past row)
 --   Bob:     past=attended, future=unknown  → registration survives (attended past row)
---   Charlie: future=not-excused             → cancelled on expiry, registration survives (attended past row)
+--   Charlie: past=attended, future=not-excused → future cancelled, registration survives
 --   Dana:    future=unknown (no past row)   → registration deleted (all rows become cancelled, no history)
-UPDATE event_attendance SET status = 'attended'    WHERE instance_id = 900001 AND person_id = 200001;
-UPDATE event_attendance SET status = 'attended'    WHERE instance_id = 900001 AND person_id = 200002;
-UPDATE event_attendance SET status = 'not-excused' WHERE instance_id = 900002 AND person_id = 200003;
+UPDATE event_instance_registration SET status = 'attended'    WHERE instance_id = 900001 AND person_id = 200001;
+UPDATE event_instance_registration SET status = 'attended'    WHERE instance_id = 900001 AND person_id = 200002;
+UPDATE event_instance_registration SET status = 'attended'    WHERE instance_id = 900001 AND person_id = 200003;
+UPDATE event_instance_registration SET status = 'not-excused' WHERE instance_id = 900002 AND person_id = 200003;
 
 -- ── Expire Alice ──────────────────────────────────────────────────────────────
 UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expired' WHERE id = 860001;
@@ -111,6 +112,20 @@ SELECT tap.ok(
   'registration with attended attendance is NOT deleted on expiry'
 );
 
+-- ── Expire Charlie ────────────────────────────────────────────────────────────
+UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expired' WHERE id = 860003;
+
+SELECT tap.is(
+  (SELECT status FROM event_attendance WHERE instance_id = 900002 AND person_id = 200003),
+  'cancelled'::attendance_type,
+  'expiry cancels future not-excused attendance'
+);
+
+SELECT tap.ok(
+  EXISTS (SELECT 1 FROM event_registration WHERE event_id = 700001 AND person_id = 200003),
+  'registration with past attended history survives not-excused cancellation'
+);
+
 -- ── Expire Dana ───────────────────────────────────────────────────────────────
 UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expired' WHERE id = 860004;
 
@@ -132,6 +147,146 @@ SELECT tap.ok(
     WHERE event_id = 700001 AND person_id = 200001 AND tenant_id = 1000
   ),
   're-activating membership re-registers person to event with future instances'
+);
+
+CREATE TEMP TABLE _attendance_audit_before ON COMMIT DROP AS
+SELECT attendance_updated_at
+FROM event_instance_registration
+WHERE instance_id = 900001 AND person_id = 200002;
+
+SELECT public.update_event_attendance(
+  900001,
+  200002,
+  'not-excused',
+  'Audit timestamp regression test'
+);
+
+SELECT tap.ok(
+  (
+    SELECT eir.attendance_updated_at > before.attendance_updated_at
+      AND ea.updated_at = eir.attendance_updated_at
+    FROM event_instance_registration eir
+    JOIN event_attendance ea ON ea.id = eir.id
+    CROSS JOIN _attendance_audit_before before
+    WHERE eir.instance_id = 900001 AND eir.person_id = 200002
+  ),
+  'updating attendance advances the attendance-specific audit timestamp exposed by the compatibility view'
+);
+
+SELECT set_config('jwt.claims.tenant_id', '1000', true);
+
+INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
+VALUES (2900001, 'Stats', 'Test', 'unspecified', '');
+
+INSERT INTO event_instance (id, tenant_id, since, until) OVERRIDING SYSTEM VALUE
+VALUES
+  (9900001, 1000, now(), now() + interval '1 hour'),
+  (9900002, 1000, now() + interval '2 hours', now() + interval '3 hours');
+
+INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, status)
+VALUES (1000, 9900001, 2900001, 'unknown');
+
+UPDATE event_instance_registration
+SET instance_id = 9900002
+WHERE instance_id = 9900001 AND person_id = 2900001;
+
+SELECT tap.ok(
+  (SELECT stats->>'TOTAL' = '0' FROM event_instance WHERE id = 9900001)
+    AND (SELECT stats->>'TOTAL' = '1' FROM event_instance WHERE id = 9900002),
+  'moving attendance refreshes both the source and destination instance summaries'
+);
+
+UPDATE event_instance SET parent_id = 9900001 WHERE id = 9900002;
+
+SELECT tap.is(
+  (
+    SELECT count(*)::int
+    FROM event_instances_for_range(
+      null,
+      '-infinity'::timestamptz,
+      null,
+      null,
+      null,
+      false,
+      9900001
+    )
+  ),
+  1,
+  'event instance range filtering scopes results to the requested parent'
+);
+
+INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
+VALUES
+  (2900002, 'Trainer', 'Policy', 'unspecified', ''),
+  (2900003, 'Participant', 'Policy', 'unspecified', ''),
+  (2900004, 'Other trainer', 'Policy', 'unspecified', '');
+
+INSERT INTO event_instance (id, tenant_id, since, until) OVERRIDING SYSTEM VALUE
+VALUES (9900003, 1000, now() + interval '4 hours', now() + interval '5 hours');
+
+INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id)
+VALUES
+  (1000, 9900001, 2900002),
+  (1000, 9900003, 2900004);
+
+SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
+GRANT USAGE ON SCHEMA tap TO trainer;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tap TO trainer;
+SET LOCAL ROLE trainer;
+
+SELECT tap.lives_ok(
+  $$
+    insert into event_instance_registration (tenant_id, instance_id, person_id, status)
+    values (1000, 9900001, 2900003, 'unknown')
+  $$,
+  'a trainer can insert attendance for an instance they manage'
+);
+
+SELECT tap.throws_ok(
+  $$
+    update event_instance_registration
+    set instance_id = 9900003
+    where instance_id = 9900001 and person_id = 2900003
+  $$,
+  '42501'::char(5),
+  null,
+  'a trainer cannot move attendance to an instance they do not manage'
+);
+
+SELECT tap.throws_ok(
+  $$
+    insert into event_instance_registration (tenant_id, instance_id, person_id, status)
+    values (1000, 9900003, 2900003, 'unknown')
+  $$,
+  '42501'::char(5),
+  null,
+  'a trainer cannot insert attendance for an instance they do not manage'
+);
+
+RESET ROLE;
+
+CREATE TEMP TABLE _detached_audit_before ON COMMIT DROP AS
+SELECT person_id, attendance_created_at, attendance_updated_at
+FROM event_instance_registration
+WHERE instance_id = 900001 AND person_id is not null;
+
+SELECT tap.is(
+  (public.detach_event_instance(900001, 1000, 'Detached test event')).name,
+  'Detached test event',
+  'detaching an event instance returns the cloned event'
+);
+
+SELECT tap.ok(
+  NOT EXISTS (
+    SELECT 1
+    FROM _detached_audit_before before
+    LEFT JOIN event_instance_registration eir
+      ON eir.instance_id = 900001 AND eir.person_id = before.person_id
+    WHERE eir.id is null
+      OR eir.attendance_created_at is distinct from before.attendance_created_at
+      OR eir.attendance_updated_at is distinct from before.attendance_updated_at
+  ),
+  'detaching an event instance preserves attendance audit timestamps'
 );
 
 SELECT tap.finish();

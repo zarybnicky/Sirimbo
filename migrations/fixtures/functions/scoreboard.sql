@@ -41,7 +41,7 @@ as $$
       case when inst.event_type = 'camp'  then 3 + 2 * ((extract(epoch from (inst.until - inst.since)) > 86400)::int) else 0 end as event_score,
       date_trunc('day', inst.since)::date as day
     from instances inst
-    join lateral (select ea.person_id, ea.registration_id, ea.status from event_attendance ea where ea.instance_id = inst.instance_id) ea on true
+    join lateral (select ea.person_id, ea.legacy_registration_id as registration_id, ea.status from event_instance_registration ea where ea.instance_id = inst.instance_id and ea.person_id is not null) ea on true
     join event_registration er on er.id = ea.registration_id
     left join lateral (
       select tc.cohort_id from event_target_cohort tc where tc.id = er.target_cohort_id

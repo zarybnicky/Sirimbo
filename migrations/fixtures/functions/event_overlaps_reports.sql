@@ -24,13 +24,14 @@ as $$
       e.id as event_id,
       e.name as event_name,
       ea.status
-    from public.event_attendance ea
+    from public.event_instance_registration ea
     join public.event_instance ei on ei.id = ea.instance_id
     join public.event e on e.id = ei.event_id
     join public.person p on p.id = ea.person_id
     join target_range tr on true
     where
       ei.tenant_id = public.current_tenant_id()
+      and ea.person_id is not null
       and not ei.is_cancelled
       and ea.status <> 'cancelled'
       and ei.range && tr.range

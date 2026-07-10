@@ -4,6 +4,7 @@ CREATE or replace FUNCTION update_event_attendance(instance_id bigint, person_id
 declare
   att event_attendance;
   reg event_registration;
+  v_id bigint;
 begin
   select event_registration.* into reg
   from event_registration
@@ -11,10 +12,12 @@ begin
   left join couple on couple_id=couple.id
   where event_instance.id=$1 and $2 in (event_registration.person_id, man_id, woman_id);
 
-  insert into event_attendance (registration_id, instance_id, person_id, status, note)
-  values (reg.id, $1, $2, $3, $4)
-  on conflict on constraint event_attendance_unique_event_person_key do update set status=$3, note=$4
-  returning * into att;
+  update event_instance_registration eir
+    set status = $3, note = $4
+  where eir.legacy_registration_id = reg.id and eir.instance_id = $1 and eir.person_id = $2
+  returning eir.id into v_id;
+
+  select * into att from event_attendance where id = v_id;
   return att;
 end
 $$;

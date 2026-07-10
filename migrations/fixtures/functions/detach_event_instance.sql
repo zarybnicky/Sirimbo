@@ -10,6 +10,7 @@ DECLARE
   v_old_event_id bigint;
   v_new_event_id bigint;
   v_new_event event;
+  v_old_att jsonb;
 BEGIN
   -- Lock the instance and fetch old event_id
   SELECT ei.event_id
@@ -30,30 +31,31 @@ BEGIN
     AND e.id        = v_old_event_id
     FOR UPDATE;
 
-  -- Snapshot attendance state for this instance so we can restore status/note later
-  CREATE TEMP TABLE _old_att (
-     reg_person_id        bigint,
-     reg_couple_id        bigint,
-     attendee_person_id   bigint NOT NULL,
-     status               public.attendance_type NOT NULL,
-     note                 text
-  ) ON COMMIT DROP;
+  -- Snapshot attendance state for this instance so it can be restored after
+  -- the legacy registration bridge is rebuilt for the cloned event.
+  SELECT coalesce(jsonb_agg(jsonb_build_object(
+    'reg_person_id', er.person_id,
+    'reg_couple_id', er.couple_id,
+    'attendee_person_id', eir.person_id,
+    'status', eir.status,
+    'note', eir.note,
+    'attendance_created_at', eir.attendance_created_at,
+    'attendance_updated_at', eir.attendance_updated_at
+  )), '[]'::jsonb)
+  INTO v_old_att
+  FROM public.event_instance_registration eir
+  JOIN public.event_registration er ON er.tenant_id = eir.tenant_id AND er.id = eir.legacy_registration_id AND er.event_id = v_old_event_id
+  WHERE eir.tenant_id   = p_tenant_id
+    AND eir.instance_id = p_instance_id
+    AND eir.person_id   IS NOT NULL;
 
-  PERFORM plpgsql_check_pragma('disable:check');
-  INSERT INTO _old_att (reg_person_id, reg_couple_id, attendee_person_id, status, note)
-  SELECT er.person_id, er.couple_id, ea.person_id, ea.status, ea.note
-  FROM public.event_attendance ea
-  JOIN public.event_registration er ON er.tenant_id = ea.tenant_id AND er.id = ea.registration_id AND er.event_id  = ea.event_id
-  WHERE ea.tenant_id   = p_tenant_id
-    AND ea.instance_id = p_instance_id
-    AND ea.event_id    = v_old_event_id;
-  PERFORM plpgsql_check_pragma('enable:check');
-
-  -- Critical: delete instance attendance BEFORE changing instance.event_id
-  DELETE FROM public.event_attendance ea
-  WHERE ea.tenant_id   = p_tenant_id
-    AND ea.instance_id = p_instance_id
-    AND ea.event_id    = v_old_event_id;
+  -- Reparenting synchronizes the new registrations before sweeping the old
+  -- bridge rows, which would collide on the instance/person unit key.
+  DELETE FROM public.event_instance_registration eir
+  WHERE eir.tenant_id = p_tenant_id
+    AND eir.instance_id = p_instance_id
+    AND eir.event_id = v_old_event_id
+    AND eir.legacy_registration_id IS NOT NULL;
 
   -- Clone the event (explicit column list, but short and stable in compact.sql)
   INSERT INTO public.event (
@@ -105,19 +107,6 @@ BEGIN
     AND er.event_id  = v_old_event_id
   ON CONFLICT (event_id, person_id, couple_id) DO NOTHING;
 
-  -- Explicitly create attendance rows for the detached instance.
-  -- tg_event_registration__create_attendance fires on registration INSERT but
-  -- queries event_instance by event_id; since the instance was re-pointed via
-  -- UPDATE (not INSERT) the tg_event_instance__create_attendance trigger never
-  -- fired. Insert directly to guarantee coverage regardless of trigger ordering.
-  INSERT INTO public.event_attendance (tenant_id, registration_id, instance_id, person_id)
-  SELECT p_tenant_id, new_reg.id, p_instance_id, pid
-  FROM public.event_registration new_reg
-  CROSS JOIN LATERAL app_private.event_registration_person_ids(new_reg) AS pid
-  WHERE new_reg.tenant_id = p_tenant_id
-    AND new_reg.event_id  = v_new_event_id
-  ON CONFLICT (registration_id, instance_id, person_id) DO NOTHING;
-
   -- Copy lesson demand:
   -- - trainer maps by person_id (old event_trainer -> new event_trainer)
   -- - registration maps by (person_id, couple_id) to new event_registration
@@ -134,22 +123,48 @@ BEGIN
     AND d.event_id  = v_old_event_id
   ON CONFLICT (registration_id, trainer_id) DO NOTHING;
 
-  -- Restore attendance status/note on the newly generated attendance rows for the detached instance
-  PERFORM plpgsql_check_pragma('disable:check');
-  UPDATE public.event_attendance ea
+  -- Restore attendance status/note on the newly generated attendance rows for the detached instance.
+  UPDATE public.event_instance_registration eir
   SET status = oa.status, note = oa.note
-  FROM _old_att oa
+  FROM jsonb_to_recordset(v_old_att) AS oa(
+    reg_person_id bigint,
+    reg_couple_id bigint,
+    attendee_person_id bigint,
+    status public.attendance_type,
+    note text,
+    attendance_created_at timestamptz,
+    attendance_updated_at timestamptz
+  )
   JOIN public.event_registration new_reg ON new_reg.tenant_id = p_tenant_id AND new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM oa.reg_person_id AND new_reg.couple_id IS NOT DISTINCT FROM oa.reg_couple_id
-  WHERE ea.tenant_id       = p_tenant_id
-    AND ea.instance_id     = p_instance_id
-    AND ea.event_id        = v_new_event_id
-    AND ea.registration_id = new_reg.id
-    AND ea.person_id       = oa.attendee_person_id;
-  PERFORM plpgsql_check_pragma('enable:check');
+  WHERE eir.tenant_id       = p_tenant_id
+    AND eir.instance_id     = p_instance_id
+    AND eir.legacy_registration_id = new_reg.id
+    AND eir.person_id       = oa.attendee_person_id;
 
-  select * into v_new_event from event where id = v_new_event_id;
+  -- Restoring status/note correctly counts as an update for the new bridge row,
+  -- so restore the original attendance audit lifecycle in a separate statement.
+  UPDATE public.event_instance_registration eir
+  SET attendance_created_at = oa.attendance_created_at,
+      attendance_updated_at = oa.attendance_updated_at
+  FROM jsonb_to_recordset(v_old_att) AS oa(
+    reg_person_id bigint,
+    reg_couple_id bigint,
+    attendee_person_id bigint,
+    status public.attendance_type,
+    note text,
+    attendance_created_at timestamptz,
+    attendance_updated_at timestamptz
+  )
+  JOIN public.event_registration new_reg ON new_reg.tenant_id = p_tenant_id AND new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM oa.reg_person_id AND new_reg.couple_id IS NOT DISTINCT FROM oa.reg_couple_id
+  WHERE eir.tenant_id = p_tenant_id
+    AND eir.instance_id = p_instance_id
+    AND eir.legacy_registration_id = new_reg.id
+    AND eir.person_id = oa.attendee_person_id;
+
+  select * into v_new_event from public.event where id = v_new_event_id;
   RETURN v_new_event;
 END;
 $$;
 
 grant all on function detach_event_instance to trainer;
+select verify_function('detach_event_instance');
