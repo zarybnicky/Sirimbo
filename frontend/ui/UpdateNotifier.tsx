@@ -41,7 +41,7 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
 
           toastRef.current = toast.warn(
             <>
-              <b>Je k dispozici nová verze aplikace.</b> Kliknutím zde ji aktualizujete.
+              <b>Je k dispozici nová verze aplikace.</b><br/> Kliknutím zde ji aktualizujete.
             </>,
             {
               autoClose: false,
