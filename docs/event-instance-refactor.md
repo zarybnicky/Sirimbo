@@ -288,10 +288,15 @@ property of individual instances and never flows along the parent/child edge:
 
 - **Camp** — the parent instance, spanning the full date range. Registering to
   the camp is an ordinary registration on this instance.
-- **Child slots** — ordinary lessons (group or private) under the camp. Nothing
-  about a slot is special: a slot only on the schedule (not open for sign-up) is
-  a lesson with registration locked (`is_locked`); a "free lesson" is a lesson
-  with registration open.
+- **Child slots** — ordinary instances (group or private lessons) that happen to
+  carry a `parent_id`. Having a parent changes **nothing** about registration: a
+  slot has ordinary registrations, exactly like a standalone lesson.
+- `is_locked` gates only whether the **registrant** may change their own
+  registration (self sign-up / self-cancel). It does **not** mean the slot has no
+  registrations — a locked slot can be fully populated, just managed by
+  trainers/admins rather than the members. A "free lesson" is a slot left open
+  for members to sign themselves up; a schedule-only slot members can't book is
+  simply a locked one.
 - Child-slot registration is **fully independent** of camp registration —
   neither requires nor implies the other.
 
