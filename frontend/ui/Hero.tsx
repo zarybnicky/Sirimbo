@@ -137,27 +137,17 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
               {x.name}
             </div>
             <div className="h-[60vh]">
-              {x.inset ? (
-                <Image
-                  className="object-contain transition-transform duration-300 group-hover:scale-110"
-                  src={x.img}
-                  alt={x.name}
-                  quality={90}
-                  fill
-                  priority={i === 0}
-                  sizes="100vw"
-                />
-              ) : (
-                <Image
-                  className="object-cover object-[50%_30%] transition-transform duration-300 group-hover:scale-110"
-                  src={x.img}
-                  alt={x.name}
-                  quality={90}
-                  fill
-                  priority={i === 0}
-                  sizes="100vw"
-                />
-              )}
+              <Image
+                className={cn(
+                  'transition-transform duration-300 group-hover:scale-110',
+                  x.inset ? 'object-contain' : 'object-cover object-[50%_30%]',
+                )}
+                src={x.img}
+                alt={x.name}
+                fill
+                preload={i === 0}
+                sizes="100vw"
+              />
             </div>
           </Link>
         ))}

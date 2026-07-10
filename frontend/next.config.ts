@@ -54,9 +54,12 @@ export default compose(
     remotePatterns: [
       { protocol: 'https', hostname: 'api.rozpisovnik.cz' },
       { protocol: 'https', hostname: 'files.rozpisovnik.cz' },
+      { protocol: 'https', hostname: 'tkolymp.cz' },
     ],
+    formats: ['image/webp'],
     minimumCacheTTL: 2_678_400,
-    qualities: [75, 90],
+    maximumDiskCacheSize: 512 * 1024 * 1024,
+    qualities: [75],
   },
 
   async redirects() {

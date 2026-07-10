@@ -10,6 +10,7 @@ interface Props {
   img: string | undefined;
   header: string;
   preview: string;
+  sizes: string;
 }
 
 export function ArticleCard(x: Props) {
@@ -23,7 +24,7 @@ export function ArticleCard(x: Props) {
               className="object-cover object-[50%_30%] transition-transform duration-300 group-hover:scale-110"
               src={x.img}
               alt={x.header}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"
+              sizes={x.sizes}
             />
           )}
         </div>

@@ -69,6 +69,7 @@ export default async function HomePage() {
               img={x.titlePhotoUrl || ''}
               preview={x.atPreview}
               href={`/clanky/${x.id}/${slugify(x.atJmeno)}`}
+              sizes="(min-width: 1024px) 300px, (min-width: 768px) 430px, calc(100vw - 1rem)"
             />
           ))}
         </div>

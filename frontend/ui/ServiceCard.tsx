@@ -27,7 +27,7 @@ export function ServiceCard(props: ServiceCardProps) {
           src={props.image}
           alt={props.header}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"
+          sizes="(min-width: 768px) 300px, calc(100vw - 1rem)"
         />
       </div>
       <div className="bg-neutral-9 group-even:bg-accent-9 h-3 md:h-auto md:w-3" />

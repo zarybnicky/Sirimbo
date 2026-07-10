@@ -35,7 +35,7 @@ export default function LocationsPage() {
             alt="Taneční sál v Tanečním centru při FZŠ Holečkova v Olomouci"
             src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
             fill
-            sizes=""
+            sizes="(min-width: 600px) 520px, calc(100vw - 1rem)"
           />
         </div>
 
@@ -56,7 +56,7 @@ export default function LocationsPage() {
             alt="Tělocvična Slovanského gymnázia používaná pro tréninky TK Olymp"
             src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-SGO.jpg"
             fill
-            sizes=""
+            sizes="(min-width: 600px) 520px, calc(100vw - 1rem)"
           />
         </div>
       </div>

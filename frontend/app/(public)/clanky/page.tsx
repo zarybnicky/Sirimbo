@@ -82,6 +82,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
             img={item.titlePhotoUrl ?? undefined}
             header={item.atJmeno}
             preview={item.atPreview}
+            sizes="(min-width: 1024px) 300px, (min-width: 960px) 440px, calc(50vw - 1.5rem)"
           />
         ))}
       </div>

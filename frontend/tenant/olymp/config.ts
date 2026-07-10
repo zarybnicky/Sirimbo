@@ -1,4 +1,5 @@
 import { TenantConfig } from '../types';
+import SocialCard from './social-card.jpg';
 
 export const config: TenantConfig = {
   shortName: 'TK Olymp',
@@ -55,9 +56,9 @@ export const config: TenantConfig = {
     origin: 'https://tkolymp.cz',
     locale: 'cs-CZ',
     image: {
-      url: '/images/2023-04-MCRDruzstev.jpg',
-      width: 6373,
-      height: 3314,
+      url: SocialCard.src,
+      width: 1200,
+      height: 630,
       alt: 'Taneční klub Olymp Olomouc na mistrovství České republiky družstev',
     },
     organization: {

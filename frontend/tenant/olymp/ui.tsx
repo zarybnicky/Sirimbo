@@ -50,7 +50,7 @@ function OlympLogoVertical(props: React.SVGProps<SVGSVGElement>) {
 export function MobileLogo() {
   return (
     <Link href="/" className="block p-0 m-0 size-full relative">
-      <Image alt="" src={LogoOnDark} height="50" priority />
+      <Image alt="" src={LogoOnDark} height="50" />
     </Link>
   );
 }

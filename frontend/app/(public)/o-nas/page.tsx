@@ -40,7 +40,7 @@ export default function OKlubuPage() {
           src="/images/2023-04-MCRDruzstev.jpg"
           width={6373}
           height={3314}
-          sizes="1256px"
+          sizes="(min-width: 960px) 960px, calc(100vw - 1rem)"
         />
       </div>
     </>

@@ -1,11 +1,15 @@
 import { ChevronRight } from 'lucide-react';
 import { buttonCls } from '@/ui/style';
+import CallToAction1 from '@/tenant/olymp/call-to-action-1.webp';
+import CallToAction2 from '@/tenant/olymp/call-to-action-2.webp';
+import CallToAction3 from '@/tenant/olymp/call-to-action-3.webp';
+import CallToAction4 from '@/tenant/olymp/call-to-action-4.webp';
 
 const images = [
-  'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1761145759656-TKOLYMP-BANNER-1.png',
-  'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1761145759657-TKOLYMP-BANNER-2.png',
-  'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1761145759657-TKOLYMP-BANNER-3.png',
-  'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1761145759657-TKOLYMP-BANNER-4.png',
+  CallToAction1.src,
+  CallToAction2.src,
+  CallToAction3.src,
+  CallToAction4.src,
 ];
 
 export function CallToAction({ url }: { url: string }) {

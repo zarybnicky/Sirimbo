@@ -43,7 +43,7 @@ export default function VyhodyClenstvi() {
           src="/images/2022-09-MCRDruzstev.jpg"
           width={5211}
           height={3474}
-          sizes="100vw"
+          sizes="(min-width: 960px) 960px, calc(100vw - 1rem)"
         />
       </div>
     </>
