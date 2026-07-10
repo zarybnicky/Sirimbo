@@ -1,5 +1,5 @@
 import {
-  type EventAttendanceFragment,
+  type EventInstanceRegistrationAttendanceFragment,
   EventInstanceWithAttendanceDocument,
   UpdateAttendanceDocument,
 } from '@/graphql/Event';
@@ -27,7 +27,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   if (!instance) return null;
 
   const canEditAttendance = canManageInstance({ auth, item: instance });
-  const attendanceList = instance.eventAttendancesByInstanceIdList
+  const attendanceList = instance.eventInstanceRegistrationsByInstanceId.nodes
     .filter((x) => x.status !== 'CANCELLED')
     .filter(keyIsNonNull('person'))
     .toSorted((x, y) =>
@@ -74,8 +74,8 @@ export function InstanceAttendanceView({ id }: { id: string }) {
                 {canEditAttendance && (
                   <div className="text-xs text-neutral-9">
                     Poslední účast:{' '}
-                    {x.registration?.lastAttended
-                      ? dateTimeFormatter.format(new Date(x.registration.lastAttended))
+                    {x.lastAttended
+                      ? dateTimeFormatter.format(new Date(x.lastAttended))
                       : '—'}
                   </div>
                 )}
@@ -86,7 +86,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
                 </td>
               ) : (
                 <td className="text-center align-middle">
-                  {React.createElement(attendanceIcons[x.status], {
+                  {React.createElement(attendanceIcons[x.status ?? 'UNKNOWN'], {
                     className: 'mx-auto',
                   })}
                 </td>
@@ -117,7 +117,7 @@ function isAttendanceType(x: string): x is AttendanceType {
 function AttendanceItem({
   attendance,
 }: {
-  attendance: Partial<EventAttendanceFragment>;
+  attendance: Partial<EventInstanceRegistrationAttendanceFragment>;
 }) {
   const update = useMutation(UpdateAttendanceDocument)[1];
   const setStatus = useAsyncCallback(async (status: string) => {
