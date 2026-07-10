@@ -4,16 +4,15 @@ CREATE FUNCTION app_private.create_latest_lesson_payments() RETURNS SETOF public
 begin
   perform set_config('jwt.claims.tenant_id', '2', true);
   perform set_config('jwt.claims.my_tenant_ids', '[2]', true);
-  if not (select row_security_active('event')) then
+  if not (select row_security_active('event_instance')) then
     set local role to administrator;
   end if;
 
   return query WITH created AS (
     SELECT p.*
     FROM event_instance ei
-      JOIN event e ON e.id = ei.event_id
       JOIN LATERAL create_event_instance_payment(ei) p ON true
-    WHERE e.type = 'lesson'
+    WHERE ei.type = 'lesson'
       AND NOT ei.is_cancelled
       AND ei.since < now()
       AND NOT EXISTS (

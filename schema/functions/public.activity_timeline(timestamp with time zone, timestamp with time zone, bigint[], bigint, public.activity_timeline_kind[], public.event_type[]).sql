@@ -31,7 +31,7 @@ begin
   if include_event_attendance then
     return query
       with scoped_people as (
-        select distinct p.id
+        select distinct p.id, p.name
         from person p
         where (exists (select 1 from current_tenant_membership where person_id = p.id)
            or exists (select 1 from current_tenant_trainer where person_id = p.id)
@@ -45,7 +45,7 @@ begin
         ei.since as sort_at,
         ei.since::date as activity_date,
         ea.person_id,
-        p.name as person_name,
+        sp.name as person_name,
         ea.id as event_attendance_id,
         ei.id as event_instance_id,
         null::text as federation,
@@ -69,11 +69,11 @@ begin
         null::federated.competition_type as competition_type,
         null::text as competition_event_external_id,
         null::text as competition_external_id
-      from event_attendance ea
+      from event_instance_registration ea
       join event_instance ei on ei.id = ea.instance_id
-      join person p on p.id = ea.person_id
       join scoped_people sp on sp.id = ea.person_id
-      where ea.status <> 'cancelled'
+      where ea.registration_status = 'active'
+        and ea.status <> 'cancelled'
         and ei.since >= p_since
         and ei.since < p_until
         and (p_event_types is null or ei.type = any(p_event_types));

@@ -69,7 +69,7 @@ CREATE INDEX event_instance_registration_instance_id_idx ON public.event_instanc
 CREATE INDEX event_instance_registration_legacy_registration_id_idx ON public.event_instance_registration USING btree (legacy_registration_id);
 CREATE INDEX event_instance_registration_parent_id_idx ON public.event_instance_registration USING btree (parent_registration_id);
 CREATE INDEX event_instance_registration_person_id_idx ON public.event_instance_registration USING btree (person_id);
-CREATE UNIQUE INDEX event_instance_registration_person_key ON public.event_instance_registration USING btree (instance_id, person_id) WHERE ((person_id IS NOT NULL) AND (legacy_registration_id IS NULL));
+CREATE UNIQUE INDEX event_instance_registration_person_key ON public.event_instance_registration USING btree (instance_id, person_id) WHERE ((person_id IS NOT NULL) AND (legacy_registration_id IS NULL) AND (registration_status = 'active'::public.event_instance_registration_status));
 CREATE INDEX event_instance_registration_target_cohort_id_idx ON public.event_instance_registration USING btree (target_cohort_id);
 CREATE INDEX event_instance_registration_tenant_id_idx ON public.event_instance_registration USING btree (tenant_id);
 CREATE UNIQUE INDEX event_instance_registration_unit_key ON public.event_instance_registration USING btree (instance_id, couple_id, person_id) NULLS NOT DISTINCT WHERE (parent_registration_id IS NULL);
