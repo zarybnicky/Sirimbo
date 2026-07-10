@@ -4,10 +4,12 @@ create or replace function public.event_instance_approx_price(v_instance event_i
 as $$
   with stats as (
     select
-      (select count(*)
-       from event e
-       join lateral event_registrants(e.*) r on true
-       where e.id = v_instance.event_id)::bigint as num_participants,
+      (select count(distinct registration.person_id)
+       from public.event_instance_registration registration
+       where registration.instance_id = v_instance.id
+         and registration.person_id is not null
+         and registration.registration_status = 'active'
+         and registration.status <> 'cancelled')::bigint as num_participants,
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
   )
   select

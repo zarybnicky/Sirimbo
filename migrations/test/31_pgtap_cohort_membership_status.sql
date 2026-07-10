@@ -71,14 +71,14 @@ UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expi
 
 -- Test 1: future 'unknown' attendance is set to 'cancelled'
 SELECT tap.is(
-  (SELECT status FROM event_attendance WHERE instance_id = 900002 AND person_id = 200001),
+  (SELECT status FROM event_instance_registration WHERE instance_id = 900002 AND person_id = 200001),
   'cancelled'::attendance_type,
   'expiry cancels future unknown attendance'
 );
 
 -- Test 2: past 'attended' attendance is not touched (instance is not "future")
 SELECT tap.is(
-  (SELECT status FROM event_attendance WHERE instance_id = 900001 AND person_id = 200001),
+  (SELECT status FROM event_instance_registration WHERE instance_id = 900001 AND person_id = 200001),
   'attended'::attendance_type,
   'expiry does not touch past attended attendance'
 );
@@ -94,14 +94,14 @@ UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expi
 
 -- Test 4: future unknown attendance cancelled
 SELECT tap.is(
-  (SELECT status FROM event_attendance WHERE instance_id = 900002 AND person_id = 200002),
+  (SELECT status FROM event_instance_registration WHERE instance_id = 900002 AND person_id = 200002),
   'cancelled'::attendance_type,
   'expiry cancels Bob''s future unknown attendance'
 );
 
 -- Test 5: past 'attended' attendance is untouched
 SELECT tap.is(
-  (SELECT status FROM event_attendance WHERE instance_id = 900001 AND person_id = 200002),
+  (SELECT status FROM event_instance_registration WHERE instance_id = 900001 AND person_id = 200002),
   'attended'::attendance_type,
   'expiry does not overwrite attended attendance'
 );
@@ -116,7 +116,7 @@ SELECT tap.ok(
 UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expired' WHERE id = 860003;
 
 SELECT tap.is(
-  (SELECT status FROM event_attendance WHERE instance_id = 900002 AND person_id = 200003),
+  (SELECT status FROM event_instance_registration WHERE instance_id = 900002 AND person_id = 200003),
   'cancelled'::attendance_type,
   'expiry cancels future not-excused attendance'
 );
@@ -147,52 +147,6 @@ SELECT tap.ok(
     WHERE event_id = 700001 AND person_id = 200001 AND tenant_id = 1000
   ),
   're-activating membership re-registers person to event with future instances'
-);
-
-CREATE TEMP TABLE _attendance_audit_before ON COMMIT DROP AS
-SELECT attendance_updated_at
-FROM event_instance_registration
-WHERE instance_id = 900001 AND person_id = 200002;
-
-SELECT public.update_event_attendance(
-  900001,
-  200002,
-  'not-excused',
-  'Audit timestamp regression test'
-);
-
-SELECT tap.ok(
-  (
-    SELECT eir.attendance_updated_at > before.attendance_updated_at
-      AND ea.updated_at = eir.attendance_updated_at
-    FROM event_instance_registration eir
-    JOIN event_attendance ea ON ea.id = eir.id
-    CROSS JOIN _attendance_audit_before before
-    WHERE eir.instance_id = 900001 AND eir.person_id = 200002
-  ),
-  'updating attendance advances the attendance-specific audit timestamp exposed by the compatibility view'
-);
-
-CREATE TEMP TABLE _attendance_audit_after ON COMMIT DROP AS
-SELECT attendance_updated_at
-FROM event_instance_registration
-WHERE instance_id = 900001 AND person_id = 200002;
-
-UPDATE event_registration
-SET note = 'Registration note regression test'
-WHERE event_id = 700001 AND person_id = 200002;
-
-SELECT tap.ok(
-  (
-    SELECT eir.attendance_updated_at = after.attendance_updated_at
-      AND eir.note = 'Registration note regression test'
-      AND ea.note = 'Audit timestamp regression test'
-    FROM event_instance_registration eir
-    JOIN event_attendance ea ON ea.id = eir.id
-    CROSS JOIN _attendance_audit_after after
-    WHERE eir.instance_id = 900001 AND eir.person_id = 200002
-  ),
-  'registration-note edits do not advance or overwrite attendance audit data'
 );
 
 SELECT tap.ok(
@@ -287,24 +241,20 @@ SELECT tap.lives_ok(
   'a trainer can insert attendance for an instance they manage'
 );
 
-SELECT tap.is(
+SELECT tap.ok(
   (
-    SELECT (
-      public.update_attendance(
-        eir.id,
-        'attended',
-        'ID-targeted attendance note'
-      )
-    ).id
+    SELECT updated.id = eir.id
+      AND updated.status = 'attended'
+      AND updated.attendance_note = 'ID-targeted attendance note'
     FROM event_instance_registration eir
+    CROSS JOIN LATERAL public.update_attendance(
+      eir.id,
+      'attended',
+      'ID-targeted attendance note'
+    ) updated
     WHERE eir.instance_id = 900001 AND eir.person_id = 200002
   ),
-  (
-    SELECT id
-    FROM event_instance_registration
-    WHERE instance_id = 900001 AND person_id = 200002
-  ),
-  'ID-targeted attendance mutation returns the canonical EIR row'
+  'an assigned trainer can update attendance by registration ID'
 );
 
 SELECT tap.is(
@@ -344,7 +294,7 @@ SELECT tap.throws_ok(
   'a trainer cannot insert attendance for an instance they do not manage'
 );
 
-CREATE TEMP TABLE _native_child ON COMMIT DROP AS
+CREATE TEMP TABLE _scheduled_lesson ON COMMIT DROP AS
 SELECT id
 FROM public.quick_create_event_instances(
   ARRAY[
@@ -353,7 +303,7 @@ FROM public.quick_create_event_instances(
       now() + interval '7 hours',
       'lesson'::event_type,
       null::bigint,
-      'Native lesson',
+      'Scheduled lesson',
       ARRAY[2900002]::bigint[],
       ARRAY[ROW(2900003, null)::quick_event_registration_input]
     )::quick_event_input
@@ -365,14 +315,14 @@ SELECT tap.ok(
   EXISTS (
     SELECT 1
     FROM event_instance child
-    WHERE child.id = (SELECT id FROM _native_child)
+    WHERE child.id = (SELECT id FROM _scheduled_lesson)
       AND child.event_id is null
       AND child.parent_id = 9900001
       AND 2900002 = any(child.manager_person_ids)
   ) AND EXISTS (
     SELECT 1
     FROM event_instance_registration registration
-    WHERE registration.instance_id = (SELECT id FROM _native_child)
+    WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
       AND registration.person_id = 2900003
       AND registration.registration_status = 'active'
   ) AND EXISTS (
@@ -380,22 +330,22 @@ SELECT tap.ok(
     FROM event_instances_for_range(
       null, now(), now() + interval '1 day', null, null, false, 9900001
     ) child
-    WHERE child.id = (SELECT id FROM _native_child)
+    WHERE child.id = (SELECT id FROM _scheduled_lesson)
   )
   AND NOT EXISTS (
     SELECT 1
     FROM event_instances_for_range(
       null, now(), now() + interval '1 day', null, null, false, null
     ) root
-    WHERE root.id = (SELECT id FROM _native_child)
+    WHERE root.id = (SELECT id FROM _scheduled_lesson)
   ),
-  'quick creation makes a managed native child with registration and scoped range'
+  'quick creation makes a managed lesson with registration and scoped range'
 );
 
 SELECT tap.lives_ok(
   format(
     'insert into event_instance (tenant_id, parent_id, since, until) values (1000, %s, now() + interval ''8 hours'', now() + interval ''9 hours'')',
-    (SELECT id FROM _native_child)
+    (SELECT id FROM _scheduled_lesson)
   ),
   'event instance schedules may be nested'
 );
@@ -409,18 +359,141 @@ SELECT tap.throws_ok(
 
 RESET ROLE;
 
+INSERT INTO couple (id, man_id, woman_id, since) OVERRIDING SYSTEM VALUE
+VALUES (2950001, 2900003, 2900005, now());
+
+SELECT public.update_event_instance_details(
+  instance.id,
+  instance.since,
+  instance.until,
+  instance.name,
+  instance.type,
+  instance.location_id,
+  instance.location_text,
+  instance.is_visible,
+  instance.is_public,
+  instance.is_cancelled,
+  null,
+  ARRAY[ROW(null, 2950001)::quick_event_registration_input]
+)
+FROM event_instance instance
+WHERE instance.id = (SELECT id FROM _scheduled_lesson);
+
 SELECT tap.ok(
-  (
-    SELECT eir.status = 'attended'
-      AND eir.attendance_note = 'ID-targeted attendance note'
-      AND ea.note = eir.attendance_note
-      AND eir.attendance_updated_at > after.attendance_updated_at
-    FROM event_instance_registration eir
-    JOIN event_attendance ea ON ea.id = eir.id
-    CROSS JOIN _attendance_audit_after after
-    WHERE eir.instance_id = 900001 AND eir.person_id = 200002
+  EXISTS (
+    SELECT 1
+    FROM event_instance_registration root
+    WHERE root.instance_id = (SELECT id FROM _scheduled_lesson)
+      AND root.couple_id = 2950001
+      AND root.registration_status = 'active'
+      AND 2 = (
+        SELECT count(*)
+        FROM event_instance_registration child
+        WHERE child.parent_registration_id = root.id
+          AND child.registration_status = 'active'
+      )
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+      AND person_id = 2900003
+      AND parent_registration_id is null
+      AND registration_status = 'cancelled'
+  ) AND (
+    SELECT stats->>'TOTAL' = '2'
+    FROM event_instance
+    WHERE id = (SELECT id FROM _scheduled_lesson)
   ),
-  'ID-targeted mutation updates attendance fields and the compatibility view'
+  'quick edit replaces a person registration with their couple'
+);
+
+SELECT public.update_event_instance_details(
+  instance.id,
+  instance.since,
+  instance.until,
+  instance.name,
+  instance.type,
+  instance.location_id,
+  instance.location_text,
+  instance.is_visible,
+  instance.is_public,
+  instance.is_cancelled,
+  null,
+  ARRAY[ROW(2900003, null)::quick_event_registration_input]
+)
+FROM event_instance instance
+WHERE instance.id = (SELECT id FROM _scheduled_lesson);
+
+SELECT public.update_event_instance_details(
+  instance.id,
+  instance.since,
+  instance.until,
+  'Scheduled lesson renamed',
+  instance.type,
+  instance.location_id,
+  instance.location_text,
+  instance.is_visible,
+  instance.is_public,
+  instance.is_cancelled,
+  null
+)
+FROM event_instance instance
+WHERE instance.id = (SELECT id FROM _scheduled_lesson);
+
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1
+    FROM event_instance_registration root
+    WHERE root.instance_id = (SELECT id FROM _scheduled_lesson)
+      AND root.couple_id = 2950001
+      AND root.registration_status = 'cancelled'
+      AND NOT EXISTS (
+        SELECT 1
+        FROM event_instance_registration child
+        WHERE child.parent_registration_id = root.id
+          AND child.registration_status <> 'cancelled'
+      )
+  )
+  AND EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+      AND person_id = 2900003
+      AND parent_registration_id is null
+      AND registration_status = 'active'
+  )
+  AND EXISTS (
+    SELECT 1
+    FROM event_instance
+    WHERE id = (SELECT id FROM _scheduled_lesson)
+      AND name = 'Scheduled lesson renamed'
+      AND stats->>'TOTAL' = '1'
+  ),
+  'quick edit replaces a couple with one person and null leaves registrations unchanged'
+);
+
+SELECT tap.throws_ok(
+  $$
+    select public.update_event_instance_details(
+      instance.id,
+      instance.since,
+      instance.until,
+      instance.name,
+      instance.type,
+      instance.location_id,
+      instance.location_text,
+      instance.is_visible,
+      instance.is_public,
+      instance.is_cancelled,
+      null,
+      '{}'::quick_event_registration_input[]
+    )
+    from event_instance instance
+    where instance.id = 900001
+  $$,
+  'P0001',
+  'event-backed instance 900001 registrations must be edited through event_registration',
+  'event-backed registrations stay on the legacy writer'
 );
 
 CREATE TEMP TABLE _stats_before_cancel ON COMMIT DROP AS
