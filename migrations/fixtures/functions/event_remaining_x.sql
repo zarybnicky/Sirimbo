@@ -28,7 +28,7 @@ CREATE or replace FUNCTION event_remaining_lessons(e event) RETURNS integer AS $
     else (
       select coalesce(sum(lessons_offered), 0) from event_trainer et where et.event_id = e.id
     ) - (
-      select coalesce(sum(lesson_count), 0) from event_registration er join event_lesson_demand eld on eld.registration_id = er.id where er.event_id = e.id
+      select coalesce(sum(lesson_count), 0) from event_lesson_demand eld where eld.event_id = e.id
     )
   end;
 $$ LANGUAGE sql STABLE security definer;

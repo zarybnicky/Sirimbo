@@ -11,6 +11,7 @@ DECLARE
   v_old_event_id bigint;
   v_new_event_id bigint;
   v_old_att jsonb;
+  v_old_demands jsonb;
 BEGIN
   -- Lock the instance and fetch old event_id
   SELECT ei.event_id
@@ -45,6 +46,21 @@ BEGIN
   FROM public.event_instance_registration eir
   JOIN public.event_registration er ON er.tenant_id = eir.tenant_id AND er.id = eir.legacy_registration_id AND er.event_id = v_old_event_id
   WHERE eir.instance_id = p_instance_id;
+
+  SELECT coalesce(jsonb_agg(jsonb_build_object(
+    'reg_person_id', er.person_id,
+    'reg_couple_id', er.couple_id,
+    'trainer_person_id', trainer.person_id,
+    'lesson_count', demand.lesson_count,
+    'created_at', demand.created_at
+  )), '[]'::jsonb)
+  INTO v_old_demands
+  FROM public.event_lesson_demand demand
+  JOIN public.event_instance_registration eir ON eir.id = demand.registration_id
+  JOIN public.event_registration er ON er.id = eir.legacy_registration_id
+  JOIN public.event_trainer trainer ON trainer.id = demand.trainer_id
+  WHERE eir.instance_id = p_instance_id
+    AND eir.parent_registration_id IS NULL;
 
   -- Reparenting synchronizes the new registrations before sweeping the old
   -- bridge rows, which would collide on the instance/person unit key.
@@ -98,19 +114,28 @@ BEGIN
   WHERE er.event_id  = v_old_event_id
   ON CONFLICT (event_id, person_id, couple_id) DO NOTHING;
 
-  -- Copy lesson demand:
-  -- - trainer maps by person_id (old event_trainer -> new event_trainer)
-  -- - registration maps by (person_id, couple_id) to new event_registration
   INSERT INTO public.event_lesson_demand (
     trainer_id, registration_id, lesson_count, created_at, event_id
   )
-  SELECT new_tr.id, new_reg.id, d.lesson_count, d.created_at, v_new_event_id
-  FROM public.event_lesson_demand d
-  JOIN public.event_trainer old_tr ON old_tr.id = d.trainer_id AND old_tr.event_id  = v_old_event_id
-  JOIN public.event_trainer new_tr ON new_tr.event_id  = v_new_event_id AND new_tr.person_id = old_tr.person_id
-  JOIN public.event_registration old_reg ON old_reg.id = d.registration_id AND old_reg.event_id  = v_old_event_id
-  JOIN public.event_registration new_reg ON new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM old_reg.person_id AND new_reg.couple_id IS NOT DISTINCT FROM old_reg.couple_id
-  WHERE d.event_id = v_old_event_id
+  SELECT new_tr.id, new_eir.id, old.lesson_count, old.created_at, v_new_event_id
+  FROM jsonb_to_recordset(v_old_demands) AS old(
+    reg_person_id bigint,
+    reg_couple_id bigint,
+    trainer_person_id bigint,
+    lesson_count integer,
+    created_at timestamptz
+  )
+  JOIN public.event_trainer new_tr
+    ON new_tr.event_id = v_new_event_id
+   AND new_tr.person_id = old.trainer_person_id
+  JOIN public.event_registration new_reg
+    ON new_reg.event_id = v_new_event_id
+   AND new_reg.person_id IS NOT DISTINCT FROM old.reg_person_id
+   AND new_reg.couple_id IS NOT DISTINCT FROM old.reg_couple_id
+  JOIN public.event_instance_registration new_eir
+    ON new_eir.instance_id = p_instance_id
+   AND new_eir.legacy_registration_id = new_reg.id
+   AND new_eir.parent_registration_id IS NULL
   ON CONFLICT (registration_id, trainer_id) DO NOTHING;
 
   -- Restore per-person attendance on the newly generated bridge rows.

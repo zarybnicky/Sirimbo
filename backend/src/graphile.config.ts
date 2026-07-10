@@ -11,6 +11,7 @@ import personMembershipConditionPlugin from './plugins/person-membership-conditi
 import { makePgService } from 'postgraphile/@dataplan/pg/adaptors/pg';
 import { JWT_SECRET } from './auth.ts';
 import { OTELPlugin } from './postgraphile-otel.ts';
+import { changeNullability } from 'postgraphile/utils';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -26,6 +27,9 @@ const preset: GraphileConfig.Preset = {
 
   disablePlugins: ['NodePlugin', 'QueryQueryPlugin', 'MutationPayloadQueryPlugin'],
   plugins: [
+    changeNullability({
+      EventRegistration: { eventLessonDemandsByRegistrationIdList: '[!]!' },
+    }),
     ...filePlugin,
     currentUserPlugin,
     ...personMembershipConditionPlugin,

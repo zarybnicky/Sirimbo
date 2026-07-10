@@ -222,10 +222,14 @@ VALUES (1000, 700001, 2900002, 1);
 INSERT INTO event_lesson_demand (
   tenant_id, trainer_id, registration_id, lesson_count, event_id
 )
-SELECT 1000, et.id, er.id, 1, 700001
+SELECT 1000, et.id, eir.id, 1, 700001
 FROM event_trainer et
 JOIN event_registration er
   ON er.event_id = et.event_id AND er.person_id = 200002
+JOIN event_instance_registration eir
+  ON eir.legacy_registration_id = er.id
+ AND eir.instance_id = 900001
+ AND eir.parent_registration_id IS NULL
 WHERE et.event_id = 700001 AND et.person_id = 2900002;
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
@@ -539,7 +543,8 @@ SELECT tap.ok(
   ) AND EXISTS (
     SELECT 1
     FROM event_instance ei
-    JOIN event_lesson_demand d ON d.event_id = ei.event_id
+    JOIN event_instance_registration eir ON eir.instance_id = ei.id
+    JOIN event_lesson_demand d ON d.registration_id = eir.id
     WHERE ei.id = 900001
   ) AND EXISTS (
     SELECT 1

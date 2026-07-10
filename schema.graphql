@@ -3648,6 +3648,23 @@ type EventInstanceRegistration {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsConnection!
+
+  """Reads and enables pagination through a set of `EventLessonDemand`."""
+  eventLessonDemandsByRegistrationIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventLessonDemandCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventLessonDemand`."""
+    orderBy: [EventLessonDemandsOrderBy!]
+  ): [EventLessonDemand!]!
   id: BigInt!
 
   """
@@ -3962,9 +3979,9 @@ type EventLessonDemand {
   lessonCount: Int!
 
   """
-  Reads a single `EventRegistration` that is related to this `EventLessonDemand`.
+  Reads a single `EventInstanceRegistration` that is related to this `EventLessonDemand`.
   """
-  registration: EventRegistration
+  registration: EventInstanceRegistration
   registrationId: BigInt!
   tenantId: BigInt!
 
@@ -4091,8 +4108,6 @@ type EventRegistration {
   """Reads a single `Event` that is related to this `EventRegistration`."""
   event: Event
   eventId: BigInt!
-
-  """Reads and enables pagination through a set of `EventLessonDemand`."""
   eventLessonDemandsByRegistrationIdList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -7813,9 +7828,9 @@ type SetLessonDemandPayload {
   ): EventLessonDemandsEdge
 
   """
-  Reads a single `EventRegistration` that is related to this `EventLessonDemand`.
+  Reads a single `EventInstanceRegistration` that is related to this `EventLessonDemand`.
   """
-  registration: EventRegistration
+  registration: EventInstanceRegistration
 
   """
   Reads a single `EventTrainer` that is related to this `EventLessonDemand`.
