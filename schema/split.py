@@ -150,6 +150,6 @@ for table_name, objects in per_table.items():
         [""],
         objects["INDEX"],
     )
-    filename = f"schema/{object_type}s/{table_name}.sql"
+    filename = f"schema/{object_type}s/{table_name.replace("timestamp with time zone", "timestamptz")}.sql"
     with open(filename, "w") as opf:
         opf.write("\n".join(source).replace("\n\n\n", "\n\n").replace("\n\n\n", "\n\n").rstrip() + "\n")

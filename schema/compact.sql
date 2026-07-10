@@ -880,17 +880,15 @@ CREATE TABLE public.event_lesson_demand (
   trainer_id bigint NOT NULL REFERENCES public.event_trainer (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  registration_id bigint NOT NULL,
+  registration_id bigint NOT NULL REFERENCES public.event_instance_registration (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
   lesson_count int NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  event_id bigint NOT NULL,
+  event_id bigint,
   CHECK (lesson_count > 0),
-  UNIQUE (registration_id, trainer_id),
-  FOREIGN KEY(tenant_id, registration_id, event_id)
-    REFERENCES public.event_registration (tenant_id, id, event_id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
+  UNIQUE (registration_id, trainer_id)
 );
 
 CREATE TYPE public.payment_status AS ENUM ('tentative', 'unpaid', 'paid');

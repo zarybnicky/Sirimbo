@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict ghahlERNFlv2tbfAdQ0Vax5lH7LwbUaT8BFe1ujs11Yquwf7gAhKihdBnMWUjRw
+\restrict U2piAyUJbwlTF4Q01gzTDCkeQGERmyZ4CoGe1naAoIuAAdpjJvoydzoVRbCQ5bJ
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -785,7 +785,7 @@ CREATE TABLE public.event_lesson_demand (
     lesson_count integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    event_id bigint NOT NULL,
+    event_id bigint,
     CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
 );
 
@@ -1838,6 +1838,7 @@ $$;
 
 CREATE FUNCTION app_private.sync_eir_registrations(reg_ids bigint[]) RETURNS void
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   -- couple unit rows: one per couple registration x each instance of its event
@@ -1918,9 +1919,12 @@ CREATE FUNCTION app_private.tg__set_event_id_from_registration_id() RETURNS trig
     LANGUAGE plpgsql
     AS $$
 begin
-  select i.event_id into new.event_id from public.event_registration i where i.id = new.registration_id;
+  select registration.event_id into new.event_id
+  from public.event_instance_registration registration
+  where registration.id = new.registration_id;
   return new;
-end $$;
+end;
+$$;
 
 
 --
@@ -4303,6 +4307,7 @@ DECLARE
   v_old_event_id bigint;
   v_new_event_id bigint;
   v_old_att jsonb;
+  v_old_demands jsonb;
 BEGIN
   -- Lock the instance and fetch old event_id
   SELECT ei.event_id
@@ -4337,6 +4342,21 @@ BEGIN
   FROM public.event_instance_registration eir
   JOIN public.event_registration er ON er.tenant_id = eir.tenant_id AND er.id = eir.legacy_registration_id AND er.event_id = v_old_event_id
   WHERE eir.instance_id = p_instance_id;
+
+  SELECT coalesce(jsonb_agg(jsonb_build_object(
+    'reg_person_id', er.person_id,
+    'reg_couple_id', er.couple_id,
+    'trainer_person_id', trainer.person_id,
+    'lesson_count', demand.lesson_count,
+    'created_at', demand.created_at
+  )), '[]'::jsonb)
+  INTO v_old_demands
+  FROM public.event_lesson_demand demand
+  JOIN public.event_instance_registration eir ON eir.id = demand.registration_id
+  JOIN public.event_registration er ON er.id = eir.legacy_registration_id
+  JOIN public.event_trainer trainer ON trainer.id = demand.trainer_id
+  WHERE eir.instance_id = p_instance_id
+    AND eir.parent_registration_id IS NULL;
 
   -- Reparenting synchronizes the new registrations before sweeping the old
   -- bridge rows, which would collide on the instance/person unit key.
@@ -4390,19 +4410,28 @@ BEGIN
   WHERE er.event_id  = v_old_event_id
   ON CONFLICT (event_id, person_id, couple_id) DO NOTHING;
 
-  -- Copy lesson demand:
-  -- - trainer maps by person_id (old event_trainer -> new event_trainer)
-  -- - registration maps by (person_id, couple_id) to new event_registration
   INSERT INTO public.event_lesson_demand (
     trainer_id, registration_id, lesson_count, created_at, event_id
   )
-  SELECT new_tr.id, new_reg.id, d.lesson_count, d.created_at, v_new_event_id
-  FROM public.event_lesson_demand d
-  JOIN public.event_trainer old_tr ON old_tr.id = d.trainer_id AND old_tr.event_id  = v_old_event_id
-  JOIN public.event_trainer new_tr ON new_tr.event_id  = v_new_event_id AND new_tr.person_id = old_tr.person_id
-  JOIN public.event_registration old_reg ON old_reg.id = d.registration_id AND old_reg.event_id  = v_old_event_id
-  JOIN public.event_registration new_reg ON new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM old_reg.person_id AND new_reg.couple_id IS NOT DISTINCT FROM old_reg.couple_id
-  WHERE d.event_id = v_old_event_id
+  SELECT new_tr.id, new_eir.id, old.lesson_count, old.created_at, v_new_event_id
+  FROM jsonb_to_recordset(v_old_demands) AS old(
+    reg_person_id bigint,
+    reg_couple_id bigint,
+    trainer_person_id bigint,
+    lesson_count integer,
+    created_at timestamptz
+  )
+  JOIN public.event_trainer new_tr
+    ON new_tr.event_id = v_new_event_id
+   AND new_tr.person_id = old.trainer_person_id
+  JOIN public.event_registration new_reg
+    ON new_reg.event_id = v_new_event_id
+   AND new_reg.person_id IS NOT DISTINCT FROM old.reg_person_id
+   AND new_reg.couple_id IS NOT DISTINCT FROM old.reg_couple_id
+  JOIN public.event_instance_registration new_eir
+    ON new_eir.instance_id = p_instance_id
+   AND new_eir.legacy_registration_id = new_reg.id
+   AND new_eir.parent_registration_id IS NULL
   ON CONFLICT (registration_id, trainer_id) DO NOTHING;
 
   -- Restore per-person attendance on the newly generated bridge rows.
@@ -4982,6 +5011,30 @@ COMMENT ON FUNCTION public.event_registrants(e public.event) IS '@simpleCollecti
 
 
 --
+-- Name: event_registration_event_lesson_demands_by_registration_id(public.event_registration); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_registration_event_lesson_demands_by_registration_id(registration public.event_registration) RETURNS SETOF public.event_lesson_demand
+    LANGUAGE sql STABLE
+    AS $$
+  select demand.*
+  from public.event_lesson_demand demand
+  join public.event_instance_registration instance_registration
+    on instance_registration.id = demand.registration_id
+  where instance_registration.legacy_registration_id = registration.id;
+$$;
+
+
+--
+-- Name: FUNCTION event_registration_event_lesson_demands_by_registration_id(registration public.event_registration); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_registration_event_lesson_demands_by_registration_id(registration public.event_registration) IS '@simpleCollections only
+@filterable
+@sortable';
+
+
+--
 -- Name: event_remaining_lessons(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4996,7 +5049,7 @@ CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
     else (
       select coalesce(sum(lessons_offered), 0) from event_trainer et where et.event_id = e.id
     ) - (
-      select coalesce(sum(lesson_count), 0) from event_registration er join event_lesson_demand eld on eld.registration_id = er.id where er.event_id = e.id
+      select coalesce(sum(lesson_count), 0) from event_lesson_demand eld where eld.event_id = e.id
     )
   end;
 $$;
@@ -6272,13 +6325,16 @@ CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigi
 declare
   v_event event;
   v_trainer event_trainer;
-  registration event_registration;
+  legacy_registration event_registration;
+  registration event_instance_registration;
+  registration_count bigint;
+  instance_registration_id bigint;
   lesson_demand event_lesson_demand;
   other_lessons bigint;
 begin
-  select * into registration from event_registration where id = $1;
-  select * into v_event from event where id = registration.event_id;
-  select * into v_trainer from event_trainer where id = $2 and event_id = registration.event_id;
+  select * into legacy_registration from event_registration where id = $1;
+  select * into v_event from event where id = legacy_registration.event_id;
+  select * into v_trainer from event_trainer where id = $2 and event_id = legacy_registration.event_id;
 
   if v_event is null then
     raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
@@ -6289,6 +6345,22 @@ begin
   if v_trainer is null then
     raise exception 'TRAINER_NOT_FOUND' using errcode = '28000';
   end if;
+
+  select count(*), min(eir.id)
+  into registration_count, instance_registration_id
+  from event_instance_registration eir
+  join event_instance instance on instance.id = eir.instance_id
+  where eir.legacy_registration_id = legacy_registration.id
+    and eir.parent_registration_id is null
+    and instance.parent_id is null;
+
+  if registration_count <> 1 then
+    raise exception 'LESSON_DEMAND_INSTANCE_AMBIGUOUS' using errcode = '22023';
+  end if;
+
+  select * into registration
+  from event_instance_registration
+  where id = instance_registration_id;
 
   if $3 = 0 then
     delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = $2;
@@ -6308,7 +6380,7 @@ begin
   end if;
 
   INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
-  values ($1, $2, $3)
+  values (registration.id, $2, $3)
   on conflict on constraint eld_unique_registration_trainer_key do update set lesson_count = $3
   returning * into lesson_demand;
 
@@ -6927,10 +6999,10 @@ $_$;
 
 
 --
--- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[], public.quick_event_registration_input[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[], public.quick_event_registration_input[], integer, public.event_capacity_unit, boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[]) RETURNS public.event_instance
+CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean) RETURNS public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
@@ -6955,6 +7027,9 @@ begin
     location_text = coalesce(p_location_text, ''),
     is_visible = coalesce(p_is_visible, is_visible),
     is_public = coalesce(p_is_public, is_public),
+    capacity = coalesce(p_capacity, capacity),
+    capacity_unit = coalesce(p_capacity_unit, capacity_unit),
+    is_locked = coalesce(p_is_locked, is_locked),
     is_cancelled = p_is_cancelled
   where id = p_instance_id
   returning * into updated_instance;
@@ -13539,28 +13614,19 @@ COMMENT ON CONSTRAINT event_instance_trainer_tenant_id_instance_id_fkey ON publi
 
 
 --
+-- Name: event_lesson_demand event_lesson_demand_registration_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_lesson_demand
+    ADD CONSTRAINT event_lesson_demand_registration_id_fkey FOREIGN KEY (registration_id) REFERENCES public.event_instance_registration(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: event_lesson_demand event_lesson_demand_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.event_lesson_demand
     ADD CONSTRAINT event_lesson_demand_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: event_lesson_demand event_lesson_demand_tenant_id_registration_id_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_lesson_demand
-    ADD CONSTRAINT event_lesson_demand_tenant_id_registration_id_event_id_fkey FOREIGN KEY (tenant_id, registration_id, event_id) REFERENCES public.event_registration(tenant_id, id, event_id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: CONSTRAINT event_lesson_demand_tenant_id_registration_id_event_id_fkey ON event_lesson_demand; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT event_lesson_demand_tenant_id_registration_id_event_id_fkey ON public.event_lesson_demand IS '@fieldName registration
-@foreignFieldName eventLessonDemandsByRegistrationId
-@behavior -delete';
 
 
 --
@@ -15309,14 +15375,6 @@ CREATE POLICY view_visible_event ON public.event_external_registration FOR SELEC
 
 
 --
--- Name: event_lesson_demand view_visible_event; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_event ON public.event_lesson_demand FOR SELECT USING ((event_id IN ( SELECT event.id
-   FROM public.event)));
-
-
---
 -- Name: event_registration view_visible_event; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -15330,6 +15388,14 @@ CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING (
 
 CREATE POLICY view_visible_instance ON public.event_instance_registration FOR SELECT USING ((instance_id IN ( SELECT event_instance.id
    FROM public.event_instance)));
+
+
+--
+-- Name: event_lesson_demand view_visible_instance; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_instance ON public.event_lesson_demand FOR SELECT USING ((registration_id IN ( SELECT event_instance_registration.id
+   FROM public.event_instance_registration)));
 
 
 --
@@ -15961,6 +16027,13 @@ GRANT ALL ON FUNCTION public.event_registrants(e public.event) TO anonymous;
 
 
 --
+-- Name: FUNCTION event_registration_event_lesson_demands_by_registration_id(registration public.event_registration); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_registration_event_lesson_demands_by_registration_id(registration public.event_registration) TO anonymous;
+
+
+--
 -- Name: FUNCTION event_remaining_lessons(e public.event); Type: ACL; Schema: public; Owner: -
 --
 
@@ -16438,10 +16511,10 @@ GRANT ALL ON FUNCTION public.trainer_group_attendance_completion(since timestamp
 
 
 --
--- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[]) TO anonymous;
+GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean) TO anonymous;
 
 
 --
@@ -17008,5 +17081,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict ghahlERNFlv2tbfAdQ0Vax5lH7LwbUaT8BFe1ujs11Yquwf7gAhKihdBnMWUjRw
+\unrestrict U2piAyUJbwlTF4Q01gzTDCkeQGERmyZ4CoGe1naAoIuAAdpjJvoydzoVRbCQ5bJ
 

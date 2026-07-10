@@ -1,5 +1,6 @@
 CREATE FUNCTION app_private.sync_eir_registrations(reg_ids bigint[]) RETURNS void
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   -- couple unit rows: one per couple registration x each instance of its event

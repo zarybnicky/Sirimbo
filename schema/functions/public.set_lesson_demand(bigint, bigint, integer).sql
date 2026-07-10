@@ -5,13 +5,16 @@ CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigi
 declare
   v_event event;
   v_trainer event_trainer;
-  registration event_registration;
+  legacy_registration event_registration;
+  registration event_instance_registration;
+  registration_count bigint;
+  instance_registration_id bigint;
   lesson_demand event_lesson_demand;
   other_lessons bigint;
 begin
-  select * into registration from event_registration where id = $1;
-  select * into v_event from event where id = registration.event_id;
-  select * into v_trainer from event_trainer where id = $2 and event_id = registration.event_id;
+  select * into legacy_registration from event_registration where id = $1;
+  select * into v_event from event where id = legacy_registration.event_id;
+  select * into v_trainer from event_trainer where id = $2 and event_id = legacy_registration.event_id;
 
   if v_event is null then
     raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
@@ -22,6 +25,22 @@ begin
   if v_trainer is null then
     raise exception 'TRAINER_NOT_FOUND' using errcode = '28000';
   end if;
+
+  select count(*), min(eir.id)
+  into registration_count, instance_registration_id
+  from event_instance_registration eir
+  join event_instance instance on instance.id = eir.instance_id
+  where eir.legacy_registration_id = legacy_registration.id
+    and eir.parent_registration_id is null
+    and instance.parent_id is null;
+
+  if registration_count <> 1 then
+    raise exception 'LESSON_DEMAND_INSTANCE_AMBIGUOUS' using errcode = '22023';
+  end if;
+
+  select * into registration
+  from event_instance_registration
+  where id = instance_registration_id;
 
   if $3 = 0 then
     delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = $2;
@@ -41,7 +60,7 @@ begin
   end if;
 
   INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
-  values ($1, $2, $3)
+  values (registration.id, $2, $3)
   on conflict on constraint eld_unique_registration_trainer_key do update set lesson_count = $3
   returning * into lesson_demand;
 

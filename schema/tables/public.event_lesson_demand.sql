@@ -6,7 +6,7 @@ CREATE TABLE public.event_lesson_demand (
     lesson_count integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    event_id bigint NOT NULL,
+    event_id bigint,
     CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
 );
 
@@ -24,15 +24,15 @@ ALTER TABLE ONLY public.event_lesson_demand
 ALTER TABLE ONLY public.event_lesson_demand
     ADD CONSTRAINT event_lesson_demand_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.event_lesson_demand
-    ADD CONSTRAINT event_lesson_demand_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_lesson_demand_registration_id_fkey FOREIGN KEY (registration_id) REFERENCES public.event_instance_registration(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_lesson_demand
-    ADD CONSTRAINT event_lesson_demand_tenant_id_registration_id_event_id_fkey FOREIGN KEY (tenant_id, registration_id, event_id) REFERENCES public.event_registration(tenant_id, id, event_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_lesson_demand_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_lesson_demand
     ADD CONSTRAINT event_lesson_demand_trainer_id_fkey FOREIGN KEY (trainer_id) REFERENCES public.event_trainer(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.event_lesson_demand TO administrator USING (true);
-CREATE POLICY view_visible_event ON public.event_lesson_demand FOR SELECT USING ((event_id IN ( SELECT event.id
-   FROM public.event)));
+CREATE POLICY view_visible_instance ON public.event_lesson_demand FOR SELECT USING ((registration_id IN ( SELECT event_instance_registration.id
+   FROM public.event_instance_registration)));
 
 CREATE TRIGGER _100_event_id BEFORE INSERT OR UPDATE OF registration_id ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__set_event_id_from_registration_id();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
