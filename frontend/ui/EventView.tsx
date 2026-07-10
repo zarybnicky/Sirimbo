@@ -236,17 +236,14 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
         </div>
       ))}
       {event.eventExternalRegistrationsList?.map((x) => (
-        <div key={x.id} className="p-1">
-          <ActionRow
-            actions={externalRegistrationActionMap.get(x.id)!}
-            className="mb-0 justify-between"
-          >
+        <ActionRow key={x.id} actions={externalRegistrationActionMap.get(x.id)!}>
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <div>
               {x.prefixTitle} {x.firstName} {x.lastName} {x.suffixTitle}
             </div>
-          </ActionRow>
-          {x.note && <div className="ml-3">{x.note}</div>}
-        </div>
+            {x.note && <div className="ml-3">{x.note}</div>}
+          </div>
+        </ActionRow>
       ))}
     </div>
   );

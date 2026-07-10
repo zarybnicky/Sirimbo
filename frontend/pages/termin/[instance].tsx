@@ -13,6 +13,9 @@ import { useQuery } from 'urql';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
 import { Calendar } from '@/calendar/Calendar';
+import { parseAsString, useQueryState } from 'nuqs';
+import { TabMenu } from '@/ui/TabMenu';
+import React from 'react';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -31,6 +34,30 @@ function EventInstancePage() {
   const instance = data?.eventInstance;
   const title = instance?.name || (instance ? formatDefaultInstanceName(instance) : '');
   const description = stripHtml(instance?.summary);
+  const [variant, setVariant] = useQueryState(
+    'tab',
+    parseAsString.withOptions({ history: 'push' }),
+  );
+
+  const tabs = React.useMemo(() => {
+    const tabs: {
+      id: string;
+      title: React.ReactNode;
+      contents: () => React.ReactNode;
+    }[] = [{
+      id: 'attendance',
+      title: 'Docházka',
+      contents: () => <InstanceAttendanceView id={router.query.instance} />,
+    }];
+    if (instance?.type === 'CAMP') {
+      tabs.push({
+        id: 'schedule',
+        title: 'Rozpis',
+        contents: () => <Calendar parentId={router.query.instance} initialDate={instance?.since} />
+      })
+    }
+    return tabs;
+  }, [instance?.since, instance?.type, router.query.instance]);
 
   return (
     <Layout hideTopMenuIfLoggedIn>
@@ -43,10 +70,9 @@ function EventInstancePage() {
         >
           {instance && <PageHeader title={title} />}
           {instance && <BasicEventInfo instance={instance} />}
-          {instance?.type === 'CAMP' && (
-            <Calendar parentId={instance.id} initialDate={instance.since} />
-          )}
-          <InstanceAttendanceView id={router.query.instance} />
+          <div className="max-w-full">
+            <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
+          </div>
         </div>
       </WithSidebar>
     </Layout>
