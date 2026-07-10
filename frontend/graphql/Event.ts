@@ -310,8 +310,11 @@ export type UpdateEventInstanceDetailsInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: string | null | undefined;
+  pCapacity?: number | null | undefined;
+  pCapacityUnit?: EventCapacityUnit | null | undefined;
   pInstanceId?: string | null | undefined;
   pIsCancelled?: boolean | null | undefined;
+  pIsLocked?: boolean | null | undefined;
   pIsPublic?: boolean | null | undefined;
   pIsVisible?: boolean | null | undefined;
   pLocationId?: string | null | undefined;

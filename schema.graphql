@@ -9733,8 +9733,11 @@ input UpdateEventInstanceDetailsInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
+  pCapacity: Int
+  pCapacityUnit: EventCapacityUnit
   pInstanceId: BigInt
   pIsCancelled: Boolean
+  pIsLocked: Boolean
   pIsPublic: Boolean
   pIsVisible: Boolean
   pLocationId: BigInt

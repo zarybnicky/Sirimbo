@@ -435,7 +435,11 @@ SELECT public.update_event_instance_details(
   instance.is_visible,
   instance.is_public,
   instance.is_cancelled,
-  null
+  null,
+  null,
+  4,
+  'registrations',
+  true
 )
 FROM event_instance instance
 WHERE instance.id = (SELECT id FROM _scheduled_lesson);
@@ -467,9 +471,12 @@ SELECT tap.ok(
     FROM event_instance
     WHERE id = (SELECT id FROM _scheduled_lesson)
       AND name = 'Scheduled lesson renamed'
+      AND capacity = 4
+      AND capacity_unit = 'registrations'
+      AND is_locked
       AND stats->>'TOTAL' = '1'
   ),
-  'quick edit replaces a couple with one person and null leaves registrations unchanged'
+  'quick edit updates details, capacity, capacity unit and lock while null leaves registrations unchanged'
 );
 
 SELECT tap.throws_ok(

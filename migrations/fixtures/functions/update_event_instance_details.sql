@@ -2,6 +2,10 @@ drop function if exists public.update_event_instance_details(
   bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
   boolean, boolean, boolean, bigint[]
 );
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[], public.quick_event_registration_input[]
+);
 
 create or replace function public.update_event_instance_details(
   p_instance_id bigint,
@@ -15,7 +19,10 @@ create or replace function public.update_event_instance_details(
   p_is_public boolean,
   p_is_cancelled boolean,
   p_trainer_person_ids bigint[] default null,
-  p_registrations public.quick_event_registration_input[] default null
+  p_registrations public.quick_event_registration_input[] default null,
+  p_capacity integer default null,
+  p_capacity_unit public.event_capacity_unit default null,
+  p_is_locked boolean default null
 ) returns public.event_instance
   language plpgsql
 as $$
@@ -41,6 +48,9 @@ begin
     location_text = coalesce(p_location_text, ''),
     is_visible = coalesce(p_is_visible, is_visible),
     is_public = coalesce(p_is_public, is_public),
+    capacity = coalesce(p_capacity, capacity),
+    capacity_unit = coalesce(p_capacity_unit, capacity_unit),
+    is_locked = coalesce(p_is_locked, is_locked),
     is_cancelled = p_is_cancelled
   where id = p_instance_id
   returning * into updated_instance;

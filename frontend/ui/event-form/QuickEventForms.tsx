@@ -327,6 +327,9 @@ export function QuickInstanceEditForm({
       type: instance.type ?? 'LESSON',
       locationId: instance.locationText ? 'other' : (instance.location?.id ?? 'none'),
       locationText: instance.locationText ?? '',
+      capacity: instance.capacity ?? 0,
+      capacityUnit: instance.capacityUnit,
+      isLocked: instance.isLocked ?? false,
       registrations: [],
       instances: [
         {
@@ -397,6 +400,9 @@ export function QuickInstanceEditForm({
         pIsVisible: null,
         pIsPublic: null,
         pIsCancelled: edited.isCancelled,
+        pCapacity: values.capacity,
+        pCapacityUnit: values.capacityUnit,
+        pIsLocked: values.isLocked,
         pTrainerPersonIds: sameTrainers ? null : nextTrainerIds,
         pRegistrations: instance.eventId || !registrationsReady ? null : nextRegistrations,
       },
@@ -423,6 +429,20 @@ export function QuickInstanceEditForm({
       />
       <TrainerListElement control={control} name="trainers" />
       <LocationField control={control} />
+      <TextFieldElement control={control} type="number" min={0} name="capacity" label="Kapacita" />
+      <RadioButtonGroupElement
+        control={control}
+        name="capacityUnit"
+        options={[
+          { id: 'PEOPLE', label: 'osob' },
+          { id: 'REGISTRATIONS', label: 'přihlášek' },
+        ]}
+      />
+      <CheckboxElement
+        control={control}
+        name="isLocked"
+        label="Zakázat přihlašování/odhlašování"
+      />
       {!instance.eventId && registrationsReady && (
         <ParticipantListElement
           control={control}

@@ -10,6 +10,7 @@ export const EventForm = z.object({
   locationId: z.string().nullish().prefault(null),
   locationText: z.string().nullish().prefault(''),
   capacity: z.number().nullish().prefault(0),
+  capacityUnit: z.enum(['PEOPLE', 'REGISTRATIONS']).prefault('PEOPLE'),
   isVisible: z.boolean().prefault(false),
   isPublic: z.boolean().prefault(false),
   enableNotes: z.boolean().prefault(false),

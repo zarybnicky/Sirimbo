@@ -8234,8 +8234,11 @@ export type UpdateEventInstanceDetailsInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pCapacity?: InputMaybe<Scalars['Int']['input']>;
+  pCapacityUnit?: InputMaybe<EventCapacityUnit>;
   pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   pIsCancelled?: InputMaybe<Scalars['Boolean']['input']>;
+  pIsLocked?: InputMaybe<Scalars['Boolean']['input']>;
   pIsPublic?: InputMaybe<Scalars['Boolean']['input']>;
   pIsVisible?: InputMaybe<Scalars['Boolean']['input']>;
   pLocationId?: InputMaybe<Scalars['BigInt']['input']>;
