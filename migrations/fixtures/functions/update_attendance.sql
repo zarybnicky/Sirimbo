@@ -1,16 +1,8 @@
-create or replace function update_attendance(instance_id bigint, person_id bigint, status attendance_type, note text)
+create or replace function update_attendance(eir_id bigint, status attendance_type, note text)
   returns event_instance_registration
-  language plpgsql as $$
-declare
-  eir_row event_instance_registration;
-begin
+  language sql as $$
   update event_instance_registration eir
-    set status = $3,
-        note = $4
-  where eir.instance_id = $1 and eir.person_id = $2
-  returning eir.* into eir_row;
-  return eir_row;
-end
+  set status = $2, attendance_note = $3
+  where eir.id = $1 and eir.person_id is not null and eir.registration_status = 'active'
+  returning eir.*;
 $$;
-
-select verify_function('update_attendance');

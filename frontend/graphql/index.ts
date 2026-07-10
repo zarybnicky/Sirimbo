@@ -2936,7 +2936,8 @@ export type EventInstance = {
   __typename?: 'EventInstance';
   approxPriceList: Maybe<Array<EventInstanceApproxPriceRecord>>;
   capacity: Maybe<Scalars['Int']['output']>;
-  capacityUnit: Maybe<EventCapacityUnit>;
+  /** Capacity counts people by default; registrations is an explicit per-occurrence choice. */
+  capacityUnit: EventCapacityUnit;
   /** Reads and enables pagination through a set of `EventInstance`. */
   childEventInstancesList: Array<EventInstance>;
   createdAt: Scalars['Datetime']['output'];
@@ -3129,6 +3130,7 @@ export type EventInstanceCondition = {
 /** Represents an update to a `EventInstance`. Fields that are set will be updated. */
 export type EventInstancePatch = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
+  /** Capacity counts people by default; registrations is an explicit per-occurrence choice. */
   capacityUnit?: InputMaybe<EventCapacityUnit>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   custom?: InputMaybe<Scalars['JSON']['input']>;
@@ -3159,6 +3161,8 @@ export type EventInstancePatch = {
 export type EventInstanceRegistration = {
   __typename?: 'EventInstanceRegistration';
   attendanceCreatedAt: Maybe<Scalars['Datetime']['output']>;
+  /** Per-person attendance note. */
+  attendanceNote: Maybe<Scalars['String']['output']>;
   attendanceUpdatedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Couple` that is related to this `EventInstanceRegistration`. */
   couple: Maybe<Couple>;
@@ -3174,6 +3178,7 @@ export type EventInstanceRegistration = {
   instance: Maybe<EventInstance>;
   instanceId: Scalars['BigInt']['output'];
   lastAttended: Maybe<Scalars['Datetime']['output']>;
+  /** Registration note stored on a root registration row. */
   note: Maybe<Scalars['String']['output']>;
   /** Reads a single `EventInstanceRegistration` that is related to this `EventInstanceRegistration`. */
   parentRegistration: Maybe<EventInstanceRegistration>;
@@ -3181,6 +3186,8 @@ export type EventInstanceRegistration = {
   /** Reads a single `Person` that is related to this `EventInstanceRegistration`. */
   person: Maybe<Person>;
   personId: Maybe<Scalars['BigInt']['output']>;
+  /** Registration lifecycle; child rows are cancelled with their root registration. */
+  registrationStatus: EventInstanceRegistrationStatus;
   status: Maybe<AttendanceType>;
   /** Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`. */
   targetCohort: Maybe<EventTargetCohort>;
@@ -3207,6 +3214,8 @@ export type EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrat
 export type EventInstanceRegistrationCondition = {
   /** Checks for equality with the object’s `attendanceCreatedAt` field. */
   attendanceCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `attendanceNote` field. */
+  attendanceNote?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `attendanceUpdatedAt` field. */
   attendanceUpdatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `coupleId` field. */
@@ -3225,6 +3234,8 @@ export type EventInstanceRegistrationCondition = {
   parentRegistrationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `registrationStatus` field. */
+  registrationStatus?: InputMaybe<EventInstanceRegistrationStatus>;
   /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<AttendanceType>;
   /** Checks for equality with the object’s `targetCohortId` field. */
@@ -3234,6 +3245,11 @@ export type EventInstanceRegistrationCondition = {
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
+
+/** Registration lifecycle, separate from attendance. */
+export type EventInstanceRegistrationStatus =
+  | 'ACTIVE'
+  | 'CANCELLED';
 
 /** A connection to a list of `EventInstanceRegistration` values. */
 export type EventInstanceRegistrationsConnection = {
@@ -3261,6 +3277,8 @@ export type EventInstanceRegistrationsEdge = {
 export type EventInstanceRegistrationsOrderBy =
   | 'ATTENDANCE_CREATED_AT_ASC'
   | 'ATTENDANCE_CREATED_AT_DESC'
+  | 'ATTENDANCE_NOTE_ASC'
+  | 'ATTENDANCE_NOTE_DESC'
   | 'ATTENDANCE_UPDATED_AT_ASC'
   | 'ATTENDANCE_UPDATED_AT_DESC'
   | 'COUPLE_ID_ASC'
@@ -3282,6 +3300,8 @@ export type EventInstanceRegistrationsOrderBy =
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'REGISTRATION_STATUS_ASC'
+  | 'REGISTRATION_STATUS_DESC'
   | 'STATUS_ASC'
   | 'STATUS_DESC'
   | 'TARGET_COHORT_ID_ASC'
@@ -4390,12 +4410,14 @@ export type Mutation = {
   deleteTransactionByTenantIdAndId: Maybe<DeleteTransactionPayload>;
   /** Deletes a single `UserProxy` using a unique key. */
   deleteUserProxy: Maybe<DeleteUserProxyPayload>;
+  /** Clones the legacy event for one instance while preserving attendance. */
   detachEventInstance: Maybe<DetachEventInstancePayload>;
   editRegistration: Maybe<EditRegistrationPayload>;
   logInAs: Maybe<LogInAsPayload>;
   login: Maybe<LoginPayload>;
   moveEventInstance: Maybe<MoveEventInstancePayload>;
   otpLogin: Maybe<OtpLoginPayload>;
+  quickCreateEventInstances: Maybe<QuickCreateEventInstancesPayload>;
   quickCreateEvents: Maybe<QuickCreateEventsPayload>;
   registerToEventMany: Maybe<RegisterToEventManyPayload>;
   registerUsingInvitation: Maybe<RegisterUsingInvitationPayload>;
@@ -4755,6 +4777,12 @@ export type MutationMoveEventInstanceArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationOtpLoginArgs = {
   input: OtpLoginInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationQuickCreateEventInstancesArgs = {
+  input: QuickCreateEventInstancesInput;
 };
 
 
@@ -6567,6 +6595,28 @@ export type QueryWdsfAthleteArgs = {
   min?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** All input for the `quickCreateEventInstances` mutation. */
+export type QuickCreateEventInstancesInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  events?: InputMaybe<Array<InputMaybe<QuickEventInputRecordInput>>>;
+  parentId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** The output of our `quickCreateEventInstances` mutation. */
+export type QuickCreateEventInstancesPayload = {
+  __typename?: 'QuickCreateEventInstancesPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  eventInstances: Maybe<Array<EventInstance>>;
+};
+
 /** All input for the `quickCreateEvents` mutation. */
 export type QuickCreateEventsInput = {
   /**
@@ -8123,9 +8173,8 @@ export type UpdateAttendanceInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  instanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  eirId?: InputMaybe<Scalars['BigInt']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
-  personId?: InputMaybe<Scalars['BigInt']['input']>;
   status?: InputMaybe<AttendanceType>;
 };
 
@@ -9222,6 +9271,7 @@ export type GraphCacheKeysConfig = {
   PersonInvitation?: (data: WithTypename<PersonInvitation>) => null | string,
   Posting?: (data: WithTypename<Posting>) => null | string,
   Price?: (data: WithTypename<Price>) => null | string,
+  QuickCreateEventInstancesPayload?: (data: WithTypename<QuickCreateEventInstancesPayload>) => null | string,
   QuickCreateEventsPayload?: (data: WithTypename<QuickCreateEventsPayload>) => null | string,
   RegisterToEventManyPayload?: (data: WithTypename<RegisterToEventManyPayload>) => null | string,
   RegisterUsingInvitationPayload?: (data: WithTypename<RegisterUsingInvitationPayload>) => null | string,
@@ -10052,6 +10102,7 @@ export type GraphCacheResolvers = {
   },
   EventInstanceRegistration?: {
     attendanceCreatedAt?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    attendanceNote?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
     attendanceUpdatedAt?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     couple?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<Couple> | string>,
     coupleId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -10068,6 +10119,7 @@ export type GraphCacheResolvers = {
     parentRegistrationId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    registrationStatus?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, EventInstanceRegistrationStatus | string>,
     status?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, AttendanceType | string>,
     targetCohort?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<EventTargetCohort> | string>,
     targetCohortId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -10424,6 +10476,10 @@ export type GraphCacheResolvers = {
   Price?: {
     amount?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     currency?: GraphCacheResolver<WithTypename<Price>, Record<string, never>, Scalars['String']['output'] | string>
+  },
+  QuickCreateEventInstancesPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<QuickCreateEventInstancesPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    eventInstances?: GraphCacheResolver<WithTypename<QuickCreateEventInstancesPayload>, Record<string, never>, Array<WithTypename<EventInstance> | string>>
   },
   QuickCreateEventsPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<QuickCreateEventsPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -10912,6 +10968,7 @@ export type GraphCacheOptimisticUpdaters = {
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
   otpLogin?: GraphCacheOptimisticMutationResolver<MutationOtpLoginArgs, Maybe<WithTypename<OtpLoginPayload>>>,
+  quickCreateEventInstances?: GraphCacheOptimisticMutationResolver<MutationQuickCreateEventInstancesArgs, Maybe<WithTypename<QuickCreateEventInstancesPayload>>>,
   quickCreateEvents?: GraphCacheOptimisticMutationResolver<MutationQuickCreateEventsArgs, Maybe<WithTypename<QuickCreateEventsPayload>>>,
   registerToEventMany?: GraphCacheOptimisticMutationResolver<MutationRegisterToEventManyArgs, Maybe<WithTypename<RegisterToEventManyPayload>>>,
   registerUsingInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterUsingInvitationArgs, Maybe<WithTypename<RegisterUsingInvitationPayload>>>,
@@ -11078,6 +11135,7 @@ export type GraphCacheUpdaters = {
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
     otpLogin?: GraphCacheUpdateResolver<{ otpLogin: Maybe<WithTypename<OtpLoginPayload>> }, MutationOtpLoginArgs>,
+    quickCreateEventInstances?: GraphCacheUpdateResolver<{ quickCreateEventInstances: Maybe<WithTypename<QuickCreateEventInstancesPayload>> }, MutationQuickCreateEventInstancesArgs>,
     quickCreateEvents?: GraphCacheUpdateResolver<{ quickCreateEvents: Maybe<WithTypename<QuickCreateEventsPayload>> }, MutationQuickCreateEventsArgs>,
     registerToEventMany?: GraphCacheUpdateResolver<{ registerToEventMany: Maybe<WithTypename<RegisterToEventManyPayload>> }, MutationRegisterToEventManyArgs>,
     registerUsingInvitation?: GraphCacheUpdateResolver<{ registerUsingInvitation: Maybe<WithTypename<RegisterUsingInvitationPayload>> }, MutationRegisterUsingInvitationArgs>,
@@ -11818,6 +11876,7 @@ export type GraphCacheUpdaters = {
   },
   EventInstanceRegistration?: {
     attendanceCreatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
+    attendanceNote?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     attendanceUpdatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     couple?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     coupleId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
@@ -11834,6 +11893,7 @@ export type GraphCacheUpdaters = {
     parentRegistrationId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
+    registrationStatus?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     status?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     targetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
@@ -12190,6 +12250,10 @@ export type GraphCacheUpdaters = {
   Price?: {
     amount?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Price>>, Record<string, never>>
+  },
+  QuickCreateEventInstancesPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<QuickCreateEventInstancesPayload>>, Record<string, never>>,
+    eventInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<QuickCreateEventInstancesPayload>>, Record<string, never>>
   },
   QuickCreateEventsPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<QuickCreateEventsPayload>>, Record<string, never>>,

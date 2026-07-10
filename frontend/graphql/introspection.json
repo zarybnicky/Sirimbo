@@ -6766,8 +6766,11 @@
           {
             "name": "capacityUnit",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -7492,6 +7495,14 @@
             "args": []
           },
           {
+            "name": "attendanceNote",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "attendanceUpdatedAt",
             "type": {
               "kind": "SCALAR",
@@ -7690,6 +7701,17 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "registrationStatus",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -10712,6 +10734,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "OtpLoginPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "quickCreateEventInstances",
+            "type": {
+              "kind": "OBJECT",
+              "name": "QuickCreateEventInstancesPayload",
               "ofType": null
             },
             "args": [
@@ -16374,6 +16416,36 @@
                 }
               }
             ]
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "QuickCreateEventInstancesPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "eventInstances",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "EventInstance",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
+            },
+            "args": []
           }
         ],
         "interfaces": []

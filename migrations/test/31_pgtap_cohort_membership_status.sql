@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(18);
+SELECT tap.plan(26);
 
 -- Fixtures
 -- People:
@@ -173,6 +173,33 @@ SELECT tap.ok(
   'updating attendance advances the attendance-specific audit timestamp exposed by the compatibility view'
 );
 
+CREATE TEMP TABLE _attendance_audit_after ON COMMIT DROP AS
+SELECT attendance_updated_at
+FROM event_instance_registration
+WHERE instance_id = 900001 AND person_id = 200002;
+
+UPDATE event_registration
+SET note = 'Registration note regression test'
+WHERE event_id = 700001 AND person_id = 200002;
+
+SELECT tap.ok(
+  (
+    SELECT eir.attendance_updated_at = after.attendance_updated_at
+      AND eir.note = 'Registration note regression test'
+      AND ea.note = 'Audit timestamp regression test'
+    FROM event_instance_registration eir
+    JOIN event_attendance ea ON ea.id = eir.id
+    CROSS JOIN _attendance_audit_after after
+    WHERE eir.instance_id = 900001 AND eir.person_id = 200002
+  ),
+  'registration-note edits do not advance or overwrite attendance audit data'
+);
+
+SELECT tap.ok(
+  NOT EXISTS (SELECT 1 FROM event_instance_registration WHERE registration_status <> 'active'),
+  'legacy root and child rows start with an active registration lifecycle'
+);
+
 SELECT set_config('jwt.claims.tenant_id', '1000', true);
 
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
@@ -219,7 +246,8 @@ INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING S
 VALUES
   (2900002, 'Trainer', 'Policy', 'unspecified', ''),
   (2900003, 'Participant', 'Policy', 'unspecified', ''),
-  (2900004, 'Other trainer', 'Policy', 'unspecified', '');
+  (2900004, 'Other trainer', 'Policy', 'unspecified', ''),
+  (2900005, 'Other participant', 'Policy', 'unspecified', '');
 
 INSERT INTO event_instance (id, tenant_id, since, until) OVERRIDING SYSTEM VALUE
 VALUES (9900003, 1000, now() + interval '4 hours', now() + interval '5 hours');
@@ -228,6 +256,23 @@ INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id)
 VALUES
   (1000, 9900001, 2900002),
   (1000, 9900003, 2900004);
+
+UPDATE event_instance SET is_public = true WHERE id = 9900003;
+
+INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, status)
+VALUES (1000, 9900003, 2900005, 'unknown');
+
+INSERT INTO event_trainer (tenant_id, event_id, person_id, lessons_offered)
+VALUES (1000, 700001, 2900002, 1);
+
+INSERT INTO event_lesson_demand (
+  tenant_id, trainer_id, registration_id, lesson_count, event_id
+)
+SELECT 1000, et.id, er.id, 1, 700001
+FROM event_trainer et
+JOIN event_registration er
+  ON er.event_id = et.event_id AND er.person_id = 200002
+WHERE et.event_id = 700001 AND et.person_id = 2900002;
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 GRANT USAGE ON SCHEMA tap TO trainer;
@@ -240,6 +285,42 @@ SELECT tap.lives_ok(
     values (1000, 9900001, 2900003, 'unknown')
   $$,
   'a trainer can insert attendance for an instance they manage'
+);
+
+SELECT tap.is(
+  (
+    SELECT (
+      public.update_attendance(
+        eir.id,
+        'attended',
+        'ID-targeted attendance note'
+      )
+    ).id
+    FROM event_instance_registration eir
+    WHERE eir.instance_id = 900001 AND eir.person_id = 200002
+  ),
+  (
+    SELECT id
+    FROM event_instance_registration
+    WHERE instance_id = 900001 AND person_id = 200002
+  ),
+  'ID-targeted attendance mutation returns the canonical EIR row'
+);
+
+SELECT tap.is(
+  (
+    public.update_attendance(
+      (
+        SELECT id
+        FROM event_instance_registration
+        WHERE instance_id = 9900003 AND person_id = 2900005
+      ),
+      'attended',
+      'Forbidden update'
+    )
+  ).id,
+  null::bigint,
+  'RLS prevents a trainer from updating attendance for another trainer''s instance'
 );
 
 SELECT tap.throws_ok(
@@ -263,18 +344,108 @@ SELECT tap.throws_ok(
   'a trainer cannot insert attendance for an instance they do not manage'
 );
 
+CREATE TEMP TABLE _native_child ON COMMIT DROP AS
+SELECT id
+FROM public.quick_create_event_instances(
+  ARRAY[
+    ROW(
+      now() + interval '6 hours',
+      now() + interval '7 hours',
+      'lesson'::event_type,
+      null::bigint,
+      'Native lesson',
+      ARRAY[2900002]::bigint[],
+      ARRAY[ROW(2900003, null)::quick_event_registration_input]
+    )::quick_event_input
+  ],
+  9900001
+);
+
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1
+    FROM event_instance child
+    WHERE child.id = (SELECT id FROM _native_child)
+      AND child.event_id is null
+      AND child.parent_id = 9900001
+      AND 2900002 = any(child.manager_person_ids)
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instance_registration registration
+    WHERE registration.instance_id = (SELECT id FROM _native_child)
+      AND registration.person_id = 2900003
+      AND registration.registration_status = 'active'
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instances_for_range(
+      null, now(), now() + interval '1 day', null, null, false, 9900001
+    ) child
+    WHERE child.id = (SELECT id FROM _native_child)
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM event_instances_for_range(
+      null, now(), now() + interval '1 day', null, null, false, null
+    ) root
+    WHERE root.id = (SELECT id FROM _native_child)
+  ),
+  'quick creation makes a managed native child with registration and scoped range'
+);
+
+SELECT tap.lives_ok(
+  format(
+    'insert into event_instance (tenant_id, parent_id, since, until) values (1000, %s, now() + interval ''8 hours'', now() + interval ''9 hours'')',
+    (SELECT id FROM _native_child)
+  ),
+  'event instance schedules may be nested'
+);
+
+SELECT tap.throws_ok(
+  'delete from event_instance where id = 9900001',
+  '23503'::char(5),
+  null,
+  'a schedule parent cannot be deleted while it has lessons'
+);
+
 RESET ROLE;
+
+SELECT tap.ok(
+  (
+    SELECT eir.status = 'attended'
+      AND eir.attendance_note = 'ID-targeted attendance note'
+      AND ea.note = eir.attendance_note
+      AND eir.attendance_updated_at > after.attendance_updated_at
+    FROM event_instance_registration eir
+    JOIN event_attendance ea ON ea.id = eir.id
+    CROSS JOIN _attendance_audit_after after
+    WHERE eir.instance_id = 900001 AND eir.person_id = 200002
+  ),
+  'ID-targeted mutation updates attendance fields and the compatibility view'
+);
+
+CREATE TEMP TABLE _stats_before_cancel ON COMMIT DROP AS
+SELECT (stats->>'TOTAL')::int AS total
+FROM event_instance
+WHERE id = 900001;
+
+UPDATE event_instance_registration
+SET registration_status = 'cancelled'
+WHERE instance_id = 900001 AND person_id = 200002;
 
 CREATE TEMP TABLE _detached_audit_before ON COMMIT DROP AS
 SELECT person_id, attendance_created_at, attendance_updated_at
 FROM event_instance_registration
 WHERE instance_id = 900001 AND person_id is not null;
 
+SET LOCAL ROLE trainer;
+
 SELECT tap.is(
-  (public.detach_event_instance(900001, 1000, 'Detached test event')).name,
+  (public.detach_event_instance(900001, 'Detached test event')).name,
   'Detached test event',
-  'detaching an event instance returns the cloned event'
+  'an assigned trainer can detach an instance with lesson demand'
 );
+
+RESET ROLE;
 
 SELECT tap.ok(
   NOT EXISTS (
@@ -285,8 +456,24 @@ SELECT tap.ok(
     WHERE eir.id is null
       OR eir.attendance_created_at is distinct from before.attendance_created_at
       OR eir.attendance_updated_at is distinct from before.attendance_updated_at
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instance ei
+    JOIN event_lesson_demand d ON d.event_id = ei.event_id
+    WHERE ei.id = 900001
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = 900001
+      AND person_id = 200002
+      AND registration_status = 'cancelled'
+  ) AND (
+    SELECT (instance.stats->>'TOTAL')::int = before.total - 1
+    FROM event_instance instance
+    CROSS JOIN _stats_before_cancel before
+    WHERE instance.id = 900001
   ),
-  'detaching an event instance preserves attendance audit timestamps'
+  'detaching preserves registration, attendance audit, and lesson demand'
 );
 
 SELECT tap.finish();

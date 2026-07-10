@@ -4,7 +4,6 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 
 ## Workflow expectations
 - Use the checked-in PNPM 10 workspaces (Node 24.x) for JavaScript/TypeScript tooling.
-- Keep the repo tidy: run targeted commands rather than regenerating every artifact. In particular **do not commit regenerated GraphQL codegen output** (the typed client definitions in `frontend/graphql`); only update them when explicitly requested and include them in a separate PR if needed.
 - Prefer incremental SQL migrations. When altering the database, author idempotent scripts in `migrations/current/1-current.sql` (or add fixtures under `migrations/fixtures/...`) and rely on Graphile Migrate to promote them.
 - `schema/` is generated from the canonical `schema.sql` dump via `python schema/split.py < schema.sql`. Do not hand-edit files under `schema/`—regenerate from the dump instead.
 

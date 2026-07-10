@@ -21,17 +21,16 @@ as $$
       ei.since,
       ei.until,
       ei.range,
-      e.id as event_id,
-      e.name as event_name,
-      ea.status
+      ei.event_id,
+      ei.name as event_name
     from public.event_instance_registration ea
     join public.event_instance ei on ei.id = ea.instance_id
-    join public.event e on e.id = ei.event_id
     join public.person p on p.id = ea.person_id
     join target_range tr on true
     where
       ei.tenant_id = public.current_tenant_id()
       and ea.person_id is not null
+      and ea.registration_status = 'active'
       and not ei.is_cancelled
       and ea.status <> 'cancelled'
       and ei.range && tr.range
@@ -81,48 +80,22 @@ as $$
   ),
   trainer_instances as (
     select
-      eit.person_id,
+      trainer.person_id,
       p.name as person_name,
       ei.id as instance_id,
       ei.since,
       ei.until,
       ei.range,
-      e.id as event_id,
-      e.name as event_name
-    from public.event_instance_trainer eit
-    join public.event_instance ei on ei.id = eit.instance_id
-    join public.event e on e.id = ei.event_id
-    join public.person p on p.id = eit.person_id
+      ei.event_id,
+      ei.name as event_name
+    from public.event_instance ei
+    cross join lateral app_private.event_instance_trainers_at(ei, ei.since) trainer
+    join public.person p on p.id = trainer.person_id
     join target_range tr on true
     where
       ei.tenant_id = public.current_tenant_id()
       and not ei.is_cancelled
       and ei.range && tr.range
-    union all
-    select
-      et.person_id,
-      p.name as person_name,
-      ei.id as instance_id,
-      ei.since,
-      ei.until,
-      ei.range,
-      e.id as event_id,
-      e.name as event_name
-    from public.event_trainer et
-    join public.event_instance ei on ei.event_id = et.event_id
-    join public.event e on e.id = ei.event_id
-    join public.person p on p.id = et.person_id
-    join target_range tr on true
-    where
-      ei.tenant_id = public.current_tenant_id()
-      and not ei.is_cancelled
-      and ei.range && tr.range
-      and not exists (
-        select 1
-        from public.event_instance_trainer eit
-        where eit.instance_id = ei.id
-          and eit.person_id = et.person_id
-      )
   )
   select
     ti1.person_id,
