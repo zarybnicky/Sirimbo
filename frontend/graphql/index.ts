@@ -2518,7 +2518,6 @@ export type DetachEventInstanceInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   pNewEventName?: InputMaybe<Scalars['String']['input']>;
-  pTenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** The output of our `detachEventInstance` mutation. */
@@ -4410,7 +4409,6 @@ export type Mutation = {
   deleteTransactionByTenantIdAndId: Maybe<DeleteTransactionPayload>;
   /** Deletes a single `UserProxy` using a unique key. */
   deleteUserProxy: Maybe<DeleteUserProxyPayload>;
-  /** Clones the legacy event for one instance while preserving attendance. */
   detachEventInstance: Maybe<DetachEventInstancePayload>;
   editRegistration: Maybe<EditRegistrationPayload>;
   logInAs: Maybe<LogInAsPayload>;

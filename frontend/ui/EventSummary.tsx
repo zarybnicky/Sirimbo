@@ -26,7 +26,10 @@ export function EventSummary({
   offsetButtons?: boolean;
 }) {
   const actions = useActions(eventInstanceActions, instance);
-  const registrationCount = instance.registrations.totalCount;
+  const registrations = instance.eventId
+    ? instance.registrations
+    : instance.instanceRegistrations;
+  const registrationCount = registrations.totalCount;
   const myRegistrations = instance.myRegistrationsList || [];
   const start = new Date(instance.since);
   const end = new Date(instance.until);
@@ -90,7 +93,7 @@ export function EventSummary({
                 : []),
             ]
           ) : registrationCount < 6 ? (
-            instance.registrations.nodes.map((x) => (
+            registrations.nodes.map((x) => (
               <div key={x.id}>{formatRegistrant(x)}</div>
             ))
           ) : (

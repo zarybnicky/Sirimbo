@@ -10,6 +10,7 @@ export function MyRegistrationsDialog({ instance }: { instance: EventInstanceWit
   const myRegistrations = instance?.myRegistrationsList || [];
 
   if (
+    !instance.eventId ||
     instance.isLocked ||
     new Date(instance.until) < new Date() ||
       ((instance.capacity ?? 0) > 0 && (instance.remainingPersonSpots ?? 0) <= 0 &&

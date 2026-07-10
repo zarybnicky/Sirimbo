@@ -1,6 +1,7 @@
 import type { EventType } from '@/graphql';
 import {
   type EventInstanceWithTrainerFragment,
+  QuickCreateEventInstancesDocument,
   QuickCreateEventsDocument,
   UpdateEventInstanceDetailsDocument,
 } from '@/graphql/Event';
@@ -46,11 +47,14 @@ type EventFormInput = z.input<typeof EventForm>;
 
 export function QuickEventCreateForm({
   defaults,
+  parentId,
 }: {
   defaults: QuickEventCreateDefaults;
+  parentId?: string;
 }) {
   const { onSuccess } = useFormResult();
   const createEvents = useMutation(QuickCreateEventsDocument)[1];
+  const createInstances = useMutation(QuickCreateEventInstancesDocument)[1];
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitRegistrationIds, setSplitRegistrationIds] = React.useState<
@@ -162,33 +166,38 @@ export function QuickEventCreateForm({
       : [{ since: new Date(instance.since), until: new Date(instance.until) }];
     const location = eventLocationInput(values);
 
-    const result = await createEvents({
-      input: {
-        events: ranges.map((range) => {
-          const [registrationKind, registrationId] =
-            splitRegistrationIds[range.since.toISOString()]?.split(':') ?? [];
-          const splitRegistration =
-            splitLessons &&
-            registrationId &&
-            (registrationKind === 'person' || registrationKind === 'couple')
-              ? [
-                  {
-                    personId: registrationKind === 'person' ? registrationId : null,
-                    coupleId: registrationKind === 'couple' ? registrationId : null,
-                  },
-                ]
-              : [];
-          return {
-            since: range.since.toISOString(),
-            until: range.until.toISOString(),
-            type: splitLessons ? 'LESSON' : values.type,
-            ...location,
-            trainerPersonIds,
-            registrations: splitLessons ? splitRegistration : selectedRegistrations,
-          };
-        }),
-      },
+    const events = ranges.map((range) => {
+      const [registrationKind, registrationId] =
+        splitRegistrationIds[range.since.toISOString()]?.split(':') ?? [];
+      const splitRegistration =
+        splitLessons &&
+        registrationId &&
+        (registrationKind === 'person' || registrationKind === 'couple')
+          ? [
+              {
+                personId: registrationKind === 'person' ? registrationId : null,
+                coupleId: registrationKind === 'couple' ? registrationId : null,
+              },
+            ]
+          : [];
+      return {
+        since: range.since.toISOString(),
+        until: range.until.toISOString(),
+        type: splitLessons ? 'LESSON' : values.type,
+        ...location,
+        trainerPersonIds,
+        registrations: splitLessons ? splitRegistration : selectedRegistrations,
+      };
     });
+
+    if (parentId) {
+      const result = await createInstances({ input: { events, parentId } });
+      if (result.error) throw result.error;
+      if (result.data?.quickCreateEventInstances?.eventInstances?.length) onSuccess();
+      return;
+    }
+
+    const result = await createEvents({ input: { events } });
     if (result.error) throw result.error;
     if (result.data?.quickCreateEvents?.events?.length) onSuccess();
   });
@@ -276,14 +285,18 @@ export function QuickEventCreateForm({
       )}
 
       <div className="flex items-center justify-between gap-2 pt-1">
-        <button
-          type="button"
-          className={buttonCls({ variant: 'outline' })}
-          onClick={() => setFullInitialValue(getValues())}
-        >
-          Více možností
-          <ChevronDown />
-        </button>
+        {parentId ? (
+          <span />
+        ) : (
+          <button
+            type="button"
+            className={buttonCls({ variant: 'outline' })}
+            onClick={() => setFullInitialValue(getValues())}
+          >
+            Více možností
+            <ChevronDown />
+          </button>
+        )}
         <SubmitButton loading={onSubmit.loading}>Vytvořit</SubmitButton>
       </div>
     </form>
@@ -385,14 +398,18 @@ export function QuickInstanceEditForm({
       />
 
       <div className="flex items-center justify-between gap-2 pt-1">
-        <button
-          type="button"
-          className={buttonCls({ variant: 'outline' })}
-          onClick={() => setFullForm(true)}
-        >
-          Více možností
-          <ChevronDown />
-        </button>
+        {instance.eventId ? (
+          <button
+            type="button"
+            className={buttonCls({ variant: 'outline' })}
+            onClick={() => setFullForm(true)}
+          >
+            Více možností
+            <ChevronDown />
+          </button>
+        ) : (
+          <span />
+        )}
         <SubmitButton loading={onSubmit.loading}>Uložit</SubmitButton>
       </div>
     </form>

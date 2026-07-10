@@ -35,7 +35,10 @@ const emptyArray: readonly [] = [];
 const preventDefault = (e: Event) => e.preventDefault();
 const calendarViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
 
-export function Calendar({ parentId }: { parentId?: string }) {
+export function Calendar({
+  parentId,
+  initialDate,
+}: { parentId?: string; initialDate?: string }) {
   const auth = useAuth();
   const [onlyMine, setOnlyMine] = useQueryState(
     'my',
@@ -48,7 +51,7 @@ export function Calendar({ parentId }: { parentId?: string }) {
       .withOptions({ history: 'push' }),
   );
   const view = CalendarViews[viewInput];
-  const [date, setDate] = React.useState(new Date());
+  const [date, setDate] = React.useState(() => initialDate ? new Date(initialDate) : new Date());
 
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragListeners = useSetAtom(dragListenersAtom);
@@ -172,7 +175,7 @@ export function Calendar({ parentId }: { parentId?: string }) {
           modal={false}
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            {creating && <QuickEventCreateForm defaults={creating} />}
+            {creating && <QuickEventCreateForm defaults={creating} parentId={parentId} />}
           </DialogContent>
         </Dialog>
       )}

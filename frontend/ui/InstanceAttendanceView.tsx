@@ -1,5 +1,5 @@
 import {
-  type EventAttendanceFragment,
+  type EventInstanceRegistrationAttendanceFragment,
   EventInstanceWithAttendanceDocument,
   UpdateAttendanceDocument,
 } from '@/graphql/Event';
@@ -27,7 +27,8 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   if (!instance) return null;
 
   const canEditAttendance = canManageInstance({ auth, item: instance });
-  const attendanceList = instance.eventAttendancesByInstanceIdList
+  const attendanceList = instance.eventInstanceRegistrationsByInstanceId.nodes
+    .filter(keyIsNonNull('status'))
     .filter((x) => x.status !== 'CANCELLED')
     .filter(keyIsNonNull('person'))
     .toSorted((x, y) =>
@@ -43,7 +44,7 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   return (
     <div className="prose prose-accent max-w-none">
       <Link
-        href={`/akce/${instance.eventId}?tab=attendance`}
+        href={instance.eventId ? `/akce/${instance.eventId}?tab=attendance` : '/akce'}
       >
         Zpět na seznam termínů
       </Link>
@@ -74,8 +75,8 @@ export function InstanceAttendanceView({ id }: { id: string }) {
                 {canEditAttendance && (
                   <div className="text-xs text-neutral-9">
                     Poslední účast:{' '}
-                    {x.registration?.lastAttended
-                      ? dateTimeFormatter.format(new Date(x.registration.lastAttended))
+                    {x.lastAttended
+                      ? dateTimeFormatter.format(new Date(x.lastAttended))
                       : '—'}
                   </div>
                 )}
@@ -117,7 +118,7 @@ function isAttendanceType(x: string): x is AttendanceType {
 function AttendanceItem({
   attendance,
 }: {
-  attendance: Partial<EventAttendanceFragment>;
+  attendance: EventInstanceRegistrationAttendanceFragment;
 }) {
   const update = useMutation(UpdateAttendanceDocument)[1];
   const setStatus = useAsyncCallback(async (status: string) => {
@@ -125,10 +126,9 @@ function AttendanceItem({
     if (isAttendanceType(nextStatus)) {
       await update({
         input: {
+          eirId: attendance.id,
+          note: attendance.attendanceNote,
           status: nextStatus,
-          instanceId: attendance.instanceId,
-          note: attendance.note,
-          personId: attendance.personId,
         },
       });
     }

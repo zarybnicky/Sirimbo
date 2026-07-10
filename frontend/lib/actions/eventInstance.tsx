@@ -74,18 +74,32 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
   },
   {
     id: 'eventInstance.detach',
-    label: 'Oddělit termín',
+    label: ({ item }) => (item.parentId ? 'Vyjmout z programu' : 'Oddělit termín'),
     icon: GitBranch,
-    visible: canManageInstance,
-    confirm: {
-      description: [
-        'Opravdu chcete oddělit tento termín do samostatné události?',
-        'Termín bude odebrán z původní události a vytvoří se nová událost se stejným nastavením.',
-      ].join(' '),
-      confirmationText: 'Oddělit termín',
-    },
+    visible: ({ item, auth }) =>
+      canManageInstance({ item, auth }) && !!(item.parentId || item.eventId),
+    confirm: ({ item }) =>
+      item.parentId
+        ? {
+            description: 'Opravdu chcete termín vyjmout z programu?',
+            confirmationText: 'Vyjmout termín',
+          }
+        : {
+            description: [
+              'Opravdu chcete oddělit tento termín do samostatné události?',
+              'Termín bude odebrán z původní události a vytvoří se nová událost se stejným nastavením.',
+            ].join(' '),
+            confirmationText: 'Oddělit termín',
+          },
     execute: async ({ item, mutate }) => {
-      await mutate(DetachEventInstanceDocument, { id: item.id });
+      if (item.parentId) {
+        await mutate(UpdateEventInstanceDocument, {
+          id: item.id,
+          patch: { parentId: null },
+        });
+      } else {
+        await mutate(DetachEventInstanceDocument, { id: item.id });
+      }
     },
   },
   {

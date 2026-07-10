@@ -108,7 +108,50 @@ fragment EventInstanceWithTrainer on EventInstance {
   registrations(first: 3) {
     totalCount
     nodes {
-      ...EventRegistration
+      id
+      person {
+        id
+        name
+      }
+      couple {
+        id
+        man {
+          id
+          name
+          lastName
+        }
+        woman {
+          id
+          name
+          lastName
+        }
+      }
+    }
+  }
+  instanceRegistrations: eventInstanceRegistrationsByInstanceId(
+    condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
+    first: 3
+  ) {
+    totalCount
+    nodes {
+      id
+      person {
+        id
+        name
+      }
+      couple {
+        id
+        man {
+          id
+          name
+          lastName
+        }
+        woman {
+          id
+          name
+          lastName
+        }
+      }
     }
   }
 }
@@ -121,17 +164,13 @@ fragment EventAttendanceSummary on Event {
   }
 }
 
-fragment EventAttendance on EventAttendance {
+fragment EventInstanceRegistrationAttendance on EventInstanceRegistration {
   id
-  personId
-  instanceId
-  registrationId
   status
-  note
-  registration {
-    id
-    lastAttended
-  }
+  attendanceNote
+  attendanceCreatedAt
+  attendanceUpdatedAt
+  lastAttended
   person {
     id
     name
@@ -230,20 +269,11 @@ query EventPayments($id: BigInt!) {
 query EventInstanceWithAttendance($id: BigInt!) {
   eventInstance(id: $id) {
     ...EventInstanceWithTrainer
-    eventAttendancesByInstanceIdList {
-      ...EventAttendance
-    }
-    event {
-      id
-      name
-      registrantsList {
-        id
-        name
-      }
-      eventTrainersList {
-        id
-        name
-        personId
+    eventInstanceRegistrationsByInstanceId(
+      condition: { registrationStatus: ACTIVE }
+    ) {
+      nodes {
+        ...EventInstanceRegistrationAttendance
       }
     }
   }
@@ -310,13 +340,18 @@ mutation QuickCreateEvents($input: QuickCreateEventsInput!) {
   }
 }
 
+mutation QuickCreateEventInstances($input: QuickCreateEventInstancesInput!) {
+  quickCreateEventInstances(input: $input) {
+    eventInstances {
+      id
+    }
+  }
+}
+
 mutation UpdateEventInstanceDetails($input: UpdateEventInstanceDetailsInput!) {
   updateEventInstanceDetails(input: $input) {
     eventInstance {
-      ...EventInstanceWithTrainer
-      event {
-        ...Event
-      }
+      id
     }
   }
 }
@@ -415,18 +450,39 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
 mutation MoveEventInstance($input: MoveEventInstanceInput!) {
   moveEventInstance(input: $input) {
     eventInstance {
-      ...EventInstanceWithTrainer
-      event {
-        ...Event
+      id
+      since
+      until
+      locationText
+      location {
+        id
+        name
       }
+      eventInstanceTrainersByInstanceIdList {
+        id
+        personId
+      }
+      trainersList {
+        id
+        personId
+        person {
+          id
+          name
+        }
+      }
+      managerPersonIds
     }
   }
 }
 
-mutation UpdateAttendance($input: UpdateEventAttendanceInput!) {
-  updateEventAttendance(input: $input) {
-    eventAttendance {
-      ...EventAttendance
+mutation UpdateAttendance($input: UpdateAttendanceInput!) {
+  updateAttendance(input: $input) {
+    eventInstanceRegistration {
+      id
+      status
+      attendanceNote
+      attendanceUpdatedAt
+      lastAttended
     }
   }
 }

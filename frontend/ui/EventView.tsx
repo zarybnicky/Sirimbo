@@ -79,7 +79,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
         tabs.push({
           id: 'schedule',
           title: 'Program',
-          contents: () => <Calendar parentId={parentId} />,
+          contents: () => <Calendar parentId={parentId} initialDate={event.eventInstancesList[0]!.since} />,
         });
       }
     }

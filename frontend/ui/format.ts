@@ -3,7 +3,7 @@ import type { EventRegistrationFragment } from '@/graphql/Event';
 import type { PaymentFragment } from '@/graphql/Payment';
 
 type MaybePerson =
-  | { name?: string | null; firstName: string; lastName: string }
+  | { name?: string | null; firstName?: string; lastName?: string }
   | null
   | undefined;
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson } | null | undefined;
@@ -29,11 +29,15 @@ export const formatEventType = (type: EventType | null | undefined) =>
   type ? names[type] : '';
 
 export const formatDefaultInstanceName = (event: {
+  eventId: string | null;
   name: string | null;
   type: EventType | null;
   registrations: {
-    nodes: EventRegistrationFragment[] | null;
+    nodes: MaybeRegistration[] | null;
   } | null;
+  instanceRegistrations: {
+    nodes: MaybeRegistration[] | null;
+  };
   trainersList: {
     person: {
       name?: string | null;
@@ -42,8 +46,11 @@ export const formatDefaultInstanceName = (event: {
 }) => {
   if (event.name) return event.name;
 
-  if (event.type === 'LESSON' && event?.registrations?.nodes && event.registrations.nodes.length > 0)
-    return event.registrations.nodes.map(formatRegistrant).join(', ');
+  const registrations = event.eventId
+    ? event.registrations?.nodes
+    : event.instanceRegistrations.nodes;
+  if (event.type === 'LESSON' && registrations?.length)
+    return registrations.map(formatRegistrant).join(', ');
 
   let name = formatEventType(event.type);
   if (event.type === 'RESERVATION' && event?.trainersList && event.trainersList.length > 0)

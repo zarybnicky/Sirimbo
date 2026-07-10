@@ -203,7 +203,7 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarInstanceEvent }
       )}
       <div className="text-sm text-accent-11">{formatEventType(instance.type)}</div>
       <Link
-        href={`/akce/${instance.eventId}`}
+        href={instance.eventId ? `/akce/${instance.eventId}` : `/termin/${instance.id}`}
         className={cn(
           'block mb-2 text-xl',
           instance.isCancelled ? 'line-through' : 'underline',
