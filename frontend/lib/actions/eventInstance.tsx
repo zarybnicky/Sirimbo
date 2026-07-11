@@ -9,7 +9,6 @@ import {
 import {
   DeleteEventInstanceDocument,
   DeleteEventExternalRegistrationDocument,
-  DetachEventInstanceDocument,
   type EventInstanceWithTrainerFragment,
   UpdateEventInstanceDocument,
 } from '@/graphql/Event';
@@ -86,10 +85,7 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
             confirmationText: 'Vyjmout termín',
           }
         : {
-            description: [
-              'Opravdu chcete oddělit tento termín do samostatné události?',
-              'Termín bude odebrán z původní události a vytvoří se nová událost se stejným nastavením.',
-            ].join(' '),
+            description: 'Opravdu chcete tento termín odebrat ze série?',
             confirmationText: 'Oddělit termín',
           },
     execute: async ({ item, mutate }) => {
@@ -99,7 +95,10 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
           patch: { parentId: null },
         });
       } else {
-        await mutate(DetachEventInstanceDocument, { id: item.id });
+        await mutate(UpdateEventInstanceDocument, {
+          id: item.id,
+          patch: { seriesId: null },
+        });
       }
     },
   },

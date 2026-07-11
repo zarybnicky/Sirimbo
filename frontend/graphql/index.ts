@@ -2602,38 +2602,6 @@ export type DeleteUserProxyPayload = {
   userProxy: Maybe<UserProxy>;
 };
 
-/** All input for the `detachEventInstance` mutation. */
-export type DetachEventInstanceInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
-  pNewEventName?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our `detachEventInstance` mutation. */
-export type DetachEventInstancePayload = {
-  __typename?: 'DetachEventInstancePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  event: Maybe<Event>;
-  /** An edge for our `Event`. May be used by Relay 1. */
-  eventEdge: Maybe<EventsEdge>;
-  /** Reads a single `TenantLocation` that is related to this `Event`. */
-  location: Maybe<TenantLocation>;
-};
-
-
-/** The output of our `detachEventInstance` mutation. */
-export type DetachEventInstancePayloadEventEdgeArgs = {
-  orderBy?: Array<EventsOrderBy>;
-};
-
 export type Event = {
   __typename?: 'Event';
   capacity: Scalars['Int']['output'];
@@ -4546,7 +4514,6 @@ export type Mutation = {
   deleteTransactionByTenantIdAndId: Maybe<DeleteTransactionPayload>;
   /** Deletes a single `UserProxy` using a unique key. */
   deleteUserProxy: Maybe<DeleteUserProxyPayload>;
-  detachEventInstance: Maybe<DetachEventInstancePayload>;
   logInAs: Maybe<LogInAsPayload>;
   login: Maybe<LoginPayload>;
   moveEventInstance: Maybe<MoveEventInstancePayload>;
@@ -4890,12 +4857,6 @@ export type MutationDeleteTransactionByTenantIdAndIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserProxyArgs = {
   input: DeleteUserProxyInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDetachEventInstanceArgs = {
-  input: DetachEventInstanceInput;
 };
 
 
@@ -6116,6 +6077,10 @@ export type Query = {
   eventInstancesList: Maybe<Array<EventInstance>>;
   eventOverlapsAttendeeReportList: Maybe<Array<EventOverlapsConflict>>;
   eventOverlapsTrainerReportList: Maybe<Array<EventOverlapsConflict>>;
+  /** Get a single `EventSeries`. */
+  eventSeries: Maybe<EventSeries>;
+  /** Get a single `EventSeries`. */
+  eventSeriesByTenantIdAndId: Maybe<EventSeries>;
   /** Reads and enables pagination through a set of `Event`. */
   events: Maybe<EventsConnection>;
   /** Get a single `FormResponse`. */
@@ -6462,6 +6427,19 @@ export type QueryEventOverlapsTrainerReportListArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   pSince?: InputMaybe<Scalars['Datetime']['input']>;
   pUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventSeriesArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventSeriesByTenantIdAndIdArgs = {
+  id: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 
@@ -9440,7 +9418,6 @@ export type GraphCacheKeysConfig = {
   DeleteTenantTrainerPayload?: (data: WithTypename<DeleteTenantTrainerPayload>) => null | string,
   DeleteTransactionPayload?: (data: WithTypename<DeleteTransactionPayload>) => null | string,
   DeleteUserProxyPayload?: (data: WithTypename<DeleteUserProxyPayload>) => null | string,
-  DetachEventInstancePayload?: (data: WithTypename<DetachEventInstancePayload>) => null | string,
   Event?: (data: WithTypename<Event>) => null | string,
   EventExternalRegistration?: (data: WithTypename<EventExternalRegistration>) => null | string,
   EventInstance?: (data: WithTypename<EventInstance>) => null | string,
@@ -9580,6 +9557,8 @@ export type GraphCacheResolvers = {
     eventInstancesList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventOverlapsAttendeeReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsAttendeeReportListArgs, Array<WithTypename<EventOverlapsConflict> | string>>,
     eventOverlapsTrainerReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsTrainerReportListArgs, Array<WithTypename<EventOverlapsConflict> | string>>,
+    eventSeries?: GraphCacheResolver<WithTypename<Query>, QueryEventSeriesArgs, WithTypename<EventSeries> | string>,
+    eventSeriesByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryEventSeriesByTenantIdAndIdArgs, WithTypename<EventSeries> | string>,
     events?: GraphCacheResolver<WithTypename<Query>, QueryEventsArgs, WithTypename<EventsConnection> | string>,
     formResponse?: GraphCacheResolver<WithTypename<Query>, QueryFormResponseArgs, WithTypename<FormResponse> | string>,
     formResponses?: GraphCacheResolver<WithTypename<Query>, QueryFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
@@ -10197,12 +10176,6 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<DeleteUserProxyPayload>, Record<string, never>, WithTypename<Person> | string>,
     user?: GraphCacheResolver<WithTypename<DeleteUserProxyPayload>, Record<string, never>, WithTypename<User> | string>,
     userProxy?: GraphCacheResolver<WithTypename<DeleteUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
-  },
-  DetachEventInstancePayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DetachEventInstancePayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    event?: GraphCacheResolver<WithTypename<DetachEventInstancePayload>, Record<string, never>, WithTypename<Event> | string>,
-    eventEdge?: GraphCacheResolver<WithTypename<DetachEventInstancePayload>, DetachEventInstancePayloadEventEdgeArgs, WithTypename<EventsEdge> | string>,
-    location?: GraphCacheResolver<WithTypename<DetachEventInstancePayload>, Record<string, never>, WithTypename<TenantLocation> | string>
   },
   Event?: {
     capacity?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -11203,7 +11176,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteTransaction?: GraphCacheOptimisticMutationResolver<MutationDeleteTransactionArgs, Maybe<WithTypename<DeleteTransactionPayload>>>,
   deleteTransactionByTenantIdAndId?: GraphCacheOptimisticMutationResolver<MutationDeleteTransactionByTenantIdAndIdArgs, Maybe<WithTypename<DeleteTransactionPayload>>>,
   deleteUserProxy?: GraphCacheOptimisticMutationResolver<MutationDeleteUserProxyArgs, Maybe<WithTypename<DeleteUserProxyPayload>>>,
-  detachEventInstance?: GraphCacheOptimisticMutationResolver<MutationDetachEventInstanceArgs, Maybe<WithTypename<DetachEventInstancePayload>>>,
   logInAs?: GraphCacheOptimisticMutationResolver<MutationLogInAsArgs, Maybe<WithTypename<LogInAsPayload>>>,
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   moveEventInstance?: GraphCacheOptimisticMutationResolver<MutationMoveEventInstanceArgs, Maybe<WithTypename<MoveEventInstancePayload>>>,
@@ -11286,6 +11258,8 @@ export type GraphCacheUpdaters = {
     eventInstancesList?: GraphCacheUpdateResolver<{ eventInstancesList: Maybe<Array<WithTypename<EventInstance>>> }, QueryEventInstancesListArgs>,
     eventOverlapsAttendeeReportList?: GraphCacheUpdateResolver<{ eventOverlapsAttendeeReportList: Maybe<Array<WithTypename<EventOverlapsConflict>>> }, QueryEventOverlapsAttendeeReportListArgs>,
     eventOverlapsTrainerReportList?: GraphCacheUpdateResolver<{ eventOverlapsTrainerReportList: Maybe<Array<WithTypename<EventOverlapsConflict>>> }, QueryEventOverlapsTrainerReportListArgs>,
+    eventSeries?: GraphCacheUpdateResolver<{ eventSeries: Maybe<WithTypename<EventSeries>> }, QueryEventSeriesArgs>,
+    eventSeriesByTenantIdAndId?: GraphCacheUpdateResolver<{ eventSeriesByTenantIdAndId: Maybe<WithTypename<EventSeries>> }, QueryEventSeriesByTenantIdAndIdArgs>,
     events?: GraphCacheUpdateResolver<{ events: Maybe<WithTypename<EventsConnection>> }, QueryEventsArgs>,
     formResponse?: GraphCacheUpdateResolver<{ formResponse: Maybe<WithTypename<FormResponse>> }, QueryFormResponseArgs>,
     formResponses?: GraphCacheUpdateResolver<{ formResponses: Maybe<WithTypename<FormResponsesConnection>> }, QueryFormResponsesArgs>,
@@ -11374,7 +11348,6 @@ export type GraphCacheUpdaters = {
     deleteTransaction?: GraphCacheUpdateResolver<{ deleteTransaction: Maybe<WithTypename<DeleteTransactionPayload>> }, MutationDeleteTransactionArgs>,
     deleteTransactionByTenantIdAndId?: GraphCacheUpdateResolver<{ deleteTransactionByTenantIdAndId: Maybe<WithTypename<DeleteTransactionPayload>> }, MutationDeleteTransactionByTenantIdAndIdArgs>,
     deleteUserProxy?: GraphCacheUpdateResolver<{ deleteUserProxy: Maybe<WithTypename<DeleteUserProxyPayload>> }, MutationDeleteUserProxyArgs>,
-    detachEventInstance?: GraphCacheUpdateResolver<{ detachEventInstance: Maybe<WithTypename<DetachEventInstancePayload>> }, MutationDetachEventInstanceArgs>,
     logInAs?: GraphCacheUpdateResolver<{ logInAs: Maybe<WithTypename<LogInAsPayload>> }, MutationLogInAsArgs>,
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     moveEventInstance?: GraphCacheUpdateResolver<{ moveEventInstance: Maybe<WithTypename<MoveEventInstancePayload>> }, MutationMoveEventInstanceArgs>,
@@ -11998,12 +11971,6 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>,
     userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>
-  },
-  DetachEventInstancePayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DetachEventInstancePayload>>, Record<string, never>>,
-    event?: GraphCacheUpdateResolver<Maybe<WithTypename<DetachEventInstancePayload>>, Record<string, never>>,
-    eventEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DetachEventInstancePayload>>, DetachEventInstancePayloadEventEdgeArgs>,
-    location?: GraphCacheUpdateResolver<Maybe<WithTypename<DetachEventInstancePayload>>, Record<string, never>>
   },
   Event?: {
     capacity?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,

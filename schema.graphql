@@ -2977,36 +2977,6 @@ type DeleteUserProxyPayload {
   userProxy: UserProxy
 }
 
-"""All input for the `detachEventInstance` mutation."""
-input DetachEventInstanceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  pInstanceId: BigInt
-  pNewEventName: String
-}
-
-"""The output of our `detachEventInstance` mutation."""
-type DetachEventInstancePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  event: Event
-
-  """An edge for our `Event`. May be used by Relay 1."""
-  eventEdge(
-    """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventsEdge
-
-  """Reads a single `TenantLocation` that is related to this `Event`."""
-  location: TenantLocation
-}
-
 type Event {
   capacity: Int!
   createdAt: Datetime
@@ -5697,12 +5667,6 @@ type Mutation {
     """
     input: DeleteUserProxyInput!
   ): DeleteUserProxyPayload
-  detachEventInstance(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DetachEventInstanceInput!
-  ): DetachEventInstancePayload
   logInAs(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7541,6 +7505,12 @@ type Query {
     pSince: Datetime
     pUntil: Datetime
   ): [EventOverlapsConflict!]
+
+  """Get a single `EventSeries`."""
+  eventSeries(id: BigInt!): EventSeries
+
+  """Get a single `EventSeries`."""
+  eventSeriesByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventSeries
 
   """Reads and enables pagination through a set of `Event`."""
   events(

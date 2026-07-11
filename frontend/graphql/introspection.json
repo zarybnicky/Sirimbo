@@ -5870,65 +5870,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DetachEventInstancePayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "event",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Event",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "ofType": {
-                        "kind": "SCALAR",
-                        "name": "Any"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "Event",
         "fields": [
           {
@@ -11079,26 +11020,6 @@
             ]
           },
           {
-            "name": "detachEventInstance",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DetachEventInstancePayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "logInAs",
             "type": {
               "kind": "OBJECT",
@@ -15692,6 +15613,56 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventSeries",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventSeries",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventSeriesByTenantIdAndId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventSeries",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
                 }
               }
             ]

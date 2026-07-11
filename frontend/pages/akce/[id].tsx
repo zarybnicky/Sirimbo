@@ -1,12 +1,10 @@
+import { EventSeriesDocument } from '@/graphql/Event';
 import { Layout } from '@/ui/Layout';
-import { stripHtml } from '@/lib/seo';
-import { WithSidebar } from '@/ui/WithSidebar';
+import { Spinner } from '@/ui/Spinner';
+import { FormError } from '@/ui/form';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { EventDocument } from '@/graphql/Event';
-import { EventList } from '@/ui/lists/EventList';
-import { EventView } from '@/ui/EventView';
-import { useAuth } from '@/ui/use-auth';
-import { NextSeo } from 'next-seo';
+import { useRouter } from 'next/router';
+import * as React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 
@@ -14,28 +12,34 @@ const QueryParams = z.object({
   id: zRouterId,
 });
 
-export default function EventPage() {
-  const router = useTypedRouter(QueryParams);
-  const { id } = router.query;
-  const auth = useAuth();
-  const [{ data }] = useQuery({ query: EventDocument, variables: { id }, pause: !id });
-  const description = stripHtml(data?.event?.summary || data?.event?.description);
+export default function LegacyEventRedirectPage() {
+  const router = useRouter();
+  const {
+    query: { id },
+  } = useTypedRouter(QueryParams);
+  const [{ data, error, fetching }] = useQuery({
+    query: EventSeriesDocument,
+    variables: { id },
+    pause: !id,
+  });
+  const series = data?.eventSeries;
+
+  React.useEffect(() => {
+    if (!series) return;
+    const destination =
+      series.eventsList.length === 1
+        ? `/termin/${series.eventsList[0]!.id}`
+        : `/terminy/${series.id}`;
+    void router.replace(destination);
+  }, [router, series]);
 
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo
-        title={data?.event?.name || 'Nadcházející akce'}
-        description={description || undefined}
-      />
-      <WithSidebar sidebar={<EventList />}>
-        <div
-          className={
-            auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'
-          }
-        >
-          {data?.event && <EventView event={data.event} />}
-        </div>
-      </WithSidebar>
+      <div className="col-feature min-h-[60vh] p-4 lg:pb-8">
+        <FormError error={error} />
+        {fetching || series ? <Spinner /> : null}
+        {!fetching && !series ? <p>Událost nebyla nalezena.</p> : null}
+      </div>
     </Layout>
   );
 }

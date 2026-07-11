@@ -345,11 +345,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'UserProxy', id: args.input.id });
       },
 
-      detachEventInstance(_result, args, cache, _info) {
-        if (args.input.pInstanceId)
-          cache.invalidate({ __typename: 'EventInstance', id: args.input.pInstanceId });
-        invalidateQueryFields(cache, ['eventInstances']);
-      },
       deleteEventInstance(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
       },
@@ -384,13 +379,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       syncCohortMemberships(_result, args, cache, _info) {
         cache.invalidate('Person', args.input.personId!);
-      },
-
-      upsertEvent(_result, args, cache, _info) {
-        if (!args.input.info?.id) {
-          invalidateQueryFields(cache, ['eventInstances']);
-        }
-        invalidateQueryFields(cache, ['eventOverlaps']);
       },
 
       quickCreateEventInstances(_result, _args, cache, _info) {

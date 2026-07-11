@@ -1,37 +1,33 @@
-fragment Event on Event {
-  id
-  type
-  summary
-  description
-  name
-  capacity
-  location {
-    id
-    name
-  }
-  locationText
-  isLocked
-  isVisible
-  isPublic
-  enableNotes
-  eventTrainersList {
-    id
-    name
-    personId
-    lessonsOffered
-    lessonsRemaining
-  }
-  eventInstancesList(orderBy: SINCE_ASC) {
-    ...EventInstance
-  }
-}
-
 fragment EventInstance on EventInstance {
   id
   parentId
   since
   until
   isCancelled
+}
+
+fragment EventSeriesInstance on EventInstance {
+  id
+  name
+  type
+  since
+  until
+  isCancelled
+  locationText
+  location {
+    id
+    name
+  }
+}
+
+query EventSeries($id: BigInt!) {
+  eventSeries(id: $id) {
+    id
+    name
+    eventsList(condition: { parentId: null }, orderBy: SINCE_ASC) {
+      ...EventSeriesInstance
+    }
+  }
 }
 
 fragment EventInstanceWithTrainer on EventInstance {
@@ -166,22 +162,6 @@ fragment EventInstanceRegistration on EventInstanceRegistration {
   }
 }
 
-fragment EventFull on Event {
-  ...Event
-  eventInstancesList(orderBy: SINCE_ASC) {
-    ...EventInstanceWithTrainer
-    eventExternalRegistrationsByInstanceIdList {
-      ...EventExternalRegistration
-    }
-    eventInstanceTrainersByInstanceIdList {
-      ...EventInstanceTrainerLessonOffer
-    }
-    childEventInstancesList(orderBy: SINCE_ASC) {
-      ...EventInstanceWithTrainer
-    }
-  }
-}
-
 query EventInstanceApproxPrice($id: BigInt!) {
   eventInstance(id: $id) {
     id
@@ -230,12 +210,6 @@ query EventInstanceExport($id: BigInt!) {
     eventExternalRegistrationsByInstanceIdList {
       ...EventExternalRegistration
     }
-  }
-}
-
-query Event($id: BigInt!) {
-  event(id: $id) {
-    ...EventFull
   }
 }
 
@@ -349,17 +323,6 @@ query EventInstanceRange(
   }
 }
 
-mutation UpsertEvent($input: UpsertEventInput!) {
-  upsertEvent(input: $input) {
-    event {
-      ...Event
-      eventInstancesList(orderBy: SINCE_ASC) {
-        ...EventInstanceWithTrainer
-      }
-    }
-  }
-}
-
 mutation CreateEventInstances($input: QuickCreateEventInstancesInput!) {
   quickCreateEventInstances(input: $input) {
     eventInstances {
@@ -372,14 +335,6 @@ mutation UpdateEventInstanceDetails($input: UpdateEventInstanceDetailsInput!) {
   updateEventInstanceDetails(input: $input) {
     eventInstance {
       id
-    }
-  }
-}
-
-mutation DetachEventInstance($id: BigInt!) {
-  detachEventInstance(input: { pInstanceId: $id }) {
-    event {
-      __typename
     }
   }
 }
