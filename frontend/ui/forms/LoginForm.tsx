@@ -1,36 +1,47 @@
-import { LoginDocument, type UserAuthFragment } from '@/graphql/CurrentUser';
+import { type UserAuthFragment } from '@/graphql/CurrentUser';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import Link from 'next/link';
-import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useClient } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTenantConfig } from '../state/auth';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { sessionPresentAtom, tenantConfigAtom } from '../state/auth';
 
 const Form = z.object({
   login: z.string().min(1, 'Zadejte přihlašovací jméno nebo e-mail'),
   passwd: z.string().min(1, 'Zadejte heslo'),
 });
 
-export function LoginForm({
-  onSuccess,
-}: {
+export type LoginFormProps = {
   onSuccess?: (result: UserAuthFragment | null) => void;
-}) {
-  const client = useClient();
-  const { enableRegistration } = useTenantConfig();
+};
+
+export function LoginForm({ onSuccess }: LoginFormProps) {
+  const { enableRegistration } = useAtomValue(tenantConfigAtom);
+  const setSessionPresent = useSetAtom(sessionPresentAtom);
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
 
-  const onSubmit = useAsyncCallback(async ({ login, passwd }: z.infer<typeof Form>) => {
-    const r = await client.mutation(LoginDocument, { login, passwd }).toPromise();
-    if (r.error) throw r.error;
-    onSuccess?.(r.data?.login?.result?.usr ?? null);
+  const onSubmit = useAsyncCallback(async ({ login, passwd }: FormValues) => {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ login, passwd }),
+    });
+    if (!res.ok) {
+      const { error } = await res
+        .json()
+        .catch(() => ({ error: 'Přihlášení se nezdařilo' }));
+      throw new Error(error || 'Přihlášení se nezdařilo');
+    }
+    const { user } = (await res.json()) as { user: UserAuthFragment | null };
+    // Flip the marker so UserRefresher fetches the current user off the cookie.
+    setSessionPresent(true);
+    onSuccess?.(user ?? null);
   });
 
   return (
