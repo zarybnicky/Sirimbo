@@ -863,6 +863,12 @@ export type Cohort = {
   cohortSubscriptionsList: Array<CohortSubscription>;
   colorRgb: Scalars['String']['output'];
   description: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsByTargetCohortId: EventInstanceRegistrationsConnection;
+  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsByTargetCohortIdList: Array<EventInstanceRegistration>;
+  /** Reads and enables pagination through a set of `EventInstanceTargetCohort`. */
+  eventInstanceTargetCohortsList: Array<EventInstanceTargetCohort>;
   /** Reads and enables pagination through a set of `EventTargetCohort`. */
   eventTargetCohortsList: Array<EventTargetCohort>;
   externalIds: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -902,6 +908,33 @@ export type CohortCohortSubscriptionsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortSubscriptionsOrderBy>>;
+};
+
+
+export type CohortEventInstanceRegistrationsByTargetCohortIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type CohortEventInstanceRegistrationsByTargetCohortIdListArgs = {
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type CohortEventInstanceTargetCohortsListArgs = {
+  condition?: InputMaybe<EventInstanceTargetCohortCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceTargetCohortsOrderBy>>;
 };
 
 
@@ -2850,7 +2883,8 @@ export type EventInstance = {
   since: Scalars['Datetime']['output'];
   stats: Scalars['JSON']['output'];
   summary: Maybe<Scalars['String']['output']>;
-  targetCohortsList: Maybe<Array<EventTargetCohort>>;
+  /** Reads and enables pagination through a set of `EventInstanceTargetCohort`. */
+  targetCohortsList: Array<EventInstanceTargetCohort>;
   tenantId: Scalars['BigInt']['output'];
   trainersList: Maybe<Array<TenantTrainer>>;
   type: Maybe<EventType>;
@@ -2932,8 +2966,10 @@ export type EventInstanceRegistrationsArgs = {
 
 
 export type EventInstanceTargetCohortsListArgs = {
+  condition?: InputMaybe<EventInstanceTargetCohortCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceTargetCohortsOrderBy>>;
 };
 
 
@@ -3072,9 +3108,12 @@ export type EventInstanceRegistration = {
   personId: Maybe<Scalars['BigInt']['output']>;
   /** Registration lifecycle; child rows are cancelled with their root registration. */
   registrationStatus: EventInstanceRegistrationStatus;
+  /** How the current registration state was set. */
+  source: Maybe<EventRegistrationSource>;
   status: Maybe<AttendanceType>;
-  /** Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`. */
-  targetCohort: Maybe<EventTargetCohort>;
+  /** Reads a single `Cohort` that is related to this `EventInstanceRegistration`. */
+  targetCohort: Maybe<Cohort>;
+  /** Cohort used to reconcile registrations whose source is cohort. */
   targetCohortId: Maybe<Scalars['BigInt']['output']>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
@@ -3136,6 +3175,8 @@ export type EventInstanceRegistrationCondition = {
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `registrationStatus` field. */
   registrationStatus?: InputMaybe<EventInstanceRegistrationStatus>;
+  /** Checks for equality with the object’s `source` field. */
+  source?: InputMaybe<EventRegistrationSource>;
   /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<AttendanceType>;
   /** Checks for equality with the object’s `targetCohortId` field. */
@@ -3202,10 +3243,63 @@ export type EventInstanceRegistrationsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'REGISTRATION_STATUS_ASC'
   | 'REGISTRATION_STATUS_DESC'
+  | 'SOURCE_ASC'
+  | 'SOURCE_DESC'
   | 'STATUS_ASC'
   | 'STATUS_DESC'
   | 'TARGET_COHORT_ID_ASC'
   | 'TARGET_COHORT_ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
+
+export type EventInstanceTargetCohort = {
+  __typename?: 'EventInstanceTargetCohort';
+  /** Reads a single `Cohort` that is related to this `EventInstanceTargetCohort`. */
+  cohort: Maybe<Cohort>;
+  cohortId: Scalars['BigInt']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
+  /** Reads a single `EventInstance` that is related to this `EventInstanceTargetCohort`. */
+  instance: Maybe<EventInstance>;
+  instanceId: Scalars['BigInt']['output'];
+  tenantId: Scalars['BigInt']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+};
+
+/**
+ * A condition to be used against `EventInstanceTargetCohort` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type EventInstanceTargetCohortCondition = {
+  /** Checks for equality with the object’s `cohortId` field. */
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `instanceId` field. */
+  instanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Methods to use when ordering `EventInstanceTargetCohort`. */
+export type EventInstanceTargetCohortsOrderBy =
+  | 'COHORT_ID_ASC'
+  | 'COHORT_ID_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'INSTANCE_ID_ASC'
+  | 'INSTANCE_ID_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
@@ -3517,6 +3611,12 @@ export type EventRegistrationCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** How an event registration state was set. */
+export type EventRegistrationSource =
+  | 'COHORT'
+  | 'MANAGER'
+  | 'SELF';
+
 /** An input for mutations affecting `EventRegistrationTypeInputRecord` */
 export type EventRegistrationTypeInputRecordInput = {
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3579,10 +3679,6 @@ export type EventTargetCohort = {
   /** Reads a single `Event` that is related to this `EventTargetCohort`. */
   event: Maybe<Event>;
   eventId: Scalars['BigInt']['output'];
-  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
-  eventInstanceRegistrationsByTargetCohortId: EventInstanceRegistrationsConnection;
-  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
-  eventInstanceRegistrationsByTargetCohortIdList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
   eventRegistrationsByTargetCohortId: EventRegistrationsConnection;
   /** Reads and enables pagination through a set of `EventRegistration`. */
@@ -3590,25 +3686,6 @@ export type EventTargetCohort = {
   id: Scalars['BigInt']['output'];
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
-};
-
-
-export type EventTargetCohortEventInstanceRegistrationsByTargetCohortIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<EventInstanceRegistrationCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
-};
-
-
-export type EventTargetCohortEventInstanceRegistrationsByTargetCohortIdListArgs = {
-  condition?: InputMaybe<EventInstanceRegistrationCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
 };
 
 
@@ -3647,12 +3724,6 @@ export type EventTargetCohortCondition = {
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** An input for mutations affecting `EventTargetCohortTypeInputRecord` */
-export type EventTargetCohortTypeInputRecordInput = {
-  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Methods to use when ordering `EventTargetCohort`. */
@@ -6773,8 +6844,8 @@ export type SetEventInstanceRegistrationPayload = {
   parentRegistration: Maybe<EventInstanceRegistration>;
   /** Reads a single `Person` that is related to this `EventInstanceRegistration`. */
   person: Maybe<Person>;
-  /** Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`. */
-  targetCohort: Maybe<EventTargetCohort>;
+  /** Reads a single `Cohort` that is related to this `EventInstanceRegistration`. */
+  targetCohort: Maybe<Cohort>;
 };
 
 
@@ -6966,6 +7037,8 @@ export type Tenant = {
   eventInstanceRegistrations: EventInstanceRegistrationsConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsList: Array<EventInstanceRegistration>;
+  /** Reads and enables pagination through a set of `EventInstanceTargetCohort`. */
+  eventInstanceTargetCohortsList: Array<EventInstanceTargetCohort>;
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
   eventInstanceTrainersList: Array<EventInstanceTrainer>;
   /** Reads and enables pagination through a set of `EventInstance`. */
@@ -7126,6 +7199,14 @@ export type TenantEventInstanceRegistrationsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type TenantEventInstanceTargetCohortsListArgs = {
+  condition?: InputMaybe<EventInstanceTargetCohortCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceTargetCohortsOrderBy>>;
 };
 
 
@@ -8081,8 +8162,8 @@ export type UpdateAttendancePayload = {
   parentRegistration: Maybe<EventInstanceRegistration>;
   /** Reads a single `Person` that is related to this `EventInstanceRegistration`. */
   person: Maybe<Person>;
-  /** Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`. */
-  targetCohort: Maybe<EventTargetCohort>;
+  /** Reads a single `Cohort` that is related to this `EventInstanceRegistration`. */
+  targetCohort: Maybe<Cohort>;
 };
 
 
@@ -8247,6 +8328,7 @@ export type UpdateEventInstanceDetailsInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   pCapacity?: InputMaybe<Scalars['Int']['input']>;
   pCapacityUnit?: InputMaybe<EventCapacityUnit>;
+  pCohortIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   pIsCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   pIsLocked?: InputMaybe<Scalars['Boolean']['input']>;
@@ -8727,7 +8809,6 @@ export type UpsertEventInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  cohorts?: InputMaybe<Array<InputMaybe<EventTargetCohortTypeInputRecordInput>>>;
   eventInstances?: InputMaybe<Array<InputMaybe<EventInstanceTypeInputRecordInput>>>;
   info?: InputMaybe<EventTypeInputRecordInput>;
   registrations?: InputMaybe<Array<InputMaybe<EventRegistrationTypeInputRecordInput>>>;
@@ -9079,6 +9160,7 @@ export type GraphCacheKeysConfig = {
   EventInstanceRegistration?: (data: WithTypename<EventInstanceRegistration>) => null | string,
   EventInstanceRegistrationsConnection?: (data: WithTypename<EventInstanceRegistrationsConnection>) => null | string,
   EventInstanceRegistrationsEdge?: (data: WithTypename<EventInstanceRegistrationsEdge>) => null | string,
+  EventInstanceTargetCohort?: (data: WithTypename<EventInstanceTargetCohort>) => null | string,
   EventInstanceTrainer?: (data: WithTypename<EventInstanceTrainer>) => null | string,
   EventInstancesEdge?: (data: WithTypename<EventInstancesEdge>) => null | string,
   EventLessonDemand?: (data: WithTypename<EventLessonDemand>) => null | string,
@@ -9501,6 +9583,9 @@ export type GraphCacheResolvers = {
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Cohort>, CohortCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     colorRgb?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String']['output'] | string>,
+    eventInstanceRegistrationsByTargetCohortId?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceRegistrationsByTargetCohortIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsByTargetCohortIdList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceRegistrationsByTargetCohortIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
+    eventInstanceTargetCohortsList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceTargetCohortsListArgs, Array<WithTypename<EventInstanceTargetCohort> | string>>,
     eventTargetCohortsList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
     externalIds?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
     id?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -9902,7 +9987,7 @@ export type GraphCacheResolvers = {
     since?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     stats?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['JSON']['output'] | string>,
     summary?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
-    targetCohortsList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
+    targetCohortsList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceTargetCohortsListArgs, Array<WithTypename<EventInstanceTargetCohort> | string>>,
     tenantId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     trainersList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     type?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, EventType | string>,
@@ -9935,8 +10020,9 @@ export type GraphCacheResolvers = {
     person?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     registrationStatus?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, EventInstanceRegistrationStatus | string>,
+    source?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, EventRegistrationSource | string>,
     status?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, AttendanceType | string>,
-    targetCohort?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<EventTargetCohort> | string>,
+    targetCohort?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<Cohort> | string>,
     targetCohortId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['Datetime']['output'] | string>
@@ -9950,6 +10036,16 @@ export type GraphCacheResolvers = {
   EventInstanceRegistrationsEdge?: {
     cursor?: GraphCacheResolver<WithTypename<EventInstanceRegistrationsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<EventInstanceRegistrationsEdge>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>
+  },
+  EventInstanceTargetCohort?: {
+    cohort?: GraphCacheResolver<WithTypename<EventInstanceTargetCohort>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortId?: GraphCacheResolver<WithTypename<EventInstanceTargetCohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<EventInstanceTargetCohort>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    id?: GraphCacheResolver<WithTypename<EventInstanceTargetCohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    instance?: GraphCacheResolver<WithTypename<EventInstanceTargetCohort>, Record<string, never>, WithTypename<EventInstance> | string>,
+    instanceId?: GraphCacheResolver<WithTypename<EventInstanceTargetCohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<EventInstanceTargetCohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<EventInstanceTargetCohort>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
   EventInstanceTrainer?: {
     createdAt?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -10031,8 +10127,6 @@ export type GraphCacheResolvers = {
     createdAt?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     event?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, WithTypename<Event> | string>,
     eventId?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    eventInstanceRegistrationsByTargetCohortId?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventInstanceRegistrationsByTargetCohortIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
-    eventInstanceRegistrationsByTargetCohortIdList?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventInstanceRegistrationsByTargetCohortIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventRegistrationsByTargetCohortId?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventRegistrationsByTargetCohortIdArgs, WithTypename<EventRegistrationsConnection> | string>,
     eventRegistrationsByTargetCohortIdList?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventRegistrationsByTargetCohortIdListArgs, Array<WithTypename<EventRegistration> | string>>,
     id?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -10353,7 +10447,7 @@ export type GraphCacheResolvers = {
     instance?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
     parentRegistration?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
     person?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<Person> | string>,
-    targetCohort?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<EventTargetCohort> | string>
+    targetCohort?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<Cohort> | string>
   },
   SetLessonDemandPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -10416,6 +10510,7 @@ export type GraphCacheResolvers = {
     eventExternalRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventExternalRegistrationsListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
+    eventInstanceTargetCohortsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceTargetCohortsListArgs, Array<WithTypename<EventInstanceTargetCohort> | string>>,
     eventInstanceTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceTrainersListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventLessonDemandsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventLessonDemandsListArgs, Array<WithTypename<EventLessonDemand> | string>>,
@@ -10574,7 +10669,7 @@ export type GraphCacheResolvers = {
     instance?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<EventInstance> | string>,
     parentRegistration?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
     person?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<Person> | string>,
-    targetCohort?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<EventTargetCohort> | string>
+    targetCohort?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<Cohort> | string>
   },
   UpdateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -11238,6 +11333,9 @@ export type GraphCacheUpdaters = {
     cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortCohortSubscriptionsListArgs>,
     colorRgb?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    eventInstanceRegistrationsByTargetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventInstanceRegistrationsByTargetCohortIdArgs>,
+    eventInstanceRegistrationsByTargetCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventInstanceRegistrationsByTargetCohortIdListArgs>,
+    eventInstanceTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventInstanceTargetCohortsListArgs>,
     eventTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventTargetCohortsListArgs>,
     externalIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
@@ -11672,6 +11770,7 @@ export type GraphCacheUpdaters = {
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     registrationStatus?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
+    source?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     status?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     targetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
@@ -11687,6 +11786,16 @@ export type GraphCacheUpdaters = {
   EventInstanceRegistrationsEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationsEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationsEdge>>, Record<string, never>>
+  },
+  EventInstanceTargetCohort?: {
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTargetCohort>>, Record<string, never>>,
+    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTargetCohort>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTargetCohort>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTargetCohort>>, Record<string, never>>,
+    instance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTargetCohort>>, Record<string, never>>,
+    instanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTargetCohort>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTargetCohort>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTargetCohort>>, Record<string, never>>
   },
   EventInstanceTrainer?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
@@ -11768,8 +11877,6 @@ export type GraphCacheUpdaters = {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
     eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
-    eventInstanceRegistrationsByTargetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventInstanceRegistrationsByTargetCohortIdArgs>,
-    eventInstanceRegistrationsByTargetCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventInstanceRegistrationsByTargetCohortIdListArgs>,
     eventRegistrationsByTargetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventRegistrationsByTargetCohortIdArgs>,
     eventRegistrationsByTargetCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventRegistrationsByTargetCohortIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
@@ -12153,6 +12260,7 @@ export type GraphCacheUpdaters = {
     eventExternalRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventExternalRegistrationsListArgs>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceRegistrationsListArgs>,
+    eventInstanceTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceTargetCohortsListArgs>,
     eventInstanceTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceTrainersListArgs>,
     eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstancesListArgs>,
     eventLessonDemandsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventLessonDemandsListArgs>,

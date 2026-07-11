@@ -1010,6 +1010,75 @@ type Cohort {
   colorRgb: String!
   description: String!
 
+  """
+  Reads and enables pagination through a set of `EventInstanceRegistration`.
+  """
+  eventInstanceRegistrationsByTargetCohortId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventInstanceRegistrationsConnection!
+
+  """
+  Reads and enables pagination through a set of `EventInstanceRegistration`.
+  """
+  eventInstanceRegistrationsByTargetCohortIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]
+  ): [EventInstanceRegistration!]!
+
+  """
+  Reads and enables pagination through a set of `EventInstanceTargetCohort`.
+  """
+  eventInstanceTargetCohortsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceTargetCohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceTargetCohort`."""
+    orderBy: [EventInstanceTargetCohortsOrderBy!]
+  ): [EventInstanceTargetCohort!]!
+
   """Reads and enables pagination through a set of `EventTargetCohort`."""
   eventTargetCohortsList(
     """
@@ -3447,13 +3516,25 @@ type EventInstance {
   since: Datetime!
   stats: JSON!
   summary: String
+
+  """
+  Reads and enables pagination through a set of `EventInstanceTargetCohort`.
+  """
   targetCohortsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceTargetCohortCondition
+
     """Only read the first `n` values of the set."""
     first: Int
 
     """Skip the first `n` values."""
     offset: Int
-  ): [EventTargetCohort!]
+
+    """The method to use when ordering `EventInstanceTargetCohort`."""
+    orderBy: [EventInstanceTargetCohortsOrderBy!]
+  ): [EventInstanceTargetCohort!]!
   tenantId: BigInt!
   trainersList(
     """Only read the first `n` values of the set."""
@@ -3706,12 +3787,17 @@ type EventInstanceRegistration {
   Registration lifecycle; child rows are cancelled with their root registration.
   """
   registrationStatus: EventInstanceRegistrationStatus!
+
+  """How the current registration state was set."""
+  source: EventRegistrationSource
   status: AttendanceType
 
   """
-  Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`.
+  Reads a single `Cohort` that is related to this `EventInstanceRegistration`.
   """
-  targetCohort: EventTargetCohort
+  targetCohort: Cohort
+
+  """Cohort used to reconcile registrations whose source is cohort."""
   targetCohortId: BigInt
   tenantId: BigInt!
   updatedAt: Datetime!
@@ -3757,6 +3843,9 @@ input EventInstanceRegistrationCondition {
 
   """Checks for equality with the object’s `registrationStatus` field."""
   registrationStatus: EventInstanceRegistrationStatus
+
+  """Checks for equality with the object’s `source` field."""
+  source: EventRegistrationSource
 
   """Checks for equality with the object’s `status` field."""
   status: AttendanceType
@@ -3834,10 +3923,73 @@ enum EventInstanceRegistrationsOrderBy {
   PRIMARY_KEY_DESC
   REGISTRATION_STATUS_ASC
   REGISTRATION_STATUS_DESC
+  SOURCE_ASC
+  SOURCE_DESC
   STATUS_ASC
   STATUS_DESC
   TARGET_COHORT_ID_ASC
   TARGET_COHORT_ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+type EventInstanceTargetCohort {
+  """
+  Reads a single `Cohort` that is related to this `EventInstanceTargetCohort`.
+  """
+  cohort: Cohort
+  cohortId: BigInt!
+  createdAt: Datetime!
+  id: BigInt!
+
+  """
+  Reads a single `EventInstance` that is related to this `EventInstanceTargetCohort`.
+  """
+  instance: EventInstance
+  instanceId: BigInt!
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `EventInstanceTargetCohort` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input EventInstanceTargetCohortCondition {
+  """Checks for equality with the object’s `cohortId` field."""
+  cohortId: BigInt
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `instanceId` field."""
+  instanceId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `EventInstanceTargetCohort`."""
+enum EventInstanceTargetCohortsOrderBy {
+  COHORT_ID_ASC
+  COHORT_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  ID_ASC
+  ID_DESC
+  INSTANCE_ID_ASC
+  INSTANCE_ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   UPDATED_AT_ASC
@@ -4204,6 +4356,13 @@ input EventRegistrationCondition {
   updatedAt: Datetime
 }
 
+"""How an event registration state was set."""
+enum EventRegistrationSource {
+  COHORT
+  MANAGER
+  SELF
+}
+
 """An input for mutations affecting `EventRegistrationTypeInputRecord`"""
 input EventRegistrationTypeInputRecordInput {
   coupleId: BigInt
@@ -4273,56 +4432,6 @@ type EventTargetCohort {
   """Reads a single `Event` that is related to this `EventTargetCohort`."""
   event: Event
   eventId: BigInt!
-
-  """
-  Reads and enables pagination through a set of `EventInstanceRegistration`.
-  """
-  eventInstanceRegistrationsByTargetCohortId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventInstanceRegistration`."""
-    orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsConnection!
-
-  """
-  Reads and enables pagination through a set of `EventInstanceRegistration`.
-  """
-  eventInstanceRegistrationsByTargetCohortIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventInstanceRegistration`."""
-    orderBy: [EventInstanceRegistrationsOrderBy!]
-  ): [EventInstanceRegistration!]!
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsByTargetCohortId(
@@ -4396,12 +4505,6 @@ input EventTargetCohortCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
-}
-
-"""An input for mutations affecting `EventTargetCohortTypeInputRecord`"""
-input EventTargetCohortTypeInputRecordInput {
-  cohortId: BigInt
-  id: BigInt
 }
 
 """Methods to use when ordering `EventTargetCohort`."""
@@ -7857,9 +7960,9 @@ type SetEventInstanceRegistrationPayload {
   person: Person
 
   """
-  Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`.
+  Reads a single `Cohort` that is related to this `EventInstanceRegistration`.
   """
-  targetCohort: EventTargetCohort
+  targetCohort: Cohort
 }
 
 """All input for the `setLessonDemand` mutation."""
@@ -8284,6 +8387,25 @@ type Tenant {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!]
   ): [EventInstanceRegistration!]!
+
+  """
+  Reads and enables pagination through a set of `EventInstanceTargetCohort`.
+  """
+  eventInstanceTargetCohortsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceTargetCohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceTargetCohort`."""
+    orderBy: [EventInstanceTargetCohortsOrderBy!]
+  ): [EventInstanceTargetCohort!]!
 
   """Reads and enables pagination through a set of `EventInstanceTrainer`."""
   eventInstanceTrainersList(
@@ -9639,9 +9761,9 @@ type UpdateAttendancePayload {
   person: Person
 
   """
-  Reads a single `EventTargetCohort` that is related to this `EventInstanceRegistration`.
+  Reads a single `Cohort` that is related to this `EventInstanceRegistration`.
   """
-  targetCohort: EventTargetCohort
+  targetCohort: Cohort
 }
 
 """All input for the `updateCohortByTenantIdAndId` mutation."""
@@ -9831,6 +9953,7 @@ input UpdateEventInstanceDetailsInput {
   clientMutationId: String
   pCapacity: Int
   pCapacityUnit: EventCapacityUnit
+  pCohortIds: [BigInt]
   pInstanceId: BigInt
   pIsCancelled: Boolean
   pIsLocked: Boolean
@@ -10372,7 +10495,6 @@ input UpsertEventInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  cohorts: [EventTargetCohortTypeInputRecordInput]
   eventInstances: [EventInstanceTypeInputRecordInput]
   info: EventTypeInputRecordInput
   registrations: [EventRegistrationTypeInputRecordInput]

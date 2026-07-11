@@ -42,11 +42,6 @@ CREATE TYPE public.event_trainer_type_input AS (
   lessons_offered integer
 );
 
-CREATE TYPE public.event_target_cohort_type_input AS (
-  id bigint,
-  cohort_id bigint
-);
-
 CREATE TYPE public.event_registration_type_input AS (
   id bigint,
   person_id bigint,
@@ -57,14 +52,12 @@ CREATE OR REPLACE FUNCTION upsert_event(
   info event_type_input,
   event_instances event_instance_type_input[],
   trainers event_trainer_type_input[],
-  cohorts event_target_cohort_type_input[],
   registrations event_registration_type_input[]
 ) RETURNS event LANGUAGE plpgsql AS $$
 declare
   instance event_instance_type_input;
   trainer event_trainer_type_input;
   instance_trainer event_instance_trainer_type_input;
-  cohort event_target_cohort_type_input;
   v_event event;
   v_instance_id bigint;
 begin
@@ -166,16 +159,6 @@ begin
       delete from event_trainer where id=trainer.id;
     else
       update event_trainer set lessons_offered=trainer.lessons_offered where id=trainer.id;
-    end if;
-  end loop;
-
-  foreach cohort in array coalesce(cohorts, '{}'::event_target_cohort_type_input[]) loop
-    if cohort.id is null then
-      insert into event_target_cohort (event_id, cohort_id)
-      values (v_event.id, cohort.cohort_id)
-      on conflict (event_id, cohort_id) do nothing;
-    elsif cohort.cohort_id is null then
-      delete from event_target_cohort where id=cohort.id;
     end if;
   end loop;
 

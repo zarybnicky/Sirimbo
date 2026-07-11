@@ -8,14 +8,15 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(27);
+SELECT tap.plan(34);
 
 -- Fixtures
 -- People:
 --   200001 = Alice   (active member, has past 'attended' → registration survives expiry)
 --   200002 = Bob     (active member, has past 'attended' → registration survives expiry)
 --   200003 = Charlie (active member, future 'not-excused' + past 'unknown' → future cancelled, survives)
---   200004 = Dana    (active member, only future 'unknown', no attended past → registration deleted)
+--   200004 = Dana    (active member, only future 'unknown' → future lifecycle cancelled)
+--   200005 = Evan    (active member, no legacy registration → exact registration is created)
 -- Cohort:  800001
 -- Event:   700001 (targets cohort 800001)
 -- Instances:
@@ -28,7 +29,8 @@ INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING S
   VALUES (200001, 'Alice',   'Test', 'unspecified', ''),
          (200002, 'Bob',     'Test', 'unspecified', ''),
          (200003, 'Charlie', 'Test', 'unspecified', ''),
-         (200004, 'Dana',    'Test', 'unspecified', '')
+         (200004, 'Dana',    'Test', 'unspecified', ''),
+         (200005, 'Evan',    'Test', 'unspecified', '')
   ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO cohort (id, tenant_id, name, color_rgb) OVERRIDING SYSTEM VALUE
@@ -48,19 +50,80 @@ INSERT INTO event_instance (id, tenant_id, event_id, since, until) OVERRIDING SY
          (900002, 1000, 700001, now() + interval '1 day',  now() + interval '2 days')
   ON CONFLICT (id) DO NOTHING;
 
+INSERT INTO event_instance_target_cohort (id, tenant_id, instance_id, cohort_id) OVERRIDING SYSTEM VALUE
+  VALUES (850101, 1000, 900001, 800001)
+  ON CONFLICT (instance_id, cohort_id) DO NOTHING;
+
+-- Existing registrations remain bridged during this slice, but cohort automation
+-- now changes their exact per-instance lifecycle directly.
+INSERT INTO event_registration (tenant_id, event_id, target_cohort_id, person_id)
+SELECT 1000, 700001, 850001, person_id
+FROM unnest(ARRAY[200001, 200002, 200003, 200004]::bigint[]) person(person_id)
+ON CONFLICT ON CONSTRAINT event_registration_unique_event_person_couple_key DO NOTHING;
+
 -- Active memberships
 INSERT INTO cohort_membership (id, tenant_id, cohort_id, person_id, since, status) OVERRIDING SYSTEM VALUE
   VALUES (860001, 1000, 800001, 200001, now() - interval '30 days', 'active'),
          (860002, 1000, 800001, 200002, now() - interval '30 days', 'active'),
          (860003, 1000, 800001, 200003, now() - interval '30 days', 'active'),
-         (860004, 1000, 800001, 200004, now() - interval '30 days', 'active')
+         (860004, 1000, 800001, 200004, now() - interval '30 days', 'active'),
+         (860005, 1000, 800001, 200005, now() - interval '30 days', 'active')
   ON CONFLICT (id) DO NOTHING;
+
+-- The submitted participant list predates the cohort selection. Participant
+-- edits must run first so adding the target can append Evan afterwards.
+SELECT public.update_event_instance_details(
+  p_instance_id => instance.id,
+  p_since => instance.since,
+  p_until => instance.until,
+  p_name => instance.name,
+  p_type => instance.type,
+  p_location_id => instance.location_id,
+  p_location_text => instance.location_text,
+  p_is_visible => instance.is_visible,
+  p_is_public => instance.is_public,
+  p_is_cancelled => instance.is_cancelled,
+  p_registrations => ARRAY[
+    ROW(200001, null)::public.quick_event_registration_input,
+    ROW(200002, null)::public.quick_event_registration_input,
+    ROW(200003, null)::public.quick_event_registration_input,
+    ROW(200004, null)::public.quick_event_registration_input
+  ],
+  p_cohort_ids => ARRAY[800001, 800001]
+)
+FROM event_instance instance
+WHERE instance.id = 900002;
+
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200005
+      AND parent_registration_id is null
+      AND legacy_registration_id is null
+      AND registration_status = 'active'
+      AND source = 'cohort'
+      AND target_cohort_id = 800001
+  ) AND 1 = (
+    SELECT count(*)
+    FROM event_instance_target_cohort
+    WHERE instance_id = 900002
+      AND cohort_id = 800001
+  ) AND NOT EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = 900001
+      AND person_id = 200005
+  ),
+  'active cohort membership creates a registration only for the future instance'
+);
 
 -- Attendance:
 --   Alice:   past=attended, future=unknown  → registration survives (attended past row)
 --   Bob:     past=attended, future=unknown  → registration survives (attended past row)
 --   Charlie: past=attended, future=not-excused → future cancelled, registration survives
---   Dana:    future=unknown (no past row)   → registration deleted (all rows become cancelled, no history)
+--   Dana:    future=unknown (no past row)   → future registration lifecycle cancelled
 UPDATE event_instance_registration SET status = 'attended'    WHERE instance_id = 900001 AND person_id = 200001;
 UPDATE event_instance_registration SET status = 'attended'    WHERE instance_id = 900001 AND person_id = 200002;
 UPDATE event_instance_registration SET status = 'attended'    WHERE instance_id = 900001 AND person_id = 200003;
@@ -69,11 +132,18 @@ UPDATE event_instance_registration SET status = 'not-excused' WHERE instance_id 
 -- ── Expire Alice ──────────────────────────────────────────────────────────────
 UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expired' WHERE id = 860001;
 
--- Test 1: future 'unknown' attendance is set to 'cancelled'
-SELECT tap.is(
-  (SELECT status FROM event_instance_registration WHERE instance_id = 900002 AND person_id = 200001),
-  'cancelled'::attendance_type,
-  'expiry cancels future unknown attendance'
+-- Test 1: future registration is cancelled without changing attendance.
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1 FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200001
+      AND registration_status = 'cancelled'
+      AND source = 'cohort'
+      AND target_cohort_id = 800001
+      AND status = 'unknown'
+  ),
+  'expiry cancels the future registration without changing attendance'
 );
 
 -- Test 2: past 'attended' attendance is not touched (instance is not "future")
@@ -92,11 +162,11 @@ SELECT tap.ok(
 -- ── Expire Bob ────────────────────────────────────────────────────────────────
 UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expired' WHERE id = 860002;
 
--- Test 4: future unknown attendance cancelled
+-- Test 4: future registration cancelled.
 SELECT tap.is(
-  (SELECT status FROM event_instance_registration WHERE instance_id = 900002 AND person_id = 200002),
-  'cancelled'::attendance_type,
-  'expiry cancels Bob''s future unknown attendance'
+  (SELECT registration_status FROM event_instance_registration WHERE instance_id = 900002 AND person_id = 200002),
+  'cancelled'::event_instance_registration_status,
+  'expiry cancels Bob''s future registration'
 );
 
 -- Test 5: past 'attended' attendance is untouched
@@ -116,9 +186,9 @@ SELECT tap.ok(
 UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expired' WHERE id = 860003;
 
 SELECT tap.is(
-  (SELECT status FROM event_instance_registration WHERE instance_id = 900002 AND person_id = 200003),
-  'cancelled'::attendance_type,
-  'expiry cancels future not-excused attendance'
+  (SELECT registration_status FROM event_instance_registration WHERE instance_id = 900002 AND person_id = 200003),
+  'cancelled'::event_instance_registration_status,
+  'expiry cancels the future registration with not-excused attendance'
 );
 
 SELECT tap.ok(
@@ -129,32 +199,284 @@ SELECT tap.ok(
 -- ── Expire Dana ───────────────────────────────────────────────────────────────
 UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expired' WHERE id = 860004;
 
--- Test 7: registration with ONLY future unknown attendance IS deleted
--- (all attendance rows become cancelled → bool_and(cancelled) = true → deleted)
+-- Test 7: the legacy source remains while only the future instance registration is cancelled.
 SELECT tap.ok(
-  NOT EXISTS (SELECT 1 FROM event_registration WHERE event_id = 700001 AND person_id = 200004),
-  'registration with only future attendance is deleted when all become cancelled'
+  EXISTS (SELECT 1 FROM event_registration WHERE event_id = 700001 AND person_id = 200004)
+  AND EXISTS (
+    SELECT 1 FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200004
+      AND registration_status = 'cancelled'
+  ),
+  'expiry preserves the bridge source and cancels only the future registration'
 );
 
 -- ── Re-activate Alice ─────────────────────────────────────────────────────────
 INSERT INTO cohort_membership (tenant_id, cohort_id, person_id, since, status)
   VALUES (1000, 800001, 200001, now(), 'active');
 
--- Test 8: re-activation re-registers the person (register_new_cohort_member_to_events)
+-- Test 8: re-activation restores the exact future registration.
 SELECT tap.ok(
   EXISTS (
-    SELECT 1 FROM event_registration
-    WHERE event_id = 700001 AND person_id = 200001 AND tenant_id = 1000
+    SELECT 1 FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200001
+      AND registration_status = 'active'
   ),
-  're-activating membership re-registers person to event with future instances'
+  're-activating membership restores the exact future registration'
 );
 
 SELECT tap.ok(
-  NOT EXISTS (SELECT 1 FROM event_instance_registration WHERE registration_status <> 'active'),
-  'legacy root and child rows start with an active registration lifecycle'
+  EXISTS (
+    SELECT 1 FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200001
+      AND target_cohort_id = 800001
+      AND source = 'cohort'
+      AND registration_status = 'active'
+  ),
+  'cohort management stays on the exact registration'
+);
+
+CREATE TEMP TABLE _target_unchanged_before ON COMMIT DROP AS
+SELECT id, created_at, updated_at
+FROM event_instance_target_cohort
+WHERE instance_id = 900002 AND cohort_id = 800001;
+
+SELECT public.update_event_instance_details(
+  p_instance_id => instance.id,
+  p_since => instance.since,
+  p_until => instance.until,
+  p_name => instance.name,
+  p_type => instance.type,
+  p_location_id => instance.location_id,
+  p_location_text => instance.location_text,
+  p_is_visible => instance.is_visible,
+  p_is_public => instance.is_public,
+  p_is_cancelled => instance.is_cancelled,
+  p_cohort_ids => ARRAY[800001]
+)
+FROM event_instance instance
+WHERE instance.id = 900002;
+
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1
+    FROM _target_unchanged_before before
+    JOIN event_instance_target_cohort target ON target.id = before.id
+    WHERE target.instance_id = 900002
+      AND target.cohort_id = 800001
+      AND target.created_at = before.created_at
+      AND target.updated_at = before.updated_at
+  ),
+  'saving an unchanged instance cohort preserves its exact target row'
+);
+
+SELECT public.update_event_instance_details(
+  p_instance_id => instance.id,
+  p_since => instance.since,
+  p_until => instance.until,
+  p_name => instance.name,
+  p_type => instance.type,
+  p_location_id => instance.location_id,
+  p_location_text => instance.location_text,
+  p_is_visible => instance.is_visible,
+  p_is_public => instance.is_public,
+  p_is_cancelled => instance.is_cancelled,
+  p_cohort_ids => '{}'::bigint[]
+)
+FROM event_instance instance
+WHERE instance.id = 900002;
+
+CREATE TEMP TABLE _target_removal ON COMMIT DROP AS
+SELECT registration_status = 'cancelled' AS cancelled,
+  source = 'cohort' AND target_cohort_id = 800001 AS cohort_managed,
+  EXISTS (
+    SELECT 1 FROM event_instance_target_cohort
+    WHERE instance_id = 900001 AND cohort_id = 800001
+  ) AS past_target_preserved
+FROM event_instance_registration
+WHERE instance_id = 900002 AND person_id = 200001;
+
+SELECT public.update_event_instance_details(
+  p_instance_id => instance.id,
+  p_since => instance.since,
+  p_until => instance.until,
+  p_name => instance.name,
+  p_type => instance.type,
+  p_location_id => instance.location_id,
+  p_location_text => instance.location_text,
+  p_is_visible => instance.is_visible,
+  p_is_public => instance.is_public,
+  p_is_cancelled => instance.is_cancelled,
+  p_cohort_ids => ARRAY[800001, 800001]
+)
+FROM event_instance instance
+WHERE instance.id = 900002;
+
+SELECT tap.ok(
+  (SELECT cancelled AND cohort_managed AND past_target_preserved FROM _target_removal)
+  AND EXISTS (
+    SELECT 1 FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200001
+      AND registration_status = 'active'
+      AND source = 'cohort'
+      AND target_cohort_id = 800001
+  ) AND 1 = (
+    SELECT count(*)
+    FROM event_instance_target_cohort
+    WHERE instance_id = 900002
+      AND cohort_id = 800001
+  ),
+  'removing and restoring an instance target reconciles its registration'
 );
 
 SELECT set_config('jwt.claims.tenant_id', '1000', true);
+SELECT set_config('jwt.claims.my_person_ids', '[200001]', true);
+
+SELECT set_event_instance_registration(900002, 200001, null, false);
+
+SELECT app_private.reconcile_event_instance_cohort_registrations(
+  ARRAY[900002], ARRAY[200001]
+);
+
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200001
+      AND parent_registration_id is null
+      AND registration_status = 'cancelled'
+      AND source = 'self'
+      AND target_cohort_id is null
+  ),
+  'cohort reconciliation preserves a member''s own cancellation'
+);
+
+UPDATE event_instance SET is_public = true WHERE id = 900002;
+SELECT set_config('jwt.claims.my_tenant_ids', '[1000]', true);
+SELECT set_config('jwt.claims.my_person_ids', '[200003]', true);
+SELECT set_event_instance_registration(900002, 200003, null, true);
+
+SELECT app_private.reconcile_event_instance_cohort_registrations(
+  ARRAY[900002], ARRAY[200003]
+);
+
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200003
+      AND parent_registration_id is null
+      AND registration_status = 'active'
+      AND source = 'self'
+      AND target_cohort_id is null
+  ),
+  'member re-registration remains self-managed through reconciliation'
+);
+
+INSERT INTO cohort_membership (tenant_id, cohort_id, person_id, since, status)
+VALUES (1000, 800001, 200002, now(), 'active');
+
+CREATE TEMP TABLE _manager_removal_before ON COMMIT DROP AS
+SELECT registration_status = 'active'
+    AND source = 'cohort'
+    AND target_cohort_id = 800001 AS cohort_managed
+FROM event_instance_registration
+WHERE instance_id = 900002
+  AND person_id = 200002
+  AND parent_registration_id is null;
+
+SELECT public.update_event_instance_details(
+  instance.id,
+  instance.since,
+  instance.until,
+  instance.name,
+  instance.type,
+  instance.location_id,
+  instance.location_text,
+  instance.is_visible,
+  instance.is_public,
+  instance.is_cancelled,
+  null,
+  ARRAY[
+    ROW(200003, null)::public.quick_event_registration_input,
+    ROW(200005, null)::public.quick_event_registration_input
+  ]
+)
+FROM event_instance instance
+WHERE instance.id = 900002;
+
+SELECT app_private.reconcile_event_instance_cohort_registrations(
+  ARRAY[900002], ARRAY[200002]
+);
+
+SELECT tap.ok(
+  (SELECT cohort_managed FROM _manager_removal_before)
+  AND EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200002
+      AND parent_registration_id is null
+      AND registration_status = 'cancelled'
+      AND source = 'manager'
+      AND target_cohort_id is null
+  ),
+  'manager removal remains manager-controlled through reconciliation'
+);
+
+CREATE TEMP TABLE _manager_registration_before ON COMMIT DROP AS
+SELECT registration_status = 'cancelled'
+    AND source = 'cohort'
+    AND target_cohort_id = 800001 AS cohort_managed
+FROM event_instance_registration
+WHERE instance_id = 900002
+  AND person_id = 200004
+  AND parent_registration_id is null;
+
+SELECT public.update_event_instance_details(
+  instance.id,
+  instance.since,
+  instance.until,
+  instance.name,
+  instance.type,
+  instance.location_id,
+  instance.location_text,
+  instance.is_visible,
+  instance.is_public,
+  instance.is_cancelled,
+  null,
+  ARRAY[
+    ROW(200003, null)::public.quick_event_registration_input,
+    ROW(200004, null)::public.quick_event_registration_input,
+    ROW(200005, null)::public.quick_event_registration_input
+  ]
+)
+FROM event_instance instance
+WHERE instance.id = 900002;
+
+SELECT app_private.reconcile_event_instance_cohort_registrations(
+  ARRAY[900002], ARRAY[200004]
+);
+
+SELECT tap.ok(
+  (SELECT cohort_managed FROM _manager_registration_before)
+  AND EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = 900002
+      AND person_id = 200004
+      AND parent_registration_id is null
+      AND registration_status = 'active'
+      AND source = 'manager'
+      AND target_cohort_id is null
+  ),
+  'manager registration overrides an automatically cancelled cohort registration'
+);
 
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
 VALUES (2900001, 'Stats', 'Test', 'unspecified', '');
@@ -164,8 +486,8 @@ VALUES
   (9900001, 1000, now(), now() + interval '1 hour'),
   (9900002, 1000, now() + interval '2 hours', now() + interval '3 hours');
 
-INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, status)
-VALUES (1000, 9900001, 2900001, 'unknown');
+INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, source, status)
+VALUES (1000, 9900001, 2900001, 'manager', 'unknown');
 
 UPDATE event_instance_registration
 SET instance_id = 9900002
@@ -214,8 +536,8 @@ VALUES
 
 UPDATE event_instance SET is_public = true WHERE id = 9900003;
 
-INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, status)
-VALUES (1000, 9900003, 2900005, 'unknown');
+INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, source, status)
+VALUES (1000, 9900003, 2900005, 'manager', 'unknown');
 
 INSERT INTO event_trainer (tenant_id, event_id, person_id, lessons_offered)
 VALUES (1000, 700001, 2900002, 1);
@@ -235,8 +557,8 @@ SET LOCAL ROLE trainer;
 
 SELECT tap.lives_ok(
   $$
-    insert into event_instance_registration (tenant_id, instance_id, person_id, status)
-    values (1000, 9900001, 2900003, 'unknown')
+    insert into event_instance_registration (tenant_id, instance_id, person_id, source, status)
+    values (1000, 9900001, 2900003, 'manager', 'unknown')
   $$,
   'a trainer can insert attendance for an instance they manage'
 );
@@ -286,8 +608,8 @@ SELECT tap.throws_ok(
 
 SELECT tap.throws_ok(
   $$
-    insert into event_instance_registration (tenant_id, instance_id, person_id, status)
-    values (1000, 9900003, 2900003, 'unknown')
+    insert into event_instance_registration (tenant_id, instance_id, person_id, source, status)
+    values (1000, 9900003, 2900003, 'manager', 'unknown')
   $$,
   '42501'::char(5),
   null,
@@ -338,6 +660,7 @@ SELECT tap.ok(
     WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
       AND registration.person_id = 2900003
       AND registration.registration_status = 'active'
+      AND registration.source = 'manager'
       AND EXISTS (
         SELECT 1
         FROM event_lesson_demand demand
@@ -403,6 +726,7 @@ SELECT tap.ok(
     WHERE instance_id = (SELECT id FROM _scheduled_lesson)
       AND person_id = 2900005
       AND registration_status = 'cancelled'
+      AND source = 'self'
   ),
   'self-registration respects capacity and can be cancelled'
 );
@@ -433,6 +757,7 @@ SELECT tap.ok(
     WHERE root.instance_id = (SELECT id FROM _scheduled_lesson)
       AND root.couple_id = 2950001
       AND root.registration_status = 'active'
+      AND root.source = 'manager'
       AND 2 = (
         SELECT count(*)
         FROM event_instance_registration child
@@ -446,6 +771,7 @@ SELECT tap.ok(
       AND person_id = 2900003
       AND parent_registration_id is null
       AND registration_status = 'cancelled'
+      AND source = 'manager'
   ) AND (
     SELECT stats->>'TOTAL' = '2'
     FROM event_instance
@@ -506,6 +832,7 @@ SELECT tap.ok(
     WHERE root.instance_id = (SELECT id FROM _scheduled_lesson)
       AND root.couple_id = 2950001
       AND root.registration_status = 'cancelled'
+      AND root.source = 'manager'
       AND NOT EXISTS (
         SELECT 1
         FROM event_instance_registration child
@@ -520,6 +847,7 @@ SELECT tap.ok(
       AND person_id = 2900003
       AND parent_registration_id is null
       AND registration_status = 'active'
+      AND source = 'manager'
   )
   AND EXISTS (
     SELECT 1
@@ -604,7 +932,8 @@ SET registration_status = 'cancelled'
 WHERE instance_id = 900001 AND person_id = 200002;
 
 CREATE TEMP TABLE _detached_audit_before ON COMMIT DROP AS
-SELECT person_id, attendance_created_at, attendance_updated_at
+SELECT person_id, source, target_cohort_id,
+  attendance_created_at, attendance_updated_at
 FROM event_instance_registration
 WHERE instance_id = 900001 AND person_id is not null;
 
@@ -625,6 +954,8 @@ SELECT tap.ok(
     LEFT JOIN event_instance_registration eir
       ON eir.instance_id = 900001 AND eir.person_id = before.person_id
     WHERE eir.id is null
+      OR eir.source is distinct from before.source
+      OR eir.target_cohort_id is distinct from before.target_cohort_id
       OR eir.attendance_created_at is distinct from before.attendance_created_at
       OR eir.attendance_updated_at is distinct from before.attendance_updated_at
   ) AND EXISTS (

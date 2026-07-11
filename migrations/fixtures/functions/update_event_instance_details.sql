@@ -11,6 +11,11 @@ drop function if exists public.update_event_instance_details(
   boolean, boolean, boolean, bigint[], public.quick_event_registration_input[],
   integer, public.event_capacity_unit, boolean
 );
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[], public.quick_event_registration_input[],
+  integer, public.event_capacity_unit, boolean, integer[]
+);
 
 create or replace function public.update_event_instance_details(
   p_instance_id bigint,
@@ -28,7 +33,8 @@ create or replace function public.update_event_instance_details(
   p_capacity integer default null,
   p_capacity_unit public.event_capacity_unit default null,
   p_is_locked boolean default null,
-  p_trainer_lessons_offered integer[] default null
+  p_trainer_lessons_offered integer[] default null,
+  p_cohort_ids bigint[] default null
 ) returns public.event_instance
   language plpgsql
 as $$
@@ -81,7 +87,10 @@ begin
         )
     )
     update public.event_instance_registration registration
-    set registration_status = 'cancelled'
+    set registration_status = 'cancelled',
+        target_cohort_id = null,
+        source = case when registration.id = roots.id
+          then 'manager'::public.event_registration_source end
     from roots
     where registration.registration_status <> 'cancelled'
       and (
@@ -102,7 +111,10 @@ begin
         and existing.parent_registration_id is null
     )
     update public.event_instance_registration registration
-    set registration_status = 'active'
+    set registration_status = 'active',
+        target_cohort_id = null,
+        source = case when registration.id = roots.id
+          then 'manager'::public.event_registration_source end
     from roots
     where registration.registration_status <> 'active'
       and (
@@ -115,12 +127,13 @@ begin
       from unnest(p_registrations) registration
     ), roots as (
       insert into public.event_instance_registration (
-        instance_id, person_id, couple_id, status
+        instance_id, person_id, couple_id, source, status
       )
       select
         p_instance_id,
         desired.person_id,
         desired.couple_id,
+        'manager',
         case when desired.person_id is not null then 'unknown'::public.attendance_type end
       from desired
       where not exists (
@@ -140,6 +153,22 @@ begin
     from roots
     join public.couple couple on couple.id = roots.couple_id
     cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id);
+  end if;
+
+  if p_cohort_ids is not null then
+    insert into public.event_instance_target_cohort (tenant_id, instance_id, cohort_id)
+    select distinct updated_instance.tenant_id, p_instance_id, desired.cohort_id
+    from unnest(p_cohort_ids) desired(cohort_id)
+    where desired.cohort_id is not null
+    on conflict (instance_id, cohort_id) do nothing;
+
+    delete from public.event_instance_target_cohort target
+    where target.instance_id = p_instance_id
+      and not exists (
+        select 1
+        from unnest(p_cohort_ids) desired(cohort_id)
+        where desired.cohort_id = target.cohort_id
+      );
   end if;
 
   if p_trainer_person_ids is not null then
@@ -174,7 +203,7 @@ begin
       else excluded.lessons_offered end;
   end if;
 
-  if p_registrations is not null then
+  if p_registrations is not null or p_cohort_ids is not null then
     select * into updated_instance
     from public.event_instance
     where id = p_instance_id;

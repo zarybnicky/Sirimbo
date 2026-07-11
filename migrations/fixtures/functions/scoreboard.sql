@@ -44,14 +44,14 @@ as $$
       on ea.instance_id = inst.instance_id and ea.person_id is not null
     left join event_instance_registration registration
       on registration.id = ea.parent_registration_id
-    left join event_target_cohort tc
+    left join cohort tc
       on tc.id = coalesce(ea.target_cohort_id, registration.target_cohort_id)
     where
       ea.registration_status = 'active'
       and ea.status <> 'cancelled'
       and (ea.status = 'attended' or inst.event_type = 'lesson')
       and ea.person_id = any (select person_id from member_people)
-      and (scoreboard_entries.cohort_id is null or tc.cohort_id = scoreboard_entries.cohort_id)
+      and (scoreboard_entries.cohort_id is null or tc.id = scoreboard_entries.cohort_id)
   ),
   per_day as (
     select

@@ -24,9 +24,10 @@ begin
 
     with roots as (
       insert into event_instance_registration (
-        instance_id, person_id, couple_id, status
+        instance_id, person_id, couple_id, source, status
       )
       select created_instance.id, registration.person_id, registration.couple_id,
+        'manager',
         case when registration.person_id is not null then 'unknown'::attendance_type end
       from unnest(quick_event.registrations) registration
       returning id, couple_id

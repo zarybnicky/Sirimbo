@@ -56,7 +56,10 @@ begin
     end if;
 
     update event_instance_registration
-    set registration_status = 'cancelled'
+    set registration_status = 'cancelled',
+        target_cohort_id = null,
+        source = case when id = registration.id
+          then 'self'::event_registration_source end
     where id = registration.id or parent_registration_id = registration.id;
 
     select * into registration from event_instance_registration where id = registration.id;
@@ -94,7 +97,10 @@ begin
 
   if registration_found then
     update event_instance_registration
-    set registration_status = 'active'
+    set registration_status = 'active',
+        target_cohort_id = null,
+        source = case when id = registration.id
+          then 'self'::event_registration_source end
     where id = registration.id or parent_registration_id = registration.id;
 
     if p_note is not null then
@@ -102,9 +108,9 @@ begin
     end if;
   else
     insert into event_instance_registration (
-      instance_id, person_id, couple_id, status, note
+      instance_id, person_id, couple_id, source, status, note
     ) values (
-      p_instance_id, p_person_id, p_couple_id,
+      p_instance_id, p_person_id, p_couple_id, 'self',
       case when p_person_id is not null then 'unknown'::attendance_type end,
       p_note
     ) returning * into registration;
