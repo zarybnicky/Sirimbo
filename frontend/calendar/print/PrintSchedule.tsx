@@ -97,10 +97,10 @@ export function PrintSchedule() {
       </div>
 
       {viewKey === 'day' && (
-        <PrintDay date={date} events={instances} resources={resources} />
+        <PrintDay date={date} events={events} resources={resources} />
       )}
       {viewKey === 'week' && (
-        <PrintWeek range={range} events={instances} resources={resources} />
+        <PrintWeek range={range} events={events} resources={resources} />
       )}
       {viewKey === 'month' && (
         <PrintMonth anchor={date} events={instances} resources={resources} />

@@ -1,11 +1,11 @@
 import React from 'react';
 import { range } from '@/calendar/localizer';
-import type { CalendarInstanceEvent, DateRange, Resource } from '@/calendar/types';
+import type { CalendarEvent, DateRange, Resource } from '@/calendar/types';
 import { PrintDay } from './PrintDay';
 
 /**
- * Print-ready week: for now, simply the daily grid repeated for each day in
- * the range, one day per printed page.
+ * Print-ready week: the daily time-grid repeated for each day in the range,
+ * one day per printed page.
  */
 export function PrintWeek({
   range: { since, until },
@@ -13,7 +13,7 @@ export function PrintWeek({
   resources,
 }: {
   range: DateRange;
-  events: readonly CalendarInstanceEvent[];
+  events: readonly CalendarEvent[];
   resources: readonly Resource[];
 }) {
   const days = React.useMemo(() => range(since, until, 'day'), [since, until]);

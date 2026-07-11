@@ -2,14 +2,9 @@ import React from 'react';
 import { cn } from '@/lib/cn';
 import { endOf, eq, startOf } from 'date-arithmetic';
 import { format, range, shortTimeIntl } from '@/calendar/localizer';
-import { capitalize } from '@/ui/format';
+import { capitalize, formatDefaultInstanceName } from '@/ui/format';
 import type { CalendarInstanceEvent, Resource } from '@/calendar/types';
-import {
-  buildMonthDays,
-  describeEvent,
-  type OccupancySegment,
-  type TrainerStrip,
-} from './model';
+import { buildMonthDays, type OccupancySegment, type TrainerStrip } from './model';
 
 /**
  * Trimmed, print-ready month: a vertical list of days. Each day writes out its
@@ -74,7 +69,8 @@ export function PrintMonth({
 }
 
 function GroupLine({ event }: { event: CalendarInstanceEvent }) {
-  const { label, color } = describeEvent(event);
+  const color = event.instance.targetCohortsList?.find((x) => x.cohort?.colorRgb)?.cohort
+    ?.colorRgb;
   return (
     <span className="inline-flex items-center gap-1 whitespace-nowrap">
       <span
@@ -84,7 +80,7 @@ function GroupLine({ event }: { event: CalendarInstanceEvent }) {
       <span className="tabular-nums text-neutral-11">
         {shortTimeIntl.format(event.start)}
       </span>
-      <span className="font-medium">{label}</span>
+      <span className="font-medium">{formatDefaultInstanceName(event.instance)}</span>
     </span>
   );
 }
