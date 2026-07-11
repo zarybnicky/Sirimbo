@@ -1,94 +1,50 @@
-import type { CalendarEvent, CalendarInstanceEvent } from '@/calendar/types';
+import type { CalendarInstanceEvent, Resource } from '@/calendar/types';
 import { eq, startOf } from 'date-arithmetic';
 import { formatEventType, formatRegistrant } from '@/ui/format';
 
 /**
- * Shared data model for the print-ready schedule views. The interactive
- * calendar positions events absolutely for drag-and-drop; the printed views
- * instead need static, paper-friendly tables and summaries, so they work off
- * this small set of pure helpers rather than the on-screen layout engine.
+ * Data model for the print-ready schedule views. Trainer columns come from the
+ * calendar's existing resource grouping (`useCalendarData(..., 'trainer')`);
+ * this module adds the paper-only pieces: a dedicated "groups" lane, a
+ * boundary-based day table, and the month occupancy strips.
  */
 
-const UNASSIGNED_ID = '__none__';
+export type CellInfo = {
+  isGroup: boolean;
+  isBooked: boolean;
+  /** What to print inside the cell. */
+  label: string;
+  /** Group colour taken from the target cohort, if any. */
+  color?: string;
+};
 
-export type Trainer = { id: string; name: string };
-
-export type CellKind = 'group' | 'booked' | 'free';
-
-export function instanceEvents(
-  events: readonly CalendarEvent[],
-): CalendarInstanceEvent[] {
-  return events.filter((e): e is CalendarInstanceEvent => e.kind === 'event');
-}
-
-export function eventsOnDay(
-  events: readonly CalendarInstanceEvent[],
-  day: Date,
-): CalendarInstanceEvent[] {
-  return events
-    .filter((e) => eq(e.start, day, 'day'))
-    .toSorted((a, b) => +a.start - +b.start);
-}
-
-function isGroup(e: CalendarInstanceEvent): boolean {
-  return e.instance.type !== 'LESSON';
-}
-
-function isBooked(e: CalendarInstanceEvent): boolean {
-  return (e.instance.registrations.totalCount ?? 0) > 0;
-}
-
-export function cellKind(e: CalendarInstanceEvent): CellKind {
-  if (isGroup(e)) return 'group';
-  return isBooked(e) ? 'booked' : 'free';
-}
-
-/** The trainer column(s) an event belongs to, or the unassigned bucket. */
-function columnIdsFor(e: CalendarInstanceEvent): string[] {
-  const ids = (e.instance.trainersList ?? [])
-    .map((t) => t.personId)
-    .filter((id): id is string => !!id);
-  return ids.length > 0 ? ids : [UNASSIGNED_ID];
-}
-
-/** Distinct trainers appearing in the events, sorted by name, with an
- * "Ostatní" bucket appended when some events have no trainer assigned. */
-function collectColumns(events: CalendarInstanceEvent[]): Trainer[] {
-  const map = new Map<string, string>();
-  let hasUnassigned = false;
-  for (const e of events) {
-    const trainers = (e.instance.trainersList ?? []).filter((t) => t.personId);
-    if (trainers.length === 0) hasUnassigned = true;
-    for (const t of trainers) map.set(t.personId, t.person?.name || '');
-  }
-  const columns = [...map.entries()]
-    .map(([id, name]) => ({ id, name }))
-    .toSorted((a, b) => a.name.localeCompare(b.name, 'cs'));
-  if (hasUnassigned) columns.push({ id: UNASSIGNED_ID, name: 'Ostatní' });
-  return columns;
-}
-
-/** The label shown inside a schedule cell: an explicit name, the booked
- * registrants, the group/event type, or a "free lesson" marker. */
-export function eventLabel(e: CalendarInstanceEvent): string {
+/** Derives everything the views need to render a single instance. */
+export function describeEvent(e: CalendarInstanceEvent): CellInfo {
   const { instance } = e;
-  if (instance.name) return instance.name;
-  if (instance.type === 'LESSON') {
-    const regs = instance.registrations.nodes;
-    if (regs.length > 0) return regs.map(formatRegistrant).filter(Boolean).join(', ');
-    return 'volná';
-  }
-  return formatEventType(instance.type);
-}
+  const isGroup = instance.type !== 'LESSON';
+  const isBooked = (instance.registrations.totalCount ?? 0) > 0;
+  const color =
+    instance.targetCohortsList?.find((x) => x.cohort?.colorRgb)?.cohort?.colorRgb ||
+    undefined;
 
-export function cohortColor(e: CalendarInstanceEvent): string | undefined {
-  return (
-    e.instance.targetCohortsList?.find((x) => x.cohort?.colorRgb)?.cohort
-      ?.colorRgb || undefined
-  );
+  const label =
+    instance.name ||
+    (isGroup
+      ? formatEventType(instance.type)
+      : isBooked
+        ? instance.registrations.nodes.map(formatRegistrant).filter(Boolean).join(', ')
+        : 'volná');
+
+  return { isGroup, isBooked, label, color };
 }
 
 // ---- Day grid ----------------------------------------------------------
+
+export type PrintColumn = {
+  key: string;
+  title: string;
+  kind: 'group' | 'trainer';
+};
 
 export type DayGridRow = { start: Date; end: Date };
 
@@ -98,7 +54,9 @@ export type DayCell =
   | { type: 'event'; event: CalendarInstanceEvent; rowSpan: number };
 
 export type DayGrid = {
-  columns: Trainer[];
+  columns: PrintColumn[];
+  /** Leading columns holding group lessons; the rest are trainers. */
+  groupColumnCount: number;
   rows: DayGridRow[];
   /** cells[columnIndex][rowIndex] */
   cells: DayCell[][];
@@ -106,15 +64,42 @@ export type DayGrid = {
 };
 
 /**
- * Builds a trainers-as-columns / time-as-rows table for a single day.
- *
- * Rows are derived from the distinct start/end boundaries of that day's
- * lessons (as in the club's hand-kept spreadsheet), so the table compacts to
- * only the times something actually happens while still letting a longer
- * lesson span the shorter slots underneath it.
+ * Builds the day table: group lessons packed into as few side-by-side lanes as
+ * their overlaps require, followed by one column per trainer with events that
+ * day. Rows are the distinct start/end boundaries of the day's events, so the
+ * table compacts to the times something happens while a longer lesson spans
+ * the shorter slots beneath it.
  */
-export function buildDayGrid(dayEvents: CalendarInstanceEvent[]): DayGrid {
-  const columns = collectColumns(dayEvents);
+export function buildDayGrid(
+  events: readonly CalendarInstanceEvent[],
+  day: Date,
+  resources: readonly Resource[],
+): DayGrid {
+  const dayEvents = eventsForDay(events, day);
+  const groupLanes = packLanes(dayEvents.filter((e) => describeEvent(e).isGroup));
+  const lessons = dayEvents.filter((e) => !describeEvent(e).isGroup);
+
+  const present = new Set(lessons.flatMap((e) => e.resourceIds));
+  const trainerCols = resources.filter((r) => present.has(r.resourceId));
+
+  const columns: PrintColumn[] = [
+    ...groupLanes.map((_, i) => ({
+      key: `__group_${i}`,
+      title: 'Společné',
+      kind: 'group' as const,
+    })),
+    ...trainerCols.map((r) => ({
+      key: r.resourceId,
+      title: r.resourceTitle,
+      kind: 'trainer' as const,
+    })),
+  ];
+
+  // Which column(s) each event lives in.
+  const columnKeys = new Map<CalendarInstanceEvent, string[]>();
+  for (const [i, lane] of groupLanes.entries())
+    for (const e of lane) columnKeys.set(e, [`__group_${i}`]);
+  for (const e of lessons) columnKeys.set(e, [...e.resourceIds]);
 
   const boundaries = [
     ...new Set(dayEvents.flatMap((e) => [+e.start, +e.end])),
@@ -124,7 +109,7 @@ export function buildDayGrid(dayEvents: CalendarInstanceEvent[]): DayGrid {
     rows.push({ start: new Date(boundaries[i]!), end: new Date(boundaries[i + 1]!) });
   }
 
-  const colIdx = new Map(columns.map((c, i) => [c.id, i]));
+  const colIdx = new Map(columns.map((c, i) => [c.key, i]));
   const cells: DayCell[][] = columns.map(() =>
     rows.map(() => ({ type: 'empty' }) as DayCell),
   );
@@ -135,98 +120,117 @@ export function buildDayGrid(dayEvents: CalendarInstanceEvent[]): DayGrid {
     let span = 0;
     while (r0 + span < rows.length && +rows[r0 + span]!.start < +e.end) span++;
 
-    for (const cid of columnIdsFor(e)) {
-      const ci = colIdx.get(cid);
+    for (const key of columnKeys.get(e) ?? []) {
+      const ci = colIdx.get(key);
       if (ci === undefined || cells[ci]![r0]!.type !== 'empty') continue;
       cells[ci]![r0] = { type: 'event', event: e, rowSpan: span };
       for (let r = r0 + 1; r < r0 + span; r++) cells[ci]![r] = { type: 'span' };
     }
   }
 
-  return { columns, rows, cells, isEmpty: dayEvents.length === 0 };
+  return {
+    columns,
+    groupColumnCount: groupLanes.length,
+    rows,
+    cells,
+    isEmpty: dayEvents.length === 0,
+  };
+}
+
+/** Greedy interval partition: the fewest lanes so no two events overlap in a
+ * lane. Input must be sorted by start. */
+function packLanes(events: CalendarInstanceEvent[]): CalendarInstanceEvent[][] {
+  const lanes: { end: number; items: CalendarInstanceEvent[] }[] = [];
+  for (const e of events) {
+    const lane = lanes.find((l) => l.end <= +e.start);
+    if (lane) {
+      lane.items.push(e);
+      lane.end = +e.end;
+    } else {
+      lanes.push({ end: +e.end, items: [e] });
+    }
+  }
+  return lanes.map((l) => l.items);
 }
 
 // ---- Month occupancy ---------------------------------------------------
 
 export type OccupancySegment = {
-  /** Fraction of the day window [0, 1] where the segment starts/ends. */
+  /** Position within the shared daily window, in percent. */
   startPct: number;
   widthPct: number;
-  kind: CellKind;
+  booked: boolean;
   label: string;
 };
 
-export type TrainerDay = {
-  trainer: Trainer;
+export type TrainerStrip = {
+  resource: Resource;
   segments: OccupancySegment[];
-  hasFree: boolean;
-  hasBooked: boolean;
 };
 
 export type MonthDay = {
   date: Date;
   groups: CalendarInstanceEvent[];
-  trainerDays: TrainerDay[];
+  strips: TrainerStrip[];
 };
 
 /**
- * Builds the trimmed month overview: for every day, the group lessons written
- * out plus one occupancy strip per trainer. Segments are placed against a
- * shared daily time window so the strips line up visually across trainers.
+ * Builds the trimmed month overview: for every day, its group lessons plus one
+ * occupancy strip per resource — solid where booked, hatched where free.
+ * Segments share one daily time window (derived across the whole month) so the
+ * strips line up visually across days and trainers.
  */
 export function buildMonthDays(
-  monthEvents: CalendarInstanceEvent[],
-  days: Date[],
+  events: readonly CalendarInstanceEvent[],
+  days: readonly Date[],
+  resources: readonly Resource[],
 ): MonthDay[] {
-  // A single time window shared by every strip, derived from the whole month
-  // so bars are comparable day-to-day. Falls back to a sensible default when
-  // the month is empty.
   let min = Number.POSITIVE_INFINITY;
   let max = Number.NEGATIVE_INFINITY;
-  for (const e of monthEvents) {
-    const s = minutesOfDay(e.start);
-    const u = minutesOfDay(e.end);
-    if (s < min) min = s;
-    if (u > max) max = u;
+  for (const e of events) {
+    min = Math.min(min, minutesOfDay(e.start));
+    max = Math.max(max, minutesOfDay(e.end));
   }
-  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) {
+  if (!Number.isFinite(min) || max <= min) {
     min = 8 * 60;
     max = 22 * 60;
   }
   const windowMinutes = max - min;
 
   return days.map((date) => {
-    const dayEvents = eventsOnDay(monthEvents, date);
-    const groups = dayEvents.filter(isGroup);
-    const columns = collectColumns(dayEvents.filter((e) => !isGroup(e)));
+    const dayEvents = eventsForDay(events, date);
+    const groups = dayEvents.filter((e) => describeEvent(e).isGroup);
+    const lessons = dayEvents.filter((e) => !describeEvent(e).isGroup);
+    const present = new Set(lessons.flatMap((e) => e.resourceIds));
 
-    const trainerDays: TrainerDay[] = columns.map((trainer) => {
-      const own = dayEvents.filter(
-        (e) => !isGroup(e) && columnIdsFor(e).includes(trainer.id),
-      );
-      const segments = own.map<OccupancySegment>((e) => {
-        const start = Math.max(min, minutesOfDay(e.start));
-        const end = Math.min(max, minutesOfDay(e.end));
-        return {
-          startPct: ((start - min) / windowMinutes) * 100,
-          widthPct: (Math.max(end - start, 6) / windowMinutes) * 100,
-          kind: cellKind(e),
-          label: eventLabel(e),
-        };
-      });
-      return {
-        trainer,
-        segments,
-        hasFree: own.some((e) => !isBooked(e)),
-        hasBooked: own.some(isBooked),
-      };
-    });
+    const strips = resources
+      .filter((r) => present.has(r.resourceId))
+      .map<TrainerStrip>((resource) => ({
+        resource,
+        segments: lessons
+          .filter((e) => e.resourceIds.includes(resource.resourceId))
+          .map<OccupancySegment>((e) => {
+            const start = Math.max(min, minutesOfDay(e.start));
+            const end = Math.min(max, minutesOfDay(e.end));
+            return {
+              startPct: ((start - min) / windowMinutes) * 100,
+              widthPct: (Math.max(end - start, 6) / windowMinutes) * 100,
+              booked: describeEvent(e).isBooked,
+              label: describeEvent(e).label,
+            };
+          }),
+      }));
 
-    return { date, groups, trainerDays };
+    return { date, groups, strips };
   });
 }
 
+function eventsForDay(events: readonly CalendarInstanceEvent[], day: Date) {
+  return events
+    .filter((e) => eq(e.start, day, 'day'))
+    .toSorted((a, b) => +a.start - +b.start);
+}
+
 function minutesOfDay(d: Date): number {
-  const day = startOf(d, 'day');
-  return (+d - +day) / 60_000;
+  return (+d - +startOf(d, 'day')) / 60_000;
 }

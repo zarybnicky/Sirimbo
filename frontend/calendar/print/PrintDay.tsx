@@ -2,29 +2,27 @@ import React from 'react';
 import { cn } from '@/lib/cn';
 import { format, shortTimeIntl } from '@/calendar/localizer';
 import { capitalize } from '@/ui/format';
-import type { CalendarInstanceEvent } from '@/calendar/types';
-import {
-  buildDayGrid,
-  cellKind,
-  cohortColor,
-  eventLabel,
-  eventsOnDay,
-  type DayCell,
-} from './model';
+import type { CalendarInstanceEvent, Resource } from '@/calendar/types';
+import { buildDayGrid, describeEvent, type DayCell } from './model';
 
 /**
- * Print-ready daily schedule: trainers across the top, time flowing down,
- * group lessons as colored blocks, booked lessons showing the client, and
- * offered-but-unbooked slots hatched as "free".
+ * Print-ready daily schedule: resources (trainers) across the top, time
+ * flowing down. Group lessons render as colored blocks, booked lessons show
+ * the client, and offered-but-unbooked slots are hatched as "free".
  */
 export function PrintDay({
   date,
   events,
+  resources,
 }: {
   date: Date;
   events: readonly CalendarInstanceEvent[];
+  resources: readonly Resource[];
 }) {
-  const grid = React.useMemo(() => buildDayGrid(eventsOnDay(events, date)), [events, date]);
+  const grid = React.useMemo(
+    () => buildDayGrid(events, date, resources),
+    [events, date, resources],
+  );
 
   return (
     <section className="print-day break-inside-avoid">
@@ -35,30 +33,40 @@ export function PrintDay({
       {grid.isEmpty ? (
         <p className="text-sm text-neutral-11">Žádné tréninky</p>
       ) : (
-        <table className="print-grid w-full table-fixed border-collapse text-[11px]">
+        <table className="w-full border-collapse text-[11px]">
           <thead>
             <tr>
-              <th className="w-14 border border-neutral-8 bg-neutral-3 p-1 text-left font-semibold">
+              <th className="whitespace-nowrap border border-neutral-8 bg-neutral-3 px-1 py-0.5 text-left font-semibold">
                 Čas
               </th>
-              {grid.columns.map((col) => (
+              {grid.groupColumnCount > 0 && (
                 <th
-                  key={col.id}
-                  className="border border-neutral-8 bg-neutral-3 p-1 text-center font-semibold"
+                  colSpan={grid.groupColumnCount}
+                  className="border border-neutral-8 bg-neutral-3 px-1 py-0.5 text-center font-semibold"
                 >
-                  {col.name}
+                  Společné
                 </th>
-              ))}
+              )}
+              {grid.columns
+                .filter((col) => col.kind === 'trainer')
+                .map((col) => (
+                  <th
+                    key={col.key}
+                    className="border border-neutral-8 bg-neutral-3 px-1 py-0.5 text-center font-semibold"
+                  >
+                    {col.title}
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody>
             {grid.rows.map((row, ri) => (
               <tr key={+row.start} className="break-inside-avoid">
-                <td className="border border-neutral-8 bg-neutral-2 p-1 text-right align-top tabular-nums">
+                <td className="whitespace-nowrap border border-neutral-8 bg-neutral-2 px-1 py-0.5 text-right align-top tabular-nums">
                   {shortTimeIntl.format(row.start)}
                 </td>
                 {grid.columns.map((col, ci) => (
-                  <Cell key={col.id} cell={grid.cells[ci]![ri]!} />
+                  <Cell key={col.key} cell={grid.cells[ci]![ri]!} />
                 ))}
               </tr>
             ))}
@@ -72,28 +80,26 @@ export function PrintDay({
 function Cell({ cell }: { cell: DayCell }) {
   if (cell.type === 'span') return null;
   if (cell.type === 'empty') {
-    return <td className="border border-neutral-8 p-1" />;
+    return <td className="border border-neutral-8" />;
   }
 
-  const { event, rowSpan } = cell;
-  const kind = cellKind(event);
-  const color = kind === 'group' ? cohortColor(event) : undefined;
-  const label = eventLabel(event);
-  const cancelled = event.instance.isCancelled;
+  const { isGroup, isBooked, label, color } = describeEvent(cell.event);
+  const free = !isGroup && !isBooked;
 
   return (
     <td
-      rowSpan={rowSpan}
-      style={color ? { backgroundColor: color } : undefined}
+      rowSpan={cell.rowSpan}
+      style={isGroup && color ? { backgroundColor: color } : undefined}
       className={cn(
-        'border border-neutral-8 p-1 align-top text-center leading-tight',
-        kind === 'group' && !color && 'bg-neutral-4 font-medium',
-        kind === 'group' && 'font-medium',
-        kind === 'free' && 'print-hatch text-neutral-11',
-        kind === 'booked' && 'bg-neutral-0',
+        'border border-neutral-8 px-1 py-0.5 text-center align-top leading-tight',
+        isGroup && 'font-medium',
+        isGroup && !color && 'bg-neutral-4',
+        free && 'print-hatch text-neutral-11',
       )}
     >
-      <span className={cn('break-words', cancelled && 'line-through')}>{label}</span>
+      <span className={cn('break-words', cell.event.instance.isCancelled && 'line-through')}>
+        {label}
+      </span>
     </td>
   );
 }

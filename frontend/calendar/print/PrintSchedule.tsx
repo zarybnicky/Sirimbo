@@ -7,7 +7,7 @@ import { CalendarDatePicker } from '@/calendar/CalendarDatePicker';
 import { useAuth } from '@/ui/use-auth';
 import { buttonCls } from '@/ui/style';
 import { Spinner } from '@/ui/Spinner';
-import { instanceEvents } from './model';
+import type { CalendarInstanceEvent } from '@/calendar/types';
 import { PrintDay } from './PrintDay';
 import { PrintWeek } from './PrintWeek';
 import { PrintMonth } from './PrintMonth';
@@ -46,8 +46,17 @@ export function PrintSchedule() {
     [auth.personIds],
   );
 
-  const { fetching, range, events } = useCalendarData(view, date, filters, 'none');
-  const instances = React.useMemo(() => instanceEvents(events), [events]);
+  const { fetching, range, events, resources } = useCalendarData(
+    view,
+    date,
+    filters,
+    'trainer',
+  );
+  const instances = React.useMemo(
+    () =>
+      events.filter((e): e is CalendarInstanceEvent => e.kind === 'event'),
+    [events],
+  );
 
   return (
     <div className="print-schedule mx-auto w-full max-w-[1100px] p-4 text-neutral-12">
@@ -87,9 +96,15 @@ export function PrintSchedule() {
         {view.label(range)}
       </div>
 
-      {viewKey === 'day' && <PrintDay date={date} events={instances} />}
-      {viewKey === 'week' && <PrintWeek range={range} events={instances} />}
-      {viewKey === 'month' && <PrintMonth anchor={date} events={instances} />}
+      {viewKey === 'day' && (
+        <PrintDay date={date} events={instances} resources={resources} />
+      )}
+      {viewKey === 'week' && (
+        <PrintWeek range={range} events={instances} resources={resources} />
+      )}
+      {viewKey === 'month' && (
+        <PrintMonth anchor={date} events={instances} resources={resources} />
+      )}
     </div>
   );
 }
