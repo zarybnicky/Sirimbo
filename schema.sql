@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict Xv1sRgH8fzOwA9bwkjWDu1jDDvSxhJsPGFPujPo90THeuB7ylBME7G8W6BGsU0O
+\restrict ZQzVGxXUotYBBgaCznmHX5uF6PavxdnwDTexThHwXSJld3QvEZubfkQ9x22upxZ
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -943,33 +943,6 @@ COMMENT ON TABLE public.event_instance IS '@omit create,delete
 
 
 --
--- Name: event_registration; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_registration (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    target_cohort_id bigint,
-    couple_id bigint,
-    person_id bigint,
-    note text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
-);
-
-
---
--- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections both';
-
-
---
 -- Name: payment; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -978,7 +951,6 @@ CREATE TABLE public.payment (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     accounting_period_id bigint NOT NULL,
     cohort_subscription_id bigint,
-    event_registration_id bigint,
     event_instance_id bigint,
     status public.payment_status NOT NULL,
     variable_symbol text,
@@ -1034,13 +1006,7 @@ CREATE FUNCTION app_private.calculate_transaction_effective_date(t public.transa
  SELECT COALESCE(( SELECT event_instance.since
             FROM (public.payment
               JOIN public.event_instance ON ((payment.event_instance_id = event_instance.id)))
-           WHERE ((calculate_transaction_effective_date.t).payment_id = payment.id)), ( SELECT event_instance.since
-            FROM ((public.payment
-              JOIN public.event_registration ON ((payment.event_registration_id = event_registration.id)))
-              JOIN public.event_instance ON ((event_instance.event_id = event_registration.event_id)))
-           WHERE ((calculate_transaction_effective_date.t).payment_id = payment.id)
-           ORDER BY event_instance.since
-          LIMIT 1), ( SELECT payment.due_at
+           WHERE ((calculate_transaction_effective_date.t).payment_id = payment.id)), ( SELECT payment.due_at
             FROM public.payment
            WHERE ((calculate_transaction_effective_date.t).payment_id = payment.id)), (t).created_at) AS "coalesce";
 END;
@@ -1341,6 +1307,33 @@ join tenant_trainer tt on tt.tenant_id = k.tenant_id and tt.person_id = k.person
 where tt.active_range @> v_at
 order by tt.tenant_id, tt.person_id, lower(tt.active_range) desc;
 $$;
+
+
+--
+-- Name: event_registration; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_registration (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    target_cohort_id bigint,
+    couple_id bigint,
+    person_id bigint,
+    note text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
+);
+
+
+--
+-- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+@simpleCollections both';
 
 
 --
@@ -4658,31 +4651,31 @@ $$;
 
 CREATE FUNCTION public.event_instance_remaining_person_spots(inst public.event_instance) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'pg_temp'
+    SET search_path TO 'public', 'pg_catalog', 'pg_temp'
     AS $$
   select case
     when inst.capacity is null or inst.capacity <= 0 then null
     else inst.capacity - case inst.capacity_unit
         when 'people' then (
           select count(*)::integer
-          from public.event_instance_registration person_row
-          where person_row.instance_id = inst.id
-            and person_row.person_id is not null
-            and person_row.registration_status = 'active'
-            and person_row.status <> 'cancelled'
+          from event_instance_registration registration
+          where registration.instance_id = inst.id
+            and registration.person_id is not null
+            and registration.registration_status = 'active'
+            and registration.status <> 'cancelled'
         )
         when 'registrations' then (
           select count(*)::integer
-          from public.event_instance_registration root
-          where root.instance_id = inst.id
-            and root.parent_registration_id is null
-            and root.registration_status = 'active'
+          from event_instance_registration registration
+          where registration.instance_id = inst.id
+            and registration.parent_registration_id is null
+            and registration.registration_status = 'active'
         )
       end - (
-      select count(*)::integer
-      from public.event_external_registration external_registration
-      where external_registration.event_id = inst.event_id
-    )
+        select count(*)::integer
+        from event_external_registration external_registration
+        where external_registration.instance_id = inst.id
+      )
   end;
 $$;
 
@@ -5105,8 +5098,10 @@ CREATE FUNCTION public.event_remaining_person_spots(e public.event) RETURNS inte
     select coalesce(sum(case when couple_id is not null then 2 else 1 end), 0)
     from event_registration where event_id = e.id
   ) - (
-    select coalesce(count(id), 0)
-    from event_external_registration where event_id = e.id
+    select coalesce(count(external_registration.id), 0)
+    from event_external_registration external_registration
+    join event_instance instance on instance.id = external_registration.instance_id
+    where instance.event_id = e.id
   );
 $$;
 
@@ -9192,7 +9187,6 @@ ALTER SEQUENCE public.dokumenty_d_id_seq OWNED BY public.dokumenty.id;
 CREATE TABLE public.event_external_registration (
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
     first_name text NOT NULL,
     last_name text NOT NULL,
     prefix_title text DEFAULT ''::text NOT NULL,
@@ -9205,7 +9199,8 @@ CREATE TABLE public.event_external_registration (
     note text,
     created_by bigint DEFAULT public.current_user_id(),
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    instance_id bigint NOT NULL
 );
 
 
@@ -11605,10 +11600,10 @@ CREATE INDEX event_external_registration_created_by_idx ON public.event_external
 
 
 --
--- Name: event_external_registration_event_id_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: event_external_registration_instance_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX event_external_registration_event_id_idx ON public.event_external_registration USING btree (event_id);
+CREATE INDEX event_external_registration_instance_id_idx ON public.event_external_registration USING btree (instance_id);
 
 
 --
@@ -12071,13 +12066,6 @@ CREATE INDEX payment_debtor_tenant_id_idx ON public.payment_debtor USING btree (
 --
 
 CREATE UNIQUE INDEX payment_event_instance_id_idx ON public.payment USING btree (event_instance_id) WHERE (event_instance_id IS NOT NULL);
-
-
---
--- Name: payment_event_registration_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX payment_event_registration_id_idx ON public.payment USING btree (event_registration_id);
 
 
 --
@@ -13656,11 +13644,11 @@ ALTER TABLE ONLY public.event_external_registration
 
 
 --
--- Name: event_external_registration event_external_registration_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: event_external_registration event_external_registration_instance_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.event_external_registration
-    ADD CONSTRAINT event_external_registration_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_external_registration_instance_id_fkey FOREIGN KEY (instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -14053,14 +14041,6 @@ ALTER TABLE ONLY public.payment_debtor
 
 ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_event_instance_id_fkey FOREIGN KEY (event_instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: payment payment_event_registration_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.payment
-    ADD CONSTRAINT payment_event_registration_id_fkey FOREIGN KEY (event_registration_id) REFERENCES public.event_registration(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -14746,9 +14726,9 @@ CREATE POLICY admin_manage ON public.transaction TO administrator USING (true);
 -- Name: event_external_registration admin_my; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_my ON public.event_external_registration TO member USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
-   FROM public.event
-  WHERE (event_external_registration.event_id = event.id)) AND (created_by = public.current_user_id())));
+CREATE POLICY admin_my ON public.event_external_registration TO member USING ((( SELECT (NOT instance.is_locked)
+   FROM public.event_instance instance
+  WHERE (event_external_registration.instance_id = instance.id)) AND (created_by = public.current_user_id())));
 
 
 --
@@ -15380,9 +15360,9 @@ CREATE POLICY public_view ON public.tenant_trainer FOR SELECT USING (true);
 -- Name: event_external_registration register_public; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY register_public ON public.event_external_registration FOR INSERT TO anonymous WITH CHECK (( SELECT event.is_public
-   FROM public.event
-  WHERE (event_external_registration.event_id = event.id)));
+CREATE POLICY register_public ON public.event_external_registration FOR INSERT TO anonymous WITH CHECK (( SELECT instance.is_public
+   FROM public.event_instance instance
+  WHERE (event_external_registration.instance_id = instance.id)));
 
 
 --
@@ -15459,7 +15439,7 @@ CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.
 -- Name: event_external_registration trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
+CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (true);
 
 
 --
@@ -15561,19 +15541,19 @@ CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((id IN (
 
 
 --
--- Name: event_external_registration view_visible_event; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_visible_event ON public.event_external_registration FOR SELECT TO member USING ((event_id IN ( SELECT event.id
-   FROM public.event)));
-
-
---
 -- Name: event_registration view_visible_event; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING ((event_id IN ( SELECT event.id
    FROM public.event)));
+
+
+--
+-- Name: event_external_registration view_visible_instance; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_visible_instance ON public.event_external_registration FOR SELECT TO member USING ((instance_id IN ( SELECT event_instance.id
+   FROM public.event_instance)));
 
 
 --
@@ -15717,13 +15697,6 @@ GRANT ALL ON TABLE public.event_instance TO anonymous;
 
 
 --
--- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_registration TO anonymous;
-
-
---
 -- Name: TABLE payment; Type: ACL; Schema: public; Owner: -
 --
 
@@ -15763,6 +15736,13 @@ GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
 --
 
 GRANT ALL ON FUNCTION app_private.event_instance_trainers_at(v_instance public.event_instance, v_at timestamp with time zone) TO anonymous;
+
+
+--
+-- Name: TABLE event_registration; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_registration TO anonymous;
 
 
 --
@@ -17111,13 +17091,6 @@ GRANT SELECT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE public.
 
 
 --
--- Name: COLUMN event_external_registration.event_id; Type: ACL; Schema: public; Owner: -
---
-
-GRANT INSERT(event_id) ON TABLE public.event_external_registration TO anonymous;
-
-
---
 -- Name: COLUMN event_external_registration.first_name; Type: ACL; Schema: public; Owner: -
 --
 
@@ -17185,6 +17158,13 @@ GRANT INSERT(phone) ON TABLE public.event_external_registration TO anonymous;
 --
 
 GRANT INSERT(note) ON TABLE public.event_external_registration TO anonymous;
+
+
+--
+-- Name: COLUMN event_external_registration.instance_id; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(instance_id) ON TABLE public.event_external_registration TO anonymous;
 
 
 --
@@ -17289,5 +17269,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Xv1sRgH8fzOwA9bwkjWDu1jDDvSxhJsPGFPujPo90THeuB7ylBME7G8W6BGsU0O
+\unrestrict ZQzVGxXUotYBBgaCznmHX5uF6PavxdnwDTexThHwXSJld3QvEZubfkQ9x22upxZ
 

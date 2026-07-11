@@ -903,9 +903,6 @@ CREATE TABLE public.payment (
   cohort_subscription_id bigint REFERENCES public.cohort_subscription (id)
     ON UPDATE CASCADE
     ON DELETE SET NULL,
-  event_registration_id bigint REFERENCES public.event_registration (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
   event_instance_id bigint REFERENCES public.event_instance (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
@@ -1150,9 +1147,6 @@ CREATE TABLE public.event_external_registration (
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  event_id bigint NOT NULL REFERENCES public.event (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
   first_name text NOT NULL,
   last_name text NOT NULL,
   prefix_title text DEFAULT ''::text NOT NULL,
@@ -1165,7 +1159,10 @@ CREATE TABLE public.event_external_registration (
   note text,
   created_by bigint DEFAULT public.current_user_id() REFERENCES public.users (id),
   created_at timestamp with time zone DEFAULT now() NOT NULL,
-  updated_at timestamp with time zone DEFAULT now() NOT NULL
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  instance_id bigint NOT NULL REFERENCES public.event_instance (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 CREATE TYPE public.application_form_status AS ENUM ('new', 'sent', 'approved', 'rejected');

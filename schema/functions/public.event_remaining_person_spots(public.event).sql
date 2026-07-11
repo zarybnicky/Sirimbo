@@ -5,8 +5,10 @@ CREATE FUNCTION public.event_remaining_person_spots(e public.event) RETURNS inte
     select coalesce(sum(case when couple_id is not null then 2 else 1 end), 0)
     from event_registration where event_id = e.id
   ) - (
-    select coalesce(count(id), 0)
-    from event_external_registration where event_id = e.id
+    select coalesce(count(external_registration.id), 0)
+    from event_external_registration external_registration
+    join event_instance instance on instance.id = external_registration.instance_id
+    where instance.event_id = e.id
   );
 $$;
 

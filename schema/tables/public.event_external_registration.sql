@@ -1,7 +1,6 @@
 CREATE TABLE public.event_external_registration (
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
     first_name text NOT NULL,
     last_name text NOT NULL,
     prefix_title text DEFAULT ''::text NOT NULL,
@@ -14,7 +13,8 @@ CREATE TABLE public.event_external_registration (
     note text,
     created_by bigint DEFAULT public.current_user_id(),
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    instance_id bigint NOT NULL
 );
 
 COMMENT ON TABLE public.event_external_registration IS '@omit update
@@ -22,7 +22,6 @@ COMMENT ON TABLE public.event_external_registration IS '@omit update
 @simpleCollections only';
 
 GRANT SELECT,REFERENCES,DELETE,TRIGGER,TRUNCATE,MAINTAIN,UPDATE ON TABLE public.event_external_registration TO anonymous;
-GRANT INSERT(event_id) ON TABLE public.event_external_registration TO anonymous;
 GRANT INSERT(first_name) ON TABLE public.event_external_registration TO anonymous;
 GRANT INSERT(last_name) ON TABLE public.event_external_registration TO anonymous;
 GRANT INSERT(prefix_title) ON TABLE public.event_external_registration TO anonymous;
@@ -33,6 +32,7 @@ GRANT INSERT(tax_identification_number) ON TABLE public.event_external_registrat
 GRANT INSERT(email) ON TABLE public.event_external_registration TO anonymous;
 GRANT INSERT(phone) ON TABLE public.event_external_registration TO anonymous;
 GRANT INSERT(note) ON TABLE public.event_external_registration TO anonymous;
+GRANT INSERT(instance_id) ON TABLE public.event_external_registration TO anonymous;
 ALTER TABLE public.event_external_registration ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.event_external_registration
@@ -40,23 +40,23 @@ ALTER TABLE ONLY public.event_external_registration
 ALTER TABLE ONLY public.event_external_registration
     ADD CONSTRAINT event_external_registration_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id);
 ALTER TABLE ONLY public.event_external_registration
-    ADD CONSTRAINT event_external_registration_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_external_registration_instance_id_fkey FOREIGN KEY (instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_external_registration
     ADD CONSTRAINT event_external_registration_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.event_external_registration TO administrator USING (true);
-CREATE POLICY admin_my ON public.event_external_registration TO member USING ((( SELECT public.event_is_registration_open(event.*) AS event_is_registration_open
-   FROM public.event
-  WHERE (event_external_registration.event_id = event.id)) AND (created_by = public.current_user_id())));
-CREATE POLICY register_public ON public.event_external_registration FOR INSERT TO anonymous WITH CHECK (( SELECT event.is_public
-   FROM public.event
-  WHERE (event_external_registration.event_id = event.id)));
-CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
-CREATE POLICY view_visible_event ON public.event_external_registration FOR SELECT TO member USING ((event_id IN ( SELECT event.id
-   FROM public.event)));
+CREATE POLICY admin_my ON public.event_external_registration TO member USING ((( SELECT (NOT instance.is_locked)
+   FROM public.event_instance instance
+  WHERE (event_external_registration.instance_id = instance.id)) AND (created_by = public.current_user_id())));
+CREATE POLICY register_public ON public.event_external_registration FOR INSERT TO anonymous WITH CHECK (( SELECT instance.is_public
+   FROM public.event_instance instance
+  WHERE (event_external_registration.instance_id = instance.id)));
+CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (true);
+CREATE POLICY view_visible_instance ON public.event_external_registration FOR SELECT TO member USING ((instance_id IN ( SELECT event_instance.id
+   FROM public.event_instance)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_external_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX event_external_registration_created_by_idx ON public.event_external_registration USING btree (created_by);
-CREATE INDEX event_external_registration_event_id_idx ON public.event_external_registration USING btree (event_id);
+CREATE INDEX event_external_registration_instance_id_idx ON public.event_external_registration USING btree (instance_id);
 CREATE INDEX event_external_registration_tenant_id_idx ON public.event_external_registration USING btree (tenant_id);
