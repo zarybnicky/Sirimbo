@@ -376,14 +376,4 @@ body {
     max-width: none;
     padding: 0;
   }
-
-  /* Reuse the interactive time-grid, but let it print in full instead of
-     scrolling inside a fixed viewport, and drop the live-only decoration. */
-  .print-schedule .rbc-time-view,
-  .print-schedule .rbc-time-content {
-    overflow: visible !important;
-  }
-  .print-schedule .rbc-now-indicator {
-    display: none !important;
-  }
 }

@@ -40,7 +40,7 @@ export const NowIndicator = React.memo(function NowIndicator({
   if (!top) return null;
   return (
     <div
-      className="rbc-now-indicator absolute z-[3] inset-x-0 h-px pointer-events-none bg-green-9"
+      className="absolute z-[3] inset-x-0 h-px pointer-events-none bg-green-9"
       style={{ top }}
     />
   );
