@@ -6,6 +6,11 @@ drop function if exists public.update_event_instance_details(
   bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
   boolean, boolean, boolean, bigint[], public.quick_event_registration_input[]
 );
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[], public.quick_event_registration_input[],
+  integer, public.event_capacity_unit, boolean
+);
 
 create or replace function public.update_event_instance_details(
   p_instance_id bigint,
@@ -22,7 +27,8 @@ create or replace function public.update_event_instance_details(
   p_registrations public.quick_event_registration_input[] default null,
   p_capacity integer default null,
   p_capacity_unit public.event_capacity_unit default null,
-  p_is_locked boolean default null
+  p_is_locked boolean default null,
+  p_trainer_lessons_offered integer[] default null
 ) returns public.event_instance
   language plpgsql
 as $$
@@ -145,14 +151,35 @@ begin
   end if;
 
   if p_trainer_person_ids is not null then
-    delete from public.event_instance_trainer
-    where instance_id = p_instance_id;
+    if p_trainer_lessons_offered is not null
+      and cardinality(p_trainer_lessons_offered) <> cardinality(p_trainer_person_ids) then
+      raise exception 'trainer lesson offers must match trainers';
+    end if;
 
-    insert into public.event_instance_trainer (instance_id, person_id)
-    select distinct p_instance_id, input.person_id
-    from unnest(p_trainer_person_ids) as input(person_id)
+    delete from public.event_instance_trainer
+    where instance_id = p_instance_id
+      and not exists (
+        select 1 from unnest(p_trainer_person_ids) person(id)
+        where person.id = event_instance_trainer.person_id
+      );
+
+    insert into public.event_instance_trainer (instance_id, person_id, lessons_offered)
+    select distinct on (input.person_id)
+      p_instance_id,
+      input.person_id,
+      case when p_trainer_lessons_offered is null then 0
+        else input.lessons_offered end
+    from (
+      select p_trainer_person_ids[i] person_id,
+        p_trainer_lessons_offered[i] lessons_offered
+      from generate_subscripts(p_trainer_person_ids, 1) item(i)
+    ) input
     where input.person_id is not null
-    on conflict (instance_id, person_id) do nothing;
+    order by input.person_id
+    on conflict (instance_id, person_id) do update
+    set lessons_offered = case when p_trainer_lessons_offered is null
+      then event_instance_trainer.lessons_offered
+      else excluded.lessons_offered end;
   end if;
 
   if p_registrations is not null then

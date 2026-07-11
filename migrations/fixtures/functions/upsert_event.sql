@@ -24,7 +24,8 @@ CREATE TYPE public.event_type_input AS (
 
 CREATE TYPE public.event_instance_trainer_type_input AS (
   id bigint,
-  person_id bigint
+  person_id bigint,
+  lessons_offered integer
 );
 
 CREATE TYPE public.event_instance_type_input AS (
@@ -54,7 +55,7 @@ CREATE TYPE public.event_registration_type_input AS (
 
 CREATE OR REPLACE FUNCTION upsert_event(
   info event_type_input,
-  instances event_instance_type_input[],
+  event_instances event_instance_type_input[],
   trainers event_trainer_type_input[],
   cohorts event_target_cohort_type_input[],
   registrations event_registration_type_input[]
@@ -118,7 +119,7 @@ begin
     end if;
   end if;
 
-  foreach instance in array coalesce(instances, '{}'::event_instance_type_input[]) loop
+  foreach instance in array coalesce(event_instances, '{}'::event_instance_type_input[]) loop
     if instance.id is null then
       insert into event_instance (event_id, since, until, is_cancelled)
       values (v_event.id, instance.since, instance.until, instance.is_cancelled)
@@ -136,11 +137,17 @@ begin
     if v_instance_id is not null then
       foreach instance_trainer in array coalesce(instance.trainers, '{}'::event_instance_trainer_type_input[]) loop
         if instance_trainer.id is null then
-          insert into event_instance_trainer (instance_id, person_id)
-          values (v_instance_id, instance_trainer.person_id)
-          on conflict (instance_id, person_id) do nothing;
+          insert into event_instance_trainer (instance_id, person_id, lessons_offered)
+          values (v_instance_id, instance_trainer.person_id, instance_trainer.lessons_offered)
+          on conflict (instance_id, person_id) do update
+            set lessons_offered = excluded.lessons_offered;
         elsif instance_trainer.person_id is null then
           delete from event_instance_trainer where id=instance_trainer.id;
+        else
+          update event_instance_trainer
+          set person_id = instance_trainer.person_id,
+              lessons_offered = instance_trainer.lessons_offered
+          where id = instance_trainer.id and instance_id = v_instance_id;
         end if;
       end loop;
     end if;

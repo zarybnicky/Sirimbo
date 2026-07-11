@@ -206,10 +206,11 @@ VALUES
 INSERT INTO event_instance (id, tenant_id, since, until) OVERRIDING SYSTEM VALUE
 VALUES (9900003, 1000, now() + interval '4 hours', now() + interval '5 hours');
 
-INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id)
+INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
 VALUES
-  (1000, 9900001, 2900002),
-  (1000, 9900003, 2900004);
+  (1000, 900001, 2900002, 1),
+  (1000, 9900001, 2900002, 0),
+  (1000, 9900003, 2900004, 0);
 
 UPDATE event_instance SET is_public = true WHERE id = 9900003;
 
@@ -219,18 +220,13 @@ VALUES (1000, 9900003, 2900005, 'unknown');
 INSERT INTO event_trainer (tenant_id, event_id, person_id, lessons_offered)
 VALUES (1000, 700001, 2900002, 1);
 
-INSERT INTO event_lesson_demand (
-  tenant_id, trainer_id, registration_id, lesson_count, event_id
-)
-SELECT 1000, et.id, eir.id, 1, 700001
-FROM event_trainer et
-JOIN event_registration er
-  ON er.event_id = et.event_id AND er.person_id = 200002
-JOIN event_instance_registration eir
-  ON eir.legacy_registration_id = er.id
- AND eir.instance_id = 900001
- AND eir.parent_registration_id IS NULL
-WHERE et.event_id = 700001 AND et.person_id = 2900002;
+SELECT set_lesson_demand(eir.id, trainer.id, 1)
+FROM event_instance_registration eir
+JOIN event_instance_trainer trainer
+  ON trainer.instance_id = eir.instance_id AND trainer.person_id = 2900002
+WHERE eir.instance_id = 900001
+  AND eir.person_id = 200002
+  AND eir.parent_registration_id IS NULL;
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 GRANT USAGE ON SCHEMA tap TO trainer;
@@ -315,6 +311,19 @@ FROM public.quick_create_event_instances(
   9900001
 );
 
+UPDATE event_instance_trainer
+SET lessons_offered = 1
+WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+  AND person_id = 2900002;
+
+SELECT set_lesson_demand(registration.id, trainer.id, 1)
+FROM event_instance_registration registration
+JOIN event_instance_trainer trainer ON trainer.instance_id = registration.instance_id
+WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
+  AND registration.person_id = 2900003
+  AND registration.parent_registration_id is null
+  AND trainer.person_id = 2900002;
+
 SELECT tap.ok(
   EXISTS (
     SELECT 1
@@ -329,6 +338,14 @@ SELECT tap.ok(
     WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
       AND registration.person_id = 2900003
       AND registration.registration_status = 'active'
+      AND EXISTS (
+        SELECT 1
+        FROM event_lesson_demand demand
+        JOIN event_instance_trainer trainer ON trainer.id = demand.trainer_id
+        WHERE demand.registration_id = registration.id
+          AND trainer.instance_id = registration.instance_id
+          AND trainer.person_id = 2900002
+      )
   ) AND EXISTS (
     SELECT 1
     FROM event_instances_for_range(
@@ -433,8 +450,16 @@ SELECT tap.ok(
     SELECT stats->>'TOTAL' = '2'
     FROM event_instance
     WHERE id = (SELECT id FROM _scheduled_lesson)
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instance_trainer trainer
+    JOIN event_lesson_demand demand ON demand.trainer_id = trainer.id
+    JOIN event_instance_registration registration ON registration.id = demand.registration_id
+    WHERE trainer.instance_id = (SELECT id FROM _scheduled_lesson)
+      AND registration.registration_status = 'cancelled'
+      AND event_instance_trainer_lessons_remaining(trainer) = 1
   ),
-  'quick edit replaces a person registration with their couple'
+  'quick edit replaces a person registration and releases its lesson capacity'
 );
 
 SELECT public.update_event_instance_details(
@@ -571,7 +596,11 @@ SELECT tap.ok(
     FROM event_instance ei
     JOIN event_instance_registration eir ON eir.instance_id = ei.id
     JOIN event_lesson_demand d ON d.registration_id = eir.id
+    JOIN event_instance_trainer trainer ON trainer.id = d.trainer_id
     WHERE ei.id = 900001
+      AND trainer.instance_id = ei.id
+      AND trainer.person_id = 2900002
+      AND trainer.lessons_offered = 1
   ) AND EXISTS (
     SELECT 1
     FROM event_instance_registration

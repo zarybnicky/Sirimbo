@@ -50,7 +50,7 @@ BEGIN
   SELECT coalesce(jsonb_agg(jsonb_build_object(
     'reg_person_id', er.person_id,
     'reg_couple_id', er.couple_id,
-    'trainer_person_id', trainer.person_id,
+    'trainer_id', trainer.id,
     'lesson_count', demand.lesson_count,
     'created_at', demand.created_at
   )), '[]'::jsonb)
@@ -58,7 +58,7 @@ BEGIN
   FROM public.event_lesson_demand demand
   JOIN public.event_instance_registration eir ON eir.id = demand.registration_id
   JOIN public.event_registration er ON er.id = eir.legacy_registration_id
-  JOIN public.event_trainer trainer ON trainer.id = demand.trainer_id
+  JOIN public.event_instance_trainer trainer ON trainer.id = demand.trainer_id
   WHERE eir.instance_id = p_instance_id
     AND eir.parent_registration_id IS NULL;
 
@@ -97,11 +97,15 @@ BEGIN
   WHERE et.event_id  = v_old_event_id
   ON CONFLICT (event_id, person_id) DO NOTHING;
 
-  -- Re-point the instance (event_instance_trainer + any other (tenant_id, instance_id, event_id) dependents follow via FK cascade)
+  -- Re-point the instance and its denormalized trainer event IDs.
   UPDATE public.event_instance ei
   SET event_id   = v_new_event_id
   WHERE ei.id        = p_instance_id
     AND ei.event_id  = v_old_event_id;
+
+  UPDATE public.event_instance_trainer
+  SET event_id = v_new_event_id
+  WHERE instance_id = p_instance_id;
 
   -- Copy registrations: map target_cohort_id by cohort_id (old_tc -> new_tc)
   INSERT INTO public.event_registration (
@@ -117,17 +121,17 @@ BEGIN
   INSERT INTO public.event_lesson_demand (
     trainer_id, registration_id, lesson_count, created_at, event_id
   )
-  SELECT new_tr.id, new_eir.id, old.lesson_count, old.created_at, v_new_event_id
+  SELECT trainer.id, new_eir.id, old.lesson_count, old.created_at, v_new_event_id
   FROM jsonb_to_recordset(v_old_demands) AS old(
     reg_person_id bigint,
     reg_couple_id bigint,
-    trainer_person_id bigint,
+    trainer_id bigint,
     lesson_count integer,
     created_at timestamptz
   )
-  JOIN public.event_trainer new_tr
-    ON new_tr.event_id = v_new_event_id
-   AND new_tr.person_id = old.trainer_person_id
+  JOIN public.event_instance_trainer trainer
+    ON trainer.id = old.trainer_id
+   AND trainer.instance_id = p_instance_id
   JOIN public.event_registration new_reg
     ON new_reg.event_id = v_new_event_id
    AND new_reg.person_id IS NOT DISTINCT FROM old.reg_person_id
