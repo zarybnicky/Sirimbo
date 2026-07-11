@@ -38,7 +38,6 @@ begin
 
     if not found
       and not exists (select 1 from public.event_instance_trainer where instance_id = inst.id)
-      and (inst.event_id is null or (select count(*) from public.event_trainer where event_id = inst.event_id) <= 1)
     then
       insert into public.event_instance_trainer (instance_id, person_id)
       values (inst.id, trainer_person_id);

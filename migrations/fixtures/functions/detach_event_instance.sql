@@ -101,17 +101,7 @@ begin
   select trainer.tenant_id, v_new_event_id, trainer.person_id,
     trainer.lessons_offered
   from public.event_instance_trainer trainer
-  where trainer.instance_id = p_instance_id
-  union all
-  select trainer.tenant_id, v_new_event_id, trainer.person_id,
-    trainer.lessons_offered
-  from public.event_trainer trainer
-  where trainer.event_id = v_old_event_id
-    and not exists (
-      select 1
-      from public.event_instance_trainer
-      where instance_id = p_instance_id
-    );
+  where trainer.instance_id = p_instance_id;
 
   insert into public.event_registration (
     tenant_id, event_id, target_cohort_id, couple_id, person_id, note
@@ -148,7 +138,8 @@ begin
     and exact.event_id is distinct from v_new_event_id;
 
   update public.event_instance instance
-  set event_id = v_new_event_id
+  set event_id = v_new_event_id,
+      series_id = null
   where instance.id = p_instance_id;
 
   update public.event_instance_trainer trainer

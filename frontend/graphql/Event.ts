@@ -84,6 +84,8 @@ export type EventInstancePatch = {
   name?: string | null | undefined;
   parentId?: string | null | undefined;
   range?: DatetimeRangeInput | null | undefined;
+  /** Groups related events without supplying inherited event values. */
+  seriesId?: string | null | undefined;
   since?: string | null | undefined;
   stats?: any;
   summary?: string | null | undefined;

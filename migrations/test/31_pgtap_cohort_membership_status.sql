@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(34);
+SELECT tap.plan(35);
 
 -- Fixtures
 -- People:
@@ -41,13 +41,17 @@ INSERT INTO event (id, tenant_id, type, name, location_text, description) OVERRI
   VALUES (700001, 1000, 'lesson', 'Test Event', '', '')
   ON CONFLICT (id) DO NOTHING;
 
+INSERT INTO event_series (id, tenant_id) OVERRIDING SYSTEM VALUE
+  VALUES (700001, 1000)
+  ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO event_target_cohort (id, event_id, cohort_id, tenant_id) OVERRIDING SYSTEM VALUE
   VALUES (850001, 700001, 800001, 1000)
   ON CONFLICT (event_id, cohort_id) DO NOTHING;
 
-INSERT INTO event_instance (id, tenant_id, event_id, since, until) OVERRIDING SYSTEM VALUE
-  VALUES (900001, 1000, 700001, now() - interval '2 days', now() - interval '1 day'),
-         (900002, 1000, 700001, now() + interval '1 day',  now() + interval '2 days')
+INSERT INTO event_instance (id, tenant_id, event_id, series_id, since, until) OVERRIDING SYSTEM VALUE
+  VALUES (900001, 1000, 700001, 700001, now() - interval '2 days', now() - interval '1 day'),
+         (900002, 1000, 700001, 700001, now() + interval '1 day',  now() + interval '2 days')
   ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO event_instance_target_cohort (id, tenant_id, instance_id, cohort_id) OVERRIDING SYSTEM VALUE
@@ -559,6 +563,32 @@ GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tap TO trainer;
 SET LOCAL ROLE trainer;
 
 SELECT tap.lives_ok(
+  $test$
+    do $body$
+    declare
+      v_series_id bigint;
+    begin
+      insert into event_series (tenant_id, name)
+      values (1000, 'Trainer-created series')
+      returning id into v_series_id;
+
+      update event_series
+      set name = 'Trainer-renamed series'
+      where id = v_series_id;
+
+      update event_instance set series_id = v_series_id where id = 9900001;
+      delete from event_series where id = v_series_id;
+
+      if (select series_id is not null from event_instance where id = 9900001) then
+        raise exception 'Deleting a series did not ungroup its event';
+      end if;
+    end;
+    $body$
+  $test$,
+  'a trainer can create, rename and delete a series, leaving its events ungrouped'
+);
+
+SELECT tap.lives_ok(
   $$
     insert into event_instance_registration (tenant_id, instance_id, person_id, source, status)
     values (1000, 9900001, 2900003, 'manager', 'unknown')
@@ -655,6 +685,7 @@ SELECT tap.ok(
     FROM event_instance child
     WHERE child.id = (SELECT id FROM _scheduled_lesson)
       AND child.event_id is null
+      AND child.series_id is null
       AND child.parent_id = 9900001
       AND 2900002 = any(child.manager_person_ids)
   ) AND EXISTS (
@@ -1001,6 +1032,7 @@ SELECT tap.ok(
     JOIN event_lesson_demand d ON d.registration_id = eir.id
     JOIN event_instance_trainer trainer ON trainer.id = d.trainer_id
     WHERE ei.id = 900001
+      AND ei.series_id is null
       AND trainer.instance_id = ei.id
       AND trainer.person_id = 2900002
       AND trainer.lessons_offered = 1

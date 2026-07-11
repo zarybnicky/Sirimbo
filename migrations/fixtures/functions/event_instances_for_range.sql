@@ -15,7 +15,6 @@ CREATE or replace FUNCTION public.event_instances_for_range(
     and i.since < coalesce(end_range, 'infinity'::timestamptz)
     and i.until > start_range
     and (trainer_ids is null
-      or exists (select 1 from event_trainer where event_id = i.event_id and person_id = any (trainer_ids))
       or exists (select 1 from event_instance_trainer where instance_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null
       or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any (participant_ids) and registration_status = 'active' and status <> 'cancelled'))

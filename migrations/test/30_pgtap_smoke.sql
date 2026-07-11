@@ -39,41 +39,46 @@ INSERT INTO event (id, tenant_id, type, name, location_text, description)
   VALUES (3001, 1, 'lesson', 'Test Event', '', '')
   ON CONFLICT (id) DO NOTHING;
 
--- instance 4001: no instance-level trainers → should fall back to event_trainer
--- instance 4002: has instance-level trainer (Bob/1002) → should NOT fall back
-INSERT INTO event_instance (id, tenant_id, event_id, since, until)
-  VALUES (4001, 1, 3001, now(), now() + interval '1 hour'),
-         (4002, 1, 3001, now(), now() + interval '1 hour')
+INSERT INTO event_series (id, tenant_id) OVERRIDING SYSTEM VALUE
+  VALUES (3001, 1)
   ON CONFLICT (id) DO NOTHING;
 
--- event-level trainer: Alice (active) + Carol (expired) on the event
+INSERT INTO event_instance (id, tenant_id, event_id, series_id, since, until)
+  VALUES (4001, 1, 3001, 3001, now(), now() + interval '1 hour'),
+         (4002, 1, 3001, 3001, now(), now() + interval '1 hour')
+  ON CONFLICT (id) DO NOTHING;
+
+-- Event-level rows remain compatibility data and no longer affect lookups.
 INSERT INTO event_trainer (tenant_id, event_id, person_id)
   VALUES (1, 3001, 1001),
+         (1, 3001, 1002),
          (1, 3001, 1003)
   ON CONFLICT DO NOTHING;
 
--- instance-level trainer: Bob on instance 4002 only
+-- The migration materializes the previously effective lists on each instance.
 -- omit event_id — trigger _100_event_id fills it from instance_id
 INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id)
-  VALUES (1, 4002, 1002)
+  VALUES (1, 4001, 1001),
+         (1, 4001, 1003),
+         (1, 4002, 1002)
   ON CONFLICT (instance_id, person_id) DO NOTHING;
 
--- Test 1: instance with NO instance-level trainers falls back to event_trainer
+-- Test 1: exact trainers are read from the instance
 SELECT tap.is(
   (SELECT count(*)::int FROM public.event_instance_trainers(
     (SELECT i FROM event_instance i WHERE i.id = 4001)
   )),
   1,
-  'instance with no instance trainers falls back to event_trainer (active only)'
+  'instance trainers are read from the materialized occurrence list (active only)'
 );
 
--- Test 2: the fallback trainer is Alice (1001), not the expired Carol (1003)
+-- Test 2: event-only Bob is ignored and expired Carol is filtered out
 SELECT tap.is(
   (SELECT person_id FROM public.event_instance_trainers(
     (SELECT i FROM event_instance i WHERE i.id = 4001)
   )),
   1001::bigint,
-  'fallback returns the active event-level trainer'
+  'event-level trainers no longer participate in occurrence lookups'
 );
 
 -- Test 3: instance WITH instance-level trainer returns only that, no fallback
@@ -82,7 +87,7 @@ SELECT tap.is(
     (SELECT i FROM event_instance i WHERE i.id = 4002)
   )),
   1,
-  'instance with instance trainer returns only instance-level trainer (no fallback)'
+  'another instance returns only its own trainer'
 );
 
 -- Test 4: the result is the instance-level trainer Bob (1002), not event-level Alice (1001)
@@ -91,7 +96,7 @@ SELECT tap.is(
     (SELECT i FROM event_instance i WHERE i.id = 4002)
   )),
   1002::bigint,
-  'instance-level trainer takes precedence over event-level trainer'
+  'occurrence trainer lists are independent'
 );
 
 -- Test 5: expired tenant_trainer (Carol/1003) excluded from fallback results
@@ -101,7 +106,7 @@ SELECT tap.ok(
       (SELECT i FROM event_instance i WHERE i.id = 4001)
     ) WHERE person_id = 1003
   ),
-  'expired tenant_trainer is excluded from fallback results'
+  'expired tenant_trainer is excluded from occurrence results'
 );
 
 -- Test 6: active trainer (Alice/1001) is included in fallback results
@@ -111,7 +116,7 @@ SELECT tap.ok(
       (SELECT i FROM event_instance i WHERE i.id = 4001)
     ) WHERE person_id = 1001
   ),
-  'active tenant_trainer is included in fallback results'
+  'active tenant_trainer is included in occurrence results'
 );
 
 SELECT tap.finish();
