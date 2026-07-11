@@ -274,6 +274,14 @@ query EventInstanceWithAttendance($id: BigInt!) {
   }
 }
 
+query EventInstanceDescription($id: BigInt!) {
+  eventInstance(id: $id) {
+    id
+    summary
+    description
+  }
+}
+
 query EventInstanceRegistrations($id: BigInt!) {
   eventInstance(id: $id) {
     id
@@ -293,6 +301,7 @@ query EventInstanceRegistrations($id: BigInt!) {
 fragment EventListInstance on EventInstance {
   id
   name
+  type
   since
   until
   capacity
@@ -305,22 +314,11 @@ fragment EventListInstance on EventInstance {
 }
 
 query EventList {
-  events(condition: { type: CAMP }) {
-    totalCount
-    edges {
-      cursor
-      node {
-        ...Event
-        eventInstancesList(orderBy: SINCE_ASC) {
-          ...EventListInstance
-        }
-      }
-    }
-    pageInfo {
-      __typename
-      hasNextPage
-      endCursor
-    }
+  eventInstancesList(
+    condition: { type: CAMP, parentId: null }
+    orderBy: SINCE_DESC
+  ) {
+    ...EventListInstance
   }
 }
 
@@ -375,14 +373,6 @@ mutation UpdateEventInstanceDetails($input: UpdateEventInstanceDetailsInput!) {
 
 mutation DetachEventInstance($id: BigInt!) {
   detachEventInstance(input: { pInstanceId: $id }) {
-    event {
-      ...Event
-    }
-  }
-}
-
-mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
-  updateEvent(input: { id: $id, patch: $patch }) {
     event {
       ...Event
     }

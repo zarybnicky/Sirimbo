@@ -1,18 +1,18 @@
 import { NotebookPen, Pencil, Trash2 } from 'lucide-react';
-import type { EventFragment } from '@/graphql/Event';
+import type { EventFullFragment } from '@/graphql/Event';
 import { DeleteEventExternalRegistrationDocument } from '@/graphql/Event';
 import { defineActions } from '@/lib/actions';
+import { canManageInstance } from '@/lib/actions/eventInstance';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
-import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
-import { exportEventParticipants } from '@/ui/reports/export-event-participants';
-import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
+import { EditEventInstanceDescriptionForm } from '@/ui/forms/EditEventInstanceDescriptionForm';
 
 const preventDefault = (e: Event) => e.preventDefault();
-const rootInstanceId = (event: EventFragment) =>
-  event.eventInstancesList.find((instance) => !instance.parentId)?.id ??
-  event.eventInstancesList[0]?.id;
+const rootInstance = (event: EventFullFragment) =>
+  event.eventInstancesList.find((instance) => !instance.parentId) ??
+  event.eventInstancesList[0];
+const rootInstanceId = (event: EventFullFragment) => rootInstance(event)?.id;
 
-export const eventActions = defineActions<EventFragment>()([
+export const eventActions = defineActions<EventFullFragment>()([
   {
     id: 'event.edit',
     label: 'Upravit',
@@ -30,37 +30,16 @@ export const eventActions = defineActions<EventFragment>()([
     id: 'event.editDescription',
     label: 'Upravit dlouhý popis',
     icon: NotebookPen,
-    visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
-    render: ({ item }) => <EditEventDescriptionForm id={item.id} />,
+    visible: ({ auth, item }) => {
+      const instance = rootInstance(item);
+      return !!instance && canManageInstance({ auth, item: instance });
+    },
+    render: ({ item }) => <EditEventInstanceDescriptionForm id={rootInstanceId(item)!} />,
     modal: false,
     dialogProps: {
       className: 'sm:max-w-xl',
       onPointerDownOutside: (e) => e.preventDefault(),
       onInteractOutside: (e) => e.preventDefault(),
-    },
-  },
-  {
-    id: 'event.exportParticipants',
-    label: 'Export přihlášených',
-    visible: ({ auth, item }) =>
-      !!rootInstanceId(item) &&
-      (auth.isAdmin ||
-        (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId)))),
-    execute: async ({ item, client }) => {
-      await exportEventParticipants(client, rootInstanceId(item)!);
-    },
-  },
-  {
-    id: 'event.exportRegistrations',
-    label: 'Export přihlášek',
-    visible: ({ auth, item }) =>
-      !!rootInstanceId(item) &&
-      (auth.isAdmin ||
-        (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId)))),
-    execute: async ({ item, client }) => {
-      await exportEventRegistrations(client, rootInstanceId(item)!);
     },
   },
 ]);

@@ -47,9 +47,11 @@ type EventFormInput = z.input<typeof EventForm>;
 export function QuickEventCreateForm({
   defaults,
   parentId,
+  initialType = 'LESSON',
 }: {
   defaults: QuickEventCreateDefaults;
   parentId?: string;
+  initialType?: EventType;
 }) {
   const { onSuccess } = useFormResult();
   const createInstances = useMutation(CreateEventInstancesDocument)[1];
@@ -59,7 +61,7 @@ export function QuickEventCreateForm({
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
-      type: 'LESSON',
+      type: initialType,
       locationId: defaults.locationText ? 'other' : (defaults.locationId ?? 'none'),
       locationText: defaults.locationText,
       isVisible: true,
@@ -81,7 +83,7 @@ export function QuickEventCreateForm({
     },
   });
 
-  const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
+  const type = useWatch({ control, name: 'type' }) ?? initialType;
   const instances = useWatch({ control, name: 'instances' });
   const firstInstance = instances?.[0];
   const lessonRanges =

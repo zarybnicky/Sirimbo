@@ -1,4 +1,7 @@
-import { UpdateEventDocument, EventDocument } from '@/graphql/Event';
+import {
+  EventInstanceDescriptionDocument,
+  UpdateEventInstanceDocument,
+} from '@/graphql/Event';
 import { TabMenu } from '@/ui/TabMenu';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { FormError, useFormResult } from '@/ui/form';
@@ -15,32 +18,33 @@ const Form = z.object({
   description: z.string(),
 });
 
-export function EditEventDescriptionForm({ id }: { id: string }) {
+export function EditEventInstanceDescriptionForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit, getValues } = useForm({
     shouldUnregister: false,
     resolver: zodResolver(Form),
   });
-  const update = useMutation(UpdateEventDocument)[1];
-  const [{ data: event }] = useQuery({
-    query: EventDocument,
+  const update = useMutation(UpdateEventInstanceDocument)[1];
+  const [{ data }] = useQuery({
+    query: EventInstanceDescriptionDocument,
     variables: { id },
   });
   const [tab, setTab] = React.useState('summary');
-
+  const instance = data?.eventInstance;
   const values = getValues();
 
   React.useEffect(() => {
-    if (event?.event && !getValues('summary') && !getValues('description')) {
+    if (instance && !getValues('summary') && !getValues('description')) {
       reset({
-        summary: event.event.summary,
-        description: event.event.description,
+        summary: instance.summary ?? '',
+        description: instance.description ?? '',
       });
     }
-  }, [reset, getValues, event]);
+  }, [reset, getValues, instance]);
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    await update({ id, patch: values });
+    const result = await update({ id, patch: values });
+    if (result.error) throw result.error;
     onSuccess();
   });
 
@@ -48,7 +52,7 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
     id: string;
     title: React.ReactNode;
     contents: () => React.ReactNode;
-  }> = event?.event
+  }> = instance
     ? [
         {
           id: 'summary',
@@ -56,7 +60,7 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
           contents: () => (
             <RichTextEditor
               name="summary"
-              initialState={values.summary || event.event?.summary}
+              initialState={values.summary || instance.summary || ''}
               control={control}
               key="summary"
             />
@@ -68,7 +72,7 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
           contents: () => (
             <RichTextEditor
               name="description"
-              initialState={values.description || event.event?.description}
+              initialState={values.description || instance.description || ''}
               control={control}
               key="description"
             />

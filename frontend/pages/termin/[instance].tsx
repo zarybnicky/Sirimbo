@@ -16,6 +16,8 @@ import { Calendar } from '@/calendar/Calendar';
 import { parseAsString, useQueryState } from 'nuqs';
 import { TabMenu } from '@/ui/TabMenu';
 import React from 'react';
+import { useActions } from '@/lib/actions';
+import { eventInstanceActions } from '@/lib/actions/eventInstance';
 
 const QueryParams = z.object({
   id: zRouterId,
@@ -32,6 +34,7 @@ function EventInstancePage() {
     pause: !instanceId,
   });
   const instance = data?.eventInstance;
+  const actions = useActions(eventInstanceActions, instance);
   const title = instance?.name || (instance ? formatDefaultInstanceName(instance) : '');
   const description = stripHtml(instance?.summary);
   const [variant, setVariant] = useQueryState(
@@ -68,7 +71,7 @@ function EventInstancePage() {
             auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'
           }
         >
-          {instance && <PageHeader title={title} />}
+          {instance && <PageHeader title={title} actions={actions} />}
           {instance && <BasicEventInfo instance={instance} />}
           <div className="max-w-full">
             <TabMenu selected={variant} onSelect={setVariant} options={tabs} />

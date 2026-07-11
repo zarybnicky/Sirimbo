@@ -14,7 +14,7 @@ import {
 } from '@/graphql/Event';
 import { type ActionContext, defineActions } from '@/lib/actions';
 import { QuickInstanceEditForm } from '@/ui/event-form/QuickEventForms';
-import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm';
+import { EditEventInstanceDescriptionForm } from '@/ui/forms/EditEventInstanceDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 
@@ -47,8 +47,8 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     id: 'eventInstance.editDescription',
     label: 'Upravit dlouhý popis',
     icon: NotebookPen,
-    visible: ({ item, auth }) => canManageInstance({item, auth}) && !!item.eventId,
-    render: ({ item }) => <EditEventDescriptionForm id={item.eventId!} />,
+    visible: canManageInstance,
+    render: ({ item }) => <EditEventInstanceDescriptionForm id={item.id} />,
     dialogProps: {
       className: 'sm:max-w-xl',
     },

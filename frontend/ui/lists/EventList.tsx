@@ -1,7 +1,7 @@
 import { EventListDocument } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
-import { fullDateFormatter } from '@/ui/format';
+import { formatEventType, fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
@@ -9,14 +9,14 @@ import { add, endOf, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
-import { UpsertEventForm } from '../event-form/UpsertEventForm';
+import { QuickEventCreateForm } from '@/ui/event-form/QuickEventForms';
+import type { QuickEventCreateDefaults } from '@/calendar/quickEventDefaults';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
-import { EventForm } from '@/ui/event-form/types';
 
 const QueryParams = z.object({
-  id: zRouterId,
+  instance: zRouterId,
 });
 
 interface EventNode {
@@ -36,41 +36,27 @@ function EventListPage({ search, currentId }: EventListPageProps) {
   const [{ data }] = useQuery({ query: EventListDocument });
 
   const nodes: EventNode[] = React.useMemo(() => {
-    const nodes = (data?.events?.edges || []).map(({ node: x }) => {
-      let closestInstance = x.eventInstancesList[0];
-      // eslint-disable-next-line react-hooks/purity
-      const refDate = Date.now();
-      for (const instance of x.eventInstancesList) {
-        const intervalA = new Date(closestInstance!.since).getTime() - refDate;
-        const intervalB = new Date(instance.since).getTime() - refDate;
-        if (intervalA < 0 && intervalB > intervalA) {
-          closestInstance = instance;
-        }
-      }
-
+    return (data?.eventInstancesList ?? []).map((instance) => {
       return {
-        id: x.id,
-        title: closestInstance?.name || x.name,
-        date: closestInstance?.since || '',
+        id: instance.id,
+        title: instance.name || formatEventType(instance.type),
+        date: instance.since,
         subtitle: [
-          closestInstance
-            ? fullDateFormatter.formatRange(
-                new Date(closestInstance.since),
-                new Date(closestInstance.until),
-              )
-            : '',
-          closestInstance?.location?.name,
-          closestInstance?.locationText,
-          (closestInstance?.capacity ?? 0) > 0
-            ? `Zbývá ${closestInstance?.remainingPersonSpots} míst z ${closestInstance?.capacity}`
+          fullDateFormatter.formatRange(
+            new Date(instance.since),
+            new Date(instance.until),
+          ),
+          instance.location?.name,
+          instance.locationText,
+          (instance.capacity ?? 0) > 0
+            ? `Zbývá ${instance.remainingPersonSpots} míst z ${instance.capacity}`
             : '',
         ]
           .filter(Boolean)
           .join(', '),
-        href: `/akce/${x.id}`,
+        href: `/termin/${instance.id}`,
       };
     });
-    return nodes.toSorted((a, b) => b.date?.localeCompare(a.date));
   }, [data]);
 
   const fuzzy: EventNode[] = useFuzzySearch(nodes, ['id', 'title'], search);
@@ -105,24 +91,19 @@ function EventListPage({ search, currentId }: EventListPageProps) {
 export function EventList() {
   const [search, setSearch] = React.useState('');
   const {
-    query: { id: currentId },
+    query: { instance: currentId },
   } = useTypedRouter(QueryParams);
   const auth = useAuth();
 
-  const emptyEvent = React.useMemo(() => {
+  const createDefaults = React.useMemo<QuickEventCreateDefaults>(() => {
     const day = startOf(endOf(new Date(), 'week', 1), 'day');
     return {
-      type: 'CAMP',
-      isVisible: true,
-      instances: [
-        {
-          since: add(day, 9, 'hours').toISOString(),
-          until: add(day, 17, 'hours').toISOString(),
-          isCancelled: false,
-          trainers: [],
-        },
-      ],
-    } satisfies Partial<z.input<typeof EventForm>>;
+      since: add(day, 9, 'hours'),
+      until: add(day, 17, 'hours'),
+      trainerPersonIds: [],
+      locationId: null,
+      locationText: '',
+    };
   }, []);
 
   return (
@@ -134,7 +115,7 @@ export function EventList() {
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" text="Přidat událost" />
             <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-              <UpsertEventForm initialValue={emptyEvent} />
+              <QuickEventCreateForm defaults={createDefaults} initialType="CAMP" />
             </DialogContent>
           </Dialog>
         )}
