@@ -1421,8 +1421,6 @@ CREATE TYPE public.event_instance_type_input AS (id bigint, since timestamp with
 
 CREATE TYPE public.event_overlaps_conflict AS (person_id bigint, person_name text, first_instance_id bigint, first_event_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, second_instance_id bigint, second_event_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, overlap_range tstzrange);
 
-CREATE TYPE public.event_registration_type_input AS (id bigint, person_id bigint, couple_id bigint);
-
 CREATE TYPE public.event_trainer_type_input AS (id bigint, person_id bigint, lessons_offered int);
 
 CREATE TYPE public.event_type_input AS (id bigint, name text, summary text, description text, type public.event_type, location_id bigint, location_text text, capacity int, is_visible boolean, is_public boolean, is_locked boolean, enable_notes boolean);
@@ -1434,8 +1432,6 @@ CREATE TYPE public.login_result AS (usr public.users, jwt public.jwt_token);
 CREATE TYPE public.quick_event_registration_input AS (person_id bigint, couple_id bigint);
 
 CREATE TYPE public.quick_event_input AS (since timestamp with time zone, until timestamp with time zone, type public.event_type, location_id bigint, location_text text, trainer_person_ids bigint[], registrations public.quick_event_registration_input[]);
-
-CREATE TYPE public.register_to_event_type AS (event_id bigint, person_id bigint, couple_id bigint, note text, lessons public.event_lesson_demand[]);
 
 CREATE TYPE public.scoreboard_record AS (person_id bigint, cohort_id bigint, lesson_total_score bigint, group_total_score bigint, event_total_score bigint, manual_total_score bigint, total_score bigint, ranking bigint);
 

@@ -1,191 +1,178 @@
-CREATE OR REPLACE FUNCTION public.detach_event_instance(
-  p_instance_id     bigint,
-  p_new_event_name  text   DEFAULT NULL
+create or replace function public.detach_event_instance(
+  p_instance_id bigint,
+  p_new_event_name text default null
 )
-  RETURNS public.event
-  LANGUAGE plpgsql
-  SECURITY DEFINER
-  SET search_path = pg_catalog, pg_temp
-AS $$
-DECLARE
+  returns public.event
+  language plpgsql
+  security definer
+  set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_tenant_id bigint;
   v_old_event_id bigint;
   v_new_event_id bigint;
-  v_old_att jsonb;
-  v_old_demands jsonb;
-BEGIN
-  -- Lock the instance and fetch old event_id
-  SELECT ei.event_id
-  INTO v_old_event_id
-  FROM public.event_instance ei
-  WHERE ei.id        = p_instance_id
-    FOR UPDATE;
+  v_result public.event;
+begin
+  select instance.tenant_id, instance.event_id
+  into v_tenant_id, v_old_event_id
+  from public.event_instance instance
+  where instance.id = p_instance_id
+  for update;
 
-  IF v_old_event_id IS NULL THEN
-    RAISE EXCEPTION 'detach_event_instance: instance % not found', p_instance_id;
-  END IF;
+  if not found or v_old_event_id is null then
+    raise exception 'INSTANCE_NOT_FOUND' using errcode = '22023';
+  end if;
+  if v_tenant_id <> public.current_tenant_id() then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
 
-  -- Also lock the parent event row (prevents concurrent edits during cloning)
-  PERFORM 1
-  FROM public.event e
-  WHERE e.id = v_old_event_id
-    FOR UPDATE;
+  if not (
+    coalesce(app_private.is_system_admin(public.current_user_id()), false)
+    or exists (
+      select 1
+      from public.current_tenant_administrator administrator
+      where administrator.person_id = any (
+        coalesce(public.current_person_ids(), '{}'::bigint[])
+      )
+        and administrator.active_range @> now()
+    )
+    or (
+      exists (
+        select 1
+        from public.current_tenant_trainer trainer
+        where trainer.person_id = any (
+          coalesce(public.current_person_ids(), '{}'::bigint[])
+        )
+          and trainer.active_range @> now()
+      )
+      and app_private.can_trainer_edit_instance(p_instance_id)
+    )
+  ) then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
 
-  -- Snapshot attendance state for this instance so it can be restored after
-  -- the legacy registration bridge is rebuilt for the cloned event.
-  SELECT coalesce(jsonb_agg(jsonb_build_object(
-    'reg_person_id', er.person_id,
-    'reg_couple_id', er.couple_id,
-    'attendee_person_id', eir.person_id,
-    'registration_status', eir.registration_status,
-    'source', eir.source,
-    'target_cohort_id', eir.target_cohort_id,
-    'status', eir.status,
-    'attendance_note', eir.attendance_note,
-    'attendance_created_at', eir.attendance_created_at,
-    'attendance_updated_at', eir.attendance_updated_at
-  )), '[]'::jsonb)
-  INTO v_old_att
-  FROM public.event_instance_registration eir
-  JOIN public.event_registration er ON er.tenant_id = eir.tenant_id AND er.id = eir.legacy_registration_id AND er.event_id = v_old_event_id
-  WHERE eir.instance_id = p_instance_id;
+  perform 1
+  from public.event event
+  where event.id = v_old_event_id
+    and event.tenant_id = v_tenant_id
+  for update;
 
-  SELECT coalesce(jsonb_agg(jsonb_build_object(
-    'reg_person_id', er.person_id,
-    'reg_couple_id', er.couple_id,
-    'trainer_id', trainer.id,
-    'lesson_count', demand.lesson_count,
-    'created_at', demand.created_at
-  )), '[]'::jsonb)
-  INTO v_old_demands
-  FROM public.event_lesson_demand demand
-  JOIN public.event_instance_registration eir ON eir.id = demand.registration_id
-  JOIN public.event_registration er ON er.id = eir.legacy_registration_id
-  JOIN public.event_instance_trainer trainer ON trainer.id = demand.trainer_id
-  WHERE eir.instance_id = p_instance_id
-    AND eir.parent_registration_id IS NULL;
+  if not exists (
+    select 1
+    from public.event_instance sibling
+    where sibling.event_id = v_old_event_id
+      and sibling.id <> p_instance_id
+  ) then
+    raise exception 'CANNOT_DETACH_ONLY_INSTANCE' using errcode = '22023';
+  end if;
 
-  -- Reparenting synchronizes the new registrations before sweeping the old
-  -- bridge rows, which would collide on the instance/person unit key.
-  DELETE FROM public.event_instance_registration eir
-  WHERE eir.instance_id = p_instance_id
-    AND eir.event_id = v_old_event_id
-    AND eir.legacy_registration_id IS NOT NULL;
-
-  -- Clone the event (explicit column list, but short and stable in compact.sql)
-  INSERT INTO public.event (
+  insert into public.event (
     name, location_text, description, capacity, files_legacy,
-    updated_at, is_locked, is_visible, summary, is_public, enable_notes, tenant_id,
-    type, location_id, created_at
+    is_locked, is_visible, summary, is_public, enable_notes, tenant_id,
+    type, location_id
   )
-  SELECT
-    COALESCE(p_new_event_name, e.name), e.location_text, e.description, e.capacity, e.files_legacy,
-    now(), e.is_locked, e.is_visible, e.summary, e.is_public, e.enable_notes, e.tenant_id,
-    e.type, e.location_id, now()
-  FROM public.event e
-  WHERE e.id = v_old_event_id
-  RETURNING id INTO v_new_event_id;
+  select coalesce(p_new_event_name, event.name), event.location_text,
+    event.description, event.capacity, event.files_legacy, event.is_locked,
+    event.is_visible, event.summary, event.is_public, event.enable_notes,
+    event.tenant_id, event.type, event.location_id
+  from public.event event
+  where event.id = v_old_event_id
+  returning id into v_new_event_id;
 
-  -- Copy event_target_cohort (natural key: cohort_id)
-  INSERT INTO public.event_target_cohort (event_id, cohort_id, created_at, updated_at)
-  SELECT v_new_event_id, etc.cohort_id, now(), now()
-  FROM public.event_target_cohort etc
-  WHERE etc.event_id = v_old_event_id
-  ON CONFLICT (event_id, cohort_id) DO NOTHING;
+  -- The exact instance lists are authoritative; these rows only keep the
+  -- legacy event-shaped API working during the transition.
+  insert into public.event_target_cohort (tenant_id, event_id, cohort_id)
+  select v_tenant_id, v_new_event_id, cohort_id
+  from (
+    select target.cohort_id
+    from public.event_instance_target_cohort target
+    where target.instance_id = p_instance_id
+    union
+    select registration.target_cohort_id
+    from public.event_instance_registration registration
+    where registration.instance_id = p_instance_id
+      and registration.parent_registration_id is null
+      and registration.target_cohort_id is not null
+  ) cohort;
 
-  -- Copy event_trainer (natural key: person_id)
-  INSERT INTO public.event_trainer (event_id, person_id, created_at, updated_at, lessons_offered)
-  SELECT v_new_event_id, et.person_id, now(), now(), et.lessons_offered
-  FROM public.event_trainer et
-  WHERE et.event_id  = v_old_event_id
-  ON CONFLICT (event_id, person_id) DO NOTHING;
-
-  -- Re-point the instance and its denormalized trainer event IDs.
-  UPDATE public.event_instance ei
-  SET event_id   = v_new_event_id
-  WHERE ei.id        = p_instance_id
-    AND ei.event_id  = v_old_event_id;
-
-  UPDATE public.event_instance_trainer
-  SET event_id = v_new_event_id
-  WHERE instance_id = p_instance_id;
-
-  -- Copy registrations: map target_cohort_id by cohort_id (old_tc -> new_tc)
-  INSERT INTO public.event_registration (
-    event_id, target_cohort_id, couple_id, person_id, note, created_at
+  insert into public.event_trainer (
+    tenant_id, event_id, person_id, lessons_offered
   )
-  SELECT v_new_event_id, new_tc.id, er.couple_id, er.person_id, er.note, er.created_at
-  FROM public.event_registration er
-  LEFT JOIN public.event_target_cohort old_tc ON old_tc.tenant_id = er.tenant_id AND old_tc.id = er.target_cohort_id
-  LEFT JOIN public.event_target_cohort new_tc ON new_tc.tenant_id = er.tenant_id AND new_tc.event_id  = v_new_event_id AND new_tc.cohort_id = old_tc.cohort_id
-  WHERE er.event_id  = v_old_event_id
-  ON CONFLICT (event_id, person_id, couple_id) DO NOTHING;
+  select trainer.tenant_id, v_new_event_id, trainer.person_id,
+    trainer.lessons_offered
+  from public.event_instance_trainer trainer
+  where trainer.instance_id = p_instance_id
+  union all
+  select trainer.tenant_id, v_new_event_id, trainer.person_id,
+    trainer.lessons_offered
+  from public.event_trainer trainer
+  where trainer.event_id = v_old_event_id
+    and not exists (
+      select 1
+      from public.event_instance_trainer
+      where instance_id = p_instance_id
+    );
 
-  INSERT INTO public.event_lesson_demand (
-    trainer_id, registration_id, lesson_count, created_at, event_id
+  insert into public.event_registration (
+    tenant_id, event_id, target_cohort_id, couple_id, person_id, note
   )
-  SELECT trainer.id, new_eir.id, old.lesson_count, old.created_at, v_new_event_id
-  FROM jsonb_to_recordset(v_old_demands) AS old(
-    reg_person_id bigint,
-    reg_couple_id bigint,
-    trainer_id bigint,
-    lesson_count integer,
-    created_at timestamptz
-  )
-  JOIN public.event_instance_trainer trainer
-    ON trainer.id = old.trainer_id
-   AND trainer.instance_id = p_instance_id
-  JOIN public.event_registration new_reg
-    ON new_reg.event_id = v_new_event_id
-   AND new_reg.person_id IS NOT DISTINCT FROM old.reg_person_id
-   AND new_reg.couple_id IS NOT DISTINCT FROM old.reg_couple_id
-  JOIN public.event_instance_registration new_eir
-    ON new_eir.instance_id = p_instance_id
-   AND new_eir.legacy_registration_id = new_reg.id
-   AND new_eir.parent_registration_id IS NULL
-  ON CONFLICT (registration_id, trainer_id) DO NOTHING;
+  select exact.tenant_id, v_new_event_id, target.id,
+    legacy.couple_id, legacy.person_id, exact.note
+  from public.event_instance_registration exact
+  join public.event_registration legacy
+    on legacy.id = exact.legacy_registration_id
+  left join public.event_target_cohort target
+    on target.event_id = v_new_event_id
+   and target.cohort_id = exact.target_cohort_id
+  where exact.instance_id = p_instance_id
+    and exact.parent_registration_id is null
+    and exact.legacy_registration_id is not null;
 
-  -- Restore per-person attendance on the newly generated bridge rows.
-  UPDATE public.event_instance_registration eir
-  SET registration_status = oa.registration_status,
-      source = oa.source,
-      target_cohort_id = oa.target_cohort_id,
-      status = oa.status,
-      attendance_note = oa.attendance_note
-  FROM jsonb_to_recordset(v_old_att) AS oa(
-    reg_person_id bigint,
-    reg_couple_id bigint,
-    attendee_person_id bigint,
-    registration_status public.event_instance_registration_status,
-    source public.event_registration_source,
-    target_cohort_id bigint,
-    status public.attendance_type,
-    attendance_note text
-  )
-  JOIN public.event_registration new_reg ON new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM oa.reg_person_id AND new_reg.couple_id IS NOT DISTINCT FROM oa.reg_couple_id
-  WHERE eir.instance_id     = p_instance_id
-    AND eir.legacy_registration_id = new_reg.id
-    AND eir.person_id IS NOT DISTINCT FROM oa.attendee_person_id;
+  -- The existing bridge and unit keys make this an unambiguous in-place rekey.
+  update public.event_instance_registration exact
+  set event_id = v_new_event_id,
+      legacy_registration_id = replacement.id
+  from public.event_registration legacy
+  join public.event_registration replacement
+    on replacement.event_id = v_new_event_id
+   and replacement.person_id is not distinct from legacy.person_id
+   and replacement.couple_id is not distinct from legacy.couple_id
+  where exact.instance_id = p_instance_id
+    and exact.legacy_registration_id = legacy.id
+    and legacy.event_id = v_old_event_id;
 
-  -- Restoring status/note correctly counts as an update for the new bridge row,
-  -- so restore the original attendance audit lifecycle in a separate statement.
-  UPDATE public.event_instance_registration eir
-  SET attendance_created_at = oa.attendance_created_at,
-      attendance_updated_at = oa.attendance_updated_at
-  FROM jsonb_to_recordset(v_old_att) AS oa(
-    reg_person_id bigint,
-    reg_couple_id bigint,
-    attendee_person_id bigint,
-    attendance_created_at timestamptz,
-    attendance_updated_at timestamptz
-  )
-  JOIN public.event_registration new_reg ON new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM oa.reg_person_id AND new_reg.couple_id IS NOT DISTINCT FROM oa.reg_couple_id
-  WHERE eir.instance_id = p_instance_id
-    AND eir.legacy_registration_id = new_reg.id
-    AND eir.person_id IS NOT DISTINCT FROM oa.attendee_person_id;
+  update public.event_instance_registration exact
+  set event_id = v_new_event_id
+  where exact.instance_id = p_instance_id
+    and exact.legacy_registration_id is null
+    and exact.event_id is distinct from v_new_event_id;
 
-  return (select event from public.event where id = v_new_event_id);
-END;
+  update public.event_instance instance
+  set event_id = v_new_event_id
+  where instance.id = p_instance_id;
+
+  update public.event_instance_trainer trainer
+  set event_id = v_new_event_id
+  where trainer.instance_id = p_instance_id
+    and trainer.event_id is distinct from v_new_event_id;
+
+  update public.event_lesson_demand demand
+  set event_id = v_new_event_id
+  from public.event_instance_registration registration
+  where registration.id = demand.registration_id
+    and registration.instance_id = p_instance_id
+    and demand.event_id is distinct from v_new_event_id;
+
+  select event.* into strict v_result
+  from public.event event
+  where event.id = v_new_event_id;
+
+  return v_result;
+end;
 $$;
 
 select verify_function('public.detach_event_instance');
-grant execute on function detach_event_instance to anonymous;
+revoke execute on function public.detach_event_instance(bigint, text)
+  from public, anonymous, member;
+grant execute on function public.detach_event_instance(bigint, text)
+  to trainer;

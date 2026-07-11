@@ -5,7 +5,7 @@ CREATE FUNCTION app_private.sync_eir_registrations(reg_ids bigint[]) RETURNS voi
 begin
   -- Legacy targetless registrations do not record who created them, so their
   -- source stays null; cohort-backed roots can be classified exactly.
-  insert into event_instance_registration
+  insert into event_instance_registration as registration
     (legacy_registration_id, tenant_id, instance_id, event_id, couple_id,
       target_cohort_id, source, note)
   select er.id, er.tenant_id, ei.id, er.event_id, er.couple_id,
@@ -19,9 +19,11 @@ begin
   on conflict (legacy_registration_id, instance_id, (coalesce(person_id, -1))) do update
     set event_id = excluded.event_id,
         couple_id = excluded.couple_id,
-        note = excluded.note;
+        note = excluded.note
+    where (registration.event_id, registration.couple_id, registration.note)
+      is distinct from (excluded.event_id, excluded.couple_id, excluded.note);
 
-  insert into event_instance_registration
+  insert into event_instance_registration as registration
     (legacy_registration_id, parent_registration_id, tenant_id, instance_id, event_id, person_id, status)
   select er.id, unit.id, er.tenant_id, ei.id, er.event_id, people.person_id, 'unknown'
   from event_registration er
@@ -32,9 +34,11 @@ begin
   where er.couple_id is not null and er.id = any (reg_ids)
   on conflict (legacy_registration_id, instance_id, (coalesce(person_id, -1))) do update
     set parent_registration_id = excluded.parent_registration_id,
-        event_id = excluded.event_id;
+        event_id = excluded.event_id
+    where (registration.parent_registration_id, registration.event_id)
+      is distinct from (excluded.parent_registration_id, excluded.event_id);
 
-  insert into event_instance_registration
+  insert into event_instance_registration as registration
     (legacy_registration_id, tenant_id, instance_id, event_id, person_id, status,
       note, target_cohort_id, source)
   select er.id, er.tenant_id, ei.id, er.event_id, er.person_id, 'unknown', er.note,
@@ -48,7 +52,18 @@ begin
     set event_id = excluded.event_id,
         note = excluded.note,
         parent_registration_id = excluded.parent_registration_id,
-        couple_id = excluded.couple_id;
+        couple_id = excluded.couple_id
+    where (
+      registration.event_id,
+      registration.note,
+      registration.parent_registration_id,
+      registration.couple_id
+    ) is distinct from (
+      excluded.event_id,
+      excluded.note,
+      excluded.parent_registration_id,
+      excluded.couple_id
+    );
 
   delete from event_instance_registration registration
   where registration.legacy_registration_id = any (reg_ids)

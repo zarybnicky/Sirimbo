@@ -525,6 +525,9 @@ VALUES
   (2900004, 'Other trainer', 'Policy', 'unspecified', ''),
   (2900005, 'Other participant', 'Policy', 'unspecified', '');
 
+INSERT INTO tenant_trainer (tenant_id, person_id, since)
+VALUES (1000, 2900002, now() - interval '1 day');
+
 INSERT INTO event_instance (id, tenant_id, since, until) OVERRIDING SYSTEM VALUE
 VALUES (9900003, 1000, now() + interval '4 hours', now() + interval '5 hours');
 
@@ -932,10 +935,22 @@ SET registration_status = 'cancelled'
 WHERE instance_id = 900001 AND person_id = 200002;
 
 CREATE TEMP TABLE _detached_audit_before ON COMMIT DROP AS
-SELECT person_id, source, target_cohort_id,
-  attendance_created_at, attendance_updated_at
-FROM event_instance_registration
-WHERE instance_id = 900001 AND person_id is not null;
+SELECT
+  (SELECT jsonb_agg(to_jsonb(registration)
+      - 'event_id' - 'legacy_registration_id' order by registration.id)
+   FROM event_instance_registration registration
+   WHERE registration.instance_id = 900001) as registrations,
+  (SELECT jsonb_agg(to_jsonb(registration) order by registration.id)
+   FROM event_instance_registration registration
+   WHERE registration.instance_id = 900002) as sibling_registrations,
+  (SELECT jsonb_agg(to_jsonb(demand) - 'event_id' order by demand.id)
+   FROM event_lesson_demand demand
+   JOIN event_instance_registration registration
+     ON registration.id = demand.registration_id
+   WHERE registration.instance_id = 900001) as demands,
+  (SELECT jsonb_agg(to_jsonb(trainer) - 'event_id' order by trainer.id)
+   FROM event_instance_trainer trainer
+   WHERE trainer.instance_id = 900001) as trainers;
 
 SET LOCAL ROLE trainer;
 
@@ -948,16 +963,37 @@ SELECT tap.is(
 RESET ROLE;
 
 SELECT tap.ok(
-  NOT EXISTS (
+  (SELECT
+    before.registrations = (
+      SELECT jsonb_agg(to_jsonb(registration)
+        - 'event_id' - 'legacy_registration_id' order by registration.id)
+      FROM event_instance_registration registration
+      WHERE registration.instance_id = 900001
+    ) AND before.sibling_registrations = (
+      SELECT jsonb_agg(to_jsonb(registration) order by registration.id)
+      FROM event_instance_registration registration
+      WHERE registration.instance_id = 900002
+    ) AND before.demands = (
+      SELECT jsonb_agg(to_jsonb(demand) - 'event_id' order by demand.id)
+      FROM event_lesson_demand demand
+      JOIN event_instance_registration registration
+        ON registration.id = demand.registration_id
+      WHERE registration.instance_id = 900001
+    ) AND before.trainers = (
+      SELECT jsonb_agg(to_jsonb(trainer) - 'event_id' order by trainer.id)
+      FROM event_instance_trainer trainer
+      WHERE trainer.instance_id = 900001
+    )
+   FROM _detached_audit_before before)
+  AND NOT EXISTS (
     SELECT 1
-    FROM _detached_audit_before before
-    LEFT JOIN event_instance_registration eir
-      ON eir.instance_id = 900001 AND eir.person_id = before.person_id
-    WHERE eir.id is null
-      OR eir.source is distinct from before.source
-      OR eir.target_cohort_id is distinct from before.target_cohort_id
-      OR eir.attendance_created_at is distinct from before.attendance_created_at
-      OR eir.attendance_updated_at is distinct from before.attendance_updated_at
+    FROM event_instance_registration registration
+    JOIN event_instance instance ON instance.id = registration.instance_id
+    JOIN event_registration legacy
+      ON legacy.id = registration.legacy_registration_id
+    WHERE registration.instance_id = 900001
+      AND registration.parent_registration_id is null
+      AND legacy.event_id <> instance.event_id
   ) AND EXISTS (
     SELECT 1
     FROM event_instance ei
@@ -968,6 +1004,18 @@ SELECT tap.ok(
       AND trainer.instance_id = ei.id
       AND trainer.person_id = 2900002
       AND trainer.lessons_offered = 1
+      AND EXISTS (
+        SELECT 1
+        FROM event_trainer legacy_trainer
+        WHERE legacy_trainer.event_id = ei.event_id
+          AND legacy_trainer.person_id = trainer.person_id
+      )
+      AND EXISTS (
+        SELECT 1
+        FROM event_target_cohort target
+        WHERE target.event_id = ei.event_id
+          AND target.cohort_id = 800001
+      )
   ) AND EXISTS (
     SELECT 1
     FROM event_instance_registration
@@ -980,7 +1028,7 @@ SELECT tap.ok(
     CROSS JOIN _stats_before_cancel before
     WHERE instance.id = 900001
   ),
-  'detaching preserves registration, attendance audit, and lesson demand'
+  'detaching preserves exact rows, siblings, and compatibility links'
 );
 
 SELECT tap.finish();

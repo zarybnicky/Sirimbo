@@ -35,7 +35,7 @@ CREATE POLICY view_visible_instance ON public.event_lesson_demand FOR SELECT USI
    FROM public.event_instance_registration)));
 
 CREATE TRIGGER _100_event_id BEFORE INSERT OR UPDATE OF registration_id ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__set_event_id_from_registration_id();
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, trainer_id, registration_id, lesson_count, created_at, updated_at ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX event_lesson_demand_registration_id_idx ON public.event_lesson_demand USING btree (registration_id);
 CREATE INDEX event_lesson_demand_tenant_id_idx ON public.event_lesson_demand USING btree (tenant_id);

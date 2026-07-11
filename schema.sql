@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict bniH389oChvrQkkn2NMSmSf9Vg7M0CwVm3pebAaAeR2oVoxDdQSOqBdmDeu4MYa
+\restrict aVdmOsYQqS3eYuiD9g2a7BeNIfljAiUK8EStdld5wKmz9CNUV2olkb4DmvoQWX8
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -555,17 +555,6 @@ CREATE TYPE public.event_registration_source AS ENUM (
 
 
 --
--- Name: event_registration_type_input; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.event_registration_type_input AS (
-	id bigint,
-	person_id bigint,
-	couple_id bigint
-);
-
-
---
 -- Name: event_trainer_type_input; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -772,59 +761,6 @@ CREATE TYPE public.quick_event_input AS (
 	location_text text,
 	trainer_person_ids bigint[],
 	registrations public.quick_event_registration_input[]
-);
-
-
---
--- Name: event_lesson_demand; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_lesson_demand (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    trainer_id bigint NOT NULL,
-    registration_id bigint NOT NULL,
-    lesson_count integer NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    event_id bigint,
-    CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
-);
-
-
---
--- Name: TABLE event_lesson_demand; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
-
-
---
--- Name: COLUMN event_lesson_demand.registration_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.event_lesson_demand.registration_id IS '@hasDefault';
-
-
---
--- Name: COLUMN event_lesson_demand.event_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.event_lesson_demand.event_id IS '@omit';
-
-
---
--- Name: register_to_event_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.register_to_event_type AS (
-	event_id bigint,
-	person_id bigint,
-	couple_id bigint,
-	note text,
-	lessons public.event_lesson_demand[]
 );
 
 
@@ -1734,6 +1670,14 @@ CREATE FUNCTION app_private.reconcile_event_instance_cohort_registrations(p_inst
     and r.person_id = desired.person_id
     and r.parent_registration_id is null
     and r.source = 'cohort'
+    and not exists (
+      select 1
+      from event_instance_registration attendee
+      where attendee.instance_id = desired.instance_id
+        and attendee.person_id = desired.person_id
+        and attendee.registration_status = 'active'
+        and coalesce(attendee.parent_registration_id, attendee.id) <> r.id
+    )
     and (r.registration_status, r.target_cohort_id)
       is distinct from (
         'active'::event_instance_registration_status,
@@ -1766,6 +1710,12 @@ CREATE FUNCTION app_private.reconcile_event_instance_cohort_registrations(p_inst
     where r.instance_id = desired.instance_id
       and r.person_id = desired.person_id
       and r.parent_registration_id is null
+  ) and not exists (
+    select 1
+    from event_instance_registration attendee
+    where attendee.instance_id = desired.instance_id
+      and attendee.person_id = desired.person_id
+      and attendee.registration_status = 'active'
   );
 
   update event_instance_registration r
@@ -1774,6 +1724,7 @@ CREATE FUNCTION app_private.reconcile_event_instance_cohort_registrations(p_inst
   where r.instance_id = instance.id
     and r.instance_id = any (p_instance_ids)
     and r.parent_registration_id is null
+    and r.person_id is not null
     and r.source = 'cohort'
     and r.registration_status = 'active'
     and instance.since >= now()
@@ -1849,62 +1800,6 @@ $$;
 
 
 --
--- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.cohort_membership (
-    cohort_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    CONSTRAINT cohort_membership_until_gt_since CHECK ((until > since))
-);
-
-
---
--- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
-
-
---
--- Name: COLUMN cohort_membership.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
-
-
---
--- Name: register_new_cohort_member_to_events(public.cohort_membership); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.register_new_cohort_member_to_events(c public.cohort_membership) RETURNS SETOF public.event_registration
-    LANGUAGE sql
-    AS $$
-  insert into event_registration (event_id, target_cohort_id, person_id, tenant_id)
-  select event.id, event_target_cohort.id, cohort_membership.person_id, cohort_membership.tenant_id
-  from event
-  join event_target_cohort on event_id=event.id
-  join cohort_membership on event_target_cohort.cohort_id=cohort_membership.cohort_id and active_range @> now()
-  left join event_registration on target_cohort_id=event_target_cohort.id and event_registration.person_id=cohort_membership.person_id and event_registration.event_id=event.id
-  where event_registration.id is null
-    and exists (select 1 from event_instance where event_id=event.id and until > now())
-    and cohort_membership.id = c.id
-    and event.tenant_id = c.tenant_id
-  on conflict on constraint event_registration_unique_event_person_couple_key do nothing
-  returning event_registration.*;
-$$;
-
-
---
 -- Name: relationship_status_next(timestamp with time zone, tstzrange, public.relationship_status); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -1931,7 +1826,7 @@ CREATE FUNCTION app_private.sync_eir_registrations(reg_ids bigint[]) RETURNS voi
 begin
   -- Legacy targetless registrations do not record who created them, so their
   -- source stays null; cohort-backed roots can be classified exactly.
-  insert into event_instance_registration
+  insert into event_instance_registration as registration
     (legacy_registration_id, tenant_id, instance_id, event_id, couple_id,
       target_cohort_id, source, note)
   select er.id, er.tenant_id, ei.id, er.event_id, er.couple_id,
@@ -1945,9 +1840,11 @@ begin
   on conflict (legacy_registration_id, instance_id, (coalesce(person_id, -1))) do update
     set event_id = excluded.event_id,
         couple_id = excluded.couple_id,
-        note = excluded.note;
+        note = excluded.note
+    where (registration.event_id, registration.couple_id, registration.note)
+      is distinct from (excluded.event_id, excluded.couple_id, excluded.note);
 
-  insert into event_instance_registration
+  insert into event_instance_registration as registration
     (legacy_registration_id, parent_registration_id, tenant_id, instance_id, event_id, person_id, status)
   select er.id, unit.id, er.tenant_id, ei.id, er.event_id, people.person_id, 'unknown'
   from event_registration er
@@ -1958,9 +1855,11 @@ begin
   where er.couple_id is not null and er.id = any (reg_ids)
   on conflict (legacy_registration_id, instance_id, (coalesce(person_id, -1))) do update
     set parent_registration_id = excluded.parent_registration_id,
-        event_id = excluded.event_id;
+        event_id = excluded.event_id
+    where (registration.parent_registration_id, registration.event_id)
+      is distinct from (excluded.parent_registration_id, excluded.event_id);
 
-  insert into event_instance_registration
+  insert into event_instance_registration as registration
     (legacy_registration_id, tenant_id, instance_id, event_id, person_id, status,
       note, target_cohort_id, source)
   select er.id, er.tenant_id, ei.id, er.event_id, er.person_id, 'unknown', er.note,
@@ -1974,7 +1873,18 @@ begin
     set event_id = excluded.event_id,
         note = excluded.note,
         parent_registration_id = excluded.parent_registration_id,
-        couple_id = excluded.couple_id;
+        couple_id = excluded.couple_id
+    where (
+      registration.event_id,
+      registration.note,
+      registration.parent_registration_id,
+      registration.couple_id
+    ) is distinct from (
+      excluded.event_id,
+      excluded.note,
+      excluded.parent_registration_id,
+      excluded.couple_id
+    );
 
   delete from event_instance_registration registration
   where registration.legacy_registration_id = any (reg_ids)
@@ -2486,38 +2396,6 @@ begin
     perform app_private.sync_eir_registrations(array(select distinct id from changed_rows));
   end if;
   return null;
-end;
-$$;
-
-
---
--- Name: tg_event_target_cohort__register_members(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.tg_event_target_cohort__register_members() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
-begin
-  insert into event_registration (event_id, person_id, target_cohort_id)
-  select NEW.event_id, person_id, NEW.id from cohort_membership where cohort_membership.cohort_id = NEW.cohort_id and now() <@ active_range
-  on conflict do nothing;
-  return NEW;
-end;
-$$;
-
-
---
--- Name: tg_event_target_cohort__unregister_members(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.tg_event_target_cohort__unregister_members() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
-begin
-  delete from event_registration where target_cohort_id = OLD.id;
-  return OLD;
 end;
 $$;
 
@@ -3554,42 +3432,6 @@ COMMENT ON FUNCTION public.attachment_directory(attachment public.attachment) IS
 
 
 --
--- Name: cancel_registration(bigint); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.cancel_registration(registration_id bigint) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-declare
-  v_event event;
-  v_reg event_registration;
-begin
-  select * into v_reg from event_registration er where er.id = registration_id;
-  select * into v_event from event where id = v_reg.event_id;
-
-  if v_event is null or v_reg is null then
-    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
-  end if;
-  if v_event.is_locked = true then
-    raise exception 'NOT_ALLOWED' using errcode = '28000';
-  end if;
-  if v_reg.person_id <> all (current_person_ids()) and v_reg.couple_id <> all (current_couple_ids()) then
-    raise exception 'ACCESS_DENIED' using errcode = '42501';
-  end if;
-
-  delete from event_registration where id = v_reg.id;
-end;
-$$;
-
-
---
--- Name: FUNCTION cancel_registration(registration_id bigint); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.cancel_registration(registration_id bigint) IS '@omit';
-
-
---
 -- Name: change_password(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4391,222 +4233,169 @@ CREATE FUNCTION public.detach_event_instance(p_instance_id bigint, p_new_event_n
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'pg_temp'
     AS $$
-DECLARE
+declare
+  v_tenant_id bigint;
   v_old_event_id bigint;
   v_new_event_id bigint;
-  v_old_att jsonb;
-  v_old_demands jsonb;
-BEGIN
-  -- Lock the instance and fetch old event_id
-  SELECT ei.event_id
-  INTO v_old_event_id
-  FROM public.event_instance ei
-  WHERE ei.id        = p_instance_id
-    FOR UPDATE;
-
-  IF v_old_event_id IS NULL THEN
-    RAISE EXCEPTION 'detach_event_instance: instance % not found', p_instance_id;
-  END IF;
-
-  -- Also lock the parent event row (prevents concurrent edits during cloning)
-  PERFORM 1
-  FROM public.event e
-  WHERE e.id = v_old_event_id
-    FOR UPDATE;
-
-  -- Snapshot attendance state for this instance so it can be restored after
-  -- the legacy registration bridge is rebuilt for the cloned event.
-  SELECT coalesce(jsonb_agg(jsonb_build_object(
-    'reg_person_id', er.person_id,
-    'reg_couple_id', er.couple_id,
-    'attendee_person_id', eir.person_id,
-    'registration_status', eir.registration_status,
-    'source', eir.source,
-    'target_cohort_id', eir.target_cohort_id,
-    'status', eir.status,
-    'attendance_note', eir.attendance_note,
-    'attendance_created_at', eir.attendance_created_at,
-    'attendance_updated_at', eir.attendance_updated_at
-  )), '[]'::jsonb)
-  INTO v_old_att
-  FROM public.event_instance_registration eir
-  JOIN public.event_registration er ON er.tenant_id = eir.tenant_id AND er.id = eir.legacy_registration_id AND er.event_id = v_old_event_id
-  WHERE eir.instance_id = p_instance_id;
-
-  SELECT coalesce(jsonb_agg(jsonb_build_object(
-    'reg_person_id', er.person_id,
-    'reg_couple_id', er.couple_id,
-    'trainer_id', trainer.id,
-    'lesson_count', demand.lesson_count,
-    'created_at', demand.created_at
-  )), '[]'::jsonb)
-  INTO v_old_demands
-  FROM public.event_lesson_demand demand
-  JOIN public.event_instance_registration eir ON eir.id = demand.registration_id
-  JOIN public.event_registration er ON er.id = eir.legacy_registration_id
-  JOIN public.event_instance_trainer trainer ON trainer.id = demand.trainer_id
-  WHERE eir.instance_id = p_instance_id
-    AND eir.parent_registration_id IS NULL;
-
-  -- Reparenting synchronizes the new registrations before sweeping the old
-  -- bridge rows, which would collide on the instance/person unit key.
-  DELETE FROM public.event_instance_registration eir
-  WHERE eir.instance_id = p_instance_id
-    AND eir.event_id = v_old_event_id
-    AND eir.legacy_registration_id IS NOT NULL;
-
-  -- Clone the event (explicit column list, but short and stable in compact.sql)
-  INSERT INTO public.event (
-    name, location_text, description, capacity, files_legacy,
-    updated_at, is_locked, is_visible, summary, is_public, enable_notes, tenant_id,
-    type, location_id, created_at
-  )
-  SELECT
-    COALESCE(p_new_event_name, e.name), e.location_text, e.description, e.capacity, e.files_legacy,
-    now(), e.is_locked, e.is_visible, e.summary, e.is_public, e.enable_notes, e.tenant_id,
-    e.type, e.location_id, now()
-  FROM public.event e
-  WHERE e.id = v_old_event_id
-  RETURNING id INTO v_new_event_id;
-
-  -- Copy event_target_cohort (natural key: cohort_id)
-  INSERT INTO public.event_target_cohort (event_id, cohort_id, created_at, updated_at)
-  SELECT v_new_event_id, etc.cohort_id, now(), now()
-  FROM public.event_target_cohort etc
-  WHERE etc.event_id = v_old_event_id
-  ON CONFLICT (event_id, cohort_id) DO NOTHING;
-
-  -- Copy event_trainer (natural key: person_id)
-  INSERT INTO public.event_trainer (event_id, person_id, created_at, updated_at, lessons_offered)
-  SELECT v_new_event_id, et.person_id, now(), now(), et.lessons_offered
-  FROM public.event_trainer et
-  WHERE et.event_id  = v_old_event_id
-  ON CONFLICT (event_id, person_id) DO NOTHING;
-
-  -- Re-point the instance and its denormalized trainer event IDs.
-  UPDATE public.event_instance ei
-  SET event_id   = v_new_event_id
-  WHERE ei.id        = p_instance_id
-    AND ei.event_id  = v_old_event_id;
-
-  UPDATE public.event_instance_trainer
-  SET event_id = v_new_event_id
-  WHERE instance_id = p_instance_id;
-
-  -- Copy registrations: map target_cohort_id by cohort_id (old_tc -> new_tc)
-  INSERT INTO public.event_registration (
-    event_id, target_cohort_id, couple_id, person_id, note, created_at
-  )
-  SELECT v_new_event_id, new_tc.id, er.couple_id, er.person_id, er.note, er.created_at
-  FROM public.event_registration er
-  LEFT JOIN public.event_target_cohort old_tc ON old_tc.tenant_id = er.tenant_id AND old_tc.id = er.target_cohort_id
-  LEFT JOIN public.event_target_cohort new_tc ON new_tc.tenant_id = er.tenant_id AND new_tc.event_id  = v_new_event_id AND new_tc.cohort_id = old_tc.cohort_id
-  WHERE er.event_id  = v_old_event_id
-  ON CONFLICT (event_id, person_id, couple_id) DO NOTHING;
-
-  INSERT INTO public.event_lesson_demand (
-    trainer_id, registration_id, lesson_count, created_at, event_id
-  )
-  SELECT trainer.id, new_eir.id, old.lesson_count, old.created_at, v_new_event_id
-  FROM jsonb_to_recordset(v_old_demands) AS old(
-    reg_person_id bigint,
-    reg_couple_id bigint,
-    trainer_id bigint,
-    lesson_count integer,
-    created_at timestamptz
-  )
-  JOIN public.event_instance_trainer trainer
-    ON trainer.id = old.trainer_id
-   AND trainer.instance_id = p_instance_id
-  JOIN public.event_registration new_reg
-    ON new_reg.event_id = v_new_event_id
-   AND new_reg.person_id IS NOT DISTINCT FROM old.reg_person_id
-   AND new_reg.couple_id IS NOT DISTINCT FROM old.reg_couple_id
-  JOIN public.event_instance_registration new_eir
-    ON new_eir.instance_id = p_instance_id
-   AND new_eir.legacy_registration_id = new_reg.id
-   AND new_eir.parent_registration_id IS NULL
-  ON CONFLICT (registration_id, trainer_id) DO NOTHING;
-
-  -- Restore per-person attendance on the newly generated bridge rows.
-  UPDATE public.event_instance_registration eir
-  SET registration_status = oa.registration_status,
-      source = oa.source,
-      target_cohort_id = oa.target_cohort_id,
-      status = oa.status,
-      attendance_note = oa.attendance_note
-  FROM jsonb_to_recordset(v_old_att) AS oa(
-    reg_person_id bigint,
-    reg_couple_id bigint,
-    attendee_person_id bigint,
-    registration_status public.event_instance_registration_status,
-    source public.event_registration_source,
-    target_cohort_id bigint,
-    status public.attendance_type,
-    attendance_note text
-  )
-  JOIN public.event_registration new_reg ON new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM oa.reg_person_id AND new_reg.couple_id IS NOT DISTINCT FROM oa.reg_couple_id
-  WHERE eir.instance_id     = p_instance_id
-    AND eir.legacy_registration_id = new_reg.id
-    AND eir.person_id IS NOT DISTINCT FROM oa.attendee_person_id;
-
-  -- Restoring status/note correctly counts as an update for the new bridge row,
-  -- so restore the original attendance audit lifecycle in a separate statement.
-  UPDATE public.event_instance_registration eir
-  SET attendance_created_at = oa.attendance_created_at,
-      attendance_updated_at = oa.attendance_updated_at
-  FROM jsonb_to_recordset(v_old_att) AS oa(
-    reg_person_id bigint,
-    reg_couple_id bigint,
-    attendee_person_id bigint,
-    attendance_created_at timestamptz,
-    attendance_updated_at timestamptz
-  )
-  JOIN public.event_registration new_reg ON new_reg.event_id = v_new_event_id AND new_reg.person_id IS NOT DISTINCT FROM oa.reg_person_id AND new_reg.couple_id IS NOT DISTINCT FROM oa.reg_couple_id
-  WHERE eir.instance_id = p_instance_id
-    AND eir.legacy_registration_id = new_reg.id
-    AND eir.person_id IS NOT DISTINCT FROM oa.attendee_person_id;
-
-  return (select event from public.event where id = v_new_event_id);
-END;
-$$;
-
-
---
--- Name: edit_registration(bigint, text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.edit_registration(registration_id bigint, note text) RETURNS public.event_registration
-    LANGUAGE plpgsql STRICT
-    AS $_$
-declare
-  v_event event;
-  reg event_registration;
+  v_result public.event;
 begin
-  select * into reg from event_registration where id = registration_id;
-  select * into v_event from event where id = reg.event_id;
+  select instance.tenant_id, instance.event_id
+  into v_tenant_id, v_old_event_id
+  from public.event_instance instance
+  where instance.id = p_instance_id
+  for update;
 
-  if v_event is null or reg is null then
-    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
+  if not found or v_old_event_id is null then
+    raise exception 'INSTANCE_NOT_FOUND' using errcode = '22023';
   end if;
-  if v_event.is_locked = true then
-    raise exception 'NOT_ALLOWED' using errcode = '28000';
-  end if;
-  if reg.person_id <> all (current_person_ids()) and reg.couple_id <> all (current_couple_ids()) then
+  if v_tenant_id <> public.current_tenant_id() then
     raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
 
-  update event_registration set note=$2 where id = reg.id returning * into reg;
-  return reg;
+  if not (
+    coalesce(app_private.is_system_admin(public.current_user_id()), false)
+    or exists (
+      select 1
+      from public.current_tenant_administrator administrator
+      where administrator.person_id = any (
+        coalesce(public.current_person_ids(), '{}'::bigint[])
+      )
+        and administrator.active_range @> now()
+    )
+    or (
+      exists (
+        select 1
+        from public.current_tenant_trainer trainer
+        where trainer.person_id = any (
+          coalesce(public.current_person_ids(), '{}'::bigint[])
+        )
+          and trainer.active_range @> now()
+      )
+      and app_private.can_trainer_edit_instance(p_instance_id)
+    )
+  ) then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+
+  perform 1
+  from public.event event
+  where event.id = v_old_event_id
+    and event.tenant_id = v_tenant_id
+  for update;
+
+  if not exists (
+    select 1
+    from public.event_instance sibling
+    where sibling.event_id = v_old_event_id
+      and sibling.id <> p_instance_id
+  ) then
+    raise exception 'CANNOT_DETACH_ONLY_INSTANCE' using errcode = '22023';
+  end if;
+
+  insert into public.event (
+    name, location_text, description, capacity, files_legacy,
+    is_locked, is_visible, summary, is_public, enable_notes, tenant_id,
+    type, location_id
+  )
+  select coalesce(p_new_event_name, event.name), event.location_text,
+    event.description, event.capacity, event.files_legacy, event.is_locked,
+    event.is_visible, event.summary, event.is_public, event.enable_notes,
+    event.tenant_id, event.type, event.location_id
+  from public.event event
+  where event.id = v_old_event_id
+  returning id into v_new_event_id;
+
+  -- The exact instance lists are authoritative; these rows only keep the
+  -- legacy event-shaped API working during the transition.
+  insert into public.event_target_cohort (tenant_id, event_id, cohort_id)
+  select v_tenant_id, v_new_event_id, cohort_id
+  from (
+    select target.cohort_id
+    from public.event_instance_target_cohort target
+    where target.instance_id = p_instance_id
+    union
+    select registration.target_cohort_id
+    from public.event_instance_registration registration
+    where registration.instance_id = p_instance_id
+      and registration.parent_registration_id is null
+      and registration.target_cohort_id is not null
+  ) cohort;
+
+  insert into public.event_trainer (
+    tenant_id, event_id, person_id, lessons_offered
+  )
+  select trainer.tenant_id, v_new_event_id, trainer.person_id,
+    trainer.lessons_offered
+  from public.event_instance_trainer trainer
+  where trainer.instance_id = p_instance_id
+  union all
+  select trainer.tenant_id, v_new_event_id, trainer.person_id,
+    trainer.lessons_offered
+  from public.event_trainer trainer
+  where trainer.event_id = v_old_event_id
+    and not exists (
+      select 1
+      from public.event_instance_trainer
+      where instance_id = p_instance_id
+    );
+
+  insert into public.event_registration (
+    tenant_id, event_id, target_cohort_id, couple_id, person_id, note
+  )
+  select exact.tenant_id, v_new_event_id, target.id,
+    legacy.couple_id, legacy.person_id, exact.note
+  from public.event_instance_registration exact
+  join public.event_registration legacy
+    on legacy.id = exact.legacy_registration_id
+  left join public.event_target_cohort target
+    on target.event_id = v_new_event_id
+   and target.cohort_id = exact.target_cohort_id
+  where exact.instance_id = p_instance_id
+    and exact.parent_registration_id is null
+    and exact.legacy_registration_id is not null;
+
+  -- The existing bridge and unit keys make this an unambiguous in-place rekey.
+  update public.event_instance_registration exact
+  set event_id = v_new_event_id,
+      legacy_registration_id = replacement.id
+  from public.event_registration legacy
+  join public.event_registration replacement
+    on replacement.event_id = v_new_event_id
+   and replacement.person_id is not distinct from legacy.person_id
+   and replacement.couple_id is not distinct from legacy.couple_id
+  where exact.instance_id = p_instance_id
+    and exact.legacy_registration_id = legacy.id
+    and legacy.event_id = v_old_event_id;
+
+  update public.event_instance_registration exact
+  set event_id = v_new_event_id
+  where exact.instance_id = p_instance_id
+    and exact.legacy_registration_id is null
+    and exact.event_id is distinct from v_new_event_id;
+
+  update public.event_instance instance
+  set event_id = v_new_event_id
+  where instance.id = p_instance_id;
+
+  update public.event_instance_trainer trainer
+  set event_id = v_new_event_id
+  where trainer.instance_id = p_instance_id
+    and trainer.event_id is distinct from v_new_event_id;
+
+  update public.event_lesson_demand demand
+  set event_id = v_new_event_id
+  from public.event_instance_registration registration
+  where registration.id = demand.registration_id
+    and registration.instance_id = p_instance_id
+    and demand.event_id is distinct from v_new_event_id;
+
+  select event.* into strict v_result
+  from public.event event
+  where event.id = v_new_event_id;
+
+  return v_result;
 end;
-$_$;
-
-
---
--- Name: FUNCTION edit_registration(registration_id bigint, note text); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.edit_registration(registration_id bigint, note text) IS '@omit';
+$$;
 
 
 --
@@ -4787,47 +4576,6 @@ CREATE FUNCTION public.event_instance_remaining_person_spots(inst public.event_i
       )
   end;
 $$;
-
-
---
--- Name: event_instance_target_cohort; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_instance_target_cohort (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    instance_id bigint NOT NULL,
-    cohort_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE event_instance_target_cohort; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_instance_target_cohort IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
-
-
---
--- Name: event_instance_target_cohorts(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_instance_target_cohorts(inst public.event_instance) RETURNS SETOF public.event_instance_target_cohort
-    LANGUAGE sql STABLE
-    AS $$
-  select * from public.event_instance_target_cohort where instance_id = inst.id;
-$$;
-
-
---
--- Name: FUNCTION event_instance_target_cohorts(inst public.event_instance); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.event_instance_target_cohorts(inst public.event_instance) IS '@omit';
 
 
 --
@@ -5144,6 +4892,46 @@ $$;
 --
 
 COMMENT ON FUNCTION public.event_registrants(e public.event) IS '@simpleCollections only';
+
+
+--
+-- Name: event_lesson_demand; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_lesson_demand (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    trainer_id bigint NOT NULL,
+    registration_id bigint NOT NULL,
+    lesson_count integer NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    event_id bigint,
+    CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
+);
+
+
+--
+-- Name: TABLE event_lesson_demand; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+@simpleCollections only';
+
+
+--
+-- Name: COLUMN event_lesson_demand.registration_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event_lesson_demand.registration_id IS '@hasDefault';
+
+
+--
+-- Name: COLUMN event_lesson_demand.event_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event_lesson_demand.event_id IS '@omit';
 
 
 --
@@ -6061,69 +5849,6 @@ CREATE FUNCTION public.refresh_jwt() RETURNS public.jwt_token
     AS $$
   SELECT app_private.create_jwt_token(users) FROM users WHERE id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
 $$;
-
-
---
--- Name: register_to_event_many(public.register_to_event_type[]); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.register_to_event_many(event_registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
-declare
-  event event;
-  created_ids bigint[] := array[]::bigint[];
-  registration register_to_event_type;
-  created event_registration;
-  demand event_lesson_demand;
-  instance_registration_id bigint;
-begin
-  foreach registration in array event_registrations loop
-    select * into event from event where id = registration.event_id;
-
-    if event is null then
-      raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
-    end if;
-    if event.is_locked = true then
-      raise exception 'NOT_ALLOWED' using errcode = '28000';
-    end if;
-    if registration.person_id <> all (current_person_ids()) and registration.couple_id <> all (current_couple_ids()) then
-      raise exception 'ACCESS_DENIED' using errcode = '42501';
-    end if;
-
-    insert into event_registration (event_id, person_id, couple_id, note)
-    values (registration.event_id, registration.person_id, registration.couple_id, registration.note)
-    returning * into created;
-    created_ids := created_ids || created.id;
-    if coalesce(cardinality(registration.lessons), 0) > 0 then
-      foreach demand in array registration.lessons loop
-        select instance_registration.id into instance_registration_id
-        from event_instance_trainer trainer
-        join event_instance_registration instance_registration
-          on instance_registration.instance_id = trainer.instance_id
-         and instance_registration.legacy_registration_id = created.id
-         and instance_registration.parent_registration_id is null
-        where trainer.id = demand.trainer_id;
-
-        if not found then
-          raise exception 'TRAINER_NOT_FOUND' using errcode = '28000';
-        end if;
-
-        perform set_lesson_demand(instance_registration_id, demand.trainer_id, demand.lesson_count);
-      end loop;
-    end if;
-  end loop;
-  return query select * from event_registration where id = any (created_ids);
-end;
-$$;
-
-
---
--- Name: FUNCTION register_to_event_many(event_registrations public.register_to_event_type[]); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.register_to_event_many(event_registrations public.register_to_event_type[]) IS '@omit';
 
 
 --
@@ -7625,10 +7350,10 @@ $$;
 
 
 --
--- Name: upsert_event(public.event_type_input, public.event_instance_type_input[], public.event_trainer_type_input[], public.event_registration_type_input[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: upsert_event(public.event_type_input, public.event_instance_type_input[], public.event_trainer_type_input[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], registrations public.event_registration_type_input[]) RETURNS public.event
+CREATE FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[]) RETURNS public.event
     LANGUAGE plpgsql
     AS $$
 declare
@@ -7638,10 +7363,6 @@ declare
   v_event event;
   v_instance_id bigint;
 begin
-  if cardinality(registrations) > 0 then
-    raise exception 'event registrations must be edited on the event instance';
-  end if;
-
   if info.id is null then
 
     insert into event (
@@ -9111,6 +8832,40 @@ ALTER TABLE public.cohort ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
+-- Name: cohort_membership; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cohort_membership (
+    cohort_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    CONSTRAINT cohort_membership_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
+
+
+--
+-- Name: COLUMN cohort_membership.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
+
+
+--
 -- Name: cohort_membership_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -9393,6 +9148,29 @@ ALTER TABLE public.event_instance_registration ALTER COLUMN id ADD GENERATED ALW
     NO MAXVALUE
     CACHE 1
 );
+
+
+--
+-- Name: event_instance_target_cohort; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_instance_target_cohort (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    instance_id bigint NOT NULL,
+    cohort_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_instance_target_cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_instance_target_cohort IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+@simpleCollections only';
 
 
 --
@@ -12650,7 +12428,7 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance 
 -- Name: event_instance_registration _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, instance_id, parent_registration_id, couple_id, person_id, target_cohort_id, status, note, attendance_note, registration_status, source, created_at, updated_at ON public.event_instance_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -12664,14 +12442,14 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_
 -- Name: event_instance_trainer _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, instance_id, person_id, created_at, updated_at, lessons_offered ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
 -- Name: event_lesson_demand _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, trainer_id, registration_id, lesson_count, created_at, updated_at ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -15964,13 +15742,6 @@ GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
 
 
 --
--- Name: TABLE event_lesson_demand; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
-
-
---
 -- Name: TABLE event_instance; Type: ACL; Schema: public; Owner: -
 --
 
@@ -16059,13 +15830,6 @@ GRANT ALL ON FUNCTION app_private.refresh_event_instance_manager_person_ids(p_in
 --
 
 REVOKE ALL ON FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) FROM PUBLIC;
-
-
---
--- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.cohort_membership TO anonymous;
 
 
 --
@@ -16216,13 +15980,6 @@ GRANT ALL ON FUNCTION public.attachment_directory(attachment public.attachment) 
 
 
 --
--- Name: FUNCTION cancel_registration(registration_id bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.cancel_registration(registration_id bigint) TO anonymous;
-
-
---
 -- Name: FUNCTION change_password(new_pass text); Type: ACL; Schema: public; Owner: -
 --
 
@@ -16352,7 +16109,8 @@ GRANT ALL ON TABLE public.event TO anonymous;
 -- Name: FUNCTION detach_event_instance(p_instance_id bigint, p_new_event_name text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.detach_event_instance(p_instance_id bigint, p_new_event_name text) TO anonymous;
+REVOKE ALL ON FUNCTION public.detach_event_instance(p_instance_id bigint, p_new_event_name text) FROM PUBLIC;
+GRANT ALL ON FUNCTION public.detach_event_instance(p_instance_id bigint, p_new_event_name text) TO trainer;
 
 
 --
@@ -16367,13 +16125,6 @@ GRANT ALL ON FUNCTION public.digest(bytea, text) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.digest(text, text) TO anonymous;
-
-
---
--- Name: FUNCTION edit_registration(registration_id bigint, note text); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.edit_registration(registration_id bigint, note text) TO anonymous;
 
 
 --
@@ -16416,20 +16167,6 @@ GRANT ALL ON FUNCTION public.event_instance_registrations(inst public.event_inst
 --
 
 GRANT ALL ON FUNCTION public.event_instance_remaining_person_spots(inst public.event_instance) TO anonymous;
-
-
---
--- Name: TABLE event_instance_target_cohort; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event_instance_target_cohort TO anonymous;
-
-
---
--- Name: FUNCTION event_instance_target_cohorts(inst public.event_instance); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.event_instance_target_cohorts(inst public.event_instance) TO anonymous;
 
 
 --
@@ -16500,6 +16237,13 @@ GRANT ALL ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp wit
 --
 
 GRANT ALL ON FUNCTION public.event_registrants(e public.event) TO anonymous;
+
+
+--
+-- Name: TABLE event_lesson_demand; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
 
 
 --
@@ -16762,13 +16506,6 @@ GRANT ALL ON FUNCTION public.refresh_jwt() TO anonymous;
 
 
 --
--- Name: FUNCTION register_to_event_many(event_registrations public.register_to_event_type[]); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.register_to_event_many(event_registrations public.register_to_event_type[]) TO anonymous;
-
-
---
 -- Name: FUNCTION register_using_invitation(email text, passwd text, token uuid, login text); Type: ACL; Schema: public; Owner: -
 --
 
@@ -17022,10 +16759,10 @@ GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_i
 
 
 --
--- Name: FUNCTION upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], registrations public.event_registration_type_input[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], registrations public.event_registration_type_input[]) TO anonymous;
+GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[]) TO anonymous;
 
 
 --
@@ -17337,6 +17074,13 @@ GRANT ALL ON TABLE public.cohort_group TO anonymous;
 
 
 --
+-- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort_membership TO anonymous;
+
+
+--
 -- Name: TABLE current_cohort_membership; Type: ACL; Schema: public; Owner: -
 --
 
@@ -17470,6 +17214,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.event_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE event_instance_target_cohort; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_instance_target_cohort TO anonymous;
+
+
+--
 -- Name: SEQUENCE event_instance_target_cohort_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -17578,5 +17329,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict bniH389oChvrQkkn2NMSmSf9Vg7M0CwVm3pebAaAeR2oVoxDdQSOqBdmDeu4MYa
+\unrestrict aVdmOsYQqS3eYuiD9g2a7BeNIfljAiUK8EStdld5wKmz9CNUV2olkb4DmvoQWX8
 

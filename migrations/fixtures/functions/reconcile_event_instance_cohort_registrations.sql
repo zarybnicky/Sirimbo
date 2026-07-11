@@ -34,6 +34,14 @@ as $$
     and r.person_id = desired.person_id
     and r.parent_registration_id is null
     and r.source = 'cohort'
+    and not exists (
+      select 1
+      from event_instance_registration attendee
+      where attendee.instance_id = desired.instance_id
+        and attendee.person_id = desired.person_id
+        and attendee.registration_status = 'active'
+        and coalesce(attendee.parent_registration_id, attendee.id) <> r.id
+    )
     and (r.registration_status, r.target_cohort_id)
       is distinct from (
         'active'::event_instance_registration_status,
@@ -66,6 +74,12 @@ as $$
     where r.instance_id = desired.instance_id
       and r.person_id = desired.person_id
       and r.parent_registration_id is null
+  ) and not exists (
+    select 1
+    from event_instance_registration attendee
+    where attendee.instance_id = desired.instance_id
+      and attendee.person_id = desired.person_id
+      and attendee.registration_status = 'active'
   );
 
   update event_instance_registration r
@@ -74,6 +88,7 @@ as $$
   where r.instance_id = instance.id
     and r.instance_id = any (p_instance_ids)
     and r.parent_registration_id is null
+    and r.person_id is not null
     and r.source = 'cohort'
     and r.registration_status = 'active'
     and instance.since >= now()

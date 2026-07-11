@@ -1,4 +1,4 @@
-CREATE FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], registrations public.event_registration_type_input[]) RETURNS public.event
+CREATE FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[]) RETURNS public.event
     LANGUAGE plpgsql
     AS $$
 declare
@@ -8,10 +8,6 @@ declare
   v_event event;
   v_instance_id bigint;
 begin
-  if cardinality(registrations) > 0 then
-    raise exception 'event registrations must be edited on the event instance';
-  end if;
-
   if info.id is null then
 
     insert into event (
@@ -113,4 +109,4 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], registrations public.event_registration_type_input[]) TO anonymous;
+GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[]) TO anonymous;
