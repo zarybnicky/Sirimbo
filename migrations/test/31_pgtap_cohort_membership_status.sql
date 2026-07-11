@@ -58,11 +58,27 @@ INSERT INTO event_instance_target_cohort (id, tenant_id, instance_id, cohort_id)
   VALUES (850101, 1000, 900001, 800001)
   ON CONFLICT (instance_id, cohort_id) DO NOTHING;
 
--- Existing registrations remain bridged during this slice, but cohort automation
--- now changes their exact per-instance lifecycle directly.
+-- Historical legacy rows and their existing exact bridges are seeded separately;
+-- changes to the frozen legacy table no longer synchronize exact registrations.
 INSERT INTO event_registration (tenant_id, event_id, target_cohort_id, person_id)
 SELECT 1000, 700001, 850001, person_id
 FROM unnest(ARRAY[200001, 200002, 200003, 200004]::bigint[]) person(person_id)
+ON CONFLICT ON CONSTRAINT event_registration_unique_event_person_couple_key DO NOTHING;
+
+INSERT INTO event_instance_registration (
+  legacy_registration_id, tenant_id, instance_id, event_id, person_id,
+  target_cohort_id, source, status
+)
+SELECT registration.id, registration.tenant_id, instance.id,
+  registration.event_id, registration.person_id, 800001, 'cohort', 'unknown'
+FROM event_registration registration
+JOIN event_instance instance ON instance.event_id = registration.event_id
+WHERE registration.event_id = 700001
+  AND registration.person_id = ANY (ARRAY[200001, 200002, 200003, 200004]::bigint[])
+ON CONFLICT DO NOTHING;
+
+INSERT INTO event_registration (tenant_id, event_id, target_cohort_id, person_id)
+VALUES (1000, 700001, 850001, 200005)
 ON CONFLICT ON CONSTRAINT event_registration_unique_event_person_couple_key DO NOTHING;
 
 -- Active memberships
@@ -1020,11 +1036,9 @@ SELECT tap.ok(
     SELECT 1
     FROM event_instance_registration registration
     JOIN event_instance instance ON instance.id = registration.instance_id
-    JOIN event_registration legacy
-      ON legacy.id = registration.legacy_registration_id
     WHERE registration.instance_id = 900001
-      AND registration.parent_registration_id is null
-      AND legacy.event_id <> instance.event_id
+      AND (registration.legacy_registration_id is not null
+        OR registration.event_id is distinct from instance.event_id)
   ) AND EXISTS (
     SELECT 1
     FROM event_instance ei
@@ -1043,10 +1057,16 @@ SELECT tap.ok(
           AND legacy_trainer.person_id = trainer.person_id
       )
       AND EXISTS (
-        SELECT 1
-        FROM event_target_cohort target
-        WHERE target.event_id = ei.event_id
-          AND target.cohort_id = 800001
+        SELECT 1 from event_instance_target_cohort target
+        WHERE target.instance_id = ei.id and target.cohort_id = 800001
+      )
+      AND NOT EXISTS (
+        SELECT 1 from event_registration legacy
+        WHERE legacy.event_id = ei.event_id
+      )
+      AND NOT EXISTS (
+        SELECT 1 from event_target_cohort legacy
+        WHERE legacy.event_id = ei.event_id
       )
   ) AND EXISTS (
     SELECT 1
@@ -1060,7 +1080,7 @@ SELECT tap.ok(
     CROSS JOIN _stats_before_cancel before
     WHERE instance.id = 900001
   ),
-  'detaching preserves exact rows, siblings, and compatibility links'
+  'detaching preserves exact rows without writing frozen legacy registrations or targets'
 );
 
 SELECT tap.finish();

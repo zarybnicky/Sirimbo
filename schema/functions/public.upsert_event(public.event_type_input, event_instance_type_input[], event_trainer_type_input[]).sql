@@ -7,6 +7,7 @@ declare
   instance_trainer event_instance_trainer_type_input;
   v_event event;
   v_instance_id bigint;
+  v_series_id bigint;
 begin
   if info.id is null then
 
@@ -37,6 +38,10 @@ begin
       info.enable_notes
     )
     returning * into v_event;
+
+    insert into event_series (tenant_id, name)
+    values (v_event.tenant_id, v_event.name)
+    returning id into v_series_id;
   else
     update event set
       name=info.name,
@@ -56,12 +61,24 @@ begin
     if not found then
       raise exception 'event % not found', info.id;
     end if;
+
+    select event_instance.series_id into v_series_id
+    from event_instance
+    where event_id = v_event.id and series_id is not null
+    order by id
+    limit 1;
+
+    if v_series_id is null then
+      insert into event_series (tenant_id, name)
+      values (v_event.tenant_id, v_event.name)
+      returning id into v_series_id;
+    end if;
   end if;
 
   foreach instance in array coalesce(event_instances, '{}'::event_instance_type_input[]) loop
     if instance.id is null then
-      insert into event_instance (event_id, since, until, is_cancelled)
-      values (v_event.id, instance.since, instance.until, instance.is_cancelled)
+      insert into event_instance (event_id, series_id, since, until, is_cancelled)
+      values (v_event.id, v_series_id, instance.since, instance.until, instance.is_cancelled)
       returning id into v_instance_id;
     elsif instance.since is null and instance.until is null then
       delete from event_instance where id=instance.id;

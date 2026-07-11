@@ -79,22 +79,6 @@ begin
   where event.id = v_old_event_id
   returning id into v_new_event_id;
 
-  -- The exact instance lists are authoritative; these rows only keep the
-  -- legacy event-shaped API working during the transition.
-  insert into public.event_target_cohort (tenant_id, event_id, cohort_id)
-  select v_tenant_id, v_new_event_id, cohort_id
-  from (
-    select target.cohort_id
-    from public.event_instance_target_cohort target
-    where target.instance_id = p_instance_id
-    union
-    select registration.target_cohort_id
-    from public.event_instance_registration registration
-    where registration.instance_id = p_instance_id
-      and registration.parent_registration_id is null
-      and registration.target_cohort_id is not null
-  ) cohort;
-
   insert into public.event_trainer (
     tenant_id, event_id, person_id, lessons_offered
   )
@@ -103,39 +87,12 @@ begin
   from public.event_instance_trainer trainer
   where trainer.instance_id = p_instance_id;
 
-  insert into public.event_registration (
-    tenant_id, event_id, target_cohort_id, couple_id, person_id, note
-  )
-  select exact.tenant_id, v_new_event_id, target.id,
-    legacy.couple_id, legacy.person_id, exact.note
-  from public.event_instance_registration exact
-  join public.event_registration legacy
-    on legacy.id = exact.legacy_registration_id
-  left join public.event_target_cohort target
-    on target.event_id = v_new_event_id
-   and target.cohort_id = exact.target_cohort_id
-  where exact.instance_id = p_instance_id
-    and exact.parent_registration_id is null
-    and exact.legacy_registration_id is not null;
-
-  -- The existing bridge and unit keys make this an unambiguous in-place rekey.
   update public.event_instance_registration exact
   set event_id = v_new_event_id,
-      legacy_registration_id = replacement.id
-  from public.event_registration legacy
-  join public.event_registration replacement
-    on replacement.event_id = v_new_event_id
-   and replacement.person_id is not distinct from legacy.person_id
-   and replacement.couple_id is not distinct from legacy.couple_id
+      legacy_registration_id = null
   where exact.instance_id = p_instance_id
-    and exact.legacy_registration_id = legacy.id
-    and legacy.event_id = v_old_event_id;
-
-  update public.event_instance_registration exact
-  set event_id = v_new_event_id
-  where exact.instance_id = p_instance_id
-    and exact.legacy_registration_id is null
-    and exact.event_id is distinct from v_new_event_id;
+    and (exact.event_id is distinct from v_new_event_id
+      or exact.legacy_registration_id is not null);
 
   update public.event_instance instance
   set event_id = v_new_event_id,

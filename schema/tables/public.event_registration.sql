@@ -47,9 +47,6 @@ CREATE POLICY view_visible_event ON public.event_registration FOR SELECT USING (
    FROM public.event)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-CREATE TRIGGER _600_sync_eir_registration_del AFTER DELETE ON public.event_registration REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_registration__sync_eir();
-CREATE TRIGGER _600_sync_eir_registration_ins AFTER INSERT ON public.event_registration REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_registration__sync_eir();
-CREATE TRIGGER _600_sync_eir_registration_upd AFTER UPDATE ON public.event_registration REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_registration__sync_eir();
 
 CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING btree (couple_id);
 CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);
