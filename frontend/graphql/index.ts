@@ -3327,7 +3327,6 @@ export type EventLessonDemandsOrderBy =
 /** Pair of overlapping event instances for a single attendee or trainer. */
 export type EventOverlapsConflict = {
   __typename?: 'EventOverlapsConflict';
-  firstEventId: Maybe<Scalars['BigInt']['output']>;
   firstEventName: Maybe<Scalars['String']['output']>;
   firstInstanceId: Maybe<Scalars['BigInt']['output']>;
   firstSince: Maybe<Scalars['Datetime']['output']>;
@@ -3335,7 +3334,6 @@ export type EventOverlapsConflict = {
   overlapRange: Maybe<DatetimeRange>;
   personId: Maybe<Scalars['BigInt']['output']>;
   personName: Maybe<Scalars['String']['output']>;
-  secondEventId: Maybe<Scalars['BigInt']['output']>;
   secondEventName: Maybe<Scalars['String']['output']>;
   secondInstanceId: Maybe<Scalars['BigInt']['output']>;
   secondSince: Maybe<Scalars['Datetime']['output']>;
@@ -9427,7 +9425,6 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<EventLessonDemandsEdge>, Record<string, never>, WithTypename<EventLessonDemand> | string>
   },
   EventOverlapsConflict?: {
-    firstEventId?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     firstEventName?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['String']['output'] | string>,
     firstInstanceId?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     firstSince?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -9435,7 +9432,6 @@ export type GraphCacheResolvers = {
     overlapRange?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, WithTypename<DatetimeRange> | string>,
     personId?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     personName?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['String']['output'] | string>,
-    secondEventId?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     secondEventName?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['String']['output'] | string>,
     secondInstanceId?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     secondSince?: GraphCacheResolver<WithTypename<EventOverlapsConflict>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -11075,7 +11071,6 @@ export type GraphCacheUpdaters = {
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemandsEdge>>, Record<string, never>>
   },
   EventOverlapsConflict?: {
-    firstEventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
     firstEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
     firstInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
     firstSince?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
@@ -11083,7 +11078,6 @@ export type GraphCacheUpdaters = {
     overlapRange?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
     personName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
-    secondEventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
     secondEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
     secondInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,
     secondSince?: GraphCacheUpdateResolver<Maybe<WithTypename<EventOverlapsConflict>>, Record<string, never>>,

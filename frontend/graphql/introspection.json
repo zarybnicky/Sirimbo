@@ -7439,14 +7439,6 @@
         "name": "EventOverlapsConflict",
         "fields": [
           {
-            "name": "firstEventId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "firstEventName",
             "type": {
               "kind": "SCALAR",
@@ -7497,14 +7489,6 @@
           },
           {
             "name": "personName",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "secondEventId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"

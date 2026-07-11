@@ -38,7 +38,18 @@ SELECT tap.ok(
     AND to_regtype('public.event_type_input') is null
     AND to_regtype('public.event_instance_type_input') is null
     AND to_regtype('public.event_instance_trainer_type_input') is null
-    AND to_regtype('public.event_trainer_type_input') is null,
+    AND to_regtype('public.event_trainer_type_input') is null
+    AND NOT EXISTS (
+      SELECT 1
+      FROM pg_catalog.pg_type type
+      JOIN pg_catalog.pg_namespace namespace ON namespace.oid = type.typnamespace
+      JOIN pg_catalog.pg_class class ON class.oid = type.typrelid
+      JOIN pg_catalog.pg_attribute attribute ON attribute.attrelid = class.oid
+      WHERE namespace.nspname = 'public'
+        AND type.typname = 'event_overlaps_conflict'
+        AND attribute.attname IN ('first_event_id', 'second_event_id')
+        AND NOT attribute.attisdropped
+    ),
   'legacy event tables and helpers have no application surface'
 );
 
@@ -387,10 +398,14 @@ SELECT tap.ok(
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
 VALUES (2900001, 'Stats', 'Test', 'unspecified', '');
 
-INSERT INTO event_instance (id, tenant_id, since, until) OVERRIDING SYSTEM VALUE
+INSERT INTO event_series (id, tenant_id) OVERRIDING SYSTEM VALUE
+VALUES (9900001, 1000);
+
+INSERT INTO event_instance (id, tenant_id, series_id, since, until) OVERRIDING SYSTEM VALUE
 VALUES
-  (9900001, 1000, now(), now() + interval '1 hour'),
-  (9900002, 1000, now() + interval '2 hours', now() + interval '3 hours');
+  (9900001, 1000, 9900001, now(), now() + interval '1 hour'),
+  (9900002, 1000, 9900001, now() + interval '2 hours', now() + interval '3 hours'),
+  (9900099, 1000, 9900001, now() - interval '2 hours', now() - interval '1 hour');
 
 INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, source, status)
 VALUES (1000, 9900001, 2900001, 'manager', 'unknown');
@@ -399,10 +414,21 @@ UPDATE event_instance_registration
 SET instance_id = 9900002
 WHERE instance_id = 9900001 AND person_id = 2900001;
 
+INSERT INTO event_instance_registration (
+  tenant_id, instance_id, person_id, source, status
+)
+VALUES (1000, 9900099, 2900001, 'manager', 'attended');
+
 SELECT tap.ok(
   (SELECT stats->>'TOTAL' = '0' FROM event_instance WHERE id = 9900001)
-    AND (SELECT stats->>'TOTAL' = '1' FROM event_instance WHERE id = 9900002),
-  'moving attendance refreshes both the source and destination instance summaries'
+    AND (SELECT stats->>'TOTAL' = '1' FROM event_instance WHERE id = 9900002)
+    AND (
+      SELECT event_instance_registration_last_attended(registration)
+      FROM event_instance_registration registration
+      WHERE registration.instance_id = 9900002
+        AND registration.person_id = 2900001
+    ) = (SELECT since FROM event_instance WHERE id = 9900099),
+  'moving attendance refreshes summaries and series history uses exact registrations'
 );
 
 UPDATE event_instance SET parent_id = 9900001 WHERE id = 9900002;

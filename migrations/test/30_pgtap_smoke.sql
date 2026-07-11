@@ -56,7 +56,6 @@ INSERT INTO event_trainer (tenant_id, event_id, person_id)
   ON CONFLICT DO NOTHING;
 
 -- The migration materializes the previously effective lists on each instance.
--- omit event_id — trigger _100_event_id fills it from instance_id
 INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id)
   VALUES (1, 4001, 1001),
          (1, 4001, 1003),

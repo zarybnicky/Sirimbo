@@ -3917,7 +3917,6 @@ enum EventLessonDemandsOrderBy {
 
 """Pair of overlapping event instances for a single attendee or trainer."""
 type EventOverlapsConflict {
-  firstEventId: BigInt
   firstEventName: String
   firstInstanceId: BigInt
   firstSince: Datetime
@@ -3925,7 +3924,6 @@ type EventOverlapsConflict {
   overlapRange: DatetimeRange
   personId: BigInt
   personName: String
-  secondEventId: BigInt
   secondEventName: String
   secondInstanceId: BigInt
   secondSince: Datetime
