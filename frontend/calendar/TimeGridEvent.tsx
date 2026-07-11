@@ -132,10 +132,7 @@ function InstanceTimeGridEvent({
           'absolute overflow-hidden max-h-full min-h-[20px] border border-b-transparent',
           {
             'w-full h-full': isResizable,
-            'empty-event': (event.instance.eventId
-              ? event.instance.registrations
-              : event.instance.instanceRegistrations
-            ).totalCount === 0,
+            'empty-event': event.instance.registrations.totalCount === 0,
             'is-group': event.instance.type === 'GROUP',
             'opacity-75': isBackgroundEvent,
             'rbc-drag-preview': event.__isPreview,

@@ -8,6 +8,9 @@ import { exportEventParticipants } from '@/ui/reports/export-event-participants'
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 
 const preventDefault = (e: Event) => e.preventDefault();
+const rootInstanceId = (event: EventFragment) =>
+  event.eventInstancesList.find((instance) => !instance.parentId)?.id ??
+  event.eventInstancesList[0]?.id;
 
 export const eventActions = defineActions<EventFragment>()([
   {
@@ -42,20 +45,22 @@ export const eventActions = defineActions<EventFragment>()([
     id: 'event.exportParticipants',
     label: 'Export přihlášených',
     visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
+      !!rootInstanceId(item) &&
+      (auth.isAdmin ||
+        (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId)))),
     execute: async ({ item, client }) => {
-      await exportEventParticipants(client, item.id);
+      await exportEventParticipants(client, rootInstanceId(item)!);
     },
   },
   {
     id: 'event.exportRegistrations',
     label: 'Export přihlášek',
     visible: ({ auth, item }) =>
-      auth.isAdmin ||
-      (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId))),
+      !!rootInstanceId(item) &&
+      (auth.isAdmin ||
+        (auth.isTrainer && item.eventTrainersList.some((x) => auth.isMyPerson(x.personId)))),
     execute: async ({ item, client }) => {
-      await exportEventRegistrations(client, item.id);
+      await exportEventRegistrations(client, rootInstanceId(item)!);
     },
   },
 ]);

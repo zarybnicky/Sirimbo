@@ -279,11 +279,10 @@ export function QuickInstanceEditForm({
 }) {
   const { onSuccess } = useFormResult();
   const updateInstance = useMutation(UpdateEventInstanceDetailsDocument)[1];
-  const [registrationsReady, setRegistrationsReady] = React.useState(!!instance.eventId);
+  const [registrationsReady, setRegistrationsReady] = React.useState(false);
   const [registrationsQuery] = useQuery({
     query: EventInstanceRegistrationsDocument,
     variables: { id: instance.id },
-    pause: !!instance.eventId,
   });
   const [fullForm, setFullForm] = React.useState(false);
   const directTrainers = instance.eventInstanceTrainersByInstanceIdList;
@@ -400,7 +399,7 @@ export function QuickInstanceEditForm({
         pTrainerLessonsOffered: trainersChanged
           ? nextTrainers.map((trainer) => trainer.lessonsOffered)
           : null,
-        pRegistrations: instance.eventId || !registrationsReady ? null : nextRegistrations,
+        pRegistrations: registrationsReady ? nextRegistrations : null,
       },
     });
     if (result.error) throw result.error;
@@ -449,7 +448,7 @@ export function QuickInstanceEditForm({
         name="isLocked"
         label="Zakázat přihlašování/odhlašování"
       />
-      {!instance.eventId && registrationsReady && (
+      {registrationsReady && (
         <ParticipantListElement
           control={control}
           name="registrations"
@@ -465,7 +464,7 @@ export function QuickInstanceEditForm({
           )}
         />
       )}
-      {!instance.eventId && !registrationsReady && registrationsQuery.fetching && (
+      {!registrationsReady && registrationsQuery.fetching && (
         <div className="text-sm text-neutral-11">Načítám účastníky…</div>
       )}
       <FormError error={registrationsQuery.error} />

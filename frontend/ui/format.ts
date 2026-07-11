@@ -9,7 +9,7 @@ type MaybePerson =
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson } | null | undefined;
 type MaybeRegistration = { person: MaybePerson; couple: MaybeCouple | null | undefined };
 
-export const formatCoupleName = (couple: MaybeCouple) =>
+const formatCoupleName = (couple: MaybeCouple) =>
   !couple ? '' : `${couple.man?.lastName || ''} - ${couple.woman?.lastName || ''}`;
 
 export const formatLongCoupleName = (couple: MaybeCouple) =>
@@ -29,15 +29,11 @@ export const formatEventType = (type: EventType | null | undefined) =>
   type ? names[type] : '';
 
 export const formatDefaultInstanceName = (event: {
-  eventId: string | null;
   name: string | null;
   type: EventType | null;
   registrations: {
     nodes: MaybeRegistration[] | null;
   } | null;
-  instanceRegistrations: {
-    nodes: MaybeRegistration[] | null;
-  };
   trainersList: {
     person: {
       name?: string | null;
@@ -46,9 +42,7 @@ export const formatDefaultInstanceName = (event: {
 }) => {
   if (event.name) return event.name;
 
-  const registrations = event.eventId
-    ? event.registrations?.nodes
-    : event.instanceRegistrations.nodes;
+  const registrations = event.registrations?.nodes;
   if (event.type === 'LESSON' && registrations?.length)
     return registrations.map(formatRegistrant).join(', ');
 

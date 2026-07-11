@@ -1,15 +1,16 @@
-import { EventDocument } from '@/graphql/Event';
+import { EventInstanceExportDocument } from '@/graphql/Event';
 import { fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
 export async function exportEventRegistrations(client: Client, id: string) {
-  const result = await client.query(EventDocument, { id }).toPromise();
+  const result = await client.query(EventInstanceExportDocument, { id }).toPromise();
   if (result.error) throw result.error;
-  const data = result.data!;
+  const instance = result.data?.eventInstance;
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet(data.event?.name || 'Sheet 1');
+  const name = instance?.name || instance?.event?.name || 'Sheet 1';
+  const worksheet = workbook.addWorksheet(name);
 
   const columns = [
     { header: 'Partner', key: 'man' },
@@ -17,24 +18,19 @@ export async function exportEventRegistrations(client: Client, id: string) {
     { header: 'Datum přihlášení', key: 'registered' },
     { header: 'Poznámka', key: 'note' },
   ];
-  const lessonTrainers = new Map(
-    [
-      ...(data.event?.eventInstancesList.flatMap((instance) =>
-        instance.eventInstanceTrainersByInstanceIdList.flatMap((trainer) =>
-          trainer.lessonsOffered !== 0
-            ? [[trainer.personId, trainer.person?.name ?? '?'] as const]
-            : [],
-        ),
-      ) ?? []),
-      ...(data.event?.eventRegistrationsList.flatMap((registration) =>
-        registration.eventLessonDemandsByRegistrationIdList.flatMap((demand) =>
-          demand.trainer?.person
-            ? [[demand.trainer.person.id, demand.trainer.person.name ?? '?'] as const]
-            : [],
-        ),
-      ) ?? []),
-    ],
-  );
+  const lessonTrainers = new Map<string, string>();
+  for (const trainer of instance?.lessonTrainers ?? []) {
+    if (trainer.lessonsOffered !== 0) {
+      lessonTrainers.set(trainer.personId, trainer.person?.name ?? '?');
+    }
+  }
+  for (const registration of instance?.registrations ?? []) {
+    for (const demand of registration.eventLessonDemandsByRegistrationIdList) {
+      if (demand.trainer?.person) {
+        lessonTrainers.set(demand.trainer.person.id, demand.trainer.person.name ?? '?');
+      }
+    }
+  }
   for (const [id, name] of lessonTrainers) {
     columns.push({
       header: name,
@@ -50,7 +46,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
   }
 
   const rows: { [k: string]: string }[] = [];
-  for (const x of data.event?.eventRegistrationsList || []) {
+  for (const x of instance?.registrations || []) {
     const row: { [key: string]: string } = {
       man: x.person?.name || x.couple?.man?.name || '',
       woman: x.couple?.woman?.name || '',
@@ -65,10 +61,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
     }
     rows.push(row);
   }
-  for (const x of
-    data.event?.eventInstancesList.flatMap(
-      (instance) => instance.eventExternalRegistrationsByInstanceIdList,
-    ) || []) {
+  for (const x of instance?.eventExternalRegistrationsByInstanceIdList || []) {
     const row: { [key: string]: string } = {
       man: `${x.prefixTitle} ${x.firstName} ${x.lastName} ${x.suffixTitle}`,
       woman: '',
@@ -81,5 +74,5 @@ export async function exportEventRegistrations(client: Client, id: string) {
   worksheet.addRows(rows);
 
   const buf = await workbook.xlsx.writeBuffer();
-  saveAs(new Blob([buf]), `${data.event?.name || 'export-akce'}.xlsx`);
+  saveAs(new Blob([buf]), `${name}.xlsx`);
 }

@@ -119,17 +119,17 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
   {
     id: 'eventInstance.exportParticipants',
     label: 'Export přihlášených',
-    visible: ({ item, auth }) => canManageInstance({item, auth}) && !!item.eventId,
+    visible: canManageInstance,
     execute: async ({ item, client }) => {
-      await exportEventParticipants(client, item.eventId!);
+      await exportEventParticipants(client, item.id);
     },
   },
   {
     id: 'eventInstance.exportRegistrations',
     label: 'Export přihlášek',
-    visible: ({ item, auth }) => canManageInstance({item, auth}) && !!item.eventId,
+    visible: canManageInstance,
     execute: async ({ item, client }) => {
-      await exportEventRegistrations(client, item.eventId!);
+      await exportEventRegistrations(client, item.id);
     },
   },
 ]);

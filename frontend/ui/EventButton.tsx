@@ -32,9 +32,7 @@ export function EventButton({
 }) {
   const auth = useAuth();
 
-  const registrationConnection = instance.eventId
-    ? instance.registrations
-    : instance.instanceRegistrations;
+  const registrationConnection = instance.registrations;
   const registrations = registrationConnection.nodes || [];
 
   const start = new Date(instance.since);

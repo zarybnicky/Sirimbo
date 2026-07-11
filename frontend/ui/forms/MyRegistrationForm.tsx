@@ -1,8 +1,8 @@
 import {
-  EditRegistrationDocument,
+  type EventInstanceRegistrationFragment,
   type EventInstanceTrainerLessonOfferFragment,
   type EventLessonDemandFragment,
-  type EventRegistrationFragment,
+  SetEventInstanceRegistrationDocument,
   SetLessonDemandDocument,
 } from '@/graphql/Event';
 import { TextAreaElement } from '@/ui/fields/textarea';
@@ -25,23 +25,21 @@ const Form = z.object({
 type FormValues = z.infer<typeof Form>;
 
 export function MyRegistrationForm({
+  instanceId,
   enableNotes,
   registration,
-  instanceRegistrationId,
-  lessonDemands,
   lessonTrainers,
 }: {
+  instanceId: string;
   enableNotes: boolean;
-  registration: EventRegistrationFragment;
-  instanceRegistrationId: string | null;
-  lessonDemands: EventLessonDemandFragment[];
+  registration: EventInstanceRegistrationFragment;
   lessonTrainers: EventInstanceTrainerLessonOfferFragment[];
 }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
-  const edit = useMutation(EditRegistrationDocument)[1];
+  const edit = useMutation(SetEventInstanceRegistrationDocument)[1];
 
   React.useEffect(() => {
     reset(
@@ -57,7 +55,16 @@ export function MyRegistrationForm({
   }, [reset, registration]);
 
   const onSubmit = useAsyncCallback(async ({ note }: FormValues) => {
-    await edit({ input: { registrationId: registration.id, note } });
+    const result = await edit({
+      input: {
+        pInstanceId: instanceId,
+        pPersonId: registration.personId,
+        pCoupleId: registration.coupleId,
+        pIsRegistered: true,
+        pNote: note,
+      },
+    });
+    if (result.error) throw result.error;
     toast.success('Úprava přihlášky proběhla úspěšně.');
     onSuccess();
   });
@@ -79,18 +86,16 @@ export function MyRegistrationForm({
         </>
       )}
 
-      {instanceRegistrationId && (
-        <LessonDemandControls
-          registrationId={instanceRegistrationId}
-          demands={lessonDemands}
-          trainers={lessonTrainers}
-        />
-      )}
+      <LessonDemandControls
+        registrationId={registration.id}
+        demands={registration.eventLessonDemandsByRegistrationIdList}
+        trainers={lessonTrainers}
+      />
     </form>
   );
 }
 
-export function LessonDemandControls({
+function LessonDemandControls({
   registrationId,
   demands,
   trainers,

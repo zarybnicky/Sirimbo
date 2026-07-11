@@ -1,15 +1,19 @@
-import { EventRegistrantsDocument } from '@/graphql/Event';
+import {
+  EventInstanceExportDocument,
+  type EventRegistrantFragment,
+} from '@/graphql/Event';
 import { fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
 export async function exportEventParticipants(client: Client, id: string) {
-  const result = await client.query(EventRegistrantsDocument, { id }).toPromise();
+  const result = await client.query(EventInstanceExportDocument, { id }).toPromise();
   if (result.error) throw result.error;
-  const data = result.data!;
+  const instance = result.data?.eventInstance;
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet(data.event?.name || 'Sheet 1');
+  const name = instance?.name || instance?.event?.name || 'Sheet 1';
+  const worksheet = workbook.addWorksheet(name);
 
   worksheet.columns = [
     { header: 'Jméno', key: 'firstName' },
@@ -27,7 +31,10 @@ export async function exportEventParticipants(client: Client, id: string) {
     column.alignment = { horizontal: 'center' };
   }
 
-  for (const x of data.event?.registrantsList || []) {
+  const personIds = new Set<string>();
+  const addPerson = (x: EventRegistrantFragment | null | undefined) => {
+    if (!x || personIds.has(x.id)) return;
+    personIds.add(x.id);
     worksheet.addRow({
       firstName: x.firstName,
       lastName: x.lastName,
@@ -37,11 +44,13 @@ export async function exportEventParticipants(client: Client, id: string) {
       email: x.email,
       cohorts: x.cohortMembershipsList.map((x) => x.cohort?.name).join(', '),
     });
+  };
+  for (const registration of instance?.registrations || []) {
+    addPerson(registration.person);
+    addPerson(registration.couple?.man);
+    addPerson(registration.couple?.woman);
   }
-  for (const x of
-    data.event?.eventInstancesList.flatMap(
-      (instance) => instance.eventExternalRegistrationsByInstanceIdList,
-    ) || []) {
+  for (const x of instance?.eventExternalRegistrationsByInstanceIdList || []) {
     worksheet.addRow({
       firstName: x.firstName,
       lastName: x.lastName,
@@ -54,5 +63,5 @@ export async function exportEventParticipants(client: Client, id: string) {
   }
 
   const buf = await workbook.xlsx.writeBuffer();
-  saveAs(new Blob([buf]), `${data.event?.name || 'export-akce'}.xlsx`);
+  saveAs(new Blob([buf]), `${name}.xlsx`);
 }

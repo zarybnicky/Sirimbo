@@ -26,11 +26,8 @@ export function EventSummary({
   offsetButtons?: boolean;
 }) {
   const actions = useActions(eventInstanceActions, instance);
-  const registrations = instance.eventId
-    ? instance.registrations
-    : instance.instanceRegistrations;
+  const registrations = instance.registrations;
   const registrationCount = registrations.totalCount;
-  const myRegistrations = instance.myRegistrationsList || [];
   const start = new Date(instance.since);
   const end = new Date(instance.until);
   const locationLabel = instance.location?.name || instance.locationText;
@@ -79,19 +76,6 @@ export function EventSummary({
             instance.targetCohortsList.map((x) => x.cohort?.name).join(', ')
           ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
-          ) : myRegistrations.length > 0 ? (
-            [
-              ...myRegistrations.map((reg) => (
-                <div key={reg.id}>{formatRegistrant(reg)}</div>
-              )),
-              ...(registrationCount > myRegistrations.length
-                ? [
-                    <div key="more">
-                      a dalších {registrationCount - myRegistrations.length} účastníků
-                    </div>,
-                  ]
-                : []),
-            ]
           ) : registrationCount < 6 ? (
             registrations.nodes.map((x) => (
               <div key={x.id}>{formatRegistrant(x)}</div>
@@ -102,7 +86,7 @@ export function EventSummary({
         </div>
       </div>
 
-      <MyRegistrationsDialog instance={instance} allowInstanceRegistration />
+      <MyRegistrationsDialog instance={instance} />
 
       <div
         className={cn('absolute', offsetButtons ? 'right-9 top-3.5' : 'right-2 top-2')}

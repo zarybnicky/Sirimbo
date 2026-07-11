@@ -3,7 +3,6 @@ import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { CohortListElement } from '@/ui/event-form/CohortListElement';
 import { InstanceListElement } from '@/ui/event-form/InstanceListElement';
 import { eventLocationInput, LocationField } from '@/ui/event-form/LocationField';
-import { ParticipantListElement } from '@/ui/event-form/ParticipantListElement';
 import { TrainerListElement } from '@/ui/event-form/TrainerListField';
 import { EventForm } from '@/ui/event-form/types';
 import { CheckboxElement } from '@/ui/fields/checkbox';
@@ -80,11 +79,6 @@ export function UpsertEventForm({
             itemId: x.id,
             cohortId: x.cohort?.id ?? '',
           })),
-          registrations: event.eventRegistrationsList.map((x) => ({
-            itemId: x.id,
-            coupleId: x.coupleId,
-            personId: x.personId,
-          })),
           instances: event.eventInstancesList.map((x) => ({
             itemId: x.id,
             since: x.since,
@@ -109,11 +103,6 @@ export function UpsertEventForm({
   const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
   const trainers = useWatch({ control, name: 'trainers' });
   const instances = useWatch({ control, name: 'instances' });
-  const registrations = useWatch({ control, name: 'registrations' });
-  const registrantCount = (registrations || []).reduce(
-    (n, x) => n + (x.coupleId ? 2 : x.personId ? 1 : 0),
-    0,
-  );
 
   const memberPrice = React.useMemo(() => {
     let memberPrice = 0;
@@ -167,11 +156,7 @@ export function UpsertEventForm({
           id: x.itemId,
           itemId: undefined,
         })),
-        registrations: values.registrations.map((x) => ({
-          ...x,
-          id: x.itemId,
-          itemId: undefined,
-        })),
+        registrations: [],
         eventInstances: values.instances.map((x) => ({
           id: x.itemId,
           since: x.since,
@@ -222,20 +207,10 @@ export function UpsertEventForm({
         <div className="">
           {'Cena: '}
           {moneyFormatter.format({ amount: memberPrice.toString(), currency: 'CZK' })}
-          {registrantCount > 0 && (
-            <>
-              {', na účastníka '}
-              {moneyFormatter.format({
-                amount: Math.floor(memberPrice / registrantCount).toString(),
-                currency: 'CZK',
-              })}
-            </>
-          )}
         </div>
       )}
 
       <CohortListElement control={control} name="cohorts" />
-      <ParticipantListElement control={control} name="registrations" />
 
       {/* <RadioButtonGroupElement
         control={control}

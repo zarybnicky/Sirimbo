@@ -261,12 +261,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Announcement', id: args.input.id });
       },
 
-      registerToEventMany(result, _args, cache, _info) {
-        for (const registration of result.registerToEventMany?.eventRegistrations || []) {
-          cache.invalidate({ __typename: 'Event', id: registration.eventId });
-        }
-      },
-
       setLessonDemand(_result, args, cache, _info) {
         const registration = {
           __typename: 'EventInstanceRegistration' as const,
@@ -293,14 +287,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
             id: args.input.pInstanceId,
           });
         }
-      },
-
-      cancelRegistration(_result, args, cache, _info) {
-        if (args.input.registrationId)
-          cache.invalidate({
-            __typename: 'EventRegistration',
-            id: args.input.registrationId,
-          });
       },
 
       createCouple(_result, args, cache, _info) {

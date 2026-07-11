@@ -1591,6 +1591,25 @@ type Couple {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsConnection!
+
+  """
+  Reads and enables pagination through a set of `EventInstanceRegistration`.
+  """
+  eventInstanceRegistrationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]
+  ): [EventInstanceRegistration!]!
   eventInstancesList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -2944,6 +2963,25 @@ type Event {
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsConnection!
 
+  """
+  Reads and enables pagination through a set of `EventInstanceRegistration`.
+  """
+  eventInstanceRegistrationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]
+  ): [EventInstanceRegistration!]!
+
   """Reads and enables pagination through a set of `EventInstance`."""
   eventInstancesList(
     """
@@ -3363,6 +3401,25 @@ type EventInstance {
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsConnection!
 
+  """
+  Reads and enables pagination through a set of `EventInstanceRegistration`.
+  """
+  eventInstanceRegistrationsByInstanceIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]
+  ): [EventInstanceRegistration!]!
+
   """Reads and enables pagination through a set of `EventInstanceTrainer`."""
   eventInstanceTrainersByInstanceIdList(
     """
@@ -3645,6 +3702,25 @@ type EventInstanceRegistration {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsConnection!
+
+  """
+  Reads and enables pagination through a set of `EventInstanceRegistration`.
+  """
+  eventInstanceRegistrationsByParentRegistrationIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]
+  ): [EventInstanceRegistration!]!
 
   """Reads and enables pagination through a set of `EventLessonDemand`."""
   eventLessonDemandsByRegistrationIdList(
@@ -4298,6 +4374,25 @@ type EventTargetCohort {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsConnection!
+
+  """
+  Reads and enables pagination through a set of `EventInstanceRegistration`.
+  """
+  eventInstanceRegistrationsByTargetCohortIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]
+  ): [EventInstanceRegistration!]!
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrationsByTargetCohortId(
@@ -6235,6 +6330,25 @@ type Person {
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsConnection!
 
+  """
+  Reads and enables pagination through a set of `EventInstanceRegistration`.
+  """
+  eventInstanceRegistrationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]
+  ): [EventInstanceRegistration!]!
+
   """Reads and enables pagination through a set of `EventInstanceTrainer`."""
   eventInstanceTrainersList(
     """
@@ -7102,6 +7216,23 @@ type Query {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsConnection
+
+  """Reads a set of `EventInstanceRegistration`."""
+  eventInstanceRegistrationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]
+  ): [EventInstanceRegistration!]
   eventInstancesForRangeList(
     endRange: Datetime
 
@@ -7798,6 +7929,7 @@ input SetEventInstanceRegistrationInput {
   pCoupleId: BigInt
   pInstanceId: BigInt
   pIsRegistered: Boolean
+  pNote: String
   pPersonId: BigInt
 }
 
@@ -8250,6 +8382,25 @@ type Tenant {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsConnection!
+
+  """
+  Reads and enables pagination through a set of `EventInstanceRegistration`.
+  """
+  eventInstanceRegistrationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventInstanceRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventInstanceRegistration`."""
+    orderBy: [EventInstanceRegistrationsOrderBy!]
+  ): [EventInstanceRegistration!]!
 
   """Reads and enables pagination through a set of `EventInstanceTrainer`."""
   eventInstanceTrainersList(

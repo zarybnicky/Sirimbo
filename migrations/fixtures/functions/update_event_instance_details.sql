@@ -39,7 +39,6 @@ begin
     perform registration.id
     from public.event_instance_registration registration
     where registration.instance_id = p_instance_id
-      and registration.legacy_registration_id is null
     order by registration.id
     for update;
   end if;
@@ -66,10 +65,6 @@ begin
   end if;
 
   if p_registrations is not null then
-    if updated_instance.event_id is not null then
-      raise exception 'event-backed instance % registrations must be edited through event_registration', p_instance_id;
-    end if;
-
     with desired as (
       select distinct registration.person_id, registration.couple_id
       from unnest(p_registrations) registration
@@ -78,7 +73,6 @@ begin
       from public.event_instance_registration existing
       where existing.instance_id = p_instance_id
         and existing.parent_registration_id is null
-        and existing.legacy_registration_id is null
         and not exists (
           select 1
           from desired
@@ -106,7 +100,6 @@ begin
         and desired.couple_id is not distinct from existing.couple_id
       where existing.instance_id = p_instance_id
         and existing.parent_registration_id is null
-        and existing.legacy_registration_id is null
     )
     update public.event_instance_registration registration
     set registration_status = 'active'
@@ -135,7 +128,6 @@ begin
         from public.event_instance_registration existing
         where existing.instance_id = p_instance_id
           and existing.parent_registration_id is null
-          and existing.legacy_registration_id is null
           and existing.person_id is not distinct from desired.person_id
           and existing.couple_id is not distinct from desired.couple_id
       )

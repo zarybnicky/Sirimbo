@@ -534,29 +534,65 @@ SELECT tap.ok(
   'quick edit updates details, capacity, capacity unit and lock while null leaves registrations unchanged'
 );
 
-SELECT tap.throws_ok(
-  $$
-    select public.update_event_instance_details(
-      instance.id,
-      instance.since,
-      instance.until,
-      instance.name,
-      instance.type,
-      instance.location_id,
-      instance.location_text,
-      instance.is_visible,
-      instance.is_public,
-      instance.is_cancelled,
-      null,
-      '{}'::quick_event_registration_input[]
-    )
-    from event_instance instance
-    where instance.id = 900001
-  $$,
-  'P0001',
-  'event-backed instance 900001 registrations must be edited through event_registration',
-  'event-backed registrations stay on the legacy writer'
+SELECT public.update_event_instance_details(
+  instance.id,
+  instance.since,
+  instance.until,
+  instance.name,
+  instance.type,
+  instance.location_id,
+  instance.location_text,
+  instance.is_visible,
+  instance.is_public,
+  instance.is_cancelled,
+  null,
+  ARRAY[
+    ROW(200001, null)::quick_event_registration_input,
+    ROW(200002, null)::quick_event_registration_input,
+    ROW(200003, null)::quick_event_registration_input
+  ]
+)
+FROM event_instance instance
+WHERE instance.id = 900001;
+
+SELECT set_config(
+  'jwt.claims.my_person_ids',
+  (SELECT jsonb_build_array(person_id)::text
+   FROM event_instance_registration
+   WHERE instance_id = 900001
+     AND parent_registration_id is null
+     AND legacy_registration_id is not null
+     AND registration_status = 'active'
+     AND person_id is not null
+   LIMIT 1),
+  true
 );
+SELECT set_event_instance_registration(
+  instance_id, person_id, null, true, 'Instance note'
+)
+FROM event_instance_registration
+WHERE instance_id = 900001
+  AND parent_registration_id is null
+  AND legacy_registration_id is not null
+  AND registration_status = 'active'
+  AND person_id is not null
+LIMIT 1;
+
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1
+    FROM event_instance_registration
+    WHERE instance_id = 900001
+      AND parent_registration_id is null
+      AND person_id is not null
+      AND legacy_registration_id is not null
+      AND registration_status = 'active'
+      AND note = 'Instance note'
+  ),
+  'event-backed quick edit and self-registration reuse bridge rows'
+);
+
+SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 
 CREATE TEMP TABLE _stats_before_cancel ON COMMIT DROP AS
 SELECT (stats->>'TOTAL')::int AS total

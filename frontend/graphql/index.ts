@@ -1370,6 +1370,8 @@ export type Couple = {
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrations: EventInstanceRegistrationsConnection;
+  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsList: Array<EventInstanceRegistration>;
   eventInstancesList: Maybe<Array<EventInstance>>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
   eventRegistrations: EventRegistrationsConnection;
@@ -1395,6 +1397,14 @@ export type CoupleEventInstanceRegistrationsArgs = {
   condition?: InputMaybe<EventInstanceRegistrationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type CoupleEventInstanceRegistrationsListArgs = {
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
 };
@@ -2583,6 +2593,8 @@ export type Event = {
   enableNotes: Scalars['Boolean']['output'];
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrations: EventInstanceRegistrationsConnection;
+  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstance`. */
   eventInstancesList: Array<EventInstance>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
@@ -2621,6 +2633,14 @@ export type EventEventInstanceRegistrationsArgs = {
   condition?: InputMaybe<EventInstanceRegistrationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type EventEventInstanceRegistrationsListArgs = {
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
 };
@@ -2859,6 +2879,8 @@ export type EventInstance = {
   eventId: Maybe<Scalars['BigInt']['output']>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsByInstanceId: EventInstanceRegistrationsConnection;
+  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsByInstanceIdList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
   eventInstanceTrainersByInstanceIdList: Array<EventInstanceTrainer>;
   filesLegacy: Maybe<Scalars['String']['output']>;
@@ -2923,6 +2945,14 @@ export type EventInstanceEventInstanceRegistrationsByInstanceIdArgs = {
   condition?: InputMaybe<EventInstanceRegistrationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type EventInstanceEventInstanceRegistrationsByInstanceIdListArgs = {
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
 };
@@ -3081,6 +3111,8 @@ export type EventInstanceRegistration = {
   eventId: Maybe<Scalars['BigInt']['output']>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsByParentRegistrationId: EventInstanceRegistrationsConnection;
+  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsByParentRegistrationIdList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventLessonDemand`. */
   eventLessonDemandsByRegistrationIdList: Array<EventLessonDemand>;
   id: Scalars['BigInt']['output'];
@@ -3113,6 +3145,14 @@ export type EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrat
   condition?: InputMaybe<EventInstanceRegistrationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrationIdListArgs = {
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
 };
@@ -3609,6 +3649,8 @@ export type EventTargetCohort = {
   eventId: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsByTargetCohortId: EventInstanceRegistrationsConnection;
+  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsByTargetCohortIdList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
   eventRegistrationsByTargetCohortId: EventRegistrationsConnection;
   /** Reads and enables pagination through a set of `EventRegistration`. */
@@ -3625,6 +3667,14 @@ export type EventTargetCohortEventInstanceRegistrationsByTargetCohortIdArgs = {
   condition?: InputMaybe<EventInstanceRegistrationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type EventTargetCohortEventInstanceRegistrationsByTargetCohortIdListArgs = {
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
 };
@@ -5296,6 +5346,8 @@ export type Person = {
   email: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrations: EventInstanceRegistrationsConnection;
+  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
   eventInstanceTrainersList: Array<EventInstanceTrainer>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
@@ -5408,6 +5460,14 @@ export type PersonEventInstanceRegistrationsArgs = {
   condition?: InputMaybe<EventInstanceRegistrationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type PersonEventInstanceRegistrationsListArgs = {
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
 };
@@ -5853,6 +5913,8 @@ export type Query = {
   eventInstanceRegistration: Maybe<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrations: Maybe<EventInstanceRegistrationsConnection>;
+  /** Reads a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsList: Maybe<Array<EventInstanceRegistration>>;
   eventInstancesForRangeList: Maybe<Array<EventInstance>>;
   eventOverlapsAttendeeReportList: Maybe<Array<EventOverlapsConflict>>;
   eventOverlapsTrainerReportList: Maybe<Array<EventOverlapsConflict>>;
@@ -6150,6 +6212,15 @@ export type QueryEventInstanceRegistrationsArgs = {
   condition?: InputMaybe<EventInstanceRegistrationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventInstanceRegistrationsListArgs = {
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
 };
@@ -6796,6 +6867,7 @@ export type SetEventInstanceRegistrationInput = {
   pCoupleId?: InputMaybe<Scalars['BigInt']['input']>;
   pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   pIsRegistered?: InputMaybe<Scalars['Boolean']['input']>;
+  pNote?: InputMaybe<Scalars['String']['input']>;
   pPersonId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
@@ -7011,6 +7083,8 @@ export type Tenant = {
   eventExternalRegistrationsList: Array<EventExternalRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrations: EventInstanceRegistrationsConnection;
+  /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
+  eventInstanceRegistrationsList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
   eventInstanceTrainersList: Array<EventInstanceTrainer>;
   /** Reads and enables pagination through a set of `EventInstance`. */
@@ -7161,6 +7235,14 @@ export type TenantEventInstanceRegistrationsArgs = {
   condition?: InputMaybe<EventInstanceRegistrationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
+};
+
+
+export type TenantEventInstanceRegistrationsListArgs = {
+  condition?: InputMaybe<EventInstanceRegistrationCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceRegistrationsOrderBy>>;
 };
@@ -9241,6 +9323,7 @@ export type GraphCacheResolvers = {
     eventInstanceByTenantIdAndIdAndEventId?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceByTenantIdAndIdAndEventIdArgs, WithTypename<EventInstance> | string>,
     eventInstanceRegistration?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationArgs, WithTypename<EventInstanceRegistration> | string>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstancesForRangeList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstancesForRangeListArgs, Array<WithTypename<EventInstance> | string>>,
     eventOverlapsAttendeeReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsAttendeeReportListArgs, Array<WithTypename<EventOverlapsConflict> | string>>,
     eventOverlapsTrainerReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsTrainerReportListArgs, Array<WithTypename<EventOverlapsConflict> | string>>,
@@ -9641,6 +9724,7 @@ export type GraphCacheResolvers = {
   Couple?: {
     createdAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventRegistrations?: GraphCacheResolver<WithTypename<Couple>, CoupleEventRegistrationsArgs, WithTypename<EventRegistrationsConnection> | string>,
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
@@ -9871,6 +9955,7 @@ export type GraphCacheResolvers = {
     description?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String']['output'] | string>,
     enableNotes?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Event>, EventEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Event>, EventEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Event>, EventEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventRegistrations?: GraphCacheResolver<WithTypename<Event>, EventEventRegistrationsArgs, WithTypename<EventRegistrationsConnection> | string>,
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Event>, EventEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
@@ -9928,6 +10013,7 @@ export type GraphCacheResolvers = {
     eventExternalRegistrationsByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventExternalRegistrationsByInstanceIdListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     eventId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     eventInstanceRegistrationsByInstanceId?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceRegistrationsByInstanceIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceRegistrationsByInstanceIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceTrainersByInstanceIdListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     filesLegacy?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -9971,6 +10057,7 @@ export type GraphCacheResolvers = {
     event?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<Event> | string>,
     eventId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     eventInstanceRegistrationsByParentRegistrationId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrationIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsByParentRegistrationIdList?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrationIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventLessonDemandsByRegistrationIdList?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, EventInstanceRegistrationEventLessonDemandsByRegistrationIdListArgs, Array<WithTypename<EventLessonDemand> | string>>,
     id?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     instance?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<EventInstance> | string>,
@@ -10079,6 +10166,7 @@ export type GraphCacheResolvers = {
     event?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, WithTypename<Event> | string>,
     eventId?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     eventInstanceRegistrationsByTargetCohortId?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventInstanceRegistrationsByTargetCohortIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsByTargetCohortIdList?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventInstanceRegistrationsByTargetCohortIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventRegistrationsByTargetCohortId?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventRegistrationsByTargetCohortIdArgs, WithTypename<EventRegistrationsConnection> | string>,
     eventRegistrationsByTargetCohortIdList?: GraphCacheResolver<WithTypename<EventTargetCohort>, EventTargetCohortEventRegistrationsByTargetCohortIdListArgs, Array<WithTypename<EventRegistration> | string>>,
     id?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -10260,6 +10348,7 @@ export type GraphCacheResolvers = {
     cstsProgressList?: GraphCacheResolver<WithTypename<Person>, PersonCstsProgressListArgs, Array<WithTypename<PersonCstsProgressRecord> | string>>,
     email?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceTrainersListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     eventRegistrations?: GraphCacheResolver<WithTypename<Person>, PersonEventRegistrationsArgs, WithTypename<EventRegistrationsConnection> | string>,
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Person>, PersonEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
@@ -10464,6 +10553,7 @@ export type GraphCacheResolvers = {
     description?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     eventExternalRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventExternalRegistrationsListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceTrainersListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventLessonDemandsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventLessonDemandsListArgs, Array<WithTypename<EventLessonDemand> | string>>,
@@ -10899,6 +10989,7 @@ export type GraphCacheUpdaters = {
     eventInstanceByTenantIdAndIdAndEventId?: GraphCacheUpdateResolver<{ eventInstanceByTenantIdAndIdAndEventId: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceByTenantIdAndIdAndEventIdArgs>,
     eventInstanceRegistration?: GraphCacheUpdateResolver<{ eventInstanceRegistration: Maybe<WithTypename<EventInstanceRegistration>> }, QueryEventInstanceRegistrationArgs>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<{ eventInstanceRegistrations: Maybe<WithTypename<EventInstanceRegistrationsConnection>> }, QueryEventInstanceRegistrationsArgs>,
+    eventInstanceRegistrationsList?: GraphCacheUpdateResolver<{ eventInstanceRegistrationsList: Maybe<Array<WithTypename<EventInstanceRegistration>>> }, QueryEventInstanceRegistrationsListArgs>,
     eventInstancesForRangeList?: GraphCacheUpdateResolver<{ eventInstancesForRangeList: Maybe<Array<WithTypename<EventInstance>>> }, QueryEventInstancesForRangeListArgs>,
     eventOverlapsAttendeeReportList?: GraphCacheUpdateResolver<{ eventOverlapsAttendeeReportList: Maybe<Array<WithTypename<EventOverlapsConflict>>> }, QueryEventOverlapsAttendeeReportListArgs>,
     eventOverlapsTrainerReportList?: GraphCacheUpdateResolver<{ eventOverlapsTrainerReportList: Maybe<Array<WithTypename<EventOverlapsConflict>>> }, QueryEventOverlapsTrainerReportListArgs>,
@@ -11392,6 +11483,7 @@ export type GraphCacheUpdaters = {
   Couple?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstanceRegistrationsArgs>,
+    eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstanceRegistrationsListArgs>,
     eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstancesListArgs>,
     eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventRegistrationsArgs>,
     eventRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventRegistrationsListArgs>,
@@ -11622,6 +11714,7 @@ export type GraphCacheUpdaters = {
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     enableNotes?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventInstanceRegistrationsArgs>,
+    eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventInstanceRegistrationsListArgs>,
     eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventInstancesListArgs>,
     eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventRegistrationsArgs>,
     eventRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventEventRegistrationsListArgs>,
@@ -11679,6 +11772,7 @@ export type GraphCacheUpdaters = {
     eventExternalRegistrationsByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventExternalRegistrationsByInstanceIdListArgs>,
     eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     eventInstanceRegistrationsByInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceRegistrationsByInstanceIdArgs>,
+    eventInstanceRegistrationsByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceRegistrationsByInstanceIdListArgs>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceTrainersByInstanceIdListArgs>,
     filesLegacy?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
@@ -11722,6 +11816,7 @@ export type GraphCacheUpdaters = {
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     eventInstanceRegistrationsByParentRegistrationId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrationIdArgs>,
+    eventInstanceRegistrationsByParentRegistrationIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrationIdListArgs>,
     eventLessonDemandsByRegistrationIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, EventInstanceRegistrationEventLessonDemandsByRegistrationIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     instance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
@@ -11830,6 +11925,7 @@ export type GraphCacheUpdaters = {
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
     eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
     eventInstanceRegistrationsByTargetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventInstanceRegistrationsByTargetCohortIdArgs>,
+    eventInstanceRegistrationsByTargetCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventInstanceRegistrationsByTargetCohortIdListArgs>,
     eventRegistrationsByTargetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventRegistrationsByTargetCohortIdArgs>,
     eventRegistrationsByTargetCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, EventTargetCohortEventRegistrationsByTargetCohortIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,
@@ -12011,6 +12107,7 @@ export type GraphCacheUpdaters = {
     cstsProgressList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCstsProgressListArgs>,
     email?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventInstanceRegistrationsArgs>,
+    eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventInstanceRegistrationsListArgs>,
     eventInstanceTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventInstanceTrainersListArgs>,
     eventRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventRegistrationsArgs>,
     eventRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventRegistrationsListArgs>,
@@ -12215,6 +12312,7 @@ export type GraphCacheUpdaters = {
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     eventExternalRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventExternalRegistrationsListArgs>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceRegistrationsArgs>,
+    eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceRegistrationsListArgs>,
     eventInstanceTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceTrainersListArgs>,
     eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstancesListArgs>,
     eventLessonDemandsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventLessonDemandsListArgs>,

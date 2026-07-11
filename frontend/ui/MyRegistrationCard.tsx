@@ -1,9 +1,8 @@
 import {
-  CancelRegistrationDocument,
-  type EventFragment,
+  type EventInstanceRegistrationFragment,
+  type EventInstanceWithTrainerFragment,
   type EventInstanceTrainerLessonOfferFragment,
-  type EventLessonDemandFragment,
-  type EventRegistrationFragment,
+  SetEventInstanceRegistrationDocument,
 } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { dateTimeFormatter, formatRegistrant } from '@/ui/format';
@@ -11,6 +10,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { MyRegistrationForm } from '@/ui/forms/MyRegistrationForm';
+import { FormError } from '@/ui/form';
 import { useConfirm } from './Confirm';
 import { SubmitButton } from './submit';
 import { cardCls } from './style';
@@ -18,24 +18,28 @@ import { useAtomValue } from 'jotai';
 import { tenantIdAtom } from '@/ui/state/auth';
 
 export function MyRegistrationCard({
-  event,
+  instance,
   registration,
-  instanceRegistrationId,
-  lessonDemands,
   lessonTrainers,
 }: {
-  event: EventFragment;
-  registration: EventRegistrationFragment;
-  instanceRegistrationId: string | null;
-  lessonDemands: EventLessonDemandFragment[];
+  instance: EventInstanceWithTrainerFragment;
+  registration: EventInstanceRegistrationFragment;
   lessonTrainers: EventInstanceTrainerLessonOfferFragment[];
 }) {
   const tenantId = useAtomValue(tenantIdAtom);
   const confirm = useConfirm();
-  const cancel = useMutation(CancelRegistrationDocument)[1];
+  const cancel = useMutation(SetEventInstanceRegistrationDocument)[1];
   const onCancel = useAsyncCallback(async () => {
     await confirm({ description: 'Opravdu chcete zrušit přihlášku?' });
-    await cancel({ input: { registrationId: registration.id } });
+    const result = await cancel({
+      input: {
+        pInstanceId: instance.id,
+        pPersonId: registration.personId,
+        pCoupleId: registration.coupleId,
+        pIsRegistered: false,
+      },
+    });
+    if (result.error) throw result.error;
     toast.success('Přihláška zrušena.');
   });
 
@@ -47,11 +51,11 @@ export function MyRegistrationCard({
         {' v '}
         {dateTimeFormatter.format(new Date(registration.createdAt))}
       </div>
-      {lessonDemands.length > 0 && (
+      {registration.eventLessonDemandsByRegistrationIdList.length > 0 && (
         <div>
           <h5>Požadavky na lekce</h5>
           <ul>
-            {lessonDemands.map((demand) => (
+            {registration.eventLessonDemandsByRegistrationIdList.map((demand) => (
               <li key={demand.id}>
                 {demand.trainer?.person?.name}: {demand.lessonCount}
               </li>
@@ -60,16 +64,19 @@ export function MyRegistrationCard({
         </div>
       )}
       {registration.note && <p>{registration.note}</p>}
+      <FormError error={onCancel.error} />
 
-      {event.type !== 'LESSON' && (
+      {(instance.enableNotes ||
+        registration.note ||
+        registration.eventLessonDemandsByRegistrationIdList.length > 0 ||
+        lessonTrainers.length > 0) && (
         <Dialog>
           <DialogTrigger text="Upravit přihlášku" />
           <DialogContent>
             <MyRegistrationForm
-              enableNotes={event.enableNotes}
+              instanceId={instance.id}
+              enableNotes={!!instance.enableNotes}
               registration={registration}
-              instanceRegistrationId={instanceRegistrationId}
-              lessonDemands={lessonDemands}
               lessonTrainers={lessonTrainers}
             />
           </DialogContent>

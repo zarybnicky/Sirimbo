@@ -3,6 +3,7 @@ import {
   type EventAttendanceSummaryFragment,
   type EventFragment,
   type EventFullFragment,
+  EventInstanceRegistrationsDocument,
   EventPaymentsDocument,
 } from '@/graphql/Event';
 import { BasicEventInfo } from './BasicEventInfo';
@@ -12,6 +13,7 @@ import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import {
   formatDefaultEventName,
+  formatDefaultInstanceName,
   formatLongCoupleName,
   formatOpenDateRange,
   fullDateFormatter,
@@ -29,6 +31,7 @@ import { eventActions, eventExternalRegistrationActions } from '@/lib/actions/ev
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionRow } from '@/ui/ActionRow';
 import { Calendar } from '@/calendar/Calendar';
+import { FormError } from '@/ui/form';
 
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
@@ -64,18 +67,15 @@ export function EventView({ event }: { event: EventFullFragment }) {
       });
     }
 
-    const numRegistrations =
-      (event.eventRegistrationsList.length ?? 0) +
-      event.eventInstancesList.reduce(
-        (count, instance) =>
-          count + instance.eventExternalRegistrationsByInstanceIdList.length,
-        0,
-      );
+    const numRegistrations = rootInstance
+      ? rootInstance.registrations.totalCount +
+        rootInstance.eventExternalRegistrationsByInstanceIdList.length
+      : 0;
     if (auth.user?.id && numRegistrations > 0) {
       tabs.push({
         id: 'registrations',
         title: `Přihlášky (${numRegistrations})`,
-        contents: () => <Registrations event={event} />,
+        contents: () => rootInstance && <Registrations instance={rootInstance} />,
       });
     }
 
@@ -116,7 +116,14 @@ export function EventView({ event }: { event: EventFullFragment }) {
 
   return (
     <>
-      <PageHeader title={event.name || formatDefaultEventName(event)} actions={actions} />
+      <PageHeader
+        title={
+          event.name ||
+          (rootInstance && formatDefaultInstanceName(rootInstance)) ||
+          formatDefaultEventName(event)
+        }
+        actions={actions}
+      />
 
       {rootInstance && (
         <BasicEventInfo instance={rootInstance} />
@@ -217,10 +224,17 @@ function EventInstances({ event }: { event: EventFullFragment }) {
   );
 }
 
-function Registrations({ event }: { event: EventFullFragment }) {
-  const externalRegistrations = event.eventInstancesList.flatMap(
-    (instance) => instance.eventExternalRegistrationsByInstanceIdList,
-  );
+function Registrations({
+  instance,
+}: {
+  instance: EventFullFragment['eventInstancesList'][number];
+}) {
+  const [registrationsQuery] = useQuery({
+    query: EventInstanceRegistrationsDocument,
+    variables: { id: instance.id },
+  });
+  const registrations = registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
+  const externalRegistrations = instance.eventExternalRegistrationsByInstanceIdList;
   const externalRegistrationActionMap = useActionMap(
     eventExternalRegistrationActions,
     externalRegistrations,
@@ -228,10 +242,12 @@ function Registrations({ event }: { event: EventFullFragment }) {
 
   return (
     <div>
-      {event.eventRegistrationsList?.map((x) => (
+      <FormError error={registrationsQuery.error} />
+      {registrationsQuery.fetching && !registrationsQuery.data && <Spinner />}
+      {registrations.map((x) => (
         <div key={x.id} className="p-1">
           <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple)}</div>
-          {(x.note || x.eventLessonDemandsByRegistrationIdList) && (
+          {(x.note || x.eventLessonDemandsByRegistrationIdList.length > 0) && (
             <div className="ml-3">
               {x.eventLessonDemandsByRegistrationIdList.map((demand) => (
                 <div key={demand.id}>

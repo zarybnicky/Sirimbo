@@ -34,9 +34,6 @@ fragment Event on Event {
       colorRgb
     }
   }
-  myRegistrationsList {
-    ...EventRegistration
-  }
   eventRegistrations(first: 3) {
     totalCount
     nodes {
@@ -45,15 +42,9 @@ fragment Event on Event {
   }
 }
 
-fragment EventRegistrations on Event {
-  id
-  eventRegistrationsList {
-    ...EventRegistration
-  }
-}
-
 fragment EventInstance on EventInstance {
   id
+  parentId
   since
   until
   isCancelled
@@ -71,6 +62,7 @@ fragment EventInstanceWithTrainer on EventInstance {
   isLocked
   isVisible
   isPublic
+  enableNotes
   locationText
   remainingPersonSpots
   location {
@@ -100,33 +92,7 @@ fragment EventInstanceWithTrainer on EventInstance {
       colorRgb
     }
   }
-  myRegistrationsList {
-    ...EventRegistration
-  }
-  registrations(first: 3) {
-    totalCount
-    nodes {
-      id
-      person {
-        id
-        name
-      }
-      couple {
-        id
-        man {
-          id
-          name
-          lastName
-        }
-        woman {
-          id
-          name
-          lastName
-        }
-      }
-    }
-  }
-  instanceRegistrations: eventInstanceRegistrationsByInstanceId(
+  registrations: eventInstanceRegistrationsByInstanceId(
     condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     first: 3
   ) {
@@ -202,6 +168,27 @@ fragment EventLessonDemand on EventLessonDemand {
   }
 }
 
+fragment EventInstanceRegistration on EventInstanceRegistration {
+  id
+  instanceId
+  note
+  createdAt
+  personId
+  person {
+    id
+    name
+    firstName
+    lastName
+  }
+  coupleId
+  couple {
+    ...Couple
+  }
+  eventLessonDemandsByRegistrationIdList {
+    ...EventLessonDemand
+  }
+}
+
 fragment EventRegistration on EventRegistration {
   id
   note
@@ -225,7 +212,6 @@ fragment EventRegistration on EventRegistration {
 
 fragment EventFull on Event {
   ...Event
-  ...EventRegistrations
   ...EventAttendanceSummary
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstanceWithTrainer
@@ -248,24 +234,46 @@ query EventInstanceApproxPrice($id: BigInt!) {
   }
 }
 
-query EventRegistrants($id: BigInt!) {
-  event(id: $id) {
+fragment EventRegistrant on Person {
+  ...PersonBasic
+  cohortMembershipsList {
+    id
+    cohort {
+      ...CohortBasic
+    }
+  }
+}
+
+query EventInstanceExport($id: BigInt!) {
+  eventInstance(id: $id) {
     id
     name
-    eventInstancesList {
+    event {
       id
-      eventExternalRegistrationsByInstanceIdList {
-        ...EventExternalRegistration
-      }
+      name
     }
-    registrantsList {
-      ...PersonBasic
-      cohortMembershipsList {
+    lessonTrainers: eventInstanceTrainersByInstanceIdList {
+      ...EventInstanceTrainerLessonOffer
+    }
+    registrations: eventInstanceRegistrationsByInstanceIdList(
+      condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
+    ) {
+      ...EventInstanceRegistration
+      person {
+        ...EventRegistrant
+      }
+      couple {
         id
-        cohort {
-          ...CohortBasic
+        man {
+          ...EventRegistrant
+        }
+        woman {
+          ...EventRegistrant
         }
       }
+    }
+    eventExternalRegistrationsByInstanceIdList {
+      ...EventExternalRegistration
     }
   }
 }
@@ -313,30 +321,7 @@ query EventInstanceRegistrations($id: BigInt!) {
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
       nodes {
-        id
-        eventId
-        personId
-        person {
-          id
-          name
-        }
-        coupleId
-        couple {
-          id
-          man {
-            id
-            name
-            lastName
-          }
-          woman {
-            id
-            name
-            lastName
-          }
-        }
-        eventLessonDemandsByRegistrationIdList {
-          ...EventLessonDemand
-        }
+        ...EventInstanceRegistration
       }
     }
   }
@@ -444,14 +429,6 @@ mutation DeleteEventExternalRegistration($id: BigInt!) {
   }
 }
 
-mutation RegisterToEvent($input: RegisterToEventManyInput!) {
-  registerToEventMany(input: $input) {
-    eventRegistrations {
-      ...EventRegistration
-    }
-  }
-}
-
 fragment EventExternalRegistration on EventExternalRegistration {
   id
   birthDate
@@ -475,20 +452,6 @@ mutation RegisterToEventExternal($input: CreateEventExternalRegistrationInput!) 
   }
 }
 
-mutation EditRegistration($input: EditRegistrationInput!) {
-  editRegistration(input: $input) {
-    eventRegistration {
-      ...EventRegistration
-    }
-  }
-}
-
-mutation CancelRegistration($input: CancelRegistrationInput!) {
-  cancelRegistration(input: $input) {
-    __typename
-  }
-}
-
 mutation SetLessonDemand($input: SetLessonDemandInput!) {
   setLessonDemand(input: $input) {
     eventLessonDemand {
@@ -502,10 +465,7 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
 mutation SetEventInstanceRegistration($input: SetEventInstanceRegistrationInput!) {
   setEventInstanceRegistration(input: $input) {
     eventInstanceRegistration {
-      id
-      instanceId
-      personId
-      coupleId
+      ...EventInstanceRegistration
       registrationStatus
       instance {
         id
