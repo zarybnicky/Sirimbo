@@ -1949,13 +1949,13 @@ type CreateEventExternalRegistrationPayload {
   """
   clientMutationId: String
 
-  """
-  Reads a single `Event` that is related to this `EventExternalRegistration`.
-  """
-  event: Event
-
   """The `EventExternalRegistration` that was created by this mutation."""
   eventExternalRegistration: EventExternalRegistration
+
+  """
+  Reads a single `EventInstance` that is related to this `EventExternalRegistration`.
+  """
+  instance: EventInstance
 
   """
   Reads a single `User` that is related to this `EventExternalRegistration`.
@@ -2445,13 +2445,13 @@ type DeleteEventExternalRegistrationPayload {
   """
   clientMutationId: String
 
-  """
-  Reads a single `Event` that is related to this `EventExternalRegistration`.
-  """
-  event: Event
-
   """The `EventExternalRegistration` that was deleted by this mutation."""
   eventExternalRegistration: EventExternalRegistration
+
+  """
+  Reads a single `EventInstance` that is related to this `EventExternalRegistration`.
+  """
+  instance: EventInstance
 
   """
   Reads a single `User` that is related to this `EventExternalRegistration`.
@@ -2557,9 +2557,6 @@ type DeletePaymentPayload {
 
   """Reads a single `EventInstance` that is related to this `Payment`."""
   eventInstance: EventInstance
-
-  """Reads a single `EventRegistration` that is related to this `Payment`."""
-  eventRegistration: EventRegistration
 
   """The `Payment` that was deleted by this mutation."""
   payment: Payment
@@ -2917,25 +2914,6 @@ type Event {
   enableNotes: Boolean!
 
   """
-  Reads and enables pagination through a set of `EventExternalRegistration`.
-  """
-  eventExternalRegistrationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventExternalRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventExternalRegistration`."""
-    orderBy: [EventExternalRegistrationsOrderBy!]
-  ): [EventExternalRegistration!]!
-
-  """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
   """
   eventInstanceRegistrations(
@@ -3159,14 +3137,14 @@ type EventExternalRegistration {
   createdAt: Datetime!
   createdBy: BigInt
   email: String!
-
-  """
-  Reads a single `Event` that is related to this `EventExternalRegistration`.
-  """
-  event: Event
-  eventId: BigInt!
   firstName: String!
   id: BigInt!
+
+  """
+  Reads a single `EventInstance` that is related to this `EventExternalRegistration`.
+  """
+  instance: EventInstance
+  instanceId: BigInt!
   lastName: String!
   nationality: String!
   note: String
@@ -3200,14 +3178,14 @@ input EventExternalRegistrationCondition {
   """Checks for equality with the object’s `email` field."""
   email: String
 
-  """Checks for equality with the object’s `eventId` field."""
-  eventId: BigInt
-
   """Checks for equality with the object’s `firstName` field."""
   firstName: String
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `instanceId` field."""
+  instanceId: BigInt
 
   """Checks for equality with the object’s `lastName` field."""
   lastName: String
@@ -3243,8 +3221,8 @@ input EventExternalRegistrationInput {
   createdAt: Datetime
   createdBy: BigInt
   email: String!
-  eventId: BigInt!
   firstName: String!
+  instanceId: BigInt!
   lastName: String!
   nationality: String!
   note: String
@@ -3266,12 +3244,12 @@ enum EventExternalRegistrationsOrderBy {
   CREATED_BY_DESC
   EMAIL_ASC
   EMAIL_DESC
-  EVENT_ID_ASC
-  EVENT_ID_DESC
   FIRST_NAME_ASC
   FIRST_NAME_DESC
   ID_ASC
   ID_DESC
+  INSTANCE_ID_ASC
+  INSTANCE_ID_DESC
   LAST_NAME_ASC
   LAST_NAME_DESC
   NATIONALITY_ASC
@@ -3333,6 +3311,25 @@ type EventInstance {
 
   """Reads a single `Event` that is related to this `EventInstance`."""
   event: Event
+
+  """
+  Reads and enables pagination through a set of `EventExternalRegistration`.
+  """
+  eventExternalRegistrationsByInstanceIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventExternalRegistrationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventExternalRegistration`."""
+    orderBy: [EventExternalRegistrationsOrderBy!]
+  ): [EventExternalRegistration!]!
   eventId: BigInt
 
   """
@@ -4154,23 +4151,6 @@ type EventRegistration {
   ): [EventLessonDemand!]!
   id: BigInt!
   note: String
-
-  """Reads and enables pagination through a set of `Payment`."""
-  paymentsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PaymentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Payment`."""
-    orderBy: [PaymentsOrderBy!]
-  ): [Payment!]!
 
   """Reads a single `Person` that is related to this `EventRegistration`."""
   person: Person
@@ -5755,10 +5735,6 @@ type Payment {
   """Reads a single `EventInstance` that is related to this `Payment`."""
   eventInstance: EventInstance
   eventInstanceId: BigInt
-
-  """Reads a single `EventRegistration` that is related to this `Payment`."""
-  eventRegistration: EventRegistration
-  eventRegistrationId: BigInt
   id: BigInt!
   isAutoCreditAllowed: Boolean!
   paidAt: Datetime
@@ -5851,9 +5827,6 @@ input PaymentCondition {
   """Checks for equality with the object’s `eventInstanceId` field."""
   eventInstanceId: BigInt
 
-  """Checks for equality with the object’s `eventRegistrationId` field."""
-  eventRegistrationId: BigInt
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -5944,7 +5917,6 @@ input PaymentPatch {
   createdAt: Datetime
   dueAt: Datetime
   eventInstanceId: BigInt
-  eventRegistrationId: BigInt
   id: BigInt
   isAutoCreditAllowed: Boolean
   paidAt: Datetime
@@ -6024,8 +5996,6 @@ enum PaymentsOrderBy {
   DUE_AT_DESC
   EVENT_INSTANCE_ID_ASC
   EVENT_INSTANCE_ID_DESC
-  EVENT_REGISTRATION_ID_ASC
-  EVENT_REGISTRATION_ID_DESC
   ID_ASC
   ID_DESC
   IS_AUTO_CREDIT_ALLOWED_ASC
@@ -10007,9 +9977,6 @@ type UpdatePaymentPayload {
 
   """Reads a single `EventInstance` that is related to this `Payment`."""
   eventInstance: EventInstance
-
-  """Reads a single `EventRegistration` that is related to this `Payment`."""
-  eventRegistration: EventRegistration
 
   """The `Payment` that was updated by this mutation."""
   payment: Payment
