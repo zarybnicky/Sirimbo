@@ -40,6 +40,8 @@
     devShells = forAllSystems (pkgs: {
       default = pkgs.mkShell {
         buildInputs = with pkgs; [
+          seaweedfs
+          mailpit
           nodePackages.prettier
           nodemon
           graphile-migrate
