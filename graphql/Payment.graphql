@@ -40,8 +40,30 @@ fragment Payment on Payment {
         name
       }
     }
-    event {
-      ...Event
+    registrations: eventInstanceRegistrationsByInstanceId(
+      condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
+      first: 3
+    ) {
+      nodes {
+        id
+        person {
+          id
+          name
+        }
+        couple {
+          id
+          man {
+            id
+            name
+            lastName
+          }
+          woman {
+            id
+            name
+            lastName
+          }
+        }
+      }
     }
   }
 }

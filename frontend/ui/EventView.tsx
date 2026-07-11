@@ -1,10 +1,9 @@
 import type { AttendanceType } from '@/graphql';
 import {
-  type EventAttendanceSummaryFragment,
-  type EventFragment,
   type EventFullFragment,
+  type EventInstanceWithTrainerFragment,
+  EventInstancePaymentsDocument,
   EventInstanceRegistrationsDocument,
-  EventPaymentsDocument,
 } from '@/graphql/Event';
 import { BasicEventInfo } from './BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
@@ -12,8 +11,8 @@ import { Spinner } from '@/ui/Spinner';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import {
-  formatDefaultEventName,
   formatDefaultInstanceName,
+  formatEventType,
   formatLongCoupleName,
   formatOpenDateRange,
   fullDateFormatter,
@@ -58,6 +57,9 @@ export function EventView({ event }: { event: EventFullFragment }) {
       contents: () => React.ReactNode;
     }[] = [];
     if (!event) return [];
+    const compositionInstances: EventInstanceWithTrainerFragment[] = rootInstance
+      ? [rootInstance, ...rootInstance.childEventInstancesList]
+      : [];
 
     if (event.description) {
       tabs.push({
@@ -95,17 +97,17 @@ export function EventView({ event }: { event: EventFullFragment }) {
         {
           id: 'attendance',
           title: 'Účast',
-          contents: () => <Attendance event={event} />,
+          contents: () => <Attendance instances={compositionInstances} />,
         },
         {
           id: 'payments',
           title: 'Platby',
-          contents: () => <Payments event={event} />,
+          contents: () => rootInstance && <Payments instanceId={rootInstance.id} />,
         },
         {
           id: 'instances',
           title: 'Termíny',
-          contents: () => <EventInstances event={event} />,
+          contents: () => <EventInstances instances={compositionInstances} />,
         },
       );
     }
@@ -120,7 +122,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
         title={
           event.name ||
           (rootInstance && formatDefaultInstanceName(rootInstance)) ||
-          formatDefaultEventName(event)
+          formatEventType(event.type)
         }
         actions={actions}
       />
@@ -136,11 +138,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
   );
 }
 
-function Attendance({
-  event,
-}: {
-  event: EventAttendanceSummaryFragment & EventFragment;
-}) {
+function Attendance({ instances }: { instances: EventInstanceWithTrainerFragment[] }) {
   return (
     <table className="prose prose-accent max-w-none">
       <thead>
@@ -156,33 +154,40 @@ function Attendance({
         </tr>
       </thead>
       <tbody>
-        {event.eventInstancesList.map((instance) => (
-          <tr key={instance.id}>
-            <td>
-              <Link
-                href={`/termin/${instance.id}`}
-              >
-                {fullDateFormatter.formatRange(
-                  new Date(instance.since),
-                  new Date(instance.until),
-                )}
-              </Link>
-            </td>
-            {Object.keys(labels)
-              .filter((x) => x !== 'CANCELLED')
-              .map((status) => (
-                <td className="text-center" key={status}>
-                  {JSON.parse(instance.stats)[status] ?? 0}
-                </td>
-              ))}
-          </tr>
-        ))}
+        {instances.map((instance) => {
+          const stats =
+            typeof instance.stats === 'string' ? JSON.parse(instance.stats) : instance.stats;
+
+          return (
+            <tr key={instance.id}>
+              <td>
+                <Link href={`/termin/${instance.id}`}>
+                  {fullDateFormatter.formatRange(
+                    new Date(instance.since),
+                    new Date(instance.until),
+                  )}
+                </Link>
+              </td>
+              {Object.keys(labels)
+                .filter((x) => x !== 'CANCELLED')
+                .map((status) => (
+                  <td className="text-center" key={status}>
+                    {stats?.[status] ?? 0}
+                  </td>
+                ))}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
 }
 
-function EventInstances({ event }: { event: EventFullFragment }) {
+function EventInstances({
+  instances,
+}: {
+  instances: EventInstanceWithTrainerFragment[];
+}) {
   return (
     <table className="prose prose-accent w-full">
       <thead>
@@ -196,7 +201,7 @@ function EventInstances({ event }: { event: EventFullFragment }) {
         </tr>
       </thead>
       <tbody>
-        {event.eventInstancesList.map((instance) => {
+        {instances.map((instance) => {
           return (
             <tr key={instance.id} className={instance.isCancelled ? 'opacity-50' : ''}>
               <td>
@@ -273,20 +278,23 @@ function Registrations({
   );
 }
 
-function Payments({ event }: { event: EventFragment }) {
+function Payments({ instanceId }: { instanceId: string }) {
   const [{ data, fetching }] = useQuery({
-    query: EventPaymentsDocument,
-    variables: { id: event.id },
+    query: EventInstancePaymentsDocument,
+    variables: { id: instanceId },
   });
 
-  const payments = (data?.event?.eventInstancesList || []).flatMap((registration) =>
+  const instances = data?.eventInstance
+    ? [data.eventInstance, ...data.eventInstance.childEventInstancesList]
+    : [];
+  const payments = instances.flatMap((registration) =>
     registration.paymentsList.flatMap((payment) =>
       payment.transactions.nodes.map((trans) => [registration, payment, trans] as const),
     ),
   );
   const actionMap = useActionMap(
     paymentActions,
-    data?.event?.eventInstancesList.flatMap((x) => x.paymentsList) ?? [],
+    instances.flatMap((x) => x.paymentsList),
   );
 
   if (fetching && !data) {

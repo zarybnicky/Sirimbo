@@ -5,8 +5,6 @@ fragment Event on Event {
   description
   name
   capacity
-  remainingPersonSpots
-  remainingLessons
   location {
     id
     name
@@ -25,12 +23,6 @@ fragment Event on Event {
   }
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstance
-  }
-  eventRegistrations(first: 3) {
-    totalCount
-    nodes {
-      ...EventRegistration
-    }
   }
 }
 
@@ -113,14 +105,6 @@ fragment EventInstanceWithTrainer on EventInstance {
   }
 }
 
-fragment EventAttendanceSummary on Event {
-  id
-  eventInstancesList(orderBy: SINCE_ASC) {
-    ...EventInstance
-    stats
-  }
-}
-
 fragment EventInstanceRegistrationAttendance on EventInstanceRegistration {
   id
   status
@@ -182,30 +166,8 @@ fragment EventInstanceRegistration on EventInstanceRegistration {
   }
 }
 
-fragment EventRegistration on EventRegistration {
-  id
-  note
-  eventId
-  personId
-  person {
-    id
-    name
-    firstName
-    lastName
-  }
-  coupleId
-  couple {
-    ...Couple
-  }
-  eventLessonDemandsByRegistrationIdList {
-    ...EventLessonDemand
-  }
-  createdAt
-}
-
 fragment EventFull on Event {
   ...Event
-  ...EventAttendanceSummary
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstanceWithTrainer
     eventExternalRegistrationsByInstanceIdList {
@@ -213,6 +175,9 @@ fragment EventFull on Event {
     }
     eventInstanceTrainersByInstanceIdList {
       ...EventInstanceTrainerLessonOffer
+    }
+    childEventInstancesList(orderBy: SINCE_ASC) {
+      ...EventInstanceWithTrainer
     }
   }
 }
@@ -277,10 +242,15 @@ query Event($id: BigInt!) {
   }
 }
 
-query EventPayments($id: BigInt!) {
-  event(id: $id) {
+query EventInstancePayments($id: BigInt!) {
+  eventInstance(id: $id) {
     id
-    eventInstancesList {
+    since
+    until
+    paymentsList {
+      ...PaymentDetail
+    }
+    childEventInstancesList(orderBy: SINCE_ASC) {
       id
       since
       until
@@ -320,6 +290,20 @@ query EventInstanceRegistrations($id: BigInt!) {
   }
 }
 
+fragment EventListInstance on EventInstance {
+  id
+  name
+  since
+  until
+  capacity
+  remainingPersonSpots
+  location {
+    id
+    name
+  }
+  locationText
+}
+
 query EventList {
   events(condition: { type: CAMP }) {
     totalCount
@@ -327,6 +311,9 @@ query EventList {
       cursor
       node {
         ...Event
+        eventInstancesList(orderBy: SINCE_ASC) {
+          ...EventListInstance
+        }
       }
     }
     pageInfo {

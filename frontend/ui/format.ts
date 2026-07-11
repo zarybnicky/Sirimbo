@@ -1,5 +1,4 @@
 import type { EventType } from '@/graphql';
-import type { EventRegistrationFragment } from '@/graphql/Event';
 import type { PaymentFragment } from '@/graphql/Payment';
 
 type MaybePerson =
@@ -49,27 +48,6 @@ export const formatDefaultInstanceName = (event: {
   let name = formatEventType(event.type);
   if (event.type === 'RESERVATION' && event?.trainersList && event.trainersList.length > 0)
     name += `: ${event.trainersList.map((x) => x?.person?.name).filter(Boolean).join(', ')}`;
-  return name;
-};
-
-export const formatDefaultEventName = (event: {
-  name: string;
-  type: EventType;
-  eventRegistrations: {
-    nodes: EventRegistrationFragment[];
-  };
-  eventTrainersList: {
-    name?: string | null;
-  }[];
-}) => {
-  if (event.name) return event.name;
-
-  if (event.type === 'LESSON' && event.eventRegistrations.nodes.length > 0)
-    return event.eventRegistrations.nodes.map(formatRegistrant).join(', ');
-
-  let name = formatEventType(event.type);
-  if (event.type === 'RESERVATION' && event.eventTrainersList.length > 0)
-    name += `: ${event.eventTrainersList.map((x) => x.name).join(', ')}`;
   return name;
 };
 
@@ -199,7 +177,6 @@ export function describePosting(
     return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;
   }
   const instance = payment.eventInstance;
-  const event = instance?.event;
   const type = instance?.type;
   if (!type) {
     return '';
@@ -208,5 +185,5 @@ export function describePosting(
     const trainers = instance?.trainersList?.map((x) => x.person?.name) ?? [];
     return `${formatEventType(type)}: ${trainers.join(', ')}`;
   }
-  return event ? formatDefaultEventName(event) : instance?.name || formatEventType(type);
+  return formatDefaultInstanceName(instance);
 }

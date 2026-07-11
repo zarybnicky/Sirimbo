@@ -146,7 +146,6 @@ export function UpsertEventForm({
           id: x.itemId,
           itemId: undefined,
         })),
-        registrations: [],
         eventInstances: values.instances.map((x) => ({
           id: x.itemId,
           since: x.since,

@@ -3617,13 +3617,6 @@ export type EventRegistrationSource =
   | 'MANAGER'
   | 'SELF';
 
-/** An input for mutations affecting `EventRegistrationTypeInputRecord` */
-export type EventRegistrationTypeInputRecordInput = {
-  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  personId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
 /** A connection to a list of `EventRegistration` values. */
 export type EventRegistrationsConnection = {
   __typename?: 'EventRegistrationsConnection';
@@ -8811,7 +8804,6 @@ export type UpsertEventInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   eventInstances?: InputMaybe<Array<InputMaybe<EventInstanceTypeInputRecordInput>>>;
   info?: InputMaybe<EventTypeInputRecordInput>;
-  registrations?: InputMaybe<Array<InputMaybe<EventRegistrationTypeInputRecordInput>>>;
   trainers?: InputMaybe<Array<InputMaybe<EventTrainerTypeInputRecordInput>>>;
 };
 

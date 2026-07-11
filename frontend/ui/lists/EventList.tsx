@@ -50,7 +50,7 @@ function EventListPage({ search, currentId }: EventListPageProps) {
 
       return {
         id: x.id,
-        title: x.name,
+        title: closestInstance?.name || x.name,
         date: closestInstance?.since || '',
         subtitle: [
           closestInstance
@@ -59,10 +59,10 @@ function EventListPage({ search, currentId }: EventListPageProps) {
                 new Date(closestInstance.until),
               )
             : '',
-          x.location?.name,
-          x.locationText,
-          (x.capacity ?? 0) > 0
-            ? `Zbývá ${x.remainingPersonSpots} míst z ${x.capacity}`
+          closestInstance?.location?.name,
+          closestInstance?.locationText,
+          (closestInstance?.capacity ?? 0) > 0
+            ? `Zbývá ${closestInstance?.remainingPersonSpots} míst z ${closestInstance?.capacity}`
             : '',
         ]
           .filter(Boolean)

@@ -32,8 +32,7 @@ export function EventButton({
 }) {
   const auth = useAuth();
 
-  const registrationConnection = instance.registrations;
-  const registrations = registrationConnection.nodes || [];
+  const registrations = instance.registrations.nodes || [];
 
   const start = new Date(instance.since);
   const end = new Date(instance.until);
@@ -79,7 +78,7 @@ export function EventButton({
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
               instance?.type === 'LESSON' &&
                 !instance.isLocked &&
-                (instance.capacity ?? 0) > registrationConnection.totalCount * 2
+                (instance.remainingPersonSpots ?? 0) > 0
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}
