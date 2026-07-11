@@ -2,13 +2,10 @@ import { EventDocument, UpsertEventDocument } from '@/graphql/Event';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { InstanceListElement } from '@/ui/event-form/InstanceListElement';
 import { eventLocationInput, LocationField } from '@/ui/event-form/LocationField';
-import { TrainerListElement } from '@/ui/event-form/TrainerListField';
 import { EventForm } from '@/ui/event-form/types';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextFieldElement } from '@/ui/fields/text';
-import { moneyFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
-import { diff } from 'date-arithmetic';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
@@ -18,11 +15,6 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
-import { CurrentTenantDocument } from '@/graphql/Tenant';
-
-type NonEmptyArray<T> = [T, ...T[]];
-const isNonEmpty = <T,>(array: Array<T> | null | undefined): array is NonEmptyArray<T> =>
-  !!array?.length;
 
 export function UpsertEventForm({
   initialValue = {},
@@ -41,7 +33,6 @@ export function UpsertEventForm({
     variables: { id },
     pause: true,
   });
-  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
 
   const { reset, control, handleSubmit, setValue } = useForm<
     z.input<typeof EventForm>,
@@ -51,6 +42,7 @@ export function UpsertEventForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
       ...initialValue,
+      trainers: [],
       isLocked: initialValue.isLocked ?? lockEventsByDefault,
     },
   });
@@ -69,11 +61,7 @@ export function UpsertEventForm({
         {
           ...event,
           locationId: event.locationText ? 'other' : (event.location?.id ?? 'none'),
-          trainers: event.eventTrainersList.map((x) => ({
-            itemId: x.id,
-            personId: x.personId,
-            lessonsOffered: x.lessonsOffered,
-          })),
+          trainers: [],
           instances: event.eventInstancesList.map((x) => ({
             itemId: x.id,
             since: x.since,
@@ -96,30 +84,6 @@ export function UpsertEventForm({
   }, [reset, eventData]);
 
   const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
-  const trainers = useWatch({ control, name: 'trainers' });
-  const instances = useWatch({ control, name: 'instances' });
-
-  const memberPrice = React.useMemo(() => {
-    let memberPrice = 0;
-    for (const x of trainers || []) {
-      const trainer = tenant?.tenant?.tenantTrainersList.find(
-        (p) => p.person?.id === x.personId,
-      );
-      const numericMember = Number.parseFloat(trainer?.memberPrice45MinAmount || '');
-      memberPrice += Number.isNaN(numericMember) ? 0 : numericMember;
-    }
-
-    let multiplier: number;
-    if (isNonEmpty(instances) && instances[0].since && instances[0].until) {
-      const { since, until } = instances[0];
-      multiplier = diff(new Date(since), new Date(until), 'minutes') / 45;
-    } else {
-      multiplier = 1;
-    }
-
-    memberPrice = Number.isNaN(memberPrice) ? 0 : memberPrice * multiplier;
-    return Math.floor(memberPrice / 10) * 10;
-  }, [instances, trainers, tenant?.tenant?.tenantTrainersList]);
 
   React.useEffect(() => {
     setValue('capacity', type === 'LESSON' ? 2 : 0);
@@ -141,11 +105,7 @@ export function UpsertEventForm({
           isLocked: values.isLocked,
           enableNotes: values.enableNotes,
         },
-        trainers: values.trainers.map((x) => ({
-          ...x,
-          id: x.itemId,
-          itemId: undefined,
-        })),
+        trainers: [],
         eventInstances: values.instances.map((x) => ({
           id: x.itemId,
           since: x.since,
@@ -190,14 +150,6 @@ export function UpsertEventForm({
       )}
 
       <InstanceListElement control={control} name="instances" />
-      <TrainerListElement control={control} name="trainers" />
-
-      {!!memberPrice && type === 'LESSON' && (
-        <div className="">
-          {'Cena: '}
-          {moneyFormatter.format({ amount: memberPrice.toString(), currency: 'CZK' })}
-        </div>
-      )}
 
       {/* <RadioButtonGroupElement
         control={control}

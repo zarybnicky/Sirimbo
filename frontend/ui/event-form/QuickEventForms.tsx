@@ -20,9 +20,7 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { formatEventType, formatLongCoupleName, shortTimeFormatter } from '@/ui/format';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { buttonCls } from '@/ui/style';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ChevronDown } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm, useWatch } from 'react-hook-form';
@@ -35,7 +33,6 @@ import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListField';
 import { CohortListElement } from './CohortListElement';
 import { EventForm, type EventFormType } from './types';
-import { UpsertEventForm } from './UpsertEventForm';
 
 const eventTypeOptions: RadioButtonGroupItem[] = [
   'LESSON',
@@ -59,8 +56,7 @@ export function QuickEventCreateForm({
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
-  const [initialValue, setInitialValue] = React.useState<Partial<EventFormInput> | null>(null);
-  const { control, handleSubmit, getValues } = useForm({
+  const { control, handleSubmit } = useForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
       type: 'LESSON',
@@ -172,10 +168,6 @@ export function QuickEventCreateForm({
     if (result.data?.quickCreateEventInstances?.eventInstances?.length) onSuccess();
   });
 
-  if (initialValue) {
-    return <UpsertEventForm initialValue={initialValue} />;
-  }
-
   return (
     <form className="space-y-3" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
@@ -254,19 +246,7 @@ export function QuickEventCreateForm({
         </>
       )}
 
-      <div className="flex items-center justify-between gap-2 pt-1">
-        {parentId ? (
-          <span />
-        ) : (
-          <button
-            type="button"
-            className={buttonCls({ variant: 'outline' })}
-            onClick={() => setInitialValue(getValues())}
-          >
-            Více možností
-            <ChevronDown />
-          </button>
-        )}
+      <div className="flex justify-end pt-1">
         <SubmitButton loading={onSubmit.loading}>Vytvořit</SubmitButton>
       </div>
     </form>
@@ -285,7 +265,6 @@ export function QuickInstanceEditForm({
     query: EventInstanceRegistrationsDocument,
     variables: { id: instance.id },
   });
-  const [fullForm, setFullForm] = React.useState(false);
   const directTrainers = instance.eventInstanceTrainersByInstanceIdList;
   const effectiveTrainerIds = instance.trainersList?.map((trainer) => trainer.personId) ?? [];
   const initialTrainers =
@@ -428,10 +407,6 @@ export function QuickInstanceEditForm({
     if (result.data?.updateEventInstanceDetails?.eventInstance?.id) onSuccess();
   });
 
-  if (fullForm && instance.eventId) {
-    return <UpsertEventForm eventId={instance.eventId} />;
-  }
-
   return (
     <form className="space-y-3" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
@@ -497,19 +472,7 @@ export function QuickInstanceEditForm({
       <FormError error={registrationsQuery.error} />
       <CheckboxElement control={control} name="instances.0.isCancelled" label="Zrušeno" />
 
-      <div className="flex items-center justify-between gap-2 pt-1">
-        {instance.eventId ? (
-          <button
-            type="button"
-            className={buttonCls({ variant: 'outline' })}
-            onClick={() => setFullForm(true)}
-          >
-            Více možností
-            <ChevronDown />
-          </button>
-        ) : (
-          <span />
-        )}
+      <div className="flex justify-end pt-1">
         <SubmitButton loading={onSubmit.loading}>Uložit</SubmitButton>
       </div>
     </form>
