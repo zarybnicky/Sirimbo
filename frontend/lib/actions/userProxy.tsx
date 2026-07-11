@@ -1,11 +1,11 @@
 import { LogIn, Pencil, Trash2, Unplug } from 'lucide-react';
-import { LogInAsDocument } from '@/graphql/CurrentUser';
 import {
   DeleteUserProxyDocument,
   UpdateUserProxyDocument,
   type UserProxyFragment,
 } from '@/graphql/Memberships';
 import { defineActions } from '@/lib/actions';
+import { sessionPresentAtom, storeRef } from '@/ui/state/auth';
 import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
 
 export const userProxyActions = defineActions<UserProxyFragment>()([
@@ -21,9 +21,17 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     label: 'Přihlásit se jako...',
     icon: LogIn,
     visible: ({ auth, item }) => auth.isAdmin && !!item.user,
-    execute: async ({ item, mutate, router }) => {
+    execute: async ({ item, router }) => {
       if (!item.user) return;
-      await mutate(LogInAsDocument, { id: item.user.id });
+      const res = await fetch('/api/auth/log-in-as', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ id: item.user.id }),
+      });
+      if (!res.ok) return;
+      // New session cookie is set server-side; refresh client auth state.
+      storeRef.current.set(sessionPresentAtom, true);
+      storeRef.resetUrqlClient?.();
       await router.replace('/dashboard');
     },
   },

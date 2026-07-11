@@ -13,15 +13,15 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const { enableHome } = useTenantConfig();
+  const { publicSite } = useTenantConfig();
 
   const onSuccess = React.useCallback(
     (user: UserAuthFragment | null) => {
       const from = searchParams?.get('from') || undefined;
-      const defaultRedirect = enableHome ? '/dashboard' : '/rozpis';
+      const defaultRedirect = publicSite ? '/dashboard' : '/rozpis';
        router.push(!user?.userProxiesList.length ? '/profil' : from || defaultRedirect);
     },
-    [enableHome, router, searchParams],
+    [publicSite, router, searchParams],
   );
 
   const personCount = auth.personIds.length;

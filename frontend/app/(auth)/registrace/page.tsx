@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Layout } from '@/ui/Layout';
 import { SubmitButton } from '@/ui/submit';
@@ -5,55 +7,49 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { z } from 'zod';
 import { useAsyncCallback } from 'react-async-hook';
-import { useMutation } from 'urql';
-import { RegisterWithoutInvitationDocument } from '@/graphql/CurrentUser';
-import { useRouter } from 'next/router';
-import { NextSeo } from 'next-seo';
+import { registerWithoutInvitationAction } from '@/lib/server/auth-actions';
+import { useRouter } from 'next/navigation';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTenantConfig } from '@/ui/state/auth';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { sessionPresentAtom, tenantConfigAtom } from '@/ui/state/auth';
 
 const Form = z.object({
   email: z.email(),
   passwd: z.string(),
 });
 
-export default function InvitationPage() {
-  const { enableRegistration } = useTenantConfig();
+export default function RegisterPage() {
+  const { enableRegistration } = useAtomValue(tenantConfigAtom);
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
+  const setSessionPresent = useSetAtom(sessionPresentAtom);
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
 
-  const register = useMutation(RegisterWithoutInvitationDocument)[1];
-
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    const response = await register({ input: values });
-    if (response.data?.registerWithoutInvitation?.result?.jwt) {
-      router.replace('/dashboard');
+    const result = await registerWithoutInvitationAction(values);
+    if (result.status === 'error') {
+      throw new Error(result.error);
     }
+    setSessionPresent(true);
+    router.replace('/dashboard');
   });
 
   const personCount = auth.personIds.length;
   React.useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-
     if (!authLoading && auth.user) {
-      const destination = personCount > 0 ? '/dashboard' : '/profil';
-      void router.replace(destination);
+      router.replace(personCount > 0 ? '/dashboard' : '/profil');
     }
-  }, [authLoading, auth.user, personCount, router, router.isReady]);
+  }, [authLoading, auth.user, personCount, router]);
 
   if (!enableRegistration) {
     return (
       <Layout className="grow content relative content-stretch">
-        <NextSeo title="Registrace uzavřena" />
         <ErrorPage
           error="Registrace je uzavřena"
           details="Nové registrace aktuálně nepřijímáme."
@@ -64,7 +60,6 @@ export default function InvitationPage() {
 
   return (
     <Layout className="grow content relative content-stretch">
-      <NextSeo title="Přihláška nového člena" />
       <div className="flex items-center justify-center h-full">
         <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
           <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>

@@ -13,12 +13,13 @@ import { useMemberMenu } from '@/lib/use-menu';
 import { User as Account } from 'lucide-react';
 import React from 'react';
 import { useSetAtom } from 'jotai';
-import { authAtom, storeRef } from '@/ui/state/auth';
+import { authAtom, sessionPresentAtom, storeRef } from '@/ui/state/auth';
 import Link from 'next/link';
 
 export function AuthButton() {
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
+  const setSessionPresent = useSetAtom(sessionPresentAtom);
   const memberMenu = useMemberMenu();
 
   const [isMounted, setIsMounted] = React.useState(false);
@@ -26,10 +27,12 @@ export function AuthButton() {
     setIsMounted(true);
   }, []);
 
-  const signOut = React.useCallback(() => {
+  const signOut = React.useCallback(async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
     setAuth(null, null);
+    setSessionPresent(false);
     storeRef.resetUrqlClient?.();
-  }, [setAuth]);
+  }, [setAuth, setSessionPresent]);
 
   if (!auth.user || !isMounted) {
     return (

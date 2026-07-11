@@ -8,7 +8,13 @@ import {
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui.pages';
 import { cn } from '@/lib/cn';
-import { authAtom, storeRef, useTenantConfig, useTenantId } from '@/ui/state/auth';
+import {
+  authAtom,
+  sessionPresentAtom,
+  storeRef,
+  useTenantConfig,
+  useTenantId,
+} from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import { useSetAtom } from 'jotai';
 import Link from 'next/link';
@@ -29,6 +35,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
   const pathname = usePathname();
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
+  const setSessionPresent = useSetAtom(sessionPresentAtom);
   const tenantId = useTenantId();
   const { publicSite, copyrightLine: newCopyrightLine } = useTenantConfig();
   const memberMenu = useMemberMenu();
@@ -66,10 +73,12 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
     return () => window.removeEventListener('resize', updateDetailView);
   }, [setIsOpen]);
 
-  const signOut = React.useCallback(() => {
+  const signOut = React.useCallback(async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
     setAuth(null, null);
+    setSessionPresent(false);
     storeRef.resetUrqlClient?.();
-  }, [setAuth]);
+  }, [setAuth, setSessionPresent]);
 
   return (
     <>
