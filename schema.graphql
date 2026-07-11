@@ -4363,13 +4363,6 @@ enum EventRegistrationSource {
   SELF
 }
 
-"""An input for mutations affecting `EventRegistrationTypeInputRecord`"""
-input EventRegistrationTypeInputRecordInput {
-  coupleId: BigInt
-  id: BigInt
-  personId: BigInt
-}
-
 """A connection to a list of `EventRegistration` values."""
 type EventRegistrationsConnection {
   """
@@ -10497,7 +10490,6 @@ input UpsertEventInput {
   clientMutationId: String
   eventInstances: [EventInstanceTypeInputRecordInput]
   info: EventTypeInputRecordInput
-  registrations: [EventRegistrationTypeInputRecordInput]
   trainers: [EventTrainerTypeInputRecordInput]
 }
 

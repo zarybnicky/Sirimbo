@@ -4,8 +4,6 @@ drop type if exists event_type_input;
 drop type if exists event_instance_type_input;
 drop type if exists event_instance_trainer_type_input;
 drop type if exists event_trainer_type_input;
-drop type if exists event_target_cohort_type_input;
-drop type if exists event_registration_type_input;
 
 CREATE TYPE public.event_type_input AS (
   id bigint,
@@ -42,17 +40,10 @@ CREATE TYPE public.event_trainer_type_input AS (
   lessons_offered integer
 );
 
-CREATE TYPE public.event_registration_type_input AS (
-  id bigint,
-  person_id bigint,
-  couple_id bigint
-);
-
 CREATE OR REPLACE FUNCTION upsert_event(
   info event_type_input,
   event_instances event_instance_type_input[],
-  trainers event_trainer_type_input[],
-  registrations event_registration_type_input[]
+  trainers event_trainer_type_input[]
 ) RETURNS event LANGUAGE plpgsql AS $$
 declare
   instance event_instance_type_input;
@@ -61,10 +52,6 @@ declare
   v_event event;
   v_instance_id bigint;
 begin
-  if cardinality(registrations) > 0 then
-    raise exception 'event registrations must be edited on the event instance';
-  end if;
-
   if info.id is null then
 
     insert into event (
