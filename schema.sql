@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict U2piAyUJbwlTF4Q01gzTDCkeQGERmyZ4CoGe1naAoIuAAdpjJvoydzoVRbCQ5bJ
+\restrict Xv1sRgH8fzOwA9bwkjWDu1jDDvSxhJsPGFPujPo90THeuB7ylBME7G8W6BGsU0O
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -497,7 +497,8 @@ CREATE TYPE public.event_instance_registration_status AS ENUM (
 
 CREATE TYPE public.event_instance_trainer_type_input AS (
 	id bigint,
-	person_id bigint
+	person_id bigint,
+	lessons_offered integer
 );
 
 
@@ -4346,7 +4347,7 @@ BEGIN
   SELECT coalesce(jsonb_agg(jsonb_build_object(
     'reg_person_id', er.person_id,
     'reg_couple_id', er.couple_id,
-    'trainer_person_id', trainer.person_id,
+    'trainer_id', trainer.id,
     'lesson_count', demand.lesson_count,
     'created_at', demand.created_at
   )), '[]'::jsonb)
@@ -4354,7 +4355,7 @@ BEGIN
   FROM public.event_lesson_demand demand
   JOIN public.event_instance_registration eir ON eir.id = demand.registration_id
   JOIN public.event_registration er ON er.id = eir.legacy_registration_id
-  JOIN public.event_trainer trainer ON trainer.id = demand.trainer_id
+  JOIN public.event_instance_trainer trainer ON trainer.id = demand.trainer_id
   WHERE eir.instance_id = p_instance_id
     AND eir.parent_registration_id IS NULL;
 
@@ -4393,11 +4394,15 @@ BEGIN
   WHERE et.event_id  = v_old_event_id
   ON CONFLICT (event_id, person_id) DO NOTHING;
 
-  -- Re-point the instance (event_instance_trainer + any other (tenant_id, instance_id, event_id) dependents follow via FK cascade)
+  -- Re-point the instance and its denormalized trainer event IDs.
   UPDATE public.event_instance ei
   SET event_id   = v_new_event_id
   WHERE ei.id        = p_instance_id
     AND ei.event_id  = v_old_event_id;
+
+  UPDATE public.event_instance_trainer
+  SET event_id = v_new_event_id
+  WHERE instance_id = p_instance_id;
 
   -- Copy registrations: map target_cohort_id by cohort_id (old_tc -> new_tc)
   INSERT INTO public.event_registration (
@@ -4413,17 +4418,17 @@ BEGIN
   INSERT INTO public.event_lesson_demand (
     trainer_id, registration_id, lesson_count, created_at, event_id
   )
-  SELECT new_tr.id, new_eir.id, old.lesson_count, old.created_at, v_new_event_id
+  SELECT trainer.id, new_eir.id, old.lesson_count, old.created_at, v_new_event_id
   FROM jsonb_to_recordset(v_old_demands) AS old(
     reg_person_id bigint,
     reg_couple_id bigint,
-    trainer_person_id bigint,
+    trainer_id bigint,
     lesson_count integer,
     created_at timestamptz
   )
-  JOIN public.event_trainer new_tr
-    ON new_tr.event_id = v_new_event_id
-   AND new_tr.person_id = old.trainer_person_id
+  JOIN public.event_instance_trainer trainer
+    ON trainer.id = old.trainer_id
+   AND trainer.instance_id = p_instance_id
   JOIN public.event_registration new_reg
     ON new_reg.event_id = v_new_event_id
    AND new_reg.person_id IS NOT DISTINCT FROM old.reg_person_id
@@ -4734,7 +4739,8 @@ CREATE TABLE public.event_instance_trainer (
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    event_id bigint
+    event_id bigint,
+    lessons_offered integer DEFAULT 0
 );
 
 
@@ -4752,6 +4758,34 @@ COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete
 --
 
 COMMENT ON COLUMN public.event_instance_trainer.event_id IS '@omit';
+
+
+--
+-- Name: COLUMN event_instance_trainer.lessons_offered; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event_instance_trainer.lessons_offered IS 'Maximum lesson requests for this trainer on this instance; NULL means unlimited.';
+
+
+--
+-- Name: event_instance_trainer_lessons_remaining(public.event_instance_trainer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instance_trainer_lessons_remaining(e public.event_instance_trainer) RETURNS integer
+    LANGUAGE sql STABLE
+    AS $$
+  select case
+    when e.lessons_offered is null then null
+    else e.lessons_offered - (
+      select coalesce(sum(demand.lesson_count), 0)
+      from event_lesson_demand demand
+      join event_instance_registration registration
+        on registration.id = demand.registration_id
+       and registration.registration_status = 'active'
+      where demand.trainer_id = e.id
+    )
+  end;
+$$;
 
 
 --
@@ -5049,7 +5083,12 @@ CREATE FUNCTION public.event_remaining_lessons(e public.event) RETURNS integer
     else (
       select coalesce(sum(lessons_offered), 0) from event_trainer et where et.event_id = e.id
     ) - (
-      select coalesce(sum(lesson_count), 0) from event_lesson_demand eld where eld.event_id = e.id
+      select coalesce(sum(demand.lesson_count), 0)
+      from event_lesson_demand demand
+      join event_instance_registration registration
+        on registration.id = demand.registration_id
+       and registration.registration_status = 'active'
+      where demand.event_id = e.id
     )
   end;
 $$;
@@ -5106,8 +5145,14 @@ CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) R
   select case
     when e.lessons_offered is null then null
     else e.lessons_offered - (
-      select coalesce(sum(lesson_count), 0)
-      from event_lesson_demand where trainer_id = e.id
+      select coalesce(sum(demand.lesson_count), 0)
+      from event_lesson_demand demand
+      join event_instance_registration registration
+        on registration.id = demand.registration_id
+       and registration.registration_status = 'active'
+      join event_instance_trainer trainer on trainer.id = demand.trainer_id
+      join event_instance instance on instance.id = trainer.instance_id
+      where instance.event_id = e.event_id and trainer.person_id = e.person_id
     )
   end;
 $$;
@@ -5917,7 +5962,7 @@ $$;
 -- Name: register_to_event_many(public.register_to_event_type[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
+CREATE FUNCTION public.register_to_event_many(event_registrations public.register_to_event_type[]) RETURNS SETOF public.event_registration
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
@@ -5927,8 +5972,9 @@ declare
   registration register_to_event_type;
   created event_registration;
   demand event_lesson_demand;
+  instance_registration_id bigint;
 begin
-  foreach registration in array registrations loop
+  foreach registration in array event_registrations loop
     select * into event from event where id = registration.event_id;
 
     if event is null then
@@ -5945,9 +5991,21 @@ begin
     values (registration.event_id, registration.person_id, registration.couple_id, registration.note)
     returning * into created;
     created_ids := created_ids || created.id;
-    if registration.lessons is not null then
+    if coalesce(cardinality(registration.lessons), 0) > 0 then
       foreach demand in array registration.lessons loop
-        perform set_lesson_demand(created.id, demand.trainer_id, demand.lesson_count);
+        select instance_registration.id into instance_registration_id
+        from event_instance_trainer trainer
+        join event_instance_registration instance_registration
+          on instance_registration.instance_id = trainer.instance_id
+         and instance_registration.legacy_registration_id = created.id
+         and instance_registration.parent_registration_id is null
+        where trainer.id = demand.trainer_id;
+
+        if not found then
+          raise exception 'TRAINER_NOT_FOUND' using errcode = '28000';
+        end if;
+
+        perform set_lesson_demand(instance_registration_id, demand.trainer_id, demand.lesson_count);
       end loop;
     end if;
   end loop;
@@ -6315,66 +6373,175 @@ COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id 
 
 
 --
--- Name: set_lesson_demand(bigint, bigint, integer); Type: FUNCTION; Schema: public; Owner: -
+-- Name: set_event_instance_registration(bigint, bigint, bigint, boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_demand
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
+CREATE FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean) RETURNS public.event_instance_registration
+    LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $_$
+    AS $$
 declare
-  v_event event;
-  v_trainer event_trainer;
-  legacy_registration event_registration;
+  target_instance event_instance;
   registration event_instance_registration;
-  registration_count bigint;
-  instance_registration_id bigint;
-  lesson_demand event_lesson_demand;
-  other_lessons bigint;
+  required_capacity integer;
+  remaining_capacity integer;
 begin
-  select * into legacy_registration from event_registration where id = $1;
-  select * into v_event from event where id = legacy_registration.event_id;
-  select * into v_trainer from event_trainer where id = $2 and event_id = legacy_registration.event_id;
-
-  if v_event is null then
-    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
+  if p_is_registered is null or num_nonnulls(p_person_id, p_couple_id) <> 1 then
+    raise exception 'INVALID_REGISTRANT' using errcode = '22023';
   end if;
-  if v_event.is_locked = true then
+
+  if (p_person_id is not null
+      and p_person_id <> all(coalesce(current_person_ids(), '{}'::bigint[])))
+    or (p_couple_id is not null
+      and p_couple_id <> all(coalesce(current_couple_ids(), '{}'::bigint[]))) then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+
+  select * into target_instance
+  from event_instance
+  where id = p_instance_id
+    and tenant_id = current_tenant_id()
+  for update;
+
+  if not found then
+    raise exception 'INSTANCE_NOT_FOUND' using errcode = '22023';
+  end if;
+  if target_instance.event_id is not null or target_instance.is_locked then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
-  end if;
-  if v_trainer is null then
-    raise exception 'TRAINER_NOT_FOUND' using errcode = '28000';
-  end if;
-
-  select count(*), min(eir.id)
-  into registration_count, instance_registration_id
-  from event_instance_registration eir
-  join event_instance instance on instance.id = eir.instance_id
-  where eir.legacy_registration_id = legacy_registration.id
-    and eir.parent_registration_id is null
-    and instance.parent_id is null;
-
-  if registration_count <> 1 then
-    raise exception 'LESSON_DEMAND_INSTANCE_AMBIGUOUS' using errcode = '22023';
   end if;
 
   select * into registration
   from event_instance_registration
-  where id = instance_registration_id;
+  where instance_id = p_instance_id
+    and parent_registration_id is null
+    and legacy_registration_id is null
+    and person_id is not distinct from p_person_id
+    and couple_id is not distinct from p_couple_id;
+
+  if not p_is_registered then
+    if registration is null then
+      raise exception 'REGISTRATION_NOT_FOUND' using errcode = '22023';
+    end if;
+
+    update event_instance_registration
+    set registration_status = 'cancelled'
+    where id = registration.id or parent_registration_id = registration.id;
+
+    select * into registration from event_instance_registration where id = registration.id;
+    return registration;
+  end if;
+
+  if target_instance.is_cancelled
+    or target_instance.until <= now()
+    or not (
+      coalesce(target_instance.is_public, false)
+      or (
+        coalesce(target_instance.is_visible, false)
+        and current_tenant_id() = any(my_tenants_array())
+      )
+    ) then
+    raise exception 'NOT_ALLOWED' using errcode = '28000';
+  end if;
+
+  if registration is not null and registration.registration_status = 'active' then
+    return registration;
+  end if;
+
+  remaining_capacity := event_instance_remaining_person_spots(target_instance);
+  required_capacity := case
+    when target_instance.capacity_unit = 'people' and p_couple_id is not null then 2
+    else 1
+  end;
+  if remaining_capacity is not null and remaining_capacity < required_capacity then
+    raise exception 'CAPACITY_EXCEEDED' using errcode = '22023';
+  end if;
+
+  if registration is not null then
+    update event_instance_registration
+    set registration_status = 'active'
+    where id = registration.id or parent_registration_id = registration.id;
+  else
+    insert into event_instance_registration (
+      instance_id, person_id, couple_id, status
+    ) values (
+      p_instance_id, p_person_id, p_couple_id,
+      case when p_person_id is not null then 'unknown'::attendance_type end
+    ) returning * into registration;
+
+    insert into event_instance_registration (
+      instance_id, parent_registration_id, person_id, status
+    )
+    select p_instance_id, registration.id, person.person_id, 'unknown'
+    from couple
+    cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id)
+    where couple.id = p_couple_id;
+  end if;
+
+  select * into registration from event_instance_registration where id = registration.id;
+  return registration;
+end;
+$$;
+
+
+--
+-- Name: set_lesson_demand(bigint, bigint, integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_demand
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $_$
+declare
+  registration event_instance_registration;
+  instance event_instance;
+  trainer event_instance_trainer;
+  lesson_demand event_lesson_demand;
+  other_lessons bigint;
+begin
+  select * into registration
+  from event_instance_registration
+  where id = $1 and parent_registration_id is null;
+
+  if not found then
+    raise exception 'REGISTRATION_NOT_FOUND' using errcode = '28000';
+  end if;
+
+  select * into instance
+  from event_instance
+  where id = registration.instance_id;
+
+  if not found then
+    raise exception 'INSTANCE_NOT_FOUND' using errcode = '28000';
+  end if;
+  if instance.is_locked then
+    raise exception 'NOT_ALLOWED' using errcode = '28000';
+  end if;
+
+  select * into trainer
+  from event_instance_trainer
+  where id = $2 and instance_id = instance.id
+  for update;
+
+  if not found then
+    raise exception 'TRAINER_NOT_FOUND' using errcode = '28000';
+  end if;
 
   if $3 = 0 then
     delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = $2;
     return null;
   end if;
-  if v_trainer.lessons_offered = 0 then
+  if trainer.lessons_offered = 0 then
     raise exception 'LESSONS_NOT_OFFERED' using errcode = '28000';
   end if;
-  if v_trainer.lessons_offered is not null then
+  if trainer.lessons_offered is not null then
     select coalesce(sum(eld.lesson_count), 0) into other_lessons
     from event_lesson_demand eld
+    join event_instance_registration other_registration
+      on other_registration.id = eld.registration_id
+     and other_registration.registration_status = 'active'
     where eld.trainer_id = $2 and eld.registration_id <> registration.id;
 
-    if $3 > v_trainer.lessons_offered - other_lessons then
+    if $3 > trainer.lessons_offered - other_lessons then
       raise exception 'LESSON_LIMIT_EXCEEDED' using errcode = '22023';
     end if;
   end if;
@@ -6999,10 +7166,10 @@ $_$;
 
 
 --
--- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[], public.quick_event_registration_input[], integer, public.event_capacity_unit, boolean); Type: FUNCTION; Schema: public; Owner: -
+-- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[], public.quick_event_registration_input[], integer, public.event_capacity_unit, boolean, integer[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean) RETURNS public.event_instance
+CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[]) RETURNS public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
@@ -7124,14 +7291,35 @@ begin
   end if;
 
   if p_trainer_person_ids is not null then
-    delete from public.event_instance_trainer
-    where instance_id = p_instance_id;
+    if p_trainer_lessons_offered is not null
+      and cardinality(p_trainer_lessons_offered) <> cardinality(p_trainer_person_ids) then
+      raise exception 'trainer lesson offers must match trainers';
+    end if;
 
-    insert into public.event_instance_trainer (instance_id, person_id)
-    select distinct p_instance_id, input.person_id
-    from unnest(p_trainer_person_ids) as input(person_id)
+    delete from public.event_instance_trainer
+    where instance_id = p_instance_id
+      and not exists (
+        select 1 from unnest(p_trainer_person_ids) person(id)
+        where person.id = event_instance_trainer.person_id
+      );
+
+    insert into public.event_instance_trainer (instance_id, person_id, lessons_offered)
+    select distinct on (input.person_id)
+      p_instance_id,
+      input.person_id,
+      case when p_trainer_lessons_offered is null then 0
+        else input.lessons_offered end
+    from (
+      select p_trainer_person_ids[i] person_id,
+        p_trainer_lessons_offered[i] lessons_offered
+      from generate_subscripts(p_trainer_person_ids, 1) item(i)
+    ) input
     where input.person_id is not null
-    on conflict (instance_id, person_id) do nothing;
+    order by input.person_id
+    on conflict (instance_id, person_id) do update
+    set lessons_offered = case when p_trainer_lessons_offered is null
+      then event_instance_trainer.lessons_offered
+      else excluded.lessons_offered end;
   end if;
 
   if p_registrations is not null then
@@ -7297,7 +7485,7 @@ $$;
 -- Name: upsert_event(public.event_type_input, public.event_instance_type_input[], public.event_trainer_type_input[], public.event_target_cohort_type_input[], public.event_registration_type_input[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) RETURNS public.event
+CREATE FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) RETURNS public.event
     LANGUAGE plpgsql
     AS $$
 declare
@@ -7359,7 +7547,7 @@ begin
     end if;
   end if;
 
-  foreach instance in array coalesce(instances, '{}'::event_instance_type_input[]) loop
+  foreach instance in array coalesce(event_instances, '{}'::event_instance_type_input[]) loop
     if instance.id is null then
       insert into event_instance (event_id, since, until, is_cancelled)
       values (v_event.id, instance.since, instance.until, instance.is_cancelled)
@@ -7377,11 +7565,17 @@ begin
     if v_instance_id is not null then
       foreach instance_trainer in array coalesce(instance.trainers, '{}'::event_instance_trainer_type_input[]) loop
         if instance_trainer.id is null then
-          insert into event_instance_trainer (instance_id, person_id)
-          values (v_instance_id, instance_trainer.person_id)
-          on conflict (instance_id, person_id) do nothing;
+          insert into event_instance_trainer (instance_id, person_id, lessons_offered)
+          values (v_instance_id, instance_trainer.person_id, instance_trainer.lessons_offered)
+          on conflict (instance_id, person_id) do update
+            set lessons_offered = excluded.lessons_offered;
         elsif instance_trainer.person_id is null then
           delete from event_instance_trainer where id=instance_trainer.id;
+        else
+          update event_instance_trainer
+          set person_id = instance_trainer.person_id,
+              lessons_offered = instance_trainer.lessons_offered
+          where id = instance_trainer.id and instance_id = v_instance_id;
         end if;
       end loop;
     end if;
@@ -13634,7 +13828,7 @@ ALTER TABLE ONLY public.event_lesson_demand
 --
 
 ALTER TABLE ONLY public.event_lesson_demand
-    ADD CONSTRAINT event_lesson_demand_trainer_id_fkey FOREIGN KEY (trainer_id) REFERENCES public.event_trainer(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT event_lesson_demand_trainer_id_fkey FOREIGN KEY (trainer_id) REFERENCES public.event_instance_trainer(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -15971,6 +16165,13 @@ GRANT ALL ON TABLE public.event_instance_trainer TO anonymous;
 
 
 --
+-- Name: FUNCTION event_instance_trainer_lessons_remaining(e public.event_instance_trainer); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_instance_trainer_lessons_remaining(e public.event_instance_trainer) TO anonymous;
+
+
+--
 -- Name: FUNCTION event_instance_trainer_name(t public.event_instance_trainer); Type: ACL; Schema: public; Owner: -
 --
 
@@ -16286,10 +16487,10 @@ GRANT ALL ON FUNCTION public.refresh_jwt() TO anonymous;
 
 
 --
--- Name: FUNCTION register_to_event_many(registrations public.register_to_event_type[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION register_to_event_many(event_registrations public.register_to_event_type[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.register_to_event_many(registrations public.register_to_event_type[]) TO anonymous;
+GRANT ALL ON FUNCTION public.register_to_event_many(event_registrations public.register_to_event_type[]) TO anonymous;
 
 
 --
@@ -16441,10 +16642,17 @@ GRANT ALL ON FUNCTION public.scoreboard_entries(since date, until date, cohort_i
 
 
 --
--- Name: FUNCTION set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) TO anonymous;
+GRANT ALL ON FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean) TO anonymous;
+
+
+--
+-- Name: FUNCTION set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer) TO anonymous;
 
 
 --
@@ -16511,10 +16719,10 @@ GRANT ALL ON FUNCTION public.trainer_group_attendance_completion(since timestamp
 
 
 --
--- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean) TO anonymous;
+GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[]) TO anonymous;
 
 
 --
@@ -16539,10 +16747,10 @@ GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_i
 
 
 --
--- Name: FUNCTION upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) TO anonymous;
+GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) TO anonymous;
 
 
 --
@@ -17081,5 +17289,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict U2piAyUJbwlTF4Q01gzTDCkeQGERmyZ4CoGe1naAoIuAAdpjJvoydzoVRbCQ5bJ
+\unrestrict Xv1sRgH8fzOwA9bwkjWDu1jDDvSxhJsPGFPujPo90THeuB7ylBME7G8W6BGsU0O
 

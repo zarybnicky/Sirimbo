@@ -1,60 +1,58 @@
-CREATE FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_demand
+CREATE FUNCTION public.set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_demand
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $_$
 declare
-  v_event event;
-  v_trainer event_trainer;
-  legacy_registration event_registration;
   registration event_instance_registration;
-  registration_count bigint;
-  instance_registration_id bigint;
+  instance event_instance;
+  trainer event_instance_trainer;
   lesson_demand event_lesson_demand;
   other_lessons bigint;
 begin
-  select * into legacy_registration from event_registration where id = $1;
-  select * into v_event from event where id = legacy_registration.event_id;
-  select * into v_trainer from event_trainer where id = $2 and event_id = legacy_registration.event_id;
-
-  if v_event is null then
-    raise exception 'EVENT_NOT_FOUND' using errcode = '28000';
-  end if;
-  if v_event.is_locked = true then
-    raise exception 'NOT_ALLOWED' using errcode = '28000';
-  end if;
-  if v_trainer is null then
-    raise exception 'TRAINER_NOT_FOUND' using errcode = '28000';
-  end if;
-
-  select count(*), min(eir.id)
-  into registration_count, instance_registration_id
-  from event_instance_registration eir
-  join event_instance instance on instance.id = eir.instance_id
-  where eir.legacy_registration_id = legacy_registration.id
-    and eir.parent_registration_id is null
-    and instance.parent_id is null;
-
-  if registration_count <> 1 then
-    raise exception 'LESSON_DEMAND_INSTANCE_AMBIGUOUS' using errcode = '22023';
-  end if;
-
   select * into registration
   from event_instance_registration
-  where id = instance_registration_id;
+  where id = $1 and parent_registration_id is null;
+
+  if not found then
+    raise exception 'REGISTRATION_NOT_FOUND' using errcode = '28000';
+  end if;
+
+  select * into instance
+  from event_instance
+  where id = registration.instance_id;
+
+  if not found then
+    raise exception 'INSTANCE_NOT_FOUND' using errcode = '28000';
+  end if;
+  if instance.is_locked then
+    raise exception 'NOT_ALLOWED' using errcode = '28000';
+  end if;
+
+  select * into trainer
+  from event_instance_trainer
+  where id = $2 and instance_id = instance.id
+  for update;
+
+  if not found then
+    raise exception 'TRAINER_NOT_FOUND' using errcode = '28000';
+  end if;
 
   if $3 = 0 then
     delete from event_lesson_demand eld where eld.registration_id = registration.id and eld.trainer_id = $2;
     return null;
   end if;
-  if v_trainer.lessons_offered = 0 then
+  if trainer.lessons_offered = 0 then
     raise exception 'LESSONS_NOT_OFFERED' using errcode = '28000';
   end if;
-  if v_trainer.lessons_offered is not null then
+  if trainer.lessons_offered is not null then
     select coalesce(sum(eld.lesson_count), 0) into other_lessons
     from event_lesson_demand eld
+    join event_instance_registration other_registration
+      on other_registration.id = eld.registration_id
+     and other_registration.registration_status = 'active'
     where eld.trainer_id = $2 and eld.registration_id <> registration.id;
 
-    if $3 > v_trainer.lessons_offered - other_lessons then
+    if $3 > trainer.lessons_offered - other_lessons then
       raise exception 'LESSON_LIMIT_EXCEEDED' using errcode = '22023';
     end if;
   end if;
@@ -68,4 +66,4 @@ begin
 end;
 $_$;
 
-GRANT ALL ON FUNCTION public.set_lesson_demand(registration_id bigint, trainer_id bigint, lesson_count integer) TO anonymous;
+GRANT ALL ON FUNCTION public.set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer) TO anonymous;

@@ -3833,6 +3833,23 @@ enum EventInstanceRegistrationsOrderBy {
 
 type EventInstanceTrainer {
   createdAt: Datetime!
+
+  """Reads and enables pagination through a set of `EventLessonDemand`."""
+  eventLessonDemandsByTrainerIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventLessonDemandCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventLessonDemand`."""
+    orderBy: [EventLessonDemandsOrderBy!]
+  ): [EventLessonDemand!]!
   id: BigInt!
 
   """
@@ -3840,6 +3857,12 @@ type EventInstanceTrainer {
   """
   instance: EventInstance
   instanceId: BigInt!
+
+  """
+  Maximum lesson requests for this trainer on this instance; NULL means unlimited.
+  """
+  lessonsOffered: Int
+  lessonsRemaining: Int
   name: String
 
   """
@@ -3865,6 +3888,9 @@ input EventInstanceTrainerCondition {
   """Checks for equality with the object’s `instanceId` field."""
   instanceId: BigInt
 
+  """Checks for equality with the object’s `lessonsOffered` field."""
+  lessonsOffered: Int
+
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
@@ -3878,6 +3904,7 @@ input EventInstanceTrainerCondition {
 """An input for mutations affecting `EventInstanceTrainerTypeInputRecord`"""
 input EventInstanceTrainerTypeInputRecordInput {
   id: BigInt
+  lessonsOffered: Int
   personId: BigInt
 }
 
@@ -3889,6 +3916,8 @@ enum EventInstanceTrainersOrderBy {
   ID_DESC
   INSTANCE_ID_ASC
   INSTANCE_ID_DESC
+  LESSONS_OFFERED_ASC
+  LESSONS_OFFERED_DESC
   NATURAL
   PERSON_ID_ASC
   PERSON_ID_DESC
@@ -3986,9 +4015,9 @@ type EventLessonDemand {
   tenantId: BigInt!
 
   """
-  Reads a single `EventTrainer` that is related to this `EventLessonDemand`.
+  Reads a single `EventInstanceTrainer` that is related to this `EventLessonDemand`.
   """
-  trainer: EventTrainer
+  trainer: EventInstanceTrainer
   trainerId: BigInt!
   updatedAt: Datetime!
 }
@@ -4395,23 +4424,6 @@ type EventTrainer {
   """Reads a single `Event` that is related to this `EventTrainer`."""
   event: Event
   eventId: BigInt!
-
-  """Reads and enables pagination through a set of `EventLessonDemand`."""
-  eventLessonDemandsByTrainerIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventLessonDemandCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventLessonDemand`."""
-    orderBy: [EventLessonDemandsOrderBy!]
-  ): [EventLessonDemand!]!
   id: BigInt!
   lessonsOffered: Int
   lessonsRemaining: Int
@@ -7556,7 +7568,7 @@ input RegisterToEventManyInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  registrations: [RegisterToEventTypeInput]
+  eventRegistrations: [RegisterToEventTypeInput]
 }
 
 """The output of our `registerToEventMany` mutation."""
@@ -7872,9 +7884,9 @@ input SetLessonDemandInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
+  instanceRegistrationId: BigInt!
+  instanceTrainerId: BigInt!
   lessonCount: Int!
-  registrationId: BigInt!
-  trainerId: BigInt!
 }
 
 """The output of our `setLessonDemand` mutation."""
@@ -7898,9 +7910,9 @@ type SetLessonDemandPayload {
   registration: EventInstanceRegistration
 
   """
-  Reads a single `EventTrainer` that is related to this `EventLessonDemand`.
+  Reads a single `EventInstanceTrainer` that is related to this `EventLessonDemand`.
   """
-  trainer: EventTrainer
+  trainer: EventInstanceTrainer
 }
 
 """All input for the `submitForm` mutation."""
@@ -9825,6 +9837,7 @@ input UpdateEventInstanceDetailsInput {
   pName: String
   pRegistrations: [QuickEventRegistrationInputRecordInput]
   pSince: Datetime
+  pTrainerLessonsOffered: [Int]
   pTrainerPersonIds: [BigInt]
   pType: EventType
   pUntil: Datetime
@@ -10359,8 +10372,8 @@ input UpsertEventInput {
   """
   clientMutationId: String
   cohorts: [EventTargetCohortTypeInputRecordInput]
+  eventInstances: [EventInstanceTypeInputRecordInput]
   info: EventTypeInputRecordInput
-  instances: [EventInstanceTypeInputRecordInput]
   registrations: [EventRegistrationTypeInputRecordInput]
   trainers: [EventTrainerTypeInputRecordInput]
 }

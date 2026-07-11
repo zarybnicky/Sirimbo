@@ -5,13 +5,15 @@ CREATE TABLE public.event_instance_trainer (
     person_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    event_id bigint
+    event_id bigint,
+    lessons_offered integer DEFAULT 0
 );
 
 COMMENT ON TABLE public.event_instance_trainer IS '@omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 COMMENT ON COLUMN public.event_instance_trainer.event_id IS '@omit';
+COMMENT ON COLUMN public.event_instance_trainer.lessons_offered IS 'Maximum lesson requests for this trainer on this instance; NULL means unlimited.';
 
 GRANT ALL ON TABLE public.event_instance_trainer TO anonymous;
 ALTER TABLE public.event_instance_trainer ENABLE ROW LEVEL SECURITY;
