@@ -28,11 +28,6 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
         date = payment.eventInstance.since;
       }
 
-      const event = payment?.eventRegistration?.event;
-      if (event) {
-        date = event.eventInstancesList?.[0]?.since;
-      }
-
       const cohort = payment?.cohortSubscription?.cohort;
       if (cohort) {
         date = payment?.dueAt || date;

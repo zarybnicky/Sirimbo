@@ -65,7 +65,10 @@ export async function exportEventRegistrations(client: Client, id: string) {
     }
     rows.push(row);
   }
-  for (const x of data.event?.eventExternalRegistrationsList || []) {
+  for (const x of
+    data.event?.eventInstancesList.flatMap(
+      (instance) => instance.eventExternalRegistrationsByInstanceIdList,
+    ) || []) {
     const row: { [key: string]: string } = {
       man: `${x.prefixTitle} ${x.firstName} ${x.lastName} ${x.suffixTitle}`,
       woman: '',

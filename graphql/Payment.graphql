@@ -27,12 +27,6 @@ fragment Payment on Payment {
       name
     }
   }
-  eventRegistration {
-    id
-    event {
-      ...Event
-    }
-  }
   eventInstance {
     id
     name

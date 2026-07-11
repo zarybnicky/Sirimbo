@@ -4363,19 +4363,19 @@
             "args": []
           },
           {
-            "name": "event",
+            "name": "eventExternalRegistration",
             "type": {
               "kind": "OBJECT",
-              "name": "Event",
+              "name": "EventExternalRegistration",
               "ofType": null
             },
             "args": []
           },
           {
-            "name": "eventExternalRegistration",
+            "name": "instance",
             "type": {
               "kind": "OBJECT",
-              "name": "EventExternalRegistration",
+              "name": "EventInstance",
               "ofType": null
             },
             "args": []
@@ -5017,19 +5017,19 @@
             "args": []
           },
           {
-            "name": "event",
+            "name": "eventExternalRegistration",
             "type": {
               "kind": "OBJECT",
-              "name": "Event",
+              "name": "EventExternalRegistration",
               "ofType": null
             },
             "args": []
           },
           {
-            "name": "eventExternalRegistration",
+            "name": "instance",
             "type": {
               "kind": "OBJECT",
-              "name": "EventExternalRegistration",
+              "name": "EventInstance",
               "ofType": null
             },
             "args": []
@@ -5182,15 +5182,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventRegistration",
               "ofType": null
             },
             "args": []
@@ -5745,59 +5736,6 @@
               }
             },
             "args": []
-          },
-          {
-            "name": "eventExternalRegistrationsList",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "EventExternalRegistration",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
           },
           {
             "name": "eventInstanceRegistrations",
@@ -6412,26 +6350,6 @@
             "args": []
           },
           {
-            "name": "event",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Event",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "firstName",
             "type": {
               "kind": "NON_NULL",
@@ -6444,6 +6362,26 @@
           },
           {
             "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "instance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventInstance",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "instanceId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -6710,6 +6648,59 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "eventExternalRegistrationsByInstanceIdList",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "EventExternalRegistration",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "eventId",
@@ -8254,59 +8245,6 @@
               "name": "Any"
             },
             "args": []
-          },
-          {
-            "name": "paymentsList",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "Payment",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
           },
           {
             "name": "person",
@@ -11495,23 +11433,6 @@
           },
           {
             "name": "eventInstanceId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "eventRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventRegistration",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventRegistrationId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -20782,15 +20703,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventRegistration",
               "ofType": null
             },
             "args": []

@@ -205,16 +205,13 @@ export function describePosting(
     return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;
   }
   const instance = payment.eventInstance;
-  const event = instance?.event || payment.eventRegistration?.event;
-  const type = event?.type ?? instance?.type;
+  const event = instance?.event;
+  const type = instance?.type;
   if (!type) {
     return '';
   }
   if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
-    const trainers =
-      instance?.trainersList?.map((x) => x.person?.name) ??
-      payment.eventRegistration?.event?.eventTrainersList?.map((x) => x.name) ??
-      [];
+    const trainers = instance?.trainersList?.map((x) => x.person?.name) ?? [];
     return `${formatEventType(type)}: ${trainers.join(', ')}`;
   }
   return event ? formatDefaultEventName(event) : instance?.name || formatEventType(type);

@@ -132,22 +132,6 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
               )}
             </div>
           )}
-          {payment.eventRegistration && (
-            <div>
-              <h3 className="font-medium text-neutral-12">Registrace na akci</h3>
-              <p className="flex flex-wrap items-center gap-2">
-                <span>#{payment.eventRegistration.id}</span>
-                {payment.eventRegistration.event && (
-                  <Link
-                    href={`/akce/${payment.eventRegistration.event.id}`}
-                    className="text-sm font-medium text-accent-11 hover:underline"
-                  >
-                    {payment.eventRegistration.event.name}
-                  </Link>
-                )}
-              </p>
-            </div>
-          )}
         </div>
       </section>
 

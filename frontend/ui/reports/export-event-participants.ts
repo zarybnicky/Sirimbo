@@ -38,7 +38,10 @@ export async function exportEventParticipants(client: Client, id: string) {
       cohorts: x.cohortMembershipsList.map((x) => x.cohort?.name).join(', '),
     });
   }
-  for (const x of data.event?.eventExternalRegistrationsList || []) {
+  for (const x of
+    data.event?.eventInstancesList.flatMap(
+      (instance) => instance.eventExternalRegistrationsByInstanceIdList,
+    ) || []) {
     worksheet.addRow({
       firstName: x.firstName,
       lastName: x.lastName,

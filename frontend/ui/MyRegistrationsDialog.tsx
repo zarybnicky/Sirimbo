@@ -29,6 +29,7 @@ export function MyRegistrationsDialog({
 }) {
   const auth = useAuth();
   const isInstanceRegistration = !instance.eventId;
+  const isExternalRegistration = !auth.isLoggedIn || auth.personIds.length === 0;
   const myRegistrations = instance.myRegistrationsList ?? [];
 
   if (
@@ -37,10 +38,8 @@ export function MyRegistrationsDialog({
     new Date(instance.until) < new Date() ||
     (isInstanceRegistration &&
       (!allowInstanceRegistration ||
-        !auth.isLoggedIn ||
-        auth.personIds.length === 0 ||
         (!instance.isPublic && !instance.isVisible))) ||
-    (!isInstanceRegistration &&
+    ((!isInstanceRegistration || isExternalRegistration) &&
       (instance.capacity ?? 0) > 0 &&
       (instance.remainingPersonSpots ?? 0) <= 0 &&
       myRegistrations.length === 0)
@@ -63,8 +62,7 @@ export function MyRegistrationsDialog({
           <InstanceRegistrationsDialogContent instance={instance} />
         ) : (
           <MyRegistrationsDialogContent
-            eventId={instance.eventId}
-            instanceId={instance.id}
+            instance={instance}
             myRegistrations={instance.myRegistrationsList ?? []}
           />
         )}
@@ -83,6 +81,7 @@ function InstanceRegistrationsDialogContent({
   const [registrationsQuery, reloadRegistrations] = useQuery({
     query: EventInstanceRegistrationsDocument,
     variables: { id: instance.id },
+    pause: !auth.isLoggedIn || auth.personIds.length === 0,
   });
   const registrations =
     registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
@@ -111,6 +110,10 @@ function InstanceRegistrationsDialogContent({
       toast.success(registered ? 'Přihlášení proběhlo úspěšně.' : 'Přihláška zrušena.');
     },
   );
+
+  if (!auth.isLoggedIn || auth.personIds.length === 0) {
+    return <NewExternalRegistrationForm instanceId={instance.id} />;
+  }
 
   if (!registrationsQuery.data) {
     return registrationsQuery.error ? (
@@ -206,23 +209,21 @@ function InstanceRegistrationsDialogContent({
 }
 
 function MyRegistrationsDialogContent({
-  eventId,
-  instanceId,
+  instance,
   myRegistrations,
 }: {
-  eventId: string | null;
-  instanceId: string;
+  instance: EventInstanceWithTrainerFragment;
   myRegistrations: EventRegistrationFragment[];
 }) {
   const auth = useAuth();
   const [{ data, fetching }] = useQuery({
     query: EventDocument,
-    variables: { id: eventId! },
-    pause: !eventId,
+    variables: { id: instance.eventId! },
+    pause: !instance.eventId,
   });
   const [registrationsQuery] = useQuery({
     query: EventInstanceRegistrationsDocument,
-    variables: { id: instanceId },
+    variables: { id: instance.id },
   });
   const event: EventFragment | undefined = data?.event ?? undefined;
 
@@ -232,7 +233,7 @@ function MyRegistrationsDialogContent({
         <FormError error={registrationsQuery.error} />
         {!registrationsQuery.error && (
           <div className="text-sm text-neutral-10">
-            {fetching || eventId ? 'Načítám…' : 'Přihlášky nejsou k dispozici.'}
+            {fetching || instance.eventId ? 'Načítám…' : 'Přihlášky nejsou k dispozici.'}
           </div>
         )}
       </>
@@ -266,7 +267,7 @@ function MyRegistrationsDialogContent({
         );
       })}
 
-      {(event.capacity <= 0 || (event.remainingPersonSpots ?? 0) > 0) && (
+      {((instance.capacity ?? 0) <= 0 || (instance.remainingPersonSpots ?? 0) > 0) && (
         <>
           {myRegistrations.length > 0 && (
             <div className="text-lg font-bold">Další přihlášky</div>
@@ -274,7 +275,7 @@ function MyRegistrationsDialogContent({
           {auth.isLoggedIn && auth.personIds.length > 0 ? (
             <NewRegistrationForm event={event} lessonTrainers={lessonTrainers} />
           ) : (
-            <NewExternalRegistrationForm event={event} />
+            <NewExternalRegistrationForm instanceId={instance.id} />
           )}
         </>
       )}

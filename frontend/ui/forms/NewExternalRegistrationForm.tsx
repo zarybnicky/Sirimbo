@@ -1,4 +1,4 @@
-import { type EventFragment, RegisterToEventExternalDocument } from '@/graphql/Event';
+import { RegisterToEventExternalDocument } from '@/graphql/Event';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
@@ -29,7 +29,7 @@ const Form = z.object({
   note: z.string().prefault(''),
 });
 
-export function NewExternalRegistrationForm({ event }: { event: EventFragment }) {
+export function NewExternalRegistrationForm({ instanceId }: { instanceId: string }) {
   const { onSuccess } = useFormResult();
   const create = useMutation(RegisterToEventExternalDocument)[1];
 
@@ -44,7 +44,7 @@ export function NewExternalRegistrationForm({ event }: { event: EventFragment })
     const res = await create({
       input: {
         eventExternalRegistration: {
-          eventId: event.id,
+          instanceId,
           ...values,
         },
       },

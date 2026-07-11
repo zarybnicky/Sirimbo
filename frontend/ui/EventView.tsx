@@ -4,7 +4,6 @@ import {
   type EventFragment,
   type EventFullFragment,
   EventPaymentsDocument,
-  type EventRegistrationsFragment,
 } from '@/graphql/Event';
 import { BasicEventInfo } from './BasicEventInfo';
 import { RichTextView } from '@/ui/RichTextView';
@@ -67,7 +66,11 @@ export function EventView({ event }: { event: EventFullFragment }) {
 
     const numRegistrations =
       (event.eventRegistrationsList.length ?? 0) +
-      (event.eventExternalRegistrationsList.length ?? 0);
+      event.eventInstancesList.reduce(
+        (count, instance) =>
+          count + instance.eventExternalRegistrationsByInstanceIdList.length,
+        0,
+      );
     if (auth.user?.id && numRegistrations > 0) {
       tabs.push({
         id: 'registrations',
@@ -214,10 +217,13 @@ function EventInstances({ event }: { event: EventFullFragment }) {
   );
 }
 
-function Registrations({ event }: { event: EventFragment & EventRegistrationsFragment }) {
+function Registrations({ event }: { event: EventFullFragment }) {
+  const externalRegistrations = event.eventInstancesList.flatMap(
+    (instance) => instance.eventExternalRegistrationsByInstanceIdList,
+  );
   const externalRegistrationActionMap = useActionMap(
     eventExternalRegistrationActions,
-    event.eventExternalRegistrationsList ?? [],
+    externalRegistrations,
   );
 
   return (
@@ -237,7 +243,7 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
           )}
         </div>
       ))}
-      {event.eventExternalRegistrationsList?.map((x) => (
+      {externalRegistrations.map((x) => (
         <ActionRow key={x.id} actions={externalRegistrationActionMap.get(x.id)!}>
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <div>

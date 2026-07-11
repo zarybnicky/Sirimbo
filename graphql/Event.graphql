@@ -50,9 +50,6 @@ fragment EventRegistrations on Event {
   eventRegistrationsList {
     ...EventRegistration
   }
-  eventExternalRegistrationsList {
-    ...EventExternalRegistration
-  }
 }
 
 fragment EventInstance on EventInstance {
@@ -232,6 +229,9 @@ fragment EventFull on Event {
   ...EventAttendanceSummary
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstanceWithTrainer
+    eventExternalRegistrationsByInstanceIdList {
+      ...EventExternalRegistration
+    }
     eventInstanceTrainersByInstanceIdList {
       ...EventInstanceTrainerLessonOffer
     }
@@ -252,8 +252,11 @@ query EventRegistrants($id: BigInt!) {
   event(id: $id) {
     id
     name
-    eventExternalRegistrationsList {
-      ...EventExternalRegistration
+    eventInstancesList {
+      id
+      eventExternalRegistrationsByInstanceIdList {
+        ...EventExternalRegistration
+      }
     }
     registrantsList {
       ...PersonBasic
@@ -276,12 +279,6 @@ query Event($id: BigInt!) {
 query EventPayments($id: BigInt!) {
   event(id: $id) {
     id
-    eventRegistrationsList {
-      id
-      paymentsList {
-        ...PaymentDetail
-      }
-    }
     eventInstancesList {
       id
       since
@@ -467,7 +464,7 @@ fragment EventExternalRegistration on EventExternalRegistration {
   updatedAt
   createdAt
   email
-  eventId
+  instanceId
   firstName
   lastName
 }
