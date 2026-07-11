@@ -336,3 +336,44 @@ body {
     stroke-dashoffset: 900;
   }
 }
+
+/* ---- Print-ready schedule views (/rozpis/tisk) ---- */
+
+/* Hatched fill marking offered-but-unbooked ("free") lesson slots. */
+.print-hatch {
+  background-image: repeating-linear-gradient(
+    45deg,
+    hsl(var(--neutral-8)) 0,
+    hsl(var(--neutral-8)) 1.5px,
+    transparent 1.5px,
+    transparent 5px
+  );
+}
+
+.print-break-before {
+  break-before: page;
+}
+
+@media print {
+  @page {
+    size: landscape;
+    margin: 8mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  /* Keep filled cells and colored group blocks in the printout. */
+  .print-schedule,
+  .print-schedule * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-schedule {
+    max-width: none;
+    padding: 0;
+  }
+}

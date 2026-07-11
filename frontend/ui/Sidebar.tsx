@@ -91,6 +91,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
           'fixed lg:sticky inset-y-0 left-0',
           isOpen ? 'translate-x-0 shadow-lg' : '-translate-x-full lg:translate-x-0',
           showTopMenu ? 'lg:hidden' : '',
+          'print:hidden',
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
           'z-50 lg:z-auto flex-none transition-transform duration-200 ease-in-out',
           'bg-accent-1 text-neutral-12 lg:bg-accent-9 lg:text-white',

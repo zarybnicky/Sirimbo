@@ -50,7 +50,7 @@ export function Header({
   }, []);
 
   return (
-    <div className="sticky z-20 top-0 inset-x-0 text-white bg-[#292524] shadow-lg">
+    <div className="sticky z-20 top-0 inset-x-0 text-white bg-[#292524] shadow-lg print:hidden">
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">

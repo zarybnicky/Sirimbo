@@ -24,6 +24,9 @@ import { TrainerFilter } from '@/calendar/TrainerFilter';
 import { GroupByPicker } from '@/calendar/GroupByPicker';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import { CalendarDatePicker } from '@/calendar/CalendarDatePicker';
+import Link from 'next/link';
+import { Printer } from 'lucide-react';
+import { localDateKey } from '@/calendar/localizer';
 import { ParticipantFilter } from '@/calendar/ParticipantFilter';
 import {
   parseResourceKey,
@@ -151,6 +154,19 @@ export function Calendar({
           </button>
           <TrainerFilter />
           <ParticipantFilter />
+          <Link
+            href={{
+              pathname: '/rozpis/tisk',
+              query: {
+                v: viewInput === 'month' ? 'month' : viewInput === 'day' ? 'day' : 'week',
+                d: localDateKey(date),
+              },
+            }}
+            className={buttonCls({ variant: 'outline', size: 'sm', className: 'gap-1' })}
+            title="Verze k tisku"
+          >
+            <Printer /> Tisk
+          </Link>
           {fetching && <Spinner />}
         </div>
 
