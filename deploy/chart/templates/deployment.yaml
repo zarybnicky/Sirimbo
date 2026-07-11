@@ -19,6 +19,28 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: PGHOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: PGUSER
+              value: {{ .Values.postgresql.user | quote }}
+            - name: PGDATABASE
+              value: {{ .Values.postgresql.database | quote }}
+            - name: S3_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: S3_PORT
+              value: {{ .Values.s3.port | quote }}
+            - name: S3_REGION
+              value: {{ .Values.s3.region | quote }}
+            - name: S3_BUCKET
+              value: {{ .Values.s3.bucket | quote }}
+            - name: S3_ACCESS_KEY_ID
+              value: {{ .Values.s3.accessKeyId | quote }}
+            - name: S3_SECRET_ACCESS_KEY
+              value: {{ .Values.s3.secretAccessKey | quote }}
             - name: GRAPHQL_BACKEND
               value: {{ .Values.runtime.graphqlBackend | quote }}
             - name: NEXT_PUBLIC_SENTRY_ENVIRONMENT

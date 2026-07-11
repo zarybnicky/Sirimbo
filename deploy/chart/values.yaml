@@ -9,6 +9,19 @@ service:
   type: NodePort
   nodePort: 30100
 
+postgresql:
+  port: 5432
+  user: olymp
+  database: olymp
+
+s3:
+  host: 10.42.0.1
+  port: 3900
+  bucket: proctor
+  forcePathStyle: true
+  accessKeyId: examproctorpocaccesskey
+  secretAccessKey: examproctorpocsecretkey000000000000000000000000
+
 runtime:
   graphqlBackend: https://api.rozpisovnik.cz
   sentryDsn: ""

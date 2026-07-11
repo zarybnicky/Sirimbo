@@ -1,0 +1,19 @@
+{
+  "identities": [
+    {
+      "name": "olymp-local",
+      "credentials": [
+        {
+          "accessKey": "sirimbosirimboaccesskey",
+          "secretKey": "sirimbosirimbosecretkey000000000000000000000000"
+        }
+      ],
+      "actions": [
+        "Read:olymp",
+        "List:olymp",
+        "Tagging:olymp",
+        "Write:olymp"
+      ]
+    }
+  ]
+}

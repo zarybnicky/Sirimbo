@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.services.olymp.frontend;
+  cfg = config.services.olymp;
 in
 {
   options.services.olymp.frontend = {
@@ -38,7 +38,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf cfg.frontend.enable {
     services.nginx = {
       enable = true;
       enableReload = true;
@@ -47,9 +47,9 @@ in
       recommendedOptimisation = true;
       recommendedProxySettings = true;
 
-      virtualHosts = lib.genAttrs cfg.domains (domain: {
-        enableACME = cfg.ssl;
-        forceSSL = cfg.ssl;
+      virtualHosts = lib.genAttrs cfg.frontend.domains (domain: {
+        enableACME = cfg.frontend.ssl;
+        forceSSL = cfg.frontend.ssl;
 
         extraConfig = ''
           ignore_invalid_headers off;
@@ -58,12 +58,12 @@ in
         '';
 
         locations."/" = {
-          proxyPass = "http://127.0.0.1:${toString cfg.nodePort}";
+          proxyPass = "http://127.0.0.1:${toString cfg.frontend.nodePort}";
           proxyWebsockets = true;
         };
-      }) // lib.genAttrs cfg.staging.domains (domain: {
-        enableACME = cfg.ssl;
-        forceSSL = cfg.ssl;
+      }) // lib.genAttrs cfg.frontend.staging.domains (domain: {
+        enableACME = cfg.frontend.ssl;
+        forceSSL = cfg.frontend.ssl;
 
         extraConfig = ''
           ignore_invalid_headers off;
@@ -72,12 +72,13 @@ in
         '';
 
         locations."/" = {
-          proxyPass = "http://127.0.0.1:${toString cfg.staging.nodePort}";
+          proxyPass = "http://127.0.0.1:${toString cfg.frontend.staging.nodePort}";
           proxyWebsockets = true;
         };
       });
     };
 
+    my.seaweedfs.buckets.olymp.ensure = true;
     my.argocdApps = [
       {
         apiVersion = "argoproj.io/v1alpha1";
@@ -103,7 +104,7 @@ in
               }
               {
                 name = "service.nodePort";
-                value = toString cfg.nodePort;
+                value = toString cfg.frontend.nodePort;
               }
               {
                 name = "runtime.graphqlBackend";
@@ -152,7 +153,7 @@ in
               }
               {
                 name = "service.nodePort";
-                value = toString cfg.staging.nodePort;
+                value = toString cfg.frontend.staging.nodePort;
               }
               {
                 name = "runtime.graphqlBackend";
@@ -166,7 +167,7 @@ in
                 name = "runtime.sentryEnvironment";
                 value = "staging";
               }
-            ];
+            ] ++ config.my.seaweedfs.buckets.olymp.helmValues;
           };
           destination = {
             server = "https://kubernetes.default.svc";

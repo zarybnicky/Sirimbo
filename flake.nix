@@ -79,6 +79,8 @@
     checks = forAllSystems (pkgs: {
       rozpisovnik-api = pkgs.rozpisovnik-api;
       rozpisovnik-worker = pkgs.rozpisovnik-worker;
+      module-eval = pkgs.runCommand "my-module-eval-check" { }
+        "echo ${builtins.deepSeq self.nixosConfigurations.container.config.system.build.toplevel.outPath "ok"} > $out";
     });
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
