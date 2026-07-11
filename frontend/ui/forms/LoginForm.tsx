@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { sessionPresentAtom, tenantConfigAtom } from '../state/auth';
+import { loginAction } from '@/lib/server/auth-actions';
 
 const Form = z.object({
   login: z.string().min(1, 'Zadejte přihlašovací jméno nebo e-mail'),
@@ -27,21 +28,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   });
 
   const onSubmit = useAsyncCallback(async ({ login, passwd }: FormValues) => {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ login, passwd }),
-    });
-    if (!res.ok) {
-      const { error } = await res
-        .json()
-        .catch(() => ({ error: 'Přihlášení se nezdařilo' }));
-      throw new Error(error || 'Přihlášení se nezdařilo');
+    const result = await loginAction({ login, passwd });
+    if (result.status === 'error') {
+      throw new Error(result.error);
     }
-    const { user } = (await res.json()) as { user: UserAuthFragment | null };
     // Flip the marker so UserRefresher fetches the current user off the cookie.
     setSessionPresent(true);
-    onSuccess?.(user ?? null);
+    onSuccess?.(result.user ?? null);
   });
 
   return (

@@ -1,4 +1,4 @@
-import { LoginForm } from '@/ui/forms/LoginForm';
+import { RedirectToLogin } from '@/ui/RedirectToLogin';
 import { useAuth } from '@/ui/use-auth';
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -135,7 +135,7 @@ export default function UploadPage() {
   }, []);
 
   if (!auth.user) {
-    return <LoginForm />;
+    return <RedirectToLogin from="/upload" />;
   }
 
   return (

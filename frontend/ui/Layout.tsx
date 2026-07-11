@@ -2,7 +2,7 @@
 
 import { getTenantUi } from '@/tenant/ui.pages';
 import { ErrorPage } from '@/ui/ErrorPage';
-import { LoginForm } from '@/ui/forms/LoginForm';
+import { RedirectToLogin } from '@/ui/RedirectToLogin';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { CallToAction } from '@/ui/CallToAction';
 import React, { useMemo } from 'react';
@@ -77,7 +77,7 @@ export const Layout = React.memo(function Layout({
         details="Nemáte dostatečná práva pro zobrazení této stránky"
       />
     ) : (
-      <LoginForm />
+      <RedirectToLogin from={currentUrl} />
     );
   }
 
