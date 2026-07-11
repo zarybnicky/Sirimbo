@@ -1,6 +1,5 @@
 import { EventDocument, UpsertEventDocument } from '@/graphql/Event';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
-import { CohortListElement } from '@/ui/event-form/CohortListElement';
 import { InstanceListElement } from '@/ui/event-form/InstanceListElement';
 import { eventLocationInput, LocationField } from '@/ui/event-form/LocationField';
 import { TrainerListElement } from '@/ui/event-form/TrainerListField';
@@ -75,10 +74,6 @@ export function UpsertEventForm({
             personId: x.personId,
             lessonsOffered: x.lessonsOffered,
           })),
-          cohorts: event.eventTargetCohortsList.map((x) => ({
-            itemId: x.id,
-            cohortId: x.cohort?.id ?? '',
-          })),
           instances: event.eventInstancesList.map((x) => ({
             itemId: x.id,
             since: x.since,
@@ -151,11 +146,6 @@ export function UpsertEventForm({
           id: x.itemId,
           itemId: undefined,
         })),
-        cohorts: values.cohorts.map((x) => ({
-          ...x,
-          id: x.itemId,
-          itemId: undefined,
-        })),
         registrations: [],
         eventInstances: values.instances.map((x) => ({
           id: x.itemId,
@@ -209,8 +199,6 @@ export function UpsertEventForm({
           {moneyFormatter.format({ amount: memberPrice.toString(), currency: 'CZK' })}
         </div>
       )}
-
-      <CohortListElement control={control} name="cohorts" />
 
       {/* <RadioButtonGroupElement
         control={control}

@@ -13,25 +13,29 @@ import { CohortListDocument } from '@/graphql/Cohorts';
 export function CohortListElement({
   name,
   control,
+  existingCohorts,
 }: {
   control: Control<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>;
   name: 'cohorts';
+  existingCohorts?: ReadonlyArray<{ id: string; label: string }>;
 }) {
   const [open, setOpen] = React.useState(false);
   const type = useWatch({ control, name: 'type' });
-  const { fields, append, remove, update } = useFieldArray({ name, control });
+  const { fields, append, remove } = useFieldArray({ name, control });
 
   const [{ data: cohortQuery }] = useQuery({
     query: CohortListDocument,
     variables: { archived: false },
   });
   const cohortOptions = React.useMemo(
-    () =>
-      cohortQuery?.cohortsList?.map((x) => ({
-        id: x.id,
-        label: x.name,
-      })) || [],
-    [cohortQuery?.cohortsList],
+    () => {
+      const options = new Map(existingCohorts?.map((cohort) => [cohort.id, cohort]));
+      for (const cohort of cohortQuery?.cohortsList ?? []) {
+        options.set(cohort.id, { id: cohort.id, label: cohort.name });
+      }
+      return [...options.values()];
+    },
+    [cohortQuery?.cohortsList, existingCohorts],
   );
 
   return (
@@ -61,7 +65,9 @@ export function CohortListElement({
                 <ComboboxSearchArea
                   options={cohortOptions}
                   onChange={(id) => {
-                    if (id) append({ cohortId: id });
+                    if (id && !fields.some((cohort) => cohort.cohortId === id)) {
+                      append({ cohortId: id });
+                    }
                     setOpen(false);
                   }}
                 />
@@ -82,11 +88,10 @@ export function CohortListElement({
             <button
               type="button"
               className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() =>
-                cohort.itemId
-                  ? update(index, { ...cohort, cohortId: null })
-                  : remove(index)
-              }
+              aria-label={`Odebrat skupinu ${
+                cohortOptions.find((x) => x.id === cohort.cohortId)?.label ?? cohort.cohortId
+              }`}
+              onClick={() => remove(index)}
             >
               <X />
             </button>

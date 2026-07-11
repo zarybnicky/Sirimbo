@@ -33,6 +33,7 @@ import { InstanceTrainerListElement } from './InstanceTrainerListField';
 import { eventLocationInput, LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListField';
+import { CohortListElement } from './CohortListElement';
 import { EventForm, type EventFormType } from './types';
 import { UpsertEventForm } from './UpsertEventForm';
 
@@ -299,6 +300,21 @@ export function QuickInstanceEditForm({
           personId,
           lessonsOffered: 0,
         }));
+  const initialCohorts = React.useMemo(
+    () =>
+      (instance.targetCohortsList ?? []).map((target) => ({
+        cohortId: target.cohortId,
+      })),
+    [instance.targetCohortsList],
+  );
+  const existingCohorts = React.useMemo(
+    () =>
+      (instance.targetCohortsList ?? []).map((target) => ({
+        id: target.cohortId,
+        label: target.cohort?.name ?? `Skupina ${target.cohortId}`,
+      })),
+    [instance.targetCohortsList],
+  );
 
   const { control, handleSubmit, setValue } = useForm<
     EventFormInput,
@@ -314,6 +330,7 @@ export function QuickInstanceEditForm({
       capacity: instance.capacity ?? 0,
       capacityUnit: instance.capacityUnit,
       isLocked: instance.isLocked ?? false,
+      cohorts: initialCohorts,
       registrations: [],
       instances: [
         {
@@ -378,6 +395,12 @@ export function QuickInstanceEditForm({
         personId: x.personId || null,
         coupleId: x.coupleId || null,
       }));
+    const nextCohortIds = values.cohorts.flatMap(({ cohortId }) =>
+      cohortId ? [cohortId] : [],
+    );
+    const cohortsChanged =
+      JSON.stringify(nextCohortIds.toSorted()) !==
+      JSON.stringify(instance.targetCohortsList.map((target) => target.cohortId).toSorted());
     const result = await updateInstance({
       input: {
         pInstanceId: instance.id,
@@ -390,8 +413,6 @@ export function QuickInstanceEditForm({
         pIsVisible: null,
         pIsPublic: null,
         pIsCancelled: edited.isCancelled,
-        pCapacity: values.type === 'LESSON' ? 2 : 0,
-        pCapacityUnit: 'REGISTRATIONS',
         pIsLocked: values.isLocked,
         pTrainerPersonIds: trainersChanged
           ? nextTrainers.map((trainer) => trainer.personId)
@@ -400,6 +421,7 @@ export function QuickInstanceEditForm({
           ? nextTrainers.map((trainer) => trainer.lessonsOffered)
           : null,
         pRegistrations: registrationsReady ? nextRegistrations : null,
+        pCohortIds: cohortsChanged ? nextCohortIds : null,
       },
     });
     if (result.error) throw result.error;
@@ -424,6 +446,11 @@ export function QuickInstanceEditForm({
       />
       <InstanceTrainerListElement control={control} index={0} />
       <LocationField control={control} />
+      <CohortListElement
+        control={control}
+        name="cohorts"
+        existingCohorts={existingCohorts}
+      />
       {/*type !== 'LESSON' && (
         <>
           <TextFieldElement

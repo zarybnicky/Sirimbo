@@ -26,14 +26,6 @@ fragment Event on Event {
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstance
   }
-  eventTargetCohortsList {
-    id
-    cohort {
-      id
-      name
-      colorRgb
-    }
-  }
   eventRegistrations(first: 3) {
     totalCount
     nodes {
@@ -86,6 +78,7 @@ fragment EventInstanceWithTrainer on EventInstance {
   stats
   targetCohortsList {
     id
+    cohortId
     cohort {
       id
       name
