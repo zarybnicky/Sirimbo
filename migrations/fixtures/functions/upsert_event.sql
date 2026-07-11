@@ -65,10 +65,13 @@ declare
   trainer event_trainer_type_input;
   instance_trainer event_instance_trainer_type_input;
   cohort event_target_cohort_type_input;
-  registration event_registration_type_input;
   v_event event;
   v_instance_id bigint;
 begin
+  if cardinality(registrations) > 0 then
+    raise exception 'event registrations must be edited on the event instance';
+  end if;
+
   if info.id is null then
 
     insert into event (
@@ -173,20 +176,6 @@ begin
       on conflict (event_id, cohort_id) do nothing;
     elsif cohort.cohort_id is null then
       delete from event_target_cohort where id=cohort.id;
-    end if;
-  end loop;
-
-  foreach registration in array coalesce(registrations, '{}'::event_registration_type_input[]) loop
-    if registration.id is null then
-      insert into event_registration (event_id, person_id, couple_id)
-      values (v_event.id, registration.person_id, registration.couple_id)
-      on conflict (event_id, person_id, couple_id) do nothing;
-    elsif registration.person_id is null and registration.couple_id is null then
-      delete from event_registration where id=registration.id;
-    else
-      update event_registration
-      set person_id=registration.person_id, couple_id=registration.couple_id
-      where id=registration.id;
     end if;
   end loop;
 

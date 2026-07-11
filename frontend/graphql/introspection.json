@@ -2339,21 +2339,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CancelRegistrationPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "Category",
         "fields": [
           {
@@ -5652,92 +5637,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "EditRegistrationPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "couple",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Couple",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "event",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Event",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventRegistration",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventRegistrationEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventRegistrationsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "ofType": {
-                        "kind": "SCALAR",
-                        "name": "Any"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "targetCohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventTargetCohort",
               "ofType": null
             },
             "args": []
@@ -9785,26 +9684,6 @@
             ]
           },
           {
-            "name": "cancelRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CancelRegistrationPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "changePassword",
             "type": {
               "kind": "OBJECT",
@@ -10645,26 +10524,6 @@
             ]
           },
           {
-            "name": "editRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EditRegistrationPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "logInAs",
             "type": {
               "kind": "OBJECT",
@@ -10769,26 +10628,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "QuickCreateEventsPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "registerToEventMany",
-            "type": {
-              "kind": "OBJECT",
-              "name": "RegisterToEventManyPayload",
               "ofType": null
             },
             "args": [
@@ -16498,36 +16337,6 @@
                 "kind": "NON_NULL",
                 "ofType": {
                   "name": "Event",
-                  "kind": "OBJECT",
-                  "ofType": null
-                }
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "RegisterToEventManyPayload",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "eventRegistrations",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "name": "EventRegistration",
                   "kind": "OBJECT",
                   "ofType": null
                 }

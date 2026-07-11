@@ -909,25 +909,6 @@ strings and not numbers.
 """
 scalar BigInt
 
-"""All input for the `cancelRegistration` mutation."""
-input CancelRegistrationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  registrationId: BigInt
-}
-
-"""The output of our `cancelRegistration` mutation."""
-type CancelRegistrationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-}
-
 type Category {
   ageGroup: String!
   baseDanceProgramId: BigInt
@@ -2885,47 +2866,6 @@ type DetachEventInstancePayload {
   location: TenantLocation
 }
 
-"""All input for the `editRegistration` mutation."""
-input EditRegistrationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  note: String!
-  registrationId: BigInt!
-}
-
-"""The output of our `editRegistration` mutation."""
-type EditRegistrationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Couple` that is related to this `EventRegistration`."""
-  couple: Couple
-
-  """Reads a single `Event` that is related to this `EventRegistration`."""
-  event: Event
-  eventRegistration: EventRegistration
-
-  """An edge for our `EventRegistration`. May be used by Relay 1."""
-  eventRegistrationEdge(
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventRegistrationsEdge
-
-  """Reads a single `Person` that is related to this `EventRegistration`."""
-  person: Person
-
-  """
-  Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
-  """
-  targetCohort: EventTargetCohort
-}
-
 type Event {
   capacity: Int!
   createdAt: Datetime
@@ -4122,16 +4062,6 @@ input EventLessonDemandCondition {
   updatedAt: Datetime
 }
 
-"""An input for mutations affecting `EventLessonDemand`"""
-input EventLessonDemandInput {
-  createdAt: Datetime
-  lessonCount: Int!
-  registrationId: BigInt
-  tenantId: BigInt
-  trainerId: BigInt!
-  updatedAt: Datetime
-}
-
 """A `EventLessonDemand` edge in the connection."""
 type EventLessonDemandsEdge {
   """A cursor for use in pagination."""
@@ -5119,12 +5049,6 @@ type Mutation {
     """
     input: ArchiveCohortInput!
   ): ArchiveCohortPayload
-  cancelRegistration(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CancelRegistrationInput!
-  ): CancelRegistrationPayload
   changePassword(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5449,12 +5373,6 @@ type Mutation {
     """
     input: DetachEventInstanceInput!
   ): DetachEventInstancePayload
-  editRegistration(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: EditRegistrationInput!
-  ): EditRegistrationPayload
   logInAs(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5491,12 +5409,6 @@ type Mutation {
     """
     input: QuickCreateEventsInput!
   ): QuickCreateEventsPayload
-  registerToEventMany(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: RegisterToEventManyInput!
-  ): RegisterToEventManyPayload
   registerUsingInvitation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7659,35 +7571,6 @@ input QuickEventInputRecordInput {
 """An input for mutations affecting `QuickEventRegistrationInputRecord`"""
 input QuickEventRegistrationInputRecordInput {
   coupleId: BigInt
-  personId: BigInt
-}
-
-"""All input for the `registerToEventMany` mutation."""
-input RegisterToEventManyInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  eventRegistrations: [RegisterToEventTypeInput]
-}
-
-"""The output of our `registerToEventMany` mutation."""
-type RegisterToEventManyPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  eventRegistrations: [EventRegistration!]
-}
-
-"""An input for mutations affecting `RegisterToEventType`"""
-input RegisterToEventTypeInput {
-  coupleId: BigInt
-  eventId: BigInt
-  lessons: [EventLessonDemandInput]
-  note: String
   personId: BigInt
 }
 
