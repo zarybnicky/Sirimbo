@@ -2,35 +2,28 @@ import type { AttendanceType } from '@/graphql';
 import {
   type EventFullFragment,
   type EventInstanceWithTrainerFragment,
-  EventInstancePaymentsDocument,
-  EventInstanceRegistrationsDocument,
 } from '@/graphql/Event';
 import { BasicEventInfo } from './BasicEventInfo';
+import { EventInstancePayments } from '@/ui/EventInstancePayments';
+import { EventInstanceRegistrations } from '@/ui/EventInstanceRegistrations';
 import { RichTextView } from '@/ui/RichTextView';
-import { Spinner } from '@/ui/Spinner';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import {
   formatDefaultInstanceName,
   formatEventType,
-  formatLongCoupleName,
   formatOpenDateRange,
   fullDateFormatter,
-  moneyFormatter,
 } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
 import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
 import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';
 import * as React from 'react';
-import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
-import { useActionMap, useActions } from '@/lib/actions';
-import { eventActions, eventExternalRegistrationActions } from '@/lib/actions/event';
-import { paymentActions } from '@/lib/actions/payment';
-import { ActionRow } from '@/ui/ActionRow';
+import { useActions } from '@/lib/actions';
+import { eventActions } from '@/lib/actions/event';
 import { Calendar } from '@/calendar/Calendar';
-import { FormError } from '@/ui/form';
 
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
@@ -77,7 +70,8 @@ export function EventView({ event }: { event: EventFullFragment }) {
       tabs.push({
         id: 'registrations',
         title: `Přihlášky (${numRegistrations})`,
-        contents: () => rootInstance && <Registrations instance={rootInstance} />,
+        contents: () =>
+          rootInstance && <EventInstanceRegistrations instance={rootInstance} />,
       });
     }
 
@@ -102,7 +96,8 @@ export function EventView({ event }: { event: EventFullFragment }) {
         {
           id: 'payments',
           title: 'Platby',
-          contents: () => rootInstance && <Payments instanceId={rootInstance.id} />,
+          contents: () =>
+            rootInstance && <EventInstancePayments instanceId={rootInstance.id} />,
         },
         {
           id: 'instances',
@@ -226,104 +221,5 @@ function EventInstances({
         })}
       </tbody>
     </table>
-  );
-}
-
-function Registrations({
-  instance,
-}: {
-  instance: EventFullFragment['eventInstancesList'][number];
-}) {
-  const [registrationsQuery] = useQuery({
-    query: EventInstanceRegistrationsDocument,
-    variables: { id: instance.id },
-  });
-  const registrations = registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
-  const externalRegistrations = instance.eventExternalRegistrationsByInstanceIdList;
-  const externalRegistrationActionMap = useActionMap(
-    eventExternalRegistrationActions,
-    externalRegistrations,
-  );
-
-  return (
-    <div>
-      <FormError error={registrationsQuery.error} />
-      {registrationsQuery.fetching && !registrationsQuery.data && <Spinner />}
-      {registrations.map((x) => (
-        <div key={x.id} className="p-1">
-          <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple)}</div>
-          {(x.note || x.eventLessonDemandsByRegistrationIdList.length > 0) && (
-            <div className="ml-3">
-              {x.eventLessonDemandsByRegistrationIdList.map((demand) => (
-                <div key={demand.id}>
-                  {demand.lessonCount}x {demand.trainer?.person?.name}
-                </div>
-              ))}
-              {x.note}
-            </div>
-          )}
-        </div>
-      ))}
-      {externalRegistrations.map((x) => (
-        <ActionRow key={x.id} actions={externalRegistrationActionMap.get(x.id)!}>
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <div>
-              {x.prefixTitle} {x.firstName} {x.lastName} {x.suffixTitle}
-            </div>
-            {x.note && <div className="ml-3">{x.note}</div>}
-          </div>
-        </ActionRow>
-      ))}
-    </div>
-  );
-}
-
-function Payments({ instanceId }: { instanceId: string }) {
-  const [{ data, fetching }] = useQuery({
-    query: EventInstancePaymentsDocument,
-    variables: { id: instanceId },
-  });
-
-  const instances = data?.eventInstance
-    ? [data.eventInstance, ...data.eventInstance.childEventInstancesList]
-    : [];
-  const payments = instances.flatMap((registration) =>
-    registration.paymentsList.flatMap((payment) =>
-      payment.transactions.nodes.map((trans) => [registration, payment, trans] as const),
-    ),
-  );
-  const actionMap = useActionMap(
-    paymentActions,
-    instances.flatMap((x) => x.paymentsList),
-  );
-
-  if (fetching && !data) {
-    return (
-      <div className="flex justify-center py-8">
-        <Spinner />
-      </div>
-    );
-  }
-
-  return (
-    <div className="prose prose-accent">
-      {payments.map(([registration, payment, transaction]) => (
-        <div key={transaction.id}>
-          <ActionRow actions={actionMap.get(payment.id)!} className="mb-0">
-            Za lekci {fullDateFormatter.format(new Date(registration.since))}
-          </ActionRow>
-          <ul>
-            {transaction.postingsList.map((posting) => (
-              <li key={posting.id}>
-                {moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}
-                {' - '}
-                {posting.account?.person?.name ||
-                  (posting.account?.tenantId ? 'Klub' : '-')}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
   );
 }

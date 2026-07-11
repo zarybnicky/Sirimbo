@@ -36,7 +36,7 @@ fragment EventInstance on EventInstance {
 
 fragment EventInstanceWithTrainer on EventInstance {
   ...EventInstance
-  eventId
+  seriesId
   parentId
   name
   type
@@ -206,10 +206,7 @@ query EventInstanceExport($id: BigInt!) {
   eventInstance(id: $id) {
     id
     name
-    event {
-      id
-      name
-    }
+    type
     lessonTrainers: eventInstanceTrainersByInstanceIdList {
       ...EventInstanceTrainerLessonOffer
     }
@@ -261,9 +258,17 @@ query EventInstancePayments($id: BigInt!) {
   }
 }
 
+fragment EventInstancePage on EventInstance {
+  ...EventInstanceWithTrainer
+  description
+  eventExternalRegistrationsByInstanceIdList {
+    ...EventExternalRegistration
+  }
+}
+
 query EventInstanceWithAttendance($id: BigInt!) {
   eventInstance(id: $id) {
-    ...EventInstanceWithTrainer
+    ...EventInstancePage
     eventInstanceRegistrationsByInstanceId(
       condition: { registrationStatus: ACTIVE }
     ) {
@@ -374,7 +379,7 @@ mutation UpdateEventInstanceDetails($input: UpdateEventInstanceDetailsInput!) {
 mutation DetachEventInstance($id: BigInt!) {
   detachEventInstance(input: { pInstanceId: $id }) {
     event {
-      ...Event
+      __typename
     }
   }
 }

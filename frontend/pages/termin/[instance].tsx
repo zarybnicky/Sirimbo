@@ -1,6 +1,9 @@
 import { Layout } from '@/ui/Layout';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
+import { EventInstancePayments } from '@/ui/EventInstancePayments';
+import { EventInstanceRegistrations } from '@/ui/EventInstanceRegistrations';
 import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
+import { RichTextView } from '@/ui/RichTextView';
 import { stripHtml } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
@@ -20,7 +23,6 @@ import { useActions } from '@/lib/actions';
 import { eventInstanceActions } from '@/lib/actions/eventInstance';
 
 const QueryParams = z.object({
-  id: zRouterId,
   instance: zRouterId,
 });
 
@@ -47,20 +49,52 @@ function EventInstancePage() {
       id: string;
       title: React.ReactNode;
       contents: () => React.ReactNode;
-    }[] = [{
-      id: 'attendance',
-      title: 'Docházka',
-      contents: () => <InstanceAttendanceView id={router.query.instance} />,
-    }];
-    if (instance?.type === 'CAMP') {
+    }[] = [];
+    if (!instance) return tabs;
+
+    if (instance.description) {
+      tabs.push({
+        id: 'info',
+        title: 'Informace',
+        contents: () => <RichTextView value={instance.description!} />,
+      });
+    }
+
+    const numRegistrations =
+      instance.registrations.totalCount +
+      instance.eventExternalRegistrationsByInstanceIdList.length;
+    if (auth.user?.id && numRegistrations > 0) {
+      tabs.push({
+        id: 'registrations',
+        title: `Přihlášky (${numRegistrations})`,
+        contents: () => <EventInstanceRegistrations instance={instance} />,
+      });
+    }
+
+    if (instance.type === 'CAMP') {
       tabs.push({
         id: 'schedule',
         title: 'Rozpis',
-        contents: () => <Calendar parentId={router.query.instance} initialDate={instance?.since} />
-      })
+        contents: () => <Calendar parentId={instance.id} initialDate={instance.since} />,
+      });
+    }
+
+    if (auth.isTrainerOrAdmin) {
+      tabs.push(
+        {
+          id: 'attendance',
+          title: 'Docházka',
+          contents: () => <InstanceAttendanceView id={instance.id} />,
+        },
+        {
+          id: 'payments',
+          title: 'Platby',
+          contents: () => <EventInstancePayments instanceId={instance.id} />,
+        },
+      );
     }
     return tabs;
-  }, [instance?.since, instance?.type, router.query.instance]);
+  }, [auth.isTrainerOrAdmin, auth.user?.id, instance]);
 
   return (
     <Layout hideTopMenuIfLoggedIn>

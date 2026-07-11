@@ -73,7 +73,7 @@ export function layoutEvents(
       return `birthday:${it.event.id}`;
     }
     if (it.event.instance.type !== 'LESSON') {
-      return `type:${it.event.instance.eventId}`;
+      return `type:${it.event.instance.id}`;
     }
     return trainerKeyOf(it);
   };

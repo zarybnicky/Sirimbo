@@ -1,6 +1,5 @@
-import { NotebookPen, Pencil, Trash2 } from 'lucide-react';
+import { NotebookPen, Pencil } from 'lucide-react';
 import type { EventFullFragment } from '@/graphql/Event';
-import { DeleteEventExternalRegistrationDocument } from '@/graphql/Event';
 import { defineActions } from '@/lib/actions';
 import { canManageInstance } from '@/lib/actions/eventInstance';
 import { UpsertEventForm } from '@/ui/event-form/UpsertEventForm';
@@ -40,19 +39,6 @@ export const eventActions = defineActions<EventFullFragment>()([
       className: 'sm:max-w-xl',
       onPointerDownOutside: (e) => e.preventDefault(),
       onInteractOutside: (e) => e.preventDefault(),
-    },
-  },
-]);
-
-export const eventExternalRegistrationActions = defineActions<{ id: string }>()([
-  {
-    id: 'eventExternalRegistration.delete',
-    label: 'Smazat',
-    icon: Trash2,
-    variant: 'danger',
-    visible: ({ auth }) => auth.isAdmin,
-    execute: async ({ item, mutate }) => {
-      await mutate(DeleteEventExternalRegistrationDocument, { id: item.id });
     },
   },
 ]);

@@ -1,5 +1,5 @@
 import { EventInstanceExportDocument } from '@/graphql/Event';
-import { fullDateFormatter } from '@/ui/format';
+import { formatEventType, fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
@@ -9,7 +9,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
   const instance = result.data?.eventInstance;
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
-  const name = instance?.name || instance?.event?.name || 'Sheet 1';
+  const name = instance?.name || formatEventType(instance?.type) || 'Sheet 1';
   const worksheet = workbook.addWorksheet(name);
 
   const columns = [

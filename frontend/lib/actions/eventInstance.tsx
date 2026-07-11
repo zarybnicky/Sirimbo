@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import {
   DeleteEventInstanceDocument,
+  DeleteEventExternalRegistrationDocument,
   DetachEventInstanceDocument,
   type EventInstanceWithTrainerFragment,
   UpdateEventInstanceDocument,
@@ -70,14 +71,14 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     id: 'eventInstance.attendance',
     label: 'Docházka',
     visible: canManageInstance,
-    href: ({ item }) => `/termin/${item.id}`,
+    href: ({ item }) => `/termin/${item.id}?tab=attendance`,
   },
   {
     id: 'eventInstance.detach',
     label: ({ item }) => (item.parentId ? 'Vyjmout z programu' : 'Oddělit termín'),
     icon: GitBranch,
     visible: ({ item, auth }) =>
-      canManageInstance({ item, auth }) && !!(item.parentId || item.eventId),
+      canManageInstance({ item, auth }) && !!(item.parentId || item.seriesId),
     confirm: ({ item }) =>
       item.parentId
         ? {
@@ -130,6 +131,19 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     visible: canManageInstance,
     execute: async ({ item, client }) => {
       await exportEventRegistrations(client, item.id);
+    },
+  },
+]);
+
+export const eventExternalRegistrationActions = defineActions<{ id: string }>()([
+  {
+    id: 'eventExternalRegistration.delete',
+    label: 'Smazat',
+    icon: Trash2,
+    variant: 'danger',
+    visible: ({ auth }) => auth.isAdmin,
+    execute: async ({ item, mutate }) => {
+      await mutate(DeleteEventExternalRegistrationDocument, { id: item.id });
     },
   },
 ]);
