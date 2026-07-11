@@ -1,18 +1,27 @@
 import * as React from 'react';
 import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import { useQuery } from 'urql';
-import { authAtom, authHelpersAtom, authLoadingAtom, tokenAtom } from '@/ui/state/auth';
+import {
+  authAtom,
+  authHelpersAtom,
+  authLoadingAtom,
+  sessionPresentAtom,
+  tokenAtom,
+} from '@/ui/state/auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { buildId } from '@/lib/build-id';
 
 export const UserRefresher = React.memo(function ProvideAuth() {
   const [token] = useAtom(tokenAtom);
+  const sessionPresent = useAtomValue(sessionPresentAtom);
   const setAuthLoading = useSetAtom(authLoadingAtom);
   const setAuth = useSetAtom(authAtom);
 
   const [{ data: currentUser, fetching }, refetch] = useQuery({
     query: CurrentUserDocument,
-    pause: !token,
+    // Cookie-based sessions have no client token to gate on; the httpOnly cookie
+    // authenticates the request. Keep gating on `token` for not-yet-migrated flows.
+    pause: !token && !sessionPresent,
     variables: { versionId: buildId },
   });
 

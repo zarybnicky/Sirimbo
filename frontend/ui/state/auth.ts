@@ -129,6 +129,23 @@ export const useTenantConfig = () => useAtomValue(tenantAtom).config;
 
 export const authLoadingAtom = atom(true);
 
+// Non-credential marker that a server-set httpOnly session cookie exists. The
+// credential itself lives only in the cookie; this just lets client code (e.g.
+// UserRefresher) know to fetch the current user. Set by the auth route-handler
+// callers, cleared on logout.
+const baseSessionPresentAtom: PrimitiveAtom<boolean> = atom(
+  storage.getItem('session') === '1',
+);
+export const sessionPresentAtom = atom<boolean, [boolean], void>(
+  (get) => get(baseSessionPresentAtom),
+  (get, set, next) => {
+    if (get(baseSessionPresentAtom) !== next) {
+      set(baseSessionPresentAtom, next);
+      storage.setItem('session', next ? '1' : null);
+    }
+  },
+);
+
 const baseTokenAtom: PrimitiveAtom<string | null> = atom(storage.getItem('token'));
 const baseUserAtom: PrimitiveAtom<BaseAuthState> = atom(
   (() => {
