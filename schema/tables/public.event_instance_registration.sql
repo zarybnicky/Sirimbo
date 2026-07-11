@@ -2,7 +2,6 @@ CREATE TABLE public.event_instance_registration (
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     instance_id bigint NOT NULL,
-    event_id bigint,
     parent_registration_id bigint,
     couple_id bigint,
     person_id bigint,
@@ -37,8 +36,6 @@ ALTER TABLE ONLY public.event_instance_registration
 ALTER TABLE ONLY public.event_instance_registration
     ADD CONSTRAINT event_instance_registration_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couple(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_instance_registration
-    ADD CONSTRAINT event_instance_registration_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public.event_instance_registration
     ADD CONSTRAINT event_instance_registration_instance_id_fkey FOREIGN KEY (instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_instance_registration
     ADD CONSTRAINT event_instance_registration_parent_registration_id_fkey FOREIGN KEY (parent_registration_id) REFERENCES public.event_instance_registration(id) ON UPDATE CASCADE ON DELETE CASCADE;
@@ -66,7 +63,6 @@ CREATE TRIGGER _500_eir_refresh_stats_upd AFTER UPDATE ON public.event_instance_
 
 CREATE UNIQUE INDEX event_instance_registration_bridge_key ON public.event_instance_registration USING btree (legacy_registration_id, instance_id, COALESCE(person_id, ('-1'::integer)::bigint));
 CREATE INDEX event_instance_registration_couple_id_idx ON public.event_instance_registration USING btree (couple_id);
-CREATE INDEX event_instance_registration_event_id_idx ON public.event_instance_registration USING btree (event_id);
 CREATE INDEX event_instance_registration_instance_id_idx ON public.event_instance_registration USING btree (instance_id);
 CREATE INDEX event_instance_registration_legacy_registration_id_idx ON public.event_instance_registration USING btree (legacy_registration_id);
 CREATE INDEX event_instance_registration_parent_id_idx ON public.event_instance_registration USING btree (parent_registration_id);

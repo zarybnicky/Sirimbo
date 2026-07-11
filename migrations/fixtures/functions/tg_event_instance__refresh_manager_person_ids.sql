@@ -1,4 +1,4 @@
-create or replace function app_private.event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint)
+create or replace function app_private.event_instance_manager_person_ids(p_instance_id bigint)
   returns bigint[] language sql stable parallel safe as $$
   with recursive chain as (
     select id, parent_id
@@ -15,17 +15,17 @@ create or replace function app_private.event_instance_manager_person_ids(p_insta
   from managers;
 $$;
 
-create or replace function app_private.refresh_event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint)
+create or replace function app_private.refresh_event_instance_manager_person_ids(p_instance_id bigint)
   returns boolean language sql security definer
   set search_path = pg_catalog, pg_temp as $$
   with recursive affected as (
-    select id, event_id from public.event_instance where id = p_instance_id
+    select id from public.event_instance where id = p_instance_id
     union all
-    select child.id, child.event_id
+    select child.id
     from public.event_instance child
     join affected parent on child.parent_id = parent.id
   ), desired as (
-    select id, app_private.event_instance_manager_person_ids(id, event_id) as person_ids
+    select id, app_private.event_instance_manager_person_ids(id) as person_ids
     from affected
   ), changed as (
     update public.event_instance instance
@@ -38,10 +38,15 @@ create or replace function app_private.refresh_event_instance_manager_person_ids
   select exists(select 1 from changed);
 $$;
 
+revoke execute on function app_private.event_instance_manager_person_ids(bigint)
+  from public, anonymous;
+grant execute on function app_private.refresh_event_instance_manager_person_ids(bigint)
+  to anonymous;
+
 create or replace function app_private.tg_event_instance__refresh_manager_person_ids()
   returns trigger language plpgsql as $$
 begin
-  perform app_private.refresh_event_instance_manager_person_ids(new.id, new.event_id);
+  perform app_private.refresh_event_instance_manager_person_ids(new.id);
   return null;
 end;
 $$;
@@ -53,3 +58,27 @@ drop trigger if exists _500_refresh_manager_person_ids_from_parent on public.eve
 create trigger _500_refresh_manager_person_ids_from_parent
   after insert or update of parent_id on public.event_instance
   for each row execute function app_private.tg_event_instance__refresh_manager_person_ids();
+
+create or replace function app_private.tg_event_instance_trainer__refresh_manager_person_ids()
+  returns trigger language plpgsql as $$
+begin
+  if tg_op = 'DELETE' then
+    perform app_private.refresh_event_instance_manager_person_ids(old.instance_id);
+  elsif tg_op = 'INSERT' then
+    perform app_private.refresh_event_instance_manager_person_ids(new.instance_id);
+  elsif old.instance_id is distinct from new.instance_id
+    or old.person_id is distinct from new.person_id then
+    perform app_private.refresh_event_instance_manager_person_ids(old.instance_id);
+    perform app_private.refresh_event_instance_manager_person_ids(new.instance_id);
+  end if;
+  return null;
+end;
+$$;
+revoke execute on function app_private.tg_event_instance_trainer__refresh_manager_person_ids()
+  from public, anonymous;
+
+drop trigger if exists _500_refresh_manager_person_ids on public.event_instance_trainer;
+create trigger _500_refresh_manager_person_ids
+  after insert or delete or update of instance_id, person_id
+  on public.event_instance_trainer
+  for each row execute function app_private.tg_event_instance_trainer__refresh_manager_person_ids();

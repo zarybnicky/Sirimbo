@@ -110,7 +110,7 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
     visible: canManageInstance,
     confirm: {
       description:
-        'Opravdu chcete smazat termín? Pokud to je poslední termín, smažete tím i celou událost. Tím se taky smažou všechny záznamy o účasti i platbách.',
+        'Opravdu chcete smazat termín? Tím se smažou také všechny jeho záznamy o účasti a platby.',
     },
     execute: async ({ item, mutate }) => {
       await mutate(DeleteEventInstanceDocument, { id: item.id });

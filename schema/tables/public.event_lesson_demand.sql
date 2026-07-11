@@ -6,7 +6,6 @@ CREATE TABLE public.event_lesson_demand (
     lesson_count integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    event_id bigint,
     CONSTRAINT event_lesson_demand_lesson_count_check CHECK ((lesson_count > 0))
 );
 
@@ -14,7 +13,6 @@ COMMENT ON TABLE public.event_lesson_demand IS '@omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 COMMENT ON COLUMN public.event_lesson_demand.registration_id IS '@hasDefault';
-COMMENT ON COLUMN public.event_lesson_demand.event_id IS '@omit';
 
 GRANT ALL ON TABLE public.event_lesson_demand TO anonymous;
 ALTER TABLE public.event_lesson_demand ENABLE ROW LEVEL SECURITY;
@@ -34,7 +32,6 @@ CREATE POLICY admin_all ON public.event_lesson_demand TO administrator USING (tr
 CREATE POLICY view_visible_instance ON public.event_lesson_demand FOR SELECT USING ((registration_id IN ( SELECT event_instance_registration.id
    FROM public.event_instance_registration)));
 
-CREATE TRIGGER _100_event_id BEFORE INSERT OR UPDATE OF registration_id ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__set_event_id_from_registration_id();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, trainer_id, registration_id, lesson_count, created_at, updated_at ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX event_lesson_demand_registration_id_idx ON public.event_lesson_demand USING btree (registration_id);

@@ -23,9 +23,11 @@ import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useForm, useWatch } from 'react-hook-form';
+import { type Control, useForm, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
+import { useAtomValue } from 'jotai';
+import { tenantConfigAtom } from '@/ui/state/auth';
 import { DateTimeRangeController } from './InstanceListElement';
 import { InstanceTrainerListElement } from './InstanceTrainerListField';
 import { eventLocationInput, LocationField } from './LocationField';
@@ -44,6 +46,33 @@ const eventTypeOptions: RadioButtonGroupItem[] = [
 
 type EventFormInput = z.input<typeof EventForm>;
 
+function EventAccessFields({
+  control,
+  type,
+}: {
+  control: Control<EventFormInput, unknown, EventFormType>;
+  type: EventFormType['type'];
+}) {
+  return (
+    <div className="flex flex-wrap items-baseline justify-between gap-x-1">
+      <CheckboxElement control={control} name="isVisible" label="Viditelná pro členy" />
+      <CheckboxElement
+        control={control}
+        name="isLocked"
+        label="Zakázat přihlašování/odhlašování"
+      />
+      <CheckboxElement control={control} name="isPublic" label="Viditelná pro veřejnost" />
+      {(type === 'RESERVATION' || type === 'CAMP') && (
+        <CheckboxElement
+          control={control}
+          name="enableNotes"
+          label="Povolit poznámky k přihlášce"
+        />
+      )}
+    </div>
+  );
+}
+
 export function QuickEventCreateForm({
   defaults,
   parentId,
@@ -56,6 +85,7 @@ export function QuickEventCreateForm({
   const { onSuccess } = useFormResult();
   const createInstances = useMutation(CreateEventInstancesDocument)[1];
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
+  const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
   const { control, handleSubmit } = useForm({
@@ -65,6 +95,9 @@ export function QuickEventCreateForm({
       locationId: defaults.locationText ? 'other' : (defaults.locationId ?? 'none'),
       locationText: defaults.locationText,
       isVisible: true,
+      isPublic: false,
+      isLocked: lockEventsByDefault,
+      enableNotes: false,
       capacity: 2,
       instances: [
         {
@@ -165,7 +198,16 @@ export function QuickEventCreateForm({
       };
     });
 
-    const result = await createInstances({ input: { events, parentId } });
+    const result = await createInstances({
+      input: {
+        events,
+        parentId,
+        pIsVisible: values.isVisible,
+        pIsPublic: values.isPublic,
+        pIsLocked: values.isLocked,
+        pEnableNotes: values.enableNotes,
+      },
+    });
     if (result.error) throw result.error;
     if (result.data?.quickCreateEventInstances?.eventInstances?.length) onSuccess();
   });
@@ -248,6 +290,8 @@ export function QuickEventCreateForm({
         </>
       )}
 
+      <EventAccessFields control={control} type={type} />
+
       <div className="flex justify-end pt-1">
         <SubmitButton loading={onSubmit.loading}>Vytvořit</SubmitButton>
       </div>
@@ -310,7 +354,10 @@ export function QuickInstanceEditForm({
       locationText: instance.locationText ?? '',
       capacity: instance.capacity ?? 0,
       capacityUnit: instance.capacityUnit,
+      isVisible: instance.isVisible ?? false,
+      isPublic: instance.isPublic ?? false,
       isLocked: instance.isLocked ?? false,
+      enableNotes: instance.enableNotes ?? false,
       cohorts: initialCohorts,
       registrations: [],
       instances: [
@@ -391,10 +438,11 @@ export function QuickInstanceEditForm({
         pType: values.type,
         pLocationId: location.locationId,
         pLocationText: location.locationText,
-        pIsVisible: null,
-        pIsPublic: null,
+        pIsVisible: values.isVisible,
+        pIsPublic: values.isPublic,
         pIsCancelled: edited.isCancelled,
         pIsLocked: values.isLocked,
+        pEnableNotes: values.enableNotes,
         pTrainerPersonIds: trainersChanged
           ? nextTrainers.map((trainer) => trainer.personId)
           : null,
@@ -447,11 +495,7 @@ export function QuickInstanceEditForm({
           />
         </>
       )*/}
-      <CheckboxElement
-        control={control}
-        name="isLocked"
-        label="Zakázat přihlašování/odhlašování"
-      />
+      <EventAccessFields control={control} type={type} />
       {registrationsReady && (
         <ParticipantListElement
           control={control}

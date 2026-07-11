@@ -14,7 +14,6 @@ CREATE TABLE public.event_instance (
     location_id bigint,
     is_visible boolean,
     is_public boolean,
-    custom jsonb DEFAULT '{}'::jsonb NOT NULL,
     manager_person_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
     stats jsonb DEFAULT '{}'::jsonb NOT NULL,
     parent_id bigint,
@@ -29,9 +28,9 @@ CREATE TABLE public.event_instance (
     CONSTRAINT event_instance_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.event_instance IS '@omit create,delete
-@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.event_instance IS '@omit create
+@simpleCollections only';
+COMMENT ON COLUMN public.event_instance.event_id IS '@omit';
 COMMENT ON COLUMN public.event_instance.series_id IS 'Groups related events without supplying inherited event values.';
 
 GRANT ALL ON TABLE public.event_instance TO anonymous;
@@ -39,8 +38,6 @@ ALTER TABLE public.event_instance ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_tenant_id_id_event_id_ux UNIQUE (tenant_id, id, event_id);
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_tenant_id_id_key UNIQUE (tenant_id, id);
 ALTER TABLE ONLY public.event_instance
@@ -67,8 +64,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance 
 CREATE TRIGGER _200_validate_parent BEFORE INSERT OR UPDATE OF tenant_id, parent_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__validate_parent();
 CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE OF is_cancelled ON public.event_instance FOR EACH ROW WHEN ((old.is_cancelled IS DISTINCT FROM new.is_cancelled)) EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 CREATE TRIGGER _500_refresh_manager_person_ids_from_parent AFTER INSERT OR UPDATE OF parent_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__refresh_manager_person_ids();
-CREATE TRIGGER _800_event_instance__fill_defaults BEFORE INSERT ON public.event_instance FOR EACH ROW EXECUTE FUNCTION public.tg_event_instance__fill_defaults();
-CREATE TRIGGER _800_event_instance__pin_overrides BEFORE UPDATE OF event_id, name, type, location_text, location_id, is_visible, is_public, capacity, is_locked, description, summary, enable_notes, files_legacy, custom ON public.event_instance FOR EACH ROW EXECUTE FUNCTION public.tg_event_instance__pin_overrides();
 
 CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
 CREATE INDEX event_instance_parent_id_idx ON public.event_instance USING btree (parent_id);

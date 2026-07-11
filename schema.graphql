@@ -1078,23 +1078,6 @@ type Cohort {
     """The method to use when ordering `EventInstanceTargetCohort`."""
     orderBy: [EventInstanceTargetCohortsOrderBy!]
   ): [EventInstanceTargetCohort!]!
-
-  """Reads and enables pagination through a set of `EventTargetCohort`."""
-  eventTargetCohortsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventTargetCohortCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventTargetCohort`."""
-    orderBy: [EventTargetCohortsOrderBy!]
-  ): [EventTargetCohort!]!
   externalIds: [String]
   id: BigInt!
   isArchived: Boolean!
@@ -1660,67 +1643,6 @@ type Couple {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!]
   ): [EventInstanceRegistration!]!
-  eventInstancesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!]
-  ): [EventInstance!]
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventRegistrationsConnection!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]
-  ): [EventRegistration!]!
   id: BigInt!
 
   """Reads a single `Person` that is related to this `Couple`."""
@@ -2558,6 +2480,17 @@ type DeleteEventExternalRegistrationPayload {
   user: User
 }
 
+"""All input for the `deleteEventInstanceByTenantIdAndId` mutation."""
+input DeleteEventInstanceByTenantIdAndIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+  tenantId: BigInt!
+}
+
 """All input for the `deleteEventInstance` mutation."""
 input DeleteEventInstanceInput {
   """
@@ -2568,23 +2501,16 @@ input DeleteEventInstanceInput {
   id: BigInt!
 }
 
-"""The output of our `deleteEventInstance` mutation."""
+"""The output of our delete `EventInstance` mutation."""
 type DeleteEventInstancePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  deleted: EventInstance
 
-  """Reads a single `Event` that is related to this `EventInstance`."""
-  event: Event
-
-  """An edge for our `EventInstance`. May be used by Relay 1."""
-  eventInstanceEdge(
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventInstancesEdge
+  """The `EventInstance` that was deleted by this mutation."""
+  eventInstance: EventInstance
 
   """
   Reads a single `TenantLocation` that is related to this `EventInstance`.
@@ -2977,248 +2903,9 @@ type DeleteUserProxyPayload {
   userProxy: UserProxy
 }
 
-type Event {
-  capacity: Int!
-  createdAt: Datetime
-  description: String!
-  enableNotes: Boolean!
-
-  """
-  Reads and enables pagination through a set of `EventInstanceRegistration`.
-  """
-  eventInstanceRegistrations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventInstanceRegistration`."""
-    orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsConnection!
-
-  """
-  Reads and enables pagination through a set of `EventInstanceRegistration`.
-  """
-  eventInstanceRegistrationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventInstanceRegistration`."""
-    orderBy: [EventInstanceRegistrationsOrderBy!]
-  ): [EventInstanceRegistration!]!
-
-  """Reads and enables pagination through a set of `EventInstance`."""
-  eventInstancesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventInstanceCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!]
-  ): [EventInstance!]!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventRegistrationsConnection!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]
-  ): [EventRegistration!]!
-
-  """Reads and enables pagination through a set of `EventTargetCohort`."""
-  eventTargetCohortsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventTargetCohortCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventTargetCohort`."""
-    orderBy: [EventTargetCohortsOrderBy!]
-  ): [EventTargetCohort!]!
-
-  """Reads and enables pagination through a set of `EventTrainer`."""
-  eventTrainersList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventTrainerCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventTrainer`."""
-    orderBy: [EventTrainersOrderBy!]
-  ): [EventTrainer!]!
-  filesLegacy: String!
-  id: BigInt!
-  isLocked: Boolean!
-  isPublic: Boolean!
-  isRegistrationOpen: Boolean
-  isVisible: Boolean!
-
-  """Reads a single `TenantLocation` that is related to this `Event`."""
-  location: TenantLocation
-  locationId: BigInt
-  locationText: String!
-  myRegistrationsList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [EventRegistration!]
-  name: String!
-  registrantsList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [Person!]
-  remainingLessons: Int
-  remainingPersonSpots: Int
-  summary: String!
-  tenantId: BigInt!
-  type: EventType!
-  updatedAt: Datetime
-}
-
 enum EventCapacityUnit {
   PEOPLE
   REGISTRATIONS
-}
-
-"""
-A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input EventCondition {
-  """Checks for equality with the object’s `capacity` field."""
-  capacity: Int
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `description` field."""
-  description: String
-
-  """Checks for equality with the object’s `enableNotes` field."""
-  enableNotes: Boolean
-
-  """Checks for equality with the object’s `filesLegacy` field."""
-  filesLegacy: String
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `isLocked` field."""
-  isLocked: Boolean
-
-  """Checks for equality with the object’s `isPublic` field."""
-  isPublic: Boolean
-
-  """Checks for equality with the object’s `isVisible` field."""
-  isVisible: Boolean
-
-  """Checks for equality with the object’s `locationId` field."""
-  locationId: BigInt
-
-  """Checks for equality with the object’s `locationText` field."""
-  locationText: String
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-
-  """Checks for equality with the object’s `summary` field."""
-  summary: String
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `type` field."""
-  type: EventType
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
 }
 
 type EventExternalRegistration {
@@ -3394,12 +3081,8 @@ type EventInstance {
     orderBy: [EventInstancesOrderBy!]
   ): [EventInstance!]!
   createdAt: Datetime!
-  custom: JSON!
   description: String
   enableNotes: Boolean
-
-  """Reads a single `Event` that is related to this `EventInstance`."""
-  event: Event
 
   """
   Reads and enables pagination through a set of `EventExternalRegistration`.
@@ -3419,7 +3102,6 @@ type EventInstance {
     """The method to use when ordering `EventExternalRegistration`."""
     orderBy: [EventExternalRegistrationsOrderBy!]
   ): [EventExternalRegistration!]!
-  eventId: BigInt
 
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
@@ -3501,13 +3183,6 @@ type EventInstance {
   locationId: BigInt
   locationText: String
   managerPersonIds: [BigInt]!
-  myRegistrationsList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [EventRegistration!]
   name: String
 
   """
@@ -3533,27 +3208,6 @@ type EventInstance {
     orderBy: [PaymentsOrderBy!]
   ): [Payment!]!
   range: DatetimeRange!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  registrations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-  ): EventRegistrationsConnection!
   remainingPersonSpots: Int
 
   """Reads a single `EventSeries` that is related to this `EventInstance`."""
@@ -3615,17 +3269,11 @@ input EventInstanceCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
-  """Checks for equality with the object’s `custom` field."""
-  custom: JSON
-
   """Checks for equality with the object’s `description` field."""
   description: String
 
   """Checks for equality with the object’s `enableNotes` field."""
   enableNotes: Boolean
-
-  """Checks for equality with the object’s `eventId` field."""
-  eventId: BigInt
 
   """Checks for equality with the object’s `filesLegacy` field."""
   filesLegacy: String
@@ -3699,10 +3347,8 @@ input EventInstancePatch {
   """
   capacityUnit: EventCapacityUnit
   createdAt: Datetime
-  custom: JSON
   description: String
   enableNotes: Boolean
-  eventId: BigInt
   filesLegacy: String
   id: BigInt
   isCancelled: Boolean
@@ -3740,12 +3386,6 @@ type EventInstanceRegistration {
   couple: Couple
   coupleId: BigInt
   createdAt: Datetime!
-
-  """
-  Reads a single `Event` that is related to this `EventInstanceRegistration`.
-  """
-  event: Event
-  eventId: BigInt
 
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
@@ -3877,9 +3517,6 @@ input EventInstanceRegistrationCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
-  """Checks for equality with the object’s `eventId` field."""
-  eventId: BigInt
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -3960,8 +3597,6 @@ enum EventInstanceRegistrationsOrderBy {
   COUPLE_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
-  EVENT_ID_ASC
-  EVENT_ID_DESC
   ID_ASC
   ID_DESC
   INSTANCE_ID_ASC
@@ -4120,13 +3755,6 @@ input EventInstanceTrainerCondition {
   updatedAt: Datetime
 }
 
-"""An input for mutations affecting `EventInstanceTrainerTypeInputRecord`"""
-input EventInstanceTrainerTypeInputRecordInput {
-  id: BigInt
-  lessonsOffered: Int
-  personId: BigInt
-}
-
 """Methods to use when ordering `EventInstanceTrainer`."""
 enum EventInstanceTrainersOrderBy {
   CREATED_AT_ASC
@@ -4148,15 +3776,6 @@ enum EventInstanceTrainersOrderBy {
   UPDATED_AT_DESC
 }
 
-"""An input for mutations affecting `EventInstanceTypeInputRecord`"""
-input EventInstanceTypeInputRecordInput {
-  id: BigInt
-  isCancelled: Boolean
-  since: Datetime
-  trainers: [EventInstanceTrainerTypeInputRecordInput]
-  until: Datetime
-}
-
 """A `EventInstance` edge in the connection."""
 type EventInstancesEdge {
   """A cursor for use in pagination."""
@@ -4174,14 +3793,10 @@ enum EventInstancesOrderBy {
   CAPACITY_UNIT_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
-  CUSTOM_ASC
-  CUSTOM_DESC
   DESCRIPTION_ASC
   DESCRIPTION_DESC
   ENABLE_NOTES_ASC
   ENABLE_NOTES_DESC
-  EVENT_ID_ASC
-  EVENT_ID_DESC
   FILES_LEGACY_ASC
   FILES_LEGACY_DESC
   ID_ASC
@@ -4317,159 +3932,11 @@ type EventOverlapsConflict {
   secondUntil: Datetime
 }
 
-"""
-Represents an update to a `Event`. Fields that are set will be updated.
-"""
-input EventPatch {
-  capacity: Int
-  createdAt: Datetime
-  description: String
-  enableNotes: Boolean
-  filesLegacy: String
-  id: BigInt
-  isLocked: Boolean
-  isPublic: Boolean
-  isVisible: Boolean
-  locationId: BigInt
-  locationText: String
-  name: String
-  summary: String
-  tenantId: BigInt
-  type: EventType
-  updatedAt: Datetime
-}
-
-type EventRegistration {
-  """Reads a single `Couple` that is related to this `EventRegistration`."""
-  couple: Couple
-  coupleId: BigInt
-  createdAt: Datetime!
-
-  """Reads a single `Event` that is related to this `EventRegistration`."""
-  event: Event
-  eventId: BigInt!
-  eventLessonDemandsByRegistrationIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventLessonDemandCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventLessonDemand`."""
-    orderBy: [EventLessonDemandsOrderBy!]
-  ): [EventLessonDemand!]!
-  id: BigInt!
-  note: String
-
-  """Reads a single `Person` that is related to this `EventRegistration`."""
-  person: Person
-  personId: BigInt
-
-  """
-  Reads a single `EventTargetCohort` that is related to this `EventRegistration`.
-  """
-  targetCohort: EventTargetCohort
-  targetCohortId: BigInt
-  tenantId: BigInt!
-  updatedAt: Datetime!
-}
-
-"""
-A condition to be used against `EventRegistration` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input EventRegistrationCondition {
-  """Checks for equality with the object’s `coupleId` field."""
-  coupleId: BigInt
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `eventId` field."""
-  eventId: BigInt
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `note` field."""
-  note: String
-
-  """Checks for equality with the object’s `personId` field."""
-  personId: BigInt
-
-  """Checks for equality with the object’s `targetCohortId` field."""
-  targetCohortId: BigInt
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
 """How an event registration state was set."""
 enum EventRegistrationSource {
   COHORT
   MANAGER
   SELF
-}
-
-"""A connection to a list of `EventRegistration` values."""
-type EventRegistrationsConnection {
-  """
-  A list of edges which contains the `EventRegistration` and cursor to aid in pagination.
-  """
-  edges: [EventRegistrationsEdge!]!
-
-  """A list of `EventRegistration` objects."""
-  nodes: [EventRegistration!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `EventRegistration` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `EventRegistration` edge in the connection."""
-type EventRegistrationsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EventRegistration` at the end of the edge."""
-  node: EventRegistration!
-}
-
-"""Methods to use when ordering `EventRegistration`."""
-enum EventRegistrationsOrderBy {
-  COUPLE_ID_ASC
-  COUPLE_ID_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  EVENT_ID_ASC
-  EVENT_ID_DESC
-  ID_ASC
-  ID_DESC
-  NATURAL
-  NOTE_ASC
-  NOTE_DESC
-  PERSON_ID_ASC
-  PERSON_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TARGET_COHORT_ID_ASC
-  TARGET_COHORT_ID_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 type EventSeries {
@@ -4593,269 +4060,12 @@ input EventSeriesPatch {
   updatedAt: Datetime
 }
 
-type EventTargetCohort {
-  """Reads a single `Cohort` that is related to this `EventTargetCohort`."""
-  cohort: Cohort
-  cohortId: BigInt!
-  createdAt: Datetime!
-
-  """Reads a single `Event` that is related to this `EventTargetCohort`."""
-  event: Event
-  eventId: BigInt!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrationsByTargetCohortId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventRegistrationsConnection!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrationsByTargetCohortIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]
-  ): [EventRegistration!]!
-  id: BigInt!
-  tenantId: BigInt!
-  updatedAt: Datetime!
-}
-
-"""
-A condition to be used against `EventTargetCohort` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input EventTargetCohortCondition {
-  """Checks for equality with the object’s `cohortId` field."""
-  cohortId: BigInt
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `eventId` field."""
-  eventId: BigInt
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `EventTargetCohort`."""
-enum EventTargetCohortsOrderBy {
-  COHORT_ID_ASC
-  COHORT_ID_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  EVENT_ID_ASC
-  EVENT_ID_DESC
-  ID_ASC
-  ID_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-}
-
-type EventTrainer {
-  createdAt: Datetime!
-
-  """Reads a single `Event` that is related to this `EventTrainer`."""
-  event: Event
-  eventId: BigInt!
-  id: BigInt!
-  lessonsOffered: Int
-  lessonsRemaining: Int
-  name: String
-
-  """Reads a single `Person` that is related to this `EventTrainer`."""
-  person: Person
-  personId: BigInt!
-  tenantId: BigInt!
-  updatedAt: Datetime!
-}
-
-"""
-A condition to be used against `EventTrainer` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input EventTrainerCondition {
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `eventId` field."""
-  eventId: BigInt
-
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `lessonsOffered` field."""
-  lessonsOffered: Int
-
-  """Checks for equality with the object’s `personId` field."""
-  personId: BigInt
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""An input for mutations affecting `EventTrainerTypeInputRecord`"""
-input EventTrainerTypeInputRecordInput {
-  id: BigInt
-  lessonsOffered: Int
-  personId: BigInt
-}
-
-"""Methods to use when ordering `EventTrainer`."""
-enum EventTrainersOrderBy {
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  EVENT_ID_ASC
-  EVENT_ID_DESC
-  ID_ASC
-  ID_DESC
-  LESSONS_OFFERED_ASC
-  LESSONS_OFFERED_DESC
-  NATURAL
-  PERSON_ID_ASC
-  PERSON_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-}
-
 enum EventType {
   CAMP
   GROUP
   HOLIDAY
   LESSON
   RESERVATION
-}
-
-"""An input for mutations affecting `EventTypeInputRecord`"""
-input EventTypeInputRecordInput {
-  capacity: Int
-  description: String
-  enableNotes: Boolean
-  id: BigInt
-  isLocked: Boolean
-  isPublic: Boolean
-  isVisible: Boolean
-  locationId: BigInt
-  locationText: String
-  name: String
-  summary: String
-  type: EventType
-}
-
-"""A connection to a list of `Event` values."""
-type EventsConnection {
-  """
-  A list of edges which contains the `Event` and cursor to aid in pagination.
-  """
-  edges: [EventsEdge!]!
-
-  """A list of `Event` objects."""
-  nodes: [Event!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Event` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Event` edge in the connection."""
-type EventsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Event` at the end of the edge."""
-  node: Event!
-}
-
-"""Methods to use when ordering `Event`."""
-enum EventsOrderBy {
-  CAPACITY_ASC
-  CAPACITY_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  ENABLE_NOTES_ASC
-  ENABLE_NOTES_DESC
-  FILES_LEGACY_ASC
-  FILES_LEGACY_DESC
-  ID_ASC
-  ID_DESC
-  IS_LOCKED_ASC
-  IS_LOCKED_DESC
-  IS_PUBLIC_ASC
-  IS_PUBLIC_DESC
-  IS_VISIBLE_ASC
-  IS_VISIBLE_DESC
-  LOCATION_ID_ASC
-  LOCATION_ID_DESC
-  LOCATION_TEXT_ASC
-  LOCATION_TEXT_DESC
-  NAME_ASC
-  NAME_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  SUMMARY_ASC
-  SUMMARY_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  TYPE_ASC
-  TYPE_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 type FormResponse {
@@ -5290,9 +4500,6 @@ type MoveEventInstancePayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Event` that is related to this `EventInstance`."""
-  event: Event
   eventInstance: EventInstance
 
   """An edge for our `EventInstance`. May be used by Relay 1."""
@@ -5525,11 +4732,21 @@ type Mutation {
     """
     input: DeleteEventExternalRegistrationInput!
   ): DeleteEventExternalRegistrationPayload
+
+  """Deletes a single `EventInstance` using a unique key."""
   deleteEventInstance(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteEventInstanceInput!
+  ): DeleteEventInstancePayload
+
+  """Deletes a single `EventInstance` using a unique key."""
+  deleteEventInstanceByTenantIdAndId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEventInstanceByTenantIdAndIdInput!
   ): DeleteEventInstancePayload
 
   """Deletes a single `EventSeries` using a unique key."""
@@ -5697,12 +4914,6 @@ type Mutation {
     """
     input: QuickCreateEventInstancesInput!
   ): QuickCreateEventInstancesPayload
-  quickCreateEvents(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: QuickCreateEventsInput!
-  ): QuickCreateEventsPayload
   registerUsingInvitation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5816,22 +5027,6 @@ type Mutation {
     input: UpdateCoupleInput!
   ): UpdateCouplePayload
 
-  """Updates a single `Event` using a unique key and a patch."""
-  updateEvent(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEventInput!
-  ): UpdateEventPayload
-
-  """Updates a single `Event` using a unique key and a patch."""
-  updateEventByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEventByTenantIdAndIdInput!
-  ): UpdateEventPayload
-
   """Updates a single `EventInstance` using a unique key and a patch."""
   updateEventInstance(
     """
@@ -5846,14 +5041,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateEventInstanceByTenantIdAndIdInput!
-  ): UpdateEventInstancePayload
-
-  """Updates a single `EventInstance` using a unique key and a patch."""
-  updateEventInstanceByTenantIdAndIdAndEventId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEventInstanceByTenantIdAndIdAndEventIdInput!
   ): UpdateEventInstancePayload
   updateEventInstanceDetails(
     """
@@ -5997,12 +5184,6 @@ type Mutation {
     """
     input: UpsertAnnouncementInput!
   ): UpsertAnnouncementPayload
-  upsertEvent(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpsertEventInput!
-  ): UpsertEventPayload
 }
 
 """All input for the `otpLogin` mutation."""
@@ -6587,69 +5768,6 @@ type Person {
     """The method to use when ordering `EventInstanceTrainer`."""
     orderBy: [EventInstanceTrainersOrderBy!]
   ): [EventInstanceTrainer!]!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventRegistrationsConnection!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]
-  ): [EventRegistration!]!
-
-  """Reads and enables pagination through a set of `EventTrainer`."""
-  eventTrainersList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventTrainerCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventTrainer`."""
-    orderBy: [EventTrainersOrderBy!]
-  ): [EventTrainer!]!
   externalIds: [String]
   facebookUrl: String
   firstName: String!
@@ -7390,20 +6508,11 @@ type Query {
   couple(id: BigInt!): Couple
   cstsAthlete(idt: Int): String
 
-  """Get a single `Event`."""
-  event(id: BigInt!): Event
-
-  """Get a single `Event`."""
-  eventByTenantIdAndId(id: BigInt!, tenantId: BigInt!): Event
-
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
 
   """Get a single `EventInstance`."""
   eventInstanceByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventInstance
-
-  """Get a single `EventInstance`."""
-  eventInstanceByTenantIdAndIdAndEventId(eventId: BigInt!, id: BigInt!, tenantId: BigInt!): EventInstance
 
   """Get a single `EventInstanceRegistration`."""
   eventInstanceRegistration(id: BigInt!): EventInstanceRegistration
@@ -7511,35 +6620,6 @@ type Query {
 
   """Get a single `EventSeries`."""
   eventSeriesByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventSeries
-
-  """Reads and enables pagination through a set of `Event`."""
-  events(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventsConnection
 
   """Get a single `FormResponse`."""
   formResponse(id: BigInt!): FormResponse
@@ -7857,6 +6937,10 @@ input QuickCreateEventInstancesInput {
   """
   clientMutationId: String
   events: [QuickEventInputRecordInput]
+  pEnableNotes: Boolean
+  pIsLocked: Boolean
+  pIsPublic: Boolean
+  pIsVisible: Boolean
   parentId: BigInt
 }
 
@@ -7868,26 +6952,6 @@ type QuickCreateEventInstancesPayload {
   """
   clientMutationId: String
   eventInstances: [EventInstance!]
-}
-
-"""All input for the `quickCreateEvents` mutation."""
-input QuickCreateEventsInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  events: [QuickEventInputRecordInput]
-}
-
-"""The output of our `quickCreateEvents` mutation."""
-type QuickCreateEventsPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  events: [Event!]
 }
 
 """An input for mutations affecting `QuickEventInputRecord`"""
@@ -8161,11 +7225,6 @@ type SetEventInstanceRegistrationPayload {
   Reads a single `Couple` that is related to this `EventInstanceRegistration`.
   """
   couple: Couple
-
-  """
-  Reads a single `Event` that is related to this `EventInstanceRegistration`.
-  """
-  event: Event
   eventInstanceRegistration: EventInstanceRegistration
 
   """An edge for our `EventInstanceRegistration`. May be used by Relay 1."""
@@ -8688,52 +7747,6 @@ type Tenant {
     orderBy: [EventLessonDemandsOrderBy!]
   ): [EventLessonDemand!]!
 
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventRegistrationsConnection!
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventRegistrationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]
-  ): [EventRegistration!]!
-
   """Reads and enables pagination through a set of `EventSeries`."""
   eventSeries(
     """Read all values in the set after (below) this cursor."""
@@ -8762,69 +7775,6 @@ type Tenant {
     """The method to use when ordering `EventSeries`."""
     orderBy: [EventSeriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventSeriesConnection!
-
-  """Reads and enables pagination through a set of `EventTargetCohort`."""
-  eventTargetCohortsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventTargetCohortCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventTargetCohort`."""
-    orderBy: [EventTargetCohortsOrderBy!]
-  ): [EventTargetCohort!]!
-
-  """Reads and enables pagination through a set of `EventTrainer`."""
-  eventTrainersList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventTrainerCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventTrainer`."""
-    orderBy: [EventTrainersOrderBy!]
-  ): [EventTrainer!]!
-
-  """Reads and enables pagination through a set of `Event`."""
-  events(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventsConnection!
 
   """Reads and enables pagination through a set of `FormResponse`."""
   formResponses(
@@ -9255,35 +8205,6 @@ type TenantLocation {
     """The method to use when ordering `EventInstance`."""
     orderBy: [EventInstancesOrderBy!]
   ): [EventInstance!]!
-
-  """Reads and enables pagination through a set of `Event`."""
-  events(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventsConnection!
   id: BigInt!
   isPublic: Boolean!
   name: String!
@@ -9991,11 +8912,6 @@ type UpdateAttendancePayload {
   Reads a single `Couple` that is related to this `EventInstanceRegistration`.
   """
   couple: Couple
-
-  """
-  Reads a single `Event` that is related to this `EventInstanceRegistration`.
-  """
-  event: Event
   eventInstanceRegistration: EventInstanceRegistration
 
   """An edge for our `EventInstanceRegistration`. May be used by Relay 1."""
@@ -10137,56 +9053,6 @@ type UpdateCouplePayload {
   woman: Person
 }
 
-"""All input for the `updateEventByTenantIdAndId` mutation."""
-input UpdateEventByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Event` being updated.
-  """
-  patch: EventPatch!
-  tenantId: BigInt!
-}
-
-"""All input for the `updateEvent` mutation."""
-input UpdateEventInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Event` being updated.
-  """
-  patch: EventPatch!
-}
-
-"""
-All input for the `updateEventInstanceByTenantIdAndIdAndEventId` mutation.
-"""
-input UpdateEventInstanceByTenantIdAndIdAndEventIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  eventId: BigInt!
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `EventInstance` being updated.
-  """
-  patch: EventInstancePatch!
-  tenantId: BigInt!
-}
-
 """All input for the `updateEventInstanceByTenantIdAndId` mutation."""
 input UpdateEventInstanceByTenantIdAndIdInput {
   """
@@ -10213,6 +9079,7 @@ input UpdateEventInstanceDetailsInput {
   pCapacity: Int
   pCapacityUnit: EventCapacityUnit
   pCohortIds: [BigInt]
+  pEnableNotes: Boolean
   pInstanceId: BigInt
   pIsCancelled: Boolean
   pIsLocked: Boolean
@@ -10236,9 +9103,6 @@ type UpdateEventInstanceDetailsPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Event` that is related to this `EventInstance`."""
-  event: Event
   eventInstance: EventInstance
 
   """An edge for our `EventInstance`. May be used by Relay 1."""
@@ -10284,9 +9148,6 @@ type UpdateEventInstancePayload {
   """
   clientMutationId: String
 
-  """Reads a single `Event` that is related to this `EventInstance`."""
-  event: Event
-
   """The `EventInstance` that was updated by this mutation."""
   eventInstance: EventInstance
 
@@ -10302,27 +9163,6 @@ type UpdateEventInstancePayload {
 
   """Reads a single `EventSeries` that is related to this `EventInstance`."""
   series: EventSeries
-}
-
-"""The output of our update `Event` mutation."""
-type UpdateEventPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Event` that was updated by this mutation."""
-  event: Event
-
-  """An edge for our `Event`. May be used by Relay 1."""
-  eventEdge(
-    """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventsEdge
-
-  """Reads a single `TenantLocation` that is related to this `Event`."""
-  location: TenantLocation
 }
 
 """All input for the `updateEventSeriesByTenantIdAndId` mutation."""
@@ -10800,37 +9640,6 @@ type UpsertAnnouncementPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-}
-
-"""All input for the `upsertEvent` mutation."""
-input UpsertEventInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  eventInstances: [EventInstanceTypeInputRecordInput]
-  info: EventTypeInputRecordInput
-  trainers: [EventTrainerTypeInputRecordInput]
-}
-
-"""The output of our `upsertEvent` mutation."""
-type UpsertEventPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  event: Event
-
-  """An edge for our `Event`. May be used by Relay 1."""
-  eventEdge(
-    """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventsEdge
-
-  """Reads a single `TenantLocation` that is related to this `Event`."""
-  location: TenantLocation
 }
 
 type User {

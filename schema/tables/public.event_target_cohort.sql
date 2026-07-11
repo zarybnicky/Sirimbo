@@ -7,11 +7,8 @@ CREATE TABLE public.event_target_cohort (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.event_target_cohort IS '@omit';
 
-GRANT ALL ON TABLE public.event_target_cohort TO anonymous;
 ALTER TABLE public.event_target_cohort ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.event_target_cohort
@@ -24,11 +21,6 @@ ALTER TABLE ONLY public.event_target_cohort
     ADD CONSTRAINT event_target_cohort_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_target_cohort
     ADD CONSTRAINT event_target_cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-CREATE POLICY admin_all ON public.event_target_cohort TO administrator USING (true);
-CREATE POLICY current_tenant ON public.event_target_cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY member_view ON public.event_target_cohort FOR SELECT TO member USING (true);
-CREATE POLICY trainer_same_tenant ON public.event_target_cohort TO trainer USING (app_private.can_trainer_edit_event(event_id)) WITH CHECK (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

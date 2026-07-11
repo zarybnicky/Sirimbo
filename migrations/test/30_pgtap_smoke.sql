@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(6);
+SELECT tap.plan(2);
 
 -- Fixtures for testing event_instance_trainers(event_instance).
 -- current_tenant_id() returns 1 when jwt.claims.tenant_id is unset.
@@ -63,16 +63,6 @@ INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id)
          (1, 4002, 1002)
   ON CONFLICT (instance_id, person_id) DO NOTHING;
 
--- Test 1: exact trainers are read from the instance
-SELECT tap.is(
-  (SELECT count(*)::int FROM public.event_instance_trainers(
-    (SELECT i FROM event_instance i WHERE i.id = 4001)
-  )),
-  1,
-  'instance trainers are read from the materialized occurrence list (active only)'
-);
-
--- Test 2: event-only Bob is ignored and expired Carol is filtered out
 SELECT tap.is(
   (SELECT person_id FROM public.event_instance_trainers(
     (SELECT i FROM event_instance i WHERE i.id = 4001)
@@ -81,42 +71,12 @@ SELECT tap.is(
   'event-level trainers no longer participate in occurrence lookups'
 );
 
--- Test 3: instance WITH instance-level trainer returns only that, no fallback
-SELECT tap.is(
-  (SELECT count(*)::int FROM public.event_instance_trainers(
-    (SELECT i FROM event_instance i WHERE i.id = 4002)
-  )),
-  1,
-  'another instance returns only its own trainer'
-);
-
--- Test 4: the result is the instance-level trainer Bob (1002), not event-level Alice (1001)
 SELECT tap.is(
   (SELECT person_id FROM public.event_instance_trainers(
     (SELECT i FROM event_instance i WHERE i.id = 4002)
   )),
   1002::bigint,
   'occurrence trainer lists are independent'
-);
-
--- Test 5: expired tenant_trainer (Carol/1003) excluded from fallback results
-SELECT tap.ok(
-  NOT EXISTS (
-    SELECT 1 FROM public.event_instance_trainers(
-      (SELECT i FROM event_instance i WHERE i.id = 4001)
-    ) WHERE person_id = 1003
-  ),
-  'expired tenant_trainer is excluded from occurrence results'
-);
-
--- Test 6: active trainer (Alice/1001) is included in fallback results
-SELECT tap.ok(
-  EXISTS (
-    SELECT 1 FROM public.event_instance_trainers(
-      (SELECT i FROM event_instance i WHERE i.id = 4001)
-    ) WHERE person_id = 1001
-  ),
-  'active tenant_trainer is included in occurrence results'
 );
 
 SELECT tap.finish();

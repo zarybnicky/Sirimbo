@@ -716,7 +716,6 @@ CREATE TABLE public.event_instance (
   location_id bigint,
   is_visible boolean,
   is_public boolean,
-  custom jsonb DEFAULT '{}'::jsonb NOT NULL,
   manager_person_ids bigint[] DEFAULT CAST('{}' AS bigint[]) NOT NULL,
   stats jsonb DEFAULT '{}'::jsonb NOT NULL,
   parent_id bigint REFERENCES public.event_instance (id)
@@ -730,7 +729,6 @@ CREATE TABLE public.event_instance (
   files_legacy text,
   series_id bigint,
   CHECK (until > since),
-  UNIQUE (tenant_id, id, event_id),
   UNIQUE (tenant_id, id),
   FOREIGN KEY(tenant_id, event_id)
     REFERENCES public.event (tenant_id, id)
@@ -758,9 +756,6 @@ CREATE TABLE public.event_instance_registration (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   instance_id bigint NOT NULL REFERENCES public.event_instance (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  event_id bigint REFERENCES public.event (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   parent_registration_id bigint REFERENCES public.event_instance_registration (id)
@@ -830,7 +825,6 @@ CREATE TABLE public.event_instance_trainer (
     ON DELETE CASCADE,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  event_id bigint,
   lessons_offered int DEFAULT 0,
   UNIQUE (instance_id, person_id),
   FOREIGN KEY(tenant_id, instance_id)
@@ -853,7 +847,6 @@ CREATE TABLE public.event_lesson_demand (
   lesson_count int NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
-  event_id bigint,
   CHECK (lesson_count > 0),
   UNIQUE (registration_id, trainer_id)
 );
@@ -902,7 +895,6 @@ CREATE TABLE public.event_registration (
       OR (couple_id IS NULL
       AND person_id IS NOT NULL)
   ),
-  UNIQUE (tenant_id, id, event_id),
   UNIQUE NULLS NOT DISTINCT (event_id, person_id, couple_id),
   FOREIGN KEY(tenant_id, event_id)
     REFERENCES public.event (tenant_id, id)
@@ -1431,15 +1423,7 @@ CREATE TYPE public.announcement_type_input AS (id bigint, title text, body text,
 
 CREATE TYPE public.competition_participation_record AS (person_id bigint, person_name text, federation text, federated_person_id text, competitor_id text, competitor_name text, competitor_type federated.competitor_type, event_id bigint, event_name text, event_location text, competition_id bigint, competition_date date, check_in_end time, category federated.category, dances text[], participants int, ranking int, ranking_to int, point_gain numeric(10, 3), is_final boolean, has_result boolean, competition_type federated.competition_type, event_external_id text, competition_external_id text);
 
-CREATE TYPE public.event_instance_trainer_type_input AS (id bigint, person_id bigint, lessons_offered int);
-
-CREATE TYPE public.event_instance_type_input AS (id bigint, since timestamp with time zone, until timestamp with time zone, is_cancelled boolean, trainers public.event_instance_trainer_type_input[]);
-
 CREATE TYPE public.event_overlaps_conflict AS (person_id bigint, person_name text, first_instance_id bigint, first_event_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, second_instance_id bigint, second_event_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, overlap_range tstzrange);
-
-CREATE TYPE public.event_trainer_type_input AS (id bigint, person_id bigint, lessons_offered int);
-
-CREATE TYPE public.event_type_input AS (id bigint, name text, summary text, description text, type public.event_type, location_id bigint, location_text text, capacity int, is_visible boolean, is_public boolean, is_locked boolean, enable_notes boolean);
 
 CREATE TYPE public.jwt_token AS (exp int, user_id bigint, tenant_id bigint, username text, email text, my_person_ids bigint[], my_tenant_ids bigint[], my_cohort_ids bigint[], my_couple_ids bigint[], is_member boolean, is_trainer boolean, is_admin boolean, is_system_admin boolean, guest_tenant_ids bigint[], member_tenant_ids bigint[], trainer_tenant_ids bigint[], admin_tenant_ids bigint[]);
 

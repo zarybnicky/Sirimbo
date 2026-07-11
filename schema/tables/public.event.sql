@@ -17,9 +17,8 @@ CREATE TABLE public.event (
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
-COMMENT ON TABLE public.event IS '@omit create,delete';
+COMMENT ON TABLE public.event IS '@omit';
 
-GRANT ALL ON TABLE public.event TO anonymous;
 ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.event
@@ -31,14 +30,7 @@ ALTER TABLE ONLY public.event
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_same_tenant ON public.event TO administrator USING (true);
-CREATE POLICY current_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY member_view ON public.event FOR SELECT TO member USING (is_visible);
-CREATE POLICY public_view ON public.event FOR SELECT TO anonymous USING (is_public);
-CREATE POLICY trainer_same_tenant ON public.event TO trainer USING (app_private.can_trainer_edit_event(id)) WITH CHECK (true);
-
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-CREATE TRIGGER _800_event__propagate_to_instances AFTER UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION public.tg_event__propagate_to_instances();
 
 CREATE INDEX event_location_id_idx ON public.event USING btree (location_id);
 CREATE INDEX event_tenant_visible_public ON public.event USING btree (tenant_id) WHERE (is_visible OR is_public);

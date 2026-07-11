@@ -1,6 +1,14 @@
+drop function if exists public.quick_create_event_instances(
+  public.quick_event_input[], bigint
+);
+
 create or replace function quick_create_event_instances(
   events quick_event_input[],
-  parent_id bigint default null
+  parent_id bigint default null,
+  p_is_visible boolean default true,
+  p_is_public boolean default false,
+  p_is_locked boolean default false,
+  p_enable_notes boolean default false
 ) returns setof event_instance
   language plpgsql
 as $$
@@ -18,7 +26,7 @@ begin
       coalesce(quick_event.type, 'lesson'), quick_event.location_id,
       coalesce(quick_event.location_text, ''),
       case when coalesce(quick_event.type, 'lesson') = 'lesson' then 2 else 0 end,
-      'people', true, false, false, false, '', ''
+      'people', p_is_visible, p_is_public, p_is_locked, p_enable_notes, '', ''
     )
     returning * into created_instance;
 

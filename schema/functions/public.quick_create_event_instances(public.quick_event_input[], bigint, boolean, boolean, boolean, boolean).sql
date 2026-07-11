@@ -1,4 +1,4 @@
-CREATE FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint DEFAULT NULL::bigint) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint DEFAULT NULL::bigint, p_is_visible boolean DEFAULT true, p_is_public boolean DEFAULT false, p_is_locked boolean DEFAULT false, p_enable_notes boolean DEFAULT false) RETURNS SETOF public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
@@ -15,7 +15,7 @@ begin
       coalesce(quick_event.type, 'lesson'), quick_event.location_id,
       coalesce(quick_event.location_text, ''),
       case when coalesce(quick_event.type, 'lesson') = 'lesson' then 2 else 0 end,
-      'people', true, false, false, false, '', ''
+      'people', p_is_visible, p_is_public, p_is_locked, p_enable_notes, '', ''
     )
     returning * into created_instance;
 
@@ -48,4 +48,4 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint) TO anonymous;
+GRANT ALL ON FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint, p_is_visible boolean, p_is_public boolean, p_is_locked boolean, p_enable_notes boolean) TO anonymous;

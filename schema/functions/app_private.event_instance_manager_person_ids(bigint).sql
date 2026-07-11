@@ -1,4 +1,4 @@
-CREATE FUNCTION app_private.event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint) RETURNS bigint[]
+CREATE FUNCTION app_private.event_instance_manager_person_ids(p_instance_id bigint) RETURNS bigint[]
     LANGUAGE sql STABLE PARALLEL SAFE
     AS $$
   with recursive chain as (
@@ -15,3 +15,5 @@ CREATE FUNCTION app_private.event_instance_manager_person_ids(p_instance_id bigi
   select coalesce(array_agg(person_id order by person_id), '{}'::bigint[])
   from managers;
 $$;
+
+REVOKE ALL ON FUNCTION app_private.event_instance_manager_person_ids(p_instance_id bigint) FROM PUBLIC;

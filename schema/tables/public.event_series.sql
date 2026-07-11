@@ -6,7 +6,7 @@ CREATE TABLE public.event_series (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.event_series IS '@behavior -query:resource:list -query:resource:connection -query:resource:single';
+COMMENT ON TABLE public.event_series IS '@behavior -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.event_series TO anonymous;
 ALTER TABLE public.event_series ENABLE ROW LEVEL SECURITY;
