@@ -83,6 +83,7 @@ fragment EventInstanceWithTrainer on EventInstance {
   eventInstanceTrainersByInstanceIdList {
     id
     personId
+    lessonsOffered
   }
   trainersList {
     id
@@ -179,6 +180,31 @@ fragment EventInstanceRegistrationAttendance on EventInstanceRegistration {
   }
 }
 
+fragment EventInstanceTrainerLessonOffer on EventInstanceTrainer {
+  id
+  personId
+  lessonsOffered
+  lessonsRemaining
+  person {
+    id
+    name
+  }
+}
+
+fragment EventLessonDemand on EventLessonDemand {
+  id
+  registrationId
+  lessonCount
+  trainerId
+  trainer {
+    id
+    person {
+      id
+      name
+    }
+  }
+}
+
 fragment EventRegistration on EventRegistration {
   id
   note
@@ -195,9 +221,7 @@ fragment EventRegistration on EventRegistration {
     ...Couple
   }
   eventLessonDemandsByRegistrationIdList {
-    id
-    lessonCount
-    trainerId
+    ...EventLessonDemand
   }
   createdAt
 }
@@ -208,6 +232,9 @@ fragment EventFull on Event {
   ...EventAttendanceSummary
   eventInstancesList(orderBy: SINCE_ASC) {
     ...EventInstanceWithTrainer
+    eventInstanceTrainersByInstanceIdList {
+      ...EventInstanceTrainerLessonOffer
+    }
   }
 }
 
@@ -282,11 +309,15 @@ query EventInstanceWithAttendance($id: BigInt!) {
 query EventInstanceRegistrations($id: BigInt!) {
   eventInstance(id: $id) {
     id
+    lessonTrainers: eventInstanceTrainersByInstanceIdList {
+      ...EventInstanceTrainerLessonOffer
+    }
     registrations: eventInstanceRegistrationsByInstanceId(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
       nodes {
         id
+        eventId
         personId
         person {
           id
@@ -305,6 +336,9 @@ query EventInstanceRegistrations($id: BigInt!) {
             name
             lastName
           }
+        }
+        eventLessonDemandsByRegistrationIdList {
+          ...EventLessonDemand
         }
       }
     }

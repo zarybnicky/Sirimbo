@@ -1,4 +1,8 @@
-import { type EventFragment, RegisterToEventDocument } from '@/graphql/Event';
+import {
+  type EventFragment,
+  type EventInstanceTrainerLessonOfferFragment,
+  RegisterToEventDocument,
+} from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
@@ -38,7 +42,13 @@ const Form = z.object({
 type FormValues = z.infer<typeof Form>;
 type FormRegistration = FormValues['registrations'][number];
 
-export function NewRegistrationForm({ event }: { event: EventFragment }) {
+export function NewRegistrationForm({
+  event,
+  lessonTrainers: allLessonTrainers,
+}: {
+  event: EventFragment;
+  lessonTrainers: EventInstanceTrainerLessonOfferFragment[];
+}) {
   const { onSuccess } = useFormResult();
   const create = useMutation(RegisterToEventDocument)[1];
   const auth = useAuth();
@@ -61,7 +71,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
       ...watchFieldArray?.[index],
     };
   });
-  const lessonTrainers = event.eventTrainersList.filter(
+  const lessonTrainers = allLessonTrainers.filter(
     (trainer) => (trainer.lessonsOffered as number | null) !== 0,
   );
 
@@ -110,7 +120,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
   const onSubmit = useAsyncCallback(async ({ registrations }: FormValues) => {
     const res = await create({
       input: {
-        registrations: registrations
+        eventRegistrations: registrations
           .filter((x) => x.selected)
           .map((x) => {
             const lessons = x.lessons
@@ -223,7 +233,7 @@ export function NewRegistrationForm({ event }: { event: EventFragment }) {
                               key={trainer.id}
                               className="flex items-center flex-wrap gap-2"
                             >
-                              <div className="grow">{trainer.name}</div>
+                              <div className="grow">{trainer.person?.name}</div>
                               {lessonsOffered === null && (
                                 <div className="text-sm text-neutral-10 shrink-0">
                                   bez omezení

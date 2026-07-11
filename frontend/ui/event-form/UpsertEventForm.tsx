@@ -93,6 +93,7 @@ export function UpsertEventForm({
             trainers: x.eventInstanceTrainersByInstanceIdList.map((y) => ({
               itemId: y.id,
               personId: y.personId,
+              lessonsOffered: y.lessonsOffered,
             })),
           })),
         },
@@ -171,7 +172,7 @@ export function UpsertEventForm({
           id: x.itemId,
           itemId: undefined,
         })),
-        instances: values.instances.map((x) => ({
+        eventInstances: values.instances.map((x) => ({
           id: x.itemId,
           since: x.since,
           until: x.until,

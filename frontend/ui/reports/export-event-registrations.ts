@@ -17,10 +17,28 @@ export async function exportEventRegistrations(client: Client, id: string) {
     { header: 'Datum přihlášení', key: 'registered' },
     { header: 'Poznámka', key: 'note' },
   ];
-  for (const trainer of data.event?.eventTrainersList || []) {
+  const lessonTrainers = new Map(
+    [
+      ...(data.event?.eventInstancesList.flatMap((instance) =>
+        instance.eventInstanceTrainersByInstanceIdList.flatMap((trainer) =>
+          trainer.lessonsOffered !== 0
+            ? [[trainer.personId, trainer.person?.name ?? '?'] as const]
+            : [],
+        ),
+      ) ?? []),
+      ...(data.event?.eventRegistrationsList.flatMap((registration) =>
+        registration.eventLessonDemandsByRegistrationIdList.flatMap((demand) =>
+          demand.trainer?.person
+            ? [[demand.trainer.person.id, demand.trainer.person.name ?? '?'] as const]
+            : [],
+        ),
+      ) ?? []),
+    ],
+  );
+  for (const [id, name] of lessonTrainers) {
     columns.push({
-      header: trainer.name || '?',
-      key: trainer.id,
+      header: name,
+      key: id,
     });
   }
   worksheet.columns = columns;
@@ -40,7 +58,10 @@ export async function exportEventRegistrations(client: Client, id: string) {
       note: x.note || '',
     };
     for (const demand of x.eventLessonDemandsByRegistrationIdList) {
-      row[demand.trainerId] = demand.lessonCount.toString();
+      const trainerId = demand.trainer?.person?.id;
+      if (trainerId) {
+        row[trainerId] = String(Number(row[trainerId] ?? 0) + demand.lessonCount);
+      }
     }
     rows.push(row);
   }

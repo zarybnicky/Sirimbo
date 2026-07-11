@@ -1,7 +1,6 @@
 import {
   EventDocument,
   EventInstanceRegistrationsDocument,
-  type EventInstanceRegistrationsQuery,
   EventFragment,
   type EventInstanceWithTrainerFragment,
   type EventRegistrationFragment,
@@ -19,10 +18,7 @@ import { SubmitButton } from '@/ui/submit';
 import { useAsyncCallback } from 'react-async-hook';
 import { useConfirm } from '@/ui/Confirm';
 import { toast } from 'react-toastify';
-
-type InstanceRegistration = NonNullable<
-  EventInstanceRegistrationsQuery['eventInstance']
->['registrations']['nodes'][number];
+import { LessonDemandControls } from '@/ui/forms/MyRegistrationForm';
 
 export function MyRegistrationsDialog({
   instance,
@@ -33,21 +29,7 @@ export function MyRegistrationsDialog({
 }) {
   const auth = useAuth();
   const isInstanceRegistration = !instance.eventId;
-  const [registrationsQuery, reloadRegistrations] = useQuery({
-    query: EventInstanceRegistrationsDocument,
-    variables: { id: instance.id },
-    pause: !isInstanceRegistration || !allowInstanceRegistration || !auth.isLoggedIn,
-  });
-  const instanceRegistrations =
-    registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
-  const myInstanceRegistrations = instanceRegistrations.filter(
-    (registration) =>
-      (!!registration.personId && auth.isMyPerson(registration.personId)) ||
-      (!!registration.coupleId && auth.isMyCouple(registration.coupleId)),
-  );
-  const myRegistrations = isInstanceRegistration
-    ? myInstanceRegistrations
-    : (instance.myRegistrationsList ?? []);
+  const myRegistrations = instance.myRegistrationsList ?? [];
 
   if (
     instance.isCancelled ||
@@ -58,7 +40,8 @@ export function MyRegistrationsDialog({
         !auth.isLoggedIn ||
         auth.personIds.length === 0 ||
         (!instance.isPublic && !instance.isVisible))) ||
-    ((instance.capacity ?? 0) > 0 &&
+    (!isInstanceRegistration &&
+      (instance.capacity ?? 0) > 0 &&
       (instance.remainingPersonSpots ?? 0) <= 0 &&
       myRegistrations.length === 0)
   ) {
@@ -67,7 +50,9 @@ export function MyRegistrationsDialog({
 
   return (
     <Dialog modal={false}>
-      {myRegistrations.length > 0 ? (
+      {isInstanceRegistration ? (
+        <DialogTrigger size="sm" text="Přihlášky" />
+      ) : myRegistrations.length > 0 ? (
         <DialogTrigger size="sm" text="Moje přihlášky" />
       ) : (
         <DialogTrigger.Add size="sm" text="Přihlásit" />
@@ -75,15 +60,11 @@ export function MyRegistrationsDialog({
 
       <DialogContent>
         {isInstanceRegistration ? (
-          <InstanceRegistrationsDialogContent
-            instance={instance}
-            registrations={instanceRegistrations}
-            myRegistrations={myInstanceRegistrations}
-            reload={() => reloadRegistrations({ requestPolicy: 'network-only' })}
-          />
+          <InstanceRegistrationsDialogContent instance={instance} />
         ) : (
           <MyRegistrationsDialogContent
             eventId={instance.eventId}
+            instanceId={instance.id}
             myRegistrations={instance.myRegistrationsList ?? []}
           />
         )}
@@ -94,17 +75,23 @@ export function MyRegistrationsDialog({
 
 function InstanceRegistrationsDialogContent({
   instance,
-  registrations,
-  myRegistrations,
-  reload,
 }: {
   instance: EventInstanceWithTrainerFragment;
-  registrations: InstanceRegistration[];
-  myRegistrations: InstanceRegistration[];
-  reload: () => void;
 }) {
   const auth = useAuth();
   const confirm = useConfirm();
+  const [registrationsQuery, reloadRegistrations] = useQuery({
+    query: EventInstanceRegistrationsDocument,
+    variables: { id: instance.id },
+  });
+  const registrations =
+    registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
+  const lessonTrainers = registrationsQuery.data?.eventInstance?.lessonTrainers ?? [];
+  const myRegistrations = registrations.filter(
+    (registration) =>
+      (!!registration.personId && auth.isMyPerson(registration.personId)) ||
+      (!!registration.coupleId && auth.isMyCouple(registration.coupleId)),
+  );
   const setRegistration = useMutation(SetEventInstanceRegistrationDocument)[1];
   const changeRegistration = useAsyncCallback(
     async (registration: { personId: string | null; coupleId: string | null }, registered: boolean) => {
@@ -120,10 +107,18 @@ function InstanceRegistrationsDialogContent({
         },
       });
       if (result.error) throw result.error;
-      reload();
+      reloadRegistrations({ requestPolicy: 'network-only' });
       toast.success(registered ? 'Přihlášení proběhlo úspěšně.' : 'Přihláška zrušena.');
     },
   );
+
+  if (!registrationsQuery.data) {
+    return registrationsQuery.error ? (
+      <FormError error={registrationsQuery.error} />
+    ) : (
+      <div className="text-sm text-neutral-10">Načítám…</div>
+    );
+  }
 
   const occupiedPersonIds = new Set(
     registrations.flatMap((registration) =>
@@ -150,16 +145,23 @@ function InstanceRegistrationsDialogContent({
       <FormError error={changeRegistration.error} />
 
       {myRegistrations.map((registration) => (
-        <div key={registration.id} className="flex items-center justify-between gap-2">
-          <b>{formatRegistrant(registration)}</b>
-          <SubmitButton
-            type="button"
-            variant="outline"
-            loading={changeRegistration.loading}
-            onClick={() => changeRegistration.execute(registration, false)}
-          >
-            Zrušit přihlášku
-          </SubmitButton>
+        <div key={registration.id} className="space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <b>{formatRegistrant(registration)}</b>
+            <SubmitButton
+              type="button"
+              variant="outline"
+              loading={changeRegistration.loading}
+              onClick={() => changeRegistration.execute(registration, false)}
+            >
+              Zrušit přihlášku
+            </SubmitButton>
+          </div>
+          <LessonDemandControls
+            registrationId={registration.id}
+            demands={registration.eventLessonDemandsByRegistrationIdList}
+            trainers={lessonTrainers}
+          />
         </div>
       ))}
 
@@ -205,9 +207,11 @@ function InstanceRegistrationsDialogContent({
 
 function MyRegistrationsDialogContent({
   eventId,
+  instanceId,
   myRegistrations,
 }: {
   eventId: string | null;
+  instanceId: string;
   myRegistrations: EventRegistrationFragment[];
 }) {
   const auth = useAuth();
@@ -216,21 +220,51 @@ function MyRegistrationsDialogContent({
     variables: { id: eventId! },
     pause: !eventId,
   });
+  const [registrationsQuery] = useQuery({
+    query: EventInstanceRegistrationsDocument,
+    variables: { id: instanceId },
+  });
   const event: EventFragment | undefined = data?.event ?? undefined;
 
-  if (!event) {
+  if (!event || !registrationsQuery.data) {
     return (
-      <div className="text-sm text-neutral-10">
-        {fetching || eventId ? 'Načítám…' : 'Přihlášky nejsou k dispozici.'}
-      </div>
+      <>
+        <FormError error={registrationsQuery.error} />
+        {!registrationsQuery.error && (
+          <div className="text-sm text-neutral-10">
+            {fetching || eventId ? 'Načítám…' : 'Přihlášky nejsou k dispozici.'}
+          </div>
+        )}
+      </>
     );
   }
 
+  const instanceRegistrations =
+    registrationsQuery.data.eventInstance?.registrations.nodes ?? [];
+  const lessonTrainers =
+    registrationsQuery.data.eventInstance?.lessonTrainers ?? [];
+
   return (
     <>
-      {myRegistrations.map((reg) => (
-        <MyRegistrationCard key={reg.id} event={event} registration={reg} />
-      ))}
+      {myRegistrations.map((registration) => {
+        const instanceRegistration = instanceRegistrations.find(
+          (candidate) =>
+            candidate.personId === registration.personId &&
+            candidate.coupleId === registration.coupleId,
+        );
+        return (
+          <MyRegistrationCard
+            key={registration.id}
+            event={event}
+            registration={registration}
+            instanceRegistrationId={instanceRegistration?.id ?? null}
+            lessonDemands={
+              instanceRegistration?.eventLessonDemandsByRegistrationIdList ?? []
+            }
+            lessonTrainers={lessonTrainers}
+          />
+        );
+      })}
 
       {(event.capacity <= 0 || (event.remainingPersonSpots ?? 0) > 0) && (
         <>
@@ -238,7 +272,7 @@ function MyRegistrationsDialogContent({
             <div className="text-lg font-bold">Další přihlášky</div>
           )}
           {auth.isLoggedIn && auth.personIds.length > 0 ? (
-            <NewRegistrationForm event={event} />
+            <NewRegistrationForm event={event} lessonTrainers={lessonTrainers} />
           ) : (
             <NewExternalRegistrationForm event={event} />
           )}

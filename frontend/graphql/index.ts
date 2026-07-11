@@ -3234,16 +3234,29 @@ export type EventInstanceRegistrationsOrderBy =
 export type EventInstanceTrainer = {
   __typename?: 'EventInstanceTrainer';
   createdAt: Scalars['Datetime']['output'];
+  /** Reads and enables pagination through a set of `EventLessonDemand`. */
+  eventLessonDemandsByTrainerIdList: Array<EventLessonDemand>;
   id: Scalars['BigInt']['output'];
   /** Reads a single `EventInstance` that is related to this `EventInstanceTrainer`. */
   instance: Maybe<EventInstance>;
   instanceId: Scalars['BigInt']['output'];
+  /** Maximum lesson requests for this trainer on this instance; NULL means unlimited. */
+  lessonsOffered: Maybe<Scalars['Int']['output']>;
+  lessonsRemaining: Maybe<Scalars['Int']['output']>;
   name: Maybe<Scalars['String']['output']>;
   /** Reads a single `Person` that is related to this `EventInstanceTrainer`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type EventInstanceTrainerEventLessonDemandsByTrainerIdListArgs = {
+  condition?: InputMaybe<EventLessonDemandCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventLessonDemandsOrderBy>>;
 };
 
 /**
@@ -3257,6 +3270,8 @@ export type EventInstanceTrainerCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `instanceId` field. */
   instanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `lessonsOffered` field. */
+  lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -3268,6 +3283,7 @@ export type EventInstanceTrainerCondition = {
 /** An input for mutations affecting `EventInstanceTrainerTypeInputRecord` */
 export type EventInstanceTrainerTypeInputRecordInput = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
@@ -3279,6 +3295,8 @@ export type EventInstanceTrainersOrderBy =
   | 'ID_DESC'
   | 'INSTANCE_ID_ASC'
   | 'INSTANCE_ID_DESC'
+  | 'LESSONS_OFFERED_ASC'
+  | 'LESSONS_OFFERED_DESC'
   | 'NATURAL'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
@@ -3370,8 +3388,8 @@ export type EventLessonDemand = {
   registration: Maybe<EventInstanceRegistration>;
   registrationId: Scalars['BigInt']['output'];
   tenantId: Scalars['BigInt']['output'];
-  /** Reads a single `EventTrainer` that is related to this `EventLessonDemand`. */
-  trainer: Maybe<EventTrainer>;
+  /** Reads a single `EventInstanceTrainer` that is related to this `EventLessonDemand`. */
+  trainer: Maybe<EventInstanceTrainer>;
   trainerId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
@@ -3691,8 +3709,6 @@ export type EventTrainer = {
   /** Reads a single `Event` that is related to this `EventTrainer`. */
   event: Maybe<Event>;
   eventId: Scalars['BigInt']['output'];
-  /** Reads and enables pagination through a set of `EventLessonDemand`. */
-  eventLessonDemandsByTrainerIdList: Array<EventLessonDemand>;
   id: Scalars['BigInt']['output'];
   lessonsOffered: Maybe<Scalars['Int']['output']>;
   lessonsRemaining: Maybe<Scalars['Int']['output']>;
@@ -3702,14 +3718,6 @@ export type EventTrainer = {
   personId: Scalars['BigInt']['output'];
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
-};
-
-
-export type EventTrainerEventLessonDemandsByTrainerIdListArgs = {
-  condition?: InputMaybe<EventLessonDemandCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventLessonDemandsOrderBy>>;
 };
 
 /**
@@ -6559,7 +6567,7 @@ export type RegisterToEventManyInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  registrations?: InputMaybe<Array<InputMaybe<RegisterToEventTypeInput>>>;
+  eventRegistrations?: InputMaybe<Array<InputMaybe<RegisterToEventTypeInput>>>;
 };
 
 /** The output of our `registerToEventMany` mutation. */
@@ -6849,9 +6857,9 @@ export type SetLessonDemandInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  instanceRegistrationId: Scalars['BigInt']['input'];
+  instanceTrainerId: Scalars['BigInt']['input'];
   lessonCount: Scalars['Int']['input'];
-  registrationId: Scalars['BigInt']['input'];
-  trainerId: Scalars['BigInt']['input'];
 };
 
 /** The output of our `setLessonDemand` mutation. */
@@ -6867,8 +6875,8 @@ export type SetLessonDemandPayload = {
   eventLessonDemandEdge: Maybe<EventLessonDemandsEdge>;
   /** Reads a single `EventInstanceRegistration` that is related to this `EventLessonDemand`. */
   registration: Maybe<EventInstanceRegistration>;
-  /** Reads a single `EventTrainer` that is related to this `EventLessonDemand`. */
-  trainer: Maybe<EventTrainer>;
+  /** Reads a single `EventInstanceTrainer` that is related to this `EventLessonDemand`. */
+  trainer: Maybe<EventInstanceTrainer>;
 };
 
 
@@ -8306,6 +8314,7 @@ export type UpdateEventInstanceDetailsInput = {
   pName?: InputMaybe<Scalars['String']['input']>;
   pRegistrations?: InputMaybe<Array<InputMaybe<QuickEventRegistrationInputRecordInput>>>;
   pSince?: InputMaybe<Scalars['Datetime']['input']>;
+  pTrainerLessonsOffered?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   pTrainerPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   pType?: InputMaybe<EventType>;
   pUntil?: InputMaybe<Scalars['Datetime']['input']>;
@@ -8778,8 +8787,8 @@ export type UpsertEventInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   cohorts?: InputMaybe<Array<InputMaybe<EventTargetCohortTypeInputRecordInput>>>;
+  eventInstances?: InputMaybe<Array<InputMaybe<EventInstanceTypeInputRecordInput>>>;
   info?: InputMaybe<EventTypeInputRecordInput>;
-  instances?: InputMaybe<Array<InputMaybe<EventInstanceTypeInputRecordInput>>>;
   registrations?: InputMaybe<Array<InputMaybe<EventRegistrationTypeInputRecordInput>>>;
   trainers?: InputMaybe<Array<InputMaybe<EventTrainerTypeInputRecordInput>>>;
 };
@@ -10014,9 +10023,12 @@ export type GraphCacheResolvers = {
   },
   EventInstanceTrainer?: {
     createdAt?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    eventLessonDemandsByTrainerIdList?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, EventInstanceTrainerEventLessonDemandsByTrainerIdListArgs, Array<WithTypename<EventLessonDemand> | string>>,
     id?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     instance?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, WithTypename<EventInstance> | string>,
     instanceId?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    lessonsOffered?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['Int']['output'] | string>,
+    lessonsRemaining?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['Int']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['String']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -10034,7 +10046,7 @@ export type GraphCacheResolvers = {
     registration?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
     registrationId?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    trainer?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, WithTypename<EventTrainer> | string>,
+    trainer?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, WithTypename<EventInstanceTrainer> | string>,
     trainerId?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
@@ -10101,7 +10113,6 @@ export type GraphCacheResolvers = {
     createdAt?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     event?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, WithTypename<Event> | string>,
     eventId?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    eventLessonDemandsByTrainerIdList?: GraphCacheResolver<WithTypename<EventTrainer>, EventTrainerEventLessonDemandsByTrainerIdListArgs, Array<WithTypename<EventLessonDemand> | string>>,
     id?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     lessonsOffered?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['Int']['output'] | string>,
     lessonsRemaining?: GraphCacheResolver<WithTypename<EventTrainer>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -10424,7 +10435,7 @@ export type GraphCacheResolvers = {
     eventLessonDemand?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, WithTypename<EventLessonDemand> | string>,
     eventLessonDemandEdge?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, SetLessonDemandPayloadEventLessonDemandEdgeArgs, WithTypename<EventLessonDemandsEdge> | string>,
     registration?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
-    trainer?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, WithTypename<EventTrainer> | string>
+    trainer?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, WithTypename<EventInstanceTrainer> | string>
   },
   SubmitFormPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SubmitFormPayload>, Record<string, never>, Scalars['String']['output'] | string>
@@ -11768,9 +11779,12 @@ export type GraphCacheUpdaters = {
   },
   EventInstanceTrainer?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    eventLessonDemandsByTrainerIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, EventInstanceTrainerEventLessonDemandsByTrainerIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     instance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     instanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    lessonsOffered?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
+    lessonsRemaining?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
@@ -11855,7 +11869,6 @@ export type GraphCacheUpdaters = {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
-    eventLessonDemandsByTrainerIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, EventTrainerEventLessonDemandsByTrainerIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     lessonsOffered?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,
     lessonsRemaining?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTrainer>>, Record<string, never>>,

@@ -27,6 +27,7 @@ export const EventForm = z.object({
           z.object({
             itemId: z.string().nullish().prefault(null),
             personId: z.string().nullish(),
+            lessonsOffered: z.number().nullish().prefault(null),
           }),
         )
         .prefault([]),

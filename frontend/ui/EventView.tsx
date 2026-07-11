@@ -40,6 +40,9 @@ const labels: { [key in AttendanceType]: LucideIcon } = {
 
 export function EventView({ event }: { event: EventFullFragment }) {
   const auth = useAuth();
+  const rootInstance =
+    event.eventInstancesList.find((instance) => !instance.parentId) ??
+    event.eventInstancesList[0];
   const [variant, setVariant] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
@@ -74,12 +77,12 @@ export function EventView({ event }: { event: EventFullFragment }) {
     }
 
     if (event.type === 'CAMP') {
-      const parentId = event.eventInstancesList[0]?.id;
+      const parentId = rootInstance?.id;
       if (parentId) {
         tabs.push({
           id: 'schedule',
           title: 'Program',
-          contents: () => <Calendar parentId={parentId} initialDate={event.eventInstancesList[0]!.since} />,
+          contents: () => <Calendar parentId={parentId} initialDate={rootInstance.since} />,
         });
       }
     }
@@ -104,7 +107,7 @@ export function EventView({ event }: { event: EventFullFragment }) {
       );
     }
     return tabs;
-  }, [auth.isTrainerOrAdmin, auth.user?.id, event]);
+  }, [auth.isTrainerOrAdmin, auth.user?.id, event, rootInstance]);
 
   if (!event) return null;
 
@@ -112,8 +115,8 @@ export function EventView({ event }: { event: EventFullFragment }) {
     <>
       <PageHeader title={event.name || formatDefaultEventName(event)} actions={actions} />
 
-      {event.eventInstancesList[0] && (
-        <BasicEventInfo instance={event.eventInstancesList[0]} />
+      {rootInstance && (
+        <BasicEventInfo instance={rootInstance} />
       )}
 
       <div className="max-w-full">
@@ -224,10 +227,9 @@ function Registrations({ event }: { event: EventFragment & EventRegistrationsFra
           <div>{x.person ? x.person.name || '' : formatLongCoupleName(x.couple)}</div>
           {(x.note || x.eventLessonDemandsByRegistrationIdList) && (
             <div className="ml-3">
-              {x.eventLessonDemandsByRegistrationIdList.map((x) => (
-                <div key={x.id}>
-                  {x.lessonCount}x{' '}
-                  {event.eventTrainersList.find((y) => y.id === x.trainerId)?.name}
+              {x.eventLessonDemandsByRegistrationIdList.map((demand) => (
+                <div key={demand.id}>
+                  {demand.lessonCount}x {demand.trainer?.person?.name}
                 </div>
               ))}
               {x.note}

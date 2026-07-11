@@ -1,6 +1,7 @@
 import {
   EditRegistrationDocument,
-  type EventFragment,
+  type EventInstanceTrainerLessonOfferFragment,
+  type EventLessonDemandFragment,
   type EventRegistrationFragment,
   SetLessonDemandDocument,
 } from '@/graphql/Event';
@@ -24,18 +25,23 @@ const Form = z.object({
 type FormValues = z.infer<typeof Form>;
 
 export function MyRegistrationForm({
-  event,
+  enableNotes,
   registration,
+  instanceRegistrationId,
+  lessonDemands,
+  lessonTrainers,
 }: {
-  event: EventFragment;
+  enableNotes: boolean;
   registration: EventRegistrationFragment;
+  instanceRegistrationId: string | null;
+  lessonDemands: EventLessonDemandFragment[];
+  lessonTrainers: EventInstanceTrainerLessonOfferFragment[];
 }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const edit = useMutation(EditRegistrationDocument)[1];
-  const [{ fetching }, setMutation] = useMutation(SetLessonDemandDocument);
 
   React.useEffect(() => {
     reset(
@@ -50,46 +56,6 @@ export function MyRegistrationForm({
     );
   }, [reset, registration]);
 
-  const myLessons = React.useMemo(() => {
-    const myLessons: Record<string, number> = {};
-    for (const x of registration.eventLessonDemandsByRegistrationIdList) {
-      myLessons[x.trainerId] = x.lessonCount;
-    }
-    return myLessons;
-  }, [registration]);
-  const lessonTrainers = event.type === 'CAMP' || event.eventInstancesList.length === 1
-    ? event.eventTrainersList.filter(
-        (trainer) =>
-          (trainer.lessonsOffered as number | null) !== 0 ||
-          (myLessons[trainer.id] ?? 0) > 0,
-      )
-    : [];
-
-  const changeLessonCount = React.useCallback(
-    async (
-      diff: number,
-      trainer: {
-        id: string;
-        lessonsOffered: number | null;
-        lessonsRemaining: number | null;
-      },
-    ) => {
-      const currentLessonCount = myLessons[trainer.id] ?? 0;
-      let lessonCount = currentLessonCount + diff;
-      if (diff > 0 && trainer.lessonsOffered !== null) {
-        lessonCount = Math.min(
-          lessonCount,
-          currentLessonCount + Math.max(trainer.lessonsRemaining ?? 0, 0),
-        );
-      }
-      lessonCount = Math.max(lessonCount, 0);
-      await setMutation({
-        input: { registrationId: registration.id, trainerId: trainer.id, lessonCount },
-      });
-    },
-    [setMutation, registration, myLessons],
-  );
-
   const onSubmit = useAsyncCallback(async ({ note }: FormValues) => {
     await edit({ input: { registrationId: registration.id, note } });
     toast.success('Úprava přihlášky proběhla úspěšně.');
@@ -101,7 +67,7 @@ export function MyRegistrationForm({
       <FormError error={onSubmit.error} />
       <b>{formatRegistrant(registration)}</b>
 
-      {(event.enableNotes || !!registration?.note) && (
+      {(enableNotes || !!registration.note) && (
         <>
           <TextAreaElement
             autoFocus
@@ -113,45 +79,89 @@ export function MyRegistrationForm({
         </>
       )}
 
-      {lessonTrainers.length > 0 && (
-        <fieldset>
-          <legend>Požadavky na lekce</legend>
-          {lessonTrainers.map((trainer) => {
-            const lessonsOffered = trainer.lessonsOffered as number | null;
-            const canAddLesson =
-              lessonsOffered === null ||
-              (lessonsOffered > 0 && (trainer.lessonsRemaining ?? 0) > 0);
-
-            return (
-              <div key={trainer.id} className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  className="text-accent-9 disabled:text-accent-7"
-                  onClick={() => changeLessonCount(-1, trainer)}
-                  disabled={fetching || !myLessons[trainer.id]}
-                >
-                  <Minus className="size-5" />
-                </button>
-                <div className="text-xl tabular-nums">
-                  {myLessons[trainer.id] ?? 0}x
-                </div>
-                <button
-                  type="button"
-                  className="text-accent-9 disabled:text-accent-7"
-                  onClick={() => changeLessonCount(1, trainer)}
-                  disabled={fetching || !canAddLesson}
-                >
-                  <Plus className="size-5" />
-                </button>
-                <div className="grow">{trainer.name}</div>
-                {lessonsOffered === null && (
-                  <div className="text-sm text-neutral-10">bez omezení</div>
-                )}
-              </div>
-            );
-          })}
-        </fieldset>
+      {instanceRegistrationId && (
+        <LessonDemandControls
+          registrationId={instanceRegistrationId}
+          demands={lessonDemands}
+          trainers={lessonTrainers}
+        />
       )}
     </form>
+  );
+}
+
+export function LessonDemandControls({
+  registrationId,
+  demands,
+  trainers,
+}: {
+  registrationId: string;
+  demands: EventLessonDemandFragment[];
+  trainers: EventInstanceTrainerLessonOfferFragment[];
+}) {
+  const [{ fetching, error }, setMutation] = useMutation(SetLessonDemandDocument);
+  const myLessons = Object.fromEntries(
+    demands.map((demand) => [demand.trainerId, demand.lessonCount]),
+  );
+  const lessonTrainers = trainers.filter(
+    (trainer) => trainer.lessonsOffered !== 0 || (myLessons[trainer.id] ?? 0) > 0,
+  );
+
+  if (lessonTrainers.length === 0) return null;
+
+  return (
+    <fieldset>
+      <legend>Požadavky na lekce</legend>
+      <FormError error={error} />
+      {lessonTrainers.map((trainer) => {
+        const currentLessonCount = myLessons[trainer.id] ?? 0;
+        const canAddLesson =
+          trainer.lessonsOffered === null ||
+          (trainer.lessonsOffered > 0 && (trainer.lessonsRemaining ?? 0) > 0);
+
+        const changeLessonCount = async (diff: number) => {
+          const available = Math.max(trainer.lessonsRemaining ?? 0, 0);
+          const lessonCount = Math.max(
+            0,
+            trainer.lessonsOffered === null
+              ? currentLessonCount + diff
+              : Math.min(currentLessonCount + diff, currentLessonCount + available),
+          );
+          await setMutation({
+            input: {
+              instanceRegistrationId: registrationId,
+              instanceTrainerId: trainer.id,
+              lessonCount,
+            },
+          });
+        };
+
+        return (
+          <div key={trainer.id} className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="text-accent-9 disabled:text-accent-7"
+              onClick={() => changeLessonCount(-1)}
+              disabled={fetching || currentLessonCount === 0}
+            >
+              <Minus className="size-5" />
+            </button>
+            <div className="text-xl tabular-nums">{currentLessonCount}x</div>
+            <button
+              type="button"
+              className="text-accent-9 disabled:text-accent-7"
+              onClick={() => changeLessonCount(1)}
+              disabled={fetching || !canAddLesson}
+            >
+              <Plus className="size-5" />
+            </button>
+            <div className="grow">{trainer.person?.name}</div>
+            {trainer.lessonsOffered === null && (
+              <div className="text-sm text-neutral-10">bez omezení</div>
+            )}
+          </div>
+        );
+      })}
+    </fieldset>
   );
 }

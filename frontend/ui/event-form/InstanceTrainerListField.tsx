@@ -1,11 +1,12 @@
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
+import { TextFieldElement } from '@/ui/fields/text';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
-import { type Control, useFieldArray } from 'react-hook-form';
+import { type Control, useFieldArray, useWatch } from 'react-hook-form';
 import { EventForm } from '@/ui/event-form/types';
 import { z } from 'zod';
 import { useQuery } from 'urql';
@@ -23,6 +24,9 @@ export function InstanceTrainerListElement({
     name: `instances.${index}.trainers`,
     control,
   });
+  const type = useWatch({ control, name: 'type' });
+  const instanceId = useWatch({ control, name: `instances.${index}.itemId` });
+  const trainers = useWatch({ control, name: `instances.${index}.trainers` });
 
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const trainerOptions = React.useMemo(
@@ -43,10 +47,10 @@ export function InstanceTrainerListElement({
 
   React.useEffect(() => {
     const firstTrainer = enabledTrainerOptions.find(() => true);
-    if (enabledTrainerOptions.length === 1 && firstTrainer) {
-      replace([{ itemId: null, personId: firstTrainer.id }]);
+    if (!instanceId && fields.length === 0 && enabledTrainerOptions.length === 1 && firstTrainer) {
+      replace([{ itemId: null, personId: firstTrainer.id, lessonsOffered: 0 }]);
     }
-  }, [replace, enabledTrainerOptions]);
+  }, [fields.length, instanceId, replace, enabledTrainerOptions]);
 
   return (
     <>
@@ -73,7 +77,7 @@ export function InstanceTrainerListElement({
             >
               <ComboboxSearchArea
                 onChange={(id) => {
-                  if (id) append({ itemId: null, personId: id });
+                  if (id) append({ itemId: null, personId: id, lessonsOffered: 0 });
                   setOpen(false);
                 }}
                 options={enabledTrainerOptions}
@@ -83,28 +87,63 @@ export function InstanceTrainerListElement({
         </Popover>
       </div>
 
-      {fields.map((trainer, index) =>
-        !trainer.personId ? (
+      {fields.map((trainer, trainerIndex) => {
+        const currentTrainer = trainers?.[trainerIndex] ?? trainer;
+        const lessonsOffered = currentTrainer.lessonsOffered as number | null | undefined;
+        const offersLessons = lessonsOffered !== 0;
+
+        return !trainer.personId ? (
           <React.Fragment key={trainer.id} />
         ) : (
-          <div className="flex items-baseline gap-2" key={trainer.id}>
+          <div className="flex flex-wrap items-center gap-2" key={trainer.id}>
             <div className="grow">
               {trainerOptions.find((x) => x.id === trainer.personId)?.label}
             </div>
+            {!['LESSON', 'GROUP'].includes(type) && (
+              <div className="flex flex-wrap items-center gap-2">
+                <label className="flex min-h-9 items-center gap-2 whitespace-nowrap text-sm text-neutral-12">
+                  <input
+                    type="checkbox"
+                    className="focus:ring-accent-9 size-4 bg-accent-2 text-accent-10 border-accent-9 border-2 rounded"
+                    checked={offersLessons}
+                    onChange={(event) =>
+                      update(trainerIndex, {
+                        itemId: currentTrainer.itemId,
+                        personId: currentTrainer.personId,
+                        lessonsOffered: event.currentTarget.checked ? null : 0,
+                      })
+                    }
+                  />
+                  Povolit nabídku lekcí
+                </label>
+                {offersLessons && (
+                  <TextFieldElement
+                    control={control}
+                    type="number"
+                    name={`instances.${index}.trainers.${trainerIndex}.lessonsOffered`}
+                    placeholder="Bez omezení"
+                    aria-label="Limit lekcí"
+                    className="w-28"
+                    min={1}
+                    size={1}
+                  />
+                )}
+              </div>
+            )}
             <button
               type="button"
               className={buttonCls({ size: 'sm', variant: 'outline' })}
               onClick={() =>
                 trainer.itemId
-                  ? update(index, { ...trainer, personId: null })
-                  : remove(index)
+                  ? update(trainerIndex, { ...trainer, personId: null })
+                  : remove(trainerIndex)
               }
             >
               <X />
             </button>
           </div>
-        ),
-      )}
+        );
+      })}
     </>
   );
 }

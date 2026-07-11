@@ -1,6 +1,8 @@
 import {
   CancelRegistrationDocument,
   type EventFragment,
+  type EventInstanceTrainerLessonOfferFragment,
+  type EventLessonDemandFragment,
   type EventRegistrationFragment,
 } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -18,9 +20,15 @@ import { tenantIdAtom } from '@/ui/state/auth';
 export function MyRegistrationCard({
   event,
   registration,
+  instanceRegistrationId,
+  lessonDemands,
+  lessonTrainers,
 }: {
   event: EventFragment;
   registration: EventRegistrationFragment;
+  instanceRegistrationId: string | null;
+  lessonDemands: EventLessonDemandFragment[];
+  lessonTrainers: EventInstanceTrainerLessonOfferFragment[];
 }) {
   const tenantId = useAtomValue(tenantIdAtom);
   const confirm = useConfirm();
@@ -39,15 +47,13 @@ export function MyRegistrationCard({
         {' v '}
         {dateTimeFormatter.format(new Date(registration.createdAt))}
       </div>
-      {registration.eventLessonDemandsByRegistrationIdList.length > 0 && (
+      {lessonDemands.length > 0 && (
         <div>
           <h5>Požadavky na lekce</h5>
           <ul>
-            {registration.eventLessonDemandsByRegistrationIdList.map((x) => (
-              <li key={x.id}>
-                {event.eventTrainersList.find((t) => t.id === x.trainerId)?.name}
-                {': '}
-                {x.lessonCount}
+            {lessonDemands.map((demand) => (
+              <li key={demand.id}>
+                {demand.trainer?.person?.name}: {demand.lessonCount}
               </li>
             ))}
           </ul>
@@ -59,7 +65,13 @@ export function MyRegistrationCard({
         <Dialog>
           <DialogTrigger text="Upravit přihlášku" />
           <DialogContent>
-            <MyRegistrationForm registration={registration} event={event} />
+            <MyRegistrationForm
+              enableNotes={event.enableNotes}
+              registration={registration}
+              instanceRegistrationId={instanceRegistrationId}
+              lessonDemands={lessonDemands}
+              lessonTrainers={lessonTrainers}
+            />
           </DialogContent>
         </Dialog>
       )}

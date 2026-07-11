@@ -29,6 +29,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { DateTimeRangeController } from './InstanceListElement';
+import { InstanceTrainerListElement } from './InstanceTrainerListField';
 import { eventLocationInput, LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListField';
@@ -289,8 +290,16 @@ export function QuickInstanceEditForm({
   const effectiveTrainerIds = instance.trainersList?.map((trainer) => trainer.personId) ?? [];
   const initialTrainers =
     directTrainers.length > 0
-      ? directTrainers.map((trainer) => ({ itemId: trainer.id, personId: trainer.personId }))
-      : effectiveTrainerIds.map((personId) => ({ itemId: null, personId }));
+      ? directTrainers.map((trainer) => ({
+          itemId: trainer.id,
+          personId: trainer.personId,
+          lessonsOffered: trainer.lessonsOffered,
+        }))
+      : effectiveTrainerIds.map((personId) => ({
+          itemId: null,
+          personId,
+          lessonsOffered: 0,
+        }));
 
   const { control, handleSubmit, setValue } = useForm<
     EventFormInput,
@@ -348,13 +357,21 @@ export function QuickInstanceEditForm({
     const edited = values.instances[0];
     if (!edited?.since || !edited.until) return;
 
-    const nextTrainerIds = edited.trainers
-      .map((x) => x.personId)
-      .filter((id): id is string => !!id);
-    const currentTrainerIds =
+    const nextTrainers = edited.trainers.flatMap((trainer) =>
+      trainer.personId
+        ? [{ personId: trainer.personId, lessonsOffered: trainer.lessonsOffered }]
+        : [],
+    );
+    const currentTrainers =
       directTrainers.length > 0
-        ? directTrainers.map((trainer) => trainer.personId)
-        : effectiveTrainerIds;
+        ? directTrainers.map((trainer) => ({
+            personId: trainer.personId,
+            lessonsOffered: trainer.lessonsOffered,
+          }))
+        : effectiveTrainerIds.map((personId) => ({ personId, lessonsOffered: 0 }));
+    const trainersChanged =
+      JSON.stringify(nextTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId))) !==
+      JSON.stringify(currentTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId)));
     const location = eventLocationInput(values);
     const nextRegistrations = values.registrations
       .filter((x) => x.personId || x.coupleId)
@@ -377,7 +394,12 @@ export function QuickInstanceEditForm({
         pCapacity: values.type === 'LESSON' ? 2 : 0,
         pCapacityUnit: 'REGISTRATIONS',
         pIsLocked: values.isLocked,
-        pTrainerPersonIds: nextTrainerIds.toSorted().join(',') === currentTrainerIds.toSorted().join(',') ? null : nextTrainerIds,
+        pTrainerPersonIds: trainersChanged
+          ? nextTrainers.map((trainer) => trainer.personId)
+          : null,
+        pTrainerLessonsOffered: trainersChanged
+          ? nextTrainers.map((trainer) => trainer.lessonsOffered)
+          : null,
         pRegistrations: instance.eventId || !registrationsReady ? null : nextRegistrations,
       },
     });
@@ -401,7 +423,7 @@ export function QuickInstanceEditForm({
         nameUntil="instances.0.until"
         isCamp={type === 'CAMP'}
       />
-      <TrainerListElement control={control} name="trainers" />
+      <InstanceTrainerListElement control={control} index={0} />
       <LocationField control={control} />
       {/*type !== 'LESSON' && (
         <>

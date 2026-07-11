@@ -102,7 +102,7 @@ export function EventSummary({
         </div>
       </div>
 
-      <MyRegistrationsDialog instance={instance} />
+      <MyRegistrationsDialog instance={instance} allowInstanceRegistration />
 
       <div
         className={cn('absolute', offsetButtons ? 'right-9 top-3.5' : 'right-2 top-2')}
