@@ -16,6 +16,7 @@ CREATE TABLE public.event_instance_registration (
     attendance_updated_at timestamp with time zone,
     attendance_note text,
     registration_status public.event_instance_registration_status DEFAULT 'active'::public.event_instance_registration_status NOT NULL,
+    source public.event_registration_source,
     CONSTRAINT event_instance_registration_attendance_state CHECK (((person_id IS NULL) OR ((status IS NOT NULL) AND (attendance_created_at IS NOT NULL) AND (attendance_updated_at IS NOT NULL)))),
     CONSTRAINT event_instance_registration_shape CHECK (
 CASE
@@ -24,7 +25,8 @@ CASE
 END)
 );
 
-COMMENT ON TABLE public.event_instance_registration IS '@omit create,update,delete';
+COMMENT ON TABLE public.event_instance_registration IS '@omit create,update,delete
+@simpleCollections both';
 COMMENT ON COLUMN public.event_instance_registration.legacy_registration_id IS '@omit';
 
 GRANT ALL ON TABLE public.event_instance_registration TO anonymous;
@@ -43,7 +45,7 @@ ALTER TABLE ONLY public.event_instance_registration
 ALTER TABLE ONLY public.event_instance_registration
     ADD CONSTRAINT event_instance_registration_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_instance_registration
-    ADD CONSTRAINT event_instance_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.event_target_cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT event_instance_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE ONLY public.event_instance_registration
     ADD CONSTRAINT event_instance_registration_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 

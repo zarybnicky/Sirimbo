@@ -23,4 +23,6 @@ begin
 end;
 $_$;
 
+COMMENT ON FUNCTION public.edit_registration(registration_id bigint, note text) IS '@omit';
+
 GRANT ALL ON FUNCTION public.edit_registration(registration_id bigint, note text) TO anonymous;

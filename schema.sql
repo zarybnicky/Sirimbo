@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict ZQzVGxXUotYBBgaCznmHX5uF6PavxdnwDTexThHwXSJld3QvEZubfkQ9x22upxZ
+\restrict bniH389oChvrQkkn2NMSmSf9Vg7M0CwVm3pebAaAeR2oVoxDdQSOqBdmDeu4MYa
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -544,6 +544,17 @@ COMMENT ON TYPE public.event_overlaps_conflict IS 'Pair of overlapping event ins
 
 
 --
+-- Name: event_registration_source; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_registration_source AS ENUM (
+    'self',
+    'manager',
+    'cohort'
+);
+
+
+--
 -- Name: event_registration_type_input; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -551,16 +562,6 @@ CREATE TYPE public.event_registration_type_input AS (
 	id bigint,
 	person_id bigint,
 	couple_id bigint
-);
-
-
---
--- Name: event_target_cohort_type_input; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.event_target_cohort_type_input AS (
-	id bigint,
-	cohort_id bigint
 );
 
 
@@ -1698,6 +1699,99 @@ COMMENT ON FUNCTION app_private.queue_announcement_notifications(in_announcement
 
 
 --
+-- Name: reconcile_event_instance_cohort_registrations(bigint[], bigint[]); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.reconcile_event_instance_cohort_registrations(p_instance_ids bigint[], p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS void
+    LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select instance.id
+  from event_instance instance
+  where instance.id = any (p_instance_ids)
+  order by instance.id
+  for update;
+
+  with desired as (
+    select target.instance_id, membership.person_id,
+      min(target.cohort_id) as target_cohort_id
+    from event_instance_target_cohort target
+    join event_instance instance on instance.id = target.instance_id
+    join cohort_membership membership on membership.cohort_id = target.cohort_id
+    where target.instance_id = any (p_instance_ids)
+      and instance.since >= now()
+      and membership.status = 'active'
+      and membership.active_range @> now()
+      and (p_person_ids is null or membership.person_id = any (p_person_ids))
+    group by target.instance_id, membership.person_id
+  )
+  update event_instance_registration r
+  set registration_status = 'active',
+      source = 'cohort',
+      target_cohort_id = desired.target_cohort_id
+  from desired
+  where r.instance_id = desired.instance_id
+    and r.person_id = desired.person_id
+    and r.parent_registration_id is null
+    and r.source = 'cohort'
+    and (r.registration_status, r.target_cohort_id)
+      is distinct from (
+        'active'::event_instance_registration_status,
+        desired.target_cohort_id
+      );
+
+  with desired as (
+    select target.instance_id, instance.tenant_id, membership.person_id,
+      min(target.cohort_id) as target_cohort_id
+    from event_instance_target_cohort target
+    join event_instance instance on instance.id = target.instance_id
+    join cohort_membership membership on membership.cohort_id = target.cohort_id
+    where target.instance_id = any (p_instance_ids)
+      and instance.since >= now()
+      and membership.status = 'active'
+      and membership.active_range @> now()
+      and (p_person_ids is null or membership.person_id = any (p_person_ids))
+    group by target.instance_id, instance.tenant_id, membership.person_id
+  )
+  insert into event_instance_registration (
+    tenant_id, instance_id, person_id, target_cohort_id,
+    source, status
+  )
+  select desired.tenant_id, desired.instance_id, desired.person_id,
+    desired.target_cohort_id, 'cohort', 'unknown'
+  from desired
+  where not exists (
+    select 1
+    from event_instance_registration r
+    where r.instance_id = desired.instance_id
+      and r.person_id = desired.person_id
+      and r.parent_registration_id is null
+  );
+
+  update event_instance_registration r
+  set registration_status = 'cancelled'
+  from event_instance instance
+  where r.instance_id = instance.id
+    and r.instance_id = any (p_instance_ids)
+    and r.parent_registration_id is null
+    and r.source = 'cohort'
+    and r.registration_status = 'active'
+    and instance.since >= now()
+    and (p_person_ids is null or r.person_id = any (p_person_ids))
+    and not exists (
+      select 1
+      from event_instance_target_cohort target
+      join cohort_membership membership
+        on membership.cohort_id = target.cohort_id
+       and membership.person_id = r.person_id
+      where target.instance_id = r.instance_id
+        and membership.status = 'active'
+        and membership.active_range @> now()
+    );
+$$;
+
+
+--
 -- Name: refresh_event_instance_manager_person_ids(bigint, bigint); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -1835,58 +1929,65 @@ CREATE FUNCTION app_private.sync_eir_registrations(reg_ids bigint[]) RETURNS voi
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
-  -- couple unit rows: one per couple registration x each instance of its event
+  -- Legacy targetless registrations do not record who created them, so their
+  -- source stays null; cohort-backed roots can be classified exactly.
   insert into event_instance_registration
-    (legacy_registration_id, tenant_id, instance_id, event_id, couple_id, target_cohort_id, note)
-  select er.id, er.tenant_id, ei.id, er.event_id, er.couple_id, er.target_cohort_id, er.note
+    (legacy_registration_id, tenant_id, instance_id, event_id, couple_id,
+      target_cohort_id, source, note)
+  select er.id, er.tenant_id, ei.id, er.event_id, er.couple_id,
+    target.cohort_id,
+    case when target.cohort_id is not null then 'cohort'::event_registration_source end,
+    er.note
   from event_registration er
   join event_instance ei on ei.event_id = er.event_id
+  left join event_target_cohort target on target.id = er.target_cohort_id
   where er.couple_id is not null and er.id = any (reg_ids)
   on conflict (legacy_registration_id, instance_id, (coalesce(person_id, -1))) do update
     set event_id = excluded.event_id,
         couple_id = excluded.couple_id,
-        target_cohort_id = excluded.target_cohort_id,
         note = excluded.note;
 
-  -- couple person rows: registration's people x instances, linked to the unit.
-  -- New rows start 'unknown'; on conflict status/note are left as-is (native).
   insert into event_instance_registration
     (legacy_registration_id, parent_registration_id, tenant_id, instance_id, event_id, person_id, status)
-  select er.id, u.id, er.tenant_id, ei.id, er.event_id, pid, 'unknown'
+  select er.id, unit.id, er.tenant_id, ei.id, er.event_id, people.person_id, 'unknown'
   from event_registration er
   join event_instance ei on ei.event_id = er.event_id
-  join event_instance_registration u
-    on u.legacy_registration_id = er.id and u.instance_id = ei.id and u.person_id is null
-  cross join lateral app_private.event_registration_person_ids(er) as pid
+  join event_instance_registration unit
+    on unit.legacy_registration_id = er.id and unit.instance_id = ei.id and unit.person_id is null
+  cross join lateral app_private.event_registration_person_ids(er) as people(person_id)
   where er.couple_id is not null and er.id = any (reg_ids)
   on conflict (legacy_registration_id, instance_id, (coalesce(person_id, -1))) do update
     set parent_registration_id = excluded.parent_registration_id,
         event_id = excluded.event_id;
 
-  -- solo rows: combined unit/person per instance
   insert into event_instance_registration
-    (legacy_registration_id, tenant_id, instance_id, event_id, person_id, status, note, target_cohort_id)
-  select er.id, er.tenant_id, ei.id, er.event_id, er.person_id, 'unknown', er.note, er.target_cohort_id
+    (legacy_registration_id, tenant_id, instance_id, event_id, person_id, status,
+      note, target_cohort_id, source)
+  select er.id, er.tenant_id, ei.id, er.event_id, er.person_id, 'unknown', er.note,
+    target.cohort_id,
+    case when target.cohort_id is not null then 'cohort'::event_registration_source end
   from event_registration er
   join event_instance ei on ei.event_id = er.event_id
+  left join event_target_cohort target on target.id = er.target_cohort_id
   where er.couple_id is null and er.id = any (reg_ids)
   on conflict (legacy_registration_id, instance_id, (coalesce(person_id, -1))) do update
     set event_id = excluded.event_id,
         note = excluded.note,
-        target_cohort_id = excluded.target_cohort_id,
         parent_registration_id = excluded.parent_registration_id,
         couple_id = excluded.couple_id;
 
-  -- orphan sweep: rows no longer in the registration x instances product
-  -- (registration cancelled, instance removed, couple recomposed).
-  delete from event_instance_registration e
-  where e.legacy_registration_id = any (reg_ids)
+  delete from event_instance_registration registration
+  where registration.legacy_registration_id = any (reg_ids)
     and not exists (
-      select 1 from event_registration er
+      select 1
+      from event_registration er
       join event_instance ei on ei.event_id = er.event_id
-      where er.id = e.legacy_registration_id and ei.id = e.instance_id
-        and ((e.person_id is null and er.couple_id is not null)
-          or (e.person_id is not null and e.person_id in (select app_private.event_registration_person_ids(er))))
+      where er.id = registration.legacy_registration_id
+        and ei.id = registration.instance_id
+        and (
+          (registration.person_id is null and er.couple_id is not null)
+          or registration.person_id in (select app_private.event_registration_person_ids(er))
+        )
     );
 end;
 $$;
@@ -2090,69 +2191,30 @@ CREATE FUNCTION app_private.tg_cohort_membership__on_status() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'app_private'
     AS $$
+declare
+  instance_ids bigint[];
+  person_ids bigint[];
 begin
-  -- Only react to status transitions (or INSERT).
-  IF TG_OP <> 'INSERT' AND NEW.status IS NOT DISTINCT FROM OLD.status THEN
-    RETURN NEW;
-  END IF;
+  select array_agg(distinct target.instance_id)
+  into instance_ids
+  from event_instance_target_cohort target
+  join event_instance instance on instance.id = target.instance_id
+  where target.cohort_id = any (
+    case when tg_op = 'INSERT' then array[new.cohort_id]
+      when tg_op = 'DELETE' then array[old.cohort_id]
+      else array[old.cohort_id, new.cohort_id]
+    end
+  ) and instance.since >= now();
 
-  if NEW.status = 'expired' then
-    WITH affected AS (
-      SELECT DISTINCT er.id AS registration_id
-      FROM event_target_cohort etc
-      JOIN event_registration er ON er.event_id = etc.event_id
-      WHERE etc.cohort_id = NEW.cohort_id
-        AND (er.person_id = NEW.person_id OR (
-          er.couple_id IS NOT NULL AND EXISTS (
-            SELECT 1 FROM couple c WHERE c.id = er.couple_id AND NEW.person_id IN (c.man_id, c.woman_id))
-          )
-        )
-    ),
-    future_att AS (
-      -- Capture future attendance rows with their pre-update status
-      SELECT eir.id, eir.legacy_registration_id AS registration_id,
-             (eir.status IN ('unknown', 'not-excused', 'cancelled')) AS will_be_cancelled
-      FROM event_instance_registration eir
-      JOIN event_instance ei ON ei.id = eir.instance_id
-      JOIN affected a ON a.registration_id = eir.legacy_registration_id
-      WHERE eir.person_id IS NOT NULL
-        AND ei.since > NEW.until
-    ),
-    upd AS (
-      UPDATE event_instance_registration eir
-        SET status = 'cancelled'
-        FROM future_att fa
-        WHERE eir.id = fa.id
-          AND eir.status IN ('unknown', 'not-excused')
-        RETURNING eir.legacy_registration_id AS registration_id
-    ),
-    deletable AS (
-      -- Delete registrations where:
-      --   (a) all future attendances will be cancelled (pre-update check avoids CTE
-      --       visibility issue with upd), AND
-      --   (b) there are no non-cancelled past/present attendance rows
-      SELECT fa.registration_id
-      FROM future_att fa
-      GROUP BY fa.registration_id
-      HAVING count(*) > 0
-         AND bool_and(fa.will_be_cancelled)
-         AND NOT EXISTS (
-           SELECT 1 FROM event_instance_registration eir2
-           JOIN event_instance ei2 ON ei2.id = eir2.instance_id
-           WHERE eir2.legacy_registration_id = fa.registration_id
-             AND eir2.person_id IS NOT NULL
-             AND ei2.since <= NEW.until
-             AND eir2.status NOT IN ('unknown', 'cancelled')
-         )
-    )
-    DELETE FROM event_registration er
-      USING deletable d
-    WHERE er.id = d.registration_id;
-  elsif NEW.status = 'active' then
-    perform app_private.register_new_cohort_member_to_events(NEW);
-    -- TODO: add payments
+  if instance_ids is not null then
+    person_ids := case when tg_op = 'INSERT' then array[new.person_id]
+      when tg_op = 'DELETE' then array[old.person_id]
+      else array[old.person_id, new.person_id]
+    end;
+    perform app_private.reconcile_event_instance_cohort_registrations(instance_ids, person_ids);
   end if;
-  return NEW;
+
+  return case when tg_op = 'DELETE' then old else new end;
 end;
 $$;
 
@@ -2354,6 +2416,31 @@ begin
       using errcode = '23514';
   end if;
 
+  return new;
+end;
+$$;
+
+
+--
+-- Name: tg_event_instance_target_cohort__reconcile(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_event_instance_target_cohort__reconcile() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+begin
+  if tg_op = 'DELETE' then
+    perform app_private.reconcile_event_instance_cohort_registrations(array[old.instance_id]);
+    return old;
+  end if;
+
+  perform app_private.reconcile_event_instance_cohort_registrations(
+    case when tg_op = 'UPDATE' and old.instance_id <> new.instance_id
+      then array[old.instance_id, new.instance_id]
+      else array[new.instance_id]
+    end
+  );
   return new;
 end;
 $$;
@@ -3496,6 +3583,13 @@ $$;
 
 
 --
+-- Name: FUNCTION cancel_registration(registration_id bigint); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.cancel_registration(registration_id bigint) IS '@omit';
+
+
+--
 -- Name: change_password(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4327,6 +4421,8 @@ BEGIN
     'reg_couple_id', er.couple_id,
     'attendee_person_id', eir.person_id,
     'registration_status', eir.registration_status,
+    'source', eir.source,
+    'target_cohort_id', eir.target_cohort_id,
     'status', eir.status,
     'attendance_note', eir.attendance_note,
     'attendance_created_at', eir.attendance_created_at,
@@ -4435,6 +4531,8 @@ BEGIN
   -- Restore per-person attendance on the newly generated bridge rows.
   UPDATE public.event_instance_registration eir
   SET registration_status = oa.registration_status,
+      source = oa.source,
+      target_cohort_id = oa.target_cohort_id,
       status = oa.status,
       attendance_note = oa.attendance_note
   FROM jsonb_to_recordset(v_old_att) AS oa(
@@ -4442,6 +4540,8 @@ BEGIN
     reg_couple_id bigint,
     attendee_person_id bigint,
     registration_status public.event_instance_registration_status,
+    source public.event_registration_source,
+    target_cohort_id bigint,
     status public.attendance_type,
     attendance_note text
   )
@@ -4500,6 +4600,13 @@ begin
   return reg;
 end;
 $_$;
+
+
+--
+-- Name: FUNCTION edit_registration(registration_id bigint, note text); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.edit_registration(registration_id bigint, note text) IS '@omit';
 
 
 --
@@ -4588,6 +4695,7 @@ CREATE TABLE public.event_instance_registration (
     attendance_updated_at timestamp with time zone,
     attendance_note text,
     registration_status public.event_instance_registration_status DEFAULT 'active'::public.event_instance_registration_status NOT NULL,
+    source public.event_registration_source,
     CONSTRAINT event_instance_registration_attendance_state CHECK (((person_id IS NULL) OR ((status IS NOT NULL) AND (attendance_created_at IS NOT NULL) AND (attendance_updated_at IS NOT NULL)))),
     CONSTRAINT event_instance_registration_shape CHECK (
 CASE
@@ -4601,7 +4709,8 @@ END)
 -- Name: TABLE event_instance_registration; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_instance_registration IS '@omit create,update,delete';
+COMMENT ON TABLE public.event_instance_registration IS '@omit create,update,delete
+@simpleCollections both';
 
 
 --
@@ -4681,13 +4790,13 @@ $$;
 
 
 --
--- Name: event_target_cohort; Type: TABLE; Schema: public; Owner: -
+-- Name: event_instance_target_cohort; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.event_target_cohort (
+CREATE TABLE public.event_instance_target_cohort (
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
+    instance_id bigint NOT NULL,
     cohort_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
@@ -4695,10 +4804,10 @@ CREATE TABLE public.event_target_cohort (
 
 
 --
--- Name: TABLE event_target_cohort; Type: COMMENT; Schema: public; Owner: -
+-- Name: TABLE event_instance_target_cohort; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
+COMMENT ON TABLE public.event_instance_target_cohort IS '@omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
@@ -4707,10 +4816,10 @@ COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
 -- Name: event_instance_target_cohorts(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_instance_target_cohorts(inst public.event_instance) RETURNS SETOF public.event_target_cohort
+CREATE FUNCTION public.event_instance_target_cohorts(inst public.event_instance) RETURNS SETOF public.event_instance_target_cohort
     LANGUAGE sql STABLE
     AS $$
-  select * from event_target_cohort where event_id = inst.event_id;
+  select * from public.event_instance_target_cohort where instance_id = inst.id;
 $$;
 
 
@@ -4718,7 +4827,7 @@ $$;
 -- Name: FUNCTION event_instance_target_cohorts(inst public.event_instance); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_instance_target_cohorts(inst public.event_instance) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_instance_target_cohorts(inst public.event_instance) IS '@omit';
 
 
 --
@@ -5857,9 +5966,10 @@ begin
 
     with roots as (
       insert into event_instance_registration (
-        instance_id, person_id, couple_id, status
+        instance_id, person_id, couple_id, source, status
       )
       select created_instance.id, registration.person_id, registration.couple_id,
+        'manager',
         case when registration.person_id is not null then 'unknown'::attendance_type end
       from unnest(quick_event.registrations) registration
       returning id, couple_id
@@ -6007,6 +6117,13 @@ begin
   return query select * from event_registration where id = any (created_ids);
 end;
 $$;
+
+
+--
+-- Name: FUNCTION register_to_event_many(event_registrations public.register_to_event_type[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.register_to_event_many(event_registrations public.register_to_event_type[]) IS '@omit';
 
 
 --
@@ -6272,14 +6389,14 @@ CREATE FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigi
       on ea.instance_id = inst.instance_id and ea.person_id is not null
     left join event_instance_registration registration
       on registration.id = ea.parent_registration_id
-    left join event_target_cohort tc
+    left join cohort tc
       on tc.id = coalesce(ea.target_cohort_id, registration.target_cohort_id)
     where
       ea.registration_status = 'active'
       and ea.status <> 'cancelled'
       and (ea.status = 'attended' or inst.event_type = 'lesson')
       and ea.person_id = any (select person_id from member_people)
-      and (scoreboard_entries.cohort_id is null or tc.cohort_id = scoreboard_entries.cohort_id)
+      and (scoreboard_entries.cohort_id is null or tc.id = scoreboard_entries.cohort_id)
   ),
   per_day as (
     select
@@ -6368,16 +6485,17 @@ COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id 
 
 
 --
--- Name: set_event_instance_registration(bigint, bigint, bigint, boolean); Type: FUNCTION; Schema: public; Owner: -
+-- Name: set_event_instance_registration(bigint, bigint, bigint, boolean, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean) RETURNS public.event_instance_registration
+CREATE FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text DEFAULT NULL::text) RETURNS public.event_instance_registration
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
   target_instance event_instance;
   registration event_instance_registration;
+  registration_found boolean;
   required_capacity integer;
   remaining_capacity integer;
 begin
@@ -6401,7 +6519,7 @@ begin
   if not found then
     raise exception 'INSTANCE_NOT_FOUND' using errcode = '22023';
   end if;
-  if target_instance.event_id is not null or target_instance.is_locked then
+  if target_instance.is_locked then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
 
@@ -6409,20 +6527,31 @@ begin
   from event_instance_registration
   where instance_id = p_instance_id
     and parent_registration_id is null
-    and legacy_registration_id is null
     and person_id is not distinct from p_person_id
     and couple_id is not distinct from p_couple_id;
+  registration_found := found;
 
   if not p_is_registered then
-    if registration is null then
+    if not registration_found then
       raise exception 'REGISTRATION_NOT_FOUND' using errcode = '22023';
     end if;
 
     update event_instance_registration
-    set registration_status = 'cancelled'
+    set registration_status = 'cancelled',
+        target_cohort_id = null,
+        source = case when id = registration.id
+          then 'self'::event_registration_source end
     where id = registration.id or parent_registration_id = registration.id;
 
     select * into registration from event_instance_registration where id = registration.id;
+    return registration;
+  end if;
+
+  if registration_found and registration.registration_status = 'active' then
+    if p_note is not null then
+      update event_instance_registration set note = p_note where id = registration.id
+      returning * into registration;
+    end if;
     return registration;
   end if;
 
@@ -6438,10 +6567,6 @@ begin
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
 
-  if registration is not null and registration.registration_status = 'active' then
-    return registration;
-  end if;
-
   remaining_capacity := event_instance_remaining_person_spots(target_instance);
   required_capacity := case
     when target_instance.capacity_unit = 'people' and p_couple_id is not null then 2
@@ -6451,16 +6576,24 @@ begin
     raise exception 'CAPACITY_EXCEEDED' using errcode = '22023';
   end if;
 
-  if registration is not null then
+  if registration_found then
     update event_instance_registration
-    set registration_status = 'active'
+    set registration_status = 'active',
+        target_cohort_id = null,
+        source = case when id = registration.id
+          then 'self'::event_registration_source end
     where id = registration.id or parent_registration_id = registration.id;
+
+    if p_note is not null then
+      update event_instance_registration set note = p_note where id = registration.id;
+    end if;
   else
     insert into event_instance_registration (
-      instance_id, person_id, couple_id, status
+      instance_id, person_id, couple_id, source, status, note
     ) values (
-      p_instance_id, p_person_id, p_couple_id,
-      case when p_person_id is not null then 'unknown'::attendance_type end
+      p_instance_id, p_person_id, p_couple_id, 'self',
+      case when p_person_id is not null then 'unknown'::attendance_type end,
+      p_note
     ) returning * into registration;
 
     insert into event_instance_registration (
@@ -7161,10 +7294,10 @@ $_$;
 
 
 --
--- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[], public.quick_event_registration_input[], integer, public.event_capacity_unit, boolean, integer[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[], public.quick_event_registration_input[], integer, public.event_capacity_unit, boolean, integer[], bigint[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[]) RETURNS public.event_instance
+CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_cohort_ids bigint[] DEFAULT NULL::bigint[]) RETURNS public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
@@ -7174,7 +7307,6 @@ begin
     perform registration.id
     from public.event_instance_registration registration
     where registration.instance_id = p_instance_id
-      and registration.legacy_registration_id is null
     order by registration.id
     for update;
   end if;
@@ -7201,10 +7333,6 @@ begin
   end if;
 
   if p_registrations is not null then
-    if updated_instance.event_id is not null then
-      raise exception 'event-backed instance % registrations must be edited through event_registration', p_instance_id;
-    end if;
-
     with desired as (
       select distinct registration.person_id, registration.couple_id
       from unnest(p_registrations) registration
@@ -7213,7 +7341,6 @@ begin
       from public.event_instance_registration existing
       where existing.instance_id = p_instance_id
         and existing.parent_registration_id is null
-        and existing.legacy_registration_id is null
         and not exists (
           select 1
           from desired
@@ -7222,7 +7349,10 @@ begin
         )
     )
     update public.event_instance_registration registration
-    set registration_status = 'cancelled'
+    set registration_status = 'cancelled',
+        target_cohort_id = null,
+        source = case when registration.id = roots.id
+          then 'manager'::public.event_registration_source end
     from roots
     where registration.registration_status <> 'cancelled'
       and (
@@ -7241,10 +7371,12 @@ begin
         and desired.couple_id is not distinct from existing.couple_id
       where existing.instance_id = p_instance_id
         and existing.parent_registration_id is null
-        and existing.legacy_registration_id is null
     )
     update public.event_instance_registration registration
-    set registration_status = 'active'
+    set registration_status = 'active',
+        target_cohort_id = null,
+        source = case when registration.id = roots.id
+          then 'manager'::public.event_registration_source end
     from roots
     where registration.registration_status <> 'active'
       and (
@@ -7257,12 +7389,13 @@ begin
       from unnest(p_registrations) registration
     ), roots as (
       insert into public.event_instance_registration (
-        instance_id, person_id, couple_id, status
+        instance_id, person_id, couple_id, source, status
       )
       select
         p_instance_id,
         desired.person_id,
         desired.couple_id,
+        'manager',
         case when desired.person_id is not null then 'unknown'::public.attendance_type end
       from desired
       where not exists (
@@ -7270,7 +7403,6 @@ begin
         from public.event_instance_registration existing
         where existing.instance_id = p_instance_id
           and existing.parent_registration_id is null
-          and existing.legacy_registration_id is null
           and existing.person_id is not distinct from desired.person_id
           and existing.couple_id is not distinct from desired.couple_id
       )
@@ -7283,6 +7415,22 @@ begin
     from roots
     join public.couple couple on couple.id = roots.couple_id
     cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id);
+  end if;
+
+  if p_cohort_ids is not null then
+    insert into public.event_instance_target_cohort (tenant_id, instance_id, cohort_id)
+    select distinct updated_instance.tenant_id, p_instance_id, desired.cohort_id
+    from unnest(p_cohort_ids) desired(cohort_id)
+    where desired.cohort_id is not null
+    on conflict (instance_id, cohort_id) do nothing;
+
+    delete from public.event_instance_target_cohort target
+    where target.instance_id = p_instance_id
+      and not exists (
+        select 1
+        from unnest(p_cohort_ids) desired(cohort_id)
+        where desired.cohort_id = target.cohort_id
+      );
   end if;
 
   if p_trainer_person_ids is not null then
@@ -7317,7 +7465,7 @@ begin
       else excluded.lessons_offered end;
   end if;
 
-  if p_registrations is not null then
+  if p_registrations is not null or p_cohort_ids is not null then
     select * into updated_instance
     from public.event_instance
     where id = p_instance_id;
@@ -7477,21 +7625,23 @@ $$;
 
 
 --
--- Name: upsert_event(public.event_type_input, public.event_instance_type_input[], public.event_trainer_type_input[], public.event_target_cohort_type_input[], public.event_registration_type_input[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: upsert_event(public.event_type_input, public.event_instance_type_input[], public.event_trainer_type_input[], public.event_registration_type_input[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) RETURNS public.event
+CREATE FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], registrations public.event_registration_type_input[]) RETURNS public.event
     LANGUAGE plpgsql
     AS $$
 declare
   instance event_instance_type_input;
   trainer event_trainer_type_input;
   instance_trainer event_instance_trainer_type_input;
-  cohort event_target_cohort_type_input;
-  registration event_registration_type_input;
   v_event event;
   v_instance_id bigint;
 begin
+  if cardinality(registrations) > 0 then
+    raise exception 'event registrations must be edited on the event instance';
+  end if;
+
   if info.id is null then
 
     insert into event (
@@ -7586,30 +7736,6 @@ begin
       delete from event_trainer where id=trainer.id;
     else
       update event_trainer set lessons_offered=trainer.lessons_offered where id=trainer.id;
-    end if;
-  end loop;
-
-  foreach cohort in array coalesce(cohorts, '{}'::event_target_cohort_type_input[]) loop
-    if cohort.id is null then
-      insert into event_target_cohort (event_id, cohort_id)
-      values (v_event.id, cohort.cohort_id)
-      on conflict (event_id, cohort_id) do nothing;
-    elsif cohort.cohort_id is null then
-      delete from event_target_cohort where id=cohort.id;
-    end if;
-  end loop;
-
-  foreach registration in array coalesce(registrations, '{}'::event_registration_type_input[]) loop
-    if registration.id is null then
-      insert into event_registration (event_id, person_id, couple_id)
-      values (v_event.id, registration.person_id, registration.couple_id)
-      on conflict (event_id, person_id, couple_id) do nothing;
-    elsif registration.person_id is null and registration.couple_id is null then
-      delete from event_registration where id=registration.id;
-    else
-      update event_registration
-      set person_id=registration.person_id, couple_id=registration.couple_id
-      where id=registration.id;
     end if;
   end loop;
 
@@ -9270,6 +9396,20 @@ ALTER TABLE public.event_instance_registration ALTER COLUMN id ADD GENERATED ALW
 
 
 --
+-- Name: event_instance_target_cohort_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_instance_target_cohort ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.event_instance_target_cohort_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: event_instance_trainer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -9309,6 +9449,29 @@ ALTER TABLE public.event_registration ALTER COLUMN id ADD GENERATED BY DEFAULT A
     NO MAXVALUE
     CACHE 1
 );
+
+
+--
+-- Name: event_target_cohort; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_target_cohort (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    cohort_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE event_target_cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+@simpleCollections only';
 
 
 --
@@ -10639,6 +10802,22 @@ ALTER TABLE ONLY public.event_instance_registration
 
 
 --
+-- Name: event_instance_target_cohort event_instance_target_cohort_instance_id_cohort_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_target_cohort
+    ADD CONSTRAINT event_instance_target_cohort_instance_id_cohort_id_key UNIQUE (instance_id, cohort_id);
+
+
+--
+-- Name: event_instance_target_cohort event_instance_target_cohort_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_target_cohort
+    ADD CONSTRAINT event_instance_target_cohort_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: event_instance event_instance_tenant_id_id_event_id_ux; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11719,6 +11898,20 @@ CREATE INDEX event_instance_since_idx ON public.event_instance USING btree (sinc
 
 
 --
+-- Name: event_instance_target_cohort_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_target_cohort_cohort_id_idx ON public.event_instance_target_cohort USING btree (cohort_id);
+
+
+--
+-- Name: event_instance_target_cohort_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_target_cohort_tenant_id_idx ON public.event_instance_target_cohort USING btree (tenant_id);
+
+
+--
 -- Name: event_instance_tenant_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -12461,6 +12654,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_
 
 
 --
+-- Name: event_instance_target_cohort _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: event_instance_trainer _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -12709,7 +12909,7 @@ CREATE TRIGGER _500_eir_refresh_stats_upd AFTER UPDATE ON public.event_instance_
 -- Name: cohort_membership _500_on_status; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _500_on_status AFTER INSERT OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_cohort_membership__on_status();
+CREATE TRIGGER _500_on_status AFTER INSERT OR DELETE OR UPDATE OF status, cohort_id, person_id, since, until ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_cohort_membership__on_status();
 
 
 --
@@ -12717,6 +12917,13 @@ CREATE TRIGGER _500_on_status AFTER INSERT OR UPDATE ON public.cohort_membership
 --
 
 CREATE TRIGGER _500_on_status AFTER UPDATE ON public.tenant_membership FOR EACH ROW WHEN ((old.status IS DISTINCT FROM new.status)) EXECUTE FUNCTION app_private.tg_tenant_membership__on_status();
+
+
+--
+-- Name: event_instance_target_cohort _500_reconcile_registrations; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_reconcile_registrations AFTER INSERT OR DELETE OR UPDATE OF instance_id, cohort_id ON public.event_instance_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance_target_cohort__reconcile();
 
 
 --
@@ -12741,24 +12948,10 @@ CREATE TRIGGER _500_refresh_manager_person_ids_from_parent AFTER INSERT OR UPDAT
 
 
 --
--- Name: event_target_cohort _500_register_members; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _500_register_members AFTER INSERT ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_target_cohort__register_members();
-
-
---
 -- Name: person_invitation _500_send; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER _500_send AFTER INSERT ON public.person_invitation FOR EACH ROW EXECUTE FUNCTION app_private.tg_person_invitation__send();
-
-
---
--- Name: event_target_cohort _500_unregister_members; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _500_unregister_members AFTER DELETE ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_target_cohort__unregister_members();
 
 
 --
@@ -13744,7 +13937,7 @@ ALTER TABLE ONLY public.event_instance_registration
 --
 
 ALTER TABLE ONLY public.event_instance_registration
-    ADD CONSTRAINT event_instance_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.event_target_cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT event_instance_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --
@@ -13753,6 +13946,38 @@ ALTER TABLE ONLY public.event_instance_registration
 
 ALTER TABLE ONLY public.event_instance_registration
     ADD CONSTRAINT event_instance_registration_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: event_instance_target_cohort event_instance_target_cohort_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_target_cohort
+    ADD CONSTRAINT event_instance_target_cohort_cohort_id_fkey FOREIGN KEY (cohort_id) REFERENCES public.cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: event_instance_target_cohort event_instance_target_cohort_instance_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_target_cohort
+    ADD CONSTRAINT event_instance_target_cohort_instance_id_fkey FOREIGN KEY (instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT event_instance_target_cohort_instance_id_fkey ON event_instance_target_cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_instance_target_cohort_instance_id_fkey ON public.event_instance_target_cohort IS '@fieldName instance
+@foreignFieldName targetCohorts';
+
+
+--
+-- Name: event_instance_target_cohort event_instance_target_cohort_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_instance_target_cohort
+    ADD CONSTRAINT event_instance_target_cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -14553,6 +14778,13 @@ CREATE POLICY admin_all ON public.event_instance_registration TO administrator U
 
 
 --
+-- Name: event_instance_target_cohort admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.event_instance_target_cohort TO administrator USING (true);
+
+
+--
 -- Name: event_instance_trainer admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -14905,6 +15137,13 @@ CREATE POLICY current_tenant ON public.event_instance_registration AS RESTRICTIV
 
 
 --
+-- Name: event_instance_target_cohort current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.event_instance_target_cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
 -- Name: event_instance_trainer current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -15049,6 +15288,12 @@ ALTER TABLE public.event_instance ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.event_instance_registration ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: event_instance_target_cohort; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_instance_target_cohort ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: event_instance_trainer; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -15166,6 +15411,14 @@ CREATE POLICY member_view ON public.event FOR SELECT TO member USING (is_visible
 --
 
 CREATE POLICY member_view ON public.event_instance FOR SELECT TO member USING (is_visible);
+
+
+--
+-- Name: event_instance_target_cohort member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.event_instance_target_cohort FOR SELECT TO member USING ((instance_id IN ( SELECT event_instance.id
+   FROM public.event_instance)));
 
 
 --
@@ -15415,6 +15668,13 @@ CREATE POLICY trainer_delete ON public.event_instance FOR DELETE TO trainer USIN
 
 
 --
+-- Name: event_instance_target_cohort trainer_delete; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_delete ON public.event_instance_target_cohort FOR DELETE TO trainer USING (app_private.can_trainer_edit_instance(instance_id));
+
+
+--
 -- Name: event_instance trainer_insert; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -15426,6 +15686,13 @@ CREATE POLICY trainer_insert ON public.event_instance FOR INSERT TO trainer WITH
 --
 
 CREATE POLICY trainer_insert ON public.event_instance_registration FOR INSERT TO trainer WITH CHECK (app_private.can_trainer_edit_instance(instance_id));
+
+
+--
+-- Name: event_instance_target_cohort trainer_insert; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_insert ON public.event_instance_target_cohort FOR INSERT TO trainer WITH CHECK (app_private.can_trainer_edit_instance(instance_id));
 
 
 --
@@ -15478,6 +15745,13 @@ CREATE POLICY trainer_select ON public.event_instance FOR SELECT TO trainer USIN
 
 
 --
+-- Name: event_instance_target_cohort trainer_select; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_select ON public.event_instance_target_cohort FOR SELECT TO trainer USING (app_private.can_trainer_edit_instance(instance_id));
+
+
+--
 -- Name: event_instance trainer_update; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -15489,6 +15763,13 @@ CREATE POLICY trainer_update ON public.event_instance FOR UPDATE TO trainer USIN
 --
 
 CREATE POLICY trainer_update ON public.event_instance_registration FOR UPDATE TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (app_private.can_trainer_edit_instance(instance_id));
+
+
+--
+-- Name: event_instance_target_cohort trainer_update; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_update ON public.event_instance_target_cohort FOR UPDATE TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (app_private.can_trainer_edit_instance(instance_id));
 
 
 --
@@ -15760,6 +16041,13 @@ GRANT ALL ON FUNCTION app_private.queue_announcement_notifications(in_announceme
 
 
 --
+-- Name: FUNCTION reconcile_event_instance_cohort_registrations(p_instance_ids bigint[], p_person_ids bigint[]); Type: ACL; Schema: app_private; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_private.reconcile_event_instance_cohort_registrations(p_instance_ids bigint[], p_person_ids bigint[]) FROM PUBLIC;
+
+
+--
 -- Name: FUNCTION refresh_event_instance_manager_person_ids(p_instance_id bigint, p_event_id bigint); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -15820,6 +16108,13 @@ REVOKE ALL ON FUNCTION app_private.tg_event_instance__refresh_manager_person_ids
 --
 
 REVOKE ALL ON FUNCTION app_private.tg_event_instance__validate_parent() FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION tg_event_instance_target_cohort__reconcile(); Type: ACL; Schema: app_private; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_private.tg_event_instance_target_cohort__reconcile() FROM PUBLIC;
 
 
 --
@@ -16124,10 +16419,10 @@ GRANT ALL ON FUNCTION public.event_instance_remaining_person_spots(inst public.e
 
 
 --
--- Name: TABLE event_target_cohort; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE event_instance_target_cohort; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.event_target_cohort TO anonymous;
+GRANT ALL ON TABLE public.event_instance_target_cohort TO anonymous;
 
 
 --
@@ -16622,10 +16917,10 @@ GRANT ALL ON FUNCTION public.scoreboard_entries(since date, until date, cohort_i
 
 
 --
--- Name: FUNCTION set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean) TO anonymous;
+GRANT ALL ON FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text) TO anonymous;
 
 
 --
@@ -16699,10 +16994,10 @@ GRANT ALL ON FUNCTION public.trainer_group_attendance_completion(since timestamp
 
 
 --
--- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[]) TO anonymous;
+GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[]) TO anonymous;
 
 
 --
@@ -16727,10 +17022,10 @@ GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_i
 
 
 --
--- Name: FUNCTION upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], registrations public.event_registration_type_input[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], cohorts public.event_target_cohort_type_input[], registrations public.event_registration_type_input[]) TO anonymous;
+GRANT ALL ON FUNCTION public.upsert_event(info public.event_type_input, event_instances public.event_instance_type_input[], trainers public.event_trainer_type_input[], registrations public.event_registration_type_input[]) TO anonymous;
 
 
 --
@@ -17175,6 +17470,20 @@ GRANT SELECT,USAGE ON SEQUENCE public.event_id_seq TO anonymous;
 
 
 --
+-- Name: SEQUENCE event_instance_target_cohort_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.event_instance_target_cohort_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE event_target_cohort; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event_target_cohort TO anonymous;
+
+
+--
 -- Name: TABLE form_responses; Type: ACL; Schema: public; Owner: -
 --
 
@@ -17269,5 +17578,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict ZQzVGxXUotYBBgaCznmHX5uF6PavxdnwDTexThHwXSJld3QvEZubfkQ9x22upxZ
+\unrestrict bniH389oChvrQkkn2NMSmSf9Vg7M0CwVm3pebAaAeR2oVoxDdQSOqBdmDeu4MYa
 

@@ -1,4 +1,4 @@
-CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[]) RETURNS public.event_instance
+CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_cohort_ids bigint[] DEFAULT NULL::bigint[]) RETURNS public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
@@ -8,7 +8,6 @@ begin
     perform registration.id
     from public.event_instance_registration registration
     where registration.instance_id = p_instance_id
-      and registration.legacy_registration_id is null
     order by registration.id
     for update;
   end if;
@@ -35,10 +34,6 @@ begin
   end if;
 
   if p_registrations is not null then
-    if updated_instance.event_id is not null then
-      raise exception 'event-backed instance % registrations must be edited through event_registration', p_instance_id;
-    end if;
-
     with desired as (
       select distinct registration.person_id, registration.couple_id
       from unnest(p_registrations) registration
@@ -47,7 +42,6 @@ begin
       from public.event_instance_registration existing
       where existing.instance_id = p_instance_id
         and existing.parent_registration_id is null
-        and existing.legacy_registration_id is null
         and not exists (
           select 1
           from desired
@@ -56,7 +50,10 @@ begin
         )
     )
     update public.event_instance_registration registration
-    set registration_status = 'cancelled'
+    set registration_status = 'cancelled',
+        target_cohort_id = null,
+        source = case when registration.id = roots.id
+          then 'manager'::public.event_registration_source end
     from roots
     where registration.registration_status <> 'cancelled'
       and (
@@ -75,10 +72,12 @@ begin
         and desired.couple_id is not distinct from existing.couple_id
       where existing.instance_id = p_instance_id
         and existing.parent_registration_id is null
-        and existing.legacy_registration_id is null
     )
     update public.event_instance_registration registration
-    set registration_status = 'active'
+    set registration_status = 'active',
+        target_cohort_id = null,
+        source = case when registration.id = roots.id
+          then 'manager'::public.event_registration_source end
     from roots
     where registration.registration_status <> 'active'
       and (
@@ -91,12 +90,13 @@ begin
       from unnest(p_registrations) registration
     ), roots as (
       insert into public.event_instance_registration (
-        instance_id, person_id, couple_id, status
+        instance_id, person_id, couple_id, source, status
       )
       select
         p_instance_id,
         desired.person_id,
         desired.couple_id,
+        'manager',
         case when desired.person_id is not null then 'unknown'::public.attendance_type end
       from desired
       where not exists (
@@ -104,7 +104,6 @@ begin
         from public.event_instance_registration existing
         where existing.instance_id = p_instance_id
           and existing.parent_registration_id is null
-          and existing.legacy_registration_id is null
           and existing.person_id is not distinct from desired.person_id
           and existing.couple_id is not distinct from desired.couple_id
       )
@@ -117,6 +116,22 @@ begin
     from roots
     join public.couple couple on couple.id = roots.couple_id
     cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id);
+  end if;
+
+  if p_cohort_ids is not null then
+    insert into public.event_instance_target_cohort (tenant_id, instance_id, cohort_id)
+    select distinct updated_instance.tenant_id, p_instance_id, desired.cohort_id
+    from unnest(p_cohort_ids) desired(cohort_id)
+    where desired.cohort_id is not null
+    on conflict (instance_id, cohort_id) do nothing;
+
+    delete from public.event_instance_target_cohort target
+    where target.instance_id = p_instance_id
+      and not exists (
+        select 1
+        from unnest(p_cohort_ids) desired(cohort_id)
+        where desired.cohort_id = target.cohort_id
+      );
   end if;
 
   if p_trainer_person_ids is not null then
@@ -151,7 +166,7 @@ begin
       else excluded.lessons_offered end;
   end if;
 
-  if p_registrations is not null then
+  if p_registrations is not null or p_cohort_ids is not null then
     select * into updated_instance
     from public.event_instance
     where id = p_instance_id;
@@ -161,4 +176,4 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[]) TO anonymous;
+GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[]) TO anonymous;

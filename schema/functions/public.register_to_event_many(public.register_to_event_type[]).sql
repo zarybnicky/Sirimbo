@@ -49,4 +49,6 @@ begin
 end;
 $$;
 
+COMMENT ON FUNCTION public.register_to_event_many(event_registrations public.register_to_event_type[]) IS '@omit';
+
 GRANT ALL ON FUNCTION public.register_to_event_many(event_registrations public.register_to_event_type[]) TO anonymous;

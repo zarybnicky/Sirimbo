@@ -32,6 +32,8 @@ BEGIN
     'reg_couple_id', er.couple_id,
     'attendee_person_id', eir.person_id,
     'registration_status', eir.registration_status,
+    'source', eir.source,
+    'target_cohort_id', eir.target_cohort_id,
     'status', eir.status,
     'attendance_note', eir.attendance_note,
     'attendance_created_at', eir.attendance_created_at,
@@ -140,6 +142,8 @@ BEGIN
   -- Restore per-person attendance on the newly generated bridge rows.
   UPDATE public.event_instance_registration eir
   SET registration_status = oa.registration_status,
+      source = oa.source,
+      target_cohort_id = oa.target_cohort_id,
       status = oa.status,
       attendance_note = oa.attendance_note
   FROM jsonb_to_recordset(v_old_att) AS oa(
@@ -147,6 +151,8 @@ BEGIN
     reg_couple_id bigint,
     attendee_person_id bigint,
     registration_status public.event_instance_registration_status,
+    source public.event_registration_source,
+    target_cohort_id bigint,
     status public.attendance_type,
     attendance_note text
   )
