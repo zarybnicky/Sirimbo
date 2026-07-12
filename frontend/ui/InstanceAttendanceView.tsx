@@ -43,15 +43,13 @@ export function InstanceAttendanceView({ id }: { id: string }) {
 
   return (
     <div className="prose prose-accent max-w-none">
-      <Link
-        href={
-          instance.parentId
-            ? `/termin/${instance.parentId}?tab=schedule`
-            : '/rozpis'
-        }
-      >
-        Zpět na seznam termínů
-      </Link>
+      <nav className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Docházka">
+        {instance.seriesId && (
+          <Link href={`/terminy/${instance.seriesId}?tab=attendance`}>
+            Zpět na seznam termínů
+          </Link>
+        )}
+      </nav>
       <table className="mt-0">
         <thead>
           <tr>

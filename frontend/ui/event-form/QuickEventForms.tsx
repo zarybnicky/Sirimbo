@@ -98,7 +98,6 @@ export function QuickEventCreateForm({
       isPublic: false,
       isLocked: lockEventsByDefault,
       enableNotes: false,
-      capacity: 2,
       instances: [
         {
           since: defaults.since.toISOString(),
@@ -218,8 +217,8 @@ export function QuickEventCreateForm({
             ? instancesToCreate.slice(1)
             : null,
         pName: splitLessons ? null : values.name.trim() || null,
-        pCapacity: values.capacity,
-        pCapacityUnit: values.capacityUnit,
+        pCapacity: values.type === 'LESSON' ? 1 : 0,
+        pCapacityUnit: values.type === 'LESSON' ? 'REGISTRATIONS' : 'PEOPLE',
         pDescription: values.description,
         pSummary: values.summary,
         pFilesLegacy: values.titleImageLegacy,
