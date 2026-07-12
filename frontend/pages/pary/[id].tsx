@@ -65,11 +65,9 @@ function CouplePage() {
           <div>{item.status === 'ACTIVE' ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
         </div>
 
-        {personIds.length > 0 ? (
-          <div className="mt-6">
-            <ActivityTimeline personIds={personIds} includeJudging />
-          </div>
-        ) : null}
+        <div className="mt-6">
+          <ActivityTimeline personIds={personIds} includeJudging />
+        </div>
       </WithSidebar>
     </Layout>
   );

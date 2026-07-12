@@ -26,7 +26,6 @@ type MonthReport = {
   privateRows: ReportRow[];
 };
 
-const numberFormatter = new Intl.NumberFormat('cs-CZ');
 const hoursFormatter = new Intl.NumberFormat('cs-CZ', {
   maximumFractionDigits: 1,
   minimumFractionDigits: 0,
@@ -42,7 +41,7 @@ const reportTypes: Record<'groupRows' | 'privateRows', EventType> = {
 };
 
 function formatDuration(minutes: number) {
-  if (minutes < 60) return `${numberFormatter.format(minutes)} min`;
+  if (minutes < 60) return `${minutes} min`;
   return `${hoursFormatter.format(minutes / 60)} h`;
 }
 
@@ -50,22 +49,18 @@ const toMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
 export function PersonWorkReportView({ id }: { id: string }) {
-  const reportNow = React.useMemo(() => new Date(), []);
-  const currentMonth = React.useMemo(
-    () => new Date(reportNow.getFullYear(), reportNow.getMonth(), 1),
-    [reportNow],
-  );
-  const currentMonthKey = `${currentMonth.getFullYear()}-${String(
-    currentMonth.getMonth() + 1,
-  ).padStart(2, '0')}`;
+  const now = React.useMemo(() => new Date(), []);
+  const month = React.useMemo(() => new Date(now.getFullYear(), now.getMonth(), 1), [now]);
   const workReportQueryParsers = React.useMemo(
     () => ({
       tab: parseAsString,
-      workReportMonth: parseAsString.withDefault(currentMonthKey),
+      month: parseAsString.withDefault(
+        `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, '0')}`,
+      ),
     }),
-    [currentMonthKey],
+    [month],
   );
-  const [{ workReportMonth: selectedMonthKey }, setWorkReportQuery] = useQueryStates(
+  const [{ month: monthKey }, setWorkReportQuery] = useQueryStates(
     workReportQueryParsers,
     { history: 'push' },
   );
@@ -73,8 +68,8 @@ export function PersonWorkReportView({ id }: { id: string }) {
   const months = React.useMemo<MonthReport[]>(() => {
     return Array.from({ length: 8 }, (_, index) => {
       const since = new Date(
-        currentMonth.getFullYear(),
-        currentMonth.getMonth() - index,
+        month.getFullYear(),
+        month.getMonth() - index,
         1,
       );
       const label = monthFormatter.format(since);
@@ -86,20 +81,20 @@ export function PersonWorkReportView({ id }: { id: string }) {
         privateRows: [],
       };
     });
-  }, [currentMonth]);
+  }, [month]);
 
   const [{ data, fetching, error }] = useQuery({
     query: EventInstanceRangeDocument,
     variables: {
-      start: months.at(-1)?.since.toISOString() ?? currentMonth.toISOString(),
-      end: reportNow.toISOString(),
+      start: months.at(-1)?.since.toISOString() ?? month.toISOString(),
+      end: now.toISOString(),
       trainerIds: [id],
     },
     pause: !id,
     requestPolicy: 'cache-and-network',
   });
 
-  const monthReports = React.useMemo(() => {
+  const reports = React.useMemo(() => {
     const byKey = new Map(
       months.map((month) => [
         month.key,
@@ -110,11 +105,10 @@ export function PersonWorkReportView({ id }: { id: string }) {
         },
       ]),
     );
-    const reportNowTime = reportNow.getTime();
 
     for (const instance of data?.list ?? []) {
       if (instance.isCancelled) continue;
-      if (new Date(instance.until).getTime() > reportNowTime) continue;
+      if (new Date(instance.until).getTime() > now.getTime()) continue;
       if (!instance.trainersList?.some((trainer) => trainer.personId === id)) continue;
 
       if (instance.type !== 'GROUP' && instance.type !== 'LESSON') continue;
@@ -153,22 +147,17 @@ export function PersonWorkReportView({ id }: { id: string }) {
     }
 
     return [...byKey.values()];
-  }, [data?.list, id, months, reportNow]);
+  }, [data?.list, id, months, now]);
 
-  const selectedMonth =
-    monthReports.find((month) => month.key === selectedMonthKey) ?? monthReports[0];
-  const selectedRows = [
-    ...(selectedMonth?.groupRows ?? []),
-    ...(selectedMonth?.privateRows ?? []),
-  ];
+  const selectedMonth = reports.find((month) => month.key === monthKey) ?? reports[0];
 
   return (
     <div className="grid gap-6">
-      {error ? (
+      {error && (
         <p className="rounded-md border border-accent-7 bg-accent-3 p-3 text-sm text-accent-11">
           Nepodařilo se načíst výkaz práce. Zkuste stránku prosím načíst znovu.
         </p>
-      ) : null}
+      )}
 
       <section className="prose prose-accent max-w-none">
         <h3>Měsíce</h3>
@@ -182,7 +171,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
             </tr>
           </thead>
           <tbody>
-            {monthReports.map((month) => {
+            {reports.map((month) => {
               const groupMinutes = month.groupRows.reduce(
                 (total, row) => total + row.durationMinutes,
                 0,
@@ -205,7 +194,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
                       onClick={() => {
                         void setWorkReportQuery({
                           tab: 'workReport',
-                          workReportMonth: month.key,
+                          month: month.key,
                         });
                       }}
                     >
@@ -213,15 +202,15 @@ export function PersonWorkReportView({ id }: { id: string }) {
                     </button>
                   </td>
                   <td className="whitespace-nowrap text-right tabular-nums">
-                    {numberFormatter.format(month.groupRows.length)} /{' '}
+                    {month.groupRows.length} /{' '}
                     {formatDuration(groupMinutes)}
                   </td>
                   <td className="whitespace-nowrap text-right tabular-nums">
-                    {numberFormatter.format(month.privateRows.length)} /{' '}
+                    {month.privateRows.length} /{' '}
                     {formatDuration(privateMinutes)}
                   </td>
                   <td className="whitespace-nowrap text-right tabular-nums">
-                    {numberFormatter.format(rowCount)} /{' '}
+                    {rowCount} /{' '}
                     {formatDuration(groupMinutes + privateMinutes)}
                   </td>
                 </tr>
@@ -231,17 +220,17 @@ export function PersonWorkReportView({ id }: { id: string }) {
         </table>
       </section>
 
-      {fetching && !data ? (
+      {fetching && !data && (
         <p className="text-sm text-neutral-10">Načítáme výkaz…</p>
-      ) : null}
+      )}
 
-      {selectedMonth ? (
+      {selectedMonth && (
         <section className="prose prose-accent max-w-none">
           <h3>{selectedMonth.label}</h3>
 
-          {selectedRows.length === 0 && !fetching && !error ? (
+          {!selectedMonth.groupRows?.length && !selectedMonth?.privateRows?.length && !fetching && !error && (
             <p>V tomto měsíci nic neproběhlo</p>
-          ) : null}
+          )}
 
           {(
             [
@@ -261,9 +250,9 @@ export function PersonWorkReportView({ id }: { id: string }) {
                       <th>Termín</th>
                       <th>Událost</th>
                       <th>Místo</th>
-                      {reportTypes[rowsKey] === 'GROUP' ? (
+                      {reportTypes[rowsKey] === 'GROUP' && (
                         <th className="text-right">Účast</th>
-                      ) : null}
+                      )}
                       <th className="text-right">Délka</th>
                     </tr>
                   </thead>
@@ -279,12 +268,11 @@ export function PersonWorkReportView({ id }: { id: string }) {
                           </Link>
                         </td>
                         <td>{row.location}</td>
-                        {reportTypes[rowsKey] === 'GROUP' ? (
+                        {reportTypes[rowsKey] === 'GROUP' && (
                           <td className="whitespace-nowrap text-right tabular-nums">
-                            {numberFormatter.format(row.attended)} /{' '}
-                            {numberFormatter.format(row.total)}
+                            {row.attended} / {row.total}
                           </td>
-                        ) : null}
+                        )}
                         <td className="whitespace-nowrap text-right tabular-nums">
                           {formatDuration(row.durationMinutes)}
                         </td>
@@ -296,7 +284,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
             );
           })}
         </section>
-      ) : null}
+      )}
     </div>
   );
 }

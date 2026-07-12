@@ -252,9 +252,9 @@ export function CompetitionEventContent({
           {title}
         </CompetitionSourceName>
       </div>
-      {location ? (
+      {location && (
         <div className="truncate text-xs leading-tight text-green-11">{location}</div>
-      ) : null}
+      )}
       <div>
         {groupByCompetitor(entries).map((group) => (
           <div key={group.key} className="border-t border-green-6 pt-2 first:border-t-0">

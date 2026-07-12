@@ -23,14 +23,12 @@ import { CstsResultsLink } from './csts-links';
 
 type TimelineMode = 'future' | 'past';
 type TimelineFilter = EventType | 'COMPETITION' | 'JUDGING' | 'BIRTHDAY';
-type TimelineItem = NonNullable<ActivityTimelineItemFragment>;
 type EventAttendanceItem = ActivityTimelineItem_ActivityEventAttendance_Fragment;
 type CompetitionItem =
   | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
   | ActivityTimelineItem_ActivityCompetitionResult_Fragment;
 type JudgingItem = ActivityTimelineItem_ActivityJudging_Fragment;
 
-const RANGE_WEEKS = 8;
 const BASE_FILTERS = [
   ['GROUP', 'Společná'],
   ['LESSON', 'Lekce'],
@@ -39,18 +37,14 @@ const BASE_FILTERS = [
   ['HOLIDAY', 'Prázdniny'],
   ['COMPETITION', 'Soutěže'],
   ['BIRTHDAY', 'Narozeniny'],
-] as const satisfies ReadonlyArray<readonly [TimelineFilter, string]>;
-const JUDGING_FILTER = ['JUDGING', 'Porota'] as const satisfies readonly [
-  TimelineFilter,
-  string,
-];
+] as const;
+const JUDGING_FILTER = ['JUDGING', 'Porota'] as const;
 
 function rangeFor(mode: TimelineMode, pages: number) {
   const now = new Date();
-  const weeks = RANGE_WEEKS * pages;
   return mode === 'future'
-    ? { since: now, until: add(now, weeks, 'week') }
-    : { since: subtract(now, weeks, 'week'), until: now };
+    ? { since: now, until: add(now, 8 * pages, 'week') }
+    : { since: subtract(now, 8 * pages, 'week'), until: now };
 }
 
 export function ActivityTimeline({
@@ -76,8 +70,7 @@ export function ActivityTimeline({
   const scopeKey = `${cohortId ?? ''}:${personIds?.join(',') ?? ''}`;
   const range = React.useMemo(() => rangeFor(mode, pages), [mode, pages]);
   const eventTypes = filters.filter(
-    (value): value is EventType =>
-      value !== 'COMPETITION' && value !== 'JUDGING' && value !== 'BIRTHDAY',
+    (x): x is EventType => x !== 'COMPETITION' && x !== 'JUDGING' && x !== 'BIRTHDAY',
   );
   const kinds: ActivityTimelineKind[] = eventTypes.length > 0 ? ['EVENT_ATTENDANCE'] : [];
   if (filters.includes('COMPETITION')) {
@@ -103,11 +96,7 @@ export function ActivityTimeline({
 
   const toggleFilter = (filter: TimelineFilter) => {
     setPages(1);
-    setFilters((value) =>
-      value.includes(filter)
-        ? value.filter((item) => item !== filter)
-        : [...value, filter],
-    );
+    setFilters((x) => x.includes(filter) ? x.filter((y) => y !== filter) : [...x, filter]);
   };
 
   const [{ data, fetching, error }] = useQuery({
@@ -125,7 +114,7 @@ export function ActivityTimeline({
 
   const days = React.useMemo(() => {
     const direction = mode === 'future' ? 1 : -1;
-    const grouped = new Map<string, TimelineItem[]>();
+    const grouped = new Map<string, ActivityTimelineItemFragment[]>();
     for (const item of (data?.activityTimelineList ?? [])
       .filter(Boolean)
       .toSorted((a, b) => {
@@ -230,7 +219,7 @@ function TimelineDay({
   isCohort,
 }: {
   date: string;
-  items: TimelineItem[];
+  items: ActivityTimelineItemFragment[];
   mode: TimelineMode;
   isCohort: boolean;
 }) {
@@ -290,7 +279,7 @@ function TimelineDay({
           </div>
         )}
 
-        {competitionGroups.size > 0 ? (
+        {competitionGroups.size > 0 && (
           <div className="flex flex-wrap justify-start gap-2 opacity-90">
             {competitionGroups.entries().map(([key, items]) => (
               <div
@@ -307,9 +296,9 @@ function TimelineDay({
               </div>
             ))}
           </div>
-        ) : null}
+        )}
 
-        {judgingGroups.size > 0 ? (
+        {judgingGroups.size > 0 && (
           <div className="flex flex-wrap justify-start gap-2 opacity-90">
             {judgingGroups.entries().map(([key, items]) => (
               <div
@@ -342,9 +331,9 @@ function TimelineDay({
               </div>
             ))}
           </div>
-        ) : null}
+        )}
 
-        {eventRows.length > 0 ? (
+        {eventRows.length > 0 && (
           <div className={cardCls({ className: 'rounded-lg border-neutral-6 border p-0' })}>
             {eventRows.map((items) => (
               <EventButton
@@ -352,17 +341,17 @@ function TimelineDay({
                 instance={items[0].eventInstance!}
                 viewer="auto"
                 suffix={
-                  ((mode === 'past' && items[0].eventInstance?.type !== 'LESSON') || isCohort) ? (
+                  ((mode === 'past' && items[0].eventInstance?.type !== 'LESSON') || isCohort) && (
                     <AttendanceSummary
                       compact={isCohort && items[0].eventInstance?.type !== 'LESSON'}
                       items={items}
                     />
-                  ) : undefined
+                  )
                 }
               />
             ))}
           </div>
-        ) : null}
+        )}
       </div>
     </section>
   );

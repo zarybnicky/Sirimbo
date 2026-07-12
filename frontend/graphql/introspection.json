@@ -6367,6 +6367,15 @@
             "args": []
           },
           {
+            "name": "seriesInfo",
+            "type": {
+              "kind": "OBJECT",
+              "name": "SeriesInfo",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "since",
             "type": {
               "kind": "NON_NULL",
@@ -15117,6 +15126,61 @@
           },
           {
             "name": "totalScore",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SeriesInfo",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "length",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "position",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "since",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "until",
             "type": {
               "kind": "SCALAR",
               "name": "Any"

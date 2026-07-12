@@ -77,11 +77,11 @@ export default function EventSeriesPage() {
         {fetching && !series ? <Spinner /> : null}
         {!fetching && !series ? <p>Série termínů nebyla nalezena.</p> : null}
         {series?.eventsList.length === 0 ? <p>Série nemá žádné termíny.</p> : null}
-        {series?.eventsList.length ? (
+        {series?.eventsList.length && (
           <div className="max-w-full">
             <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
           </div>
-        ) : null}
+        )}
       </div>
     </Layout>
   );

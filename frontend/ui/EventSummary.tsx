@@ -13,6 +13,7 @@ import {
 import { useActions } from '@/lib/actions';
 import { eventInstanceActions } from '@/lib/actions/eventInstance';
 import { ActionGroup } from '@/ui/ActionGroup';
+import { SeriesInfoLink } from '@/ui/SeriesInfoLink';
 import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
@@ -45,6 +46,8 @@ export function EventSummary({
         </div>
       )}
 
+      <SeriesInfoLink info={instance.seriesInfo} />
+
       <div className="flex items-center gap-2">
         <Clock className="size-5 text-accent-11" />
         {shortTimeFormatter.formatRange(start, end)}
@@ -57,7 +60,7 @@ export function EventSummary({
         </div>
       )}
 
-      {instance.trainersList?.length ? (
+      {instance.trainersList?.length && (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-5 text-accent-11 shrink-0" />
           {instance.trainersList
@@ -65,7 +68,7 @@ export function EventSummary({
             .filter(Boolean)
             .join(', ')}
         </div>
-      ) : null}
+      )}
 
       {instance.type === 'LESSON' && <EventInstancePriceView id={instance.id} />}
 

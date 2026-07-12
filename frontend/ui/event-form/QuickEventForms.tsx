@@ -20,6 +20,7 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { formatEventType, formatLongCoupleName, shortTimeFormatter } from '@/ui/format';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
+import { SeriesInfoLink } from '@/ui/SeriesInfoLink';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -28,7 +29,8 @@ import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
-import { DateTimeRangeController, InstanceListElement } from './InstanceListElement';
+import { DateTimeRangeField } from './DateTimeRangeField';
+import { InstanceListElement } from './InstanceListElement';
 import { InstanceTrainerListElement } from './InstanceTrainerListField';
 import { eventLocationInput, LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
@@ -251,7 +253,7 @@ export function QuickEventCreateForm({
 
       {splitLessons ? (
         <>
-          <DateTimeRangeController
+          <DateTimeRangeField
             control={control}
             nameSince="instances.0.since"
             nameUntil="instances.0.until"
@@ -499,10 +501,12 @@ export function QuickInstanceEditForm({
     <form className="space-y-3" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
 
+      <SeriesInfoLink info={instance.seriesInfo} />
+
       <RadioButtonGroupElement control={control} name="type" options={eventTypeOptions} />
       <TextFieldElement control={control} name="name" label="Název termínu" />
       {instance.seriesId ? (
-        <DateTimeRangeController
+        <DateTimeRangeField
           control={control}
           nameSince="instances.0.since"
           nameUntil="instances.0.until"

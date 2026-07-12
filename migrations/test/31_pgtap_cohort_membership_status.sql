@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(23);
+SELECT tap.plan(25);
 
 SELECT tap.ok(
   NOT EXISTS (
@@ -918,6 +918,68 @@ SELECT tap.ok(
       AND event_instance_trainer_lessons_remaining(trainer) = 2
   ),
   'quick edit updates exact settings and replaces registrations consistently'
+);
+
+SELECT public.update_event_instance_details(
+  p_instance_id => instance.id,
+  p_since => instance.since,
+  p_until => instance.until,
+  p_name => instance.name,
+  p_type => instance.type,
+  p_location_id => instance.location_id,
+  p_location_text => instance.location_text,
+  p_is_visible => instance.is_visible,
+  p_is_public => instance.is_public,
+  p_is_cancelled => instance.is_cancelled,
+  p_copies => ARRAY[
+    ROW(
+      instance.since + interval '2 weeks',
+      instance.until + interval '2 weeks',
+      instance.type,
+      instance.location_id,
+      instance.location_text,
+      '{}'::bigint[],
+      '{}'::quick_event_registration_input[]
+    )::quick_event_input
+  ]
+)
+FROM event_instance instance
+WHERE instance.id = (SELECT id FROM _scheduled_lesson);
+
+SELECT tap.ok(
+  (
+    SELECT count(*) = 3
+    FROM event_instance member
+    JOIN event_instance original
+      ON original.id = (SELECT id FROM _scheduled_lesson)
+      AND member.series_id = original.series_id
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instance copy
+    JOIN event_instance original
+      ON original.id = (SELECT id FROM _scheduled_lesson)
+      AND copy.series_id = original.series_id
+    WHERE copy.id <> original.id
+      AND copy.since = original.since + interval '2 weeks'
+      AND copy.until = original.until + interval '2 weeks'
+  ),
+  'quick edit adds copies to an existing series without replacing it'
+);
+
+SELECT tap.ok(
+  (
+    SELECT
+      info.id = instance.series_id
+      AND info.name = instance.name
+      AND info.position = 1
+      AND info.length = 3
+      AND info.since = instance.since
+      AND info.until = instance.until + interval '2 weeks'
+    FROM event_instance instance
+    CROSS JOIN LATERAL event_instance_series_info(instance) info
+    WHERE instance.id = (SELECT id FROM _scheduled_lesson)
+  ),
+  'series info reports identity, range, position and length without loading sibling events'
 );
 
 SELECT public.update_event_instance_details(

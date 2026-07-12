@@ -80,12 +80,12 @@ export default function TrainerAttendanceReportPage() {
         <PageHeader title="Vyplněnost docházky" />
 
         <section className="space-y-2 text-sm text-neutral-10">
-          <p>Přehled vychází z proběhlých termínů vedených.</p>
-          {period.displaySince && period.displayUntil ? (
+          <p>Přehled vychází z proběhlých vedených.</p>
+          {period.displaySince && period.displayUntil && (
             <p>
               {fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
             </p>
-          ) : null}
+          )}
         </section>
 
         <section className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 text-sm shadow-sm">
@@ -99,27 +99,27 @@ export default function TrainerAttendanceReportPage() {
                 </span>
               </li>
               <li>
-                Plně vyplněná docházka:{' '}
+                Plně vyplněno:{' '}
                 <span className="font-semibold text-neutral-12">
                   {numberFormatter.format(summary.filled)}
                 </span>
               </li>
               <li>
-                Částečně vyplněná docházka:{' '}
+                Částečně vyplněno:{' '}
                 <span className="font-semibold text-neutral-12">
                   {numberFormatter.format(summary.partial)}
                 </span>
               </li>
               <li>
-                Nevyplněná docházka:{' '}
+                Nevyplněno:{' '}
                 <span className="font-semibold text-accent-11">
                   {numberFormatter.format(summary.unfilled)}
                 </span>
-                {summary.ratio !== null ? (
+                {summary.ratio !== null && (
                   <span className="text-neutral-10">
                     {` · ${percentFormatter.format(summary.ratio)} alespoň částečně vyplněno`}
                   </span>
-                ) : null}
+                )}
               </li>
             </ul>
           ) : (
@@ -129,15 +129,15 @@ export default function TrainerAttendanceReportPage() {
           )}
         </section>
 
-        {error ? (
+        {error && (
           <p className="rounded-md border border-accent-7 bg-accent-3 p-3 text-sm text-accent-11">
             Nepodařilo se načíst přehled. Zkuste stránku prosím načíst znovu.
           </p>
-        ) : null}
+        )}
 
-        {fetching ? <p className="text-sm text-neutral-10">Načítáme přehled…</p> : null}
+        {fetching && <p className="text-sm text-neutral-10">Načítáme přehled…</p>}
 
-        {!fetching && !error ? (
+        {!fetching && !error && (
           rows.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-neutral-6 text-sm">
@@ -192,7 +192,7 @@ export default function TrainerAttendanceReportPage() {
               Momentálně není k dispozici žádný záznam.
             </p>
           )
-        ) : null}
+        )}
       </div>
     </Layout>
   );

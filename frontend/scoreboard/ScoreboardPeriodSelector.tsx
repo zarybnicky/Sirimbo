@@ -8,11 +8,10 @@ type ScoreboardPeriodSelectorProps = {
   onPresetChange: (preset: PeriodPreset) => void;
   referenceDate: Date;
   onReferenceDateChange: (value: Date) => void;
-  customSince: Date | null;
-  onCustomSinceChange: (value: Date | null) => void;
-  customUntil: Date | null;
-  onCustomUntilChange: (value: Date | null) => void;
-  showCustomRangeWarning: boolean;
+  since: Date | null;
+  onSinceChange: (value: Date | null) => void;
+  until: Date | null;
+  onUntilChange: (value: Date | null) => void;
 };
 
 export function ScoreboardPeriodSelector({
@@ -20,11 +19,10 @@ export function ScoreboardPeriodSelector({
   onPresetChange,
   referenceDate,
   onReferenceDateChange,
-  customSince,
-  onCustomSinceChange,
-  customUntil,
-  onCustomUntilChange,
-  showCustomRangeWarning,
+  since,
+  onSinceChange,
+  until,
+  onUntilChange,
 }: ScoreboardPeriodSelectorProps) {
   const periodOptions = React.useMemo(
     () =>
@@ -48,31 +46,22 @@ export function ScoreboardPeriodSelector({
         <>
           <TextField
             label="Od"
-            name="scoreboard-custom-since"
+            name="scoreboard-since"
             type="date"
-            value={customSince?.toISOString()?.slice(0, 10)}
+            value={since?.toISOString()?.slice(0, 10)}
             onChange={(event) =>
-              onCustomSinceChange(
-                event.currentTarget.value ? new Date(event.currentTarget.value) : null,
-              )
+              onSinceChange(event.currentTarget.value ? new Date(event.currentTarget.value) : null)
             }
           />
           <TextField
             label="Do"
-            name="scoreboard-custom-until"
+            name="scoreboard-until"
             type="date"
-            value={customUntil?.toISOString()?.slice(0, 10)}
+            value={until?.toISOString()?.slice(0, 10)}
             onChange={(event) =>
-              onCustomUntilChange(
-                event.currentTarget.value ? new Date(event.currentTarget.value) : null,
-              )
+              onUntilChange(event.currentTarget.value ? new Date(event.currentTarget.value) : null)
             }
           />
-          {showCustomRangeWarning ? (
-            <p className="text-sm text-neutral-10 md:col-span-2 xl:col-span-4">
-              Vyplňte prosím datum od i do, aby bylo možné žebříček spočítat.
-            </p>
-          ) : null}
         </>
       ) : (
         <TextField

@@ -224,18 +224,18 @@ begin
   end if;
 
   if cardinality(coalesce(p_copies, '{}'::public.quick_event_input[])) > 0 then
-    if updated_instance.series_id is not null then
-      raise exception 'event instance % already belongs to a series', p_instance_id;
+    v_series_id := updated_instance.series_id;
+
+    if v_series_id is null then
+      insert into public.event_series (name)
+      values (updated_instance.name)
+      returning id into v_series_id;
+
+      update public.event_instance
+      set series_id = v_series_id
+      where id = p_instance_id
+      returning * into updated_instance;
     end if;
-
-    insert into public.event_series (name)
-    values (updated_instance.name)
-    returning id into v_series_id;
-
-    update public.event_instance
-    set series_id = v_series_id
-    where id = p_instance_id
-    returning * into updated_instance;
 
     perform public.quick_create_event_instances(
       events => p_copies,

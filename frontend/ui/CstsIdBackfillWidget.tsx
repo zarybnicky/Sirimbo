@@ -134,9 +134,9 @@ export function CstsIdBackfillWidget() {
                       </div>
                       <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-accent-11">
                         <span>{selectedCandidate.name ?? 'bez jména'}</span>
-                        {selectedCandidate.ageGroup ? (
+                        {selectedCandidate.ageGroup && (
                           <span>{selectedCandidate.ageGroup}</span>
-                        ) : null}
+                        )}
                         <span>
                           Shoda {formatSimilarity(selectedCandidate.similarity)}
                         </span>
@@ -154,47 +154,43 @@ export function CstsIdBackfillWidget() {
                   </div>
                 ) : (
                   <div className="grid gap-1">
-                    {person.cstsCandidatesList?.length ? (
-                      person.cstsCandidatesList.map((candidate) => {
-                        if (candidate.id == null) return null;
-                        const key = `${person.id}:fill:${candidate.id}`;
+                    {person.cstsCandidatesList?.map((candidate) => {
+                      if (candidate.id == null) return null;
+                      const key = `${person.id}:fill:${candidate.id}`;
 
-                        return (
-                          <div
-                            key={candidate.id}
-                            className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-neutral-2 px-2 py-1.5"
-                          >
-                            <div className="min-w-0">
-                              <div className="flex min-w-0 items-center gap-1 font-medium">
-                                <CstsPersonLink idt={candidate.id}>
-                                  {candidate.name ?? 'bez jména'}
-                                </CstsPersonLink>
-                              </div>
-                              <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-11">
-                                <span>IDT {candidate.id}</span>
-                                {candidate.ageGroup ? (
-                                  <span>{candidate.ageGroup}</span>
-                                ) : null}
-                                <span>
-                                  Shoda {formatSimilarity(candidate.similarity)}
-                                </span>
-                              </div>
+                      return (
+                        <div
+                          key={candidate.id}
+                          className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-neutral-2 px-2 py-1.5"
+                        >
+                          <div className="min-w-0">
+                            <div className="flex min-w-0 items-center gap-1 font-medium">
+                              <CstsPersonLink idt={candidate.id}>
+                                {candidate.name || '-'}
+                              </CstsPersonLink>
                             </div>
-                            <button
-                              type="button"
-                              className={buttonCls({ size: 'sm', variant: 'outline' })}
-                              disabled={pending !== null}
-                              onClick={() => fillCstsId(person, candidate)}
-                            >
-                              <Check />
-                              {pending === key ? 'Ukládám...' : 'Vybrat'}
-                            </button>
+                            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-11">
+                              <span>IDT {candidate.id}</span>
+                              {candidate.ageGroup && (
+                                <span>{candidate.ageGroup}</span>
+                              )}
+                              <span>
+                                Shoda {formatSimilarity(candidate.similarity)}
+                              </span>
+                            </div>
                           </div>
-                        );
-                      })
-                    ) : (
-                      <span className="text-neutral-11">Žádný kandidát</span>
-                    )}
+                          <button
+                            type="button"
+                            className={buttonCls({ size: 'sm', variant: 'outline' })}
+                            disabled={pending !== null}
+                            onClick={() => fillCstsId(person, candidate)}
+                          >
+                            <Check />
+                            {pending === key ? 'Ukládám...' : 'Vybrat'}
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>

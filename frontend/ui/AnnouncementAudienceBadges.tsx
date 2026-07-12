@@ -18,9 +18,6 @@ export function AnnouncementAudienceBadges({ audiences, className }: Readonly<Pr
   const derivedCohorts = audiences?.map((x) => x.cohort).filter(isTruthy) || [];
   const derivedRoles = audiences?.map((x) => x.audienceRole).filter(isTruthy) || [];
 
-  const hasCohorts = derivedCohorts.length > 0;
-  const hasRoles = derivedRoles.length > 0;
-
   return (
     <div
       className={cn(
@@ -28,7 +25,7 @@ export function AnnouncementAudienceBadges({ audiences, className }: Readonly<Pr
         className,
       )}
     >
-      {hasCohorts ? (
+      {derivedCohorts.length > 0 && (
         <div className="flex gap-0.5">
           {derivedCohorts.map((cohort) => (
             <div
@@ -39,9 +36,9 @@ export function AnnouncementAudienceBadges({ audiences, className }: Readonly<Pr
             />
           ))}
         </div>
-      ) : null}
+      )}
 
-      {hasRoles ? (
+      {derivedRoles.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {derivedRoles.map((role) => (
             <span
@@ -52,7 +49,7 @@ export function AnnouncementAudienceBadges({ audiences, className }: Readonly<Pr
             </span>
           ))}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

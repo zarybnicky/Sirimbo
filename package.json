@@ -59,6 +59,7 @@
       "unrs-resolver"
     ],
     "overrides": {
+      "graphile-migrate>@types/pg": "*",
       "@opentelemetry/sdk-trace-base": "2.8.0",
       "zod": "4.4.3"
     }

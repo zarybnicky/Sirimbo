@@ -3214,6 +3214,7 @@ type EventInstance {
 
   """Groups related events without supplying inherited event values."""
   seriesId: BigInt
+  seriesInfo: SeriesInfo
   since: Datetime!
   stats: JSON!
   summary: String
@@ -7204,6 +7205,15 @@ type ScoreboardRecord {
   personId: BigInt
   ranking: BigInt
   totalScore: BigInt
+}
+
+type SeriesInfo {
+  id: BigInt
+  length: Int
+  name: String
+  position: Int
+  since: Datetime
+  until: Datetime
 }
 
 """All input for the `setEventInstanceRegistration` mutation."""

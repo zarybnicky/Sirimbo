@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2017",
     "lib": ["dom", "dom.iterable", "esnext", "webworker"],
-    "types": ["node", "d3", "d3-sankey", "date-arithmetic", "facebook-pixel", "file-saver", "iban", "leaflet", "nprogress", "react", "react-dom"],
+    "types": ["node", "d3", "d3-sankey", "date-arithmetic", "facebook-pixel", "file-saver", "iban", "leaflet", "nprogress", "react", "react-dom", "pg"],
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,

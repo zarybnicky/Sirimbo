@@ -21,6 +21,15 @@ fragment EventSeriesInstance on EventInstance {
   stats
 }
 
+fragment SeriesInfo on SeriesInfo {
+  id
+  name
+  position
+  length
+  since
+  until
+}
+
 query EventSeries($id: BigInt!) {
   eventSeries(id: $id) {
     id
@@ -37,6 +46,9 @@ query EventSeries($id: BigInt!) {
 fragment EventInstanceWithTrainer on EventInstance {
   ...EventInstance
   seriesId
+  seriesInfo {
+    ...SeriesInfo
+  }
   name
   type
   summary

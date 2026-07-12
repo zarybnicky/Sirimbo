@@ -2727,6 +2727,7 @@ export type EventInstance = {
   series: Maybe<EventSeries>;
   /** Groups related events without supplying inherited event values. */
   seriesId: Maybe<Scalars['BigInt']['output']>;
+  seriesInfo: Maybe<SeriesInfo>;
   since: Scalars['Datetime']['output'];
   stats: Scalars['JSON']['output'];
   summary: Maybe<Scalars['String']['output']>;
@@ -6315,6 +6316,16 @@ export type ScoreboardRecord = {
   totalScore: Maybe<Scalars['BigInt']['output']>;
 };
 
+export type SeriesInfo = {
+  __typename?: 'SeriesInfo';
+  id: Maybe<Scalars['BigInt']['output']>;
+  length: Maybe<Scalars['Int']['output']>;
+  name: Maybe<Scalars['String']['output']>;
+  position: Maybe<Scalars['Int']['output']>;
+  since: Maybe<Scalars['Datetime']['output']>;
+  until: Maybe<Scalars['Datetime']['output']>;
+};
+
 /** All input for the `setEventInstanceRegistration` mutation. */
 export type SetEventInstanceRegistrationInput = {
   /**
@@ -8600,6 +8611,7 @@ export type GraphCacheKeysConfig = {
   Result?: (data: WithTypename<Result>) => null | string,
   ScoreboardManualAdjustment?: (data: WithTypename<ScoreboardManualAdjustment>) => null | string,
   ScoreboardRecord?: (data: WithTypename<ScoreboardRecord>) => null | string,
+  SeriesInfo?: (data: WithTypename<SeriesInfo>) => null | string,
   SetEventInstanceRegistrationPayload?: (data: WithTypename<SetEventInstanceRegistrationPayload>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
   SubmitFormPayload?: (data: WithTypename<SubmitFormPayload>) => null | string,
@@ -9342,6 +9354,7 @@ export type GraphCacheResolvers = {
     remainingPersonSpots?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Int']['output'] | string>,
     series?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<EventSeries> | string>,
     seriesId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    seriesInfo?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<SeriesInfo> | string>,
     since?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     stats?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['JSON']['output'] | string>,
     summary?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -9741,6 +9754,14 @@ export type GraphCacheResolvers = {
     personId?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     ranking?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     totalScore?: GraphCacheResolver<WithTypename<ScoreboardRecord>, Record<string, never>, Scalars['BigInt']['output'] | string>
+  },
+  SeriesInfo?: {
+    id?: GraphCacheResolver<WithTypename<SeriesInfo>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    length?: GraphCacheResolver<WithTypename<SeriesInfo>, Record<string, never>, Scalars['Int']['output'] | string>,
+    name?: GraphCacheResolver<WithTypename<SeriesInfo>, Record<string, never>, Scalars['String']['output'] | string>,
+    position?: GraphCacheResolver<WithTypename<SeriesInfo>, Record<string, never>, Scalars['Int']['output'] | string>,
+    since?: GraphCacheResolver<WithTypename<SeriesInfo>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    until?: GraphCacheResolver<WithTypename<SeriesInfo>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
   SetEventInstanceRegistrationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -10988,6 +11009,7 @@ export type GraphCacheUpdaters = {
     remainingPersonSpots?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     series?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     seriesId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    seriesInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     stats?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     summary?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
@@ -11387,6 +11409,14 @@ export type GraphCacheUpdaters = {
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
     ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>,
     totalScore?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardRecord>>, Record<string, never>>
+  },
+  SeriesInfo?: {
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<SeriesInfo>>, Record<string, never>>,
+    length?: GraphCacheUpdateResolver<Maybe<WithTypename<SeriesInfo>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<SeriesInfo>>, Record<string, never>>,
+    position?: GraphCacheUpdateResolver<Maybe<WithTypename<SeriesInfo>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<SeriesInfo>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<SeriesInfo>>, Record<string, never>>
   },
   SetEventInstanceRegistrationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,

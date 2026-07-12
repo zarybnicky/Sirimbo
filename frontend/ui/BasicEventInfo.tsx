@@ -1,12 +1,19 @@
 import type { EventInstanceWithTrainerFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { RichTextView } from '@/ui/RichTextView';
+import { SeriesInfoLink } from '@/ui/SeriesInfoLink';
 import { formatEventType } from '@/ui/format';
 
 export function BasicEventInfo({ instance }: { instance: EventInstanceWithTrainerFragment }) {
   return (
     <dl className="not-prose gap-2 mb-6">
       <dd>{formatEventType(instance.type)}</dd>
+
+      {(instance.seriesInfo?.length ?? 0) > 1 && (
+        <dd>
+          <SeriesInfoLink info={instance.seriesInfo} />
+        </dd>
+      )}
 
       {(instance.capacity ?? 0) > 0 && (
         <>
