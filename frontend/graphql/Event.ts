@@ -138,10 +138,20 @@ export type QuickCreateEventInstancesInput = {
    */
   clientMutationId?: string | null | undefined;
   events?: Array<QuickEventInputRecordInput | null | undefined> | null | undefined;
+  pCapacity?: number | null | undefined;
+  pCapacityUnit?: EventCapacityUnit | null | undefined;
+  pCohortIds?: Array<string | null | undefined> | null | undefined;
+  pCopies?: Array<QuickEventInputRecordInput | null | undefined> | null | undefined;
+  pDescription?: string | null | undefined;
   pEnableNotes?: boolean | null | undefined;
+  pFilesLegacy?: string | null | undefined;
   pIsLocked?: boolean | null | undefined;
   pIsPublic?: boolean | null | undefined;
   pIsVisible?: boolean | null | undefined;
+  pName?: string | null | undefined;
+  pSeriesId?: string | null | undefined;
+  pSummary?: string | null | undefined;
+  pTrainerLessonsOffered?: Array<number | null | undefined> | null | undefined;
   parentId?: string | null | undefined;
 };
 
@@ -177,6 +187,8 @@ export type SetEventInstanceRegistrationInput = {
   pCoupleId?: string | null | undefined;
   pInstanceId?: string | null | undefined;
   pIsRegistered?: boolean | null | undefined;
+  pLessonCounts?: Array<number | null | undefined> | null | undefined;
+  pLessonTrainerIds?: Array<string | null | undefined> | null | undefined;
   pNote?: string | null | undefined;
   pPersonId?: string | null | undefined;
 };
@@ -215,6 +227,7 @@ export type UpdateEventInstanceDetailsInput = {
   pCapacity?: number | null | undefined;
   pCapacityUnit?: EventCapacityUnit | null | undefined;
   pCohortIds?: Array<string | null | undefined> | null | undefined;
+  pCopies?: Array<QuickEventInputRecordInput | null | undefined> | null | undefined;
   pEnableNotes?: boolean | null | undefined;
   pInstanceId?: string | null | undefined;
   pIsCancelled?: boolean | null | undefined;

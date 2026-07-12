@@ -77,7 +77,8 @@ INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING S
   ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO cohort (id, tenant_id, name, color_rgb) OVERRIDING SYSTEM VALUE
-  VALUES (800001, 1000, 'Test Cohort', '000000')
+  VALUES (800001, 1000, 'Test Cohort', '000000'),
+         (800002, 1000, 'Empty Test Cohort', '000000')
   ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO event (id, tenant_id, type, name, location_text, description) OVERRIDING SYSTEM VALUE
@@ -611,13 +612,45 @@ FROM public.quick_create_event_instances(
   p_is_visible => false,
   p_is_public => true,
   p_is_locked => false,
-  p_enable_notes => true
+  p_enable_notes => true,
+  p_name => 'Scheduled lesson copy',
+  p_capacity => 2,
+  p_capacity_unit => 'registrations',
+  p_description => 'Copied description',
+  p_summary => 'Copied summary',
+  p_files_legacy => 'copied-file',
+  p_cohort_ids => ARRAY[800002]::bigint[],
+  p_trainer_lessons_offered => ARRAY[2]
 );
 
-UPDATE event_instance_trainer
-SET lessons_offered = 1
-WHERE instance_id = (SELECT id FROM _scheduled_lesson)
-  AND person_id = 2900002;
+CREATE TEMP TABLE _created_series_lesson ON COMMIT DROP AS
+SELECT series_id, count(*) instance_count
+FROM public.quick_create_event_instances(
+  ARRAY[
+    ROW(
+      now() + interval '2 days',
+      now() + interval '2 days 1 hour',
+      'lesson'::event_type,
+      null::bigint,
+      '',
+      '{}'::bigint[],
+      '{}'::quick_event_registration_input[]
+    )::quick_event_input
+  ],
+  p_name => 'Created series',
+  p_copies => ARRAY[
+    ROW(
+      now() + interval '3 days',
+      now() + interval '3 days 1 hour',
+      'lesson'::event_type,
+      null::bigint,
+      '',
+      '{}'::bigint[],
+      '{}'::quick_event_registration_input[]
+    )::quick_event_input
+  ]
+)
+GROUP BY series_id;
 
 SELECT set_lesson_demand(registration.id, trainer.id, 1)
 FROM event_instance_registration registration
@@ -635,11 +668,35 @@ SELECT tap.ok(
       AND child.event_id is null
       AND child.series_id is null
       AND child.parent_id = 9900001
+      AND child.name = 'Scheduled lesson copy'
+      AND child.capacity = 2
+      AND child.capacity_unit = 'registrations'
       AND child.is_visible = false
       AND child.is_public = true
       AND child.is_locked = false
       AND child.enable_notes = true
+      AND child.description = 'Copied description'
+      AND child.summary = 'Copied summary'
+      AND child.files_legacy = 'copied-file'
       AND 2900002 = any(child.manager_person_ids)
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_series series
+    JOIN _created_series_lesson created ON created.series_id = series.id
+    WHERE created.instance_count = 2
+      AND series.name = 'Created series'
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instance_target_cohort target
+    WHERE target.instance_id = (SELECT id FROM _scheduled_lesson)
+      AND target.cohort_id = 800002
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instance_trainer trainer
+    WHERE trainer.instance_id = (SELECT id FROM _scheduled_lesson)
+      AND trainer.person_id = 2900002
+      AND trainer.lessons_offered = 2
+      AND event_instance_trainer_lessons_remaining(trainer) = 1
   ) AND EXISTS (
     SELECT 1
     FROM event_instance_registration registration
@@ -695,7 +752,17 @@ VALUES (2950001, 2900003, 2900005, now());
 SELECT set_config('jwt.claims.my_tenant_ids', '[1000]', true);
 SELECT set_config('jwt.claims.my_person_ids', '[2900005]', true);
 SELECT set_event_instance_registration(
-  (SELECT id FROM _scheduled_lesson), 2900005, null, true
+  (SELECT id FROM _scheduled_lesson),
+  2900005,
+  null,
+  true,
+  'Self-registration note',
+  ARRAY[
+    (SELECT id FROM event_instance_trainer
+     WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+       AND person_id = 2900002)
+  ],
+  ARRAY[1]
 );
 CREATE TEMP TABLE _self_registration_created ON COMMIT DROP AS
 SELECT event_instance_remaining_person_spots(instance) = 0 AS at_capacity
@@ -713,8 +780,17 @@ SELECT tap.ok(
       AND person_id = 2900005
       AND registration_status = 'cancelled'
       AND source = 'self'
+      AND note = 'Self-registration note'
+      AND EXISTS (
+        SELECT 1
+        FROM event_lesson_demand demand
+        JOIN event_instance_trainer trainer ON trainer.id = demand.trainer_id
+        WHERE demand.registration_id = event_instance_registration.id
+          AND demand.lesson_count = 1
+          AND trainer.person_id = 2900002
+      )
   ),
-  'self-registration respects capacity and can be cancelled'
+  'self-registration stores its note and lesson demands and can be cancelled'
 );
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
@@ -730,14 +806,25 @@ SELECT public.update_event_instance_details(
   instance.is_visible,
   instance.is_public,
   instance.is_cancelled,
-  null,
+  ARRAY[2900002]::bigint[],
   ARRAY[ROW(null, 2950001)::quick_event_registration_input],
   4,
   'registrations',
   true,
-  null,
-  null,
-  true
+  ARRAY[2],
+  ARRAY[800002]::bigint[],
+  true,
+  ARRAY[
+    ROW(
+      instance.since + interval '1 week',
+      instance.until + interval '1 week',
+      instance.type,
+      instance.location_id,
+      instance.location_text,
+      ARRAY[2900002]::bigint[],
+      ARRAY[ROW(null, 2950001)::quick_event_registration_input]
+    )::quick_event_input
+  ]
 )
 FROM event_instance instance
 WHERE instance.id = (SELECT id FROM _scheduled_lesson);
@@ -774,6 +861,40 @@ SELECT tap.ok(
       AND is_locked
       AND enable_notes
       AND stats->>'TOTAL' = '2'
+      AND series_id is not null
+  ) AND EXISTS (
+    SELECT 1
+    FROM event_instance copy
+    JOIN event_instance original
+      ON original.id = (SELECT id FROM _scheduled_lesson)
+      AND copy.series_id = original.series_id
+    WHERE copy.id <> original.id
+      AND copy.since = original.since + interval '1 week'
+      AND copy.until = original.until + interval '1 week'
+      AND copy.name = original.name
+      AND copy.description = original.description
+      AND copy.summary = original.summary
+      AND copy.files_legacy = original.files_legacy
+      AND EXISTS (
+        SELECT 1
+        FROM event_instance_target_cohort target
+        WHERE target.instance_id = copy.id
+          AND target.cohort_id = 800002
+      )
+      AND EXISTS (
+        SELECT 1
+        FROM event_instance_trainer trainer
+        WHERE trainer.instance_id = copy.id
+          AND trainer.person_id = 2900002
+          AND trainer.lessons_offered = 2
+      )
+      AND EXISTS (
+        SELECT 1
+        FROM event_instance_registration registration
+        WHERE registration.instance_id = copy.id
+          AND registration.couple_id = 2950001
+          AND registration.registration_status = 'active'
+      )
   ) AND EXISTS (
     SELECT 1
     FROM event_instance_trainer trainer
@@ -781,7 +902,7 @@ SELECT tap.ok(
     JOIN event_instance_registration registration ON registration.id = demand.registration_id
     WHERE trainer.instance_id = (SELECT id FROM _scheduled_lesson)
       AND registration.registration_status = 'cancelled'
-      AND event_instance_trainer_lessons_remaining(trainer) = 1
+      AND event_instance_trainer_lessons_remaining(trainer) = 2
   ),
   'quick edit updates exact settings and replaces registrations consistently'
 );

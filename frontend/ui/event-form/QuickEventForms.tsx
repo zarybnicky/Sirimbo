@@ -28,7 +28,7 @@ import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useAtomValue } from 'jotai';
 import { tenantConfigAtom } from '@/ui/state/auth';
-import { DateTimeRangeController } from './InstanceListElement';
+import { DateTimeRangeController, InstanceListElement } from './InstanceListElement';
 import { InstanceTrainerListElement } from './InstanceTrainerListField';
 import { eventLocationInput, LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
@@ -123,7 +123,10 @@ export function QuickEventCreateForm({
     firstInstance?.since && firstInstance.until
       ? splitIntoLessonRanges(new Date(firstInstance.since), new Date(firstInstance.until))
       : [];
-  const canSplit = type === 'LESSON' && lessonRanges.length >= 2;
+  const canSplit =
+    type === 'LESSON' &&
+    lessonRanges.length >= 2 &&
+    instances?.filter((instance) => instance.since && instance.until).length === 1;
   const splitRegistrationOptions = React.useMemo(
     () => [
       ...(tenant?.tenant?.couplesList || [])
@@ -157,8 +160,13 @@ export function QuickEventCreateForm({
   }, [canSplit]);
 
   const onSubmit = useAsyncCallback(async (values: EventFormType) => {
-    const instance = values.instances[0];
-    if (!instance?.since || !instance.until) return;
+    const explicitRanges = values.instances.flatMap((instance) =>
+      instance.since && instance.until
+        ? [{ since: new Date(instance.since), until: new Date(instance.until) }]
+        : [],
+    );
+    const firstRange = explicitRanges[0];
+    if (!firstRange) return;
     const selectedRegistrations = values.registrations
       .filter((registration) => registration.personId || registration.coupleId)
       .map((registration) => ({
@@ -173,15 +181,18 @@ export function QuickEventCreateForm({
       if (registrantCount > 2) throw new Error('Lekce má nejvýš dvě místa');
     }
 
-    const trainerPersonIds = values.trainers
-      .map((trainer) => trainer.personId)
-      .filter((id): id is string => !!id);
+    const trainers = values.trainers.flatMap((trainer) =>
+      trainer.personId
+        ? [{ personId: trainer.personId, lessonsOffered: trainer.lessonsOffered ?? 0 }]
+        : [],
+    );
+    const trainerPersonIds = trainers.map(({ personId }) => personId);
     const ranges = splitLessons
-      ? splitIntoLessonRanges(new Date(instance.since), new Date(instance.until))
-      : [{ since: new Date(instance.since), until: new Date(instance.until) }];
+      ? splitIntoLessonRanges(firstRange.since, firstRange.until)
+      : explicitRanges;
     const location = eventLocationInput(values);
 
-    const events = ranges.map((range) => {
+    const instancesToCreate = ranges.map((range) => {
       const [kind, id] =
         splitIds[range.since.toISOString()]?.split(':') ?? [];
       const splitRegistration = splitLessons && id && [{
@@ -200,8 +211,22 @@ export function QuickEventCreateForm({
 
     const result = await createInstances({
       input: {
-        events,
+        events: splitLessons ? instancesToCreate : instancesToCreate.slice(0, 1),
         parentId,
+        pCopies:
+          !splitLessons && instancesToCreate.length > 1
+            ? instancesToCreate.slice(1)
+            : null,
+        pName: splitLessons ? null : values.name.trim() || null,
+        pCapacity: values.capacity,
+        pCapacityUnit: values.capacityUnit,
+        pDescription: values.description,
+        pSummary: values.summary,
+        pFilesLegacy: values.titleImageLegacy,
+        pCohortIds: values.cohorts.flatMap(({ cohortId }) =>
+          cohortId ? [cohortId] : [],
+        ),
+        pTrainerLessonsOffered: trainers.map(({ lessonsOffered }) => lessonsOffered),
         pIsVisible: values.isVisible,
         pIsPublic: values.isPublic,
         pIsLocked: values.isLocked,
@@ -278,14 +303,10 @@ export function QuickEventCreateForm({
             name="type"
             options={eventTypeOptions}
           />
-          <DateTimeRangeController
-            control={control}
-            nameSince="instances.0.since"
-            nameUntil="instances.0.until"
-            isCamp={type === 'CAMP'}
-          />
-          {trainerField}
+          <TextFieldElement control={control} name="name" label="Název (nepovinný)" />
           <LocationField control={control} />
+          {trainerField}
+          <InstanceListElement control={control} />
           <ParticipantListElement control={control} name="registrations" />
         </>
       )}
@@ -401,6 +422,15 @@ export function QuickInstanceEditForm({
     const edited = values.instances[0];
     if (!edited?.since || !edited.until) return;
 
+    const copies = values.instances
+      .slice(1)
+      .flatMap((copy) =>
+        copy.since && copy.until ? [{ since: copy.since, until: copy.until }] : [],
+      );
+    if (copies.length > 0 && !registrationsReady) {
+      throw new Error('Účastníci ještě nejsou načteni');
+    }
+
     const nextTrainers = edited.trainers.flatMap((trainer) =>
       trainer.personId
         ? [{ personId: trainer.personId, lessonsOffered: trainer.lessonsOffered }]
@@ -429,6 +459,14 @@ export function QuickInstanceEditForm({
     const cohortsChanged =
       JSON.stringify(nextCohortIds.toSorted()) !==
       JSON.stringify(instance.targetCohortsList.map((target) => target.cohortId).toSorted());
+    const copyEvents = copies.map(({ since, until }) => ({
+      since,
+      until,
+      type: values.type,
+      ...location,
+      trainerPersonIds: nextTrainers.map((trainer) => trainer.personId),
+      registrations: nextRegistrations,
+    }));
     const result = await updateInstance({
       input: {
         pInstanceId: instance.id,
@@ -443,14 +481,15 @@ export function QuickInstanceEditForm({
         pIsCancelled: edited.isCancelled,
         pIsLocked: values.isLocked,
         pEnableNotes: values.enableNotes,
-        pTrainerPersonIds: trainersChanged
+        pTrainerPersonIds: trainersChanged || copies.length > 0
           ? nextTrainers.map((trainer) => trainer.personId)
           : null,
-        pTrainerLessonsOffered: trainersChanged
+        pTrainerLessonsOffered: trainersChanged || copies.length > 0
           ? nextTrainers.map((trainer) => trainer.lessonsOffered)
           : null,
         pRegistrations: registrationsReady ? nextRegistrations : null,
-        pCohortIds: cohortsChanged ? nextCohortIds : null,
+        pCohortIds: cohortsChanged || copies.length > 0 ? nextCohortIds : null,
+        pCopies: copyEvents.length > 0 ? copyEvents : null,
       },
     });
     if (result.error) throw result.error;
@@ -463,14 +502,18 @@ export function QuickInstanceEditForm({
 
       <RadioButtonGroupElement control={control} name="type" options={eventTypeOptions} />
       <TextFieldElement control={control} name="name" label="Název termínu" />
-      <DateTimeRangeController
-        control={control}
-        nameSince="instances.0.since"
-        nameUntil="instances.0.until"
-        isCamp={type === 'CAMP'}
-      />
-      <InstanceTrainerListElement control={control} index={0} />
+      {instance.seriesId ? (
+        <DateTimeRangeController
+          control={control}
+          nameSince="instances.0.since"
+          nameUntil="instances.0.until"
+          isCamp={type === 'CAMP'}
+        />
+      ) : (
+        <InstanceListElement control={control} />
+      )}
       <LocationField control={control} />
+      <InstanceTrainerListElement control={control} index={0} />
       <CohortListElement
         control={control}
         name="cohorts"
@@ -495,28 +538,24 @@ export function QuickInstanceEditForm({
           />
         </>
       )*/}
-      <EventAccessFields control={control} type={type} />
       {registrationsReady && (
         <ParticipantListElement
           control={control}
           name="registrations"
           existingPeople={registrations.flatMap(({ person }) =>
-            person
-              ? [{ id: person.id, label: person.name }]
-              : [],
+            person ? [{ id: person.id, label: person.name }] : [],
           )}
           existingCouples={registrations.flatMap(({ couple }) =>
-            couple
-              ? [{ id: couple.id, label: formatLongCoupleName(couple) }]
-              : [],
+            couple ? [{ id: couple.id, label: formatLongCoupleName(couple) }] : [],
           )}
         />
       )}
       {!registrationsReady && registrationsQuery.fetching && (
         <div className="text-sm text-neutral-11">Načítám účastníky…</div>
       )}
-      <FormError error={registrationsQuery.error} />
+      <EventAccessFields control={control} type={type} />
       <CheckboxElement control={control} name="instances.0.isCancelled" label="Zrušeno" />
+      <FormError error={registrationsQuery.error} />
 
       <div className="flex justify-end pt-1">
         <SubmitButton loading={onSubmit.loading}>Uložit</SubmitButton>

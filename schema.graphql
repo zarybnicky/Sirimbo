@@ -6935,10 +6935,20 @@ input QuickCreateEventInstancesInput {
   """
   clientMutationId: String
   events: [QuickEventInputRecordInput]
+  pCapacity: Int
+  pCapacityUnit: EventCapacityUnit
+  pCohortIds: [BigInt]
+  pCopies: [QuickEventInputRecordInput]
+  pDescription: String
   pEnableNotes: Boolean
+  pFilesLegacy: String
   pIsLocked: Boolean
   pIsPublic: Boolean
   pIsVisible: Boolean
+  pName: String
+  pSeriesId: BigInt
+  pSummary: String
+  pTrainerLessonsOffered: [Int]
   parentId: BigInt
 }
 
@@ -7207,6 +7217,8 @@ input SetEventInstanceRegistrationInput {
   pCoupleId: BigInt
   pInstanceId: BigInt
   pIsRegistered: Boolean
+  pLessonCounts: [Int]
+  pLessonTrainerIds: [BigInt]
   pNote: String
   pPersonId: BigInt
 }
@@ -9077,6 +9089,7 @@ input UpdateEventInstanceDetailsInput {
   pCapacity: Int
   pCapacityUnit: EventCapacityUnit
   pCohortIds: [BigInt]
+  pCopies: [QuickEventInputRecordInput]
   pEnableNotes: Boolean
   pInstanceId: BigInt
   pIsCancelled: Boolean

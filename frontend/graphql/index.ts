@@ -6055,10 +6055,20 @@ export type QuickCreateEventInstancesInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   events?: InputMaybe<Array<InputMaybe<QuickEventInputRecordInput>>>;
+  pCapacity?: InputMaybe<Scalars['Int']['input']>;
+  pCapacityUnit?: InputMaybe<EventCapacityUnit>;
+  pCohortIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  pCopies?: InputMaybe<Array<InputMaybe<QuickEventInputRecordInput>>>;
+  pDescription?: InputMaybe<Scalars['String']['input']>;
   pEnableNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  pFilesLegacy?: InputMaybe<Scalars['String']['input']>;
   pIsLocked?: InputMaybe<Scalars['Boolean']['input']>;
   pIsPublic?: InputMaybe<Scalars['Boolean']['input']>;
   pIsVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  pName?: InputMaybe<Scalars['String']['input']>;
+  pSeriesId?: InputMaybe<Scalars['BigInt']['input']>;
+  pSummary?: InputMaybe<Scalars['String']['input']>;
+  pTrainerLessonsOffered?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
@@ -6316,6 +6326,8 @@ export type SetEventInstanceRegistrationInput = {
   pCoupleId?: InputMaybe<Scalars['BigInt']['input']>;
   pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   pIsRegistered?: InputMaybe<Scalars['Boolean']['input']>;
+  pLessonCounts?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  pLessonTrainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   pNote?: InputMaybe<Scalars['String']['input']>;
   pPersonId?: InputMaybe<Scalars['BigInt']['input']>;
 };
@@ -7727,6 +7739,7 @@ export type UpdateEventInstanceDetailsInput = {
   pCapacity?: InputMaybe<Scalars['Int']['input']>;
   pCapacityUnit?: InputMaybe<EventCapacityUnit>;
   pCohortIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  pCopies?: InputMaybe<Array<InputMaybe<QuickEventInputRecordInput>>>;
   pEnableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   pIsCancelled?: InputMaybe<Scalars['Boolean']['input']>;

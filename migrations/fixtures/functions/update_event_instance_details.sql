@@ -21,6 +21,11 @@ drop function if exists public.update_event_instance_details(
   boolean, boolean, boolean, bigint[], public.quick_event_registration_input[],
   integer, public.event_capacity_unit, boolean, integer[], bigint[]
 );
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[], public.quick_event_registration_input[],
+  integer, public.event_capacity_unit, boolean, integer[], bigint[], boolean
+);
 
 create or replace function public.update_event_instance_details(
   p_instance_id bigint,
@@ -40,12 +45,14 @@ create or replace function public.update_event_instance_details(
   p_is_locked boolean default null,
   p_trainer_lessons_offered integer[] default null,
   p_cohort_ids bigint[] default null,
-  p_enable_notes boolean default null
+  p_enable_notes boolean default null,
+  p_copies public.quick_event_input[] default null
 ) returns public.event_instance
   language plpgsql
 as $$
 declare
   updated_instance public.event_instance;
+  v_series_id bigint;
 begin
   if p_registrations is not null then
     perform registration.id
@@ -214,6 +221,39 @@ begin
     select * into updated_instance
     from public.event_instance
     where id = p_instance_id;
+  end if;
+
+  if cardinality(coalesce(p_copies, '{}'::public.quick_event_input[])) > 0 then
+    if updated_instance.series_id is not null then
+      raise exception 'event instance % already belongs to a series', p_instance_id;
+    end if;
+
+    insert into public.event_series (name)
+    values (updated_instance.name)
+    returning id into v_series_id;
+
+    update public.event_instance
+    set series_id = v_series_id
+    where id = p_instance_id
+    returning * into updated_instance;
+
+    perform public.quick_create_event_instances(
+      events => p_copies,
+      parent_id => updated_instance.parent_id,
+      p_is_visible => updated_instance.is_visible,
+      p_is_public => updated_instance.is_public,
+      p_is_locked => updated_instance.is_locked,
+      p_enable_notes => updated_instance.enable_notes,
+      p_series_id => v_series_id,
+      p_name => updated_instance.name,
+      p_capacity => updated_instance.capacity,
+      p_capacity_unit => updated_instance.capacity_unit,
+      p_description => updated_instance.description,
+      p_summary => updated_instance.summary,
+      p_files_legacy => updated_instance.files_legacy,
+      p_cohort_ids => p_cohort_ids,
+      p_trainer_lessons_offered => p_trainer_lessons_offered
+    );
   end if;
 
   return updated_instance;

@@ -1,18 +1,15 @@
 import {
   EventInstanceRegistrationsDocument,
   type EventInstanceWithTrainerFragment,
-  SetEventInstanceRegistrationDocument,
 } from '@/graphql/Event';
 import { MyRegistrationCard } from '@/ui/MyRegistrationCard';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { useAuth } from '@/ui/use-auth';
 import { NewExternalRegistrationForm } from './forms/NewExternalRegistrationForm';
-import { useMutation, useQuery } from 'urql';
+import { NewInstanceRegistrationForm } from './forms/NewInstanceRegistrationForm';
+import { useQuery } from 'urql';
 import { FormError } from '@/ui/form';
 import { formatRegistrant } from '@/ui/format';
-import { SubmitButton } from '@/ui/submit';
-import { useAsyncCallback } from 'react-async-hook';
-import { toast } from 'react-toastify';
 
 export function MyRegistrationsDialog({
   instance,
@@ -55,55 +52,33 @@ function InstanceRegistrationsDialogContent({
   instance: EventInstanceWithTrainerFragment;
 }) {
   const auth = useAuth();
-  const [registrationsQuery, reloadRegistrations] = useQuery({
+  const [query, refetch] = useQuery({
     query: EventInstanceRegistrationsDocument,
     variables: { id: instance.id },
     pause: !auth.isLoggedIn || auth.personIds.length === 0,
   });
-  const registrations =
-    registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
-  const lessonTrainers = registrationsQuery.data?.eventInstance?.lessonTrainers ?? [];
+  const registrations = query.data?.eventInstance?.registrations.nodes ?? [];
+  const lessonTrainers = query.data?.eventInstance?.lessonTrainers ?? [];
   const myRegistrations = registrations.filter(
-    (registration) =>
-      (!!registration.personId && auth.isMyPerson(registration.personId)) ||
-      (!!registration.coupleId && auth.isMyCouple(registration.coupleId)),
+    (r) => (!!r.personId && auth.isMyPerson(r.personId)) || (!!r.coupleId && auth.isMyCouple(r.coupleId)),
   );
-  const setRegistration = useMutation(SetEventInstanceRegistrationDocument)[1];
-  const register = useAsyncCallback(
-    async (registration: { personId: string | null; coupleId: string | null }) => {
-      const result = await setRegistration({
-        input: {
-          pInstanceId: instance.id,
-          pPersonId: registration.personId,
-          pCoupleId: registration.coupleId,
-          pIsRegistered: true,
-        },
-      });
-      if (result.error) throw result.error;
-      reloadRegistrations({ requestPolicy: 'network-only' });
-      toast.success('Přihlášení proběhlo úspěšně.');
-    },
-  );
-
   if (!auth.isLoggedIn || auth.personIds.length === 0) {
     return <NewExternalRegistrationForm instanceId={instance.id} />;
   }
 
-  if (!registrationsQuery.data) {
-    return registrationsQuery.error ? (
-      <FormError error={registrationsQuery.error} />
+  if (!query.data) {
+    return query.error ? (
+      <FormError error={query.error} />
     ) : (
       <div className="text-sm text-neutral-10">Načítám…</div>
     );
   }
 
   const occupiedPersonIds = new Set(
-    registrations.flatMap((registration) =>
-      registration.personId
-        ? [registration.personId]
-        : [registration.couple?.man?.id, registration.couple?.woman?.id].filter(
-            (id): id is string => !!id,
-          ),
+    registrations.flatMap((r) =>
+      r.personId
+        ? [r.personId]
+        : [r.couple?.man?.id, r.couple?.woman?.id].filter((id): id is string => !!id),
     ),
   );
   const availablePeople = auth.persons.filter((person) => !occupiedPersonIds.has(person.id));
@@ -119,8 +94,6 @@ function InstanceRegistrationsDialogContent({
 
   return (
     <div className="space-y-3">
-      <FormError error={register.error} />
-
       {myRegistrations.map((registration) => (
         <MyRegistrationCard
           key={registration.id}
@@ -134,37 +107,33 @@ function InstanceRegistrationsDialogContent({
         myRegistrations.length > 0 && <div className="text-lg font-bold">Další přihlášky</div>}
 
       {availablePeople.map((person) => (
-        <div key={person.id} className="flex items-center justify-between gap-2">
-          <span>{person.name}</span>
-          <SubmitButton
-            type="button"
-            loading={register.loading}
-            disabled={remainingCapacity < 1}
-            onClick={() =>
-              register.execute({ personId: person.id, coupleId: null })
-            }
-          >
-            Přihlásit
-          </SubmitButton>
-        </div>
+        <NewInstanceRegistrationForm
+          key={person.id}
+          instanceId={instance.id}
+          enableNotes={!!instance.enableNotes}
+          personId={person.id}
+          coupleId={null}
+          label={person.name}
+          lessonTrainers={lessonTrainers}
+          disabled={remainingCapacity < 1}
+          onRegistered={() => refetch({ requestPolicy: 'network-only' })}
+        />
       ))}
 
       {availableCouples.map((couple) => (
-        <div key={couple.id} className="flex items-center justify-between gap-2">
-          <span>{formatRegistrant({ person: null, couple })}</span>
-          <SubmitButton
-            type="button"
-            loading={register.loading}
-            disabled={
-              remainingCapacity < (instance.capacityUnit === 'PEOPLE' ? 2 : 1)
-            }
-            onClick={() =>
-              register.execute({ personId: null, coupleId: couple.id })
-            }
-          >
-            Přihlásit
-          </SubmitButton>
-        </div>
+        <NewInstanceRegistrationForm
+          key={couple.id}
+          instanceId={instance.id}
+          enableNotes={!!instance.enableNotes}
+          personId={null}
+          coupleId={couple.id}
+          label={formatRegistrant({ person: null, couple })}
+          lessonTrainers={lessonTrainers}
+          disabled={
+            remainingCapacity < (instance.capacityUnit === 'PEOPLE' ? 2 : 1)
+          }
+          onRegistered={() => refetch({ requestPolicy: 'network-only' })}
+        />
       ))}
     </div>
   );

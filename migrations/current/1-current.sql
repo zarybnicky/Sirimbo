@@ -29,3 +29,6 @@ alter type public.event_overlaps_conflict drop attribute if exists second_event_
 
 --! include functions/event_instance_registration_last_attended.sql
 --! include functions/event_overlaps_reports.sql
+--! include functions/quick_create_event_instances.sql
+--! include functions/update_event_instance_details.sql
+--! include functions/set_event_instance_registration.sql
