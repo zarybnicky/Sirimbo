@@ -1,7 +1,7 @@
 import { MoveEventInstanceDocument } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent } from '@/ui/dialog';
-import { QuickEventCreateForm } from '@/ui/event-form/QuickEventForms';
+import { EventCreateForm } from '@/ui/event-form/EventForms';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -175,7 +175,7 @@ export function Calendar({
           modal={false}
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            {creating && <QuickEventCreateForm defaults={creating} parentId={parentId} />}
+            {creating && <EventCreateForm defaults={creating} parentId={parentId} />}
           </DialogContent>
         </Dialog>
       )}

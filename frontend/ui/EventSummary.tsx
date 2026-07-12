@@ -1,6 +1,6 @@
 import {
   EventInstanceApproxPriceDocument,
-  EventInstanceWithTrainerFragment,
+  EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from '@/lib/cn';
@@ -23,7 +23,7 @@ export function EventSummary({
   instance,
   offsetButtons,
 }: {
-  instance: EventInstanceWithTrainerFragment;
+  instance: EventWithTrainerFragment;
   offsetButtons?: boolean;
 }) {
   const actions = useActions(eventInstanceActions, instance);

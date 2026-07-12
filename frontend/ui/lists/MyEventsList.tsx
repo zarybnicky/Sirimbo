@@ -1,4 +1,4 @@
-import { EventInstanceRangeDocument, EventInstanceWithTrainerFragment } from '@/graphql/Event';
+import { EventInstanceRangeDocument, EventWithTrainerFragment } from '@/graphql/Event';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { formatWeekDay } from '@/ui/format';
@@ -20,12 +20,12 @@ export function MyEventsList() {
   });
 
   const eventsPerDay = React.useMemo(() => {
-    const map = new Map<string, Map<string, EventInstanceWithTrainerFragment []>>();
+    const map = new Map<string, Map<string, EventWithTrainerFragment []>>();
     for (const instance of data?.list || []) {
       const date = startOf(new Date(instance.since), 'day').toISOString();
       const location = instance.location?.name || instance.locationText || '';
 
-      const locations = map.get(date) ?? new Map<string, EventInstanceWithTrainerFragment[]>();
+      const locations = map.get(date) ?? new Map<string, EventWithTrainerFragment[]>();
       locations.set(location, [...(locations.get(location) ?? []), instance]);
       map.set(date, locations);
     }

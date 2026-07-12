@@ -9,11 +9,11 @@ import {
 import {
   DeleteEventInstanceDocument,
   DeleteEventExternalRegistrationDocument,
-  type EventInstanceWithTrainerFragment,
+  type EventWithTrainerFragment,
   UpdateEventInstanceDocument,
 } from '@/graphql/Event';
 import { type ActionContext, defineActions } from '@/lib/actions';
-import { QuickInstanceEditForm } from '@/ui/event-form/QuickEventForms';
+import { EventEditForm } from '@/ui/event-form/EventForms';
 import { EditEventInstanceDescriptionForm } from '@/ui/forms/EditEventInstanceDescriptionForm';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
@@ -23,7 +23,7 @@ const preventDefault = (e: Event) => e.preventDefault();
 export function canManageInstance({
   auth,
   item,
-}: Pick<ActionContext<EventInstanceWithTrainerFragment>, 'auth' | 'item'>) {
+}: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
   return (
     auth.isAdmin ||
     (auth.isTrainer &&
@@ -31,13 +31,13 @@ export function canManageInstance({
   );
 }
 
-export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragment>()([
+export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
   {
     id: 'eventInstance.edit',
     label: 'Upravit',
     icon: Pencil,
     visible: canManageInstance,
-    render: ({ item }) => <QuickInstanceEditForm instance={item} />,
+    render: ({ item }) => <EventEditForm instance={item} />,
     dialogProps: {
       className: 'sm:max-w-xl',
       onOpenAutoFocus: preventDefault,
@@ -56,7 +56,7 @@ export const eventInstanceActions = defineActions<EventInstanceWithTrainerFragme
   {
     id: 'eventInstance.toggleCancelled',
     label: ({ item }) => (item.isCancelled ? 'Zrušeno' : 'Zrušit termín'),
-    icon: ({ item }: ActionContext<EventInstanceWithTrainerFragment>) =>
+    icon: ({ item }: ActionContext<EventWithTrainerFragment>) =>
       item.isCancelled ? CheckSquare : Square,
     visible: canManageInstance,
     execute: async ({ item, mutate }) => {

@@ -1,4 +1,4 @@
-import type { EventInstanceWithTrainerFragment } from '@/graphql/Event';
+import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { EventSummary } from '@/ui/EventSummary';
 import { cn } from '@/lib/cn';
 import {
@@ -24,7 +24,7 @@ export function EventButton({
   attendance,
   suffix,
 }: {
-  instance: EventInstanceWithTrainerFragment;
+  instance: EventWithTrainerFragment;
   showDate?: boolean;
   viewer: 'auto' | 'trainer' | 'couple';
   attendance?: 'inline';

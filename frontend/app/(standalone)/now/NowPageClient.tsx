@@ -44,21 +44,10 @@ function formatStartsIn(now: Date, start: Date) {
 }
 
 function trainerGroups(instance: Instance) {
-  const groups = (instance.trainersList ?? [])
-    .map((trainer) => {
-      const key = trainer.personId
-        ? `person:${trainer.personId}`
-        : trainer.id
-          ? `trainer:${trainer.id}`
-          : undefined;
-
-      if (!key) return null;
-
-      const label = trainer.person?.name.trim() ?? 'Neznámý trenér';
-
-      return { key, label };
-    })
-    .filter(isTruthy);
+  const groups = (instance.trainersList ?? []).map((x) => ({
+    key: x.personId,
+    label: x.person?.name.trim() ?? 'Neznámý trenér'
+  }));
 
   if (groups.length === 0) {
     return [{ key: 'trainer:none', label: 'Bez trenéra' }];

@@ -1,6 +1,6 @@
 import {
   type EventInstanceRegistrationFragment,
-  type EventInstanceWithTrainerFragment,
+  type EventWithTrainerFragment,
   type EventInstanceTrainerLessonOfferFragment,
   SetEventInstanceRegistrationDocument,
 } from '@/graphql/Event';
@@ -22,7 +22,7 @@ export function MyRegistrationCard({
   registration,
   lessonTrainers,
 }: {
-  instance: EventInstanceWithTrainerFragment;
+  instance: EventWithTrainerFragment;
   registration: EventInstanceRegistrationFragment;
   lessonTrainers: EventInstanceTrainerLessonOfferFragment[];
 }) {

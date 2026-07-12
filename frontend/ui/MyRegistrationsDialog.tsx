@@ -1,6 +1,6 @@
 import {
   EventInstanceRegistrationsDocument,
-  type EventInstanceWithTrainerFragment,
+  type EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { MyRegistrationCard } from '@/ui/MyRegistrationCard';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -14,7 +14,7 @@ import { formatRegistrant } from '@/ui/format';
 export function MyRegistrationsDialog({
   instance,
 }: {
-  instance: EventInstanceWithTrainerFragment;
+  instance: EventWithTrainerFragment;
 }) {
   const auth = useAuth();
   const isExternalRegistration = !auth.isLoggedIn || auth.personIds.length === 0;
@@ -49,7 +49,7 @@ export function MyRegistrationsDialog({
 function InstanceRegistrationsDialogContent({
   instance,
 }: {
-  instance: EventInstanceWithTrainerFragment;
+  instance: EventWithTrainerFragment;
 }) {
   const auth = useAuth();
   const [query, refetch] = useQuery({
@@ -58,7 +58,7 @@ function InstanceRegistrationsDialogContent({
     pause: !auth.isLoggedIn || auth.personIds.length === 0,
   });
   const registrations = query.data?.eventInstance?.registrations.nodes ?? [];
-  const lessonTrainers = query.data?.eventInstance?.lessonTrainers ?? [];
+  const lessonTrainers = query.data?.eventInstance?.trainersList ?? [];
   const myRegistrations = registrations.filter(
     (r) => (!!r.personId && auth.isMyPerson(r.personId)) || (!!r.coupleId && auth.isMyCouple(r.coupleId)),
   );

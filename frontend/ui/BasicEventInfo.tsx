@@ -1,28 +1,22 @@
-import type { EventInstanceWithTrainerFragment } from '@/graphql/Event';
+import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { RichTextView } from '@/ui/RichTextView';
 import { SeriesInfoLink } from '@/ui/SeriesInfoLink';
-import { formatEventType } from '@/ui/format';
+import { dateTimeFormatter, formatEventType,  } from '@/ui/format';
 
-export function BasicEventInfo({ instance }: { instance: EventInstanceWithTrainerFragment }) {
+export function BasicEventInfo({ instance }: { instance: EventWithTrainerFragment }) {
   return (
     <dl className="not-prose gap-2 mb-6">
-      <dd>{formatEventType(instance.type)}</dd>
-
       {(instance.seriesInfo?.length ?? 0) > 1 && (
         <dd>
           <SeriesInfoLink info={instance.seriesInfo} />
         </dd>
       )}
 
-      {(instance.capacity ?? 0) > 0 && (
-        <>
-          <dt>Kapacita</dt>
-          <dd>
-            Zbývá {instance.remainingPersonSpots} míst z {instance.capacity}
-          </dd>
-        </>
-      )}
+      <dd>{formatEventType(instance.type)}</dd>
+
+      <dt>Termín</dt>
+      <dd>{dateTimeFormatter.formatRange(new Date(instance.since), new Date(instance.until))}</dd>
 
       {!!(instance.location?.name || instance.locationText) && (
         <>
@@ -41,6 +35,15 @@ export function BasicEventInfo({ instance }: { instance: EventInstanceWithTraine
               </dd>
             );
           })}
+        </>
+      )}
+
+      {(instance.capacity ?? 0) > 0 && (
+        <>
+          <dt>Kapacita</dt>
+          <dd>
+            Zbývá {instance.remainingPersonSpots} míst z {instance.capacity}
+          </dd>
         </>
       )}
 

@@ -9,7 +9,7 @@ import { add, endOf, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
-import { QuickEventCreateForm } from '@/ui/event-form/QuickEventForms';
+import { EventCreateForm } from '@/ui/event-form/EventForms';
 import type { QuickEventCreateDefaults } from '@/calendar/quickEventDefaults';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
@@ -115,7 +115,7 @@ export function EventList() {
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" text="Přidat událost" />
             <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-              <QuickEventCreateForm defaults={createDefaults} initialType="CAMP" />
+              <EventCreateForm defaults={createDefaults} initialType="CAMP" />
             </DialogContent>
           </Dialog>
         )}

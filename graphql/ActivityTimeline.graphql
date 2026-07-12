@@ -16,7 +16,7 @@ fragment ActivityTimelineItem on ActivityTimelineItem {
       status
     }
     eventInstance {
-      ...EventInstanceWithTrainer
+      ...EventWithTrainer
     }
   }
   ... on ActivityCompetitionBrief {

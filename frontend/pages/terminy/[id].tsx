@@ -1,8 +1,5 @@
 import type { AttendanceType } from '@/graphql';
-import {
-  EventSeriesDocument,
-  type EventSeriesInstanceFragment,
-} from '@/graphql/Event';
+import { EventSeriesDocument, type EventInstanceFragment } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { Layout } from '@/ui/Layout';
 import { Spinner } from '@/ui/Spinner';
@@ -87,7 +84,7 @@ export default function EventSeriesPage() {
   );
 }
 
-function Attendance({ instances }: { instances: EventSeriesInstanceFragment[] }) {
+function Attendance({ instances }: { instances: EventInstanceFragment[] }) {
   return (
     <table className="prose prose-accent max-w-none">
       <thead>
@@ -128,7 +125,7 @@ function Attendance({ instances }: { instances: EventSeriesInstanceFragment[] })
   );
 }
 
-function EventInstances({ instances }: { instances: EventSeriesInstanceFragment[] }) {
+function EventInstances({ instances }: { instances: EventInstanceFragment[] }) {
   return (
     <div className="divide-y divide-neutral-4 rounded-lg border border-neutral-4 bg-neutral-1">
       {instances.map((instance) => {

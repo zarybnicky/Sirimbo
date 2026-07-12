@@ -1,12 +1,6 @@
 fragment EventInstance on EventInstance {
-  id
   parentId
-  since
-  until
-  isCancelled
-}
-
-fragment EventSeriesInstance on EventInstance {
+  seriesId
   id
   name
   type
@@ -35,15 +29,15 @@ query EventSeries($id: BigInt!) {
     id
     name
     eventsList(condition: { parentId: null }, orderBy: SINCE_ASC) {
-      ...EventSeriesInstance
+      ...EventInstance
     }
     attendanceEventsList: eventsList(orderBy: SINCE_ASC) {
-      ...EventSeriesInstance
+      ...EventInstance
     }
   }
 }
 
-fragment EventInstanceWithTrainer on EventInstance {
+fragment EventWithTrainer on EventInstance {
   ...EventInstance
   seriesId
   seriesInfo {
@@ -64,14 +58,10 @@ fragment EventInstanceWithTrainer on EventInstance {
     id
     name
   }
-  eventInstanceTrainersByInstanceIdList {
+  trainersList: eventInstanceTrainersByInstanceIdList {
     id
     personId
     lessonsOffered
-  }
-  trainersList {
-    id
-    personId
     person {
       id
       name
@@ -202,7 +192,7 @@ query EventInstanceExport($id: BigInt!) {
     id
     name
     type
-    lessonTrainers: eventInstanceTrainersByInstanceIdList {
+    trainersList: eventInstanceTrainersByInstanceIdList {
       ...EventInstanceTrainerLessonOffer
     }
     registrations: eventInstanceRegistrationsByInstanceIdList(
@@ -248,7 +238,7 @@ query EventInstancePayments($id: BigInt!) {
 }
 
 fragment EventInstancePage on EventInstance {
-  ...EventInstanceWithTrainer
+  ...EventWithTrainer
   description
   eventExternalRegistrationsByInstanceIdList {
     ...EventExternalRegistration
@@ -279,7 +269,7 @@ query EventInstanceDescription($id: BigInt!) {
 query EventInstanceRegistrations($id: BigInt!) {
   eventInstance(id: $id) {
     id
-    lessonTrainers: eventInstanceTrainersByInstanceIdList {
+    trainersList: eventInstanceTrainersByInstanceIdList {
       ...EventInstanceTrainerLessonOffer
     }
     registrations: eventInstanceRegistrationsByInstanceId(
@@ -334,7 +324,7 @@ query EventInstanceRange(
     onlyMine: $onlyMine,
     parentId: $parentId
   ) {
-    ...EventInstanceWithTrainer
+    ...EventWithTrainer
   }
 }
 
@@ -431,11 +421,7 @@ mutation MoveEventInstance($input: MoveEventInstanceInput!) {
         id
         name
       }
-      eventInstanceTrainersByInstanceIdList {
-        id
-        personId
-      }
-      trainersList {
+      trainersList: eventInstanceTrainersByInstanceIdList {
         id
         personId
         person {

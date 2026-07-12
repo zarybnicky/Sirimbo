@@ -1,6 +1,6 @@
 import type { EventType } from '@/graphql';
 import {
-  type EventInstanceWithTrainerFragment,
+  type EventWithTrainerFragment,
   EventInstanceRegistrationsDocument,
   CreateEventInstancesDocument,
   UpdateEventInstanceDetailsDocument,
@@ -75,7 +75,7 @@ function EventAccessFields({
   );
 }
 
-export function QuickEventCreateForm({
+export function EventCreateForm({
   defaults,
   parentId,
   initialType = 'LESSON',
@@ -169,10 +169,10 @@ export function QuickEventCreateForm({
     const firstRange = explicitRanges[0];
     if (!firstRange) return;
     const selectedRegistrations = values.registrations
-      .filter((registration) => registration.personId || registration.coupleId)
-      .map((registration) => ({
-        personId: registration.personId || null,
-        coupleId: registration.coupleId || null,
+      .filter((r) => r.personId || r.coupleId)
+      .map((r) => ({
+        personId: r.personId || null,
+        coupleId: r.coupleId || null,
       }));
     if (!splitLessons && values.type === 'LESSON') {
       const registrantCount = selectedRegistrations.reduce(
@@ -321,10 +321,10 @@ export function QuickEventCreateForm({
   );
 }
 
-export function QuickInstanceEditForm({
+export function EventEditForm({
   instance,
 }: {
-  instance: EventInstanceWithTrainerFragment;
+  instance: EventWithTrainerFragment;
 }) {
   const { onSuccess } = useFormResult();
   const updateInstance = useMutation(UpdateEventInstanceDetailsDocument)[1];
@@ -333,41 +333,25 @@ export function QuickInstanceEditForm({
     query: EventInstanceRegistrationsDocument,
     variables: { id: instance.id },
   });
-  const directTrainers = instance.eventInstanceTrainersByInstanceIdList;
-  const effectiveTrainerIds = instance.trainersList?.map((trainer) => trainer.personId) ?? [];
-  const initialTrainers =
-    directTrainers.length > 0
-      ? directTrainers.map((trainer) => ({
-          itemId: trainer.id,
-          personId: trainer.personId,
-          lessonsOffered: trainer.lessonsOffered,
-        }))
-      : effectiveTrainerIds.map((personId) => ({
-          itemId: null,
-          personId,
-          lessonsOffered: 0,
-        }));
+  const initialTrainers = instance.trainersList.map((trainer) => ({
+    itemId: trainer.id,
+    personId: trainer.personId,
+    lessonsOffered: trainer.lessonsOffered,
+  }))
   const initialCohorts = React.useMemo(
-    () =>
-      (instance.targetCohortsList ?? []).map((target) => ({
-        cohortId: target.cohortId,
-      })),
+    () => (instance.targetCohortsList ?? []).map(({ cohortId }) => ({ cohortId })),
     [instance.targetCohortsList],
   );
   const existingCohorts = React.useMemo(
     () =>
       (instance.targetCohortsList ?? []).map((target) => ({
         id: target.cohortId,
-        label: target.cohort?.name ?? `Skupina ${target.cohortId}`,
+        label: target.cohort?.name ?? '-',
       })),
     [instance.targetCohortsList],
   );
 
-  const { control, handleSubmit, setValue } = useForm<
-    EventFormInput,
-    unknown,
-    EventFormType
-  >({
+  const { control, handleSubmit, setValue } = useForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
       name: instance.name ?? '',
@@ -437,13 +421,10 @@ export function QuickInstanceEditForm({
         ? [{ personId: trainer.personId, lessonsOffered: trainer.lessonsOffered }]
         : [],
     );
-    const currentTrainers =
-      directTrainers.length > 0
-        ? directTrainers.map((trainer) => ({
-            personId: trainer.personId,
-            lessonsOffered: trainer.lessonsOffered,
-          }))
-        : effectiveTrainerIds.map((personId) => ({ personId, lessonsOffered: 0 }));
+    const currentTrainers = instance.trainersList.map((trainer) => ({
+      personId: trainer.personId,
+      lessonsOffered: trainer.lessonsOffered,
+    }));
     const trainersChanged =
       JSON.stringify(nextTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId))) !==
       JSON.stringify(currentTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId)));

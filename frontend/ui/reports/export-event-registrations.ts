@@ -19,7 +19,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
     { header: 'Poznámka', key: 'note' },
   ];
   const lessonTrainers = new Map<string, string>();
-  for (const trainer of instance?.lessonTrainers ?? []) {
+  for (const trainer of instance?.trainersList ?? []) {
     if (trainer.lessonsOffered !== 0) {
       lessonTrainers.set(trainer.personId, trainer.person?.name ?? '?');
     }
