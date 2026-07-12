@@ -11,9 +11,9 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
     and (trainer_ids is null
       or exists (select 1 from event_instance_trainer where instance_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null
-      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any (participant_ids) and registration_status = 'active' and status <> 'cancelled'))
+      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any (participant_ids) and registration_status = 'active'))
     and (only_mine is false
-      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active' and status <> 'cancelled')
+      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active')
       or i.manager_person_ids && ((select current_person_ids())::bigint[]));
 $_$;
 

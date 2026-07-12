@@ -9,7 +9,7 @@ as $$
   set stats = actual.stats
   from (
     select jsonb_build_object(
-      'TOTAL', count(*) filter (where status <> 'cancelled')::int,
+      'TOTAL', count(*)::int,
       'UNKNOWN', count(*) filter (where status = 'unknown')::int,
       'ATTENDED', count(*) filter (where status = 'attended')::int,
       'NOT_EXCUSED', count(*) filter (where status = 'not-excused')::int

@@ -8,8 +8,7 @@ as $$
        from public.event_instance_registration registration
        where registration.instance_id = v_instance.id
          and registration.person_id is not null
-         and registration.registration_status = 'active'
-         and registration.status <> 'cancelled')::bigint as num_participants,
+         and registration.registration_status = 'active')::bigint as num_participants,
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
   )
   select

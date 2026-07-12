@@ -8,7 +8,6 @@ import * as Types from './index';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type AttendanceType =
   | 'ATTENDED'
-  | 'CANCELLED'
   | 'NOT_EXCUSED'
   | 'UNKNOWN';
 

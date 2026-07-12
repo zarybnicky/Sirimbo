@@ -8,7 +8,7 @@ import { useAuth } from '@/ui/use-auth';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 import type { AttendanceType } from '@/graphql';
-import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
+import { Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
 import { cn } from '@/lib/cn';
 import Link from 'next/link';
@@ -29,7 +29,6 @@ export function InstanceAttendanceView({ id }: { id: string }) {
   const canEditAttendance = canManageInstance({ auth, item: instance });
   const attendanceList = instance.eventInstanceRegistrationsByInstanceId.nodes
     .filter(keyIsNonNull('status'))
-    .filter((x) => x.status !== 'CANCELLED')
     .filter(keyIsNonNull('person'))
     .toSorted((x, y) =>
       `${x.person.lastName}${x.person.firstName}`.localeCompare(
@@ -106,7 +105,6 @@ export const attendanceIcons: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
   UNKNOWN: HelpCircle,
   NOT_EXCUSED: X,
-  CANCELLED: OctagonMinus,
 };
 const toggleableAttendanceIcons = {
   ATTENDED: Check,
@@ -114,7 +112,7 @@ const toggleableAttendanceIcons = {
 } satisfies Record<'ATTENDED' | 'NOT_EXCUSED', LucideIcon>;
 
 function isAttendanceType(x: string): x is AttendanceType {
-  return ['ATTENDED', 'NOT_EXCUSED', 'UNKNOWN', 'CANCELLED'].includes(x);
+  return ['ATTENDED', 'NOT_EXCUSED', 'UNKNOWN'].includes(x);
 }
 
 function AttendanceItem({

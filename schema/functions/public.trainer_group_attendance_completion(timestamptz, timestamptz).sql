@@ -35,7 +35,6 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
       where eir.instance_id = ti.instance_id
         and eir.person_id is not null
         and eir.registration_status = 'active'
-        and eir.status <> 'cancelled'
     ) stats on true
   ),
   per_trainer as (

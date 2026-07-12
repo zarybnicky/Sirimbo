@@ -8,7 +8,20 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(22);
+SELECT tap.plan(23);
+
+SELECT tap.ok(
+  NOT EXISTS (
+    SELECT 1
+    FROM pg_catalog.pg_enum enum
+    JOIN pg_catalog.pg_type type ON type.oid = enum.enumtypid
+    JOIN pg_catalog.pg_namespace namespace ON namespace.oid = type.typnamespace
+    WHERE namespace.nspname = 'public'
+      AND type.typname = 'attendance_type'
+      AND enum.enumlabel = 'cancelled'
+  ),
+  'registration cancellation is not an attendance status'
+);
 
 SELECT tap.ok(
   to_regprocedure('public.delete_event_instance(bigint)') is null

@@ -15,7 +15,6 @@ export type ActivityTimelineKind =
 
 export type AttendanceType =
   | 'ATTENDED'
-  | 'CANCELLED'
   | 'NOT_EXCUSED'
   | 'UNKNOWN';
 

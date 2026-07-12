@@ -31,7 +31,6 @@ as $$
       and ea.person_id is not null
       and ea.registration_status = 'active'
       and not ei.is_cancelled
-      and ea.status <> 'cancelled'
       and ei.range && tr.range
   )
   select

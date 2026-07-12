@@ -24,7 +24,6 @@ begin
     where registration.instance_id = i.id
       and registration.person_id is not null
       and registration.registration_status = 'active'
-      and registration.status <> 'cancelled'
   ) then
     return null;
   end if;
@@ -58,8 +57,7 @@ begin
   from public.event_instance_registration registration
   where registration.instance_id = i.id
     and registration.person_id is not null
-    and registration.registration_status = 'active'
-    and registration.status <> 'cancelled';
+    and registration.registration_status = 'active';
 
   return created_payment;
 end

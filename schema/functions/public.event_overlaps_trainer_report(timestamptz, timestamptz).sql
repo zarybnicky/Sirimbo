@@ -16,7 +16,6 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
       ei.since,
       ei.until,
       ei.range,
-      ei.event_id,
       ei.name as event_name
     from public.event_instance ei
     cross join lateral app_private.event_instance_trainers_at(ei, ei.since) trainer
@@ -31,12 +30,10 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
     ti1.person_id,
     ti1.person_name,
     ti1.instance_id as first_instance_id,
-    ti1.event_id as first_event_id,
     ti1.event_name as first_event_name,
     ti1.since as first_since,
     ti1.until as first_until,
     ti2.instance_id as second_instance_id,
-    ti2.event_id as second_event_id,
     ti2.event_name as second_event_name,
     ti2.since as second_since,
     ti2.until as second_until,

@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict mrG7sCkVkbnX4O6YjAfUEiVbGhUr7gLW1hJmwCBOjRtEyYERhtAXpizxEyPzeNE
+\restrict 5Jw4zmGTTleoN9UUwIpR7arr0RXfjwAsDoVZgnWFJRJ0dhFjTMqjAQLhcY96DRh
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -80,6 +80,20 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
+
+
+--
+-- Name: hypopg; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS hypopg WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION hypopg; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION hypopg IS 'Hypothetical indexes for PostgreSQL';
 
 
 --
@@ -413,8 +427,7 @@ CREATE TYPE public.application_form_status AS ENUM (
 CREATE TYPE public.attendance_type AS ENUM (
     'unknown',
     'attended',
-    'not-excused',
-    'cancelled'
+    'not-excused'
 );
 
 
@@ -499,12 +512,10 @@ CREATE TYPE public.event_overlaps_conflict AS (
 	person_id bigint,
 	person_name text,
 	first_instance_id bigint,
-	first_event_id bigint,
 	first_event_name text,
 	first_since timestamp with time zone,
 	first_until timestamp with time zone,
 	second_instance_id bigint,
-	second_event_id bigint,
 	second_event_name text,
 	second_since timestamp with time zone,
 	second_until timestamp with time zone,
@@ -1643,7 +1654,7 @@ CREATE FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) R
   set stats = actual.stats
   from (
     select jsonb_build_object(
-      'TOTAL', count(*) filter (where status <> 'cancelled')::int,
+      'TOTAL', count(*)::int,
       'UNKNOWN', count(*) filter (where status = 'unknown')::int,
       'ATTENDED', count(*) filter (where status = 'attended')::int,
       'NOT_EXCUSED', count(*) filter (where status = 'not-excused')::int
@@ -2675,7 +2686,6 @@ begin
       join event_instance ei on ei.id = ea.instance_id
       join scoped_people sp on sp.id = ea.person_id
       where ea.registration_status = 'active'
-        and ea.status <> 'cancelled'
         and ei.since >= p_since
         and ei.since < p_until
         and (p_event_types is null or ei.type = any(p_event_types));
@@ -3445,7 +3455,6 @@ begin
     where registration.instance_id = i.id
       and registration.person_id is not null
       and registration.registration_status = 'active'
-      and registration.status <> 'cancelled'
   ) then
     return null;
   end if;
@@ -3479,8 +3488,7 @@ begin
   from public.event_instance_registration registration
   where registration.instance_id = i.id
     and registration.person_id is not null
-    and registration.registration_status = 'active'
-    and registration.status <> 'cancelled';
+    and registration.registration_status = 'active';
 
   return created_payment;
 end
@@ -3882,7 +3890,6 @@ CREATE FUNCTION public.event_instance_remaining_person_spots(inst public.event_i
           where registration.instance_id = inst.id
             and registration.person_id is not null
             and registration.registration_status = 'active'
-            and registration.status <> 'cancelled'
         )
         when 'registrations' then (
           select count(*)::integer
@@ -4004,9 +4011,9 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
     and (trainer_ids is null
       or exists (select 1 from event_instance_trainer where instance_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null
-      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any (participant_ids) and registration_status = 'active' and status <> 'cancelled'))
+      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any (participant_ids) and registration_status = 'active'))
     and (only_mine is false
-      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active' and status <> 'cancelled')
+      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active')
       or i.manager_person_ids && ((select current_person_ids())::bigint[]));
 $_$;
 
@@ -4040,7 +4047,6 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
       ei.since,
       ei.until,
       ei.range,
-      ei.event_id,
       ei.name as event_name
     from public.event_instance_registration ea
     join public.event_instance ei on ei.id = ea.instance_id
@@ -4051,19 +4057,16 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
       and ea.person_id is not null
       and ea.registration_status = 'active'
       and not ei.is_cancelled
-      and ea.status <> 'cancelled'
       and ei.range && tr.range
   )
   select
     i1.person_id,
     i1.person_name,
     i1.instance_id as first_instance_id,
-    i1.event_id as first_event_id,
     i1.event_name as first_event_name,
     i1.since as first_since,
     i1.until as first_until,
     i2.instance_id as second_instance_id,
-    i2.event_id as second_event_id,
     i2.event_name as second_event_name,
     i2.since as second_since,
     i2.until as second_until,
@@ -4109,7 +4112,6 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
       ei.since,
       ei.until,
       ei.range,
-      ei.event_id,
       ei.name as event_name
     from public.event_instance ei
     cross join lateral app_private.event_instance_trainers_at(ei, ei.since) trainer
@@ -4124,12 +4126,10 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
     ti1.person_id,
     ti1.person_name,
     ti1.instance_id as first_instance_id,
-    ti1.event_id as first_event_id,
     ti1.event_name as first_event_name,
     ti1.since as first_since,
     ti1.until as first_until,
     ti2.instance_id as second_instance_id,
-    ti2.event_id as second_event_id,
     ti2.event_name as second_event_name,
     ti2.since as second_since,
     ti2.until as second_until,
@@ -4854,27 +4854,47 @@ $$;
 
 
 --
--- Name: quick_create_event_instances(public.quick_event_input[], bigint, boolean, boolean, boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
+-- Name: quick_create_event_instances(public.quick_event_input[], bigint, boolean, boolean, boolean, boolean, bigint, text, integer, public.event_capacity_unit, text, text, text, bigint[], integer[], public.quick_event_input[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint DEFAULT NULL::bigint, p_is_visible boolean DEFAULT true, p_is_public boolean DEFAULT false, p_is_locked boolean DEFAULT false, p_enable_notes boolean DEFAULT false) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint DEFAULT NULL::bigint, p_is_visible boolean DEFAULT true, p_is_public boolean DEFAULT false, p_is_locked boolean DEFAULT false, p_enable_notes boolean DEFAULT false, p_series_id bigint DEFAULT NULL::bigint, p_name text DEFAULT NULL::text, p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT 'people'::public.event_capacity_unit, p_description text DEFAULT ''::text, p_summary text DEFAULT ''::text, p_files_legacy text DEFAULT ''::text, p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_copies public.quick_event_input[] DEFAULT NULL::public.quick_event_input[]) RETURNS SETOF public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
   quick_event quick_event_input;
   created_instance event_instance;
+  v_series_id bigint := p_series_id;
+  instances quick_event_input[] := coalesce(events, '{}'::quick_event_input[]);
 begin
-  foreach quick_event in array coalesce(events, '{}'::quick_event_input[]) loop
+  if cardinality(coalesce(p_copies, '{}'::quick_event_input[])) > 0 then
+    if p_series_id is not null then
+      raise exception 'cannot copy into an existing event series';
+    end if;
+    if cardinality(instances) <> 1 then
+      raise exception 'event copies require exactly one source event';
+    end if;
+
+    insert into event_series (name)
+    values (p_name)
+    returning id into v_series_id;
+
+    instances := instances || p_copies;
+  end if;
+
+  foreach quick_event in array instances loop
     insert into event_instance (
-      parent_id, since, until, name, type, location_id, location_text,
+      parent_id, series_id, since, until, name, type, location_id, location_text,
       capacity, capacity_unit, is_visible, is_public, is_locked, enable_notes,
-      description, summary
+      description, summary, files_legacy
     ) values (
-      parent_id, quick_event.since, quick_event.until, '',
+      parent_id, v_series_id, quick_event.since, quick_event.until, p_name,
       coalesce(quick_event.type, 'lesson'), quick_event.location_id,
       coalesce(quick_event.location_text, ''),
-      case when coalesce(quick_event.type, 'lesson') = 'lesson' then 2 else 0 end,
-      'people', p_is_visible, p_is_public, p_is_locked, p_enable_notes, '', ''
+      coalesce(p_capacity,
+        case when coalesce(quick_event.type, 'lesson') = 'lesson' then 2 else 0 end),
+      coalesce(p_capacity_unit, 'people'),
+      p_is_visible, p_is_public, p_is_locked, p_enable_notes,
+      coalesce(p_description, ''), coalesce(p_summary, ''), coalesce(p_files_legacy, '')
     )
     returning * into created_instance;
 
@@ -4897,10 +4917,20 @@ begin
     cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id)
     where root.couple_id is not null;
 
-    insert into event_instance_trainer (instance_id, person_id)
-    select distinct created_instance.id, trainer.person_id
-    from unnest(quick_event.trainer_person_ids) trainer(person_id)
+    insert into event_instance_trainer (instance_id, person_id, lessons_offered)
+    select distinct on (trainer.person_id)
+      created_instance.id,
+      trainer.person_id,
+      case when p_trainer_lessons_offered is null then 0
+        else p_trainer_lessons_offered[trainer.ordinality] end
+    from unnest(quick_event.trainer_person_ids) with ordinality
+      trainer(person_id, ordinality)
     where trainer.person_id is not null;
+
+    insert into event_instance_target_cohort (tenant_id, instance_id, cohort_id)
+    select distinct created_instance.tenant_id, created_instance.id, cohort_id
+    from unnest(coalesce(p_cohort_ids, '{}'::bigint[])) cohort(cohort_id)
+    where cohort_id is not null;
 
     return next created_instance;
   end loop;
@@ -5187,7 +5217,6 @@ CREATE FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigi
       on tc.id = coalesce(ea.target_cohort_id, registration.target_cohort_id)
     where
       ea.registration_status = 'active'
-      and ea.status <> 'cancelled'
       and (ea.status = 'attended' or inst.event_type = 'lesson')
       and ea.person_id = any (select person_id from member_people)
       and (scoreboard_entries.cohort_id is null or tc.id = scoreboard_entries.cohort_id)
@@ -5279,10 +5308,10 @@ COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id 
 
 
 --
--- Name: set_event_instance_registration(bigint, bigint, bigint, boolean, text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: set_event_instance_registration(bigint, bigint, bigint, boolean, text, bigint[], integer[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text DEFAULT NULL::text) RETURNS public.event_instance_registration
+CREATE FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text DEFAULT NULL::text, p_lesson_trainer_ids bigint[] DEFAULT NULL::bigint[], p_lesson_counts integer[] DEFAULT NULL::integer[]) RETURNS public.event_instance_registration
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
@@ -5292,6 +5321,7 @@ declare
   registration_found boolean;
   required_capacity integer;
   remaining_capacity integer;
+  lesson_demand record;
 begin
   if p_is_registered is null or num_nonnulls(p_person_id, p_couple_id) <> 1 then
     raise exception 'INVALID_REGISTRANT' using errcode = '22023';
@@ -5302,6 +5332,21 @@ begin
     or (p_couple_id is not null
       and p_couple_id <> all(coalesce(current_couple_ids(), '{}'::bigint[]))) then
     raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+
+  if num_nonnulls(p_lesson_trainer_ids, p_lesson_counts) = 1
+    or cardinality(p_lesson_trainer_ids) <> cardinality(p_lesson_counts)
+    or exists (
+      select 1
+      from unnest(p_lesson_trainer_ids, p_lesson_counts) demand(trainer_id, lesson_count)
+      where demand.trainer_id is null
+        or demand.lesson_count is null
+        or demand.lesson_count < 0
+    ) then
+    raise exception 'INVALID_LESSON_DEMANDS' using errcode = '22023';
+  end if;
+  if not p_is_registered and p_lesson_trainer_ids is not null then
+    raise exception 'INVALID_LESSON_DEMANDS' using errcode = '22023';
   end if;
 
   select * into target_instance
@@ -5346,60 +5391,79 @@ begin
       update event_instance_registration set note = p_note where id = registration.id
       returning * into registration;
     end if;
-    return registration;
-  end if;
-
-  if target_instance.is_cancelled
-    or target_instance.until <= now()
-    or not (
-      coalesce(target_instance.is_public, false)
-      or (
-        coalesce(target_instance.is_visible, false)
-        and current_tenant_id() = any(my_tenants_array())
-      )
-    ) then
-    raise exception 'NOT_ALLOWED' using errcode = '28000';
-  end if;
-
-  remaining_capacity := event_instance_remaining_person_spots(target_instance);
-  required_capacity := case
-    when target_instance.capacity_unit = 'people' and p_couple_id is not null then 2
-    else 1
-  end;
-  if remaining_capacity is not null and remaining_capacity < required_capacity then
-    raise exception 'CAPACITY_EXCEEDED' using errcode = '22023';
-  end if;
-
-  if registration_found then
-    update event_instance_registration
-    set registration_status = 'active',
-        target_cohort_id = null,
-        source = case when id = registration.id
-          then 'self'::event_registration_source end
-    where id = registration.id or parent_registration_id = registration.id;
-
-    if p_note is not null then
-      update event_instance_registration set note = p_note where id = registration.id;
-    end if;
   else
-    insert into event_instance_registration (
-      instance_id, person_id, couple_id, source, status, note
-    ) values (
-      p_instance_id, p_person_id, p_couple_id, 'self',
-      case when p_person_id is not null then 'unknown'::attendance_type end,
-      p_note
-    ) returning * into registration;
+    if target_instance.is_cancelled
+      or target_instance.until <= now()
+      or not (
+        coalesce(target_instance.is_public, false)
+        or (
+          coalesce(target_instance.is_visible, false)
+          and current_tenant_id() = any(my_tenants_array())
+        )
+      ) then
+      raise exception 'NOT_ALLOWED' using errcode = '28000';
+    end if;
 
-    insert into event_instance_registration (
-      instance_id, parent_registration_id, person_id, status
-    )
-    select p_instance_id, registration.id, person.person_id, 'unknown'
-    from couple
-    cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id)
-    where couple.id = p_couple_id;
+    remaining_capacity := event_instance_remaining_person_spots(target_instance);
+    required_capacity := case
+      when target_instance.capacity_unit = 'people' and p_couple_id is not null then 2
+      else 1
+    end;
+    if remaining_capacity is not null and remaining_capacity < required_capacity then
+      raise exception 'CAPACITY_EXCEEDED' using errcode = '22023';
+    end if;
+
+    if registration_found then
+      update event_instance_registration
+      set registration_status = 'active',
+          target_cohort_id = null,
+          source = case when id = registration.id
+            then 'self'::event_registration_source end
+      where id = registration.id or parent_registration_id = registration.id;
+
+      if p_note is not null then
+        update event_instance_registration set note = p_note where id = registration.id;
+      end if;
+    else
+      insert into event_instance_registration (
+        instance_id, person_id, couple_id, source, status, note
+      ) values (
+        p_instance_id, p_person_id, p_couple_id, 'self',
+        case when p_person_id is not null then 'unknown'::attendance_type end,
+        p_note
+      ) returning * into registration;
+
+      insert into event_instance_registration (
+        instance_id, parent_registration_id, person_id, status
+      )
+      select p_instance_id, registration.id, person.person_id, 'unknown'
+      from couple
+      cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id)
+      where couple.id = p_couple_id;
+    end if;
   end if;
 
   select * into registration from event_instance_registration where id = registration.id;
+
+  if p_lesson_trainer_ids is not null then
+    delete from event_lesson_demand
+    where registration_id = registration.id
+      and trainer_id <> all(p_lesson_trainer_ids);
+
+    for lesson_demand in
+      select demand.trainer_id, demand.lesson_count
+      from unnest(p_lesson_trainer_ids, p_lesson_counts)
+        demand(trainer_id, lesson_count)
+      order by demand.trainer_id
+    loop
+      perform set_lesson_demand(
+        registration.id,
+        lesson_demand.trainer_id,
+        lesson_demand.lesson_count
+      );
+    end loop;
+  end if;
+
   return registration;
 end;
 $$;
@@ -5868,7 +5932,6 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
       where eir.instance_id = ti.instance_id
         and eir.person_id is not null
         and eir.registration_status = 'active'
-        and eir.status <> 'cancelled'
     ) stats on true
   ),
   per_trainer as (
@@ -5926,14 +5989,15 @@ $_$;
 
 
 --
--- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[], public.quick_event_registration_input[], integer, public.event_capacity_unit, boolean, integer[], bigint[], boolean); Type: FUNCTION; Schema: public; Owner: -
+-- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[], public.quick_event_registration_input[], integer, public.event_capacity_unit, boolean, integer[], bigint[], boolean, public.quick_event_input[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_enable_notes boolean DEFAULT NULL::boolean) RETURNS public.event_instance
+CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_enable_notes boolean DEFAULT NULL::boolean, p_copies public.quick_event_input[] DEFAULT NULL::public.quick_event_input[]) RETURNS public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
   updated_instance public.event_instance;
+  v_series_id bigint;
 begin
   if p_registrations is not null then
     perform registration.id
@@ -6102,6 +6166,39 @@ begin
     select * into updated_instance
     from public.event_instance
     where id = p_instance_id;
+  end if;
+
+  if cardinality(coalesce(p_copies, '{}'::public.quick_event_input[])) > 0 then
+    if updated_instance.series_id is not null then
+      raise exception 'event instance % already belongs to a series', p_instance_id;
+    end if;
+
+    insert into public.event_series (name)
+    values (updated_instance.name)
+    returning id into v_series_id;
+
+    update public.event_instance
+    set series_id = v_series_id
+    where id = p_instance_id
+    returning * into updated_instance;
+
+    perform public.quick_create_event_instances(
+      events => p_copies,
+      parent_id => updated_instance.parent_id,
+      p_is_visible => updated_instance.is_visible,
+      p_is_public => updated_instance.is_public,
+      p_is_locked => updated_instance.is_locked,
+      p_enable_notes => updated_instance.enable_notes,
+      p_series_id => v_series_id,
+      p_name => updated_instance.name,
+      p_capacity => updated_instance.capacity,
+      p_capacity_unit => updated_instance.capacity_unit,
+      p_description => updated_instance.description,
+      p_summary => updated_instance.summary,
+      p_files_legacy => updated_instance.files_legacy,
+      p_cohort_ids => p_cohort_ids,
+      p_trainer_lessons_offered => p_trainer_lessons_offered
+    );
   end if;
 
   return updated_instance;
@@ -15135,10 +15232,10 @@ GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
 
 
 --
--- Name: FUNCTION quick_create_event_instances(events public.quick_event_input[], parent_id bigint, p_is_visible boolean, p_is_public boolean, p_is_locked boolean, p_enable_notes boolean); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION quick_create_event_instances(events public.quick_event_input[], parent_id bigint, p_is_visible boolean, p_is_public boolean, p_is_locked boolean, p_enable_notes boolean, p_series_id bigint, p_name text, p_capacity integer, p_capacity_unit public.event_capacity_unit, p_description text, p_summary text, p_files_legacy text, p_cohort_ids bigint[], p_trainer_lessons_offered integer[], p_copies public.quick_event_input[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint, p_is_visible boolean, p_is_public boolean, p_is_locked boolean, p_enable_notes boolean) TO anonymous;
+GRANT ALL ON FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint, p_is_visible boolean, p_is_public boolean, p_is_locked boolean, p_enable_notes boolean, p_series_id bigint, p_name text, p_capacity integer, p_capacity_unit public.event_capacity_unit, p_description text, p_summary text, p_files_legacy text, p_cohort_ids bigint[], p_trainer_lessons_offered integer[], p_copies public.quick_event_input[]) TO anonymous;
 
 
 --
@@ -15297,10 +15394,10 @@ GRANT ALL ON FUNCTION public.scoreboard_entries(since date, until date, cohort_i
 
 
 --
--- Name: FUNCTION set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text, p_lesson_trainer_ids bigint[], p_lesson_counts integer[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text) TO anonymous;
+GRANT ALL ON FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text, p_lesson_trainer_ids bigint[], p_lesson_counts integer[]) TO anonymous;
 
 
 --
@@ -15381,10 +15478,10 @@ GRANT ALL ON FUNCTION public.trainer_group_attendance_completion(since timestamp
 
 
 --
--- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[], p_enable_notes boolean); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[], p_enable_notes boolean, p_copies public.quick_event_input[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[], p_enable_notes boolean) TO anonymous;
+GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[], p_enable_notes boolean, p_copies public.quick_event_input[]) TO anonymous;
 
 
 --
@@ -15972,5 +16069,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict mrG7sCkVkbnX4O6YjAfUEiVbGhUr7gLW1hJmwCBOjRtEyYERhtAXpizxEyPzeNE
+\unrestrict 5Jw4zmGTTleoN9UUwIpR7arr0RXfjwAsDoVZgnWFJRJ0dhFjTMqjAQLhcY96DRh
 

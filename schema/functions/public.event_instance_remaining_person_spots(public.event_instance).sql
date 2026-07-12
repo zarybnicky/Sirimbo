@@ -11,7 +11,6 @@ CREATE FUNCTION public.event_instance_remaining_person_spots(inst public.event_i
           where registration.instance_id = inst.id
             and registration.person_id is not null
             and registration.registration_status = 'active'
-            and registration.status <> 'cancelled'
         )
         when 'registrations' then (
           select count(*)::integer

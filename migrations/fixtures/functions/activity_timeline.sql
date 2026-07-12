@@ -124,7 +124,6 @@ begin
       join event_instance ei on ei.id = ea.instance_id
       join scoped_people sp on sp.id = ea.person_id
       where ea.registration_status = 'active'
-        and ea.status <> 'cancelled'
         and ei.since >= p_since
         and ei.since < p_until
         and (p_event_types is null or ei.type = any(p_event_types));

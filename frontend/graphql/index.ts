@@ -813,7 +813,6 @@ export type AttachmentsOrderBy =
 
 export type AttendanceType =
   | 'ATTENDED'
-  | 'CANCELLED'
   | 'NOT_EXCUSED'
   | 'UNKNOWN';
 

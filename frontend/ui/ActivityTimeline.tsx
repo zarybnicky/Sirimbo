@@ -371,7 +371,6 @@ function TimelineDay({
 function attendanceCounts(items: EventAttendanceItem[]) {
   const counts: Record<AttendanceType, number> = {
     ATTENDED: 0,
-    CANCELLED: 0,
     NOT_EXCUSED: 0,
     UNKNOWN: 0,
   };

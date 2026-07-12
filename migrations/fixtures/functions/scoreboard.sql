@@ -48,7 +48,6 @@ as $$
       on tc.id = coalesce(ea.target_cohort_id, registration.target_cohort_id)
     where
       ea.registration_status = 'active'
-      and ea.status <> 'cancelled'
       and (ea.status = 'attended' or inst.event_type = 'lesson')
       and ea.person_id = any (select person_id from member_people)
       and (scoreboard_entries.cohort_id is null or tc.id = scoreboard_entries.cohort_id)

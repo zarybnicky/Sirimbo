@@ -119,14 +119,14 @@ if os.path.exists("schema/views"):
    shutil.rmtree("schema/views")
 os.makedirs("schema/views")
 
-for table_name, objects in per_table.items():
+for object_name, objects in per_table.items():
     object_type = "type" if objects["TYPE"] else "view" if objects["VIEW"] else "function" if objects["FUNCTION"] else "table" if objects["TABLE"] else "domain"
     main_objects = objects["VIEW"] + objects["FUNCTION"] + objects["TABLE"] + objects["DOMAIN"] + objects["TYPE"]
     if not main_objects:
-      print(f"Skipped object without a definition:\t{table_name}")
+      print(f"Skipped object without a definition:\t{object_name}")
       continue
     if len(main_objects) > 1:
-      print(f"Skipped object with multiple definitions:\t{table_name}")
+      print(f"Skipped object with multiple definitions:\t{object_name}")
       continue
     schema = main_objects[0].split('.')[0].split(' ')[-1]
     source = itertools.chain(
@@ -150,6 +150,15 @@ for table_name, objects in per_table.items():
         [""],
         objects["INDEX"],
     )
-    filename = f"schema/{object_type}s/{table_name.replace("timestamp with time zone", "timestamptz").replace(", public.", ", ")}.sql"
+    object_name = object_name\
+      .replace("timestamp with time zone", "timestamptz")\
+      .replace(", public.", ", ")
+    if "(" in object_name:
+      fn_name, fn_args = object_name.rstrip(")").split("(", 1)
+      fn_arglist = fn_args.split(", ")
+      if len(fn_arglist) > 14:
+        object_name = fn_name + "(" + ", ".join(fn_arglist[0:14]) + ", ...)"
+
+    filename = f"schema/{object_type}s/{object_name}.sql"
     with open(filename, "w") as opf:
         opf.write("\n".join(source).replace("\n\n\n", "\n\n").replace("\n\n\n", "\n\n").rstrip() + "\n")

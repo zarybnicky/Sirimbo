@@ -12,7 +12,7 @@ import { FormError } from '@/ui/form';
 import { formatEventType, fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { Check, HelpCircle, type LucideIcon, OctagonMinus, X } from 'lucide-react';
+import { Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
 import { NextSeo } from 'next-seo';
 import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -28,7 +28,6 @@ const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
   UNKNOWN: HelpCircle,
   NOT_EXCUSED: X,
-  CANCELLED: OctagonMinus,
 };
 
 export default function EventSeriesPage() {
@@ -94,13 +93,11 @@ function Attendance({ instances }: { instances: EventSeriesInstanceFragment[] })
       <thead>
         <tr>
           <th />
-          {Object.entries(labels)
-            .filter(([key]) => key !== 'CANCELLED')
-            .map(([key, Icon]) => (
-              <th className="text-center" key={key}>
-                {React.createElement(Icon, { className: 'inline-block' })}
-              </th>
-            ))}
+          {Object.entries(labels).map(([key, Icon]) => (
+            <th className="text-center" key={key}>
+              {React.createElement(Icon, { className: 'inline-block' })}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
@@ -118,13 +115,11 @@ function Attendance({ instances }: { instances: EventSeriesInstanceFragment[] })
                   )}
                 </Link>
               </td>
-              {Object.keys(labels)
-                .filter((status) => status !== 'CANCELLED')
-                .map((status) => (
-                  <td className="text-center" key={status}>
-                    {stats?.[status] ?? 0}
-                  </td>
-                ))}
+              {Object.keys(labels).map((status) => (
+                <td className="text-center" key={status}>
+                  {stats?.[status] ?? 0}
+                </td>
+              ))}
             </tr>
           );
         })}

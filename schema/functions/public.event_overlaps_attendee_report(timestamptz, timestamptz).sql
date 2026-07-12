@@ -16,7 +16,6 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
       ei.since,
       ei.until,
       ei.range,
-      ei.event_id,
       ei.name as event_name
     from public.event_instance_registration ea
     join public.event_instance ei on ei.id = ea.instance_id
@@ -27,19 +26,16 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
       and ea.person_id is not null
       and ea.registration_status = 'active'
       and not ei.is_cancelled
-      and ea.status <> 'cancelled'
       and ei.range && tr.range
   )
   select
     i1.person_id,
     i1.person_name,
     i1.instance_id as first_instance_id,
-    i1.event_id as first_event_id,
     i1.event_name as first_event_name,
     i1.since as first_since,
     i1.until as first_until,
     i2.instance_id as second_instance_id,
-    i2.event_id as second_event_id,
     i2.event_name as second_event_name,
     i2.since as second_since,
     i2.until as second_until,

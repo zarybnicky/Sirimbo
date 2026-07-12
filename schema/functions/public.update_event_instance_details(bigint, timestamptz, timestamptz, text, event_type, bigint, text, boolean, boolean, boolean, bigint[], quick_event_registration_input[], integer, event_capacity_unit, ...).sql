@@ -1,8 +1,9 @@
-CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_enable_notes boolean DEFAULT NULL::boolean) RETURNS public.event_instance
+CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_enable_notes boolean DEFAULT NULL::boolean, p_copies public.quick_event_input[] DEFAULT NULL::public.quick_event_input[]) RETURNS public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
   updated_instance public.event_instance;
+  v_series_id bigint;
 begin
   if p_registrations is not null then
     perform registration.id
@@ -173,8 +174,41 @@ begin
     where id = p_instance_id;
   end if;
 
+  if cardinality(coalesce(p_copies, '{}'::public.quick_event_input[])) > 0 then
+    if updated_instance.series_id is not null then
+      raise exception 'event instance % already belongs to a series', p_instance_id;
+    end if;
+
+    insert into public.event_series (name)
+    values (updated_instance.name)
+    returning id into v_series_id;
+
+    update public.event_instance
+    set series_id = v_series_id
+    where id = p_instance_id
+    returning * into updated_instance;
+
+    perform public.quick_create_event_instances(
+      events => p_copies,
+      parent_id => updated_instance.parent_id,
+      p_is_visible => updated_instance.is_visible,
+      p_is_public => updated_instance.is_public,
+      p_is_locked => updated_instance.is_locked,
+      p_enable_notes => updated_instance.enable_notes,
+      p_series_id => v_series_id,
+      p_name => updated_instance.name,
+      p_capacity => updated_instance.capacity,
+      p_capacity_unit => updated_instance.capacity_unit,
+      p_description => updated_instance.description,
+      p_summary => updated_instance.summary,
+      p_files_legacy => updated_instance.files_legacy,
+      p_cohort_ids => p_cohort_ids,
+      p_trainer_lessons_offered => p_trainer_lessons_offered
+    );
+  end if;
+
   return updated_instance;
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[], p_enable_notes boolean) TO anonymous;
+GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[], p_enable_notes boolean, p_copies public.quick_event_input[]) TO anonymous;
