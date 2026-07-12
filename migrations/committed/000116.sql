@@ -1,6 +1,102 @@
-CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_enable_notes boolean DEFAULT NULL::boolean, p_copies public.quick_event_input[] DEFAULT NULL::public.quick_event_input[]) RETURNS public.event_instance
-    LANGUAGE plpgsql
-    AS $$
+--! Previous: sha1:a990ad64a25c3571324f09c10ec2bcc7e792d8a7
+--! Hash: sha1:76e92504aa95da350d8f8b48bcd04f7565996437
+
+--! split: 1-current.sql
+drop type if exists series_info cascade;
+create type series_info as (
+  id bigint,
+  name text,
+  position integer,
+  length integer,
+  since timestamptz,
+  until timestamptz
+);
+
+--! Included functions/event_instance_series_info.sql
+create or replace function event_instance_series_info(instance event_instance)
+  returns series_info
+  language sql
+  stable
+as $$
+  select row(
+    ranked.series_id,
+    ranked.name,
+    ranked.position,
+    ranked.length,
+    ranked.since,
+    ranked.until
+  )::series_info
+  from (
+    select
+      member.id as member_id,
+      series.id as series_id,
+      series.name,
+      row_number() over (order by member.since, member.id)::integer as position,
+      count(*) over ()::integer as length,
+      min(member.since) over () as since,
+      max(member.until) over () as until
+    from event_instance member
+    join event_series series on series.tenant_id = member.tenant_id and series.id = member.series_id
+    where member.series_id = instance.series_id
+  ) ranked
+  where ranked.member_id = instance.id;
+$$;
+
+grant execute on function event_instance_series_info to anonymous;
+--! EndIncluded functions/event_instance_series_info.sql
+--! Included functions/update_event_instance_details.sql
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[]
+);
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[], public.quick_event_registration_input[]
+);
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[], public.quick_event_registration_input[],
+  integer, public.event_capacity_unit, boolean
+);
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[], public.quick_event_registration_input[],
+  integer, public.event_capacity_unit, boolean, integer[]
+);
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[], public.quick_event_registration_input[],
+  integer, public.event_capacity_unit, boolean, integer[], bigint[]
+);
+drop function if exists public.update_event_instance_details(
+  bigint, timestamptz, timestamptz, text, public.event_type, bigint, text,
+  boolean, boolean, boolean, bigint[], public.quick_event_registration_input[],
+  integer, public.event_capacity_unit, boolean, integer[], bigint[], boolean
+);
+
+create or replace function public.update_event_instance_details(
+  p_instance_id bigint,
+  p_since timestamptz,
+  p_until timestamptz,
+  p_name text,
+  p_type public.event_type,
+  p_location_id bigint,
+  p_location_text text,
+  p_is_visible boolean,
+  p_is_public boolean,
+  p_is_cancelled boolean,
+  p_trainer_person_ids bigint[] default null,
+  p_registrations public.quick_event_registration_input[] default null,
+  p_capacity integer default null,
+  p_capacity_unit public.event_capacity_unit default null,
+  p_is_locked boolean default null,
+  p_trainer_lessons_offered integer[] default null,
+  p_cohort_ids bigint[] default null,
+  p_enable_notes boolean default null,
+  p_copies public.quick_event_input[] default null
+) returns public.event_instance
+  language plpgsql
+as $$
 declare
   updated_instance public.event_instance;
   v_series_id bigint;
@@ -211,4 +307,21 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[], p_enable_notes boolean, p_copies public.quick_event_input[]) TO anonymous;
+select verify_function('public.update_event_instance_details');
+grant all on function public.update_event_instance_details to anonymous;
+--! EndIncluded functions/update_event_instance_details.sql
+
+alter table public.event_instance_registration
+  drop column if exists legacy_registration_id;
+
+create unique index if not exists event_instance_registration_person_key
+  on public.event_instance_registration (instance_id, person_id)
+  where person_id is not null and registration_status = 'active';
+
+alter table public.event_instance
+  drop column if exists event_id;
+
+drop table if exists public.event_registration;
+drop table if exists public.event_target_cohort;
+drop table if exists public.event_trainer;
+drop table if exists public.event;

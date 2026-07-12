@@ -35,27 +35,15 @@ INSERT INTO tenant_trainer (tenant_id, person_id, since, until)
   VALUES (1, 1003, now() - interval '2 years', now() - interval '1 day')  -- expired
   ON CONFLICT DO NOTHING;
 
-INSERT INTO event (id, tenant_id, type, name, location_text, description)
-  VALUES (3001, 1, 'lesson', 'Test Event', '', '')
-  ON CONFLICT (id) DO NOTHING;
-
 INSERT INTO event_series (id, tenant_id) OVERRIDING SYSTEM VALUE
   VALUES (3001, 1)
   ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO event_instance (id, tenant_id, event_id, series_id, since, until)
-  VALUES (4001, 1, 3001, 3001, now(), now() + interval '1 hour'),
-         (4002, 1, 3001, 3001, now(), now() + interval '1 hour')
+INSERT INTO event_instance (id, tenant_id, series_id, since, until)
+  VALUES (4001, 1, 3001, now(), now() + interval '1 hour'),
+         (4002, 1, 3001, now(), now() + interval '1 hour')
   ON CONFLICT (id) DO NOTHING;
 
--- Event-level rows remain compatibility data and no longer affect lookups.
-INSERT INTO event_trainer (tenant_id, event_id, person_id)
-  VALUES (1, 3001, 1001),
-         (1, 3001, 1002),
-         (1, 3001, 1003)
-  ON CONFLICT DO NOTHING;
-
--- The migration materializes the previously effective lists on each instance.
 INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id)
   VALUES (1, 4001, 1001),
          (1, 4001, 1003),
@@ -67,7 +55,7 @@ SELECT tap.is(
     (SELECT i FROM event_instance i WHERE i.id = 4001)
   )),
   1001::bigint,
-  'event-level trainers no longer participate in occurrence lookups'
+  'expired trainers do not participate in occurrence lookups'
 );
 
 SELECT tap.is(

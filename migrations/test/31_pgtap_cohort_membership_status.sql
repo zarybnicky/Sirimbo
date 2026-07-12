@@ -30,13 +30,24 @@ SELECT tap.ok(
       'public.upsert_event(public.event_type_input,public.event_instance_type_input[],public.event_trainer_type_input[])'
     ) is null
     AND to_regprocedure('public.tg_event__propagate_to_instances()') is null
-    AND NOT has_table_privilege('anonymous', 'public.event', 'INSERT')
-    AND NOT has_table_privilege('anonymous', 'public.event', 'UPDATE')
-    AND NOT has_table_privilege('anonymous', 'public.event', 'DELETE')
-    AND NOT has_table_privilege('anonymous', 'public.event', 'SELECT')
-    AND NOT has_table_privilege('anonymous', 'public.event_registration', 'SELECT')
-    AND NOT has_table_privilege('anonymous', 'public.event_target_cohort', 'SELECT')
-    AND NOT has_table_privilege('anonymous', 'public.event_trainer', 'SELECT')
+    AND to_regclass('public.event') is null
+    AND to_regclass('public.event_registration') is null
+    AND to_regclass('public.event_target_cohort') is null
+    AND to_regclass('public.event_trainer') is null
+    AND NOT EXISTS (
+      SELECT 1
+      FROM pg_catalog.pg_attribute
+      WHERE attrelid = 'public.event_instance'::regclass
+        AND attname = 'event_id'
+        AND NOT attisdropped
+    )
+    AND NOT EXISTS (
+      SELECT 1
+      FROM pg_catalog.pg_attribute
+      WHERE attrelid = 'public.event_instance_registration'::regclass
+        AND attname = 'legacy_registration_id'
+        AND NOT attisdropped
+    )
     AND to_regprocedure('public.event_my_registrations(public.event)') is null
     AND to_regprocedure(
       'public.event_instance_my_registrations(public.event_instance)'
@@ -63,18 +74,18 @@ SELECT tap.ok(
         AND attribute.attname IN ('first_event_id', 'second_event_id')
         AND NOT attribute.attisdropped
     ),
-  'legacy event tables and helpers have no application surface'
+  'legacy event tables, bridge columns and helpers are gone'
 );
 
 -- Fixtures
 -- People:
---   200001 = Alice   (legacy bridge, attendance history and self-cancellation)
+--   200001 = Alice   (attendance history and self-cancellation)
 --   200002 = Bob     (manager removal)
 --   200003 = Charlie (self-registration)
 --   200004 = Dana    (manager registration)
 --   200005 = Evan    (exact-only cohort registration)
 -- Cohort:  800001
--- Event:   700001 (targets cohort 800001)
+-- Series:  700001
 -- Instances:
 --   900001 = past   (since = now()-2d, until = now()-1d)
 --   900002 = future (since = now()+1d, until = now()+2d)
@@ -94,27 +105,19 @@ INSERT INTO cohort (id, tenant_id, name, color_rgb) OVERRIDING SYSTEM VALUE
          (800002, 1000, 'Empty Test Cohort', '000000')
   ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO event (id, tenant_id, type, name, location_text, description) OVERRIDING SYSTEM VALUE
-  VALUES (700001, 1000, 'lesson', 'Test Event', '', '')
-  ON CONFLICT (id) DO NOTHING;
-
 INSERT INTO event_series (id, tenant_id) OVERRIDING SYSTEM VALUE
   VALUES (700001, 1000)
   ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO event_target_cohort (id, event_id, cohort_id, tenant_id) OVERRIDING SYSTEM VALUE
-  VALUES (850001, 700001, 800001, 1000)
-  ON CONFLICT (event_id, cohort_id) DO NOTHING;
-
 INSERT INTO event_instance (
-  id, tenant_id, event_id, series_id, since, until, name, type,
+  id, tenant_id, series_id, since, until, name, type,
   location_text, is_visible, is_public, capacity, description, summary,
   is_locked, enable_notes, files_legacy
 ) OVERRIDING SYSTEM VALUE
   VALUES
-    (900001, 1000, 700001, 700001, now() - interval '2 days', now() - interval '1 day',
+    (900001, 1000, 700001, now() - interval '2 days', now() - interval '1 day',
       'Test Event', 'lesson', '', false, false, 0, '', '', false, false, ''),
-    (900002, 1000, 700001, 700001, now() + interval '1 day', now() + interval '2 days',
+    (900002, 1000, 700001, now() + interval '1 day', now() + interval '2 days',
       'Test Event', 'lesson', '', false, false, 0, '', '', false, false, '')
   ON CONFLICT (id) DO NOTHING;
 
@@ -122,23 +125,14 @@ INSERT INTO event_instance_target_cohort (id, tenant_id, instance_id, cohort_id)
   VALUES (850101, 1000, 900001, 800001)
   ON CONFLICT (instance_id, cohort_id) DO NOTHING;
 
--- Historical legacy rows and their existing exact bridges are seeded separately;
--- changes to the frozen legacy table no longer synchronize exact registrations.
-INSERT INTO event_registration (tenant_id, event_id, target_cohort_id, person_id)
-SELECT 1000, 700001, 850001, person_id
-FROM unnest(ARRAY[200001, 200002, 200003, 200004]::bigint[]) person(person_id)
-ON CONFLICT ON CONSTRAINT event_registration_unique_event_person_couple_key DO NOTHING;
-
 INSERT INTO event_instance_registration (
-  legacy_registration_id, tenant_id, instance_id, person_id,
+  tenant_id, instance_id, person_id,
   target_cohort_id, source, status
 )
-SELECT registration.id, registration.tenant_id, instance.id,
-  registration.person_id, 800001, 'cohort', 'unknown'
-FROM event_registration registration
-JOIN event_instance instance ON instance.event_id = registration.event_id
-WHERE registration.event_id = 700001
-  AND registration.person_id = ANY (ARRAY[200001, 200002, 200003, 200004]::bigint[])
+SELECT 1000, instance.id, person.id, 800001, 'cohort', 'unknown'
+FROM event_instance instance
+CROSS JOIN unnest(ARRAY[200001, 200002, 200003, 200004]::bigint[]) person(id)
+WHERE instance.id IN (900001, 900002)
 ON CONFLICT DO NOTHING;
 
 -- Active memberships
@@ -183,7 +177,6 @@ SELECT tap.ok(
     WHERE instance_id = 900002
       AND person_id = 200005
       AND parent_registration_id is null
-      AND legacy_registration_id is null
       AND registration_status = 'active'
       AND source = 'cohort'
       AND target_cohort_id = 800001
@@ -474,12 +467,10 @@ VALUES
 INSERT INTO tenant_trainer (tenant_id, person_id, since)
 VALUES (1000, 2900002, now() - interval '1 day');
 
-INSERT INTO event_instance (
-  id, tenant_id, event_id, series_id, since, until
-) OVERRIDING SYSTEM VALUE
+INSERT INTO event_instance (id, tenant_id, series_id, since, until) OVERRIDING SYSTEM VALUE
 VALUES
-  (9900003, 1000, null, null, now() + interval '4 hours', now() + interval '5 hours'),
-  (9900004, 1000, 700001, 700001, now() + interval '5 hours', now() + interval '6 hours');
+  (9900003, 1000, null, now() + interval '4 hours', now() + interval '5 hours'),
+  (9900004, 1000, 700001, now() + interval '5 hours', now() + interval '6 hours');
 
 INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
 VALUES
@@ -599,10 +590,9 @@ RESET ROLE;
 
 SELECT tap.ok(
   NOT EXISTS (SELECT 1 FROM event_instance WHERE id = 9900004)
-    AND EXISTS (SELECT 1 FROM event WHERE id = 700001)
     AND EXISTS (SELECT 1 FROM event_instance WHERE id = 900001)
     AND EXISTS (SELECT 1 FROM event_instance WHERE id = 900002),
-  'deleting an exact instance leaves its legacy row and sibling instances intact'
+  'deleting an exact instance leaves sibling instances intact'
 );
 
 SET LOCAL ROLE trainer;
@@ -678,7 +668,6 @@ SELECT tap.ok(
     SELECT 1
     FROM event_instance child
     WHERE child.id = (SELECT id FROM _scheduled_lesson)
-      AND child.event_id is null
       AND child.series_id is null
       AND child.parent_id = 9900001
       AND child.name = 'Scheduled lesson copy'
@@ -1009,7 +998,6 @@ SELECT set_config(
    FROM event_instance_registration
    WHERE instance_id = 900001
      AND parent_registration_id is null
-     AND legacy_registration_id is not null
      AND registration_status = 'active'
      AND person_id is not null
    LIMIT 1),
@@ -1021,7 +1009,6 @@ SELECT set_event_instance_registration(
 FROM event_instance_registration
 WHERE instance_id = 900001
   AND parent_registration_id is null
-  AND legacy_registration_id is not null
   AND registration_status = 'active'
   AND person_id is not null
 LIMIT 1;
@@ -1033,11 +1020,10 @@ SELECT tap.ok(
     WHERE instance_id = 900001
       AND parent_registration_id is null
       AND person_id is not null
-      AND legacy_registration_id is not null
       AND registration_status = 'active'
       AND note = 'Instance note'
   ),
-  'event-backed quick edit and self-registration reuse bridge rows'
+  'quick edit and self-registration reuse exact registration rows'
 );
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);

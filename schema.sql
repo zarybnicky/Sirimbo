@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 5Jw4zmGTTleoN9UUwIpR7arr0RXfjwAsDoVZgnWFJRJ0dhFjTMqjAQLhcY96DRh
+\restrict hskuMdhlz3N9BUIF3zt9hT9ua4sKAX2esbmum696h8Mczjnq1R1exMJ9XUyl452
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -756,6 +756,20 @@ COMMENT ON TYPE public.scoreboard_record IS '@foreignKey (person_id) references 
 
 
 --
+-- Name: series_info; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.series_info AS (
+	id bigint,
+	name text,
+	"position" integer,
+	length integer,
+	since timestamp with time zone,
+	until timestamp with time zone
+);
+
+
+--
 -- Name: trainer_group_attendance_completion; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -798,7 +812,6 @@ CREATE TYPE public.transaction_source AS ENUM (
 CREATE TABLE public.event_instance (
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     since timestamp with time zone NOT NULL,
@@ -832,13 +845,6 @@ CREATE TABLE public.event_instance (
 
 COMMENT ON TABLE public.event_instance IS '@omit create
 @simpleCollections only';
-
-
---
--- Name: COLUMN event_instance.event_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.event_instance.event_id IS '@omit';
 
 
 --
@@ -3822,7 +3828,6 @@ CREATE TABLE public.event_instance_registration (
     couple_id bigint,
     person_id bigint,
     target_cohort_id bigint,
-    legacy_registration_id bigint,
     status public.attendance_type,
     note text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -3847,13 +3852,6 @@ END)
 
 COMMENT ON TABLE public.event_instance_registration IS '@omit create,update,delete
 @simpleCollections both';
-
-
---
--- Name: COLUMN event_instance_registration.legacy_registration_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.event_instance_registration.legacy_registration_id IS '@omit';
 
 
 --
@@ -3904,6 +3902,38 @@ CREATE FUNCTION public.event_instance_remaining_person_spots(inst public.event_i
         where external_registration.instance_id = inst.id
       )
   end;
+$$;
+
+
+--
+-- Name: event_instance_series_info(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instance_series_info(instance public.event_instance) RETURNS public.series_info
+    LANGUAGE sql STABLE
+    AS $$
+  select row(
+    ranked.series_id,
+    ranked.name,
+    ranked.position,
+    ranked.length,
+    ranked.since,
+    ranked.until
+  )::series_info
+  from (
+    select
+      member.id as member_id,
+      series.id as series_id,
+      series.name,
+      row_number() over (order by member.since, member.id)::integer as position,
+      count(*) over ()::integer as length,
+      min(member.since) over () as since,
+      max(member.until) over () as until
+    from event_instance member
+    join event_series series on series.tenant_id = member.tenant_id and series.id = member.series_id
+    where member.series_id = instance.series_id
+  ) ranked
+  where ranked.member_id = instance.id;
 $$;
 
 
@@ -6169,18 +6199,18 @@ begin
   end if;
 
   if cardinality(coalesce(p_copies, '{}'::public.quick_event_input[])) > 0 then
-    if updated_instance.series_id is not null then
-      raise exception 'event instance % already belongs to a series', p_instance_id;
+    v_series_id := updated_instance.series_id;
+
+    if v_series_id is null then
+      insert into public.event_series (name)
+      values (updated_instance.name)
+      returning id into v_series_id;
+
+      update public.event_instance
+      set series_id = v_series_id
+      where id = p_instance_id
+      returning * into updated_instance;
     end if;
-
-    insert into public.event_series (name)
-    values (updated_instance.name)
-    returning id into v_series_id;
-
-    update public.event_instance
-    set series_id = v_series_id
-    where id = p_instance_id
-    returning * into updated_instance;
 
     perform public.quick_create_event_instances(
       events => p_copies,
@@ -7951,37 +7981,6 @@ ALTER SEQUENCE public.dokumenty_d_id_seq OWNED BY public.dokumenty.id;
 
 
 --
--- Name: event; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event (
-    id bigint CONSTRAINT akce_a_id_not_null NOT NULL,
-    name text CONSTRAINT akce_a_jmeno_not_null NOT NULL,
-    location_text text CONSTRAINT akce_a_kde_not_null NOT NULL,
-    description text CONSTRAINT akce_a_info_not_null NOT NULL,
-    capacity integer DEFAULT 0 CONSTRAINT akce_a_kapacita_not_null NOT NULL,
-    files_legacy text DEFAULT ''::text CONSTRAINT akce_a_dokumenty_not_null NOT NULL,
-    updated_at timestamp with time zone,
-    is_locked boolean DEFAULT false CONSTRAINT akce_a_lock_not_null NOT NULL,
-    is_visible boolean DEFAULT false CONSTRAINT akce_a_visible_not_null NOT NULL,
-    summary text DEFAULT ''::text CONSTRAINT akce_summary_not_null NOT NULL,
-    is_public boolean DEFAULT false CONSTRAINT akce_is_public_not_null NOT NULL,
-    enable_notes boolean DEFAULT false CONSTRAINT akce_enable_notes_not_null NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    type public.event_type DEFAULT 'camp'::public.event_type NOT NULL,
-    location_id bigint,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
-);
-
-
---
--- Name: TABLE event; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event IS '@omit';
-
-
---
 -- Name: event_external_registration; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8020,20 +8019,6 @@ COMMENT ON TABLE public.event_external_registration IS '@omit update
 
 ALTER TABLE public.event_external_registration ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.event_external_registration_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.event ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.event_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -8136,45 +8121,6 @@ ALTER TABLE public.event_lesson_demand ALTER COLUMN id ADD GENERATED ALWAYS AS I
 
 
 --
--- Name: event_registration; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_registration (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    target_cohort_id bigint,
-    couple_id bigint,
-    person_id bigint,
-    note text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT event_registration_check CHECK ((((couple_id IS NOT NULL) AND (person_id IS NULL)) OR ((couple_id IS NULL) AND (person_id IS NOT NULL))))
-);
-
-
---
--- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_registration IS '@omit';
-
-
---
--- Name: event_registration_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.event_registration ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.event_registration_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
 -- Name: event_series; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8200,77 +8146,6 @@ COMMENT ON TABLE public.event_series IS '@behavior -query:resource:list -query:r
 
 ALTER TABLE public.event_series ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.event_series_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: event_target_cohort; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_target_cohort (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    cohort_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE event_target_cohort; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_target_cohort IS '@omit';
-
-
---
--- Name: event_target_cohort_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.event_target_cohort ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.event_target_cohort_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: event_trainer; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event_trainer (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    lessons_offered integer DEFAULT 0
-);
-
-
---
--- Name: TABLE event_trainer; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_trainer IS '@omit';
-
-
---
--- Name: event_trainer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-ALTER TABLE public.event_trainer ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.event_trainer_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -9627,22 +9502,6 @@ ALTER TABLE ONLY public.event_lesson_demand
 
 
 --
--- Name: event_registration event_registration_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_pkey PRIMARY KEY (id);
-
-
---
--- Name: event_registration event_registration_unique_event_person_couple_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_unique_event_person_couple_key UNIQUE NULLS NOT DISTINCT (event_id, person_id, couple_id);
-
-
---
 -- Name: event_series event_series_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9659,59 +9518,11 @@ ALTER TABLE ONLY public.event_series
 
 
 --
--- Name: event_target_cohort event_target_cohort_cohort_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_cohort_id_key UNIQUE (event_id, cohort_id);
-
-
---
--- Name: event_target_cohort event_target_cohort_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_pkey PRIMARY KEY (id);
-
-
---
--- Name: event event_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event
-    ADD CONSTRAINT event_tenant_id_id_key UNIQUE (tenant_id, id);
-
-
---
--- Name: event_trainer event_trainer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_trainer
-    ADD CONSTRAINT event_trainer_pkey PRIMARY KEY (id);
-
-
---
--- Name: event_trainer event_trainer_trainer_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_trainer
-    ADD CONSTRAINT event_trainer_trainer_id_key UNIQUE (event_id, person_id);
-
-
---
 -- Name: form_responses form_responses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.form_responses
     ADD CONSTRAINT form_responses_pkey PRIMARY KEY (id);
-
-
---
--- Name: event idx_23735_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event
-    ADD CONSTRAINT idx_23735_primary PRIMARY KEY (id);
 
 
 --
@@ -10570,13 +10381,6 @@ CREATE INDEX event_external_registration_tenant_id_idx ON public.event_external_
 
 
 --
--- Name: event_instance_event_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
-
-
---
 -- Name: event_instance_parent_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10591,13 +10395,6 @@ CREATE INDEX event_instance_range_idx ON public.event_instance USING gist (range
 
 
 --
--- Name: event_instance_registration_bridge_key; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX event_instance_registration_bridge_key ON public.event_instance_registration USING btree (legacy_registration_id, instance_id, COALESCE(person_id, ('-1'::integer)::bigint));
-
-
---
 -- Name: event_instance_registration_couple_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10609,13 +10406,6 @@ CREATE INDEX event_instance_registration_couple_id_idx ON public.event_instance_
 --
 
 CREATE INDEX event_instance_registration_instance_id_idx ON public.event_instance_registration USING btree (instance_id);
-
-
---
--- Name: event_instance_registration_legacy_registration_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_instance_registration_legacy_registration_id_idx ON public.event_instance_registration USING btree (legacy_registration_id);
 
 
 --
@@ -10636,7 +10426,7 @@ CREATE INDEX event_instance_registration_person_id_idx ON public.event_instance_
 -- Name: event_instance_registration_person_key; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX event_instance_registration_person_key ON public.event_instance_registration USING btree (instance_id, person_id) WHERE ((person_id IS NOT NULL) AND (legacy_registration_id IS NULL) AND (registration_status = 'active'::public.event_instance_registration_status));
+CREATE UNIQUE INDEX event_instance_registration_person_key ON public.event_instance_registration USING btree (instance_id, person_id) WHERE ((person_id IS NOT NULL) AND (registration_status = 'active'::public.event_instance_registration_status));
 
 
 --
@@ -10766,153 +10556,6 @@ CREATE INDEX event_lesson_demand_trainer_id_idx ON public.event_lesson_demand US
 
 
 --
--- Name: event_location_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_location_id_idx ON public.event USING btree (location_id);
-
-
---
--- Name: event_registration_couple_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING btree (couple_id);
-
-
---
--- Name: event_registration_event_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);
-
-
---
--- Name: event_registration_person_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_person_id_idx ON public.event_registration USING btree (person_id);
-
-
---
--- Name: event_registration_target_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_target_cohort_id_idx ON public.event_registration USING btree (target_cohort_id);
-
-
---
--- Name: event_registration_tenant_couple_event_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_tenant_couple_event_idx ON public.event_registration USING btree (tenant_id, couple_id, event_id) WHERE (couple_id IS NOT NULL);
-
-
---
--- Name: event_registration_tenant_event_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_tenant_event_id_idx ON public.event_registration USING btree (tenant_id, event_id);
-
-
---
--- Name: event_registration_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_tenant_id_idx ON public.event_registration USING btree (tenant_id);
-
-
---
--- Name: event_registration_tenant_person_event_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_registration_tenant_person_event_idx ON public.event_registration USING btree (tenant_id, person_id, event_id) WHERE (person_id IS NOT NULL);
-
-
---
--- Name: event_target_cohort_cohort_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_target_cohort_cohort_id_idx ON public.event_target_cohort USING btree (cohort_id);
-
-
---
--- Name: event_target_cohort_event_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_target_cohort_event_id_idx ON public.event_target_cohort USING btree (event_id);
-
-
---
--- Name: event_target_cohort_tenant_id_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_target_cohort_tenant_id_id_idx ON public.event_target_cohort USING btree (tenant_id, id) INCLUDE (cohort_id);
-
-
---
--- Name: event_target_cohort_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_target_cohort_tenant_id_idx ON public.event_target_cohort USING btree (tenant_id);
-
-
---
--- Name: event_tenant_visible_public; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_tenant_visible_public ON public.event USING btree (tenant_id) WHERE (is_visible OR is_public);
-
-
---
--- Name: event_tenant_visible_public_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_tenant_visible_public_idx ON public.event USING btree (tenant_id, is_public, is_visible);
-
-
---
--- Name: event_trainer_event_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_trainer_event_idx ON public.event_trainer USING btree (event_id, person_id);
-
-
---
--- Name: event_trainer_person_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_trainer_person_id_idx ON public.event_trainer USING btree (person_id);
-
-
---
--- Name: event_trainer_tenant_event_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_trainer_tenant_event_idx ON public.event_trainer USING btree (tenant_id, event_id);
-
-
---
--- Name: event_trainer_tenant_person_event_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_trainer_tenant_person_event_idx ON public.event_trainer USING btree (tenant_id, person_id, event_id);
-
-
---
--- Name: event_type_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_type_idx ON public.event USING btree (type);
-
-
---
--- Name: event_visible_public_tenant_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX event_visible_public_tenant_idx ON public.event USING btree (is_public, is_visible, tenant_id);
-
-
---
 -- Name: form_responses_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10945,27 +10588,6 @@ CREATE UNIQUE INDEX idx_23771_d_path ON public.dokumenty USING btree (d_path);
 --
 
 CREATE INDEX idx_23771_dokumenty_d_kdo_fkey ON public.dokumenty USING btree (d_kdo);
-
-
---
--- Name: idx_e_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_e_tenant ON public.event USING btree (tenant_id);
-
-
---
--- Name: idx_event_tenant; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_event_tenant ON public.event USING btree (tenant_id, is_visible);
-
-
---
--- Name: is_visible; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX is_visible ON public.event USING btree (is_visible);
 
 
 --
@@ -11389,13 +11011,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.dokumenty FOR E
 
 
 --
--- Name: event _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
 -- Name: event_external_registration _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -11438,31 +11053,10 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, trainer_id,
 
 
 --
--- Name: event_registration _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
 -- Name: event_series _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_series FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
--- Name: event_target_cohort _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
--- Name: event_trainer _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -12560,22 +12154,6 @@ ALTER TABLE ONLY public.event_external_registration
 
 
 --
--- Name: event_instance event_instance_event_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: CONSTRAINT event_instance_event_fkey ON event_instance; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT event_instance_event_fkey ON public.event_instance IS '@fieldName event
-@foreignFieldName eventInstances';
-
-
---
 -- Name: event_instance event_instance_location_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12760,70 +12338,6 @@ ALTER TABLE ONLY public.event_lesson_demand
 
 
 --
--- Name: event event_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event
-    ADD CONSTRAINT event_location_id_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
-
-
---
--- Name: CONSTRAINT event_location_id_fkey ON event; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT event_location_id_fkey ON public.event IS '@fieldName location
-@foreignFieldName events';
-
-
---
--- Name: event_registration event_registration_couple_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couple(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: event_registration event_registration_event_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: CONSTRAINT event_registration_event_fkey ON event_registration; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT event_registration_event_fkey ON public.event_registration IS '@fieldName event
-@foreignFieldName eventRegistrations';
-
-
---
--- Name: event_registration event_registration_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: event_registration event_registration_target_cohort_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.event_target_cohort(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: event_registration event_registration_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_registration
-    ADD CONSTRAINT event_registration_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
 -- Name: event_series event_series_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12837,78 +12351,6 @@ ALTER TABLE ONLY public.event_series
 
 COMMENT ON CONSTRAINT event_series_tenant_id_fkey ON public.event_series IS '@fieldName tenant
 @foreignFieldName eventSeries';
-
-
---
--- Name: event_target_cohort event_target_cohort_cohort_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_cohort_fkey FOREIGN KEY (tenant_id, cohort_id) REFERENCES public.cohort(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: CONSTRAINT event_target_cohort_cohort_fkey ON event_target_cohort; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT event_target_cohort_cohort_fkey ON public.event_target_cohort IS '@fieldName cohort
-@foreignFieldName eventTargetCohorts';
-
-
---
--- Name: event_target_cohort event_target_cohort_event_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: CONSTRAINT event_target_cohort_event_fkey ON event_target_cohort; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT event_target_cohort_event_fkey ON public.event_target_cohort IS '@fieldName event
-@foreignFieldName eventTargetCohorts';
-
-
---
--- Name: event_target_cohort event_target_cohort_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_target_cohort
-    ADD CONSTRAINT event_target_cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: event event_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event
-    ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
-
-
---
--- Name: event_trainer event_trainer_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_trainer
-    ADD CONSTRAINT event_trainer_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: event_trainer event_trainer_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_trainer
-    ADD CONSTRAINT event_trainer_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: event_trainer event_trainer_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.event_trainer
-    ADD CONSTRAINT event_trainer_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -13951,12 +13393,6 @@ CREATE POLICY delete_my ON public.event_instance_registration FOR DELETE USING (
 ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: event; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: event_external_registration; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -13993,28 +13429,10 @@ ALTER TABLE public.event_instance_trainer ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.event_lesson_demand ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: event_registration; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.event_registration ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: event_series; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.event_series ENABLE ROW LEVEL SECURITY;
-
---
--- Name: event_target_cohort; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.event_target_cohort ENABLE ROW LEVEL SECURITY;
-
---
--- Name: event_trainer; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.event_trainer ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: form_responses; Type: ROW SECURITY; Schema: public; Owner: -
@@ -14977,6 +14395,13 @@ GRANT ALL ON FUNCTION public.event_instance_registration_last_attended(reg publi
 --
 
 GRANT ALL ON FUNCTION public.event_instance_remaining_person_spots(inst public.event_instance) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_instance_series_info(instance public.event_instance); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_instance_series_info(instance public.event_instance) TO anonymous;
 
 
 --
@@ -16069,5 +15494,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 5Jw4zmGTTleoN9UUwIpR7arr0RXfjwAsDoVZgnWFJRJ0dhFjTMqjAQLhcY96DRh
+\unrestrict hskuMdhlz3N9BUIF3zt9hT9ua4sKAX2esbmum696h8Mczjnq1R1exMJ9XUyl452
 

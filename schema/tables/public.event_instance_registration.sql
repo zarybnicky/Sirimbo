@@ -6,7 +6,6 @@ CREATE TABLE public.event_instance_registration (
     couple_id bigint,
     person_id bigint,
     target_cohort_id bigint,
-    legacy_registration_id bigint,
     status public.attendance_type,
     note text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -26,7 +25,6 @@ END)
 
 COMMENT ON TABLE public.event_instance_registration IS '@omit create,update,delete
 @simpleCollections both';
-COMMENT ON COLUMN public.event_instance_registration.legacy_registration_id IS '@omit';
 
 GRANT ALL ON TABLE public.event_instance_registration TO anonymous;
 ALTER TABLE public.event_instance_registration ENABLE ROW LEVEL SECURITY;
@@ -61,13 +59,11 @@ CREATE TRIGGER _500_eir_refresh_stats_del AFTER DELETE ON public.event_instance_
 CREATE TRIGGER _500_eir_refresh_stats_ins AFTER INSERT ON public.event_instance_registration REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_eir__refresh_stats_stmt();
 CREATE TRIGGER _500_eir_refresh_stats_upd AFTER UPDATE ON public.event_instance_registration REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_eir__refresh_stats_stmt();
 
-CREATE UNIQUE INDEX event_instance_registration_bridge_key ON public.event_instance_registration USING btree (legacy_registration_id, instance_id, COALESCE(person_id, ('-1'::integer)::bigint));
 CREATE INDEX event_instance_registration_couple_id_idx ON public.event_instance_registration USING btree (couple_id);
 CREATE INDEX event_instance_registration_instance_id_idx ON public.event_instance_registration USING btree (instance_id);
-CREATE INDEX event_instance_registration_legacy_registration_id_idx ON public.event_instance_registration USING btree (legacy_registration_id);
 CREATE INDEX event_instance_registration_parent_id_idx ON public.event_instance_registration USING btree (parent_registration_id);
 CREATE INDEX event_instance_registration_person_id_idx ON public.event_instance_registration USING btree (person_id);
-CREATE UNIQUE INDEX event_instance_registration_person_key ON public.event_instance_registration USING btree (instance_id, person_id) WHERE ((person_id IS NOT NULL) AND (legacy_registration_id IS NULL) AND (registration_status = 'active'::public.event_instance_registration_status));
+CREATE UNIQUE INDEX event_instance_registration_person_key ON public.event_instance_registration USING btree (instance_id, person_id) WHERE ((person_id IS NOT NULL) AND (registration_status = 'active'::public.event_instance_registration_status));
 CREATE INDEX event_instance_registration_target_cohort_id_idx ON public.event_instance_registration USING btree (target_cohort_id);
 CREATE INDEX event_instance_registration_tenant_id_idx ON public.event_instance_registration USING btree (tenant_id);
 CREATE UNIQUE INDEX event_instance_registration_unit_key ON public.event_instance_registration USING btree (instance_id, couple_id, person_id) NULLS NOT DISTINCT WHERE (parent_registration_id IS NULL);

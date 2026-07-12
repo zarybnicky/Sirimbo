@@ -1,7 +1,6 @@
 CREATE TABLE public.event_instance (
     id bigint NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    event_id bigint,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     since timestamp with time zone NOT NULL,
@@ -30,7 +29,6 @@ CREATE TABLE public.event_instance (
 
 COMMENT ON TABLE public.event_instance IS '@omit create
 @simpleCollections only';
-COMMENT ON COLUMN public.event_instance.event_id IS '@omit';
 COMMENT ON COLUMN public.event_instance.series_id IS 'Groups related events without supplying inherited event values.';
 
 GRANT ALL ON TABLE public.event_instance TO anonymous;
@@ -40,8 +38,6 @@ ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_tenant_id_id_key UNIQUE (tenant_id, id);
-ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_event_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public.event_instance
@@ -65,7 +61,6 @@ CREATE TRIGGER _200_validate_parent BEFORE INSERT OR UPDATE OF tenant_id, parent
 CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE OF is_cancelled ON public.event_instance FOR EACH ROW WHEN ((old.is_cancelled IS DISTINCT FROM new.is_cancelled)) EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 CREATE TRIGGER _500_refresh_manager_person_ids_from_parent AFTER INSERT OR UPDATE OF parent_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__refresh_manager_person_ids();
 
-CREATE INDEX event_instance_event_id_idx ON public.event_instance USING btree (event_id);
 CREATE INDEX event_instance_parent_id_idx ON public.event_instance USING btree (parent_id);
 CREATE INDEX event_instance_range_idx ON public.event_instance USING gist (range);
 CREATE INDEX event_instance_since_idx ON public.event_instance USING btree (since);
