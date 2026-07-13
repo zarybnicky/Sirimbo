@@ -336,18 +336,21 @@ query EventRegistrationCandidates {
   tenant: getCurrentTenant {
     id
     tenantMembershipsList(condition: { status: ACTIVE }) {
+      id
       person {
         id
         name
       }
     }
     tenantTrainersList(condition: { status: ACTIVE }) {
+      id
       person {
         id
         name
       }
     }
     tenantAdministratorsList(condition: { status: ACTIVE }) {
+      id
       person {
         id
         name
@@ -388,6 +391,7 @@ query CampTrainerOverview($id: BigInt!) {
       }
     }
     payoutTrainers: trainersList {
+      id
       personId
       memberPayout45MinAmount
       currency
