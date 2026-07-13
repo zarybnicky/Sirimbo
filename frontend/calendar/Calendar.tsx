@@ -20,6 +20,7 @@ import type {
   CalendarInstanceEvent,
   DateRange,
   InteractionInfo,
+  Resource,
   SlotInfo,
 } from './types';
 import { Spinner } from '@/ui/Spinner';
@@ -43,6 +44,7 @@ import {
 } from '@/calendar/quickEventDefaults';
 
 const emptyArray: readonly [] = [];
+const emptyResources: readonly Resource[] = [];
 const preventDefault = (e: Event) => e.preventDefault();
 const calendarViewKeys = ['month', 'week', 'work_week', 'day', 'agenda', 'range'] as const;
 const standardViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
@@ -53,6 +55,8 @@ export function Calendar({
   initialDate,
   dateRange,
   onDropFromOutside,
+  onRemove,
+  additionalResources = emptyResources,
 }: {
   parentId?: string;
   initialDate?: string;
@@ -61,6 +65,8 @@ export function Calendar({
     subject: ExternalDragSubject,
     info: InteractionInfo,
   ) => void | Promise<void>;
+  onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
+  additionalResources?: readonly Resource[];
 }) {
   const auth = useAuth();
   const [onlyMine, setOnlyMine] = useQueryState(
@@ -116,6 +122,7 @@ export function Calendar({
     date,
     filters,
     groupBy,
+    additionalResources,
   );
   const [, moveEvent] = useMutation(MoveEventInstanceDocument);
   const onMove = React.useCallback(
@@ -178,6 +185,7 @@ export function Calendar({
     setDragListeners({
       onMove,
       onResize,
+      onRemove,
       onDropFromOutside: handleDropFromOutside,
       onSelectSlot,
       onDrillDown,
@@ -186,6 +194,7 @@ export function Calendar({
   }, [
     onMove,
     onResize,
+    onRemove,
     handleDropFromOutside,
     onSelectSlot,
     onDrillDown,

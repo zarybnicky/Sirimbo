@@ -1,27 +1,32 @@
 import {
   CreateEventInstancesDocument,
+  DeleteEventInstanceDocument,
   EventInstanceRegistrationsDocument,
   type EventInstanceRegistrationsQuery,
 } from '@/graphql/Event';
 import { parseResourceKey } from '@/calendar/quickEventDefaults';
 import {
+  dragSubjectAtom,
   externalDragDataType,
   externalDragSubjectAtom,
+  groupByAtom,
   isDraggingAtom,
   type ExternalDragSubject,
 } from '@/calendar/state';
-import type { InteractionInfo } from '@/calendar/types';
+import type { CalendarInstanceEvent, InteractionInfo } from '@/calendar/types';
 import { FormError } from '@/ui/form';
-import { formatLongCoupleName } from '@/ui/format';
+import { formatInstanceName, formatLongCoupleName } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { useAuth } from '@/ui/use-auth';
 import { startOf } from 'date-arithmetic';
-import { useSetAtom } from 'jotai';
-import { GripVertical } from 'lucide-react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { Calendar } from './Calendar';
+
+const emptyRegistrations: Registration[] = [];
 
 export function CampSchedule({
   id,
@@ -38,8 +43,35 @@ export function CampSchedule({
     variables: { id },
     pause: !auth.isTrainerOrAdmin,
   });
-  const registrations = registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
+  const registrations =
+    registrationsQuery.data?.eventInstance?.registrations.nodes ?? emptyRegistrations;
   const createInstances = useMutation(CreateEventInstancesDocument)[1];
+  const deleteInstance = useMutation(DeleteEventInstanceDocument)[1];
+  const [groupBy, setGroupBy] = useAtom(groupByAtom);
+  const dragSubject = useAtomValue(dragSubjectAtom);
+  const previousGroupBy = React.useRef(groupBy);
+  React.useEffect(() => {
+    const previous = previousGroupBy.current;
+    setGroupBy('trainer');
+    return () => setGroupBy(previous);
+  }, [setGroupBy]);
+
+  const trainerResources = React.useMemo(() => {
+    const trainers = new Map<string, string>();
+    for (const trainer of registrationsQuery.data?.eventInstance?.trainersList ?? []) {
+      trainers.set(trainer.personId, trainer.person?.name ?? '');
+    }
+    for (const registration of registrations) {
+      for (const demand of registration.eventLessonDemandsByRegistrationIdList) {
+        const person = demand.trainer?.person;
+        if (person) trainers.set(person.id, person.name);
+      }
+    }
+    return [...trainers].map(([id, name]) => ({
+      resourceId: `person:${id}`,
+      resourceTitle: name,
+    }));
+  }, [registrations, registrationsQuery.data?.eventInstance?.trainersList]);
   const dateRange = React.useMemo(
     () => ({
       since: startOf(new Date(since), 'day'),
@@ -88,25 +120,77 @@ export function CampSchedule({
       refreshRegistrations({ requestPolicy: 'network-only' });
     },
   );
+  const removeLesson = useAsyncCallback(async ({ instance }: CalendarInstanceEvent) => {
+    if (instance.parentId !== id || instance.type !== 'LESSON') return;
+    const result = await deleteInstance({ id: instance.id });
+    if (result.error) throw result.error;
+    refreshRegistrations({ requestPolicy: 'network-only' });
+  });
+  const draggedLesson =
+    dragSubject?.action === 'move' &&
+    dragSubject.event?.instance.parentId === id &&
+    dragSubject.event.instance.type === 'LESSON'
+      ? dragSubject.event
+      : null;
+  const dragPreview = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (!draggedLesson) return;
+    const followPointer = ({ clientX, clientY }: MouseEvent) => {
+      if (!dragPreview.current) return;
+      dragPreview.current.style.transform = `translate(${clientX + 12}px, ${clientY + 12}px)`;
+      dragPreview.current.style.opacity = document
+        .elementFromPoint(clientX, clientY)
+        ?.closest('.rbc-calendar')
+        ? '0'
+        : '1';
+    };
+    window.addEventListener('mousemove', followPointer);
+    return () => window.removeEventListener('mousemove', followPointer);
+  }, [draggedLesson]);
 
   return (
     <div className="relative col-full lg:pr-80">
+      {draggedLesson && (
+        <div
+          ref={dragPreview}
+          className="rbc-event pointer-events-none fixed left-0 top-0 z-50 truncate opacity-0 shadow-lg"
+          style={{ width: 'max-content', maxWidth: '16rem' }}
+        >
+          {formatInstanceName(draggedLesson.instance) || '-'}
+        </div>
+      )}
       <div className="min-w-0">
         <Calendar
           parentId={id}
           initialDate={since}
           dateRange={dateRange}
           onDropFromOutside={scheduleDemand.execute}
+          onRemove={removeLesson.execute}
+          additionalResources={groupBy === 'trainer' ? trainerResources : undefined}
         />
       </div>
       {auth.isTrainerOrAdmin && (
-        <aside className="border-neutral-6 bg-neutral-2 lg:absolute lg:inset-y-0 lg:right-0 lg:w-80 lg:overflow-y-auto lg:border-l">
+        <aside
+          data-calendar-remove-target
+          className="relative border-neutral-6 bg-neutral-2 lg:absolute lg:inset-y-0 lg:right-0 lg:w-80 lg:overflow-y-auto lg:border-l"
+        >
           <LessonDemandPool
             registrations={registrations}
             scheduledLessons={registrationsQuery.data?.scheduledLessons ?? []}
             fetching={registrationsQuery.fetching}
-            error={registrationsQuery.error || scheduleDemand.error}
+            error={
+              registrationsQuery.error || scheduleDemand.error || removeLesson.error
+            }
+            lockTrainers={groupBy === 'trainer'}
           />
+          {draggedLesson && (
+            <div className="pointer-events-none absolute inset-0 z-20 flex items-start justify-center border-2 border-dashed border-neutral-8 bg-neutral-2/95 p-6 pt-24 text-center font-medium text-neutral-12">
+              <div>
+                <Trash2 className="mx-auto mb-2 size-6 text-neutral-11" />
+                Pustit do seznamu pro odstranění lekce
+              </div>
+            </div>
+          )}
         </aside>
       )}
     </div>
@@ -169,11 +253,13 @@ function LessonDemandPool({
   scheduledLessons,
   fetching,
   error,
+  lockTrainers,
 }: {
   registrations: Registration[];
   scheduledLessons: ScheduledLesson[];
   fetching: boolean;
   error: React.ReactNode | Error;
+  lockTrainers: boolean;
 }) {
   const setExternalDragSubject = useSetAtom(externalDragSubjectAtom);
   const setIsDragging = useSetAtom(isDraggingAtom);
@@ -243,7 +329,13 @@ function LessonDemandPool({
                     title="Přetáhnout do rozpisu"
                     className="flex cursor-grab items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-neutral-3 active:cursor-grabbing"
                     onDragStart={(event) => {
-                      const subject = { id: demand.id, durationMinutes: 45 };
+                      const subject = {
+                        id: demand.id,
+                        durationMinutes: 45,
+                        ...(lockTrainers && trainerPersonId
+                          ? { resourceId: `person:${trainerPersonId}` }
+                          : {}),
+                      };
                       event.dataTransfer.effectAllowed = 'copy';
                       event.dataTransfer.setData(
                         externalDragDataType,

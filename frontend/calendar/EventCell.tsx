@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import type { CalendarEvent, DragDirection, Resource } from './types';
+import type { CalendarEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -17,7 +17,6 @@ type EventCellProps = {
   event: CalendarEvent;
   continuesPrior: boolean;
   continuesAfter: boolean;
-  resource?: Resource;
 };
 
 function EventCell({ event, ...props }: EventCellProps) {
@@ -87,7 +86,6 @@ function InstanceEventCell({
   event,
   continuesPrior,
   continuesAfter,
-  resource,
 }: EventCellProps & { event: Extract<CalendarEvent, { kind: 'event' }> }) {
   const { instance } = event;
   const isResizable = event.isResizable !== false;
@@ -113,10 +111,10 @@ function InstanceEventCell({
           direction: resizeDirection as DragDirection,
         });
       } else if (isDraggable) {
-        setDragSubject({ action: 'move', event: { ...event, sourceResource: resource } });
+        setDragSubject({ action: 'move', event });
       }
     },
-    [setDragSubject, event, isDraggable, isResizable, resource],
+    [setDragSubject, event, isDraggable, isResizable],
   );
 
   return (

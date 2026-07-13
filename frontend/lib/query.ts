@@ -342,6 +342,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       deleteEventInstance(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
+        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
       },
       updateEventInstance(result, _args, cache, _info) {
         const instanceId = result.updateEventInstance?.eventInstance?.id;
@@ -351,7 +352,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
       },
       moveEventInstance(_result, _args, cache, _info) {
-        invalidateQueryFields(cache, ['eventOverlaps']);
+        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
       },
       deleteEventExternalRegistration(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'EventExternalRegistration', id: args.input.id });

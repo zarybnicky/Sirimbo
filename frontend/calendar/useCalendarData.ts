@@ -49,11 +49,15 @@ function prepareVariables(
 function mapInstancesToCalendar(
   list: EventInstanceRangeQuery['list'],
   groupBy: CalendarGroupBy,
+  additionalResources: readonly Resource[],
 ): { events: CalendarInstanceEvent[]; resources: Resource[] } {
   const events: CalendarInstanceEvent[] = [];
   const resourceMap = new Map<string, Resource>();
 
   const put = (resource: Resource) => resourceMap.set(resource.resourceId, resource);
+  if (groupBy !== 'none') {
+    for (const resource of additionalResources) put(resource);
+  }
 
   for (const instance of list ?? []) {
     const start = new Date(instance.since);
@@ -106,6 +110,7 @@ export function useCalendarData(
   date: Date,
   filters: CalendarFilters,
   groupBy: CalendarGroupBy,
+  additionalResources: readonly Resource[],
 ) {
   const client = useClient();
 
@@ -168,7 +173,11 @@ export function useCalendarData(
   }, [client, vars.prev, vars.next, view.nav]);
 
   const { events, resources } = React.useMemo(() => {
-    const schedule = mapInstancesToCalendar(data?.list ?? null, effectiveGroupBy);
+    const schedule = mapInstancesToCalendar(
+      data?.list ?? null,
+      effectiveGroupBy,
+      additionalResources,
+    );
     const competitionsByEvent = new Map<string, CompetitionBucket>();
     const seen = new Set<string>();
     const birthdays: CalendarEvent[] = [];
@@ -234,15 +243,16 @@ export function useCalendarData(
       }),
     );
 
+    if (effectiveGroupBy !== 'none' && competitions.length > 0) {
+      schedule.resources.push(competitionResource);
+    }
     return {
       events: [...schedule.events, ...competitions, ...birthdays],
-      resources:
-        effectiveGroupBy !== 'none' && competitions.length > 0
-          ? [...schedule.resources, competitionResource]
-          : schedule.resources,
+      resources: schedule.resources,
     };
   }, [
     activityData?.activityTimelineList,
+    additionalResources,
     data?.list,
     effectiveGroupBy,
   ]);

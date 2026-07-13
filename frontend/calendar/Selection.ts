@@ -95,6 +95,7 @@ class Selection extends TypedEventTarget<EventMap> {
   public removeEndListener?: () => void;
   public onEscListener?: () => void;
   public removeMoveListener?: () => void;
+  public removeMouseLeaveListener?: () => void;
   public removeSelectStartListener?: () => void;
   public removeLongPressListener?: () => void;
   public initialEventData?: ClientPoint & { isTouch: boolean };
@@ -116,6 +117,7 @@ class Selection extends TypedEventTarget<EventMap> {
     this.removeEndListener?.();
     this.onEscListener?.();
     this.removeMoveListener?.();
+    this.removeMouseLeaveListener?.();
     this.removeSelectStartListener?.();
     this.removeLongPressListener?.();
   }
@@ -253,6 +255,13 @@ class Selection extends TypedEventTarget<EventMap> {
           'mousemove',
           this.handleMoveEvent.bind(this),
         );
+        this.removeMouseLeaveListener = addEventListener('mouseout', (e) => {
+          if (!e.relatedTarget) {
+            this.handleTerminatingEvent(
+              new KeyboardEvent('keydown', { key: 'Escape' }),
+            );
+          }
+        });
         this.removeSelectStartListener = addEventListener('selectstart', (e) =>
           e.preventDefault(),
         );
@@ -287,11 +296,14 @@ class Selection extends TypedEventTarget<EventMap> {
   }
 
   handleTerminatingEvent(e: MouseEvent | TouchEvent | KeyboardEvent) {
+    if (e.type === 'mouseup') this.handleMoveEvent(e as MouseEvent);
     this.selecting = false;
 
     this.container()?.style.removeProperty('touch-action');
     this.removeEndListener?.();
+    this.onEscListener?.();
     this.removeMoveListener?.();
+    this.removeMouseLeaveListener?.();
     this.removeSelectStartListener?.();
 
     if (!this.initialEventData) return;

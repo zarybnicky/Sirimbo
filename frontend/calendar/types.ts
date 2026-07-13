@@ -13,7 +13,6 @@ type CalendarItemBase = {
   isDraggable?: boolean;
   isResizable?: boolean;
   __isPreview?: boolean;
-  sourceResource?: Resource;
 };
 
 export type CalendarInstanceEvent = CalendarItemBase & {

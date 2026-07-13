@@ -4,7 +4,6 @@ import type { DateSlotMetrics } from './DateSlotMetrics';
 import EventCell from './EventCell';
 import { useAtomValue } from 'jotai';
 import { dragListenersAtom } from './state';
-import type { Resource } from './types';
 
 const isSegmentInSlot = (seg: Segment, slot: number) =>
   seg.left <= slot && seg.right >= slot;
@@ -14,12 +13,10 @@ const eventsInSlot = (segments: Segment[], s: number) =>
 function EventEndingRow({
   segments,
   slotMetrics,
-  resource,
   onShowMore,
 }: {
   segments: Segment[];
   slotMetrics: DateSlotMetrics;
-  resource?: Resource;
   onShowMore?: (date: Date) => void;
 }) {
   const { onDrillDown } = useAtomValue(dragListenersAtom);
@@ -94,7 +91,6 @@ function EventEndingRow({
           event={segment.event}
           continuesPrior={slotMetrics.continuesPrior(segment.event)}
           continuesAfter={slotMetrics.continuesAfter(segment.event)}
-          resource={resource}
         />
       </div>,
     );

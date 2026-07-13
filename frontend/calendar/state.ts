@@ -34,6 +34,7 @@ export const dragSubjectAtom = atom<DragSubject>(null);
 export type ExternalDragSubject = {
   id: string;
   durationMinutes: number;
+  resourceId?: string;
 };
 export const externalDragDataType = 'application/x-tkolymp-calendar-item';
 export const externalDragSubjectAtom = atom<ExternalDragSubject | null>(null);
@@ -55,6 +56,7 @@ export function readExternalDragSubject(
 export const dragListenersAtom = atom<{
   onMove?: (event: CalendarInstanceEvent, info: InteractionInfo) => void;
   onResize?: (event: CalendarInstanceEvent, info: InteractionInfo) => void;
+  onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
   onDropFromOutside?: (
     subject: ExternalDragSubject,
     info: InteractionInfo,

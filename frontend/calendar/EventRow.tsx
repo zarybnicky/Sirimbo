@@ -3,16 +3,14 @@ import EventCell from './EventCell';
 import type { DateSlotMetrics } from './DateSlotMetrics';
 import type { Segment } from './common';
 import { cn } from '@/lib/cn';
-import type { Resource } from './types';
 
 type EventRowProps = {
   className?: string;
   segments: Segment[];
   slotMetrics: DateSlotMetrics;
-  resource?: Resource;
 };
 
-function EventRow({ className, segments = [], slotMetrics, resource }: EventRowProps) {
+function EventRow({ className, segments = [], slotMetrics }: EventRowProps) {
   const { slots } = slotMetrics;
   let lastEnd = 1;
   const row: JSX.Element[] = [];
@@ -30,7 +28,6 @@ function EventRow({ className, segments = [], slotMetrics, resource }: EventRowP
           event={segment.event}
           continuesPrior={slotMetrics.continuesPrior(segment.event)}
           continuesAfter={slotMetrics.continuesAfter(segment.event)}
-          resource={resource}
         />
       </div>,
     );

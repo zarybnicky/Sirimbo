@@ -3,7 +3,7 @@
 import { getServerTenant } from '@/tenant/catalog';
 import { tenantIdAtom } from '@/ui/state/auth';
 import { useAtomValue } from 'jotai';
-import { DefaultSeo, NextSeo } from 'next-seo';
+import { DefaultSeo } from 'next-seo';
 import { usePathname } from 'next/navigation';
 
 export function TenantSeo() {

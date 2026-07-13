@@ -291,14 +291,12 @@ function DateContentRow({
               <EventRow
                 key={idx}
                 segments={segs}
-                resource={resource}
                 slotMetrics={slotMetrics}
               />
             ))}
             {slotMetrics.extra.length > 0 && (
               <EventEndingRow
                 segments={slotMetrics.extra}
-                resource={resource}
                 slotMetrics={slotMetrics}
               />
             )}
@@ -306,7 +304,6 @@ function DateContentRow({
               <EventRow
                 className="absolute inset-x-0 top-0"
                 segments={[segment]}
-                resource={resource}
                 slotMetrics={slotMetrics}
               />
             )}

@@ -1,7 +1,7 @@
 import { shortTimeIntl } from './localizer';
 import React, { useCallback } from 'react';
 import type { TimeSlotMetrics } from './TimeSlotMetrics';
-import type { CalendarEvent, DragDirection, Resource } from './types';
+import type { CalendarEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -40,7 +40,6 @@ type TimeGridEventProps = {
   event: CalendarEvent;
   isBackgroundEvent?: boolean;
   slotMetrics: TimeSlotMetrics;
-  resource?: Resource;
 };
 
 function TimeGridEvent({ event, ...props }: TimeGridEventProps) {
@@ -57,7 +56,6 @@ function InstanceTimeGridEvent({
   event,
   isBackgroundEvent,
   slotMetrics,
-  resource,
 }: TimeGridEventProps & { event: Extract<CalendarEvent, { kind: 'event' }> }) {
   const { useTrainerInitials } = useAtomValue(tenantConfigAtom);
   const isDragging = useAtomValue(isDraggingAtom);
@@ -92,10 +90,10 @@ function InstanceTimeGridEvent({
           direction: resizeDirection as DragDirection,
         });
       } else if (isDraggable) {
-        setDragSubject({ action: 'move', event: { ...event, sourceResource: resource } });
+        setDragSubject({ action: 'move', event });
       }
     },
-    [setDragSubject, event, isDraggable, isResizable, resource],
+    [setDragSubject, event, isDraggable, isResizable],
   );
 
   const title = formatInstanceName(event.instance) || '-';

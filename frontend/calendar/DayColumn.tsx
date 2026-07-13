@@ -35,6 +35,19 @@ const EMPTY = {};
 const calendarEventKey = (event: CalendarEvent) =>
   event.kind === 'event' ? event.instance.id : event.id;
 
+function pointTargetsDate(
+  grid: HTMLElement,
+  date: Date,
+  { x, y }: { x: number; y: number },
+) {
+  return [...grid.querySelectorAll<HTMLElement>(`[data-calendar-date="${+date}"]`)].some(
+    (column) => {
+      const { left, right, top, bottom } = getBoundsForNode(column);
+      return x >= left && x < right && y >= top && y <= bottom;
+    },
+  );
+}
+
 type DayColumnProps = {
   date: Date;
   resource?: Resource;
@@ -74,7 +87,7 @@ function DayColumn({
   const store = useStore();
 
   const auth = useAuth();
-  const { onSelectSlot, onMove, onResize, onDropFromOutside } =
+  const { onSelectSlot, onMove, onResize, onRemove, onDropFromOutside } =
     useAtomValue(dragListenersAtom);
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
@@ -293,7 +306,13 @@ function DayColumn({
         store.get(externalDragSubjectAtom),
       );
       const bounds = getBoundsForNode(columnRef.current!);
-      if (!subject || !eventTargetsNode(columnRef.current!, point.target)) {
+      if (
+        !subject ||
+        (subject.resourceId
+          ? subject.resourceId !== resource?.resourceId ||
+            !pointTargetsDate(gridRef.current!, date, point)
+          : !eventTargetsNode(columnRef.current!, point.target))
+      ) {
         setBackgroundState(EMPTY);
         return;
       }
@@ -318,7 +337,14 @@ function DayColumn({
       );
       const bounds = getBoundsForNode(columnRef.current!);
       setBackgroundState(EMPTY);
-      if (!subject || !eventTargetsNode(columnRef.current!, point.target)) return;
+      if (
+        !subject ||
+        (subject.resourceId
+          ? subject.resourceId !== resource?.resourceId ||
+            !pointTargetsDate(gridRef.current!, date, point)
+          : !eventTargetsNode(columnRef.current!, point.target))
+      )
+        return;
 
       const start = slotMetrics.closestSlotFromPoint(point, bounds);
       void onDropFromOutside?.(subject, {
@@ -340,28 +366,9 @@ function DayColumn({
         setIsDragging(true);
         setEventState({
           ...slotMetrics.getRange(event.start, event.end, false, true),
-          event,
+          event: { ...event, __isPreview: true },
         });
       }
-    });
-
-    selector.addEventListener('select', ({ detail: point }) => {
-      const bounds = getBoundsForNode(columnRef.current!);
-      setEventState(({ event }) => {
-        const { action } = store.get(dragSubjectAtom) || {};
-        if (event && (action === 'resize' || pointInColumn(bounds, point))) {
-          setIsDragging(false);
-          setDragSubject(null);
-          if (event) {
-            if (action === 'move') {
-              onMove?.(event, { start: event.start, end: event.end, resource });
-            } else if (action === 'resize') {
-              onResize?.(event, { start: event.start, end: event.end, resource });
-            }
-          }
-        }
-        return EMPTY;
-      });
     });
 
     const reset = () => {
@@ -369,6 +376,41 @@ function DayColumn({
       setIsDragging(false);
       setDragSubject(null);
     };
+
+    selector.addEventListener('select', ({ detail: point }) => {
+      const bounds = getBoundsForNode(columnRef.current!);
+      const target = document.elementFromPoint(
+        point.x - window.scrollX,
+        point.y - window.scrollY,
+      );
+      const removeTarget = target?.closest('[data-calendar-remove-target]');
+      const dragSubject = store.get(dragSubjectAtom);
+      if (!target?.closest('[data-calendar-date]')) {
+        reset();
+        if (removeTarget && dragSubject?.action === 'move' && dragSubject.event) {
+          void onRemove?.(dragSubject.event);
+        }
+        return;
+      }
+      setEventState(({ event }) => {
+        const { action } = store.get(dragSubjectAtom) || {};
+        if (
+          event &&
+          (action === 'resize' ||
+            (action === 'move' && pointInColumn(bounds, point)))
+        ) {
+          setIsDragging(false);
+          setDragSubject(null);
+          if (action === 'move') {
+            onMove?.(event, { start: event.start, end: event.end, resource });
+          } else if (action === 'resize') {
+            onResize?.(event, { start: event.start, end: event.end, resource });
+          }
+        }
+        return EMPTY;
+      });
+    });
+
     selector.addEventListener('click', reset);
     selector.addEventListener('reset', reset);
 
@@ -380,11 +422,13 @@ function DayColumn({
     slotMetrics,
     onMove,
     onResize,
+    onRemove,
     onDropFromOutside,
     auth.isTrainerOrAdmin,
     store,
     setDragSubject,
     setExternalDragSubject,
+    date,
   ]);
 
   const backgroundEventsInRange = React.useMemo(() => {
@@ -399,6 +443,7 @@ function DayColumn({
   return (
     <div
       ref={columnRef}
+      data-calendar-date={+date}
       className={cn('rbc-day-slot rbc-time-column', {
         'bg-accent-3/80': isToday,
         'rbc-slot-selecting': backgroundState.selecting,
@@ -429,7 +474,6 @@ function DayColumn({
             key={calendarEventKey(event)}
             style={style}
             event={event}
-            resource={resource}
             slotMetrics={slotMetrics}
           />
         ))}
@@ -438,7 +482,6 @@ function DayColumn({
             key={calendarEventKey(event)}
             style={style}
             event={event}
-            resource={resource}
             slotMetrics={slotMetrics}
           />
         ))}
@@ -452,7 +495,6 @@ function DayColumn({
               width: 100,
               xOffset: 0,
             }}
-            resource={resource}
             slotMetrics={slotMetrics}
           />
         )}
