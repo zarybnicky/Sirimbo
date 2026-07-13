@@ -299,6 +299,13 @@ query EventInstanceRegistrations($id: BigInt!) {
     condition: { parentId: $id, type: LESSON }
   ) {
     id
+    since
+    until
+    locationText
+    location {
+      id
+      name
+    }
     trainersList: eventInstanceTrainersByInstanceIdList {
       id
       personId
@@ -311,8 +318,79 @@ query EventInstanceRegistrations($id: BigInt!) {
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
       id
+      note
       personId
+      person {
+        id
+        name
+      }
       coupleId
+      couple {
+        ...Couple
+      }
+    }
+  }
+}
+
+query EventRegistrationCandidates {
+  tenant: getCurrentTenant {
+    id
+    tenantMembershipsList(condition: { status: ACTIVE }) {
+      person {
+        id
+        name
+      }
+    }
+    tenantTrainersList(condition: { status: ACTIVE }) {
+      person {
+        id
+        name
+      }
+    }
+    tenantAdministratorsList(condition: { status: ACTIVE }) {
+      person {
+        id
+        name
+      }
+    }
+    couplesList {
+      ...Couple
+    }
+  }
+}
+
+query CampTrainerOverview($id: BigInt!) {
+  eventInstance(id: $id) {
+    id
+    trainersList: eventInstanceTrainersByInstanceIdList {
+      id
+      personId
+      person {
+        id
+        name
+      }
+    }
+  }
+  scheduledEvents: eventInstancesList(
+    condition: { parentId: $id, isCancelled: false }
+    orderBy: SINCE_ASC
+  ) {
+    id
+    type
+    since
+    until
+    trainersList: eventInstanceTrainersByInstanceIdList {
+      id
+      personId
+      person {
+        id
+        name
+      }
+    }
+    payoutTrainers: trainersList {
+      personId
+      memberPayout45MinAmount
+      currency
     }
   }
 }

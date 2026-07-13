@@ -218,7 +218,7 @@ export const authHelpersAtom = atom((get) => {
   const auth = get(authAtom);
   return {
     ...auth,
-    isMyPerson: (id: string) => auth.personIds.includes(id),
-    isMyCouple: (id: string) => auth.couples.some((x) => x.id === id),
+    isMyPerson: (id: string | null | undefined) => id && auth.personIds.includes(id),
+    isMyCouple: (id: string | null | undefined) => id && auth.couples.some((x) => x.id === id),
   };
 });

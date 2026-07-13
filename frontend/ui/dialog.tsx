@@ -76,7 +76,7 @@ export const DialogTrigger = Object.assign(
 function DialogPortal({ children, ...props }: DialogPrimitive.DialogPortalProps) {
   return (
     <DialogPrimitive.Portal {...props}>
-      <div className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto overscroll-contain p-4 [-webkit-overflow-scrolling:touch] sm:items-center sm:p-6">
+      <div className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto overscroll-contain p-4 [-webkit-overflow-scrolling:touch] sm:p-6">
         {children}
       </div>
     </DialogPrimitive.Portal>

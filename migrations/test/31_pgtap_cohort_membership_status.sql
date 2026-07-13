@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(25);
+SELECT tap.plan(28);
 
 SELECT tap.ok(
   NOT EXISTS (
@@ -484,6 +484,8 @@ UPDATE event_instance SET is_public = true WHERE id = 9900003;
 INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, source, status)
 VALUES (1000, 9900003, 2900005, 'manager', 'unknown');
 
+SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
+
 SELECT set_lesson_demand(eir.id, trainer.id, 1)
 FROM event_instance_registration eir
 JOIN event_instance_trainer trainer
@@ -624,6 +626,65 @@ FROM public.quick_create_event_instances(
   p_files_legacy => 'copied-file',
   p_cohort_ids => ARRAY[800002]::bigint[],
   p_trainer_lessons_offered => ARRAY[2]
+);
+
+SELECT set_event_instance_registration(
+  (SELECT id FROM _scheduled_lesson),
+  2900005,
+  null,
+  true,
+  'Manager registration note',
+  ARRAY[
+    (SELECT id FROM event_instance_trainer
+     WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+       AND person_id = 2900002)
+  ],
+  ARRAY[1]
+);
+
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1
+    FROM event_instance_registration registration
+    WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
+      AND registration.person_id = 2900005
+      AND registration.registration_status = 'active'
+      AND registration.source = 'manager'
+      AND registration.note = 'Manager registration note'
+      AND EXISTS (
+        SELECT 1
+        FROM event_lesson_demand demand
+        WHERE demand.registration_id = registration.id
+          AND demand.lesson_count = 1
+      )
+  ),
+  'an assigned trainer can create a managed registration with lesson demands'
+);
+
+SELECT set_event_instance_registration(
+  (SELECT id FROM _scheduled_lesson), 2900002, null, true
+);
+SELECT set_event_instance_registration(
+  (SELECT id FROM _scheduled_lesson), 2900002, null, false
+);
+
+SELECT tap.ok(
+  EXISTS (
+    SELECT 1
+    FROM event_instance_registration registration
+    WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
+      AND registration.person_id = 2900002
+      AND registration.registration_status = 'cancelled'
+      AND registration.source = 'self'
+  ),
+  'a manager cancelling their own registration records a self action'
+);
+
+SELECT tap.throws_ok(
+  $$SELECT set_event_instance_registration(9900003, 2900003, null, true)$$,
+  '42501'::char(5),
+  null,
+  'a trainer cannot use the registration function for another trainer''s instance'
 );
 
 CREATE TEMP TABLE _created_series_lesson ON COMMIT DROP AS

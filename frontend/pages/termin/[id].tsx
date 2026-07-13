@@ -16,6 +16,8 @@ import { useQuery } from 'urql';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
 import { CampSchedule } from '@/calendar/CampSchedule';
+import { CampLessonsTable } from '@/calendar/CampLessonsTable';
+import { CampTrainersTable } from '@/calendar/CampTrainersTable';
 import { parseAsString, useQueryState } from 'nuqs';
 import { TabMenu } from '@/ui/TabMenu';
 import React from 'react';
@@ -85,6 +87,32 @@ function EventInstancePage() {
     }
 
     if (auth.isTrainerOrAdmin) {
+      if (instance.type === 'CAMP') {
+        tabs.push(
+          {
+            id: 'lessons',
+            title: 'Lekce',
+            contents: () => (
+              <div className="col-popout">
+                <CampLessonsTable id={instance.id} />
+              </div>
+            ),
+          },
+          {
+            id: 'trainers',
+            title: 'Trenéři',
+            contents: () => (
+              <div className="col-popout">
+                <CampTrainersTable
+                  id={instance.id}
+                  since={instance.since}
+                  until={instance.until}
+                />
+              </div>
+            ),
+          },
+        );
+      }
       tabs.push(
         {
           id: 'attendance',

@@ -7,17 +7,20 @@ export const buttonCls = tv({
       none: ' ',
       button:
         'inline-flex gap-1 shadow-md uppercase font-medium justify-center items-center',
-      listItem: 'flex flex-col gap-1 shadow-sm font-medium items-start mb-0.5',
+      listItem:
+        'flex w-full items-center px-2.5 py-2 text-left hover:bg-accent-3 active:bg-accent-5',
     },
     variant: {
       none: ' ',
       primary:
         'bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11',
       outline:
-        'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7',
+        'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7 disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5',
       outlineDark: 'bg-neutral-12 text-neutral-0',
     },
     size: {
+      none: ' ',
+      icon: 'size-8 rounded-xl [&_svg]:size-4',
       xs: 'px-1.5 py-1 text-xs rounded-xl tracking-tight [&_svg]:w-3 [&_svg]:h-3',
       sm: 'px-2 py-1.5 text-xs rounded-xl tracking-tight [&_svg]:w-3 [&_svg]:h-3',
       md: 'px-3 py-2 text-sm rounded-xl [&_svg]:w-4 [&_svg]:h-4',
