@@ -9,7 +9,7 @@ import { NewExternalRegistrationForm } from './forms/NewExternalRegistrationForm
 import { NewInstanceRegistrationForm } from './forms/NewInstanceRegistrationForm';
 import { useQuery } from 'urql';
 import { FormError } from '@/ui/form';
-import { formatRegistrant } from '@/ui/format';
+import { formatLongCoupleName, formatRegistrant } from '@/ui/format';
 
 export function MyRegistrationsDialog({
   instance,
@@ -127,7 +127,7 @@ function InstanceRegistrationsDialogContent({
           enableNotes={!!instance.enableNotes}
           personId={null}
           coupleId={couple.id}
-          label={formatRegistrant({ person: null, couple })}
+          label={formatLongCoupleName(couple)}
           lessonTrainers={lessonTrainers}
           disabled={
             remainingCapacity < (instance.capacityUnit === 'PEOPLE' ? 2 : 1)

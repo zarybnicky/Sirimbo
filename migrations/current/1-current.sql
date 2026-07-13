@@ -1,1 +1,1 @@
-
+--! include functions/event_instance_registration_last_attended.sql

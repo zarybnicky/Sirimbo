@@ -301,6 +301,9 @@ query EventInstanceRegistrations($id: BigInt!) {
     id
     trainersList: eventInstanceTrainersByInstanceIdList {
       personId
+      person {
+        name
+      }
     }
     registrationsList: eventInstanceRegistrationsByInstanceIdList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }

@@ -6,7 +6,7 @@ import {
   type EventInstanceRangeQueryVariables,
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
-import { formatDefaultInstanceName, formatEventType, shortTimeFormatter } from '@/ui/format';
+import { formatInstanceName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { add } from 'date-arithmetic';
 import React from 'react';
@@ -238,7 +238,7 @@ export default function NowPage() {
                           {formatEventType(instance.type)}
                         </p>
                         <h3 className="mt-1 text-2xl font-semibold text-accent-12">
-                          {instance.name || formatDefaultInstanceName(instance)}
+                          {formatInstanceName(instance)}
                         </h3>
                         <p className="mt-2 text-lg text-accent-10">
                           {shortTimeFormatter.formatRange(since, until)}
@@ -264,7 +264,7 @@ export default function NowPage() {
                         className="rounded-xl border border-accent-6 bg-accent-2/60 p-3"
                       >
                         <p className="text-sm font-medium text-accent-12">
-                          {instance.name || formatDefaultInstanceName(instance)}
+                          {formatInstanceName(instance)}
                         </p>
                         <p className="text-sm text-neutral-9">
                           {shortTimeFormatter.formatRange(since, until)}

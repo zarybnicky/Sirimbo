@@ -5,7 +5,7 @@ import {
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from '@/lib/cn';
 import {
-  formatDefaultInstanceName,
+  formatInstanceName,
   formatRegistrant,
   moneyFormatter,
   shortTimeFormatter,
@@ -41,7 +41,7 @@ export function EventSummary({
             href={`/termin/${instance.id}`}
             className={cn('text-xl', instance.isCancelled ? 'line-through' : 'underline')}
           >
-            {instance.name || formatDefaultInstanceName(instance)}
+            {formatInstanceName(instance)}
           </Link>
         </div>
       )}

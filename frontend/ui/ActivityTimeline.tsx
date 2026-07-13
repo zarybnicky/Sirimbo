@@ -11,7 +11,7 @@ import { cn } from '@/lib/cn';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { formatCstsCategoryName } from '@/ui/csts';
 import { EventButton } from '@/ui/EventButton';
-import { attendanceIcons } from '@/ui/InstanceAttendanceView';
+import { attendanceIcons } from '@/ui/EventAttendance';
 import { formatWeekDay } from '@/ui/format';
 import { buttonCls, cardCls } from '@/ui/style';
 import { add, subtract } from 'date-arithmetic';

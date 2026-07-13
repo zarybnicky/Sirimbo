@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 import { canManageInstance } from '@/lib/actions/eventInstance';
 
-export function InstanceAttendanceView({ id }: { id: string }) {
+export function EventAttendance({ id }: { id: string }) {
   const auth = useAuth();
   const [{ data }] = useQuery({
     query: EventWithAttendanceDocument,

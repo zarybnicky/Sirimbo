@@ -1,13 +1,13 @@
 import { Layout } from '@/ui/Layout';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { EventPayments } from '@/ui/EventPayments';
-import { EventInstanceRegistrations } from '@/ui/EventInstanceRegistrations';
-import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
+import { EventRegistrations } from '@/ui/EventRegistrations';
+import { EventAttendance } from '@/ui/EventAttendance';
 import { RichTextView } from '@/ui/RichTextView';
 import { stripHtml } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { formatDefaultInstanceName } from '@/ui/format';
+import { formatInstanceName } from '@/ui/format';
 import { EventWithAttendanceDocument } from '@/graphql/Event';
 import { EventList } from '@/ui/lists/EventList';
 import { useAuth } from '@/ui/use-auth';
@@ -37,7 +37,7 @@ function EventInstancePage() {
   });
   const instance = data?.eventInstance;
   const actions = useActions(eventInstanceActions, instance);
-  const title = instance?.name || (instance ? formatDefaultInstanceName(instance) : '');
+  const title = formatInstanceName(instance) || '';
   const [variant, setVariant] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
@@ -66,7 +66,7 @@ function EventInstancePage() {
       tabs.push({
         id: 'registrations',
         title: `Přihlášky (${numRegistrations})`,
-        contents: () => <EventInstanceRegistrations instance={instance} />,
+        contents: () => <EventRegistrations instance={instance} />,
       });
     }
 
@@ -85,7 +85,7 @@ function EventInstancePage() {
         {
           id: 'attendance',
           title: 'Docházka',
-          contents: () => <InstanceAttendanceView id={instance.id} />,
+          contents: () => <EventAttendance id={instance.id} />,
         },
         {
           id: 'payments',

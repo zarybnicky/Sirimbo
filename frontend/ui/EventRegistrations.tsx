@@ -9,8 +9,9 @@ import { Spinner } from '@/ui/Spinner';
 import { FormError } from '@/ui/form';
 import { formatLongCoupleName } from '@/ui/format';
 import { useQuery } from 'urql';
+import { useAuth } from './use-auth';
 
-export function EventInstanceRegistrations({
+export function EventRegistrations({
   instance,
 }: {
   instance: Pick<
@@ -18,6 +19,7 @@ export function EventInstanceRegistrations({
     'id' | 'eventExternalRegistrationsByInstanceIdList'
   >;
 }) {
+  const auth = useAuth();
   const [registrationsQuery] = useQuery({
     query: EventInstanceRegistrationsDocument,
     variables: { id: instance.id },
@@ -40,8 +42,7 @@ export function EventInstanceRegistrations({
               ? registration.person.name || ''
               : formatLongCoupleName(registration.couple)}
           </div>
-          {(registration.note ||
-            registration.eventLessonDemandsByRegistrationIdList.length > 0) && (
+          {auth.isTrainerOrAdmin && (
             <div className="ml-3">
               {registration.eventLessonDemandsByRegistrationIdList.map((demand) => (
                 <div key={demand.id}>
@@ -53,17 +54,20 @@ export function EventInstanceRegistrations({
           )}
         </div>
       ))}
+      {externalRegistrations.length > 0 && (
+        <h3>Externí přihlášky</h3>
+      )}
       {externalRegistrations.map((registration) => (
         <ActionRow
           key={registration.id}
           actions={externalRegistrationActionMap.get(registration.id)!}
         >
-          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+          <div className="p-1">
             <div>
               {registration.prefixTitle} {registration.firstName} {registration.lastName}{' '}
               {registration.suffixTitle}
             </div>
-            {registration.note && <div className="ml-3">{registration.note}</div>}
+            {auth.isTrainerOrAdmin && registration.note && <div className="ml-3">{registration.note}</div>}
           </div>
         </ActionRow>
       ))}

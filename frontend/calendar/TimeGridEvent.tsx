@@ -8,7 +8,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { type DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
-import { formatDefaultInstanceName } from '@/ui/format';
+import { formatInstanceName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { tenantConfigAtom } from '@/ui/state/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
@@ -98,7 +98,7 @@ function InstanceTimeGridEvent({
     [setDragSubject, event, isDraggable, isResizable, resource],
   );
 
-  const title = event.instance.name || formatDefaultInstanceName(event.instance) || '-';
+  const title = formatInstanceName(event.instance) || '-';
   let label =
     startsBeforeDay && startsAfterDay
       ? 'Celý den'

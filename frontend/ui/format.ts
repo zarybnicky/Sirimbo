@@ -27,7 +27,7 @@ const names: { [type in EventType]: string } = {
 export const formatEventType = (type: EventType | null | undefined) =>
   type ? names[type] : '';
 
-export const formatDefaultInstanceName = (event: {
+export const formatInstanceName = (event: {
   name: string | null;
   type: EventType | null;
   registrations: {
@@ -38,7 +38,8 @@ export const formatDefaultInstanceName = (event: {
       name?: string | null;
     } | null;
   }[] | null;
-}) => {
+} | null | undefined) => {
+  if (!event) return;
   if (event.name) return event.name;
 
   const registrations = event.registrations?.nodes;
@@ -185,5 +186,5 @@ export function describePosting(
     const trainers = instance?.trainersList?.map((x) => x.person?.name) ?? [];
     return `${formatEventType(type)}: ${trainers.join(', ')}`;
   }
-  return formatDefaultInstanceName(instance);
+  return formatInstanceName(instance);
 }
