@@ -111,8 +111,8 @@ export function useCalendarData(
 
   const { range, variables: vars } = React.useMemo(() => {
     const range = view.range(date);
-    const prev = view.range(view.nav(date, -1));
-    const next = view.range(view.nav(date, 1));
+    const prev = view.nav ? view.range(view.nav(date, -1)) : range;
+    const next = view.nav ? view.range(view.nav(date, 1)) : range;
 
     return {
       range,
@@ -124,7 +124,7 @@ export function useCalendarData(
     };
   }, [view, date, filters]);
 
-  const [{ data, fetching }] = useQuery({
+  const [{ data, fetching }, refresh] = useQuery({
     query: EventInstanceRangeDocument,
     variables: vars.current,
     requestPolicy: 'cache-and-network',
@@ -149,9 +149,12 @@ export function useCalendarData(
       kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT', 'BIRTHDAY'],
     },
     requestPolicy: 'cache-and-network',
+    pause: !!filters.parentId,
   });
 
   React.useEffect(() => {
+    if (!view.nav) return;
+
     const timeout = setTimeout(() => {
       client
         .query(EventInstanceRangeDocument, vars.prev, { requestPolicy: 'cache-first' })
@@ -162,7 +165,7 @@ export function useCalendarData(
     }, 100);
 
     return () => clearTimeout(timeout);
-  }, [client, vars.prev, vars.next]);
+  }, [client, vars.prev, vars.next, view.nav]);
 
   const { events, resources } = React.useMemo(() => {
     const schedule = mapInstancesToCalendar(data?.list ?? null, effectiveGroupBy);
@@ -248,6 +251,7 @@ export function useCalendarData(
     range,
     events,
     resources,
-    fetching: fetching || activityFetching,
+    fetching: fetching || (!filters.parentId && activityFetching),
+    refresh,
   };
 }

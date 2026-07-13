@@ -10,7 +10,7 @@ import Agenda from '@/calendar/Agenda';
 export type CalendarView = {
   component: React.ComponentType<ViewProps>;
   range: (d: Date) => DateRange;
-  nav: (d: Date, dir: -1 | 1) => Date;
+  nav?: (d: Date, dir: -1 | 1) => Date;
   label: (range: DateRange) => string;
   supportsGrouping: boolean;
 };
@@ -71,4 +71,4 @@ export const CalendarViews = {
   },
 } as const satisfies Record<string, CalendarView>;
 
-export type CalendarViewKey = keyof typeof CalendarViews;
+export type CalendarViewKey = keyof typeof CalendarViews | 'range';

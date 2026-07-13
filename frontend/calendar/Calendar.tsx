@@ -10,21 +10,32 @@ import React from 'react';
 import { useMutation } from 'urql';
 import {
   dragListenersAtom,
+  type ExternalDragSubject,
   groupByAtom,
   isDraggingAtom,
   participantIdsFilterAtom,
   trainerIdsFilterAtom,
 } from './state';
-import type { CalendarInstanceEvent, InteractionInfo, SlotInfo } from './types';
+import type {
+  CalendarInstanceEvent,
+  DateRange,
+  InteractionInfo,
+  SlotInfo,
+} from './types';
 import { Spinner } from '@/ui/Spinner';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
-import { CalendarViews } from '@/calendar/CalendarViews';
+import {
+  CalendarViews,
+  type CalendarView,
+  type CalendarViewKey,
+} from '@/calendar/CalendarViews';
 import { useCalendarData } from '@/calendar/useCalendarData';
 import { TrainerFilter } from '@/calendar/TrainerFilter';
 import { GroupByPicker } from '@/calendar/GroupByPicker';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import { CalendarDatePicker } from '@/calendar/CalendarDatePicker';
 import { ParticipantFilter } from '@/calendar/ParticipantFilter';
+import TimeGrid from '@/calendar/TimeGrid';
 import {
   parseResourceKey,
   quickDefaultsFromSlot,
@@ -33,24 +44,55 @@ import {
 
 const emptyArray: readonly [] = [];
 const preventDefault = (e: Event) => e.preventDefault();
-const calendarViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
+const calendarViewKeys = ['month', 'week', 'work_week', 'day', 'agenda', 'range'] as const;
+const standardViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
+const boundedViewKeys = ['range', 'day'] as const;
 
 export function Calendar({
   parentId,
   initialDate,
-}: { parentId?: string; initialDate?: string }) {
+  dateRange,
+  onDropFromOutside,
+}: {
+  parentId?: string;
+  initialDate?: string;
+  dateRange?: DateRange;
+  onDropFromOutside?: (
+    subject: ExternalDragSubject,
+    info: InteractionInfo,
+  ) => void | Promise<void>;
+}) {
   const auth = useAuth();
   const [onlyMine, setOnlyMine] = useQueryState(
     'my',
     parseAsBoolean.withDefault(false).withOptions({ history: 'push' }),
   );
-  const [viewInput, setView] = useQueryState(
+  const [requestedView, setView] = useQueryState(
     'v',
     parseAsStringLiteral(calendarViewKeys)
-      .withDefault('agenda')
+      .withDefault(dateRange ? 'range' : 'agenda')
       .withOptions({ history: 'push' }),
   );
-  const view = CalendarViews[viewInput];
+  const availableViews: readonly CalendarViewKey[] = dateRange
+    ? boundedViewKeys
+    : standardViewKeys;
+  const viewInput = availableViews.includes(requestedView)
+    ? requestedView
+    : dateRange
+      ? 'range'
+      : 'agenda';
+  const rangeView = React.useMemo<CalendarView | undefined>(
+    () =>
+      dateRange && {
+        component: TimeGrid,
+        range: () => dateRange,
+        label: CalendarViews.week.label,
+        supportsGrouping: true,
+      },
+    [dateRange],
+  );
+  const view: CalendarView =
+    viewInput === 'range' ? rangeView! : CalendarViews[viewInput];
   const [date, setDate] = React.useState(() => initialDate ? new Date(initialDate) : new Date());
 
   const isDragging = useAtomValue(isDraggingAtom);
@@ -69,7 +111,7 @@ export function Calendar({
     [auth.personIds, onlyMine, trainerIds, participantIds, parentId],
   );
 
-  const { fetching, range, events, resources } = useCalendarData(
+  const { fetching, range, events, resources, refresh } = useCalendarData(
     view,
     date,
     filters,
@@ -106,6 +148,13 @@ export function Calendar({
     },
     [moveEvent],
   );
+  const handleDropFromOutside = React.useCallback(
+    async (subject: ExternalDragSubject, info: InteractionInfo) => {
+      await onDropFromOutside?.(subject, info);
+      refresh({ requestPolicy: 'network-only' });
+    },
+    [onDropFromOutside, refresh],
+  );
 
   const [creating, setCreating] = React.useState<QuickEventCreateDefaults>();
 
@@ -126,9 +175,22 @@ export function Calendar({
   );
 
   React.useEffect(() => {
-    setDragListeners({ onMove, onResize, onSelectSlot, onDrillDown });
+    setDragListeners({
+      onMove,
+      onResize,
+      onDropFromOutside: handleDropFromOutside,
+      onSelectSlot,
+      onDrillDown,
+    });
     return () => setDragListeners({});
-  }, [onMove, onResize, onSelectSlot, onDrillDown, setDragListeners]);
+  }, [
+    onMove,
+    onResize,
+    handleDropFromOutside,
+    onSelectSlot,
+    onDrillDown,
+    setDragListeners,
+  ]);
 
   return (
     <div
@@ -139,8 +201,15 @@ export function Calendar({
     >
       <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
         <div className="flex gap-2 flex-wrap items-start">
-          <CalendarDatePicker date={date} setDate={setDate} view={view} />
-          <ViewPicker view={viewInput} setView={setView} />
+          {view.nav && (
+            <CalendarDatePicker
+              date={date}
+              setDate={setDate}
+              view={view}
+              bounds={dateRange}
+            />
+          )}
+          <ViewPicker view={viewInput} setView={setView} views={availableViews} />
           {!onlyMine && view.supportsGrouping && <GroupByPicker />}
           <button
             type="button"

@@ -12,34 +12,33 @@ import React from 'react';
 export function ViewPicker({
   view,
   setView,
+  views = ['month', 'week', 'work_week', 'day', 'agenda'],
 }: {
-  view: string;
+  view: CalendarViewKey;
   setView: (view: CalendarViewKey) => void;
+  views?: readonly CalendarViewKey[];
 }) {
+  const labels: Record<CalendarViewKey, string> = {
+    month: 'Měsíc',
+    week: 'Týden',
+    work_week: 'Pracovní dny',
+    day: 'Den',
+    agenda: 'Agenda',
+    range: 'Celý rozpis',
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
-        {view === 'month'
-          ? 'Měsíc'
-          : view === 'day'
-            ? 'Den'
-            : view === 'week'
-              ? 'Týden'
-              : view === 'work_week'
-                ? 'Pracovní dny'
-                : view === 'agenda'
-                  ? 'Agenda'
-                  : ''}
+        {labels[view]}
         <ChevronDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuButton onSelect={() => setView('month')}>Měsíc</DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setView('week')}>Týden</DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setView('work_week')}>
-          Pracovní dny
-        </DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setView('day')}>Den</DropdownMenuButton>
-        <DropdownMenuButton onSelect={() => setView('agenda')}>Agenda</DropdownMenuButton>
+        {views.map((item) => (
+          <DropdownMenuButton key={item} onSelect={() => setView(item)}>
+            {labels[item]}
+          </DropdownMenuButton>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -31,9 +31,34 @@ export type DragSubject = null | {
   direction?: DragDirection | null;
 };
 export const dragSubjectAtom = atom<DragSubject>(null);
+export type ExternalDragSubject = {
+  id: string;
+  durationMinutes: number;
+};
+export const externalDragDataType = 'application/x-tkolymp-calendar-item';
+export const externalDragSubjectAtom = atom<ExternalDragSubject | null>(null);
+
+export function readExternalDragSubject(
+  dataTransfer: Pick<DataTransfer, 'getData'> | null,
+  preview: ExternalDragSubject | null,
+) {
+  const serialized = dataTransfer?.getData(externalDragDataType);
+  if (!serialized) return preview;
+
+  try {
+    const subject = JSON.parse(serialized) as ExternalDragSubject;
+    return subject.id && subject.durationMinutes > 0 ? subject : preview;
+  } catch {
+    return preview;
+  }
+}
 export const dragListenersAtom = atom<{
   onMove?: (event: CalendarInstanceEvent, info: InteractionInfo) => void;
   onResize?: (event: CalendarInstanceEvent, info: InteractionInfo) => void;
+  onDropFromOutside?: (
+    subject: ExternalDragSubject,
+    info: InteractionInfo,
+  ) => void | Promise<void>;
   onSelectSlot?: (slot: SlotInfo) => void;
   onDrillDown?: (date: Date) => void;
 }>({});

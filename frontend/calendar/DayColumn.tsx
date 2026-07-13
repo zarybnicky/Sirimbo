@@ -5,6 +5,7 @@ import { NowIndicator } from './NowIndicator';
 import Selection, {
   type Bounds,
   type ClientPoint,
+  eventTargetsNode,
   getBoundsForNode,
   isEvent,
   pointInColumn,
@@ -17,9 +18,11 @@ import { useAuth } from '@/ui/use-auth';
 import {
   dragListenersAtom,
   dragSubjectAtom,
+  externalDragSubjectAtom,
   isDraggingAtom,
   maxTimeAtom,
   minTimeAtom,
+  readExternalDragSubject,
   stepAtom,
   timeslotsAtom,
 } from './state';
@@ -67,19 +70,26 @@ function DayColumn({
   const eventOffsetTopRef = React.useRef<number>(0);
   const setIsDragging = useSetAtom(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
+  const setExternalDragSubject = useSetAtom(externalDragSubjectAtom);
   const store = useStore();
 
   const auth = useAuth();
-  const { onSelectSlot, onMove, onResize } = useAtomValue(dragListenersAtom);
+  const { onSelectSlot, onMove, onResize, onDropFromOutside } =
+    useAtomValue(dragListenersAtom);
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
   const timeslots = useAtomValue(timeslotsAtom);
   const step = useAtomValue(stepAtom);
+  const externalDragSubject = useAtomValue(externalDragSubjectAtom);
 
   const [backgroundState, setBackgroundState] = React.useState<BackgroundSelectionState>(
     {},
   );
   const [eventState, setEventState] = React.useState<EventSelectionState>(EMPTY);
+
+  useLayoutEffect(() => {
+    if (!externalDragSubject) setBackgroundState(EMPTY);
+  }, [externalDragSubject]);
 
   const slotMetrics = React.useMemo(() => {
     return getSlotMetrics({ date, minTime, maxTime, step, timeslots });
@@ -277,21 +287,48 @@ function DayColumn({
       });
     });
 
-    /* FIXME: selector.addEventListener('dropFromOutside', ({ detail: point }) => {
-     *   const bounds = getBoundsForNode(columnRef.current!)
-     *   if (pointInColumn(bounds, point)) {
-     *     const start = slotMetrics.closestSlotFromPoint(point, bounds)
-     *     onDropFromOutside?.({ start, end: slotMetrics.nextSlot(start), resourceId })
-     *   }
-     *   setIsDragging(false);
-     * }) */
+    selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
+      const subject = readExternalDragSubject(
+        point.dataTransfer,
+        store.get(externalDragSubjectAtom),
+      );
+      const bounds = getBoundsForNode(columnRef.current!);
+      if (!subject || !eventTargetsNode(columnRef.current!, point.target)) {
+        setBackgroundState(EMPTY);
+        return;
+      }
 
-    /* FIXME: selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
-     *   setIsDragging(false);
-     *   const bounds = getBoundsForNode(columnRef.current!)
-     *   const start = slotMetrics.closestSlotFromPoint(point, bounds)
-     *   onDropFromOutside?.({ start, end: slotMetrics.nextSlot(start), resourceId })
-     * }) */
+      if (point.dataTransfer) point.dataTransfer.dropEffect = 'copy';
+      const start = slotMetrics.closestSlotFromPoint(point, bounds);
+      const end = add(start, subject.durationMinutes, 'minutes');
+      const preview = slotMetrics.getRange(start, end, false, true);
+      setBackgroundState({
+        ...preview,
+        selecting: true,
+        top: `${preview.top}%`,
+        height: `${preview.height}%`,
+      });
+      setIsDragging(true);
+    });
+
+    selector.addEventListener('dropFromOutside', ({ detail: point }) => {
+      const subject = readExternalDragSubject(
+        point.dataTransfer,
+        store.get(externalDragSubjectAtom),
+      );
+      const bounds = getBoundsForNode(columnRef.current!);
+      setBackgroundState(EMPTY);
+      if (!subject || !eventTargetsNode(columnRef.current!, point.target)) return;
+
+      const start = slotMetrics.closestSlotFromPoint(point, bounds);
+      void onDropFromOutside?.(subject, {
+        start,
+        end: add(start, subject.durationMinutes, 'minutes'),
+        resource,
+      });
+      setExternalDragSubject(null);
+      setIsDragging(false);
+    });
 
     selector.addEventListener('selectStart', ({ detail: point }) => {
       const bounds = getBoundsForNode(columnRef.current!);
@@ -343,9 +380,11 @@ function DayColumn({
     slotMetrics,
     onMove,
     onResize,
+    onDropFromOutside,
     auth.isTrainerOrAdmin,
     store,
     setDragSubject,
+    setExternalDragSubject,
   ]);
 
   const backgroundEventsInRange = React.useMemo(() => {

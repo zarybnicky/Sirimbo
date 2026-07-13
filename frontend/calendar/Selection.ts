@@ -29,7 +29,7 @@ const addEventListener: <K extends keyof WindowEventMap>(
   options?: boolean | AddEventListenerOptions,
 ) => () => void = (...args) => {
   globalThis.addEventListener(args[0], args[1], args[2]);
-  return () => globalThis.removeEventListener(args[0], args[1]);
+  return () => globalThis.removeEventListener(args[0], args[1], args[2]);
 };
 
 export function isEvent(node: HTMLElement, { clientX, clientY }: ClientPoint) {
@@ -53,6 +53,13 @@ export function pointInBox(box: BoxSize, { x, y }: { x: number; y: number }) {
   return y >= box.top && y <= box.bottom && x >= box.left && x <= box.right;
 }
 
+export function eventTargetsNode(
+  node: Pick<Node, 'contains'>,
+  target: EventTarget | null,
+) {
+  return !!target && node.contains(target as Node);
+}
+
 const isTouchEvent = (e: any): e is TouchEvent => 'touches' in e && e.touches.length > 0 && e.touches[0];
 function getEventCoordinates(e: TouchEvent | DragEvent | MouseEvent) {
   const target = isTouchEvent(e) ? e.touches[0]! : e;
@@ -73,8 +80,12 @@ interface EventMap {
   select: CustomEvent<Bounds>;
   selectStart: CustomEvent<ClientPoint & { isTouch: boolean }>;
   selecting: CustomEvent<Bounds>;
-  dropFromOutside: CustomEvent<ClientPoint>;
-  dragOverFromOutside: CustomEvent<ClientPoint>;
+  dropFromOutside: CustomEvent<
+    ClientPoint & { dataTransfer: DataTransfer | null; target: EventTarget | null }
+  >;
+  dragOverFromOutside: CustomEvent<
+    ClientPoint & { dataTransfer: DataTransfer | null; target: EventTarget | null }
+  >;
 }
 
 class Selection extends TypedEventTarget<EventMap> {
@@ -193,6 +204,8 @@ class Selection extends TypedEventTarget<EventMap> {
       y: pageY,
       clientX: clientX,
       clientY: clientY,
+      dataTransfer: e.dataTransfer,
+      target: e.target,
     };
     this.dispatchTypedEvent(
       'dropFromOutside',
@@ -207,6 +220,8 @@ class Selection extends TypedEventTarget<EventMap> {
       y: pageY,
       clientX: clientX,
       clientY: clientY,
+      dataTransfer: e.dataTransfer,
+      target: e.target,
     };
     this.dispatchTypedEvent(
       'dragOverFromOutside',
@@ -392,14 +407,22 @@ function ensureSelectionListeners() {
   removeTouchStartListener = addEventListener('touchstart', (e) => {
     forEachSelection((selection) => selection.handleInitialTouchEvent(e));
   });
-  removeDropListener = addEventListener('drop', (e) => {
-    e.preventDefault();
-    forEachSelection((selection) => selection.dropFromOutsideListener(e));
-  });
-  removeDragOverListener = addEventListener('dragover', (e) => {
-    e.preventDefault();
-    forEachSelection((selection) => selection.dragOverFromOutsideListener(e));
-  });
+  removeDropListener = addEventListener(
+    'drop',
+    (e) => {
+      e.preventDefault();
+      forEachSelection((selection) => selection.dropFromOutsideListener(e));
+    },
+    true,
+  );
+  removeDragOverListener = addEventListener(
+    'dragover',
+    (e) => {
+      e.preventDefault();
+      forEachSelection((selection) => selection.dragOverFromOutsideListener(e));
+    },
+    true,
+  );
 }
 
 function teardownSelectionListeners() {
