@@ -1,6 +1,6 @@
 'use client';
 
-import { getTenantUi } from '@/tenant/catalog';
+import { getTenantUi } from '@/tenant/ui.pages';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
@@ -59,7 +59,7 @@ export const Layout = React.memo(function Layout({
   const { publicSite } = useAtomValue(tenantConfigAtom);
   const Footer = useMemo(() => getTenantUi(tenantId, 'Footer'), [tenantId]);
   const search = searchParams?.toString() ?? '';
-  const currentUrl = search ? `${pathname}?${search}` : pathname ?? '';
+  const currentUrl = search ? `${pathname}?${search}` : (pathname ?? '');
   const protectedPage =
     requireUser || requireMember || requireAdmin || requireTrainer || requireSystemAdmin;
 
@@ -87,7 +87,7 @@ export const Layout = React.memo(function Layout({
 
   return (
     <>
-      {includeTenantSeo && <TenantSeo tenantId={tenantId} noindex={protectedPage} />}
+      {includeTenantSeo && <TenantSeo noindex={protectedPage} />}
       <Header
         isOpen={isOpen}
         setIsOpen={setIsOpen}

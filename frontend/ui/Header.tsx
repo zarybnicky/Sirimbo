@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from '@/lib/cn';
-import { getHrefs, topMenu, type MenuStructItem } from '@/lib/use-menu';
-import { getTenantUi } from '@/tenant/catalog';
+import { getHrefs, type MenuStructItem, topMenu } from '@/lib/use-menu';
+import { getTenantUi } from '@/tenant/ui.pages';
 import { AuthButton } from '@/ui/AuthButton';
 import {
   DropdownMenu,
@@ -71,9 +71,7 @@ export function Header({
             <MenuIcon />
           </button>
 
-          <div className="grow flex items-center">
-            {mobileLogo ?? <MobileLogo />}
-          </div>
+          <div className="grow flex items-center">{mobileLogo ?? <MobileLogo />}</div>
 
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
@@ -87,13 +85,7 @@ export function Header({
   );
 }
 
-function DesktopMenuItem({
-  item,
-  pathname,
-}: {
-  item: MenuStructItem;
-  pathname: string;
-}) {
+function DesktopMenuItem({ item, pathname }: { item: MenuStructItem; pathname: string }) {
   const inPath = !!getHrefs(item).some((x) => {
     const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
     if (!y) return false;

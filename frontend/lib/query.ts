@@ -24,7 +24,6 @@ import { fetchExchange, mapExchange } from 'urql';
 import { pipe, tap } from 'wonka';
 import schema from '@/graphql/introspection.json';
 import { errorTarget } from '@/ui/ErrorNotifier';
-import { tracingExchange } from '@/graphql/tracing';
 
 export const origin =
   typeof window === 'undefined'
@@ -111,15 +110,11 @@ const refocusReloadExchange: Exchange =
     return forward(pipe(ops$, tap(processIncomingOperation)));
   };
 
-const shouldTrace = false;
-
 export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
   preferGetMethod: false,
-  exchanges: shouldTrace
-    ? [errorEmitter(errorTarget), tracingExchange, fetchExchange]
-    : typeof window === 'undefined'
+  exchanges: typeof window === 'undefined'
       ? [errorEmitter(errorTarget), ssrExchange ?? noopExchange, fetchExchange]
       : [
           errorEmitter(errorTarget),

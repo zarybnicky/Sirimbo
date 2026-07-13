@@ -63,7 +63,7 @@ const storage = {
   },
 };
 
-const tenantCookieStorage = {
+const cookieStorage = {
   getItem(key: string, initialValue: string) {
     const tenant = parseTenant(getCookie(key));
     return tenant ? String(tenant.id) : initialValue;
@@ -96,15 +96,18 @@ const tenantCookieStorage = {
 
 const baseTenantIdAtom = atomWithStorage(
   'tenant_id',
-  String(defaultTenant.id),
-  tenantCookieStorage,
-  { getOnInit: true },
+  defaultTenant.id.toString(),
+  cookieStorage,
+  {
+    getOnInit: true,
+  },
 );
 
 export const tenantIdAtom = atom<string, [string], void>(
   (get) => get(baseTenantIdAtom),
   (_get, set, nextValue) => {
-    const tenantId = String((parseTenant(nextValue) ?? defaultTenant).id);
+    const tenant = parseTenant(nextValue);
+    const tenantId = String(tenant?.id ?? defaultTenant.id);
     set(baseTenantIdAtom, tenantId);
 
     if (typeof document === 'undefined') return;
@@ -116,7 +119,7 @@ export const tenantIdAtom = atom<string, [string], void>(
   },
 );
 tenantIdAtom.onMount = (setTenantId) => {
-  setTenantId(tenantCookieStorage.getItem('tenant_id', String(defaultTenant.id)));
+  setTenantId(cookieStorage.getItem('tenant_id', String(defaultTenant.id)));
 };
 export const tenantConfigAtom = atom<TenantConfig>(
   (get) => (parseTenant(get(tenantIdAtom)) ?? defaultTenant).config,
@@ -178,10 +181,12 @@ export const authAtom = atom<
       const persons =
         user.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) || [];
 
-      const tenantId = get(tenantIdAtom);
+      const tenantId = String(get(tenantIdAtom));
       const isGuest = jwt.guest_tenant_ids?.includes(tenantId) ?? false;
-      const isMember = jwt.member_tenant_ids?.includes(tenantId) ?? jwt.is_member ?? false;
-      const isTrainer = jwt.trainer_tenant_ids?.includes(tenantId) ?? jwt.is_trainer ?? false;
+      const isMember =
+        jwt.member_tenant_ids?.includes(tenantId) ?? jwt.is_member ?? false;
+      const isTrainer =
+        jwt.trainer_tenant_ids?.includes(tenantId) ?? jwt.is_trainer ?? false;
       const isAdmin = jwt.admin_tenant_ids?.includes(tenantId) ?? jwt.is_admin ?? false;
       const isSystemAdmin = jwt.is_system_admin ?? false;
 

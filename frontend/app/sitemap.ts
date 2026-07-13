@@ -2,7 +2,7 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { CohortGroupListDocument } from '@/graphql/CohortGroup';
 import { CohortListDocument } from '@/graphql/Cohorts';
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestTenant } from '@/lib/tenant/server';
 import { executeGraphql } from '@/lib/server/graphql';
 import { absoluteTenantUrl, publicRoutes } from '@/lib/seo';
 import { slugify } from '@/lib/slugify';
@@ -57,10 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: route.priority,
     })),
     ...(articles?.aktualities?.nodes ?? []).map((article) => ({
-      url: absoluteTenantUrl(
-        tenant,
-        `/clanky/${article.id}/${slugify(article.atJmeno)}`,
-      ),
+      url: absoluteTenantUrl(tenant, `/clanky/${article.id}/${slugify(article.atJmeno)}`),
       lastModified: article.updatedAt ?? article.createdAt ?? undefined,
       changeFrequency: 'monthly' as const,
       priority: 0.65,

@@ -9,7 +9,7 @@ import { NewExternalRegistrationForm } from './forms/NewExternalRegistrationForm
 import { NewInstanceRegistrationForm } from './forms/NewInstanceRegistrationForm';
 import { useQuery } from 'urql';
 import { FormError } from '@/ui/form';
-import { formatLongCoupleName, formatRegistrant } from '@/ui/format';
+import { formatLongCoupleName } from '@/ui/format';
 
 export function MyRegistrationsDialog({
   instance,

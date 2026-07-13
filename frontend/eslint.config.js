@@ -110,6 +110,7 @@ export default defineConfig([
   globalIgnores([
     'public/sw.js',
     'graphql/index.ts',
+    'starlet/graphql/**',
     '.next/**',
     'out/**',
     'build/**',

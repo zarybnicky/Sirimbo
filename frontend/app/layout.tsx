@@ -1,5 +1,5 @@
 /* eslint-disable import-x/no-unused-modules, tailwindcss/no-custom-classname */
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestTenant } from '@/lib/tenant/server';
 import type { Metadata, Viewport } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';

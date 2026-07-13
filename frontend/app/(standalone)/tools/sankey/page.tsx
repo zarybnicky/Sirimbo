@@ -199,8 +199,7 @@ function buildGraph(
   };
 }
 
-// eslint-disable-next-line import-x/no-unused-modules
-export function CompetitionSankey({
+function CompetitionSankey({
   width = 960,
   height = 560,
   mergeInactive = false,
@@ -306,13 +305,13 @@ export function CompetitionSankey({
   if (visibleLinks.length === 0) return <p>No competition flows for this selection.</p>;
 
   return (
-    <figure className="competition-sankey">
+    <figure>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         role="img"
         aria-label="Competition class movement Sankey"
       >
-        <g className="year-labels">
+        <g>
           {graphData.years.map((year) => {
             const node = graph.nodes.find((candidate) => candidate.year === year);
             return (
@@ -398,6 +397,7 @@ export function CompetitionSankey({
   );
 }
 
+// eslint-disable-next-line import-x/no-unused-modules
 export default function Page() {
   return (
     <CompetitionSankey

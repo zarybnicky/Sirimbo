@@ -2,8 +2,9 @@
 import { createPublicPageMetadata } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
+import { Metadata } from 'next';
 
-export const metadata = createPublicPageMetadata({
+export const metadata: Metadata = createPublicPageMetadata({
   title: 'Členství v Olympu',
   description:
     'Výhody členství v TK Olymp Olomouc: systematické tréninky, špičkoví trenéři, soutěže, soustředění, klubové zázemí a podpora tanečních párů.',

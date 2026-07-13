@@ -2,8 +2,9 @@
 import { createPublicPageMetadata } from '@/lib/seo';
 import { ServiceCard } from '@/ui/ServiceCard';
 import { PageHeader } from '@/ui/TitleBar';
+import { Metadata } from 'next';
 
-export const metadata = createPublicPageMetadata({
+export const metadata: Metadata = createPublicPageMetadata({
   title: 'Galerie mistrů',
   description:
     'Přehled mistrů České republiky z TK Olymp Olomouc. Podívejte se na úspěšné taneční páry klubu ve standardních, latinskoamerických a deseti tancích.',

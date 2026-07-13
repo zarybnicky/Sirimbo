@@ -1,5 +1,5 @@
 import type { Metadata, MetadataRoute } from 'next';
-import type { ServerTenantCatalogEntry } from '@/tenant/catalog-server';
+import type { TenantCatalogEntry } from '@/tenant/catalog';
 import type { TenantPublicSiteConfig } from '@/tenant/types';
 
 export type PublicSitemapRoute = {
@@ -35,7 +35,7 @@ export function stripHtml(value: string | null | undefined) {
     .trim();
 }
 
-export function absoluteTenantUrl(tenant: ServerTenantCatalogEntry, path = '/') {
+export function absoluteTenantUrl(tenant: TenantCatalogEntry, path = '/') {
   const origin = tenant.config.publicSite?.origin ?? `https://${tenant.hosts[0]}`;
   return new URL(path, origin).toString();
 }
@@ -73,7 +73,7 @@ export function createPublicPageMetadata({
   };
 }
 
-export function getTenantStructuredData(tenant: ServerTenantCatalogEntry) {
+export function getTenantStructuredData(tenant: TenantCatalogEntry) {
   const site = tenant.config.publicSite;
   if (!site) return [];
 

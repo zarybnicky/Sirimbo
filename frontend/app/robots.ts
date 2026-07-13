@@ -1,5 +1,5 @@
 /* eslint-disable import-x/no-unused-modules */
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestTenant } from '@/lib/tenant/server';
 import { absoluteTenantUrl } from '@/lib/seo';
 import type { MetadataRoute } from 'next';
 

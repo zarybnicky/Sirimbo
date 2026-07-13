@@ -1,7 +1,7 @@
 import {
   type EventInstanceRegistrationFragment,
-  type EventWithTrainerFragment,
   type EventInstanceTrainerFragment,
+  type EventWithTrainerFragment,
   SetEventInstanceRegistrationDocument,
 } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -14,8 +14,6 @@ import { FormError } from '@/ui/form';
 import { useConfirm } from './Confirm';
 import { SubmitButton } from './submit';
 import { cardCls } from './style';
-import { useAtomValue } from 'jotai';
-import { tenantIdAtom } from '@/ui/state/auth';
 
 export function MyRegistrationCard({
   instance,
@@ -26,7 +24,6 @@ export function MyRegistrationCard({
   registration: EventInstanceRegistrationFragment;
   lessonTrainers: EventInstanceTrainerFragment[];
 }) {
-  const tenantId = useAtomValue(tenantIdAtom);
   const confirm = useConfirm();
   const cancel = useMutation(SetEventInstanceRegistrationDocument)[1];
   const onCancel = useAsyncCallback(async () => {
@@ -83,16 +80,14 @@ export function MyRegistrationCard({
         </Dialog>
       )}
 
-      {tenantId === '2' ? null : (
-        <SubmitButton
-          type="button"
-          variant="outline"
-          onClick={onCancel.execute}
-          loading={onCancel.loading}
-        >
-          Zrušit přihlášku
-        </SubmitButton>
-      )}
+      <SubmitButton
+        type="button"
+        variant="outline"
+        onClick={onCancel.execute}
+        loading={onCancel.loading}
+      >
+        Zrušit přihlášku
+      </SubmitButton>
     </div>
   );
 }

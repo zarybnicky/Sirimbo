@@ -1,83 +1,40 @@
-import dynamic from 'next/dynamic';
-import { serverTenantCatalog, type ServerTenantCatalogEntry } from './catalog-server';
+import type { TenantConfig } from './types';
 
-type TenantCatalogEntry = ServerTenantCatalogEntry & {
-  ui: {
-    DesktopLogo: React.ComponentType;
-    MobileLogo: React.ComponentType;
-    SidebarLogo: React.ComponentType;
-    SocialIcons: React.ComponentType;
-    Footer: React.ComponentType;
-    Sponsors: React.ComponentType;
-  };
+import { config as kometaConfig } from './kometa/config';
+import { config as olympConfig } from './olymp/config';
+import { config as starletConfig } from './starlet/config';
+
+export type TenantCatalogEntry = {
+  id: number;
+  name: string;
+  hosts: string[];
+  config: TenantConfig;
 };
 
-const tenantCatalog: Record<number, TenantCatalogEntry> = {
+export const tenantCatalog: Record<number, TenantCatalogEntry> = {
   1: {
-    ...serverTenantCatalog[1],
-    ui: {
-      DesktopLogo: dynamic(() => import('./olymp/ui').then((x) => x.DesktopLogo), {
-        ssr: false,
-      }),
-      MobileLogo: dynamic(() => import('./olymp/ui').then((x) => x.MobileLogo), {
-        ssr: false,
-      }),
-      SidebarLogo: dynamic(() => import('./olymp/ui').then((x) => x.SidebarLogo), {
-        ssr: false,
-      }),
-      SocialIcons: dynamic(() => import('./olymp/ui').then((x) => x.SocialIcons), {
-        ssr: false,
-      }),
-      Sponsors: dynamic(() => import('./olymp/ui').then((x) => x.Sponsors), {
-        ssr: false,
-      }),
-      Footer: dynamic(() => import('./olymp/ui').then((x) => x.Footer), { ssr: false }),
-    },
+    id: 1,
+    name: olympConfig.shortName,
+    hosts: ['olymp.rozpisovnik.cz', 'tkolymp.cz'],
+    config: olympConfig,
   },
   2: {
-    ...serverTenantCatalog[2],
-    ui: {
-      MobileLogo: dynamic(() => import('./kometa/ui').then((x) => x.MobileLogo), {
-        ssr: false,
-      }),
-      SidebarLogo: dynamic(() => import('./kometa/ui').then((x) => x.SidebarLogo), {
-        ssr: false,
-      }),
-      DesktopLogo: () => null,
-      SocialIcons: () => null,
-      Sponsors: () => null,
-      Footer: () => null,
-    },
+    id: 2,
+    name: kometaConfig.shortName,
+    hosts: ['dspkometa.rozpisovnik.cz'],
+    config: kometaConfig,
   },
   3: {
-    ...serverTenantCatalog[3],
-    ui: {
-      MobileLogo: dynamic(() => import('./starlet/ui').then((x) => x.MobileLogo), {
-        ssr: false,
-      }),
-      SidebarLogo: dynamic(() => import('./starlet/ui').then((x) => x.SidebarLogo), {
-        ssr: false,
-      }),
-      DesktopLogo: () => null,
-      SocialIcons: () => null,
-      Sponsors: () => null,
-      Footer: () => null,
-    },
+    id: 3,
+    name: starletConfig.shortName,
+    hosts: ['tkstarletbrno.rozpisovnik.cz'],
+    config: starletConfig,
   },
   4: {
-    ...serverTenantCatalog[4],
-    ui: {
-      MobileLogo: dynamic(() => import('./kometa/ui').then((x) => x.MobileLogo), {
-        ssr: false,
-      }),
-      SidebarLogo: dynamic(() => import('./kometa/ui').then((x) => x.SidebarLogo), {
-        ssr: false,
-      }),
-      DesktopLogo: () => null,
-      SocialIcons: () => null,
-      Sponsors: () => null,
-      Footer: () => null,
-    },
+    id: 4,
+    name: 'DSP Kometa, kurzy',
+    hosts: ['dspkometa2.rozpisovnik.cz'],
+    config: kometaConfig,
   },
 };
 
@@ -86,12 +43,16 @@ export const defaultTenant = tenantCatalog[2]!;
 export function parseTenant(
   tenantId: string | number | null | undefined,
 ): TenantCatalogEntry | undefined {
-  return tenantCatalog[Number.parseInt(String(tenantId), 10)];
+  return tenantCatalog[Number.parseInt(String(tenantId))];
 }
 
-export function getTenantUi<K extends keyof TenantCatalogEntry['ui']>(
-  tenantId: string,
-  key: K,
-): React.ComponentType {
-  return (parseTenant(tenantId) ?? defaultTenant).ui[key];
+export function getServerTenant(tenantId: string | number): TenantCatalogEntry {
+  return parseTenant(tenantId) ?? defaultTenant;
+}
+
+export const hostToTenant = new Map<string, TenantCatalogEntry>();
+for (const entry of Object.values(tenantCatalog)) {
+  for (const host of entry.hosts) {
+    hostToTenant.set(host.toLowerCase(), entry);
+  }
 }

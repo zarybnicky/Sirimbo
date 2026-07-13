@@ -8,8 +8,8 @@ import {
   topMenu,
   useMemberMenu,
 } from '@/lib/use-menu';
-import { getTenantUi } from '@/tenant/catalog';
-import { serverTenantCatalog } from '@/tenant/catalog-server';
+import { getTenantUi } from '@/tenant/ui.pages';
+import { tenantCatalog } from '@/tenant/catalog';
 import { cn } from '@/lib/cn';
 import { authAtom, storeRef, tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
@@ -204,13 +204,7 @@ function SidebarLink({ item, pathname, onClick }: SidebarLinkProps) {
   );
 }
 
-function SidebarSection({
-  item,
-  pathname,
-}: {
-  item: MenuStructItem;
-  pathname: string;
-}) {
+function SidebarSection({ item, pathname }: { item: MenuStructItem; pathname: string }) {
   return item.type === 'link' ? (
     <SidebarLink item={item} pathname={pathname} />
   ) : item.children.length > 0 ? (
@@ -239,7 +233,7 @@ function TenantSelect() {
 
   return (
     <select className="text-neutral-12" onChange={onChange} value={tenantId}>
-      {Object.values(serverTenantCatalog).map((x) => (
+      {Object.values(tenantCatalog).map((x) => (
         <option key={x.id} value={x.id}>
           {x.name}
         </option>

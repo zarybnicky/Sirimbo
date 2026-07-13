@@ -3,8 +3,9 @@ import { createPublicPageMetadata } from '@/lib/seo';
 import { buttonCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
+import { Metadata } from 'next';
 
-export const metadata = createPublicPageMetadata({
+export const metadata: Metadata = createPublicPageMetadata({
   title: 'Olymp Dance',
   description:
     'Olymp Dance přináší taneční kroužky přímo na základní školy v okolí Olomouce a Prostějova. Děti tančí, vystupují a poznávají standardní i latinskoamerické tance.',

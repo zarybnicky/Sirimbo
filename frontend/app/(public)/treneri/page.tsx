@@ -4,8 +4,9 @@ import { typographyCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
+import { Metadata } from 'next';
 
-export const metadata = createPublicPageMetadata({
+export const metadata: Metadata = createPublicPageMetadata({
   title: 'Naši trenéři',
   description:
     'Seznamte se s trenéry TK Olymp Olomouc. Klub vede zkušený tým trenérů, porotců a odborníků pro standardní i latinskoamerické tance.',

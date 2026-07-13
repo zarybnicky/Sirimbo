@@ -1,5 +1,5 @@
 /* eslint-disable import-x/no-unused-modules */
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestTenant } from '@/lib/tenant/server';
 import { getTenantStructuredData } from '@/lib/seo';
 import { getTenantUi } from '@/tenant/ui';
 import { JsonLd } from '@/ui/JsonLd';

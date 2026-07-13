@@ -1,7 +1,7 @@
 /* eslint-disable import-x/no-unused-modules */
 import { ArticlesDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestTenant } from '@/lib/tenant/server';
 import { createPublicPageMetadata } from '@/lib/seo';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
@@ -9,8 +9,9 @@ import { CallToAction } from '@/ui/CallToAction';
 import { Hero } from '@/ui/Hero';
 import LiteYouTubeEmbed from '@/ui/LiteYouTubeEmbed';
 import { TrainingPrograms } from '@/ui/TrainingPrograms';
+import { Metadata } from 'next';
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const tenant = await getRequestTenant();
   const title = tenant.config.publicSite?.organization.name ?? tenant.name;
 

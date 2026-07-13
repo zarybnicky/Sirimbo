@@ -1,20 +1,20 @@
 'use client';
 
-import { getServerTenant } from '@/tenant/catalog-server';
+import { getServerTenant } from '@/tenant/catalog';
+import { tenantIdAtom } from '@/ui/state/auth';
+import { useAtomValue } from 'jotai';
 import { DefaultSeo } from 'next-seo';
 import { usePathname } from 'next/navigation';
 
-export function TenantSeo({
-  tenantId,
-  noindex,
-}: {
-  tenantId: string;
-  noindex?: boolean;
-}) {
+export function TenantSeo({ noindex }: { noindex?: boolean }) {
+  const tenantId = useAtomValue(tenantIdAtom);
+
   const entry = getServerTenant(tenantId);
   const pathname = usePathname() ?? '/';
   const publicSite = entry.config.publicSite;
-  const canonical = publicSite ? new URL(pathname, publicSite.origin).toString() : undefined;
+  const canonical = publicSite
+    ? new URL(pathname, publicSite.origin).toString()
+    : undefined;
   const publicImage = publicSite?.image
     ? {
         ...publicSite.image,

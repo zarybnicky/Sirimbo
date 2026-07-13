@@ -3,8 +3,9 @@ import { cn } from '@/lib/cn';
 import { createPublicPageMetadata } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
+import { Metadata } from 'next';
 
-export const metadata = createPublicPageMetadata({
+export const metadata: Metadata = createPublicPageMetadata({
   title: 'Galerie',
   description:
     'Fotografie a videa TK Olymp Olomouc ze soutěží, vystoupení, tréninků a klubových akcí na YouTube a Facebooku.',

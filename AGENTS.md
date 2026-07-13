@@ -23,8 +23,8 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - `schema/`: Auto-split DDL organized by domain/type/table/function/view for review purposes only.
 
 ## Frontend tenancy model
-- Tenant host mapping lives in `frontend/tenant/catalog-server.ts`; `frontend/proxy.ts` and `frontend/pages/_app.tsx` keep the `tenant_id` cookie aligned with the current host.
-- Tenant-specific assets/config live under `frontend/tenant/{olymp,kometa,starlet}`. `frontend/tenant/catalog.ts` wires those configs to dynamically loaded tenant UI components.
+- Tenant host mapping lives in `frontend/tenant/catalog.ts`; `frontend/proxy.ts` and `frontend/pages/_app.tsx` keep the `tenant_id` cookie aligned with the current host.
+- Tenant-specific assets/config live under `frontend/tenant/{olymp,kometa,starlet}`. `frontend/tenant/ui.pages.ts` wires those configs to dynamically loaded tenant UI components.
 - Shared tenant metadata/types sit in `frontend/tenant/types.ts`; use these helpers when adding new tenant-aware UI.
 - Pages and components should read the active tenant configuration rather than hard-coding IDs. `frontend/lib/query.ts` injects the active `x-tenant-id` header for URQL requests.
 
