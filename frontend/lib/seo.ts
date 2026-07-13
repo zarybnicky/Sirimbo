@@ -1,31 +1,6 @@
-import type { Metadata, MetadataRoute } from 'next';
+import type { Metadata } from 'next';
 import type { TenantCatalogEntry } from '@/tenant/catalog';
 import type { TenantPublicSiteConfig } from '@/tenant/types';
-
-export type PublicSitemapRoute = {
-  path: string;
-  changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'];
-  priority: number;
-};
-
-export const publicRoutes: PublicSitemapRoute[] = [
-  { path: '/', changeFrequency: 'weekly', priority: 1 },
-  { path: '/clanky', changeFrequency: 'daily', priority: 0.8 },
-  { path: '/akce', changeFrequency: 'daily', priority: 0.8 },
-  { path: '/treninkove-programy', changeFrequency: 'monthly', priority: 0.8 },
-  { path: '/treninkove-skupiny', changeFrequency: 'monthly', priority: 0.8 },
-  { path: '/o-nas', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/treneri', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/kde-trenujeme', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/vyhody-clenstvi', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/skolni-krouzky', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/vystoupeni', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/galerie', changeFrequency: 'monthly', priority: 0.6 },
-  { path: '/galerie-mistru', changeFrequency: 'monthly', priority: 0.6 },
-  { path: '/kontakt', changeFrequency: 'monthly', priority: 0.6 },
-  { path: '/registrace', changeFrequency: 'weekly', priority: 0.5 },
-  { path: '/ochrana-osobnich-udaju', changeFrequency: 'yearly', priority: 0.2 },
-];
 
 export function stripHtml(value: string | null | undefined) {
   return (value ?? '')
@@ -33,11 +8,6 @@ export function stripHtml(value: string | null | undefined) {
     .replaceAll('&nbsp;', ' ')
     .replaceAll(/\s+/g, ' ')
     .trim();
-}
-
-export function absoluteTenantUrl(tenant: TenantCatalogEntry, path = '/') {
-  const origin = tenant.config.publicSite?.origin ?? `https://${tenant.hosts[0]}`;
-  return new URL(path, origin).toString();
 }
 
 export function createPublicPageMetadata({

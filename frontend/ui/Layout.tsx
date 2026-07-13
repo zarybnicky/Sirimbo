@@ -50,30 +50,29 @@ export const Layout = React.memo(function Layout({
   footer,
   includeTenantSeo = true,
 }: LayoutProps) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = React.useState(false);
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const tenantId = useAtomValue(tenantIdAtom);
   const { publicSite } = useAtomValue(tenantConfigAtom);
   const Footer = useMemo(() => getTenantUi(tenantId, 'Footer'), [tenantId]);
-  const search = searchParams?.toString() ?? '';
-  const currentUrl = search ? `${pathname}?${search}` : (pathname ?? '');
+
+  const search = useSearchParams()?.toString();
+  const url = usePathname() + (search ? `?${search}` : '');
+
   const protectedPage =
     requireUser || requireMember || requireAdmin || requireTrainer || requireSystemAdmin;
-
-  showTopMenu = publicSite ? showTopMenu : false;
-  if (hideTopMenuIfLoggedIn) {
-    showTopMenu = !auth.user;
-  }
-
   const missingPermission =
     (requireUser && !auth.isLoggedIn) ||
     (requireMember && !auth.isMember && !auth.isTrainerOrAdmin) ||
     (requireTrainer && !auth.isTrainerOrAdmin) ||
     (requireAdmin && !auth.isAdmin) ||
     (requireSystemAdmin && !auth.isSystemAdmin);
+
+  showTopMenu = publicSite ? showTopMenu : false;
+  if (hideTopMenuIfLoggedIn) {
+    showTopMenu = !auth.user;
+  }
   if (!authLoading && missingPermission) {
     children = auth.user ? (
       <ErrorPage
@@ -109,7 +108,7 @@ export const Layout = React.memo(function Layout({
           {children}
           {showTopMenu && (
             <>
-              {!hideCta && <CallToAction url={currentUrl} />}
+              {!hideCta && <CallToAction url={url} />}
               {footer ?? <Footer />}
             </>
           )}

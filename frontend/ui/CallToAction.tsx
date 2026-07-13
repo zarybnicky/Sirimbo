@@ -12,7 +12,7 @@ const images = [
   CallToAction4.src,
 ];
 
-export function CallToAction({ url }: { url: string }) {
+export function CallToAction({ url = '' }: { url?: string }) {
   const image =
     images[
       [...url].map((x) => x.codePointAt(0) || 0).reduce((a, b) => a + b * 3, 0) %
