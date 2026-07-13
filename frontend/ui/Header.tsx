@@ -50,7 +50,7 @@ export function Header({
   }, []);
 
   return (
-    <div className="sticky z-20 top-0 inset-x-0 text-white bg-[#292524] shadow-lg">
+    <header className="sticky z-20 top-0 inset-x-0 text-white bg-[#292524] shadow-lg">
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
@@ -67,8 +67,11 @@ export function Header({
           <button
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
             onClick={() => setIsOpen(!isOpen)}
+            aria-controls="app-navigation"
+            aria-expanded={isOpen}
+            aria-label={isOpen ? 'Zavřít navigaci' : 'Otevřít navigaci'}
           >
-            <MenuIcon />
+            <MenuIcon aria-hidden="true" />
           </button>
 
           <div className="grow flex items-center">{mobileLogo ?? <MobileLogo />}</div>
@@ -76,12 +79,13 @@ export function Header({
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
             href={auth.user && isMounted ? '/profil' : '/login'}
+            aria-label={auth.user && isMounted ? 'Otevřít profil' : 'Přihlásit se'}
           >
-            <Account />
+            <Account aria-hidden="true" />
           </Link>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
 

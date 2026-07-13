@@ -17,14 +17,20 @@ type HeroArticle = {
   inset: boolean;
 };
 
-export function Hero({ data }: { data: ArticleFragment[] }) {
+export function Hero({
+  data,
+  fallbackImage,
+}: {
+  data: ArticleFragment[];
+  fallbackImage: string;
+}) {
   const articles = React.useMemo<HeroArticle[]>(() => {
     const mappedData = data.map((x) => ({
       id: x.id,
       href: `/clanky/${x.id}/${slugify(x.atJmeno)}`,
       name: x.atJmeno,
       summary: x.atPreview,
-      img: x.titlePhotoUrl || '',
+      img: x.titlePhotoUrl || fallbackImage,
       inset: false,
     }));
 
@@ -41,7 +47,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
       },
       ...mappedData.filter((x) => x.id !== '467' && x.id !== '468' && x.id !== '470'),
     ] as HeroArticle[];
-  }, [data]);
+  }, [data, fallbackImage]);
 
   const scrollerRef = React.useRef<HTMLDivElement>(null);
   const scrollFrameRef = React.useRef<number | null>(null);
@@ -146,6 +152,7 @@ export function Hero({ data }: { data: ArticleFragment[] }) {
                 alt={x.name}
                 fill
                 preload={i === 0}
+                fetchPriority={i === 0 ? 'high' : 'low'}
                 sizes="100vw"
               />
             </div>

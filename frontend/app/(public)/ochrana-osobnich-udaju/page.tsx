@@ -1,14 +1,14 @@
 /* eslint-disable import-x/no-unused-modules */
-import { createPublicPageMetadata } from '@/lib/seo';
+import { publicPageMetadata } from '@/lib/server/seo';
 import { PageHeader } from '@/ui/TitleBar';
-import { Metadata } from 'next';
 
-export const metadata: Metadata = createPublicPageMetadata({
-  title: 'Ochrana osobních údajů',
-  description:
-    'Informace TK Olymp Olomouc o zpracování osobních údajů, kontaktech správce, účelu zpracování a právech subjektů údajů.',
-  path: '/ochrana-osobnich-udaju',
-});
+export const generateMetadata = () =>
+  publicPageMetadata({
+    title: 'Ochrana osobních údajů',
+    description:
+      'Informace TK Olymp Olomouc o zpracování osobních údajů, kontaktech správce, účelu zpracování a právech subjektů údajů.',
+    path: '/ochrana-osobnich-udaju',
+  });
 
 export default function OchranaOsobnichUdajuPage() {
   return (

@@ -6,7 +6,11 @@ import LogoIcon from './logo-white-no-text.png';
 export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
-      <Link href="/dashboard" className="h-28 pt-3 pl-2 pr-4 mx-auto">
+      <Link
+        href="/dashboard"
+        aria-label="Nástěnka"
+        className="h-28 pt-3 pl-2 pr-4 mx-auto"
+      >
         <Image alt="" src={LogoIcon} sizes="256px" />
       </Link>
     </div>

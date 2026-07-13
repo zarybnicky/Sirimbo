@@ -1,5 +1,5 @@
 import { CohortGroupDocument } from '@/graphql/CohortGroup';
-import { stripHtml } from '@/lib/seo';
+import { stripHtml } from '@/lib/stripHtml';
 import { PageHeader } from '@/ui/TitleBar';
 import { RichTextView } from '@/ui/RichTextView';
 import { slugify } from '@/lib/slugify';

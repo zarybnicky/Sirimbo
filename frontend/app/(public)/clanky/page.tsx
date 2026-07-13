@@ -2,13 +2,14 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { cn } from '@/lib/cn';
 import { executeGraphql } from '@/lib/server/graphql';
-import { createPublicPageMetadata } from '@/lib/seo';
+import { getRequestTenant } from '@/lib/tenant/server';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
 import { PageHeader } from '@/ui/TitleBar';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { publicPageMetadata } from '@/lib/server/seo';
 
 const pageSize = 12;
 type PageItem = number | 'break';
@@ -30,7 +31,7 @@ export async function generateMetadata({
 }: ArticlesPageProps): Promise<Metadata> {
   const currentPage = await getCurrentPage(searchParams);
 
-  return createPublicPageMetadata({
+  return publicPageMetadata({
     title: currentPage > 1 ? `Články - ${currentPage}. stránka` : 'Články',
     description:
       'Aktuality, články a pozvánky TK Olymp Olomouc ze světa tanečního sportu, soutěží, soustředění, tréninků a klubových akcí.',
@@ -63,11 +64,14 @@ function getPageItems(currentPage: number, pageCount: number): PageItem[] {
 
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
   const currentPage = await getCurrentPage(searchParams);
-  const { aktualities } = await executeGraphql(ArticlesDocument, {
-    first: pageSize,
-    offset: (currentPage - 1) * pageSize,
-    visibleOnly: true,
-  });
+  const [{ aktualities }, tenant] = await Promise.all([
+    executeGraphql(ArticlesDocument, {
+      first: pageSize,
+      offset: (currentPage - 1) * pageSize,
+      visibleOnly: true,
+    }),
+    getRequestTenant(),
+  ]);
   const totalPages = Math.max(1, Math.ceil((aktualities?.totalCount ?? 0) / pageSize));
 
   return (
@@ -79,10 +83,11 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
           <ArticleCard
             key={item.id}
             href={`/clanky/${item.id}/${slugify(item.atJmeno)}`}
-            img={item.titlePhotoUrl ?? undefined}
+            img={item.titlePhotoUrl}
             header={item.atJmeno}
             preview={item.atPreview}
             sizes="(min-width: 1024px) 300px, (min-width: 960px) 440px, calc(50vw - 1.5rem)"
+            fallbackImage={tenant.config.publicSite?.image.url}
           />
         ))}
       </div>
@@ -93,7 +98,9 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
             <Link
               href={currentPage <= 2 ? '/clanky' : `/clanky?page=${currentPage - 1}`}
               aria-label="Předchozí stránka"
-              className={'w-6 h-10 inline-flex items-center justify-center rounded-full aria-disabled:opacity-40'}
+              className={
+                'w-6 h-10 inline-flex items-center justify-center rounded-full aria-disabled:opacity-40'
+              }
             >
               <ChevronsLeft className="size-4" />
             </Link>
@@ -111,7 +118,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
                 aria-current={item === currentPage ? 'page' : undefined}
                 className={cn(
                   item === currentPage ? 'text-white !bg-accent-5' : '',
-                  'size-10 bg-accent-3 inline-flex items-center justify-center rounded-full border border-accent-6'
+                  'size-10 bg-accent-3 inline-flex items-center justify-center rounded-full border border-accent-6',
                 )}
               >
                 {item}
@@ -123,7 +130,9 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
             <Link
               href={`/clanky?page=${currentPage + 1}`}
               aria-label="Další stránka"
-              className={'w-6 h-10 inline-flex items-center justify-center rounded-full aria-disabled:opacity-40'}
+              className={
+                'w-6 h-10 inline-flex items-center justify-center rounded-full aria-disabled:opacity-40'
+              }
             >
               <ChevronsRight className="size-4" />
             </Link>

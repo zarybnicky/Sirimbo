@@ -4,7 +4,7 @@ import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { EventAttendance } from '@/ui/EventAttendance';
 import { RichTextView } from '@/ui/RichTextView';
-import { stripHtml } from '@/lib/seo';
+import { stripHtml } from '@/lib/stripHtml';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { formatInstanceName } from '@/ui/format';

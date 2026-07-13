@@ -60,8 +60,6 @@ export const Layout = React.memo(function Layout({
   const search = useSearchParams()?.toString();
   const url = usePathname() + (search ? `?${search}` : '');
 
-  const protectedPage =
-    requireUser || requireMember || requireAdmin || requireTrainer || requireSystemAdmin;
   const missingPermission =
     (requireUser && !auth.isLoggedIn) ||
     (requireMember && !auth.isMember && !auth.isTrainerOrAdmin) ||
@@ -86,7 +84,7 @@ export const Layout = React.memo(function Layout({
 
   return (
     <>
-      {includeTenantSeo && <TenantSeo noindex={protectedPage} />}
+      {includeTenantSeo && <TenantSeo />}
       <Header
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -104,8 +102,10 @@ export const Layout = React.memo(function Layout({
           sidebarLogo={sidebarLogo}
         />
 
-        <div className={className || 'grow content relative content-start'}>
-          {children}
+        <div className="flex min-w-0 grow flex-col">
+          <main className={className || 'grow content relative content-start'}>
+            {children}
+          </main>
           {showTopMenu && (
             <>
               {!hideCta && <CallToAction url={url} />}

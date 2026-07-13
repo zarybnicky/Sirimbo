@@ -49,7 +49,7 @@ function OlympLogoVertical(props: React.SVGProps<SVGSVGElement>) {
 
 export function MobileLogo() {
   return (
-    <Link href="/" className="block p-0 m-0 size-full relative">
+    <Link href="/" aria-label="Domů" className="block p-0 m-0 size-full relative">
       <Image alt="" src={LogoOnDark} height="50" />
     </Link>
   );
@@ -59,7 +59,7 @@ export function DesktopLogo() {
   return (
     <div className="relative overflow-visible min-w-[104px]">
       <div className="w-[104px] h-[130px] text-white bg-accent-9 z-30 shadow-accent-9/60 shadow-lg absolute top-0 inset-x-0">
-        <Link href="/" className="block p-0 m-0 size-full relative">
+        <Link href="/" aria-label="Domů" className="block p-0 m-0 size-full relative">
           <OlympLogoVertical
             style={{
               filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
@@ -81,7 +81,7 @@ export function DesktopLogo() {
 export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
-      <Link href="/" className="h-20 mt-3 mx-auto">
+      <Link href="/" aria-label="Domů" className="h-20 mt-3 mx-auto">
         <OlympLogoVertical className="size-full text-white !fill-white" />
       </Link>
     </div>
@@ -95,6 +95,7 @@ export function SocialIcons() {
         target="_blank"
         rel="noreferrer"
         href="https://www.facebook.com/tkolymp"
+        aria-label="TK Olymp na Facebooku"
         className="p-1"
       >
         <SiFacebook className="text-accent-10" />
@@ -103,6 +104,7 @@ export function SocialIcons() {
         target="_blank"
         rel="noreferrer"
         href="https://www.instagram.com/tanecni_klub_olymp"
+        aria-label="TK Olymp na Instagramu"
         className="p-1"
       >
         <SiInstagram className="text-accent-9" />
@@ -111,6 +113,7 @@ export function SocialIcons() {
         target="_blank"
         rel="noreferrer"
         href="https://www.youtube.com/user/TheMamcro"
+        aria-label="TK Olymp na YouTube"
         className="p-1"
       >
         <SiYoutube className="text-white" />
@@ -123,15 +126,22 @@ export function Sponsors() {
   return (
     <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-stretch justify-center text-center text-neutral-11">
       {[
-        { label: 'Český svaz tanečního sportu', image: LogoCsts.src },
-        { label: 'Město Olomouc', image: LogoOlomouc.src },
-        { label: 'Olomoucký kraj', image: LogoKraj.src },
-        { label: 'Město Prostějov', image: LogoProstejov.src },
-        { label: 'Národní sportovní agentura', image: LogoNsa.src },
+        { label: 'Český svaz tanečního sportu', image: LogoCsts },
+        { label: 'Město Olomouc', image: LogoOlomouc },
+        { label: 'Olomoucký kraj', image: LogoKraj },
+        { label: 'Město Prostějov', image: LogoProstejov },
+        { label: 'Národní sportovní agentura', image: LogoNsa },
       ].map((x) => (
         <div key={x.label} className="flex flex-col grow">
           <div className="grow flex items-center">
-            <img alt={x.label} className="w-full h-auto" src={x.image} />
+            <Image
+              alt={x.label}
+              className="w-full h-auto"
+              src={x.image}
+              loading="lazy"
+              fetchPriority="low"
+              sizes="(min-width: 1024px) 160px, (min-width: 640px) 30vw, 50vw"
+            />
           </div>
           <div className="h-12 mt-4">{x.label}</div>
         </div>
@@ -142,7 +152,7 @@ export function Sponsors() {
 
 export function Footer() {
   return (
-    <div className="col-full-width content bg-[#292524] text-white py-12">
+    <footer className="col-full-width content bg-[#292524] text-white py-12">
       <div className="col-feature grid grid-cols-2 gap-2">
         <h2 className="col-span-2 text-3xl font-bold">Kontakt</h2>
         <div className="col-span-2 md:col-span-1">
@@ -160,7 +170,10 @@ export function Footer() {
             miroslav.hyza@tkolymp.cz
           </div>
 
-          <Link className={buttonCls({ size: 'lg', className: 'mt-4' })} href="/kontakt">
+          <Link
+            className={buttonCls({ size: 'lg', variant: 'outline', className: 'mt-4' })}
+            href="/kontakt"
+          >
             Kontaktní detaily
             <ChevronRight />
           </Link>
@@ -205,6 +218,6 @@ export function Footer() {
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }

@@ -27,14 +27,16 @@ export function ServiceCard(props: ServiceCardProps) {
           src={props.image}
           alt={props.header}
           fill
+          loading="lazy"
+          fetchPriority="low"
           sizes="(min-width: 768px) 300px, calc(100vw - 1rem)"
         />
       </div>
       <div className="bg-neutral-9 group-even:bg-accent-9 h-3 md:h-auto md:w-3" />
       <div className="grow basis-4 px-4 py-6 md:p-8">
-        <div className="text-2xl text-neutral-11 group-odd:text-accent-11 font-bold mb-2 md:mb-4">
+        <h2 className="text-2xl text-neutral-11 group-odd:text-accent-11 font-bold mb-2 md:mb-4">
           {props.header}
-        </div>
+        </h2>
         <div className="min-h-14">{props.children}</div>
         {props.href && (
           <div>

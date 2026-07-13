@@ -87,6 +87,8 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
       />
 
       <nav
+        id="app-navigation"
+        aria-label="Hlavní navigace"
         className={cn(
           'fixed lg:sticky inset-y-0 left-0',
           isOpen ? 'translate-x-0 shadow-lg' : '-translate-x-full lg:translate-x-0',

@@ -1,10 +1,9 @@
 /* eslint-disable import-x/no-unused-modules */
-import { createPublicPageMetadata } from '@/lib/seo';
+import { publicPageMetadata } from '@/lib/server/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
-import { Metadata } from 'next';
 
-export const metadata: Metadata = createPublicPageMetadata({
+export const generateMetadata = () => publicPageMetadata({
   title: 'Olymp v tanečním světě',
   description:
     'Poznejte TK Olymp Olomouc, taneční sportovní klub s více než třicetiletou tradicí, Sportovním centrem mládeže a tréninky v Olomouci a Prostějově.',

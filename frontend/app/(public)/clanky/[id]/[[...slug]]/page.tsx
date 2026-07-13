@@ -2,7 +2,6 @@
 import { ArticleDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
 import { getRequestTenant } from '@/lib/tenant/server';
-import { stripHtml } from '@/lib/seo';
 import { slugify } from '@/lib/slugify';
 import { fullDateFormatter } from '@/ui/format';
 import { JsonLd } from '@/ui/JsonLd';
@@ -11,6 +10,7 @@ import { PageHeader } from '@/ui/TitleBar';
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
+import { stripHtml } from '@/lib/stripHtml';
 
 type ArticlePageProps = {
   params: Promise<{
@@ -24,18 +24,33 @@ const getArticle = cache(async (id: string) => {
   return executeGraphql(ArticleDocument, { id }).then((x) => x.aktuality);
 });
 
-export async function generateMetadata({
-  params,
-}: ArticlePageProps): Promise<Metadata> {
+function createSeoDescription(
+  primary: string | null | undefined,
+  fallback: string | null | undefined,
+  maxLength = 160,
+) {
+  const value = stripHtml(primary) || stripHtml(fallback);
+  if (value.length <= maxLength) return value;
+
+  const shortened = value.slice(0, maxLength - 1);
+  const lastSpace = shortened.lastIndexOf(' ');
+  const end = lastSpace >= maxLength * 0.75 ? lastSpace : shortened.length;
+  return `${shortened.slice(0, end)}…`;
+}
+
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { id } = await params;
-  const item = await getArticle(id);
+  const [item, tenant] = await Promise.all([getArticle(id), getRequestTenant()]);
   if (!item) {
     return {
       title: 'Článek',
     };
   }
-  const description = stripHtml(item.atPreview);
+  const description = createSeoDescription(item.atPreview, item.atText);
   const canonicalPath = `/clanky/${item.id}/${slugify(item.atJmeno)}`;
+  const image = item.titlePhotoUrl
+    ? { url: item.titlePhotoUrl, alt: item.atJmeno }
+    : tenant.config.publicSite?.image;
 
   return {
     title: item.atJmeno,
@@ -50,15 +65,13 @@ export async function generateMetadata({
       url: canonicalPath,
       publishedTime: item.createdAt ?? undefined,
       modifiedTime: item.updatedAt ?? undefined,
-      images: item.titlePhotoUrl
-        ? [{ url: item.titlePhotoUrl, alt: item.atJmeno }]
-        : undefined,
+      images: image ? [image] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: item.atJmeno,
       description,
-      images: item.titlePhotoUrl ? [item.titlePhotoUrl] : undefined,
+      images: image ? [image.url] : undefined,
     },
     robots: item.isVisible ? undefined : { index: false, follow: false },
   };
@@ -66,24 +79,25 @@ export async function generateMetadata({
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { id, slug } = await params;
-  const item = await getArticle(id);
+  const [item, tenant] = await Promise.all([getArticle(id), getRequestTenant()]);
 
   if (!item) notFound();
   if (slug?.join('/') !== slugify(item.atJmeno)) {
     redirect(`/clanky/${item.id}/${slugify(item.atJmeno)}`);
   }
 
-  const tenant = await getRequestTenant();
   const site = tenant.config.publicSite;
   const canonicalPath = `/clanky/${item.id}/${slugify(item.atJmeno)}`;
-  const description = stripHtml(item.atPreview);
+  const description = createSeoDescription(item.atPreview, item.atText);
+  const image =
+    item.titlePhotoUrl || (site && new URL(site.image.url, site.origin).toString());
   const articleJsonLd = site
     ? {
         '@context': 'https://schema.org',
         '@type': 'Article',
         headline: item.atJmeno,
         description,
-        image: item.titlePhotoUrl ? [item.titlePhotoUrl] : undefined,
+        image: image ? [image] : undefined,
         datePublished: item.createdAt ?? undefined,
         dateModified: item.updatedAt ?? item.createdAt ?? undefined,
         author: item.atKdo

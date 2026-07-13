@@ -3,10 +3,10 @@
 import { getServerTenant } from '@/tenant/catalog';
 import { tenantIdAtom } from '@/ui/state/auth';
 import { useAtomValue } from 'jotai';
-import { DefaultSeo } from 'next-seo';
+import { DefaultSeo, NextSeo } from 'next-seo';
 import { usePathname } from 'next/navigation';
 
-export function TenantSeo({ noindex }: { noindex?: boolean }) {
+export function TenantSeo() {
   const tenantId = useAtomValue(tenantIdAtom);
 
   const entry = getServerTenant(tenantId);
@@ -21,14 +21,10 @@ export function TenantSeo({ noindex }: { noindex?: boolean }) {
         url: new URL(publicSite.image.url, publicSite.origin).toString(),
       }
     : undefined;
-  const shouldNoindex = noindex || !publicSite;
-
   return (
     <DefaultSeo
       {...entry.config.seo}
       canonical={canonical}
-      dangerouslySetAllPagesToNoIndex={shouldNoindex}
-      dangerouslySetAllPagesToNoFollow={shouldNoindex}
       openGraph={{
         ...entry.config.seo.openGraph,
         url: canonical ?? publicSite?.origin,

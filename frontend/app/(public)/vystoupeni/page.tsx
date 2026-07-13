@@ -1,11 +1,10 @@
 /* eslint-disable import-x/no-unused-modules */
-import { createPublicPageMetadata } from '@/lib/seo';
+import { publicPageMetadata } from '@/lib/server/seo';
 import LiteYouTubeEmbed from '@/ui/LiteYouTubeEmbed';
 import { ExhibitionRequestForm } from '@/ui/forms/ExhibitionRequestForm';
 import { PageHeader } from '@/ui/TitleBar';
-import { Metadata } from 'next';
 
-export const metadata: Metadata = createPublicPageMetadata({
+export const generateMetadata = () => publicPageMetadata({
   title: 'Taneční vystoupení',
   description:
     'Objednejte taneční vystoupení TK Olymp na ples, firemní večírek nebo společenskou akci. Standardní i latinskoamerické tance, soutěžní páry a jednoduchá poptávka.',

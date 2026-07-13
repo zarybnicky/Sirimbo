@@ -7,7 +7,7 @@ import LogoOnWhite from './logo-vec.webp';
 export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
-      <Link href="/dashboard" className="h-16 mt-3 mx-auto">
+      <Link href="/dashboard" aria-label="Nástěnka" className="h-16 mt-3 mx-auto">
         <Image alt="" src={LogoOnDark} sizes="192px" />
       </Link>
     </div>

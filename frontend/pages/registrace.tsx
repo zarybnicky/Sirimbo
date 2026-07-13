@@ -54,7 +54,7 @@ export default function InvitationPage() {
   if (!enableRegistration) {
     return (
       <Layout className="grow content relative content-stretch">
-        <NextSeo title="Registrace uzavřena" noindex />
+        <NextSeo title="Registrace uzavřena" />
         <ErrorPage
           error="Registrace je uzavřena"
           details="Nové registrace aktuálně nepřijímáme."
