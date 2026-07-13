@@ -1,6 +1,6 @@
 import {
-  type EventInstanceRegistrationAttendanceFragment,
-  EventInstanceWithAttendanceDocument,
+  type EventRegistrationAttendanceFragment,
+  EventWithAttendanceDocument,
   UpdateAttendanceDocument,
 } from '@/graphql/Event';
 import { dateTimeFormatter, numericDateFormatter } from '@/ui/format';
@@ -18,7 +18,7 @@ import { canManageInstance } from '@/lib/actions/eventInstance';
 export function InstanceAttendanceView({ id }: { id: string }) {
   const auth = useAuth();
   const [{ data }] = useQuery({
-    query: EventInstanceWithAttendanceDocument,
+    query: EventWithAttendanceDocument,
     variables: { id },
     pause: !id,
   });
@@ -118,7 +118,7 @@ function isAttendanceType(x: string): x is AttendanceType {
 function AttendanceItem({
   attendance,
 }: {
-  attendance: EventInstanceRegistrationAttendanceFragment;
+  attendance: EventRegistrationAttendanceFragment;
 }) {
   const update = useMutation(UpdateAttendanceDocument)[1];
   const setStatus = useAsyncCallback(async (status: string) => {

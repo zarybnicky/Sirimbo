@@ -1,6 +1,6 @@
 import {
   type EventInstanceRegistrationFragment,
-  type EventInstanceTrainerLessonOfferFragment,
+  type EventInstanceTrainerFragment,
   type EventLessonDemandFragment,
   SetEventInstanceRegistrationDocument,
   SetLessonDemandDocument,
@@ -33,7 +33,7 @@ export function MyRegistrationForm({
   instanceId: string;
   enableNotes: boolean;
   registration: EventInstanceRegistrationFragment;
-  lessonTrainers: EventInstanceTrainerLessonOfferFragment[];
+  lessonTrainers: EventInstanceTrainerFragment[];
 }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useForm({
@@ -102,7 +102,7 @@ function LessonDemandControls({
 }: {
   registrationId: string;
   demands: EventLessonDemandFragment[];
-  trainers: EventInstanceTrainerLessonOfferFragment[];
+  trainers: EventInstanceTrainerFragment[];
 }) {
   const [{ fetching, error }, setMutation] = useMutation(SetLessonDemandDocument);
   const myLessons = Object.fromEntries(

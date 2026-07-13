@@ -1,5 +1,5 @@
 import {
-  type EventInstanceTrainerLessonOfferFragment,
+  type EventInstanceTrainerFragment,
   SetEventInstanceRegistrationDocument,
 } from '@/graphql/Event';
 import { TextAreaElement } from '@/ui/fields/textarea';
@@ -36,7 +36,7 @@ export function NewInstanceRegistrationForm({
   personId: string | null;
   coupleId: string | null;
   label: string;
-  lessonTrainers: EventInstanceTrainerLessonOfferFragment[];
+  lessonTrainers: EventInstanceTrainerFragment[];
   disabled: boolean;
   onRegistered: () => void;
 }) {

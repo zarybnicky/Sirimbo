@@ -15,6 +15,21 @@ fragment EventInstance on EventInstance {
   stats
 }
 
+fragment EventListInstance on EventInstance {
+  id
+  name
+  type
+  since
+  until
+  capacity
+  remainingPersonSpots
+  location {
+    id
+    name
+  }
+  locationText
+}
+
 fragment SeriesInfo on SeriesInfo {
   id
   name
@@ -106,7 +121,7 @@ fragment EventWithTrainer on EventInstance {
   }
 }
 
-fragment EventInstanceRegistrationAttendance on EventInstanceRegistration {
+fragment EventRegistrationAttendance on EventInstanceRegistration {
   id
   status
   attendanceNote
@@ -121,7 +136,7 @@ fragment EventInstanceRegistrationAttendance on EventInstanceRegistration {
   }
 }
 
-fragment EventInstanceTrainerLessonOffer on EventInstanceTrainer {
+fragment EventInstanceTrainer on EventInstanceTrainer {
   id
   personId
   lessonsOffered
@@ -193,7 +208,7 @@ query EventInstanceExport($id: BigInt!) {
     name
     type
     trainersList: eventInstanceTrainersByInstanceIdList {
-      ...EventInstanceTrainerLessonOffer
+      ...EventInstanceTrainer
     }
     registrations: eventInstanceRegistrationsByInstanceIdList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
@@ -218,7 +233,7 @@ query EventInstanceExport($id: BigInt!) {
   }
 }
 
-query EventInstancePayments($id: BigInt!) {
+query EventPayments($id: BigInt!) {
   eventInstance(id: $id) {
     id
     since
@@ -245,14 +260,14 @@ fragment EventInstancePage on EventInstance {
   }
 }
 
-query EventInstanceWithAttendance($id: BigInt!) {
+query EventWithAttendance($id: BigInt!) {
   eventInstance(id: $id) {
     ...EventInstancePage
     eventInstanceRegistrationsByInstanceId(
       condition: { registrationStatus: ACTIVE }
     ) {
       nodes {
-        ...EventInstanceRegistrationAttendance
+        ...EventRegistrationAttendance
       }
     }
   }
@@ -270,7 +285,7 @@ query EventInstanceRegistrations($id: BigInt!) {
   eventInstance(id: $id) {
     id
     trainersList: eventInstanceTrainersByInstanceIdList {
-      ...EventInstanceTrainerLessonOffer
+      ...EventInstanceTrainer
     }
     registrations: eventInstanceRegistrationsByInstanceId(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
@@ -280,21 +295,20 @@ query EventInstanceRegistrations($id: BigInt!) {
       }
     }
   }
-}
-
-fragment EventListInstance on EventInstance {
-  id
-  name
-  type
-  since
-  until
-  capacity
-  remainingPersonSpots
-  location {
+  scheduledLessons: eventInstancesList(
+    condition: { parentId: $id, type: LESSON }
+  ) {
     id
-    name
+    trainersList: eventInstanceTrainersByInstanceIdList {
+      personId
+    }
+    registrationsList: eventInstanceRegistrationsByInstanceIdList(
+      condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
+    ) {
+      personId
+      coupleId
+    }
   }
-  locationText
 }
 
 query EventList {

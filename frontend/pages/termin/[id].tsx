@@ -1,6 +1,6 @@
 import { Layout } from '@/ui/Layout';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
-import { EventInstancePayments } from '@/ui/EventInstancePayments';
+import { EventPayments } from '@/ui/EventPayments';
 import { EventInstanceRegistrations } from '@/ui/EventInstanceRegistrations';
 import { InstanceAttendanceView } from '@/ui/InstanceAttendanceView';
 import { RichTextView } from '@/ui/RichTextView';
@@ -8,14 +8,14 @@ import { stripHtml } from '@/lib/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { formatDefaultInstanceName } from '@/ui/format';
-import { EventInstanceWithAttendanceDocument } from '@/graphql/Event';
+import { EventWithAttendanceDocument } from '@/graphql/Event';
 import { EventList } from '@/ui/lists/EventList';
 import { useAuth } from '@/ui/use-auth';
 import { NextSeo } from 'next-seo';
 import { useQuery } from 'urql';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
-import { Calendar } from '@/calendar/Calendar';
+import { CampSchedule } from '@/calendar/CampSchedule';
 import { parseAsString, useQueryState } from 'nuqs';
 import { TabMenu } from '@/ui/TabMenu';
 import React from 'react';
@@ -23,22 +23,21 @@ import { useActions } from '@/lib/actions';
 import { eventInstanceActions } from '@/lib/actions/eventInstance';
 
 const QueryParams = z.object({
-  instance: zRouterId,
+  id: zRouterId,
 });
 
 function EventInstancePage() {
   const router = useTypedRouter(QueryParams);
   const auth = useAuth();
-  const { instance: instanceId } = router.query;
+  const { id } = router.query;
   const [{ data }] = useQuery({
-    query: EventInstanceWithAttendanceDocument,
-    variables: { id: instanceId },
-    pause: !instanceId,
+    query: EventWithAttendanceDocument,
+    variables: { id },
+    pause: !id,
   });
   const instance = data?.eventInstance;
   const actions = useActions(eventInstanceActions, instance);
   const title = instance?.name || (instance ? formatDefaultInstanceName(instance) : '');
-  const description = stripHtml(instance?.summary);
   const [variant, setVariant] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
@@ -75,7 +74,9 @@ function EventInstancePage() {
       tabs.push({
         id: 'schedule',
         title: 'Rozpis',
-        contents: () => <Calendar parentId={instance.id} initialDate={instance.since} />,
+        contents: () => (
+          <CampSchedule id={instance.id} since={instance.since} until={instance.until} />
+        ),
       });
     }
 
@@ -89,7 +90,7 @@ function EventInstancePage() {
         {
           id: 'payments',
           title: 'Platby',
-          contents: () => <EventInstancePayments instanceId={instance.id} />,
+          contents: () => <EventPayments id={instance.id} />,
         },
       );
     }
@@ -98,7 +99,7 @@ function EventInstancePage() {
 
   return (
     <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title={title} description={description || undefined} />
+      <NextSeo title={title} description={stripHtml(instance?.summary) || undefined} />
       <WithSidebar sidebar={<EventList />}>
         <div
           className={

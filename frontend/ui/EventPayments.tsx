@@ -1,4 +1,4 @@
-import { EventInstancePaymentsDocument } from '@/graphql/Event';
+import { EventPaymentsDocument } from '@/graphql/Event';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionRow } from '@/ui/ActionRow';
@@ -6,10 +6,10 @@ import { Spinner } from '@/ui/Spinner';
 import { fullDateFormatter, moneyFormatter } from '@/ui/format';
 import { useQuery } from 'urql';
 
-export function EventInstancePayments({ instanceId }: { instanceId: string }) {
+export function EventPayments({ id }: { id: string }) {
   const [{ data, fetching }] = useQuery({
-    query: EventInstancePaymentsDocument,
-    variables: { id: instanceId },
+    query: EventPaymentsDocument,
+    variables: { id },
   });
 
   const instances = data?.eventInstance

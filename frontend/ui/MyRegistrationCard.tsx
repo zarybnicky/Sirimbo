@@ -1,7 +1,7 @@
 import {
   type EventInstanceRegistrationFragment,
   type EventWithTrainerFragment,
-  type EventInstanceTrainerLessonOfferFragment,
+  type EventInstanceTrainerFragment,
   SetEventInstanceRegistrationDocument,
 } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -24,7 +24,7 @@ export function MyRegistrationCard({
 }: {
   instance: EventWithTrainerFragment;
   registration: EventInstanceRegistrationFragment;
-  lessonTrainers: EventInstanceTrainerLessonOfferFragment[];
+  lessonTrainers: EventInstanceTrainerFragment[];
 }) {
   const tenantId = useAtomValue(tenantIdAtom);
   const confirm = useConfirm();
