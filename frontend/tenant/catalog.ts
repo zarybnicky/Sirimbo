@@ -38,7 +38,7 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
   },
 };
 
-export const defaultTenant = tenantCatalog[2]!;
+export const defaultTenant = tenantCatalog[1]!;
 
 export function parseTenant(
   tenantId: string | number | null | undefined,

@@ -1,22 +1,33 @@
 import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { RichTextView } from '@/ui/RichTextView';
-import { SeriesInfoLink } from '@/ui/SeriesInfoLink';
-import { dateTimeFormatter, formatEventType,  } from '@/ui/format';
+import { dateTimeFormatter, formatEventType } from '@/ui/format';
+import Link from 'next/link';
 
 export function BasicEventInfo({ instance }: { instance: EventWithTrainerFragment }) {
+  const { seriesInfo } = instance;
   return (
     <dl className="not-prose gap-2 mb-6">
-      {(instance.seriesInfo?.length ?? 0) > 1 && (
+      {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
         <dd>
-          <SeriesInfoLink info={instance.seriesInfo} />
+          <Link
+            href={`/terminy/${seriesInfo.id}`}
+            className="text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11"
+          >
+            {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
+          </Link>
         </dd>
       )}
 
       <dd>{formatEventType(instance.type)}</dd>
 
       <dt>Termín</dt>
-      <dd>{dateTimeFormatter.formatRange(new Date(instance.since), new Date(instance.until))}</dd>
+      <dd>
+        {dateTimeFormatter.formatRange(
+          new Date(instance.since),
+          new Date(instance.until),
+        )}
+      </dd>
 
       {!!(instance.location?.name || instance.locationText) && (
         <>
@@ -25,15 +36,11 @@ export function BasicEventInfo({ instance }: { instance: EventWithTrainerFragmen
         </>
       )}
 
-      {instance.trainersList && instance.trainersList.length > 0 && (
+      {instance.trainersList.length > 0 && (
         <>
           <dt>Trenéři</dt>
           {instance.trainersList.map((trainer) => {
-            return (
-              <dd key={trainer.id}>
-                {trainer.person?.name}
-              </dd>
-            );
+            return <dd key={trainer.id}>{trainer.person?.name}</dd>;
           })}
         </>
       )}

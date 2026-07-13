@@ -13,7 +13,6 @@ import {
 import { useActions } from '@/lib/actions';
 import { eventInstanceActions } from '@/lib/actions/eventInstance';
 import { ActionGroup } from '@/ui/ActionGroup';
-import { SeriesInfoLink } from '@/ui/SeriesInfoLink';
 import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
@@ -27,7 +26,7 @@ export function EventSummary({
   offsetButtons?: boolean;
 }) {
   const actions = useActions(eventInstanceActions, instance);
-  const registrations = instance.registrations;
+  const { seriesInfo, registrations } = instance;
   const registrationCount = registrations.totalCount;
   const start = new Date(instance.since);
   const end = new Date(instance.until);
@@ -35,6 +34,15 @@ export function EventSummary({
 
   return (
     <div className="flex flex-col gap-2 text-sm">
+      {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
+        <Link
+          href={`/terminy/${seriesInfo.id}`}
+          className="text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11"
+        >
+          {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
+        </Link>
+      )}
+
       {offsetButtons && (
         <div className="mt-2 flex flex-col">
           <Link
@@ -45,8 +53,6 @@ export function EventSummary({
           </Link>
         </div>
       )}
-
-      <SeriesInfoLink info={instance.seriesInfo} />
 
       <div className="flex items-center gap-2">
         <Clock className="size-5 text-accent-11" />
@@ -80,9 +86,7 @@ export function EventSummary({
           ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
           ) : registrationCount < 6 ? (
-            registrations.nodes.map((x) => (
-              <div key={x.id}>{formatRegistrant(x)}</div>
-            ))
+            registrations.nodes.map((x) => <div key={x.id}>{formatRegistrant(x)}</div>)
           ) : (
             `${registrationCount} účastníků`
           )}

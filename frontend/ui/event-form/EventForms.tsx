@@ -1,14 +1,14 @@
 import type { EventType } from '@/graphql';
 import {
-  type EventWithTrainerFragment,
-  EventInstanceRegistrationsDocument,
   CreateEventInstancesDocument,
+  EventInstanceRegistrationsDocument,
+  type EventWithTrainerFragment,
   UpdateEventInstanceDetailsDocument,
 } from '@/graphql/Event';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import {
-  splitIntoLessonRanges,
   type QuickEventCreateDefaults,
+  splitIntoLessonRanges,
 } from '@/calendar/quickEventDefaults';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import {
@@ -20,7 +20,6 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { formatEventType, formatLongCoupleName, shortTimeFormatter } from '@/ui/format';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { SeriesInfoLink } from '@/ui/SeriesInfoLink';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -63,7 +62,11 @@ function EventAccessFields({
         name="isLocked"
         label="Zakázat přihlašování/odhlašování"
       />
-      <CheckboxElement control={control} name="isPublic" label="Viditelná pro veřejnost" />
+      <CheckboxElement
+        control={control}
+        name="isPublic"
+        label="Viditelná pro veřejnost"
+      />
       {(type === 'RESERVATION' || type === 'CAMP') && (
         <CheckboxElement
           control={control}
@@ -122,7 +125,10 @@ export function EventCreateForm({
   const firstInstance = instances?.[0];
   const lessonRanges =
     firstInstance?.since && firstInstance.until
-      ? splitIntoLessonRanges(new Date(firstInstance.since), new Date(firstInstance.until))
+      ? splitIntoLessonRanges(
+          new Date(firstInstance.since),
+          new Date(firstInstance.until),
+        )
       : [];
   const canSplit =
     type === 'LESSON' &&
@@ -149,7 +155,11 @@ export function EventCreateForm({
       <div className="text-sm text-neutral-11">
         Trenéři:{' '}
         {defaults.trainerPersonIds
-          .map((id) => tenant?.tenant?.tenantTrainersList.find((x) => x.person?.id === id)?.person?.name)
+          .map(
+            (id) =>
+              tenant?.tenant?.tenantTrainersList.find((x) => x.person?.id === id)?.person
+                ?.name,
+          )
           .join(', ')}
       </div>
     ) : (
@@ -194,12 +204,16 @@ export function EventCreateForm({
     const location = eventLocationInput(values);
 
     const instancesToCreate = ranges.map((range) => {
-      const [kind, id] =
-        splitIds[range.since.toISOString()]?.split(':') ?? [];
-      const splitRegistration = splitLessons && id && [{
-        personId: kind === 'person' ? id : null,
-        coupleId: kind === 'couple' ? id : null,
-      }] || [];
+      const [kind, id] = splitIds[range.since.toISOString()]?.split(':') ?? [];
+      const splitRegistration =
+        (splitLessons &&
+          id && [
+            {
+              personId: kind === 'person' ? id : null,
+              coupleId: kind === 'couple' ? id : null,
+            },
+          ]) ||
+        [];
       return {
         since: range.since.toISOString(),
         until: range.until.toISOString(),
@@ -321,11 +335,7 @@ export function EventCreateForm({
   );
 }
 
-export function EventEditForm({
-  instance,
-}: {
-  instance: EventWithTrainerFragment;
-}) {
+export function EventEditForm({ instance }: { instance: EventWithTrainerFragment }) {
   const { onSuccess } = useFormResult();
   const updateInstance = useMutation(UpdateEventInstanceDetailsDocument)[1];
   const [registrationsReady, setRegistrationsReady] = React.useState(false);
@@ -337,7 +347,7 @@ export function EventEditForm({
     itemId: trainer.id,
     personId: trainer.personId,
     lessonsOffered: trainer.lessonsOffered,
-  }))
+  }));
   const initialCohorts = React.useMemo(
     () => (instance.targetCohortsList ?? []).map(({ cohortId }) => ({ cohortId })),
     [instance.targetCohortsList],
@@ -378,8 +388,7 @@ export function EventEditForm({
     },
   });
 
-  const registrations =
-    registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
+  const registrations = registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
 
   React.useEffect(() => {
     const instance = registrationsQuery.data?.eventInstance;
@@ -426,8 +435,12 @@ export function EventEditForm({
       lessonsOffered: trainer.lessonsOffered,
     }));
     const trainersChanged =
-      JSON.stringify(nextTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId))) !==
-      JSON.stringify(currentTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId)));
+      JSON.stringify(
+        nextTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId)),
+      ) !==
+      JSON.stringify(
+        currentTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId)),
+      );
     const location = eventLocationInput(values);
     const nextRegistrations = values.registrations
       .filter((x) => x.personId || x.coupleId)
@@ -440,7 +453,9 @@ export function EventEditForm({
     );
     const cohortsChanged =
       JSON.stringify(nextCohortIds.toSorted()) !==
-      JSON.stringify(instance.targetCohortsList.map((target) => target.cohortId).toSorted());
+      JSON.stringify(
+        instance.targetCohortsList.map((target) => target.cohortId).toSorted(),
+      );
     const copyEvents = copies.map(({ since, until }) => ({
       since,
       until,
@@ -463,12 +478,14 @@ export function EventEditForm({
         pIsCancelled: edited.isCancelled,
         pIsLocked: values.isLocked,
         pEnableNotes: values.enableNotes,
-        pTrainerPersonIds: trainersChanged || copies.length > 0
-          ? nextTrainers.map((trainer) => trainer.personId)
-          : null,
-        pTrainerLessonsOffered: trainersChanged || copies.length > 0
-          ? nextTrainers.map((trainer) => trainer.lessonsOffered)
-          : null,
+        pTrainerPersonIds:
+          trainersChanged || copies.length > 0
+            ? nextTrainers.map((trainer) => trainer.personId)
+            : null,
+        pTrainerLessonsOffered:
+          trainersChanged || copies.length > 0
+            ? nextTrainers.map((trainer) => trainer.lessonsOffered)
+            : null,
         pRegistrations: registrationsReady ? nextRegistrations : null,
         pCohortIds: cohortsChanged || copies.length > 0 ? nextCohortIds : null,
         pCopies: copyEvents.length > 0 ? copyEvents : null,
@@ -481,8 +498,6 @@ export function EventEditForm({
   return (
     <form className="space-y-3" onSubmit={handleSubmit(onSubmit.execute)}>
       <FormError error={onSubmit.error} />
-
-      <SeriesInfoLink info={instance.seriesInfo} />
 
       <RadioButtonGroupElement control={control} name="type" options={eventTypeOptions} />
       <TextFieldElement control={control} name="name" label="Název termínu" />
