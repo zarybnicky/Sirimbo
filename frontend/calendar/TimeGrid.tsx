@@ -10,17 +10,7 @@ import EventRow from './EventRow';
 import TimeGutter from './TimeGutter';
 import { diff, format, inEventRange, merge, range } from './localizer';
 import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
-import type { CalendarEvent, DateRange, Resource } from './types';
-
-type PrimaryGrouping = 'resource' | 'day';
-
-interface TimeGridProps {
-  events: readonly CalendarEvent[];
-  backgroundEvents: readonly CalendarEvent[];
-  resources: readonly Resource[];
-  range: DateRange;
-  primary?: PrimaryGrouping;
-}
+import type { CalendarEvent, DateRange, Resource, ViewProps } from './types';
 
 type Grid = {
   days: readonly Date[];
@@ -35,7 +25,7 @@ export default React.memo(function TimeGrid({
   range,
   resources,
   primary = 'resource',
-}: TimeGridProps) {
+}: ViewProps) {
   const today = new Date();
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);

@@ -55,6 +55,7 @@ export type ViewProps = {
   events: readonly CalendarEvent[];
   backgroundEvents: readonly CalendarEvent[];
   resources: readonly Resource[];
+  primary?: 'resource' | 'day';
 };
 
 export type SlotInfo = {

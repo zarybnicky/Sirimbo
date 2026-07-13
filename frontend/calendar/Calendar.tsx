@@ -22,6 +22,7 @@ import type {
   InteractionInfo,
   Resource,
   SlotInfo,
+  ViewProps,
 } from './types';
 import { Spinner } from '@/ui/Spinner';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
@@ -57,6 +58,7 @@ export function Calendar({
   onDropFromOutside,
   onRemove,
   additionalResources = emptyResources,
+  primary,
 }: {
   parentId?: string;
   initialDate?: string;
@@ -67,6 +69,7 @@ export function Calendar({
   ) => void | Promise<void>;
   onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
   additionalResources?: readonly Resource[];
+  primary?: ViewProps['primary'];
 }) {
   const auth = useAuth();
   const [onlyMine, setOnlyMine] = useQueryState(
@@ -204,7 +207,7 @@ export function Calendar({
   return (
     <div
       className={cn(
-        'overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full overflow-hidden',
+        'overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full min-w-0 max-w-full overflow-hidden',
         isDragging && 'rbc-is-dragging',
       )}
     >
@@ -240,6 +243,7 @@ export function Calendar({
         events={events}
         backgroundEvents={emptyArray}
         resources={resources}
+        primary={primary}
       />
 
       <CalendarConflictsIndicator range={range} />

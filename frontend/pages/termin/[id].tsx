@@ -66,7 +66,11 @@ function EventInstancePage() {
       tabs.push({
         id: 'registrations',
         title: `Přihlášky (${numRegistrations})`,
-        contents: () => <EventRegistrations instance={instance} />,
+        contents: () => (
+          <div className="col-popout">
+            <EventRegistrations instance={instance} />
+          </div>
+        ),
       });
     }
 
@@ -85,12 +89,20 @@ function EventInstancePage() {
         {
           id: 'attendance',
           title: 'Docházka',
-          contents: () => <EventAttendance id={instance.id} />,
+          contents: () => (
+            <div className="col-popout">
+              <EventAttendance id={instance.id} />
+            </div>
+          ),
         },
         {
           id: 'payments',
           title: 'Platby',
-          contents: () => <EventPayments id={instance.id} />,
+          contents: () => (
+            <div className="col-popout">
+              <EventPayments id={instance.id} />
+            </div>
+          ),
         },
       );
     }
@@ -100,18 +112,12 @@ function EventInstancePage() {
   return (
     <Layout hideTopMenuIfLoggedIn>
       <NextSeo title={title} description={stripHtml(instance?.summary) || undefined} />
-      <WithSidebar sidebar={<EventList />}>
-        <div
-          className={
-            auth.user ? 'col-feature p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8'
-          }
-        >
+      <WithSidebar sidebar={<EventList />} className={auth.user ? 'p-4 lg:pb-8' : 'min-h-[60vh] mb-8'}>
+        <div className="col-feature">
           {instance && <PageHeader title={title} actions={actions} />}
           {instance && <BasicEventInfo instance={instance} />}
-          <div className="max-w-full">
-            <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
-          </div>
         </div>
+        <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
       </WithSidebar>
     </Layout>
   );

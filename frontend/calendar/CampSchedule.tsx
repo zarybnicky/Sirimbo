@@ -5,6 +5,7 @@ import {
   type EventInstanceRegistrationsQuery,
 } from '@/graphql/Event';
 import { parseResourceKey } from '@/calendar/quickEventDefaults';
+import { cn } from '@/lib/cn';
 import {
   dragSubjectAtom,
   externalDragDataType,
@@ -20,7 +21,7 @@ import { Spinner } from '@/ui/Spinner';
 import { useAuth } from '@/ui/use-auth';
 import { startOf } from 'date-arithmetic';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { GripVertical, Trash2 } from 'lucide-react';
+import { GripVertical, PanelRightClose, PanelRightOpen, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
@@ -45,6 +46,12 @@ export function CampSchedule({
   });
   const registrations =
     registrationsQuery.data?.eventInstance?.registrations.nodes ?? emptyRegistrations;
+  const lessonDemandCount = registrations.reduce(
+    (count, registration) =>
+      count + registration.eventLessonDemandsByRegistrationIdList.length,
+    0,
+  );
+  const [demandPaneOpen, setDemandPaneOpen] = React.useState<boolean>();
   const createInstances = useMutation(CreateEventInstancesDocument)[1];
   const deleteInstance = useMutation(DeleteEventInstanceDocument)[1];
   const [groupBy, setGroupBy] = useAtom(groupByAtom);
@@ -126,6 +133,10 @@ export function CampSchedule({
     if (result.error) throw result.error;
     refreshRegistrations({ requestPolicy: 'network-only' });
   });
+  const demandError =
+    registrationsQuery.error || scheduleDemand.error || removeLesson.error;
+  const showDemandPane =
+    demandPaneOpen ?? (lessonDemandCount > 0 || !!demandError);
   const draggedLesson =
     dragSubject?.action === 'move' &&
     dragSubject.event?.instance.parentId === id &&
@@ -149,7 +160,12 @@ export function CampSchedule({
   }, [draggedLesson]);
 
   return (
-    <div className="relative col-full lg:pr-80">
+    <div
+      className={cn(
+        'col-full-width relative max-w-full',
+        showDemandPane ? 'lg:pr-80' : 'lg:pr-10',
+      )}
+    >
       {draggedLesson && (
         <div
           ref={dragPreview}
@@ -167,22 +183,54 @@ export function CampSchedule({
           onDropFromOutside={scheduleDemand.execute}
           onRemove={removeLesson.execute}
           additionalResources={groupBy === 'trainer' ? trainerResources : undefined}
+          primary="day"
         />
       </div>
       {auth.isTrainerOrAdmin && (
         <aside
           data-calendar-remove-target
-          className="relative border-neutral-6 bg-neutral-2 lg:absolute lg:inset-y-0 lg:right-0 lg:w-80 lg:overflow-y-auto lg:border-l"
+          className={cn(
+            'relative min-h-10 border-neutral-6 bg-neutral-2 lg:absolute lg:inset-y-0 lg:right-0 lg:border-l',
+            showDemandPane || draggedLesson
+              ? 'lg:w-80 lg:overflow-y-auto'
+              : 'lg:w-10',
+          )}
         >
-          <LessonDemandPool
-            registrations={registrations}
-            scheduledLessons={registrationsQuery.data?.scheduledLessons ?? []}
-            fetching={registrationsQuery.fetching}
-            error={
-              registrationsQuery.error || scheduleDemand.error || removeLesson.error
-            }
-            lockTrainers={groupBy === 'trainer'}
-          />
+          {!draggedLesson && (
+            <>
+              <button
+                type="button"
+                title={showDemandPane ? 'Skrýt požadavky' : 'Zobrazit požadavky'}
+                aria-label={showDemandPane ? 'Skrýt požadavky' : 'Zobrazit požadavky'}
+                aria-expanded={showDemandPane}
+                aria-controls="lesson-demand-pane"
+                className="absolute right-1 top-1 z-30 rounded p-1.5 text-neutral-11 hover:bg-neutral-4 hover:text-neutral-12"
+                onClick={() => setDemandPaneOpen(!showDemandPane)}
+              >
+                {showDemandPane ? (
+                  <PanelRightClose className="size-5" />
+                ) : (
+                  <PanelRightOpen className="size-5" />
+                )}
+              </button>
+              {!showDemandPane && (
+                <span className="pointer-events-none absolute left-3 top-2 text-xs text-neutral-10 lg:left-1/2 lg:top-11 lg:-translate-x-1/2 lg:[writing-mode:vertical-rl]">
+                  Požadavky{lessonDemandCount > 0 && ` (${lessonDemandCount})`}
+                </span>
+              )}
+            </>
+          )}
+          {showDemandPane && (
+            <div id="lesson-demand-pane">
+              <LessonDemandPool
+                registrations={registrations}
+                scheduledLessons={registrationsQuery.data?.scheduledLessons ?? []}
+                fetching={registrationsQuery.fetching}
+                error={demandError}
+                lockTrainers={groupBy === 'trainer'}
+              />
+            </div>
+          )}
           {draggedLesson && (
             <div className="pointer-events-none absolute inset-0 z-20 flex items-start justify-center border-2 border-dashed border-neutral-8 bg-neutral-2/95 p-6 pt-24 text-center font-medium text-neutral-12">
               <div>
@@ -293,7 +341,7 @@ function LessonDemandPool({
 
   return (
     <div className="flex min-h-full flex-col">
-      <div className="border-b border-neutral-6 bg-neutral-1 px-3 py-2">
+      <div className="border-b border-neutral-6 bg-neutral-1 py-2 pl-3 pr-10">
         <div className="font-semibold text-neutral-12">Požadavky na lekce</div>
         {(demands.length > 0 || scheduledCount > 0) && (
           <div className="text-sm text-neutral-11">
