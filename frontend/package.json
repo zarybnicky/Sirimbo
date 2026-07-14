@@ -101,7 +101,7 @@
     "@types/file-saver": "~2.0.7",
     "@types/iban": "~0.0.35",
     "@types/leaflet": "^1.9.21",
-    "@types/node": "~24.10.15",
+    "@types/node": "~26.0.1",
     "@types/nprogress": "~0.2.3",
     "@types/pg": "^8.20.0",
     "@types/react": "19.2.17",
