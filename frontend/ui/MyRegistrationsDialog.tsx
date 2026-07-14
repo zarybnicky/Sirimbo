@@ -136,7 +136,7 @@ export function MyRegistrationsDialog({
       {isManager ? (
         <DialogTrigger
           size="sm"
-          text={`Přihlášky (${instance.registrations.nodes.length})`}
+          text={`Přihlášky (${instance.registrations.totalCount})`}
         />
       ) : isExternal || !hasRegistration ? (
         <DialogTrigger.Add size="sm" text="Přihlásit" />
