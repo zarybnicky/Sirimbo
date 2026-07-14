@@ -1,4 +1,3 @@
-import type { EventType } from '@/graphql';
 import {
   CreateEventInstancesDocument,
   EventInstanceRegistrationsDocument,
@@ -44,11 +43,11 @@ type EventFormInput = z.input<typeof EventForm>;
 
 function EventAccessFields({
   control,
-  type,
 }: {
   control: Control<EventFormInput, unknown, EventFormType>;
-  type: EventFormType['type'];
 }) {
+  const type = useWatch({ control, name: 'type' });
+
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-1">
       <CheckboxElement control={control} name="isVisible" label="Viditelná pro členy" />
@@ -76,11 +75,9 @@ function EventAccessFields({
 export function EventCreateForm({
   defaults,
   parentId,
-  initialType = 'LESSON',
 }: {
   defaults: CreateEventDefaults;
   parentId?: string;
-  initialType?: EventType;
 }) {
   const { onSuccess } = useFormResult();
   const createInstances = useMutation(CreateEventInstancesDocument)[1];
@@ -91,7 +88,7 @@ export function EventCreateForm({
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
-      type: initialType,
+      type: defaults.type,
       locationId: defaults.locationText ? 'other' : (defaults.locationId ?? 'none'),
       locationText: defaults.locationText,
       isVisible: true,
@@ -115,7 +112,7 @@ export function EventCreateForm({
     },
   });
 
-  const type = useWatch({ control, name: 'type' }) ?? initialType;
+  const type = useWatch({ control, name: 'type' });
   const instances = useWatch({ control, name: 'instances' });
   const first = instances?.[0];
   const lessonRanges =
@@ -235,7 +232,6 @@ export function EventCreateForm({
             control={control}
             nameSince="instances.0.since"
             nameUntil="instances.0.until"
-            isCamp={false}
           />
           <TrainerListElement control={control} name="trainers" mode="add" />
           <LocationField control={control} />
@@ -289,7 +285,7 @@ export function EventCreateForm({
         </>
       )}
 
-      <EventAccessFields control={control} type={type} />
+      <EventAccessFields control={control} />
 
       <div className="flex justify-end pt-1">
         <SubmitButton loading={onSubmit.loading}>Vytvořit</SubmitButton>
@@ -451,13 +447,12 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
       <FormError error={onSubmit.error} />
 
       <RadioButtonGroupElement control={control} name="type" options={eventTypeOptions} />
-      <TextFieldElement control={control} name="name" label="Název termínu" />
+      <TextFieldElement control={control} name="name" label="Název" />
       {instance.seriesId ? (
         <DateTimeRangeField
           control={control}
           nameSince="instances.0.since"
           nameUntil="instances.0.until"
-          isCamp={type === 'CAMP'}
         />
       ) : (
         <InstanceListElement control={control} />
@@ -503,7 +498,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
       {!registrationsReady && registrationsQuery.fetching && (
         <div className="text-sm text-neutral-11">Načítám účastníky…</div>
       )}
-      <EventAccessFields control={control} type={type} />
+      <EventAccessFields control={control} />
       <CheckboxElement control={control} name="instances.0.isCancelled" label="Zrušeno" />
       <FormError error={registrationsQuery.error} />
 

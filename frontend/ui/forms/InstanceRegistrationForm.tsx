@@ -46,7 +46,7 @@ export function InstanceRegistrationForm({
 }) {
   const confirm = useConfirm();
   const setRegistration = useMutation(SetEventInstanceRegistrationDocument)[1];
-  const demandCounts = Object.fromEntries(
+  const requestCounts = Object.fromEntries(
     registration?.eventLessonDemandsByRegistrationIdList.map((demand) => [
       demand.trainerId,
       demand.lessonCount,
@@ -54,7 +54,7 @@ export function InstanceRegistrationForm({
   );
   const lessonTrainers = enableDetails
     ? allLessonTrainers.filter(
-        (trainer) => trainer.lessonsOffered !== 0 || (demandCounts[trainer.id] ?? 0) > 0,
+        (trainer) => trainer.lessonsOffered !== 0 || (requestCounts[trainer.id] ?? 0) > 0,
       )
     : [];
   const showNotes = enableDetails && (enableNotes || !!registration?.note);
@@ -63,7 +63,7 @@ export function InstanceRegistrationForm({
     resolver: zodResolver(Form),
     defaultValues: {
       note: registration?.note ?? '',
-      lessonCounts: lessonTrainers.map((trainer) => demandCounts[trainer.id] ?? 0),
+      lessonCounts: lessonTrainers.map((trainer) => requestCounts[trainer.id] ?? 0),
     },
   });
 
@@ -115,12 +115,12 @@ export function InstanceRegistrationForm({
         <fieldset className="grid gap-2">
           <legend>Požadavky na lekce</legend>
           {lessonTrainers.map((trainer, index) => (
-            <LessonDemandField
+            <LessonRequestField
               key={trainer.id}
               control={control}
               name={`lessonCounts.${index}`}
               trainer={trainer}
-              current={demandCounts[trainer.id] ?? 0}
+              current={requestCounts[trainer.id] ?? 0}
             />
           ))}
         </fieldset>
@@ -147,7 +147,7 @@ export function InstanceRegistrationForm({
   );
 }
 
-function LessonDemandField({
+function LessonRequestField({
   control,
   name,
   trainer,

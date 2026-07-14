@@ -4,9 +4,9 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceReport';
 import { isTruthy } from '@/lib/truthyFilter';
-import { computeRange } from '@/scoreboard/periods';
 import { fullDateFormatter } from '@/ui/format';
 import { NextSeo } from 'next-seo';
+import { computeRange } from '@/ui/PeriodSelector';
 
 const numberFormatter = new Intl.NumberFormat('cs-CZ');
 const percentFormatter = new Intl.NumberFormat('cs-CZ', {
@@ -79,13 +79,10 @@ export default function TrainerAttendanceReportPage() {
         <NextSeo title="Vyplněnost docházky" />
         <PageHeader title="Vyplněnost docházky" />
 
-        <section className="space-y-2 text-sm text-neutral-10">
-          <p>Přehled vychází z proběhlých vedených.</p>
-          {period.displaySince && period.displayUntil && (
-            <p>
-              {fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
-            </p>
-          )}
+        <section className="text-sm text-neutral-10">
+          {period.displaySince &&
+            period.displayUntil &&
+            fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
         </section>
 
         <section className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 text-sm shadow-sm">
@@ -137,8 +134,9 @@ export default function TrainerAttendanceReportPage() {
 
         {fetching && <p className="text-sm text-neutral-10">Načítáme přehled…</p>}
 
-        {!fetching && !error && (
-          rows.length > 0 ? (
+        {!fetching &&
+          !error &&
+          (rows.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-neutral-6 text-sm">
                 <thead>
@@ -191,8 +189,7 @@ export default function TrainerAttendanceReportPage() {
             <p className="text-sm text-neutral-10">
               Momentálně není k dispozici žádný záznam.
             </p>
-          )
-        )}
+          ))}
       </div>
     </Layout>
   );

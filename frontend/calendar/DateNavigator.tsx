@@ -4,7 +4,7 @@ import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { MoveLeft, MoveRight } from 'lucide-react';
 import React from 'react';
 
-export function CalendarDatePicker({
+export function DateNavigator({
   date,
   setDate,
   view,
@@ -24,7 +24,6 @@ export function CalendarDatePicker({
     const range = view.range(candidate);
     return range.until >= bounds.since && range.since <= bounds.until;
   };
-  const todayIsVisible = canShow(today);
 
   return (
     <div className={buttonGroupCls()}>
@@ -39,7 +38,7 @@ export function CalendarDatePicker({
       <button
         type="button"
         className={buttonCls({ variant: 'outline' })}
-        disabled={!todayIsVisible}
+        disabled={!canShow(today)}
         onClick={() => setDate(today)}
       >
         Dnes

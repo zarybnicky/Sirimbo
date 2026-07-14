@@ -98,6 +98,7 @@ export function EventList() {
   const createDefaults = React.useMemo<CreateEventDefaults>(() => {
     const day = startOf(endOf(new Date(), 'week', 1), 'day');
     return {
+      type: 'CAMP',
       since: add(day, 9, 'hours'),
       until: add(day, 17, 'hours'),
       trainerPersonIds: [],
@@ -115,7 +116,7 @@ export function EventList() {
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" text="Přidat událost" />
             <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-              <EventCreateForm defaults={createDefaults} initialType="CAMP" />
+              <EventCreateForm defaults={createDefaults} />
             </DialogContent>
           </Dialog>
         )}

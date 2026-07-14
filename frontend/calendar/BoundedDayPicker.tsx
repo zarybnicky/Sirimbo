@@ -14,7 +14,7 @@ const dayFormatter = new Intl.DateTimeFormat('cs-CZ', {
 });
 const dayId = (date: Date) => String(startOf(date, 'day').getTime());
 
-export function CalendarRangePicker({
+export function BoundedDayPicker({
   range,
   date,
   view,
@@ -35,20 +35,21 @@ export function CalendarRangePicker({
   ) {
     days.push(day);
   }
+
+  if (days.length <= 1) return null;
+
   const options: RadioButtonGroupItem[] = [
     { id: 'range', label: 'Celé soustředění' },
-    ...(days.length > 1
-      ? days.map((day) => ({
-          id: dayId(day),
-          label: capitalize(dayFormatter.format(day)),
-        }))
-      : []),
+    ...days.map((day) => ({
+      id: dayId(day),
+      label: capitalize(dayFormatter.format(day)),
+    })),
   ];
 
   return (
     <div
       role="radiogroup"
-      aria-label="Rozsah kalendáře"
+      aria-label="Výběr data"
       className="scrollbar min-w-0 max-w-full basis-full overflow-x-auto overscroll-x-contain"
     >
       <RadioButtonGroup

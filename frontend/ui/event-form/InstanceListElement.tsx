@@ -64,7 +64,6 @@ export function InstanceListElement({
             control={control}
             nameSince={`instances.${index}.since`}
             nameUntil={`instances.${index}.until`}
-            isCamp={type === 'CAMP'}
           />
           {!instance.itemId && fields.length > 1 && (
             <button

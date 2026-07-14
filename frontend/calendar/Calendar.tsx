@@ -36,10 +36,10 @@ import { useCalendarData } from '@/calendar/useCalendarData';
 import { TrainerFilter } from '@/calendar/TrainerFilter';
 import { GroupByPicker } from '@/calendar/GroupByPicker';
 import { ViewPicker } from '@/calendar/ViewPicker';
-import { CalendarDatePicker } from '@/calendar/CalendarDatePicker';
+import { DateNavigator } from '@/calendar/DateNavigator';
 import { ParticipantFilter } from '@/calendar/ParticipantFilter';
 import { EventTypeFilter } from '@/calendar/EventTypeFilter';
-import { CalendarRangePicker } from '@/calendar/CalendarRangePicker';
+import { BoundedDayPicker } from '@/calendar/BoundedDayPicker';
 import TimeGrid from '@/calendar/TimeGrid';
 import {
   type CreateEventDefaults,
@@ -59,8 +59,8 @@ const calendarViewKeys = [
   'range',
 ] as const;
 const standardViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
-const boundedViewKeys = ['range', 'day'] as const;
-const rangeOnlyViewKeys = ['range'] as const;
+const boundedViewKeys = ['range', 'day', 'agenda'] as const;
+const rangeOnlyViewKeys = ['range', 'agenda'] as const;
 
 export function Calendar({
   parentId,
@@ -70,7 +70,6 @@ export function Calendar({
   onRemove,
   additionalResources = emptyResources,
   primary,
-  rangeDayPicker = false,
 }: {
   parentId?: string;
   initialDate?: string;
@@ -82,31 +81,27 @@ export function Calendar({
   onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
   additionalResources?: readonly Resource[];
   primary?: ViewProps['primary'];
-  rangeDayPicker?: boolean;
 }) {
   const auth = useAuth();
   const [onlyMine, setOnlyMine] = useQueryState(
     'my',
     parseAsBoolean.withDefault(false).withOptions({ history: 'push' }),
   );
+  const defaultView = dateRange ? 'range' : 'agenda';
   const [requestedView, setView] = useQueryState(
     'v',
     parseAsStringLiteral(calendarViewKeys)
-      .withDefault(dateRange ? 'range' : 'agenda')
+      .withDefault(defaultView)
       .withOptions({ history: 'push' }),
   );
   const singleDayRange =
     !!dateRange && dateRange.since.toDateString() === dateRange.until.toDateString();
   const availableViews: readonly CalendarViewKey[] = dateRange
-    ? rangeDayPicker && singleDayRange
+    ? singleDayRange
       ? rangeOnlyViewKeys
       : boundedViewKeys
     : standardViewKeys;
-  const viewInput = availableViews.includes(requestedView)
-    ? requestedView
-    : dateRange
-      ? 'range'
-      : 'agenda';
+  const viewInput = availableViews.includes(requestedView) ? requestedView : defaultView;
   const rangeView = React.useMemo<CalendarView | undefined>(
     () =>
       dateRange && {
@@ -235,27 +230,19 @@ export function Calendar({
     >
       <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
         <div className="flex w-full min-w-0 max-w-full flex-1 flex-wrap items-start gap-2">
-          {rangeDayPicker && dateRange ? (
-            <CalendarRangePicker
+          {dateRange && (
+            <BoundedDayPicker
               range={dateRange}
               date={date}
               view={viewInput}
               setDate={setDate}
               setView={setView}
             />
-          ) : (
-            <>
-              {view.nav && (
-                <CalendarDatePicker
-                  date={date}
-                  setDate={setDate}
-                  view={view}
-                  bounds={dateRange}
-                />
-              )}
-              <ViewPicker view={viewInput} setView={setView} views={availableViews} />
-            </>
           )}
+          {view.nav && (
+            <DateNavigator date={date} setDate={setDate} view={view} bounds={dateRange} />
+          )}
+          <ViewPicker view={viewInput} setView={setView} views={availableViews} />
           {!onlyMine && view.supportsGrouping && <GroupByPicker />}
           <button
             type="button"

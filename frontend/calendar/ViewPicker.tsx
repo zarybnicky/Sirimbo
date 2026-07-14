@@ -9,6 +9,15 @@ import { buttonCls } from '@/ui/style';
 import { ChevronDown } from 'lucide-react';
 import React from 'react';
 
+const labels: Record<CalendarViewKey, string> = {
+  month: 'Měsíc',
+  week: 'Týden',
+  work_week: 'Pracovní dny',
+  day: 'Den',
+  agenda: 'Agenda',
+  range: 'Soustředění',
+};
+
 export function ViewPicker({
   view,
   setView,
@@ -18,14 +27,7 @@ export function ViewPicker({
   setView: (view: CalendarViewKey) => void;
   views?: readonly CalendarViewKey[];
 }) {
-  const labels: Record<CalendarViewKey, string> = {
-    month: 'Měsíc',
-    week: 'Týden',
-    work_week: 'Pracovní dny',
-    day: 'Den',
-    agenda: 'Agenda',
-    range: 'Celý rozpis',
-  };
+  if (views.length <= 1) return;
 
   return (
     <DropdownMenu>

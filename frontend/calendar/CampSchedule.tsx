@@ -187,7 +187,6 @@ export function CampSchedule({
           onRemove={removeLesson.execute}
           additionalResources={groupBy === 'trainer' ? trainerResources : undefined}
           primary="day"
-          rangeDayPicker
         />
       </div>
       {auth.isTrainerOrAdmin && (

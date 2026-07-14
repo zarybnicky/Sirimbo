@@ -1,7 +1,9 @@
 import { add } from 'date-arithmetic';
 import type { CalendarEvent, CalendarInstanceEvent, SlotInfo } from '@/calendar/types';
+import { EventType } from '@/graphql';
 
 export type CreateEventDefaults = {
+  type?: EventType;
   since: Date;
   until: Date;
   trainerPersonIds: string[];
