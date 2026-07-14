@@ -1,7 +1,7 @@
 import { TenantConfig } from '../types';
 
 export const config: TenantConfig = {
-  origin: 'tkstarletbrno.rozpisovnik.cz',
+  origin: 'https://tkstarletbrno.rozpisovnik.cz',
   shortName: 'TK Starlet',
   copyrightLine: '© 2024 TK Starlet Brno, z. s.',
   favicon: '',

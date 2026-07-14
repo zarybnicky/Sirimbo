@@ -34,7 +34,10 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
     id: 4,
     name: 'DSP Kometa, kurzy',
     hosts: ['dspkometa2.rozpisovnik.cz'],
-    config: kometaConfig,
+    config: {
+      ...kometaConfig,
+      origin: 'https://dspkometa2.rozpisovnik.cz',
+    },
   },
 };
 
