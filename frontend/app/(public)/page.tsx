@@ -31,13 +31,14 @@ export default async function HomePage() {
     }),
   ]);
   const articles = data.aktualities?.nodes ?? [];
-  const heroData = articles.slice(0, 3);
-  const restData = articles.slice(3);
   const description = tenant.config.seo.description;
 
   return (
     <>
-      <Hero data={heroData} fallbackImage={tenant.config.publicSite?.image.url ?? ''} />
+      <Hero
+        data={articles.slice(0, 3)}
+        fallbackImage={tenant.config.publicSite?.image.url ?? ''}
+      />
 
       <CallToAction url="/" />
 
@@ -64,7 +65,7 @@ export default async function HomePage() {
       <div className="col-feature my-12">
         <h2 className={typographyCls({ variant: 'section' })}>Aktuálně</h2>
         <div className="grid place-items-stretch gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-3 mb-6">
-          {restData.map((x) => (
+          {articles.slice(3).map((x) => (
             <ArticleCard
               key={x.id}
               header={x.atJmeno}

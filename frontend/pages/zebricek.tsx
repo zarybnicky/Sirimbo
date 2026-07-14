@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useQuery } from 'urql';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { ScoreboardPeriodSelector } from '@/scoreboard/ScoreboardPeriodSelector';
+import { PeriodSelector } from '@/scoreboard/PeriodSelector';
 import { computeRange, PeriodPreset } from '@/scoreboard/periods';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import { Combobox } from '@/ui/fields/Combobox';
@@ -11,9 +11,7 @@ import { fullDateFormatter } from '@/ui/format';
 import { NextSeo } from 'next-seo';
 
 export default function ScoreboardPage() {
-  const [cohortId, setCohortId] = React.useState<
-    string | null | undefined
-  >(null);
+  const [cohortId, setCohortId] = React.useState<string | null | undefined>(null);
   const [preset, setPreset] = React.useState<PeriodPreset>('schoolyear');
   const [date, setDate] = React.useState(() => new Date());
   const [range, setRange] = React.useState<{
@@ -106,11 +104,11 @@ export default function ScoreboardPage() {
               placeholder="Všechny skupiny"
             />
 
-            <ScoreboardPeriodSelector
+            <PeriodSelector
               preset={preset}
               onPresetChange={setPreset}
-              referenceDate={date}
-              onReferenceDateChange={setDate}
+              date={date}
+              onDateChange={setDate}
               since={range.since}
               onSinceChange={(since) => setRange((x) => ({ ...x, since }))}
               until={range.until}
@@ -149,7 +147,7 @@ export default function ScoreboardPage() {
                   <th className="py-2 pr-2" />
                   <th className="py-2 pr-4">Člen</th>
                   <th className="p-2 text-center">Lekce</th>
-                  <th className="p-2 text-center">Skupiny</th>
+                  <th className="p-2 text-center">Společné</th>
                   <th className="p-2 text-center">Akce</th>
                   <th className="py-2 pl-2 text-center">Celkem</th>
                 </tr>
@@ -163,10 +161,10 @@ export default function ScoreboardPage() {
                     rank === 1
                       ? 'bg-[rgb(254,240,138)] text-black'
                       : rank === 2
-                      ? 'bg-[rgb(186,230,253)] text-black'
-                      : rank === 3
-                      ? 'bg-[rgb(254,215,170)] text-black'
-                      : '';
+                        ? 'bg-[rgb(186,230,253)] text-black'
+                        : rank === 3
+                          ? 'bg-[rgb(254,215,170)] text-black'
+                          : '';
 
                   return (
                     <tr key={key} className={highlightClass}>

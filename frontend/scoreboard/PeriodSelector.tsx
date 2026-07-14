@@ -1,38 +1,40 @@
 import React from 'react';
 import { TextField } from '@/ui/fields/text';
-import { PeriodPreset, periodLabels } from './periods';
+import { PeriodPreset } from './periods';
 import { SelectField, type SelectOption } from '@/ui/fields/select';
 
-type ScoreboardPeriodSelectorProps = {
+type PeriodSelectorProps = {
   preset: PeriodPreset;
   onPresetChange: (preset: PeriodPreset) => void;
-  referenceDate: Date;
-  onReferenceDateChange: (value: Date) => void;
+  date: Date;
+  onDateChange: (value: Date) => void;
   since: Date | null;
   onSinceChange: (value: Date | null) => void;
   until: Date | null;
   onUntilChange: (value: Date | null) => void;
 };
 
-export function ScoreboardPeriodSelector({
+const periodOptions = Object.entries({
+  schoolyear: 'Školní rok',
+  semester: 'Pololetí',
+  quarter: 'Čtvrtletí',
+  month: 'Měsíc',
+  custom: 'Vlastní interval',
+}).map(([value, label]) => ({
+  value: value as PeriodPreset,
+  label,
+})) satisfies SelectOption<PeriodPreset>[];
+
+export function PeriodSelector({
   preset,
   onPresetChange,
-  referenceDate,
-  onReferenceDateChange,
+  date,
+  onDateChange,
   since,
   onSinceChange,
   until,
   onUntilChange,
-}: ScoreboardPeriodSelectorProps) {
-  const periodOptions = React.useMemo(
-    () =>
-      Object.entries(periodLabels).map(([value, label]) => ({
-        value: value as PeriodPreset,
-        label,
-      })) satisfies SelectOption<PeriodPreset>[],
-    [],
-  );
-
+}: PeriodSelectorProps) {
   return (
     <>
       <SelectField
@@ -50,7 +52,9 @@ export function ScoreboardPeriodSelector({
             type="date"
             value={since?.toISOString()?.slice(0, 10)}
             onChange={(event) =>
-              onSinceChange(event.currentTarget.value ? new Date(event.currentTarget.value) : null)
+              onSinceChange(
+                event.currentTarget.value ? new Date(event.currentTarget.value) : null,
+              )
             }
           />
           <TextField
@@ -59,18 +63,20 @@ export function ScoreboardPeriodSelector({
             type="date"
             value={until?.toISOString()?.slice(0, 10)}
             onChange={(event) =>
-              onUntilChange(event.currentTarget.value ? new Date(event.currentTarget.value) : null)
+              onUntilChange(
+                event.currentTarget.value ? new Date(event.currentTarget.value) : null,
+              )
             }
           />
         </>
       ) : (
         <TextField
-          label="Referenční datum"
+          label="K datu"
           name="scoreboard-reference-date"
           type="date"
-          value={referenceDate.toISOString().slice(0, 10)}
+          value={date.toISOString().slice(0, 10)}
           onChange={(event) =>
-            onReferenceDateChange(
+            onDateChange(
               event.currentTarget.value
                 ? new Date(event.currentTarget.value)
                 : new Date(),

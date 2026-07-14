@@ -14,34 +14,31 @@ import '../style/lite-youtube-embed.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const tenant = await getRequestTenant();
-  const { seo } = tenant.config;
-  const publicSite = tenant.config.publicSite;
+  const { seo, publicSite, origin } = tenant.config;
   const linkTags = seo.additionalLinkTags ?? [];
-  const manifest = linkTags.find((tag) => tag.rel === 'manifest')?.href;
-  const publicImage = publicSite?.image;
 
   return {
-    metadataBase: publicSite ? new URL(tenant.config.origin) : undefined,
+    metadataBase: publicSite ? new URL(origin) : undefined,
     title: {
       default: seo.defaultTitle,
       template: seo.titleTemplate,
     },
     description: seo.description,
     applicationName: tenant.name,
-    manifest,
+    manifest: linkTags.find((tag) => tag.rel === 'manifest')?.href,
     openGraph: {
       siteName: tenant.name,
       type: 'website',
-      locale: seo.openGraph?.locale,
+      locale: 'cs_CZ',
       description: seo.description,
-      images: publicImage ? [publicImage] : seo.openGraph?.images,
+      images: publicSite?.image ? [publicSite?.image] : [],
     },
-    twitter: publicImage
+    twitter: publicSite?.image
       ? {
           card: 'summary_large_image',
           title: seo.defaultTitle,
           description: seo.description,
-          images: [publicImage.url],
+          images: [publicSite?.image.url],
         }
       : undefined,
     robots: publicSite

@@ -4,7 +4,7 @@ import {
   EventInstanceRegistrationsDocument,
   type EventInstanceRegistrationsQuery,
 } from '@/graphql/Event';
-import { parseResourceKey } from '@/calendar/quickEventDefaults';
+import { parseResourceKey } from '@/calendar/eventDefaults';
 import { cn } from '@/lib/cn';
 import {
   dragSubjectAtom,

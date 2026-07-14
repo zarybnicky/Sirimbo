@@ -10,8 +10,8 @@ import React from 'react';
 import { useMutation } from 'urql';
 import {
   dragListenersAtom,
-  type ExternalDragSubject,
   eventTypesFilterAtom,
+  type ExternalDragSubject,
   groupByAtom,
   isDraggingAtom,
   participantIdsFilterAtom,
@@ -28,9 +28,9 @@ import type {
 import { Spinner } from '@/ui/Spinner';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
 import {
-  CalendarViews,
   type CalendarView,
   type CalendarViewKey,
+  CalendarViews,
 } from '@/calendar/CalendarViews';
 import { useCalendarData } from '@/calendar/useCalendarData';
 import { TrainerFilter } from '@/calendar/TrainerFilter';
@@ -42,10 +42,10 @@ import { EventTypeFilter } from '@/calendar/EventTypeFilter';
 import { CalendarRangePicker } from '@/calendar/CalendarRangePicker';
 import TimeGrid from '@/calendar/TimeGrid';
 import {
+  type CreateEventDefaults,
+  defaultsFromSlot,
   parseResourceKey,
-  quickDefaultsFromSlot,
-  type QuickEventCreateDefaults,
-} from '@/calendar/quickEventDefaults';
+} from '@/calendar/eventDefaults';
 
 const emptyArray: readonly [] = [];
 const emptyResources: readonly Resource[] = [];
@@ -187,11 +187,11 @@ export function Calendar({
     [onDropFromOutside, refresh],
   );
 
-  const [creating, setCreating] = React.useState<QuickEventCreateDefaults>();
+  const [creating, setCreating] = React.useState<CreateEventDefaults>();
 
   const onSelectSlot = React.useCallback(
     (slot: SlotInfo) => {
-      const defaults = quickDefaultsFromSlot(slot, events, auth.persons, onlyMine);
+      const defaults = defaultsFromSlot(slot, events, auth.persons, onlyMine);
       setTimeout(() => setCreating((prev) => prev || defaults));
     },
     [onlyMine, auth.persons, events],

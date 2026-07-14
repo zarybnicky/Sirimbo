@@ -1,7 +1,7 @@
 import { add } from 'date-arithmetic';
 import type { CalendarEvent, CalendarInstanceEvent, SlotInfo } from '@/calendar/types';
 
-export type QuickEventCreateDefaults = {
+export type CreateEventDefaults = {
   since: Date;
   until: Date;
   trainerPersonIds: string[];
@@ -33,12 +33,12 @@ export function splitIntoLessonRanges(since: Date, until: Date) {
   return ranges;
 }
 
-export function quickDefaultsFromSlot(
+export function defaultsFromSlot(
   slot: SlotInfo,
   events: readonly CalendarEvent[],
   persons: readonly AuthPerson[],
   onlyMine: null | boolean,
-): QuickEventCreateDefaults {
+): CreateEventDefaults {
   const [resourceType, resourceId] = parseResourceKey(slot.resource?.resourceId);
   const trainerPersonIds: string[] = [];
 
@@ -49,7 +49,7 @@ export function quickDefaultsFromSlot(
     if (trainer) trainerPersonIds.push(trainer.id);
   }
 
-  const defaults: QuickEventCreateDefaults = {
+  const defaults: CreateEventDefaults = {
     since: slot.start,
     until: slot.action === 'click' ? add(slot.start, 45, 'minutes') : slot.end,
     trainerPersonIds,

@@ -7,9 +7,9 @@ import {
 } from '@/graphql/Event';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import {
-  type QuickEventCreateDefaults,
+  type CreateEventDefaults,
   splitIntoLessonRanges,
-} from '@/calendar/quickEventDefaults';
+} from '@/calendar/eventDefaults';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import {
   RadioButtonGroupElement,
@@ -78,7 +78,7 @@ export function EventCreateForm({
   parentId,
   initialType = 'LESSON',
 }: {
-  defaults: QuickEventCreateDefaults;
+  defaults: CreateEventDefaults;
   parentId?: string;
   initialType?: EventType;
 }) {

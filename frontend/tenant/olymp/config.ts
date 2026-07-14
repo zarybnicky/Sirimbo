@@ -11,9 +11,6 @@ export const config: TenantConfig = {
       'TK Olymp vede děti, mládež i dospělé v tanečním sportu v Olomouci a Prostějově. Nabízíme tréninkové programy, soutěžní tanec i školní kroužky.',
     themeColor: '#000',
     facebook: { appId: '704526480597551' },
-    openGraph: {
-      locale: 'cs_CZ',
-    },
     additionalMetaTags: [
       { name: 'wot-verification', content: 'ec0cf41ab42dae52d3d4' },
       { name: 'msvalidate.01', content: '7BD6C8B5748FC22EF06AB3AE89900885' },

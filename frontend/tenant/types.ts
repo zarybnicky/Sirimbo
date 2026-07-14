@@ -26,7 +26,6 @@ export type TenantSeoConfig = {
     appId: string;
   };
   openGraph?: {
-    locale?: string;
     images?: TenantOpenGraphImage[];
   };
   additionalMetaTags?: TenantMetaTag[];

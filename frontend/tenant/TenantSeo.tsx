@@ -28,7 +28,6 @@ export function TenantSeo() {
                 },
               ]
             : []),
-          ...(seo.openGraph?.images ?? []),
         ],
       }}
     />

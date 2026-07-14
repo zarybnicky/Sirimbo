@@ -10,7 +10,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
 import { EventCreateForm } from '@/ui/event-form/EventForms';
-import type { QuickEventCreateDefaults } from '@/calendar/quickEventDefaults';
+import type { CreateEventDefaults } from '@/calendar/eventDefaults';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
@@ -95,7 +95,7 @@ export function EventList() {
   } = useTypedRouter(QueryParams);
   const auth = useAuth();
 
-  const createDefaults = React.useMemo<QuickEventCreateDefaults>(() => {
+  const createDefaults = React.useMemo<CreateEventDefaults>(() => {
     const day = startOf(endOf(new Date(), 'week', 1), 'day');
     return {
       since: add(day, 9, 'hours'),

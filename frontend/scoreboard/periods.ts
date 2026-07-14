@@ -9,25 +9,9 @@ type PeriodRange = {
   displayUntil: Date | null;
 };
 
-export const periodLabels: Record<PeriodPreset, string> = {
-  schoolyear: 'Školní rok',
-  semester: 'Pololetí',
-  quarter: 'Čtvrtletí',
-  month: 'Měsíc',
-  custom: 'Vlastní interval',
-};
-
-const formatDate = (value: Date) => value.toISOString().slice(0, 10);
-
-const startOfSchoolYear = (value: Date) => {
-  const year =
-    value.getUTCMonth() >= 8 ? value.getUTCFullYear() : value.getUTCFullYear() - 1;
-  return new Date(Date.UTC(year, 8, 1));
-};
-
 export const computeRange = (
   preset: PeriodPreset,
-  reference: Date,
+  date: Date,
   customSince: Date | null,
   customUntil: Date | null,
 ): PeriodRange => {
@@ -47,28 +31,30 @@ export const computeRange = (
 
     const untilExclusive = add(customUntil, 1, 'day');
     return {
-      since: formatDate(customSince),
-      until: formatDate(untilExclusive),
+      since: customSince.toISOString().slice(0, 10),
+      until: untilExclusive.toISOString().slice(0, 10),
       displaySince: customSince,
       displayUntil: customUntil,
     };
   }
 
-  const schoolYearStart = startOfSchoolYear(reference);
+  const schoolYear =
+    date.getUTCMonth() >= 8 ? date.getUTCFullYear() : date.getUTCFullYear() - 1;
+  const schoolYearStart = new Date(Date.UTC(schoolYear, 8, 1));
 
   if (preset === 'schoolyear') {
     const untilDate = add(schoolYearStart, 12, 'month');
     return {
-      since: formatDate(schoolYearStart),
-      until: formatDate(untilDate),
+      since: schoolYearStart.toISOString().slice(0, 10),
+      until: untilDate.toISOString().slice(0, 10),
       displaySince: schoolYearStart,
       displayUntil: add(untilDate, -1, 'month'),
     };
   }
 
   const monthsDiff =
-    (reference.getUTCFullYear() - schoolYearStart.getUTCFullYear()) * 12 +
-    (reference.getUTCMonth() - schoolYearStart.getUTCMonth());
+    (date.getUTCFullYear() - schoolYearStart.getUTCFullYear()) * 12 +
+    (date.getUTCMonth() - schoolYearStart.getUTCMonth());
 
   if (preset === 'semester') {
     const isSecondSemester = monthsDiff >= 5;
@@ -79,8 +65,8 @@ export const computeRange = (
       ? add(schoolYearStart, 12, 'month')
       : add(schoolYearStart, 5, 'month');
     return {
-      since: formatDate(sinceDate),
-      until: formatDate(untilDate),
+      since: sinceDate.toISOString().slice(0, 10),
+      until: untilDate.toISOString().slice(0, 10),
       displaySince: sinceDate,
       displayUntil: add(untilDate, -1, 'day'),
     };
@@ -91,8 +77,8 @@ export const computeRange = (
     const sinceDate = add(schoolYearStart, monthIndex, 'month');
     const untilDate = add(sinceDate, 1, 'month');
     return {
-      since: formatDate(sinceDate),
-      until: formatDate(untilDate),
+      since: sinceDate.toISOString().slice(0, 10),
+      until: untilDate.toISOString().slice(0, 10),
       displaySince: sinceDate,
       displayUntil: add(untilDate, -1, 'day'),
     };
@@ -103,8 +89,8 @@ export const computeRange = (
     const sinceDate = add(schoolYearStart, quarterIndex * 3, 'month');
     const untilDate = add(sinceDate, 3, 'month');
     return {
-      since: formatDate(sinceDate),
-      until: formatDate(untilDate),
+      since: sinceDate.toISOString().slice(0, 10),
+      until: untilDate.toISOString().slice(0, 10),
       displaySince: sinceDate,
       displayUntil: add(untilDate, -1, 'day'),
     };
