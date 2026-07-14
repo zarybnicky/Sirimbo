@@ -9,7 +9,7 @@ import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTenant } from '../state/auth';
+import { useTenantConfig } from '../state/auth';
 
 const Form = z.object({
   login: z.string().min(1, 'Zadejte přihlašovací jméno nebo e-mail'),
@@ -21,7 +21,7 @@ export function LoginForm({
 }: {
   onSuccess?: (result: UserAuthFragment | null) => void;
 }) {
-  const { enableRegistration } = useTenant();
+  const { enableRegistration } = useTenantConfig();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });

@@ -10,7 +10,7 @@ import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatInstanceName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
-import { useTenant } from '@/ui/state/auth';
+import { useTenantConfig } from '@/ui/state/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { Cake } from 'lucide-react';
@@ -58,9 +58,7 @@ function InstanceTimeGridEvent({
   isBackgroundEvent,
   slotMetrics,
 }: TimeGridEventProps & { event: Extract<CalendarEvent, { kind: 'event' }> }) {
-  const {
-    config: { useTrainerInitials },
-  } = useTenant();
+  const { useTrainerInitials } = useTenantConfig();
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const getCurrentEvent = useCallback(

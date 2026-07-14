@@ -1,4 +1,4 @@
-import { useTenant } from '@/ui/state/auth';
+import { useTenantConfig } from '@/ui/state/auth';
 import type { LinkProps } from 'next/link';
 
 type Route = LinkProps['href'];
@@ -59,7 +59,7 @@ export const topMenu: MenuStructItem[] = [
 ];
 
 export function useMemberMenu(): MenuStructItem[] {
-  const { publicSite, enableStarletImport } = useTenant();
+  const { publicSite, enableStarletImport } = useTenantConfig();
   return [
     {
       type: 'link',

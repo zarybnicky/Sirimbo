@@ -5,13 +5,13 @@ import { useRouter } from 'next/compat/router';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { GoogleAnalytics, pageView as googlePageView } from 'nextjs-google-analytics';
 import type { init, pageView } from 'react-facebook-pixel';
-import { useTenant } from './state/auth';
+import { useTenantConfig } from './state/auth';
 
 export const Tracking = React.memo(function Tracking() {
   const router = useRouter();
 
   const lastTrackedPath = React.useRef<string | null>(null);
-  const { facebookPixelId } = useTenant();
+  const { facebookPixelId } = useTenantConfig();
   const facebookRef = React.useRef<{
     init: typeof init;
     pageView: typeof pageView;

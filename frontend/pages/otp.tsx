@@ -6,13 +6,13 @@ import * as React from 'react';
 import { Spinner } from '@/ui/Spinner';
 import { useMutation } from 'urql';
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
-import { useTenant } from '@/ui/state/auth';
+import { useTenantConfig } from '@/ui/state/auth';
 
 export default function OtpPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const { publicSite } = useTenant();
+  const { publicSite } = useTenantConfig();
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
   const doSignInWithOtp = useMutation(OtpLoginDocument)[1];
