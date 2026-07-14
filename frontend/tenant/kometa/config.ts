@@ -1,6 +1,7 @@
 import { TenantConfig } from '../types';
 
 export const config: TenantConfig = {
+  origin: 'https://dspkometa.rozpisovnik.cz',
   shortName: 'DSP Kometa',
   copyrightLine: '© 2024 DSP Kometa Brno, z. s.',
   favicon: '',

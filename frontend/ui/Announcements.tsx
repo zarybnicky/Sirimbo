@@ -137,7 +137,7 @@ export function MyAnnouncements() {
           total={data.myAnnouncements.totalCount}
           limit={5}
           page={page}
-          setPage={setPage}
+          onPageChange={setPage}
         />
       )}
     </div>

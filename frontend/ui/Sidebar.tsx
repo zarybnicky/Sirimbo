@@ -1,5 +1,3 @@
-'use client';
-
 import { buildId } from '@/lib/build-id';
 import {
   getHrefs,
@@ -55,16 +53,13 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
   }, [router, setIsOpen]);
 
   React.useEffect(() => {
-    if (router) return;
-    setIsOpen(false);
+    if (!router) setIsOpen(false);
   }, [pathname, router, setIsOpen]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
     const updateDetailView = () => {
-      if (window.matchMedia('(min-width: 768px)').matches) {
-        setIsOpen(false);
-      }
+      if (window.matchMedia('(min-width: 768px)').matches) setIsOpen(false);
     };
     updateDetailView();
     window.addEventListener('resize', updateDetailView);

@@ -3,13 +3,15 @@ import { cn } from '@/lib/cn';
 import { publicPageMetadata } from '@/lib/server/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
+import { Metadata } from 'next';
 
-export const generateMetadata = () => publicPageMetadata({
-  title: 'Galerie',
-  description:
+export const generateMetadata = (): Promise<Metadata> =>
+  publicPageMetadata({
+    title: 'Galerie',
+    description:
       'Fotografie a videa TK Olymp Olomouc ze soutěží, vystoupení, tréninků a klubových akcí na YouTube a Facebooku.',
-  path: '/galerie',
-});
+    path: '/galerie',
+  });
 
 export default function GalleryPage() {
   return (

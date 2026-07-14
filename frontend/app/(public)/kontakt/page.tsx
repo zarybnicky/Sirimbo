@@ -3,13 +3,15 @@ import { publicPageMetadata } from '@/lib/server/seo';
 import { Mail, Phone } from 'lucide-react';
 import { PageHeader } from '@/ui/TitleBar';
 import { cardCls } from '@/ui/style';
+import { Metadata } from 'next';
 
-export const generateMetadata = () => publicPageMetadata({
-  title: 'Kontakt',
-  description:
+export const generateMetadata = (): Promise<Metadata> =>
+  publicPageMetadata({
+    title: 'Kontakt',
+    description:
       'Kontakty na TK Olymp Olomouc, fakturační údaje, taneční sály a osoby pro členské příspěvky, ČSTS, Olymp Dance, Pro-Am a klubové vybavení.',
-  path: '/kontakt',
-});
+    path: '/kontakt',
+  });
 
 const contacts = [
   {
@@ -89,40 +91,35 @@ export default function ContactPage() {
     <>
       <PageHeader title="Kontakt" />
       <section className="my-4 rounded-md border border-accent-5 bg-accent-2 px-3 py-4">
-        <h2 className="text-xl font-bold text-accent-11 mb-3">
-          Fakturační údaje
-        </h2>
+        <h2 className="text-xl font-bold text-accent-11 mb-3">Fakturační údaje</h2>
 
         <div className="flex flex-col gap-5">
-            <address className="mt-1 not-italic leading-snug text-neutral-12">
-              <b>Taneční klub Olymp Olomouc, z. s.</b>
-              <br />
-              Jiráskova 381/25
-              <br />
-              Olomouc-Hodolany
-              <br />
-              779 00
-            </address>
+          <address className="mt-1 not-italic leading-snug text-neutral-12">
+            <b>Taneční klub Olymp Olomouc, z. s.</b>
+            <br />
+            Jiráskova 381/25
+            <br />
+            Olomouc-Hodolany
+            <br />
+            779 00
+          </address>
 
-            <p className="mt-1 text-neutral-12">
-              IČO: 68347286
-              <br />
-              Oddíl L, vložka 4133, Krajský soud v Ostravě, pobočka v Olomouci
-              <br />
-              Datová schránka: g2q66be
-            </p>
+          <p className="mt-1 text-neutral-12">
+            IČO: 68347286
+            <br />
+            Oddíl L, vložka 4133, Krajský soud v Ostravě, pobočka v Olomouci
+            <br />
+            Datová schránka: g2q66be
+          </p>
 
-            <p className="mt-1 text-neutral-12">
-              Číslo účtu:{' '}
-              <span className="font-semibold text-neutral-12">1806875329/0800</span>
-            </p>
+          <p className="mt-1 text-neutral-12">
+            Číslo účtu:{' '}
+            <span className="font-semibold text-neutral-12">1806875329/0800</span>
+          </p>
         </div>
       </section>
 
-      <section
-        className="col-feature my-6"
-        aria-label="Kontaktní osoby"
-      >
+      <section className="col-feature my-6" aria-label="Kontaktní osoby">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {contacts.map((contact) => (
             <ContactCard key={contact.role} {...contact} />
@@ -153,9 +150,7 @@ function ContactCard({
       <p className="text-sm font-medium uppercase leading-snug tracking-wide text-accent-11">
         {role}
       </p>
-      <h2 className="mt-1.5 text-lg font-bold leading-tight text-neutral-12">
-        {name}
-      </h2>
+      <h2 className="mt-1.5 text-lg font-bold leading-tight text-neutral-12">{name}</h2>
 
       {(phone || email) && (
         <div className="mt-3 space-y-2 text-sm text-neutral-12">

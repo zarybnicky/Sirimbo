@@ -2,13 +2,15 @@
 import { publicPageMetadata } from '@/lib/server/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
+import { Metadata } from 'next';
 
-export const generateMetadata = () => publicPageMetadata({
-  title: 'Členství v Olympu',
-  description:
-    'Výhody členství v TK Olymp Olomouc: systematické tréninky, špičkoví trenéři, soutěže, soustředění, klubové zázemí a podpora tanečních párů.',
-  path: '/vyhody-clenstvi',
-});
+export const generateMetadata = (): Promise<Metadata> =>
+  publicPageMetadata({
+    title: 'Členství v Olympu',
+    description:
+      'Výhody členství v TK Olymp Olomouc: systematické tréninky, špičkoví trenéři, soutěže, soustředění, klubové zázemí a podpora tanečních párů.',
+    path: '/vyhody-clenstvi',
+  });
 
 export default function VyhodyClenstvi() {
   return (

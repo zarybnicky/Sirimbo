@@ -1,18 +1,25 @@
+import { cn } from '@/lib/cn';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
+import Link from 'next/link';
 
 type PageItem = number | 'break';
 
-export function Pagination({
-  total,
-  limit,
-  page,
-  setPage,
-}: {
+type PaginationProps = {
   total: number;
   limit: number;
   page: number;
-  setPage: (page: number) => void;
-}) {
+} & (
+  | {
+      href: (page: number) => string;
+      onPageChange?: never;
+    }
+  | {
+      href?: never;
+      onPageChange: (page: number) => void;
+    }
+);
+
+export function Pagination({ total, limit, page, href, onPageChange }: PaginationProps) {
   const pageCount = Math.max(1, Math.ceil(total / limit));
   const currentPage = Math.min(Math.max(page, 1), pageCount);
 
@@ -26,45 +33,81 @@ export function Pagination({
     'w-6 h-10 inline-flex items-center justify-center rounded-full disabled:opacity-40';
 
   return (
-    <nav className="flex flex-wrap gap-1 my-4 text-accent-9">
-      <button
-        type="button"
-        className={arrowButtonClassName}
-        disabled={currentPage === 1}
-        onClick={() => setPage(currentPage - 1)}
-      >
-        <ChevronsLeft className="size-4" />
-      </button>
+    <nav aria-label="Stránkování" className="flex flex-wrap gap-1 my-4 text-accent-9">
+      {currentPage > 1 &&
+        (href ? (
+          <Link
+            href={href(currentPage - 1)}
+            aria-label="Předchozí stránka"
+            className={arrowButtonClassName}
+          >
+            <ChevronsLeft aria-hidden="true" className="size-4" />
+          </Link>
+        ) : (
+          <button
+            type="button"
+            aria-label="Předchozí stránka"
+            className={arrowButtonClassName}
+            disabled={currentPage === 1}
+            onClick={() => onPageChange(currentPage - 1)}
+          >
+            <ChevronsLeft aria-hidden="true" className="size-4" />
+          </button>
+        ))}
 
       {items.map((item, index) =>
         item === 'break' ? (
           <span key={`break-${index}`} className="flex mx-1 items-center">
             ...
           </span>
+        ) : href ? (
+          <Link
+            key={item}
+            href={href(item)}
+            aria-current={item === currentPage ? 'page' : undefined}
+            className={cn(
+              pageButtonClassName,
+              item === currentPage && 'text-white !bg-accent-5',
+            )}
+          >
+            {item}
+          </Link>
         ) : (
           <button
             key={item}
             type="button"
-            className={
-              item === currentPage
-                ? `${pageButtonClassName} text-white !bg-accent-5`
-                : pageButtonClassName
-            }
-            onClick={() => setPage(item)}
+            aria-current={item === currentPage ? 'page' : undefined}
+            className={cn(
+              pageButtonClassName,
+              item === currentPage && 'text-white !bg-accent-5',
+            )}
+            onClick={() => onPageChange(item)}
           >
             {item}
           </button>
         ),
       )}
 
-      <button
-        type="button"
-        className={arrowButtonClassName}
-        disabled={currentPage === pageCount}
-        onClick={() => setPage(currentPage + 1)}
-      >
-        <ChevronsRight className="size-4" />
-      </button>
+      {currentPage < pageCount &&
+        (href ? (
+          <Link
+            href={href(currentPage + 1)}
+            aria-label="Další stránka"
+            className={arrowButtonClassName}
+          >
+            <ChevronsRight aria-hidden="true" className="size-4" />
+          </Link>
+        ) : (
+          <button
+            type="button"
+            aria-label="Další stránka"
+            className={arrowButtonClassName}
+            disabled={currentPage === pageCount}
+            onClick={() => onPageChange(currentPage + 1)}
+          >
+            <ChevronsRight aria-hidden="true" className="size-4" />
+          </button>
+        ))}
     </nav>
   );
 }

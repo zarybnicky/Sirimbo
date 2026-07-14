@@ -8,27 +8,24 @@ import { usePathname } from 'next/navigation';
 
 export function TenantSeo() {
   const tenantId = useAtomValue(tenantIdAtom);
-
-  const entry = getServerTenant(tenantId);
+  const tenant = getServerTenant(tenantId);
   const pathname = usePathname() ?? '/';
-  const publicSite = entry.config.publicSite;
-  const canonical = publicSite
-    ? new URL(pathname, publicSite.origin).toString()
-    : undefined;
+  const publicSite = tenant.config.publicSite;
+  const canonical = new URL(pathname, tenant.config.origin).toString();
   const publicImage = publicSite?.image
     ? {
         ...publicSite.image,
-        url: new URL(publicSite.image.url, publicSite.origin).toString(),
+        url: new URL(publicSite.image.url, tenant.config.origin).toString(),
       }
     : undefined;
   return (
     <DefaultSeo
-      {...entry.config.seo}
+      {...tenant.config.seo}
       canonical={canonical}
       openGraph={{
-        ...entry.config.seo.openGraph,
-        url: canonical ?? publicSite?.origin,
-        images: publicImage ? [publicImage] : entry.config.seo.openGraph.images,
+        ...tenant.config.seo.openGraph,
+        url: canonical,
+        images: publicImage ? [publicImage] : tenant.config.seo.openGraph.images,
       }}
     />
   );

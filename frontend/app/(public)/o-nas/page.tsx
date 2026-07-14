@@ -2,13 +2,15 @@
 import { publicPageMetadata } from '@/lib/server/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
+import { Metadata } from 'next';
 
-export const generateMetadata = () => publicPageMetadata({
-  title: 'Olymp v tanečním světě',
-  description:
-    'Poznejte TK Olymp Olomouc, taneční sportovní klub s více než třicetiletou tradicí, Sportovním centrem mládeže a tréninky v Olomouci a Prostějově.',
-  path: '/o-nas',
-});
+export const generateMetadata = (): Promise<Metadata> =>
+  publicPageMetadata({
+    title: 'Olymp v tanečním světě',
+    description:
+      'Poznejte TK Olymp Olomouc, taneční sportovní klub s více než třicetiletou tradicí, Sportovním centrem mládeže a tréninky v Olomouci a Prostějově.',
+    path: '/o-nas',
+  });
 
 export default function OKlubuPage() {
   return (

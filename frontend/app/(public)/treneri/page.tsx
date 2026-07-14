@@ -4,13 +4,15 @@ import { typographyCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
+import { Metadata } from 'next';
 
-export const generateMetadata = () => publicPageMetadata({
-  title: 'Naši trenéři',
-  description:
-    'Seznamte se s trenéry TK Olymp Olomouc. Klub vede zkušený tým trenérů, porotců a odborníků pro standardní i latinskoamerické tance.',
-  path: '/treneri',
-});
+export const generateMetadata = (): Promise<Metadata> =>
+  publicPageMetadata({
+    title: 'Naši trenéři',
+    description:
+      'Seznamte se s trenéry TK Olymp Olomouc. Klub vede zkušený tým trenérů, porotců a odborníků pro standardní i latinskoamerické tance.',
+    path: '/treneri',
+  });
 
 export default function TrainersPage() {
   return (

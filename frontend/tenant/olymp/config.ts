@@ -2,6 +2,7 @@ import { TenantConfig } from '../types';
 import SocialCard from './social-card.jpg';
 
 export const config: TenantConfig = {
+  origin: 'https://tkolymp.cz',
   shortName: 'TK Olymp',
   copyrightLine: '© 2024 TK Olymp Olomouc, z. s.',
   favicon: '',
@@ -53,7 +54,6 @@ export const config: TenantConfig = {
     ],
   },
   publicSite: {
-    origin: 'https://tkolymp.cz',
     locale: 'cs-CZ',
     image: {
       url: SocialCard.src,

@@ -36,11 +36,11 @@ const publicRoutes: PublicSitemapRoute[] = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const tenant = await getRequestTenant();
+  const origin = tenant.config.origin;
 
   if (!tenant.config.publicSite) {
     return [];
   }
-  const origin = tenant.config.publicSite?.origin ?? `https://${tenant.hosts[0]}`;
 
   const [articles, cohortGroups, cohorts] = await Promise.all([
     executeGraphql(ArticlesDocument, {
@@ -67,31 +67,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: route.changeFrequency,
       priority: route.priority,
     })),
-    ...(articles?.aktualities?.nodes ?? []).map((article) => ({
-      url: new URL(
-        `/clanky/${article.id}/${slugify(article.atJmeno)}`,
-        origin,
-      ).toString(),
-      lastModified: article.updatedAt ?? article.createdAt ?? undefined,
+    ...(articles?.aktualities?.nodes?.map((a) => ({
+      url: new URL(`/clanky/${a.id}/${slugify(a.atJmeno)}`, origin).toString(),
+      lastModified: a.updatedAt ?? a.createdAt ?? undefined,
       changeFrequency: 'monthly' as const,
       priority: 0.65,
-      images: article.titlePhotoUrl ? [article.titlePhotoUrl] : undefined,
-    })),
-    ...(cohortGroups?.cohortGroups?.nodes ?? []).map((group) => ({
+      images: a.titlePhotoUrl ? [a.titlePhotoUrl] : undefined,
+    })) ?? []),
+    ...(cohortGroups?.cohortGroups?.nodes?.map((group) => ({
       url: new URL(
         `/treninkove-programy/${group.id}/${slugify(group.name)}`,
         origin,
       ).toString(),
       changeFrequency: 'monthly' as const,
       priority: 0.65,
-    })),
-    ...(cohorts?.cohortsList ?? []).map((cohort) => ({
-      url: new URL(
-        `/treninkove-skupiny/${cohort.id}/${slugify(cohort.name)}`,
-        origin,
-      ).toString(),
+    })) ?? []),
+    ...(cohorts?.cohortsList?.map((x) => ({
+      url: new URL(`/treninkove-skupiny/${x.id}/${slugify(x.name)}`, origin).toString(),
       changeFrequency: 'monthly' as const,
       priority: 0.55,
-    })),
+    })) ?? []),
   ];
 }

@@ -1,5 +1,3 @@
-'use client';
-
 import { cn } from '@/lib/cn';
 import { getHrefs, type MenuStructItem, topMenu } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui.pages';
@@ -66,7 +64,7 @@ export function Header({
         <div className="flex lg:hidden items-stretch justify-between min-h-[48px] md:min-h-[64px] p-2">
           <button
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen((x) => !x)}
             aria-controls="app-navigation"
             aria-expanded={isOpen}
             aria-label={isOpen ? 'Zavřít navigaci' : 'Otevřít navigaci'}

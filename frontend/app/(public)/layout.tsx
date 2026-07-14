@@ -34,18 +34,18 @@ function getTenantStructuredData(tenant: TenantCatalogEntry) {
   const site = tenant.config.publicSite;
   if (!site) return [];
 
-  const organizationId = `${site.origin}/#organization`;
+  const origin = tenant.config.origin;
   const organization = site.organization;
 
   return [
     {
       '@context': 'https://schema.org',
       '@type': 'SportsOrganization',
-      '@id': organizationId,
+      '@id': `${origin}/#organization`,
       name: organization.name,
       legalName: organization.legalName,
-      url: site.origin,
-      logo: new URL(organization.logo, site.origin).toString(),
+      url: origin,
+      logo: new URL(organization.logo, origin).toString(),
       email: organization.email,
       telephone: organization.telephone,
       sameAs: organization.sameAs,
@@ -59,12 +59,12 @@ function getTenantStructuredData(tenant: TenantCatalogEntry) {
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      '@id': `${site.origin}/#website`,
+      '@id': `${origin}/#website`,
       name: tenant.name,
-      url: site.origin,
+      url: origin,
       inLanguage: site.locale,
       publisher: {
-        '@id': organizationId,
+        '@id': `${origin}/#organization`,
       },
     },
   ];

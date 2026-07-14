@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const publicImage = publicSite?.image;
 
   return {
-    metadataBase: publicSite ? new URL(publicSite.origin) : undefined,
+    metadataBase: publicSite ? new URL(tenant.config.origin) : undefined,
     title: {
       default: seo.defaultTitle,
       template: seo.titleTemplate,

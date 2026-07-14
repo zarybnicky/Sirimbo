@@ -3,13 +3,15 @@ import { publicPageMetadata } from '@/lib/server/seo';
 import LiteYouTubeEmbed from '@/ui/LiteYouTubeEmbed';
 import { ExhibitionRequestForm } from '@/ui/forms/ExhibitionRequestForm';
 import { PageHeader } from '@/ui/TitleBar';
+import { Metadata } from 'next';
 
-export const generateMetadata = () => publicPageMetadata({
-  title: 'Taneční vystoupení',
-  description:
-    'Objednejte taneční vystoupení TK Olymp na ples, firemní večírek nebo společenskou akci. Standardní i latinskoamerické tance, soutěžní páry a jednoduchá poptávka.',
-  path: '/vystoupeni',
-});
+export const generateMetadata = (): Promise<Metadata> =>
+  publicPageMetadata({
+    title: 'Taneční vystoupení',
+    description:
+      'Objednejte taneční vystoupení TK Olymp na ples, firemní večírek nebo společenskou akci. Standardní i latinskoamerické tance, soutěžní páry a jednoduchá poptávka.',
+    path: '/vystoupeni',
+  });
 
 export default function Vystoupeni() {
   return (

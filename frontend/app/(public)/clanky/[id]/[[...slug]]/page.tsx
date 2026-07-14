@@ -4,7 +4,6 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { getRequestTenant } from '@/lib/tenant/server';
 import { slugify } from '@/lib/slugify';
 import { fullDateFormatter } from '@/ui/format';
-import { JsonLd } from '@/ui/JsonLd';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
 import type { Metadata } from 'next';
@@ -79,46 +78,14 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { id, slug } = await params;
-  const [item, tenant] = await Promise.all([getArticle(id), getRequestTenant()]);
-
+  const item = await getArticle(id);
   if (!item) notFound();
   if (slug?.join('/') !== slugify(item.atJmeno)) {
     redirect(`/clanky/${item.id}/${slugify(item.atJmeno)}`);
   }
 
-  const site = tenant.config.publicSite;
-  const canonicalPath = `/clanky/${item.id}/${slugify(item.atJmeno)}`;
-  const description = createSeoDescription(item.atPreview, item.atText);
-  const image =
-    item.titlePhotoUrl || (site && new URL(site.image.url, site.origin).toString());
-  const articleJsonLd = site
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: item.atJmeno,
-        description,
-        image: image ? [image] : undefined,
-        datePublished: item.createdAt ?? undefined,
-        dateModified: item.updatedAt ?? item.createdAt ?? undefined,
-        author: item.atKdo
-          ? {
-              '@type': 'Person',
-              name: item.atKdo,
-            }
-          : {
-              '@id': `${site.origin}/#organization`,
-            },
-        publisher: {
-          '@id': `${site.origin}/#organization`,
-        },
-        mainEntityOfPage: new URL(canonicalPath, site.origin).toString(),
-        inLanguage: site.locale,
-      }
-    : null;
-
   return (
     <>
-      {articleJsonLd && <JsonLd data={articleJsonLd} />}
       <PageHeader title={item.atJmeno} />
       {item.createdAt && (
         <div className="text-neutral-11 mb-6 -mt-4">

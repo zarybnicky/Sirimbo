@@ -36,7 +36,6 @@ export type TenantSeoConfig = {
 };
 
 export type TenantPublicSiteConfig = {
-  origin: string;
   locale: string;
   image: TenantOpenGraphImage;
   organization: {
@@ -56,6 +55,7 @@ export type TenantPublicSiteConfig = {
 };
 
 export type TenantConfig = {
+  origin: string;
   shortName: string;
   copyrightLine: string;
   favicon: string;

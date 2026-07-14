@@ -1,8 +1,9 @@
 /* eslint-disable import-x/no-unused-modules */
 import { publicPageMetadata } from '@/lib/server/seo';
 import { PageHeader } from '@/ui/TitleBar';
+import { Metadata } from 'next';
 
-export const generateMetadata = () =>
+export const generateMetadata = (): Promise<Metadata> =>
   publicPageMetadata({
     title: 'Ochrana osobních údajů',
     description:

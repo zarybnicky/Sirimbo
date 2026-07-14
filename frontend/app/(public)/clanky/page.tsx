@@ -1,18 +1,15 @@
 /* eslint-disable import-x/no-unused-modules */
 import { ArticlesDocument } from '@/graphql/Articles';
-import { cn } from '@/lib/cn';
 import { executeGraphql } from '@/lib/server/graphql';
+import { publicPageMetadata } from '@/lib/server/seo';
 import { getRequestTenant } from '@/lib/tenant/server';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
+import { Pagination } from '@/ui/Pagination';
 import { PageHeader } from '@/ui/TitleBar';
-import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { publicPageMetadata } from '@/lib/server/seo';
 
 const pageSize = 12;
-type PageItem = number | 'break';
 
 type ArticlesPageProps = {
   searchParams: Promise<{
@@ -39,29 +36,6 @@ export async function generateMetadata({
   });
 }
 
-function getPageItems(currentPage: number, pageCount: number): PageItem[] {
-  const visible = new Set([1, pageCount]);
-
-  for (let page = currentPage - 1; page <= currentPage + 1; page += 1) {
-    if (page > 1 && page < pageCount) {
-      visible.add(page);
-    }
-  }
-
-  const pages = [...visible].toSorted((a, b) => a - b);
-  const items: PageItem[] = [];
-
-  for (const page of pages) {
-    const previous = items.at(-1);
-    if (typeof previous === 'number' && page - previous > 1) {
-      items.push('break');
-    }
-    items.push(page);
-  }
-
-  return items;
-}
-
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
   const currentPage = await getCurrentPage(searchParams);
   const [{ aktualities }, tenant] = await Promise.all([
@@ -72,8 +46,6 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
     }),
     getRequestTenant(),
   ]);
-  const totalPages = Math.max(1, Math.ceil((aktualities?.totalCount ?? 0) / pageSize));
-
   return (
     <>
       <PageHeader title="Články" />
@@ -92,53 +64,12 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
         ))}
       </div>
 
-      {totalPages > 1 && (
-        <nav className="flex flex-wrap gap-1 my-4 text-accent-9">
-          {currentPage > 1 && (
-            <Link
-              href={currentPage <= 2 ? '/clanky' : `/clanky?page=${currentPage - 1}`}
-              aria-label="Předchozí stránka"
-              className={
-                'w-6 h-10 inline-flex items-center justify-center rounded-full aria-disabled:opacity-40'
-              }
-            >
-              <ChevronsLeft className="size-4" />
-            </Link>
-          )}
-
-          {getPageItems(currentPage, totalPages).map((item, index) =>
-            item === 'break' ? (
-              <span key={`break-${index}`} className="flex mx-1 items-center">
-                ...
-              </span>
-            ) : (
-              <Link
-                key={item}
-                href={item <= 1 ? '/clanky' : `/clanky?page=${item}`}
-                aria-current={item === currentPage ? 'page' : undefined}
-                className={cn(
-                  item === currentPage ? 'text-white !bg-accent-5' : '',
-                  'size-10 bg-accent-3 inline-flex items-center justify-center rounded-full border border-accent-6',
-                )}
-              >
-                {item}
-              </Link>
-            ),
-          )}
-
-          {currentPage < totalPages && (
-            <Link
-              href={`/clanky?page=${currentPage + 1}`}
-              aria-label="Další stránka"
-              className={
-                'w-6 h-10 inline-flex items-center justify-center rounded-full aria-disabled:opacity-40'
-              }
-            >
-              <ChevronsRight className="size-4" />
-            </Link>
-          )}
-        </nav>
-      )}
+      <Pagination
+        total={aktualities?.totalCount ?? 0}
+        limit={pageSize}
+        page={currentPage}
+        href={(page) => (page <= 1 ? '/clanky' : `/clanky?page=${page}`)}
+      />
     </>
   );
 }
