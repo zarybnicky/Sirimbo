@@ -7,7 +7,7 @@ import { eventExternalRegistrationActions } from '@/lib/actions/eventInstance';
 import { ActionRow } from '@/ui/ActionRow';
 import { Spinner } from '@/ui/Spinner';
 import { FormError } from '@/ui/form';
-import { formatLongCoupleName } from '@/ui/format';
+import { formatCoupleName } from '@/ui/format';
 import { useQuery } from 'urql';
 import { useAuth } from './use-auth';
 
@@ -40,7 +40,7 @@ export function EventRegistrations({
           <div>
             {registration.person
               ? registration.person.name || ''
-              : formatLongCoupleName(registration.couple)}
+              : formatCoupleName(registration.couple)}
           </div>
           {auth.isTrainerOrAdmin && (
             <div className="ml-3">
@@ -54,9 +54,7 @@ export function EventRegistrations({
           )}
         </div>
       ))}
-      {externalRegistrations.length > 0 && (
-        <h3>Externí přihlášky</h3>
-      )}
+      {externalRegistrations.length > 0 && <h3>Externí přihlášky</h3>}
       {externalRegistrations.map((registration) => (
         <ActionRow
           key={registration.id}
@@ -67,7 +65,9 @@ export function EventRegistrations({
               {registration.prefixTitle} {registration.firstName} {registration.lastName}{' '}
               {registration.suffixTitle}
             </div>
-            {auth.isTrainerOrAdmin && registration.note && <div className="ml-3">{registration.note}</div>}
+            {auth.isTrainerOrAdmin && registration.note && (
+              <div className="ml-3">{registration.note}</div>
+            )}
           </div>
         </ActionRow>
       ))}

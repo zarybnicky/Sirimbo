@@ -2,20 +2,16 @@ import type { EventType } from '@/graphql';
 import type { PaymentFragment } from '@/graphql/Payment';
 
 type MaybePerson =
-  | { name?: string | null; firstName?: string; lastName?: string }
-  | null
-  | undefined;
+  { name?: string | null; firstName?: string; lastName?: string } | null | undefined;
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson } | null | undefined;
 type MaybeRegistration = { person: MaybePerson; couple: MaybeCouple | null | undefined };
 
-const formatCoupleName = (couple: MaybeCouple) =>
-  !couple ? '' : `${couple.man?.lastName || ''} - ${couple.woman?.lastName || ''}`;
-
-export const formatLongCoupleName = (couple: MaybeCouple) =>
+export const formatCoupleName = (couple: MaybeCouple) =>
   !couple ? '' : `${couple.man?.name || ''} - ${couple.woman?.name || ''}`;
 
 export const formatRegistrant = ({ person, couple }: MaybeRegistration) =>
-  person?.name || formatCoupleName(couple);
+  person?.name ||
+  (!couple ? '' : `${couple.man?.lastName || ''} - ${couple.woman?.lastName || ''}`);
 
 const names: { [type in EventType]: string } = {
   LESSON: 'Lekce',
@@ -27,18 +23,25 @@ const names: { [type in EventType]: string } = {
 export const formatEventType = (type: EventType | null | undefined) =>
   type ? names[type] : '';
 
-export const formatInstanceName = (event: {
-  name: string | null;
-  type: EventType | null;
-  registrations: {
-    nodes: MaybeRegistration[] | null;
-  } | null;
-  trainersList: {
-    person: {
-      name?: string | null;
-    } | null;
-  }[] | null;
-} | null | undefined) => {
+export const formatInstanceName = (
+  event:
+    | {
+        name: string | null;
+        type: EventType | null;
+        registrations: {
+          nodes: MaybeRegistration[] | null;
+        } | null;
+        trainersList:
+          | {
+              person: {
+                name?: string | null;
+              } | null;
+            }[]
+          | null;
+      }
+    | null
+    | undefined,
+) => {
   if (!event) return;
   if (event.name) return event.name;
 
@@ -47,8 +50,15 @@ export const formatInstanceName = (event: {
     return registrations.map(formatRegistrant).join(', ');
 
   let name = formatEventType(event.type);
-  if (event.type === 'RESERVATION' && event?.trainersList && event.trainersList.length > 0)
-    name += `: ${event.trainersList.map((x) => x?.person?.name).filter(Boolean).join(', ')}`;
+  if (
+    event.type === 'RESERVATION' &&
+    event?.trainersList &&
+    event.trainersList.length > 0
+  )
+    name += `: ${event.trainersList
+      .map((x) => x?.person?.name)
+      .filter(Boolean)
+      .join(', ')}`;
   return name;
 };
 

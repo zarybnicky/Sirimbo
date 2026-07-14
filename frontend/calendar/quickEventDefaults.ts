@@ -1,10 +1,5 @@
 import { add } from 'date-arithmetic';
-import { localDateKey } from '@/calendar/localizer';
-import type {
-  CalendarEvent,
-  CalendarInstanceEvent,
-  SlotInfo,
-} from '@/calendar/types';
+import type { CalendarEvent, CalendarInstanceEvent, SlotInfo } from '@/calendar/types';
 
 export type QuickEventCreateDefaults = {
   since: Date;
@@ -44,7 +39,6 @@ export function quickDefaultsFromSlot(
   persons: readonly AuthPerson[],
   onlyMine: null | boolean,
 ): QuickEventCreateDefaults {
-  const until = slot.action === 'click' ? add(slot.start, 45, 'minutes') : slot.end;
   const [resourceType, resourceId] = parseResourceKey(slot.resource?.resourceId);
   const trainerPersonIds: string[] = [];
 
@@ -57,7 +51,7 @@ export function quickDefaultsFromSlot(
 
   const defaults: QuickEventCreateDefaults = {
     since: slot.start,
-    until,
+    until: slot.action === 'click' ? add(slot.start, 45, 'minutes') : slot.end,
     trainerPersonIds,
     locationId: null,
     locationText: '',
@@ -68,16 +62,12 @@ export function quickDefaultsFromSlot(
   } else if (resourceType === 'locationText' && resourceId) {
     defaults.locationText = resourceId;
   } else if (trainerPersonIds[0]) {
-    const closestPrev = findClosestPreviousForTrainer(
-      events,
-      trainerPersonIds[0],
-      defaults.since,
-    );
-    if (closestPrev?.instance.locationText) {
-      defaults.locationText = closestPrev.instance.locationText;
+    const closest = findClosest(events, trainerPersonIds[0], defaults.since);
+    if (closest?.instance.locationText) {
+      defaults.locationText = closest.instance.locationText;
     }
-    if (closestPrev?.instance.location?.id) {
-      defaults.locationId = closestPrev.instance.location.id;
+    if (closest?.instance.location?.id) {
+      defaults.locationId = closest.instance.location.id;
       defaults.locationText = '';
     }
   }
@@ -85,37 +75,18 @@ export function quickDefaultsFromSlot(
   return defaults;
 }
 
-export function quickDefaultsAfterLessonGroup(
-  items: readonly CalendarInstanceEvent[],
-): QuickEventCreateDefaults {
-  const last = items.at(-1);
-  const since = last?.end ?? new Date();
-
-  return {
-    since,
-    until: add(since, 45, 'minutes'),
-    trainerPersonIds: last?.instance.trainersList?.map(({ personId }) => personId) ?? [],
-    locationId: last?.instance.location?.id ?? null,
-    locationText: last?.instance.locationText ?? '',
-  };
-}
-
-function findClosestPreviousForTrainer(
-  events: readonly CalendarEvent[],
-  trainerPersonId: string,
-  since: Date,
-) {
+function findClosest(events: readonly CalendarEvent[], personId: string, since: Date) {
   let closestPrev: CalendarInstanceEvent | undefined;
-  const dateKey = localDateKey(since);
+  const dateKey = since.toISOString().slice(0, 10);
 
   for (const event of events) {
-    if (event.kind !== 'event') continue;
-    if (localDateKey(event.start) !== dateKey) continue;
-    if (!event.instance.trainersList?.some((trainer) => trainer.personId === trainerPersonId)) {
-      continue;
-    }
-    if (event.end > since) continue;
-    if (!closestPrev || closestPrev.start < event.start) {
+    if (
+      event.kind === 'event' &&
+      event.start.toISOString().slice(0, 10) === dateKey &&
+      event.instance.trainersList?.some((x) => x.personId === personId) &&
+      event.end <= since &&
+      (!closestPrev || closestPrev.start < event.start)
+    ) {
       closestPrev = event;
     }
   }

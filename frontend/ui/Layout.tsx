@@ -8,8 +8,7 @@ import { CallToAction } from '@/ui/CallToAction';
 import React, { useMemo } from 'react';
 import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
-import { tenantConfigAtom, tenantIdAtom } from './state/auth';
-import { useAtomValue } from 'jotai';
+import { useTenantConfig, useTenantId } from './state/auth';
 import { TenantSeo } from '@/tenant/TenantSeo';
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -53,8 +52,8 @@ export const Layout = React.memo(function Layout({
   const [isOpen, setIsOpen] = React.useState(false);
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const tenantId = useAtomValue(tenantIdAtom);
-  const { publicSite } = useAtomValue(tenantConfigAtom);
+  const tenantId = useTenantId();
+  const { publicSite } = useTenantConfig();
   const Footer = useMemo(() => getTenantUi(tenantId, 'Footer'), [tenantId]);
 
   const search = useSearchParams()?.toString();

@@ -6,7 +6,7 @@ import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
-import { formatLongCoupleName } from '@/ui/format';
+import { formatCoupleName } from '@/ui/format';
 import { cn } from '@/lib/cn';
 import { z } from 'zod';
 import { useQuery } from 'urql';
@@ -33,7 +33,7 @@ export function ParticipantListElement({
         .filter((x) => x.status === 'ACTIVE')
         .map((c) => ({
           id: c.id,
-          label: formatLongCoupleName(c),
+          label: formatCoupleName(c),
         })),
     [tenant],
   );

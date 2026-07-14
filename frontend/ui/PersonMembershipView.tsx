@@ -2,7 +2,7 @@ import { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonWithLinksFragment } from '@/graphql/Person';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import {
-  formatLongCoupleName,
+  formatCoupleName,
   formatOpenDateRange,
   fullDateFormatter,
   moneyFormatter,
@@ -10,9 +10,7 @@ import {
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { useAuth } from '@/ui/use-auth';
-import { useAtomValue } from 'jotai';
 import Link from 'next/link';
-import { tenantIdAtom } from '@/ui/state/auth';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { keyIsNonNull } from '@/lib/truthyFilter';
@@ -26,11 +24,12 @@ import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { ActionRow } from '@/ui/ActionRow';
 import { slugify } from '@/lib/slugify';
+import { useTenantId } from '@/ui/state/auth';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(item.id);
-  const tenantId = useAtomValue(tenantIdAtom);
+  const tenantId = useTenantId();
   const cohortMembershipActionMap = useActionMap(
     cohortMembershipActions,
     item.cohortMembershipsList,
@@ -88,7 +87,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       </div>
       {item.cohortMembershipsList
         .filter(keyIsNonNull('cohort'))
-        .toSorted((x, y) => (x.person?.name || '').localeCompare(y.person?.name || ''))
+        .toSorted((x, y) => x.since.localeCompare(y.since))
         .map((item) => (
           <ActionRow key={item.id} actions={cohortMembershipActionMap.get(item.id)!}>
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
@@ -165,10 +164,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
             <ActionRow key={proxy.id} actions={userProxyActionMap.get(proxy.id)!}>
               <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between text-sm gap-y-1 sm:gap-x-3">
                 <b className="break-words">
-                  <Link
-                    href={`/users/${proxy.user.id}`}
-                    className="underline"
-                  >
+                  <Link href={`/users/${proxy.user.id}`} className="underline">
                     {[proxy.user.uEmail, proxy.user.uLogin].filter(Boolean).join(', ')}
                   </Link>
                 </b>
@@ -215,11 +211,8 @@ function CoupleRow({ item }: { item: CoupleFragment }) {
   return (
     <ActionRow actions={actions}>
       <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-        <Link
-          className="underline font-bold"
-          href={`/pary/${item.id}`}
-        >
-          {formatLongCoupleName(item)}
+        <Link className="underline font-bold" href={`/pary/${item.id}`}>
+          {formatCoupleName(item)}
         </Link>
         <span>{formatOpenDateRange(item)}</span>
       </div>

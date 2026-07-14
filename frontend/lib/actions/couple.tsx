@@ -6,7 +6,7 @@ import {
 } from '@/graphql/Memberships';
 import { defineActions } from '@/lib/actions';
 import { EditCoupleForm } from '@/ui/forms/EditCoupleForm';
-import { formatLongCoupleName } from '@/ui/format';
+import { formatCoupleName } from '@/ui/format';
 
 export const coupleActions = defineActions<CoupleFragment>()([
   {
@@ -26,7 +26,7 @@ export const coupleActions = defineActions<CoupleFragment>()([
     icon: Unplug,
     visible: ({ auth }) => auth.isAdmin,
     confirm: ({ item }) =>
-      `Opravdu chcete partnerství ${formatLongCoupleName(item)} ukončit ke dnešnímu datu?`,
+      `Opravdu chcete partnerství ${formatCoupleName(item)} ukončit ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
       await mutate(UpdateCoupleDocument, {
         input: {

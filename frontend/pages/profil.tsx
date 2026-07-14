@@ -11,8 +11,7 @@ import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
 import { useQuery } from 'urql';
-import { useAtomValue } from 'jotai';
-import { tenantConfigAtom } from '@/ui/state/auth';
+import { useTenant } from '@/ui/state/auth';
 import { LockKeyhole } from 'lucide-react';
 import { useActions } from '@/lib/actions';
 import { NextSeo } from 'next-seo';
@@ -21,7 +20,7 @@ type Tabs = TabMenuProps['options'];
 
 export default function ProfilePage() {
   const auth = useAuth();
-  const { enableRegistration } = useAtomValue(tenantConfigAtom);
+  const { enableRegistration } = useTenant();
   const [{ data }] = useQuery({
     query: MyMembershipApplicationsDocument,
     pause: !enableRegistration,
@@ -37,7 +36,6 @@ export default function ProfilePage() {
         group: 'primary',
         label: 'Změnit heslo',
         icon: LockKeyhole,
-        visible: true,
         render: () => <ChangePasswordForm />,
       },
     ],

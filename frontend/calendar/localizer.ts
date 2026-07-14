@@ -1,14 +1,14 @@
 import {
-  type Unit,
-  milliseconds,
-  seconds,
-  minutes,
-  hours,
-  startOf,
   add,
   eq,
   gte,
+  hours,
   lte,
+  milliseconds,
+  minutes,
+  seconds,
+  startOf,
+  type Unit,
 } from 'date-arithmetic';
 import { format as dateFnsFormat } from 'date-fns/format';
 import { cs } from 'date-fns/locale/cs';
@@ -68,10 +68,6 @@ export function inEventRange(
 
 export function format(value: string | Date, format: string) {
   return dateFnsFormat(new Date(value), format, { locale: cs });
-}
-
-export function localDateKey(date: Date) {
-  return dateFnsFormat(date, 'yyyy-MM-dd');
 }
 
 export const shortTimeIntl = new Intl.DateTimeFormat('cs-CZ', {

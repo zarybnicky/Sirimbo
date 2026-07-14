@@ -3,7 +3,7 @@ import { CoupleDocument } from '@/graphql/Memberships';
 import { CoupleList } from '@/ui/lists/CoupleList';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { formatLongCoupleName, formatOpenDateRange } from '@/ui/format';
+import { formatCoupleName, formatOpenDateRange } from '@/ui/format';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
@@ -26,7 +26,7 @@ function CouplePage() {
   const personIds = [item?.man?.id, item?.woman?.id].filter(Boolean) as string[];
 
   if (!item) return null;
-  const title = formatLongCoupleName(item);
+  const title = formatCoupleName(item);
 
   return (
     <Layout requireMember>
@@ -40,10 +40,7 @@ function CouplePage() {
             {!item.man ? (
               '?'
             ) : (
-              <Link
-                className="underline font-medium"
-                href={`/clenove/${item.man.id}`}
-              >
+              <Link className="underline font-medium" href={`/clenove/${item.man.id}`}>
                 {item.man?.name}
               </Link>
             )}
@@ -53,10 +50,7 @@ function CouplePage() {
             {!item.woman ? (
               '?'
             ) : (
-              <Link
-                className="underline font-medium"
-                href={`/clenove/${item.woman.id}`}
-              >
+              <Link className="underline font-medium" href={`/clenove/${item.woman.id}`}>
                 {item.woman?.name}
               </Link>
             )}

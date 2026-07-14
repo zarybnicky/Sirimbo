@@ -9,28 +9,25 @@ import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAtomValue } from 'jotai';
-import { tenantConfigAtom } from '../state/auth';
+import { useTenant } from '../state/auth';
 
 const Form = z.object({
   login: z.string().min(1, 'Zadejte přihlašovací jméno nebo e-mail'),
   passwd: z.string().min(1, 'Zadejte heslo'),
 });
 
-type FormValues = z.infer<typeof Form>;
-
-type LoginFormProps = {
+export function LoginForm({
+  onSuccess,
+}: {
   onSuccess?: (result: UserAuthFragment | null) => void;
-};
-
-export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { enableRegistration } = useAtomValue(tenantConfigAtom);
+}) {
+  const { enableRegistration } = useTenant();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const doSignIn = useMutation(LoginDocument)[1];
 
-  const onSubmit = useAsyncCallback(async ({ login, passwd }: FormValues) => {
+  const onSubmit = useAsyncCallback(async ({ login, passwd }: z.infer<typeof Form>) => {
     const result = await doSignIn({ login, passwd });
     onSuccess?.(result.data?.login?.result?.usr ?? null);
   });

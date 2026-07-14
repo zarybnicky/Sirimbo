@@ -14,8 +14,7 @@ import { ChevronDown, Menu as MenuIcon, User as Account } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useMemo } from 'react';
-import { useAtomValue } from 'jotai';
-import { tenantIdAtom } from './state/auth';
+import { useTenantId } from '@/ui/state/auth';
 
 type Props = {
   isOpen: boolean;
@@ -36,7 +35,7 @@ export function Header({
 }: Props) {
   const pathname = usePathname() ?? '';
   const auth = useAuth();
-  const tenantId = useAtomValue(tenantIdAtom);
+  const tenantId = useTenantId();
   const [isMounted, setIsMounted] = React.useState(false);
 
   const DesktopLogo = useMemo(() => getTenantUi(tenantId, 'DesktopLogo'), [tenantId]);

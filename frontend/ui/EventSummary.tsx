@@ -66,7 +66,7 @@ export function EventSummary({
         </div>
       )}
 
-      {instance.trainersList?.length && (
+      {!!instance.trainersList?.length && (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-5 text-accent-11 shrink-0" />
           {instance.trainersList

@@ -45,7 +45,7 @@ export function BasicEventInfo({ instance }: { instance: EventWithTrainerFragmen
         </>
       )}
 
-      {(instance.capacity ?? 0) > 0 && (
+      {!!instance.capacity && (
         <>
           <dt>Kapacita</dt>
           <dd>

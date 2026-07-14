@@ -3,12 +3,7 @@ import {
   type EventInstanceRegistrationsQuery,
 } from '@/graphql/Event';
 import { FormError } from '@/ui/form';
-import {
-    dateTimeFormatter,
-  formatLongCoupleName,
-  numericDateFormatter,
-  shortTimeFormatter,
-} from '@/ui/format';
+import { dateTimeFormatter, formatCoupleName } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import * as React from 'react';
 import { type Column, DataGrid } from 'react-data-grid';
@@ -47,8 +42,7 @@ export function CampLessonsTable({ id }: { id: string }) {
         : `couple:${registration.coupleId}`;
       const row: Row = {
         id: registrantId,
-        registrant:
-          registration.person?.name || formatLongCoupleName(registration.couple),
+        registrant: registration.person?.name || formatCoupleName(registration.couple),
         note: registration.note,
         coupleMemberIds: registration.couple
           ? [registration.couple.man?.id, registration.couple.woman?.id].filter(
@@ -84,7 +78,7 @@ export function CampLessonsTable({ id }: { id: string }) {
         const row = rows.get(registrantId) ?? {
           id: registrantId,
           registrant: registration
-            ? registration.person?.name || formatLongCoupleName(registration.couple)
+            ? registration.person?.name || formatCoupleName(registration.couple)
             : 'Volné lekce',
           note: registration?.note ?? null,
           coupleMemberIds: [],
@@ -194,7 +188,12 @@ export function CampLessonsTable({ id }: { id: string }) {
             <div
               className="grid h-full grow grid-cols-2 divide-x divide-neutral-5 text-center tabular-nums"
               title={cell.lessons
-                .map((lesson) => dateTimeFormatter.formatRange(new Date(lesson.since), new Date(lesson.until)))
+                .map((lesson) =>
+                  dateTimeFormatter.formatRange(
+                    new Date(lesson.since),
+                    new Date(lesson.until),
+                  ),
+                )
                 .join('\n')}
             >
               <span className="grid place-items-center font-semibold">{assigned}</span>
@@ -203,17 +202,19 @@ export function CampLessonsTable({ id }: { id: string }) {
                 style={
                   assigned > cell.requested
                     ? {
-                      backgroundColor: 'hsl(40 90% 88%)',
-                      color: 'hsl(35 80% 22%)',
-                  }
+                        backgroundColor: 'hsl(40 90% 88%)',
+                        color: 'hsl(35 80% 22%)',
+                      }
                     : assigned < cell.requested
-                    ? {
-                      backgroundColor: `hsl(0 75% ${62 + (assigned / cell.requested) * 38}%)`,
-                      color: 'hsl(0 65% 25%)',
-                  }
-                    : undefined
+                      ? {
+                          backgroundColor: `hsl(0 75% ${62 + (assigned / cell.requested) * 38}%)`,
+                          color: 'hsl(0 65% 25%)',
+                        }
+                      : undefined
                 }
-              >{cell.requested}</span>
+              >
+                {cell.requested}
+              </span>
             </div>
           );
         },

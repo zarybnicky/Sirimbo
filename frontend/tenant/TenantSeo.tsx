@@ -1,31 +1,28 @@
 'use client';
 
-import { getServerTenant } from '@/tenant/catalog';
-import { tenantIdAtom } from '@/ui/state/auth';
-import { useAtomValue } from 'jotai';
+import { useTenantConfig } from '@/ui/state/auth';
 import { DefaultSeo } from 'next-seo';
 import { usePathname } from 'next/navigation';
 
 export function TenantSeo() {
-  const tenantId = useAtomValue(tenantIdAtom);
-  const tenant = getServerTenant(tenantId);
+  const { origin, publicSite, seo } = useTenantConfig();
   const pathname = usePathname() ?? '/';
-  const publicSite = tenant.config.publicSite;
-  const canonical = new URL(pathname, tenant.config.origin).toString();
-  const publicImage = publicSite?.image
-    ? {
-        ...publicSite.image,
-        url: new URL(publicSite.image.url, tenant.config.origin).toString(),
-      }
-    : undefined;
+  const canonical = new URL(pathname, origin).toString();
   return (
     <DefaultSeo
-      {...tenant.config.seo}
+      {...seo}
       canonical={canonical}
       openGraph={{
-        ...tenant.config.seo.openGraph,
+        ...seo.openGraph,
         url: canonical,
-        images: publicImage ? [publicImage] : tenant.config.seo.openGraph.images,
+        images: publicSite?.image
+          ? [
+              {
+                ...publicSite.image,
+                url: new URL(publicSite.image.url, origin).toString(),
+              },
+            ]
+          : seo.openGraph.images,
       }}
     />
   );

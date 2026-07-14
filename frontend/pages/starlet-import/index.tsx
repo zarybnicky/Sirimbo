@@ -4,16 +4,16 @@ import { PageHeader } from '@/ui/TitleBar';
 import React, { useEffect } from 'react';
 import { useQuery } from 'urql';
 import { starletSettingsAtom, starletTokenAtom } from '@/ui/starlet-importer/state';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { StarletImporter } from '@/ui/starlet-importer';
 import { useRouter } from 'next/router';
-import { tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
+import { useTenantConfig, useTenantId } from '@/ui/state/auth';
 import { NextSeo } from 'next-seo';
 
 export default function StarletImportPage() {
   const router = useRouter();
-  const tenantId = useAtomValue(tenantIdAtom);
-  const { enableStarletImport } = useAtomValue(tenantConfigAtom);
+  const tenantId = useTenantId();
+  const { enableStarletImport } = useTenantConfig();
   const [{ data: settingsQuery }] = useQuery({
     query: TenantSettingsDocument,
     pause: !enableStarletImport,

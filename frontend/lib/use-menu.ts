@@ -1,6 +1,6 @@
-import { tenantConfigAtom } from '@/ui/state/auth';
-import { useAtomValue } from 'jotai';
+import { useTenant } from '@/ui/state/auth';
 import type { LinkProps } from 'next/link';
+
 type Route = LinkProps['href'];
 
 export type MenuLink = {
@@ -46,7 +46,7 @@ export const topMenu: MenuStructItem[] = [
       {
         type: 'link',
         title: 'Přípravka tanečního sportu',
-        href: 'https://nabor.tkolymp.cz' as any,
+        href: 'https://nabor.tkolymp.cz',
       },
       { type: 'link', title: 'Vystoupení na akcích', href: '/vystoupeni' },
       { type: 'link', title: 'Školní taneční kroužky', href: '/skolni-krouzky' },
@@ -59,7 +59,7 @@ export const topMenu: MenuStructItem[] = [
 ];
 
 export function useMemberMenu(): MenuStructItem[] {
-  const { publicSite, enableStarletImport } = useAtomValue(tenantConfigAtom);
+  const { publicSite, enableStarletImport } = useTenant();
   return [
     {
       type: 'link',
@@ -67,14 +67,14 @@ export function useMemberMenu(): MenuStructItem[] {
       href: '/dashboard?tab=myAnnouncements',
     },
     ...(publicSite
-      ? ([
+      ? [
           {
-            type: 'link',
+            type: 'link' as const,
             title: 'Stálá nástěnka',
             className: 'lg:hidden',
             href: '/dashboard?tab=stickyAnnouncements',
           },
-        ] as MenuStructItem[])
+        ]
       : []),
     { type: 'link', title: 'Profil', href: '/profil' },
     {
@@ -109,31 +109,36 @@ export function useMemberMenu(): MenuStructItem[] {
         { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
         { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
         ...(publicSite
-          ? ([
-              { type: 'link', title: 'Články', href: '/aktuality', requireTrainer: true },
+          ? [
               {
-                type: 'link',
+                type: 'link' as const,
+                title: 'Články',
+                href: '/aktuality',
+                requireTrainer: true,
+              },
+              {
+                type: 'link' as const,
                 title: 'Vyplněné formuláře',
                 href: '/crm',
                 requireAdmin: true,
               },
               {
-                type: 'link',
+                type: 'link' as const,
                 title: 'Upload (WIP)',
                 href: '/upload',
                 requireAdmin: true,
               },
-            ] as MenuLink[])
+            ]
           : []),
         ...(enableStarletImport
-          ? ([
+          ? [
               {
-                type: 'link',
+                type: 'link' as const,
                 title: 'Import z evidence',
                 href: '/starlet-import',
                 requireAdmin: true,
               },
-            ] as MenuLink[])
+            ]
           : []),
       ],
     },
@@ -144,7 +149,7 @@ export function useMemberMenu(): MenuStructItem[] {
         {
           type: 'link',
           title: 'Tenanti',
-          href: '/admin/tenants' as Route,
+          href: '/admin/tenants',
           requireSystemAdmin: true,
         },
       ],

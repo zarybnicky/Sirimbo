@@ -23,7 +23,7 @@ import {
   UpdateCoupleDocument,
   UpdateTenantMembershipDocument,
 } from '@/graphql/Memberships';
-import { tenantIdAtom } from '../state/auth';
+import { useTenantId } from '../state/auth';
 
 type QueriedStudent = Pick<
   Student,
@@ -105,7 +105,7 @@ type Person = {
 
 export function PersonComparisonForm() {
   const client = useClient();
-  const tenantId = useAtomValue(tenantIdAtom);
+  const tenantId = useTenantId();
   const token = useAtomValue(starletTokenAtom);
   const { courses } = useAtomValue(starletSettingsAtom);
   const [{ data: personQuery }] = useQuery({ query: PersonListDocument });

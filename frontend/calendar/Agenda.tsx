@@ -1,13 +1,12 @@
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
 import { formatEventType, formatWeekDay } from '@/ui/format';
-import { startOf } from 'date-arithmetic';
+import { add, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
 import type {
   CalendarBirthdayEvent,
   CalendarCompetitionEvent,
-  CalendarInstanceEvent,
   ViewProps,
 } from '@/calendar/types';
 import { Cake } from 'lucide-react';
@@ -19,14 +18,13 @@ import { CompetitionEventContent } from '@/ui/Competitions';
 import { cardCls } from '@/ui/style';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
-import { localDateKey } from '@/calendar/localizer';
-import { quickDefaultsAfterLessonGroup } from '@/calendar/quickEventDefaults';
+import type { EventWithTrainerFragment } from '@/graphql/Event';
 
 type MapItem = {
   birthdays: CalendarBirthdayEvent[];
   competitions: CalendarCompetitionEvent[];
-  lessons: Map<string, CalendarInstanceEvent[]>;
-  groups: CalendarInstanceEvent[];
+  lessons: Map<string, EventWithTrainerFragment[]>;
+  groups: EventWithTrainerFragment[];
 };
 
 const preventDefault = (e: Event) => e.preventDefault();
@@ -35,7 +33,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   const dataByDay = React.useMemo(() => {
     const map = new Map<string, MapItem>();
     for (const calendarEvent of events) {
-      const date = localDateKey(startOf(calendarEvent.start, 'day'));
+      const date = startOf(calendarEvent.start, 'day').toISOString().slice(0, 10);
       const mapItem: MapItem = map.get(date) ?? {
         birthdays: [],
         competitions: [],
@@ -45,28 +43,22 @@ function Agenda({ events }: ViewProps): React.ReactNode {
 
       if (calendarEvent.kind === 'birthday') {
         mapItem.birthdays.push(calendarEvent);
-        map.set(date, mapItem);
-        continue;
-      }
-
-      if (calendarEvent.kind === 'competition') {
+      } else if (calendarEvent.kind === 'competition') {
         mapItem.competitions.push(calendarEvent);
-        map.set(date, mapItem);
-        continue;
-      }
-
-      const { instance } = calendarEvent;
-      if (instance.type === 'LESSON') {
-        const trainers = instance.trainersList ?? [];
-        const key = trainers
-          .map((x) => x.personId)
-          .toSorted((a, b) => a.localeCompare(b))
-          .join(',');
-        const arr = mapItem.lessons.get(key);
-        if (arr) arr.push(calendarEvent);
-        else mapItem.lessons.set(key, [calendarEvent]);
       } else {
-        mapItem.groups.push(calendarEvent);
+        const { instance } = calendarEvent;
+        if (instance.type === 'LESSON') {
+          const key =
+            instance.trainersList
+              ?.map((x) => x.personId)
+              .toSorted()
+              .join(',') ?? '';
+          const arr = mapItem.lessons.get(key);
+          if (arr) arr.push(calendarEvent.instance);
+          else mapItem.lessons.set(key, [calendarEvent.instance]);
+        } else {
+          mapItem.groups.push(calendarEvent.instance);
+        }
       }
       map.set(date, mapItem);
     }
@@ -81,15 +73,13 @@ function Agenda({ events }: ViewProps): React.ReactNode {
                 x.person.firstName.localeCompare(y.person.firstName),
             ),
             competitions: itemMap.competitions,
-            groups: itemMap.groups.toSorted(
-              (x, y) => x.start.getTime() - y.start.getTime(),
-            ),
+            groups: itemMap.groups.toSorted((x, y) => x.since.localeCompare(y.since)),
             lessons: [...itemMap.lessons.entries()]
               .map(
                 ([trainers, items]) =>
                   [
                     trainers,
-                    items.toSorted((x, y) => x.start.getTime() - y.start.getTime()),
+                    items.toSorted((x, y) => x.since.localeCompare(y.since)),
                   ] as const,
               )
               .toSorted((x, y) => x[0].localeCompare(y[0])),
@@ -107,54 +97,42 @@ function Agenda({ events }: ViewProps): React.ReactNode {
         </div>
       )}
 
-      {dataByDay.map(([date, dateEntry]) => {
-        const hasEventCards =
-          dateEntry.competitions.length > 0 ||
-          dateEntry.groups.length > 0 ||
-          dateEntry.lessons.length > 0;
-
-        return (
-          <React.Fragment key={date}>
-            <div className="mt-8 mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-              <div className="text-2xl tracking-wide">
-                {formatWeekDay(new Date(`${date}T00:00:00`))}
-              </div>
-              {dateEntry.birthdays.map((calendarEvent) => (
-                <BirthdayChip key={calendarEvent.id} calendarEvent={calendarEvent} />
-              ))}
+      {dataByDay.map(([date, dateEntry]) => (
+        <React.Fragment key={date}>
+          <div className="mt-8 mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+            <div className="text-2xl tracking-wide">
+              {formatWeekDay(new Date(`${date}T00:00:00`))}
             </div>
+            {dateEntry.birthdays.map((calendarEvent) => (
+              <BirthdayChip key={calendarEvent.id} calendarEvent={calendarEvent} />
+            ))}
+          </div>
 
-            {hasEventCards && (
-              <div className="flex justify-start flex-wrap gap-2 opacity-90">
-                {dateEntry.competitions.map((calendarEvent) => (
-                  <div
-                    key={calendarEvent.id}
-                    className={cardCls({
-                      className:
-                        'min-w-[200px] w-72 rounded-lg border-green-7 bg-green-2 p-3',
-                    })}
-                  >
-                    <CompetitionEventContent
-                      title={calendarEvent.title}
-                      location={calendarEvent.eventLocation}
-                      entries={calendarEvent.items}
-                    />
-                  </div>
-                ))}
-                {dateEntry.groups.map((calendarEvent) => (
-                  <GroupLesson
-                    key={calendarEvent.instance.id}
-                    calendarEvent={calendarEvent}
-                  />
-                ))}
-                {dateEntry.lessons.map(([ids, items]) => (
-                  <LessonGroup key={ids} items={items} />
-                ))}
+          <div className="flex justify-start flex-wrap gap-2 opacity-90">
+            {dateEntry.competitions.map((calendarEvent) => (
+              <div
+                key={calendarEvent.id}
+                className={cardCls({
+                  className:
+                    'min-w-[200px] w-72 rounded-lg border-green-7 bg-green-2 p-3',
+                })}
+              >
+                <CompetitionEventContent
+                  title={calendarEvent.title}
+                  location={calendarEvent.eventLocation}
+                  entries={calendarEvent.items}
+                />
               </div>
-            )}
-          </React.Fragment>
-        );
-      })}
+            ))}
+            {dateEntry.groups.map((instance) => (
+              <GroupLesson key={instance.id} instance={instance} />
+            ))}
+            {dateEntry.lessons.map(([ids, items]) => (
+              <LessonGroup key={ids} items={items} />
+            ))}
+          </div>
+        </React.Fragment>
+      ))}
     </div>
   );
 }
@@ -172,15 +150,15 @@ function BirthdayChip({ calendarEvent }: { calendarEvent: CalendarBirthdayEvent 
   );
 }
 
-function GroupLesson({ calendarEvent }: { calendarEvent: CalendarInstanceEvent }) {
-  const { instance } = calendarEvent;
-
+function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
   return (
     <div
       className={cardCls({
         className:
           'relative group min-w-[200px] w-72 rounded-lg border-accent-7 border' +
-          (instance.targetCohortsList && instance.targetCohortsList.length > 0 ? ' pl-5' : ' pl-3'),
+          (instance.targetCohortsList && instance.targetCohortsList.length > 0
+            ? ' pl-5'
+            : ' pl-3'),
       })}
     >
       <ConflictsInstanceBadge
@@ -192,12 +170,8 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarInstanceEvent }
           {instance.targetCohortsList
             .map((x) => x.cohort?.colorRgb)
             .filter(isTruthy)
-            .map((color) => (
-              <div
-                key={color}
-                className="flex-1 w-2"
-                style={{ backgroundColor: color }}
-              />
+            .map((c) => (
+              <div key={c} className="flex-1 w-2" style={{ backgroundColor: c }} />
             ))}
         </div>
       )}
@@ -217,16 +191,21 @@ function GroupLesson({ calendarEvent }: { calendarEvent: CalendarInstanceEvent }
   );
 }
 
-function LessonGroup({ items }: { items: CalendarInstanceEvent[] }) {
+function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
   const auth = useAuth();
 
-  const locLabel = (it: CalendarInstanceEvent) =>
-    it.instance.location?.name || it.instance.locationText || '-';
+  const nextEventDefaults = React.useMemo(() => {
+    const last = items.at(-1);
+    const since = last ? new Date(last.until) : new Date();
 
-  const nextEventDefaults = React.useMemo(
-    () => quickDefaultsAfterLessonGroup(items),
-    [items],
-  );
+    return {
+      since,
+      until: add(since, 45, 'minutes'),
+      trainerPersonIds: last?.trainersList?.map(({ personId }) => personId) ?? [],
+      locationId: last?.location?.id ?? null,
+      locationText: last?.locationText ?? '',
+    };
+  }, [items]);
 
   return (
     <div
@@ -250,21 +229,20 @@ function LessonGroup({ items }: { items: CalendarInstanceEvent[] }) {
       )}
 
       <div className="ml-2 text-xl mb-1">
-        {(items[0]?.instance.trainersList ?? []).map((x) => x.person?.name).join(', ') ||
-          '-'}
+        {items[0]?.trainersList?.map((x) => x.person?.name).join(', ') ?? ''}
       </div>
 
-      {items.map((item, i) => {
-        const loc = locLabel(item);
-        const prevLoc = i === 0 ? null : locLabel(items[i - 1]!);
-        const showHeader = loc !== prevLoc && (i !== 0 || loc !== '-'); // Don't show first if missing
+      {items.map((instance, i) => {
+        const loc = instance.location?.name || instance.locationText;
+        const prev = i === 0 ? null : items.at(i - 1);
+        const prevLoc = prev ? prev.location?.name || prev.locationText : null;
 
         return (
-          <React.Fragment key={item.instance.id}>
-            {showHeader && (
+          <React.Fragment key={instance.id}>
+            {loc !== prevLoc && i !== 0 && !!loc && (
               <div className="ml-2.5 mt-1 text-sm text-accent-11">{loc}</div>
             )}
-            <EventButton instance={item.instance} viewer="trainer" />
+            <EventButton instance={instance} viewer="trainer" />
           </React.Fragment>
         );
       })}

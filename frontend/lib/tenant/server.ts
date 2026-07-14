@@ -1,4 +1,4 @@
-import { defaultTenant, hostToTenant, parseTenant } from '@/tenant/catalog';
+import { defaultTenant, getTenant, hostToTenant } from '@/tenant/catalog';
 import { cookies, headers } from 'next/headers';
 
 export async function getRequestTenant() {
@@ -9,7 +9,7 @@ export async function getRequestTenant() {
   const hostname = host?.split(',')[0]?.trim()?.split(':')[0]?.toLowerCase() || null;
 
   return (
-    parseTenant(cookieStore.get('tenant_id')?.value) ??
+    getTenant(cookieStore.get('tenant_id')?.value) ??
     hostToTenant.get(hostname ?? '') ??
     defaultTenant
   );

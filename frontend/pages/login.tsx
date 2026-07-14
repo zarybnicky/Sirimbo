@@ -5,14 +5,13 @@ import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
-import { useAtomValue } from 'jotai';
-import { tenantConfigAtom } from '@/ui/state/auth';
+import { useTenant } from '@/ui/state/auth';
 
 export default function LoginPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const { publicSite } = useAtomValue(tenantConfigAtom);
+  const { publicSite } = useTenant();
 
   const onSuccess = React.useCallback(
     (user: UserAuthFragment | null) => {
@@ -21,7 +20,7 @@ export default function LoginPage() {
       void router.push(
         !user?.userProxiesList.length
           ? '/profil'
-          : (redirect || defaultRedirect) as Parameters<typeof router.push>[0],
+          : ((redirect || defaultRedirect) as Parameters<typeof router.push>[0]),
       );
     },
     [publicSite, router],

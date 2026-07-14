@@ -7,15 +7,15 @@ import {
   useMemberMenu,
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui.pages';
-import { tenantCatalog } from '@/tenant/catalog';
 import { cn } from '@/lib/cn';
-import { authAtom, storeRef, tenantConfigAtom, tenantIdAtom } from '@/ui/state/auth';
+import { authAtom, storeRef, useTenantConfig, useTenantId } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { useRouter } from 'next/compat/router';
 import { usePathname } from 'next/navigation';
 import React from 'react';
+import { TenantSelect } from '@/ui/TenantSelect';
 
 type SidebarProps = {
   isOpen: boolean;
@@ -29,8 +29,8 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
   const pathname = usePathname() ?? '';
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
-  const tenantId = useAtomValue(tenantIdAtom);
-  const { publicSite, copyrightLine: newCopyrightLine } = useAtomValue(tenantConfigAtom);
+  const tenantId = useTenantId();
+  const { publicSite, copyrightLine: newCopyrightLine } = useTenantConfig();
   const memberMenu = useMemberMenu();
   const SidebarLogo = React.useMemo(
     () => getTenantUi(tenantId, 'SidebarLogo'),
@@ -178,7 +178,7 @@ type SidebarLinkProps = {
 };
 
 function SidebarLink({ item, pathname, onClick }: SidebarLinkProps) {
-  const inPath = !!getHrefs(item).some((x) => {
+  const inPath = getHrefs(item).some((x) => {
     const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
     if (!y) return false;
     return y === '/' ? false : pathname.startsWith(y);
@@ -202,9 +202,13 @@ function SidebarLink({ item, pathname, onClick }: SidebarLinkProps) {
 }
 
 function SidebarSection({ item, pathname }: { item: MenuStructItem; pathname: string }) {
-  return item.type === 'link' ? (
-    <SidebarLink item={item} pathname={pathname} />
-  ) : item.children.length > 0 ? (
+  if (item.type === 'link') {
+    return <SidebarLink item={item} pathname={pathname} />;
+  }
+  if (item.children.length <= 0) {
+    return null;
+  }
+  return (
     <>
       <div key={item.title} className="ml-5">
         <div className="font-bold text-xs uppercase grow mt-4">{item.title}</div>
@@ -215,26 +219,5 @@ function SidebarSection({ item, pathname }: { item: MenuStructItem; pathname: st
         ))}
       </div>
     </>
-  ) : null;
-}
-
-function TenantSelect() {
-  const [tenantId, setTenantId] = useAtom(tenantIdAtom);
-  const onChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      storeRef.resetUrqlClient();
-      setTenantId(e.currentTarget.value);
-    },
-    [setTenantId],
-  );
-
-  return (
-    <select className="text-neutral-12" onChange={onChange} value={tenantId}>
-      {Object.values(tenantCatalog).map((x) => (
-        <option key={x.id} value={x.id}>
-          {x.name}
-        </option>
-      ))}
-    </select>
   );
 }

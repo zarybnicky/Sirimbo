@@ -1,11 +1,10 @@
-import { atom, createStore, type PrimitiveAtom } from 'jotai';
+import { atom, createStore, type PrimitiveAtom, useAtomValue } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import deepEqual from 'fast-deep-equal';
-import { defaultTenant, parseTenant } from '@/tenant/catalog';
-import type { TenantConfig } from '@/tenant/types';
+import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 
 interface BaseAuthState {
@@ -65,13 +64,13 @@ const storage = {
 
 const cookieStorage = {
   getItem(key: string, initialValue: string) {
-    const tenant = parseTenant(getCookie(key));
+    const tenant = getTenant(getCookie(key));
     return tenant ? String(tenant.id) : initialValue;
   },
   setItem(key: string, nextValue: string) {
     if (typeof window === 'undefined') return;
 
-    const tenant = parseTenant(nextValue);
+    const tenant = getTenant(nextValue);
     if (!tenant) return;
 
     const tenantId = String(tenant.id);
@@ -106,7 +105,7 @@ const baseTenantIdAtom = atomWithStorage(
 export const tenantIdAtom = atom<string, [string], void>(
   (get) => get(baseTenantIdAtom),
   (_get, set, nextValue) => {
-    const tenant = parseTenant(nextValue);
+    const tenant = getTenant(nextValue);
     const tenantId = String(tenant?.id ?? defaultTenant.id);
     set(baseTenantIdAtom, tenantId);
 
@@ -121,14 +120,16 @@ export const tenantIdAtom = atom<string, [string], void>(
 tenantIdAtom.onMount = (setTenantId) => {
   setTenantId(cookieStorage.getItem('tenant_id', String(defaultTenant.id)));
 };
-export const tenantConfigAtom = atom<TenantConfig>(
-  (get) => (parseTenant(get(tenantIdAtom)) ?? defaultTenant).config,
+const tenantAtom = atom<TenantCatalogEntry>(
+  (get) => getTenant(get(tenantIdAtom)) ?? defaultTenant,
 );
+
+export const useTenantId = () => useAtomValue(tenantIdAtom);
+export const useTenantConfig = () => useAtomValue(tenantAtom).config;
 
 export const authLoadingAtom = atom(true);
 
 const baseTokenAtom: PrimitiveAtom<string | null> = atom(storage.getItem('token'));
-
 const baseUserAtom: PrimitiveAtom<BaseAuthState> = atom(
   (() => {
     const item = storage.getItem('user');
@@ -219,6 +220,7 @@ export const authHelpersAtom = atom((get) => {
   return {
     ...auth,
     isMyPerson: (id: string | null | undefined) => !!id && auth.personIds.includes(id),
-    isMyCouple: (id: string | null | undefined) => !!id && auth.couples.some((x) => x.id === id),
+    isMyCouple: (id: string | null | undefined) =>
+      !!id && auth.couples.some((x) => x.id === id),
   };
 });

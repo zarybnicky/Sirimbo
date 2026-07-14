@@ -1,14 +1,14 @@
 import {
+  type EventInstanceRegistrationFragment,
   EventInstanceRegistrationsDocument,
   EventRegistrationCandidatesDocument,
-  type EventInstanceRegistrationFragment,
   type EventWithTrainerFragment,
   SetEventInstanceRegistrationDocument,
 } from '@/graphql/Event';
 import { buttonCls } from '@/ui/style';
 import { TextField } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
-import { formatLongCoupleName, formatRegistrant } from '@/ui/format';
+import { formatCoupleName, formatRegistrant } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
@@ -35,9 +35,7 @@ type Registrant = {
 const registrantKey = (personId: string | null, coupleId: string | null) =>
   personId ? `person:${personId}` : `couple:${coupleId}`;
 
-const registrant = (
-  registration: EventInstanceRegistrationFragment,
-): Registrant => ({
+const registrant = (registration: EventInstanceRegistrationFragment): Registrant => ({
   id: registrantKey(registration.personId, registration.coupleId),
   label: formatRegistrant(registration),
   personId: registration.personId,
@@ -90,7 +88,7 @@ function useRegistrationCandidates(
       )
       .map((couple) => ({
         id: registrantKey(null, couple.id),
-        label: formatLongCoupleName(couple),
+        label: formatCoupleName(couple),
         personId: null,
         coupleId: couple.id,
       })),
@@ -178,7 +176,9 @@ function RegistrationsDialogContent({
   const allRegistrations = query.data?.eventInstance?.registrations.nodes ?? [];
   const registrations = isManager
     ? allRegistrations
-    : allRegistrations.filter((r) => auth.isMyPerson(r.personId) || auth.isMyCouple(r.coupleId));
+    : allRegistrations.filter(
+        (r) => auth.isMyPerson(r.personId) || auth.isMyCouple(r.coupleId),
+      );
   const {
     candidates,
     error: candidateError,
@@ -200,9 +200,7 @@ function RegistrationsDialogContent({
   const selectedRegistration = selected
     ? registrations.find((r) => registrantKey(r.personId, r.coupleId) === selected.id)
     : undefined;
-  const i = selectedRegistration
-    ? registrations.indexOf(selectedRegistration)
-    : -1;
+  const i = selectedRegistration ? registrations.indexOf(selectedRegistration) : -1;
   const simpleRegistration = instance.type === 'LESSON' || instance.type === 'GROUP';
 
   const registerImmediately = useAsyncCallback(async (candidate: Registrant) => {
@@ -234,7 +232,8 @@ function RegistrationsDialogContent({
   };
 
   const changeRegistration = (n: number) => {
-    const registration = registrations[(i + n + registrations.length) % registrations.length];
+    const registration =
+      registrations[(i + n + registrations.length) % registrations.length];
     if (registration) selectRegistration(registrant(registration));
   };
 
@@ -311,8 +310,7 @@ function RegistrationsDialogContent({
             )}
             <DialogTitle className="grow text-center">
               {selected.label}
-              {registrations.length > 1 &&
-                ` (${i + 1}/${registrations.length})`}
+              {registrations.length > 1 && ` (${i + 1}/${registrations.length})`}
             </DialogTitle>
             {registrations.length > 1 && (
               <IconButton

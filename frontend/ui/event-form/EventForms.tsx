@@ -17,7 +17,7 @@ import {
 } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
-import { formatEventType, formatLongCoupleName, shortTimeFormatter } from '@/ui/format';
+import { formatCoupleName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,24 +26,19 @@ import { useAsyncCallback } from 'react-async-hook';
 import { type Control, useForm, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { useAtomValue } from 'jotai';
-import { tenantConfigAtom } from '@/ui/state/auth';
+import { useTenantConfig } from '@/ui/state/auth';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
 import { InstanceTrainerListElement } from './InstanceTrainerListField';
 import { eventLocationInput, LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
-import { TrainerListElement } from './TrainerListField';
 import { CohortListElement } from './CohortListElement';
 import { EventForm, type EventFormType } from './types';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 
-const eventTypeOptions: RadioButtonGroupItem[] = [
-  'LESSON',
-  'GROUP',
-  'RESERVATION',
-  'CAMP',
-  'HOLIDAY',
-].map((type) => ({ id: type, label: formatEventType(type as EventType) }));
+const eventTypeOptions: RadioButtonGroupItem[] = (
+  ['LESSON', 'GROUP', 'RESERVATION', 'CAMP', 'HOLIDAY'] as const
+).map((type) => ({ id: type, label: formatEventType(type) }));
 
 type EventFormInput = z.input<typeof EventForm>;
 
@@ -90,7 +85,7 @@ export function EventCreateForm({
   const { onSuccess } = useFormResult();
   const createInstances = useMutation(CreateEventInstancesDocument)[1];
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
-  const { lockEventsByDefault } = useAtomValue(tenantConfigAtom);
+  const { lockEventsByDefault } = useTenantConfig();
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
   const { control, handleSubmit } = useForm({
@@ -122,13 +117,10 @@ export function EventCreateForm({
 
   const type = useWatch({ control, name: 'type' }) ?? initialType;
   const instances = useWatch({ control, name: 'instances' });
-  const firstInstance = instances?.[0];
+  const first = instances?.[0];
   const lessonRanges =
-    firstInstance?.since && firstInstance.until
-      ? splitIntoLessonRanges(
-          new Date(firstInstance.since),
-          new Date(firstInstance.until),
-        )
+    first?.since && first.until
+      ? splitIntoLessonRanges(new Date(first.since), new Date(first.until))
       : [];
   const canSplit =
     type === 'LESSON' &&
@@ -140,7 +132,7 @@ export function EventCreateForm({
         .filter((couple) => couple.status === 'ACTIVE')
         .map((couple) => ({
           id: `couple:${couple.id}`,
-          label: formatLongCoupleName(couple),
+          label: formatCoupleName(couple),
         })),
       ...(tenant?.tenant?.tenantMembershipsList || []).flatMap((x) =>
         x.status === 'ACTIVE' && x.person?.id
@@ -150,21 +142,6 @@ export function EventCreateForm({
     ],
     [tenant],
   );
-  const trainerField =
-    defaults.trainerPersonIds.length > 0 ? (
-      <div className="text-sm text-neutral-11">
-        Trenéři:{' '}
-        {defaults.trainerPersonIds
-          .map(
-            (id) =>
-              tenant?.tenant?.tenantTrainersList.find((x) => x.person?.id === id)?.person
-                ?.name,
-          )
-          .join(', ')}
-      </div>
-    ) : (
-      <TrainerListElement control={control} name="trainers" />
-    );
 
   React.useEffect(() => {
     if (!canSplit) setSplitLessons(false);
@@ -180,46 +157,33 @@ export function EventCreateForm({
     if (!firstRange) return;
     const selectedRegistrations = values.registrations
       .filter((r) => r.personId || r.coupleId)
-      .map((r) => ({
-        personId: r.personId || null,
-        coupleId: r.coupleId || null,
-      }));
-    if (!splitLessons && values.type === 'LESSON') {
-      const registrantCount = selectedRegistrations.reduce(
-        (sum, r) => sum + (r.coupleId ? 2 : 1),
-        0,
-      );
-      if (registrantCount > 2) throw new Error('Lekce má nejvýš dvě místa');
-    }
+      .map(({ personId, coupleId }) => ({ personId, coupleId }));
 
-    const trainers = values.trainers.flatMap((trainer) =>
-      trainer.personId
-        ? [{ personId: trainer.personId, lessonsOffered: trainer.lessonsOffered ?? 0 }]
-        : [],
-    );
-    const trainerPersonIds = trainers.map(({ personId }) => personId);
+    const trainers = values.trainers
+      .filter(keyIsNonNull('personId'))
+      .map(({ personId, lessonsOffered = 0 }) => ({ personId, lessonsOffered }));
+
     const ranges = splitLessons
       ? splitIntoLessonRanges(firstRange.since, firstRange.until)
       : explicitRanges;
-    const location = eventLocationInput(values);
 
     const instancesToCreate = ranges.map((range) => {
       const [kind, id] = splitIds[range.since.toISOString()]?.split(':') ?? [];
       const splitRegistration =
-        (splitLessons &&
-          id && [
-            {
-              personId: kind === 'person' ? id : null,
-              coupleId: kind === 'couple' ? id : null,
-            },
-          ]) ||
-        [];
+        splitLessons && id
+          ? [
+              {
+                personId: kind === 'person' ? id : null,
+                coupleId: kind === 'couple' ? id : null,
+              },
+            ]
+          : [];
       return {
         since: range.since.toISOString(),
         until: range.until.toISOString(),
         type: splitLessons ? 'LESSON' : values.type,
-        ...location,
-        trainerPersonIds,
+        ...eventLocationInput(values),
+        trainerPersonIds: trainers.map(({ personId }) => personId),
         registrations: splitLessons ? splitRegistration : selectedRegistrations,
       };
     });
@@ -273,7 +237,7 @@ export function EventCreateForm({
             nameUntil="instances.0.until"
             isCamp={false}
           />
-          {trainerField}
+          <InstanceTrainerListElement control={control} name="trainers" mode="add" />
           <LocationField control={control} />
           <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
             {lessonRanges.map((range) => {
@@ -320,7 +284,7 @@ export function EventCreateForm({
           />
           <TextFieldElement control={control} name="name" label="Název (nepovinný)" />
           <LocationField control={control} />
-          {trainerField}
+          <InstanceTrainerListElement control={control} name="trainers" mode="add" />
           <InstanceListElement control={control} />
           <ParticipantListElement control={control} name="registrations" />
         </>
@@ -410,7 +374,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
     }
   }, [registrationsQuery, registrationsReady, setValue]);
 
-  const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
+  const type = useWatch({ control, name: 'type' });
 
   const onSubmit = useAsyncCallback(async (values: EventFormType) => {
     const edited = values.instances[0];
@@ -418,51 +382,39 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
 
     const copies = values.instances
       .slice(1)
-      .flatMap((copy) =>
-        copy.since && copy.until ? [{ since: copy.since, until: copy.until }] : [],
-      );
+      .filter(({ since, until }) => since && until)
+      .map(({ since, until }) => ({ since, until }));
     if (copies.length > 0 && !registrationsReady) {
       throw new Error('Účastníci ještě nejsou načteni');
     }
 
-    const nextTrainers = edited.trainers.flatMap((trainer) =>
-      trainer.personId
-        ? [{ personId: trainer.personId, lessonsOffered: trainer.lessonsOffered }]
-        : [],
-    );
-    const currentTrainers = instance.trainersList.map((trainer) => ({
-      personId: trainer.personId,
-      lessonsOffered: trainer.lessonsOffered,
-    }));
+    const nextTrainers = edited.trainers
+      .filter(keyIsNonNull('personId'))
+      .map(({ personId, lessonsOffered }) => ({ personId, lessonsOffered }))
+      .toSorted((a, b) => a.personId.localeCompare(b.personId));
+    const currentTrainers = instance.trainersList
+      .map(({ personId, lessonsOffered }) => ({ personId, lessonsOffered }))
+      .toSorted((a, b) => a.personId.localeCompare(b.personId));
     const trainersChanged =
-      JSON.stringify(
-        nextTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId)),
-      ) !==
-      JSON.stringify(
-        currentTrainers.toSorted((a, b) => a.personId.localeCompare(b.personId)),
-      );
+      JSON.stringify(nextTrainers) !== JSON.stringify(currentTrainers);
     const location = eventLocationInput(values);
-    const nextRegistrations = values.registrations
+    const registrations = values.registrations
       .filter((x) => x.personId || x.coupleId)
-      .map((x) => ({
-        personId: x.personId || null,
-        coupleId: x.coupleId || null,
-      }));
-    const nextCohortIds = values.cohorts.flatMap(({ cohortId }) =>
-      cohortId ? [cohortId] : [],
-    );
+      .map(({ personId, coupleId }) => ({ personId, coupleId }));
+    const currentCohortIds = instance.targetCohortsList.map((x) => x.cohortId).toSorted();
+    const nextCohortIds = values.cohorts
+      .filter(keyIsNonNull('cohortId'))
+      .map((x) => x.cohortId)
+      .toSorted();
     const cohortsChanged =
-      JSON.stringify(nextCohortIds.toSorted()) !==
-      JSON.stringify(
-        instance.targetCohortsList.map((target) => target.cohortId).toSorted(),
-      );
+      JSON.stringify(nextCohortIds) !== JSON.stringify(currentCohortIds);
     const copyEvents = copies.map(({ since, until }) => ({
       since,
       until,
       type: values.type,
       ...location,
       trainerPersonIds: nextTrainers.map((trainer) => trainer.personId),
-      registrations: nextRegistrations,
+      registrations,
     }));
     const result = await updateInstance({
       input: {
@@ -486,7 +438,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
           trainersChanged || copies.length > 0
             ? nextTrainers.map((trainer) => trainer.lessonsOffered)
             : null,
-        pRegistrations: registrationsReady ? nextRegistrations : null,
+        pRegistrations: registrationsReady ? registrations : null,
         pCohortIds: cohortsChanged || copies.length > 0 ? nextCohortIds : null,
         pCopies: copyEvents.length > 0 ? copyEvents : null,
       },
@@ -512,7 +464,11 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
         <InstanceListElement control={control} />
       )}
       <LocationField control={control} />
-      <InstanceTrainerListElement control={control} index={0} />
+      <InstanceTrainerListElement
+        control={control}
+        name="instances.0.trainers"
+        mode="edit"
+      />
       <CohortListElement
         control={control}
         name="cohorts"
@@ -545,7 +501,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
             person ? [{ id: person.id, label: person.name }] : [],
           )}
           existingCouples={registrations.flatMap(({ couple }) =>
-            couple ? [{ id: couple.id, label: formatLongCoupleName(couple) }] : [],
+            couple ? [{ id: couple.id, label: formatCoupleName(couple) }] : [],
           )}
         />
       )}

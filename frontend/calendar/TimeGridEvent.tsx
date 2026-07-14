@@ -10,7 +10,7 @@ import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatInstanceName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
-import { tenantConfigAtom } from '@/ui/state/auth';
+import { useTenant } from '@/ui/state/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { Cake } from 'lucide-react';
@@ -43,7 +43,8 @@ type TimeGridEventProps = {
 };
 
 function TimeGridEvent({ event, ...props }: TimeGridEventProps) {
-  if (event.kind === 'birthday') return <BirthdayTimeGridEvent event={event} {...props} />;
+  if (event.kind === 'birthday')
+    return <BirthdayTimeGridEvent event={event} {...props} />;
   if (event.kind === 'competition') {
     return <CompetitionTimeGridEvent event={event} {...props} />;
   }
@@ -57,7 +58,9 @@ function InstanceTimeGridEvent({
   isBackgroundEvent,
   slotMetrics,
 }: TimeGridEventProps & { event: Extract<CalendarEvent, { kind: 'event' }> }) {
-  const { useTrainerInitials } = useAtomValue(tenantConfigAtom);
+  const {
+    config: { useTrainerInitials },
+  } = useTenant();
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const getCurrentEvent = useCallback(
@@ -137,7 +140,9 @@ function InstanceTimeGridEvent({
             'rounded-t-none': continuesPrior,
             'rounded-b-none': continuesAfter,
             'rbc-dragged-event': isDragging && currentDragSubject && !event.__isPreview,
-            'pl-3': event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0,
+            'pl-3':
+              event.instance.targetCohortsList &&
+              event.instance.targetCohortsList.length > 0,
           },
         )}
       >
@@ -145,20 +150,21 @@ function InstanceTimeGridEvent({
           instanceId={event.instance.id}
           className="absolute right-1 top-1 text-accent-11 drop-shadow"
         />
-        {event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0 && (
-          <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-sm inset-y-0 left-0 flex flex-col">
-            {event.instance.targetCohortsList
-              .map((x) => x.cohort?.colorRgb)
-              .filter(isTruthy)
-              .map((color) => (
-                <div
-                  key={color}
-                  className="flex-1 w-2"
-                  style={{ backgroundColor: color }}
-                />
-              ))}
-          </div>
-        )}
+        {event.instance.targetCohortsList &&
+          event.instance.targetCohortsList.length > 0 && (
+            <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-sm inset-y-0 left-0 flex flex-col">
+              {event.instance.targetCohortsList
+                .map((x) => x.cohort?.colorRgb)
+                .filter(isTruthy)
+                .map((color) => (
+                  <div
+                    key={color}
+                    className="flex-1 w-2"
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+            </div>
+          )}
         {!continuesPrior && isResizable && (
           <div
             className="absolute top-0 opacity-0 group-hover:opacity-100 cursor-n-resize w-3 left-1/2 mx-auto border-t-[6px] border-double"

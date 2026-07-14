@@ -30,10 +30,10 @@ export function LocationField({
   const locationOptions = React.useMemo(
     () => [
       { id: 'none', label: 'Žádné' },
-      ...(tenant?.tenant?.tenantLocationsList || []).map((location) => ({
+      ...(tenant?.tenant?.tenantLocationsList?.map((location) => ({
         id: location.id,
         label: location.name,
-      })),
+      })) ?? []),
       { id: 'other', label: 'Jiné...' },
     ],
     [tenant],

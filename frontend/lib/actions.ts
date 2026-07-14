@@ -36,7 +36,7 @@ export type Action<T, Id extends string = string> = {
   id: Id;
   label: Resolvable<T, string>;
   icon?: Resolvable<T, Icon>;
-  visible: Resolvable<T, boolean>;
+  visible?: Resolvable<T, boolean>;
   variant?: 'default' | 'danger';
   group?: 'primary' | 'add';
 } & (
@@ -125,7 +125,9 @@ function forItem<T, const A extends readonly Action<T>[]>(
   actions: A,
   ctx: ActionContext<T>,
 ): ResolvedAction<IdOf<A>>[] {
-  return actions.filter((a) => resolve(a.visible, ctx)).map((a) => resolveOne(a, ctx));
+  return actions
+    .filter((a) => resolve(a.visible, ctx) ?? true)
+    .map((a) => resolveOne(a, ctx));
 }
 
 function useActionRouter(): ActionRouter {

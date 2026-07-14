@@ -11,52 +11,54 @@ import { EventForm } from '@/ui/event-form/types';
 import { z } from 'zod';
 import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 
 export function InstanceTrainerListElement({
-  index,
+  name,
   control,
+  mode,
 }: {
   control: Control<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>;
-  index: number;
+  name: 'trainers' | `instances.${number}.trainers`;
+  mode: 'add' | 'edit';
 }) {
+  const auth = useAuth();
   const [open, setOpen] = React.useState(false);
-  const { fields, append, remove, update, replace } = useFieldArray({
-    name: `instances.${index}.trainers`,
-    control,
-  });
+  const { fields, append, remove, update, replace } = useFieldArray({ name, control });
   const type = useWatch({ control, name: 'type' });
-  const instanceId = useWatch({ control, name: `instances.${index}.itemId` });
-  const trainers = useWatch({ control, name: `instances.${index}.trainers` });
+  const value = useWatch({ control, name });
 
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
-  const trainerOptions = React.useMemo(
+  const trainers = React.useMemo(
     () =>
-      (tenant?.tenant?.tenantTrainersList || []).map((trainer) => ({
-        id: trainer.person?.id || '',
-        label: trainer.person?.name || '?',
-      })),
+      (tenant?.tenant?.tenantTrainersList || [])
+        .filter(keyIsNonNull('person'))
+        .map(({ person: { id, name } }) => ({ id, label: name })),
     [tenant],
   );
 
-  const auth = useAuth();
-  const enabledTrainerOptions = React.useMemo(
-    () =>
-      auth.isAdmin ? trainerOptions : trainerOptions.filter((x) => auth.isMyPerson(x.id)),
-    [trainerOptions, auth],
+  const enabledTrainers = React.useMemo(
+    () => (auth.isAdmin ? trainers : trainers.filter((x) => auth.isMyPerson(x.id))),
+    [trainers, auth],
   );
 
   React.useEffect(() => {
-    const firstTrainer = enabledTrainerOptions.find(() => true);
-    if (!instanceId && fields.length === 0 && enabledTrainerOptions.length === 1 && firstTrainer) {
+    const firstTrainer = enabledTrainers.at(0);
+    if (
+      mode === 'add' &&
+      fields.length === 0 &&
+      enabledTrainers.length === 1 &&
+      firstTrainer
+    ) {
       replace([{ itemId: null, personId: firstTrainer.id, lessonsOffered: 0 }]);
     }
-  }, [fields.length, instanceId, replace, enabledTrainerOptions]);
+  }, [fields.length, mode, replace, enabledTrainers]);
 
   return (
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
         <div>
-          <b>Trenéři termínu</b>
+          <b>Trenéři</b>
         </div>
 
         <Popover open={open} onOpenChange={setOpen}>
@@ -80,7 +82,7 @@ export function InstanceTrainerListElement({
                   if (id) append({ itemId: null, personId: id, lessonsOffered: 0 });
                   setOpen(false);
                 }}
-                options={enabledTrainerOptions}
+                options={enabledTrainers}
               />
             </PopoverPrimitive.Content>
           </PopoverPrimitive.Portal>
@@ -88,7 +90,7 @@ export function InstanceTrainerListElement({
       </div>
 
       {fields.map((trainer, trainerIndex) => {
-        const currentTrainer = trainers?.[trainerIndex] ?? trainer;
+        const currentTrainer = value?.[trainerIndex] ?? trainer;
         const lessonsOffered = currentTrainer.lessonsOffered as number | null | undefined;
         const offersLessons = lessonsOffered !== 0;
 
@@ -97,7 +99,7 @@ export function InstanceTrainerListElement({
         ) : (
           <div className="flex flex-wrap items-center gap-2" key={trainer.id}>
             <div className="grow">
-              {trainerOptions.find((x) => x.id === trainer.personId)?.label}
+              {trainers.find((x) => x.id === trainer.personId)?.label}
             </div>
             {!['LESSON', 'GROUP'].includes(type) && (
               <div className="flex flex-wrap items-center gap-2">
@@ -114,13 +116,13 @@ export function InstanceTrainerListElement({
                       })
                     }
                   />
-                  Povolit nabídku lekcí
+                  Požadavky na lekce
                 </label>
                 {offersLessons && (
                   <TextFieldElement
                     control={control}
                     type="number"
-                    name={`instances.${index}.trainers.${trainerIndex}.lessonsOffered`}
+                    name={`${name}.${trainerIndex}.lessonsOffered`}
                     placeholder="Bez omezení"
                     aria-label="Limit lekcí"
                     className="w-28"

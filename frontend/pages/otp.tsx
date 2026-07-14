@@ -6,14 +6,13 @@ import * as React from 'react';
 import { Spinner } from '@/ui/Spinner';
 import { useMutation } from 'urql';
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
-import { useAtomValue } from 'jotai';
-import { tenantConfigAtom } from '@/ui/state/auth';
+import { useTenant } from '@/ui/state/auth';
 
 export default function OtpPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const { publicSite } = useAtomValue(tenantConfigAtom);
+  const { publicSite } = useTenant();
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
   const doSignInWithOtp = useMutation(OtpLoginDocument)[1];
@@ -46,7 +45,7 @@ export default function OtpPage() {
       void router.push(
         !user.otpLogin?.result?.usr?.userProxiesList.length
           ? '/profil'
-          : (redirect || defaultRedirect) as Parameters<typeof router.push>[0],
+          : ((redirect || defaultRedirect) as Parameters<typeof router.push>[0]),
       );
     })();
   }, [

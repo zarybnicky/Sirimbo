@@ -40,15 +40,8 @@ export const tenantCatalog: Record<number, TenantCatalogEntry> = {
 
 export const defaultTenant = tenantCatalog[1]!;
 
-export function parseTenant(
-  tenantId: string | number | null | undefined,
-): TenantCatalogEntry | undefined {
-  return tenantCatalog[Number.parseInt(String(tenantId))];
-}
-
-export function getServerTenant(tenantId: string | number): TenantCatalogEntry {
-  return parseTenant(tenantId) ?? defaultTenant;
-}
+export const getTenant = (id: string | number | null | undefined) =>
+  tenantCatalog[Number.parseInt(String(id))];
 
 export const hostToTenant = new Map<string, TenantCatalogEntry>();
 for (const entry of Object.values(tenantCatalog)) {

@@ -1,7 +1,7 @@
 import { CoupleListDocument } from '@/graphql/Memberships';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
-import { formatLongCoupleName } from '@/ui/format';
+import { formatCoupleName } from '@/ui/format';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
@@ -26,7 +26,7 @@ export function CoupleList() {
   const nodes = React.useMemo(() => {
     return (data?.getCurrentTenant?.couplesList || []).map((item) => ({
       id: item.id,
-      title: formatLongCoupleName(item),
+      title: formatCoupleName(item),
       href: `/pary/${item.id}`,
     }));
   }, [data]);

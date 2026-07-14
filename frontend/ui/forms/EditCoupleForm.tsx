@@ -1,7 +1,7 @@
 import { CoupleDocument, UpdateCoupleDocument } from '@/graphql/Memberships';
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
-import { formatLongCoupleName } from '@/ui/format';
+import { formatCoupleName } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -52,7 +52,7 @@ export function EditCoupleForm({ id }: { id: string }) {
       <FormError error={onSubmit.error} />
 
       <div>
-        <b>{formatLongCoupleName(item)}</b>
+        <b>{formatCoupleName(item)}</b>
       </div>
 
       <DatePickerElement control={control} name="since" label="Od" clearable />

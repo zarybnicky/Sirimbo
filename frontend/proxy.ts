@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { defaultTenant, hostToTenant, parseTenant } from './tenant/catalog';
+import { defaultTenant, getTenant, hostToTenant } from './tenant/catalog';
 
 // eslint-disable-next-line import-x/no-unused-modules
 export const config = {
@@ -18,7 +18,7 @@ export function proxy(request: NextRequest) {
   const hostname = hostHeader?.split(',')[0]?.trim().split(':')[0]?.toLowerCase() ?? null;
   const previousTenantId = request.cookies.get('tenant_id')?.value;
   const tenant =
-    parseTenant(previousTenantId) ?? hostToTenant.get(hostname ?? '') ?? defaultTenant;
+    getTenant(previousTenantId) ?? hostToTenant.get(hostname ?? '') ?? defaultTenant;
   const tenantId = String(tenant.id);
 
   request.cookies.set('tenant_id', tenantId);

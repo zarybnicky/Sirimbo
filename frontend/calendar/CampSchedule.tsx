@@ -9,14 +9,14 @@ import { cn } from '@/lib/cn';
 import {
   dragSubjectAtom,
   externalDragDataType,
+  type ExternalDragSubject,
   externalDragSubjectAtom,
   groupByAtom,
   isDraggingAtom,
-  type ExternalDragSubject,
 } from '@/calendar/state';
 import type { CalendarInstanceEvent, InteractionInfo } from '@/calendar/types';
 import { FormError } from '@/ui/form';
-import { formatInstanceName, formatLongCoupleName } from '@/ui/format';
+import { formatCoupleName, formatInstanceName } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { useAuth } from '@/ui/use-auth';
 import { startOf } from 'date-arithmetic';
@@ -373,7 +373,7 @@ function LessonDemandPool({
               <summary className="flex min-w-0 cursor-pointer list-none items-center gap-2 px-3 py-2 text-neutral-12 [&::-webkit-details-marker]:hidden">
                 <ChevronRight className="size-4 shrink-0 transition-transform group-open:rotate-90 motion-reduce:transition-none" />
                 <span className="min-w-0 grow text-sm break-words">
-                  {registration.person?.name || formatLongCoupleName(registration.couple)}
+                  {registration.person?.name || formatCoupleName(registration.couple)}
                 </span>
                 <span
                   className="shrink-0 rounded-full px-2 py-0.5 text-sm font-semibold"

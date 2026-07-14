@@ -12,8 +12,7 @@ import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
 import { PersonWorkReportView } from '@/ui/PersonWorkReportView';
 import { personActions } from '@/lib/actions/person';
 import { useActions } from '@/lib/actions';
-import { tenantIdAtom } from '@/ui/state/auth';
-import { useAtomValue } from 'jotai';
+import { useTenantId } from '@/ui/state/auth';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { CstsPersonLink } from '@/ui/csts-links';
 import { Globe, Music2 } from 'lucide-react';
@@ -21,7 +20,7 @@ import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
-  const tenantId = useAtomValue(tenantIdAtom);
+  const tenantId = useTenantId();
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
     variables: { id },
