@@ -4,6 +4,7 @@ import {
   RadioButtonGroup,
   type RadioButtonGroupItem,
 } from '@/ui/fields/RadioButtonGroupElement';
+import { capitalize } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 
 const dayFormatter = new Intl.DateTimeFormat('cs-CZ', {
@@ -41,7 +42,7 @@ export function BoundedDayPicker({
     { id: 'range', label: 'Celé soustředění' },
     ...days.map((day) => ({
       id: dayId(day),
-      label: dayFormatter.format(day),
+      label: capitalize(dayFormatter.format(day)),
     })),
   ];
 
@@ -56,7 +57,6 @@ export function BoundedDayPicker({
         value={view === 'day' ? dayId(date) : 'range'}
         options={options}
         className="w-max flex-nowrap"
-        itemClassName="capitalize"
         onValueChange={(value) => {
           if (value === 'range') {
             setView('range');

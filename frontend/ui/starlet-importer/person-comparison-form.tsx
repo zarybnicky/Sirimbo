@@ -23,6 +23,7 @@ import {
   UpdateTenantMembershipDocument,
 } from '@/graphql/Memberships';
 import { useTenantId } from '../state/auth';
+import { capitalize } from '../format';
 
 type QueriedStudent = Pick<
   Student,
@@ -679,11 +680,6 @@ function mergeCandidates(candidates: QueriedStudent[]): DeduplicatedStudent {
 
 function getNormalizedName(name: string | null, surname: string | null): string {
   return `${capitalize(slugify(name || '').trim())} ${capitalize(slugify(surname || '').trim())}`;
-}
-
-function capitalize(x: string | undefined | null) {
-  if (!x) return '';
-  return x.slice(0, 1).toUpperCase() + x.slice(1);
 }
 
 function diffObjectsList(objects: Record<string, string>[]) {

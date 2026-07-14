@@ -1,6 +1,6 @@
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
-import { formatEventType, weekDayFormatter } from '@/ui/format';
+import { capitalize, formatEventType, weekDayFormatter } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
@@ -33,7 +33,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   const dataByDay = React.useMemo(() => {
     const map = new Map<string, MapItem>();
     for (const calendarEvent of events) {
-      const date = startOf(calendarEvent.start, 'day').toISOString().slice(0, 10);
+      const date = calendarEvent.start.toISOString().slice(0, 10);
       const mapItem: MapItem = map.get(date) ?? {
         birthdays: [],
         competitions: [],
@@ -100,8 +100,8 @@ function Agenda({ events }: ViewProps): React.ReactNode {
       {dataByDay.map(([date, dateEntry]) => (
         <React.Fragment key={date}>
           <div className="mt-8 mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <div className="text-2xl tracking-wide capitalize">
-              {weekDayFormatter.format(new Date(date))}
+            <div className="text-2xl tracking-wide">
+              {capitalize(weekDayFormatter.format(new Date(date)))}
             </div>
             {dateEntry.birthdays.map((calendarEvent) => (
               <BirthdayChip key={calendarEvent.id} calendarEvent={calendarEvent} />

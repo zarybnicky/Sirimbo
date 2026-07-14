@@ -28,7 +28,6 @@ export function RadioButtonGroup({
   onValueChange,
   onBlur,
   className,
-  itemClassName,
 }: {
   name: string;
   value: string;
@@ -36,7 +35,6 @@ export function RadioButtonGroup({
   onValueChange: (value: string) => void;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   className?: string;
-  itemClassName?: string;
 }) {
   return (
     <div className={cn('flex flex-wrap gap-1 rounded-xl', className)}>
@@ -59,7 +57,6 @@ export function RadioButtonGroup({
               'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-accent-10',
               'peer-disabled:cursor-not-allowed peer-disabled:border-neutral-6 peer-disabled:text-neutral-11',
               'peer-disabled:peer-checked:border-neutral-10 peer-disabled:peer-checked:bg-neutral-9 peer-disabled:peer-checked:text-white',
-              itemClassName,
             )}
           >
             {label}

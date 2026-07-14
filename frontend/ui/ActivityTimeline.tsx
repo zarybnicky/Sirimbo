@@ -12,7 +12,7 @@ import { CompetitionEventContent } from '@/ui/Competitions';
 import { formatCstsCategoryName } from '@/ui/csts';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/EventAttendance';
-import { weekDayFormatter } from '@/ui/format';
+import { capitalize, weekDayFormatter } from '@/ui/format';
 import { buttonCls, cardCls } from '@/ui/style';
 import { add, subtract } from 'date-arithmetic';
 import { Cake } from 'lucide-react';
@@ -251,9 +251,9 @@ function TimelineDay({
 
   return (
     <section>
-      <h4 className="mb-2 mt-5 text-2xl tracking-wide capitalize first:mt-3">
+      <h4 className="mb-2 mt-5 text-2xl tracking-wide first:mt-3">
         {date
-          ? weekDayFormatter.format(new Date(date))
+          ? capitalize(weekDayFormatter.format(new Date(date)))
           : mode === 'future'
             ? 'Budoucí'
             : 'Minulé'}
