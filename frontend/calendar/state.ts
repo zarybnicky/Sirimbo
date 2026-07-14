@@ -1,5 +1,6 @@
 import { atom } from 'jotai';
 import { selectAtom } from 'jotai/utils';
+import type { EventType } from '@/graphql';
 import type {
   CalendarInstanceEvent,
   DragAction,
@@ -98,6 +99,14 @@ const storage = {
 
 export const trainerIdsFilterAtom = atom<string[]>([]);
 export const participantIdsFilterAtom = atom<string[]>([]);
+export const eventTypes = [
+  'LESSON',
+  'GROUP',
+  'RESERVATION',
+  'CAMP',
+  'HOLIDAY',
+] as const satisfies readonly EventType[];
+export const eventTypesFilterAtom = atom<EventType[]>([...eventTypes]);
 
 const baseGroupByAtom = atom(
   ((storage.getItem('groupBy') as any) || 'trainer') as 'none' | 'trainer' | 'room',

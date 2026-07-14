@@ -11,6 +11,7 @@ import { useMutation } from 'urql';
 import {
   dragListenersAtom,
   type ExternalDragSubject,
+  eventTypesFilterAtom,
   groupByAtom,
   isDraggingAtom,
   participantIdsFilterAtom,
@@ -37,6 +38,8 @@ import { GroupByPicker } from '@/calendar/GroupByPicker';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import { CalendarDatePicker } from '@/calendar/CalendarDatePicker';
 import { ParticipantFilter } from '@/calendar/ParticipantFilter';
+import { EventTypeFilter } from '@/calendar/EventTypeFilter';
+import { CalendarRangePicker } from '@/calendar/CalendarRangePicker';
 import TimeGrid from '@/calendar/TimeGrid';
 import {
   parseResourceKey,
@@ -47,9 +50,17 @@ import {
 const emptyArray: readonly [] = [];
 const emptyResources: readonly Resource[] = [];
 const preventDefault = (e: Event) => e.preventDefault();
-const calendarViewKeys = ['month', 'week', 'work_week', 'day', 'agenda', 'range'] as const;
+const calendarViewKeys = [
+  'month',
+  'week',
+  'work_week',
+  'day',
+  'agenda',
+  'range',
+] as const;
 const standardViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
 const boundedViewKeys = ['range', 'day'] as const;
+const rangeOnlyViewKeys = ['range'] as const;
 
 export function Calendar({
   parentId,
@@ -59,6 +70,7 @@ export function Calendar({
   onRemove,
   additionalResources = emptyResources,
   primary,
+  rangeDayPicker = false,
 }: {
   parentId?: string;
   initialDate?: string;
@@ -70,6 +82,7 @@ export function Calendar({
   onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
   additionalResources?: readonly Resource[];
   primary?: ViewProps['primary'];
+  rangeDayPicker?: boolean;
 }) {
   const auth = useAuth();
   const [onlyMine, setOnlyMine] = useQueryState(
@@ -82,8 +95,12 @@ export function Calendar({
       .withDefault(dateRange ? 'range' : 'agenda')
       .withOptions({ history: 'push' }),
   );
+  const singleDayRange =
+    !!dateRange && dateRange.since.toDateString() === dateRange.until.toDateString();
   const availableViews: readonly CalendarViewKey[] = dateRange
-    ? boundedViewKeys
+    ? rangeDayPicker && singleDayRange
+      ? rangeOnlyViewKeys
+      : boundedViewKeys
     : standardViewKeys;
   const viewInput = availableViews.includes(requestedView)
     ? requestedView
@@ -102,22 +119,26 @@ export function Calendar({
   );
   const view: CalendarView =
     viewInput === 'range' ? rangeView! : CalendarViews[viewInput];
-  const [date, setDate] = React.useState(() => initialDate ? new Date(initialDate) : new Date());
+  const [date, setDate] = React.useState(() =>
+    initialDate ? new Date(initialDate) : new Date(),
+  );
 
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragListeners = useSetAtom(dragListenersAtom);
   const groupBy = useAtomValue(groupByAtom);
   const trainerIds = useAtomValue(trainerIdsFilterAtom);
   const participantIds = useAtomValue(participantIdsFilterAtom);
+  const eventTypes = useAtomValue(eventTypesFilterAtom);
   const filters = React.useMemo(
     () => ({
       onlyMine,
       trainerIds,
       participantIds,
+      eventTypes,
       myPersonIds: auth.personIds,
       parentId,
     }),
-    [auth.personIds, onlyMine, trainerIds, participantIds, parentId],
+    [auth.personIds, onlyMine, trainerIds, participantIds, eventTypes, parentId],
   );
 
   const { fetching, range, events, resources, refresh } = useCalendarData(
@@ -178,10 +199,11 @@ export function Calendar({
 
   const onDrillDown = React.useCallback(
     (date: Date) => {
+      if (!availableViews.includes('day')) return;
       setDate(date);
       setView('day');
     },
-    [setView],
+    [availableViews, setView],
   );
 
   React.useEffect(() => {
@@ -212,26 +234,42 @@ export function Calendar({
       )}
     >
       <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
-        <div className="flex gap-2 flex-wrap items-start">
-          {view.nav && (
-            <CalendarDatePicker
+        <div className="flex w-full min-w-0 max-w-full flex-1 flex-wrap items-start gap-2">
+          {rangeDayPicker && dateRange ? (
+            <CalendarRangePicker
+              range={dateRange}
               date={date}
+              view={viewInput}
               setDate={setDate}
-              view={view}
-              bounds={dateRange}
+              setView={setView}
             />
+          ) : (
+            <>
+              {view.nav && (
+                <CalendarDatePicker
+                  date={date}
+                  setDate={setDate}
+                  view={view}
+                  bounds={dateRange}
+                />
+              )}
+              <ViewPicker view={viewInput} setView={setView} views={availableViews} />
+            </>
           )}
-          <ViewPicker view={viewInput} setView={setView} views={availableViews} />
           {!onlyMine && view.supportsGrouping && <GroupByPicker />}
           <button
             type="button"
-            className={buttonCls({ variant: onlyMine ? 'primary' : 'outline', size: 'sm' })}
+            className={buttonCls({
+              variant: onlyMine ? 'primary' : 'outline',
+              size: 'sm',
+            })}
             onClick={() => setOnlyMine((x) => !x)}
           >
             Pouze moje
           </button>
           <TrainerFilter />
           <ParticipantFilter />
+          <EventTypeFilter />
           {fetching && <Spinner />}
         </div>
 

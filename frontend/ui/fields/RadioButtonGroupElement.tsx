@@ -20,6 +20,53 @@ export type RadioButtonGroupItem = {
   label: React.ReactNode;
   disabled?: boolean;
 };
+
+export function RadioButtonGroup({
+  name,
+  value,
+  options,
+  onValueChange,
+  onBlur,
+  className,
+}: {
+  name: string;
+  value: string;
+  options: RadioButtonGroupItem[];
+  onValueChange: (value: string) => void;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  className?: string;
+}) {
+  return (
+    <div className={cn('flex flex-wrap gap-1 rounded-xl', className)}>
+      {options.map(({ label, id, disabled }) => (
+        <label key={id} className="relative">
+          <input
+            className="peer sr-only"
+            type="radio"
+            name={name}
+            value={id}
+            checked={value === id}
+            disabled={disabled}
+            onBlur={onBlur}
+            onChange={() => onValueChange(id)}
+          />
+          <span
+            className={cn(
+              'block cursor-pointer rounded-xl border border-accent-7 bg-neutral-1 px-2.5 py-2 text-sm text-accent-11',
+              'peer-checked:border-accent-10 peer-checked:bg-accent-9 peer-checked:text-white',
+              'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-accent-10',
+              'peer-disabled:cursor-not-allowed peer-disabled:border-neutral-6 peer-disabled:text-neutral-11',
+              'peer-disabled:peer-checked:border-neutral-10 peer-disabled:peer-checked:bg-neutral-9 peer-disabled:peer-checked:text-white',
+            )}
+          >
+            {label}
+          </span>
+        </label>
+      ))}
+    </div>
+  );
+}
+
 type RadioButtonGroupElementProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
@@ -39,35 +86,13 @@ export function RadioButtonGroupElement<T extends FieldValues>({
   return (
     <div className={cn('relative', className)}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <div className="flex flex-wrap gap-1 rounded-xl">
-        {options.map(({ label, id, disabled }) => (
-          <label key={id} className="relative">
-            <input
-              className="peer sr-only"
-              type="radio"
-              name={field.name}
-              value={id}
-              checked={field.value === id}
-              disabled={disabled}
-              onBlur={field.onBlur}
-              onChange={field.onChange}
-            />
-            <span
-              className={cn(
-                'block cursor-pointer bg-neutral-1 px-2.5 py-2 text-sm text-accent-11',
-                'border border-accent-7',
-                'peer-checked:border-accent-10 peer-checked:bg-accent-9 peer-checked:text-white',
-                'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-accent-10',
-                'peer-disabled:cursor-not-allowed peer-disabled:border-neutral-6 peer-disabled:text-neutral-11',
-                'peer-disabled:peer-checked:border-neutral-10 peer-disabled:peer-checked:bg-neutral-9 peer-disabled:peer-checked:text-white',
-                'rounded-xl',
-              )}
-            >
-              {label}
-            </span>
-          </label>
-        ))}
-      </div>
+      <RadioButtonGroup
+        name={field.name}
+        value={field.value}
+        options={options}
+        onBlur={field.onBlur}
+        onValueChange={field.onChange}
+      />
       <FieldHelper error={fieldState.error} helperText={helperText} />
     </div>
   );
