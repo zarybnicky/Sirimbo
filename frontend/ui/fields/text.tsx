@@ -11,6 +11,7 @@ import {
 
 type Extras = {
   className?: string;
+  inputClassName?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
   prefix?: React.ReactNode;
@@ -28,6 +29,7 @@ export function TextField({
   name,
   type = 'text',
   className,
+  inputClassName,
   label,
   error,
   helperText,
@@ -52,6 +54,7 @@ export function TextField({
             'disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9',
             'read-only:bg-neutral-2 read-only:border-neutral-7 read-only:text-neutral-11 read-only:placeholder:text-neutral-9',
             'focus:outline-none focus:ring-accent-7 focus:border-accent-8',
+            inputClassName,
           )}
         />
         {error && (

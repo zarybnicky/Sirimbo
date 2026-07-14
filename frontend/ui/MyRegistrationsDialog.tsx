@@ -134,7 +134,10 @@ export function MyRegistrationsDialog({
   return (
     <Dialog modal={false} open={open} onOpenChange={setOpen}>
       {isManager ? (
-        <DialogTrigger size="sm" text="Přihlášky" />
+        <DialogTrigger
+          size="sm"
+          text={`Přihlášky (${instance.registrations.nodes.length})`}
+        />
       ) : isExternal || !hasRegistration ? (
         <DialogTrigger.Add size="sm" text="Přihlásit" />
       ) : (
@@ -277,6 +280,7 @@ function RegistrationsDialogContent({
           <Spinner />
         ) : candidates.length > 0 ? (
           <RegistrantList
+            autoFocus
             options={candidates}
             searchable={isManager}
             onSelect={selectCandidate}
@@ -391,10 +395,12 @@ function IconButton({
 }
 
 function RegistrantList({
+  autoFocus,
   options,
   searchable,
   onSelect,
 }: {
+  autoFocus?: boolean;
   options: Registrant[];
   searchable: boolean;
   onSelect: (registrant: Registrant) => void;
@@ -406,9 +412,10 @@ function RegistrantList({
     <div className="scrollbar max-h-[60dvh] overflow-y-auto overscroll-contain">
       {searchable && (
         <TextField
-          autoFocus
+          autoFocus={autoFocus}
           type="search"
           className="sticky top-0 z-10 bg-neutral-1"
+          inputClassName="bg-neutral-1"
           placeholder="Vyhledat..."
           value={search}
           onChange={(event) => setSearch(event.currentTarget.value)}
