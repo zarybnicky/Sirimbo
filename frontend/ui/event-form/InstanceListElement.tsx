@@ -14,7 +14,6 @@ export function InstanceListElement({
 }) {
   const { fields, append, remove } = useFieldArray({ name: 'instances', control });
   const instances = useWatch({ control, name: 'instances' });
-  const type = useWatch({ control, name: 'type' }) ?? 'LESSON';
 
   const addInstance = React.useCallback(
     (weeks: 1 | 2) => {

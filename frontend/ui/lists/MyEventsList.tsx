@@ -1,7 +1,7 @@
 import { EventInstanceRangeDocument, EventWithTrainerFragment } from '@/graphql/Event';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
-import { formatWeekDay } from '@/ui/format';
+import { weekDayFormatter } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -60,7 +60,9 @@ export function MyEventsList() {
             })}
           >
             <h6 className="ml-3">
-              <div className="font-bold mb-1">{formatWeekDay(new Date(date))}</div>
+              <div className="font-bold mb-1 capitalize">
+                {weekDayFormatter.format(new Date(date))}
+              </div>
               <div className="text-sm text-neutral-11">{location}</div>
             </h6>
             {eventInstances.map((instance) => (

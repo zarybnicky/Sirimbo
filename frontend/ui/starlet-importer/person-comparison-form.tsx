@@ -1,7 +1,6 @@
 import { fetchStarlet } from '@/starlet/query';
 import { Course, Student } from '@/starlet/graphql';
 import { CourseDocument } from '@/starlet/graphql/Query';
-import { capitalize } from '@/ui/format';
 import { slugify } from '@/lib/slugify';
 import { type JSX, useEffect, useMemo, useState } from 'react';
 import {
@@ -680,6 +679,11 @@ function mergeCandidates(candidates: QueriedStudent[]): DeduplicatedStudent {
 
 function getNormalizedName(name: string | null, surname: string | null): string {
   return `${capitalize(slugify(name || '').trim())} ${capitalize(slugify(surname || '').trim())}`;
+}
+
+function capitalize(x: string | undefined | null) {
+  if (!x) return '';
+  return x.slice(0, 1).toUpperCase() + x.slice(1);
 }
 
 function diffObjectsList(objects: Record<string, string>[]) {

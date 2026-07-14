@@ -1,6 +1,6 @@
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
-import { formatEventType, formatWeekDay } from '@/ui/format';
+import { formatEventType, weekDayFormatter } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
@@ -100,8 +100,8 @@ function Agenda({ events }: ViewProps): React.ReactNode {
       {dataByDay.map(([date, dateEntry]) => (
         <React.Fragment key={date}>
           <div className="mt-8 mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <div className="text-2xl tracking-wide">
-              {formatWeekDay(new Date(`${date}T00:00:00`))}
+            <div className="text-2xl tracking-wide capitalize">
+              {weekDayFormatter.format(new Date(date))}
             </div>
             {dateEntry.birthdays.map((calendarEvent) => (
               <BirthdayChip key={calendarEvent.id} calendarEvent={calendarEvent} />

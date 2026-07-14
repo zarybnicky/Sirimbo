@@ -62,7 +62,7 @@ export const formatInstanceName = (
   return name;
 };
 
-const weekDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
+export const weekDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
   weekday: 'long',
   day: 'numeric',
   month: 'long',
@@ -119,13 +119,6 @@ export const moneyFormatter = {
     return formatter.format(Number.parseFloat(price.amount));
   },
 };
-
-export const formatWeekDay = (date: Date) => capitalize(weekDayFormatter.format(date));
-
-export function capitalize(x: string | undefined | null) {
-  if (!x) return '';
-  return x.slice(0, 1).toUpperCase() + x.slice(1);
-}
 
 export const formatOpenDateRange = (item: {
   since: string | null;

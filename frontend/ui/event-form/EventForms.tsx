@@ -369,8 +369,6 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
     }
   }, [registrationsQuery, registrationsReady, setValue]);
 
-  const type = useWatch({ control, name: 'type' });
-
   const onSubmit = useAsyncCallback(async (values: EventFormType) => {
     const edited = values.instances[0];
     if (!edited?.since || !edited.until) return;
