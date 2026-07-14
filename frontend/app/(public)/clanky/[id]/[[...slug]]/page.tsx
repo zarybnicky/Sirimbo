@@ -1,7 +1,7 @@
 /* eslint-disable import-x/no-unused-modules */
 import { ArticleDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
-import { getRequestTenant } from '@/lib/tenant/server';
+import { getRequestTenant } from '@/tenant/server';
 import { slugify } from '@/lib/slugify';
 import { fullDateFormatter } from '@/ui/format';
 import { RichTextView } from '@/ui/RichTextView';

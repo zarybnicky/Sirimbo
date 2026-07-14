@@ -1,5 +1,5 @@
 /* eslint-disable import-x/no-unused-modules */
-import { getRequestTenant } from '@/lib/tenant/server';
+import { getRequestTenant } from '@/tenant/server';
 import type { MetadataRoute } from 'next';
 
 export const dynamic = 'force-dynamic';

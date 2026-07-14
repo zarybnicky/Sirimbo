@@ -1,5 +1,5 @@
 /* eslint-disable import-x/no-unused-modules, tailwindcss/no-custom-classname */
-import { getRequestTenant } from '@/lib/tenant/server';
+import { getRequestTenant } from '@/tenant/server';
 import type { Metadata, Viewport } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
@@ -30,11 +30,11 @@ export async function generateMetadata(): Promise<Metadata> {
     applicationName: tenant.name,
     manifest,
     openGraph: {
-      siteName: seo.openGraph.siteName,
-      type: seo.openGraph.type as 'website' | undefined,
-      locale: seo.openGraph.locale,
+      siteName: tenant.name,
+      type: 'website',
+      locale: seo.openGraph?.locale,
       description: seo.description,
-      images: publicImage ? [publicImage] : seo.openGraph.images,
+      images: publicImage ? [publicImage] : seo.openGraph?.images,
     },
     twitter: publicImage
       ? {
@@ -85,9 +85,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     other: {
       ...Object.fromEntries(
-        seo.additionalMetaTags
-          .filter((tag) => tag.name !== 'viewport')
-          .map((tag) => [tag.name, tag.content]),
+        (seo.additionalMetaTags || []).map((tag) => [tag.name, tag.content]),
       ),
     },
   };

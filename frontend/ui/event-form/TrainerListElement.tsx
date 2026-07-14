@@ -13,7 +13,7 @@ import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 
-export function InstanceTrainerListElement({
+export function TrainerListElement({
   name,
   control,
   mode,

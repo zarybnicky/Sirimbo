@@ -8,12 +8,12 @@ export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
       <Link href="/dashboard" aria-label="Nástěnka" className="h-16 mt-3 mx-auto">
-        <Image alt="" src={LogoOnDark} sizes="192px" />
+        <Image alt="" src={LogoOnDark} loading="eager" sizes="192px" />
       </Link>
     </div>
   );
 }
 
 export function MobileLogo() {
-  return <Image alt="" src={LogoOnWhite} height="50" />;
+  return <Image alt="" src={LogoOnWhite} loading="eager" height="50" />;
 }

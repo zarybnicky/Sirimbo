@@ -26,7 +26,7 @@ type SidebarProps = {
 
 export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: SidebarProps) {
   const router = useRouter();
-  const pathname = usePathname() ?? '';
+  const pathname = usePathname();
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
   const tenantId = useTenantId();
@@ -120,12 +120,12 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
                     : item.children.length > 0,
                 )
                 .map((item) => (
-                  <SidebarSection key={item.title} item={item} pathname={pathname} />
+                  <SidebarSection key={item.title} item={item} />
                 ))}
 
               <Link
                 onClick={signOut}
-                href={publicSite ? '/' : '/dashboard'}
+                href={isMounted && publicSite ? '/' : '/dashboard'}
                 className={cn(
                   'rounded-2xl px-3 py-1.5',
                   'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
@@ -137,22 +137,15 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
               <div className="h-8" />
             </>
           ) : (
-            <SidebarLink
-              item={{ type: 'link', title: 'Přihlásit se', href: '/login' }}
-              pathname={pathname}
-            />
+            <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {publicSite &&
+          {isMounted &&
+            publicSite &&
             (showTopMenu ? (
-              topMenu.map((item) => (
-                <SidebarSection key={item.title} item={item} pathname={pathname} />
-              ))
+              topMenu.map((item) => <SidebarSection key={item.title} item={item} />)
             ) : (
-              <SidebarLink
-                item={{ type: 'link', title: 'Veřejná sekce', href: '/' }}
-                pathname={pathname}
-              />
+              <SidebarLink item={{ type: 'link', title: 'Veřejná sekce', href: '/' }} />
             ))}
 
           <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
@@ -163,7 +156,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
                 Právě probíhá ↗︎
               </Link>
             </div>
-            {isMounted && auth.isSystemAdmin && <TenantSelect />}
+            <TenantSelect />
           </div>
         </div>
       </nav>
@@ -173,11 +166,11 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
 
 type SidebarLinkProps = {
   item: MenuLink;
-  pathname: string;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 };
 
-function SidebarLink({ item, pathname, onClick }: SidebarLinkProps) {
+function SidebarLink({ item, onClick }: SidebarLinkProps) {
+  const pathname = usePathname() ?? '';
   const inPath = getHrefs(item).some((x) => {
     const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
     if (!y) return false;
@@ -201,9 +194,9 @@ function SidebarLink({ item, pathname, onClick }: SidebarLinkProps) {
   );
 }
 
-function SidebarSection({ item, pathname }: { item: MenuStructItem; pathname: string }) {
+function SidebarSection({ item }: { item: MenuStructItem }) {
   if (item.type === 'link') {
-    return <SidebarLink item={item} pathname={pathname} />;
+    return <SidebarLink item={item} />;
   }
   if (item.children.length <= 0) {
     return null;
@@ -215,7 +208,7 @@ function SidebarSection({ item, pathname }: { item: MenuStructItem; pathname: st
       </div>
       <div className="list-none grid gap-0.5 pb-2">
         {item.children.map((y) => (
-          <SidebarLink key={y.title} item={y} pathname={pathname} />
+          <SidebarLink key={y.title} item={y} />
         ))}
       </div>
     </>

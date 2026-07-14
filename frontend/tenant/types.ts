@@ -25,21 +25,17 @@ export type TenantSeoConfig = {
   facebook?: {
     appId: string;
   };
-  openGraph: {
-    siteName: string;
+  openGraph?: {
     locale?: string;
-    type?: string;
     images?: TenantOpenGraphImage[];
   };
-  additionalMetaTags: TenantMetaTag[];
+  additionalMetaTags?: TenantMetaTag[];
   additionalLinkTags?: TenantLinkTag[];
 };
 
 export type TenantPublicSiteConfig = {
-  locale: string;
   image: TenantOpenGraphImage;
   organization: {
-    name: string;
     legalName: string;
     logo: string;
     email?: string;
@@ -56,9 +52,7 @@ export type TenantPublicSiteConfig = {
 
 export type TenantConfig = {
   origin: string;
-  shortName: string;
   copyrightLine: string;
-  favicon: string;
   seo: TenantSeoConfig;
   publicSite?: TenantPublicSiteConfig;
   enableRegistration: boolean;

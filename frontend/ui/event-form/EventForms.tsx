@@ -29,7 +29,7 @@ import { z } from 'zod';
 import { useTenantConfig } from '@/ui/state/auth';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
-import { InstanceTrainerListElement } from './InstanceTrainerListField';
+import { TrainerListElement } from './TrainerListElement';
 import { eventLocationInput, LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
 import { CohortListElement } from './CohortListElement';
@@ -237,7 +237,7 @@ export function EventCreateForm({
             nameUntil="instances.0.until"
             isCamp={false}
           />
-          <InstanceTrainerListElement control={control} name="trainers" mode="add" />
+          <TrainerListElement control={control} name="trainers" mode="add" />
           <LocationField control={control} />
           <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
             {lessonRanges.map((range) => {
@@ -249,8 +249,7 @@ export function EventCreateForm({
                   className="flex gap-2 text-sm flex-wrap justify-between items-center"
                 >
                   <span className="text-neutral-11">
-                    {shortTimeFormatter.format(range.since)} -{' '}
-                    {shortTimeFormatter.format(range.until)}
+                    {shortTimeFormatter.formatRange(range.since, range.until)}
                   </span>
                   <div className="sm:justify-self-end">
                     <ComboboxButton
@@ -284,7 +283,7 @@ export function EventCreateForm({
           />
           <TextFieldElement control={control} name="name" label="Název (nepovinný)" />
           <LocationField control={control} />
-          <InstanceTrainerListElement control={control} name="trainers" mode="add" />
+          <TrainerListElement control={control} name="trainers" mode="add" />
           <InstanceListElement control={control} />
           <ParticipantListElement control={control} name="registrations" />
         </>
@@ -464,11 +463,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
         <InstanceListElement control={control} />
       )}
       <LocationField control={control} />
-      <InstanceTrainerListElement
-        control={control}
-        name="instances.0.trainers"
-        mode="edit"
-      />
+      <TrainerListElement control={control} name="instances.0.trainers" mode="edit" />
       <CohortListElement
         control={control}
         name="cohorts"

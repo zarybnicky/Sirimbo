@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { getRequestTenant } from '@/lib/tenant/server';
+import { getRequestTenant } from '@/tenant/server';
 import type { TenantPublicSiteConfig } from '@/tenant/types';
 import { Metadata } from 'next';
 
@@ -15,7 +15,6 @@ export async function publicPageMetadata({
   path: string;
   image?: TenantPublicSiteConfig['image'];
 }): Promise<Metadata> {
-
   if (!image) {
     const tenant = await getRequestTenant();
     image = tenant.config.publicSite?.image;

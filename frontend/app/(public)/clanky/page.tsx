@@ -2,7 +2,7 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
 import { publicPageMetadata } from '@/lib/server/seo';
-import { getRequestTenant } from '@/lib/tenant/server';
+import { getRequestTenant } from '@/tenant/server';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
 import { Pagination } from '@/ui/Pagination';

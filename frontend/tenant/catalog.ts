@@ -14,19 +14,19 @@ export type TenantCatalogEntry = {
 export const tenantCatalog: Record<number, TenantCatalogEntry> = {
   1: {
     id: 1,
-    name: olympConfig.shortName,
+    name: 'TK Olymp Olomouc',
     hosts: ['olymp.rozpisovnik.cz', 'tkolymp.cz'],
     config: olympConfig,
   },
   2: {
     id: 2,
-    name: kometaConfig.shortName,
+    name: 'DSP Kometa Brno',
     hosts: ['dspkometa.rozpisovnik.cz'],
     config: kometaConfig,
   },
   3: {
     id: 3,
-    name: starletConfig.shortName,
+    name: 'TK Starlet Brno',
     hosts: ['tkstarletbrno.rozpisovnik.cz'],
     config: starletConfig,
   },

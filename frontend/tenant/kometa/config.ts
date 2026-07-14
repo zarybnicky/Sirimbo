@@ -2,17 +2,11 @@ import { TenantConfig } from '../types';
 
 export const config: TenantConfig = {
   origin: 'https://dspkometa.rozpisovnik.cz',
-  shortName: 'DSP Kometa',
-  copyrightLine: '© 2024 DSP Kometa Brno, z. s.',
-  favicon: '',
+  copyrightLine: '© 2026 DSP Kometa Brno, z. s.',
   seo: {
-    titleTemplate: '%s · DSP Kometa',
-    defaultTitle: 'DSP Kometa',
+    titleTemplate: '%s · DSP Kometa Brno',
+    defaultTitle: 'DSP Kometa Brno',
     themeColor: '#000',
-    openGraph: { siteName: 'DSP Kometa' },
-    additionalMetaTags: [
-      { name: 'viewport', content: 'initial-scale=1,width=device-width' },
-    ],
     additionalLinkTags: [
       {
         rel: 'apple-touch-icon',

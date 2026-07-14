@@ -2,7 +2,7 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { CohortGroupListDocument } from '@/graphql/CohortGroup';
 import { CohortListDocument } from '@/graphql/Cohorts';
-import { getRequestTenant } from '@/lib/tenant/server';
+import { getRequestTenant } from '@/tenant/server';
 import { executeGraphql } from '@/lib/server/graphql';
 import { slugify } from '@/lib/slugify';
 import type { MetadataRoute } from 'next';

@@ -11,18 +11,25 @@ export function TenantSeo() {
   return (
     <DefaultSeo
       {...seo}
+      additionalMetaTags={[
+        ...(seo.additionalMetaTags ?? []),
+        { name: 'viewport', content: 'initial-scale=1,width=device-width' },
+      ]}
       canonical={canonical}
       openGraph={{
         ...seo.openGraph,
         url: canonical,
-        images: publicSite?.image
-          ? [
-              {
-                ...publicSite.image,
-                url: new URL(publicSite.image.url, origin).toString(),
-              },
-            ]
-          : seo.openGraph.images,
+        images: [
+          ...(publicSite?.image
+            ? [
+                {
+                  ...publicSite.image,
+                  url: new URL(publicSite.image.url, origin).toString(),
+                },
+              ]
+            : []),
+          ...(seo.openGraph?.images ?? []),
+        ],
       }}
     />
   );

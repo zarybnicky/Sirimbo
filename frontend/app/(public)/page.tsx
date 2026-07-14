@@ -1,7 +1,7 @@
 /* eslint-disable import-x/no-unused-modules */
 import { ArticlesDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
-import { getRequestTenant } from '@/lib/tenant/server';
+import { getRequestTenant } from '@/tenant/server';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
 import { CallToAction } from '@/ui/CallToAction';
@@ -15,7 +15,7 @@ import { publicPageMetadata } from '@/lib/server/seo';
 export async function generateMetadata(): Promise<Metadata> {
   const tenant = await getRequestTenant();
   return publicPageMetadata({
-    title: tenant.config.publicSite?.organization.name ?? tenant.name,
+    title: tenant.name,
     description: tenant.config.seo.description ?? '',
     path: '/',
   });
@@ -33,7 +33,6 @@ export default async function HomePage() {
   const articles = data.aktualities?.nodes ?? [];
   const heroData = articles.slice(0, 3);
   const restData = articles.slice(3);
-  const title = tenant.config.publicSite?.organization.name ?? tenant.name;
   const description = tenant.config.seo.description;
 
   return (
@@ -43,7 +42,7 @@ export default async function HomePage() {
       <CallToAction url="/" />
 
       <section className="prose prose-accent my-8">
-        <h1>{title}</h1>
+        <h1>{tenant.name}</h1>
         {description && <p>{description}</p>}
       </section>
 

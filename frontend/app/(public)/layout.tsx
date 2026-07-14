@@ -1,4 +1,4 @@
-import { getRequestTenant } from '@/lib/tenant/server';
+import { getRequestTenant } from '@/tenant/server';
 import type { TenantCatalogEntry } from '@/tenant/catalog';
 import { getTenantUi } from '@/tenant/ui';
 import { JsonLd } from '@/ui/JsonLd';
@@ -42,7 +42,7 @@ function getTenantStructuredData(tenant: TenantCatalogEntry) {
       '@context': 'https://schema.org',
       '@type': 'SportsOrganization',
       '@id': `${origin}/#organization`,
-      name: organization.name,
+      name: tenant.name,
       legalName: organization.legalName,
       url: origin,
       logo: new URL(organization.logo, origin).toString(),
@@ -62,7 +62,7 @@ function getTenantStructuredData(tenant: TenantCatalogEntry) {
       '@id': `${origin}/#website`,
       name: tenant.name,
       url: origin,
-      inLanguage: site.locale,
+      inLanguage: 'cs-CZ',
       publisher: {
         '@id': `${origin}/#organization`,
       },

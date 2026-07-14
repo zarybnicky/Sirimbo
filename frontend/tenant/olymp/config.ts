@@ -3,20 +3,16 @@ import SocialCard from './social-card.jpg';
 
 export const config: TenantConfig = {
   origin: 'https://tkolymp.cz',
-  shortName: 'TK Olymp',
-  copyrightLine: '© 2024 TK Olymp Olomouc, z. s.',
-  favicon: '',
+  copyrightLine: '© 2026 TK Olymp Olomouc, z. s.',
   seo: {
-    titleTemplate: '%s · TK Olymp',
-    defaultTitle: 'TK Olymp',
+    titleTemplate: '%s · TK Olymp Olomouc',
+    defaultTitle: 'TK Olymp Olomouc',
     description:
-      'TK Olymp Olomouc vede děti, mládež i dospělé v tanečním sportu v Olomouci a Prostějově. Nabízíme tréninkové programy, soutěžní tanec i školní kroužky.',
+      'TK Olymp vede děti, mládež i dospělé v tanečním sportu v Olomouci a Prostějově. Nabízíme tréninkové programy, soutěžní tanec i školní kroužky.',
     themeColor: '#000',
     facebook: { appId: '704526480597551' },
     openGraph: {
-      siteName: 'TK Olymp',
       locale: 'cs_CZ',
-      type: 'website',
     },
     additionalMetaTags: [
       { name: 'wot-verification', content: 'ec0cf41ab42dae52d3d4' },
@@ -34,7 +30,6 @@ export const config: TenantConfig = {
         content:
           'r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh',
       },
-      { name: 'viewport', content: 'initial-scale=1,width=device-width' },
     ],
     additionalLinkTags: [
       {
@@ -54,7 +49,6 @@ export const config: TenantConfig = {
     ],
   },
   publicSite: {
-    locale: 'cs-CZ',
     image: {
       url: SocialCard.src,
       width: 1200,
@@ -62,7 +56,6 @@ export const config: TenantConfig = {
       alt: 'Taneční klub Olymp Olomouc na mistrovství České republiky družstev',
     },
     organization: {
-      name: 'TK Olymp Olomouc',
       legalName: 'Taneční klub Olymp Olomouc, z. s.',
       logo: '/olymp/android-chrome-512x512.png',
       email: 'miroslav.hyza@tkolymp.cz',

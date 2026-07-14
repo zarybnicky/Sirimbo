@@ -1,9 +1,9 @@
 /* eslint-disable import-x/no-unused-modules */
 import { publicPageMetadata } from '@/lib/server/seo';
-import { LocationCard } from '@/ui/LocationCard';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
 import { Metadata } from 'next';
+import { LeafletMap } from '@/ui/LeafletMap';
 
 export const generateMetadata = (): Promise<Metadata> =>
   publicPageMetadata({
@@ -63,5 +63,43 @@ export default function LocationsPage() {
         </div>
       </div>
     </>
+  );
+}
+
+type Props = {
+  name: string;
+  children: React.ReactNode;
+  href: string;
+  mapHref: string;
+  map: {
+    lat: number;
+    lng: number;
+    zoom: number;
+  };
+};
+
+function LocationCard(x: Props) {
+  return (
+    <div>
+      <h3 className="text-accent-10 text-2xl font-bold mb-4 mt-8">{x.name}</h3>
+      <div className="grid md:grid-cols-[1fr_2fr] gap-4 items-center">
+        <LeafletMap map={x.map} name={x.name} />
+
+        <div className="grow text-neutral-12">
+          <div className="py-2">{x.children}</div>
+          <a href={x.href} rel="noreferrer" target="_blank" className="block underline">
+            {x.href}
+          </a>
+          <a
+            href={x.mapHref}
+            rel="noreferrer"
+            target="_blank"
+            className="block underline"
+          >
+            Otevřít mapu
+          </a>
+        </div>
+      </div>
+    </div>
   );
 }
