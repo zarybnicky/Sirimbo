@@ -31,32 +31,29 @@ export const UserRefresher = React.memo(function ProvideAuth() {
   React.useEffect(() => setAuthLoading(fetching), [fetching, setAuthLoading]);
 
   // Claims come from the server as data (no client-side JWT decode). A legacy
-  // session POSTs its token to establish the cookie; otherwise read via GET.
-  React.useEffect(() => {
+  // session POSTs its token once to establish the cookie; otherwise read via GET.
+  const refreshClaims = React.useCallback(async () => {
     if (!token && !sessionPresent) {
       setClaims(null);
       return;
     }
-    let cancelled = false;
-    void (async () => {
-      const res =
-        !sessionPresent && token
-          ? await fetch('/api/auth/session', {
-              method: 'POST',
-              headers: { 'content-type': 'application/json' },
-              body: JSON.stringify({ token }),
-            })
-          : await fetch('/api/auth/session');
-      if (!res.ok || cancelled) return;
-      const data = (await res.json()) as { claims: SessionClaims | null };
-      if (cancelled) return;
-      setClaims(data.claims ?? null);
-      if (!sessionPresent && token && data.claims) setSessionPresent(true);
-    })().catch(() => {});
-    return () => {
-      cancelled = true;
-    };
+    const res =
+      !sessionPresent && token
+        ? await fetch('/api/auth/session', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ token }),
+          })
+        : await fetch('/api/auth/session');
+    if (!res.ok) return;
+    const data = (await res.json()) as { claims: SessionClaims | null };
+    setClaims(data.claims ?? null);
+    if (!sessionPresent && token && data.claims) setSessionPresent(true);
   }, [token, sessionPresent, setSessionPresent]);
+
+  React.useEffect(() => {
+    void refreshClaims().catch(() => {});
+  }, [refreshClaims]);
 
   React.useEffect(() => {
     if (!fetching && currentUser && claims) {
@@ -64,19 +61,21 @@ export const UserRefresher = React.memo(function ProvideAuth() {
     }
   }, [fetching, setAuth, currentUser, claims]);
 
+  // Poll the current user and claims together; authAtom's deepEqual skips no-ops.
   React.useEffect(() => {
-    const launchQuery = () => {
+    const poll = () => {
       if (
         typeof document === 'undefined' ||
         document.visibilityState === undefined ||
         document.visibilityState === 'visible'
       ) {
         refetch({ requestPolicy: 'network-only' });
+        void refreshClaims().catch(() => {});
       }
     };
-    const interval = setInterval(launchQuery, 30_000);
+    const interval = setInterval(poll, 30_000);
     return () => clearInterval(interval);
-  }, [refetch]);
+  }, [refetch, refreshClaims]);
 
   return null;
 });
