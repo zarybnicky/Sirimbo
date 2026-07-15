@@ -77,7 +77,7 @@ export const Layout = React.memo(function Layout({
         details="Nemáte dostatečná práva pro zobrazení této stránky"
       />
     ) : (
-      <RedirectToLogin from={currentUrl} />
+      <RedirectToLogin from={url} />
     );
   }
 

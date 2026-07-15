@@ -7,8 +7,8 @@ import { useAsyncCallback } from 'react-async-hook';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { sessionPresentAtom, tenantConfigAtom } from '../state/auth';
+import { useSetAtom } from 'jotai';
+import { sessionPresentAtom, useTenantConfig } from '../state/auth';
 import { loginAction } from '@/lib/server/auth-actions';
 
 const Form = z.object({
@@ -16,12 +16,14 @@ const Form = z.object({
   passwd: z.string().min(1, 'Zadejte heslo'),
 });
 
+type FormValues = z.infer<typeof Form>;
+
 export type LoginFormProps = {
   onSuccess?: (result: UserAuthFragment | null) => void;
 };
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { enableRegistration } = useAtomValue(tenantConfigAtom);
+  const { enableRegistration } = useTenantConfig();
   const setSessionPresent = useSetAtom(sessionPresentAtom);
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),

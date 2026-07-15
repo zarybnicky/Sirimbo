@@ -13,8 +13,8 @@ import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { sessionPresentAtom, tenantConfigAtom } from '@/ui/state/auth';
+import { useSetAtom } from 'jotai';
+import { sessionPresentAtom, useTenantConfig } from '@/ui/state/auth';
 
 const Form = z.object({
   email: z.email(),
@@ -22,7 +22,7 @@ const Form = z.object({
 });
 
 export default function RegisterPage() {
-  const { enableRegistration } = useAtomValue(tenantConfigAtom);
+  const { enableRegistration } = useTenantConfig();
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();

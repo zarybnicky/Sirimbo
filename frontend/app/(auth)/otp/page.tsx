@@ -6,6 +6,7 @@ import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { otpLoginAction } from '@/lib/server/auth-actions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { sessionPresentAtom, useTenantConfig } from '@/ui/state/auth';
+import { useSetAtom } from 'jotai';
 import * as React from 'react';
 
 export default function OtpPage() {
