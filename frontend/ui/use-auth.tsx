@@ -14,6 +14,7 @@ import { buildId } from '@/lib/build-id';
 export const UserRefresher = React.memo(function ProvideAuth() {
   const [token] = useAtom(tokenAtom);
   const sessionPresent = useAtomValue(sessionPresentAtom);
+  const setSessionPresent = useSetAtom(sessionPresentAtom);
   const setAuthLoading = useSetAtom(authLoadingAtom);
   const setAuth = useSetAtom(authAtom);
 
@@ -30,8 +31,19 @@ export const UserRefresher = React.memo(function ProvideAuth() {
   React.useEffect(() => {
     if (!fetching && currentUser) {
       setAuth(currentUser.refreshJwt, currentUser.getCurrentUser);
+      // Zero-friction upgrade: a pre-existing session (localStorage token, no
+      // server cookie) plants the httpOnly cookie from the fresh JWT, once.
+      if (currentUser.getCurrentUser && currentUser.refreshJwt && !sessionPresent) {
+        void fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ token: currentUser.refreshJwt }),
+        }).then((res) => {
+          if (res.ok) setSessionPresent(true);
+        });
+      }
     }
-  }, [fetching, setAuth, currentUser]);
+  }, [fetching, setAuth, currentUser, sessionPresent, setSessionPresent]);
 
   React.useEffect(() => {
     const launchQuery = () => {
