@@ -7,8 +7,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSetAtom } from 'jotai';
-import { authAtom, sessionPresentAtom, useTenantConfig } from '../state/auth';
+import { useTenantConfig } from '../state/auth';
 import { loginAction } from '@/lib/server/auth-actions';
 
 const Form = z.object({
@@ -24,8 +23,6 @@ export type LoginFormProps = {
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const { enableRegistration } = useTenantConfig();
-  const setSessionPresent = useSetAtom(sessionPresentAtom);
-  const setAuth = useSetAtom(authAtom);
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
@@ -35,10 +32,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     if (result.status === 'error') {
       throw new Error(result.error);
     }
-    // Seed auth state from the server's return value (no JWT decoding on the
-    // client); the cookie is already set server-side.
-    setAuth(result.claims, result.user);
-    setSessionPresent(true);
+    // Cookie is set server-side; the navigation that follows is a full page
+    // load (Pages Router target), which picks the session up fresh.
     onSuccess?.(result.user ?? null);
   });
 

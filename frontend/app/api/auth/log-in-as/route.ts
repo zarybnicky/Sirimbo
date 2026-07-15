@@ -2,7 +2,6 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { LogInAsDocument } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
 import { sameOrigin, setSessionCookie } from '@/lib/server/session';
-import { decodeClaims } from '@/lib/session-claims';
 
 // Impersonation runs with the admin's own cookie (forwarded by executeGraphql);
 // the returned token replaces the session cookie.
@@ -16,12 +15,11 @@ export async function POST(req: NextRequest) {
 
   try {
     const { logInAs } = await executeGraphql(LogInAsDocument, { id });
-    const result = logInAs?.result;
-    if (!result?.jwt) {
+    if (!logInAs?.result?.jwt) {
       return NextResponse.json({ error: 'Nepodařilo se přihlásit' }, { status: 403 });
     }
-    await setSessionCookie(result.jwt, req.headers.get('host'));
-    return NextResponse.json({ user: result.usr ?? null, claims: decodeClaims(result.jwt) });
+    await setSessionCookie(logInAs.result.jwt, req.headers.get('host'));
+    return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: 'Nepodařilo se přihlásit' }, { status: 403 });
   }

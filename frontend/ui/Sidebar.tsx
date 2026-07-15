@@ -8,16 +8,8 @@ import {
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui.pages';
 import { cn } from '@/lib/cn';
-import {
-  authAtom,
-  sessionPresentAtom,
-  storeRef,
-  tokenAtom,
-  useTenantConfig,
-  useTenantId,
-} from '@/ui/state/auth';
+import { signOut, useTenantConfig, useTenantId } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
-import { useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { useRouter } from 'next/compat/router';
 import { usePathname } from 'next/navigation';
@@ -35,9 +27,6 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
   const router = useRouter();
   const pathname = usePathname();
   const auth = useAuth();
-  const setAuth = useSetAtom(authAtom);
-  const setSessionPresent = useSetAtom(sessionPresentAtom);
-  const setToken = useSetAtom(tokenAtom);
   const tenantId = useTenantId();
   const { publicSite, copyrightLine: newCopyrightLine } = useTenantConfig();
   const memberMenu = useMemberMenu();
@@ -74,14 +63,6 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
     window.addEventListener('resize', updateDetailView);
     return () => window.removeEventListener('resize', updateDetailView);
   }, [setIsOpen]);
-
-  const signOut = React.useCallback(async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    setAuth(null, null);
-    setSessionPresent(false);
-    setToken(null);
-    storeRef.resetUrqlClient?.();
-  }, [setAuth, setSessionPresent, setToken]);
 
   return (
     <>

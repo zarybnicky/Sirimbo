@@ -1,3 +1,4 @@
+--! include functions/current_claims.sql
 --! include functions/event_instance_registration_last_attended.sql
 --! include functions/event_instance_approx_price.sql
 --! include functions/set_event_instance_registration.sql

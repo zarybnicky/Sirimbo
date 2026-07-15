@@ -13,8 +13,7 @@ import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSetAtom } from 'jotai';
-import { authAtom, sessionPresentAtom, useTenantConfig } from '@/ui/state/auth';
+import { useTenantConfig } from '@/ui/state/auth';
 
 const Form = z.object({
   email: z.email(),
@@ -26,8 +25,6 @@ export default function RegisterPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const setSessionPresent = useSetAtom(sessionPresentAtom);
-  const setAuth = useSetAtom(authAtom);
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
@@ -37,8 +34,6 @@ export default function RegisterPage() {
     if (result.status === 'error') {
       throw new Error(result.error);
     }
-    setAuth(result.claims, result.user);
-    setSessionPresent(true);
     router.replace('/dashboard');
   });
 

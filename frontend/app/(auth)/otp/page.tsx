@@ -5,8 +5,7 @@ import { Spinner } from '@/ui/Spinner';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { otpLoginAction } from '@/lib/server/auth-actions';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { authAtom, sessionPresentAtom, useTenantConfig } from '@/ui/state/auth';
-import { useSetAtom } from 'jotai';
+import { useTenantConfig } from '@/ui/state/auth';
 import * as React from 'react';
 
 export default function OtpPage() {
@@ -15,8 +14,6 @@ export default function OtpPage() {
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const { publicSite } = useTenantConfig();
-  const setSessionPresent = useSetAtom(sessionPresentAtom);
-  const setAuth = useSetAtom(authAtom);
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
   const ranRef = React.useRef(false);
@@ -40,8 +37,6 @@ export default function OtpPage() {
         setLoading(false);
         return;
       }
-      setAuth(result.claims, result.user);
-      setSessionPresent(true);
       setStatus('Přesměrovávám...');
       const from = searchParams?.get('from') || undefined;
       const defaultRedirect = publicSite ? '/dashboard' : '/rozpis';
@@ -49,7 +44,7 @@ export default function OtpPage() {
         !result.user?.userProxiesList.length ? '/profil' : from || defaultRedirect,
       );
     })();
-  }, [searchParams, publicSite, router, setSessionPresent]);
+  }, [searchParams, publicSite, router]);
 
   const personCount = auth.personIds.length;
 

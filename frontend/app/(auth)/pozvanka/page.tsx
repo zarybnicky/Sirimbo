@@ -16,8 +16,6 @@ import Link from 'next/link';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSetAtom } from 'jotai';
-import { authAtom, sessionPresentAtom } from '@/ui/state/auth';
 
 const InvitationToken = z.uuid();
 
@@ -31,8 +29,6 @@ export default function InvitationPage() {
   const router = useRouter();
   const auth = useAuth();
   const authLoading = useAuthLoading();
-  const setSessionPresent = useSetAtom(sessionPresentAtom);
-  const setAuth = useSetAtom(authAtom);
   const [token] = useQueryState('token', parseAsString.withDefault(''));
   const { setValue, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
@@ -55,8 +51,6 @@ export default function InvitationPage() {
     if (result.status === 'error') {
       throw new Error(result.error);
     }
-    setAuth(result.claims, result.user);
-    setSessionPresent(true);
     router.replace('/dashboard');
   });
 

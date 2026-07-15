@@ -13104,6 +13104,14 @@
             ]
           },
           {
+            "name": "currentClaims",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "eventInstance",
             "type": {
               "kind": "OBJECT",

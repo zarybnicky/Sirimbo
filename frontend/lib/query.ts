@@ -138,6 +138,8 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
         ],
   fetchOptions: () => {
     const tenantId = storeRef.current.get(tenantIdAtom);
+    // TODO(cookie-migration): bearer carries pre-cookie sessions; the cookie
+    // (credentials: include) is the go-forward auth.
     const token = storeRef.current.get(tokenAtom);
     return {
       credentials: 'include',

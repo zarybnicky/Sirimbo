@@ -3,10 +3,23 @@ import { atomWithStorage } from 'jotai/utils';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
-import type { SessionClaims } from '@/lib/session-claims';
 import deepEqual from 'fast-deep-equal';
 import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
+
+// Role claims served by Query.currentClaims (see current_claims.sql) — the
+// fields authAtom consumes. to_jsonb renders bigint[] as numbers, so id arrays
+// are compared via String().
+export type SessionClaims = {
+  guest_tenant_ids?: (string | number)[];
+  member_tenant_ids?: (string | number)[];
+  trainer_tenant_ids?: (string | number)[];
+  admin_tenant_ids?: (string | number)[];
+  is_member?: boolean;
+  is_trainer?: boolean;
+  is_admin?: boolean;
+  is_system_admin?: boolean;
+};
 
 interface BaseAuthState {
   user: null | {
@@ -130,23 +143,20 @@ export const useTenantConfig = () => useAtomValue(tenantAtom).config;
 
 export const authLoadingAtom = atom(true);
 
-// Non-credential marker that a server-set httpOnly session cookie exists. The
-// credential itself lives only in the cookie; this just lets client code (e.g.
-// UserRefresher) know to fetch the current user. Set by the auth route-handler
-// callers, cleared on logout.
-const baseSessionPresentAtom: PrimitiveAtom<boolean> = atom(
-  storage.getItem('session') === '1',
+// Mirrors the non-httpOnly companion cookie set/cleared next to the session
+// cookie server-side, so the cookie is the source of truth on every page load.
+// Written only when the session changes without a reload (legacy upgrade, logout).
+const PRESENCE_COOKIE = 'rozpisovnik_p';
+export const sessionPresentAtom: PrimitiveAtom<boolean> = atom(
+  getCookie(PRESENCE_COOKIE) === '1',
 );
-export const sessionPresentAtom = atom<boolean, [boolean], void>(
-  (get) => get(baseSessionPresentAtom),
-  (get, set, next) => {
-    if (get(baseSessionPresentAtom) !== next) {
-      set(baseSessionPresentAtom, next);
-      storage.setItem('session', next ? '1' : null);
-    }
-  },
-);
+sessionPresentAtom.onMount = (set) => {
+  set(getCookie(PRESENCE_COOKIE) === '1');
+};
 
+// TODO(cookie-migration): carries pre-cookie localStorage sessions through the
+// upgrade window; delete together with the bearer header in lib/query.ts and
+// the POST /api/auth/session shim.
 const baseTokenAtom: PrimitiveAtom<string | null> = atom(storage.getItem('token'));
 const baseUserAtom: PrimitiveAtom<BaseAuthState> = atom(
   (() => {
@@ -179,13 +189,12 @@ export const authAtom = atom<
         user.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) || [];
 
       const tenantId = String(get(tenantIdAtom));
-      const isGuest = claims.guest_tenant_ids?.includes(tenantId) ?? false;
-      const isMember =
-        claims.member_tenant_ids?.includes(tenantId) ?? claims.is_member ?? false;
-      const isTrainer =
-        claims.trainer_tenant_ids?.includes(tenantId) ?? claims.is_trainer ?? false;
-      const isAdmin =
-        claims.admin_tenant_ids?.includes(tenantId) ?? claims.is_admin ?? false;
+      const inTenant = (ids?: (string | number)[]) =>
+        ids ? ids.some((x) => String(x) === tenantId) : undefined;
+      const isGuest = inTenant(claims.guest_tenant_ids) ?? false;
+      const isMember = inTenant(claims.member_tenant_ids) ?? claims.is_member ?? false;
+      const isTrainer = inTenant(claims.trainer_tenant_ids) ?? claims.is_trainer ?? false;
+      const isAdmin = inTenant(claims.admin_tenant_ids) ?? claims.is_admin ?? false;
       const isSystemAdmin = claims.is_system_admin ?? false;
 
       nextValue = {
@@ -220,3 +229,11 @@ export const authHelpersAtom = atom((get) => {
       !!id && auth.couples.some((x) => x.id === id),
   };
 });
+
+export async function signOut() {
+  await fetch('/api/auth/logout', { method: 'POST' });
+  storeRef.current.set(authAtom, null, null);
+  storeRef.current.set(sessionPresentAtom, false);
+  storeRef.current.set(tokenAtom, null);
+  storeRef.resetUrqlClient?.();
+}

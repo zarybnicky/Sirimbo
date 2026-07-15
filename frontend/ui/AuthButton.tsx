@@ -12,29 +12,17 @@ import { useAuth } from '@/ui/use-auth';
 import { useMemberMenu } from '@/lib/use-menu';
 import { User as Account } from 'lucide-react';
 import React from 'react';
-import { useSetAtom } from 'jotai';
-import { authAtom, sessionPresentAtom, storeRef, tokenAtom } from '@/ui/state/auth';
+import { signOut } from '@/ui/state/auth';
 import Link from 'next/link';
 
 export function AuthButton() {
   const auth = useAuth();
-  const setAuth = useSetAtom(authAtom);
-  const setSessionPresent = useSetAtom(sessionPresentAtom);
-  const setToken = useSetAtom(tokenAtom);
   const memberMenu = useMemberMenu();
 
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  const signOut = React.useCallback(async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    setAuth(null, null);
-    setSessionPresent(false);
-    setToken(null);
-    storeRef.resetUrqlClient?.();
-  }, [setAuth, setSessionPresent, setToken]);
 
   if (!auth.user || !isMounted) {
     return (

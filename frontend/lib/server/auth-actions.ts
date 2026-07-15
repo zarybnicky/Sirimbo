@@ -8,21 +8,20 @@ import {
   RegisterWithoutInvitationDocument,
   type UserAuthFragment,
 } from '@/graphql/CurrentUser';
-import { executeGraphql } from '@/lib/server/graphql';
+import { executeGraphql, GraphqlOperationError } from '@/lib/server/graphql';
 import { setSessionCookie } from '@/lib/server/session';
-import { decodeClaims, type SessionClaims } from '@/lib/session-claims';
 
 export type AuthResult =
   | { status: 'error'; error: string }
-  | { status: 'success'; user: UserAuthFragment | null; claims: SessionClaims | null };
+  | { status: 'success'; user: UserAuthFragment | null };
 
 const INVALID_CREDENTIALS = 'Nesprávné jméno nebo heslo';
 const INVALID_LINK = 'Použitý odkaz již vypršel nebo je neplatný.';
 const REGISTRATION_FAILED = 'Registraci se nepodařilo dokončit';
+const SERVICE_UNAVAILABLE = 'Přihlášení je momentálně nedostupné, zkuste to prosím později.';
 
-async function persistSession(jwt: string): Promise<SessionClaims | null> {
+async function persistSession(jwt: string) {
   await setSessionCookie(jwt, (await headers()).get('host'));
-  return decodeClaims(jwt);
 }
 
 export async function loginAction(input: {
@@ -35,9 +34,13 @@ export async function loginAction(input: {
     const data = await executeGraphql(LoginDocument, { login, passwd: input.passwd });
     const result = data.login?.result;
     if (!result?.jwt) return { status: 'error', error: INVALID_CREDENTIALS };
-    return { status: 'success', user: result.usr ?? null, claims: await persistSession(result.jwt) };
-  } catch {
-    return { status: 'error', error: INVALID_CREDENTIALS };
+    await persistSession(result.jwt);
+    return { status: 'success', user: result.usr ?? null };
+  } catch (e) {
+    if (e instanceof GraphqlOperationError) {
+      return { status: 'error', error: INVALID_CREDENTIALS };
+    }
+    return { status: 'error', error: SERVICE_UNAVAILABLE };
   }
 }
 
@@ -47,9 +50,11 @@ export async function otpLoginAction(token: string): Promise<AuthResult> {
     const data = await executeGraphql(OtpLoginDocument, { token });
     const result = data.otpLogin?.result;
     if (!result?.jwt) return { status: 'error', error: INVALID_LINK };
-    return { status: 'success', user: result.usr ?? null, claims: await persistSession(result.jwt) };
-  } catch {
-    return { status: 'error', error: INVALID_LINK };
+    await persistSession(result.jwt);
+    return { status: 'success', user: result.usr ?? null };
+  } catch (e) {
+    if (e instanceof GraphqlOperationError) return { status: 'error', error: INVALID_LINK };
+    return { status: 'error', error: SERVICE_UNAVAILABLE };
   }
 }
 
@@ -61,9 +66,11 @@ export async function registerWithoutInvitationAction(input: {
     const data = await executeGraphql(RegisterWithoutInvitationDocument, { input });
     const result = data.registerWithoutInvitation?.result;
     if (!result?.jwt) return { status: 'error', error: REGISTRATION_FAILED };
-    return { status: 'success', user: result.usr ?? null, claims: await persistSession(result.jwt) };
+    await persistSession(result.jwt);
+    return { status: 'success', user: result.usr ?? null };
   } catch (e) {
-    return { status: 'error', error: e instanceof Error ? e.message : REGISTRATION_FAILED };
+    if (e instanceof GraphqlOperationError) return { status: 'error', error: e.message };
+    return { status: 'error', error: SERVICE_UNAVAILABLE };
   }
 }
 
@@ -76,8 +83,10 @@ export async function registerUsingInvitationAction(input: {
     const data = await executeGraphql(RegisterUsingInvitationDocument, { input });
     const result = data.registerUsingInvitation?.result;
     if (!result?.jwt) return { status: 'error', error: REGISTRATION_FAILED };
-    return { status: 'success', user: result.usr ?? null, claims: await persistSession(result.jwt) };
+    await persistSession(result.jwt);
+    return { status: 'success', user: result.usr ?? null };
   } catch (e) {
-    return { status: 'error', error: e instanceof Error ? e.message : REGISTRATION_FAILED };
+    if (e instanceof GraphqlOperationError) return { status: 'error', error: e.message };
+    return { status: 'error', error: SERVICE_UNAVAILABLE };
   }
 }

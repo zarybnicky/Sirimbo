@@ -1,22 +1,24 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { cookies } from 'next/headers';
 import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
-import { SESSION_COOKIE, sameOrigin, setSessionCookie } from '@/lib/server/session';
-import { decodeClaims } from '@/lib/session-claims';
+import { sameOrigin, setSessionCookie } from '@/lib/server/session';
 
-// "Who am I": current user + session claims, resolved from the cookie.
+// "Who am I": current user + claims, resolved from the session cookie.
 export async function GET() {
-  const claims = decodeClaims((await cookies()).get(SESSION_COOKIE)?.value);
   try {
-    const { getCurrentUser } = await executeGraphql(CurrentUserDocument);
-    return NextResponse.json({ user: getCurrentUser ?? null, claims });
+    const data = await executeGraphql(CurrentUserDocument);
+    return NextResponse.json({
+      user: data.getCurrentUser ?? null,
+      claims: data.currentClaims ?? null,
+    });
   } catch {
-    return NextResponse.json({ user: null, claims });
+    return NextResponse.json({ user: null, claims: null });
   }
 }
 
-// Establish the cookie from a token the client already holds (legacy upgrade).
+// TODO(cookie-migration): upgrade shim — plants the httpOnly cookie from a
+// legacy localStorage token. The token isn't verified here (the backend
+// verifies on every request); delete together with tokenAtom.
 export async function POST(req: NextRequest) {
   if (!sameOrigin(req)) return NextResponse.json({ error: 'Invalid origin' }, { status: 403 });
 
@@ -26,5 +28,5 @@ export async function POST(req: NextRequest) {
   }
 
   await setSessionCookie(token, req.headers.get('host'));
-  return NextResponse.json({ ok: true, claims: decodeClaims(token) });
+  return NextResponse.json({ ok: true });
 }

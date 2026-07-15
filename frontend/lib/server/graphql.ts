@@ -12,6 +12,10 @@ type GraphqlResponse<TResult> = {
   errors?: GraphqlError[];
 };
 
+// The operation ran and the server rejected it (e.g. bad credentials), as
+// opposed to transport/HTTP failures which throw plain Error.
+export class GraphqlOperationError extends Error {}
+
 function graphqlUrl() {
   const origin =
     process.env.GRAPHQL_BACKEND ??
@@ -47,7 +51,7 @@ export async function executeGraphql<
 
   const result = (await response.json()) as GraphqlResponse<TResult>;
   if (result.errors?.length) {
-    throw new Error(result.errors.map((error) => error.message).join('\n'));
+    throw new GraphqlOperationError(result.errors.map((error) => error.message).join('\n'));
   }
   if (!result.data) {
     throw new Error('GraphQL request returned no data.');
