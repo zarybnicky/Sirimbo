@@ -78,7 +78,7 @@ export default function ForgottenPasswordPage() {
   return (
     <Layout className="grow content relative content-stretch">
       <NextSeo title="Zapomenuté heslo" />
-      <div className="flex h-[calc(100vh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
+      <div className="flex h-[calc(100dvh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
         <div className={cardCls({ className: 'p-4 max-w-lg' })}>
           <ForgottenPasswordForm />
         </div>

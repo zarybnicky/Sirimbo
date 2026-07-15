@@ -7,7 +7,7 @@ type ErrorPageProps = {
 
 export function ErrorPage({ error, details }: ErrorPageProps) {
   return (
-    <div className="flex h-[calc(100vh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
+    <div className="flex h-[calc(100dvh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
       <div className="text-center">
         <div className="inline-flex rounded-full bg-accent-4 p-4">
           <div className="rounded-full stroke-accent-10 bg-accent-6 p-4">

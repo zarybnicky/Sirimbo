@@ -646,7 +646,7 @@ export default function WDSFLive(): JSX.Element {
       style={{
         background: '#0a0a10',
         color: '#d0d0d0',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         fontFamily: "'DM Mono','JetBrains Mono',monospace",
         padding: '20px 24px',
         boxSizing: 'border-box',
