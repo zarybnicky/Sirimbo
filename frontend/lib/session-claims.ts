@@ -1,7 +1,3 @@
-// The claim shape the frontend needs to derive auth state. These are the fields
-// baked into the signed JWT by app_private.create_jwt_token; the server returns
-// them as plain data (from the auth mutations and the who-am-I endpoint) so the
-// frontend never decodes a JWT itself.
 export type SessionClaims = {
   user_id?: string;
   tenant_id?: string;
@@ -21,15 +17,13 @@ export type SessionClaims = {
   is_system_admin?: boolean;
 };
 
-// Server-side only: extract the claims from a signed token. This is the single
-// place a JWT is read, done once to produce a structured return value — it is
-// not a verification (the backend verifies on every request); it only turns the
-// token the backend just issued into data for the client.
+// Read claims out of a signed token to return to the client as data. Not a
+// verification — the backend verifies on every request.
 export function decodeClaims(jwt: string | null | undefined): SessionClaims | null {
   const payload = jwt?.split('.')[1];
   if (!payload) return null;
   try {
-    return JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) as SessionClaims;
+    return JSON.parse(Buffer.from(payload, 'base64url').toString()) as SessionClaims;
   } catch {
     return null;
   }

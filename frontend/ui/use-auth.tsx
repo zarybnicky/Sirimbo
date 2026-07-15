@@ -30,10 +30,8 @@ export const UserRefresher = React.memo(function ProvideAuth() {
 
   React.useEffect(() => setAuthLoading(fetching), [fetching, setAuthLoading]);
 
-  // Session claims come from the server as plain data — the frontend never
-  // decodes a JWT. A legacy session (localStorage token, no cookie) POSTs its
-  // token once to establish the cookie and receive claims; otherwise the claims
-  // are read from the cookie via GET.
+  // Claims come from the server as data (no client-side JWT decode). A legacy
+  // session POSTs its token to establish the cookie; otherwise read via GET.
   React.useEffect(() => {
     if (!token && !sessionPresent) {
       setClaims(null);
