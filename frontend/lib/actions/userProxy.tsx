@@ -5,7 +5,9 @@ import {
   type UserProxyFragment,
 } from '@/graphql/Memberships';
 import { defineActions } from '@/lib/actions';
-import { sessionPresentAtom, storeRef } from '@/ui/state/auth';
+import { authAtom, sessionPresentAtom, storeRef } from '@/ui/state/auth';
+import type { SessionClaims } from '@/lib/session-claims';
+import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
 
 export const userProxyActions = defineActions<UserProxyFragment>()([
@@ -29,7 +31,13 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
         body: JSON.stringify({ id: item.user.id }),
       });
       if (!res.ok) return;
-      // New session cookie is set server-side; refresh client auth state.
+      // New session cookie is set server-side; seed client auth from the
+      // returned claims (no JWT decoding on the client).
+      const data = (await res.json()) as {
+        user: UserAuthFragment | null;
+        claims: SessionClaims | null;
+      };
+      storeRef.current.set(authAtom, data.claims, data.user);
       storeRef.current.set(sessionPresentAtom, true);
       storeRef.resetUrqlClient?.();
       await router.replace('/dashboard');

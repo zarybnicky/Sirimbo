@@ -8,7 +8,6 @@ import type {
   TenantTrainer,
   WithTypename,
 } from '@/graphql';
-import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
 import { type Cache, cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
@@ -418,63 +417,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         invalidateQueryFields(cache, ['paymentDebtorsList']);
       },
 
-      login(result, _args, cache, _info) {
-        const { usr, jwt } = result.login?.result || {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
-        });
-      },
-      otpLogin(result, _args, cache, _info) {
-        const { usr, jwt } = result.otpLogin?.result || {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
-        });
-      },
-      logInAs(result, _args, cache, _info) {
-        const { usr, jwt } = result.logInAs?.result || {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
-        });
-      },
-
-      registerUsingInvitation(result, _args, cache, _info) {
-        const { usr, jwt } = result.registerUsingInvitation?.result || {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
-        });
-      },
-
-      registerWithoutInvitation(result, _args, cache, _info) {
-        const { usr, jwt } = result.registerWithoutInvitation?.result || {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
-        });
-      },
     },
   },
 };

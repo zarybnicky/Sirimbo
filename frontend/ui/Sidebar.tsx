@@ -12,6 +12,7 @@ import {
   authAtom,
   sessionPresentAtom,
   storeRef,
+  tokenAtom,
   useTenantConfig,
   useTenantId,
 } from '@/ui/state/auth';
@@ -36,6 +37,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
   const auth = useAuth();
   const setAuth = useSetAtom(authAtom);
   const setSessionPresent = useSetAtom(sessionPresentAtom);
+  const setToken = useSetAtom(tokenAtom);
   const tenantId = useTenantId();
   const { publicSite, copyrightLine: newCopyrightLine } = useTenantConfig();
   const memberMenu = useMemberMenu();
@@ -77,8 +79,9 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
     await fetch('/api/auth/logout', { method: 'POST' });
     setAuth(null, null);
     setSessionPresent(false);
+    setToken(null);
     storeRef.resetUrqlClient?.();
-  }, [setAuth, setSessionPresent]);
+  }, [setAuth, setSessionPresent, setToken]);
 
   return (
     <>

@@ -10,6 +10,7 @@ import {
 } from '@/ui/state/auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { buildId } from '@/lib/build-id';
+import type { SessionClaims } from '@/lib/session-claims';
 
 export const UserRefresher = React.memo(function ProvideAuth() {
   const [token] = useAtom(tokenAtom);
@@ -17,33 +18,53 @@ export const UserRefresher = React.memo(function ProvideAuth() {
   const setSessionPresent = useSetAtom(sessionPresentAtom);
   const setAuthLoading = useSetAtom(authLoadingAtom);
   const setAuth = useSetAtom(authAtom);
+  const [claims, setClaims] = React.useState<SessionClaims | null>(null);
 
   const [{ data: currentUser, fetching }, refetch] = useQuery({
     query: CurrentUserDocument,
-    // Cookie-based sessions have no client token to gate on; the httpOnly cookie
-    // authenticates the request. Keep gating on `token` for not-yet-migrated flows.
+    // The httpOnly cookie authenticates the request; also gate on `token` for
+    // legacy sessions not yet upgraded to the cookie.
     pause: !token && !sessionPresent,
     variables: { versionId: buildId },
   });
 
   React.useEffect(() => setAuthLoading(fetching), [fetching, setAuthLoading]);
 
+  // Session claims come from the server as plain data — the frontend never
+  // decodes a JWT. A legacy session (localStorage token, no cookie) POSTs its
+  // token once to establish the cookie and receive claims; otherwise the claims
+  // are read from the cookie via GET.
   React.useEffect(() => {
-    if (!fetching && currentUser) {
-      setAuth(currentUser.refreshJwt, currentUser.getCurrentUser);
-      // Zero-friction upgrade: a pre-existing session (localStorage token, no
-      // server cookie) plants the httpOnly cookie from the fresh JWT, once.
-      if (currentUser.getCurrentUser && currentUser.refreshJwt && !sessionPresent) {
-        void fetch('/api/auth/session', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ token: currentUser.refreshJwt }),
-        }).then((res) => {
-          if (res.ok) setSessionPresent(true);
-        });
-      }
+    if (!token && !sessionPresent) {
+      setClaims(null);
+      return;
     }
-  }, [fetching, setAuth, currentUser, sessionPresent, setSessionPresent]);
+    let cancelled = false;
+    void (async () => {
+      const res =
+        !sessionPresent && token
+          ? await fetch('/api/auth/session', {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ token }),
+            })
+          : await fetch('/api/auth/session');
+      if (!res.ok || cancelled) return;
+      const data = (await res.json()) as { claims: SessionClaims | null };
+      if (cancelled) return;
+      setClaims(data.claims ?? null);
+      if (!sessionPresent && token && data.claims) setSessionPresent(true);
+    })().catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [token, sessionPresent, setSessionPresent]);
+
+  React.useEffect(() => {
+    if (!fetching && currentUser && claims) {
+      setAuth(claims, currentUser.getCurrentUser);
+    }
+  }, [fetching, setAuth, currentUser, claims]);
 
   React.useEffect(() => {
     const launchQuery = () => {

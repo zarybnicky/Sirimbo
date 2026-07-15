@@ -3,6 +3,7 @@ import { atomWithStorage } from 'jotai/utils';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
+import type { SessionClaims } from '@/lib/session-claims';
 import deepEqual from 'fast-deep-equal';
 import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
@@ -166,47 +167,26 @@ export const tokenAtom = atom<string | null, [string | null], void>(
 
 export const authAtom = atom<
   BaseAuthState,
-  [string | null, UserAuthFragment | null],
+  [SessionClaims | null, UserAuthFragment | null],
   void
 >(
   (get) => get(baseUserAtom) || defaultAuthState,
-  (get, set, token, user) => {
+  (get, set, claims, user) => {
     let nextValue = defaultAuthState;
 
-    if (user && token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-      const jwt = (base64 ? JSON.parse(atob(base64)) : {}) as {
-        exp?: number;
-        user_id?: string;
-        tenant_id?: string;
-        username?: string;
-        email?: string;
-        my_person_ids?: string[];
-        my_tenant_ids?: string[];
-        my_cohort_ids?: string[];
-        my_couple_ids?: string[];
-        guest_tenant_ids?: string[];
-        member_tenant_ids?: string[];
-        trainer_tenant_ids?: string[];
-        admin_tenant_ids?: string[];
-        is_member?: boolean;
-        is_trainer?: boolean;
-        is_admin?: boolean;
-        is_system_admin?: boolean;
-      };
-
+    if (user && claims) {
       const persons =
         user.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) || [];
 
       const tenantId = String(get(tenantIdAtom));
-      const isGuest = jwt.guest_tenant_ids?.includes(tenantId) ?? false;
+      const isGuest = claims.guest_tenant_ids?.includes(tenantId) ?? false;
       const isMember =
-        jwt.member_tenant_ids?.includes(tenantId) ?? jwt.is_member ?? false;
+        claims.member_tenant_ids?.includes(tenantId) ?? claims.is_member ?? false;
       const isTrainer =
-        jwt.trainer_tenant_ids?.includes(tenantId) ?? jwt.is_trainer ?? false;
-      const isAdmin = jwt.admin_tenant_ids?.includes(tenantId) ?? jwt.is_admin ?? false;
-      const isSystemAdmin = jwt.is_system_admin ?? false;
+        claims.trainer_tenant_ids?.includes(tenantId) ?? claims.is_trainer ?? false;
+      const isAdmin =
+        claims.admin_tenant_ids?.includes(tenantId) ?? claims.is_admin ?? false;
+      const isSystemAdmin = claims.is_system_admin ?? false;
 
       nextValue = {
         user,
@@ -223,8 +203,7 @@ export const authAtom = atom<
       };
     }
 
-    set(tokenAtom, token);
-    // only update baseUserAtom if the token payload changes
+    // only update baseUserAtom if the derived state changes
     if (!deepEqual(nextValue, get(baseUserAtom))) {
       set(baseUserAtom, nextValue);
       storage.setItem('user', nextValue ? JSON.stringify(nextValue) : null);

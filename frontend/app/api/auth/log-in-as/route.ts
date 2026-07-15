@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { LogInAsDocument } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
 import { setSessionCookie } from '@/lib/server/session';
+import { decodeClaims } from '@/lib/session-claims';
 
 // Impersonation ("log in as") is triggered from the Pages-Router admin UI, where
 // server actions can't run, so it stays a route handler. executeGraphql forwards
@@ -45,5 +46,5 @@ export async function POST(req: NextRequest) {
   }
 
   await setSessionCookie(result.jwt, host);
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ user: result.usr ?? null, claims: decodeClaims(result.jwt) });
 }
