@@ -18,10 +18,33 @@ export type AuthResult =
 const INVALID_CREDENTIALS = 'Nesprávné jméno nebo heslo';
 const INVALID_LINK = 'Použitý odkaz již vypršel nebo je neplatný.';
 const REGISTRATION_FAILED = 'Registraci se nepodařilo dokončit';
-const SERVICE_UNAVAILABLE = 'Přihlášení je momentálně nedostupné, zkuste to prosím později.';
+const SERVICE_UNAVAILABLE =
+  'Přihlášení je momentálně nedostupné, zkuste to prosím později.';
 
-async function persistSession(jwt: string) {
-  await setSessionCookie(jwt, (await headers()).get('host'));
+type MutationResult =
+  | { jwt?: string | null; usr?: UserAuthFragment | null }
+  | null
+  | undefined;
+
+// Runs an auth mutation, plants the session cookie from the returned token, and
+// maps failures: a GraphQL-level rejection reads as `rejected` (or its own
+// message when `rejected` is unset), transport failures as service unavailable.
+async function establishSession(
+  run: () => Promise<MutationResult>,
+  rejected?: string,
+): Promise<AuthResult> {
+  try {
+    const result = await run();
+    if (!result?.jwt) return { status: 'error', error: rejected ?? REGISTRATION_FAILED };
+    const requestHeaders = await headers();
+    await setSessionCookie(result.jwt, requestHeaders.get('host'));
+    return { status: 'success', user: result.usr ?? null };
+  } catch (e) {
+    if (e instanceof GraphqlOperationError) {
+      return { status: 'error', error: rejected ?? e.message };
+    }
+    return { status: 'error', error: SERVICE_UNAVAILABLE };
+  }
 }
 
 export async function loginAction(input: {
@@ -30,48 +53,28 @@ export async function loginAction(input: {
 }): Promise<AuthResult> {
   const login = input.login?.trim();
   if (!login || !input.passwd) return { status: 'error', error: 'Zadejte jméno a heslo' };
-  try {
+  return establishSession(async () => {
     const data = await executeGraphql(LoginDocument, { login, passwd: input.passwd });
-    const result = data.login?.result;
-    if (!result?.jwt) return { status: 'error', error: INVALID_CREDENTIALS };
-    await persistSession(result.jwt);
-    return { status: 'success', user: result.usr ?? null };
-  } catch (e) {
-    if (e instanceof GraphqlOperationError) {
-      return { status: 'error', error: INVALID_CREDENTIALS };
-    }
-    return { status: 'error', error: SERVICE_UNAVAILABLE };
-  }
+    return data.login?.result;
+  }, INVALID_CREDENTIALS);
 }
 
 export async function otpLoginAction(token: string): Promise<AuthResult> {
   if (!token) return { status: 'error', error: INVALID_LINK };
-  try {
+  return establishSession(async () => {
     const data = await executeGraphql(OtpLoginDocument, { token });
-    const result = data.otpLogin?.result;
-    if (!result?.jwt) return { status: 'error', error: INVALID_LINK };
-    await persistSession(result.jwt);
-    return { status: 'success', user: result.usr ?? null };
-  } catch (e) {
-    if (e instanceof GraphqlOperationError) return { status: 'error', error: INVALID_LINK };
-    return { status: 'error', error: SERVICE_UNAVAILABLE };
-  }
+    return data.otpLogin?.result;
+  }, INVALID_LINK);
 }
 
 export async function registerWithoutInvitationAction(input: {
   email: string;
   passwd: string;
 }): Promise<AuthResult> {
-  try {
+  return establishSession(async () => {
     const data = await executeGraphql(RegisterWithoutInvitationDocument, { input });
-    const result = data.registerWithoutInvitation?.result;
-    if (!result?.jwt) return { status: 'error', error: REGISTRATION_FAILED };
-    await persistSession(result.jwt);
-    return { status: 'success', user: result.usr ?? null };
-  } catch (e) {
-    if (e instanceof GraphqlOperationError) return { status: 'error', error: e.message };
-    return { status: 'error', error: SERVICE_UNAVAILABLE };
-  }
+    return data.registerWithoutInvitation?.result;
+  });
 }
 
 export async function registerUsingInvitationAction(input: {
@@ -79,14 +82,8 @@ export async function registerUsingInvitationAction(input: {
   passwd: string;
   token: string;
 }): Promise<AuthResult> {
-  try {
+  return establishSession(async () => {
     const data = await executeGraphql(RegisterUsingInvitationDocument, { input });
-    const result = data.registerUsingInvitation?.result;
-    if (!result?.jwt) return { status: 'error', error: REGISTRATION_FAILED };
-    await persistSession(result.jwt);
-    return { status: 'success', user: result.usr ?? null };
-  } catch (e) {
-    if (e instanceof GraphqlOperationError) return { status: 'error', error: e.message };
-    return { status: 'error', error: SERVICE_UNAVAILABLE };
-  }
+    return data.registerUsingInvitation?.result;
+  });
 }

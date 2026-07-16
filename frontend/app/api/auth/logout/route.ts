@@ -1,3 +1,4 @@
+/* eslint-disable import-x/no-unused-modules */
 import { NextResponse, type NextRequest } from 'next/server';
 import { clearSessionCookie, sameOrigin } from '@/lib/server/session';
 

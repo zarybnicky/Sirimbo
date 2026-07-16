@@ -5,12 +5,11 @@ import type { NextRequest } from 'next/server';
 // already read it); the difference is it's now set server-side, httpOnly, and
 // site-wide (path=/) rather than client-side at /f. A non-httpOnly companion
 // cookie tells the client a session exists without exposing the credential.
-export const SESSION_COOKIE = 'rozpisovnik';
-export const PRESENCE_COOKIE = 'rozpisovnik_p';
+import { PRESENCE_COOKIE, SESSION_COOKIE } from '@/lib/session-cookies';
 
 const MAX_AGE = 60 * 60 * 24 * 365;
 
-export function cookieDomainForHost(hostname: string | null | undefined): string | undefined {
+function cookieDomainForHost(hostname: string | null | undefined): string | undefined {
   const host = hostname?.split(':')[0]?.toLowerCase() ?? '';
   if (!host || host === 'localhost' || host === '127.0.0.1') return undefined;
   return host.replace(/^www\./, '');

@@ -3,6 +3,7 @@ import { atomWithStorage } from 'jotai/utils';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
+import { PRESENCE_COOKIE } from '@/lib/session-cookies';
 import deepEqual from 'fast-deep-equal';
 import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
@@ -146,7 +147,6 @@ export const authLoadingAtom = atom(true);
 // Mirrors the non-httpOnly companion cookie set/cleared next to the session
 // cookie server-side, so the cookie is the source of truth on every page load.
 // Written only when the session changes without a reload (legacy upgrade, logout).
-const PRESENCE_COOKIE = 'rozpisovnik_p';
 export const sessionPresentAtom: PrimitiveAtom<boolean> = atom(
   getCookie(PRESENCE_COOKIE) === '1',
 );

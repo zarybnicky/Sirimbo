@@ -1,3 +1,4 @@
+/* eslint-disable import-x/no-unused-modules */
 import { NextResponse, type NextRequest } from 'next/server';
 import { LogInAsDocument } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';

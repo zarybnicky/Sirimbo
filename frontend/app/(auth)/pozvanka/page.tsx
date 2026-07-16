@@ -13,7 +13,7 @@ import { InvitationInfoDocument } from '@/graphql/CurrentUser';
 import { registerUsingInvitationAction } from '@/lib/server/auth-actions';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -27,8 +27,7 @@ const Form = z.object({
 
 export default function InvitationPage() {
   const router = useRouter();
-  const auth = useAuth();
-  const authLoading = useAuthLoading();
+  useRedirectLoggedIn();
   const [token] = useQueryState('token', parseAsString.withDefault(''));
   const { setValue, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
@@ -53,12 +52,6 @@ export default function InvitationPage() {
     }
     router.replace('/dashboard');
   });
-
-  React.useEffect(() => {
-    if (!authLoading && auth.user) {
-      router.replace(auth.personIds.length === 0 ? '/profil' : '/dashboard');
-    }
-  }, [authLoading, auth.user, auth.personIds.length, router]);
 
   return (
     <Layout className="grow content relative content-stretch">

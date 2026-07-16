@@ -10,6 +10,7 @@ import {
   type SessionClaims,
 } from '@/ui/state/auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
 import { buildId } from '@/lib/build-id';
 
 export const UserRefresher = React.memo(function ProvideAuth() {
@@ -71,3 +72,17 @@ export const UserRefresher = React.memo(function ProvideAuth() {
 
 export const useAuth = () => useAtomValue(authHelpersAtom);
 export const useAuthLoading = () => useAtomValue(authLoadingAtom);
+
+// Auth entry pages (login/otp/register): bounce an already-signed-in visitor
+// into the app — to their profile first if no person is linked yet.
+export function useRedirectLoggedIn() {
+  const router = useRouter();
+  const auth = useAuth();
+  const authLoading = useAuthLoading();
+  const personCount = auth.personIds.length;
+  React.useEffect(() => {
+    if (!authLoading && auth.user) {
+      router.replace(personCount === 0 ? '/profil' : '/dashboard');
+    }
+  }, [authLoading, auth.user, personCount, router]);
+}

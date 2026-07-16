@@ -2,7 +2,7 @@
 
 import { Layout } from '@/ui/Layout';
 import { Spinner } from '@/ui/Spinner';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { otpLoginAction } from '@/lib/server/auth-actions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTenantConfig } from '@/ui/state/auth';
@@ -11,9 +11,8 @@ import * as React from 'react';
 export default function OtpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const auth = useAuth();
-  const authLoading = useAuthLoading();
   const { publicSite } = useTenantConfig();
+  useRedirectLoggedIn();
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
   const ranRef = React.useRef(false);
@@ -45,14 +44,6 @@ export default function OtpPage() {
       );
     })();
   }, [searchParams, publicSite, router]);
-
-  const personCount = auth.personIds.length;
-
-  React.useEffect(() => {
-    if (!authLoading && auth.user) {
-      router.replace(personCount === 0 ? '/profil' : '/dashboard');
-    }
-  }, [authLoading, auth.user, personCount, router]);
 
   return (
     <Layout className="grow content relative content-stretch">

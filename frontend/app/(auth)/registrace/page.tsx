@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { useAsyncCallback } from 'react-async-hook';
 import { registerWithoutInvitationAction } from '@/lib/server/auth-actions';
 import { useRouter } from 'next/navigation';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,8 +23,7 @@ const Form = z.object({
 export default function RegisterPage() {
   const { enableRegistration } = useTenantConfig();
   const router = useRouter();
-  const auth = useAuth();
-  const authLoading = useAuthLoading();
+  useRedirectLoggedIn();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
@@ -36,13 +35,6 @@ export default function RegisterPage() {
     }
     router.replace('/dashboard');
   });
-
-  const personCount = auth.personIds.length;
-  React.useEffect(() => {
-    if (!authLoading && auth.user) {
-      router.replace(personCount > 0 ? '/dashboard' : '/profil');
-    }
-  }, [authLoading, auth.user, personCount, router]);
 
   if (!enableRegistration) {
     return (

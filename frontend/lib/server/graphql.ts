@@ -1,4 +1,5 @@
 import { getRequestTenant } from '@/tenant/server';
+import { SESSION_COOKIE } from '@/lib/session-cookies';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { print } from 'graphql';
 import { cookies } from 'next/headers';
@@ -30,14 +31,14 @@ export async function executeGraphql<
 >(document: TypedDocumentNode<TResult, TVariables>, variables?: TVariables) {
   const tenant = await getRequestTenant();
   const cookieStore = await cookies();
-  const token = cookieStore.get('rozpisovnik')?.value;
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
   const response = await fetch(graphqlUrl(), {
     method: 'POST',
     cache: 'no-store',
     headers: {
       'content-type': 'application/json',
       'x-tenant-id': String(tenant.id),
-      ...(token ? { cookie: `rozpisovnik=${token}` } : {}),
+      ...(token ? { cookie: `${SESSION_COOKIE}=${token}` } : {}),
     },
     body: JSON.stringify({
       query: print(document),
