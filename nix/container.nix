@@ -64,47 +64,4 @@
       apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
     };
   };
-
-  services.minio = {
-    enable = true;
-    browser = false;
-    listenAddress = ":9000";
-    configDir = "/var/lib/minio/config";
-    dataDir = [ "/var/lib/minio/data" ];
-    accessKey = "00000000";
-    secretKey = "000000000000";
-  };
-  systemd.tmpfiles.rules = [
-    "d /var/lib/minio 0755 minio minio -"
-    "d /var/lib/minio/config 0755 minio minio -"
-    "d /var/lib/minio/data 0755 minio minio -"
-  ];
-
-  systemd.services.minio = {
-    serviceConfig = {
-      ExecStartPost = ''
-        ${pkgs.coreutils}/bin/timeout 30 ${pkgs.bash}/bin/bash -c \
-          'while ! ${pkgs.curl}/bin/curl --silent --fail http://localhost:9000/minio/health/cluster; do sleep 1; done'
-      '';
-    };
-  };
-
-  systemd.services.minio-config = {
-    path = [ pkgs.minio pkgs.minio-client ];
-    requiredBy = [ "multi-user.target" ];
-    after = [ "minio.service" ];
-    serviceConfig = {
-      Type = "simple";
-      User = "minio";
-      Group = "minio";
-      WorkingDirectory = "/var/lib/minio/config";
-    };
-    script = ''
-      set -e
-      mc --config-dir . alias set minio http://localhost:9000 "00000000" "000000000000"
-      mc --config-dir . mb --ignore-existing minio/private
-      mc --config-dir . mb --ignore-existing minio/public
-      mc --config-dir . policy set download minio/public
-    '';
-  };
 }

@@ -12,12 +12,13 @@
     "pnpm-workspace.yaml"
   ],
   postInstall,
+  fetchPnpmDeps,
+  pnpmConfigHook,
   pnpmDepsHash,
   ...
 }:
 let
   nodejs = nodejs_24;
-  pnpm = pnpm_10;
   inWorkspace =
     path: type:
     let
@@ -45,12 +46,9 @@ stdenv.mkDerivation (finalAttrs: {
     filter = inWorkspace;
   };
   buildInputs = [ nodejs ];
-  nativeBuildInputs = [
-    nodejs
-    pnpm.configHook
-  ];
+  nativeBuildInputs = [ pnpm_10 nodejs pnpmConfigHook ];
   pnpmWorkspaces = workspaceFolders;
-  pnpmDeps = pnpm.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit nodejs;
     inherit (finalAttrs)
       pname
@@ -58,6 +56,7 @@ stdenv.mkDerivation (finalAttrs: {
       src
       pnpmWorkspaces
       ;
+    pnpm = pnpm_10;
     fetcherVersion = 3;
     hash = pnpmDepsHash;
   };
