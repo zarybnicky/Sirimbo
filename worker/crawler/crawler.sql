@@ -622,17 +622,12 @@ WHERE r.id = ANY(:ids::bigint[])
 RETURNING r.id AS "id!";
 
 /* @name DeleteOrphanedJsonResponseCache */
-WITH deleted AS (
-  DELETE FROM crawler.json_response_cache c
-  WHERE NOT EXISTS (
-    SELECT 1
-    FROM crawler.json_response r
-    WHERE r.content_hash = c.content_hash
-  )
-  RETURNING pg_column_size(c.content) AS bytes
-)
-SELECT count(*)::int AS "entries!", coalesce(sum(bytes), 0)::bigint AS "bytes!"
-FROM deleted;
+DELETE FROM crawler.json_response_cache c
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM crawler.json_response r
+  WHERE r.content_hash = c.content_hash
+);
 
 /* @name UpsertFrontier */
 INSERT INTO crawler.frontier (federation, kind, key)

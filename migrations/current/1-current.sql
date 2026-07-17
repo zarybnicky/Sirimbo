@@ -34,6 +34,9 @@ create index if not exists frontier_last_successful_response_id_idx
   on crawler.frontier (last_successful_response_id)
   where last_successful_response_id is not null;
 
+create index if not exists json_response_content_hash_idx
+  on crawler.json_response (content_hash);
+
 do $$
 begin
   if not exists (select 1 from pg_constraint where conrelid = 'crawler.frontier'::regclass and conname = 'frontier_last_response_id_fkey') then

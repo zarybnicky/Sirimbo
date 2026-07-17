@@ -1503,10 +1503,7 @@ export const deleteCrawlerResponseRows = new PreparedQuery<IDeleteCrawlerRespons
 export type IDeleteOrphanedJsonResponseCacheParams = void;
 
 /** 'DeleteOrphanedJsonResponseCache' return type */
-export interface IDeleteOrphanedJsonResponseCacheResult {
-  bytes: string;
-  entries: number;
-}
+export type IDeleteOrphanedJsonResponseCacheResult = void;
 
 /** 'DeleteOrphanedJsonResponseCache' query type */
 export interface IDeleteOrphanedJsonResponseCacheQuery {
@@ -1514,22 +1511,17 @@ export interface IDeleteOrphanedJsonResponseCacheQuery {
   result: IDeleteOrphanedJsonResponseCacheResult;
 }
 
-const deleteOrphanedJsonResponseCacheIR: any = {"usedParamSet":{},"params":[],"statement":"WITH deleted AS (\n  DELETE FROM crawler.json_response_cache c\n  WHERE NOT EXISTS (\n    SELECT 1\n    FROM crawler.json_response r\n    WHERE r.content_hash = c.content_hash\n  )\n  RETURNING pg_column_size(c.content) AS bytes\n)\nSELECT count(*)::int AS \"entries!\", coalesce(sum(bytes), 0)::bigint AS \"bytes!\"\nFROM deleted"};
+const deleteOrphanedJsonResponseCacheIR: any = {"usedParamSet":{},"params":[],"statement":"DELETE FROM crawler.json_response_cache c\nWHERE NOT EXISTS (\n  SELECT 1\n  FROM crawler.json_response r\n  WHERE r.content_hash = c.content_hash\n)"};
 
 /**
  * Query generated from SQL:
  * ```
- * WITH deleted AS (
- *   DELETE FROM crawler.json_response_cache c
- *   WHERE NOT EXISTS (
- *     SELECT 1
- *     FROM crawler.json_response r
- *     WHERE r.content_hash = c.content_hash
- *   )
- *   RETURNING pg_column_size(c.content) AS bytes
+ * DELETE FROM crawler.json_response_cache c
+ * WHERE NOT EXISTS (
+ *   SELECT 1
+ *   FROM crawler.json_response r
+ *   WHERE r.content_hash = c.content_hash
  * )
- * SELECT count(*)::int AS "entries!", coalesce(sum(bytes), 0)::bigint AS "bytes!"
- * FROM deleted
  * ```
  */
 export const deleteOrphanedJsonResponseCache = new PreparedQuery<IDeleteOrphanedJsonResponseCacheParams,IDeleteOrphanedJsonResponseCacheResult>(deleteOrphanedJsonResponseCacheIR);

@@ -60,14 +60,6 @@ function formatDate(date: Date | null | undefined) {
   return date ? date.toISOString().replace(/\.\d{3}Z$/, 'Z') : '-';
 }
 
-function formatBytes(bytes: number | string) {
-  const value = Number(bytes);
-  if (value < 1024) return `${value} B`;
-  if (value < 1024 ** 2) return `${(value / 1024).toFixed(1)} kB`;
-  if (value < 1024 ** 3) return `${(value / 1024 ** 2).toFixed(1)} MB`;
-  return `${(value / 1024 ** 3).toFixed(1)} GB`;
-}
-
 function printTable(
   rows: Array<Record<string, unknown> & { details?: Record<string, string | null> }>,
 ) {
@@ -637,12 +629,6 @@ async function cleanup(targetText: string | undefined, options: CleanupOptions) 
         'duplicate responses': preview.duplicate_responses,
       },
     ]);
-    if (preview.resolved_failures > 0) {
-      console.log('Duplicate count is before resolved-failure removal; --commit recalculates it afterward.');
-    }
-    console.log();
-    console.log('Globally orphaned blobs are checked and removed only during --commit.');
-    console.log('Dry run only. Re-run with --commit to remove rows.');
     return;
   }
 
@@ -677,14 +663,12 @@ async function cleanup(targetText: string | undefined, options: CleanupOptions) 
     },
   );
 
-  const [orphaned] = await deleteOrphanedJsonResponseCache.run(undefined, pool);
+  await deleteOrphanedJsonResponseCache.run(undefined, pool);
   const result = {
     mode: 'committed',
     scope: targetText ?? null,
     resolved_failures: deleted.resolvedFailures,
     duplicate_responses: deleted.duplicateResponses,
-    orphaned_cache_entries: orphaned.entries,
-    orphaned_cache_bytes: orphaned.bytes,
   };
 
   if (options.json) {
@@ -696,7 +680,6 @@ async function cleanup(targetText: string | undefined, options: CleanupOptions) 
         scope,
         'resolved failures': result.resolved_failures,
         'duplicate responses': result.duplicate_responses,
-        'globally orphaned blobs': `${result.orphaned_cache_entries} (${formatBytes(result.orphaned_cache_bytes)})`,
       },
     ]);
   }
