@@ -533,9 +533,7 @@ export interface IGetScheduleStatusResult {
   locked: number;
   max_requests: number | null;
   next_available_at: Date | null;
-  next_run_at: Date | null;
   per_interval: string | null;
-  queue_tail_at: Date | null;
   queued: number;
   ready: number;
   spacing: number | null;
@@ -547,7 +545,7 @@ export interface IGetScheduleStatusQuery {
   result: IGetScheduleStatusResult;
 }
 
-const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WITH fetch_jobs AS (\n  SELECT\n    host,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,\n    count(*) FILTER (WHERE state = 'ready')::int AS ready,\n    count(*) FILTER (WHERE state = 'delayed')::int AS delayed,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked,\n    min(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS next_run_at,\n    max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at\n  FROM crawler.frontier_fetch_job\n  WHERE host IS NOT NULL\n  GROUP BY host\n)\nSELECT\n  COALESCE(r.host, fj.host) AS \"host!\",\n  r.max_requests AS \"max_requests?\",\n  r.per_interval::text AS \"per_interval?\",\n  (extract(epoch from r.spacing) * 1000)::int AS \"spacing?\",\n  r.next_available_at AS \"next_available_at?\",\n  COALESCE(fj.queued, 0)::int AS \"queued!\",\n  COALESCE(fj.ready, 0)::int AS \"ready!\",\n  COALESCE(fj.delayed, 0)::int AS \"delayed!\",\n  COALESCE(fj.locked, 0)::int AS \"locked!\",\n  fj.next_run_at,\n  fj.queue_tail_at\nFROM crawler.rate_limit_rule r\nFULL JOIN fetch_jobs fj USING (host)\nORDER BY host"};
+const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WITH fetch_jobs AS (\n  SELECT\n    host,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,\n    count(*) FILTER (WHERE state = 'ready')::int AS ready,\n    count(*) FILTER (WHERE state = 'delayed')::int AS delayed,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked\n  FROM crawler.frontier_fetch_job\n  WHERE host IS NOT NULL\n  GROUP BY host\n)\nSELECT\n  COALESCE(r.host, fj.host) AS \"host!\",\n  r.max_requests AS \"max_requests?\",\n  r.per_interval::text AS \"per_interval?\",\n  (extract(epoch from r.spacing) * 1000)::int AS \"spacing?\",\n  r.next_available_at AS \"next_available_at?\",\n  COALESCE(fj.queued, 0)::int AS \"queued!\",\n  COALESCE(fj.ready, 0)::int AS \"ready!\",\n  COALESCE(fj.delayed, 0)::int AS \"delayed!\",\n  COALESCE(fj.locked, 0)::int AS \"locked!\"\nFROM crawler.rate_limit_rule r\nFULL JOIN fetch_jobs fj USING (host)\nORDER BY host"};
 
 /**
  * Query generated from SQL:
@@ -558,9 +556,7 @@ const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
  *     count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,
  *     count(*) FILTER (WHERE state = 'ready')::int AS ready,
  *     count(*) FILTER (WHERE state = 'delayed')::int AS delayed,
- *     count(*) FILTER (WHERE state = 'locked')::int AS locked,
- *     min(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS next_run_at,
- *     max(run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS queue_tail_at
+ *     count(*) FILTER (WHERE state = 'locked')::int AS locked
  *   FROM crawler.frontier_fetch_job
  *   WHERE host IS NOT NULL
  *   GROUP BY host
@@ -574,15 +570,43 @@ const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
  *   COALESCE(fj.queued, 0)::int AS "queued!",
  *   COALESCE(fj.ready, 0)::int AS "ready!",
  *   COALESCE(fj.delayed, 0)::int AS "delayed!",
- *   COALESCE(fj.locked, 0)::int AS "locked!",
- *   fj.next_run_at,
- *   fj.queue_tail_at
+ *   COALESCE(fj.locked, 0)::int AS "locked!"
  * FROM crawler.rate_limit_rule r
  * FULL JOIN fetch_jobs fj USING (host)
  * ORDER BY host
  * ```
  */
 export const getScheduleStatus = new PreparedQuery<IGetScheduleStatusParams,IGetScheduleStatusResult>(getScheduleStatusIR);
+
+
+/** 'GetScheduledFetchSlots' parameters type */
+export type IGetScheduledFetchSlotsParams = void;
+
+/** 'GetScheduledFetchSlots' return type */
+export interface IGetScheduledFetchSlotsResult {
+  host: string;
+  run_at: Date;
+}
+
+/** 'GetScheduledFetchSlots' query type */
+export interface IGetScheduledFetchSlotsQuery {
+  params: IGetScheduledFetchSlotsParams;
+  result: IGetScheduledFetchSlotsResult;
+}
+
+const getScheduledFetchSlotsIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT host AS \"host!\", run_at AS \"run_at!\"\nFROM crawler.frontier_fetch_job\nWHERE host IS NOT NULL\n  AND state IN ('ready', 'delayed')\nORDER BY host, run_at"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT host AS "host!", run_at AS "run_at!"
+ * FROM crawler.frontier_fetch_job
+ * WHERE host IS NOT NULL
+ *   AND state IN ('ready', 'delayed')
+ * ORDER BY host, run_at
+ * ```
+ */
+export const getScheduledFetchSlots = new PreparedQuery<IGetScheduledFetchSlotsParams,IGetScheduledFetchSlotsResult>(getScheduledFetchSlotsIR);
 
 
 /** 'GetFrontierDetail' parameters type */
@@ -927,7 +951,7 @@ export interface IMarkFrontierFetchErrorQuery {
   result: IMarkFrontierFetchErrorResult;
 }
 
-const markFrontierFetchErrorIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":274,"b":276}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status    = 'error',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      interval '5 minutes',\n      (power(2::numeric, error_count + 1) * 5) * interval '1 second'\n    )\nWHERE id = :id::bigint"};
+const markFrontierFetchErrorIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":274,"b":276}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status    = 'error',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      300::numeric,\n      power(2::numeric, least(error_count, 9) + 1) * 5\n    ) * interval '1 second'\nWHERE id = :id::bigint"};
 
 /**
  * Query generated from SQL:
@@ -937,9 +961,9 @@ const markFrontierFetchErrorIR: any = {"usedParamSet":{"id":true},"params":[{"na
  *     fetch_status    = 'error',
  *     error_count     = error_count + 1,
  *     next_fetch_at   = now() + least(
- *       interval '5 minutes',
- *       (power(2::numeric, error_count + 1) * 5) * interval '1 second'
- *     )
+ *       300::numeric,
+ *       power(2::numeric, least(error_count, 9) + 1) * 5
+ *     ) * interval '1 second'
  * WHERE id = :id::bigint
  * ```
  */
@@ -960,7 +984,7 @@ export interface IMarkFrontierTransientQuery {
   result: IMarkFrontierTransientResult;
 }
 
-const markFrontierTransientIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":279,"b":281}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status    = 'transient',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      interval '30 minutes',\n      (power(2::numeric, error_count + 1) * 5) * interval '1 second'\n    )\nWHERE id = :id::bigint"};
+const markFrontierTransientIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":279,"b":281}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status    = 'transient',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      1800::numeric,\n      power(2::numeric, least(error_count, 9) + 1) * 5\n    ) * interval '1 second'\nWHERE id = :id::bigint"};
 
 /**
  * Query generated from SQL:
@@ -970,9 +994,9 @@ const markFrontierTransientIR: any = {"usedParamSet":{"id":true},"params":[{"nam
  *     fetch_status    = 'transient',
  *     error_count     = error_count + 1,
  *     next_fetch_at   = now() + least(
- *       interval '30 minutes',
- *       (power(2::numeric, error_count + 1) * 5) * interval '1 second'
- *     )
+ *       1800::numeric,
+ *       power(2::numeric, least(error_count, 9) + 1) * 5
+ *     ) * interval '1 second'
  * WHERE id = :id::bigint
  * ```
  */

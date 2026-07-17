@@ -1,6 +1,7 @@
 import type { Task } from 'graphile-worker';
 import {
   getScheduleStatus,
+  getScheduledFetchSlots,
   getNextPendingProcess,
   getOutstandingJobCountForTask,
   getPendingFetch,
@@ -9,6 +10,29 @@ import {
 import { LOADERS, loaderFor, type LoaderIds } from '../crawler/handlers.ts';
 
 const MAX_OUTSTANDING_FETCH = 100;
+
+function reserveEarliestSlot(
+  sortedSlots: number[],
+  earliest: number,
+  spacing: number,
+): Date {
+  let candidate = earliest;
+  let insertAt = 0;
+
+  for (; insertAt < sortedSlots.length; insertAt++) {
+    const slot = sortedSlots[insertAt];
+    if (slot < candidate) {
+      if (candidate - slot < spacing) candidate = slot + spacing;
+    } else if (slot - candidate < spacing) {
+      candidate = slot + spacing;
+    } else {
+      break;
+    }
+  }
+
+  sortedSlots.splice(insertAt, 0, candidate);
+  return new Date(candidate);
+}
 
 const SEED_FRONTIERS: LoaderIds[] = [
   { federation: 'wdsf', kind: 'memberIndex' },
@@ -55,24 +79,25 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
     await upsertFrontiers.run(seedFrontierParams, client);
 
     const scheduleRows = await getScheduleStatus.run(undefined, client);
-    const now = new Date();
-    const spacingMs = new Map<string, number>();
-    const queueTail = new Map<string, Date>();
-
-    for (const row of scheduleRows) {
-      const earliestRunAt = Math.max(
-        now.getTime(),
-        row.next_available_at?.getTime() ?? now.getTime(),
-        row.queue_tail_at?.getTime() ?? now.getTime(),
-      );
-      spacingMs.set(row.host, row.spacing ?? 50);
-      queueTail.set(row.host, new Date(earliestRunAt));
-    }
+    const nowMs = Date.now();
 
     const outstanding = scheduleRows.reduce((total, row) => total + row.queued + row.locked, 0);
     if (outstanding >= MAX_OUTSTANDING_FETCH) return;
 
     const capacity = MAX_OUTSTANDING_FETCH - outstanding;
+    const earliestRunAt = new Map<string, number>();
+    const spacingMs = new Map<string, number>();
+    const scheduledSlots = new Map<string, number[]>();
+    for (const row of scheduleRows) {
+      earliestRunAt.set(
+        row.host,
+        Math.max(nowMs, row.next_available_at?.getTime() ?? nowMs),
+      );
+      spacingMs.set(row.host, row.spacing ?? 50);
+    }
+    for (const row of await getScheduledFetchSlots.run(undefined, client)) {
+      scheduledSlots.getOrInsert(row.host, []).push(row.run_at.getTime());
+    }
 
     const pendingIds = await getPendingFetch.run(
       { capacity, allowRefetch, ...fetchLoaderParams },
@@ -83,17 +108,14 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
       const loader = loaderFor(federation, kind);
       if (!loader) continue;
       const { host } = loader.buildRequest(key).url;
-      const runAt = new Date(
-        (queueTail.get(host) ?? now).getTime() + (spacingMs.get(host) ?? 50)
+      const runAt = reserveEarliestSlot(
+        scheduledSlots.getOrInsert(host, []),
+        earliestRunAt.get(host) ?? nowMs,
+        spacingMs.get(host) ?? 50,
       );
-      queueTail.set(host, runAt);
-
       const jobKey = `fetch:${host}:${id}`;
-      await addJob(
-        'frontier_fetch',
-        { id },
-        { jobKey, jobKeyMode: 'preserve_run_at', runAt },
-      );
+      const jobKeyMode = 'preserve_run_at';
+      await addJob('frontier_fetch', { id }, { jobKey, jobKeyMode, runAt });
       scheduled++;
     }
     if (pendingIds.length > 0 || outstanding > 0) {

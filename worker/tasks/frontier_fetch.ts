@@ -65,11 +65,12 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
   if (!result) return;
   const { frontier, handler, url, init } = result;
 
-  const { httpStatus, error, content, fetchStatus } = await fetchResponse(
-    handler,
-    url,
-    init,
-  );
+  const response = await fetchResponse(handler, url, init);
+  const { httpStatus, error, content } = response;
+  let { fetchStatus } = response;
+  if (fetchStatus === 'transient' && frontier.error_count + 1 >= 25) {
+    fetchStatus = 'error';
+  }
 
   if (error && (fetchStatus === 'error' || fetchStatus === 'transient')) {
     logger.warn(`Fetch error in ${frontier.id}, URL ${url} (${error})`);
