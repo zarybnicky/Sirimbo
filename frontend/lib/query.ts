@@ -420,58 +420,75 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       login(result, _args, cache, _info) {
         const { usr, jwt } = result.login?.result || {};
+        let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
+          const base64Url = jwt.split('.')[1];
+          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
             : old;
         });
       },
       otpLogin(result, _args, cache, _info) {
         const { usr, jwt } = result.otpLogin?.result || {};
+        let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
+          const base64Url = jwt.split('.')[1];
+          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
             : old;
         });
       },
       logInAs(result, _args, cache, _info) {
         const { usr, jwt } = result.logInAs?.result || {};
+        let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
+          const base64Url = jwt.split('.')[1];
+          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
             : old;
         });
       },
 
       registerUsingInvitation(result, _args, cache, _info) {
         const { usr, jwt } = result.registerUsingInvitation?.result || {};
+        let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
+          const base64Url = jwt.split('.')[1];
+          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
             : old;
         });
       },
 
       registerWithoutInvitation(result, _args, cache, _info) {
         const { usr, jwt } = result.registerWithoutInvitation?.result || {};
+        let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr
-            ? ({ getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
+            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
             : old;
         });
       },
