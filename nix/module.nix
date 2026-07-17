@@ -36,12 +36,6 @@ in {
         description = "${pkgName} GraphQL port";
         example = 3002;
       };
-      postgrestPort = lib.mkOption {
-        type = lib.types.int;
-        description = "${pkgName} Postgrest port";
-        example = 3003;
-      };
-
       domain = lib.mkOption {
         type = lib.types.str;
         description = "${pkgName} Nginx vhost domain";
@@ -194,27 +188,6 @@ in {
         };
       };
 
-      services.postgrest = {
-        enable = true;
-        settings = {
-          server-port = cfg.backend.postgrestPort;
-          server-unix-socket = null;
-          db-uri = {
-            dbname = cfg.backend.database;
-            host = "/run/postgresql";
-          };
-          db-schema = "federated";
-          db-anon-role = "anonymous";
-          db-config = false;
-          openapi-server-proxy-uri = "https://${cfg.backend.domain}/federated";
-        };
-      };
-      systemd.services.postgrest.serviceConfig = {
-        DynamicUser = lib.mkForce false;
-        User = lib.mkForce cfg.user;
-        Group = lib.mkForce cfg.group;
-      };
-
       services.nginx = {
         enable = true;
         enableReload = true;
@@ -235,15 +208,6 @@ in {
 
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
-
-          locations."/federated/" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.backend.postgrestPort}/";
-            extraConfig = ''
-              limit_except GET HEAD {
-                deny all;
-              }
-            '';
-          };
 
           locations."/" = {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";

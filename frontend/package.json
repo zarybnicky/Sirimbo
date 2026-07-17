@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint . --cache",
     "typecheck": "tsc --noEmit",
-    "test": "vitest"
+    "test": "vitest",
+    "sql:generate": "pgtyped -c sql.config.json"
   },
   "dependencies": {
     "@0no-co/graphql.web": "^1.3.2",

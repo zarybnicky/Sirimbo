@@ -51,8 +51,6 @@
           sqlfluff
           pgformatter
           overmind
-          postgrest
-          prefetch-npm-deps
           playwright-driver
           playwright-driver.browsers
           perlPackages.TAPParserSourceHandlerpgTAP

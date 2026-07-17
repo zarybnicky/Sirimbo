@@ -64,7 +64,6 @@ export type EventExternalRegistrationInput = {
 /** Represents an update to a `EventInstance`. Fields that are set will be updated. */
 export type EventInstancePatch = {
   capacity?: number | null | undefined;
-  /** Capacity counts people by default; registrations is an explicit per-occurrence choice. */
   capacityUnit?: EventCapacityUnit | null | undefined;
   createdAt?: string | null | undefined;
   description?: string | null | undefined;
@@ -92,7 +91,6 @@ export type EventInstancePatch = {
   updatedAt?: string | null | undefined;
 };
 
-/** Registration lifecycle, separate from attendance. */
 export type EventInstanceRegistrationStatus =
   | 'ACTIVE'
   | 'CANCELLED';

@@ -2689,7 +2689,6 @@ export type EventInstance = {
   __typename?: 'EventInstance';
   approxPriceList: Maybe<Array<EventInstanceApproxPriceRecord>>;
   capacity: Maybe<Scalars['Int']['output']>;
-  /** Capacity counts people by default; registrations is an explicit per-occurrence choice. */
   capacityUnit: EventCapacityUnit;
   /** Reads and enables pagination through a set of `EventInstance`. */
   childEventInstancesList: Array<EventInstance>;
@@ -2877,7 +2876,6 @@ export type EventInstanceCondition = {
 /** Represents an update to a `EventInstance`. Fields that are set will be updated. */
 export type EventInstancePatch = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
-  /** Capacity counts people by default; registrations is an explicit per-occurrence choice. */
   capacityUnit?: InputMaybe<EventCapacityUnit>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -2908,7 +2906,6 @@ export type EventInstancePatch = {
 export type EventInstanceRegistration = {
   __typename?: 'EventInstanceRegistration';
   attendanceCreatedAt: Maybe<Scalars['Datetime']['output']>;
-  /** Per-person attendance note. */
   attendanceNote: Maybe<Scalars['String']['output']>;
   attendanceUpdatedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Couple` that is related to this `EventInstanceRegistration`. */
@@ -2926,7 +2923,6 @@ export type EventInstanceRegistration = {
   instance: Maybe<EventInstance>;
   instanceId: Scalars['BigInt']['output'];
   lastAttended: Maybe<Scalars['Datetime']['output']>;
-  /** Registration note stored on a root registration row. */
   note: Maybe<Scalars['String']['output']>;
   /** Reads a single `EventInstanceRegistration` that is related to this `EventInstanceRegistration`. */
   parentRegistration: Maybe<EventInstanceRegistration>;
@@ -2934,14 +2930,11 @@ export type EventInstanceRegistration = {
   /** Reads a single `Person` that is related to this `EventInstanceRegistration`. */
   person: Maybe<Person>;
   personId: Maybe<Scalars['BigInt']['output']>;
-  /** Registration lifecycle; child rows are cancelled with their root registration. */
   registrationStatus: EventInstanceRegistrationStatus;
-  /** How the current registration state was set. */
   source: Maybe<EventRegistrationSource>;
   status: Maybe<AttendanceType>;
   /** Reads a single `Cohort` that is related to this `EventInstanceRegistration`. */
   targetCohort: Maybe<Cohort>;
-  /** Cohort used to reconcile registrations whose source is cohort. */
   targetCohortId: Maybe<Scalars['BigInt']['output']>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
@@ -3013,7 +3006,6 @@ export type EventInstanceRegistrationCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
-/** Registration lifecycle, separate from attendance. */
 export type EventInstanceRegistrationStatus =
   | 'ACTIVE'
   | 'CANCELLED';
@@ -3340,7 +3332,6 @@ export type EventOverlapsConflict = {
   secondUntil: Maybe<Scalars['Datetime']['output']>;
 };
 
-/** How an event registration state was set. */
 export type EventRegistrationSource =
   | 'COHORT'
   | 'MANAGER'
@@ -3352,7 +3343,6 @@ export type EventSeries = {
   /** Reads and enables pagination through a set of `EventInstance`. */
   eventsList: Array<EventInstance>;
   id: Scalars['BigInt']['output'];
-  /** An optional label for the series itself; it is never inherited by its events. */
   name: Maybe<Scalars['String']['output']>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
@@ -3409,7 +3399,6 @@ export type EventSeriesEdge = {
 export type EventSeriesInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** An optional label for the series itself; it is never inherited by its events. */
   name?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -3435,7 +3424,6 @@ export type EventSeriesOrderBy =
 export type EventSeriesPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** An optional label for the series itself; it is never inherited by its events. */
   name?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
