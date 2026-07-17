@@ -23,7 +23,7 @@ importers:
         version: 7.1.0(graphql@16.14.2)
       '@graphql-codegen/cli':
         specifier: ~7.2.0
-        version: 7.2.0(@parcel/watcher@2.5.6)(@types/node@25.0.10)(graphql@16.14.2)(typescript@6.0.3)
+        version: 7.2.0(@parcel/watcher@2.5.6)(@types/node@26.0.1)(graphql@16.14.2)(typescript@6.0.3)
       '@graphql-codegen/near-operation-file-preset':
         specifier: ~5.2.1
         version: 5.2.1(graphql@16.14.2)
@@ -52,8 +52,8 @@ importers:
         specifier: ~24.0.4
         version: 24.0.4
       '@types/node':
-        specifier: ~25.0.10
-        version: 25.0.10
+        specifier: ~26.0.1
+        version: 26.0.1
       '@urql/exchange-graphcache':
         specifier: ~9.0.1
         version: 9.0.1(@urql/core@6.0.3(graphql@16.14.2))(graphql@16.14.2)
@@ -134,7 +134,7 @@ importers:
         version: 1.0.2(@envelop/core@5.4.0)(graphql@16.14.2)
       grafserv:
         specifier: ~1.0.0
-        version: 1.0.0(@envelop/core@5.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))(ws@8.21.0)
+        version: 1.0.0(@envelop/core@5.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))(ws@8.21.0)
       graphile-build:
         specifier: ~5.0.2
         version: 5.0.2(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)
@@ -167,7 +167,7 @@ importers:
         version: 5.0.1
       postgraphile:
         specifier: ~5.0.3
-        version: 5.0.3(8df6e280a015aca072c925e1d9d2d2ee)
+        version: 5.0.3(2d7492cc876aaf5bc334392f63ba319b)
       tamedevil:
         specifier: ~0.1.1
         version: 0.1.1
@@ -203,8 +203,8 @@ importers:
         specifier: ~1.9.10
         version: 1.9.10
       '@types/node':
-        specifier: ^24.13.3
-        version: 24.13.3
+        specifier: ^26.0.1
+        version: 26.0.1
       '@types/pg':
         specifier: ^8.20.0
         version: 8.20.0
@@ -279,7 +279,7 @@ importers:
         version: 10.64.0(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(@opentelemetry/exporter-trace-otlp-http@0.218.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.8.0(@opentelemetry/api@1.9.1))(next@16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(webpack@5.108.4(@swc/core@1.15.43)(esbuild@0.27.7)(postcss@8.5.16))
       '@serwist/next':
         specifier: ^9.5.11
-        version: 9.5.11(@serwist/cli@9.5.11(@types/node@24.10.15)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3))(next@16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.15.43)(esbuild@0.27.7)(postcss@8.5.16))
+        version: 9.5.11(@serwist/cli@9.5.11(@types/node@26.0.1)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3))(next@16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.15.43)(esbuild@0.27.7)(postcss@8.5.16))
       '@serwist/window':
         specifier: ^9.5.11
         version: 9.5.11(browserslist@4.28.2)(typescript@6.0.3)
@@ -463,7 +463,7 @@ importers:
         version: 2.4.3(typescript@6.0.3)
       '@serwist/cli':
         specifier: ^9.5.11
-        version: 9.5.11(@types/node@24.10.15)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3)
+        version: 9.5.11(@types/node@26.0.1)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3)
       '@swc/core':
         specifier: ~1.15.43
         version: 1.15.43
@@ -498,8 +498,8 @@ importers:
         specifier: ^1.9.21
         version: 1.9.21
       '@types/node':
-        specifier: ~24.10.15
-        version: 24.10.15
+        specifier: ~26.0.1
+        version: 26.0.1
       '@types/nprogress':
         specifier: ~0.2.3
         version: 0.2.3
@@ -565,7 +565,7 @@ importers:
         version: 8.63.0(eslint@9.39.1(jiti@1.21.7))(typescript@6.0.3)
       vitest:
         specifier: ^4.1.10
-        version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@24.10.15)(vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.10.15)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.48.0)(yaml@2.8.1))
+        version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@26.0.1)(vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@26.0.1)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.49.0)(yaml@2.8.1))
       windy-radix-typography:
         specifier: ~0.2.1
         version: 0.2.1(@tailwindcss/typography@0.5.20(tailwindcss@3.4.18(yaml@2.8.1)))(tailwindcss@3.4.18(yaml@2.8.1))
@@ -581,7 +581,7 @@ importers:
         version: 9.39.1
       '@graphql-eslint/eslint-plugin':
         specifier: ^4.4.0
-        version: 4.4.0(@types/node@25.0.10)(eslint@9.39.1(jiti@2.6.1))(graphql@16.14.2)(typescript@6.0.3)
+        version: 4.4.0(@types/node@26.0.1)(eslint@9.39.1(jiti@2.6.1))(graphql@16.14.2)(typescript@6.0.3)
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)
@@ -626,7 +626,7 @@ importers:
         version: 0.14.2
       mjml:
         specifier: ^5.4.0
-        version: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+        version: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
       nodemailer:
         specifier: ~9.0.3
         version: 9.0.3
@@ -662,8 +662,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       '@types/node':
-        specifier: ^24.13.3
-        version: 24.13.3
+        specifier: ^26.0.1
+        version: 26.0.1
       '@types/nodemailer':
         specifier: ~8.0.1
         version: 8.0.1
@@ -4500,14 +4500,8 @@ packages:
   '@types/node@22.20.1':
     resolution: {integrity: sha512-EANqOCF9QFyra+4pfxUcX9STKJpCLjMbObVzljIJomAWSnuSIEAvyzEU53GaajbXJEgdh0iEcPL+DGvpUd4k1Q==}
 
-  '@types/node@24.10.15':
-    resolution: {integrity: sha512-BgjLoRuSr0MTI5wA6gMw9Xy0sFudAaUuvrnjgGx9wZ522fYYLA5SYJ+1Y30vTcJEG+DRCyDHx/gzQVfofYzSdg==}
-
-  '@types/node@24.13.3':
-    resolution: {integrity: sha512-Dh8vAsV36ig5wa9OX4pXvMc9D3Veibfw2wix0CUwYODLD8nkj9UsLjASr49nPg+2eKzxhBV+v7L8pXvT4e639Q==}
-
-  '@types/node@25.0.10':
-    resolution: {integrity: sha512-zWW5KPngR/yvakJgGOmZ5vTBemDoSqF3AcV/LrO5u5wTWyEAVVh+IT39G4gtyAkh3CtTZs8aX/yRM82OfzHJRg==}
+  '@types/node@26.0.1':
+    resolution: {integrity: sha512-fc3KiUoBt6kie0N9bIW3E47vZsuaMf0PM2AaUpLCLT0s/LvX1nxAim6Fc049cNxODPpGm6qRAuUOB86SkRuPQw==}
 
   '@types/nodemailer@8.0.1':
     resolution: {integrity: sha512-PxpaInm8V1JQDd4j0ds5HfvWQk8JupS1C0Picb96QJsrrRDjBH+DlK7L4ZdNSqNULhiZRQHc40nLVShaGxXAMw==}
@@ -5217,6 +5211,11 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
+  baseline-browser-mapping@2.10.43:
+    resolution: {integrity: sha512-AjYpR78kDWAY3Efj+cDTFH9t9SCoL7OoTp1BOb0mQV7S+6CiLwnWM3FyxhJtdPufDFKzmCSFoUncKjWgJEZTCQ==}
+    engines: {node: '>=6.0.0'}
+    hasBin: true
+
   baseline-browser-mapping@2.9.4:
     resolution: {integrity: sha512-ZCQ9GEWl73BVm8bu5Fts8nt7MHdbt5vY9bP6WGnUh+r3l8M7CgfyTlwsgCbMC66BNxPr6Xoce3j66Ms5YUQTNA==}
     hasBin: true
@@ -5300,6 +5299,11 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
+  browserslist@4.28.6:
+    resolution: {integrity: sha512-FQBYNK15VMslhLHpA7+n+n1GOlF1kId2xcCg7/j95f24AOF6VDYMNH4mFxF7KuaTdv627faazpOAjFzMrfJOUw==}
+    engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
+    hasBin: true
+
   buffer-crc32@0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
 
@@ -5374,6 +5378,9 @@ packages:
 
   caniuse-lite@1.0.30001803:
     resolution: {integrity: sha512-g/uHREV2ZpK9qMalCsWaxmA6ol+DX8GYhuf3T40RKoP+oL7vhRJh8LNt73PCjpnR6l14FzfPrB5Yux4PKm2meg==}
+
+  caniuse-lite@1.0.30001805:
+    resolution: {integrity: sha512-52noaS3DubycKSXaU30TwPGIp+POyQSUVa5jBEq3vkRkY0kjyb3LQgvhU6WGyCcyXqVLWO0Cw0Q6BSdD0kUfVA==}
 
   capital-case@1.0.4:
     resolution: {integrity: sha512-ds37W8CytHgwnhGGTi88pcPyR15qoNkOpYwmMMfnWqqWgESapLqvDx6huFjQ5vqWSn2Z06173XNA7LtMOeUh1A==}
@@ -6125,6 +6132,9 @@ packages:
   electron-to-chromium@1.5.388:
     resolution: {integrity: sha512-Pl/aJaqOOxYxda3vcx1IKSJimwYXHDkEnGn0F+kG2EE68dDtx2uCinaS+Vih8Z91B9t8CSAbiF/HKyWcnXjhzw==}
 
+  electron-to-chromium@1.5.391:
+    resolution: {integrity: sha512-YmCu4856jkgKT1Nh6fwRdeVrM6Ydf/fBnq51tpmSfX+jOcUMTxh31yH6hjKScRenhB2oDSvA9oooxcpjogPeig==}
+
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
 
@@ -6207,6 +6217,9 @@ packages:
 
   es-module-lexer@2.3.0:
     resolution: {integrity: sha512-KLdwQm2NvGLDkQDCGvmiQrhkd0JbMzXthwQAUgWjQuQdBLFa3eiBP5arXZyA+f8x+x7OXgud6bq2rxjGtHV2tw==}
+
+  es-module-lexer@2.3.1:
+    resolution: {integrity: sha512-shc1dbU90Yl/xq1QrC7QRtfcwURZuVRfPhZbDoldJ1cn1gzDvBaBWlv0eFolj5+0znnPJz5TXLxsN77X/12KTA==}
 
   es-object-atoms@1.1.1:
     resolution: {integrity: sha512-FGgH2h8zKNim9ljj7dankFPcICIK9Cp5bm+c2gQSYePhpaG5+esrLODihIorn+Pe6FGJzWhXQotPv73jTaldXA==}
@@ -8417,6 +8430,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@3.3.16:
+    resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
   napi-postinstall@0.3.4:
     resolution: {integrity: sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
@@ -8514,6 +8532,10 @@ packages:
 
   node-releases@2.0.50:
     resolution: {integrity: sha512-J6l92tKHX6w8Jy5nO1Vuc01NoIiRGi/d6qBKVxh+IQ8Cr3b6HbVNfKiF8ZpFKufTwpwxMmce2W3iQZ861ZRyTg==}
+    engines: {node: '>=18'}
+
+  node-releases@2.0.51:
+    resolution: {integrity: sha512-wRNIrw4DmVLKQlbgOMdkMx27Wrpzes2hh5Jtbi2bjPd+4wJstWIqP5A+lscnqbm0xxmT5Bpg8Lec5ItEBwx6BQ==}
     engines: {node: '>=18'}
 
   nodemailer@9.0.3:
@@ -9105,6 +9127,10 @@ packages:
 
   postcss@8.5.16:
     resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
+    engines: {node: ^10 || ^12 || >=14}
+
+  postcss@8.5.19:
+    resolution: {integrity: sha512-Mz8SaolMd8nB+G13WkORcxQKHZ/NE4xXevtkJHVuG+guo9/wYKlIMTKAqGdEmYOXR2ijPjTYNHssizdaVSUNdQ==}
     engines: {node: ^10 || ^12 || >=14}
 
   postgraphile@5.0.3:
@@ -10035,8 +10061,8 @@ packages:
     resolution: {integrity: sha512-4LeEWl96twnS2Q7Bz4MGqgazLqO+hJN63GZxXoIqh1T3VweYD997gbU1ItNsQafqqXTXd5WFyFdReLtwvRBNiw==}
     engines: {node: '>=18'}
 
-  terser@5.48.0:
-    resolution: {integrity: sha512-J/9An6vs9Us6wKRriSFXBWdRZapREHqFzdNUKk0pmu804EMR6dr6winwo7e5JDxN4xahxQsuysyYFwlwj4XN/Q==}
+  terser@5.49.0:
+    resolution: {integrity: sha512-SNiDnXyHSrxVcIOtVbULzcTmniUiwcV7Nwdyj1twVubeTmbjoa8p69KKDpfkdoOavuM4/GRm1+ykI8qqnavHoA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -10231,11 +10257,8 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
-  undici-types@7.16.0:
-    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
-
-  undici-types@7.18.2:
-    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
+  undici-types@8.3.0:
+    resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
   undici@6.27.0:
     resolution: {integrity: sha512-YmfV3YnEDzXRC5lZ2jWtWWHKGUm1zIt8AhesR1tens+HTNv+YZlN/dp6G727LOvMJ8xjP9Be7Y2Sdr96LDm+pg==}
@@ -11100,8 +11123,6 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-upload': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-alignment@47.6.2':
     dependencies:
@@ -11210,8 +11231,6 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-code-block@47.6.2':
     dependencies:
@@ -11233,6 +11252,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-watchdog': 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-easy-image@47.6.2':
     dependencies:
@@ -11252,8 +11273,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-classic@47.6.2':
     dependencies:
@@ -11263,8 +11282,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-decoupled@47.6.2':
     dependencies:
@@ -11274,8 +11291,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-inline@47.6.2':
     dependencies:
@@ -11317,6 +11332,8 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-enter@47.6.2':
     dependencies:
@@ -11345,8 +11362,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-font@47.6.2':
     dependencies:
@@ -11402,8 +11417,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-html-embed@47.6.2':
     dependencies:
@@ -11547,6 +11560,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-mention@47.6.2':
     dependencies:
@@ -11556,6 +11571,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-minimap@47.6.2':
     dependencies:
@@ -11564,6 +11581,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-page-break@47.6.2':
     dependencies:
@@ -11573,6 +11592,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-paragraph@47.6.2':
     dependencies:
@@ -11627,6 +11648,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-source-editing@47.6.2':
     dependencies:
@@ -11657,6 +11680,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-table@47.6.2':
     dependencies:
@@ -11669,6 +11694,8 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-theme-lark@47.6.2':
     dependencies:
@@ -11693,6 +11720,8 @@ snapshots:
       color-parse: 2.0.2
       es-toolkit: 1.39.5
       vanilla-colorful: 0.7.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-undo@47.6.2':
     dependencies:
@@ -11701,6 +11730,8 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.6.2
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-upload@47.6.2':
     dependencies:
@@ -11711,6 +11742,8 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-ui': 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-watchdog@47.6.2':
     dependencies:
@@ -11719,6 +11752,8 @@ snapshots:
       '@ckeditor/ckeditor5-engine': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-widget@47.6.2':
     dependencies:
@@ -11738,6 +11773,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@colordx/core@5.5.0': {}
 
@@ -12070,9 +12107,9 @@ snapshots:
 
   '@graphile/simplify-inflection@8.0.0': {}
 
-  '@graphiql/plugin-doc-explorer@0.4.2(@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/react@19.2.17)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))':
+  '@graphiql/plugin-doc-explorer@0.4.2(@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/react@19.2.17)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))':
     dependencies:
-      '@graphiql/react': 0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      '@graphiql/react': 0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       '@headlessui/react': 2.2.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       graphql: 16.14.2
       react: 19.2.7
@@ -12084,10 +12121,10 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@graphiql/plugin-history@0.4.2(@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/node@24.13.3)(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))':
+  '@graphiql/plugin-history@0.4.2(@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/node@26.0.1)(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))':
     dependencies:
-      '@graphiql/react': 0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
-      '@graphiql/toolkit': 0.12.0(@types/node@24.13.3)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)
+      '@graphiql/react': 0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      '@graphiql/toolkit': 0.12.0(@types/node@26.0.1)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)
       react: 19.2.7
       react-compiler-runtime: 19.1.0-rc.1(react@19.2.7)
       react-dom: 19.2.7(react@19.2.7)
@@ -12100,9 +12137,9 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))':
+  '@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))':
     dependencies:
-      '@graphiql/toolkit': 0.12.0(@types/node@24.13.3)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)
+      '@graphiql/toolkit': 0.12.0(@types/node@26.0.1)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)
       '@radix-ui/react-dialog': 1.1.19(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@radix-ui/react-dropdown-menu': 2.1.20(patch_hash=879575068f0d3746a5162317bfbbee4ea661c284e4d2b60db0fbd01d130d7b48)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@radix-ui/react-tooltip': 1.2.9(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -12131,21 +12168,21 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@graphiql/toolkit@0.11.3(@types/node@24.13.3)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)':
+  '@graphiql/toolkit@0.11.3(@types/node@26.0.1)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)':
     dependencies:
       '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
       graphql: 16.14.2
-      meros: 1.3.2(@types/node@24.13.3)
+      meros: 1.3.2(@types/node@26.0.1)
     optionalDependencies:
       graphql-ws: 6.0.6(graphql@16.14.2)(ws@8.21.0)
     transitivePeerDependencies:
       - '@types/node'
 
-  '@graphiql/toolkit@0.12.0(@types/node@24.13.3)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)':
+  '@graphiql/toolkit@0.12.0(@types/node@26.0.1)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)':
     dependencies:
       '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
       graphql: 16.14.2
-      meros: 1.3.2(@types/node@24.13.3)
+      meros: 1.3.2(@types/node@26.0.1)
     optionalDependencies:
       graphql-ws: 6.0.6(graphql@16.14.2)(ws@8.21.0)
     transitivePeerDependencies:
@@ -12157,7 +12194,7 @@ snapshots:
       graphql: 16.14.2
       tslib: 2.8.1
 
-  '@graphql-codegen/cli@7.2.0(@parcel/watcher@2.5.6)(@types/node@25.0.10)(graphql@16.14.2)(typescript@6.0.3)':
+  '@graphql-codegen/cli@7.2.0(@parcel/watcher@2.5.6)(@types/node@26.0.1)(graphql@16.14.2)(typescript@6.0.3)':
     dependencies:
       '@babel/generator': 7.29.7
       '@babel/template': 7.29.7
@@ -12168,21 +12205,21 @@ snapshots:
       '@graphql-tools/apollo-engine-loader': 8.0.30(graphql@16.14.2)
       '@graphql-tools/code-file-loader': 8.1.32(graphql@16.14.2)
       '@graphql-tools/git-loader': 8.0.36(graphql@16.14.2)
-      '@graphql-tools/github-loader': 9.1.2(@types/node@25.0.10)(graphql@16.14.2)
+      '@graphql-tools/github-loader': 9.1.2(@types/node@26.0.1)(graphql@16.14.2)
       '@graphql-tools/graphql-file-loader': 8.1.14(graphql@16.14.2)
       '@graphql-tools/json-file-loader': 8.0.28(graphql@16.14.2)
       '@graphql-tools/load': 8.1.10(graphql@16.14.2)
       '@graphql-tools/merge': 9.1.9(graphql@16.14.2)
-      '@graphql-tools/url-loader': 9.1.2(@types/node@25.0.10)(graphql@16.14.2)
+      '@graphql-tools/url-loader': 9.1.2(@types/node@26.0.1)(graphql@16.14.2)
       '@graphql-tools/utils': 11.2.0(graphql@16.14.2)
-      '@inquirer/prompts': 8.5.2(@types/node@25.0.10)
+      '@inquirer/prompts': 8.5.2(@types/node@26.0.1)
       '@whatwg-node/fetch': 0.10.13
       chalk: 5.6.2
       cosmiconfig: 9.0.0(typescript@6.0.3)
       debounce: 3.0.0
       detect-indent: 7.0.2
       graphql: 16.14.2
-      graphql-config: 5.1.6(@types/node@25.0.10)(graphql@16.14.2)(typescript@6.0.3)
+      graphql-config: 5.1.6(@types/node@26.0.1)(graphql@16.14.2)(typescript@6.0.3)
       is-glob: 4.0.3
       jiti: 2.6.1
       json-to-pretty-yaml: 1.2.2
@@ -12374,7 +12411,7 @@ snapshots:
       parse-filepath: 1.0.2
       tslib: 2.8.1
 
-  '@graphql-eslint/eslint-plugin@4.4.0(@types/node@25.0.10)(eslint@9.39.1(jiti@2.6.1))(graphql@16.14.2)(typescript@6.0.3)':
+  '@graphql-eslint/eslint-plugin@4.4.0(@types/node@26.0.1)(eslint@9.39.1(jiti@2.6.1))(graphql@16.14.2)(typescript@6.0.3)':
     dependencies:
       '@graphql-tools/code-file-loader': 8.1.32(graphql@16.14.2)
       '@graphql-tools/graphql-tag-pluck': 8.3.31(graphql@16.14.2)
@@ -12383,7 +12420,7 @@ snapshots:
       eslint: 9.39.1(jiti@2.6.1)
       fast-glob: 3.3.3
       graphql: 16.14.2
-      graphql-config: 5.1.6(@types/node@25.0.10)(graphql@16.14.2)(typescript@6.0.3)
+      graphql-config: 5.1.6(@types/node@26.0.1)(graphql@16.14.2)(typescript@6.0.3)
       graphql-depth-limit: 1.1.0(graphql@16.14.2)
       lodash.lowercase: 4.3.0
     transitivePeerDependencies:
@@ -12467,7 +12504,7 @@ snapshots:
       - uWebSockets.js
       - utf-8-validate
 
-  '@graphql-tools/executor-http@3.3.0(@types/node@25.0.10)(graphql@16.14.2)':
+  '@graphql-tools/executor-http@3.3.0(@types/node@26.0.1)(graphql@16.14.2)':
     dependencies:
       '@graphql-hive/signal': 2.0.0
       '@graphql-tools/executor-common': 1.0.6(graphql@16.14.2)
@@ -12477,7 +12514,7 @@ snapshots:
       '@whatwg-node/fetch': 0.10.13
       '@whatwg-node/promise-helpers': 1.3.2
       graphql: 16.14.2
-      meros: 1.3.2(@types/node@25.0.10)
+      meros: 1.3.2(@types/node@26.0.1)
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@types/node'
@@ -12516,9 +12553,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@graphql-tools/github-loader@9.1.2(@types/node@25.0.10)(graphql@16.14.2)':
+  '@graphql-tools/github-loader@9.1.2(@types/node@26.0.1)(graphql@16.14.2)':
     dependencies:
-      '@graphql-tools/executor-http': 3.3.0(@types/node@25.0.10)(graphql@16.14.2)
+      '@graphql-tools/executor-http': 3.3.0(@types/node@26.0.1)(graphql@16.14.2)
       '@graphql-tools/graphql-tag-pluck': 8.3.31(graphql@16.14.2)
       '@graphql-tools/utils': 11.2.0(graphql@16.14.2)
       '@whatwg-node/fetch': 0.10.13
@@ -12600,10 +12637,10 @@ snapshots:
       graphql: 16.14.2
       tslib: 2.8.1
 
-  '@graphql-tools/url-loader@9.1.2(@types/node@25.0.10)(graphql@16.14.2)':
+  '@graphql-tools/url-loader@9.1.2(@types/node@26.0.1)(graphql@16.14.2)':
     dependencies:
       '@graphql-tools/executor-graphql-ws': 3.1.5(graphql@16.14.2)
-      '@graphql-tools/executor-http': 3.3.0(@types/node@25.0.10)(graphql@16.14.2)
+      '@graphql-tools/executor-http': 3.3.0(@types/node@26.0.1)(graphql@16.14.2)
       '@graphql-tools/executor-legacy-ws': 1.1.28(graphql@16.14.2)
       '@graphql-tools/utils': 11.1.0(graphql@16.14.2)
       '@graphql-tools/wrap': 11.1.2(graphql@16.14.2)
@@ -12868,237 +12905,137 @@ snapshots:
 
   '@inquirer/ansi@2.0.7': {}
 
-  '@inquirer/checkbox@5.2.1(@types/node@24.10.15)':
+  '@inquirer/checkbox@5.2.1(@types/node@26.0.1)':
     dependencies:
       '@inquirer/ansi': 2.0.7
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
       '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
     optionalDependencies:
-      '@types/node': 24.10.15
+      '@types/node': 26.0.1
 
-  '@inquirer/checkbox@5.2.1(@types/node@25.0.10)':
+  '@inquirer/confirm@6.1.1(@types/node@26.0.1)':
     dependencies:
-      '@inquirer/ansi': 2.0.7
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
     optionalDependencies:
-      '@types/node': 25.0.10
+      '@types/node': 26.0.1
 
-  '@inquirer/confirm@6.1.1(@types/node@24.10.15)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
-    optionalDependencies:
-      '@types/node': 24.10.15
-
-  '@inquirer/confirm@6.1.1(@types/node@25.0.10)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
-    optionalDependencies:
-      '@types/node': 25.0.10
-
-  '@inquirer/core@11.2.1(@types/node@24.10.15)':
+  '@inquirer/core@11.2.1(@types/node@26.0.1)':
     dependencies:
       '@inquirer/ansi': 2.0.7
       '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
       cli-width: 4.1.0
       fast-wrap-ansi: 0.2.2
       mute-stream: 3.0.0
       signal-exit: 4.1.0
     optionalDependencies:
-      '@types/node': 24.10.15
+      '@types/node': 26.0.1
 
-  '@inquirer/core@11.2.1(@types/node@25.0.10)':
+  '@inquirer/editor@5.2.2(@types/node@26.0.1)':
     dependencies:
-      '@inquirer/ansi': 2.0.7
-      '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
-      cli-width: 4.1.0
-      fast-wrap-ansi: 0.2.2
-      mute-stream: 3.0.0
-      signal-exit: 4.1.0
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
+      '@inquirer/external-editor': 3.0.3(@types/node@26.0.1)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
     optionalDependencies:
-      '@types/node': 25.0.10
+      '@types/node': 26.0.1
 
-  '@inquirer/editor@5.2.2(@types/node@24.10.15)':
+  '@inquirer/expand@5.1.1(@types/node@26.0.1)':
     dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
-      '@inquirer/external-editor': 3.0.3(@types/node@24.10.15)
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
     optionalDependencies:
-      '@types/node': 24.10.15
+      '@types/node': 26.0.1
 
-  '@inquirer/editor@5.2.2(@types/node@25.0.10)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/external-editor': 3.0.3(@types/node@25.0.10)
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
-    optionalDependencies:
-      '@types/node': 25.0.10
-
-  '@inquirer/expand@5.1.1(@types/node@24.10.15)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
-    optionalDependencies:
-      '@types/node': 24.10.15
-
-  '@inquirer/expand@5.1.1(@types/node@25.0.10)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
-    optionalDependencies:
-      '@types/node': 25.0.10
-
-  '@inquirer/external-editor@3.0.3(@types/node@24.10.15)':
+  '@inquirer/external-editor@3.0.3(@types/node@26.0.1)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.2
     optionalDependencies:
-      '@types/node': 24.10.15
-
-  '@inquirer/external-editor@3.0.3(@types/node@25.0.10)':
-    dependencies:
-      chardet: 2.1.1
-      iconv-lite: 0.7.2
-    optionalDependencies:
-      '@types/node': 25.0.10
+      '@types/node': 26.0.1
 
   '@inquirer/figures@2.0.7': {}
 
-  '@inquirer/input@5.1.2(@types/node@24.10.15)':
+  '@inquirer/input@5.1.2(@types/node@26.0.1)':
     dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
     optionalDependencies:
-      '@types/node': 24.10.15
+      '@types/node': 26.0.1
 
-  '@inquirer/input@5.1.2(@types/node@25.0.10)':
+  '@inquirer/number@4.1.1(@types/node@26.0.1)':
     dependencies:
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
     optionalDependencies:
-      '@types/node': 25.0.10
+      '@types/node': 26.0.1
 
-  '@inquirer/number@4.1.1(@types/node@24.10.15)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
-    optionalDependencies:
-      '@types/node': 24.10.15
-
-  '@inquirer/number@4.1.1(@types/node@25.0.10)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
-    optionalDependencies:
-      '@types/node': 25.0.10
-
-  '@inquirer/password@5.1.1(@types/node@24.10.15)':
+  '@inquirer/password@5.1.1(@types/node@26.0.1)':
     dependencies:
       '@inquirer/ansi': 2.0.7
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
     optionalDependencies:
-      '@types/node': 24.10.15
+      '@types/node': 26.0.1
 
-  '@inquirer/password@5.1.1(@types/node@25.0.10)':
+  '@inquirer/prompts@8.4.2(@types/node@26.0.1)':
+    dependencies:
+      '@inquirer/checkbox': 5.2.1(@types/node@26.0.1)
+      '@inquirer/confirm': 6.1.1(@types/node@26.0.1)
+      '@inquirer/editor': 5.2.2(@types/node@26.0.1)
+      '@inquirer/expand': 5.1.1(@types/node@26.0.1)
+      '@inquirer/input': 5.1.2(@types/node@26.0.1)
+      '@inquirer/number': 4.1.1(@types/node@26.0.1)
+      '@inquirer/password': 5.1.1(@types/node@26.0.1)
+      '@inquirer/rawlist': 5.3.1(@types/node@26.0.1)
+      '@inquirer/search': 4.2.1(@types/node@26.0.1)
+      '@inquirer/select': 5.2.1(@types/node@26.0.1)
+    optionalDependencies:
+      '@types/node': 26.0.1
+
+  '@inquirer/prompts@8.5.2(@types/node@26.0.1)':
+    dependencies:
+      '@inquirer/checkbox': 5.2.1(@types/node@26.0.1)
+      '@inquirer/confirm': 6.1.1(@types/node@26.0.1)
+      '@inquirer/editor': 5.2.2(@types/node@26.0.1)
+      '@inquirer/expand': 5.1.1(@types/node@26.0.1)
+      '@inquirer/input': 5.1.2(@types/node@26.0.1)
+      '@inquirer/number': 4.1.1(@types/node@26.0.1)
+      '@inquirer/password': 5.1.1(@types/node@26.0.1)
+      '@inquirer/rawlist': 5.3.1(@types/node@26.0.1)
+      '@inquirer/search': 4.2.1(@types/node@26.0.1)
+      '@inquirer/select': 5.2.1(@types/node@26.0.1)
+    optionalDependencies:
+      '@types/node': 26.0.1
+
+  '@inquirer/rawlist@5.3.1(@types/node@26.0.1)':
+    dependencies:
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
+    optionalDependencies:
+      '@types/node': 26.0.1
+
+  '@inquirer/search@4.2.1(@types/node@26.0.1)':
+    dependencies:
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
+      '@inquirer/figures': 2.0.7
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
+    optionalDependencies:
+      '@types/node': 26.0.1
+
+  '@inquirer/select@5.2.1(@types/node@26.0.1)':
     dependencies:
       '@inquirer/ansi': 2.0.7
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
-    optionalDependencies:
-      '@types/node': 25.0.10
-
-  '@inquirer/prompts@8.4.2(@types/node@24.10.15)':
-    dependencies:
-      '@inquirer/checkbox': 5.2.1(@types/node@24.10.15)
-      '@inquirer/confirm': 6.1.1(@types/node@24.10.15)
-      '@inquirer/editor': 5.2.2(@types/node@24.10.15)
-      '@inquirer/expand': 5.1.1(@types/node@24.10.15)
-      '@inquirer/input': 5.1.2(@types/node@24.10.15)
-      '@inquirer/number': 4.1.1(@types/node@24.10.15)
-      '@inquirer/password': 5.1.1(@types/node@24.10.15)
-      '@inquirer/rawlist': 5.3.1(@types/node@24.10.15)
-      '@inquirer/search': 4.2.1(@types/node@24.10.15)
-      '@inquirer/select': 5.2.1(@types/node@24.10.15)
-    optionalDependencies:
-      '@types/node': 24.10.15
-
-  '@inquirer/prompts@8.5.2(@types/node@25.0.10)':
-    dependencies:
-      '@inquirer/checkbox': 5.2.1(@types/node@25.0.10)
-      '@inquirer/confirm': 6.1.1(@types/node@25.0.10)
-      '@inquirer/editor': 5.2.2(@types/node@25.0.10)
-      '@inquirer/expand': 5.1.1(@types/node@25.0.10)
-      '@inquirer/input': 5.1.2(@types/node@25.0.10)
-      '@inquirer/number': 4.1.1(@types/node@25.0.10)
-      '@inquirer/password': 5.1.1(@types/node@25.0.10)
-      '@inquirer/rawlist': 5.3.1(@types/node@25.0.10)
-      '@inquirer/search': 4.2.1(@types/node@25.0.10)
-      '@inquirer/select': 5.2.1(@types/node@25.0.10)
-    optionalDependencies:
-      '@types/node': 25.0.10
-
-  '@inquirer/rawlist@5.3.1(@types/node@24.10.15)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
-    optionalDependencies:
-      '@types/node': 24.10.15
-
-  '@inquirer/rawlist@5.3.1(@types/node@25.0.10)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
-    optionalDependencies:
-      '@types/node': 25.0.10
-
-  '@inquirer/search@4.2.1(@types/node@24.10.15)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
+      '@inquirer/core': 11.2.1(@types/node@26.0.1)
       '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
+      '@inquirer/type': 4.0.7(@types/node@26.0.1)
     optionalDependencies:
-      '@types/node': 24.10.15
+      '@types/node': 26.0.1
 
-  '@inquirer/search@4.2.1(@types/node@25.0.10)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
+  '@inquirer/type@4.0.7(@types/node@26.0.1)':
     optionalDependencies:
-      '@types/node': 25.0.10
-
-  '@inquirer/select@5.2.1(@types/node@24.10.15)':
-    dependencies:
-      '@inquirer/ansi': 2.0.7
-      '@inquirer/core': 11.2.1(@types/node@24.10.15)
-      '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@24.10.15)
-    optionalDependencies:
-      '@types/node': 24.10.15
-
-  '@inquirer/select@5.2.1(@types/node@25.0.10)':
-    dependencies:
-      '@inquirer/ansi': 2.0.7
-      '@inquirer/core': 11.2.1(@types/node@25.0.10)
-      '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@25.0.10)
-    optionalDependencies:
-      '@types/node': 25.0.10
-
-  '@inquirer/type@4.0.7(@types/node@24.10.15)':
-    optionalDependencies:
-      '@types/node': 24.10.15
-
-  '@inquirer/type@4.0.7(@types/node@25.0.10)':
-    optionalDependencies:
-      '@types/node': 25.0.10
+      '@types/node': 26.0.1
 
   '@internationalized/date@3.12.2':
     dependencies:
@@ -14998,9 +14935,9 @@ snapshots:
     transitivePeerDependencies:
       - browserslist
 
-  '@serwist/cli@9.5.11(@types/node@24.10.15)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3)':
+  '@serwist/cli@9.5.11(@types/node@26.0.1)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3)':
     dependencies:
-      '@inquirer/prompts': 8.4.2(@types/node@24.10.15)
+      '@inquirer/prompts': 8.4.2(@types/node@26.0.1)
       '@serwist/build': 9.5.11(browserslist@4.28.2)(typescript@6.0.3)
       '@serwist/utils': 9.5.11(browserslist@4.28.2)
       chalk: 5.6.2
@@ -15019,7 +14956,7 @@ snapshots:
       - browserslist
       - typescript
 
-  '@serwist/next@9.5.11(@serwist/cli@9.5.11(@types/node@24.10.15)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3))(next@16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.15.43)(esbuild@0.27.7)(postcss@8.5.16))':
+  '@serwist/next@9.5.11(@serwist/cli@9.5.11(@types/node@26.0.1)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3))(next@16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.15.43)(esbuild@0.27.7)(postcss@8.5.16))':
     dependencies:
       '@serwist/build': 9.5.11(browserslist@4.28.2)(typescript@6.0.3)
       '@serwist/utils': 9.5.11(browserslist@4.28.2)
@@ -15034,7 +14971,7 @@ snapshots:
       serwist: 9.5.11(browserslist@4.28.2)(typescript@6.0.3)
       zod: 4.4.3
     optionalDependencies:
-      '@serwist/cli': 9.5.11(@types/node@24.10.15)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3)
+      '@serwist/cli': 9.5.11(@types/node@26.0.1)(browserslist@4.28.2)(esbuild@0.27.7)(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
       - webpack
@@ -15231,11 +15168,11 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/bunyan@1.8.11':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/chai@5.2.3':
     dependencies:
@@ -15251,11 +15188,11 @@ snapshots:
   '@types/compression@1.8.1':
     dependencies:
       '@types/express': 5.0.6
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/cookie-parser@1.4.10(@types/express@5.0.6)':
     dependencies:
@@ -15263,7 +15200,7 @@ snapshots:
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/d3-array@3.2.2': {}
 
@@ -15410,7 +15347,7 @@ snapshots:
 
   '@types/express-serve-static-core@5.1.2':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
       '@types/qs': 6.15.1
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -15439,7 +15376,7 @@ snapshots:
 
   '@types/interpret@1.1.3':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/json-schema@7.0.15': {}
 
@@ -15452,7 +15389,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/leaflet@1.9.21':
     dependencies:
@@ -15464,7 +15401,7 @@ snapshots:
 
   '@types/memcached@2.2.10':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/mjml-core@4.15.2': {}
 
@@ -15474,13 +15411,13 @@ snapshots:
 
   '@types/morgan@1.9.10':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/ms@2.1.0': {}
 
   '@types/mysql@2.15.27':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/node@14.18.63': {}
 
@@ -15492,31 +15429,23 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@24.10.15':
+  '@types/node@26.0.1':
     dependencies:
-      undici-types: 7.16.0
-
-  '@types/node@24.13.3':
-    dependencies:
-      undici-types: 7.18.2
-
-  '@types/node@25.0.10':
-    dependencies:
-      undici-types: 7.16.0
+      undici-types: 8.3.0
 
   '@types/nodemailer@8.0.1':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/nprogress@0.2.3': {}
 
   '@types/oracledb@6.5.2':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/pg-cursor@2.7.2':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
       '@types/pg': 8.20.0
 
   '@types/pg-pool@2.0.7':
@@ -15525,13 +15454,13 @@ snapshots:
 
   '@types/pg@8.15.6':
     dependencies:
-      '@types/node': 25.0.10
+      '@types/node': 26.0.1
       pg-protocol: 1.15.0
       pg-types: 2.2.0
 
   '@types/pg@8.20.0':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
       pg-protocol: 1.15.0
       pg-types: 2.2.0
 
@@ -15555,16 +15484,16 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/tedious@4.0.14':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@types/triple-beam@1.3.5': {}
 
@@ -15574,7 +15503,7 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
 
   '@typescript-eslint/eslint-plugin@8.63.0(@typescript-eslint/parser@8.63.0(eslint@9.39.1(jiti@1.21.7))(typescript@6.0.3))(eslint@9.39.1(jiti@1.21.7))(typescript@6.0.3)':
     dependencies:
@@ -15882,13 +15811,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.10(vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.10.15)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.48.0)(yaml@2.8.1))':
+  '@vitest/mocker@4.1.10(vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@26.0.1)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.49.0)(yaml@2.8.1))':
     dependencies:
       '@vitest/spy': 4.1.10
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.10.15)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.48.0)(yaml@2.8.1)
+      vite: 8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@26.0.1)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.49.0)(yaml@2.8.1)
 
   '@vitest/pretty-format@4.1.10':
     dependencies:
@@ -16266,6 +16195,8 @@ snapshots:
 
   baseline-browser-mapping@2.10.42: {}
 
+  baseline-browser-mapping@2.10.43: {}
+
   baseline-browser-mapping@2.9.4: {}
 
   basic-auth@2.0.1:
@@ -16377,6 +16308,14 @@ snapshots:
       node-releases: 2.0.50
       update-browserslist-db: 1.2.3(browserslist@4.28.5)
 
+  browserslist@4.28.6:
+    dependencies:
+      baseline-browser-mapping: 2.10.43
+      caniuse-lite: 1.0.30001805
+      electron-to-chromium: 1.5.391
+      node-releases: 2.0.51
+      update-browserslist-db: 1.2.3(browserslist@4.28.6)
+
   buffer-crc32@0.2.13: {}
 
   buffer-equal-constant-time@1.0.1: {}
@@ -16445,6 +16384,8 @@ snapshots:
   caniuse-lite@1.0.30001759: {}
 
   caniuse-lite@1.0.30001803: {}
+
+  caniuse-lite@1.0.30001805: {}
 
   capital-case@1.0.4:
     dependencies:
@@ -17328,6 +17269,8 @@ snapshots:
 
   electron-to-chromium@1.5.388: {}
 
+  electron-to-chromium@1.5.391: {}
+
   emoji-regex@10.6.0: {}
 
   emoji-regex@8.0.0: {}
@@ -17455,6 +17398,8 @@ snapshots:
   es-module-lexer@2.0.0: {}
 
   es-module-lexer@2.3.0: {}
+
+  es-module-lexer@2.3.1: {}
 
   es-object-atoms@1.1.1:
     dependencies:
@@ -18296,7 +18241,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  grafserv@1.0.0(@envelop/core@5.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))(ws@8.21.0):
+  grafserv@1.0.0(@envelop/core@5.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))(ws@8.21.0):
     dependencies:
       '@graphile/lru': 5.0.0
       debug: 4.4.3
@@ -18305,7 +18250,7 @@ snapshots:
       graphile-config: 1.0.1
       graphql: 16.14.2
       graphql-ws: 6.0.6(graphql@16.14.2)(ws@8.21.0)
-      ruru: 2.0.0(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(debug@4.4.3)(graphile-config@1.0.1)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      ruru: 2.0.0(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(debug@4.4.3)(graphile-config@1.0.1)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       tslib: 2.8.1
     optionalDependencies:
       '@envelop/core': 5.4.0
@@ -18435,11 +18380,11 @@ snapshots:
       - supports-color
       - typescript
 
-  graphiql@5.2.3(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
+  graphiql@5.2.3(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
     dependencies:
-      '@graphiql/plugin-doc-explorer': 0.4.2(@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/react@19.2.17)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
-      '@graphiql/plugin-history': 0.4.2(@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/node@24.13.3)(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
-      '@graphiql/react': 0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      '@graphiql/plugin-doc-explorer': 0.4.2(@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/react@19.2.17)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      '@graphiql/plugin-history': 0.4.2(@graphiql/react@0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))(@types/node@26.0.1)(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      '@graphiql/react': 0.37.6(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       graphql: 16.14.2
       react: 19.2.7
       react-compiler-runtime: 19.1.0-rc.1(react@19.2.7)
@@ -18453,13 +18398,13 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  graphql-config@5.1.6(@types/node@25.0.10)(graphql@16.14.2)(typescript@6.0.3):
+  graphql-config@5.1.6(@types/node@26.0.1)(graphql@16.14.2)(typescript@6.0.3):
     dependencies:
       '@graphql-tools/graphql-file-loader': 8.1.14(graphql@16.14.2)
       '@graphql-tools/json-file-loader': 8.0.28(graphql@16.14.2)
       '@graphql-tools/load': 8.1.10(graphql@16.14.2)
       '@graphql-tools/merge': 9.1.9(graphql@16.14.2)
-      '@graphql-tools/url-loader': 9.1.2(@types/node@25.0.10)(graphql@16.14.2)
+      '@graphql-tools/url-loader': 9.1.2(@types/node@26.0.1)(graphql@16.14.2)
       '@graphql-tools/utils': 11.1.0(graphql@16.14.2)
       cosmiconfig: 8.3.6(typescript@6.0.3)
       graphql: 16.14.2
@@ -18675,7 +18620,7 @@ snapshots:
 
   html-void-elements@3.0.0: {}
 
-  htmlnano@3.3.2(cssnano@7.1.9(postcss@8.5.16))(postcss@8.5.16)(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  htmlnano@3.3.2(cssnano@7.1.9(postcss@8.5.16))(postcss@8.5.16)(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@types/relateurl': 0.2.33
       commander: 14.0.3
@@ -18685,7 +18630,7 @@ snapshots:
       cssnano: 7.1.9(postcss@8.5.16)
       postcss: 8.5.16
       svgo: 4.0.1
-      terser: 5.48.0
+      terser: 5.49.0
     transitivePeerDependencies:
       - typescript
 
@@ -19130,7 +19075,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 25.0.10
+      '@types/node': 26.0.1
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -19626,13 +19571,9 @@ snapshots:
 
   meriyah@6.1.4: {}
 
-  meros@1.3.2(@types/node@24.13.3):
+  meros@1.3.2(@types/node@26.0.1):
     optionalDependencies:
-      '@types/node': 24.13.3
-
-  meros@1.3.2(@types/node@25.0.10):
-    optionalDependencies:
-      '@types/node': 25.0.10
+      '@types/node': 26.0.1
 
   methods@1.1.2: {}
 
@@ -19887,7 +19828,7 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
-      terser: 5.48.0
+      terser: 5.49.0
       webpack: 5.108.4(@swc/core@1.15.43)(esbuild@0.27.7)(postcss@8.5.16)
     optionalDependencies:
       '@swc/core': 1.15.43
@@ -19902,11 +19843,11 @@ snapshots:
     dependencies:
       minipass: 7.1.2
 
-  mjml-accordion@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-accordion@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -19916,11 +19857,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-body@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-body@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -19930,11 +19871,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-button@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-button@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -19944,11 +19885,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-carousel@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-carousel@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -19958,16 +19899,16 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-cli@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-cli@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       chokidar: 4.0.3
       glob: 11.1.0
       lodash: 4.18.1
       minimatch: 10.2.5
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
       mjml-parser-xml: 5.4.0
-      mjml-preset-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-preset-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
       mjml-validator: 5.4.0
       yargs: 17.7.3
     transitivePeerDependencies:
@@ -19979,11 +19920,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-column@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-column@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -19993,14 +19934,14 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-core@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-core@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       cheerio: 1.0.0
       cssnano: 7.1.9(postcss@8.5.16)
       cssnano-preset-lite: 4.0.6(postcss@8.5.16)
       detect-node: 2.1.0
-      htmlnano: 3.3.2(cssnano@7.1.9(postcss@8.5.16))(postcss@8.5.16)(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      htmlnano: 3.3.2(cssnano@7.1.9(postcss@8.5.16))(postcss@8.5.16)(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
       js-beautify: 1.15.4
       juice: 11.1.1
       lodash: 4.18.1
@@ -20016,11 +19957,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-divider@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-divider@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20030,11 +19971,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-group@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-group@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20044,11 +19985,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-head-attributes@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-head-attributes@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20058,11 +19999,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-head-breakpoint@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-head-breakpoint@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20072,11 +20013,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-head-font@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-head-font@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20086,11 +20027,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-head-html-attributes@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-head-html-attributes@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20100,11 +20041,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-head-preview@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-head-preview@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20114,11 +20055,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-head-style@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-head-style@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20128,11 +20069,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-head-title@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-head-title@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20142,11 +20083,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-head@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-head@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20156,11 +20097,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-hero@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-hero@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20170,11 +20111,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-image@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-image@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20184,11 +20125,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-navbar@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-navbar@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20205,34 +20146,34 @@ snapshots:
       htmlparser2: 9.1.0
       lodash: 4.18.1
 
-  mjml-preset-core@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-preset-core@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      mjml-accordion: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-body: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-button: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-carousel: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-column: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-divider: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-group: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-head: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-head-attributes: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-head-breakpoint: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-head-font: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-head-html-attributes: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-head-preview: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-head-style: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-head-title: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-hero: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-image: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-navbar: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-raw: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-section: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-social: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-spacer: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-table: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-text: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-wrapper: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-accordion: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-body: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-button: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-carousel: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-column: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-divider: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-group: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-head: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-head-attributes: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-head-breakpoint: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-head-font: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-head-html-attributes: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-head-preview: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-head-style: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-head-title: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-hero: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-image: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-navbar: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-raw: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-section: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-social: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-spacer: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-table: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-text: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-wrapper: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20242,11 +20183,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-raw@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-raw@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20256,11 +20197,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-section@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-section@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20270,11 +20211,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-social@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-social@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20284,11 +20225,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-spacer@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-spacer@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20298,11 +20239,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-table@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-table@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20312,11 +20253,11 @@ snapshots:
       - typescript
       - uncss
 
-  mjml-text@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-text@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20330,12 +20271,12 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.7
 
-  mjml-wrapper@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml-wrapper@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       lodash: 4.18.1
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-section: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-section: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - purgecss
       - relateurl
@@ -20345,12 +20286,12 @@ snapshots:
       - typescript
       - uncss
 
-  mjml@5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3):
+  mjml@5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      mjml-cli: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
-      mjml-preset-core: 5.4.0(svgo@4.0.1)(terser@5.48.0)(typescript@6.0.3)
+      mjml-cli: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
+      mjml-preset-core: 5.4.0(svgo@4.0.1)(terser@5.49.0)(typescript@6.0.3)
       mjml-validator: 5.4.0
     transitivePeerDependencies:
       - purgecss
@@ -20425,6 +20366,8 @@ snapshots:
       thenify-all: 1.6.0
 
   nanoid@3.3.15: {}
+
+  nanoid@3.3.16: {}
 
   napi-postinstall@0.3.4: {}
 
@@ -20518,6 +20461,8 @@ snapshots:
   node-releases@2.0.27: {}
 
   node-releases@2.0.50: {}
+
+  node-releases@2.0.51: {}
 
   nodemailer@9.0.3: {}
 
@@ -21080,7 +21025,13 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postgraphile@5.0.3(8df6e280a015aca072c925e1d9d2d2ee):
+  postcss@8.5.19:
+    dependencies:
+      nanoid: 3.3.16
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
+
+  postgraphile@5.0.3(2d7492cc876aaf5bc334392f63ba319b):
     dependencies:
       '@dataplan/json': 1.0.0(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))
       '@dataplan/pg': 1.0.3(@dataplan/json@1.0.0(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2)))(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0)
@@ -21089,7 +21040,7 @@ snapshots:
       '@types/pg': 8.20.0
       debug: 4.4.3
       grafast: 1.0.2(@envelop/core@5.4.0)(graphql@16.14.2)
-      grafserv: 1.0.0(@envelop/core@5.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))(ws@8.21.0)
+      grafserv: 1.0.0(@envelop/core@5.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))(ws@8.21.0)
       graphile-build: 5.0.2(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)
       graphile-build-pg: 5.0.2(@dataplan/pg@1.0.3(@dataplan/json@1.0.0(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2)))(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0))(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-build@5.0.2(grafast@1.0.2(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2))(graphile-config@1.0.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0)(tamedevil@0.1.1)
       graphile-config: 1.0.1
@@ -21177,7 +21128,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 24.13.3
+      '@types/node': 26.0.1
       long: 5.3.2
 
   proxy-addr@2.0.7:
@@ -21618,10 +21569,10 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
-  ruru-types@2.0.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
+  ruru-types@2.0.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
     dependencies:
-      '@graphiql/toolkit': 0.11.3(@types/node@24.13.3)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)
-      graphiql: 5.2.3(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      '@graphiql/toolkit': 0.11.3(@types/node@26.0.1)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)
+      graphiql: 5.2.3(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       graphql: 16.14.2
     optionalDependencies:
       react: 19.2.7
@@ -21635,13 +21586,13 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  ruru@2.0.0(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(debug@4.4.3)(graphile-config@1.0.1)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
+  ruru@2.0.0(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(debug@4.4.3)(graphile-config@1.0.1)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
       graphile-config: 1.0.1
       graphql: 16.14.2
       http-proxy: 1.18.1(debug@4.4.3)
-      ruru-types: 2.0.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.3)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+      ruru-types: 2.0.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.0.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(graphql-ws@6.0.6(graphql@16.14.2)(ws@8.21.0))(graphql@16.14.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       tslib: 2.8.1
       yargs: 17.7.3
     optionalDependencies:
@@ -22206,7 +22157,7 @@ snapshots:
       minizlib: 3.1.0
       yallist: 5.0.0
 
-  terser@5.48.0:
+  terser@5.49.0:
     dependencies:
       '@jridgewell/source-map': 0.3.11
       acorn: 8.17.0
@@ -22400,9 +22351,7 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici-types@7.16.0: {}
-
-  undici-types@7.18.2: {}
+  undici-types@8.3.0: {}
 
   undici@6.27.0: {}
 
@@ -22538,6 +22487,12 @@ snapshots:
       escalade: 3.2.0
       picocolors: 1.1.1
 
+  update-browserslist-db@1.2.3(browserslist@4.28.6):
+    dependencies:
+      browserslist: 4.28.6
+      escalade: 3.2.0
+      picocolors: 1.1.1
+
   update-notifier@7.3.1:
     dependencies:
       boxen: 8.0.1
@@ -22612,28 +22567,28 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.10.15)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.48.0)(yaml@2.8.1):
+  vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@26.0.1)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.49.0)(yaml@2.8.1):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.5
-      postcss: 8.5.16
+      postcss: 8.5.19
       rolldown: 1.0.0-rc.10(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 24.10.15
+      '@types/node': 26.0.1
       esbuild: 0.27.7
       fsevents: 2.3.3
       jiti: 1.21.7
-      terser: 5.48.0
+      terser: 5.49.0
       yaml: 2.8.1
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
 
-  vitest@4.1.10(@opentelemetry/api@1.9.1)(@types/node@24.10.15)(vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.10.15)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.48.0)(yaml@2.8.1)):
+  vitest@4.1.10(@opentelemetry/api@1.9.1)(@types/node@26.0.1)(vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@26.0.1)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.49.0)(yaml@2.8.1)):
     dependencies:
       '@vitest/expect': 4.1.10
-      '@vitest/mocker': 4.1.10(vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.10.15)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.48.0)(yaml@2.8.1))
+      '@vitest/mocker': 4.1.10(vite@8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@26.0.1)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.49.0)(yaml@2.8.1))
       '@vitest/pretty-format': 4.1.10
       '@vitest/runner': 4.1.10
       '@vitest/snapshot': 4.1.10
@@ -22650,11 +22605,11 @@ snapshots:
       tinyexec: 1.0.4
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vite: 8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.10.15)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.48.0)(yaml@2.8.1)
+      vite: 8.0.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@26.0.1)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.49.0)(yaml@2.8.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
-      '@types/node': 24.10.15
+      '@types/node': 26.0.1
     transitivePeerDependencies:
       - msw
 
@@ -22725,10 +22680,10 @@ snapshots:
       '@webassemblyjs/wasm-parser': 1.14.1
       acorn: 8.17.0
       acorn-import-phases: 1.0.4(acorn@8.17.0)
-      browserslist: 4.28.5
+      browserslist: 4.28.6
       chrome-trace-event: 1.0.4
       enhanced-resolve: 5.24.2
-      es-module-lexer: 2.3.0
+      es-module-lexer: 2.3.1
       eslint-scope: 5.1.1
       events: 3.3.0
       graceful-fs: 4.2.11

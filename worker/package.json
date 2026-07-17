@@ -42,7 +42,7 @@
     "@tsconfig/node24": "^24.0.4",
     "@types/html-to-text": "~9.0.4",
     "@types/mjml": "^5.0.0",
-    "@types/node": "^24.13.3",
+    "@types/node": "^26.0.1",
     "@types/nodemailer": "~8.0.1",
     "@types/pg": "~8.20.0",
     "@types/pg-cursor": "^2.7.2",
