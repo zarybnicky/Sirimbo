@@ -18,3 +18,6 @@ as $$
 $$;
 
 grant all on function public.current_claims() to anonymous;
+
+comment on function competition_brief is '@omit';
+comment on function competition_report is '@omit';
