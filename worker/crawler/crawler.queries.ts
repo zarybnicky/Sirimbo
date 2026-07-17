@@ -228,7 +228,7 @@ export interface IGetFrontierResponsesQuery {
   result: IGetFrontierResponsesResult;
 }
 
-const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true,"allowErrors":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":554,"b":564},{"a":598,"b":608}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":618,"b":622},{"a":650,"b":654}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":664,"b":667},{"a":694,"b":697}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":707,"b":709},{"a":737,"b":739}]},{"name":"allowErrors","required":false,"transform":{"type":"scalar"},"locs":[{"a":749,"b":760}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":844,"b":849}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url AS \"url!\",\n  jr.http_status,\n  jr.fetched_at AS \"fetched_at!\",\n  jrc.content AS \"content!\"\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n    AND (jr.http_status IS NULL OR jr.http_status < 400)\n  ORDER BY case when jr.error is null then 0 else 1 end asc, jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND (:id::bigint IS NULL OR f.id = :id)\n  AND (:allowErrors OR f.fetch_status = 'ok')\nORDER BY f.discovered_at, f.last_fetched_at, f.id\nLIMIT :limit"};
+const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true,"allowErrors":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":374,"b":384},{"a":418,"b":428}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":438,"b":442},{"a":470,"b":474}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":484,"b":487},{"a":514,"b":517}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":527,"b":529},{"a":557,"b":559}]},{"name":"allowErrors","required":false,"transform":{"type":"scalar"},"locs":[{"a":569,"b":580}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":664,"b":669}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url AS \"url!\",\n  jr.http_status,\n  jr.fetched_at AS \"fetched_at!\",\n  jrc.content AS \"content!\"\nFROM crawler.frontier f\nJOIN crawler.json_response jr ON jr.id = f.last_successful_response_id\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND (:id::bigint IS NULL OR f.id = :id)\n  AND (:allowErrors OR f.fetch_status = 'ok')\nORDER BY f.discovered_at, f.last_fetched_at, f.id\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -243,14 +243,7 @@ const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":tr
  *   jr.fetched_at AS "fetched_at!",
  *   jrc.content AS "content!"
  * FROM crawler.frontier f
- * JOIN LATERAL (
- *   SELECT jr.*
- *   FROM crawler.json_response jr
- *   WHERE jr.frontier_id = f.id
- *     AND (jr.http_status IS NULL OR jr.http_status < 400)
- *   ORDER BY case when jr.error is null then 0 else 1 end asc, jr.fetched_at DESC
- *   LIMIT 1
- * ) jr ON true
+ * JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
  * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
  * WHERE (:federation::text IS NULL OR f.federation = :federation)
  *   AND (:kind::text IS NULL OR f.kind = :kind)
@@ -452,7 +445,7 @@ export interface IGetCrawlerJobsQuery {
   result: IGetCrawlerJobsResult;
 }
 
-const getCrawlerJobsIR: any = {"usedParamSet":{"state":true,"federation":true,"kind":true,"limit":true},"params":[{"name":"state","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":297},{"a":321,"b":326},{"a":377,"b":382}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":439,"b":449},{"a":483,"b":493}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":505,"b":509},{"a":537,"b":541}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1694,"b":1699}]}],"statement":"WITH jobs AS (\n  SELECT\n    j.*,\n    (\n      j.state = 'failed'\n      OR j.job_error IS NOT NULL\n      OR j.process_error IS NOT NULL\n      OR j.fetch_status IN ('error', 'transient')\n      OR j.process_status = 'error'\n    ) AS needs_detail\n  FROM crawler.frontier_fetch_job j\n  WHERE (\n    :state::text IS NULL\n    OR (:state::text = 'failed' AND j.state = 'failed')\n    OR (:state::text = 'active' AND j.state <> 'failed')\n  )\n    AND (:federation::text IS NULL OR j.federation = :federation)\n    AND (:kind::text IS NULL OR j.kind = :kind)\n)\nSELECT\n  j.job_id AS \"job_id!\",\n  j.run_at AS \"run_at!\",\n  j.locked_at,\n  j.attempts AS \"attempts!\",\n  j.max_attempts AS \"max_attempts!\",\n  j.job_error,\n  j.job_updated_at AS \"job_updated_at!\",\n  j.frontier_id AS \"frontier_id!\",\n  j.federation AS \"federation!\",\n  j.kind AS \"kind!\",\n  j.frontier_key AS \"frontier_key!\",\n  j.fetch_status AS \"fetch_status!\",\n  j.process_status AS \"process_status!\",\n  response.http_status AS response_http_status,\n  response.error AS response_error,\n  CASE\n    WHEN j.needs_detail OR response.error IS NOT NULL THEN response.content\n  END AS response_content,\n  j.process_error,\n  j.state AS \"state!\"\nFROM jobs j\nLEFT JOIN LATERAL (\n  SELECT jr.http_status, jr.error, jrc.content\n  FROM crawler.json_response jr\n  LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash\n  WHERE jr.frontier_id = j.frontier_id\n    AND (j.needs_detail OR jr.error IS NOT NULL)\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) response ON true\nORDER BY\n  CASE j.state\n    WHEN 'failed' THEN 0\n    WHEN 'locked' THEN 1\n    WHEN 'ready' THEN 2\n    ELSE 3\n  END,\n  j.job_updated_at DESC,\n  j.run_at,\n  j.job_id DESC\nLIMIT :limit"};
+const getCrawlerJobsIR: any = {"usedParamSet":{"state":true,"federation":true,"kind":true,"limit":true},"params":[{"name":"state","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":297},{"a":321,"b":326},{"a":377,"b":382}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":439,"b":449},{"a":483,"b":493}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":505,"b":509},{"a":537,"b":541}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":1605,"b":1610}]}],"statement":"WITH jobs AS (\n  SELECT\n    j.*,\n    (\n      j.state = 'failed'\n      OR j.job_error IS NOT NULL\n      OR j.process_error IS NOT NULL\n      OR j.fetch_status IN ('error', 'transient')\n      OR j.process_status = 'error'\n    ) AS needs_detail\n  FROM crawler.frontier_fetch_job j\n  WHERE (\n    :state::text IS NULL\n    OR (:state::text = 'failed' AND j.state = 'failed')\n    OR (:state::text = 'active' AND j.state <> 'failed')\n  )\n    AND (:federation::text IS NULL OR j.federation = :federation)\n    AND (:kind::text IS NULL OR j.kind = :kind)\n)\nSELECT\n  j.job_id AS \"job_id!\",\n  j.run_at AS \"run_at!\",\n  j.locked_at,\n  j.attempts AS \"attempts!\",\n  j.max_attempts AS \"max_attempts!\",\n  j.job_error,\n  j.job_updated_at AS \"job_updated_at!\",\n  j.frontier_id AS \"frontier_id!\",\n  j.federation AS \"federation!\",\n  j.kind AS \"kind!\",\n  j.frontier_key AS \"frontier_key!\",\n  j.fetch_status AS \"fetch_status!\",\n  j.process_status AS \"process_status!\",\n  response.http_status AS response_http_status,\n  response.error AS response_error,\n  CASE\n    WHEN j.needs_detail OR response.error IS NOT NULL THEN response_cache.content\n  END AS response_content,\n  j.process_error,\n  j.state AS \"state!\"\nFROM jobs j\nJOIN crawler.frontier f ON f.id = j.frontier_id\nLEFT JOIN crawler.json_response response ON response.id = f.last_response_id\nLEFT JOIN crawler.json_response_cache response_cache ON response_cache.content_hash = response.content_hash\nORDER BY\n  CASE j.state\n    WHEN 'failed' THEN 0\n    WHEN 'locked' THEN 1\n    WHEN 'ready' THEN 2\n    ELSE 3\n  END,\n  j.job_updated_at DESC,\n  j.run_at,\n  j.job_id DESC\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -493,20 +486,14 @@ const getCrawlerJobsIR: any = {"usedParamSet":{"state":true,"federation":true,"k
  *   response.http_status AS response_http_status,
  *   response.error AS response_error,
  *   CASE
- *     WHEN j.needs_detail OR response.error IS NOT NULL THEN response.content
+ *     WHEN j.needs_detail OR response.error IS NOT NULL THEN response_cache.content
  *   END AS response_content,
  *   j.process_error,
  *   j.state AS "state!"
  * FROM jobs j
- * LEFT JOIN LATERAL (
- *   SELECT jr.http_status, jr.error, jrc.content
- *   FROM crawler.json_response jr
- *   LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash
- *   WHERE jr.frontier_id = j.frontier_id
- *     AND (j.needs_detail OR jr.error IS NOT NULL)
- *   ORDER BY jr.fetched_at DESC
- *   LIMIT 1
- * ) response ON true
+ * JOIN crawler.frontier f ON f.id = j.frontier_id
+ * LEFT JOIN crawler.json_response response ON response.id = f.last_response_id
+ * LEFT JOIN crawler.json_response_cache response_cache ON response_cache.content_hash = response.content_hash
  * ORDER BY
  *   CASE j.state
  *     WHEN 'failed' THEN 0
@@ -650,7 +637,7 @@ export interface IGetFrontierDetailQuery {
   result: IGetFrontierDetailResult;
 }
 
-const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":944,"b":946},{"a":979,"b":981},{"a":1001,"b":1003}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":1058,"b":1068}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":1071,"b":1075}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":1078,"b":1081}]}],"statement":"SELECT\n  f.id,\n  f.federation,\n  f.kind,\n  f.key,\n  f.discovered_at,\n  f.last_fetched_at,\n  f.fetch_status,\n  f.process_status,\n  f.error_count,\n  f.next_fetch_at,\n  f.last_process_error,\n  f.meta,\n  jr.url AS \"response_url?\",\n  jr.fetched_at AS \"response_fetched_at?\",\n  jr.http_status AS \"response_http_status?\",\n  jr.error AS \"response_error?\",\n  jr.content AS \"response_content?\",\n  j.job_id,\n  j.job_key,\n  j.run_at AS job_run_at,\n  j.attempts AS job_attempts,\n  j.max_attempts AS job_max_attempts,\n  j.job_error AS job_last_error\nFROM crawler.frontier f\nLEFT JOIN LATERAL (\n  SELECT jr.*, jrc.content\n  FROM crawler.json_response jr\n  JOIN crawler.json_response_cache jrc USING (content_hash)\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nLEFT JOIN LATERAL (\n  SELECT j.*\n  FROM crawler.frontier_fetch_job j\n  WHERE j.frontier_id = f.id\n  ORDER BY j.job_updated_at DESC\n  LIMIT 1\n) j ON true\n  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))"};
+const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":868,"b":870},{"a":903,"b":905},{"a":925,"b":927}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":982,"b":992}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":995,"b":999}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":1002,"b":1005}]}],"statement":"SELECT\n  f.id,\n  f.federation,\n  f.kind,\n  f.key,\n  f.discovered_at,\n  f.last_fetched_at,\n  f.fetch_status,\n  f.process_status,\n  f.error_count,\n  f.next_fetch_at,\n  f.last_process_error,\n  f.meta,\n  jr.url AS \"response_url?\",\n  jr.fetched_at AS \"response_fetched_at?\",\n  jr.http_status AS \"response_http_status?\",\n  jr.error AS \"response_error?\",\n  jrc.content AS \"response_content?\",\n  j.job_id,\n  j.job_key,\n  j.run_at AS job_run_at,\n  j.attempts AS job_attempts,\n  j.max_attempts AS job_max_attempts,\n  j.job_error AS job_last_error\nFROM crawler.frontier f\nLEFT JOIN crawler.json_response jr ON jr.id = f.last_response_id\nLEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash\nLEFT JOIN LATERAL (\n  SELECT j.*\n  FROM crawler.frontier_fetch_job j\n  WHERE j.frontier_id = f.id\n  ORDER BY j.job_updated_at DESC\n  LIMIT 1\n) j ON true\n  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))"};
 
 /**
  * Query generated from SQL:
@@ -672,7 +659,7 @@ const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"k
  *   jr.fetched_at AS "response_fetched_at?",
  *   jr.http_status AS "response_http_status?",
  *   jr.error AS "response_error?",
- *   jr.content AS "response_content?",
+ *   jrc.content AS "response_content?",
  *   j.job_id,
  *   j.job_key,
  *   j.run_at AS job_run_at,
@@ -680,14 +667,8 @@ const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"k
  *   j.max_attempts AS job_max_attempts,
  *   j.job_error AS job_last_error
  * FROM crawler.frontier f
- * LEFT JOIN LATERAL (
- *   SELECT jr.*, jrc.content
- *   FROM crawler.json_response jr
- *   JOIN crawler.json_response_cache jrc USING (content_hash)
- *   WHERE jr.frontier_id = f.id
- *   ORDER BY jr.fetched_at DESC
- *   LIMIT 1
- * ) jr ON true
+ * LEFT JOIN crawler.json_response jr ON jr.id = f.last_response_id
+ * LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash
  * LEFT JOIN LATERAL (
  *   SELECT j.*
  *   FROM crawler.frontier_fetch_job j
@@ -721,35 +702,17 @@ export interface IGetLatestFrontierResponseQuery {
   result: IGetLatestFrontierResponseResult;
 }
 
-const getLatestFrontierResponseIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":68},{"a":101,"b":103},{"a":123,"b":125}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":180,"b":190}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":193,"b":197}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":200,"b":203}]}],"statement":"WITH target AS (\n  SELECT f.id\n  FROM crawler.frontier f\n  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))\n), latest AS (\n  SELECT\n    jr.fetched_at,\n    jrc.content AS content\n  FROM target\n  JOIN LATERAL (\n    SELECT fetched_at, content_hash\n    FROM crawler.json_response jr\n    WHERE jr.frontier_id = target.id\n    ORDER BY jr.fetched_at DESC\n    LIMIT 1\n  ) jr ON true\n  LEFT JOIN crawler.json_response_cache jrc USING (content_hash)\n)\nSELECT\n  content\nFROM latest\nORDER BY fetched_at DESC\nLIMIT 1"};
+const getLatestFrontierResponseIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":190,"b":192},{"a":225,"b":227},{"a":245,"b":247}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":302,"b":312}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":319}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":322,"b":325}]}],"statement":"SELECT jrc.content\nFROM crawler.frontier f\nJOIN crawler.json_response jr ON jr.id = f.last_response_id\nLEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash\nWHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n   OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))"};
 
 /**
  * Query generated from SQL:
  * ```
- * WITH target AS (
- *   SELECT f.id
- *   FROM crawler.frontier f
- *   WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)
- *      OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))
- * ), latest AS (
- *   SELECT
- *     jr.fetched_at,
- *     jrc.content AS content
- *   FROM target
- *   JOIN LATERAL (
- *     SELECT fetched_at, content_hash
- *     FROM crawler.json_response jr
- *     WHERE jr.frontier_id = target.id
- *     ORDER BY jr.fetched_at DESC
- *     LIMIT 1
- *   ) jr ON true
- *   LEFT JOIN crawler.json_response_cache jrc USING (content_hash)
- * )
- * SELECT
- *   content
- * FROM latest
- * ORDER BY fetched_at DESC
- * LIMIT 1
+ * SELECT jrc.content
+ * FROM crawler.frontier f
+ * JOIN crawler.json_response jr ON jr.id = f.last_response_id
+ * LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash
+ * WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)
+ *    OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))
  * ```
  */
 export const getLatestFrontierResponse = new PreparedQuery<IGetLatestFrontierResponseParams,IGetLatestFrontierResponseResult>(getLatestFrontierResponseIR);
@@ -875,7 +838,7 @@ export interface IGetNextPendingProcessQuery {
   result: IGetNextPendingProcessResult;
 }
 
-const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":527,"b":532}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url,\n  jr.http_status,\n  jr.error,\n  jrc.content\nFROM crawler.frontier f\nJOIN LATERAL (\n  SELECT jr.*\n  FROM crawler.json_response jr\n  WHERE jr.frontier_id = f.id\n  ORDER BY jr.fetched_at DESC\n  LIMIT 1\n) jr ON true\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE process_status = 'pending'\n  AND fetch_status = 'ok'\nORDER BY discovered_at, last_fetched_at\nFOR UPDATE OF f SKIP LOCKED\nLIMIT :limit"};
+const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":454,"b":459}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url,\n  jr.http_status,\n  jr.error,\n  jrc.content\nFROM crawler.frontier f\nJOIN crawler.json_response jr ON jr.id = f.last_successful_response_id\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE process_status = 'pending'\n  AND fetch_status = 'ok'\nORDER BY discovered_at, last_fetched_at\nFOR UPDATE OF f SKIP LOCKED\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -890,13 +853,7 @@ const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"
  *   jr.error,
  *   jrc.content
  * FROM crawler.frontier f
- * JOIN LATERAL (
- *   SELECT jr.*
- *   FROM crawler.json_response jr
- *   WHERE jr.frontier_id = f.id
- *   ORDER BY jr.fetched_at DESC
- *   LIMIT 1
- * ) jr ON true
+ * JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
  * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
  * WHERE process_status = 'pending'
  *   AND fetch_status = 'ok'
@@ -1194,13 +1151,16 @@ export const queueRefetch = new PreparedQuery<IQueueRefetchParams,IQueueRefetchR
 export interface IInsertResponseParams {
   content?: string | null | void;
   error?: string | null | void;
+  fetchStatus?: fetch_status | null | void;
   httpStatus?: number | null | void;
   id?: NumberOrString | null | void;
   url?: string | null | void;
 }
 
 /** 'InsertResponse' return type */
-export type IInsertResponseResult = void;
+export interface IInsertResponseResult {
+  id: string;
+}
 
 /** 'InsertResponse' query type */
 export interface IInsertResponseQuery {
@@ -1208,7 +1168,7 @@ export interface IInsertResponseQuery {
   result: IInsertResponseResult;
 }
 
-const insertResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":334,"b":336}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":339,"b":342}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":345,"b":355}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":358,"b":363}]}],"statement":"WITH payload AS (\n  SELECT :content::text::jsonb AS content\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n)\nINSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\nSELECT :id, :url, :httpStatus, :error,\n       case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash\nFROM payload"};
+const insertResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true,"fetchStatus":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":353,"b":355},{"a":808,"b":810}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":358,"b":361}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":364,"b":374}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":377,"b":382}]},{"name":"fetchStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":669,"b":680}]}],"statement":"WITH payload AS (\n  SELECT :content::text::jsonb AS content\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n), inserted AS (\n  INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\n  SELECT :id, :url, :httpStatus, :error,\n         case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash\n  FROM payload\n  RETURNING id\n), frontier AS (\n  UPDATE crawler.frontier f\n  SET\n    last_response_id = inserted.id,\n    last_successful_response_id = case\n      when :fetchStatus::crawler.fetch_status = 'ok' then inserted.id\n      else f.last_successful_response_id\n    end\n  FROM inserted\n  WHERE f.id = :id\n)\nSELECT id AS \"id!\"\nFROM inserted"};
 
 /**
  * Query generated from SQL:
@@ -1221,14 +1181,358 @@ const insertResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":tr
  *     FROM payload
  *     WHERE content IS NOT NULL
  *     ON CONFLICT (content_hash) DO NOTHING
+ * ), inserted AS (
+ *   INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
+ *   SELECT :id, :url, :httpStatus, :error,
+ *          case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash
+ *   FROM payload
+ *   RETURNING id
+ * ), frontier AS (
+ *   UPDATE crawler.frontier f
+ *   SET
+ *     last_response_id = inserted.id,
+ *     last_successful_response_id = case
+ *       when :fetchStatus::crawler.fetch_status = 'ok' then inserted.id
+ *       else f.last_successful_response_id
+ *     end
+ *   FROM inserted
+ *   WHERE f.id = :id
  * )
- * INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
- * SELECT :id, :url, :httpStatus, :error,
- *        case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash
- * FROM payload
+ * SELECT id AS "id!"
+ * FROM inserted
  * ```
  */
 export const insertResponse = new PreparedQuery<IInsertResponseParams,IInsertResponseResult>(insertResponseIR);
+
+
+/** 'GetResolvedFailureCleanupCount' parameters type */
+export interface IGetResolvedFailureCleanupCountParams {
+  federation?: string | null | void;
+  id?: NumberOrString | null | void;
+  key?: string | null | void;
+  kind?: string | null | void;
+}
+
+/** 'GetResolvedFailureCleanupCount' return type */
+export interface IGetResolvedFailureCleanupCountResult {
+  resolved_failures: number;
+}
+
+/** 'GetResolvedFailureCleanupCount' query type */
+export interface IGetResolvedFailureCleanupCountQuery {
+  params: IGetResolvedFailureCleanupCountParams;
+  result: IGetResolvedFailureCleanupCountResult;
+}
+
+const getResolvedFailureCleanupCountIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":216,"b":226},{"a":260,"b":270}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":280,"b":284},{"a":312,"b":316}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":326,"b":329},{"a":356,"b":359}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":369,"b":371},{"a":399,"b":401}]}],"statement":"SELECT count(*)::int AS \"resolved_failures!\"\nFROM crawler.json_response r\nJOIN crawler.frontier f ON f.id = r.frontier_id\nJOIN crawler.json_response successful ON successful.id = f.last_successful_response_id\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND (:id::bigint IS NULL OR f.id = :id)\n  AND (r.error IS NOT NULL OR r.http_status >= 400)\n  AND (r.fetched_at, r.id) < (successful.fetched_at, successful.id)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT count(*)::int AS "resolved_failures!"
+ * FROM crawler.json_response r
+ * JOIN crawler.frontier f ON f.id = r.frontier_id
+ * JOIN crawler.json_response successful ON successful.id = f.last_successful_response_id
+ * WHERE (:federation::text IS NULL OR f.federation = :federation)
+ *   AND (:kind::text IS NULL OR f.kind = :kind)
+ *   AND (:key::text IS NULL OR f.key = :key)
+ *   AND (:id::bigint IS NULL OR f.id = :id)
+ *   AND (r.error IS NOT NULL OR r.http_status >= 400)
+ *   AND (r.fetched_at, r.id) < (successful.fetched_at, successful.id)
+ * ```
+ */
+export const getResolvedFailureCleanupCount = new PreparedQuery<IGetResolvedFailureCleanupCountParams,IGetResolvedFailureCleanupCountResult>(getResolvedFailureCleanupCountIR);
+
+
+/** 'GetGlobalDuplicateResponseCleanupCount' parameters type */
+export type IGetGlobalDuplicateResponseCleanupCountParams = void;
+
+/** 'GetGlobalDuplicateResponseCleanupCount' return type */
+export interface IGetGlobalDuplicateResponseCleanupCountResult {
+  duplicate_responses: number;
+}
+
+/** 'GetGlobalDuplicateResponseCleanupCount' query type */
+export interface IGetGlobalDuplicateResponseCleanupCountQuery {
+  params: IGetGlobalDuplicateResponseCleanupCountParams;
+  result: IGetGlobalDuplicateResponseCleanupCountResult;
+}
+
+const getGlobalDuplicateResponseCleanupCountIR: any = {"usedParamSet":{},"params":[],"statement":"WITH adjacent AS (\n  SELECT\n    r.id,\n    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM\n      lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,\n    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM\n      lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next\n  FROM crawler.json_response r\n  WINDOW w AS (\n    PARTITION BY r.frontier_id\n    ORDER BY r.fetched_at DESC, r.id DESC\n  )\n)\nSELECT count(*)::int AS \"duplicate_responses!\"\nFROM adjacent\nWHERE same_previous AND same_next"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH adjacent AS (
+ *   SELECT
+ *     r.id,
+ *     ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+ *       lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,
+ *     ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+ *       lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next
+ *   FROM crawler.json_response r
+ *   WINDOW w AS (
+ *     PARTITION BY r.frontier_id
+ *     ORDER BY r.fetched_at DESC, r.id DESC
+ *   )
+ * )
+ * SELECT count(*)::int AS "duplicate_responses!"
+ * FROM adjacent
+ * WHERE same_previous AND same_next
+ * ```
+ */
+export const getGlobalDuplicateResponseCleanupCount = new PreparedQuery<IGetGlobalDuplicateResponseCleanupCountParams,IGetGlobalDuplicateResponseCleanupCountResult>(getGlobalDuplicateResponseCleanupCountIR);
+
+
+/** 'GetScopedDuplicateResponseCleanupCount' parameters type */
+export interface IGetScopedDuplicateResponseCleanupCountParams {
+  federation?: string | null | void;
+  id?: NumberOrString | null | void;
+  key?: string | null | void;
+  kind?: string | null | void;
+}
+
+/** 'GetScopedDuplicateResponseCleanupCount' return type */
+export interface IGetScopedDuplicateResponseCleanupCountResult {
+  duplicate_responses: number;
+}
+
+/** 'GetScopedDuplicateResponseCleanupCount' query type */
+export interface IGetScopedDuplicateResponseCleanupCountQuery {
+  params: IGetScopedDuplicateResponseCleanupCountParams;
+  result: IGetScopedDuplicateResponseCleanupCountResult;
+}
+
+const getScopedDuplicateResponseCleanupCountIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":450,"b":460},{"a":494,"b":504}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":516,"b":520},{"a":548,"b":552}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":564,"b":567},{"a":594,"b":597}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":609,"b":611},{"a":639,"b":641}]}],"statement":"WITH adjacent AS (\n  SELECT\n    r.id,\n    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM\n      lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,\n    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM\n      lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next\n  FROM crawler.json_response r\n  JOIN crawler.frontier f ON f.id = r.frontier_id\n  WHERE (:federation::text IS NULL OR f.federation = :federation)\n    AND (:kind::text IS NULL OR f.kind = :kind)\n    AND (:key::text IS NULL OR f.key = :key)\n    AND (:id::bigint IS NULL OR f.id = :id)\n  WINDOW w AS (\n    PARTITION BY r.frontier_id\n    ORDER BY r.fetched_at DESC, r.id DESC\n  )\n)\nSELECT count(*)::int AS \"duplicate_responses!\"\nFROM adjacent\nWHERE same_previous AND same_next"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH adjacent AS (
+ *   SELECT
+ *     r.id,
+ *     ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+ *       lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,
+ *     ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+ *       lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next
+ *   FROM crawler.json_response r
+ *   JOIN crawler.frontier f ON f.id = r.frontier_id
+ *   WHERE (:federation::text IS NULL OR f.federation = :federation)
+ *     AND (:kind::text IS NULL OR f.kind = :kind)
+ *     AND (:key::text IS NULL OR f.key = :key)
+ *     AND (:id::bigint IS NULL OR f.id = :id)
+ *   WINDOW w AS (
+ *     PARTITION BY r.frontier_id
+ *     ORDER BY r.fetched_at DESC, r.id DESC
+ *   )
+ * )
+ * SELECT count(*)::int AS "duplicate_responses!"
+ * FROM adjacent
+ * WHERE same_previous AND same_next
+ * ```
+ */
+export const getScopedDuplicateResponseCleanupCount = new PreparedQuery<IGetScopedDuplicateResponseCleanupCountParams,IGetScopedDuplicateResponseCleanupCountResult>(getScopedDuplicateResponseCleanupCountIR);
+
+
+/** 'GetResolvedFailureCleanupCandidates' parameters type */
+export interface IGetResolvedFailureCleanupCandidatesParams {
+  federation?: string | null | void;
+  id?: NumberOrString | null | void;
+  key?: string | null | void;
+  kind?: string | null | void;
+}
+
+/** 'GetResolvedFailureCleanupCandidates' return type */
+export interface IGetResolvedFailureCleanupCandidatesResult {
+  id: string;
+}
+
+/** 'GetResolvedFailureCleanupCandidates' query type */
+export interface IGetResolvedFailureCleanupCandidatesQuery {
+  params: IGetResolvedFailureCleanupCandidatesParams;
+  result: IGetResolvedFailureCleanupCandidatesResult;
+}
+
+const getResolvedFailureCleanupCandidatesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":192,"b":202},{"a":236,"b":246}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":256,"b":260},{"a":288,"b":292}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":302,"b":305},{"a":332,"b":335}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":345,"b":347},{"a":375,"b":377}]}],"statement":"SELECT r.id AS \"id!\"\nFROM crawler.json_response r\nJOIN crawler.frontier f ON f.id = r.frontier_id\nJOIN crawler.json_response successful ON successful.id = f.last_successful_response_id\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND (:id::bigint IS NULL OR f.id = :id)\n  AND (r.error IS NOT NULL OR r.http_status >= 400)\n  AND (r.fetched_at, r.id) < (successful.fetched_at, successful.id)\nORDER BY r.frontier_id, r.fetched_at, r.id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT r.id AS "id!"
+ * FROM crawler.json_response r
+ * JOIN crawler.frontier f ON f.id = r.frontier_id
+ * JOIN crawler.json_response successful ON successful.id = f.last_successful_response_id
+ * WHERE (:federation::text IS NULL OR f.federation = :federation)
+ *   AND (:kind::text IS NULL OR f.kind = :kind)
+ *   AND (:key::text IS NULL OR f.key = :key)
+ *   AND (:id::bigint IS NULL OR f.id = :id)
+ *   AND (r.error IS NOT NULL OR r.http_status >= 400)
+ *   AND (r.fetched_at, r.id) < (successful.fetched_at, successful.id)
+ * ORDER BY r.frontier_id, r.fetched_at, r.id
+ * ```
+ */
+export const getResolvedFailureCleanupCandidates = new PreparedQuery<IGetResolvedFailureCleanupCandidatesParams,IGetResolvedFailureCleanupCandidatesResult>(getResolvedFailureCleanupCandidatesIR);
+
+
+/** 'GetGlobalDuplicateResponseCleanupCandidates' parameters type */
+export type IGetGlobalDuplicateResponseCleanupCandidatesParams = void;
+
+/** 'GetGlobalDuplicateResponseCleanupCandidates' return type */
+export interface IGetGlobalDuplicateResponseCleanupCandidatesResult {
+  id: string;
+}
+
+/** 'GetGlobalDuplicateResponseCleanupCandidates' query type */
+export interface IGetGlobalDuplicateResponseCleanupCandidatesQuery {
+  params: IGetGlobalDuplicateResponseCleanupCandidatesParams;
+  result: IGetGlobalDuplicateResponseCleanupCandidatesResult;
+}
+
+const getGlobalDuplicateResponseCleanupCandidatesIR: any = {"usedParamSet":{},"params":[],"statement":"WITH adjacent AS (\n  SELECT\n    r.id,\n    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM\n      lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,\n    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM\n      lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next\n  FROM crawler.json_response r\n  WINDOW w AS (\n    PARTITION BY r.frontier_id\n    ORDER BY r.fetched_at DESC, r.id DESC\n  )\n)\nSELECT id AS \"id!\"\nFROM adjacent\nWHERE same_previous AND same_next"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH adjacent AS (
+ *   SELECT
+ *     r.id,
+ *     ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+ *       lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,
+ *     ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+ *       lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next
+ *   FROM crawler.json_response r
+ *   WINDOW w AS (
+ *     PARTITION BY r.frontier_id
+ *     ORDER BY r.fetched_at DESC, r.id DESC
+ *   )
+ * )
+ * SELECT id AS "id!"
+ * FROM adjacent
+ * WHERE same_previous AND same_next
+ * ```
+ */
+export const getGlobalDuplicateResponseCleanupCandidates = new PreparedQuery<IGetGlobalDuplicateResponseCleanupCandidatesParams,IGetGlobalDuplicateResponseCleanupCandidatesResult>(getGlobalDuplicateResponseCleanupCandidatesIR);
+
+
+/** 'GetScopedDuplicateResponseCleanupCandidates' parameters type */
+export interface IGetScopedDuplicateResponseCleanupCandidatesParams {
+  federation?: string | null | void;
+  id?: NumberOrString | null | void;
+  key?: string | null | void;
+  kind?: string | null | void;
+}
+
+/** 'GetScopedDuplicateResponseCleanupCandidates' return type */
+export interface IGetScopedDuplicateResponseCleanupCandidatesResult {
+  id: string;
+}
+
+/** 'GetScopedDuplicateResponseCleanupCandidates' query type */
+export interface IGetScopedDuplicateResponseCleanupCandidatesQuery {
+  params: IGetScopedDuplicateResponseCleanupCandidatesParams;
+  result: IGetScopedDuplicateResponseCleanupCandidatesResult;
+}
+
+const getScopedDuplicateResponseCleanupCandidatesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":450,"b":460},{"a":494,"b":504}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":516,"b":520},{"a":548,"b":552}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":564,"b":567},{"a":594,"b":597}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":609,"b":611},{"a":639,"b":641}]}],"statement":"WITH adjacent AS (\n  SELECT\n    r.id,\n    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM\n      lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,\n    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM\n      lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next\n  FROM crawler.json_response r\n  JOIN crawler.frontier f ON f.id = r.frontier_id\n  WHERE (:federation::text IS NULL OR f.federation = :federation)\n    AND (:kind::text IS NULL OR f.kind = :kind)\n    AND (:key::text IS NULL OR f.key = :key)\n    AND (:id::bigint IS NULL OR f.id = :id)\n  WINDOW w AS (\n    PARTITION BY r.frontier_id\n    ORDER BY r.fetched_at DESC, r.id DESC\n  )\n)\nSELECT id AS \"id!\"\nFROM adjacent\nWHERE same_previous AND same_next"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH adjacent AS (
+ *   SELECT
+ *     r.id,
+ *     ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+ *       lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,
+ *     ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+ *       lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next
+ *   FROM crawler.json_response r
+ *   JOIN crawler.frontier f ON f.id = r.frontier_id
+ *   WHERE (:federation::text IS NULL OR f.federation = :federation)
+ *     AND (:kind::text IS NULL OR f.kind = :kind)
+ *     AND (:key::text IS NULL OR f.key = :key)
+ *     AND (:id::bigint IS NULL OR f.id = :id)
+ *   WINDOW w AS (
+ *     PARTITION BY r.frontier_id
+ *     ORDER BY r.fetched_at DESC, r.id DESC
+ *   )
+ * )
+ * SELECT id AS "id!"
+ * FROM adjacent
+ * WHERE same_previous AND same_next
+ * ```
+ */
+export const getScopedDuplicateResponseCleanupCandidates = new PreparedQuery<IGetScopedDuplicateResponseCleanupCandidatesParams,IGetScopedDuplicateResponseCleanupCandidatesResult>(getScopedDuplicateResponseCleanupCandidatesIR);
+
+
+/** 'DeleteCrawlerResponseRows' parameters type */
+export interface IDeleteCrawlerResponseRowsParams {
+  ids?: NumberOrStringArray | null | void;
+}
+
+/** 'DeleteCrawlerResponseRows' return type */
+export interface IDeleteCrawlerResponseRowsResult {
+  id: string;
+}
+
+/** 'DeleteCrawlerResponseRows' query type */
+export interface IDeleteCrawlerResponseRowsQuery {
+  params: IDeleteCrawlerResponseRowsParams;
+  result: IDeleteCrawlerResponseRowsResult;
+}
+
+const deleteCrawlerResponseRowsIR: any = {"usedParamSet":{"ids":true},"params":[{"name":"ids","required":false,"transform":{"type":"scalar"},"locs":[{"a":53,"b":56}]}],"statement":"DELETE FROM crawler.json_response r\nWHERE r.id = ANY(:ids::bigint[])\n  AND NOT EXISTS (\n    SELECT 1\n    FROM crawler.frontier f\n    WHERE f.last_response_id = r.id\n       OR f.last_successful_response_id = r.id\n  )\nRETURNING r.id AS \"id!\""};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM crawler.json_response r
+ * WHERE r.id = ANY(:ids::bigint[])
+ *   AND NOT EXISTS (
+ *     SELECT 1
+ *     FROM crawler.frontier f
+ *     WHERE f.last_response_id = r.id
+ *        OR f.last_successful_response_id = r.id
+ *   )
+ * RETURNING r.id AS "id!"
+ * ```
+ */
+export const deleteCrawlerResponseRows = new PreparedQuery<IDeleteCrawlerResponseRowsParams,IDeleteCrawlerResponseRowsResult>(deleteCrawlerResponseRowsIR);
+
+
+/** 'DeleteOrphanedJsonResponseCache' parameters type */
+export type IDeleteOrphanedJsonResponseCacheParams = void;
+
+/** 'DeleteOrphanedJsonResponseCache' return type */
+export interface IDeleteOrphanedJsonResponseCacheResult {
+  bytes: string;
+  entries: number;
+}
+
+/** 'DeleteOrphanedJsonResponseCache' query type */
+export interface IDeleteOrphanedJsonResponseCacheQuery {
+  params: IDeleteOrphanedJsonResponseCacheParams;
+  result: IDeleteOrphanedJsonResponseCacheResult;
+}
+
+const deleteOrphanedJsonResponseCacheIR: any = {"usedParamSet":{},"params":[],"statement":"WITH deleted AS (\n  DELETE FROM crawler.json_response_cache c\n  WHERE NOT EXISTS (\n    SELECT 1\n    FROM crawler.json_response r\n    WHERE r.content_hash = c.content_hash\n  )\n  RETURNING pg_column_size(c.content) AS bytes\n)\nSELECT count(*)::int AS \"entries!\", coalesce(sum(bytes), 0)::bigint AS \"bytes!\"\nFROM deleted"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH deleted AS (
+ *   DELETE FROM crawler.json_response_cache c
+ *   WHERE NOT EXISTS (
+ *     SELECT 1
+ *     FROM crawler.json_response r
+ *     WHERE r.content_hash = c.content_hash
+ *   )
+ *   RETURNING pg_column_size(c.content) AS bytes
+ * )
+ * SELECT count(*)::int AS "entries!", coalesce(sum(bytes), 0)::bigint AS "bytes!"
+ * FROM deleted
+ * ```
+ */
+export const deleteOrphanedJsonResponseCache = new PreparedQuery<IDeleteOrphanedJsonResponseCacheParams,IDeleteOrphanedJsonResponseCacheResult>(deleteOrphanedJsonResponseCacheIR);
 
 
 /** 'UpsertFrontier' parameters type */

@@ -10,13 +10,21 @@ import type {
   IGetFrontierResponsesResult,
 } from './crawler.queries.ts';
 import {
+  deleteCrawlerResponseRows,
+  deleteOrphanedJsonResponseCache,
   getCrawlerJobs,
   getCrawlerStatus,
   getFrontierDetail,
   getFrontierFailureGroups,
   getFrontierResponses,
+  getGlobalDuplicateResponseCleanupCandidates,
+  getGlobalDuplicateResponseCleanupCount,
   getLatestFrontierFailures,
   getLatestFrontierResponse,
+  getResolvedFailureCleanupCount,
+  getResolvedFailureCleanupCandidates,
+  getScopedDuplicateResponseCleanupCandidates,
+  getScopedDuplicateResponseCleanupCount,
   queueCrawlerSchedule,
   queueRefetch,
 } from './crawler.queries.ts';
@@ -50,6 +58,14 @@ function frontierPriority(row: CrawlerStatusRow) {
 
 function formatDate(date: Date | null | undefined) {
   return date ? date.toISOString().replace(/\.\d{3}Z$/, 'Z') : '-';
+}
+
+function formatBytes(bytes: number | string) {
+  const value = Number(bytes);
+  if (value < 1024) return `${value} B`;
+  if (value < 1024 ** 2) return `${(value / 1024).toFixed(1)} kB`;
+  if (value < 1024 ** 3) return `${(value / 1024 ** 2).toFixed(1)} MB`;
+  return `${(value / 1024 ** 3).toFixed(1)} GB`;
 }
 
 function printTable(
@@ -536,6 +552,156 @@ async function refetch(target: string, options: RefetchOptions) {
   }
 }
 
+type CleanupOptions = {
+  commit?: boolean;
+  json?: boolean;
+};
+
+const CLEANUP_BATCH_SIZE = 10_000;
+
+type CleanupCursor = {
+  read: (rowCount: number) => Promise<Array<{ id: string }>>;
+  close: () => Promise<void>;
+};
+
+async function deleteCleanupCandidates(
+  streamCandidates: (client: PoolClient) => CleanupCursor,
+  onDeleted: (count: number) => void,
+) {
+  const selectClient = await pool.connect();
+  const deleteClient = await pool.connect();
+  let cursor: CleanupCursor | undefined;
+  let deleted = 0;
+
+  try {
+    cursor = streamCandidates(selectClient);
+    while (true) {
+      const rows = await cursor.read(CLEANUP_BATCH_SIZE);
+      if (rows.length === 0) break;
+
+      await deleteClient.query('BEGIN');
+      try {
+        const removed = await deleteCrawlerResponseRows.run(
+          { ids: rows.map((row) => row.id) },
+          deleteClient,
+        );
+        if (removed.length !== rows.length) {
+          throw new Error(
+            `Expected to delete ${rows.length} response rows, deleted ${removed.length}; ` +
+              'a current response pointer may have changed during cleanup',
+          );
+        }
+        await deleteClient.query('COMMIT');
+      } catch (e) {
+        await deleteClient.query('ROLLBACK');
+        throw e;
+      }
+
+      deleted += rows.length;
+      onDeleted(rows.length);
+    }
+  } finally {
+    try {
+      await cursor?.close();
+    } finally {
+      deleteClient.release();
+      selectClient.release();
+    }
+  }
+
+  return deleted;
+}
+
+async function cleanup(targetText: string | undefined, options: CleanupOptions) {
+  const target = parseTarget(targetText);
+  const scope = targetText || 'all frontiers';
+
+  if (!options.commit) {
+    const [resolved] = await getResolvedFailureCleanupCount.run(target, pool);
+    const [duplicates] = target.scope === 'none'
+      ? await getGlobalDuplicateResponseCleanupCount.run(undefined, pool)
+      : await getScopedDuplicateResponseCleanupCount.run(target, pool);
+    const preview = {
+      resolved_failures: resolved.resolved_failures,
+      duplicate_responses: duplicates.duplicate_responses,
+    };
+    if (options.json) {
+      console.log(JSON.stringify({ mode: 'preview', scope: targetText ?? null, ...preview }, null, 2));
+      return;
+    }
+
+    printTable([
+      {
+        scope,
+        'resolved failures': preview.resolved_failures,
+        'duplicate responses': preview.duplicate_responses,
+      },
+    ]);
+    if (preview.resolved_failures > 0) {
+      console.log('Duplicate count is before resolved-failure removal; --commit recalculates it afterward.');
+    }
+    console.log();
+    console.log('Globally orphaned blobs are checked and removed only during --commit.');
+    console.log('Dry run only. Re-run with --commit to remove rows.');
+    return;
+  }
+
+  const deleted = { resolvedFailures: 0, duplicateResponses: 0 };
+  const showProgress = () => {
+    if (options.json) return;
+    process.stdout.write(
+      `\rDeleted ${deleted.resolvedFailures} resolved failures and ` +
+        `${deleted.duplicateResponses} duplicate responses...\x1b[K`,
+    );
+  };
+  const stream = (client: PoolClient) => ({
+    query: client.query,
+    stream: (query: string, bindings: unknown[]) => client.query(new Cursor(query, bindings)),
+  });
+
+  await deleteCleanupCandidates(
+    (client) => getResolvedFailureCleanupCandidates.stream(target, stream(client)),
+    (count) => {
+      deleted.resolvedFailures += count;
+      showProgress();
+    },
+  );
+  await deleteCleanupCandidates(
+    (client) =>
+      target.scope === 'none'
+        ? getGlobalDuplicateResponseCleanupCandidates.stream(undefined, stream(client))
+        : getScopedDuplicateResponseCleanupCandidates.stream(target, stream(client)),
+    (count) => {
+      deleted.duplicateResponses += count;
+      showProgress();
+    },
+  );
+
+  const [orphaned] = await deleteOrphanedJsonResponseCache.run(undefined, pool);
+  const result = {
+    mode: 'committed',
+    scope: targetText ?? null,
+    resolved_failures: deleted.resolvedFailures,
+    duplicate_responses: deleted.duplicateResponses,
+    orphaned_cache_entries: orphaned.entries,
+    orphaned_cache_bytes: orphaned.bytes,
+  };
+
+  if (options.json) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    process.stdout.write('\n');
+    printTable([
+      {
+        scope,
+        'resolved failures': result.resolved_failures,
+        'duplicate responses': result.duplicate_responses,
+        'globally orphaned blobs': `${result.orphaned_cache_entries} (${formatBytes(result.orphaned_cache_bytes)})`,
+      },
+    ]);
+  }
+}
+
 function logClientQueries(client: PoolClient): PoolClient {
   return new Proxy(client, {
     get(target, prop, receiver) {
@@ -784,6 +950,12 @@ cli
   .option('--all', 'Include OK rows when refetching a scoped federation[:kind] target')
   .option('--json', 'Print JSON for scoped-row selections')
   .action((target: string, options: RefetchOptions) => refetch(target, options));
+
+cli
+  .command('cleanup [target]', 'Preview or remove redundant responses and global orphaned blobs')
+  .option('--commit', 'Delete rows; otherwise only print a preview')
+  .option('--json', 'Print JSON')
+  .action((target: string | undefined, options: CleanupOptions) => cleanup(target, options));
 
 cli
   .command('backtest [target]', 'Validate latest JSON responses for a loader')

@@ -80,7 +80,14 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     await client.query('BEGIN');
     try {
       await insertResponse.run(
-        { id, url: url.toString(), httpStatus, error, content: JSON.stringify(content) },
+        {
+          id,
+          url: url.toString(),
+          httpStatus,
+          error,
+          content: JSON.stringify(content),
+          fetchStatus,
+        },
         client,
       );
 

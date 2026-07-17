@@ -101,14 +101,7 @@ SELECT
   jr.fetched_at AS "fetched_at!",
   jrc.content AS "content!"
 FROM crawler.frontier f
-JOIN LATERAL (
-  SELECT jr.*
-  FROM crawler.json_response jr
-  WHERE jr.frontier_id = f.id
-    AND (jr.http_status IS NULL OR jr.http_status < 400)
-  ORDER BY case when jr.error is null then 0 else 1 end asc, jr.fetched_at DESC
-  LIMIT 1
-) jr ON true
+JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
 JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE (:federation::text IS NULL OR f.federation = :federation)
   AND (:kind::text IS NULL OR f.kind = :kind)
@@ -231,20 +224,14 @@ SELECT
   response.http_status AS response_http_status,
   response.error AS response_error,
   CASE
-    WHEN j.needs_detail OR response.error IS NOT NULL THEN response.content
+    WHEN j.needs_detail OR response.error IS NOT NULL THEN response_cache.content
   END AS response_content,
   j.process_error,
   j.state AS "state!"
 FROM jobs j
-LEFT JOIN LATERAL (
-  SELECT jr.http_status, jr.error, jrc.content
-  FROM crawler.json_response jr
-  LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash
-  WHERE jr.frontier_id = j.frontier_id
-    AND (j.needs_detail OR jr.error IS NOT NULL)
-  ORDER BY jr.fetched_at DESC
-  LIMIT 1
-) response ON true
+JOIN crawler.frontier f ON f.id = j.frontier_id
+LEFT JOIN crawler.json_response response ON response.id = f.last_response_id
+LEFT JOIN crawler.json_response_cache response_cache ON response_cache.content_hash = response.content_hash
 ORDER BY
   CASE j.state
     WHEN 'failed' THEN 0
@@ -308,7 +295,7 @@ SELECT
   jr.fetched_at AS "response_fetched_at?",
   jr.http_status AS "response_http_status?",
   jr.error AS "response_error?",
-  jr.content AS "response_content?",
+  jrc.content AS "response_content?",
   j.job_id,
   j.job_key,
   j.run_at AS job_run_at,
@@ -316,14 +303,8 @@ SELECT
   j.max_attempts AS job_max_attempts,
   j.job_error AS job_last_error
 FROM crawler.frontier f
-LEFT JOIN LATERAL (
-  SELECT jr.*, jrc.content
-  FROM crawler.json_response jr
-  JOIN crawler.json_response_cache jrc USING (content_hash)
-  WHERE jr.frontier_id = f.id
-  ORDER BY jr.fetched_at DESC
-  LIMIT 1
-) jr ON true
+LEFT JOIN crawler.json_response jr ON jr.id = f.last_response_id
+LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash
 LEFT JOIN LATERAL (
   SELECT j.*
   FROM crawler.frontier_fetch_job j
@@ -335,30 +316,12 @@ LEFT JOIN LATERAL (
      OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key));
 
 /* @name GetLatestFrontierResponse */
-WITH target AS (
-  SELECT f.id
-  FROM crawler.frontier f
-  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)
-     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))
-), latest AS (
-  SELECT
-    jr.fetched_at,
-    jrc.content AS content
-  FROM target
-  JOIN LATERAL (
-    SELECT fetched_at, content_hash
-    FROM crawler.json_response jr
-    WHERE jr.frontier_id = target.id
-    ORDER BY jr.fetched_at DESC
-    LIMIT 1
-  ) jr ON true
-  LEFT JOIN crawler.json_response_cache jrc USING (content_hash)
-)
-SELECT
-  content
-FROM latest
-ORDER BY fetched_at DESC
-LIMIT 1;
+SELECT jrc.content
+FROM crawler.frontier f
+JOIN crawler.json_response jr ON jr.id = f.last_response_id
+LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash
+WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)
+   OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key));
 
 /* @name GetOutstandingJobCountForTask */
 SELECT count(*)::int AS "count!"
@@ -414,13 +377,7 @@ SELECT
   jr.error,
   jrc.content
 FROM crawler.frontier f
-JOIN LATERAL (
-  SELECT jr.*
-  FROM crawler.json_response jr
-  WHERE jr.frontier_id = f.id
-  ORDER BY jr.fetched_at DESC
-  LIMIT 1
-) jr ON true
+JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
 JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
 WHERE process_status = 'pending'
   AND fetch_status = 'ok'
@@ -526,11 +483,156 @@ WITH payload AS (
     FROM payload
     WHERE content IS NOT NULL
     ON CONFLICT (content_hash) DO NOTHING
+), inserted AS (
+  INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
+  SELECT :id, :url, :httpStatus, :error,
+         case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash
+  FROM payload
+  RETURNING id
+), frontier AS (
+  UPDATE crawler.frontier f
+  SET
+    last_response_id = inserted.id,
+    last_successful_response_id = case
+      when :fetchStatus::crawler.fetch_status = 'ok' then inserted.id
+      else f.last_successful_response_id
+    end
+  FROM inserted
+  WHERE f.id = :id
 )
-INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
-SELECT :id, :url, :httpStatus, :error,
-       case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash
-FROM payload;
+SELECT id AS "id!"
+FROM inserted;
+
+/* @name GetResolvedFailureCleanupCount */
+SELECT count(*)::int AS "resolved_failures!"
+FROM crawler.json_response r
+JOIN crawler.frontier f ON f.id = r.frontier_id
+JOIN crawler.json_response successful ON successful.id = f.last_successful_response_id
+WHERE (:federation::text IS NULL OR f.federation = :federation)
+  AND (:kind::text IS NULL OR f.kind = :kind)
+  AND (:key::text IS NULL OR f.key = :key)
+  AND (:id::bigint IS NULL OR f.id = :id)
+  AND (r.error IS NOT NULL OR r.http_status >= 400)
+  AND (r.fetched_at, r.id) < (successful.fetched_at, successful.id);
+
+/* @name GetGlobalDuplicateResponseCleanupCount */
+WITH adjacent AS (
+  SELECT
+    r.id,
+    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+      lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,
+    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+      lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next
+  FROM crawler.json_response r
+  WINDOW w AS (
+    PARTITION BY r.frontier_id
+    ORDER BY r.fetched_at DESC, r.id DESC
+  )
+)
+SELECT count(*)::int AS "duplicate_responses!"
+FROM adjacent
+WHERE same_previous AND same_next;
+
+/* @name GetScopedDuplicateResponseCleanupCount */
+WITH adjacent AS (
+  SELECT
+    r.id,
+    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+      lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,
+    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+      lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next
+  FROM crawler.json_response r
+  JOIN crawler.frontier f ON f.id = r.frontier_id
+  WHERE (:federation::text IS NULL OR f.federation = :federation)
+    AND (:kind::text IS NULL OR f.kind = :kind)
+    AND (:key::text IS NULL OR f.key = :key)
+    AND (:id::bigint IS NULL OR f.id = :id)
+  WINDOW w AS (
+    PARTITION BY r.frontier_id
+    ORDER BY r.fetched_at DESC, r.id DESC
+  )
+)
+SELECT count(*)::int AS "duplicate_responses!"
+FROM adjacent
+WHERE same_previous AND same_next;
+
+/* @name GetResolvedFailureCleanupCandidates */
+SELECT r.id AS "id!"
+FROM crawler.json_response r
+JOIN crawler.frontier f ON f.id = r.frontier_id
+JOIN crawler.json_response successful ON successful.id = f.last_successful_response_id
+WHERE (:federation::text IS NULL OR f.federation = :federation)
+  AND (:kind::text IS NULL OR f.kind = :kind)
+  AND (:key::text IS NULL OR f.key = :key)
+  AND (:id::bigint IS NULL OR f.id = :id)
+  AND (r.error IS NOT NULL OR r.http_status >= 400)
+  AND (r.fetched_at, r.id) < (successful.fetched_at, successful.id)
+ORDER BY r.frontier_id, r.fetched_at, r.id;
+
+/* @name GetGlobalDuplicateResponseCleanupCandidates */
+WITH adjacent AS (
+  SELECT
+    r.id,
+    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+      lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,
+    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+      lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next
+  FROM crawler.json_response r
+  WINDOW w AS (
+    PARTITION BY r.frontier_id
+    ORDER BY r.fetched_at DESC, r.id DESC
+  )
+)
+SELECT id AS "id!"
+FROM adjacent
+WHERE same_previous AND same_next;
+
+/* @name GetScopedDuplicateResponseCleanupCandidates */
+WITH adjacent AS (
+  SELECT
+    r.id,
+    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+      lag(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_previous,
+    ROW(r.url, r.http_status, r.error, r.content_hash) IS NOT DISTINCT FROM
+      lead(ROW(r.url, r.http_status, r.error, r.content_hash)) OVER w AS same_next
+  FROM crawler.json_response r
+  JOIN crawler.frontier f ON f.id = r.frontier_id
+  WHERE (:federation::text IS NULL OR f.federation = :federation)
+    AND (:kind::text IS NULL OR f.kind = :kind)
+    AND (:key::text IS NULL OR f.key = :key)
+    AND (:id::bigint IS NULL OR f.id = :id)
+  WINDOW w AS (
+    PARTITION BY r.frontier_id
+    ORDER BY r.fetched_at DESC, r.id DESC
+  )
+)
+SELECT id AS "id!"
+FROM adjacent
+WHERE same_previous AND same_next;
+
+/* @name DeleteCrawlerResponseRows */
+DELETE FROM crawler.json_response r
+WHERE r.id = ANY(:ids::bigint[])
+  AND NOT EXISTS (
+    SELECT 1
+    FROM crawler.frontier f
+    WHERE f.last_response_id = r.id
+       OR f.last_successful_response_id = r.id
+  )
+RETURNING r.id AS "id!";
+
+/* @name DeleteOrphanedJsonResponseCache */
+WITH deleted AS (
+  DELETE FROM crawler.json_response_cache c
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM crawler.json_response r
+    WHERE r.content_hash = c.content_hash
+  )
+  RETURNING pg_column_size(c.content) AS bytes
+)
+SELECT count(*)::int AS "entries!", coalesce(sum(bytes), 0)::bigint AS "bytes!"
+FROM deleted;
 
 /* @name UpsertFrontier */
 INSERT INTO crawler.frontier (federation, kind, key)
