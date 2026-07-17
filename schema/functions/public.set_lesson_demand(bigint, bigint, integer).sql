@@ -7,6 +7,8 @@ declare
   instance event_instance;
   trainer event_instance_trainer;
   lesson_demand event_lesson_demand;
+  is_manager boolean;
+  is_self boolean;
   other_lessons bigint;
 begin
   select * into registration
@@ -24,7 +26,28 @@ begin
   if not found then
     raise exception 'INSTANCE_NOT_FOUND' using errcode = '28000';
   end if;
-  if instance.is_locked then
+
+  is_self := (registration.person_id is not null
+      and registration.person_id = any(coalesce(current_person_ids(), '{}'::bigint[])))
+    or (registration.couple_id is not null
+      and registration.couple_id = any(coalesce(current_couple_ids(), '{}'::bigint[])));
+  is_manager := app_private.is_system_admin(current_user_id())
+    or exists (
+      select 1 from current_tenant_administrator
+      where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
+    )
+    or (
+      exists (
+        select 1 from current_tenant_trainer
+        where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
+      )
+      and app_private.can_trainer_edit_instance(instance.id)
+    );
+
+  if not is_self and not is_manager then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+  if instance.is_locked and not is_manager then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
 

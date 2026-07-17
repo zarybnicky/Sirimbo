@@ -31,15 +31,5 @@ CREATE VIEW crawler.frontier_failure AS
             ELSE NULL::text
         END, jr.error, f.last_process_error, ''::text) AS error_text
    FROM (crawler.frontier f
-     LEFT JOIN LATERAL ( SELECT jr_1.id,
-            jr_1.frontier_id,
-            jr_1.url,
-            jr_1.fetched_at,
-            jr_1.http_status,
-            jr_1.error,
-            jr_1.content_hash
-           FROM crawler.json_response jr_1
-          WHERE (jr_1.frontier_id = f.id)
-          ORDER BY jr_1.fetched_at DESC
-         LIMIT 1) jr ON (true))
+     LEFT JOIN crawler.json_response jr ON ((jr.id = f.last_response_id)))
   WHERE ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR (f.process_status = 'error'::crawler.process_status));

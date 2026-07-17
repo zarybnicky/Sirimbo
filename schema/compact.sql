@@ -1245,6 +1245,29 @@ CREATE TABLE app_private.system_admin_user (
   created_by bigint DEFAULT public.current_user_id() NOT NULL
 );
 
+CREATE TABLE crawler.incremental_ranges (
+  federation text NOT NULL,
+  kind text NOT NULL,
+  last_known int DEFAULT 0 NOT NULL,
+  last_checked int DEFAULT 0 NOT NULL,
+  PRIMARY KEY (federation, kind)
+);
+
+CREATE TABLE crawler.json_response_cache (
+  content_hash text GENERATED ALWAYS AS (encode(public.digest(content::text, 'sha256'::text), 'hex'::text)) STORED NOT NULL PRIMARY KEY,
+  content jsonb NOT NULL
+);
+
+CREATE TABLE crawler.rate_limit_rule (
+  host text NOT NULL PRIMARY KEY,
+  max_requests int NOT NULL,
+  per_interval interval NOT NULL,
+  spacing interval GENERATED ALWAYS AS ((per_interval / CAST(max_requests AS double precision)) + '00:00:00.02'::interval) STORED NOT NULL,
+  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+00' AS timestamp with time zone) NOT NULL,
+  CHECK (max_requests > 0),
+  CHECK (per_interval > '00:00:00'::interval)
+);
+
 CREATE TYPE crawler.fetch_status AS ENUM ('pending', 'ok', 'gone', 'error', 'transient');
 
 CREATE TYPE crawler.process_status AS ENUM ('pending', 'ok', 'error');
@@ -1263,36 +1286,11 @@ CREATE TABLE crawler.frontier (
   meta jsonb DEFAULT '{}'::jsonb NOT NULL,
   last_process_error text,
   last_process_error_at timestamp with time zone,
+  last_response_id bigint REFERENCES crawler.json_response (id)
+    ON DELETE SET NULL,
+  last_successful_response_id bigint REFERENCES crawler.json_response (id)
+    ON DELETE SET NULL,
   UNIQUE (federation, kind, key)
-);
-
-CREATE TABLE crawler.html_response_cache (
-  content_hash text GENERATED ALWAYS AS (encode(public.digest(content, 'sha256'::text), 'hex'::text)) STORED NOT NULL PRIMARY KEY,
-  content text NOT NULL
-);
-
-CREATE TABLE crawler.html_response (
-  id bigint NOT NULL PRIMARY KEY,
-  frontier_id bigint NOT NULL REFERENCES crawler.frontier (id)
-    ON DELETE CASCADE,
-  url text NOT NULL,
-  fetched_at timestamp with time zone DEFAULT now() NOT NULL,
-  http_status int,
-  error text,
-  content_hash text REFERENCES crawler.html_response_cache (content_hash)
-);
-
-CREATE TABLE crawler.incremental_ranges (
-  federation text NOT NULL,
-  kind text NOT NULL,
-  last_known int DEFAULT 0 NOT NULL,
-  last_checked int DEFAULT 0 NOT NULL,
-  PRIMARY KEY (federation, kind)
-);
-
-CREATE TABLE crawler.json_response_cache (
-  content_hash text GENERATED ALWAYS AS (encode(public.digest(content::text, 'sha256'::text), 'hex'::text)) STORED NOT NULL PRIMARY KEY,
-  content jsonb NOT NULL
 );
 
 CREATE TABLE crawler.json_response (
@@ -1304,16 +1302,6 @@ CREATE TABLE crawler.json_response (
   http_status int,
   error text,
   content_hash text REFERENCES crawler.json_response_cache (content_hash)
-);
-
-CREATE TABLE crawler.rate_limit_rule (
-  host text NOT NULL PRIMARY KEY,
-  max_requests int NOT NULL,
-  per_interval interval NOT NULL,
-  spacing interval GENERATED ALWAYS AS ((per_interval / CAST(max_requests AS double precision)) + '00:00:00.02'::interval) STORED NOT NULL,
-  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+00' AS timestamp with time zone) NOT NULL,
-  CHECK (max_requests > 0),
-  CHECK (per_interval > '00:00:00'::interval)
 );
 
 CREATE TYPE public.activity_timeline_kind AS ENUM ('EVENT_ATTENDANCE', 'COMPETITION_BRIEF', 'COMPETITION_RESULT', 'JUDGING', 'BIRTHDAY');

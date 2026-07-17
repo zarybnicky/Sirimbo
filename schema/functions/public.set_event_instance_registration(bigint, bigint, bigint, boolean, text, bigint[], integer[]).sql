@@ -6,19 +6,15 @@ declare
   target_instance event_instance;
   registration event_instance_registration;
   registration_found boolean;
+  is_manager boolean;
+  is_self boolean;
+  registration_source event_registration_source;
   required_capacity integer;
   remaining_capacity integer;
   lesson_demand record;
 begin
   if p_is_registered is null or num_nonnulls(p_person_id, p_couple_id) <> 1 then
     raise exception 'INVALID_REGISTRANT' using errcode = '22023';
-  end if;
-
-  if (p_person_id is not null
-      and p_person_id <> all(coalesce(current_person_ids(), '{}'::bigint[])))
-    or (p_couple_id is not null
-      and p_couple_id <> all(coalesce(current_couple_ids(), '{}'::bigint[]))) then
-    raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
 
   if num_nonnulls(p_lesson_trainer_ids, p_lesson_counts) = 1
@@ -45,9 +41,34 @@ begin
   if not found then
     raise exception 'INSTANCE_NOT_FOUND' using errcode = '22023';
   end if;
-  if target_instance.is_locked then
+
+  is_self := (p_person_id is not null
+      and p_person_id = any(coalesce(current_person_ids(), '{}'::bigint[])))
+    or (p_couple_id is not null
+      and p_couple_id = any(coalesce(current_couple_ids(), '{}'::bigint[])));
+  is_manager := app_private.is_system_admin(current_user_id())
+    or exists (
+      select 1 from current_tenant_administrator
+      where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
+    )
+    or (
+      exists (
+        select 1 from current_tenant_trainer
+        where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
+      )
+      and app_private.can_trainer_edit_instance(p_instance_id)
+    );
+
+  if not is_self and not is_manager then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+  if target_instance.is_locked and not is_manager then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
+  registration_source := case when is_self
+    then 'self'::event_registration_source
+    else 'manager'::event_registration_source
+  end;
 
   select * into registration
   from event_instance_registration
@@ -66,7 +87,7 @@ begin
     set registration_status = 'cancelled',
         target_cohort_id = null,
         source = case when id = registration.id
-          then 'self'::event_registration_source end
+          then registration_source end
     where id = registration.id or parent_registration_id = registration.id;
 
     select * into registration from event_instance_registration where id = registration.id;
@@ -79,25 +100,29 @@ begin
       returning * into registration;
     end if;
   else
-    if target_instance.is_cancelled
-      or target_instance.until <= now()
-      or not (
-        coalesce(target_instance.is_public, false)
-        or (
-          coalesce(target_instance.is_visible, false)
-          and current_tenant_id() = any(my_tenants_array())
+    if not is_manager and (
+      target_instance.is_cancelled
+        or target_instance.until <= now()
+        or not (
+          coalesce(target_instance.is_public, false)
+          or (
+            coalesce(target_instance.is_visible, false)
+            and current_tenant_id() = any(my_tenants_array())
+          )
         )
-      ) then
+    ) then
       raise exception 'NOT_ALLOWED' using errcode = '28000';
     end if;
 
-    remaining_capacity := event_instance_remaining_person_spots(target_instance);
-    required_capacity := case
-      when target_instance.capacity_unit = 'people' and p_couple_id is not null then 2
-      else 1
-    end;
-    if remaining_capacity is not null and remaining_capacity < required_capacity then
-      raise exception 'CAPACITY_EXCEEDED' using errcode = '22023';
+    if not is_manager then
+      remaining_capacity := event_instance_remaining_person_spots(target_instance);
+      required_capacity := case
+        when target_instance.capacity_unit = 'people' and p_couple_id is not null then 2
+        else 1
+      end;
+      if remaining_capacity is not null and remaining_capacity < required_capacity then
+        raise exception 'CAPACITY_EXCEEDED' using errcode = '22023';
+      end if;
     end if;
 
     if registration_found then
@@ -105,7 +130,7 @@ begin
       set registration_status = 'active',
           target_cohort_id = null,
           source = case when id = registration.id
-            then 'self'::event_registration_source end
+            then registration_source end
       where id = registration.id or parent_registration_id = registration.id;
 
       if p_note is not null then
@@ -115,7 +140,7 @@ begin
       insert into event_instance_registration (
         instance_id, person_id, couple_id, source, status, note
       ) values (
-        p_instance_id, p_person_id, p_couple_id, 'self',
+        p_instance_id, p_person_id, p_couple_id, registration_source,
         case when p_person_id is not null then 'unknown'::attendance_type end,
         p_note
       ) returning * into registration;

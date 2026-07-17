@@ -2,13 +2,15 @@ CREATE FUNCTION app_private.drop_policies(tbl text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
-   rec record;
+  target regclass := tbl::regclass;
+  policy_name name;
 begin
-   for rec in (
-     select policyname from pg_policies
-     where schemaname = split_part(tbl, '.', 1) and tablename = split_part(tbl, '.', 2)
-   ) loop
-     execute 'drop policy "' || rec.policyname || '" on ' || tbl;
-   end loop;
+  for policy_name in
+    select polname
+    from pg_catalog.pg_policy
+    where polrelid = target
+  loop
+    execute format('drop policy %I on %s', policy_name, target);
+  end loop;
 end;
 $$;

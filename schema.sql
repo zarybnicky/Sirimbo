@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict hskuMdhlz3N9BUIF3zt9hT9ua4sKAX2esbmum696h8Mczjnq1R1exMJ9XUyl452
+\restrict 9ldYRwO7kfgcTSkq98WSIIut4huIXvYAoGzRvCwTLJAZivVD5HCIMiLKYjxSXkh
 
--- Dumped from database version 18.3
--- Dumped by pg_dump version 18.3
+-- Dumped from database version 18.4
+-- Dumped by pg_dump version 18.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1094,14 +1094,16 @@ CREATE FUNCTION app_private.drop_policies(tbl text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
-   rec record;
+  target regclass := tbl::regclass;
+  policy_name name;
 begin
-   for rec in (
-     select policyname from pg_policies
-     where schemaname = split_part(tbl, '.', 1) and tablename = split_part(tbl, '.', 2)
-   ) loop
-     execute 'drop policy "' || rec.policyname || '" on ' || tbl;
-   end loop;
+  for policy_name in
+    select polname
+    from pg_catalog.pg_policy
+    where polrelid = target
+  loop
+    execute format('drop policy %I on %s', policy_name, target);
+  end loop;
 end;
 $$;
 
@@ -1199,180 +1201,177 @@ CREATE FUNCTION app_private.index_advisor(query text) RETURNS TABLE(startup_cost
     LANGUAGE plpgsql
     AS $_$
 declare
-    n_args int;
-    prepared_statement_name text = 'index_advisor_working_statement';
-    hypopg_schema_name text = (select extnamespace::regnamespace::text from pg_extension where extname = 'hypopg');
-    explain_plan_statement text;
-    error_message text;
-    rec record;
-    plan_initial jsonb;
-    plan_final jsonb;
-    statements text[] = '{}';
-    v_context text;
+  n_args int;
+  prepared_statement_name text = 'index_advisor_working_statement';
+  hypopg_schema_name text = (select extnamespace::regnamespace::text from pg_extension where extname = 'hypopg');
+  explain_plan_statement text;
+  error_message text;
+  rec record;
+  plan_initial jsonb;
+  plan_final jsonb;
+  statements text[] := array[]::text[];
+  v_context text;
 begin
+  -- Remove comment lines (it is common for them to contain semicolons).
+  query := trim(
+    regexp_replace(
+      regexp_replace(
+        regexp_replace(query, '\/\*.+\*\/', '', 'g'),
+        '--[^\r\n]*',
+        ' ',
+        'g'
+      ),
+      '\s+',
+      ' ',
+      'g'
+    )
+  );
 
-    -- Remove comment lines (its common that they contain semicolons)
-    query := trim(
-        regexp_replace(
-            regexp_replace(
-                regexp_replace(query,'\/\*.+\*\/', '', 'g'),
-            '--[^\r\n]*', ' ', 'g'),
-        '\s+', ' ', 'g')
+  query := regexp_replace(query, ';\s*$', '');
+
+  begin
+    if query ilike '%;%' then
+      raise exception 'Query must not contain a semicolon';
+    end if;
+
+    -- Hack to support PostgREST because prepared-statement arguments default to text.
+    query := replace(
+      query,
+      'WITH pgrst_payload AS (SELECT $1 AS json_data)',
+      'WITH pgrst_payload AS (SELECT $1::json AS json_data)'
     );
 
-    -- Remove trailing semicolon
-    query := regexp_replace(query, ';\s*$', '');
+    deallocate all;
+    perform plpgsql_check_pragma('disable:security_warnings');
+    execute format('prepare %I as %s', prepared_statement_name, query);
+    perform plpgsql_check_pragma('enable:security_warnings');
 
-    begin
-        -- Disallow multiple statements
-        if query ilike '%;%' then
-            raise exception 'Query must not contain a semicolon';
-        end if;
+    n_args := (
+      select coalesce(array_length(parameter_types, 1), 0)
+      from pg_prepared_statements
+      where name = prepared_statement_name
+      limit 1
+    );
 
-        -- Hack to support PostgREST because the prepared statement for args incorrectly defaults to text
-        query := replace(query, 'WITH pgrst_payload AS (SELECT $1 AS json_data)', 'WITH pgrst_payload AS (SELECT $1::json AS json_data)');
+    explain_plan_statement := format(
+      'set local plan_cache_mode = force_generic_plan; explain (format json) execute %I%s',
+      prepared_statement_name,
+      case
+        when n_args = 0 then ''
+        else format(
+          '(%s)',
+          array_to_string(array_fill('null'::text, array[n_args]), ',')
+        )
+      end
+    );
+    execute explain_plan_statement into plan_initial;
 
-        -- Create a prepared statement for the given query
-        deallocate all;
-        execute format('prepare %I as %s', prepared_statement_name, query);
+    for rec in (
+      with extension_regclass as (
+        select distinct objid as oid
+        from pg_catalog.pg_depend
+        where deptype = 'e'
+      )
+      select
+        pc.relnamespace::regnamespace::text as schema_name,
+        pc.relname as table_name,
+        pa.attname as column_name,
+        format(
+          'select %I.hypopg_create_index($i$create index on %I.%I(%I)$i$)',
+          hypopg_schema_name,
+          pc.relnamespace::regnamespace::text,
+          pc.relname,
+          pa.attname
+        ) as hypopg_statement
+      from pg_catalog.pg_class pc
+      join pg_catalog.pg_attribute pa on pc.oid = pa.attrelid
+      left join extension_regclass er on pc.oid = er.oid
+      left join pg_catalog.pg_index pi
+        on pc.oid = pi.indrelid
+       and (select array_agg(x) from unnest(pi.indkey) v(x)) = array[pa.attnum]
+       and pi.indexprs is null
+       and pi.indpred is null
+      where pc.relnamespace::regnamespace::text not in (
+        'pg_catalog',
+        'pg_toast',
+        'information_schema'
+      )
+        and er.oid is null
+        and pc.relkind in ('r', 'm')
+        and pc.relpersistence = 'p'
+        and pa.attnum > 0
+        and not pa.attisdropped
+        and pi.indrelid is null
+        and pa.atttypid in (
+          20,
+          16,
+          1082,
+          1184,
+          1114,
+          701,
+          23,
+          21,
+          700,
+          1083,
+          2950,
+          1700,
+          25,
+          18,
+          1042,
+          1043
+        )
+    ) loop
+      perform plpgsql_check_pragma('disable:security_warnings');
+      execute rec.hypopg_statement;
+      perform plpgsql_check_pragma('enable:security_warnings');
+    end loop;
 
-        -- Detect how many arguments are present in the prepared statement
-        n_args = (
-            select
-                coalesce(array_length(parameter_types, 1), 0)
-            from
-                pg_prepared_statements
-            where
-                name = prepared_statement_name
-            limit
-                1
-        );
+    deallocate index_advisor_working_statement;
+    perform plpgsql_check_pragma('disable:security_warnings');
+    execute format('prepare %I as %s', prepared_statement_name, query);
+    perform plpgsql_check_pragma('enable:security_warnings');
 
-        -- Create a SQL statement that can be executed to collect the explain plan
-        explain_plan_statement = format(
-            'set local plan_cache_mode = force_generic_plan; explain (format json) execute %I%s',
-            --'explain (format json) execute %I%s',
-            prepared_statement_name,
-            case
-                when n_args = 0 then ''
-                else format(
-                    '(%s)', array_to_string(array_fill('null'::text, array[n_args]), ',')
-                )
-            end
-        );
-        -- Store the query plan before any new indexes
-        execute explain_plan_statement into plan_initial;
+    execute explain_plan_statement into plan_final;
 
-        -- Create possible indexes
-        for rec in (
-            with extension_regclass as (
-                select
-                    distinct objid as oid
-                from
-                    pg_catalog.pg_depend
-                where
-                    deptype = 'e'
-            )
-            select
-                pc.relnamespace::regnamespace::text as schema_name,
-                pc.relname as table_name,
-                pa.attname as column_name,
-                format(
-                    'select %I.hypopg_create_index($i$create index on %I.%I(%I)$i$)',
-                    hypopg_schema_name,
-                    pc.relnamespace::regnamespace::text,
-                    pc.relname,
-                    pa.attname
-                ) hypopg_statement
-            from
-                pg_catalog.pg_class pc
-                join pg_catalog.pg_attribute pa
-                    on pc.oid = pa.attrelid
-                left join extension_regclass er
-                    on pc.oid = er.oid
-                left join pg_catalog.pg_index pi
-                    on pc.oid = pi.indrelid
-                    and (select array_agg(x) from unnest(pi.indkey) v(x)) = array[pa.attnum]
-                    and pi.indexprs is null -- ignore expression indexes
-                    and pi.indpred is null -- ignore partial indexes
-            where
-                pc.relnamespace::regnamespace::text not in ( -- ignore schema list
-                    'pg_catalog', 'pg_toast', 'information_schema'
-                )
-                and er.oid is null -- ignore entities owned by extensions
-                and pc.relkind in ('r', 'm') -- regular tables, and materialized views
-                and pc.relpersistence = 'p' -- permanent tables (not unlogged or temporary)
-                and pa.attnum > 0
-                and not pa.attisdropped
-                and pi.indrelid is null
-                and pa.atttypid in (20,16,1082,1184,1114,701,23,21,700,1083,2950,1700,25,18,1042,1043)
-            )
-            loop
-                -- Create the hypothetical index
-                execute rec.hypopg_statement;
-            end loop;
+    execute format(
+      'select
+         coalesce(
+           array_agg(hypopg_get_indexdef(indexrelid) order by indrelid, indkey::text),
+           $i${}$i$::text[]
+         )
+       from %I.hypopg()
+       where %s ilike ($i$%%$i$ || indexname || $i$%%$i$)',
+      hypopg_schema_name,
+      quote_literal(plan_final)::text
+    ) into statements;
 
-        /*
-        for rec in select * from hypopg()
-            loop
-                raise notice '%', rec;
-            end loop;
-        */
+    perform hypopg_reset();
+    deallocate all;
 
-        -- Create a prepared statement for the given query
-        -- The original prepared statement MUST be dropped because its plan is cached
-        execute format('deallocate %I', prepared_statement_name);
-        execute format('prepare %I as %s', prepared_statement_name, query);
+    return query values (
+      plan_initial -> 0 -> 'Plan' -> 'Startup Cost',
+      plan_final -> 0 -> 'Plan' -> 'Startup Cost',
+      plan_initial -> 0 -> 'Plan' -> 'Total Cost',
+      plan_final -> 0 -> 'Plan' -> 'Total Cost',
+      statements,
+      array[]::text[]
+    );
+    return;
+  exception when others then
+    get stacked diagnostics
+      error_message = message_text,
+      v_context = pg_exception_context;
 
-        -- Store the query plan after new indexes
-        execute explain_plan_statement into plan_final;
-
-        --raise notice '%', plan_final;
-
-        -- Idenfity referenced indexes in new plan
-        execute format(
-            'select
-                coalesce(array_agg(hypopg_get_indexdef(indexrelid) order by indrelid, indkey::text), $i${}$i$::text[])
-            from
-                %I.hypopg()
-            where
-                %s ilike ($i$%%$i$ || indexname || $i$%%$i$)
-            ',
-            hypopg_schema_name,
-            quote_literal(plan_final)::text
-        ) into statements;
-
-        -- Reset all hypothetical indexes
-        perform hypopg_reset();
-
-        -- Reset prepared statements
-        deallocate all;
-
-        return query values (
-            (plan_initial -> 0 -> 'Plan' -> 'Startup Cost'),
-            (plan_final -> 0 -> 'Plan' -> 'Startup Cost'),
-            (plan_initial -> 0 -> 'Plan' -> 'Total Cost'),
-            (plan_final -> 0 -> 'Plan' -> 'Total Cost'),
-            statements::text[],
-            array[]::text[]
-        );
-        return;
-
-    exception when others then
-        get stacked diagnostics error_message = MESSAGE_TEXT,
-		v_context = pg_exception_context;
-
-        return query values (
-            null::jsonb,
-            null::jsonb,
-            null::jsonb,
-            null::jsonb,
-            array[]::text[],
-            array[error_message, v_context]::text[]
-        );
-        return;
-    end;
-
+    return query values (
+      null::jsonb,
+      null::jsonb,
+      null::jsonb,
+      null::jsonb,
+      array[]::text[],
+      array[error_message, v_context]::text[]
+    );
+    return;
+  end;
 end;
 $_$;
 
@@ -2221,11 +2220,11 @@ CREATE FUNCTION app_private.tg_users__encrypt_password() RETURNS trigger
 declare
   v_salt varchar;
 begin
-  if length(NEW.u_pass) <> 40 then
-      select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
-      NEW.u_pass := encode(digest(v_salt || NEW.u_pass || v_salt, 'sha1'), 'hex');
+  if length(new.u_pass) <> 40 then
+    v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
+    new.u_pass := encode(digest(v_salt || new.u_pass || v_salt, 'sha1'), 'hex');
   end if;
-  return NEW;
+  return new;
 end;
 $$;
 
@@ -2237,11 +2236,9 @@ $$;
 CREATE FUNCTION app_private.tg_users__trim_login() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
-declare
-  v_salt varchar;
 begin
-  NEW.u_login := trim(NEW.u_login);
-  return NEW;
+  new.u_login := trim(new.u_login);
+  return new;
 end;
 $$;
 
@@ -2356,108 +2353,6 @@ CREATE FUNCTION federated.class_rank(class text) RETURNS integer
     when 'Novice' then 1
     else 0
   end;
-$$;
-
-
---
--- Name: competition_sankey_links(integer, integer, text[], text[], boolean); Type: FUNCTION; Schema: federated; Owner: -
---
-
-CREATE FUNCTION federated.competition_sankey_links(p_first_year integer, p_last_year integer, p_classes text[], p_disciplines text[], p_by_school_year boolean DEFAULT false) RETURNS TABLE(from_year integer, from_state text, from_class text, to_year integer, to_state text, to_class text, discipline text, kind text, value integer)
-    LANGUAGE sql STABLE
-    AS $$
-with base as (
-    select
-        cm.person_id,
-        (extract(year from comp.start_date) - case when p_by_school_year and extract(month from comp.start_date) < 9 then 1 else 0 end) as period_year,
-        c.discipline as discipline,
-        c.class as class,
-        federated.class_rank(c.class) as class_rank,
-        comp.start_date date,
-        comp.category_id,
-        cr.competitor_id
-    from federated.competition_result cr
-    join federated.competition comp on cr.competition_id = comp.id
-    join federated.competitor_component cm on cm.competitor_id = cr.competitor_id
-    join federated.category c on c.id = comp.category_id
-    where (p_disciplines is null or c.discipline = any (p_disciplines))
-      and (p_classes is null or c.class = any(p_classes))
-),
-bounds as (
-    select
-        coalesce(p_first_year, min(period_year) - 1) as first_year,
-        coalesce(p_last_year, max(period_year)) as last_year
-    from base
-),
-observed as (
-    select r.person_id, r.period_year, r.discipline, r.class
-    from (
-        select
-            b.*,
-            row_number() over (
-                partition by b.person_id, b.period_year, b.discipline
-                order by b.class_rank desc nulls last, b.date desc nulls last, b.category_id , b.competitor_id
-              ) as rn
-        from base b, bounds x
-        where x.last_year is not null and b.period_year <= x.last_year
-    ) r
-    where r.rn = 1
-),
-windowed as (
-    select
-        o.*,
-        row_number() over person_timeline as observed_n,
-        lead(o.period_year) over person_timeline as next_year,
-        lead(o.class) over person_timeline as next_class
-    from observed o
-    window person_timeline as (partition by o.person_id, o.discipline order by o.period_year)
-),
-person_links(from_year, from_state, from_class, to_year, to_state, to_class, discipline, kind) as (
-    select
-        w.period_year - 1,
-        'inactive',
-        w.class,
-        w.period_year,
-        'active',
-        w.class,
-        w.discipline,
-        'entry'
-    from windowed w
-    where w.observed_n = 1
-
-    union all
-
-    select
-        y.from_year,
-        case when y.from_year = w.period_year then 'active' else 'inactive' end,
-        w.class,
-        y.from_year + 1,
-        case when w.next_year = y.from_year + 1 then 'active' else 'inactive' end,
-        case when w.next_year = y.from_year + 1 then w.next_class else w.class end,
-        w.discipline,
-        case
-            when w.next_year = w.period_year + 1 then 'flow'
-            when y.from_year = w.period_year then 'dropout'
-            when w.next_year = y.from_year + 1 then 'return'
-            else 'inactive'
-        end
-    from windowed w
-    cross join bounds x
-    cross join lateral generate_series(w.period_year, coalesce(w.next_year, case when w.period_year < x.last_year then x.last_year else w.period_year end) - 1) as y(from_year)
-    where w.next_year is not null or w.period_year < x.last_year
-)
-select pl.from_year, pl.from_state, pl.from_class, pl.to_year, pl.to_state, pl.to_class, pl.discipline, pl.kind, count(*)::integer as value
-from person_links pl, bounds x
-where pl.from_year >= x.first_year and pl.to_year <= x.last_year
-group by pl.from_year, pl.from_state, pl.from_class, pl.to_year, pl.to_state, pl.to_class, pl.discipline, pl.kind
-order by
-    pl.from_year,
-    pl.discipline,
-    coalesce(array_position(array['entry','flow','dropout','inactive','return']::text[], pl.kind), 99),
-    pl.from_state,
-    pl.from_class,
-    pl.to_state,
-    pl.to_class;
 $$;
 
 
@@ -3214,7 +3109,7 @@ $$;
 -- Name: FUNCTION competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@omit';
 
 
 --
@@ -3315,7 +3210,7 @@ $$;
 -- Name: FUNCTION competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@omit';
 
 
 --
@@ -3743,6 +3638,23 @@ $$;
 
 
 --
+-- Name: current_claims(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_claims() RETURNS jsonb
+    LANGUAGE sql STABLE SECURITY DEFINER
+    AS $$
+  select to_jsonb(app_private.create_jwt_token(users))
+    - 'exp'
+    - 'is_member'
+    - 'is_trainer'
+    - 'is_admin'
+  from users
+  where id = nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
+$$;
+
+
+--
 -- Name: current_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3791,8 +3703,7 @@ CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_insta
        from public.event_instance_registration registration
        where registration.instance_id = v_instance.id
          and registration.person_id is not null
-         and registration.registration_status = 'active'
-         and registration.status <> 'cancelled')::bigint as num_participants,
+         and registration.registration_status = 'active')::bigint as num_participants,
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
   )
   select
@@ -3861,12 +3772,14 @@ COMMENT ON TABLE public.event_instance_registration IS '@omit create,update,dele
 CREATE FUNCTION public.event_instance_registration_last_attended(reg public.event_instance_registration) RETURNS timestamp with time zone
     LANGUAGE sql STABLE
     AS $$
-  select max(ei.since)
-  from public.event_instance_registration r
-  join public.event_instance ei on ei.id = r.instance_id
-  where reg.legacy_registration_id is not null
-    and r.legacy_registration_id = reg.legacy_registration_id
-    and r.person_id is not null
+  select max(attended_instance.since)
+  from event_instance_registration r
+  join event_instance attended_instance on attended_instance.id = r.instance_id
+  join event_instance current_instance on current_instance.id = reg.instance_id
+  where current_instance.series_id is not null
+    and attended_instance.tenant_id = current_instance.tenant_id
+    and attended_instance.series_id = current_instance.series_id
+    and r.person_id = reg.person_id
     and r.status = 'attended'
 $$;
 
@@ -4306,7 +4219,7 @@ declare
   usr users;
   jwt jwt_token;
 begin
-  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
 
   select u.* into usr
   from users u
@@ -5006,7 +4919,7 @@ begin
     raise exception 'INVALID_EMAIL' using errcode = '28P01';
   end if;
 
-  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
   insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
   insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id);
   update person_invitation set used_at=now() where access_token=token;
@@ -5034,7 +4947,7 @@ declare
   usr users;
   jwt jwt_token;
 begin
-  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
   insert into users (u_email, u_pass) values (email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
   jwt := app_private.create_jwt_token(usr);
   perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
@@ -5349,19 +5262,15 @@ declare
   target_instance event_instance;
   registration event_instance_registration;
   registration_found boolean;
+  is_manager boolean;
+  is_self boolean;
+  registration_source event_registration_source;
   required_capacity integer;
   remaining_capacity integer;
   lesson_demand record;
 begin
   if p_is_registered is null or num_nonnulls(p_person_id, p_couple_id) <> 1 then
     raise exception 'INVALID_REGISTRANT' using errcode = '22023';
-  end if;
-
-  if (p_person_id is not null
-      and p_person_id <> all(coalesce(current_person_ids(), '{}'::bigint[])))
-    or (p_couple_id is not null
-      and p_couple_id <> all(coalesce(current_couple_ids(), '{}'::bigint[]))) then
-    raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
 
   if num_nonnulls(p_lesson_trainer_ids, p_lesson_counts) = 1
@@ -5388,9 +5297,34 @@ begin
   if not found then
     raise exception 'INSTANCE_NOT_FOUND' using errcode = '22023';
   end if;
-  if target_instance.is_locked then
+
+  is_self := (p_person_id is not null
+      and p_person_id = any(coalesce(current_person_ids(), '{}'::bigint[])))
+    or (p_couple_id is not null
+      and p_couple_id = any(coalesce(current_couple_ids(), '{}'::bigint[])));
+  is_manager := app_private.is_system_admin(current_user_id())
+    or exists (
+      select 1 from current_tenant_administrator
+      where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
+    )
+    or (
+      exists (
+        select 1 from current_tenant_trainer
+        where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
+      )
+      and app_private.can_trainer_edit_instance(p_instance_id)
+    );
+
+  if not is_self and not is_manager then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+  if target_instance.is_locked and not is_manager then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
+  registration_source := case when is_self
+    then 'self'::event_registration_source
+    else 'manager'::event_registration_source
+  end;
 
   select * into registration
   from event_instance_registration
@@ -5409,7 +5343,7 @@ begin
     set registration_status = 'cancelled',
         target_cohort_id = null,
         source = case when id = registration.id
-          then 'self'::event_registration_source end
+          then registration_source end
     where id = registration.id or parent_registration_id = registration.id;
 
     select * into registration from event_instance_registration where id = registration.id;
@@ -5422,25 +5356,29 @@ begin
       returning * into registration;
     end if;
   else
-    if target_instance.is_cancelled
-      or target_instance.until <= now()
-      or not (
-        coalesce(target_instance.is_public, false)
-        or (
-          coalesce(target_instance.is_visible, false)
-          and current_tenant_id() = any(my_tenants_array())
+    if not is_manager and (
+      target_instance.is_cancelled
+        or target_instance.until <= now()
+        or not (
+          coalesce(target_instance.is_public, false)
+          or (
+            coalesce(target_instance.is_visible, false)
+            and current_tenant_id() = any(my_tenants_array())
+          )
         )
-      ) then
+    ) then
       raise exception 'NOT_ALLOWED' using errcode = '28000';
     end if;
 
-    remaining_capacity := event_instance_remaining_person_spots(target_instance);
-    required_capacity := case
-      when target_instance.capacity_unit = 'people' and p_couple_id is not null then 2
-      else 1
-    end;
-    if remaining_capacity is not null and remaining_capacity < required_capacity then
-      raise exception 'CAPACITY_EXCEEDED' using errcode = '22023';
+    if not is_manager then
+      remaining_capacity := event_instance_remaining_person_spots(target_instance);
+      required_capacity := case
+        when target_instance.capacity_unit = 'people' and p_couple_id is not null then 2
+        else 1
+      end;
+      if remaining_capacity is not null and remaining_capacity < required_capacity then
+        raise exception 'CAPACITY_EXCEEDED' using errcode = '22023';
+      end if;
     end if;
 
     if registration_found then
@@ -5448,7 +5386,7 @@ begin
       set registration_status = 'active',
           target_cohort_id = null,
           source = case when id = registration.id
-            then 'self'::event_registration_source end
+            then registration_source end
       where id = registration.id or parent_registration_id = registration.id;
 
       if p_note is not null then
@@ -5458,7 +5396,7 @@ begin
       insert into event_instance_registration (
         instance_id, person_id, couple_id, source, status, note
       ) values (
-        p_instance_id, p_person_id, p_couple_id, 'self',
+        p_instance_id, p_person_id, p_couple_id, registration_source,
         case when p_person_id is not null then 'unknown'::attendance_type end,
         p_note
       ) returning * into registration;
@@ -5544,6 +5482,8 @@ declare
   instance event_instance;
   trainer event_instance_trainer;
   lesson_demand event_lesson_demand;
+  is_manager boolean;
+  is_self boolean;
   other_lessons bigint;
 begin
   select * into registration
@@ -5561,7 +5501,28 @@ begin
   if not found then
     raise exception 'INSTANCE_NOT_FOUND' using errcode = '28000';
   end if;
-  if instance.is_locked then
+
+  is_self := (registration.person_id is not null
+      and registration.person_id = any(coalesce(current_person_ids(), '{}'::bigint[])))
+    or (registration.couple_id is not null
+      and registration.couple_id = any(coalesce(current_couple_ids(), '{}'::bigint[])));
+  is_manager := app_private.is_system_admin(current_user_id())
+    or exists (
+      select 1 from current_tenant_administrator
+      where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
+    )
+    or (
+      exists (
+        select 1 from current_tenant_trainer
+        where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
+      )
+      and app_private.can_trainer_edit_instance(instance.id)
+    );
+
+  if not is_self and not is_manager then
+    raise exception 'ACCESS_DENIED' using errcode = '42501';
+  end if;
+  if instance.is_locked and not is_manager then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
 
@@ -6389,23 +6350,39 @@ $$;
 --
 
 CREATE FUNCTION public.verify_function(f regproc, relid regclass DEFAULT 0) RETURNS void
-    LANGUAGE plpgsql SECURITY DEFINER
+    LANGUAGE plpgsql
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
-  error text[];
-  count int;
+  issues text;
 begin
-  select array_agg(plpgsql_check_function) into error
-  from plpgsql_check_function(
+  select string_agg(
+    concat_ws(
+      E'\n',
+      format(
+        '%s:%s:%s:%s: %s',
+        issue.level,
+        issue.sqlstate,
+        coalesce(issue.lineno::text, '?'),
+        issue.statement,
+        issue.message
+      ),
+      'Query: ' || issue.query,
+      'Detail: ' || issue.detail,
+      'Hint: ' || issue.hint,
+      'Context: ' || issue.context
+    ),
+    E'\n\n' order by issue.lineno nulls last, issue.level, issue.message
+  ) into issues
+  from plpgsql_check_function_tb(
     funcoid => f,
     relid => relid,
-    performance_warnings => true,
-    extra_warnings => true,
-    security_warnings => true
-  );
-  if array_length(error, 1) > 0 then
-    raise exception 'Error when checking function %', f using detail = array_to_string(error, E'\n');
+    fatal_errors => false,
+    all_warnings => true
+  ) issue;
+
+  if issues is not null then
+    raise exception 'Error when checking function %', f using detail = issues;
   end if;
 end;
 $$;
@@ -6804,7 +6781,9 @@ CREATE TABLE crawler.frontier (
     next_fetch_at timestamp with time zone,
     meta jsonb DEFAULT '{}'::jsonb NOT NULL,
     last_process_error text,
-    last_process_error_at timestamp with time zone
+    last_process_error_at timestamp with time zone,
+    last_response_id bigint,
+    last_successful_response_id bigint
 );
 
 
@@ -6860,17 +6839,7 @@ CREATE VIEW crawler.frontier_failure AS
             ELSE NULL::text
         END, jr.error, f.last_process_error, ''::text) AS error_text
    FROM (crawler.frontier f
-     LEFT JOIN LATERAL ( SELECT jr_1.id,
-            jr_1.frontier_id,
-            jr_1.url,
-            jr_1.fetched_at,
-            jr_1.http_status,
-            jr_1.error,
-            jr_1.content_hash
-           FROM crawler.json_response jr_1
-          WHERE (jr_1.frontier_id = f.id)
-          ORDER BY jr_1.fetched_at DESC
-         LIMIT 1) jr ON (true))
+     LEFT JOIN crawler.json_response jr ON ((jr.id = f.last_response_id)))
   WHERE ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR (f.process_status = 'error'::crawler.process_status));
 
 
@@ -6941,50 +6910,6 @@ CREATE SEQUENCE crawler.frontier_id_seq
 --
 
 ALTER SEQUENCE crawler.frontier_id_seq OWNED BY crawler.frontier.id;
-
-
---
--- Name: html_response; Type: TABLE; Schema: crawler; Owner: -
---
-
-CREATE TABLE crawler.html_response (
-    id bigint NOT NULL,
-    frontier_id bigint NOT NULL,
-    url text NOT NULL,
-    fetched_at timestamp with time zone DEFAULT now() NOT NULL,
-    http_status integer,
-    error text,
-    content_hash text
-);
-
-
---
--- Name: html_response_cache; Type: TABLE; Schema: crawler; Owner: -
---
-
-CREATE TABLE crawler.html_response_cache (
-    content_hash text GENERATED ALWAYS AS (encode(public.digest(content, 'sha256'::text), 'hex'::text)) STORED NOT NULL,
-    content text NOT NULL
-);
-
-
---
--- Name: html_response_id_seq; Type: SEQUENCE; Schema: crawler; Owner: -
---
-
-CREATE SEQUENCE crawler.html_response_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: html_response_id_seq; Type: SEQUENCE OWNED BY; Schema: crawler; Owner: -
---
-
-ALTER SEQUENCE crawler.html_response_id_seq OWNED BY crawler.html_response.id;
 
 
 --
@@ -8640,13 +8565,6 @@ ALTER TABLE ONLY crawler.frontier ALTER COLUMN id SET DEFAULT nextval('crawler.f
 
 
 --
--- Name: html_response id; Type: DEFAULT; Schema: crawler; Owner: -
---
-
-ALTER TABLE ONLY crawler.html_response ALTER COLUMN id SET DEFAULT nextval('crawler.html_response_id_seq'::regclass);
-
-
---
 -- Name: json_response id; Type: DEFAULT; Schema: crawler; Owner: -
 --
 
@@ -8827,22 +8745,6 @@ ALTER TABLE ONLY crawler.frontier
 
 ALTER TABLE ONLY crawler.frontier
     ADD CONSTRAINT frontier_pkey PRIMARY KEY (id);
-
-
---
--- Name: html_response_cache html_response_cache_pkey; Type: CONSTRAINT; Schema: crawler; Owner: -
---
-
-ALTER TABLE ONLY crawler.html_response_cache
-    ADD CONSTRAINT html_response_cache_pkey PRIMARY KEY (content_hash);
-
-
---
--- Name: html_response html_response_pkey; Type: CONSTRAINT; Schema: crawler; Owner: -
---
-
-ALTER TABLE ONLY crawler.html_response
-    ADD CONSTRAINT html_response_pkey PRIMARY KEY (id);
 
 
 --
@@ -9905,6 +9807,20 @@ CREATE INDEX frontier_federation_kind_next_fetch_at_idx ON crawler.frontier USIN
 
 
 --
+-- Name: frontier_last_response_id_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE INDEX frontier_last_response_id_idx ON crawler.frontier USING btree (last_response_id) WHERE (last_response_id IS NOT NULL);
+
+
+--
+-- Name: frontier_last_successful_response_id_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE INDEX frontier_last_successful_response_id_idx ON crawler.frontier USING btree (last_successful_response_id) WHERE (last_successful_response_id IS NOT NULL);
+
+
+--
 -- Name: frontier_process_pending_ok_pick_idx; Type: INDEX; Schema: crawler; Owner: -
 --
 
@@ -9912,17 +9828,10 @@ CREATE INDEX frontier_process_pending_ok_pick_idx ON crawler.frontier USING btre
 
 
 --
--- Name: html_response_frontier_fetched_desc_idx; Type: INDEX; Schema: crawler; Owner: -
+-- Name: json_response_content_hash_idx; Type: INDEX; Schema: crawler; Owner: -
 --
 
-CREATE INDEX html_response_frontier_fetched_desc_idx ON crawler.html_response USING btree (frontier_id, fetched_at DESC);
-
-
---
--- Name: json_response_frontier_fetched_desc_idx; Type: INDEX; Schema: crawler; Owner: -
---
-
-CREATE INDEX json_response_frontier_fetched_desc_idx ON crawler.json_response USING btree (frontier_id, fetched_at DESC);
+CREATE INDEX json_response_content_hash_idx ON crawler.json_response USING btree (content_hash);
 
 
 --
@@ -11466,19 +11375,19 @@ ALTER TABLE ONLY app_private.system_admin_user
 
 
 --
--- Name: html_response html_response_content_hash_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
+-- Name: frontier frontier_last_response_id_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
 --
 
-ALTER TABLE ONLY crawler.html_response
-    ADD CONSTRAINT html_response_content_hash_fkey FOREIGN KEY (content_hash) REFERENCES crawler.html_response_cache(content_hash);
+ALTER TABLE ONLY crawler.frontier
+    ADD CONSTRAINT frontier_last_response_id_fkey FOREIGN KEY (last_response_id) REFERENCES crawler.json_response(id) ON DELETE SET NULL;
 
 
 --
--- Name: html_response html_response_frontier_id_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
+-- Name: frontier frontier_last_successful_response_id_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
 --
 
-ALTER TABLE ONLY crawler.html_response
-    ADD CONSTRAINT html_response_frontier_id_fkey FOREIGN KEY (frontier_id) REFERENCES crawler.frontier(id) ON DELETE CASCADE;
+ALTER TABLE ONLY crawler.frontier
+    ADD CONSTRAINT frontier_last_successful_response_id_fkey FOREIGN KEY (last_successful_response_id) REFERENCES crawler.json_response(id) ON DELETE SET NULL;
 
 
 --
@@ -14342,6 +14251,13 @@ GRANT ALL ON FUNCTION public.csts_athlete(idt integer) TO anonymous;
 
 
 --
+-- Name: FUNCTION current_claims(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.current_claims() TO anonymous;
+
+
+--
 -- Name: FUNCTION current_couple_ids(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -14931,6 +14847,13 @@ GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_i
 
 
 --
+-- Name: FUNCTION verify_function(f regproc, relid regclass); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.verify_function(f regproc, relid regclass) FROM PUBLIC;
+
+
+--
 -- Name: FUNCTION wdsf_athlete(min integer); Type: ACL; Schema: public; Owner: -
 --
 
@@ -15494,5 +15417,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict hskuMdhlz3N9BUIF3zt9hT9ua4sKAX2esbmum696h8Mczjnq1R1exMJ9XUyl452
+\unrestrict 9ldYRwO7kfgcTSkq98WSIIut4huIXvYAoGzRvCwTLJAZivVD5HCIMiLKYjxSXkh
 

@@ -7,7 +7,7 @@ declare
   usr users;
   jwt jwt_token;
 begin
-  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
 
   select u.* into usr
   from users u

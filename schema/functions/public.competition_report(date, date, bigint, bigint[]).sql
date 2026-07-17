@@ -87,6 +87,6 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     c.name;
 $$;
 
-COMMENT ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@omit';
 
 GRANT ALL ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) TO anonymous;
