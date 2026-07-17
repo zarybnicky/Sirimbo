@@ -14,6 +14,7 @@ fragment UserAuth on User {
 }
 
 query CurrentUser($versionId: String) {
+  currentClaims
   refreshJwt
   getCurrentUser(versionId: $versionId) {
     ...UserAuth

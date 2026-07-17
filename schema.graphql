@@ -6471,6 +6471,7 @@ type Query {
   """Get a single `Couple`."""
   couple(id: BigInt!): Couple
   cstsAthlete(idt: Int): String
+  currentClaims: JSON
 
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
