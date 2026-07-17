@@ -28,7 +28,7 @@ export const schema = z.array(
       nationalreference: z.string().nullish(),
     }),
     z.object({
-      Kind: z.undefined(),
+      Kind: z.undefined().optional(),
       link: z.array(
         z.object({ href: z.string(), rel: z.string(), type: z.string() })
       ),
