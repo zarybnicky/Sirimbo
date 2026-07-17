@@ -1,5 +1,9 @@
 --! include functions/event_instance_registration_last_attended.sql
 --! include functions/event_instance_approx_price.sql
+--! include functions/index_advisor.sql
+--! include functions/login.sql
+--! include functions/register_using_invitation.sql
+--! include functions/register_without_invitation.sql
 --! include functions/set_event_instance_registration.sql
 --! include functions/set_lesson_demand.sql
 
@@ -124,3 +128,80 @@ drop index if exists crawler.json_response_frontier_fetched_desc_idx;
 
 drop table if exists crawler.html_response;
 drop table if exists crawler.html_response_cache;
+
+-- Restore the verifier after historical migrations have finished replaying.
+create or replace function public.verify_function(f regproc, relid regclass default 0)
+returns void
+language plpgsql volatile security invoker
+set search_path = pg_catalog, public, pg_temp
+as $$
+declare
+  issues text;
+begin
+  select string_agg(
+    concat_ws(
+      E'\n',
+      format(
+        '%s:%s:%s:%s: %s',
+        issue.level,
+        issue.sqlstate,
+        coalesce(issue.lineno::text, '?'),
+        issue.statement,
+        issue.message
+      ),
+      'Query: ' || issue.query,
+      'Detail: ' || issue.detail,
+      'Hint: ' || issue.hint,
+      'Context: ' || issue.context
+    ),
+    E'\n\n' order by issue.lineno nulls last, issue.level, issue.message
+  ) into issues
+  from plpgsql_check_function_tb(
+    funcoid => f,
+    relid => relid,
+    fatal_errors => false,
+    all_warnings => true
+  ) issue;
+
+  if issues is not null then
+    raise exception 'Error when checking function %', f using detail = issues;
+  end if;
+end;
+$$;
+
+comment on function public.verify_function(regproc, regclass) is '@omit';
+revoke execute on function public.verify_function(regproc, regclass) from public;
+
+create or replace function app_private.drop_policies(tbl text) returns void language plpgsql as $$
+declare
+  target regclass := tbl::regclass;
+  policy_name name;
+begin
+  for policy_name in
+    select polname
+    from pg_catalog.pg_policy
+    where polrelid = target
+  loop
+    execute format('drop policy %I on %s', policy_name, target);
+  end loop;
+end;
+$$;
+
+create or replace function app_private.tg_users__encrypt_password() returns trigger language plpgsql as $$
+declare
+  v_salt varchar;
+begin
+  if length(new.u_pass) <> 40 then
+    v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
+    new.u_pass := encode(digest(v_salt || new.u_pass || v_salt, 'sha1'), 'hex');
+  end if;
+  return new;
+end;
+$$;
+
+create or replace function app_private.tg_users__trim_login() returns trigger language plpgsql as $$
+begin
+  new.u_login := trim(new.u_login);
+  return new;
+end;
+$$;

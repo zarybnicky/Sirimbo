@@ -1,5 +1,3 @@
-drop function if exists register_using_invitation;
-
 CREATE or replace FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text default null)
   RETURNS login_result
   LANGUAGE plpgsql SECURITY DEFINER
@@ -23,7 +21,7 @@ begin
     raise exception 'INVALID_EMAIL' using errcode = '28P01';
   end if;
 
-  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
   insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
   insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id);
   update person_invitation set used_at=now() where access_token=token;

@@ -44,7 +44,8 @@ CROSS JOIN LATERAL plpgsql_check_function_tb(
   COALESCE(t.tgrelid, 0),
   oldtable => t.tgoldtable,
   newtable => t.tgnewtable,
-  fatal_errors := false
+  fatal_errors := false,
+  all_warnings := true
 ) AS pcf
 WHERE l.lanname = 'plpgsql'
   AND n.nspname NOT IN ('pg_catalog','information_schema')
@@ -62,7 +63,6 @@ WHERE l.lanname = 'plpgsql'
 
 SELECT *
 FROM _plpgsql_issues
-WHERE level = 'error'
 ORDER BY functionid::text, relid::text NULLS FIRST, lineno;
 
 DO $$
@@ -72,16 +72,16 @@ DECLARE
   msg text;
 BEGIN
   SELECT count(*) INTO total
-  FROM _plpgsql_issues
-  WHERE level = 'error';
+  FROM _plpgsql_issues;
 
   IF total > 0 THEN
     SELECT string_agg(
       format(
-        '%s%s @%s: %s (SQLSTATE %s): %s',
+        '%s%s @%s [%s]: %s (SQLSTATE %s): %s',
         functionid::text,
         CASE WHEN relid IS NULL THEN '' ELSE ' on ' || relid::text END,
         COALESCE(lineno::text, '?'),
+        level,
         message,
         sqlstate,
         left(query, 200)
@@ -92,7 +92,6 @@ BEGIN
     FROM (
       SELECT *
       FROM _plpgsql_issues
-      WHERE level = 'error'
       ORDER BY functionid::text, relid::text NULLS FIRST, lineno NULLS LAST
       LIMIT shown
     ) s;
