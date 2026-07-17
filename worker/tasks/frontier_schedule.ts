@@ -96,7 +96,9 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
       spacingMs.set(row.host, row.spacing ?? 50);
     }
     for (const row of await getScheduledFetchSlots.run(undefined, client)) {
-      scheduledSlots.getOrInsert(row.host, []).push(row.run_at.getTime());
+      const slots = scheduledSlots.get(row.host) ?? [];
+      slots.push(row.run_at.getTime());
+      scheduledSlots.set(row.host, slots);
     }
 
     const pendingIds = await getPendingFetch.run(
@@ -108,8 +110,10 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
       const loader = loaderFor(federation, kind);
       if (!loader) continue;
       const { host } = loader.buildRequest(key).url;
+      const slots = scheduledSlots.get(host) ?? [];
+      scheduledSlots.set(host, slots);
       const runAt = reserveEarliestSlot(
-        scheduledSlots.getOrInsert(host, []),
+        slots,
         earliestRunAt.get(host) ?? nowMs,
         spacingMs.get(host) ?? 50,
       );
