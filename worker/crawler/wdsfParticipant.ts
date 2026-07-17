@@ -115,6 +115,21 @@ const Score = z.discriminatedUnion("kind", [
     ...scoreCommon,
   }),
   z.object({
+    kind: z.literal("threefold"),
+    mode: z.enum([
+      'Preliminary',
+      'RoundRobin',
+      'TopX',
+    ]),
+    isred: z.boolean().optional(),
+    branch: z.number(),
+    artistic: z.number(),
+    physical: z.number(),
+    subround: z.number(),
+    interpretation: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
     kind: z.literal("wdsfbreaking"),
     mode: z.enum([
       'Preliminary',
