@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { type JsonLoader } from './types.ts';
-import { upsertFrontierKeys } from './crawler.queries.ts';
 import { endOfMonth } from 'date-fns';
 
 const rangeKeyRe = /^(\d{4})-(\d{2})$/;
@@ -48,14 +47,13 @@ export const wdsfCompetitionIndex: JsonLoader<z.infer<typeof schema>> = {
     };
   },
   revalidatePeriod: '12h',
-  async load(client, parsed) {
-    await upsertFrontierKeys.run(
-      {
+  async load(_, parsed) {
+    return {
+      upsertFrontier: parsed.map((x) => ({
         federation: 'wdsf',
         kind: 'competition',
-        keys: parsed.map((c) => String(c.id)),
-      },
-      client,
-    );
+        key: x.id.toString(),
+      })),
+    };
   },
 };

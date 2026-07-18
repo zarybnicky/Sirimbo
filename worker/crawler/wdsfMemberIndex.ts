@@ -1,7 +1,6 @@
 import type { JsonLoader } from './types.ts';
 import { ensurePeople, type gender } from './federated.queries.ts';
 import { z } from 'zod';
-import { upsertFrontierKeys } from './crawler.queries.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
 
 const requestSchema = z.array(
@@ -52,14 +51,13 @@ export const wdsfMemberIndex: JsonLoader<z.output<typeof requestSchema>> = {
       });
     }
     await ensurePeople.run(people.params, client);
-    await upsertFrontierKeys.run(
-      {
+    return {
+      upsertFrontier: parsed.map((member) => ({
         federation: 'wdsf',
         kind: 'member',
-        keys: parsed.map((x) => x.id),
-      },
-      client,
-    );
+        key: member.id,
+      })),
+    };
   },
 };
 

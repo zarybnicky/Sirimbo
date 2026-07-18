@@ -33,9 +33,8 @@ import { ALL_LOADERS, loaderFor, LOADERS, loadersFor } from './handlers.ts';
 import type { JsonLoader } from './types.ts';
 import { formatException } from './error.ts';
 import {
-  createLoaderEffects,
   flushLoaderEffects,
-  mergeLoaderEffects,
+  type LoaderEffect,
   type LoaderResult,
 } from './effects.ts';
 import { pool } from '../pool.ts';
@@ -785,7 +784,7 @@ async function processLatest(
 
     await processClient.query('BEGIN');
     inTransaction = true;
-    const effects = createLoaderEffects();
+    const effects: LoaderEffect[] = [];
     const successfulIds: string[] = [];
 
     let shouldStop = false;
@@ -810,7 +809,7 @@ async function processLatest(
         if (result.ok) {
           counts.processed += 1;
           successfulIds.push(row.id);
-          mergeLoaderEffects(effects, result.effects);
+          if (result.effects) effects.push(result.effects);
         } else {
           counts.failures += 1;
           shouldStop = !options.keepGoing;

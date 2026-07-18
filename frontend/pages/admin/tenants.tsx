@@ -126,7 +126,7 @@ export default function SystemAdminTenantsPage() {
               <DataGrid
                 columns={columns}
                 rows={tenants}
-                rowKeyGetter={(r) => String(r.id)}
+                rowKeyGetter={(r) => r.id!}
                 defaultColumnOptions={{ resizable: true }}
                 headerRowHeight={44}
                 rowHeight={44}

@@ -21,7 +21,7 @@ import {
 import type { PoolClient } from 'pg';
 import { danceCode, type DanceCode, getDanceProgramIds } from './danceProgram.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
-import { createLoaderEffects, type LoaderResult } from './effects.ts';
+import type { LoaderResult } from './effects.ts';
 
 const Link = z.object( {
   href: z.string(),
@@ -422,17 +422,15 @@ async function loadWdsfRoundDetails(
     );
   }
 
-  const danceProgramIds = await getDanceProgramIds(
-    rounds.map((round) => round.dances.map((dance) => dance.code)),
-  );
+  const danceProgramIds = await getDanceProgramIds(rounds.map((r) => r.dances.map((d) => d.code)));
   const roundRows = await upsertCompetitionRoundsNonDestructive.run(
     {
       competitionId: context.id,
-      roundKey: rounds.map((round) => round.key),
-      roundLabel: rounds.map((round) => round.label),
-      roundIndex: rounds.map((round) => round.index),
+      roundKey: rounds.map((r) => r.key),
+      roundLabel: rounds.map((r) => r.label),
+      roundIndex: rounds.map((r) => r.index),
       danceProgramId: danceProgramIds,
-      scoringMethod: rounds.map((round) => round.scoringMethod),
+      scoringMethod: rounds.map((r) => r.scoringMethod),
     },
     client,
   );
@@ -532,9 +530,7 @@ async function loadWdsfRoundDetails(
       client,
     );
   }
-  const effects = createLoaderEffects();
-  effects.roundResultRefreshes.add({ competitionId: context.id });
-  return effects;
+  return { refreshRoundResult: [context.id] };
 }
 
 function resolveCompetitor(p: Participant): ResolvedCompetitor | null {

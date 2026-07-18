@@ -15,7 +15,6 @@ import {
   numberAsEnum,
   seriesType,
 } from './cstsEnums.ts';
-import { upsertFrontierKeys } from './crawler.queries.ts';
 import {
   ensurePeople,
   mergeEventOfficials,
@@ -237,18 +236,22 @@ export const cstsEvent: JsonLoader<Response> = {
       client,
     );
 
-    await upsertFrontierKeys.run(
-      { federation: 'csts', kind: 'eventCompetitors', keys: [event.eventId.toString()] },
-      client,
-    );
-
-    const keys = event.competitions
-      .filter((x) => !!x.completedAt)
-      .map((x) => x.competitionId.toString());
-    await upsertFrontierKeys.run(
-      { federation: 'csts', kind: 'competitionResults', keys },
-      client,
-    );
+    return {
+      upsertFrontier: [
+        {
+          federation: 'csts',
+          kind: 'eventCompetitors',
+          key: event.eventId.toString(),
+        },
+        ...event.competitions
+          .filter((x) => !!x.completedAt)
+          .map((competition) => ({
+            federation: 'csts',
+            kind: 'competitionResults',
+            key: competition.competitionId.toString(),
+          })),
+      ],
+    };
   },
 };
 

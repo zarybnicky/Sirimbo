@@ -5,11 +5,7 @@ import {
   markFrontiersProcessSuccess,
 } from '../crawler/crawler.queries.ts';
 import { formatException } from '../crawler/error.ts';
-import {
-  createLoaderEffects,
-  flushLoaderEffects,
-  mergeLoaderEffects,
-} from '../crawler/effects.ts';
+import { flushLoaderEffects, type LoaderEffect } from '../crawler/effects.ts';
 import { loadFrontier } from '../crawler/process.ts';
 
 type ProcessorStats = { count: number; ms: number; errors: number };
@@ -54,7 +50,7 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
       }
 
       const successfulBatch: Array<{ federation: string; kind: string; ms: number }> = [];
-      const effects = createLoaderEffects();
+      const effects: LoaderEffect[] = [];
       let failedFrontier: (typeof frontiers)[number] | null = null;
       let failedAt = 0;
 
@@ -64,7 +60,8 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
           failedFrontier = frontier;
           failedAt = performance.now();
 
-          mergeLoaderEffects(effects, await loadFrontier(client, frontier, 'loose'));
+          const result = await loadFrontier(client, frontier, 'loose');
+          if (result) effects.push(result);
 
           successfulBatch.push({
             federation,

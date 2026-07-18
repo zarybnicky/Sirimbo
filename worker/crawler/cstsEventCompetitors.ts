@@ -139,7 +139,7 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
     }
 
     await mergeCompetitionEntriesByEventId.run(
-      { federation: 'csts', eventId: String(eventId), ...entries.params },
+      { federation: 'csts', eventId: eventId.toString(), ...entries.params },
       client,
     );
   },
@@ -157,27 +157,20 @@ type PayloadCompetitorComponent = {
 };
 
 function fullName(...parts: Array<string | undefined>) {
-  return parts
-    .map((part) => part?.trim())
-    .filter(Boolean)
-    .join(' ');
+  return parts.map((x) => x?.trim()).filter(Boolean).join(' ');
 }
 
 function competitorLabel(competitor: EventCompetitor) {
   const label = competitor.name?.trim();
   if (label) return label;
 
-  const coupleLabels = competitor.couplesOrDuos?.map((couple) =>
-    [fullName(couple.name1, couple.surname1), fullName(couple.name2, couple.surname2)].join(
-      ' - ',
-    ),
+  const coupleLabels = competitor.couplesOrDuos?.map((c) =>
+    [fullName(c.name1, c.surname1), fullName(c.name2, c.surname2)].join(' - '),
   );
   if (coupleLabels?.length) return coupleLabels.join(', ');
 
-  const personLabels = competitor.persons?.map((person) =>
-    fullName(person.name, person.surname),
-  );
-  return personLabels?.join(', ') ?? '';
+  const personLabels = competitor.persons?.map((p) => fullName(p.name, p.surname)) ?? [];
+  return personLabels.join(', ');
 }
 
 function competitorComponents(competitor: EventCompetitor, type: competitor_type) {
@@ -237,7 +230,7 @@ function component(
     componentCompetitorId: competitorId,
     personId: `csts:${personExternalId}`,
     personFederation: 'csts',
-    personExternalId: String(personExternalId),
+    personExternalId: personExternalId.toString(),
     personCanonicalName,
     personGender: 'unknown',
     componentRole: role,

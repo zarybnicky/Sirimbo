@@ -11,11 +11,7 @@ import {
   rescheduleFrontier,
   reserveRequest,
 } from '../crawler/crawler.queries.ts';
-import {
-  createLoaderEffects,
-  flushLoaderEffects,
-  mergeLoaderEffects,
-} from '../crawler/effects.ts';
+import { flushLoaderEffects } from '../crawler/effects.ts';
 import { formatException } from '../crawler/error.ts';
 import { fetchResponse } from '../crawler/fetch.ts';
 import { loaderFor } from '../crawler/handlers.ts';
@@ -128,9 +124,8 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
         return;
       }
 
-      const effects = createLoaderEffects();
-      mergeLoaderEffects(effects, await loadFrontier(client, pending, 'loose'));
-      await flushLoaderEffects(client, effects);
+      const effect = await loadFrontier(client, pending, 'loose');
+      await flushLoaderEffects(client, effect ? [effect] : []);
       await markFrontiersProcessSuccess.run({ ids: [id] }, client);
       await client.query('COMMIT');
     } catch (e) {

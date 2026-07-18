@@ -644,7 +644,9 @@ WHERE NOT EXISTS (
 /* @name UpsertFrontier */
 INSERT INTO crawler.frontier (federation, kind, key)
 VALUES (:federation, :kind, :key)
-ON CONFLICT (federation, kind, key) DO NOTHING;
+ON CONFLICT (federation, kind, key) DO UPDATE
+SET process_status = 'pending'
+WHERE crawler.frontier.process_status = 'error';
 
 /* @name UpsertFrontiers */
 INSERT INTO crawler.frontier (federation, kind, key)
@@ -654,10 +656,14 @@ FROM unnest(
   :kinds::text[],
   :keys::text[]
 ) AS input(federation, kind, key)
-ON CONFLICT (federation, kind, key) DO NOTHING;
+ON CONFLICT (federation, kind, key) DO UPDATE
+SET process_status = 'pending'
+WHERE crawler.frontier.process_status = 'error';
 
 /* @name UpsertFrontierKeys */
 INSERT INTO crawler.frontier (federation, kind, key)
 SELECT :federation, :kind, key
 FROM unnest(:keys::text[]) as input(key)
-ON CONFLICT DO NOTHING;
+ON CONFLICT (federation, kind, key) DO UPDATE
+SET process_status = 'pending'
+WHERE crawler.frontier.process_status = 'error';

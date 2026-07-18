@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import { getFederatedCategoryId } from './federatedCategory.ts';
-import { upsertFrontiers } from './crawler.queries.ts';
 import {
   type competition_type,
   type competitor_type,
@@ -373,13 +372,19 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
       },
       client,
     );
-    await upsertFrontiers.run(
-      {
-        federations: ['wdsf', 'wdsf'],
-        kinds: ['participantIndex', 'officialIndex'],
-        keys: [c.id.toString(), c.id.toString()],
-      },
-      client,
-    );
+    return {
+      upsertFrontier: [
+        {
+          federation: 'wdsf',
+          kind: 'participantIndex',
+          key: c.id.toString(),
+        },
+        {
+          federation: 'wdsf',
+          kind: 'officialIndex',
+          key: c.id.toString(),
+        },
+      ],
+    };
   },
 };

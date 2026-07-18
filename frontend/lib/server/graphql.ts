@@ -32,7 +32,7 @@ export async function executeGraphql<
     cache: 'no-store',
     headers: {
       'content-type': 'application/json',
-      'x-tenant-id': String(tenant.id),
+      'x-tenant-id': tenant.id.toString(),
       ...(token ? { cookie: `rozpisovnik=${token}` } : {}),
     },
     body: JSON.stringify({

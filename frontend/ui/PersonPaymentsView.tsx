@@ -261,7 +261,7 @@ function AccountPaymentsTable({ account }: { account: Account }) {
       <DataGrid
         columns={columns}
         rows={rows}
-        rowKeyGetter={(r) => String(r.id)}
+        rowKeyGetter={(r) => r.id}
         sortColumns={sortColumns}
         onSortColumnsChange={setSortColumns}
         headerRowHeight={36}

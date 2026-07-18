@@ -206,7 +206,7 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     if (rp.partnerIdt && (competitorType === 'couple' || competitorType === 'duo')) {
       people.add({
         federation: 'csts',
-        externalId: String(rp.partnerIdt),
+        externalId: rp.partnerIdt.toString(),
         canonicalName: rp.partner || '',
         gender:
           competitorType !== 'couple'

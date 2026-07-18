@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
-import { upsertFrontierKeys } from './crawler.queries.ts';
 
 const status = z.enum([
   'Disqualified',
@@ -60,7 +59,7 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
     if (httpStatus === 500) return 'error';
     return undefined;
   },
-  async load(client, parsed) {
+  async load(_, parsed) {
     // Competitor reference needs to be fron link
     // participant Id == marks
     // name can serve as a backup competitor name
@@ -68,14 +67,12 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
     // metadata to seed competitor/couple/team loaders instead of dropping them.
 
     const participantIds = parsed.map(x => x.id.toString());
-    if (participantIds.length === 0) return;
-    await upsertFrontierKeys.run(
-      {
+    return {
+      upsertFrontier: participantIds.map((key) => ({
         federation: 'wdsf',
         kind: 'participant',
-        keys: participantIds,
-      },
-      client,
-    );
+        key,
+      })),
+    };
   },
 };

@@ -64,8 +64,7 @@ const storage = {
 
 const cookieStorage = {
   getItem(key: string, initialValue: string) {
-    const tenant = getTenant(getCookie(key));
-    return tenant ? String(tenant.id) : initialValue;
+    return getTenant(getCookie(key))?.id.toString() ?? initialValue;
   },
   setItem(key: string, nextValue: string) {
     if (typeof window === 'undefined') return;
@@ -73,8 +72,8 @@ const cookieStorage = {
     const tenant = getTenant(nextValue);
     if (!tenant) return;
 
-    const tenantId = String(tenant.id);
-    if (String(getCookie(key)) === tenantId) return;
+    const tenantId = tenant.id.toString();
+    if (getCookie(key) === tenantId) return;
 
     const { hostname, protocol } = window.location;
     setCookie(key, tenantId, {
@@ -105,9 +104,8 @@ const baseTenantIdAtom = atomWithStorage(
 export const tenantIdAtom = atom<string, [string], void>(
   (get) => get(baseTenantIdAtom),
   (_get, set, nextValue) => {
-    const tenant = getTenant(nextValue);
-    const tenantId = String(tenant?.id ?? defaultTenant.id);
-    set(baseTenantIdAtom, tenantId);
+    const tenantId = getTenant(nextValue)?.id ?? defaultTenant.id;
+    set(baseTenantIdAtom, tenantId.toString());
 
     if (typeof document === 'undefined') return;
 

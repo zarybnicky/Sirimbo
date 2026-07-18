@@ -222,7 +222,7 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
       federation: 'csts',
       externalId: competitor.competitorId.toString(),
       type: context.competitorType,
-      label: resultCompetitorLabel(competitor),
+      label: resultCompetitorLabel(competitor.competitor),
     });
 
     components.add(...resultCompetitorComponents(competitor, context.competitorType));
@@ -523,11 +523,8 @@ function scoresForRound(args: {
   return rows;
 }
 
-function resultCompetitorLabel(competitor: ResultCompetitor) {
-  return [
-    fullName(competitor.competitor.name1, competitor.competitor.surname1),
-    fullName(competitor.competitor.name2, competitor.competitor.surname2),
-  ]
+function resultCompetitorLabel(c: ResultCompetitor['competitor']) {
+  return [fullName(c.name1, c.surname1), fullName(c.name2, c.surname2)]
     .filter(Boolean)
     .join(' - ');
 }
@@ -544,10 +541,9 @@ function resultCompetitorComponents(
   type: competitor_type,
 ) {
   const competitorId = `csts:${competitor.competitorId}`;
-  const components: PayloadCompetitorComponent[] = [];
 
   if (type === 'couple' && competitor.competitor.idt1 && competitor.competitor.idt2) {
-    components.push(
+    return [
       resultComponent(
         competitorId,
         competitor.competitor.idt1,
@@ -560,28 +556,29 @@ function resultCompetitorComponents(
         fullName(competitor.competitor.name2, competitor.competitor.surname2),
         'follow',
       ),
+    ];
+  }
+
+  const components: PayloadCompetitorComponent[] = [];
+  if (competitor.competitor.idt1) {
+    components.push(
+      resultComponent(
+        competitorId,
+        competitor.competitor.idt1,
+        fullName(competitor.competitor.name1, competitor.competitor.surname1),
+        'member',
+      ),
     );
-  } else {
-    if (competitor.competitor.idt1) {
-      components.push(
-        resultComponent(
-          competitorId,
-          competitor.competitor.idt1,
-          fullName(competitor.competitor.name1, competitor.competitor.surname1),
-          'member',
-        ),
-      );
-    }
-    if (competitor.competitor.idt2) {
-      components.push(
-        resultComponent(
-          competitorId,
-          competitor.competitor.idt2,
-          fullName(competitor.competitor.name2, competitor.competitor.surname2),
-          'member',
-        ),
-      );
-    }
+  }
+  if (competitor.competitor.idt2) {
+    components.push(
+      resultComponent(
+        competitorId,
+        competitor.competitor.idt2,
+        fullName(competitor.competitor.name2, competitor.competitor.surname2),
+        'member',
+      ),
+    );
   }
 
   return components;
@@ -597,7 +594,7 @@ function resultComponent(
     componentCompetitorId: competitorId,
     personId: `csts:${personExternalId}`,
     personFederation: 'csts',
-    personExternalId: String(personExternalId),
+    personExternalId: personExternalId.toString(),
     personCanonicalName,
     personGender: 'unknown',
     componentRole: role,
