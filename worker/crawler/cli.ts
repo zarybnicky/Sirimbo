@@ -1,7 +1,7 @@
 import process from 'node:process';
 import { deepStrictEqual } from 'node:assert/strict';
 import { cac } from 'cac';
-import { Pool, type PoolClient } from 'pg';
+import type { PoolClient } from 'pg';
 import Cursor from 'pg-cursor';
 import { zx } from '@traversable/zod';
 import type {
@@ -37,8 +37,7 @@ import {
   mergeLoaderEffects,
   type LoaderResult,
 } from './effects.ts';
-
-const pool = new Pool();
+import { pool } from '../pool.ts';
 
 type CrawlerStatusRow = IGetCrawlerStatusResult & {
   target: string;
@@ -336,7 +335,10 @@ async function showStatus(target: string | undefined, options: StatusOptions) {
 
   const [frontierRows, failures] = await Promise.all([
     getCrawlerStatus.run({ federation, kind, allowRefetch }, pool),
-    getFrontierFailureGroups.run({ federation, kind, excludeHttpStatuses: null }, pool),
+    getFrontierFailureGroups.run(
+      { federation, kind, excludeHttpStatuses: null, limit: 100 },
+      pool,
+    ),
   ]);
 
   const frontiers = frontierRows

@@ -190,7 +190,7 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
 
     const competitorType = mapCompetitorType(rp.competitors);
     const progressClass = classifyProgressClass(rp.class);
-    const categoryId = await getFederatedCategoryId(client, {
+    const categoryId = await getFederatedCategoryId({
       class: progressClass.className,
       ageGroup: rp.age ?? rp.rankingAge,
       genderGroup: 'mixed', // ČSTS distinguishes this only in competitions

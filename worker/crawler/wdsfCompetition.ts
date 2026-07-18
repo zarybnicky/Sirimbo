@@ -341,7 +341,7 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
     // TODO(wdsf): Persist parsed status, coefficient, eventId, lastmodifiedDate,
     // and link relations, or remove them from the schema.
     const competitorType = mapCompetitorType(c);
-    const categoryId = await getFederatedCategoryId(client, {
+    const categoryId = await getFederatedCategoryId({
       series: c.division,
       discipline: c.discipline,
       ageGroup: c.age,

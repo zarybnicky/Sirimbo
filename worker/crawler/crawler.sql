@@ -5,29 +5,12 @@ WHERE id = :id::bigint
 FOR UPDATE;
 
 /* @name GetCrawlerStatus */
-WITH frontiers AS (
-  SELECT
-    f.*,
-    row_number() OVER (
-      PARTITION BY f.federation, f.kind
-      ORDER BY
-        CASE WHEN f.fetch_status = 'pending' THEN 0 ELSE 1 END,
-        f.discovered_at DESC,
-        f.id
-    ) AS key_rank
-  FROM crawler.frontier f
-  WHERE (:federation::text IS NULL OR f.federation = :federation)
-    AND (:kind::text IS NULL OR f.kind = :kind)
-), frontier_status AS (
+WITH frontier_status AS (
   SELECT
     federation,
     kind,
     count(*)::int AS total,
-    coalesce(
-      string_agg(key, ', ' ORDER BY key_rank) FILTER (WHERE key <> '' AND key_rank <= 3)
-        || CASE WHEN count(*) FILTER (WHERE key <> '') > 3 THEN ', ...' ELSE '' END,
-      '-'
-    ) AS keys,
+    count(*) FILTER (WHERE key <> '')::int AS key_count,
     count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,
     count(*) FILTER (WHERE fetch_status = 'transient')::int AS fetch_transient,
     count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,
@@ -35,17 +18,21 @@ WITH frontiers AS (
     count(*) FILTER (WHERE process_status = 'error')::int AS process_error,
     count(*) FILTER (WHERE process_status = 'pending' AND fetch_status = 'ok')::int
       AS process_ready,
-    max(last_fetched_at) AS latest
-  FROM frontiers f
-  GROUP BY federation, kind
-), due_fetch AS (
-  SELECT df.*
-  FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df
-  WHERE (:federation::text IS NULL OR df.federation = :federation)
-    AND (:kind::text IS NULL OR df.kind = :kind)
-), due_status AS (
-  SELECT federation, kind, count(*)::int AS fetch_due
-  FROM due_fetch
+    max(last_fetched_at) AS latest,
+    count(*) FILTER (
+      WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
+        AND (
+          fetch_status IN ('pending', 'transient')
+          OR (
+            coalesce(:allowRefetch::boolean, false)
+            AND fetch_status = 'ok'
+            AND process_status = 'ok'
+          )
+        )
+    )::int AS fetch_due
+  FROM crawler.frontier
+  WHERE (:federation::text IS NULL OR federation = :federation)
+    AND (:kind::text IS NULL OR kind = :kind)
   GROUP BY federation, kind
 ), fetch_jobs AS (
   SELECT
@@ -63,19 +50,31 @@ SELECT
   fs.federation AS "federation!",
   fs.kind AS "kind!",
   fs.total AS "total!",
-  fs.keys AS "keys!",
+  coalesce(key_samples.keys, '-')
+    || CASE WHEN fs.key_count > 3 THEN ', ...' ELSE '' END AS "keys!",
   fs.fetch_pending AS "fetch_pending!",
   fs.fetch_transient AS "fetch_transient!",
   fs.fetch_error AS "fetch_error!",
   fs.done AS "done!",
   fs.process_error AS "process_error!",
   fs.latest,
-  coalesce(ds.fetch_due, 0)::int AS "fetch_due!",
+  fs.fetch_due AS "fetch_due!",
   fs.process_ready AS "process_ready!",
   coalesce(fj.queued_fetch, 0)::int AS "queued_fetch!",
   coalesce(fj.locked_fetch, 0)::int AS "locked_fetch!"
 FROM frontier_status fs
-LEFT JOIN due_status ds USING (federation, kind)
+LEFT JOIN LATERAL (
+  SELECT string_agg(sample.key, ', ' ORDER BY sample.key) AS keys
+  FROM (
+    SELECT f.key
+    FROM crawler.frontier f
+    WHERE f.federation = fs.federation
+      AND f.kind = fs.kind
+      AND f.key <> ''
+    ORDER BY f.key
+    LIMIT 3
+  ) sample
+) key_samples ON true
 LEFT JOIN fetch_jobs fj USING (federation, kind)
 ORDER BY fs.federation, fs.kind;
 

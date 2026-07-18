@@ -76,7 +76,7 @@ export const cstsRanklist: JsonLoader<Response> = {
 };
 
 async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
-  const categoryId = await getFederatedCategoryId(client, {
+  const categoryId = await getFederatedCategoryId({
     class: '',
     ageGroup: entity.age,
     genderGroup: 'mixed', // ČSTS distinguishes this only in competitions

@@ -148,7 +148,7 @@ export const cstsEvent: JsonLoader<Response> = {
       series: competition.series,
       competitorType: mapCompetitorType(competition.competitors),
     }));
-    const categoryIds = await getFederatedCategoryIds(client, categoryParams);
+    const categoryIds = await getFederatedCategoryIds(categoryParams);
     const competitions = makePgtypedCollection<{
       externalId: string;
       categoryId: string;

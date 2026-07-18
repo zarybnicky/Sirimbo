@@ -1,10 +1,10 @@
-import type { PoolClient } from 'pg';
 import {
   type competitor_type,
   getAllCategories,
   upsertCategories,
 } from './federated.queries.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
+import { pool } from '../pool.ts';
 
 let categoryCache = new Map<string, string>();
 let cacheTime = 0;
@@ -30,8 +30,8 @@ function categoryKey(params: CategoryParams): string {
   ].join('\0');
 }
 
-async function refreshCache(client: PoolClient): Promise<void> {
-  const rows = await getAllCategories.run(undefined, client);
+async function refreshCache(): Promise<void> {
+  const rows = await getAllCategories.run(undefined, pool);
   const fresh = new Map<string, string>();
   for (const row of rows) {
     fresh.set(categoryKey(row), row.id);
@@ -41,20 +41,18 @@ async function refreshCache(client: PoolClient): Promise<void> {
 }
 
 export async function getFederatedCategoryId(
-  client: PoolClient,
   params: CategoryParams,
 ): Promise<string> {
-  return (await getFederatedCategoryIds(client, [params]))[0]!;
+  return (await getFederatedCategoryIds([params]))[0]!;
 }
 
 export async function getFederatedCategoryIds(
-  client: PoolClient,
   params: readonly CategoryParams[],
 ): Promise<string[]> {
   if (params.length === 0) return [];
 
   if (Date.now() - cacheTime > CACHE_TTL_MS) {
-    await refreshCache(client);
+    await refreshCache();
   }
 
   const misses = makePgtypedCollection<{
@@ -82,9 +80,13 @@ export async function getFederatedCategoryIds(
   }
 
   if (misses.length) {
-    const rows = await upsertCategories.run(misses.params, client);
+    const rows = await upsertCategories.run(misses.params, pool);
     for (const row of rows) {
       categoryCache.set(categoryKey(row), row.id);
+    }
+
+    if (params.some((item) => !categoryCache.has(categoryKey(item)))) {
+      await refreshCache();
     }
   }
 
