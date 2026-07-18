@@ -210,7 +210,7 @@ export function EventCreateForm({
       },
     });
     if (result.error) throw result.error;
-    if (result.data?.quickCreateEventInstances?.eventInstances?.length) onSuccess();
+    onSuccess();
   });
 
   return (
@@ -437,7 +437,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
       },
     });
     if (result.error) throw result.error;
-    if (result.data?.updateEventInstanceDetails?.eventInstance?.id) onSuccess();
+    onSuccess();
   });
 
   return (
