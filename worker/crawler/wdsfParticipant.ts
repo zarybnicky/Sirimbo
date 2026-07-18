@@ -577,11 +577,10 @@ function parsePositiveRank(rank: string) {
 }
 
 function supportedRounds(rounds: Round[]): SupportedRound[] {
-  return rounds
-    .map((round, roundIndex) => {
+  return rounds.flatMap((round, roundIndex) => {
       const hasAnyScores = round.dances.some((dance) => dance.scores.length > 0);
       const dances = round.dances.map((dance, danceIndex) => ({
-        code: danceCode.parse(dance.name),
+        code: danceCode.safeParse(dance.name).data ?? 'OT',
         order: danceIndex + 1,
         scores: dance.scores
           .map((score) => ({
@@ -592,21 +591,20 @@ function supportedRounds(rounds: Round[]): SupportedRound[] {
       }));
       const hasSupportedScores = dances.some((dance) => dance.scores.length > 0);
       if (hasAnyScores && !hasSupportedScores) {
-        return null;
+        return [];
       }
       if (!hasSupportedScores && !dances.some((dance) => dance.code !== 'OT')) {
-        return null;
+        return [];
       }
 
-      return {
+      return [{
         key: round.name,
         label: round.name,
         index: roundIndex + 1,
         dances,
         scoringMethod: roundScoringMethod(round),
-      };
-    })
-    .filter((round): round is NonNullable<typeof round> => round != null);
+      }];
+    });
 }
 
 function roundScoringMethod(round: Round): scoring_method {
