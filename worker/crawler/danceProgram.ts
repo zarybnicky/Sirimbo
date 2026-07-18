@@ -1,7 +1,7 @@
-import type { PoolClient } from 'pg';
 import { getAllDancePrograms, upsertDancePrograms } from './federated.queries.ts';
 import { z } from 'zod';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
+import { pool } from '../pool.ts';
 
 const danceCodes = {
   SW: 'SW',
@@ -82,20 +82,19 @@ function uniqueDanceCodes(danceCodes: readonly DanceCode[]) {
   return [...new Set(danceCodes)];
 }
 
-async function refreshCache(client: PoolClient) {
-  const rows = await getAllDancePrograms.run(undefined, client);
+async function refreshCache() {
+  const rows = await getAllDancePrograms.run(undefined, pool);
   cache = new Map(rows.flatMap((row) => (row.code ? [[row.code, row.id]] : [])));
   cacheTime = Date.now();
 }
 
 export async function getDanceProgramIds(
-  client: PoolClient,
   inputCodeLists: readonly (readonly DanceCode[])[],
 ): Promise<string[]> {
   if (inputCodeLists.length === 0) return [];
 
   if (Date.now() - cacheTime > CACHE_TTL_MS) {
-    await refreshCache(client);
+    await refreshCache();
   }
 
   const programs = makePgtypedCollection<{
@@ -125,7 +124,7 @@ export async function getDanceProgramIds(
         ...programs.params,
         ...programDances.params,
       },
-      client,
+      pool,
     );
     for (const row of rows) {
       if (row.code) cache.set(row.code, row.id);

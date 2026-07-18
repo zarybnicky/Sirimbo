@@ -21,6 +21,7 @@ import {
   getGlobalDuplicateResponseCleanupCount,
   getLatestFrontierFailures,
   getLatestFrontierResponse,
+  markFrontiersProcessSuccess,
   getResolvedFailureCleanupCount,
   getResolvedFailureCleanupCandidates,
   getScopedDuplicateResponseCleanupCandidates,
@@ -38,6 +39,7 @@ import {
   type LoaderResult,
 } from './effects.ts';
 import { pool } from '../pool.ts';
+import { loadFrontier } from './process.ts';
 
 type CrawlerStatusRow = IGetCrawlerStatusResult & {
   target: string;
@@ -733,13 +735,7 @@ async function processFrontier(
   await client.query('SAVEPOINT bulk_process');
 
   try {
-    const loader = loaderFor(row.federation, row.kind);
-    if (!loader) throw new Error(`Unknown loader ${row.federation}:${row.kind}`);
-    const content =
-      loader.mode === 'json'
-        ? zx.deepStrict(loader.schema).parse(row.content, { reportInput: true })
-        : row.content;
-    const effects = await loader.load(client, content);
+    const effects = await loadFrontier(client, row, 'strict');
     await client.query('RELEASE SAVEPOINT bulk_process');
     return { ok: true, effects };
   } catch (e) {
@@ -790,6 +786,7 @@ async function processLatest(
     await processClient.query('BEGIN');
     inTransaction = true;
     const effects = createLoaderEffects();
+    const successfulIds: string[] = [];
 
     let shouldStop = false;
     while (!shouldStop) {
@@ -812,6 +809,7 @@ async function processLatest(
 
         if (result.ok) {
           counts.processed += 1;
+          successfulIds.push(row.id);
           mergeLoaderEffects(effects, result.effects);
         } else {
           counts.failures += 1;
@@ -831,6 +829,9 @@ async function processLatest(
     }
 
     await flushLoaderEffects(processClient, effects);
+    if (successfulIds.length) {
+      await markFrontiersProcessSuccess.run({ ids: successfulIds }, processClient);
+    }
     await processClient.query(options.commit ? 'COMMIT' : 'ROLLBACK');
     inTransaction = false;
   } catch (e) {

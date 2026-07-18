@@ -423,7 +423,6 @@ async function loadWdsfRoundDetails(
   }
 
   const danceProgramIds = await getDanceProgramIds(
-    client,
     rounds.map((round) => round.dances.map((dance) => dance.code)),
   );
   const roundRows = await upsertCompetitionRoundsNonDestructive.run(

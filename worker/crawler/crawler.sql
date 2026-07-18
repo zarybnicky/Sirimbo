@@ -384,6 +384,19 @@ ORDER BY discovered_at, last_fetched_at
 FOR UPDATE OF f SKIP LOCKED
 LIMIT :limit;
 
+/* @name GetPendingProcessById */
+SELECT
+  f.federation AS "federation!",
+  f.kind AS "kind!",
+  jrc.content
+FROM crawler.frontier f
+JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
+JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
+WHERE f.id = :id::bigint
+  AND process_status = 'pending'
+  AND fetch_status = 'ok'
+FOR UPDATE OF f SKIP LOCKED;
+
 /* @name ReserveRequest */
 SELECT granted, allowed_at
   FROM crawler.reserve_request(:host::text);

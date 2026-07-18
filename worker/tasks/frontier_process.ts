@@ -4,14 +4,13 @@ import {
   markFrontierProcessError,
   markFrontiersProcessSuccess,
 } from '../crawler/crawler.queries.ts';
-import { loaderFor } from '../crawler/handlers.ts';
-import { zx } from '@traversable/zod';
 import { formatException } from '../crawler/error.ts';
 import {
   createLoaderEffects,
   flushLoaderEffects,
   mergeLoaderEffects,
 } from '../crawler/effects.ts';
+import { loadFrontier } from '../crawler/process.ts';
 
 type ProcessorStats = { count: number; ms: number; errors: number };
 
@@ -65,16 +64,7 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
           failedFrontier = frontier;
           failedAt = performance.now();
 
-          const loader = loaderFor(federation, kind);
-          if (!loader) throw new Error(`Unknown loader ${federation}:${kind}`);
-
-          let content = frontier.content;
-          if (loader.mode === 'json') {
-            content = zx.deepLoose(loader.schema).parse(content, {
-              reportInput: true,
-            });
-          }
-          mergeLoaderEffects(effects, await loader.load(client, content));
+          mergeLoaderEffects(effects, await loadFrontier(client, frontier, 'loose'));
 
           successfulBatch.push({
             federation,

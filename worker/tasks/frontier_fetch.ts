@@ -1,15 +1,25 @@
 import type { Task } from 'graphile-worker';
 import {
   getFrontierForUpdate,
+  getPendingProcessById,
   insertResponse,
   markFrontierFetchError,
   markFrontierFetchSuccess,
+  markFrontierProcessError,
+  markFrontiersProcessSuccess,
   markFrontierTransient,
   rescheduleFrontier,
   reserveRequest,
 } from '../crawler/crawler.queries.ts';
+import {
+  createLoaderEffects,
+  flushLoaderEffects,
+  mergeLoaderEffects,
+} from '../crawler/effects.ts';
+import { formatException } from '../crawler/error.ts';
 import { fetchResponse } from '../crawler/fetch.ts';
 import { loaderFor } from '../crawler/handlers.ts';
+import { loadFrontier } from '../crawler/process.ts';
 
 export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) => {
   const { withPgClient, logger } = helpers;
@@ -104,6 +114,30 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     } catch (e) {
       await client.query('ROLLBACK');
       throw e;
+    }
+  });
+
+  if (fetchStatus !== 'ok') return;
+
+  await withPgClient(async (client) => {
+    await client.query('BEGIN');
+    try {
+      const [pending] = await getPendingProcessById.run({ id }, client);
+      if (!pending) {
+        await client.query('ROLLBACK');
+        return;
+      }
+
+      const effects = createLoaderEffects();
+      mergeLoaderEffects(effects, await loadFrontier(client, pending, 'loose'));
+      await flushLoaderEffects(client, effects);
+      await markFrontiersProcessSuccess.run({ ids: [id] }, client);
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      const processError = formatException(e);
+      await markFrontierProcessError.run({ id, error: processError }, client);
+      logger.error(`Processing frontier ${id} failed: ${processError}`);
     }
   });
 };

@@ -277,7 +277,6 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
   );
 
   const roundProgramIds = await getDanceProgramIds(
-    client,
     result.rounds.map((round) => round.dances),
   );
   if (roundProgramIds.some((id) => !id)) {
