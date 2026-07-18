@@ -61,13 +61,13 @@ const seedFrontierParams = {
   keys: SEED_FRONTIERS.map(() => ''),
 };
 
-const loaderFrontiers = Object.entries(LOADERS).flatMap(([federation, loaders]) =>
+const knownKinds = Object.entries(LOADERS).flatMap(([federation, loaders]) =>
   Object.keys(loaders).map((kind) => ({ federation, kind })),
 );
 
 const fetchLoaderParams = {
-  loaderFederations: loaderFrontiers.map((frontier) => frontier.federation),
-  loaderKinds: loaderFrontiers.map((frontier) => frontier.kind),
+  loaderFederations: knownKinds.map((f) => f.federation),
+  loaderKinds: knownKinds.map((f) => f.kind),
 };
 
 export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, helpers) => {
