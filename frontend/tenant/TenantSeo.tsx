@@ -2,12 +2,11 @@
 
 import { useTenantConfig } from '@/ui/state/auth';
 import { DefaultSeo } from 'next-seo';
-import { usePathname } from 'next/navigation';
 
 export function TenantSeo() {
   const { origin, publicSite, seo } = useTenantConfig();
-  const pathname = usePathname() ?? '/';
-  const canonical = new URL(pathname, origin).toString();
+  // FIXME: const canonical = new URL(pathname, origin).toString();
+
   return (
     <DefaultSeo
       {...seo}
@@ -15,10 +14,10 @@ export function TenantSeo() {
         ...(seo.additionalMetaTags ?? []),
         { name: 'viewport', content: 'initial-scale=1,width=device-width' },
       ]}
-      canonical={canonical}
+      /* canonical={canonical} */
       openGraph={{
         ...seo.openGraph,
-        url: canonical,
+        // url: canonical,
         images: [
           ...(publicSite?.image
             ? [
