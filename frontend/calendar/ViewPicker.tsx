@@ -7,7 +7,6 @@ import {
 } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
 import { ChevronDown } from 'lucide-react';
-import React from 'react';
 
 const labels: Record<CalendarViewKey, string> = {
   month: 'Měsíc',
@@ -31,7 +30,7 @@ export function ViewPicker({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
+      <DropdownMenuTrigger className={buttonCls({ size: 'sm', variant: 'outline' })}>
         {labels[view]}
         <ChevronDown />
       </DropdownMenuTrigger>

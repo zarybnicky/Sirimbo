@@ -239,7 +239,7 @@ export function Calendar({
               setView={setView}
             />
           )}
-          {view.nav && (
+          {!dateRange && view.nav && (
             <DateNavigator date={date} setDate={setDate} view={view} bounds={dateRange} />
           )}
           <ViewPicker view={viewInput} setView={setView} views={availableViews} />
@@ -260,7 +260,7 @@ export function Calendar({
           {fetching && <Spinner />}
         </div>
 
-        <span className="grow px-3 text-right">{view.label(range)}</span>
+        <span className="px-3 text-right">{view.label(range)}</span>
       </div>
 
       <view.component

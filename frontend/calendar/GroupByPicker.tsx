@@ -8,13 +8,12 @@ import {
 } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
 import { ChevronDown } from 'lucide-react';
-import React from 'react';
 
 export function GroupByPicker() {
   const [groupBy, setGroupBy] = useAtom(groupByAtom);
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
+      <DropdownMenuTrigger className={buttonCls({ size: 'sm', variant: 'outline' })}>
         {groupBy === 'room'
           ? 'Seskupit podle místa'
           : groupBy === 'trainer'
