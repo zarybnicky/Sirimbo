@@ -2,9 +2,8 @@ import React from 'react';
 import type { DateRange, ViewProps } from '@/calendar/types';
 import Month from '@/calendar/Month';
 import { add, endOf, startOf } from 'date-arithmetic';
-import { format } from '@/calendar/localizer';
 import TimeGrid from '@/calendar/TimeGrid';
-import { fullDateFormatter } from '@/ui/format';
+import { fullDateFormatter, monthFormatter } from '@/ui/format';
 import Agenda from '@/calendar/Agenda';
 
 export type CalendarView = {
@@ -23,7 +22,7 @@ export const CalendarViews = {
       until: endOf(endOf(d, 'month'), 'week', 1),
     }),
     nav: (d: Date, dir: -1 | 1) => add(d, dir, 'month'),
-    label: ({ since }) => format(since, 'MMMM yyyy'),
+    label: ({ since }) => monthFormatter.format(since),
     supportsGrouping: false,
   },
   week: {
@@ -55,7 +54,7 @@ export const CalendarViews = {
       until: startOf(d, 'day'),
     }),
     nav: (d: Date, dir: -1 | 1) => add(d, dir, 'day'),
-    label: ({ since }) => format(since, 'cccc dd. MM. yyyy'),
+    label: ({ since }) => fullDateFormatter.format(since),
     supportsGrouping: true,
   },
   agenda: {

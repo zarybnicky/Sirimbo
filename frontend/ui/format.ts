@@ -62,7 +62,22 @@ export const formatInstanceName = (
   return name;
 };
 
-export const weekDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
+export const monthFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  month: 'long',
+  year: 'numeric',
+});
+
+export const weekdayFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  weekday: 'long',
+});
+
+export const dayFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  weekday: 'short',
+  day: 'numeric',
+  month: 'numeric',
+});
+
+export const longDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
   weekday: 'long',
   day: 'numeric',
   month: 'long',

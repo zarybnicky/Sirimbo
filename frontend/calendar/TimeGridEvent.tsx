@@ -1,4 +1,3 @@
-import { shortTimeIntl } from './localizer';
 import React, { useCallback } from 'react';
 import type { TimeSlotMetrics } from './TimeSlotMetrics';
 import type { CalendarEvent, DragDirection } from './types';
@@ -8,7 +7,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { type DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
-import { formatInstanceName } from '@/ui/format';
+import { formatInstanceName, shortTimeFormatter } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { useTenantConfig } from '@/ui/state/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
@@ -102,10 +101,10 @@ function InstanceTimeGridEvent({
     startsBeforeDay && startsAfterDay
       ? 'Celý den'
       : startsBeforeDay
-        ? ` – ${shortTimeIntl.format(event.end)}`
+        ? ` – ${shortTimeFormatter.format(event.end)}`
         : startsAfterDay
-          ? `${shortTimeIntl.format(event.start)} – `
-          : shortTimeIntl.format(event.start);
+          ? `${shortTimeFormatter.format(event.start)} – `
+          : shortTimeFormatter.format(event.start);
   for (const trainer of event.instance.trainersList ?? []) {
     const trainerLabel = formatTrainerLabel(trainer.person?.name, useTrainerInitials);
     if (trainerLabel) label += `, ${trainerLabel}`;

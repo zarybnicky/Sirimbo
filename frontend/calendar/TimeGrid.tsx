@@ -8,9 +8,10 @@ import { getSlotMetrics as getDateSlotMetrics } from './DateSlotMetrics';
 import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import TimeGutter from './TimeGutter';
-import { diff, format, inEventRange, merge, range } from './localizer';
+import { diff, inEventRange, merge, range } from './localizer';
 import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
 import type { CalendarEvent, DateRange, Resource, ViewProps } from './types';
+import { dayFormatter } from '@/ui/format';
 
 type Grid = {
   days: readonly Date[];
@@ -290,7 +291,7 @@ function DayButton({ today, date }: { today: Date; date: Date }) {
         }}
       >
         <span role="columnheader" aria-sort="none">
-          {format(date, 'dd eee')}
+          {dayFormatter.format(date)}
         </span>
       </button>
     </div>

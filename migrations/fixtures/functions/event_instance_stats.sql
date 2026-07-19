@@ -21,8 +21,6 @@ as $$
   ) actual
   where instance.id = p_instance_id and instance.stats is distinct from actual.stats;
 $$;
-revoke execute on function app_private.refresh_event_instance_stats(bigint)
-  from public, anonymous;
 
 create or replace function app_private.tg_eir__refresh_stats_stmt()
   returns trigger
@@ -63,9 +61,3 @@ begin
   return null;
 end;
 $$;
-select verify_function(
-  'app_private.tg_eir__refresh_stats_stmt',
-  'public.event_instance_registration'
-);
-revoke execute on function app_private.tg_eir__refresh_stats_stmt()
-  from public, anonymous;

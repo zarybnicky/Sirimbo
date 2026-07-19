@@ -1,0 +1,21 @@
+fragment EventConflict on EventConflict {
+  person {
+    id
+    name
+  }
+  first: firstInstance {
+    ...EventWithTrainer
+  }
+  second: secondInstance {
+    ...EventWithTrainer
+  }
+}
+
+query EventConflictsReport($since: Datetime!, $until: Datetime) {
+  attendeeConflicts: eventOverlapsAttendeeReportList(pSince: $since, pUntil: $until) {
+    ...EventConflict
+  }
+  trainerConflicts: eventOverlapsTrainerReportList(pSince: $since, pUntil: $until) {
+    ...EventConflict
+  }
+}

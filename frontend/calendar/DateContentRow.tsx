@@ -7,12 +7,13 @@ import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
 import { eventSegments, type Segment } from './common';
-import { diff, format, merge } from './localizer';
+import { diff, merge } from './localizer';
 import type { CalendarEvent, Resource } from './types';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
+import { numericDateFormatter } from '@/ui/format';
 
 type DateContentRowProps = {
   date: Date;
@@ -271,7 +272,7 @@ function DateContentRow({
                   onDrillDown?.(date);
                 }}
               >
-                {format(date, 'dd')}
+                {numericDateFormatter.format(date)}
               </button>
             </div>
           ))}

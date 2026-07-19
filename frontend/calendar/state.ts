@@ -11,9 +11,8 @@ import type {
 
 export type CalendarInstanceConflict = {
   id: string;
-  role: 'attendee' | 'trainer';
   personName: string | null;
-  otherEventName: string;
+  otherEventName: string | undefined;
   otherSince: string;
   otherUntil: string;
 };

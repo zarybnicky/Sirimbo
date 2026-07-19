@@ -2880,6 +2880,33 @@ enum EventCapacityUnit {
   REGISTRATIONS
 }
 
+type EventConflict {
+  firstEventName: String
+
+  """
+  Reads a single `EventInstance` that is related to this `EventConflict`.
+  """
+  firstInstance: EventInstance
+  firstInstanceId: BigInt!
+  firstSince: Datetime
+  firstUntil: Datetime
+  overlapRange: DatetimeRange!
+
+  """Reads a single `Person` that is related to this `EventConflict`."""
+  person: Person
+  personId: BigInt!
+  personName: String
+  secondEventName: String
+
+  """
+  Reads a single `EventInstance` that is related to this `EventConflict`.
+  """
+  secondInstance: EventInstance
+  secondInstanceId: BigInt!
+  secondSince: Datetime
+  secondUntil: Datetime
+}
+
 type EventExternalRegistration {
   birthDate: Date
   createdAt: Datetime!
@@ -3865,21 +3892,6 @@ enum EventLessonDemandsOrderBy {
   TRAINER_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-}
-
-"""Pair of overlapping event instances for a single attendee or trainer."""
-type EventOverlapsConflict {
-  firstEventName: String
-  firstInstanceId: BigInt
-  firstSince: Datetime
-  firstUntil: Datetime
-  overlapRange: DatetimeRange
-  personId: BigInt
-  personName: String
-  secondEventName: String
-  secondInstanceId: BigInt
-  secondSince: Datetime
-  secondUntil: Datetime
 }
 
 enum EventRegistrationSource {
@@ -6520,7 +6532,7 @@ type Query {
     offset: Int
     pSince: Datetime
     pUntil: Datetime
-  ): [EventOverlapsConflict!]
+  ): [EventConflict!]
   eventOverlapsTrainerReportList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -6529,7 +6541,7 @@ type Query {
     offset: Int
     pSince: Datetime
     pUntil: Datetime
-  ): [EventOverlapsConflict!]
+  ): [EventConflict!]
 
   """Get a single `EventSeries`."""
   eventSeries(id: BigInt!): EventSeries

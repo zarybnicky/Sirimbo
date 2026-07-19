@@ -10,8 +10,6 @@ import {
   startOf,
   type Unit,
 } from 'date-arithmetic';
-import { format as dateFnsFormat } from 'date-fns/format';
-import { cs } from 'date-fns/locale/cs';
 
 const MILLI = {
   seconds: 1000,
@@ -65,11 +63,3 @@ export function inEventRange(
 ) {
   return lte(event.start, range.end, 'day') && gte(event.end, range.start, 'minutes');
 }
-
-export function format(value: string | Date, format: string) {
-  return dateFnsFormat(new Date(value), format, { locale: cs });
-}
-
-export const shortTimeIntl = new Intl.DateTimeFormat('cs-CZ', {
-  timeStyle: 'short',
-});

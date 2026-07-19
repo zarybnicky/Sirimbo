@@ -12,7 +12,7 @@ import Selection, {
 } from './Selection';
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
-import { diff, format, range } from './localizer';
+import { diff, range } from './localizer';
 import type { CalendarEvent, CalendarInstanceEvent, Resource } from './types';
 import { useAuth } from '@/ui/use-auth';
 import {
@@ -29,6 +29,7 @@ import {
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { cn } from '@/lib/cn';
 import { layoutEvents } from '@/calendar/layout';
+import { shortTimeFormatter } from '@/ui/format';
 
 const EMPTY = {};
 
@@ -506,8 +507,8 @@ function DayColumn({
           style={{ top: backgroundState.top, height: backgroundState.height }}
         >
           <span>
-            {format(backgroundState.startDate, 'p')} –{' '}
-            {format(backgroundState.endDate, 'p')}
+            {shortTimeFormatter.format(backgroundState.startDate)} –{' '}
+            {shortTimeFormatter.format(backgroundState.endDate)}
           </span>
         </div>
       )}

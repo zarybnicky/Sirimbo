@@ -1,6 +1,7 @@
 import React from 'react';
 import DateContentRow from './DateContentRow';
-import { ceil, diff, format, inEventRange, range } from './localizer';
+import { ceil, diff, inEventRange, range } from './localizer';
+import { weekdayFormatter } from '@/ui/format';
 import type { ViewProps } from './types';
 import { startOf } from 'date-arithmetic';
 
@@ -33,7 +34,7 @@ function MonthView({ range: { since, until }, events }: ViewProps) {
         {(weeks[0] ?? []).map((day, idx) => (
           <div key={`header_${idx}`} className="rbc-header">
             <span role="columnheader" aria-sort="none">
-              {format(day, 'cccc')}
+              {weekdayFormatter.format(day)}
             </span>
           </div>
         ))}

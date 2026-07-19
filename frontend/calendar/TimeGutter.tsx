@@ -1,9 +1,9 @@
-import React from 'react';
-import { getSlotMetrics } from './TimeSlotMetrics';
-import { shortTimeIntl } from './localizer';
-import { useAtomValue } from 'jotai';
-import { maxTimeAtom, minTimeAtom, stepAtom, timeslotsAtom } from './state';
 import { cn } from '@/lib/cn';
+import { shortTimeFormatter } from '@/ui/format';
+import { useAtomValue } from 'jotai';
+import React from 'react';
+import { maxTimeAtom, minTimeAtom, stepAtom, timeslotsAtom } from './state';
+import { getSlotMetrics } from './TimeSlotMetrics';
 
 type TimeGutterProps = {
   date: Date;
@@ -33,7 +33,7 @@ function TimeGutter({ gutterRef, date }: TimeGutterProps) {
                     'font-bold': slotMetrics.dateIsInGroup(date, idx),
                   })}
                 >
-                  {shortTimeIntl.format(value)}
+                  {shortTimeFormatter.format(value)}
                 </span>
               )}
             </div>

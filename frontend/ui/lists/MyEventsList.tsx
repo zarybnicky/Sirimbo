@@ -1,7 +1,7 @@
 import { EventInstanceRangeDocument, EventWithTrainerFragment } from '@/graphql/Event';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
-import { capitalize, weekDayFormatter } from '@/ui/format';
+import { capitalize, longDayFormatter } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -61,7 +61,7 @@ export function MyEventsList() {
           >
             <h6 className="ml-3">
               <div className="font-bold mb-1">
-                {capitalize(weekDayFormatter.format(new Date(date)))}
+                {capitalize(longDayFormatter.format(new Date(date)))}
               </div>
               <div className="text-sm text-neutral-11">{location}</div>
             </h6>

@@ -4,14 +4,9 @@ import {
   RadioButtonGroup,
   type RadioButtonGroupItem,
 } from '@/ui/fields/RadioButtonGroupElement';
-import { capitalize } from '@/ui/format';
+import { capitalize, dayFormatter } from '@/ui/format';
 import { add, startOf } from 'date-arithmetic';
 
-const dayFormatter = new Intl.DateTimeFormat('cs-CZ', {
-  weekday: 'short',
-  day: 'numeric',
-  month: 'numeric',
-});
 const dayId = (date: Date) => String(startOf(date, 'day').getTime());
 
 export function BoundedDayPicker({
