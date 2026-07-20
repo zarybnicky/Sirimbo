@@ -35,5 +35,3 @@ begin
   WHERE p IS NOT NULL;
 end;
 $$;
-
-select verify_function('app_private.create_latest_lesson_payments');

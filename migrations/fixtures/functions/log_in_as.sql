@@ -1,8 +1,8 @@
-drop function if exists app_private.log_in_as;
 drop function if exists log_in_as;
 
-CREATE FUNCTION public.log_in_as(id bigint) RETURNS login_result
-  LANGUAGE sql STRICT SECURITY DEFINER
+CREATE FUNCTION log_in_as(id bigint) RETURNS login_result
+  LANGUAGE sql
+  STRICT SECURITY DEFINER
   SET search_path TO pg_catalog, public, pg_temp
 AS $$
   select (
@@ -11,4 +11,4 @@ AS $$
   );
 $$;
 
-GRANT ALL ON FUNCTION public.log_in_as TO administrator;
+GRANT ALL ON FUNCTION log_in_as TO administrator;

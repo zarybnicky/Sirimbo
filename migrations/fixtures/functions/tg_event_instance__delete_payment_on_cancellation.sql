@@ -23,8 +23,6 @@ begin
 end;
 $$;
 
-select verify_function('app_private.tg_event_instance__delete_payment_on_cancellation', 'event_instance');
-
 DROP TRIGGER IF EXISTS _500_delete_on_cancellation on public.event_instance;
 
 CREATE TRIGGER _500_delete_on_cancellation

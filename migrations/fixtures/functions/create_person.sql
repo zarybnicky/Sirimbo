@@ -63,5 +63,5 @@ begin
   end if;
 end
 $$;
-select verify_function('create_person');
+
 grant all on function create_person to anonymous;

@@ -1,17 +1,17 @@
-create or replace function public.move_event_instance(
+create or replace function move_event_instance(
   id bigint,
   since timestamptz,
   until timestamptz,
   trainer_person_id bigint default null,
   location_id bigint default null,
   location_text text default null
-) returns public.event_instance
+) returns event_instance
   language plpgsql
 as $$
 declare
-  inst public.event_instance;
+  inst event_instance;
 begin
-  update public.event_instance
+  update event_instance
   set since = move_event_instance.since,
       until = move_event_instance.until,
       location_id = case
@@ -31,24 +31,20 @@ begin
   end if;
 
   if trainer_person_id is not null then
-    update public.event_instance_trainer
+    update event_instance_trainer
     set person_id = trainer_person_id
     where instance_id = inst.id
-      and 1 = (select count(*) from public.event_instance_trainer where instance_id = inst.id);
+      and 1 = (select count(*) from event_instance_trainer where instance_id = inst.id);
 
-    if not found
-      and not exists (select 1 from public.event_instance_trainer where instance_id = inst.id)
+    if not found and not exists (select 1 from event_instance_trainer where instance_id = inst.id)
     then
-      insert into public.event_instance_trainer (instance_id, person_id)
+      insert into event_instance_trainer (instance_id, person_id)
       values (inst.id, trainer_person_id);
     end if;
   end if;
 
-  return (select instance from public.event_instance instance where instance.id = inst.id);
+  return (select instance from event_instance instance where instance.id = inst.id);
 end;
 $$;
 
-select verify_function('public.move_event_instance');
-grant execute on function public.move_event_instance(
-  bigint, timestamptz, timestamptz, bigint, bigint, text
-) to anonymous;
+grant execute on function move_event_instance to anonymous;

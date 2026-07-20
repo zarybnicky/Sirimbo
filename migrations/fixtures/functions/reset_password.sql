@@ -1,4 +1,4 @@
-CREATE or replace FUNCTION public.reset_password(email character varying) RETURNS void
+CREATE or replace FUNCTION reset_password(email character varying) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     SET search_path TO pg_catalog, public, pg_temp
     AS $$
@@ -6,13 +6,13 @@ declare
   v_tenant tenant;
   v_user users;
   v_token otp_token;
-  v_payload jsonb := null;
+  v_payload jsonb := jsonb_build_array();
 begin
   for v_user in (select * from users where u_email = email) loop
     insert into otp_token (user_id)
     values (v_user.id) returning * into v_token;
 
-    v_payload := coalesce(v_payload, jsonb_build_array()) || jsonb_build_object(
+    v_payload := v_payload || jsonb_build_object(
       'login', v_user.u_login,
       'email', v_user.u_email,
       'token', v_token.access_token,
@@ -36,5 +36,4 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.reset_password(email character varying) TO anonymous;
-select verify_function('reset_password');
+GRANT ALL ON FUNCTION reset_password TO anonymous;

@@ -16,7 +16,7 @@ create or replace function app_private.event_instance_manager_person_ids(p_insta
 $$;
 
 create or replace function app_private.refresh_event_instance_manager_person_ids(p_instance_id bigint)
-  returns boolean language sql security definer
+  returns void language sql security definer
   set search_path = pg_catalog, pg_temp as $$
   with recursive affected as (
     select id from public.event_instance where id = p_instance_id
@@ -27,21 +27,13 @@ create or replace function app_private.refresh_event_instance_manager_person_ids
   ), desired as (
     select id, app_private.event_instance_manager_person_ids(id) as person_ids
     from affected
-  ), changed as (
-    update public.event_instance instance
-    set manager_person_ids = desired.person_ids
-    from desired
-    where instance.id = desired.id
-      and instance.manager_person_ids is distinct from desired.person_ids
-    returning 1
   )
-  select exists(select 1 from changed);
+  update public.event_instance instance
+  set manager_person_ids = desired.person_ids
+  from desired
+  where instance.id = desired.id
+    and instance.manager_person_ids is distinct from desired.person_ids
 $$;
-
-revoke execute on function app_private.event_instance_manager_person_ids(bigint)
-  from public, anonymous;
-grant execute on function app_private.refresh_event_instance_manager_person_ids(bigint)
-  to anonymous;
 
 create or replace function app_private.tg_event_instance__refresh_manager_person_ids()
   returns trigger language plpgsql as $$
@@ -50,9 +42,6 @@ begin
   return null;
 end;
 $$;
-select verify_function('app_private.tg_event_instance__refresh_manager_person_ids', 'public.event_instance');
-revoke execute on function app_private.tg_event_instance__refresh_manager_person_ids()
-  from public, anonymous;
 
 drop trigger if exists _500_refresh_manager_person_ids_from_parent on public.event_instance;
 create trigger _500_refresh_manager_person_ids_from_parent
@@ -74,8 +63,6 @@ begin
   return null;
 end;
 $$;
-revoke execute on function app_private.tg_event_instance_trainer__refresh_manager_person_ids()
-  from public, anonymous;
 
 drop trigger if exists _500_refresh_manager_person_ids on public.event_instance_trainer;
 create trigger _500_refresh_manager_person_ids

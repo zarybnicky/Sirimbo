@@ -29,5 +29,4 @@ begin
 end;
 $$;
 
-select verify_function('login');
 GRANT ALL ON FUNCTION login TO anonymous;

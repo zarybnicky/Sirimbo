@@ -19,9 +19,7 @@ begin
     return;
   end if;
 
-  if not (v_is_visible
-      and (v_since is null or v_since <= now())
-      and (v_until is null or v_until > now())) then
+  if not (v_is_visible and (v_since is null or v_since <= now()) and (v_until is null or v_until > now())) then
     return;
   end if;
 
@@ -81,7 +79,6 @@ begin
   );
 end;
 $$;
-select verify_function('app_private.queue_announcement_notifications');
 comment on function app_private.queue_announcement_notifications is '@omit';
 grant all on function app_private.queue_announcement_notifications to anonymous;
 
@@ -107,9 +104,7 @@ begin
     if TG_OP = 'INSERT' then
       was_published := false;
     else
-      select * into old_row
-      from oldtable
-      where id = rec.id;
+      select * into old_row from oldtable where id = rec.id;
 
       if not found then
         was_published := false;
@@ -128,7 +123,6 @@ begin
   return null;
 end;
 $$;
-select verify_function('app_private.tg_announcement__after_write', 'announcement');
 
 create or replace function app_private.tg_announcement_audience__after_write()
 returns trigger
@@ -140,22 +134,17 @@ declare
   rec record;
 begin
   if TG_OP = 'DELETE' then
-    for rec in (
-      select distinct announcement_id from oldtable
-    ) loop
+    for rec in (select distinct announcement_id from oldtable) loop
       perform app_private.queue_announcement_notifications(rec.announcement_id);
     end loop;
   else
-    for rec in (
-      select distinct announcement_id from newtable
-    ) loop
+    for rec in (select distinct announcement_id from newtable) loop
       perform app_private.queue_announcement_notifications(rec.announcement_id);
     end loop;
   end if;
   return null;
 end;
 $$;
-select verify_function('app_private.tg_announcement_audience__after_write', 'announcement_audience');
 
 drop trigger if exists _600_notify_announcement_insert on announcement;
 drop trigger if exists _600_notify_announcement_update on announcement;

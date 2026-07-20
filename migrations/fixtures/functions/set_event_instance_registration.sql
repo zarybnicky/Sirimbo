@@ -1,7 +1,6 @@
-drop function if exists public.set_event_instance_registration(bigint, bigint, bigint, boolean);
-drop function if exists public.set_event_instance_registration(bigint, bigint, bigint, boolean, text);
+drop function if exists set_event_instance_registration;
 
-create or replace function public.set_event_instance_registration(
+create or replace function set_event_instance_registration(
   p_instance_id bigint,
   p_person_id bigint,
   p_couple_id bigint,
@@ -9,7 +8,7 @@ create or replace function public.set_event_instance_registration(
   p_note text default null,
   p_lesson_trainer_ids bigint[] default null,
   p_lesson_counts integer[] default null
-) returns public.event_instance_registration
+) returns event_instance_registration
   language plpgsql
   security definer
   set search_path = pg_catalog, public, pg_temp
@@ -54,22 +53,11 @@ begin
     raise exception 'INSTANCE_NOT_FOUND' using errcode = '22023';
   end if;
 
-  is_self := (p_person_id is not null
-      and p_person_id = any(coalesce(current_person_ids(), '{}'::bigint[])))
-    or (p_couple_id is not null
-      and p_couple_id = any(coalesce(current_couple_ids(), '{}'::bigint[])));
+  is_self := (p_person_id is not null and p_person_id = any(current_person_ids()))
+    or (p_couple_id is not null and p_couple_id = any(current_couple_ids()));
   is_manager := app_private.is_system_admin(current_user_id())
-    or exists (
-      select 1 from current_tenant_administrator
-      where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
-    )
-    or (
-      exists (
-        select 1 from current_tenant_trainer
-        where person_id = any(coalesce(current_person_ids(), '{}'::bigint[]))
-      )
-      and app_private.can_trainer_edit_instance(p_instance_id)
-    );
+    or exists (select 1 from current_tenant_administrator where person_id = any(current_person_ids()))
+    or app_private.can_trainer_edit_instance(p_instance_id);
 
   if not is_self and not is_manager then
     raise exception 'ACCESS_DENIED' using errcode = '42501';
@@ -98,8 +86,7 @@ begin
     update event_instance_registration
     set registration_status = 'cancelled',
         target_cohort_id = null,
-        source = case when id = registration.id
-          then registration_source end
+        source = case when id = registration.id then registration_source end
     where id = registration.id or parent_registration_id = registration.id;
 
     select * into registration from event_instance_registration where id = registration.id;
@@ -174,17 +161,13 @@ begin
     where registration_id = registration.id
       and trainer_id <> all(p_lesson_trainer_ids);
 
-    for lesson_demand in
+    for request in
       select demand.trainer_id, demand.lesson_count
       from unnest(p_lesson_trainer_ids, p_lesson_counts)
         demand(trainer_id, lesson_count)
       order by demand.trainer_id
     loop
-      perform set_lesson_demand(
-        registration.id,
-        lesson_demand.trainer_id,
-        lesson_demand.lesson_count
-      );
+      perform set_lesson_demand(registration.id, request.trainer_id, request.lesson_count);
     end loop;
   end if;
 
@@ -192,8 +175,4 @@ begin
 end;
 $$;
 
-select verify_function('public.set_event_instance_registration');
-grant execute on function public.set_event_instance_registration(
-  bigint, bigint, bigint, boolean, text, bigint[], integer[]
-)
-  to anonymous;
+grant execute on function set_event_instance_registration to anonymous;

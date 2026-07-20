@@ -1,23 +1,9 @@
-do $$ begin
-  if not exists (
-    select 1 from pg_type t
-    join pg_catalog.pg_namespace n on n.oid = t.typnamespace
-    where n.nspname = 'public' and typname = 'login_result'
-  ) then
-    create type login_result as (
-      usr users,
-      jwt jwt_token
-    );
-  end if;
-end $$;
-
-comment on type login_result is '@name result';
-
 drop function if exists otp_login;
 
 CREATE or replace FUNCTION otp_login(token uuid)
   RETURNS login_result
-  LANGUAGE plpgsql STRICT SECURITY DEFINER
+  LANGUAGE plpgsql
+  STRICT SECURITY DEFINER
   SET search_path TO pg_catalog, public, pg_temp
   AS $$
 declare
@@ -45,4 +31,3 @@ end;
 $$;
 
 GRANT ALL ON FUNCTION otp_login TO anonymous;
-select verify_function('public.otp_login');

@@ -1,28 +1,28 @@
-create or replace function public.system_admin_update_tenant(
+create or replace function system_admin_update_tenant(
   tenant_id bigint,
   name text default null,
   description text default null,
   bank_account text default null,
   origins text[] default null,
-  address public.address_domain default null,
+  address address_domain default null,
   cz_ico text default null,
   cz_dic text default null
 )
-returns public.tenant
+returns tenant
 language plpgsql
 volatile
 security definer
 set search_path = public, pg_temp
 as $$
 declare
-  v_tenant public.tenant;
+  v_tenant tenant;
 begin
   if not app_private.is_system_admin(current_user_id()) then
     raise exception 'permission denied for system admin tenant update'
       using errcode = '42501';
   end if;
 
-  update public.tenant t
+  update tenant t
   set
     name = coalesce(system_admin_update_tenant.name, t.name),
     description = coalesce(system_admin_update_tenant.description, t.description),
@@ -42,7 +42,4 @@ begin
 end;
 $$;
 
-comment on function public.system_admin_update_tenant is 'Allows system administrators to update tenant metadata without switching tenant context.';
-grant execute on function public.system_admin_update_tenant to anonymous;
-
-select verify_function('public.system_admin_update_tenant');
+grant execute on function system_admin_update_tenant to anonymous;

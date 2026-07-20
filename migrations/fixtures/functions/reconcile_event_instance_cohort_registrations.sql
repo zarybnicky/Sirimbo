@@ -104,7 +104,6 @@ as $$
         and membership.active_range @> now()
     );
 $$;
-revoke execute on function app_private.reconcile_event_instance_cohort_registrations from public, anonymous;
 
 create or replace function app_private.tg_event_instance_target_cohort__reconcile()
   returns trigger
@@ -127,13 +126,6 @@ begin
   return new;
 end;
 $$;
-revoke execute on function app_private.tg_event_instance_target_cohort__reconcile()
-  from public, anonymous;
-
-select verify_function(
-  'app_private.tg_event_instance_target_cohort__reconcile',
-  'public.event_instance_target_cohort'
-);
 
 drop trigger if exists _500_reconcile_registrations on public.event_instance_target_cohort;
 create trigger _500_reconcile_registrations

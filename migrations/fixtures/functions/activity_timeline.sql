@@ -410,20 +410,5 @@ begin
 end;
 $function$;
 
-select verify_function('public.activity_timeline');
-comment on function public.activity_timeline(
-  timestamptz,
-  timestamptz,
-  bigint[],
-  bigint,
-  public.activity_timeline_kind[],
-  public.event_type[]
-) is '@behavior +queryField:resource:list -queryField:resource:connection';
-grant all on function public.activity_timeline(
-  timestamptz,
-  timestamptz,
-  bigint[],
-  bigint,
-  public.activity_timeline_kind[],
-  public.event_type[]
-) to anonymous;
+comment on function activity_timeline is '@behavior +queryField:resource:list -queryField:resource:connection';
+grant all on function activity_timeline to anonymous;

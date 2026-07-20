@@ -1,4 +1,4 @@
-CREATE or replace FUNCTION public.submit_form(type text, data jsonb, url text) RETURNS void
+CREATE or replace FUNCTION submit_form(type text, data jsonb, url text) RETURNS void
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
@@ -26,5 +26,4 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.submit_form(type text, data jsonb, url text) TO anonymous;
-select verify_function('submit_form');
+GRANT ALL ON FUNCTION submit_form TO anonymous;

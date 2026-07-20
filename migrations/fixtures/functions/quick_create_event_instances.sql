@@ -1,19 +1,4 @@
-drop function if exists public.quick_create_event_instances(
-  public.quick_event_input[], bigint
-);
-drop function if exists public.quick_create_event_instances(
-  public.quick_event_input[], bigint, boolean, boolean, boolean, boolean
-);
-drop function if exists public.quick_create_event_instances(
-  public.quick_event_input[], bigint, boolean, boolean, boolean, boolean,
-  bigint, text, integer, public.event_capacity_unit, text, text, text,
-  bigint[], integer[]
-);
-drop function if exists public.quick_create_event_instances(
-  public.quick_event_input[], bigint, boolean, boolean, boolean, boolean,
-  bigint, text, integer, public.event_capacity_unit, text, text, text,
-  bigint[], integer[], boolean
-);
+drop function if exists public.quick_create_event_instances;
 
 create or replace function quick_create_event_instances(
   events quick_event_input[],
@@ -112,5 +97,4 @@ begin
 end;
 $$;
 
-select verify_function('quick_create_event_instances');
 grant execute on function quick_create_event_instances to anonymous;

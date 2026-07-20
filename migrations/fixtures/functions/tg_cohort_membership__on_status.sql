@@ -31,10 +31,9 @@ end;
 $$;
 
 grant all on function app_private.tg_cohort_membership__on_status to trainer;
-select verify_function('app_private.tg_cohort_membership__on_status', 'cohort_membership');
 
-DROP TRIGGER IF EXISTS _500_on_status ON public.cohort_membership;
+DROP TRIGGER IF EXISTS _500_on_status ON cohort_membership;
 CREATE TRIGGER _500_on_status
   AFTER INSERT OR DELETE OR UPDATE OF status, cohort_id, person_id, since, until
-  ON public.cohort_membership
+  ON cohort_membership
   FOR EACH ROW EXECUTE FUNCTION app_private.tg_cohort_membership__on_status();

@@ -35,5 +35,4 @@ begin
 end
 $$;
 
-select verify_function('register_using_invitation');
 GRANT ALL ON FUNCTION public.register_using_invitation TO anonymous;

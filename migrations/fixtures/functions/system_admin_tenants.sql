@@ -1,4 +1,4 @@
-create or replace function public.system_admin_tenants()
+create or replace function system_admin_tenants()
 returns table (
   id bigint,
   name text,
@@ -7,7 +7,7 @@ returns table (
   origins text[],
   cz_ico text,
   cz_dic text,
-  address public.address_domain,
+  address address_domain,
   membership_count bigint,
   trainer_count bigint,
   administrator_count bigint,
@@ -40,22 +40,15 @@ begin
     administrators.administrator_count,
     load.session_count_last_30_days,
     load.session_count_per_trainer_last_30_days
-  from public.tenant t
+  from tenant t
   cross join lateral (
-    select
-      count(*) filter (where tm.status = 'active') as membership_count
-    from public.tenant_membership tm
-    where tm.tenant_id = t.id
+    select count(*) as membership_count from tenant_membership tm where tm.tenant_id = t.id and tm.status = 'active'
   ) as membership_counts
   cross join lateral (
-    select count(*) filter (where tt.status = 'active') as trainer_count
-    from public.tenant_trainer tt
-    where tt.tenant_id = t.id
+    select count(*) as trainer_count from tenant_trainer tt where tt.tenant_id = t.id where tt.status = 'active'
   ) as staffing
   cross join lateral (
-    select count(*) filter (where ta.status = 'active') as administrator_count
-    from public.tenant_administrator ta
-    where ta.tenant_id = t.id
+    select count(*) as administrator_count from tenant_administrator ta where ta.tenant_id = t.id and ta.status = 'active'
   ) as administrators
   cross join lateral (
     select
@@ -64,7 +57,7 @@ begin
         when coalesce(staffing.trainer_count, 0) > 0 then count(*)::double precision / staffing.trainer_count::double precision
         else 0::double precision
       end as session_count_per_trainer_last_30_days
-    from public.event_instance ei
+    from event_instance ei
     where ei.tenant_id = t.id
       and coalesce(ei.is_cancelled, false) = false
       and ei.since >= now() - interval '30 days'
@@ -73,8 +66,4 @@ begin
 end;
 $$;
 
-comment on function public.system_admin_tenants() is 'Lists tenants with aggregate membership, staffing, and recent session statistics for system administrators.';
-
-grant execute on function public.system_admin_tenants() to anonymous;
-
-select verify_function('public.system_admin_tenants');
+grant execute on function system_admin_tenants to anonymous;
