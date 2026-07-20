@@ -1,4 +1,4 @@
-CREATE or replace FUNCTION public.resolve_payment_with_credit(p public.payment) RETURNS public.payment
+CREATE or replace FUNCTION resolve_payment_with_credit(p payment) RETURNS payment
   LANGUAGE plpgsql
 AS $$
 declare
@@ -50,6 +50,6 @@ begin
 end
 $$;
 
-COMMENT ON FUNCTION public.resolve_payment_with_credit(p public.payment) IS '@omit';
+COMMENT ON FUNCTION resolve_payment_with_credit IS '@omit';
 
-GRANT ALL ON FUNCTION public.resolve_payment_with_credit(p public.payment) TO anonymous;
+GRANT ALL ON FUNCTION resolve_payment_with_credit TO anonymous;

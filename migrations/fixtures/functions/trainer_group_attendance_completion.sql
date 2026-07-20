@@ -1,7 +1,7 @@
-create or replace function public.trainer_group_attendance_completion(
+create or replace function trainer_group_attendance_completion(
   since timestamp with time zone default null,
   until timestamp with time zone default null
-) returns setof public.trainer_group_attendance_completion
+) returns setof trainer_group_attendance_completion
   language sql stable as $_$
   with filtered_instances as (
     select ei.id
@@ -17,10 +17,7 @@ create or replace function public.trainer_group_attendance_completion(
     select effective_trainer.person_id, fi.id as instance_id
     from filtered_instances fi
     join event_instance instance on instance.id = fi.id
-    cross join lateral app_private.event_instance_trainers_at(
-      instance,
-      instance.since
-    ) effective_trainer
+    cross join lateral app_private.event_instance_trainers_at(instance, instance.since) effective_trainer
   ),
   attendance_stats as (
     select
@@ -71,5 +68,5 @@ create or replace function public.trainer_group_attendance_completion(
   order by filled_ratio asc nulls last, person_id;
 $_$;
 
-comment on function public.trainer_group_attendance_completion(timestamp with time zone, timestamp with time zone) is '@simpleCollections only';
-grant all on function public.trainer_group_attendance_completion(timestamp with time zone, timestamp with time zone) to anonymous;
+comment on function trainer_group_attendance_completion is '@simpleCollections only';
+grant all on function trainer_group_attendance_completion to anonymous;
