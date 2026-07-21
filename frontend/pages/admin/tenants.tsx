@@ -88,7 +88,7 @@ export default function SystemAdminTenantsPage() {
   const snapPoints = React.useMemo(() => [0, 0.2, 1], []); // must include 0 and 1 :contentReference[oaicite:1]{index=1}
 
   useLayoutEffect(() => {
-    if (!!selected) document.querySelector('body')!.style.overscrollBehavior = 'none';
+    if (selected) document.querySelector('body')!.style.overscrollBehavior = 'none';
 
     return () => {
       document.querySelector('body')!.style.overscrollBehavior = 'unset';

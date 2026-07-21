@@ -23,7 +23,7 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
   if (editing) {
     return (
       <div className={cardCls()}>
-        <AnnouncementForm id={item.id} data={item} onSuccess={stopEditing} />;
+        <AnnouncementForm id={item.id} data={item} onSuccess={stopEditing} />
       </div>
     );
   }

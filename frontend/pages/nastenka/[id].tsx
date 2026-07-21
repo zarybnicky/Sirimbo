@@ -54,9 +54,7 @@ export default function AnnouncementPage() {
           ) : editing ? (
             <AnnouncementForm id={data.id} data={data} onSuccess={stopEditing} />
           ) : (
-            <>
-              <RichTextView className="max-w-none" value={data.body} />
-            </>
+            <RichTextView className="max-w-none" value={data.body} />
           )}
         </div>
       </WithSidebar>

@@ -1,24 +1,33 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.3.3/schema.json",
-	"assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
+  "$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
     }
   },
   "linter": {
     "enabled": true,
+    "domains": {
+      "next": "recommended",
+      "react": "recommended",
+      "types": "recommended",
+      "project": "recommended"
+    },
     "rules": {
-      "recommended": true
+      "preset": "recommended",
+      "nursery": {
+        "recommended": true
+      }
     }
   },
   "files": {
     "includes": [
       "**",
       "!.next",
+      "!**/*.svg",
       "!public/sw.js",
-      "!graphql"
+      "!frontend/graphql/",
+      "!graphql/"
     ]
   },
   "javascript": {
