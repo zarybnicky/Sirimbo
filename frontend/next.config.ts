@@ -128,38 +128,14 @@ export default compose(
   },
 
   async rewrites() {
-    if (process.env.NODE_ENV !== 'production') {
-      const graphqlServer = process.env.GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz';
-      const externalServer = process.env.EXTERNAL_SERVER_URL || graphqlServer;
-      return [
-        { source: '/member/download', destination: `${graphqlServer}/member/download` },
-        {
-          source: '/system-admin/:path*',
-          destination: `${graphqlServer}/system-admin/:path*`,
-        },
-        {
-          source: '/galerie/:path*',
-          destination: `${externalServer ?? ''}/galerie/:path*`,
-        },
-        { source: '/graphql', destination: `${graphqlServer}/graphql` },
-        { source: '/starlet/graphql', destination: `${graphqlServer}/graphql` },
-        { source: '/graphiql', destination: `${graphqlServer}/graphiql` },
-      ];
-    } else {
-      return [
-        {
-          source: '/member/download',
-          destination: 'https://api.rozpisovnik.cz/member/download',
-        },
-        {
-          source: '/system-admin/:path*',
-          destination: 'https://api.rozpisovnik.cz/system-admin/:path*',
-        },
-        {
-          source: '/galerie/:path*',
-          destination: 'https://api.rozpisovnik.cz/galerie/:path*',
-        },
-      ];
-    }
+    const graphqlServer = process.env.GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz';
+    return [
+      { source: '/graphql', destination: `${graphqlServer}/graphql` },
+      { source: '/graphiql', destination: `${graphqlServer}/graphiql` },
+      { source: '/starlet/graphql', destination: `${graphqlServer}/graphql` },
+      { source: '/member/download', destination: `${graphqlServer}/member/download` },
+      { source: '/galerie/:path*', destination: `${graphqlServer}/galerie/:path*` },
+      { source: '/system-admin/:path*', destination: `${graphqlServer}/system-admin/:path*` },
+    ];
   },
 });
