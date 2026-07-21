@@ -21,6 +21,7 @@ import { TextAreaElement } from '@/ui/fields/textarea';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { Mail } from 'lucide-react';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
+import { origin } from '@/lib/query';
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = React.useState(false);
@@ -179,7 +180,7 @@ export default function SystemAdminTenantsPage() {
 
 function TestEmailButton() {
   const sendTestEmail = useAsyncCallback(async function () {
-    const response = await fetch('/system-admin/test-email', {
+    const response = await fetch(`${origin}/system-admin/test-email`, {
       method: 'POST',
       credentials: 'include',
       headers: {
