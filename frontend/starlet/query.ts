@@ -1,6 +1,5 @@
 import { print } from '@0no-co/graphql.web';
 import type { ExecutionResult, TypedDocumentNode } from 'urql';
-import { origin } from '@/lib/query';
 import { starletTokenAtom } from '@/ui/starlet-importer/state';
 import { storeRef } from '@/ui/state/auth';
 
@@ -11,7 +10,7 @@ export async function fetchStarlet<TResult, TVariables>(
   const tokenAtom = storeRef.current.get(starletTokenAtom);
   const token = tokenAtom?.auth_ok ? tokenAtom.auth_token : undefined;
 
-  const response = await fetch(origin + '/starlet/graphql', {
+  const response = await fetch('/starlet/graphql', {
     method: 'POST',
     credentials: 'include',
     headers: {
