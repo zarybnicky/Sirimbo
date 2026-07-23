@@ -18,7 +18,7 @@ export default async function LegacyEventRedirectPage({
 
   redirect(
     events.length === 1
-      ? `/termin/${events.length}`
+      ? `/termin/${events[0]?.id}`
       : `/terminy/${id}`,
   );
 }
