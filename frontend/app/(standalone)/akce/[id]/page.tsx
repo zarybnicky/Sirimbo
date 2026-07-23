@@ -1,7 +1,7 @@
 /* eslint-disable import-x/no-unused-modules */
-import { EventSeriesDocument } from '@/graphql/Event';
-import { executeGraphql } from '@/lib/server/graphql';
+import { runQuery } from '@/lib/server/postgresql';
 import { notFound, redirect } from 'next/navigation';
+import { eventSeriesEvents } from './akce.queries';
 
 type LegacyEventRedirectPageProps = {
   params: Promise<{ id: string }>;
@@ -13,15 +13,12 @@ export default async function LegacyEventRedirectPage({
   const { id } = await params;
   if (!/^\d+$/.test(id)) notFound();
 
-  const { eventSeries: series } = await executeGraphql(
-    EventSeriesDocument,
-    { id },
-  );
-  if (!series) notFound();
+  const events = await runQuery(eventSeriesEvents, { id });
+  if (events.length === 0) notFound();
 
   redirect(
-    series.eventsList.length === 1
-      ? `/termin/${series.eventsList[0]!.id}`
-      : `/terminy/${series.id}`,
+    events.length === 1
+      ? `/termin/${events.length}`
+      : `/terminy/${id}`,
   );
 }
