@@ -22,7 +22,12 @@ import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { type Control, useForm, useWatch } from 'react-hook-form';
+import {
+  FormProvider,
+  useForm,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useTenantConfig } from '@/ui/state/auth';
@@ -41,32 +46,27 @@ const eventTypeOptions: RadioButtonGroupItem[] = (
 
 type EventFormInput = z.input<typeof EventForm>;
 
-function EventAccessFields({
-  control,
-}: {
-  control: Control<EventFormInput, unknown, EventFormType>;
-}) {
+function EventAccessFields() {
+  const { control, setValue } = useFormContext<EventFormInput, unknown, EventFormType>();
   const type = useWatch({ control, name: 'type' });
+  const isPublic = useWatch({ control, name: 'isPublic' });
+
+  React.useEffect(() => {
+    if (!isPublic) setValue('hasPublicDetails', false);
+  }, [isPublic, setValue]);
 
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-1">
-      <CheckboxElement control={control} name="isVisible" label="Viditelná pro členy" />
+      <CheckboxElement name="isVisible" label="Viditelná pro členy" />
+      <CheckboxElement name="isLocked" label="Zakázat přihlašování/odhlašování" />
+      <CheckboxElement name="isPublic" label="Zveřejnit přihlášky" />
       <CheckboxElement
-        control={control}
-        name="isLocked"
-        label="Zakázat přihlašování/odhlašování"
-      />
-      <CheckboxElement
-        control={control}
-        name="isPublic"
-        label="Viditelná pro veřejnost"
+        name="hasPublicDetails"
+        label="Zveřejnit program"
+        disabled={!isPublic}
       />
       {(type === 'RESERVATION' || type === 'CAMP') && (
-        <CheckboxElement
-          control={control}
-          name="enableNotes"
-          label="Povolit poznámky k přihlášce"
-        />
+        <CheckboxElement name="enableNotes" label="Povolit poznámky k přihlášce" />
       )}
     </div>
   );
@@ -85,7 +85,7 @@ export function EventCreateForm({
   const { lockEventsByDefault } = useTenantConfig();
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
-  const { control, handleSubmit } = useForm({
+  const form = useForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
       type: defaults.type,
@@ -93,6 +93,7 @@ export function EventCreateForm({
       locationText: defaults.locationText,
       isVisible: true,
       isPublic: false,
+      hasPublicDetails: false,
       isLocked: lockEventsByDefault,
       enableNotes: false,
       instances: [
@@ -111,6 +112,7 @@ export function EventCreateForm({
       registrations: [],
     },
   });
+  const { control, handleSubmit } = form;
 
   const type = useWatch({ control, name: 'type' });
   const instances = useWatch({ control, name: 'instances' });
@@ -205,6 +207,7 @@ export function EventCreateForm({
         pTrainerLessonsOffered: trainers.map(({ lessonsOffered }) => lessonsOffered),
         pIsVisible: values.isVisible,
         pIsPublic: values.isPublic,
+        pHasPublicDetails: values.hasPublicDetails,
         pIsLocked: values.isLocked,
         pEnableNotes: values.enableNotes,
       },
@@ -285,7 +288,9 @@ export function EventCreateForm({
         </>
       )}
 
-      <EventAccessFields control={control} />
+      <FormProvider {...form}>
+        <EventAccessFields />
+      </FormProvider>
 
       <div className="flex justify-end pt-1">
         <SubmitButton loading={onSubmit.loading}>Vytvořit</SubmitButton>
@@ -320,7 +325,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
     [instance.targetCohortsList],
   );
 
-  const { control, handleSubmit, setValue } = useForm({
+  const form = useForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
       name: instance.name ?? '',
@@ -331,6 +336,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
       capacityUnit: instance.capacityUnit,
       isVisible: instance.isVisible ?? false,
       isPublic: instance.isPublic ?? false,
+      hasPublicDetails: instance.hasPublicDetails,
       isLocked: instance.isLocked ?? false,
       enableNotes: instance.enableNotes ?? false,
       cohorts: initialCohorts,
@@ -346,6 +352,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
       ],
     },
   });
+  const { control, handleSubmit, setValue } = form;
 
   const registrations = registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
 
@@ -420,6 +427,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
         pLocationText: location.locationText,
         pIsVisible: values.isVisible,
         pIsPublic: values.isPublic,
+        pHasPublicDetails: values.hasPublicDetails,
         pIsCancelled: edited.isCancelled,
         pIsLocked: values.isLocked,
         pEnableNotes: values.enableNotes,
@@ -496,7 +504,9 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
       {!registrationsReady && registrationsQuery.fetching && (
         <div className="text-sm text-neutral-11">Načítám účastníky…</div>
       )}
-      <EventAccessFields control={control} />
+      <FormProvider {...form}>
+        <EventAccessFields />
+      </FormProvider>
       <CheckboxElement control={control} name="instances.0.isCancelled" label="Zrušeno" />
       <FormError error={registrationsQuery.error} />
 

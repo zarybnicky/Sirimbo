@@ -13,6 +13,7 @@ export const EventForm = z.object({
   capacityUnit: z.enum(['PEOPLE', 'REGISTRATIONS']).prefault('PEOPLE'),
   isVisible: z.boolean().prefault(false),
   isPublic: z.boolean().prefault(false),
+  hasPublicDetails: z.boolean().prefault(false),
   enableNotes: z.boolean().prefault(false),
   isLocked: z.boolean().prefault(false),
   titleImageLegacy: z.string().nullish().prefault(null),

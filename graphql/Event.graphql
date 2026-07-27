@@ -66,6 +66,8 @@ fragment EventWithTrainer on EventInstance {
   isLocked
   isVisible
   isPublic
+  hasPublicDetails
+  shareToken
   enableNotes
   locationText
   remainingPersonSpots
@@ -443,6 +445,12 @@ mutation UpdateEventInstanceDetails($input: UpdateEventInstanceDetailsInput!) {
     eventInstance {
       id
     }
+  }
+}
+
+mutation SetEventSharing($input: SetEventSharingInput!) {
+  setEventSharing(input: $input) {
+    string
   }
 }
 

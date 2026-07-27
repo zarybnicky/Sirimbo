@@ -140,6 +140,17 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   fetchOptions: () => {
     const tenantId = storeRef.current.get(tenantIdAtom);
     const token = storeRef.current.get(tokenAtom);
+    const eventShareId =
+      typeof window === 'undefined'
+        ? undefined
+        : /^\/termin\/(\d+)\/?$/.exec(window.location.pathname)?.[1];
+    const eventShareToken = eventShareId
+      ? new URLSearchParams(window.location.search).get('share')
+      : null;
+    const eventShare =
+      eventShareToken && /^[A-Za-z0-9_-]{32}$/.test(eventShareToken)
+        ? eventShareToken
+        : eventShareId;
     return {
       credentials: 'include',
       headers: {
@@ -153,6 +164,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
               'x-tenant-id': tenantId,
             }
           : {}),
+        ...(eventShare ? { 'x-event-share': eventShare } : {}),
       },
     };
   },
@@ -281,6 +293,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
             __typename: 'EventInstance',
             id: args.input.pInstanceId,
           });
+        }
+      },
+      setEventSharing(_result, args, cache, _info) {
+        if (args.input.id) {
+          cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
         }
       },
 

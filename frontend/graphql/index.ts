@@ -2697,6 +2697,8 @@ export type EventInstance = {
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
   eventInstanceTrainersByInstanceIdList: Array<EventInstanceTrainer>;
   filesLegacy: Maybe<Scalars['String']['output']>;
+  /** Whether the named schedule is available without authentication for public events. */
+  hasPublicDetails: Scalars['Boolean']['output'];
   id: Scalars['BigInt']['output'];
   isCancelled: Scalars['Boolean']['output'];
   isLocked: Maybe<Scalars['Boolean']['output']>;
@@ -2720,6 +2722,7 @@ export type EventInstance = {
   /** Groups related events without supplying inherited event values. */
   seriesId: Maybe<Scalars['BigInt']['output']>;
   seriesInfo: Maybe<SeriesInfo>;
+  shareToken: Maybe<Scalars['String']['output']>;
   since: Scalars['Datetime']['output'];
   stats: Scalars['JSON']['output'];
   summary: Maybe<Scalars['String']['output']>;
@@ -2826,6 +2829,8 @@ export type EventInstanceCondition = {
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `filesLegacy` field. */
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `hasPublicDetails` field. */
+  hasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isCancelled` field. */
@@ -2874,6 +2879,8 @@ export type EventInstancePatch = {
   description?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
+  /** Whether the named schedule is available without authentication for public events. */
+  hasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3206,6 +3213,8 @@ export type EventInstancesOrderBy =
   | 'ENABLE_NOTES_DESC'
   | 'FILES_LEGACY_ASC'
   | 'FILES_LEGACY_DESC'
+  | 'HAS_PUBLIC_DETAILS_ASC'
+  | 'HAS_PUBLIC_DETAILS_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'IS_CANCELLED_ASC'
@@ -3906,6 +3915,7 @@ export type Mutation = {
   rejectMembershipApplication: Maybe<RejectMembershipApplicationPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
   setEventInstanceRegistration: Maybe<SetEventInstanceRegistrationPayload>;
+  setEventSharing: Maybe<SetEventSharingPayload>;
   setLessonDemand: Maybe<SetLessonDemandPayload>;
   submitForm: Maybe<SubmitFormPayload>;
   syncCohortMemberships: Maybe<SyncCohortMembershipsPayload>;
@@ -4297,6 +4307,12 @@ export type MutationResetPasswordArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSetEventInstanceRegistrationArgs = {
   input: SetEventInstanceRegistrationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationSetEventSharingArgs = {
+  input: SetEventSharingInput;
 };
 
 
@@ -6004,6 +6020,7 @@ export type QuickCreateEventInstancesInput = {
   pDescription?: InputMaybe<Scalars['String']['input']>;
   pEnableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   pFilesLegacy?: InputMaybe<Scalars['String']['input']>;
+  pHasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
   pIsLocked?: InputMaybe<Scalars['Boolean']['input']>;
   pIsPublic?: InputMaybe<Scalars['Boolean']['input']>;
   pIsVisible?: InputMaybe<Scalars['Boolean']['input']>;
@@ -6311,6 +6328,28 @@ export type SetEventInstanceRegistrationPayload = {
 /** The output of our `setEventInstanceRegistration` mutation. */
 export type SetEventInstanceRegistrationPayloadEventInstanceRegistrationEdgeArgs = {
   orderBy?: Array<EventInstanceRegistrationsOrderBy>;
+};
+
+/** All input for the `setEventSharing` mutation. */
+export type SetEventSharingInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** The output of our `setEventSharing` mutation. */
+export type SetEventSharingPayload = {
+  __typename?: 'SetEventSharingPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  string: Maybe<Scalars['String']['output']>;
 };
 
 /** All input for the `setLessonDemand` mutation. */
@@ -7693,6 +7732,7 @@ export type UpdateEventInstanceDetailsInput = {
   pCohortIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   pCopies?: InputMaybe<Array<InputMaybe<QuickEventInputRecordInput>>>;
   pEnableNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  pHasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
   pInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   pIsCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   pIsLocked?: InputMaybe<Scalars['Boolean']['input']>;
@@ -8554,6 +8594,7 @@ export type GraphCacheKeysConfig = {
   ScoreboardRecord?: (data: WithTypename<ScoreboardRecord>) => null | string,
   SeriesInfo?: (data: WithTypename<SeriesInfo>) => null | string,
   SetEventInstanceRegistrationPayload?: (data: WithTypename<SetEventInstanceRegistrationPayload>) => null | string,
+  SetEventSharingPayload?: (data: WithTypename<SetEventSharingPayload>) => null | string,
   SetLessonDemandPayload?: (data: WithTypename<SetLessonDemandPayload>) => null | string,
   SubmitFormPayload?: (data: WithTypename<SubmitFormPayload>) => null | string,
   SyncCohortMembershipsPayload?: (data: WithTypename<SyncCohortMembershipsPayload>) => null | string,
@@ -9267,6 +9308,7 @@ export type GraphCacheResolvers = {
     eventInstanceRegistrationsByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceRegistrationsByInstanceIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceTrainersByInstanceIdListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     filesLegacy?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
+    hasPublicDetails?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isCancelled?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isLocked?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -9285,6 +9327,7 @@ export type GraphCacheResolvers = {
     series?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<EventSeries> | string>,
     seriesId?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     seriesInfo?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, WithTypename<SeriesInfo> | string>,
+    shareToken?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
     since?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     stats?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['JSON']['output'] | string>,
     summary?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -9689,6 +9732,10 @@ export type GraphCacheResolvers = {
     parentRegistration?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
     person?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<Person> | string>,
     targetCohort?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<Cohort> | string>
+  },
+  SetEventSharingPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<SetEventSharingPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    string?: GraphCacheResolver<WithTypename<SetEventSharingPayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
   SetLessonDemandPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -10109,6 +10156,7 @@ export type GraphCacheOptimisticUpdaters = {
   rejectMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationRejectMembershipApplicationArgs, Maybe<WithTypename<RejectMembershipApplicationPayload>>>,
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
   setEventInstanceRegistration?: GraphCacheOptimisticMutationResolver<MutationSetEventInstanceRegistrationArgs, Maybe<WithTypename<SetEventInstanceRegistrationPayload>>>,
+  setEventSharing?: GraphCacheOptimisticMutationResolver<MutationSetEventSharingArgs, Maybe<WithTypename<SetEventSharingPayload>>>,
   setLessonDemand?: GraphCacheOptimisticMutationResolver<MutationSetLessonDemandArgs, Maybe<WithTypename<SetLessonDemandPayload>>>,
   submitForm?: GraphCacheOptimisticMutationResolver<MutationSubmitFormArgs, Maybe<WithTypename<SubmitFormPayload>>>,
   syncCohortMemberships?: GraphCacheOptimisticMutationResolver<MutationSyncCohortMembershipsArgs, Maybe<WithTypename<SyncCohortMembershipsPayload>>>,
@@ -10272,6 +10320,7 @@ export type GraphCacheUpdaters = {
     rejectMembershipApplication?: GraphCacheUpdateResolver<{ rejectMembershipApplication: Maybe<WithTypename<RejectMembershipApplicationPayload>> }, MutationRejectMembershipApplicationArgs>,
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,
     setEventInstanceRegistration?: GraphCacheUpdateResolver<{ setEventInstanceRegistration: Maybe<WithTypename<SetEventInstanceRegistrationPayload>> }, MutationSetEventInstanceRegistrationArgs>,
+    setEventSharing?: GraphCacheUpdateResolver<{ setEventSharing: Maybe<WithTypename<SetEventSharingPayload>> }, MutationSetEventSharingArgs>,
     setLessonDemand?: GraphCacheUpdateResolver<{ setLessonDemand: Maybe<WithTypename<SetLessonDemandPayload>> }, MutationSetLessonDemandArgs>,
     submitForm?: GraphCacheUpdateResolver<{ submitForm: Maybe<WithTypename<SubmitFormPayload>> }, MutationSubmitFormArgs>,
     syncCohortMemberships?: GraphCacheUpdateResolver<{ syncCohortMemberships: Maybe<WithTypename<SyncCohortMembershipsPayload>> }, MutationSyncCohortMembershipsArgs>,
@@ -10898,6 +10947,7 @@ export type GraphCacheUpdaters = {
     eventInstanceRegistrationsByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceRegistrationsByInstanceIdListArgs>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceTrainersByInstanceIdListArgs>,
     filesLegacy?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    hasPublicDetails?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     isCancelled?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     isLocked?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
@@ -10916,6 +10966,7 @@ export type GraphCacheUpdaters = {
     series?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     seriesId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     seriesInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    shareToken?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     stats?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     summary?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
@@ -11320,6 +11371,10 @@ export type GraphCacheUpdaters = {
     parentRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>,
     targetCohort?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventInstanceRegistrationPayload>>, Record<string, never>>
+  },
+  SetEventSharingPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventSharingPayload>>, Record<string, never>>,
+    string?: GraphCacheUpdateResolver<Maybe<WithTypename<SetEventSharingPayload>>, Record<string, never>>
   },
   SetLessonDemandPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SetLessonDemandPayload>>, Record<string, never>>,

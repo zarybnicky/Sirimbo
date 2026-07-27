@@ -6099,6 +6099,17 @@
             "args": []
           },
           {
+            "name": "hasPublicDetails",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "id",
             "type": {
               "kind": "NON_NULL",
@@ -6304,6 +6315,14 @@
               "kind": "OBJECT",
               "name": "SeriesInfo",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "shareToken",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -9298,6 +9317,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "SetEventInstanceRegistrationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "setEventSharing",
+            "type": {
+              "kind": "OBJECT",
+              "name": "SetEventSharingPayload",
               "ofType": null
             },
             "args": [
@@ -15001,6 +15040,29 @@
               "kind": "OBJECT",
               "name": "Cohort",
               "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SetEventSharingPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "string",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }

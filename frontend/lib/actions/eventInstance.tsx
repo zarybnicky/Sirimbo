@@ -3,6 +3,7 @@ import {
   GitBranch,
   NotebookPen,
   Pencil,
+  Share2,
   Square,
   Trash2,
 } from 'lucide-react';
@@ -52,6 +53,13 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     dialogProps: {
       className: 'sm:max-w-xl',
     },
+  },
+  {
+    id: 'eventInstance.share',
+    label: 'Sdílet program',
+    icon: Share2,
+    visible: canManageInstance,
+    render: () => import('@/ui/EventShareDialog'),
   },
   {
     id: 'eventInstance.toggleCancelled',

@@ -1,11 +1,24 @@
+import type { ISharedEventInstanceResult } from '@/app/(member)/termin/[id]/termin.queries';
+import type { EventType } from '@/graphql';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { RichTextView } from '@/ui/RichTextView';
 import { dateTimeFormatter, formatEventType } from '@/ui/format';
 import Link from 'next/link';
 
-export function BasicEventInfo({ instance }: { instance: EventWithTrainerFragment }) {
-  const { seriesInfo } = instance;
+export function BasicEventInfo({
+  instance,
+}: {
+  instance: EventWithTrainerFragment | ISharedEventInstanceResult;
+}) {
+  const shared = 'trainerNames' in instance;
+  const seriesInfo = shared ? null : instance.seriesInfo;
+  const type = shared ? (instance.type?.toUpperCase() as EventType | null) : instance.type;
+  const location = (shared ? instance.locationName : instance.location?.name) || instance.locationText
+  const trainers = shared
+    ? instance.trainerNames
+    : instance.trainersList.map((t) => t.person?.name).filter(Boolean);
+
   return (
     <dl className="not-prose gap-2 mb-6">
       {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
@@ -19,29 +32,26 @@ export function BasicEventInfo({ instance }: { instance: EventWithTrainerFragmen
         </dd>
       )}
 
-      <dd>{formatEventType(instance.type)}</dd>
+      <dd>{formatEventType(type)}</dd>
 
       <dt>Termín</dt>
       <dd>
-        {dateTimeFormatter.formatRange(
-          new Date(instance.since),
-          new Date(instance.until),
-        )}
+        {dateTimeFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
       </dd>
 
-      {!!(instance.location?.name || instance.locationText) && (
+      {location && (
         <>
           <dt>Místo konání</dt>
-          <dd>{instance.location?.name || instance.locationText}</dd>
+          <dd>{location}</dd>
         </>
       )}
 
-      {instance.trainersList.length > 0 && (
+      {trainers.length > 0 && (
         <>
           <dt>Trenéři</dt>
-          {instance.trainersList.map((trainer) => {
-            return <dd key={trainer.id}>{trainer.person?.name}</dd>;
-          })}
+          {trainers.map((trainer, index) => (
+            <dd key={`${trainer}:${index}`}>{trainer}</dd>
+          ))}
         </>
       )}
 
@@ -54,9 +64,11 @@ export function BasicEventInfo({ instance }: { instance: EventWithTrainerFragmen
         </>
       )}
 
-      <dt>
-        <MyRegistrationsDialog instance={instance} />
-      </dt>
+      {!shared && (
+        <dt>
+          <MyRegistrationsDialog instance={instance} />
+        </dt>
+      )}
 
       {instance.summary?.trim() && (
         <>
