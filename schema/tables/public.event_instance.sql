@@ -24,12 +24,16 @@ CREATE TABLE public.event_instance (
     enable_notes boolean,
     files_legacy text,
     series_id bigint,
+    has_public_details boolean DEFAULT false NOT NULL,
+    share_token text,
+    CONSTRAINT event_instance_public_details_require_public CHECK (((NOT has_public_details) OR (is_public IS TRUE))),
     CONSTRAINT event_instance_until_gt_since CHECK ((until > since))
 );
 
 COMMENT ON TABLE public.event_instance IS '@omit create
 @simpleCollections only';
 COMMENT ON COLUMN public.event_instance.series_id IS 'Groups related events without supplying inherited event values.';
+COMMENT ON COLUMN public.event_instance.share_token IS '@omit';
 
 GRANT ALL ON TABLE public.event_instance TO anonymous;
 ALTER TABLE public.event_instance ENABLE ROW LEVEL SECURITY;
@@ -49,12 +53,13 @@ ALTER TABLE ONLY public.event_instance
 
 CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event_instance AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY event_share_view ON public.event_instance FOR SELECT TO anonymous USING ((id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[])));
 CREATE POLICY member_view ON public.event_instance FOR SELECT TO member USING (is_visible);
 CREATE POLICY public_view ON public.event_instance FOR SELECT TO anonymous USING (is_public);
 CREATE POLICY trainer_delete ON public.event_instance FOR DELETE TO trainer USING (app_private.can_trainer_edit_instance(id));
 CREATE POLICY trainer_insert ON public.event_instance FOR INSERT TO trainer WITH CHECK (((parent_id IS NULL) OR app_private.can_trainer_edit_instance(parent_id)));
 CREATE POLICY trainer_select ON public.event_instance FOR SELECT TO trainer USING (app_private.can_trainer_edit_instance(id));
-CREATE POLICY trainer_update ON public.event_instance FOR UPDATE TO trainer USING (app_private.can_trainer_edit_instance(id)) WITH CHECK ((app_private.can_trainer_edit_instance(id) OR ((parent_id IS NOT NULL) AND app_private.can_trainer_edit_instance(parent_id))));
+CREATE POLICY trainer_update ON public.event_instance FOR UPDATE TO trainer USING (app_private.can_trainer_edit_instance(id));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_validate_parent BEFORE INSERT OR UPDATE OF tenant_id, parent_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__validate_parent();
@@ -63,6 +68,7 @@ CREATE TRIGGER _500_refresh_manager_person_ids_from_parent AFTER INSERT OR UPDAT
 
 CREATE INDEX event_instance_parent_id_idx ON public.event_instance USING btree (parent_id);
 CREATE INDEX event_instance_range_idx ON public.event_instance USING gist (range);
+CREATE UNIQUE INDEX event_instance_share_token_key ON public.event_instance USING btree (share_token) WHERE (share_token IS NOT NULL);
 CREATE INDEX event_instance_since_idx ON public.event_instance USING btree (since);
 CREATE INDEX event_instance_tenant_idx ON public.event_instance USING btree (tenant_id);
 CREATE INDEX event_instance_tenant_range_gist ON public.event_instance USING gist (tenant_id, range);

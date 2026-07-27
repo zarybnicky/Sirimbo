@@ -1,4 +1,4 @@
-CREATE TYPE public.event_overlaps_conflict AS (
+CREATE TYPE public.event_conflict AS (
 	person_id bigint,
 	person_name text,
 	first_instance_id bigint,
@@ -11,3 +11,8 @@ CREATE TYPE public.event_overlaps_conflict AS (
 	second_until timestamp with time zone,
 	overlap_range tstzrange
 );
+
+COMMENT ON COLUMN public.event_conflict.person_id IS '@notNull';
+COMMENT ON COLUMN public.event_conflict.first_instance_id IS '@notNull';
+COMMENT ON COLUMN public.event_conflict.second_instance_id IS '@notNull';
+COMMENT ON COLUMN public.event_conflict.overlap_range IS '@notNull';

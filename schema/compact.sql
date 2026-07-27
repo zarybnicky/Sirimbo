@@ -702,6 +702,12 @@ CREATE TABLE public.event_instance (
   enable_notes boolean,
   files_legacy text,
   series_id bigint,
+  has_public_details boolean DEFAULT false NOT NULL,
+  share_token text,
+  CHECK (
+    NOT (has_public_details)
+      OR is_public IS TRUE
+  ),
   CHECK (until > since),
   UNIQUE (tenant_id, id),
   FOREIGN KEY(tenant_id, location_id)
@@ -1263,7 +1269,7 @@ CREATE TABLE crawler.rate_limit_rule (
   max_requests int NOT NULL,
   per_interval interval NOT NULL,
   spacing interval GENERATED ALWAYS AS ((per_interval / CAST(max_requests AS double precision)) + '00:00:00.02'::interval) STORED NOT NULL,
-  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+00' AS timestamp with time zone) NOT NULL,
+  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+01' AS timestamp with time zone) NOT NULL,
   CHECK (max_requests > 0),
   CHECK (per_interval > '00:00:00'::interval)
 );
@@ -1312,7 +1318,7 @@ CREATE TYPE public.announcement_type_input AS (id bigint, title text, body text,
 
 CREATE TYPE public.competition_participation_record AS (person_id bigint, person_name text, federation text, federated_person_id text, competitor_id text, competitor_name text, competitor_type federated.competitor_type, event_id bigint, event_name text, event_location text, competition_id bigint, competition_date date, check_in_end time, category federated.category, dances text[], participants int, ranking int, ranking_to int, point_gain numeric(10, 3), is_final boolean, has_result boolean, competition_type federated.competition_type, event_external_id text, competition_external_id text);
 
-CREATE TYPE public.event_overlaps_conflict AS (person_id bigint, person_name text, first_instance_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, second_instance_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, overlap_range tstzrange);
+CREATE TYPE public.event_conflict AS (person_id bigint, person_name text, first_instance_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, second_instance_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, overlap_range tstzrange);
 
 CREATE TYPE public.jwt_token AS (exp int, user_id bigint, tenant_id bigint, username text, email text, my_person_ids bigint[], my_tenant_ids bigint[], my_cohort_ids bigint[], my_couple_ids bigint[], is_member boolean, is_trainer boolean, is_admin boolean, is_system_admin boolean, guest_tenant_ids bigint[], member_tenant_ids bigint[], trainer_tenant_ids bigint[], admin_tenant_ids bigint[]);
 

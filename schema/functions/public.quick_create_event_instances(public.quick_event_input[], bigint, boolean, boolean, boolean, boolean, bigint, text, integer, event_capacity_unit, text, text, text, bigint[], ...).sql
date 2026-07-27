@@ -1,4 +1,4 @@
-CREATE FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint DEFAULT NULL::bigint, p_is_visible boolean DEFAULT true, p_is_public boolean DEFAULT false, p_is_locked boolean DEFAULT false, p_enable_notes boolean DEFAULT false, p_series_id bigint DEFAULT NULL::bigint, p_name text DEFAULT NULL::text, p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT 'people'::public.event_capacity_unit, p_description text DEFAULT ''::text, p_summary text DEFAULT ''::text, p_files_legacy text DEFAULT ''::text, p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_copies public.quick_event_input[] DEFAULT NULL::public.quick_event_input[]) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint DEFAULT NULL::bigint, p_is_visible boolean DEFAULT true, p_is_public boolean DEFAULT false, p_is_locked boolean DEFAULT false, p_enable_notes boolean DEFAULT false, p_series_id bigint DEFAULT NULL::bigint, p_name text DEFAULT NULL::text, p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT 'people'::public.event_capacity_unit, p_description text DEFAULT ''::text, p_summary text DEFAULT ''::text, p_files_legacy text DEFAULT ''::text, p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_copies public.quick_event_input[] DEFAULT NULL::public.quick_event_input[], p_has_public_details boolean DEFAULT false) RETURNS SETOF public.event_instance
     LANGUAGE plpgsql
     AS $$
 declare
@@ -25,7 +25,8 @@ begin
   foreach quick_event in array instances loop
     insert into event_instance (
       parent_id, series_id, since, until, name, type, location_id, location_text,
-      capacity, capacity_unit, is_visible, is_public, is_locked, enable_notes,
+      capacity, capacity_unit, is_visible, is_public, has_public_details,
+      is_locked, enable_notes,
       description, summary, files_legacy
     ) values (
       parent_id, v_series_id, quick_event.since, quick_event.until, p_name,
@@ -34,7 +35,8 @@ begin
       coalesce(p_capacity,
         case when coalesce(quick_event.type, 'lesson') = 'lesson' then 2 else 0 end),
       coalesce(p_capacity_unit, 'people'),
-      p_is_visible, p_is_public, p_is_locked, p_enable_notes,
+      p_is_visible, p_is_public, p_is_public and p_has_public_details,
+      p_is_locked, p_enable_notes,
       coalesce(p_description, ''), coalesce(p_summary, ''), coalesce(p_files_legacy, '')
     )
     returning * into created_instance;
@@ -78,4 +80,4 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint, p_is_visible boolean, p_is_public boolean, p_is_locked boolean, p_enable_notes boolean, p_series_id bigint, p_name text, p_capacity integer, p_capacity_unit public.event_capacity_unit, p_description text, p_summary text, p_files_legacy text, p_cohort_ids bigint[], p_trainer_lessons_offered integer[], p_copies public.quick_event_input[]) TO anonymous;
+GRANT ALL ON FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint, p_is_visible boolean, p_is_public boolean, p_is_locked boolean, p_enable_notes boolean, p_series_id bigint, p_name text, p_capacity integer, p_capacity_unit public.event_capacity_unit, p_description text, p_summary text, p_files_legacy text, p_cohort_ids bigint[], p_trainer_lessons_offered integer[], p_copies public.quick_event_input[], p_has_public_details boolean) TO anonymous;

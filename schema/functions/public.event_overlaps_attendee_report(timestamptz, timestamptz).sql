@@ -1,14 +1,7 @@
-CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS SETOF public.event_overlaps_conflict
+CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS SETOF public.event_conflict
     LANGUAGE sql STABLE
     AS $$
-  with target_range as (
-    select tstzrange(
-      coalesce(p_since, '-infinity'::timestamptz),
-      coalesce(p_until, 'infinity'::timestamptz),
-      '[]'
-    ) as range
-  ),
-  instances as (
+  with instances as (
     select
       ea.person_id,
       p.name as person_name,
@@ -17,16 +10,13 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
       ei.until,
       ei.range,
       ei.name as event_name
-    from public.event_instance_registration ea
-    join public.event_instance ei on ei.id = ea.instance_id
-    join public.person p on p.id = ea.person_id
-    join target_range tr on true
-    where
-      ei.tenant_id = public.current_tenant_id()
+    from event_instance_registration ea
+    join event_instance ei on ei.id = ea.instance_id
+    join person p on p.id = ea.person_id
+    where not ei.is_cancelled
       and ea.person_id is not null
       and ea.registration_status = 'active'
-      and not ei.is_cancelled
-      and ei.range && tr.range
+      and ei.range && tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]')
   )
   select
     i1.person_id,
@@ -39,11 +29,7 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
     i2.event_name as second_event_name,
     i2.since as second_since,
     i2.until as second_until,
-    tstzrange(
-      greatest(i1.since, i2.since),
-      least(i1.until, i2.until),
-      '[]'
-    ) as overlap_range
+    tstzrange(greatest(i1.since, i2.since), least(i1.until, i2.until), '[]') as overlap_range
   from instances i1
   join instances i2 on i1.person_id = i2.person_id
     and i1.instance_id < i2.instance_id

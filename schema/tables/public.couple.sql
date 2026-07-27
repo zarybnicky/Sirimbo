@@ -30,6 +30,7 @@ ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_woman_id_fkey FOREIGN KEY (woman_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.couple TO administrator USING (true);
+CREATE POLICY event_share_view ON public.couple FOR SELECT TO anonymous USING ((id = ANY ((( SELECT current_setting('jwt.claims.shared.couple_ids'::text, true) AS current_setting))::bigint[])));
 CREATE POLICY view_visible_person ON public.couple FOR SELECT USING (((man_id IN ( SELECT v.person_id
    FROM app_private.visible_person_ids() v(person_id))) OR (woman_id IN ( SELECT v.person_id
    FROM app_private.visible_person_ids() v(person_id)))));

@@ -19,7 +19,8 @@ create or replace function update_event_instance_details(
   p_trainer_lessons_offered integer[] default null,
   p_cohort_ids bigint[] default null,
   p_enable_notes boolean default null,
-  p_copies quick_event_input[] default null
+  p_copies quick_event_input[] default null,
+  p_has_public_details boolean default null
 ) returns event_instance
   language plpgsql
 as $$
@@ -45,6 +46,11 @@ begin
     location_text = coalesce(p_location_text, ''),
     is_visible = coalesce(p_is_visible, is_visible),
     is_public = coalesce(p_is_public, is_public),
+    has_public_details = case
+      when coalesce(p_is_public, is_public) is true
+        then coalesce(p_has_public_details, has_public_details)
+      else false
+    end,
     capacity = coalesce(p_capacity, capacity),
     capacity_unit = coalesce(p_capacity_unit, capacity_unit),
     is_locked = coalesce(p_is_locked, is_locked),
@@ -215,6 +221,7 @@ begin
       parent_id => updated_instance.parent_id,
       p_is_visible => updated_instance.is_visible,
       p_is_public => updated_instance.is_public,
+      p_has_public_details => updated_instance.has_public_details,
       p_is_locked => updated_instance.is_locked,
       p_enable_notes => updated_instance.enable_notes,
       p_series_id => v_series_id,

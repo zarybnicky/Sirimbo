@@ -85,42 +85,69 @@ function verifySessionToken(token: string): jwt.JwtPayload | undefined {
   }
 }
 
+const emptySettings = (tenantId: string): Record<string, string> => ({
+  role: 'anonymous',
+  'jwt.claims.tenant_id': tenantId,
+  'jwt.claims.user_id': '',
+  'jwt.claims.username': '',
+  'jwt.claims.email': '',
+  'jwt.claims.my_person_ids': '{}',
+  'jwt.claims.my_tenant_ids': '{}',
+  'jwt.claims.my_cohort_ids': '{}',
+  'jwt.claims.my_couple_ids': '{}',
+  'jwt.claims.shared.event_ids': '{}',
+  'jwt.claims.shared.person_ids': '{}',
+  'jwt.claims.shared.couple_ids': '{}',
+  'jwt.claims.shared.cohort_ids': '{}',
+});
+
 async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
   const tenantId = await findTenantId(req);
-  const settings: Record<string, string> = {
-    role: 'anonymous',
-    'jwt.claims.tenant_id': tenantId,
-    'jwt.claims.user_id': '',
-    'jwt.claims.username': '',
-    'jwt.claims.email': '',
-    'jwt.claims.my_person_ids': '[]',
-    'jwt.claims.my_tenant_ids': '[]',
-    'jwt.claims.my_cohort_ids': '[]',
-    'jwt.claims.my_couple_ids': '[]',
-  };
-
+  const settings = emptySettings(tenantId);
   const token = getBearerOrCookie(req);
-  if (!token) return settings;
+  const claims = token ? verifySessionToken(token) : undefined;
+  if (claims) {
+    // FIXME: process tenant_member_ids, etc, replace reading is_admin, ...
+    // and remove the override of tenant_id below!
+    settings.role = claims.is_system_admin
+      ? 'system_admin'
+      : claims.is_admin
+        ? 'administrator'
+        : claims.is_trainer
+          ? 'trainer'
+          : claims.is_member
+            ? 'member'
+            : 'anonymous';
 
-  const claims = verifySessionToken(token);
-  if (!claims) return settings;
+    for (const key in claims) {
+      if (['exp', 'aud', 'iat', 'iss'].includes(key)) continue;
+      if (Array.isArray(claims[key])) {
+        settings[`jwt.claims.${key}`] = '{' + claims[key].map(String).join(',') + '}';
+      } else {
+        settings[`jwt.claims.${key}`] = claims[key];
+      }
+    }
+  }
 
-  settings.role = claims.is_system_admin
-    ? 'system_admin'
-    : claims.is_admin
-      ? 'administrator'
-      : claims.is_trainer
-        ? 'trainer'
-        : claims.is_member
-          ? 'member'
-          : 'anonymous';
+  const eventShare = req.get('x-event-share');
+  if (eventShare && /^(?:\d{1,18}|[A-Za-z0-9_-]{32})$/.test(eventShare)) {
+    const {
+      rows: [share],
+    } = await pool.query<{
+      instance_ids: string[];
+      person_ids: string[];
+      couple_ids: string[];
+      cohort_ids: string[];
+    }>('select * from app_private.event_share_claims($1, $2)', [
+      tenantId,
+      eventShare,
+    ]);
 
-  for (const key in claims) {
-    if (['exp', 'aud', 'iat', 'iss'].includes(key)) continue;
-    if (Array.isArray(claims[key])) {
-      settings[`jwt.claims.${key}`] = '{' + claims[key].map(String).join(',') + '}';
-    } else {
-      settings[`jwt.claims.${key}`] = claims[key];
+    if (share) {
+      settings['jwt.claims.shared.event_ids'] = `{${share.instance_ids.join(',')}}`;
+      settings['jwt.claims.shared.person_ids'] = `{${share.person_ids.join(',')}}`;
+      settings['jwt.claims.shared.couple_ids'] = `{${share.couple_ids.join(',')}}`;
+      settings['jwt.claims.shared.cohort_ids'] = `{${share.cohort_ids.join(',')}}`;
     }
   }
 

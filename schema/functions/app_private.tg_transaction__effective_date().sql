@@ -4,7 +4,11 @@ CREATE FUNCTION app_private.tg_transaction__effective_date() RETURNS trigger
     AS $$
 begin
   if NEW.effective_date is null then
-    NEW.effective_date = app_private.calculate_transaction_effective_date(NEW);
+    NEW.effective_date = (select coalesce(
+      (select since from payment join event_instance on event_instance_id = event_instance.id where NEW.payment_id = payment.id),
+      (select due_at from payment where NEW.payment_id = payment.id),
+      NEW.created_at
+    ));
   end if;
   return NEW;
 end;

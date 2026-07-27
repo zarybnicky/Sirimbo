@@ -29,6 +29,7 @@ ALTER TABLE ONLY public.event_instance_trainer
 
 CREATE POLICY admin_all ON public.event_instance_trainer TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event_instance_trainer AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY event_share_view ON public.event_instance_trainer FOR SELECT TO anonymous USING ((instance_id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[])));
 CREATE POLICY member_view ON public.event_instance_trainer FOR SELECT TO member USING (true);
 CREATE POLICY trainer_same_tenant ON public.event_instance_trainer TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (true);
 

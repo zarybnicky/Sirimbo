@@ -16,7 +16,8 @@ create or replace function quick_create_event_instances(
   p_files_legacy text default '',
   p_cohort_ids bigint[] default null,
   p_trainer_lessons_offered integer[] default null,
-  p_copies quick_event_input[] default null
+  p_copies quick_event_input[] default null,
+  p_has_public_details boolean default false
 ) returns setof event_instance
   language plpgsql
 as $$
@@ -44,7 +45,8 @@ begin
   foreach quick_event in array instances loop
     insert into event_instance (
       parent_id, series_id, since, until, name, type, location_id, location_text,
-      capacity, capacity_unit, is_visible, is_public, is_locked, enable_notes,
+      capacity, capacity_unit, is_visible, is_public, has_public_details,
+      is_locked, enable_notes,
       description, summary, files_legacy
     ) values (
       parent_id, v_series_id, quick_event.since, quick_event.until, p_name,
@@ -53,7 +55,8 @@ begin
       coalesce(p_capacity,
         case when coalesce(quick_event.type, 'lesson') = 'lesson' then 2 else 0 end),
       coalesce(p_capacity_unit, 'people'),
-      p_is_visible, p_is_public, p_is_locked, p_enable_notes,
+      p_is_visible, p_is_public, p_is_public and p_has_public_details,
+      p_is_locked, p_enable_notes,
       coalesce(p_description, ''), coalesce(p_summary, ''), coalesce(p_files_legacy, '')
     )
     returning * into created_instance;
@@ -97,4 +100,5 @@ begin
 end;
 $$;
 
+select verify_function('quick_create_event_instances');
 grant execute on function quick_create_event_instances to anonymous;

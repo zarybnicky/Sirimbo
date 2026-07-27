@@ -27,12 +27,10 @@ ALTER TABLE ONLY public.event_instance_target_cohort
 
 CREATE POLICY admin_all ON public.event_instance_target_cohort TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event_instance_target_cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY event_share_view ON public.event_instance_target_cohort FOR SELECT TO anonymous USING ((instance_id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[])));
 CREATE POLICY member_view ON public.event_instance_target_cohort FOR SELECT TO member USING ((instance_id IN ( SELECT event_instance.id
    FROM public.event_instance)));
-CREATE POLICY trainer_delete ON public.event_instance_target_cohort FOR DELETE TO trainer USING (app_private.can_trainer_edit_instance(instance_id));
-CREATE POLICY trainer_insert ON public.event_instance_target_cohort FOR INSERT TO trainer WITH CHECK (app_private.can_trainer_edit_instance(instance_id));
-CREATE POLICY trainer_select ON public.event_instance_target_cohort FOR SELECT TO trainer USING (app_private.can_trainer_edit_instance(instance_id));
-CREATE POLICY trainer_update ON public.event_instance_target_cohort FOR UPDATE TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (app_private.can_trainer_edit_instance(instance_id));
+CREATE POLICY trainer_select ON public.event_instance_target_cohort TO trainer USING (app_private.can_trainer_edit_instance(instance_id));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _500_reconcile_registrations AFTER INSERT OR DELETE OR UPDATE OF instance_id, cohort_id ON public.event_instance_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance_target_cohort__reconcile();

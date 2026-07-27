@@ -44,6 +44,7 @@ ALTER TABLE ONLY public.person
 
 CREATE POLICY admin_all ON public.person TO administrator USING (true);
 CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id = ANY (public.current_person_ids())));
+CREATE POLICY event_share_view ON public.person FOR SELECT TO anonymous USING ((id = ANY ((( SELECT current_setting('jwt.claims.shared.person_ids'::text, true) AS current_setting))::bigint[])));
 CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((id IN ( SELECT v.person_id
    FROM app_private.visible_person_ids() v(person_id))));
 
