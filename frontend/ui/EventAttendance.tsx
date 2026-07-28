@@ -73,7 +73,7 @@ export function EventAttendance({ id }: { id: string }) {
             <tr key={x.id}>
               <td className="align-middle">
                 <div>{x.person?.name}</div>
-                {canEditAttendance && (
+                {canEditAttendance && instance.seriesId && (
                   <div className="text-xs text-neutral-9">
                     Poslední účast:{' '}
                     {x.lastAttended
