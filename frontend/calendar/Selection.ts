@@ -89,6 +89,11 @@ interface EventMap {
 }
 
 class Selection extends TypedEventTarget<EventMap> {
+  public container: () => HTMLElement | null;
+  public options: {
+    validContainers?: string[];
+    shouldSelect: (point: ClientPoint) => boolean;
+  };
   public selecting = false;
   public isDetached = false;
   public selectRect?: Bounds;
@@ -101,13 +106,15 @@ class Selection extends TypedEventTarget<EventMap> {
   public initialEventData?: ClientPoint & { isTouch: boolean };
 
   constructor(
-    public container: () => HTMLElement | null,
-    public options: {
+    container: () => HTMLElement | null,
+    options: {
       validContainers?: string[];
       shouldSelect: (point: ClientPoint) => boolean;
-    } = { shouldSelect: () => true },
+    }
   ) {
     super();
+    this.container = container;
+    this.options = options;
     registerSelection(this);
   }
 

@@ -100,5 +100,4 @@ begin
 end;
 $$;
 
-select verify_function('quick_create_event_instances');
 grant execute on function quick_create_event_instances to anonymous;

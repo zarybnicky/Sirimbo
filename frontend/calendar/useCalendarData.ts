@@ -104,7 +104,7 @@ function mapInstancesToCalendar(
       resourceIds.push('');
       put({ resourceId: '', resourceTitle: '-' });
     }
-    events.push({ kind: 'event', instance, resourceIds, start, end });
+    events.push({ kind: 'event', id: instance.id, instance, resourceIds, start, end });
   }
 
   return {

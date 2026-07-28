@@ -144,7 +144,7 @@ function InstanceTimeGridEvent({
         )}
       >
         <ConflictsInstanceBadge
-          instanceId={event.instance.id}
+          instanceId={event.id}
           className="absolute right-1 top-1 text-accent-11 drop-shadow"
         />
         {event.instance.targetCohortsList &&

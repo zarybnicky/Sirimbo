@@ -33,9 +33,6 @@ import { shortTimeFormatter } from '@/ui/format';
 
 const EMPTY = {};
 
-const calendarEventKey = (event: CalendarEvent) =>
-  event.kind === 'event' ? event.instance.id : event.id;
-
 function pointTargetsDate(
   grid: HTMLElement,
   date: Date,
@@ -472,7 +469,7 @@ function DayColumn({
         {backgroundEventsInRange.map(({ event, style }) => (
           <TimeGridEvent
             isBackgroundEvent
-            key={calendarEventKey(event)}
+            key={event.id}
             style={style}
             event={event}
             slotMetrics={slotMetrics}
@@ -480,7 +477,7 @@ function DayColumn({
         ))}
         {eventsInRange.map(({ event, style }) => (
           <TimeGridEvent
-            key={calendarEventKey(event)}
+            key={event.id}
             style={style}
             event={event}
             slotMetrics={slotMetrics}

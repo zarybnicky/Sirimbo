@@ -17,6 +17,7 @@ type CalendarItemBase = {
 
 export type CalendarInstanceEvent = CalendarItemBase & {
   kind: 'event';
+  id: string;
   instance: EventWithTrainerFragment;
 };
 

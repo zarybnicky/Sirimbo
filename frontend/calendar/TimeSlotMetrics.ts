@@ -1,4 +1,4 @@
-import { merge } from './localizer';
+import { merge } from './localizer.ts';
 
 export type TimeSlotMetrics = ReturnType<typeof getSlotMetrics>;
 

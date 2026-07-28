@@ -1,7 +1,9 @@
-import { describe, expect, test } from 'vitest';
-import { layoutEvents } from './layout';
-import { getSlotMetrics } from './TimeSlotMetrics';
-import type { CalendarEvent } from './types';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
+import { layoutEvents } from './layout.ts';
+import { getSlotMetrics } from './TimeSlotMetrics.ts';
+import type { CalendarEvent } from './types.ts';
+import type { EventType } from '@/graphql/Event.js';
 
 // ---- Helpers ----
 
@@ -23,7 +25,7 @@ function ev(
   start: string,
   end: string,
   opts: {
-    type?: string;
+    type?: EventType;
     trainers?: string[];
     eventId?: string;
   } = {},
@@ -34,6 +36,7 @@ function ev(
     start: new Date(`${DAY}T${start}`),
     end: new Date(`${DAY}T${end}`),
     resourceIds: [],
+    id: `inst-${id}`,
     instance: {
       id: `inst-${id}`,
       type: opts.type ?? 'LESSON',
@@ -46,22 +49,15 @@ function layout(events: CalendarEvent[], eps = 5) {
   return layoutEvents(events, metrics(), eps);
 }
 
-const eventId = (event: CalendarEvent) =>
-  event.kind === 'event' ? event.instance.id : event.id;
-
 type Style = { top: number; width: number; height: number; xOffset: number };
 
 function stylesOf(events: CalendarEvent[], eps = 5): Style[] {
   return layout(events, eps).map((r) => r.style);
 }
 
-function visualRange(s: Style): [number, number] {
-  return [s.xOffset, s.xOffset + s.width];
-}
-
 function visuallyOverlaps(a: Style, b: Style): boolean {
-  const [aLeft, aRight] = visualRange(a);
-  const [bLeft, bRight] = visualRange(b);
+  const [aLeft, aRight] = [a.xOffset, a.xOffset + a.width];
+  const [bLeft, bRight] = [b.xOffset, b.xOffset + b.width];
   const [aTop, aBottom] = [a.top, a.top + a.height];
   const [bTop, bBottom] = [b.top, b.top + b.height];
   // Allow 0.01% tolerance for floating point
@@ -70,6 +66,14 @@ function visuallyOverlaps(a: Style, b: Style): boolean {
     bLeft < aRight - 0.01 &&
     aTop < bBottom - 0.01 &&
     bTop < aBottom - 0.01
+  );
+}
+
+function assertCloseTo(actual: number, expected: number, precision = 2) {
+  const tolerance = 10 ** -precision / 2;
+  assert.ok(
+    Math.abs(actual - expected) < tolerance,
+    `Expected ${actual} to be within ${tolerance} of ${expected}`,
   );
 }
 
@@ -85,8 +89,8 @@ describe('invariants', () => {
       ev('10:30', '12:00', { trainers: ['e'] }),
     ];
     for (const { style } of layout(events)) {
-      expect(style.xOffset).toBeGreaterThanOrEqual(0);
-      expect(style.xOffset + style.width).toBeLessThanOrEqual(100.01);
+      assert.ok(style.xOffset >= 0);
+      assert.ok(style.xOffset + style.width <= 100.01);
     }
   });
 
@@ -100,10 +104,11 @@ describe('invariants', () => {
     const result = layout(events);
     for (let i = 0; i < result.length; i++) {
       for (let j = i + 1; j < result.length; j++) {
-        expect(
+        assert.equal(
           visuallyOverlaps(result[i]!.style, result[j]!.style),
+          false,
           `events ${i} and ${j} visually overlap`,
-        ).toBe(false);
+        );
       }
     }
   });
@@ -115,9 +120,9 @@ describe('invariants', () => {
       ev('10:00', '11:00', { trainers: ['c'] }),
     ];
     const result = layout(events);
-    expect(result).toHaveLength(events.length);
+    assert.equal(result.length, events.length);
     for (const event of events) {
-      expect(result.filter((r) => r.event === event)).toHaveLength(1);
+      assert.equal(result.filter((r) => r.event === event).length, 1);
     }
   });
 
@@ -127,7 +132,7 @@ describe('invariants', () => {
       ev('10:00', '11:00', { trainers: ['b'] }),
     ];
     for (const { style } of layout(events)) {
-      expect(style.width).toBeGreaterThan(0);
+      assert.ok(style.width > 0);
     }
   });
 });
@@ -137,8 +142,8 @@ describe('invariants', () => {
 describe('lane count', () => {
   test('single event fills full width', () => {
     const [s] = stylesOf([ev('10:00', '11:00', { trainers: ['a'] })]);
-    expect(s!.xOffset).toBe(0);
-    expect(s!.width).toBeCloseTo(100);
+    assert.equal(s!.xOffset, 0);
+    assertCloseTo(s!.width, 100);
   });
 
   test('non-overlapping events each fill full width', () => {
@@ -148,7 +153,7 @@ describe('lane count', () => {
       ev('12:00', '13:00', { trainers: ['c'] }),
     ]);
     for (const s of styles) {
-      expect(s.width).toBeCloseTo(100);
+      assertCloseTo(s.width, 100);
     }
   });
 
@@ -157,9 +162,9 @@ describe('lane count', () => {
       ev('10:00', '11:00', { trainers: ['a'] }),
       ev('10:00', '11:00', { trainers: ['b'] }),
     ]);
-    expect(styles).toHaveLength(2);
-    expect(styles[0]!.width).toBeCloseTo(50);
-    expect(styles[1]!.width).toBeCloseTo(50);
+    assert.equal(styles.length, 2);
+    assertCloseTo(styles[0]!.width, 50);
+    assertCloseTo(styles[1]!.width, 50);
   });
 
   test('three concurrent events get equal width', () => {
@@ -169,7 +174,7 @@ describe('lane count', () => {
       ev('10:00', '11:00', { trainers: ['c'] }),
     ]);
     for (const s of styles) {
-      expect(s.width).toBeCloseTo(100 / 3);
+      assertCloseTo(s.width, 100 / 3);
     }
   });
 
@@ -180,10 +185,10 @@ describe('lane count', () => {
       ev('12:00', '13:00', { trainers: ['c'] }),
     ]);
     // First two share
-    expect(styles[0]!.width).toBeLessThan(100);
-    expect(styles[1]!.width).toBeLessThan(100);
+    assert.ok(styles[0]!.width < 100);
+    assert.ok(styles[1]!.width < 100);
     // Third is alone in its own group
-    expect(styles[2]!.width).toBeCloseTo(100);
+    assertCloseTo(styles[2]!.width, 100);
   });
 
   test('chain overlap creates correct lane count', () => {
@@ -194,10 +199,10 @@ describe('lane count', () => {
       ev('10:30', '11:15', { trainers: ['b'] }),
       ev('11:00', '11:45', { trainers: ['c'] }),
     ]);
-    expect(styles).toHaveLength(3);
+    assert.equal(styles.length, 3);
     // Should only need 2 lanes (A and C can share a lane)
     const lanes = new Set(styles.map((s) => s.xOffset));
-    expect(lanes.size).toBeLessThanOrEqual(2);
+    assert.ok(lanes.size <= 2);
   });
 });
 
@@ -216,7 +221,7 @@ describe('expansion', () => {
     // But B spans the full group so it stays at baseWidth during the overlap.
     // After A and C end, B can't change width because it's one event with one style.
     // This is a fundamental limitation: one style per event.
-    expect(styles).toHaveLength(3);
+    assert.equal(styles.length, 3);
   });
 
   test('round-robin: concurrent events share free space fairly', () => {
@@ -235,9 +240,9 @@ describe('expansion', () => {
     const lateEvents = result.filter(
       (r) => r.event.start.getHours() === 11 && r.event.start.getMinutes() === 30,
     );
-    expect(lateEvents).toHaveLength(2);
+    assert.equal(lateEvents.length, 2);
     // Both should get roughly equal width (2 lanes each out of 4)
-    expect(lateEvents[0]!.style.width).toBeCloseTo(lateEvents[1]!.style.width, 0);
+    assertCloseTo(lateEvents[0]!.style.width, lateEvents[1]!.style.width, 0);
   });
 });
 
@@ -253,7 +258,7 @@ describe('rank and type priority', () => {
     const group = result.find(
       (r) => r.event.kind === 'event' && r.event.instance.type === 'GROUP',
     );
-    expect(group!.style.xOffset).toBe(0);
+    assert.equal(group!.style.xOffset, 0);
   });
 
   test('trainer lane consistency across groups', () => {
@@ -289,7 +294,7 @@ describe('rank and type priority', () => {
       .toSorted((a, b) => a.x - b.x)
       .map((o) => o.t);
 
-    expect(order1).toEqual(order2);
+    assert.deepEqual(order1, order2);
   });
 
   test('trainer consistency when one trainer absent', () => {
@@ -314,8 +319,8 @@ describe('rank and type priority', () => {
     };
 
     // a should still be left of c in both groups
-    expect(offsetOf('a', 10)).toBeLessThan(offsetOf('c', 10));
-    expect(offsetOf('a', 12)).toBeLessThan(offsetOf('c', 12));
+    assert.ok(offsetOf('a', 10) < offsetOf('c', 10));
+    assert.ok(offsetOf('a', 12) < offsetOf('c', 12));
   });
 });
 
@@ -329,10 +334,10 @@ describe('epsilon', () => {
       ev('10:45', '11:30', { trainers: ['b'] }),
     ]);
     // Should share a lane (1 lane total) since they're within epsilon
-    expect(styles).toHaveLength(2);
+    assert.equal(styles.length, 2);
     // Both should get full width (separate groups or shared lane)
     for (const s of styles) {
-      expect(s.width).toBeCloseTo(100);
+      assertCloseTo(s.width, 100);
     }
   });
 
@@ -342,10 +347,10 @@ describe('epsilon', () => {
       ev('10:00', '11:00', { trainers: ['a'] }),
       ev('10:50', '11:30', { trainers: ['b'] }),
     ]);
-    expect(styles).toHaveLength(2);
+    assert.equal(styles.length, 2);
     // Should need 2 lanes
-    expect(styles[0]!.width).toBeLessThan(100);
-    expect(styles[1]!.width).toBeLessThan(100);
+    assert.ok(styles[0]!.width < 100);
+    assert.ok(styles[1]!.width < 100);
   });
 
   test('zero epsilon: adjacent events do not overlap', () => {
@@ -357,7 +362,7 @@ describe('epsilon', () => {
       0,
     );
     for (const s of styles) {
-      expect(s.width).toBeCloseTo(100);
+      assertCloseTo(s.width, 100);
     }
   });
 });
@@ -367,7 +372,7 @@ describe('epsilon', () => {
 describe('randomized', () => {
   test('no overflow or visual overlap in random schedules', () => {
     const trainerPool = ['a', 'b', 'c', 'd', 'e', 'f'];
-    const types = ['LESSON', 'LESSON', 'LESSON', 'GROUP'];
+    const types = ['LESSON', 'LESSON', 'LESSON', 'GROUP'] satisfies EventType[];
 
     for (let trial = 0; trial < 50; trial++) {
       const events: CalendarEvent[] = [];
@@ -400,28 +405,30 @@ describe('randomized', () => {
 
       // Invariant 1: no overflow
       for (const { style } of result) {
-        expect(style.xOffset, `trial ${trial}: negative xOffset`).toBeGreaterThanOrEqual(
-          0,
+        assert.ok(
+          style.xOffset >= 0,
+          `trial ${trial}: negative xOffset`,
         );
-        expect(
-          style.xOffset + style.width,
+        assert.ok(
+          style.xOffset + style.width <= 100.01,
           `trial ${trial}: overflow past 100%`,
-        ).toBeLessThanOrEqual(100.01);
-        expect(style.width, `trial ${trial}: zero width`).toBeGreaterThan(0);
+        );
+        assert.ok(style.width > 0, `trial ${trial}: zero width`);
       }
 
       // Invariant 2: no visual overlap
       for (let i = 0; i < result.length; i++) {
         for (let j = i + 1; j < result.length; j++) {
-          expect(
+          assert.equal(
             visuallyOverlaps(result[i]!.style, result[j]!.style),
+            false,
             `trial ${trial}: events ${i} and ${j} visually overlap`,
-          ).toBe(false);
+          );
         }
       }
 
       // Invariant 3: all events present
-      expect(result).toHaveLength(events.length);
+      assert.equal(result.length, events.length);
     }
   });
 });
@@ -490,41 +497,42 @@ describe('full afternoon schedule', () => {
   // ---- Structural invariants ----
 
   test('all events present', () => {
-    expect(result).toHaveLength(allEvents.length);
+    assert.equal(result.length, allEvents.length);
   });
 
   test('no overflow', () => {
     for (const { style } of result) {
-      expect(style.xOffset).toBeGreaterThanOrEqual(0);
-      expect(style.xOffset + style.width).toBeLessThanOrEqual(100.01);
+      assert.ok(style.xOffset >= 0);
+      assert.ok(style.xOffset + style.width <= 100.01);
     }
   });
 
   test('no visual overlap', () => {
     for (let i = 0; i < result.length; i++) {
       for (let j = i + 1; j < result.length; j++) {
-        expect(
+        assert.equal(
           visuallyOverlaps(result[i]!.style, result[j]!.style),
-          `${eventId(result[i]!.event)} and ${eventId(result[j]!.event)} overlap`,
-        ).toBe(false);
+          false,
+          `${result[i]!.event.id} and ${result[j]!.event.id} overlap`,
+        );
       }
     }
   });
 
   test('positive dimensions', () => {
     for (const { style } of result) {
-      expect(style.width).toBeGreaterThan(0);
-      expect(style.height).toBeGreaterThan(0);
+      assert.ok(style.width > 0);
+      assert.ok(style.height > 0);
     }
   });
 
   // ---- Trainer lane consistency ----
 
   test('trainer A consecutive lessons maintain same lane', () => {
-    expect(styleOf(a1).xOffset).toBe(styleOf(a2).xOffset);
+    assert.equal(styleOf(a1).xOffset, styleOf(a2).xOffset);
   });
   test('trainer B consecutive lessons maintain same lane', () => {
-    expect(styleOf(b1).xOffset).toBe(styleOf(b2).xOffset);
+    assert.equal(styleOf(b1).xOffset, styleOf(b2).xOffset);
   });
 
   test('trainer relative order preserved: A, B, C, D', () => {
@@ -542,11 +550,11 @@ describe('full afternoon schedule', () => {
     // A and D both teach at 16:45 — their relative order should match
     const aBeforeD_14 = order14.indexOf('A') < order14.indexOf('D');
     const aBeforeD_17 = styleOf(a4).xOffset < styleOf(d3).xOffset;
-    expect(aBeforeD_14).toBe(aBeforeD_17);
+    assert.equal(aBeforeD_14, aBeforeD_17);
   });
 
   test('trainer A stays left of C when C returns at 15:30', () => {
-    expect(styleOf(a3).xOffset).toBeLessThan(styleOf(c3).xOffset);
+    assert.ok(styleOf(a3).xOffset < styleOf(c3).xOffset);
   });
 
   // ---- Staggered overlap handling ----
@@ -554,12 +562,12 @@ describe('full afternoon schedule', () => {
   test('d2 overlaps with a2 and they are side by side', () => {
     // d2 (15:15-16:00) overlaps with a2 (14:45-15:30) by 15 minutes
     // (beyond the 5-minute epsilon, so they're truly concurrent)
-    expect(visuallyOverlaps(styleOf(a2), styleOf(d2))).toBe(false);
+    assert.equal(visuallyOverlaps(styleOf(a2), styleOf(d2)), false);
   });
 
   test('zlata overlaps with d2 and they are side by side', () => {
     // zlata (15:45-17:15) overlaps with d2 (15:15-16:00) by 15 minutes
-    expect(visuallyOverlaps(styleOf(zlata), styleOf(d2))).toBe(false);
+    assert.equal(visuallyOverlaps(styleOf(zlata), styleOf(d2)), false);
   });
 
   // ---- Fair width distribution ----
@@ -570,14 +578,14 @@ describe('full afternoon schedule', () => {
     const minWidth = Math.min(...peak.map((s) => s.width));
     const maxWidth = Math.max(...peak.map((s) => s.width));
     // Round-robin: ratio between widest and narrowest ≤ 2:1
-    expect(maxWidth / minWidth).toBeLessThanOrEqual(2.01);
+    assert.ok(maxWidth / minWidth <= 2.01);
   });
 
   test('events in sparse regions expand', () => {
     // a4 and d3 at 16:45-17:30 only overlap with tail of zlata (3 events)
     // Each should be wider than if peak concurrency (5) applied
-    expect(styleOf(a4).width).toBeGreaterThanOrEqual(20);
-    expect(styleOf(d3).width).toBeGreaterThanOrEqual(20);
+    assert.ok(styleOf(a4).width >= 20);
+    assert.ok(styleOf(d3).width >= 20);
   });
 });
 
@@ -589,23 +597,23 @@ describe('degenerate cases', () => {
       ev('10:00', '10:45', { trainers: [`trainer-${i}`] }),
     );
     const result = layout(events);
-    expect(result).toHaveLength(8);
+    assert.equal(result.length, 8);
     for (const { style } of result) {
-      expect(style.width).toBeCloseTo(100 / 8);
-      expect(style.xOffset + style.width).toBeLessThanOrEqual(100.01);
+      assertCloseTo(style.width, 100 / 8);
+      assert.ok(style.xOffset + style.width <= 100.01);
     }
     // No visual overlaps
     for (let i = 0; i < result.length; i++) {
       for (let j = i + 1; j < result.length; j++) {
-        expect(visuallyOverlaps(result[i]!.style, result[j]!.style)).toBe(false);
+        assert.equal(visuallyOverlaps(result[i]!.style, result[j]!.style), false);
       }
     }
   });
 
   test('single very long event', () => {
     const [s] = stylesOf([ev('08:00', '20:00', { trainers: ['a'] })]);
-    expect(s!.width).toBeCloseTo(100);
-    expect(s!.xOffset).toBe(0);
+    assertCloseTo(s!.width, 100);
+    assert.equal(s!.xOffset, 0);
   });
 
   test('many short non-overlapping events reuse lanes', () => {
@@ -624,7 +632,7 @@ describe('degenerate cases', () => {
     });
     const result = layout(events);
     for (const { style } of result) {
-      expect(style.width).toBeCloseTo(100);
+      assertCloseTo(style.width, 100);
     }
   });
 
@@ -641,13 +649,13 @@ describe('degenerate cases', () => {
       ev('11:45', '12:30', { trainers: ['B'] }),
     ];
     const result = layout(events);
-    expect(result).toHaveLength(6);
+    assert.equal(result.length, 6);
     // Should be exactly 2 distinct xOffsets
     const offsets = new Set(result.map((r) => Math.round(r.style.xOffset)));
-    expect(offsets.size).toBe(2);
+    assert.equal(offsets.size, 2);
     // Each should be ~50% wide
     for (const { style } of result) {
-      expect(style.width).toBeCloseTo(50, 0);
+      assertCloseTo(style.width, 50, 0);
     }
     // A should always be in the same column
     const aOffsets = result
@@ -657,7 +665,7 @@ describe('degenerate cases', () => {
           r.event.instance.trainersList?.some((t: any) => t.personId === 'A'),
       )
       .map((r) => r.style.xOffset);
-    expect(new Set(aOffsets).size).toBe(1);
+    assert.equal(new Set(aOffsets).size, 1);
     // B should always be in the same column
     const bOffsets = result
       .filter(
@@ -666,6 +674,6 @@ describe('degenerate cases', () => {
           r.event.instance.trainersList?.some((t: any) => t.personId === 'B'),
       )
       .map((r) => r.style.xOffset);
-    expect(new Set(bOffsets).size).toBe(1);
+    assert.equal(new Set(bOffsets).size, 1);
   });
 });

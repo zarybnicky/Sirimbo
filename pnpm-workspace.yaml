@@ -5,6 +5,7 @@ packages:
   - backend
   - e2e
 
+strictPeerDependencies: true
 injectWorkspacePackages: false
 nodeLinker: isolated
 
