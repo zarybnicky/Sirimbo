@@ -21,7 +21,6 @@ import type {
   CalendarInstanceEvent,
   DateRange,
   InteractionInfo,
-  Resource,
   SlotInfo,
   ViewProps,
 } from './types';
@@ -33,7 +32,7 @@ import {
   CalendarViews,
 } from '@/calendar/CalendarViews';
 import { useCalendarData } from '@/calendar/useCalendarData';
-import { TrainerFilter } from '@/calendar/TrainerFilter';
+import { TrainerFilter, type TrainerFilterOption } from '@/calendar/TrainerFilter';
 import { GroupByPicker } from '@/calendar/GroupByPicker';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import { DateNavigator } from '@/calendar/DateNavigator';
@@ -48,7 +47,6 @@ import {
 } from '@/calendar/eventDefaults';
 
 const emptyArray: readonly [] = [];
-const emptyResources: readonly Resource[] = [];
 const preventDefault = (e: Event) => e.preventDefault();
 const calendarViewKeys = [
   'month',
@@ -68,7 +66,7 @@ export function Calendar({
   dateRange,
   onDropFromOutside,
   onRemove,
-  additionalResources = emptyResources,
+  availableTrainers,
   primary,
 }: {
   parentId?: string;
@@ -79,7 +77,7 @@ export function Calendar({
     info: InteractionInfo,
   ) => void | Promise<void>;
   onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
-  additionalResources?: readonly Resource[];
+  availableTrainers?: readonly TrainerFilterOption[];
   primary?: ViewProps['primary'];
 }) {
   const auth = useAuth();
@@ -124,16 +122,21 @@ export function Calendar({
   const trainerIds = useAtomValue(trainerIdsFilterAtom);
   const participantIds = useAtomValue(participantIdsFilterAtom);
   const eventTypes = useAtomValue(eventTypesFilterAtom);
+  const effectiveTrainerIds = React.useMemo(() => {
+    if (!availableTrainers) return trainerIds;
+    const availableIds = new Set(availableTrainers.map((trainer) => trainer.id));
+    return trainerIds.filter((trainerId) => availableIds.has(trainerId));
+  }, [availableTrainers, trainerIds]);
   const filters = React.useMemo(
     () => ({
       onlyMine,
-      trainerIds,
+      trainerIds: effectiveTrainerIds,
       participantIds,
       eventTypes,
       myPersonIds: auth.personIds,
       parentId,
     }),
-    [auth.personIds, onlyMine, trainerIds, participantIds, eventTypes, parentId],
+    [auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId],
   );
 
   const { fetching, range, events, resources, refresh } = useCalendarData(
@@ -141,8 +144,30 @@ export function Calendar({
     date,
     filters,
     groupBy,
-    additionalResources,
   );
+  const displayedResources = React.useMemo(() => {
+    const resourceMap = new Map(
+      resources.map((resource) => [resource.resourceId, resource]),
+    );
+    if (!onlyMine && groupBy === 'trainer') {
+      for (const trainer of availableTrainers ?? []) {
+        resourceMap.set(`person:${trainer.id}`, {
+          resourceId: `person:${trainer.id}`,
+          resourceTitle: trainer.name,
+        });
+      }
+    }
+
+    const selectedResources =
+      !onlyMine && groupBy === 'trainer' && effectiveTrainerIds.length > 0
+        ? new Set(effectiveTrainerIds.map((trainerId) => `person:${trainerId}`))
+        : null;
+    return [...resourceMap.values()]
+      .filter(
+        (resource) => !selectedResources || selectedResources.has(resource.resourceId),
+      )
+      .toSorted((a, b) => a.resourceTitle.localeCompare(b.resourceTitle));
+  }, [availableTrainers, effectiveTrainerIds, groupBy, onlyMine, resources]);
   const [, moveEvent] = useMutation(MoveEventInstanceDocument);
   const onMove = React.useCallback(
     async ({ instance }: CalendarInstanceEvent, info: InteractionInfo) => {
@@ -249,7 +274,7 @@ export function Calendar({
           >
             Pouze moje
           </button>
-          <TrainerFilter />
+          <TrainerFilter availableTrainers={availableTrainers} />
           <ParticipantFilter />
           <EventTypeFilter />
           {fetching && <Spinner />}
@@ -262,7 +287,7 @@ export function Calendar({
         range={range}
         events={events}
         backgroundEvents={emptyArray}
-        resources={resources}
+        resources={displayedResources}
         primary={primary}
       />
 

@@ -53,7 +53,6 @@ function prepareVariables(
 function mapInstancesToCalendar(
   list: EventInstanceRangeQuery['list'],
   groupBy: CalendarGroupBy,
-  additionalResources: readonly Resource[],
   eventTypes: EventType[],
 ): { events: CalendarInstanceEvent[]; resources: Resource[] } {
   const events: CalendarInstanceEvent[] = [];
@@ -62,10 +61,6 @@ function mapInstancesToCalendar(
   const filterTypes = eventTypes.length !== allEventTypes.length;
 
   const put = (resource: Resource) => resourceMap.set(resource.resourceId, resource);
-  if (groupBy !== 'none') {
-    for (const resource of additionalResources) put(resource);
-  }
-
   for (const instance of list ?? []) {
     if (filterTypes && (!instance.type || !visibleTypes.has(instance.type))) continue;
     const start = new Date(instance.since);
@@ -120,7 +115,6 @@ export function useCalendarData(
   date: Date,
   filters: CalendarFilters,
   groupBy: CalendarGroupBy,
-  additionalResources: readonly Resource[],
 ) {
   const client = useClient();
 
@@ -191,7 +185,6 @@ export function useCalendarData(
     const schedule = mapInstancesToCalendar(
       data?.list ?? null,
       effectiveGroupBy,
-      additionalResources,
       filters.eventTypes,
     );
     const competitionsByEvent = new Map<string, CompetitionBucket>();
@@ -269,7 +262,6 @@ export function useCalendarData(
     };
   }, [
     activityData?.activityTimelineList,
-    additionalResources,
     data?.list,
     effectiveGroupBy,
     filters.eventTypes,

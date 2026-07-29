@@ -70,7 +70,7 @@ export function CampSchedule({
     return () => setGroupBy(previous);
   }, [setGroupBy]);
 
-  const trainerResources = React.useMemo(() => {
+  const availableTrainers = React.useMemo(() => {
     const trainers = new Map<string, string>();
     for (const trainer of registrationsQuery.data?.eventInstance?.trainersList ?? []) {
       trainers.set(trainer.personId, trainer.person?.name ?? '');
@@ -81,11 +81,17 @@ export function CampSchedule({
         if (person) trainers.set(person.id, person.name);
       }
     }
-    return [...trainers].map(([id, name]) => ({
-      resourceId: `person:${id}`,
-      resourceTitle: name,
-    }));
-  }, [registrations, registrationsQuery.data?.eventInstance?.trainersList]);
+    for (const lesson of registrationsQuery.data?.scheduledLessons ?? []) {
+      for (const trainer of lesson.trainersList ?? []) {
+        trainers.set(trainer.personId, trainer.person?.name ?? '');
+      }
+    }
+    return [...trainers].map(([id, name]) => ({ id, name }));
+  }, [
+    registrations,
+    registrationsQuery.data?.eventInstance?.trainersList,
+    registrationsQuery.data?.scheduledLessons,
+  ]);
   const dateRange = React.useMemo(
     () => ({
       since: startOf(new Date(since), 'day'),
@@ -192,7 +198,9 @@ export function CampSchedule({
           dateRange={dateRange}
           onDropFromOutside={scheduleDemand.execute}
           onRemove={removeLesson.execute}
-          additionalResources={groupBy === 'trainer' ? trainerResources : undefined}
+          availableTrainers={
+            registrationsQuery.data?.eventInstance ? availableTrainers : undefined
+          }
           primary="day"
         />
       </div>
