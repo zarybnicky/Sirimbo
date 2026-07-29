@@ -67,6 +67,7 @@ export function Calendar({
   onDropFromOutside,
   onRemove,
   availableTrainers,
+  showGroupLessonsColumn = false,
   primary,
 }: {
   parentId?: string;
@@ -78,6 +79,7 @@ export function Calendar({
   ) => void | Promise<void>;
   onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
   availableTrainers?: readonly TrainerFilterOption[];
+  showGroupLessonsColumn?: boolean;
   primary?: ViewProps['primary'];
 }) {
   const auth = useAuth();
@@ -144,6 +146,7 @@ export function Calendar({
     date,
     filters,
     groupBy,
+    showGroupLessonsColumn,
   );
   const displayedResources = React.useMemo(() => {
     const resourceMap = new Map(
@@ -163,15 +166,18 @@ export function Calendar({
         ? new Set(effectiveTrainerIds.map((trainerId) => `person:${trainerId}`))
         : null;
     return [...resourceMap.values()]
-      .filter(
-        (resource) => !selectedResources || selectedResources.has(resource.resourceId),
-      )
+      .filter((resource) => {
+        if (!selectedResources) return true;
+        const [resourceType] = parseResourceKey(resource.resourceId);
+        return resourceType === 'eventType' || selectedResources.has(resource.resourceId);
+      })
       .toSorted((a, b) => a.resourceTitle.localeCompare(b.resourceTitle));
   }, [availableTrainers, effectiveTrainerIds, groupBy, onlyMine, resources]);
   const [, moveEvent] = useMutation(MoveEventInstanceDocument);
   const onMove = React.useCallback(
     async ({ instance }: CalendarInstanceEvent, info: InteractionInfo) => {
       const [type, resourceId] = parseResourceKey(info.resource?.resourceId);
+      if (type === 'eventType' && resourceId !== instance.type) return;
 
       await moveEvent({
         input: {

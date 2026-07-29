@@ -1,4 +1,4 @@
-import { add } from 'date-arithmetic';
+import { add, eq } from 'date-arithmetic';
 import type { CalendarEvent, CalendarInstanceEvent, SlotInfo } from '@/calendar/types';
 import { EventType } from '@/graphql';
 
@@ -52,6 +52,7 @@ export function defaultsFromSlot(
   }
 
   const defaults: CreateEventDefaults = {
+    type: resourceType === 'eventType' && resourceId === 'GROUP' ? 'GROUP' : undefined,
     since: slot.start,
     until: slot.action === 'click' ? add(slot.start, 45, 'minutes') : slot.end,
     trainerPersonIds,
@@ -79,12 +80,11 @@ export function defaultsFromSlot(
 
 function findClosest(events: readonly CalendarEvent[], personId: string, since: Date) {
   let closestPrev: CalendarInstanceEvent | undefined;
-  const dateKey = since.toISOString().slice(0, 10);
 
   for (const event of events) {
     if (
       event.kind === 'event' &&
-      event.start.toISOString().slice(0, 10) === dateKey &&
+      eq(event.start, since, 'day') &&
       event.instance.trainersList?.some((x) => x.personId === personId) &&
       event.end <= since &&
       (!closestPrev || closestPrev.start < event.start)

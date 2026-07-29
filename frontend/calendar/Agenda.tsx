@@ -1,7 +1,7 @@
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
 import { capitalize, formatEventType, longDayFormatter } from '@/ui/format';
-import { add } from 'date-arithmetic';
+import { add, startOf } from 'date-arithmetic';
 import Link from 'next/link';
 import React from 'react';
 import type {
@@ -31,9 +31,9 @@ const preventDefault = (e: Event) => e.preventDefault();
 
 function Agenda({ events }: ViewProps): React.ReactNode {
   const dataByDay = React.useMemo(() => {
-    const map = new Map<string, MapItem>();
+    const map = new Map<number, MapItem>();
     for (const calendarEvent of events) {
-      const date = calendarEvent.start.toISOString().slice(0, 10);
+      const date = startOf(calendarEvent.start, 'day').valueOf();
       const mapItem: MapItem = map.get(date) ?? {
         birthdays: [],
         competitions: [],
@@ -86,7 +86,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
           },
         ] as const,
     );
-    return list.toSorted((x, y) => x[0].localeCompare(y[0]));
+    return list.toSorted((x, y) => x[0] - y[0]);
   }, [events]);
 
   return (

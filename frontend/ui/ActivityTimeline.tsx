@@ -121,7 +121,7 @@ export function ActivityTimeline({
         const byTime = (a.sortAt ?? '').localeCompare(b.sortAt ?? '') * direction;
         return byTime || a.id.localeCompare(b.id);
       })) {
-      const key = (item.sortAt ?? item.activityDate ?? '').slice(0, 10);
+      const key = item.activityDate ?? item.sortAt?.slice(0, 10) ?? '';
       const group = grouped.get(key);
       if (group) group.push(item);
       else grouped.set(key, [item]);
@@ -253,7 +253,7 @@ function TimelineDay({
     <section>
       <h4 className="mb-2 mt-5 text-2xl tracking-wide first:mt-3">
         {date
-          ? capitalize(longDayFormatter.format(new Date(date)))
+          ? capitalize(longDayFormatter.format(new Date(`${date}T00:00:00`)))
           : mode === 'future'
             ? 'Budoucí'
             : 'Minulé'}

@@ -192,8 +192,8 @@ begin
       from birthdays b
       join person p on p.id = b.person_id
       where b.birthday_date >= p.birth_date
-        and ((b.birthday_date + time '12:00')::timestamp)::timestamptz >= p_since
-        and ((b.birthday_date + time '12:00')::timestamp)::timestamptz < p_until;
+        and b.birthday_date >= p_since::date
+        and b.birthday_date < p_until::date;
   end if;
 
   if include_competition_result then
