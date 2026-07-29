@@ -106,33 +106,33 @@ export function EventPageClient({
       });
     }
 
+    if (instance?.type === 'CAMP') {
+      tabs.push(
+        {
+          id: 'lessons',
+          title: 'Lekce',
+          contents: () => (
+            <div className="col-full-width relative">
+              <CampLessonsTable id={instance.id} />
+            </div>
+          ),
+        },
+        {
+          id: 'trainers',
+          title: 'Trenéři',
+          contents: () => (
+            <div className="col-full-width relative">
+              <CampTrainersTable
+                id={instance.id}
+                since={instance.since}
+                until={instance.until}
+              />
+            </div>
+          ),
+        },
+      );
+    }
     if (auth.isTrainerOrAdmin && instance) {
-      if (instance.type === 'CAMP') {
-        tabs.push(
-          {
-            id: 'lessons',
-            title: 'Lekce',
-            contents: () => (
-              <div className="col-full-width relative">
-                <CampLessonsTable id={instance.id} />
-              </div>
-            ),
-          },
-          {
-            id: 'trainers',
-            title: 'Trenéři',
-            contents: () => (
-              <div className="col-full-width relative">
-                <CampTrainersTable
-                  id={instance.id}
-                  since={instance.since}
-                  until={instance.until}
-                />
-              </div>
-            ),
-          },
-        );
-      }
       tabs.push(
         {
           id: 'attendance',
