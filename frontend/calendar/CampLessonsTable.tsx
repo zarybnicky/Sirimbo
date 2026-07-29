@@ -8,6 +8,7 @@ import { Spinner } from '@/ui/Spinner';
 import * as React from 'react';
 import { type Column, DataGrid } from 'react-data-grid';
 import { useQuery } from 'urql';
+import { isTruthy } from '@/lib/truthyFilter';
 
 type Lesson = NonNullable<EventInstanceRegistrationsQuery['scheduledLessons']>[number];
 type Cell = { requested: number; lessons: Lesson[] };
@@ -17,8 +18,6 @@ type Row = {
   note: string | null;
   coupleMemberIds: string[];
   cells: Map<string, Cell>;
-  extra: boolean;
-  free: boolean;
   nested?: boolean;
 };
 
@@ -37,57 +36,43 @@ export function CampLessonsTable({ id }: { id: string }) {
     }
 
     for (const registration of registrations) {
-      const registrantId = registration.personId
+      const id = registration.personId
         ? `person:${registration.personId}`
         : `couple:${registration.coupleId}`;
       const row: Row = {
-        id: registrantId,
+        id,
         registrant: registration.person?.name || formatCoupleName(registration.couple),
         note: registration.note,
         coupleMemberIds: registration.couple
-          ? [registration.couple.man?.id, registration.couple.woman?.id].filter(
-              (memberId): memberId is string => !!memberId,
-            )
+          ? [registration.couple.man?.id, registration.couple.woman?.id].filter(isTruthy)
           : [],
         cells: new Map(),
-        extra: false,
-        free: false,
       };
       for (const demand of registration.eventLessonDemandsByRegistrationIdList) {
         const trainerId = demand.trainer?.person?.id ?? `trainer:${demand.trainerId}`;
         trainers.set(trainerId, demand.trainer?.person?.name || 'Bez trenéra');
         row.cells.set(trainerId, { requested: demand.lessonCount, lessons: [] });
       }
-      rows.set(registrantId, row);
+      rows.set(id, row);
     }
 
     for (const lesson of query.data?.scheduledLessons ?? []) {
-      const lessonRegistrations =
-        lesson.registrationsList.length > 0 ? lesson.registrationsList : [null];
-      const lessonTrainers =
-        lesson.trainersList.length > 0 ? lesson.trainersList : [null];
-      for (const trainer of lessonTrainers) {
-        trainers.set(trainer?.personId ?? 'none', trainer?.person?.name || 'Bez trenéra');
+      for (const trainer of lesson.trainersList) {
+        trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
       }
-      for (const registration of lessonRegistrations) {
-        const registrantId = registration
-          ? registration.personId
-            ? `person:${registration.personId}`
-            : `couple:${registration.coupleId}`
-          : 'free';
+      for (const registration of lesson.registrationsList) {
+        const registrantId = registration.personId
+          ? `person:${registration.personId}`
+          : `couple:${registration.coupleId}`;
         const row = rows.get(registrantId) ?? {
           id: registrantId,
-          registrant: registration
-            ? registration.person?.name || formatCoupleName(registration.couple)
-            : 'Volné lekce',
-          note: registration?.note ?? null,
+          registrant: registration.person?.name || formatCoupleName(registration.couple),
+          note: registration.note,
           coupleMemberIds: [],
           cells: new Map(),
-          extra: !!registration,
-          free: !registration,
         };
-        for (const trainer of lessonTrainers) {
-          const trainerId = trainer?.personId ?? 'none';
+        for (const trainer of lesson.trainersList) {
+          const trainerId = trainer.personId;
           const cell = row.cells.get(trainerId) ?? { requested: 0, lessons: [] };
           cell.lessons.push(lesson);
           row.cells.set(trainerId, cell);
@@ -121,11 +106,7 @@ export function CampLessonsTable({ id }: { id: string }) {
     const result: Row[] = [];
     for (const row of [...rows.values()]
       .filter((row) => !nestedIds.has(row.id))
-      .toSorted(
-        (a, b) =>
-          Number(a.free) - Number(b.free) ||
-          a.registrant.localeCompare(b.registrant, 'cs'),
-      )) {
+      .toSorted((a, b) => a.registrant.localeCompare(b.registrant, 'cs'))) {
       result.push(
         row,
         ...(nestedRows.get(row.id) ?? [])
@@ -147,9 +128,7 @@ export function CampLessonsTable({ id }: { id: string }) {
         renderCell: ({ row }) => {
           const detail = row.nested
             ? ['samostatně', row.note].filter(Boolean).join(' · ')
-            : row.free
-              ? ''
-              : [row.extra && 'mimo přihlášku', row.note].filter(Boolean).join(' · ');
+            : (row.note ?? '');
           return (
             <div className="flex h-full min-w-0 items-center gap-2">
               {row.nested && <span className="shrink-0 text-neutral-9">↳</span>}
@@ -168,57 +147,79 @@ export function CampLessonsTable({ id }: { id: string }) {
       ...trainers.map<Column<Row>>(([trainerId, trainer]) => ({
         key: trainerId,
         name: trainer,
-        width: 132,
+        width: 120,
         cellClass: '!p-0',
         renderHeaderCell: () => (
-          <div className="min-w-0 grow text-center">
-            <div className="truncate font-medium" title={trainer}>
-              {trainer}
-            </div>
-            <div className="grid grid-cols-2 text-[10px] font-normal text-neutral-10">
-              <span>Dostal</span>
-              <span>Chtěl</span>
-            </div>
+          <div className="min-w-0 grow text-center font-medium truncate" title={trainer}>
+            {trainer}
           </div>
         ),
         renderCell: ({ row }) => {
-          const cell = row.cells.get(trainerId) ?? { requested: 0, lessons: [] };
-          const assigned = cell.lessons.length;
+          const { requested, lessons } = row.cells.get(trainerId) ?? {
+            requested: 0,
+            lessons: [],
+          };
+          const assigned = lessons.length;
+          const title = lessons
+            .map((x) =>
+              dateTimeFormatter.formatRange(new Date(x.since), new Date(x.until)),
+            )
+            .join('\n');
           return (
-            <div
-              className="grid h-full grow grid-cols-2 divide-x divide-neutral-5 text-center tabular-nums"
-              title={cell.lessons
-                .map((lesson) =>
-                  dateTimeFormatter.formatRange(
-                    new Date(lesson.since),
-                    new Date(lesson.until),
-                  ),
-                )
-                .join('\n')}
-            >
-              <span className="grid place-items-center font-semibold">{assigned}</span>
+            <div className="h-full grow text-center tabular-nums" title={title}>
               <span
                 className="grid place-items-center"
                 style={
-                  assigned > cell.requested
+                  assigned > requested
                     ? {
                         backgroundColor: 'hsl(40 90% 88%)',
                         color: 'hsl(35 80% 22%)',
                       }
-                    : assigned < cell.requested
+                    : assigned < requested
                       ? {
-                          backgroundColor: `hsl(0 75% ${62 + (assigned / cell.requested) * 38}%)`,
+                          backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
                           color: 'hsl(0 65% 25%)',
                         }
                       : undefined
                 }
               >
-                {cell.requested}
+                {assigned} ({requested})
               </span>
             </div>
           );
         },
       })),
+      {
+        key: 'total',
+        name: 'Celkem',
+        width: 120,
+        cellClass: '!p-0',
+        renderCell: ({ row }) => {
+          const cells = [...row.cells.values()];
+          const assigned = cells.reduce((sum, cell) => sum + cell.lessons.length, 0);
+          const requested = cells.reduce((sum, cell) => sum + cell.requested, 0);
+          return (
+            <div
+              className="h-full grow text-center tabular-nums grid place-items-center"
+              style={
+                assigned > requested
+                  ? {
+                      backgroundColor: 'hsl(40 90% 88%)',
+                      color: 'hsl(35 80% 22%)',
+                    }
+                  : assigned < requested
+                    ? {
+                        backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
+                        color: 'hsl(0 65% 25%)',
+                      }
+                    : undefined
+              }
+            >
+              {assigned} ({requested})
+            </div>
+          );
+        },
+      },
     ],
     [trainers],
   );
