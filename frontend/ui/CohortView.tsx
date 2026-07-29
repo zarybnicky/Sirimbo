@@ -16,10 +16,12 @@ import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { useAuth } from './use-auth';
 
 type CohortWithMembers = NonNullable<CohortWithMembersQuery['entity']>;
 
 export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
+  const auth = useAuth();
   const members = React.useMemo(
     () => cohort.cohortMembershipsList ?? [],
     [cohort.cohortMembershipsList],
@@ -42,6 +44,8 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
       <h6 className="mb-2 font-bold">{cohort.location}</h6>
       <RichTextView value={description} />
 
+      {auth.isLoggedIn && (
+        <>
       <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Členové ({members.length})
       </h3>
@@ -87,6 +91,8 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
       </div>
 
       <ActivityTimeline cohortId={cohort.id} />
+                                                 </>
+      )}
     </>
   );
 }
