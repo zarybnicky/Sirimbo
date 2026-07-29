@@ -94,7 +94,7 @@ function useRegistrationCandidates(
       })),
   ]
     .filter(() => isManager || capacityLeft >= 1)
-    .toSorted((a, b) => a.label.localeCompare(b.label, 'cs'));
+    .toSorted((a, b) => a.label.localeCompare(b.label));
 
   return {
     candidates,
@@ -176,7 +176,7 @@ function RegistrationsDialogContent({
     variables: { id: instance.id },
   });
   const setRegistration = useMutation(SetEventInstanceRegistrationDocument)[1];
-  const allRegistrations = query.data?.eventInstance?.registrations.nodes ?? [];
+  const allRegistrations = query.data?.eventInstance?.registrationsList ?? [];
   const registrations = isManager
     ? allRegistrations
     : allRegistrations.filter(

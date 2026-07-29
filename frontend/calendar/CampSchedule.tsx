@@ -51,7 +51,7 @@ export function CampSchedule({
     pause: !auth.isTrainerOrAdmin,
   });
   const registrations =
-    registrationsQuery.data?.eventInstance?.registrations.nodes ?? emptyRegistrations;
+    registrationsQuery.data?.eventInstance?.registrationsList ?? emptyRegistrations;
   const lessonDemandCount = registrations.reduce(
     (count, registration) =>
       count + registration.eventLessonDemandsByRegistrationIdList.length,
@@ -255,7 +255,7 @@ export function CampSchedule({
 
 type Registration = NonNullable<
   EventInstanceRegistrationsQuery['eventInstance']
->['registrations']['nodes'][number];
+>['registrationsList'][number];
 type ScheduledLesson = NonNullable<
   EventInstanceRegistrationsQuery['scheduledLessons']
 >[number];
@@ -271,7 +271,7 @@ function scheduledTrainers(registration: Registration, lessons: ScheduledLesson[
     );
     if (!hasRegistration) continue;
 
-    for (const trainer of lesson.trainersList) {
+    for (const trainer of lesson.trainersList ?? []) {
       const current = counts.get(trainer.personId);
       counts.set(trainer.personId, {
         count: (current?.count ?? 0) + 1,

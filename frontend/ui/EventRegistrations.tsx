@@ -24,7 +24,7 @@ export function EventRegistrations({
     query: EventInstanceRegistrationsDocument,
     variables: { id: instance.id },
   });
-  const registrations = registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
+  const registrations = registrationsQuery.data?.eventInstance?.registrationsList ?? [];
   const externalRegistrations = instance.eventExternalRegistrationsByInstanceIdList;
   const externalRegistrationActionMap = useActionMap(
     eventExternalRegistrationActions,

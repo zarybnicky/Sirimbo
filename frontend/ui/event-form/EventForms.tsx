@@ -22,12 +22,7 @@ import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import {
-  FormProvider,
-  useForm,
-  useFormContext,
-  useWatch,
-} from 'react-hook-form';
+import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useTenantConfig } from '@/ui/state/auth';
@@ -354,7 +349,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
   });
   const { control, handleSubmit, setValue } = form;
 
-  const registrations = registrationsQuery.data?.eventInstance?.registrations.nodes ?? [];
+  const registrations = registrationsQuery.data?.eventInstance?.registrationsList ?? [];
 
   React.useEffect(() => {
     const instance = registrationsQuery.data?.eventInstance;
@@ -366,7 +361,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
     ) {
       setValue(
         'registrations',
-        instance.registrations.nodes.map((x) => ({
+        instance.registrationsList.map((x) => ({
           itemId: x.id,
           personId: x.personId,
           coupleId: x.coupleId,

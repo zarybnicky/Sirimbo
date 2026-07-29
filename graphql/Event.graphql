@@ -289,17 +289,13 @@ query EventInstanceRegistrations($id: BigInt!) {
     trainersList: eventInstanceTrainersByInstanceIdList {
       ...EventInstanceTrainer
     }
-    registrations: eventInstanceRegistrationsByInstanceId(
+    registrationsList: eventInstanceRegistrationsByInstanceIdList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
-      nodes {
-        ...EventInstanceRegistration
-      }
+      ...EventInstanceRegistration
     }
   }
-  scheduledLessons: eventInstancesList(
-    condition: { parentId: $id, type: LESSON }
-  ) {
+  scheduledLessons: eventInstancesList(condition: { parentId: $id, type: LESSON }) {
     id
     since
     until
@@ -308,16 +304,13 @@ query EventInstanceRegistrations($id: BigInt!) {
       id
       name
     }
-    trainersList: eventInstanceTrainersByInstanceIdList {
+    trainersList {
       id
       personId
       person {
         id
         name
       }
-    }
-    priceTrainers: trainersList {
-      personId
       memberPrice45MinAmount
       currency
     }

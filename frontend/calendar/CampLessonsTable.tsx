@@ -28,10 +28,13 @@ export function CampLessonsTable({ id }: { id: string }) {
     query: EventInstanceRegistrationsDocument,
     variables: { id },
   });
-  const { rows, trainers } = React.useMemo(() => {
-    const registrations = query.data?.eventInstance?.registrations.nodes ?? [];
+  const { rows, trainers, hasLessonDemands } = React.useMemo(() => {
+    const registrations = query.data?.eventInstance?.registrationsList ?? [];
     const rows = new Map<string, Row>();
     const trainers = new Map<string, string>();
+    const hasLessonDemands = registrations.some(
+      (registration) => registration.eventLessonDemandsByRegistrationIdList.length > 0,
+    );
 
     for (const trainer of query.data?.eventInstance?.trainersList ?? []) {
       trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
@@ -68,10 +71,10 @@ export function CampLessonsTable({ id }: { id: string }) {
         0,
       );
       const priceTrainers = new Map(
-        (lesson.priceTrainers ?? []).map((trainer) => [trainer.personId, trainer]),
+        (lesson.trainersList ?? []).map((trainer) => [trainer.personId, trainer]),
       );
 
-      for (const trainer of lesson.trainersList) {
+      for (const trainer of lesson.trainersList ?? []) {
         trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
       }
       for (const registration of lesson.registrationsList) {
@@ -88,7 +91,7 @@ export function CampLessonsTable({ id }: { id: string }) {
           priceIncomplete: false,
         };
         const participantShare = (registration.couple ? 2 : 1) / participantCount;
-        for (const trainer of lesson.trainersList) {
+        for (const trainer of lesson.trainersList ?? []) {
           const trainerId = trainer.personId;
           const cell = row.cells.get(trainerId) ?? { requested: 0, lessons: [] };
           cell.lessons.push(lesson);
@@ -138,16 +141,16 @@ export function CampLessonsTable({ id }: { id: string }) {
     const result: Row[] = [];
     for (const row of [...rows.values()]
       .filter((row) => !nestedIds.has(row.id))
-      .toSorted((a, b) => a.registrant.localeCompare(b.registrant, 'cs'))) {
+      .toSorted((a, b) => a.registrant.localeCompare(b.registrant))) {
       result.push(
         row,
         ...(nestedRows.get(row.id) ?? [])
-          .toSorted((a, b) => a.registrant.localeCompare(b.registrant, 'cs'))
+          .toSorted((a, b) => a.registrant.localeCompare(b.registrant))
           .map((child) => ({ ...child, nested: true })),
       );
     }
 
-    return { rows: result, trainers: [...trainers] };
+    return { rows: result, trainers: [...trainers], hasLessonDemands };
   }, [query.data]);
 
   const columns = React.useMemo<Column<Row>[]>(
@@ -202,20 +205,23 @@ export function CampLessonsTable({ id }: { id: string }) {
               title={title}
               className="flex h-full flex-col justify-center text-center tabular-nums"
               style={
-                assigned > requested
-                  ? {
-                      backgroundColor: 'hsl(40 90% 88%)',
-                      color: 'hsl(35 80% 22%)',
-                    }
-                  : assigned < requested
+                !hasLessonDemands
+                  ? undefined
+                  : assigned > requested
                     ? {
-                        backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
-                        color: 'hsl(0 65% 25%)',
+                        backgroundColor: 'hsl(40 90% 88%)',
+                        color: 'hsl(35 80% 22%)',
                       }
-                    : undefined
+                    : assigned < requested
+                      ? {
+                          backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
+                          color: 'hsl(0 65% 25%)',
+                        }
+                      : undefined
               }
             >
-              {assigned} ({requested})
+              {assigned}
+              {hasLessonDemands && ` (${requested})`}
             </div>
           );
         },
@@ -231,22 +237,25 @@ export function CampLessonsTable({ id }: { id: string }) {
           const requested = cells.reduce((sum, cell) => sum + cell.requested, 0);
           return (
             <div
-              className="flex h-full flex-col justify-center text-right tabular-nums"
+              className="flex h-full flex-col justify-center tabular-nums"
               style={
-                assigned > requested
-                  ? {
-                      backgroundColor: 'hsl(40 90% 88%)',
-                      color: 'hsl(35 80% 22%)',
-                    }
-                  : assigned < requested
+                !hasLessonDemands
+                  ? undefined
+                  : assigned > requested
                     ? {
-                        backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
-                        color: 'hsl(0 65% 25%)',
+                        backgroundColor: 'hsl(40 90% 88%)',
+                        color: 'hsl(35 80% 22%)',
                       }
-                    : undefined
+                    : assigned < requested
+                      ? {
+                          backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
+                          color: 'hsl(0 65% 25%)',
+                        }
+                      : undefined
               }
             >
-              {assigned} ({requested})
+              {assigned}
+              {hasLessonDemands && ` (${requested})`}
             </div>
           );
         },
@@ -255,7 +264,6 @@ export function CampLessonsTable({ id }: { id: string }) {
         key: 'price',
         name: 'Cena',
         width: 140,
-        renderHeaderCell: () => <span title="Podle výchozí sazby trenéra">Cena</span>,
         renderCell: ({ row }) => (
           <div className="flex h-full flex-col justify-center text-right tabular-nums">
             {[...row.prices].map(([currency, amount]) => (
@@ -271,7 +279,7 @@ export function CampLessonsTable({ id }: { id: string }) {
         ),
       },
     ],
-    [trainers],
+    [hasLessonDemands, trainers],
   );
 
   return (
