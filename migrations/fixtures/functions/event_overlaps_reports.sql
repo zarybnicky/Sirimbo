@@ -36,6 +36,7 @@ as $$
       ea.person_id,
       p.name as person_name,
       ei.id as instance_id,
+      ei.parent_id,
       ei.since,
       ei.until,
       ei.range,
@@ -63,6 +64,8 @@ as $$
   from instances i1
   join instances i2 on i1.person_id = i2.person_id
     and i1.instance_id < i2.instance_id
+    and i1.parent_id is distinct from i2.instance_id
+    and i2.parent_id is distinct from i1.instance_id
     and i1.range && i2.range
     and greatest(i1.since, i2.since) < least(i1.until, i2.until);
 $$;
@@ -79,6 +82,7 @@ as $$
       eit.person_id,
       p.name as person_name,
       ei.id as instance_id,
+      ei.parent_id,
       ei.since,
       ei.until,
       ei.range,
@@ -104,6 +108,8 @@ as $$
   from trainer_instances ti1
   join trainer_instances ti2 on ti1.person_id = ti2.person_id
     and ti1.instance_id < ti2.instance_id
+    and ti1.parent_id is distinct from ti2.instance_id
+    and ti2.parent_id is distinct from ti1.instance_id
     and ti1.range && ti2.range
     and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
 $$;

@@ -1,4 +1,12 @@
 fragment EventConflict on EventConflict {
+  overlapRange {
+    start {
+      value
+    }
+    end {
+      value
+    }
+  }
   person {
     id
     name

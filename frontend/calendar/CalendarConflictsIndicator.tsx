@@ -112,8 +112,8 @@ function ConflictEventsSummary({ conflict }: { conflict: EventConflictFragment }
   const { person, first, second } = conflict;
   if (!person || !first || !second) return null;
 
-  const start = new Date(first.since.localeCompare(second.since) ? first.since : second.since);
-  const end = new Date(first.until.localeCompare(second.until) ? second.until : first.until);
+  const start = conflict.overlapRange.start ? new Date(conflict.overlapRange.start?.value) : null;
+  const end = conflict.overlapRange.end ? new Date(conflict.overlapRange.end?.value) : null;
 
   return (
     <div className="space-y-3 text-sm text-neutral-11">
@@ -132,9 +132,11 @@ function ConflictEventsSummary({ conflict }: { conflict: EventConflictFragment }
           {formatInstanceName(second)}
         </p>
       </div>
-      <p className="text-xs text-accent-10">
-        Překryv: {dateTimeFormatter.formatRange(start, end)}
-      </p>
+      {start && end && (
+        <p className="text-xs text-accent-10">
+          Překryv: {dateTimeFormatter.formatRange(start, end)}
+        </p>
+      )}
     </div>
   );
 }
