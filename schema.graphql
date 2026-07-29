@@ -3165,10 +3165,6 @@ type EventInstance {
     orderBy: [EventInstanceTrainersOrderBy!]
   ): [EventInstanceTrainer!]!
   filesLegacy: String
-
-  """
-  Whether the named schedule is available without authentication for public events.
-  """
   hasPublicDetails: Boolean!
   id: BigInt!
   isCancelled: Boolean!
@@ -3351,10 +3347,6 @@ input EventInstancePatch {
   description: String
   enableNotes: Boolean
   filesLegacy: String
-
-  """
-  Whether the named schedule is available without authentication for public events.
-  """
   hasPublicDetails: Boolean
   id: BigInt
   isCancelled: Boolean

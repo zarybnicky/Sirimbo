@@ -21,10 +21,7 @@ export function CstsIdFieldElement<T extends FieldValues>({
   const value = useWatch({ control: control!, name }) as number | string | undefined;
 
   const idt = React.useMemo(() => {
-    if (value === null || value === undefined || value === '') {
-      return Number.NaN;
-    }
-
+    if (!value) return Number.NaN;
     const parsed = typeof value === 'number' ? value : Number.parseInt(value, 10);
     return Number.isNaN(parsed) ? Number.NaN : parsed;
   }, [value]);

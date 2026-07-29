@@ -38,7 +38,8 @@ function pointTargetsDate(
   date: Date,
   { x, y }: { x: number; y: number },
 ) {
-  return [...grid.querySelectorAll<HTMLElement>(`[data-calendar-date="${+date}"]`)].some(
+  const dateId = (+date).toString();
+  return [...grid.querySelectorAll<HTMLElement>(`[data-calendar-date="${CSS.escape(dateId)}"]`)].some(
     (column) => {
       const { left, right, top, bottom } = getBoundsForNode(column);
       return x >= left && x < right && y >= top && y <= bottom;

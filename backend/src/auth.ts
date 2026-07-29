@@ -1,13 +1,13 @@
+import {
+    makePgAdaptorWithPgClient,
+    type NodePostgresPgClient,
+} from '@dataplan/pg/adaptors/pg';
 import express from 'express';
+import 'postgraphile/grafserv/express/v4';
 import 'graphile-config';
 import jwt from 'jsonwebtoken';
-import { pool } from './db.ts';
-import 'postgraphile/grafserv/express/v4';
 import { LRUCache } from 'lru-cache';
-import {
-  makePgAdaptorWithPgClient,
-  type NodePostgresPgClient,
-} from '@dataplan/pg/adaptors/pg';
+import { pool } from './db.ts';
 
 export const JWT_SECRET = process.env.JWT_SECRET!;
 if (!JWT_SECRET && process.env.NODE_ENV !== 'development') {

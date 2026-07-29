@@ -299,8 +299,8 @@ class ResonatorBank {
       trackPhase: 0,
       beatCount: 0,
       barPhase: 0,
-      accentBins: Array.from<number>({ length: d.meter }).fill(0),
-      accentCounts: Array.from<number>({ length: d.meter }).fill(0),
+      accentBins: Array.from({ length: d.meter }, () => 0),
+      accentCounts: Array.from({ length: d.meter }, () => 0),
       // Compat fields
       energy: 0,
       phase: 0,
@@ -997,13 +997,9 @@ function Card({
             fontFamily: "'Outfit',sans-serif",
             fontSize: 11,
             fontWeight: isTop || isLocked ? 700 : 400,
-            color: isLocked
-              ? '#ffc850'
-              : isTop
-                ? '#ffc850'
-                : active
-                  ? '#c0c0c0'
-                  : 'rgba(255,255,255,.15)',
+            color: isLocked || isTop ? '#ffc850' : active
+              ? '#c0c0c0'
+              : 'rgba(255,255,255,.15)',
           }}
         >
           {dance.short}

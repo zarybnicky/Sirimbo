@@ -87,13 +87,14 @@ server.on('error', (e) => {
   console.error(e);
 });
 
-const pgl = postgraphile(preset);
-const serv = pgl.createServ(grafserv);
 
-serv.addTo(app, server).catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+postgraphile(preset)
+  .createServ(grafserv)
+  .addTo(app, server)
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
 
 server.listen(preset.grafserv?.port ?? 5200, () => {
   const address = server.address();

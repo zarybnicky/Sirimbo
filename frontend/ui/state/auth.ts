@@ -155,7 +155,7 @@ export const authAtom = atom<
     let nextValue = defaultAuthState;
 
     if (user && token) {
-      const base64Url = token.split('.')[1];
+      const base64Url = token.split('.', 2)[1];
       const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
       const jwt = (base64 ? JSON.parse(atob(base64)) : {}) as {
         exp?: number;

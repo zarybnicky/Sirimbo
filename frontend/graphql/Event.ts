@@ -69,7 +69,6 @@ export type EventInstancePatch = {
   description?: string | null | undefined;
   enableNotes?: boolean | null | undefined;
   filesLegacy?: string | null | undefined;
-  /** Whether the named schedule is available without authentication for public events. */
   hasPublicDetails?: boolean | null | undefined;
   id?: string | null | undefined;
   isCancelled?: boolean | null | undefined;

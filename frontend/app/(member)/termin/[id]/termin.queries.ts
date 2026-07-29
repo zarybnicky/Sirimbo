@@ -17,7 +17,6 @@ export interface ISharedEventInstanceResult {
   capacity: number | null;
   capacityUnit: string;
   description: string | null;
-  /** Whether the named schedule is available without authentication for public events. */
   hasPublicDetails: boolean;
   hasTokenAccess: boolean;
   id: string;

@@ -1,15 +1,15 @@
+import { makePgService } from '@dataplan/pg/adaptors/pg';
+import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
+import 'postgraphile/grafserv/express/v4';
 import 'graphile-config';
 import path from 'path';
 import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
 import { makeV4Preset } from 'postgraphile/presets/v4';
-import { pool } from './db.ts';
-import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
-import 'postgraphile/grafserv/express/v4';
-import filePlugin from './plugins/file.ts';
-import currentUserPlugin from './plugins/current-user.ts';
-import personMembershipConditionPlugin from './plugins/person-membership-condition.ts';
-import { makePgService } from 'postgraphile/@dataplan/pg/adaptors/pg';
 import { JWT_SECRET } from './auth.ts';
+import { pool } from './db.ts';
+import currentUserPlugin from './plugins/current-user.ts';
+import filePlugin from './plugins/file.ts';
+import personMembershipConditionPlugin from './plugins/person-membership-condition.ts';
 import { OTELPlugin } from './postgraphile-otel.ts';
 
 const isDevelopment = process.env.NODE_ENV === 'development';

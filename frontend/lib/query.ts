@@ -440,7 +440,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
-          const base64Url = jwt.split('.')[1];
+          const base64Url = jwt.split('.', 2)[1];
           const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
           currentClaims = base64 ? JSON.parse(atob(base64)) : {}
         }
@@ -455,7 +455,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
-          const base64Url = jwt.split('.')[1];
+          const base64Url = jwt.split('.', 2)[1];
           const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
           currentClaims = base64 ? JSON.parse(atob(base64)) : {}
         }
@@ -470,7 +470,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
-          const base64Url = jwt.split('.')[1];
+          const base64Url = jwt.split('.', 2)[1];
           const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
           currentClaims = base64 ? JSON.parse(atob(base64)) : {}
         }
@@ -486,7 +486,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
-          const base64Url = jwt.split('.')[1];
+          const base64Url = jwt.split('.', 2)[1];
           const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
           currentClaims = base64 ? JSON.parse(atob(base64)) : {}
         }
@@ -502,6 +502,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         let currentClaims = {};
         if (jwt) {
           storeRef.current.set(tokenAtom, jwt);
+          const base64Url = jwt.split('.', 2)[1];
+          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           return usr

@@ -199,7 +199,7 @@ export function ComboboxSearchArea({
           <Command.Item
             value={`${item.id}: ${item.label}`}
             key={item.id}
-            onSelect={(value) => onChange(value.split(/: (.*)/)[0] || null)}
+            onSelect={(value) => onChange(value.split(/: (.*)/, 1)[0] || null)}
             className={cn(
               'relative flex p-2 cursor-default select-none items-center rounded-sm',
               'text-sm outline-none data-[selected=true]:bg-accent-7 data-[selected=true]:text-accent-12 text-accent-11',

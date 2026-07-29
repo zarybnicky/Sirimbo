@@ -42,6 +42,13 @@ export function getSlotMetrics({
   // includes “one extra”, selectable to end
   const slots: Date[] = Array.from({ length: numSlots + 1 }, (_, i) => slotAt(i));
 
+  function closestSlotToPosition(percent: number): Date {
+    const p = Math.min(1, Math.max(0, percent));
+    const idx = Math.min(slots.length - 1, Math.max(0, Math.floor(p * numSlots)));
+    return slots[idx]!;
+  };
+
+
   return {
     groups,
 
@@ -59,18 +66,13 @@ export function getSlotMetrics({
       return slots[idx]!;
     },
 
-    closestSlotToPosition(percent: number): Date {
-      const p = Math.min(1, Math.max(0, percent));
-      const idx = Math.min(slots.length - 1, Math.max(0, Math.floor(p * numSlots)));
-      return slots[idx]!;
-    },
-
+    closestSlotToPosition,
     closestSlotFromPoint(
       point: { x: number; y: number },
       boundaryRect: { top: number; bottom: number },
     ): Date {
       const rangePx = Math.abs(boundaryRect.top - boundaryRect.bottom) || 1;
-      return this.closestSlotToPosition((point.y - boundaryRect.top) / rangePx);
+      return closestSlotToPosition((point.y - boundaryRect.top) / rangePx);
     },
 
     closestSlotFromDate(date: Date, offset = 0): Date {

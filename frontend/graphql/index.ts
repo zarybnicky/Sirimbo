@@ -2697,7 +2697,6 @@ export type EventInstance = {
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
   eventInstanceTrainersByInstanceIdList: Array<EventInstanceTrainer>;
   filesLegacy: Maybe<Scalars['String']['output']>;
-  /** Whether the named schedule is available without authentication for public events. */
   hasPublicDetails: Scalars['Boolean']['output'];
   id: Scalars['BigInt']['output'];
   isCancelled: Scalars['Boolean']['output'];
@@ -2879,7 +2878,6 @@ export type EventInstancePatch = {
   description?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
-  /** Whether the named schedule is available without authentication for public events. */
   hasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isCancelled?: InputMaybe<Scalars['Boolean']['input']>;

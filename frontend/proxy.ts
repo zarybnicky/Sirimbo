@@ -15,7 +15,7 @@ export const config = {
 export function proxy(request: NextRequest) {
   const forwardedHost = request.headers.get('x-forwarded-host');
   const hostHeader = forwardedHost ?? request.headers.get('host') ?? request.nextUrl.host;
-  const hostname = hostHeader?.split(',')[0]?.trim().split(':')[0]?.toLowerCase() ?? null;
+  const hostname = hostHeader?.split(',', 1)[0]?.trim().split(':', 1)[0]?.toLowerCase() ?? null;
   const previousTenantId = request.cookies.get('tenant_id')?.value;
   const tenant =
     getTenant(previousTenantId) ?? hostToTenant.get(hostname ?? '') ?? defaultTenant;

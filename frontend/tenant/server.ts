@@ -8,7 +8,7 @@ export async function getRequestTenant() {
 
   const headerStore = await headers();
   const host = headerStore.get('x-forwarded-host') ?? headerStore.get('host');
-  const hostname = host?.split(',')[0]?.trim()?.split(':')[0]?.toLowerCase() || null;
+  const hostname = host?.split(',', 1)[0]?.trim()?.split(':', 1)[0]?.toLowerCase() || null;
 
   return hostToTenant.get(hostname ?? '') ?? defaultTenant;
 }
