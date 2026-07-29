@@ -6,7 +6,6 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true,
     "forceConsistentCasingInFileNames": true,
     "erasableSyntaxOnly": true,
     "noEmit": true,

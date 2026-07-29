@@ -47,8 +47,7 @@ export function EventPageClient({
       ? formatInstanceName(instance)
       : shared &&
         (shared.name?.trim() ||
-          formatEventType(shared.type?.toUpperCase() as EventType | null))) ||
-    '';
+          formatEventType(shared.type?.toUpperCase() as EventType | null))) || '';
   const [variant, setVariant] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
@@ -114,7 +113,7 @@ export function EventPageClient({
             id: 'lessons',
             title: 'Lekce',
             contents: () => (
-              <div className="col-popout">
+              <div className="col-full-width relative">
                 <CampLessonsTable id={instance.id} />
               </div>
             ),
@@ -123,7 +122,7 @@ export function EventPageClient({
             id: 'trainers',
             title: 'Trenéři',
             contents: () => (
-              <div className="col-popout">
+              <div className="col-full-width relative">
                 <CampTrainersTable
                   id={instance.id}
                   since={instance.since}

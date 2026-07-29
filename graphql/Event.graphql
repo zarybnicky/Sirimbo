@@ -316,6 +316,11 @@ query EventInstanceRegistrations($id: BigInt!) {
         name
       }
     }
+    priceTrainers: trainersList {
+      personId
+      memberPrice45MinAmount
+      currency
+    }
     registrationsList: eventInstanceRegistrationsByInstanceIdList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {

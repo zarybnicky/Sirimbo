@@ -62,6 +62,7 @@ export function CampSchedule({
   const deleteInstance = useMutation(DeleteEventInstanceDocument)[1];
   const [groupBy, setGroupBy] = useAtom(groupByAtom);
   const dragSubject = useAtomValue(dragSubjectAtom);
+  const isDragging = useAtomValue(isDraggingAtom);
   const previousGroupBy = React.useRef(groupBy);
   React.useEffect(() => {
     const previous = previousGroupBy.current;
@@ -147,6 +148,7 @@ export function CampSchedule({
       ? dragSubject.event
       : null;
   const dragPreview = React.useRef<HTMLDivElement>(null);
+
   React.useEffect(() => {
     if (!draggedLesson) return;
     const followPointer = ({ clientX, clientY }: MouseEvent) => {
@@ -178,7 +180,12 @@ export function CampSchedule({
           {formatInstanceName(draggedLesson.instance) || '-'}
         </div>
       )}
-      <div className="min-w-0">
+      <div
+        className={cn(
+          'min-w-0 max-w-full flex flex-col items-stretch camp',
+          isDragging ? 'rbc-is-dragging' : '',
+        )}
+      >
         <Calendar
           parentId={id}
           initialDate={since}
@@ -194,7 +201,7 @@ export function CampSchedule({
           data-calendar-remove-target
           className={cn(
             'relative min-h-10 max-w-full overflow-x-hidden border-neutral-6 bg-neutral-2 lg:absolute lg:inset-y-0 lg:right-0 lg:border-l',
-            showDemandPane || draggedLesson ? 'lg:w-80 lg:overflow-y-auto' : 'lg:w-10',
+            showDemandPane ? 'lg:w-80 lg:overflow-y-auto' : 'lg:w-10',
           )}
         >
           {!draggedLesson && (
@@ -232,7 +239,7 @@ export function CampSchedule({
               />
             </div>
           )}
-          {draggedLesson && (
+          {showDemandPane && draggedLesson && (
             <div className="pointer-events-none absolute inset-0 z-20 flex items-start justify-center border-2 border-dashed border-neutral-8 bg-neutral-2/95 p-6 pt-24 text-center font-medium text-neutral-12">
               <div>
                 <Trash2 className="mx-auto mb-2 size-6 text-neutral-11" />

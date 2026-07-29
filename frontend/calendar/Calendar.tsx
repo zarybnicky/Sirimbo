@@ -222,12 +222,7 @@ export function Calendar({
   ]);
 
   return (
-    <div
-      className={cn(
-        'overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full min-w-0 max-w-full overflow-hidden',
-        isDragging && 'rbc-is-dragging',
-      )}
-    >
+    <>
       <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
         <div className="flex w-full min-w-0 max-w-full flex-1 flex-wrap items-start gap-2">
           {dateRange && (
@@ -286,6 +281,6 @@ export function Calendar({
           </DialogContent>
         </Dialog>
       )}
-    </div>
+    </>
   );
 }

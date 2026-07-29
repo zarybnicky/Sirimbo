@@ -76,10 +76,7 @@ export default React.memo(function TimeGrid({
   return (
     <div
       ref={containerRef}
-      className={cn(
-        'rbc-time-view overscroll-contain',
-        resources.length > 0 && 'rbc-time-view-resources',
-      )}
+      className={cn('rbc-time-view', resources.length > 0 && 'rbc-time-view-resources')}
     >
       <div ref={scrollRef} className="rbc-time-header">
         <div
@@ -125,7 +122,9 @@ export default React.memo(function TimeGrid({
                 {hasBirthdayEvents && (
                   <AllDayEventLane
                     range={[date]}
-                    events={birthdayEvents.filter((event) => eq(event.start, date, 'day'))}
+                    events={birthdayEvents.filter((event) =>
+                      eq(event.start, date, 'day'),
+                    )}
                   />
                 )}
               </div>

@@ -3,7 +3,7 @@ import {
   type EventInstanceRegistrationsQuery,
 } from '@/graphql/Event';
 import { FormError } from '@/ui/form';
-import { dateTimeFormatter, formatCoupleName } from '@/ui/format';
+import { dateTimeFormatter, formatCoupleName, moneyFormatter } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import * as React from 'react';
 import { type Column, DataGrid } from 'react-data-grid';
@@ -18,6 +18,8 @@ type Row = {
   note: string | null;
   coupleMemberIds: string[];
   cells: Map<string, Cell>;
+  prices: Map<string, number>;
+  priceIncomplete: boolean;
   nested?: boolean;
 };
 
@@ -47,6 +49,8 @@ export function CampLessonsTable({ id }: { id: string }) {
           ? [registration.couple.man?.id, registration.couple.woman?.id].filter(isTruthy)
           : [],
         cells: new Map(),
+        prices: new Map(),
+        priceIncomplete: false,
       };
       for (const demand of registration.eventLessonDemandsByRegistrationIdList) {
         const trainerId = demand.trainer?.person?.id ?? `trainer:${demand.trainerId}`;
@@ -57,6 +61,16 @@ export function CampLessonsTable({ id }: { id: string }) {
     }
 
     for (const lesson of query.data?.scheduledLessons ?? []) {
+      const duration =
+        new Date(lesson.until).getTime() - new Date(lesson.since).getTime();
+      const participantCount = lesson.registrationsList.reduce(
+        (sum, registration) => sum + (registration.couple ? 2 : 1),
+        0,
+      );
+      const priceTrainers = new Map(
+        (lesson.priceTrainers ?? []).map((trainer) => [trainer.personId, trainer]),
+      );
+
       for (const trainer of lesson.trainersList) {
         trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
       }
@@ -70,12 +84,30 @@ export function CampLessonsTable({ id }: { id: string }) {
           note: registration.note,
           coupleMemberIds: [],
           cells: new Map(),
+          prices: new Map(),
+          priceIncomplete: false,
         };
+        const participantShare = (registration.couple ? 2 : 1) / participantCount;
         for (const trainer of lesson.trainersList) {
           const trainerId = trainer.personId;
           const cell = row.cells.get(trainerId) ?? { requested: 0, lessons: [] };
           cell.lessons.push(lesson);
           row.cells.set(trainerId, cell);
+
+          const priceTrainer = priceTrainers.get(trainerId);
+          if (priceTrainer?.memberPrice45MinAmount && priceTrainer.currency) {
+            const amount =
+              (Number(priceTrainer.memberPrice45MinAmount) *
+                duration *
+                participantShare) /
+              (45 * 60_000);
+            row.prices.set(
+              priceTrainer.currency,
+              (row.prices.get(priceTrainer.currency) ?? 0) + amount,
+            );
+          } else {
+            row.priceIncomplete = true;
+          }
         }
         rows.set(registrantId, row);
       }
@@ -130,7 +162,7 @@ export function CampLessonsTable({ id }: { id: string }) {
             ? ['samostatně', row.note].filter(Boolean).join(' · ')
             : (row.note ?? '');
           return (
-            <div className="flex h-full min-w-0 items-center gap-2">
+            <div className="flex h-full min-w-0 items-center gap-2 bg-neutral-1/50">
               {row.nested && <span className="shrink-0 text-neutral-9">↳</span>}
               <div className="min-w-0">
                 <div className="truncate font-medium text-neutral-12">
@@ -166,41 +198,9 @@ export function CampLessonsTable({ id }: { id: string }) {
             )
             .join('\n');
           return (
-            <div className="h-full grow text-center tabular-nums" title={title}>
-              <span
-                className="grid place-items-center"
-                style={
-                  assigned > requested
-                    ? {
-                        backgroundColor: 'hsl(40 90% 88%)',
-                        color: 'hsl(35 80% 22%)',
-                      }
-                    : assigned < requested
-                      ? {
-                          backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
-                          color: 'hsl(0 65% 25%)',
-                        }
-                      : undefined
-                }
-              >
-                {assigned} ({requested})
-              </span>
-            </div>
-          );
-        },
-      })),
-      {
-        key: 'total',
-        name: 'Celkem',
-        width: 120,
-        cellClass: '!p-0',
-        renderCell: ({ row }) => {
-          const cells = [...row.cells.values()];
-          const assigned = cells.reduce((sum, cell) => sum + cell.lessons.length, 0);
-          const requested = cells.reduce((sum, cell) => sum + cell.requested, 0);
-          return (
             <div
-              className="h-full grow text-center tabular-nums grid place-items-center"
+              title={title}
+              className="flex h-full flex-col justify-center text-center tabular-nums"
               style={
                 assigned > requested
                   ? {
@@ -219,6 +219,56 @@ export function CampLessonsTable({ id }: { id: string }) {
             </div>
           );
         },
+      })),
+      {
+        key: 'total',
+        name: 'Celkem',
+        width: 120,
+        cellClass: '!p-0',
+        renderCell: ({ row }) => {
+          const cells = [...row.cells.values()];
+          const assigned = cells.reduce((sum, cell) => sum + cell.lessons.length, 0);
+          const requested = cells.reduce((sum, cell) => sum + cell.requested, 0);
+          return (
+            <div
+              className="flex h-full flex-col justify-center text-right tabular-nums"
+              style={
+                assigned > requested
+                  ? {
+                      backgroundColor: 'hsl(40 90% 88%)',
+                      color: 'hsl(35 80% 22%)',
+                    }
+                  : assigned < requested
+                    ? {
+                        backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
+                        color: 'hsl(0 65% 25%)',
+                      }
+                    : undefined
+              }
+            >
+              {assigned} ({requested})
+            </div>
+          );
+        },
+      },
+      {
+        key: 'price',
+        name: 'Cena',
+        width: 140,
+        renderHeaderCell: () => <span title="Podle výchozí sazby trenéra">Cena</span>,
+        renderCell: ({ row }) => (
+          <div className="flex h-full flex-col justify-center text-right tabular-nums">
+            {[...row.prices].map(([currency, amount]) => (
+              <div key={currency}>
+                {moneyFormatter.format({ amount: amount.toString(), currency })}
+              </div>
+            ))}
+            {row.prices.size === 0 && '—'}
+            {row.priceIncomplete && row.prices.size > 0 && (
+              <div className="text-xs text-neutral-10">+ bez sazby</div>
+            )}
+          </div>
+        ),
       },
     ],
     [trainers],
@@ -241,6 +291,7 @@ export function CampLessonsTable({ id }: { id: string }) {
           rowKeyGetter={(row) => row.id}
           rowHeight={52}
           headerRowHeight={52}
+          headerRowClass="bg-neutral-1/50"
           style={{ height: Math.min(720, 52 + rows.length * 52) }}
         />
       )}
