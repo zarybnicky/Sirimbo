@@ -105,9 +105,11 @@ function useRegistrationCandidates(
 export function MyRegistrationsDialog({
   instance,
   isManager,
+  initialRegistrationId,
 }: {
   instance: EventWithTrainerFragment;
   isManager: boolean;
+  initialRegistrationId?: string;
 }) {
   const auth = useAuth();
   const { onSuccess } = useFormResult();
@@ -119,6 +121,7 @@ export function MyRegistrationsDialog({
     <RegistrationsDialogContent
       instance={instance}
       isManager={isManager}
+      initialRegistrationId={initialRegistrationId}
       onClose={onSuccess}
     />
   );
@@ -127,10 +130,12 @@ export function MyRegistrationsDialog({
 function RegistrationsDialogContent({
   instance,
   isManager,
+  initialRegistrationId,
   onClose,
 }: {
   instance: EventWithTrainerFragment;
   isManager: boolean;
+  initialRegistrationId?: string;
   onClose: () => void;
 }) {
   const auth = useAuth();
@@ -155,7 +160,13 @@ function RegistrationsDialogContent({
 
   React.useEffect(() => {
     if (!query.data || page) return;
-    if (registrations.length > 1) {
+    const initialRegistration = registrations.find(
+      (registration) => registration.id === initialRegistrationId,
+    );
+    if (initialRegistration) {
+      setSelected(registrant(initialRegistration));
+      setPage('editor');
+    } else if (registrations.length > 1) {
       setPage('overview');
     } else if (registrations[0]) {
       setSelected(registrant(registrations[0]));
@@ -163,7 +174,7 @@ function RegistrationsDialogContent({
     } else {
       setPage('candidates');
     }
-  }, [page, query.data, registrations]);
+  }, [initialRegistrationId, page, query.data, registrations]);
 
   const selectedRegistration = selected
     ? registrations.find((r) => registrantKey(r.personId, r.coupleId) === selected.id)
