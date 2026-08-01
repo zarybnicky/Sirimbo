@@ -7,11 +7,11 @@ import {
 } from '@/graphql/Event';
 import { buttonCls } from '@/ui/style';
 import { TextField } from '@/ui/fields/text';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { formatCoupleName, formatRegistrant } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
+import { DialogTitle } from '@/ui/dialog';
 import { InstanceRegistrationForm } from '@/ui/forms/InstanceRegistrationForm';
 import { NewExternalRegistrationForm } from '@/ui/forms/NewExternalRegistrationForm';
 import { useAuth } from '@/ui/use-auth';
@@ -20,7 +20,6 @@ import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { canManageInstance } from '@/lib/actions/eventInstance';
 
 type Page = 'overview' | 'candidates' | 'editor';
 const registrantSearchFields: 'label'[] = ['label'];
@@ -105,57 +104,23 @@ function useRegistrationCandidates(
 
 export function MyRegistrationsDialog({
   instance,
+  isManager,
 }: {
   instance: EventWithTrainerFragment;
+  isManager: boolean;
 }) {
   const auth = useAuth();
-  const [open, setOpen] = React.useState(false);
+  const { onSuccess } = useFormResult();
   const isExternal = !auth.isLoggedIn || auth.personIds.length === 0;
-  const isManager = canManageInstance({ auth, item: instance });
-  const hasRegistration = instance.registrations.nodes.some(
-    (r) =>
-      (!!r.person?.id && auth.isMyPerson(r.person.id)) ||
-      (!!r.couple?.id && auth.isMyCouple(r.couple.id)),
-  );
 
-  if (
-    !isManager &&
-    (instance.isCancelled ||
-      instance.isLocked ||
-      new Date(instance.until) < new Date() ||
-      (!instance.isPublic && !instance.isVisible) ||
-      (isExternal &&
-        (instance.capacity ?? 0) > 0 &&
-        (instance.remainingPersonSpots ?? 0) <= 0))
-  ) {
-    return null;
-  }
-
-  return (
-    <Dialog modal={false} open={open} onOpenChange={setOpen}>
-      {isManager ? (
-        <DialogTrigger
-          size="sm"
-          text={`Přihlášky (${instance.registrations.totalCount})`}
-        />
-      ) : isExternal || !hasRegistration ? (
-        <DialogTrigger.Add size="sm" text="Přihlásit" />
-      ) : (
-        <DialogTrigger size="sm" text="Moje přihlášky" />
-      )}
-
-      <DialogContent>
-        {isExternal ? (
-          <NewExternalRegistrationForm instanceId={instance.id} />
-        ) : (
-          <RegistrationsDialogContent
-            instance={instance}
-            isManager={isManager}
-            onClose={() => setOpen(false)}
-          />
-        )}
-      </DialogContent>
-    </Dialog>
+  return isExternal ? (
+    <NewExternalRegistrationForm instanceId={instance.id} />
+  ) : (
+    <RegistrationsDialogContent
+      instance={instance}
+      isManager={isManager}
+      onClose={onSuccess}
+    />
   );
 }
 

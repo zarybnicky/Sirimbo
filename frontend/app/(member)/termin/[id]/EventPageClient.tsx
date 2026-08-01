@@ -13,7 +13,6 @@ import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
 import { EventList } from '@/ui/lists/EventList';
-import { RichTextView } from '@/ui/RichTextView';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
@@ -40,8 +39,10 @@ export function EventPageClient({
   });
   const instance = data?.eventInstance;
   const event = instance ?? shared;
-  const description = event?.description;
   const actions = useActions(eventInstanceActions, instance);
+  const primaryAction = actions.some((action) => action.id === 'eventInstance.edit')
+    ? 'eventInstance.edit'
+    : 'eventInstance.registrations';
   const title =
     (instance
       ? formatInstanceName(instance)
@@ -65,13 +66,11 @@ export function EventPageClient({
     }[] = [];
     if (!event) return tabs;
 
-    if (description) {
-      tabs.push({
-        id: 'info',
-        title: 'Informace',
-        contents: () => <RichTextView value={description} />,
-      });
-    }
+    tabs.push({
+      id: 'info',
+      title: 'Info',
+      contents: () => <BasicEventInfo instance={event} />,
+    });
 
     if (instance) {
       const numRegistrations =
@@ -155,7 +154,7 @@ export function EventPageClient({
       );
     }
     return tabs;
-  }, [auth.isTrainerOrAdmin, auth.user?.id, description, event, instance, shared]);
+  }, [auth.isTrainerOrAdmin, auth.user?.id, event, instance, shared]);
 
   return (
     <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
@@ -164,8 +163,7 @@ export function EventPageClient({
         className={auth.user ? 'p-4 lg:pb-8' : 'min-h-[60vh] mb-8'}
       >
         <div className="col-feature">
-          {event && <PageHeader title={title} actions={actions} />}
-          {event && <BasicEventInfo instance={event} />}
+          {event && <PageHeader title={title} actions={actions} primary={primaryAction} />}
           {!authLoading && !fetching && !event && (
             <div className="my-12 rounded-md border border-neutral-5 bg-neutral-2 p-6 text-center">
               <h1 className="text-xl text-neutral-12">Termín nebyl nalezen</h1>

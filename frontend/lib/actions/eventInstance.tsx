@@ -16,6 +16,7 @@ import {
 import { type ActionContext, defineActions } from '@/lib/actions';
 import { EventEditForm } from '@/ui/event-form/EventForms';
 import { EditEventInstanceDescriptionForm } from '@/ui/forms/EditEventInstanceDescriptionForm';
+import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 
@@ -32,7 +33,56 @@ export function canManageInstance({
   );
 }
 
+function canOpenRegistrations({
+  auth,
+  item,
+}: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
+  const isManager = canManageInstance({ auth, item });
+  const isExternal = !auth.isLoggedIn || auth.personIds.length === 0;
+
+  return (
+    isManager ||
+    (!item.isCancelled &&
+      !item.isLocked &&
+      new Date(item.until) >= new Date() &&
+      !!(item.isPublic || item.isVisible) &&
+      (!isExternal ||
+        !item.capacity ||
+        (item.remainingPersonSpots ?? 0) > 0))
+  );
+}
+
+function registrationActionLabel({
+  auth,
+  item,
+}: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
+  if (canManageInstance({ auth, item })) {
+    return `Přihlášky (${item.registrations.totalCount})`;
+  }
+
+  const hasRegistration = item.registrations.nodes.some(
+    (registration) =>
+      (!!registration.person?.id && auth.isMyPerson(registration.person.id)) ||
+      (!!registration.couple?.id && auth.isMyCouple(registration.couple.id)),
+  );
+  return !auth.isLoggedIn || auth.personIds.length === 0 || !hasRegistration
+    ? 'Přihlásit'
+    : 'Moje přihlášky';
+}
+
 export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
+  {
+    id: 'eventInstance.registrations',
+    label: registrationActionLabel,
+    visible: canOpenRegistrations,
+    group: 'primary',
+    render: ({ auth, item }) => (
+      <MyRegistrationsDialog
+        instance={item}
+        isManager={canManageInstance({ auth, item })}
+      />
+    ),
+  },
   {
     id: 'eventInstance.edit',
     label: 'Upravit',

@@ -2,7 +2,6 @@ import {
   EventInstanceApproxPriceDocument,
   EventWithTrainerFragment,
 } from '@/graphql/Event';
-import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { cn } from '@/lib/cn';
 import {
   formatInstanceName,
@@ -92,8 +91,6 @@ export function EventSummary({
           )}
         </div>
       </div>
-
-      <MyRegistrationsDialog instance={instance} />
 
       <div
         className={cn('absolute', offsetButtons ? 'right-9 top-3.5' : 'right-2 top-2')}

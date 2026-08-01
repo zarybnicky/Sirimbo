@@ -1,7 +1,6 @@
 import type { ISharedEventInstanceResult } from '@/app/(member)/termin/[id]/termin.queries';
 import type { EventType } from '@/graphql';
-import type { EventWithTrainerFragment } from '@/graphql/Event';
-import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
+import type { EventInstancePageFragment } from '@/graphql/Event';
 import { RichTextView } from '@/ui/RichTextView';
 import { dateTimeFormatter, formatEventType } from '@/ui/format';
 import Link from 'next/link';
@@ -9,7 +8,7 @@ import Link from 'next/link';
 export function BasicEventInfo({
   instance,
 }: {
-  instance: EventWithTrainerFragment | ISharedEventInstanceResult;
+  instance: EventInstancePageFragment | ISharedEventInstanceResult;
 }) {
   const shared = 'trainerNames' in instance;
   const seriesInfo = shared ? null : instance.seriesInfo;
@@ -20,6 +19,7 @@ export function BasicEventInfo({
     : instance.trainersList.map((t) => t.person?.name).filter(Boolean);
 
   return (
+    <div>
     <dl className="not-prose gap-2 mb-6">
       {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
         <dd>
@@ -64,12 +64,6 @@ export function BasicEventInfo({
         </>
       )}
 
-      {!shared && (
-        <dt>
-          <MyRegistrationsDialog instance={instance} />
-        </dt>
-      )}
-
       {instance.summary?.trim() && (
         <>
           <dt>Shrnutí</dt>
@@ -78,6 +72,11 @@ export function BasicEventInfo({
           </dd>
         </>
       )}
+
     </dl>
+      {!shared && instance.description && (
+        <RichTextView value={instance.description} />
+      )}
+    </div>
   );
 }
