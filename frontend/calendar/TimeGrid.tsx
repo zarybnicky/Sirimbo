@@ -20,12 +20,24 @@ type Grid = {
   bg: CalendarEvent[][][]; // [r][d]
 };
 
+type DayResourceColumn = {
+  resource: Resource | undefined;
+  events: CalendarEvent[];
+  backgroundEvents: CalendarEvent[];
+};
+
+type DayResourceGroup = {
+  date: Date;
+  columns: readonly DayResourceColumn[];
+};
+
 export default React.memo(function TimeGrid({
   events,
   backgroundEvents,
   range,
   resources,
   primary = 'resource',
+  showAllResources = false,
 }: ViewProps) {
   const today = new Date();
   const minTime = useAtomValue(minTimeAtom);
@@ -72,6 +84,46 @@ export default React.memo(function TimeGrid({
     () => buildGrid(range, resources, timedEvents, backgroundEvents),
     [range, resources, timedEvents, backgroundEvents],
   );
+  const resourceDayGroups = React.useMemo(
+    () =>
+      grid.resources.flatMap((resource, rIdx) => {
+        const columns = grid.days.flatMap((date, dIdx) =>
+          !resource || showAllResources || grid.events[rIdx]![dIdx]!.length > 0
+            ? [{ date, dIdx }]
+            : [],
+        );
+        return columns.length > 0 ? [{ resource, rIdx, columns }] : [];
+      }),
+    [grid, showAllResources],
+  );
+  const dayResourceGroups = React.useMemo<readonly DayResourceGroup[]>(
+    () => {
+      if (primary !== 'day') return [];
+
+      return grid.days.map((date, dIdx) => {
+        const columns = grid.resources.flatMap((resource, rIdx) => {
+          const columnEvents = grid.events[rIdx]![dIdx]!;
+          if (!showAllResources && columnEvents.length === 0) return [];
+          return [
+            {
+              resource,
+              events: columnEvents,
+              backgroundEvents: grid.bg[rIdx]![dIdx]!,
+            },
+          ];
+        });
+
+        return {
+          date,
+          columns:
+            columns.length > 0
+              ? columns
+              : [{ resource: undefined, events: [], backgroundEvents: [] }],
+        };
+      });
+    },
+    [grid, primary, showAllResources],
+  );
 
   return (
     <div
@@ -84,10 +136,11 @@ export default React.memo(function TimeGrid({
           style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }}
         />
         {primary === 'resource'
-          ? grid.resources.map((resource) => (
+          ? resourceDayGroups.map(({ resource, columns }) => (
               <div
                 className="rbc-time-header-content"
                 key={resource?.resourceId ?? '__nothing__'}
+                style={{ flexGrow: columns.length, minWidth: columns.length * 140 }}
               >
                 {resource && (
                   <div className="rbc-row">
@@ -95,22 +148,31 @@ export default React.memo(function TimeGrid({
                   </div>
                 )}
                 <div className={cn('rbc-row', grid.days.length <= 1 && 'hidden')}>
-                  {grid.days.map((date) => (
+                  {columns.map(({ date }) => (
                     <DayButton key={+date} today={today} date={date} />
                   ))}
                 </div>
                 {hasBirthdayEvents && (
-                  <AllDayEventLane range={grid.days} events={birthdayEvents} />
+                  <AllDayEventLane
+                    range={columns.map(({ date }) => date)}
+                    events={birthdayEvents.filter((event) =>
+                      columns.some(({ date }) => eq(event.start, date, 'day')),
+                    )}
+                  />
                 )}
               </div>
             ))
-          : grid.days.map((date) => (
-              <div className="rbc-time-header-content" key={+date}>
+          : dayResourceGroups.map(({ date, columns }) => (
+              <div
+                className="rbc-time-header-content"
+                key={+date}
+                style={{ flexGrow: columns.length, minWidth: columns.length * 140 }}
+              >
                 <div className="rbc-row">
                   <DayButton today={today} date={date} />
                 </div>
                 <div className={cn('rbc-row', grid.resources.length <= 1 && 'hidden')}>
-                  {grid.resources.map((resource) => (
+                  {columns.map(({ resource }) => (
                     <div
                       key={resource?.resourceId ?? '__nothing__'}
                       className="rbc-header"
@@ -149,8 +211,8 @@ export default React.memo(function TimeGrid({
         <TimeGutter gutterRef={gutterRef} date={grid.days[0]!} />
 
         {primary === 'resource'
-          ? grid.resources.flatMap((resource, rIdx) =>
-              grid.days.map((date, dIdx) => (
+          ? resourceDayGroups.flatMap(({ resource, rIdx, columns }) =>
+              columns.map(({ date, dIdx }) => (
                 <DayColumn
                   gridRef={containerRef}
                   resource={resource}
@@ -161,15 +223,15 @@ export default React.memo(function TimeGrid({
                 />
               )),
             )
-          : grid.days.flatMap((date, dIdx) =>
-              grid.resources.map((resource, rIdx) => (
+          : dayResourceGroups.flatMap(({ date, columns }) =>
+              columns.map(({ resource, events, backgroundEvents }) => (
                 <DayColumn
                   gridRef={containerRef}
                   resource={resource}
                   key={`${+date}-${resource?.resourceId ?? '__nothing__'}`}
                   date={date}
-                  events={grid.events[rIdx]![dIdx]!}
-                  backgroundEvents={grid.bg[rIdx]![dIdx]!}
+                  events={events}
+                  backgroundEvents={backgroundEvents}
                 />
               )),
             )}

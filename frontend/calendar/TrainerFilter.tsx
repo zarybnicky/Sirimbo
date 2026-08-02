@@ -19,8 +19,12 @@ export type TrainerFilterOption = {
 
 export function TrainerFilter({
   availableTrainers,
+  showAllResources,
+  onShowAllResourcesChange,
 }: {
   availableTrainers?: readonly TrainerFilterOption[];
+  showAllResources?: boolean;
+  onShowAllResourcesChange?: (showAllResources: boolean) => void;
 }) {
   const [trainerIds, setTrainerIds] = useAtom(trainerIdsFilterAtom);
   const [{ data: tenant }] = useQuery({
@@ -43,6 +47,17 @@ export function TrainerFilter({
         Trenéři
       </DropdownMenuTrigger>
       <DropdownMenuContent>
+        {onShowAllResourcesChange && (
+          <DropdownMenuButton
+            onSelect={(e) => {
+              e.preventDefault();
+              onShowAllResourcesChange(!showAllResources);
+            }}
+          >
+            {showAllResources ? <CheckCircle2 /> : <Circle />}
+            Zobrazit všechny trenéry
+          </DropdownMenuButton>
+        )}
         {trainers.map((x) => (
           <DropdownMenuButton
             key={x.id}

@@ -201,7 +201,6 @@ export function CampSchedule({
           availableTrainers={
             registrationsQuery.data?.eventInstance ? availableTrainers : undefined
           }
-          showGroupLessonsColumn={availableTrainers.length > 2}
           primary="day"
         />
       </div>

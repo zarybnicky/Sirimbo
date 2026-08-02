@@ -54,6 +54,7 @@ const calendarViewKeys = [
   'agenda',
   'range',
 ] as const;
+const columnModes = ['all'] as const;
 const standardViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
 const boundedViewKeys = ['range', 'day', 'agenda'] as const;
 const rangeOnlyViewKeys = ['range', 'agenda'] as const;
@@ -65,7 +66,6 @@ export function Calendar({
   onDropFromOutside,
   onRemove,
   availableTrainers,
-  showGroupLessonsColumn = false,
   primary,
 }: {
   parentId?: string;
@@ -77,7 +77,6 @@ export function Calendar({
   ) => void | Promise<void>;
   onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
   availableTrainers?: readonly TrainerFilterOption[];
-  showGroupLessonsColumn?: boolean;
   primary?: ViewProps['primary'];
 }) {
   const auth = useAuth();
@@ -91,6 +90,10 @@ export function Calendar({
     parseAsStringLiteral(calendarViewKeys)
       .withDefault(defaultView)
       .withOptions({ history: 'push' }),
+  );
+  const [columnMode, setColumnMode] = useQueryState(
+    'columns',
+    parseAsStringLiteral(columnModes).withOptions({ history: 'push' }),
   );
   const singleDayRange =
     !!dateRange && dateRange.since.toDateString() === dateRange.until.toDateString();
@@ -143,7 +146,6 @@ export function Calendar({
     date,
     filters,
     groupBy,
-    showGroupLessonsColumn,
   );
   const displayedResources = React.useMemo(() => {
     const resourceMap = new Map(
@@ -170,6 +172,12 @@ export function Calendar({
       })
       .toSorted((a, b) => a.resourceTitle.localeCompare(b.resourceTitle));
   }, [availableTrainers, effectiveTrainerIds, groupBy, onlyMine, resources]);
+  const handleShowAllResourcesChange = React.useCallback(
+    (showAllResources: boolean) => {
+      void setColumnMode(showAllResources ? 'all' : null);
+    },
+    [setColumnMode],
+  );
   const [, moveEvent] = useMutation(MoveEventInstanceDocument);
   const onMove = React.useCallback(
     async ({ instance }: CalendarInstanceEvent, info: InteractionInfo) => {
@@ -277,7 +285,11 @@ export function Calendar({
           >
             Pouze moje
           </button>
-          <TrainerFilter availableTrainers={availableTrainers} />
+          <TrainerFilter
+            availableTrainers={availableTrainers}
+            showAllResources={columnMode === 'all'}
+            onShowAllResourcesChange={handleShowAllResourcesChange}
+          />
           <ParticipantFilter />
           <EventTypeFilter />
           {fetching && <Spinner />}
@@ -292,6 +304,7 @@ export function Calendar({
         backgroundEvents={emptyArray}
         resources={displayedResources}
         primary={primary}
+        showAllResources={columnMode === 'all'}
       />
 
       <CalendarConflictsIndicator range={range} />

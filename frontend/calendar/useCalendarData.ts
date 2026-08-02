@@ -58,7 +58,6 @@ function mapInstancesToCalendar(
   list: EventInstanceRangeQuery['list'],
   groupBy: CalendarGroupBy,
   eventTypes: EventType[],
-  showGroupLessonsColumn: boolean,
 ): { events: CalendarInstanceEvent[]; resources: Resource[] } {
   const events: CalendarInstanceEvent[] = [];
   const resourceMap = new Map<string, Resource>();
@@ -83,9 +82,6 @@ function mapInstancesToCalendar(
           resourceTitle: trainer.person?.name || '',
         });
       }
-      if (showGroupLessonsColumn && instance.type === 'GROUP') {
-        resourceIds.push(groupLessonsResource.resourceId);
-      }
     } else if (groupBy === 'room') {
       if (instance.location?.id) {
         const resourceId = `location:${instance.location.id}`;
@@ -109,9 +105,6 @@ function mapInstancesToCalendar(
     }
     events.push({ kind: 'event', id: instance.id, instance, resourceIds, start, end });
   }
-  if (groupBy === 'trainer' && showGroupLessonsColumn && visibleTypes.has('GROUP')) {
-    put(groupLessonsResource);
-  }
 
   return {
     events,
@@ -126,7 +119,6 @@ export function useCalendarData(
   date: Date,
   filters: CalendarFilters,
   groupBy: CalendarGroupBy,
-  showGroupLessonsColumn = false,
 ) {
   const client = useClient();
 
@@ -198,7 +190,6 @@ export function useCalendarData(
       data?.list ?? null,
       effectiveGroupBy,
       filters.eventTypes,
-      showGroupLessonsColumn,
     );
     const competitionsByEvent = new Map<string, CompetitionBucket>();
     const seen = new Set<string>();
@@ -278,7 +269,6 @@ export function useCalendarData(
     data?.list,
     effectiveGroupBy,
     filters.eventTypes,
-    showGroupLessonsColumn,
     showActivities,
   ]);
 
