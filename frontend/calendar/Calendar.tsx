@@ -1,5 +1,4 @@
 import { MoveEventInstanceDocument } from '@/graphql/Event';
-import { cn } from '@/lib/cn';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { EventCreateForm } from '@/ui/event-form/EventForms';
 import { buttonCls } from '@/ui/style';
@@ -13,7 +12,6 @@ import {
   eventTypesFilterAtom,
   type ExternalDragSubject,
   groupByAtom,
-  isDraggingAtom,
   participantIdsFilterAtom,
   trainerIdsFilterAtom,
 } from './state';
@@ -118,7 +116,6 @@ export function Calendar({
     initialDate ? new Date(initialDate) : new Date(),
   );
 
-  const isDragging = useAtomValue(isDraggingAtom);
   const setDragListeners = useSetAtom(dragListenersAtom);
   const groupBy = useAtomValue(groupByAtom);
   const trainerIds = useAtomValue(trainerIdsFilterAtom);
@@ -255,7 +252,7 @@ export function Calendar({
   return (
     <>
       <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
-        <div className="flex w-full min-w-0 max-w-full flex-1 flex-wrap items-start gap-2">
+        <div className="print:hidden flex w-full min-w-0 max-w-full flex-1 flex-wrap items-start gap-2">
           {dateRange && (
             <BoundedDayPicker
               range={dateRange}

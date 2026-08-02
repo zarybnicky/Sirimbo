@@ -76,7 +76,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
       <div
         onClick={() => setIsOpen(false)}
         className={cn(
-          'fixed inset-0 z-20 bg-neutral-12/10 transition-opacity duration-200 ease-in-out',
+          'fixed print:hidden inset-0 z-20 bg-neutral-12/10 transition-opacity duration-200 ease-in-out',
           isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         )}
       />

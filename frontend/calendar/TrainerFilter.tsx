@@ -10,7 +10,6 @@ import {
 } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
 import { CheckCircle2, Circle, Filter } from 'lucide-react';
-import React from 'react';
 import { isTruthy } from '@/lib/truthyFilter';
 
 export type TrainerFilterOption = {
