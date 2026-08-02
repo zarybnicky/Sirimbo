@@ -13064,6 +13064,13 @@
             },
             "args": [
               {
+                "name": "anyParent",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "endRange",
                 "type": {
                   "kind": "SCALAR",

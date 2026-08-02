@@ -1,2 +1,3 @@
 --!include functions/event_overlaps_reports.sql
 --!include functions/activity_timeline.sql
+--!include functions/event_instances_for_range.sql

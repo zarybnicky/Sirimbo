@@ -6507,6 +6507,7 @@ type Query {
     orderBy: [EventInstanceRegistrationsOrderBy!]
   ): [EventInstanceRegistration!]
   eventInstancesForRangeList(
+    anyParent: Boolean
     endRange: Datetime
 
     """Only read the first `n` values of the set."""

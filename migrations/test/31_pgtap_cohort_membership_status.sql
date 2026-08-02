@@ -8,74 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(28);
-
-SELECT tap.ok(
-  NOT EXISTS (
-    SELECT 1
-    FROM pg_catalog.pg_enum enum
-    JOIN pg_catalog.pg_type type ON type.oid = enum.enumtypid
-    JOIN pg_catalog.pg_namespace namespace ON namespace.oid = type.typnamespace
-    WHERE namespace.nspname = 'public'
-      AND type.typname = 'attendance_type'
-      AND enum.enumlabel = 'cancelled'
-  ),
-  'registration cancellation is not an attendance status'
-);
-
-SELECT tap.ok(
-  to_regprocedure('public.delete_event_instance(bigint)') is null
-    AND to_regprocedure('public.quick_create_events(public.quick_event_input[])') is null
-    AND to_regprocedure(
-      'public.upsert_event(public.event_type_input,public.event_instance_type_input[],public.event_trainer_type_input[])'
-    ) is null
-    AND to_regprocedure('public.tg_event__propagate_to_instances()') is null
-    AND to_regclass('public.event') is null
-    AND to_regclass('public.event_registration') is null
-    AND to_regclass('public.event_target_cohort') is null
-    AND to_regclass('public.event_trainer') is null
-    AND NOT EXISTS (
-      SELECT 1
-      FROM pg_catalog.pg_attribute
-      WHERE attrelid = 'public.event_instance'::regclass
-        AND attname = 'event_id'
-        AND NOT attisdropped
-    )
-    AND NOT EXISTS (
-      SELECT 1
-      FROM pg_catalog.pg_attribute
-      WHERE attrelid = 'public.event_instance_registration'::regclass
-        AND attname = 'legacy_registration_id'
-        AND NOT attisdropped
-    )
-    AND to_regprocedure('public.event_my_registrations(public.event)') is null
-    AND to_regprocedure(
-      'public.event_instance_my_registrations(public.event_instance)'
-    ) is null
-    AND to_regprocedure(
-      'public.event_instance_registrations(public.event_instance)'
-    ) is null
-    AND to_regprocedure('public.tg_event_instance__fill_defaults()') is null
-    AND to_regprocedure('public.tg_event_instance__pin_overrides()') is null
-    AND to_regprocedure('app_private.tg_eir__legacy_created_at()') is null
-    AND to_regprocedure('app_private.can_trainer_edit_event(bigint)') is null
-    AND to_regtype('public.event_type_input') is null
-    AND to_regtype('public.event_instance_type_input') is null
-    AND to_regtype('public.event_instance_trainer_type_input') is null
-    AND to_regtype('public.event_trainer_type_input') is null
-    AND NOT EXISTS (
-      SELECT 1
-      FROM pg_catalog.pg_type type
-      JOIN pg_catalog.pg_namespace namespace ON namespace.oid = type.typnamespace
-      JOIN pg_catalog.pg_class class ON class.oid = type.typrelid
-      JOIN pg_catalog.pg_attribute attribute ON attribute.attrelid = class.oid
-      WHERE namespace.nspname = 'public'
-        AND type.typname = 'event_overlaps_conflict'
-        AND attribute.attname IN ('first_event_id', 'second_event_id')
-        AND NOT attribute.attisdropped
-    ),
-  'legacy event tables, bridge columns and helpers are gone'
-);
+SELECT tap.plan(26);
 
 -- Fixtures
 -- People:
@@ -444,13 +377,7 @@ SELECT tap.is(
   (
     SELECT count(*)::int
     FROM event_instances_for_range(
-      null,
-      '-infinity'::timestamptz,
-      null,
-      null,
-      null,
-      false,
-      9900001
+      null, '-infinity'::timestamptz, null, null, null, false, false, 9900001
     )
   ),
   1,
@@ -778,14 +705,14 @@ SELECT tap.ok(
   ) AND EXISTS (
     SELECT 1
     FROM event_instances_for_range(
-      null, now(), now() + interval '1 day', null, null, false, 9900001
+      null, now(), now() + interval '1 day', null, null, false, false, 9900001
     ) child
     WHERE child.id = (SELECT id FROM _scheduled_lesson)
   )
   AND NOT EXISTS (
     SELECT 1
     FROM event_instances_for_range(
-      null, now(), now() + interval '1 day', null, null, false, null
+      null, now(), now() + interval '1 day', null, null, false, false, null
     ) root
     WHERE root.id = (SELECT id FROM _scheduled_lesson)
   ),

@@ -5670,6 +5670,7 @@ export type QueryEventInstanceRegistrationsListArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEventInstancesForRangeListArgs = {
+  anyParent?: InputMaybe<Scalars['Boolean']['input']>;
   endRange?: InputMaybe<Scalars['Datetime']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
