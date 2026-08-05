@@ -5,6 +5,9 @@ import { RichTextView } from '@/ui/RichTextView';
 import { dateTimeFormatter, formatEventType } from '@/ui/format';
 import Link from 'next/link';
 
+const eventLinkCls =
+  'text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11';
+
 export function BasicEventInfo({
   instance,
 }: {
@@ -12,6 +15,7 @@ export function BasicEventInfo({
 }) {
   const shared = 'trainerNames' in instance;
   const seriesInfo = shared ? null : instance.seriesInfo;
+  const parent = shared ? null : instance.parent;
   const type = shared ? (instance.type?.toUpperCase() as EventType | null) : instance.type;
   const location = (shared ? instance.locationName : instance.location?.name) || instance.locationText
   const trainers = shared
@@ -23,11 +27,16 @@ export function BasicEventInfo({
     <dl className="not-prose gap-2 mb-6">
       {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
         <dd>
-          <Link
-            href={`/terminy/${seriesInfo.id}`}
-            className="text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11"
-          >
+          <Link href={`/terminy/${seriesInfo.id}`} className={eventLinkCls}>
             {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
+          </Link>
+        </dd>
+      )}
+
+      {parent && (
+        <dd>
+          <Link href={`/termin/${parent.id}`} className={eventLinkCls}>
+            Nadřazená událost: {parent.name?.trim() || formatEventType(parent.type)}
           </Link>
         </dd>
       )}

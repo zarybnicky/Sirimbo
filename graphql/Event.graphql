@@ -58,6 +58,13 @@ fragment EventWithTrainer on EventInstance {
   seriesInfo {
     ...SeriesInfo
   }
+  parent {
+    id
+    name
+    type
+    since
+    until
+  }
   name
   type
   summary

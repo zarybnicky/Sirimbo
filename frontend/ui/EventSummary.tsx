@@ -4,6 +4,7 @@ import {
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import {
+  formatEventType,
   formatInstanceName,
   formatRegistrant,
   moneyFormatter,
@@ -39,6 +40,15 @@ export function EventSummary({
           className="text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11"
         >
           {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
+        </Link>
+      )}
+
+      {instance.parent && (
+        <Link
+          href={`/termin/${instance.parent.id}`}
+          className="text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11"
+        >
+          Nadřazená událost: {instance.parent.name?.trim() || formatEventType(instance.parent.type)}
         </Link>
       )}
 
