@@ -5,7 +5,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { SiFacebook, SiInstagram, SiYoutube } from '@icons-pack/react-simple-icons';
 import LogoCsts from './logo-csts.svg';
-import LogoNsa from './logo-nsa.svg';
+import LogoNsa from './logo-nsa-2026.png';
 import LogoProstejov from './logo-prostejov.svg';
 import LogoOlomouc from './logo-olomouc.jpg';
 import LogoKraj from './logo-kraj.png';
@@ -124,26 +124,26 @@ export function SocialIcons() {
 
 export function Sponsors() {
   return (
-    <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-stretch justify-center text-center text-neutral-11">
+    <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-center justify-center text-center text-neutral-11">
       {[
-        { label: 'Český svaz tanečního sportu', image: LogoCsts },
-        { label: 'Město Olomouc', image: LogoOlomouc },
-        { label: 'Olomoucký kraj', image: LogoKraj },
-        { label: 'Město Prostějov', image: LogoProstejov },
-        { label: 'Národní sportovní agentura', image: LogoNsa },
+        { image: LogoCsts },
+        { image: LogoNsa, label: '' },
+        { image: LogoOlomouc },
+        { image: LogoKraj },
+        { image: LogoProstejov, label: 'Město Prostějov' },
       ].map((x) => (
-        <div key={x.label} className="flex flex-col grow">
-          <div className="grow flex items-center">
-            <Image
-              alt={x.label}
-              className="w-full h-auto"
-              src={x.image}
-              loading="lazy"
-              fetchPriority="low"
-              sizes="(min-width: 1024px) 160px, (min-width: 640px) 30vw, 50vw"
-            />
-          </div>
-          <div className="h-12 mt-4">{x.label}</div>
+        <div key={x.label} className="grow flex flex-1 flex-col items-center gap-1">
+          <Image
+            alt={x.label ?? ''}
+            className="w-full h-auto"
+            src={x.image}
+            loading="lazy"
+            fetchPriority="low"
+            sizes="(min-width: 1024px) 160px, (min-width: 640px) 30vw, 50vw"
+          />
+          {x.label && (
+            <div className="min-w-0">{x.label}</div>
+          )}
         </div>
       ))}
     </div>
@@ -208,6 +208,10 @@ export function Footer() {
         <div className={cardCls({ className: 'my-8 p-4 col-span-2' })}>
           <h2 className="text-xl text-accent-7 font-bold mb-4">Podporují nás</h2>
           <Sponsors />
+        </div>
+
+        <div className="col-span-2 text-sm text-white/60 mb-4">
+          Taneční klub v roce 2026 finančně podpořila Národní sportovní agentura částkou 632.900 Kč v oblasti sportovní aktivity dětí a mládeže ve věku 4 až 19 let za účelem zabezpečení sportovní, tělovýchovné a organizační funkce klubu v souladu s platnými a registrovanými stanovami.
         </div>
 
         <div className="mt-4 col-span-2 flex flex-wrap justify-between">

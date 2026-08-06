@@ -73,11 +73,9 @@ export function Hero({
       if (!scroller || articles.length === 0) return;
 
       const nextIndex = (index + articles.length) % articles.length;
-      const slide = scroller.children.item(nextIndex);
-      slide?.scrollIntoView({
+      scroller.scrollTo({
+        left: nextIndex * scroller.clientWidth,
         behavior: reducedMotion ? 'auto' : 'smooth',
-        block: 'nearest',
-        inline: 'start',
       });
       setActiveIndex(nextIndex);
     },
