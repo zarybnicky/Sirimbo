@@ -201,6 +201,32 @@ in
     };
     systemd.user.services.docker.environment.DOCKERD_ROOTLESS_ROOTLESSKIT_DISABLE_HOST_LOOPBACK = "false";
 
+    systemd.user.services.buildkitd = {
+      description = "Rootless BuildKit daemon";
+      unitConfig.ConditionUser = "1234";
+      wantedBy = [ "default.target" ];
+      path = with pkgs; [ rootlesskit buildkit ];
+      serviceConfig = let
+        buildkitdToml = pkgs.writeText "buildkitd.toml" ''
+          [worker.oci]
+          enabled = true
+          gc = true
+          reservedSpace = "10GB"
+          maxUsedSpace = "90GB"
+
+          [registry."127.0.0.1:5000"]
+          http = true
+          insecure = true
+        '';
+      in {
+        ExecStart = ''
+          ${pkgs.rootlesskit}/bin/rootlesskit --net=host --copy-up=/etc --copy-up=/run --propagation=rslave ${pkgs.buildkit}/bin/buildkitd --config ${buildkitdToml}
+        '';
+        Restart = "always";
+        RestartSec = 2;
+      };
+    };
+
     services.github-runners."sirimbo" = {
       enable = true;
       name = "${config.networking.hostName}-sirimbo";
