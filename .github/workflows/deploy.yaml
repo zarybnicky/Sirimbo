@@ -36,22 +36,14 @@ jobs:
 
           cache_ref="10.0.2.2:5000/sirimbo:buildcache-${GITHUB_REF_NAME//\//-}"
 
-          cat >/tmp/buildkitd.toml <<'EOF'
-          [registry."10.0.2.2:5000"]
-          http = true
-          insecure = true
-          EOF
-          if ! docker buildx inspect ci >/dev/null 2>&1; then
-            docker buildx create --name ci \
-              --driver docker-container \
-              --driver-opt image=moby/buildkit:v0.31.2 \
-              --driver-opt network=host \
-              --buildkitd-flags '--oci-worker-no-process-sandbox --allow-insecure-entitlement network.host' \
-              --buildkitd-config /tmp/buildkitd.toml
+          BUILDER=ci-remote-v1
+          if ! docker buildx inspect "$BUILDER" >/dev/null 2>&1; then
+            docker buildx create --name "$BUILDER" --driver remote \
+              unix:///run/user/1234/buildkit/buildkitd.sock
           fi
+          docker buildx use "$BUILDER"
+          docker buildx inspect --bootstrap "$BUILDER"
 
-          docker buildx use ci
-          docker buildx inspect --bootstrap
           docker buildx build \
             --file deploy/Dockerfile \
             --target runner \
