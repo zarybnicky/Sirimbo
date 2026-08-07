@@ -242,6 +242,7 @@ in
         kubectl
         skopeo
         docker
+        buildkit
       ];
       serviceOverrides = {
         PrivateUsers = lib.mkForce false;
