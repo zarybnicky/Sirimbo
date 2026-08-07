@@ -205,14 +205,15 @@ in
       description = "Rootless BuildKit daemon";
       unitConfig.ConditionUser = "1234";
       wantedBy = [ "default.target" ];
-      path = with pkgs; [ rootlesskit buildkit "/run/wrappers" ];
+      path = with pkgs; [ rootlesskit buildkit runc "/run/wrappers" ];
       serviceConfig = let
         buildkitdToml = pkgs.writeText "buildkitd.toml" ''
           [worker.oci]
           enabled = true
           gc = true
-          reservedSpace = "10GB"
-          maxUsedSpace = "90GB"
+          reservedSpace = "5GB"
+          maxUsedSpace = "10GB"
+          networkMode = "host"
 
           [registry."127.0.0.1:5000"]
           http = true
