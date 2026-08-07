@@ -44,7 +44,7 @@ jobs:
           if ! docker buildx inspect ci >/dev/null 2>&1; then
             docker buildx create --name ci \
               --driver docker-container \
-              --driver-opt image=moby/buildkit:v0.30.0-rootless \
+              --driver-opt image=moby/buildkit:v0.31.2 \
               --driver-opt network=host \
               --buildkitd-flags '--oci-worker-no-process-sandbox --allow-insecure-entitlement network.host' \
               --buildkitd-config /tmp/buildkitd.toml
