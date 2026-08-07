@@ -205,7 +205,7 @@ in
       description = "Rootless BuildKit daemon";
       unitConfig.ConditionUser = "1234";
       wantedBy = [ "default.target" ];
-      path = with pkgs; [ rootlesskit buildkit ];
+      path = with pkgs; [ rootlesskit buildkit "/run/wrappers" ];
       serviceConfig = let
         buildkitdToml = pkgs.writeText "buildkitd.toml" ''
           [worker.oci]
@@ -242,7 +242,6 @@ in
         kubectl
         skopeo
         docker
-        buildkit
       ];
       serviceOverrides = {
         PrivateUsers = lib.mkForce false;
