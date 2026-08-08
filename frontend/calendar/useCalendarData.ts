@@ -1,6 +1,5 @@
 import { ActivityTimelineDocument } from '@/graphql/ActivityTimeline';
 import type { EventType } from '@/graphql';
-import { type CompetitionEntry } from '@/ui/Competitions';
 import {
   EventInstanceRangeDocument,
   type EventInstanceRangeQuery,
@@ -9,7 +8,7 @@ import {
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery } from 'urql';
-import type { CalendarEvent, CalendarInstanceEvent, DateRange, Resource } from './types';
+import type { CalendarCompetitionEvent, CalendarEvent, CalendarInstanceEvent, DateRange, Resource } from './types';
 import { CalendarView } from '@/calendar/CalendarViews';
 import { eventTypes as allEventTypes } from '@/calendar/state';
 
@@ -28,12 +27,12 @@ const competitionResource: Resource = {
   resourceTitle: 'Soutěže',
 };
 
-type CompetitionBucket = {
-  date: string;
-  title: string;
-  eventLocation: string | null;
-  items: CompetitionEntry[];
-};
+const calendarDay = (date: string) => ({
+  start: new Date(`${date}T00:00:00`),
+  end: new Date(`${date}T23:59:00`),
+  isDraggable: false,
+  isResizable: false,
+});
 
 function prepareVariables(
   range: DateRange,
@@ -50,8 +49,8 @@ function prepareVariables(
   };
 }
 
-function mapInstancesToCalendar(
-  list: EventInstanceRangeQuery['list'],
+function mapEventsToCalendar(
+  list: EventInstanceRangeQuery['list'] | undefined,
   groupBy: CalendarGroupBy,
   eventTypes: EventType[],
 ): { events: CalendarInstanceEvent[]; resources: Resource[] } {
@@ -60,7 +59,15 @@ function mapInstancesToCalendar(
   const visibleTypes = new Set(eventTypes);
   const filterTypes = eventTypes.length !== allEventTypes.length;
 
-  const put = (resource: Resource) => resourceMap.set(resource.resourceId, resource);
+  const assignResource = (
+    resourceIds: string[],
+    resourceId: string,
+    resourceTitle: string,
+  ) => {
+    resourceIds.push(resourceId);
+    resourceMap.set(resourceId, { resourceId, resourceTitle });
+  };
+
   for (const instance of list ?? []) {
     if (filterTypes && (!instance.type || !visibleTypes.has(instance.type))) continue;
     const start = new Date(instance.since);
@@ -68,36 +75,19 @@ function mapInstancesToCalendar(
     const resourceIds: string[] = [];
 
     if (groupBy === 'trainer') {
-      for (const trainer of instance.trainersList ?? []) {
-        const id = trainer.personId;
-        if (!id) continue;
-        const resourceId = `person:${id}`;
-        resourceIds.push(resourceId);
-        put({
-          resourceId,
-          resourceTitle: trainer.person?.name || '',
-        });
+      for (const { person, personId } of instance.trainersList) {
+        assignResource(resourceIds, `person:${personId}`, person?.name || '');
       }
     } else if (groupBy === 'room') {
-      if (instance.location?.id) {
-        const resourceId = `location:${instance.location.id}`;
-        resourceIds.push(resourceId);
-        put({
-          resourceId,
-          resourceTitle: instance.location.name,
-        });
-      } else if (instance.locationText) {
-        const resourceId = `locationText:${instance.locationText}`;
-        resourceIds.push(resourceId);
-        put({
-          resourceId,
-          resourceTitle: instance.locationText,
-        });
+      const { location, locationText } = instance;
+      if (location?.id) {
+        assignResource(resourceIds, `location:${location.id}`, location.name);
+      } else if (locationText) {
+        assignResource(resourceIds, `locationText:${locationText}`, locationText);
       }
     }
     if (groupBy !== 'none' && resourceIds.length === 0) {
-      resourceIds.push('');
-      put({ resourceId: '', resourceTitle: '-' });
+      assignResource(resourceIds, '', '-');
     }
     events.push({ kind: 'event', id: instance.id, instance, resourceIds, start, end });
   }
@@ -117,49 +107,29 @@ export function useCalendarData(
   groupBy: CalendarGroupBy,
 ) {
   const client = useClient();
-
-  const { range, variables: vars } = React.useMemo(() => {
-    const range = view.range(date);
-    const prev = view.nav ? view.range(view.nav(date, -1)) : range;
-    const next = view.nav ? view.range(view.nav(date, 1)) : range;
-
-    return {
-      range,
-      variables: {
-        current: prepareVariables(range, filters),
-        prev: prepareVariables(prev, filters),
-        next: prepareVariables(next, filters),
-      },
-    };
-  }, [view, date, filters]);
+  const range = React.useMemo(() => {
+    return view.range(date);
+  }, [view, date]);
+  const variables = prepareVariables(range, filters);
 
   const [{ data, fetching }, refresh] = useQuery({
     query: EventInstanceRangeDocument,
-    variables: vars.current,
+    variables,
     requestPolicy: 'cache-and-network',
   });
   const effectiveGroupBy = filters.onlyMine ? 'none' : groupBy;
-  const factRange = React.useMemo(
-    () => ({
-      since: startOf(range.since, 'day').toISOString(),
-      until: add(startOf(range.until, 'day'), 1, 'day').toISOString(),
-    }),
-    [range.since, range.until],
-  );
-  const factPersonIds =
-    filters.participantIds.length > 0
-      ? filters.participantIds
-      : filters.onlyMine
-        ? filters.myPersonIds
-        : undefined;
   const showActivities =
     !filters.parentId && filters.eventTypes.length === allEventTypes.length;
   const [{ data: activityData, fetching: activityFetching }] = useQuery({
     query: ActivityTimelineDocument,
     variables: {
-      since: factRange.since,
-      until: factRange.until,
-      personIds: factPersonIds,
+      since: variables.start,
+      until: variables.end,
+      personIds: filters.participantIds.length > 0
+          ? filters.participantIds
+          : filters.onlyMine
+              ? filters.myPersonIds
+              : undefined,
       kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT', 'BIRTHDAY'],
     },
     requestPolicy: 'cache-and-network',
@@ -168,50 +138,48 @@ export function useCalendarData(
 
   React.useEffect(() => {
     if (!view.nav) return;
-
+    const prev = prepareVariables(view.range(view.nav(date, -1)), filters);
+    const next = prepareVariables(view.range(view.nav(date, 1)), filters);
     const timeout = setTimeout(() => {
-      client
-        .query(EventInstanceRangeDocument, vars.prev, { requestPolicy: 'cache-first' })
+      void client
+        .query(EventInstanceRangeDocument, prev, { requestPolicy: 'cache-first' })
         .toPromise();
-      client
-        .query(EventInstanceRangeDocument, vars.next, { requestPolicy: 'cache-first' })
+      void client
+        .query(EventInstanceRangeDocument, next, { requestPolicy: 'cache-first' })
         .toPromise();
     }, 100);
-
     return () => clearTimeout(timeout);
-  }, [client, vars.prev, vars.next, view.nav]);
+  }, [client, date, filters, view]);
 
   const { events, resources } = React.useMemo(() => {
-    const schedule = mapInstancesToCalendar(
-      data?.list ?? null,
-      effectiveGroupBy,
-      filters.eventTypes,
-    );
-    const competitionsByEvent = new Map<string, CompetitionBucket>();
+    const schedule = mapEventsToCalendar(data?.list, effectiveGroupBy, filters.eventTypes);
+    const competitionsByEvent = new Map<string, CalendarCompetitionEvent>();
     const seen = new Set<string>();
     const birthdays: CalendarEvent[] = [];
-    const addCompetition = (item: CompetitionEntry) => {
-      if (!item.competitionDate || seen.has(`${item.competitionId}:${item.competitorId}`))
-        return;
-      seen.add(`${item.competitionId}:${item.competitorId}`);
-
-      const eventKey = `${item.competitionDate}:${item.competitionEventId ?? ''}`;
-      const competition = competitionsByEvent.get(eventKey) ?? {
-        date: item.competitionDate,
-        title: item.competitionEventName!,
-        eventLocation: item.competitionEventLocation,
-        items: [],
-      };
-      competition.items.push(item);
-      competitionsByEvent.set(eventKey, competition);
-    };
 
     for (const item of showActivities ? (activityData?.activityTimelineList ?? []) : []) {
       if (
         item.__typename === 'ActivityCompetitionBrief' ||
         item.__typename === 'ActivityCompetitionResult'
       ) {
-        addCompetition(item);
+        const date = item.competitionDate;
+        const competitorKey = `${item.competitionId}:${item.competitorId}`;
+        if (!date || seen.has(competitorKey)) continue;
+        seen.add(competitorKey);
+
+        const eventKey = `${date}:${item.competitionEventId ?? ''}`;
+        const competition = competitionsByEvent.get(eventKey) ?? {
+          kind: 'competition',
+          id: `competition:${date}:${item.competitionEventId ?? 'unknown'}`,
+          title: item.competitionEventName!,
+          eventLocation: item.competitionEventLocation,
+          ...calendarDay(date),
+          resourceIds:
+            effectiveGroupBy === 'none' ? [] : [competitionResource.resourceId],
+          items: [],
+        };
+        competition.items.push(item);
+        competitionsByEvent.set(eventKey, competition);
       } else if (item.__typename === 'ActivityBirthday') {
         const date = item.activityDate!;
         birthdays.push({
@@ -224,34 +192,21 @@ export function useCalendarData(
             lastName: item.person?.lastName!,
           },
           date,
-          start: new Date(`${date}T00:00:00`),
-          end: new Date(`${date}T23:59:00`),
+          ...calendarDay(date),
           resourceIds: [],
-          isDraggable: false,
-          isResizable: false,
         });
       }
     }
 
-    const competitions: CalendarEvent[] = [...competitionsByEvent.values()].map(
-      ({ date, items, title, eventLocation }) => ({
-        kind: 'competition',
-        id: `competition:${date}:${items[0]?.competitionEventId ?? 'unknown'}`,
-        title,
-        eventLocation,
-        start: new Date(`${date}T00:00:00`),
-        end: new Date(`${date}T23:59:00`),
-        resourceIds: effectiveGroupBy === 'none' ? [] : [competitionResource.resourceId],
-        isDraggable: false,
-        isResizable: false,
-        items: items.toSorted(
-          (a, b) =>
-            a.__typename.localeCompare(b.__typename) ||
-            (a.competitorName ?? '').localeCompare(b.competitorName ?? '') ||
-            (a.category?.name ?? '').localeCompare(b.category?.name ?? ''),
-        ),
-      }),
-    );
+    const competitions = [...competitionsByEvent.values()];
+    for (const competition of competitions) {
+      competition.items.sort(
+        (a, b) =>
+          a.__typename.localeCompare(b.__typename) ||
+          (a.competitorName ?? '').localeCompare(b.competitorName ?? '') ||
+          (a.category?.name ?? '').localeCompare(b.category?.name ?? ''),
+      );
+    }
 
     if (effectiveGroupBy !== 'none' && competitions.length > 0) {
       schedule.resources.push(competitionResource);
