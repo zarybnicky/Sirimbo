@@ -27,10 +27,6 @@ const competitionResource: Resource = {
   resourceId: '__competition__',
   resourceTitle: 'Soutěže',
 };
-const groupLessonsResource: Resource = {
-  resourceId: 'eventType:GROUP',
-  resourceTitle: 'Společné lekce',
-};
 
 type CompetitionBucket = {
   date: string;

@@ -4,7 +4,7 @@ import {
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import {
-  formatInstanceName,
+  formatEventName,
   formatRegistrant,
   moneyFormatter,
   shortTimeFormatter,
@@ -48,7 +48,7 @@ export function EventSummary({
             href={`/termin/${instance.id}`}
             className={cn('text-xl', instance.isCancelled ? 'line-through' : 'underline')}
           >
-            {formatInstanceName(instance)}
+            {formatEventName(instance)}
           </Link>
         </div>
       )}

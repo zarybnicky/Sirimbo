@@ -16,7 +16,7 @@ import {
 } from '@/calendar/state';
 import type { CalendarInstanceEvent, InteractionInfo } from '@/calendar/types';
 import { FormError } from '@/ui/form';
-import { formatCoupleName, formatInstanceName } from '@/ui/format';
+import { formatCoupleName, formatEventName } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { useAuth } from '@/ui/use-auth';
 import { startOf } from 'date-arithmetic';
@@ -183,7 +183,7 @@ export function CampSchedule({
           className="rbc-event pointer-events-none fixed left-0 top-0 z-50 truncate opacity-0 shadow-lg"
           style={{ width: 'max-content', maxWidth: '16rem' }}
         >
-          {formatInstanceName(draggedLesson.instance) || '-'}
+          {formatEventName(draggedLesson.instance) || '-'}
         </div>
       )}
       <div

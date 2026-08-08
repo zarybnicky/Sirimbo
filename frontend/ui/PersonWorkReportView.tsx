@@ -3,7 +3,7 @@ import {
   EventInstanceRangeDocument,
   type EventInstanceRangeQuery,
 } from '@/graphql/Event';
-import { dateTimeFormatter, formatInstanceName } from '@/ui/format';
+import { dateTimeFormatter, formatEventName } from '@/ui/format';
 import Link from 'next/link';
 import { parseAsString, useQueryStates } from 'nuqs';
 import React from 'react';
@@ -122,7 +122,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
         typeof instance.stats === 'string' ? JSON.parse(instance.stats) : instance.stats;
       const row: ReportRow = {
         instance,
-        title: formatInstanceName(instance) || '-',
+        title: formatEventName(instance) || '-',
         location: instance.location?.name || instance.locationText || '—',
         durationMinutes: Math.max(
           0,

@@ -62,7 +62,11 @@ export function CheckboxElement<T extends FieldValues>({
       checked={!!field.value}
       error={fieldState.error}
       {...props}
-      onChange={() => field.onChange(!field.value)}
+      onBlur={field.onBlur}
+      onChange={() => {
+        field.onChange(!field.value);
+        field.onBlur();
+      }}
     />
   );
 }

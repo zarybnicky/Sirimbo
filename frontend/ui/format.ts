@@ -23,7 +23,7 @@ const names: { [type in EventType]: string } = {
 export const formatEventType = (type: EventType | null | undefined) =>
   type ? names[type] : '';
 
-export const formatInstanceName = (
+export const formatEventName = (
   event:
     | {
         name: string | null;
@@ -204,7 +204,7 @@ export function describePosting(
     const trainers = instance?.trainersList?.map((x) => x.person?.name) ?? [];
     return `${formatEventType(type)}: ${trainers.join(', ')}`;
   }
-  return formatInstanceName(instance);
+  return formatEventName(instance);
 }
 
 export function capitalize(x: string | undefined | null) {

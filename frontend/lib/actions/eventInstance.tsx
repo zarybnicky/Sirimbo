@@ -1,4 +1,5 @@
 import {
+  CalendarPlus,
   CheckSquare,
   GitBranch,
   NotebookPen,
@@ -15,6 +16,7 @@ import {
 } from '@/graphql/Event';
 import { type ActionContext, defineActions } from '@/lib/actions';
 import { EventEditForm } from '@/ui/event-form/EventForms';
+import { AddToEventScheduleForm } from '@/ui/forms/AddToEventScheduleForm';
 import { EditEventInstanceDescriptionForm } from '@/ui/forms/EditEventInstanceDescriptionForm';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
@@ -42,13 +44,8 @@ function canOpenRegistrations({
 
   return (
     isManager ||
-    (!item.isCancelled &&
-      !item.isLocked &&
-      new Date(item.until) >= new Date() &&
-      !!(item.isPublic || item.isVisible) &&
-      (!isExternal ||
-        !item.capacity ||
-        (item.remainingPersonSpots ?? 0) > 0))
+    (!!(item.isPublic || item.isVisible) &&
+      (!isExternal || !item.capacity || (item.remainingPersonSpots ?? 0) > 0))
   );
 }
 
@@ -129,6 +126,14 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     label: 'Docházka',
     visible: canManageInstance,
     href: ({ item }) => `/termin/${item.id}?tab=attendance`,
+  },
+  {
+    id: 'eventInstance.addToEventSchedule',
+    label: 'Přidat do rozpisu události',
+    icon: CalendarPlus,
+    visible: ({ item, auth }) =>
+      canManageInstance({ item, auth }) && !item.parentId,
+    render: ({ item }) => <AddToEventScheduleForm eventId={item.id} />,
   },
   {
     id: 'eventInstance.detach',

@@ -16,7 +16,7 @@ import { EventList } from '@/ui/lists/EventList';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { WithSidebar } from '@/ui/WithSidebar';
-import { formatEventType, formatInstanceName } from '@/ui/format';
+import { formatEventType, formatEventName } from '@/ui/format';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
@@ -45,7 +45,7 @@ export function EventPageClient({
     : 'eventInstance.registrations';
   const title =
     (instance
-      ? formatInstanceName(instance)
+      ? formatEventName(instance)
       : shared &&
         (shared.name?.trim() ||
           formatEventType(shared.type?.toUpperCase() as EventType | null))) || '';

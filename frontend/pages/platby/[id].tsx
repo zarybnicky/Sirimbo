@@ -2,7 +2,7 @@ import { Layout } from '@/ui/Layout';
 import type { PaymentQuery } from '@/graphql/Payment';
 import { PaymentDocument } from '@/graphql/Payment';
 import {
-  formatInstanceName,
+  formatEventName,
   moneyFormatter,
   numericDateFormatter,
 } from '@/ui/format';
@@ -118,7 +118,7 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
                   href={`/termin/${payment.eventInstance.id}`}
                   className="text-sm font-medium text-accent-11 hover:underline"
                 >
-                  {formatInstanceName(payment.eventInstance)}
+                  {formatEventName(payment.eventInstance)}
                 </Link>
               </p>
               {!!payment.eventInstance.trainersList?.length && (

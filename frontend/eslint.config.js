@@ -48,7 +48,7 @@ export default defineConfig([
           caughtErrors: 'all',
           caughtErrorsIgnorePattern: '^_',
           destructuredArrayIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
+          varsIgnorePattern: '^_|Types',
           ignoreRestSiblings: true,
         },
       ],

@@ -1,58 +1,5 @@
 import React from 'react';
 
-const setLocalStorageItem = (key: string, value: string | null | undefined) => {
-  if (value) {
-    localStorage.setItem(key, value);
-  } else {
-    localStorage.removeItem(key);
-  }
-  globalThis.dispatchEvent(
-    new StorageEvent('storage', { key, newValue: value, storageArea: localStorage }),
-  );
-};
-
-const useLocalStorageSubscribe = (callback: (ev: StorageEvent) => void) => {
-  const realCallback = (ev: StorageEvent) => {
-    if (ev.storageArea === localStorage) {
-      callback(ev);
-    }
-  };
-  globalThis.addEventListener('storage', realCallback);
-  return () => globalThis.removeEventListener('storage', realCallback);
-};
-
-const getLocalStorageServerSnapshot = (): undefined => {};
-
-export function useLocalStorage(key: string, initialValue: string | null | undefined) {
-  const getSnapshot = () => localStorage.getItem(key);
-
-  const store = React.useSyncExternalStore(
-    useLocalStorageSubscribe,
-    getSnapshot,
-    getLocalStorageServerSnapshot,
-  );
-
-  const setState = React.useCallback(
-    (v: React.SetStateAction<string | null | undefined>) => {
-      try {
-        const nextState = typeof v === 'function' ? v(store) : v;
-        setLocalStorageItem(key, nextState);
-      } catch (error) {
-        console.warn(error);
-      }
-    },
-    [key, store],
-  );
-
-  React.useEffect(() => {
-    if (localStorage.getItem(key) === null && initialValue !== undefined) {
-      setLocalStorageItem(key, initialValue);
-    }
-  }, [key, initialValue]);
-
-  return [store || initialValue, setState] as const;
-}
-
 const setSessionStorageItem = (key: string, value: string | null | undefined) => {
   if (value) {
     sessionStorage.setItem(key, value);

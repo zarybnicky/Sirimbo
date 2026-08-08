@@ -6,7 +6,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { type DragSubject, dragSubjectAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
-import { formatInstanceName } from '@/ui/format';
+import { formatEventName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import { Cake } from 'lucide-react';
@@ -166,7 +166,7 @@ function InstanceEventCell({
           <div
             className={`rbc-event-content${instance.isCancelled ? ' line-through' : ''}`}
           >
-            {formatInstanceName(event.instance)}
+            {formatEventName(event.instance)}
           </div>
 
           {!continuesAfter && isResizable && (

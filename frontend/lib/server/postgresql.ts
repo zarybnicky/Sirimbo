@@ -7,6 +7,7 @@ declare global {
   var pool: Pool | undefined;
 }
 
+// eslint-disable-next-line import-x/no-unused-modules
 export function getPool(): Pool {
   globalThis.pool ??= new Pool();
   return globalThis.pool;
@@ -26,6 +27,7 @@ export function runQuery<TParams, TResult>(
   return query.run(params as TParams, getPool());
 }
 
+// eslint-disable-next-line import-x/no-unused-modules
 export async function withTransaction<TResult>(
   callback: (client: PoolClient) => Promise<TResult>,
 ): Promise<TResult> {

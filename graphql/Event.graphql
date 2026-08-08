@@ -6,37 +6,17 @@ fragment EventInstance on EventInstance {
   type
   since
   until
+  locationText
+  location {
+    id
+    name
+  }
+  isLocked
+  isVisible
+  isPublic
+  hasPublicDetails
   isCancelled
-  locationText
-  location {
-    id
-    name
-  }
   stats
-}
-
-fragment EventListInstance on EventInstance {
-  id
-  name
-  type
-  since
-  until
-  capacity
-  remainingPersonSpots
-  location {
-    id
-    name
-  }
-  locationText
-}
-
-fragment SeriesInfo on SeriesInfo {
-  id
-  name
-  position
-  length
-  since
-  until
 }
 
 query EventSeries($id: BigInt!) {
@@ -56,25 +36,21 @@ fragment EventWithTrainer on EventInstance {
   ...EventInstance
   seriesId
   seriesInfo {
-    ...SeriesInfo
+    id
+    name
+    position
+    length
+    since
+    until
   }
   name
   type
   summary
   capacity
   capacityUnit
-  isLocked
-  isVisible
-  isPublic
-  hasPublicDetails
   shareToken
   enableNotes
-  locationText
   remainingPersonSpots
-  location {
-    id
-    name
-  }
   trainersList: eventInstanceTrainersByInstanceIdList {
     id
     personId
@@ -404,7 +380,7 @@ query EventList {
     condition: { type: CAMP, parentId: null }
     orderBy: SINCE_DESC
   ) {
-    ...EventListInstance
+    ...EventWithTrainer
   }
 }
 

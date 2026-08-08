@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
 import { useAuth } from '@/ui/use-auth';
 import { buttonCls } from '@/ui/style';
-import { useSessionStorage } from '@/lib/use-local-storage';
+import { useSessionStorage } from '@/lib/useSessionStorage';
 import { cn } from '@/lib/cn';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';

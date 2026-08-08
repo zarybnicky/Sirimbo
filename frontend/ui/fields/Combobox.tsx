@@ -17,17 +17,18 @@ type Item = { id: string | null; label: string };
 type ComboboxProps = {
   value: string | null | undefined;
   onChange: (value: string | null | undefined) => void;
+  onBlur?: () => void;
   options?: Item[];
   placeholder: string;
   className?: string;
   label?: React.ReactNode;
-} & Omit<Popover.PopoverContentProps, 'onChange'>;
+} & Omit<Popover.PopoverContentProps, 'onChange' | 'onBlur'>;
 
 type ComboboxElementProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
   helperText?: React.ReactNode;
-} & Omit<ComboboxProps, 'value' | 'onChange'>;
+} & Omit<ComboboxProps, 'value' | 'onChange' | 'onBlur'>;
 
 export function ComboboxElement<T extends FieldValues>({
   name,
@@ -44,6 +45,7 @@ export function ComboboxElement<T extends FieldValues>({
       <Combobox
         value={field.value}
         onChange={field.onChange}
+        onBlur={field.onBlur}
         options={options}
         label={label}
         placeholder={placeholder}
@@ -57,6 +59,7 @@ export function ComboboxElement<T extends FieldValues>({
 export function Combobox({
   value,
   onChange,
+  onBlur,
   options = [],
   label,
   placeholder,
@@ -67,17 +70,28 @@ export function Combobox({
   const realOnChange = React.useCallback(
     (x: string | null | undefined) => {
       onChange(x);
+      onBlur?.();
       setOpen(false);
     },
-    [onChange],
+    [onBlur, onChange],
+  );
+  const handleOpenChange = React.useCallback(
+    (nextOpen: boolean) => {
+      setOpen(nextOpen);
+      if (!nextOpen) onBlur?.();
+    },
+    [onBlur],
   );
 
   return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
+    <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <div className="grow">
         <FieldLabel>{label}</FieldLabel>
         <Popover.Trigger
           type="button"
+          onBlur={() => {
+            if (!open) onBlur?.();
+          }}
           className={cn(
             'w-full flex bg-accent-2 px-3 py-2 text-sm border rounded-md border-accent-7 justify-between items-center',
             !value && 'text-accent-11',
@@ -112,7 +126,7 @@ export function ComboboxButton({
   className,
   buttonClassName,
   ...props
-}: Omit<ComboboxProps, 'label'> & { buttonClassName?: string }) {
+}: Omit<ComboboxProps, 'label' | 'onBlur'> & { buttonClassName?: string }) {
   const [open, setOpen] = React.useState(false);
   const realOnChange = React.useCallback(
     (x: string | null | undefined) => {

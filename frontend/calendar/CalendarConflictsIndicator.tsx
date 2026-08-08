@@ -2,7 +2,7 @@ import {
   type EventConflictFragment,
   EventConflictsReportDocument,
 } from '@/graphql/EventConflicts';
-import { dateTimeFormatter, formatInstanceName } from '@/ui/format';
+import { dateTimeFormatter, formatEventName } from '@/ui/format';
 import {
   Dialog,
   DialogContent,
@@ -46,14 +46,14 @@ export function CalendarConflictsIndicator({ range }: Props) {
       (map[first.id] ??= []).push({
         id: `${id}:first`,
         personName: person.name,
-        otherEventName: formatInstanceName(second),
+        otherEventName: formatEventName(second),
         otherSince: second.since,
         otherUntil: second.until,
       });
       (map[second.id] ??= []).push({
         id: `${id}:second`,
         personName: person.name,
-        otherEventName: formatInstanceName(first),
+        otherEventName: formatEventName(first),
         otherSince: first.since,
         otherUntil: first.until,
       });
@@ -123,13 +123,13 @@ function ConflictEventsSummary({ conflict }: { conflict: EventConflictFragment }
           {dateTimeFormatter.formatRange(new Date(first.since), new Date(first.until))}
         </p>
         <p className="font-medium text-neutral-12">
-          {formatInstanceName(first)}
+          {formatEventName(first)}
         </p>
         <p className="text-sm tracking-wide text-neutral-10">
           {dateTimeFormatter.formatRange(new Date(second.since), new Date(second.until))}
         </p>
         <p className="font-medium text-neutral-12">
-          {formatInstanceName(second)}
+          {formatEventName(second)}
         </p>
       </div>
       {start && end && (

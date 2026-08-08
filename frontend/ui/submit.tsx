@@ -1,23 +1,53 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
+import { type Control, type FieldValues, useFormState } from 'react-hook-form';
 import { buttonCls } from '@/ui/style';
 import { Spinner } from '@/ui/Spinner';
 
-export const SubmitButton = React.forwardRef(function SubmitButton(
-  {
-    loading,
-    disabled,
-    className,
-    children = 'Uložit',
-    variant,
-    ...props
-  }: Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> & {
-    disabled?: boolean;
-    loading?: boolean;
-    variant?: NonNullable<Parameters<typeof buttonCls>[0]>['variant'];
-  },
-  ref: React.ForwardedRef<HTMLButtonElement>,
-) {
+type BaseSubmitButtonProps = React.ComponentPropsWithRef<'button'> & {
+  loading?: boolean;
+  variant?: NonNullable<Parameters<typeof buttonCls>[0]>['variant'];
+};
+
+export type SubmitButtonProps<T extends FieldValues = FieldValues> =
+  BaseSubmitButtonProps & { control?: Control<T> };
+
+export function SubmitButton<T extends FieldValues>({
+  control,
+  ...props
+}: SubmitButtonProps<T>) {
+  return control ? (
+    <FormStateSubmitButton {...props} control={control} />
+  ) : (
+    <BaseSubmitButton {...props} />
+  );
+}
+
+function FormStateSubmitButton<T extends FieldValues>({
+  control,
+  loading,
+  disabled,
+  ...props
+}: BaseSubmitButtonProps & { control: Control<T> }) {
+  const { isSubmitting, isValid } = useFormState({ control });
+
+  return (
+    <BaseSubmitButton
+      {...props}
+      loading={loading || isSubmitting}
+      disabled={disabled || !isValid}
+    />
+  );
+}
+
+function BaseSubmitButton({
+  loading,
+  disabled,
+  className,
+  children = 'Uložit',
+  variant,
+  ...props
+}: BaseSubmitButtonProps) {
   const [state, setState] = React.useState<'NORMAL' | 'LOADING' | 'LOADED'>('NORMAL');
   React.useEffect(() => {
     setState((oldState) => {
@@ -36,7 +66,6 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
     <button
       type="submit"
       {...props}
-      ref={ref}
       disabled={loading || disabled}
       className={buttonCls({
         className,
@@ -57,7 +86,7 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
       )}
     </button>
   );
-});
+}
 
 function AnimatedCheck() {
   return (
