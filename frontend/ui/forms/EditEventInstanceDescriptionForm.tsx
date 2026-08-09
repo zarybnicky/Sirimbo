@@ -7,7 +7,6 @@ import { RichTextEditor } from '@/ui/fields/richtext';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -21,10 +20,11 @@ const Form = z.object({
 export function EditEventInstanceDescriptionForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit, getValues } = useForm({
+    mode: 'onBlur',
     shouldUnregister: false,
     resolver: zodResolver(Form),
   });
-  const update = useMutation(UpdateEventInstanceDocument)[1];
+  const [result, update] = useMutation(UpdateEventInstanceDocument);
   const [{ data }] = useQuery({
     query: EventInstanceDescriptionDocument,
     variables: { id },
@@ -42,11 +42,10 @@ export function EditEventInstanceDescriptionForm({ id }: { id: string }) {
     }
   }, [reset, getValues, instance]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
     const result = await update({ id, patch: values });
-    if (result.error) throw result.error;
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   const tabs: Array<{
     id: string;
@@ -82,15 +81,15 @@ export function EditEventInstanceDescriptionForm({ id }: { id: string }) {
     : [];
 
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
 
       <div className="max-w-full">
         <TabMenu selected={tab} onSelect={setTab} options={tabs} />
       </div>
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
+        <SubmitButton control={control}>Uložit změny</SubmitButton>
       </div>
     </form>
   );

@@ -104,7 +104,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     label: 'Sdílet program',
     icon: Share2,
     visible: canManageInstance,
-    render: () => import('@/ui/EventShareDialog'),
+    load: () => import('@/ui/EventShareDialog'),
   },
   {
     id: 'eventInstance.toggleCancelled',

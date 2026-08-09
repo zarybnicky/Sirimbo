@@ -29,13 +29,16 @@ function FormStateSubmitButton<T extends FieldValues>({
   disabled,
   ...props
 }: BaseSubmitButtonProps & { control: Control<T> }) {
+  const [isMounted, setIsMounted] = React.useState(false);
   const { isSubmitting, isValid } = useFormState({ control });
+
+  React.useEffect(() => setIsMounted(true), []);
 
   return (
     <BaseSubmitButton
       {...props}
       loading={loading || isSubmitting}
-      disabled={disabled || !isValid}
+      disabled={disabled || !isMounted || !isValid}
     />
   );
 }

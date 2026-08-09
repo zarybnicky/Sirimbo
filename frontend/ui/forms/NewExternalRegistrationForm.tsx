@@ -3,7 +3,6 @@ import { TextAreaElement } from '@/ui/fields/textarea';
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { z } from 'zod';
@@ -14,34 +13,35 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
+  firstName: z.string().min(1, 'Zadejte jméno'),
+  lastName: z.string().min(1, 'Zadejte příjmení'),
   prefixTitle: z.string().prefault(''),
   suffixTitle: z.string().prefault(''),
-  nationality: z.string(),
+  nationality: z.string().min(1, 'Vyberte národnost'),
   birthDate: z.string().nullish(),
   taxIdentificationNumber: z
     .string()
     .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
     .nullish(),
-  email: z.email(),
+  email: z.email({ error: 'Zadejte platný e-mail' }),
   phone: z.string().min(9).max(14),
   note: z.string().prefault(''),
 });
 
 export function NewExternalRegistrationForm({ instanceId }: { instanceId: string }) {
   const { onSuccess } = useFormResult();
-  const create = useMutation(RegisterToEventExternalDocument)[1];
+  const [result, create] = useMutation(RegisterToEventExternalDocument);
 
   const { control, handleSubmit } = useForm({
+    mode: 'onBlur',
     defaultValues: {
       nationality: '203',
     },
     resolver: zodResolver(Form),
   });
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    const res = await create({
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    const result = await create({
       input: {
         eventExternalRegistration: {
           instanceId,
@@ -49,16 +49,16 @@ export function NewExternalRegistrationForm({ instanceId }: { instanceId: string
         },
       },
     });
-    if (res.data?.createEventExternalRegistration) {
+    if (!result.error && result.data?.createEventExternalRegistration) {
       toast.success('Přihlášení na akci proběhlo úspěšně.');
       onSuccess();
     }
-  });
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit.execute)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset className="grid lg:grid-cols-2 gap-2">
-        <FormError error={onSubmit.error} />
+        <FormError error={result.error} />
 
         {/*<TextFieldElement
           control={control}
@@ -81,6 +81,7 @@ export function NewExternalRegistrationForm({ instanceId }: { instanceId: string
           type="email"
           label="E-mail"
           autoComplete="email"
+          required
         />
         <TextFieldElement
           control={control}
@@ -88,6 +89,7 @@ export function NewExternalRegistrationForm({ instanceId }: { instanceId: string
           type="tel"
           label="Telefon"
           autoComplete="tel"
+          required
         />
 
         <ComboboxElement
@@ -119,7 +121,7 @@ export function NewExternalRegistrationForm({ instanceId }: { instanceId: string
       </fieldset>
 
       <div className="col-full pt-2">
-        <SubmitButton loading={onSubmit.loading} />
+        <SubmitButton control={control} />
       </div>
     </form>
   );

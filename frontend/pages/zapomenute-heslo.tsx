@@ -2,7 +2,6 @@ import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { TextFieldElement } from '@/ui/fields/text';
 import { toast } from 'react-toastify';
 import { ResetPasswordDocument } from '@/graphql/CurrentUser';
@@ -22,22 +21,23 @@ const Form = z.object({
 function ForgottenPasswordForm() {
   const router = useRouter();
   const { control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
-  const resetPassword = useMutation(ResetPasswordDocument)[1];
+  const [result, resetPassword] = useMutation(ResetPasswordDocument);
 
-  const onSubmit = useAsyncCallback(async (data: z.infer<typeof Form>) => {
-    const res = await resetPassword({ input: data });
-    if (res.data?.resetPassword?.__typename) {
+  const onSubmit = async (data: z.infer<typeof Form>) => {
+    const result = await resetPassword({ input: data });
+    if (!result.error && result.data?.resetPassword?.__typename) {
       toast.success(
         'Pokud byl e-mail správný, tak za chvíli najdete e-mail s pokyny ve své schránce.',
       );
       await router.push('/login');
     }
-  });
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit.execute)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <h5 className="text-xl mb-2">Zapomenuté heslo</h5>
       <div className="mb-4">
         Pokud jste zapomněli heslo, pošleme Vám na e-mail odkaz, kde si ho můžete změnit.
@@ -52,9 +52,9 @@ function ForgottenPasswordForm() {
           autoComplete="email"
           required
         />
-        <FormError error={onSubmit.error} default="Nepodařilo se obnovit heslo." />
+        <FormError error={result.error} default="Nepodařilo se obnovit heslo." />
       </div>
-      <SubmitButton className="w-full" loading={onSubmit.loading}>
+      <SubmitButton control={control} className="w-full">
         Obnovit heslo
       </SubmitButton>
     </form>

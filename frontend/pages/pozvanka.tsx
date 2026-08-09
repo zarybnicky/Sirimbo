@@ -5,7 +5,6 @@ import { SubmitButton } from '@/ui/submit';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { z } from 'zod';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import {
   InvitationInfoDocument,
@@ -22,7 +21,7 @@ const InvitationToken = z.uuid();
 
 const Form = z.object({
   email: z.email(),
-  passwd: z.string(),
+  passwd: z.string().min(1, 'Zadejte heslo'),
   token: InvitationToken,
 });
 
@@ -32,6 +31,7 @@ export default function InvitationPage() {
   const authLoading = useAuthLoading();
   const [token] = useQueryState('token', parseAsString.withDefault(''));
   const { setValue, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
 
@@ -41,19 +41,19 @@ export default function InvitationPage() {
     variables: { token },
     pause: !isValidToken || !router.isReady,
   });
-  const register = useMutation(RegisterUsingInvitationDocument)[1];
+  const [result, register] = useMutation(RegisterUsingInvitationDocument);
 
   React.useEffect(() => {
     setValue('token', token);
     setValue('email', data?.invitationInfo || '');
   }, [data, setValue, token]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
     const response = await register({ input: values });
-    if (response.data?.registerUsingInvitation?.result?.jwt) {
-      router.replace('/dashboard');
+    if (!response.error && response.data?.registerUsingInvitation?.result?.jwt) {
+      await router.replace('/dashboard');
     }
-  });
+  };
 
   if (!authLoading && auth.user) {
     void router.replace(auth.personIds.length === 0 ? '/profil' : '/dashboard');
@@ -65,10 +65,10 @@ export default function InvitationPage() {
 
       <div className="flex items-center justify-center h-full">
         <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
-          <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
+          <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit)}>
             <h4 className="text-2xl">Registrace nového uživatele</h4>
 
-            <FormError error={onSubmit.error} />
+            <FormError error={result.error} />
             {router.isReady && !isValidToken && (
               <FormError
                 default="Vaše pozvánka není platná."
@@ -118,7 +118,7 @@ export default function InvitationPage() {
               autoComplete="new-password"
               required
             />
-            <SubmitButton className="w-full my-2" loading={onSubmit.loading}>
+            <SubmitButton control={control} className="w-full my-2">
               Registrovat
             </SubmitButton>
           </form>

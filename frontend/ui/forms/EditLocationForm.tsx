@@ -8,7 +8,6 @@ import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -34,6 +33,7 @@ const Form = z.object({
 export function EditTenantLocationForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [query] = useQuery({
@@ -41,8 +41,8 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
     variables: { id },
     pause: !id,
   });
-  const create = useMutation(CreateTenantLocationDocument)[1];
-  const update = useMutation(UpdateTenantLocationDocument)[1];
+  const [createResult, create] = useMutation(CreateTenantLocationDocument);
+  const [updateResult, update] = useMutation(UpdateTenantLocationDocument);
 
   const item = query.data?.tenantLocation;
 
@@ -65,21 +65,21 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
     }
   }, [reset, item]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!Object.values(values.address || {}).some(Boolean)) {
       values.address = null;
     }
-    await (id
+    const result = await (id
       ? update({ input: { id, patch: { ...values, isPublic: !!values.isPublic } } })
       : create({
           input: { tenantLocation: { ...values, isPublic: !!values.isPublic } },
         }));
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={createResult.error || updateResult.error} />
 
       <TextFieldElement control={control} name="name" label="Jméno" />
       <TextFieldElement control={control} name="description" label="Popis" />
@@ -110,7 +110,7 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
       <CheckboxElement control={control} name="isPublic" label="Veřejné" />
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
+        <SubmitButton control={control}>Uložit změny</SubmitButton>
       </div>
     </form>
   );

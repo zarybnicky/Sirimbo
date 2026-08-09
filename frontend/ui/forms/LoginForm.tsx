@@ -3,9 +3,7 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import Link from 'next/link';
-import * as React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
-import { useClient } from 'urql';
+import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,25 +19,25 @@ export function LoginForm({
 }: {
   onSuccess?: (result: UserAuthFragment | null) => void;
 }) {
-  const client = useClient();
+  const [result, executeLogin] = useMutation(LoginDocument);
   const { enableRegistration } = useTenantConfig();
   const { control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
 
-  const onSubmit = useAsyncCallback(async ({ login, passwd }: z.infer<typeof Form>) => {
-    const r = await client.mutation(LoginDocument, { login, passwd }).toPromise();
-    if (r.error) throw r.error;
-    onSuccess?.(r.data?.login?.result?.usr ?? null);
-  });
+  const onSubmit = async ({ login, passwd }: z.infer<typeof Form>) => {
+    const result = await executeLogin({ login, passwd });
+    if (!result.error) onSuccess?.(result.data?.login?.result?.usr ?? null);
+  };
 
   return (
     <div className="flex h-[calc(100dvh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
-      <div className="group bg-neutral-1 text-accent-11 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
-        <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
+      <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
+        <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit)}>
           <h4 className="text-2xl">Přihlášení do systému</h4>
 
-          <FormError error={onSubmit.error} />
+          <FormError error={result.error} />
           <TextFieldElement
             control={control}
             name="login"
@@ -56,7 +54,7 @@ export function LoginForm({
             autoComplete="current-password"
             required
           />
-          <SubmitButton className="my-2" loading={onSubmit.loading}>
+          <SubmitButton control={control} className="my-2">
             Přihlásit
           </SubmitButton>
 

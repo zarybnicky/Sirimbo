@@ -45,7 +45,12 @@ export type Action<T, Id extends string = string> = {
       execute: (ctx: ActionContext<T>) => Promise<void>;
     }
   | {
-      render: DialogBody<T> | (() => Promise<{ default: DialogBody<T> }>);
+      render: DialogBody<T>;
+      modal?: boolean;
+      dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
+    }
+  | {
+      load: () => Promise<{ default: DialogBody<T> }>;
       modal?: boolean;
       dialogProps?: React.ComponentPropsWithoutRef<typeof DialogContent>;
     }
@@ -108,10 +113,7 @@ function resolveOne<T>(a: Action<T>, ctx: ActionContext<T>): ResolvedAction {
     };
   }
 
-  const Body =
-    typeof a.render === 'function' && a.render.length === 0
-      ? React.lazy(a.render as () => Promise<{ default: DialogBody<T> }>)
-      : (a.render as DialogBody<T>);
+  const Body = 'load' in a ? React.lazy(a.load) : a.render;
 
   return {
     ...base,

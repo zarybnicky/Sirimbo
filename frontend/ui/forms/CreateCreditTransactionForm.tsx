@@ -2,12 +2,11 @@ import { PersonPaymentsDocument } from '@/graphql/Person';
 import { CreateCreditTransactionDocument } from '@/graphql/Payment';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
-import { useFormResult } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { moneyFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm, useWatch } from 'react-hook-form';
@@ -15,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   date: z.date(),
-  amount: z.number(),
+  amount: z.number().positive('Zadejte kladnou částku'),
   description: z.string().nullish().prefault(null),
 });
 
@@ -27,6 +26,7 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
   });
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
+    mode: 'onBlur',
     defaultValues: {
       date: new Date(),
       amount: 0,
@@ -35,13 +35,13 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
     resolver: zodResolver(Form),
   });
   const [isDeposit, setIsDeposit] = React.useState(true);
-  const create = useMutation(CreateCreditTransactionDocument)[1];
+  const [result, create] = useMutation(CreateCreditTransactionDocument);
   const person = data?.person;
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!person) return;
 
-    await create({
+    const result = await create({
       input: {
         vDate: values.date.toISOString(),
         vPersonId: person.id,
@@ -51,15 +51,16 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
           values.description || (isDeposit ? 'Vklad kreditu' : 'Vyplacení kreditu'),
       },
     });
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
   const amount = useWatch({ control, name: 'amount' }) || 0;
 
   if (!person) return null;
 
   const balance = Number.parseFloat(person.accountsList.find(Boolean)?.balance ?? '0');
   return (
-    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
       <DatePickerElement
         label="Datum"
         control={control}
@@ -115,7 +116,7 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
         </div>
       </div>
 
-      <SubmitButton loading={onSubmit.loading} disabled={!amount} />
+      <SubmitButton control={control} disabled={!amount} />
     </form>
   );
 }

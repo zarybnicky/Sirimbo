@@ -8,7 +8,6 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { z } from 'zod';
@@ -17,35 +16,42 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  date: z.date(),
-  time: z.string(),
-  location: z.string(),
-  event: z.string(),
+  date: z.date({ error: 'Zadejte termín' }),
+  time: z.string().min(1, 'Zadejte čas'),
+  location: z.string().min(1, 'Zadejte místo'),
+  event: z.string().min(1, 'Zadejte název akce'),
   exhibition: z.string().nullish(),
-  phone: z.string(),
-  email: z.email(),
+  phone: z.string().min(1, 'Zadejte telefon'),
+  email: z.email({ error: 'Zadejte platný e-mail' }),
   notes: z.string().nullish(),
-  op: z.boolean().refine((x) => x),
+  op: z
+    .boolean()
+    .refine((x) => x, 'Potvrďte souhlas se zpracováním osobních údajů'),
 });
 
 export function ExhibitionRequestForm() {
-  const submit = useMutation(SubmitFormDocument)[1];
+  const [result, submit] = useMutation(SubmitFormDocument);
   const { control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
 
-  const onSubmit = useAsyncCallback(async ({ op: _, ...data }: z.infer<typeof Form>) => {
+  const onSubmit = async ({ op: _, ...data }: z.infer<typeof Form>) => {
     if (typeof fbq !== 'undefined') {
       fbq('track', 'SubmitApplication');
     }
     const url = window.location.toString();
-    await submit({ type: 'Zájemce o vystoupení', data: JSON.stringify(data), url });
-    toast.success('Brzy se vám ozveme!');
-  });
+    const result = await submit({
+      type: 'Zájemce o vystoupení',
+      data: JSON.stringify(data),
+      url,
+    });
+    if (!result.error) toast.success('Brzy se vám ozveme!');
+  };
 
   return (
     <div className={cardCls()}>
-      <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
         <h4 className="text-xl font-bold mb-2 col-full">
           Nezávazná poptávka tanečního vystoupení
         </h4>
@@ -129,8 +135,8 @@ export function ExhibitionRequestForm() {
           Ozveme se Vám co nejdříve. V případě potřeby volejte 737 545 525.
         </p>
 
-        <FormError error={onSubmit.error} />
-        <SubmitButton loading={onSubmit.loading}>Odeslat</SubmitButton>
+        <FormError error={result.error} />
+        <SubmitButton control={control}>Odeslat</SubmitButton>
       </form>
     </div>
   );

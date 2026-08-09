@@ -1,6 +1,4 @@
-import React from 'react';
 import { TextFieldElement } from '@/ui/fields/text';
-import { useAsyncCallback } from 'react-async-hook';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { ChangePasswordDocument } from '@/graphql/CurrentUser';
@@ -12,8 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z
   .object({
-    newPass: z.string(),
-    checkPass: z.string(),
+    newPass: z.string().min(1, 'Zadejte nové heslo'),
+    checkPass: z.string().min(1, 'Potvrďte nové heslo'),
   })
   .refine((data) => data.newPass === data.checkPass, {
     path: ['checkPass'],
@@ -22,19 +20,20 @@ const Form = z
 
 export function ChangePasswordForm() {
   const { onSuccess } = useFormResult();
-  const doUpdate = useMutation(ChangePasswordDocument)[1];
+  const [result, doUpdate] = useMutation(ChangePasswordDocument);
   const { control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
-  const onSubmit = useAsyncCallback(async ({ newPass }: z.infer<typeof Form>) => {
-    await doUpdate({ input: { newPass } });
-    onSuccess();
-  });
+  const onSubmit = async ({ newPass }: z.infer<typeof Form>) => {
+    const result = await doUpdate({ input: { newPass } });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <DialogTitle>Změnit heslo</DialogTitle>
-      <FormError error={onSubmit.error} />
+      <FormError error={result.error} />
 
       <TextFieldElement
         control={control}
@@ -53,7 +52,7 @@ export function ChangePasswordForm() {
         required
       />
 
-      <SubmitButton loading={onSubmit.loading} />
+      <SubmitButton control={control} />
     </form>
   );
 }

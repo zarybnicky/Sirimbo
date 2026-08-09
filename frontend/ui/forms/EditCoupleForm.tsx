@@ -4,7 +4,6 @@ import { FormError, useFormResult } from '@/ui/form';
 import { formatCoupleName } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -18,10 +17,11 @@ const Form = z.object({
 export function EditCoupleForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [query] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
-  const update = useMutation(UpdateCoupleDocument)[1];
+  const [result, update] = useMutation(UpdateCoupleDocument);
 
   const item = query.data?.couple;
 
@@ -34,8 +34,8 @@ export function EditCoupleForm({ id }: { id: string }) {
     }
   }, [reset, item]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    await update({
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    const result = await update({
       input: {
         id,
         patch: {
@@ -44,12 +44,12 @@ export function EditCoupleForm({ id }: { id: string }) {
         },
       },
     });
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
 
       <div>
         <b>{formatCoupleName(item)}</b>
@@ -59,7 +59,7 @@ export function EditCoupleForm({ id }: { id: string }) {
       <DatePickerElement control={control} name="until" label="Do" clearable />
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
+        <SubmitButton control={control}>Uložit změny</SubmitButton>
       </div>
     </form>
   );

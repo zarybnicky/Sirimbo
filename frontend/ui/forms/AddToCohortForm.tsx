@@ -1,8 +1,7 @@
 import { CreateCohortMembershipDocument } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
-import { useFormResult } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
@@ -12,15 +11,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CohortListDocument } from '@/graphql/Cohorts';
 
 const Form = z.object({
-  cohortIds: z.array(z.string()),
+  cohortIds: z.array(z.string()).min(1, 'Vyberte alespoň jednu skupinu'),
 });
 
 export function AddToCohortForm({ person }: { person: PersonFragment }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
-  const createCohortMember = useMutation(CreateCohortMembershipDocument)[1];
+  const [result, createCohortMember] = useMutation(CreateCohortMembershipDocument);
 
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
@@ -31,23 +31,25 @@ export function AddToCohortForm({ person }: { person: PersonFragment }) {
     [cohorts],
   );
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
     for (const cohortId of values.cohortIds) {
-      await createCohortMember({
+      const result = await createCohortMember({
         input: { cohortMembership: { personId: person.id, cohortId } },
       });
+      if (result.error) return;
     }
     onSuccess();
-  });
+  };
 
   return (
-    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
       <VerticalCheckboxButtonGroupElement
         control={control}
         name="cohortIds"
         options={cohortOptions}
       />
-      <SubmitButton loading={onSubmit.loading} />
+      <SubmitButton control={control} />
     </form>
   );
 }

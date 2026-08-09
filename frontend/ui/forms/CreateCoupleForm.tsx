@@ -4,15 +4,14 @@ import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
-  man: z.string(),
-  woman: z.string(),
+  man: z.string().min(1, 'Vyberte partnera'),
+  woman: z.string().min(1, 'Vyberte partnerku'),
 });
 
 export function CreateCoupleForm({
@@ -21,7 +20,7 @@ export function CreateCoupleForm({
   person?: PersonBasicFragment;
 }) {
   const { onSuccess } = useFormResult();
-  const doCreate = useMutation(CreateCoupleDocument)[1];
+  const [result, doCreate] = useMutation(CreateCoupleDocument);
   const [{ data }] = useQuery({ query: PersonListDocument });
   const men = React.useMemo(
     () =>
@@ -53,6 +52,7 @@ export function CreateCoupleForm({
   );
 
   const { reset, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
@@ -63,8 +63,8 @@ export function CreateCoupleForm({
     }
   }, [initialPerson, reset]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    const res = await doCreate({
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    const result = await doCreate({
       input: {
         couple: {
           manId: values.man,
@@ -73,15 +73,12 @@ export function CreateCoupleForm({
         },
       },
     });
-    const id = res.data?.createCouple?.couple?.id;
-    if (id) {
-      onSuccess();
-    }
-  });
+    if (!result.error && result.data?.createCouple?.couple?.id) onSuccess();
+  };
 
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
       <ComboboxElement
         control={control}
         name="man"
@@ -96,7 +93,7 @@ export function CreateCoupleForm({
         placeholder="vyberte partnerku"
         options={women}
       />
-      <SubmitButton loading={onSubmit.loading}>Spárovat</SubmitButton>
+      <SubmitButton control={control}>Spárovat</SubmitButton>
     </form>
   );
 }

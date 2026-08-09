@@ -4,7 +4,6 @@ import { SubmitButton } from '@/ui/submit';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { z } from 'zod';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { RegisterWithoutInvitationDocument } from '@/graphql/CurrentUser';
 import { useRouter } from 'next/router';
@@ -17,7 +16,7 @@ import { useTenantConfig } from '@/ui/state/auth';
 
 const Form = z.object({
   email: z.email(),
-  passwd: z.string(),
+  passwd: z.string().min(1, 'Zadejte heslo'),
 });
 
 export default function InvitationPage() {
@@ -26,17 +25,18 @@ export default function InvitationPage() {
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const { control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
 
-  const register = useMutation(RegisterWithoutInvitationDocument)[1];
+  const [result, register] = useMutation(RegisterWithoutInvitationDocument);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
     const response = await register({ input: values });
-    if (response.data?.registerWithoutInvitation?.result?.jwt) {
-      router.replace('/dashboard');
+    if (!response.error && response.data?.registerWithoutInvitation?.result?.jwt) {
+      await router.replace('/dashboard');
     }
-  });
+  };
 
   const personCount = auth.personIds.length;
   React.useEffect(() => {
@@ -67,10 +67,10 @@ export default function InvitationPage() {
       <NextSeo title="Přihláška nového člena" />
       <div className="flex items-center justify-center h-full">
         <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
-          <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
+          <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit)}>
             <h4 className="text-2xl">Přihláška nového člena</h4>
 
-            <FormError error={onSubmit.error} />
+            <FormError error={result.error} />
 
             <p>
               Než začnete vyplňovat přihlášku nového člena, vytvořte si prosím uživatelský
@@ -95,7 +95,7 @@ export default function InvitationPage() {
               required
             />
 
-            <SubmitButton className="w-full my-2" loading={onSubmit.loading}>
+            <SubmitButton control={control} className="w-full my-2">
               Vytvořit účet
             </SubmitButton>
           </form>

@@ -6,7 +6,6 @@ import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -20,6 +19,7 @@ const Form = z.object({
 export function EditTenantMembershipForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [query] = useQuery({
@@ -27,7 +27,7 @@ export function EditTenantMembershipForm({ id }: { id: string }) {
     variables: { id },
     pause: !id,
   });
-  const update = useMutation(UpdateTenantMembershipDocument)[1];
+  const [result, update] = useMutation(UpdateTenantMembershipDocument);
 
   const item = query.data?.tenantMembership;
 
@@ -40,8 +40,8 @@ export function EditTenantMembershipForm({ id }: { id: string }) {
     }
   }, [reset, item]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    await update({
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    const result = await update({
       input: {
         id,
         patch: {
@@ -50,12 +50,12 @@ export function EditTenantMembershipForm({ id }: { id: string }) {
         },
       },
     });
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
 
       <div className="prose prose-accent">
         <h4>
@@ -67,7 +67,7 @@ export function EditTenantMembershipForm({ id }: { id: string }) {
       <DatePickerElement control={control} name="until" label="Členství do" clearable />
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
+        <SubmitButton control={control}>Uložit změny</SubmitButton>
       </div>
     </form>
   );
