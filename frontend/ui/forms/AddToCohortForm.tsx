@@ -17,7 +17,6 @@ const Form = z.object({
 export function AddToCohortForm({ person }: { person: PersonFragment }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [result, createCohortMember] = useMutation(CreateCohortMembershipDocument);

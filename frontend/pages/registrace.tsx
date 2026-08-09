@@ -25,7 +25,6 @@ export default function InvitationPage() {
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const { control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
 

@@ -22,7 +22,6 @@ export function LoginForm({
   const [result, executeLogin] = useMutation(LoginDocument);
   const { enableRegistration } = useTenantConfig();
   const { control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
 

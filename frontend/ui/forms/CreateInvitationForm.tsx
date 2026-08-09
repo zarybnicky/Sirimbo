@@ -15,7 +15,6 @@ const Form = z.object({
 export function CreateInvitationForm({ person }: { person: PersonBasicFragment }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [result, createInvitation] = useMutation(CreateInvitationDocument);

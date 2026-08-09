@@ -21,7 +21,6 @@ export function EditTenantForm() {
   const [result, update] = useMutation(UpdateTenantDocument);
 
   const { reset, control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {

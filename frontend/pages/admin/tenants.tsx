@@ -255,7 +255,6 @@ type TenantEditDialogProps = {
 function TenantEditDialog({ tenant }: TenantEditDialogProps) {
   const defaultValues = React.useMemo(() => createFormState(tenant), [tenant]);
   const { control, handleSubmit, reset } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(TenantFormSchema),
     defaultValues,
   });

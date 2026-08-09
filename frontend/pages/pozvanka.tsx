@@ -31,7 +31,6 @@ export default function InvitationPage() {
   const authLoading = useAuthLoading();
   const [token] = useQueryState('token', parseAsString.withDefault(''));
   const { setValue, control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
 

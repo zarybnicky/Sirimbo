@@ -111,7 +111,6 @@ export function CreatePersonDialog() {
   );
 
   const { control, handleSubmit, getValues, setValue, reset, trigger } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [{ data: cohorts }] = useQuery({

@@ -32,7 +32,6 @@ const Form = z.object({
 export function ExhibitionRequestForm() {
   const [result, submit] = useMutation(SubmitFormDocument);
   const { control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
 

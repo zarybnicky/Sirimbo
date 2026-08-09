@@ -16,7 +16,6 @@ const AuthForm = z.object({
 export function ChangeLoginForm() {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(AuthForm),
   });
   const [result, update] = useMutation(UpdateTenantSettingsDocument);

@@ -80,7 +80,6 @@ export function EventCreateForm({
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
   const form = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(EventForm),
     defaultValues: {
       type: defaults.type,
@@ -320,7 +319,6 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
   );
 
   const form = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(EventForm),
     defaultValues: {
       name: instance.name ?? '',

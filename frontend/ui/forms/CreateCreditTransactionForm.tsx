@@ -26,7 +26,6 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
   });
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
-    mode: 'onBlur',
     defaultValues: {
       date: new Date(),
       amount: 0,

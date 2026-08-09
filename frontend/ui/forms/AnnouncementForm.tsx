@@ -63,7 +63,6 @@ export function AnnouncementForm({
   const [result, upsert] = useMutation(UpsertAnnouncementDocument);
 
   const { reset, control, handleSubmit } = useForm({
-    mode: 'onBlur',
     defaultValues: {
       audienceRoles: [],
       cohortIds: [],

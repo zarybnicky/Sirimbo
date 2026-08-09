@@ -61,7 +61,6 @@ export function InstanceRegistrationForm({
   const showNotes = enableDetails && (enableNotes || !!registration?.note);
   const hasFields = showNotes || lessonTrainers.length > 0;
   const { control, handleSubmit } = useForm<FormValues>({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
     defaultValues: {
       note: registration?.note ?? '',

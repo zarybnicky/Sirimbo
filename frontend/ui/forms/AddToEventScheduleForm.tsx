@@ -21,7 +21,6 @@ export function AddToEventScheduleForm({
 }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [updateResult, update] = useMutation(UpdateEventInstanceDocument);

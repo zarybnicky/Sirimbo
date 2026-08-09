@@ -20,7 +20,6 @@ const Form = z.object({
 export function EditEventInstanceDescriptionForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit, getValues } = useForm({
-    mode: 'onBlur',
     shouldUnregister: false,
     resolver: zodResolver(Form),
   });

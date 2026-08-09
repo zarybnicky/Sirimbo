@@ -21,7 +21,6 @@ const Form = z.object({
 function ForgottenPasswordForm() {
   const router = useRouter();
   const { control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [result, resetPassword] = useMutation(ResetPasswordDocument);

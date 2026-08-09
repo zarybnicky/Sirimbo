@@ -44,7 +44,6 @@ export function ArticleForm({ id = '' }: { id?: string }) {
   const [updateResult, update] = useMutation(UpdateArticleDocument);
 
   const { reset, control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {

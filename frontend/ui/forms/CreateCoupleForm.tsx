@@ -52,7 +52,6 @@ export function CreateCoupleForm({
   );
 
   const { reset, control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {

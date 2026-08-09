@@ -33,7 +33,6 @@ export function NewExternalRegistrationForm({ instanceId }: { instanceId: string
   const [result, create] = useMutation(RegisterToEventExternalDocument);
 
   const { control, handleSubmit } = useForm({
-    mode: 'onBlur',
     defaultValues: {
       nationality: '203',
     },

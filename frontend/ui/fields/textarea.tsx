@@ -64,6 +64,10 @@ export function TextAreaElement<T extends FieldValues>({
       value={field.value}
       error={fieldState.error}
       {...props}
+      onBlur={(event) => {
+        props.onBlur?.(event);
+        field.onBlur();
+      }}
       onChange={(e) => field.onChange(e.currentTarget.value)}
     />
   );

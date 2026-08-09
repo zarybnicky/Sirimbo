@@ -27,7 +27,6 @@ type FolderOrSeason = {
 export function ChangeFoldersForm() {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit, reset } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [result, updateSettings] = useMutation(UpdateTenantSettingsDocument);

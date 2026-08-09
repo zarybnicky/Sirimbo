@@ -39,7 +39,6 @@ export function CohortForm({ id = '' }: { id?: string }) {
   const [updateResult, update] = useMutation(UpdateCohortDocument);
 
   const { reset, control, handleSubmit } = useForm({
-    mode: 'onBlur',
     defaultValues: { colorRgb: '#ff0000' },
     resolver: zodResolver(Form),
   });

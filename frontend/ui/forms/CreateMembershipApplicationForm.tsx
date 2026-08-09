@@ -50,7 +50,6 @@ export function CreateMembershipApplicationForm({
   const { onSuccess } = useFormResult();
   const auth = useAuth();
   const { reset, control, handleSubmit } = useForm({
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [createResult, create] = useMutation(CreateMembershipApplicationDocument);
@@ -206,7 +205,7 @@ export function CreateMembershipApplicationForm({
               </button>
             )}
 
-            <SubmitButton control={control} />
+            <SubmitButton control={control} disabled={disabled} />
           </>
         )}
       </div>

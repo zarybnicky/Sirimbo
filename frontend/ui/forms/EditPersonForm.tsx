@@ -78,7 +78,6 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
       ...data,
       birthDate: data.birthDate ?? null,
     } as unknown as any,
-    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [result, update] = useMutation(UpdatePersonDocument);
