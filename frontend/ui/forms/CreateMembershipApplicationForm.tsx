@@ -17,7 +17,6 @@ import { useAuth } from '@/ui/use-auth';
 import { countries } from '@/lib/countries';
 import { Check, Trash2 } from 'lucide-react';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -51,10 +50,11 @@ export function CreateMembershipApplicationForm({
   const { onSuccess } = useFormResult();
   const auth = useAuth();
   const { reset, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
-  const create = useMutation(CreateMembershipApplicationDocument)[1];
-  const update = useMutation(UpdateMembershipApplicationDocument)[1];
+  const [createResult, create] = useMutation(CreateMembershipApplicationDocument);
+  const [updateResult, update] = useMutation(UpdateMembershipApplicationDocument);
   const confirm = useMutation(ConfirmMembershipApplicationDocument)[1];
   const del = useMutation(DeleteMembershipApplicationDocument)[1];
 
@@ -70,11 +70,12 @@ export function CreateMembershipApplicationForm({
     }
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    let result;
     if (data) {
-      await update({ input: { id: data.id, patch: values } });
+      result = await update({ input: { id: data.id, patch: values } });
     } else {
-      await create({
+      result = await create({
         input: {
           membershipApplication: {
             ...values,
@@ -83,13 +84,13 @@ export function CreateMembershipApplicationForm({
         },
       });
     }
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit.execute)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset className="grid lg:grid-cols-2 gap-2" disabled={disabled}>
-        <FormError error={onSubmit.error} />
+        <FormError error={createResult.error || updateResult.error} />
 
         <TextFieldElement
           control={control}
@@ -205,7 +206,7 @@ export function CreateMembershipApplicationForm({
               </button>
             )}
 
-            <SubmitButton loading={onSubmit.loading} />
+            <SubmitButton control={control} />
           </>
         )}
       </div>

@@ -8,7 +8,6 @@ import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { countries } from '@/lib/countries';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -79,23 +78,24 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
       ...data,
       birthDate: data.birthDate ?? null,
     } as unknown as any,
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
-  const update = useMutation(UpdatePersonDocument)[1];
+  const [result, update] = useMutation(UpdatePersonDocument);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    await update({
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    const result = await update({
       input: {
         id: data.id,
         patch: values,
       },
     });
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
 
       <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
       <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
@@ -212,7 +212,7 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
       </div>
 
       <div className="col-full">
-        <SubmitButton loading={onSubmit.loading} />
+        <SubmitButton control={control} />
       </div>
     </form>
   );

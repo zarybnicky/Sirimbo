@@ -14,7 +14,6 @@ import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -41,10 +40,11 @@ export function ArticleForm({ id = '' }: { id?: string }) {
   const data = query.data?.aktuality;
   const title = id ? data?.atJmeno || '(Bez názvu)' : 'Nový článek';
 
-  const create = useMutation(CreateArticleDocument)[1];
-  const update = useMutation(UpdateArticleDocument)[1];
+  const [createResult, create] = useMutation(CreateArticleDocument);
+  const [updateResult, update] = useMutation(UpdateArticleDocument);
 
   const { reset, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
@@ -64,20 +64,22 @@ export function ArticleForm({ id = '' }: { id?: string }) {
     );
   }, [data, reset]);
 
-  const onSubmit = useAsyncCallback(async (patch: FormValues) => {
+  const onSubmit = async (patch: FormValues) => {
     if (id) {
       await update({ id, patch });
     } else {
-      const res = await create({ input: patch });
-      const id = res.data?.createAktuality?.aktuality?.id;
-      toast.success('Přidáno.');
-      if (id) {
-        router.replace(`/aktuality/${id}`);
-      } else {
-        reset();
+      const result = await create({ input: patch });
+      if (!result.error) {
+        const id = result.data?.createAktuality?.aktuality?.id;
+        toast.success('Přidáno.');
+        if (id) {
+          router.replace(`/aktuality/${id}`);
+        } else {
+          reset();
+        }
       }
     }
-  });
+  };
   const actions = useActions(
     [
       {
@@ -101,12 +103,12 @@ export function ArticleForm({ id = '' }: { id?: string }) {
   }
 
   return (
-    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit)}>
       <TitleBar title={title}>
         <ActionGroup actions={actions} />
       </TitleBar>
 
-      <FormError error={onSubmit.error} />
+      <FormError error={createResult.error || updateResult.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
       <TextFieldElement control={control} name="titlePhotoUrl" label="URL hlavní fotky" />
       <CheckboxElement control={control} name="isVisible" value="1" label="Veřejný" />
@@ -123,7 +125,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         name="atText"
         label="Text"
       />
-      <SubmitButton loading={onSubmit.loading} />
+      <SubmitButton control={control} />
     </form>
   );
 }

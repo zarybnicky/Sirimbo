@@ -4,7 +4,6 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -19,9 +18,10 @@ const Form = z.object({
 export function EditTenantForm() {
   const [{ data }] = useQuery({ query: CurrentTenantDocument });
   const { onSuccess } = useFormResult();
-  const doUpdate = useMutation(UpdateTenantDocument)[1];
+  const [result, update] = useMutation(UpdateTenantDocument);
 
   const { reset, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
@@ -32,15 +32,15 @@ export function EditTenantForm() {
     });
   }, [reset, data?.tenant]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!data) return;
-    await doUpdate({ input: { id: data?.tenant?.id!, patch: values } });
-    onSuccess();
-  });
+    const result = await update({ input: { id: data.tenant?.id!, patch: values } });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
       <TextFieldElement control={control} name="name" label="Název organizace" required />
       <TextFieldElement
         control={control}
@@ -54,7 +54,7 @@ export function EditTenantForm() {
         name="description"
         label="Základní informace"
       />
-      <SubmitButton loading={onSubmit.loading} />
+      <SubmitButton control={control} />
     </form>
   );
 }

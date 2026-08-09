@@ -21,7 +21,6 @@ import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -75,12 +74,13 @@ export function EventCreateForm({
   parentId?: string;
 }) {
   const { onSuccess } = useFormResult();
-  const createInstances = useMutation(CreateEventInstancesDocument)[1];
+  const [result, createInstances] = useMutation(CreateEventInstancesDocument);
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const { lockEventsByDefault } = useTenantConfig();
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
   const form = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(EventForm),
     defaultValues: {
       type: defaults.type,
@@ -141,7 +141,7 @@ export function EventCreateForm({
     if (!canSplit) setSplitLessons(false);
   }, [canSplit]);
 
-  const onSubmit = useAsyncCallback(async (values: EventFormType) => {
+  const onSubmit = async (values: EventFormType) => {
     const explicitRanges = values.instances.flatMap((instance) =>
       instance.since && instance.until
         ? [{ since: new Date(instance.since), until: new Date(instance.until) }]
@@ -207,13 +207,12 @@ export function EventCreateForm({
         pEnableNotes: values.enableNotes,
       },
     });
-    if (result.error) throw result.error;
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="space-y-3" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
 
       {canSplit && (
         <Checkbox
@@ -288,7 +287,7 @@ export function EventCreateForm({
       </FormProvider>
 
       <div className="flex justify-end pt-1">
-        <SubmitButton loading={onSubmit.loading}>Vytvořit</SubmitButton>
+        <SubmitButton control={control}>Vytvořit</SubmitButton>
       </div>
     </form>
   );
@@ -296,7 +295,7 @@ export function EventCreateForm({
 
 export function EventEditForm({ instance }: { instance: EventWithTrainerFragment }) {
   const { onSuccess } = useFormResult();
-  const updateInstance = useMutation(UpdateEventInstanceDetailsDocument)[1];
+  const [result, updateInstance] = useMutation(UpdateEventInstanceDetailsDocument);
   const [registrationsReady, setRegistrationsReady] = React.useState(false);
   const [registrationsQuery] = useQuery({
     query: EventInstanceRegistrationsDocument,
@@ -321,6 +320,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
   );
 
   const form = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(EventForm),
     defaultValues: {
       name: instance.name ?? '',
@@ -348,6 +348,10 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
     },
   });
   const { control, handleSubmit, setValue } = form;
+  const instances = useWatch({ control, name: 'instances' });
+  const registrationsPending =
+    instances?.slice(1).some(({ since, until }) => since && until) &&
+    !registrationsReady;
 
   const registrations = registrationsQuery.data?.eventInstance?.registrationsList ?? [];
 
@@ -371,7 +375,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
     }
   }, [registrationsQuery, registrationsReady, setValue]);
 
-  const onSubmit = useAsyncCallback(async (values: EventFormType) => {
+  const onSubmit = async (values: EventFormType) => {
     const edited = values.instances[0];
     if (!edited?.since || !edited.until) return;
 
@@ -379,9 +383,7 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
       .slice(1)
       .filter(({ since, until }) => since && until)
       .map(({ since, until }) => ({ since, until }));
-    if (copies.length > 0 && !registrationsReady) {
-      throw new Error('Účastníci ještě nejsou načteni');
-    }
+    if (copies.length > 0 && !registrationsReady) return;
 
     const nextTrainers = edited.trainers
       .filter(keyIsNonNull('personId'))
@@ -439,13 +441,12 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
         pCopies: copyEvents.length > 0 ? copyEvents : null,
       },
     });
-    if (result.error) throw result.error;
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="space-y-3" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
 
       <RadioButtonGroupElement control={control} name="type" options={eventTypeOptions} />
       <TextFieldElement control={control} name="name" label="Název" />
@@ -506,7 +507,9 @@ export function EventEditForm({ instance }: { instance: EventWithTrainerFragment
       <FormError error={registrationsQuery.error} />
 
       <div className="flex justify-end pt-1">
-        <SubmitButton loading={onSubmit.loading}>Uložit</SubmitButton>
+        <SubmitButton control={control} disabled={registrationsPending}>
+          Uložit
+        </SubmitButton>
       </div>
     </form>
   );

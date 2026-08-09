@@ -1,10 +1,9 @@
 import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
 import { EnumerateCoursesDocument } from '@/starlet/graphql/Query';
 import { CheckboxElement } from '@/ui/fields/checkbox';
-import { useFormResult } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useEffect, useState } from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { z } from 'zod';
 import { starletSettingsAtom, starletTokenAtom } from './state';
@@ -27,9 +26,10 @@ type SimpleCourse = {
 export function ChangeCoursesForm() {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit, reset } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
-  const update = useMutation(UpdateTenantSettingsDocument)[1];
+  const [result, update] = useMutation(UpdateTenantSettingsDocument);
   const token = useAtomValue(starletTokenAtom);
 
   const { folders, seasons, courses: prevCourses } = useAtomValue(starletSettingsAtom);
@@ -51,8 +51,8 @@ export function ChangeCoursesForm() {
     ).then(setCourses);
   }, [folders, token?.auth_ok, seasons]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    await update({
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    const result = await update({
       input: {
         path: ['evidenceCourses'],
         newValue: JSON.stringify(
@@ -67,11 +67,12 @@ export function ChangeCoursesForm() {
         ),
       },
     });
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
       <ul>
         {courses.map((x) => (
           <li key={x.key}>
@@ -83,7 +84,7 @@ export function ChangeCoursesForm() {
           </li>
         ))}
       </ul>
-      <SubmitButton loading={onSubmit.loading} />
+      <SubmitButton control={control} />
     </form>
   );
 }

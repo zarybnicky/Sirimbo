@@ -12,7 +12,6 @@ import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { type Control, useController, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
@@ -61,9 +60,10 @@ export function AnnouncementForm({
   data?: AnnouncementFragment | null;
   onSuccess?: (id: string | undefined) => void;
 }) {
-  const upsert = useMutation(UpsertAnnouncementDocument)[1];
+  const [result, upsert] = useMutation(UpsertAnnouncementDocument);
 
   const { reset, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     defaultValues: {
       audienceRoles: [],
       cohortIds: [],
@@ -93,7 +93,7 @@ export function AnnouncementForm({
     );
   }, [data, reset]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
     const oldAudiences = [...(data?.announcementAudiences.nodes || [])];
     const newAudiences: UpsertAnnouncementInput['audiences'] = [];
 
@@ -120,7 +120,7 @@ export function AnnouncementForm({
       newAudiences.push({ id: remaining.id });
     }
 
-    const res = await upsert({
+    const result = await upsert({
       input: {
         info: {
           id,
@@ -134,16 +134,16 @@ export function AnnouncementForm({
         audiences: newAudiences,
       },
     });
-    const newId = res.data?.upsertAnnouncement?.announcement?.id;
-    if (!id && newId) {
-      toast.success('Přidáno.');
+    if (!result.error) {
+      const newId = result.data?.upsertAnnouncement?.announcement?.id;
+      if (!id && newId) toast.success('Přidáno.');
+      onSuccess?.(newId);
     }
-    onSuccess?.(newId);
-  });
+  };
 
   return (
-    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
 
       <TextFieldElement control={control} name="title" label="Nadpis" required />
       <RichTextEditor
@@ -173,7 +173,7 @@ export function AnnouncementForm({
       />
       <AnnouncementAudienceEditor control={control} />
 
-      <SubmitButton loading={onSubmit.loading} />
+      <SubmitButton control={control} />
     </form>
   );
 }

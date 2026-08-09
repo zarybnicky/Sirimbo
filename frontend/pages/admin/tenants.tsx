@@ -255,10 +255,11 @@ type TenantEditDialogProps = {
 function TenantEditDialog({ tenant }: TenantEditDialogProps) {
   const defaultValues = React.useMemo(() => createFormState(tenant), [tenant]);
   const { control, handleSubmit, reset } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(TenantFormSchema),
     defaultValues,
   });
-  const [, updateTenant] = useMutation(SystemAdminUpdateTenantDocument);
+  const [result, updateTenant] = useMutation(SystemAdminUpdateTenantDocument);
   const { onSuccess } = useFormResult();
 
   React.useEffect(() => {
@@ -269,7 +270,7 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
     });
   }, [tenant, reset]);
 
-  const onSubmit = useAsyncCallback(async (values: TenantFormValues) => {
+  const onSubmit = async (values: TenantFormValues) => {
     const result = await updateTenant({
       input: {
         tenantId: tenant.id,
@@ -284,16 +285,12 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
         czDic: values.czDic ?? '',
       },
     });
-
-    if (result.error) {
-      throw result.error;
-    }
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="grid gap-4" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error ?? null} />
+    <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
 
       <TextFieldElement control={control} name="name" label="Název" required />
       <TextAreaElement
@@ -314,7 +311,7 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
         <TextFieldElement control={control} name="czDic" label="DIČ" />
       </div>
 
-      <SubmitButton loading={onSubmit.loading}>Uložit změny</SubmitButton>
+      <SubmitButton control={control}>Uložit změny</SubmitButton>
     </form>
   );
 }

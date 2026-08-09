@@ -1,9 +1,8 @@
 import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
 import { TextFieldElement } from '@/ui/fields/text';
-import { useFormResult } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -17,25 +16,27 @@ const AuthForm = z.object({
 export function ChangeLoginForm() {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(AuthForm),
   });
-  const update = useMutation(UpdateTenantSettingsDocument)[1];
+  const [result, update] = useMutation(UpdateTenantSettingsDocument);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof AuthForm>) => {
-    await update({
+  const onSubmit = async (values: z.infer<typeof AuthForm>) => {
+    const result = await update({
       input: {
         path: ['evidenceAuth'],
         newValue: JSON.stringify(values),
       },
     });
-    onSuccess();
-  });
+    if (!result.error) onSuccess();
+  };
 
   return (
-    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
       <TextFieldElement control={control} name="login" label="Přihlašovací jméno" />
       <TextFieldElement control={control} name="password" type="password" label="Heslo" />
-      <SubmitButton loading={onSubmit.loading} />
+      <SubmitButton control={control} />
     </form>
   );
 }

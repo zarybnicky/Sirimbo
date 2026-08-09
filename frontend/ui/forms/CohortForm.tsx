@@ -12,7 +12,6 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -36,10 +35,11 @@ export function CohortForm({ id = '' }: { id?: string }) {
   const data = query.data?.entity;
 
   const [{ data: cohortGroups }] = useQuery({ query: CohortGroupListDocument });
-  const create = useMutation(CreateCohortDocument)[1];
-  const update = useMutation(UpdateCohortDocument)[1];
+  const [createResult, create] = useMutation(CreateCohortDocument);
+  const [updateResult, update] = useMutation(UpdateCohortDocument);
 
   const { reset, control, handleSubmit } = useForm({
+    mode: 'onBlur',
     defaultValues: { colorRgb: '#ff0000' },
     resolver: zodResolver(Form),
   });
@@ -51,22 +51,18 @@ export function CohortForm({ id = '' }: { id?: string }) {
     });
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (patch: z.infer<typeof Form>) => {
+  const onSubmit = async (patch: z.infer<typeof Form>) => {
     if (id) {
-      const res = await update({ id, patch });
-      const newId = res.data?.updateCohort?.cohort?.id;
-      if (newId) {
-        onSuccess();
-      }
+      const result = await update({ id, patch });
+      if (!result.error && result.data?.updateCohort?.cohort?.id) onSuccess();
     } else {
-      const res = await create({ input: patch });
-      const id = res.data?.createCohort?.cohort?.id;
-      if (id) {
+      const result = await create({ input: patch });
+      if (!result.error && result.data?.createCohort?.cohort?.id) {
         toast.success('Přidáno.');
         onSuccess();
       }
     }
-  });
+  };
 
   const programOptions = [
     ...(cohortGroups?.cohortGroups?.nodes || []).map((x) => ({
@@ -77,8 +73,8 @@ export function CohortForm({ id = '' }: { id?: string }) {
   ];
 
   return (
-    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <FormError error={onSubmit.error} />
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={createResult.error || updateResult.error} />
       <ColorPicker label="Barva skupiny" name="colorRgb" control={control} />
       <TextFieldElement control={control} name="name" label="Název" required />
       <TextFieldElement control={control} name="location" label="Město/místo" />
@@ -119,7 +115,7 @@ export function CohortForm({ id = '' }: { id?: string }) {
         name="description"
         label="Popis"
       />
-      <SubmitButton loading={onSubmit.loading} />
+      <SubmitButton control={control} />
     </form>
   );
 }

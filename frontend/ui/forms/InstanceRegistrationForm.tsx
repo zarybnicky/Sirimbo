@@ -10,7 +10,6 @@ import { SubmitButton } from '@/ui/submit';
 import { useConfirm } from '@/ui/Confirm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Minus, Plus } from 'lucide-react';
-import { useAsyncCallback } from 'react-async-hook';
 import { type Control, useController, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
@@ -45,7 +44,9 @@ export function InstanceRegistrationForm({
   onCancelled: () => void;
 }) {
   const confirm = useConfirm();
-  const setRegistration = useMutation(SetEventInstanceRegistrationDocument)[1];
+  const [result, setRegistration] = useMutation(
+    SetEventInstanceRegistrationDocument,
+  );
   const requestCounts = Object.fromEntries(
     registration?.eventLessonDemandsByRegistrationIdList.map((demand) => [
       demand.trainerId,
@@ -60,6 +61,7 @@ export function InstanceRegistrationForm({
   const showNotes = enableDetails && (enableNotes || !!registration?.note);
   const hasFields = showNotes || lessonTrainers.length > 0;
   const { control, handleSubmit } = useForm<FormValues>({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
     defaultValues: {
       note: registration?.note ?? '',
@@ -67,7 +69,7 @@ export function InstanceRegistrationForm({
     },
   });
 
-  const save = useAsyncCallback(async (values: FormValues) => {
+  const save = async (values: FormValues) => {
     const result = await setRegistration({
       input: {
         pInstanceId: instanceId,
@@ -79,13 +81,20 @@ export function InstanceRegistrationForm({
         pLessonCounts: lessonTrainers.map((_, index) => values.lessonCounts[index] ?? 0),
       },
     });
-    if (result.error) throw result.error;
-    toast.success(registration ? 'Přihláška upravena.' : 'Přihlášení proběhlo úspěšně.');
-    onSaved();
-  });
+    if (!result.error) {
+      toast.success(
+        registration ? 'Přihláška upravena.' : 'Přihlášení proběhlo úspěšně.',
+      );
+      onSaved();
+    }
+  };
 
-  const cancel = useAsyncCallback(async () => {
-    await confirm({ description: 'Opravdu chcete zrušit přihlášku?' });
+  const cancel = async () => {
+    try {
+      await confirm({ description: 'Opravdu chcete zrušit přihlášku?' });
+    } catch {
+      return;
+    }
     const result = await setRegistration({
       input: {
         pInstanceId: instanceId,
@@ -94,14 +103,15 @@ export function InstanceRegistrationForm({
         pIsRegistered: false,
       },
     });
-    if (result.error) throw result.error;
-    toast.success('Přihláška zrušena.');
-    onCancelled();
-  });
+    if (!result.error) {
+      toast.success('Přihláška zrušena.');
+      onCancelled();
+    }
+  };
 
   return (
-    <form className="grid gap-3" onSubmit={handleSubmit(save.execute)}>
-      <FormError error={save.error || cancel.error} />
+    <form className="grid gap-3" onSubmit={handleSubmit(save)}>
+      <FormError error={result.error} />
 
       {showNotes && (
         <TextAreaElement
@@ -131,14 +141,14 @@ export function InstanceRegistrationForm({
           <SubmitButton
             type="button"
             variant="outline"
-            loading={cancel.loading}
-            onClick={cancel.execute}
+            loading={result.fetching}
+            onClick={cancel}
           >
             Zrušit přihlášku
           </SubmitButton>
         )}
         {(!registration || hasFields) && (
-          <SubmitButton className="ml-auto" loading={save.loading}>
+          <SubmitButton className="ml-auto" control={control} disabled={result.fetching}>
             {registration ? 'Uložit' : 'Přihlásit'}
           </SubmitButton>
         )}

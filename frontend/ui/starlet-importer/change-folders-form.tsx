@@ -2,10 +2,9 @@ import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
 import { fetchStarlet } from '@/starlet/query';
 import { FoldersAndSeasonsDocument } from '@/starlet/graphql/Query';
 import { CheckboxElement } from '@/ui/fields/checkbox';
-import { useFormResult } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React, { useEffect, useState } from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { useMutation } from 'urql';
 import { z } from 'zod';
 import { starletSettingsAtom, starletTokenAtom } from './state';
@@ -28,9 +27,10 @@ type FolderOrSeason = {
 export function ChangeFoldersForm() {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit, reset } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
-  const updateSettings = useMutation(UpdateTenantSettingsDocument)[1];
+  const [result, updateSettings] = useMutation(UpdateTenantSettingsDocument);
   const token = useAtomValue(starletTokenAtom);
 
   const { folders: prevFolders, seasons: prevSeasons } =
@@ -64,8 +64,8 @@ export function ChangeFoldersForm() {
     });
   }, [token?.auth_ok]);
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    await updateSettings({
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    const foldersResult = await updateSettings({
       input: {
         path: ['evidenceFolders'],
         newValue: JSON.stringify(
@@ -75,7 +75,9 @@ export function ChangeFoldersForm() {
         ),
       },
     });
-    await updateSettings({
+    if (foldersResult.error) return;
+
+    const seasonsResult = await updateSettings({
       input: {
         path: ['evidenceSeasons'],
         newValue: JSON.stringify(
@@ -85,11 +87,12 @@ export function ChangeFoldersForm() {
         ),
       },
     });
-    onSuccess();
-  });
+    if (!seasonsResult.error) onSuccess();
+  };
 
   return (
-    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error} />
       <div className="grid grid-cols-2">
         <ul>
           {folders.map((x) => (
@@ -114,7 +117,7 @@ export function ChangeFoldersForm() {
           ))}
         </ul>
       </div>
-      <SubmitButton loading={onSubmit.loading} />
+      <SubmitButton control={control} />
     </form>
   );
 }

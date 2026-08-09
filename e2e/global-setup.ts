@@ -19,6 +19,7 @@ async function globalSetup(config: FullConfig) {
   // name="login" (email or username), name="passwd" (password)
   await page.fill('[name="login"]', process.env.E2E_EMAIL ?? 'admin@test.cz');
   await page.fill('[name="passwd"]', process.env.E2E_PASSWORD ?? 'admin');
+  await page.locator('[name="passwd"]').blur();
   await page.click('[type="submit"]');
 
   // Wait for redirect away from the login page

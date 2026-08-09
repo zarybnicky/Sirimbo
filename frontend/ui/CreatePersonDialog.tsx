@@ -22,12 +22,11 @@ import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { countries } from '@/lib/countries';
 import * as Collapsible from '@radix-ui/react-collapsible';
-import { FieldLabel } from '@/ui/form';
+import { FieldLabel, FormError } from '@/ui/form';
 import { ChevronDown, Plus } from 'lucide-react';
 import { useRouter as useCompatRouter } from 'next/compat/router';
 import { useRouter as useAppRouter } from 'next/navigation';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -93,8 +92,8 @@ export function CreatePersonDialog() {
   const [open, setOpen] = React.useState<'existing' | 'new' | null>(null);
   const pagesRouter = useCompatRouter();
   const appRouter = useAppRouter();
-  const create = useMutation(CreatePersonDocument)[1];
-  const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
+  const [createResult, create] = useMutation(CreatePersonDocument);
+  const [syncResult, syncCohorts] = useMutation(SyncCohortMembershipsDocument);
 
   const [personQuery] = useQuery({
     query: FullPersonListDocument,
@@ -111,7 +110,8 @@ export function CreatePersonDialog() {
     [personQuery],
   );
 
-  const { control, handleSubmit, getValues, setValue, reset } = useForm({
+  const { control, handleSubmit, getValues, setValue, reset, trigger } = useForm({
+    mode: 'onBlur',
     resolver: zodResolver(Form),
   });
   const [{ data: cohorts }] = useQuery({
@@ -148,8 +148,9 @@ export function CreatePersonDialog() {
       setValue('sendInvitation', false);
       setValue('cohortIds', person.cohortIds?.filter(isTruthy) ?? []);
       setCohortPickerOpen((person.cohortIds?.filter(isTruthy) ?? []).length > 0);
+      void trigger();
     }
-  }, [setValue, personId, setCohortPickerOpen, personQuery.data?.people?.nodes]);
+  }, [setValue, trigger, personId, setCohortPickerOpen, personQuery.data?.people?.nodes]);
 
   const email = useWatch({ control, name: 'email' });
   React.useEffect(() => {
@@ -182,7 +183,7 @@ export function CreatePersonDialog() {
     }
   }, [open, reset, setValue, setCohortPickerOpen]);
 
-  const onSubmit = useAsyncCallback(async (data: z.infer<typeof Form>) => {
+  const onSubmit = async (data: z.infer<typeof Form>) => {
     const {
       personId,
       isAdmin,
@@ -193,7 +194,7 @@ export function CreatePersonDialog() {
       cohortIds,
       ...p
     } = data;
-    const res = await create({
+    const result = await create({
       input: {
         personId,
         p,
@@ -204,14 +205,18 @@ export function CreatePersonDialog() {
         joinDate: joinDate.toISOString(),
       },
     });
-    const id = res.data?.createPerson?.p?.id;
+    if (result.error) return;
+
+    const id = result.data?.createPerson?.p?.id;
     if (id) {
-      await syncCohorts({
+      const result = await syncCohorts({
         input: {
           personId: id,
           cohortIds: (cohortIds ?? []).filter(isTruthy),
         },
       });
+      if (result.error) return;
+
       toast.success('Přidáno.');
       setOpen(null);
       if (pagesRouter) {
@@ -220,7 +225,7 @@ export function CreatePersonDialog() {
         appRouter.replace(`/clenove/${id}`);
       }
     }
-  });
+  };
 
   return (
     <Dialog open={!!open} onOpenChange={() => setOpen(null)}>
@@ -245,7 +250,9 @@ export function CreatePersonDialog() {
       >
         <DialogTitle>Nový člen</DialogTitle>
 
-        <form onSubmit={handleSubmit(onSubmit.execute)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormError error={createResult.error || syncResult.error} />
+
           {open === 'existing' && (
             <ComboboxElement
               control={control}
@@ -411,7 +418,7 @@ export function CreatePersonDialog() {
           </div>
 
           <div className="col-span-2">
-            <SubmitButton className="w-full" loading={onSubmit.loading}>
+            <SubmitButton className="w-full" control={control}>
               Vytvořit
             </SubmitButton>
           </div>
