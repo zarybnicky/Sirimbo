@@ -27,8 +27,6 @@ export function EventSummary({
   const actions = useActions(eventInstanceActions, instance);
   const { seriesInfo, registrations } = instance;
   const registrationCount = registrations.totalCount;
-  const start = new Date(instance.since);
-  const end = new Date(instance.until);
   const locationLabel = instance.location?.name || instance.locationText;
 
   return (
@@ -55,7 +53,7 @@ export function EventSummary({
 
       <div className="flex items-center gap-2">
         <Clock className="size-5 text-accent-11" />
-        {shortTimeFormatter.formatRange(start, end)}
+        {shortTimeFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
       </div>
 
       {locationLabel && (
@@ -92,11 +90,15 @@ export function EventSummary({
         </div>
       </div>
 
-      <div
-        className={cn('absolute', offsetButtons ? 'right-9 top-3.5' : 'right-2 top-2')}
-      >
-        <ActionGroup variant="row" align="end" actions={actions} />
-      </div>
+      <ActionGroup
+        className="max-w-full flex-wrap"
+        primary={[
+          'eventInstance.registrations',
+          'eventInstance.edit',
+          'eventInstance.attendance',
+        ]}
+        actions={actions}
+      />
     </div>
   );
 }

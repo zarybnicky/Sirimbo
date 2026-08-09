@@ -16,6 +16,7 @@ interface BaseAuthState {
   persons: PersonFragment[];
   couples: CoupleFragment[];
   personIds: string[];
+  isExternal: boolean;
   isGuest: boolean;
   isMember: boolean;
   isTrainer: boolean;
@@ -35,6 +36,7 @@ const defaultAuthState: BaseAuthState = {
   persons: [],
   couples: [],
   personIds: [],
+  isExternal: true,
   isGuest: false,
   isMember: false,
   isTrainer: false,
@@ -195,6 +197,7 @@ export const authAtom = atom<
         couples: persons.flatMap((x) => x.allCouplesList || []),
         personIds: persons.map((x) => x.id),
         isLoggedIn: !!user?.id,
+        isExternal: !user?.id || persons.length === 0,
         isGuest,
         isMember,
         isTrainer,

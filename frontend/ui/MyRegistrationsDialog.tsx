@@ -113,9 +113,8 @@ export function MyRegistrationsDialog({
 }) {
   const auth = useAuth();
   const { onSuccess } = useFormResult();
-  const isExternal = !auth.isLoggedIn || auth.personIds.length === 0;
 
-  return isExternal ? (
+  return auth.isExternal ? (
     <NewExternalRegistrationForm instanceId={instance.id} />
   ) : (
     <RegistrationsDialogContent
@@ -160,9 +159,7 @@ function RegistrationsDialogContent({
 
   React.useEffect(() => {
     if (!query.data || page) return;
-    const initialRegistration = registrations.find(
-      (registration) => registration.id === initialRegistrationId,
-    );
+    const initialRegistration = registrations.find((r) => r.id === initialRegistrationId);
     if (initialRegistration) {
       setSelected(registrant(initialRegistration));
       setPage('editor');

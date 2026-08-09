@@ -121,11 +121,10 @@ export function ActionGroup<Id extends string = string>({
     if (!('execute' in action)) return;
     if (action.confirm) {
       try {
-        await confirm(
-          typeof action.confirm === 'string'
+        const options = typeof action.confirm === 'string'
             ? { description: action.confirm }
-            : action.confirm,
-        );
+            : action.confirm;
+        await confirm(options);
       } catch {
         return;
       }

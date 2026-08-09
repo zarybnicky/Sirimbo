@@ -13,9 +13,7 @@ import { diff } from 'date-arithmetic';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import * as React from 'react';
 import { Check, HelpCircle, X } from 'lucide-react';
-import { canManageInstance, eventInstanceActions } from '@/lib/actions/eventInstance';
-import { useActions } from '@/lib/actions';
-import { ActionGroup } from './ActionGroup';
+import { canManageInstance } from '@/lib/actions/eventInstance';
 
 export function EventButton({
   instance,
@@ -47,8 +45,6 @@ export function EventButton({
       : viewer === 'trainer'
         ? false
         : !trainerIds.some((id) => auth.isMyPerson(id));
-
-  const actions = useActions(eventInstanceActions.filter(x => ['eventInstance.edit', 'eventInstance.attendance'].includes(x.id)), instance);
 
   const showInlineAttendance =
     attendance === 'inline' &&
@@ -114,7 +110,6 @@ export function EventButton({
 
         <PopoverContent align="start" className="flex flex-col gap-2">
           <EventSummary offsetButtons instance={instance} />
-          <ActionGroup primary={['eventInstance.edit', 'eventInstance.attendance']} actions={actions} />
         </PopoverContent>
       </Popover>
     </div>

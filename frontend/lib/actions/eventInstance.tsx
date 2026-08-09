@@ -39,13 +39,10 @@ function canOpenRegistrations({
   auth,
   item,
 }: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
-  const isManager = canManageInstance({ auth, item });
-  const isExternal = !auth.isLoggedIn || auth.personIds.length === 0;
-
   return (
-    isManager ||
+    canManageInstance({ auth, item }) ||
     (!!(item.isPublic || item.isVisible) &&
-      (!isExternal || !item.capacity || (item.remainingPersonSpots ?? 0) > 0))
+      (!auth.isExternal || !item.capacity || (item.remainingPersonSpots ?? 0) > 0))
   );
 }
 
@@ -58,9 +55,9 @@ function registrationActionLabel({
   }
 
   const hasRegistration = item.registrations.nodes.some(
-    (registration) =>
-      (!!registration.person?.id && auth.isMyPerson(registration.person.id)) ||
-      (!!registration.couple?.id && auth.isMyCouple(registration.couple.id)),
+    (r) =>
+      (!!r.person?.id && auth.isMyPerson(r.person.id)) ||
+      (!!r.couple?.id && auth.isMyCouple(r.couple.id)),
   );
   return !auth.isLoggedIn || auth.personIds.length === 0 || !hasRegistration
     ? 'Přihlásit'
@@ -70,9 +67,9 @@ function registrationActionLabel({
 export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
   {
     id: 'eventInstance.registrations',
+    group: 'primary',
     label: registrationActionLabel,
     visible: canOpenRegistrations,
-    group: 'primary',
     render: ({ auth, item }) => (
       <MyRegistrationsDialog
         instance={item}
@@ -82,6 +79,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
   },
   {
     id: 'eventInstance.edit',
+    group: 'primary',
     label: 'Upravit',
     icon: Pencil,
     visible: canManageInstance,
@@ -131,8 +129,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     id: 'eventInstance.addToEventSchedule',
     label: 'Přidat do rozpisu události',
     icon: CalendarPlus,
-    visible: ({ item, auth }) =>
-      canManageInstance({ item, auth }) && !item.parentId,
+    visible: ({ item, auth }) => canManageInstance({ item, auth }) && !item.parentId,
     render: ({ item }) => <AddToEventScheduleForm eventId={item.id} />,
   },
   {
