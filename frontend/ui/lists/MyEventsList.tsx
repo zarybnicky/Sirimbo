@@ -1,4 +1,5 @@
-import { EventInstanceRangeDocument, EventWithTrainerFragment } from '@/graphql/Event';
+import { EventInstanceRangeDocument } from '@/graphql/Event';
+import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { capitalize, longDayFormatter } from '@/ui/format';
@@ -20,27 +21,21 @@ export function MyEventsList() {
     },
   });
 
-  const eventsPerDay = React.useMemo(() => {
-    const map = new Map<string, Map<string, EventWithTrainerFragment []>>();
-    for (const instance of data?.list || []) {
+  const eventsByDay = React.useMemo(() => {
+    const map = new Map<string, EventWithTrainerFragment[]>();
+    for (const instance of data?.list ?? []) {
       const date = startOf(new Date(instance.since), 'day').toISOString();
-      const location = instance.location?.name || instance.locationText || '';
-
-      const locations = map.get(date) ?? new Map<string, EventWithTrainerFragment[]>();
-      locations.set(location, [...(locations.get(location) ?? []), instance]);
-      map.set(date, locations);
+      const items = map.get(date);
+      if (items) items.push(instance);
+      else map.set(date, [instance]);
     }
-    const list = [...map.entries()].flatMap(([date, itemMap]) =>
-      [...itemMap.entries()].map(([location, items]) => {
-        items.sort((x, y) => x.since.localeCompare(y.since));
-        const minTime = Math.min(
-          ...items.map((x) => new Date(x.since).getTime()),
-        );
-        const sortKey = `${date}T${minTime}`;
-        return [date, sortKey, location, items] as const;
-      }),
-    );
-    return list.toSorted((x, y) => x[1].localeCompare(y[1]));
+
+    return [...map.entries()]
+      .map(
+        ([date, items]) =>
+          [date, items.toSorted((x, y) => x.since.localeCompare(y.since))] as const,
+      )
+      .toSorted((x, y) => x[0].localeCompare(y[0]));
   }, [data]);
 
   return (
@@ -53,27 +48,38 @@ export function MyEventsList() {
       </div>
 
       <div className="flex flex-wrap flex-col gap-x-2">
-        {eventsPerDay.map(([date, _, location, eventInstances]) => (
+        {eventsByDay.map(([date, eventInstances]) => (
           <div
-            key={`${date}_${location}`}
+            key={date}
             className={cardCls({
               className: 'rounded-lg border-neutral-6 border px-1 py-3',
             })}
           >
-            <h6 className="ml-3">
-              <div className="font-bold mb-1">
-                {capitalize(longDayFormatter.format(new Date(date)))}
-              </div>
-              <div className="text-sm text-neutral-11">{location}</div>
-            </h6>
-            {eventInstances.map((instance) => (
-              <EventButton
-                key={instance.id}
-                instance={instance}
-                viewer="auto"
-                attendance="inline"
-              />
-            ))}
+            <div className="ml-3 mb-1 font-bold">
+              {capitalize(longDayFormatter.format(new Date(date)))}
+            </div>
+            {eventInstances.map((instance, i) => {
+              const location = instance.location?.name || instance.locationText || '';
+              const previous = i === 0 ? null : eventInstances.at(i - 1);
+              const previousLocation = previous
+                ? previous.location?.name || previous.locationText || ''
+                : null;
+
+              return (
+                <React.Fragment key={instance.id}>
+                  {!!location && location !== previousLocation && (
+                    <div className="ml-2.5 mt-1 text-sm text-accent-11">
+                      {location}
+                    </div>
+                  )}
+                  <EventButton
+                    instance={instance}
+                    viewer="auto"
+                    attendance="inline"
+                  />
+                </React.Fragment>
+              );
+            })}
           </div>
         ))}
       </div>
