@@ -115,7 +115,7 @@ function compare(
   }
   for (const cohort of cohorts) {
     if (courses.some((course) => cohort.name === course[1])) continue;
-    if (!cohort.isVisible) continue;
+    if (!cohort.isVisible || !cohort.externalIds || cohort.externalIds.length === 0) continue;
     tasks.push(['archive', cohort.id, '', '']);
     views.push(
       <li key={cohort.id} className="my-0">
