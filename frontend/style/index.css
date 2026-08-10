@@ -189,16 +189,44 @@
   }
 
   dl {
-    @apply md:grid gap-y-1 gap-x-2;
-    grid-template-columns: minmax(max-content, auto) 1fr;
-    grid-template-areas: "term definition";
+    line-height: 1.75;
   }
   dt {
     font-weight: bold;
-    grid-column: term;
   }
   dd {
-    grid-column: definition;
+    overflow-wrap: anywhere;
+  }
+
+  dl:not(.tabular) dt,
+  dl:not(.tabular) dd {
+    display: inline;
+  }
+  dl:not(.tabular) dt::after {
+    content: ': ';
+  }
+  dl:not(.tabular) > dd + dt::before,
+  dl:not(.tabular) > dd + dd::before {
+    display: block;
+    content: '';
+  }
+
+  .tabular {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 1rem;
+  }
+  .tabular > div {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+  }
+  .tabular dt {
+    grid-column: 1;
+  }
+  .tabular dd {
+    min-width: 0;
+    grid-column: 2;
   }
 
   .ClampFade {

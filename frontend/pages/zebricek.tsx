@@ -47,10 +47,10 @@ export default function ScoreboardPage() {
       <div className="prose prose-accent space-y-8">
         <section>
           <p>Skóre se skládá z:</p>
-          <dl className="not-prose text-sm mt-2 grid gap-y-1">
+          <dl className="tabular not-prose mt-2 text-sm">
             <div>
               <dt>Individuální lekce</dt>
-              <dd>1b, max. 4b za týden</dd>
+              <dd>1b, max. 4b/týden</dd>
             </div>
             <div>
               <dt>Pohybovka, performance</dt>

@@ -12,71 +12,68 @@ export function BasicEventInfo({
 }) {
   const shared = 'trainerNames' in instance;
   const seriesInfo = shared ? null : instance.seriesInfo;
-  const type = shared ? (instance.type?.toUpperCase() as EventType | null) : instance.type;
-  const location = (shared ? instance.locationName : instance.location?.name) || instance.locationText
+  const type = shared
+    ? (instance.type?.toUpperCase() as EventType | null)
+    : instance.type;
+  const location =
+    (shared ? instance.locationName : instance.location?.name) || instance.locationText;
   const trainers = shared
     ? instance.trainerNames
     : instance.trainersList.map((t) => t.person?.name).filter(Boolean);
 
   return (
-    <div>
-    <dl className="not-prose gap-2 mb-6">
-      {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
+    <div className="flex flex-col gap-3">
+      <dl className="not-prose">
+        {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
+          <dd>
+            <Link
+              href={`/terminy/${seriesInfo.id}`}
+              className="text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11"
+            >
+              {seriesInfo.position}. z {seriesInfo.length} v sérii{' '}
+              {seriesInfo.name?.trim()}
+            </Link>
+          </dd>
+        )}
+
+        <dd>{formatEventType(type)}</dd>
+
+        <dt>Termín</dt>
         <dd>
-          <Link
-            href={`/terminy/${seriesInfo.id}`}
-            className="text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11"
-          >
-            {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
-          </Link>
+          {dateTimeFormatter.formatRange(
+            new Date(instance.since),
+            new Date(instance.until),
+          )}
         </dd>
-      )}
 
-      <dd>{formatEventType(type)}</dd>
+        {location && (
+          <>
+            <dt>Místo konání</dt>
+            <dd>{location}</dd>
+          </>
+        )}
 
-      <dt>Termín</dt>
-      <dd>
-        {dateTimeFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
-      </dd>
+        {trainers.length > 0 && (
+          <>
+            <dt>Trenéři</dt>
+            {trainers.map((trainer, index) => (
+              <dd key={`${trainer}:${index}`}>{trainer}</dd>
+            ))}
+          </>
+        )}
 
-      {location && (
-        <>
-          <dt>Místo konání</dt>
-          <dd>{location}</dd>
-        </>
-      )}
+        {!!instance.capacity && (
+          <>
+            <dt>Kapacita</dt>
+            <dd>
+              Zbývá {instance.remainingPersonSpots} míst z {instance.capacity}
+            </dd>
+          </>
+        )}
+      </dl>
 
-      {trainers.length > 0 && (
-        <>
-          <dt>Trenéři</dt>
-          {trainers.map((trainer, index) => (
-            <dd key={`${trainer}:${index}`}>{trainer}</dd>
-          ))}
-        </>
-      )}
-
-      {!!instance.capacity && (
-        <>
-          <dt>Kapacita</dt>
-          <dd>
-            Zbývá {instance.remainingPersonSpots} míst z {instance.capacity}
-          </dd>
-        </>
-      )}
-
-      {instance.summary?.trim() && (
-        <>
-          <dt>Shrnutí</dt>
-          <dd>
-            <RichTextView value={instance.summary} />
-          </dd>
-        </>
-      )}
-
-    </dl>
-      {!shared && instance.description && (
-        <RichTextView value={instance.description} />
-      )}
+      {instance.summary?.trim() && <RichTextView value={instance.summary} />}
+      {!shared && instance.description && <RichTextView value={instance.description} />}
     </div>
   );
 }

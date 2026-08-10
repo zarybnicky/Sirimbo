@@ -16,6 +16,7 @@ import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
+import React from 'react';
 
 export function EventSummary({
   instance,
@@ -28,6 +29,12 @@ export function EventSummary({
   const { seriesInfo, registrations } = instance;
   const registrationCount = registrations.totalCount;
   const locationLabel = instance.location?.name || instance.locationText;
+
+  const primaryActions = React.useMemo(() => {
+    return new Date(instance.since) > new Date()
+      ? ['eventInstance.registrations', 'eventInstance.edit']
+      : ['eventInstance.edit', 'eventInstance.attendance']
+  }, [instance.since]);
 
   return (
     <div className="flex flex-col gap-2 text-sm">
@@ -52,13 +59,13 @@ export function EventSummary({
       )}
 
       <div className="flex items-center gap-2">
-        <Clock className="size-5 text-accent-11" />
+        <Clock className="size-5 text-accent-11 shrink-0" />
         {shortTimeFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
       </div>
 
       {locationLabel && (
         <div className="flex items-center gap-2">
-          <MapPin className="size-5 text-accent-11" />
+          <MapPin className="size-5 text-accent-11 shrink-0" />
           {locationLabel}
         </div>
       )}
@@ -76,7 +83,7 @@ export function EventSummary({
       {instance.type === 'LESSON' && <EventInstancePriceView id={instance.id} />}
 
       <div className="flex items-center gap-2">
-        <Users className="size-5 text-accent-11" />
+        <Users className="size-5 text-accent-11 shrink-0" />
         <div>
           {instance.targetCohortsList && instance.targetCohortsList.length > 0 ? (
             instance.targetCohortsList.map((x) => x.cohort?.name).join(', ')
@@ -92,11 +99,7 @@ export function EventSummary({
 
       <ActionGroup
         className="max-w-full flex-wrap"
-        primary={[
-          'eventInstance.registrations',
-          'eventInstance.edit',
-          'eventInstance.attendance',
-        ]}
+        primary={primaryActions}
         actions={actions}
       />
     </div>

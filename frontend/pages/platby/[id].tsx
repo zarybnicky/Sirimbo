@@ -76,7 +76,7 @@ export function PaymentTree({ payment }: PaymentTreeProps) {
     <div className="space-y-6">
       <section className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 shadow-sm">
         <h2 className="text-lg font-semibold text-neutral-12">Platba</h2>
-        <dl className="mt-2 grid gap-y-1 text-sm text-neutral-12 md:grid-cols-2">
+        <dl className="mt-2 text-sm text-neutral-12">
           <Info label="ID" value={payment.id} />
           <Info label="Stav" value={payment.status} />
           <Info label="Splatnost" value={formatDate(payment.dueAt)} />

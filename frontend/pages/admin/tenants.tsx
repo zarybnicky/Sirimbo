@@ -179,7 +179,7 @@ export default function SystemAdminTenantsPage() {
 }
 
 function TestEmailButton() {
-  const sendTestEmail = useAsyncCallback(async function () {
+  const sendEmail = useAsyncCallback(async function () {
     const response = await fetch(`${origin}/system-admin/test-email`, {
       method: 'POST',
       credentials: 'include',
@@ -194,10 +194,7 @@ function TestEmailButton() {
   });
 
   return (
-    <SubmitButton
-      state={sendTestEmail.status}
-      onClick={sendTestEmail.execute}
-    >
+    <SubmitButton state={sendEmail.status} onClick={sendEmail.execute}>
       <Mail />
       Poslat testovací e-mail
     </SubmitButton>
@@ -234,7 +231,7 @@ function TenantCard({ tenant }: TenantCardProps) {
         </p>
       )}
 
-      <dl className="grid gap-2 text-sm text-neutral-12 sm:grid-cols-[1fr_2fr]">
+      <dl className="text-sm text-neutral-12">
         <dt className="font-semibold text-neutral-11">Bankovní účet</dt>
         <dd>{tenant.bankAccount || '—'}</dd>
         <dt className="font-semibold text-neutral-11">Domény</dt>

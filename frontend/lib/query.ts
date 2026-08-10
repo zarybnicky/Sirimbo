@@ -178,6 +178,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     DatetimeRangeBound: () => null,
     EventInstanceApproxPriceRecord: () => null,
     EventConflict: () => null,
+    PersonCstsProgressRecord: () => null,
     Price: () => null,
     ScoreboardRecord: (x) => x.personId || null,
     TenantSetting: (x) => x.tenantId || null,

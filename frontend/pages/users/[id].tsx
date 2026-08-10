@@ -1,4 +1,3 @@
-import React from 'react';
 import { Layout } from '@/ui/Layout';
 import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { z } from 'zod';
@@ -53,7 +52,7 @@ function UserPage() {
           <div className="space-y-6">
             <section>
               <h2 className="text-lg font-medium">Základní informace</h2>
-              <dl className="mt-2 grid gap-x-6 gap-y-2 sm:grid-cols-2">
+              <dl className="mt-2">
                 <div>
                   <dt className="text-sm text-neutral-10">ID</dt>
                   <dd className="text-sm font-medium">{user.id}</dd>
