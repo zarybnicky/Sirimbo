@@ -35,17 +35,20 @@ export function CohortComparisonForm() {
         const hex = Math.floor(Math.random() * 0xff_ff_ff)
           .toString(16)
           .padStart(6, '0');
-        await create({
+        const result = await create({
           input: { name, description, colorRgb: `#${hex}`, externalIds: [id] },
         });
+        if (result.error) throw result.error;
       } else if (task[0] === 'update') {
-        await update({
+        const result = await update({
           id: task[1],
           patch: { externalIds: [task[2]] },
         });
+        if (result.error) throw result.error;
       } else {
         const [, id] = task;
-        await archive({ id });
+        const result = await archive({ id });
+        if (result.error) throw result.error;
       }
     }
   });
@@ -58,7 +61,7 @@ export function CohortComparisonForm() {
         <SubmitButton
           className="mb-2"
           onClick={onSubmit.execute}
-          loading={onSubmit.loading}
+          state={onSubmit.status}
         >
           Synchronizovat
         </SubmitButton>

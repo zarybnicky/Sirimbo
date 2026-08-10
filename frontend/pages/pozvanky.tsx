@@ -37,7 +37,7 @@ export default function InvitationOverviewPage() {
       if (!person.email) continue;
       if (sent.has(person.email)) continue;
       sent.add(person.email);
-      await sendInvitation({
+      const result = await sendInvitation({
         input: {
           personInvitation: {
             personId: person.id,
@@ -45,6 +45,7 @@ export default function InvitationOverviewPage() {
           },
         },
       });
+      if (result.error) throw result.error;
     }
   });
 
@@ -110,7 +111,7 @@ export default function InvitationOverviewPage() {
             <SubmitButton
               type="button"
               onClick={bulkSendInvitations.execute}
-              loading={bulkSendInvitations.loading}
+              state={bulkSendInvitations.status}
             >
               Pozvat všechny
             </SubmitButton>

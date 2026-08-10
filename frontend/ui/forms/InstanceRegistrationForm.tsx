@@ -140,7 +140,15 @@ export function InstanceRegistrationForm({
           <SubmitButton
             type="button"
             variant="outline"
-            loading={result.fetching}
+            state={
+              result.fetching
+                ? 'loading'
+                : result.error
+                  ? 'error'
+                  : result.data
+                    ? 'success'
+                    : 'not-requested'
+            }
             onClick={cancel}
           >
             Zrušit přihlášku

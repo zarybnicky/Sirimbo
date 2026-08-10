@@ -4,8 +4,10 @@ import { type Control, type FieldValues, useFormState } from 'react-hook-form';
 import { buttonCls } from '@/ui/style';
 import { Spinner } from '@/ui/Spinner';
 
+export type SubmitButtonState = 'not-requested' | 'loading' | 'success' | 'error';
+
 type BaseSubmitButtonProps = React.ComponentPropsWithRef<'button'> & {
-  loading?: boolean;
+  state?: SubmitButtonState;
   variant?: NonNullable<Parameters<typeof buttonCls>[0]>['variant'];
 };
 
@@ -25,7 +27,7 @@ export function SubmitButton<T extends FieldValues>({
 
 function FormStateSubmitButton<T extends FieldValues>({
   control,
-  loading,
+  state,
   disabled,
   ...props
 }: BaseSubmitButtonProps & { control: Control<T> }) {
@@ -34,14 +36,14 @@ function FormStateSubmitButton<T extends FieldValues>({
   return (
     <BaseSubmitButton
       {...props}
-      loading={loading || isSubmitting}
+      state={isSubmitting ? 'loading' : state}
       disabled={disabled}
     />
   );
 }
 
 function BaseSubmitButton({
-  loading,
+  state: submitState = 'not-requested',
   disabled,
   className,
   children = 'Uložit',
@@ -50,23 +52,24 @@ function BaseSubmitButton({
 }: BaseSubmitButtonProps) {
   const [state, setState] = React.useState<'NORMAL' | 'LOADING' | 'LOADED'>('NORMAL');
   React.useEffect(() => {
-    setState((oldState) => {
-      if (loading) {
-        return 'LOADING';
-      }
-      if (oldState === 'LOADING') {
-        setTimeout(() => setState('NORMAL'), 1000);
-        return 'LOADED';
-      }
-      return 'NORMAL';
-    });
-  }, [loading]);
+    if (submitState === 'loading') {
+      setState('LOADING');
+      return;
+    }
+    if (submitState !== 'success') {
+      setState('NORMAL');
+      return;
+    }
+    setState('LOADED');
+    const timeout = setTimeout(() => setState('NORMAL'), 1000);
+    return () => clearTimeout(timeout);
+  }, [submitState]);
 
   return (
     <button
       type="submit"
       {...props}
-      disabled={loading || disabled}
+      disabled={submitState === 'loading' || disabled}
       className={buttonCls({
         className,
         variant: variant || (state === 'NORMAL' ? 'primary' : 'outline'),

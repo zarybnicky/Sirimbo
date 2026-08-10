@@ -194,7 +194,10 @@ function TestEmailButton() {
   });
 
   return (
-    <SubmitButton loading={sendTestEmail.loading} onClick={sendTestEmail.execute}>
+    <SubmitButton
+      state={sendTestEmail.status}
+      onClick={sendTestEmail.execute}
+    >
       <Mail />
       Poslat testovací e-mail
     </SubmitButton>

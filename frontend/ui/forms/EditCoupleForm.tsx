@@ -58,7 +58,9 @@ export function EditCoupleForm({ id }: { id: string }) {
       <DatePickerElement control={control} name="until" label="Do" clearable />
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton control={control}>Uložit změny</SubmitButton>
+        <SubmitButton control={control} disabled={!item}>
+          Uložit změny
+        </SubmitButton>
       </div>
     </form>
   );

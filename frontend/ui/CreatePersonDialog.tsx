@@ -54,16 +54,16 @@ function normalizeUsername(value: unknown, platform: 'instagram.com' | 'tiktok.c
 
 const Form = z.object({
   prefixTitle: z.string().prefault(''),
-  firstName: z.string(),
-  lastName: z.string(),
+  firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno'),
+  lastName: z.string({ error: 'Zadejte příjmení' }).min(1, 'Zadejte příjmení'),
   suffixTitle: z.string().prefault(''),
-  gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED']),
+  gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED'], { error: 'Vyberte pohlaví' }),
   birthDate: z.string().nullish(),
   cstsId: z.number().int().positive().nullable().optional(),
   wdsfId: z.number().int().positive().nullable().optional(),
   taxIdentificationNumber: z
     .string()
-    .regex(/^$|\d{9,10}/, 'Neplatné rodné číslo')
+    .regex(/^(?:\d{9,10})?$/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
   bio: z.string().prefault(''),
@@ -417,7 +417,11 @@ export function CreatePersonDialog() {
           </div>
 
           <div className="col-span-2">
-            <SubmitButton className="w-full" control={control}>
+            <SubmitButton
+              className="w-full"
+              control={control}
+              disabled={open === 'existing' && !personId}
+            >
               Vytvořit
             </SubmitButton>
           </div>

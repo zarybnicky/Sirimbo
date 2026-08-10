@@ -60,7 +60,9 @@ export function EditUserProxyForm({ id }: { id: string }) {
       <DatePickerElement control={control} name="until" label="Platné do" clearable />
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton control={control}>Uložit změny</SubmitButton>
+        <SubmitButton control={control} disabled={!item}>
+          Uložit změny
+        </SubmitButton>
       </div>
     </form>
   );

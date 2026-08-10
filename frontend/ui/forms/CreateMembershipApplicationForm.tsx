@@ -35,7 +35,7 @@ const Form = z.object({
   wdsfId: z.number().int().positive().nullable().optional(),
   taxIdentificationNumber: z
     .string()
-    .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
+    .regex(/^(?:\d{9,10})?$/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
   bio: z.string().prefault(''),

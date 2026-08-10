@@ -166,16 +166,18 @@ export function PersonComparisonForm() {
             joinDate: new Date().toISOString(),
           },
         });
+        if (res.error) throw res.error;
         if (res.data?.createPerson?.p?.id) {
-          await syncCohorts({
+          const syncResult = await syncCohorts({
             input: {
               personId: res.data.createPerson.p.id,
               cohortIds,
             },
           });
+          if (syncResult.error) throw syncResult.error;
         }
       } else if (task === 'update' && student) {
-        await update({
+        const updateResult = await update({
           input: {
             id: person!.id,
             patch: {
@@ -202,19 +204,22 @@ export function PersonComparisonForm() {
             },
           },
         });
-        await syncCohorts({
+        if (updateResult.error) throw updateResult.error;
+        const syncResult = await syncCohorts({
           input: {
             personId: person!.id,
             cohortIds,
           },
         });
+        if (syncResult.error) throw syncResult.error;
       } else {
-        await syncCohorts({
+        const syncResult = await syncCohorts({
           input: {
             personId: person!.id,
             cohortIds: [],
           },
         });
+        if (syncResult.error) throw syncResult.error;
         const membershipsResult = await client
           .query(PersonMembershipsDocument, { id: person!.id })
           .toPromise();
@@ -224,7 +229,7 @@ export function PersonComparisonForm() {
           (x) => x.tenantId === tenantId,
         );
         if (currentMembership) {
-          await updateMembership({
+          const membershipResult = await updateMembership({
             input: {
               id: currentMembership.id,
               patch: {
@@ -233,8 +238,9 @@ export function PersonComparisonForm() {
               },
             },
           });
+          if (membershipResult.error) throw membershipResult.error;
         }
-        await update({
+        const updateResult = await update({
           input: {
             id: person!.id,
             patch: {
@@ -242,6 +248,7 @@ export function PersonComparisonForm() {
             },
           },
         });
+        if (updateResult.error) throw updateResult.error;
       }
     }
   });
@@ -249,20 +256,22 @@ export function PersonComparisonForm() {
   const onSubmitCouples = useAsyncCallback(async () => {
     for (const [manId, womenIds] of couplesToCreate) {
       for (const womanId of womenIds) {
-        await createCouple({
+        const result = await createCouple({
           input: {
             couple: { manId, womanId, since: new Date().toISOString(), status: 'ACTIVE' },
           },
         });
+        if (result.error) throw result.error;
       }
     }
     for (const coupleId of couplesToDelete) {
-      await updateCouple({
+      const result = await updateCouple({
         input: {
           id: coupleId,
           patch: { until: new Date().toISOString(), status: 'EXPIRED' },
         },
       });
+      if (result.error) throw result.error;
     }
   });
 
@@ -348,7 +357,7 @@ export function PersonComparisonForm() {
         <SubmitButton
           className="mb-2"
           onClick={onSubmit.execute}
-          loading={onSubmit.loading}
+          state={onSubmit.status}
         >
           Synchronizovat
         </SubmitButton>
@@ -368,7 +377,7 @@ export function PersonComparisonForm() {
         <SubmitButton
           className="mb-2"
           onClick={onSubmitCouples.execute}
-          loading={onSubmitCouples.loading}
+          state={onSubmitCouples.status}
         >
           Synchronizovat
         </SubmitButton>

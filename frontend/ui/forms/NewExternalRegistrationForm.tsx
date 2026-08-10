@@ -21,7 +21,7 @@ const Form = z.object({
   birthDate: z.string().nullish(),
   taxIdentificationNumber: z
     .string()
-    .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
+    .regex(/^(?:\d{9,10})?$/, 'Neplatné rodné číslo')
     .nullish(),
   email: z.email({ error: 'Zadejte platný e-mail' }),
   phone: z.string().min(9).max(14),

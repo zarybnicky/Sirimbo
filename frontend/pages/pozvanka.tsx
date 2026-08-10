@@ -41,6 +41,7 @@ export default function InvitationPage() {
     pause: !isValidToken || !router.isReady,
   });
   const [result, register] = useMutation(RegisterUsingInvitationDocument);
+  const canRegister = isValidToken && !fetching && !!data?.invitationInfo;
 
   React.useEffect(() => {
     setValue('token', token);
@@ -116,8 +117,9 @@ export default function InvitationPage() {
               label="Heslo"
               autoComplete="new-password"
               required
+              disabled={!canRegister}
             />
-            <SubmitButton control={control} className="w-full my-2">
+            <SubmitButton control={control} className="w-full my-2" disabled={!canRegister}>
               Registrovat
             </SubmitButton>
           </form>
