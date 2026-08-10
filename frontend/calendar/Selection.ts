@@ -71,6 +71,16 @@ function getEventCoordinates(e: TouchEvent | DragEvent | MouseEvent) {
   };
 }
 
+let latestActiveClientPoint: Pick<ClientPoint, 'clientX' | 'clientY'> | undefined;
+
+export function getLatestActiveClientPoint() {
+  return latestActiveClientPoint;
+}
+
+export function replayActiveSelections() {
+  forEachSelection((selection) => selection.replayLastMove());
+}
+
 const clickTolerance = 10;
 const longPressDurationMs = 250;
 
@@ -328,7 +338,10 @@ class Selection extends TypedEventTarget<EventMap> {
     this.removeMouseLeaveListener?.();
     this.removeSelectStartListener?.();
 
-    if (!this.initialEventData) return;
+    if (!this.initialEventData) {
+      latestActiveClientPoint = undefined;
+      return;
+    }
 
     const node = this.container();
     const inRoot = !node || node.contains(e.target as Node | null);
@@ -339,6 +352,7 @@ class Selection extends TypedEventTarget<EventMap> {
       !this.isWithinValidContainer(e)
     ) {
       this.initialEventData = undefined;
+      latestActiveClientPoint = undefined;
       return setTimeout(() => this.dispatchTypedEvent('reset', new CustomEvent('reset')));
     }
 
@@ -346,6 +360,7 @@ class Selection extends TypedEventTarget<EventMap> {
     const click = this.isClick(pageX, pageY);
 
     this.initialEventData = undefined;
+    latestActiveClientPoint = undefined;
 
     if (click && inRoot) {
       const { pageX, pageY, clientX, clientY } = getEventCoordinates(e as MouseEvent | TouchEvent);
@@ -367,16 +382,23 @@ class Selection extends TypedEventTarget<EventMap> {
     return setTimeout(() => this.dispatchTypedEvent('reset', new CustomEvent('reset')));
   }
 
-  handleMoveEvent(e: TouchEvent | MouseEvent) {
+  updateSelectionPoint({
+    pageX,
+    pageY,
+    clientX,
+    clientY,
+  }: {
+    pageX: number;
+    pageY: number;
+    clientX: number;
+    clientY: number;
+  }) {
     if (!this.initialEventData || this.isDetached) {
       return;
     }
-    if (e.cancelable) {
-      e.preventDefault();
-    }
+    latestActiveClientPoint = { clientX, clientY };
 
     const { x = 0, y = 0 } = this.initialEventData || {};
-    const { pageX, pageY } = getEventCoordinates(e);
     const w = Math.abs(x - pageX);
     const h = Math.abs(y - pageY);
     const left = Math.min(pageX, x);
@@ -411,6 +433,23 @@ class Selection extends TypedEventTarget<EventMap> {
       );
     }
   }
+  replayLastMove() {
+    if (!latestActiveClientPoint) return;
+
+    this.updateSelectionPoint({
+      clientX: latestActiveClientPoint.clientX,
+      clientY: latestActiveClientPoint.clientY,
+      pageX: latestActiveClientPoint.clientX + window.scrollX,
+      pageY: latestActiveClientPoint.clientY + window.scrollY,
+    });
+  }
+  handleMoveEvent(e: TouchEvent | MouseEvent) {
+    if (!this.initialEventData || this.isDetached) return;
+    if (e.cancelable) e.preventDefault();
+
+    const { pageX, pageY, clientX, clientY } = getEventCoordinates(e);
+    this.updateSelectionPoint({ pageX, pageY, clientX, clientY });
+  }
 
   isClick(pageX: number, pageY: number) {
     const { x = 0, y = 0, isTouch } = this.initialEventData || {};
@@ -435,9 +474,7 @@ function forEachSelection(callback: (selection: Selection) => void) {
 }
 
 function ensureSelectionListeners() {
-  if (removeMouseDownListener) {
-    return;
-  }
+  if (removeMouseDownListener) return;
 
   removeMouseDownListener = addEventListener('mousedown', (e) => {
     forEachSelection((selection) => selection.handleInitialEvent(e));

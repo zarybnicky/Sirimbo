@@ -9,8 +9,9 @@ import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import TimeGutter from './TimeGutter';
 import { diff, inEventRange, merge, range } from './localizer';
-import { dragListenersAtom, focusedTimeAtom, maxTimeAtom, minTimeAtom } from './state';
+import { dragListenersAtom, focusedTimeAtom, isDraggingAtom, maxTimeAtom, minTimeAtom } from './state';
 import type { CalendarEvent, DateRange, Resource, ViewProps } from './types';
+import { useDragAutoScroll } from './useDragAutoScroll';
 import { dayFormatter } from '@/ui/format';
 
 type Grid = {
@@ -43,11 +44,13 @@ export default React.memo(function TimeGrid({
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
   const focusedTime = useAtomValue(focusedTimeAtom);
+  const isDragging = useAtomValue(isDraggingAtom);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const gutterRef = React.useRef<HTMLDivElement>(null);
+  useDragAutoScroll(contentRef, isDragging);
 
   const [gutterWidth, setGutterWidth] = React.useState<number | undefined>();
 
