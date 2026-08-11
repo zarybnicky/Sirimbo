@@ -132,10 +132,10 @@ export function Sponsors() {
         { image: LogoKraj },
         { image: LogoProstejov, label: 'Město Prostějov' },
       ].map((x) => (
-        <div key={x.label} className="grow flex flex-1 flex-col items-center gap-1">
+        <div key={x.label} className="grow flex lg:flex-1 flex-col items-center gap-1">
           <Image
             alt={x.label ?? ''}
-            className="w-full h-auto"
+            className="w-full h-auto max-w-[200px] max-h-[120px] min-h-[60px] object-contain"
             src={x.image}
             loading="lazy"
             fetchPriority="low"
@@ -156,7 +156,7 @@ export function Footer() {
       <div className="col-feature grid grid-cols-2 gap-2">
         <h2 className="col-span-2 text-3xl font-bold">Kontakt</h2>
         <div className="col-span-2 md:col-span-1">
-          <h3 className="text-lg tracking-wide mt-2 text-accent-7 font-bold">
+          <h3 className="text-lg tracking-wide mt-2 text-accent-9 font-bold">
             Taneční klub
           </h3>
 
@@ -184,7 +184,7 @@ export function Footer() {
         </div>
 
         <div className="col-span-2 md:col-span-1">
-          <h3 className="text-lg tracking-wide mt-2 text-accent-7 font-bold">
+          <h3 className="text-lg tracking-wide mt-2 text-accent-9 font-bold">
             Taneční sály
           </h3>
 
@@ -206,12 +206,12 @@ export function Footer() {
         </div>
 
         <div className={cardCls({ className: 'my-8 p-4 col-span-2' })}>
-          <h2 className="text-xl text-accent-7 font-bold mb-4">Podporují nás</h2>
+          <h2 className="text-xl text-accent-9 font-bold mb-4">Podporují nás</h2>
           <Sponsors />
-        </div>
 
-        <div className="col-span-2 text-sm text-white/60 mb-4">
+        <div className="col-span-2 text-sm text-accent-12 p-2">
           Taneční klub v roce 2026 finančně podpořila Národní sportovní agentura částkou 632.900 Kč v oblasti sportovní aktivity dětí a mládeže ve věku 4 až 19 let za účelem zabezpečení sportovní, tělovýchovné a organizační funkce klubu v souladu s platnými a registrovanými stanovami.
+        </div>
         </div>
 
         <div className="mt-4 col-span-2 flex flex-wrap justify-between">
