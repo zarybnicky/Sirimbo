@@ -100,8 +100,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const tenant = await getRequestTenant();
 
   return (
-    <html lang="cs" className={`tenant-${tenant.id}`}>
-      <body className={`tenant-${tenant.id}`}>
+    <html lang="cs" className={`tenant-${tenant.id}`} suppressHydrationWarning>
+      <body className={`tenant-${tenant.id}`} suppressHydrationWarning>
         <NuqsAdapter>{children}</NuqsAdapter>
       </body>
     </html>
