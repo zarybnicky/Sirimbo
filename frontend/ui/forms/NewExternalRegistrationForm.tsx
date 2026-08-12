@@ -8,7 +8,7 @@ import { useMutation } from 'urql';
 import { z } from 'zod';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
-import { countries } from '@/lib/countries';
+import { countryOptions } from '@/lib/countries';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -96,7 +96,7 @@ export function NewExternalRegistrationForm({ instanceId }: { instanceId: string
           label="Národnost"
           name="nationality"
           placeholder="vyberte národnost"
-          options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
+          options={countryOptions}
         />
         {
           /*watch('nationality') === '203' ? (

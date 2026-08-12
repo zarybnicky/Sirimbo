@@ -166,7 +166,7 @@ export function ComboboxButton({
   );
 }
 
-export function ComboboxSearchArea({
+export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
   value,
   onChange,
   options,
@@ -232,4 +232,4 @@ export function ComboboxSearchArea({
       </Command.List>
     </Command>
   );
-}
+});

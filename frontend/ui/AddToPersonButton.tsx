@@ -16,12 +16,13 @@ export function AddToPersonButton({ person }: { person: { id: string } }) {
   const doCreate = useMutation(CreateUserProxyDocument)[1];
 
   const [userQuery] = useQuery({ query: UserListDocument });
+  const users = userQuery.data?.users?.nodes;
   const userOptions = React.useMemo(() => {
-    return (userQuery.data?.users?.nodes || []).map((x) => ({
+    return (users || []).map((x) => ({
       id: x.id,
       label: [x.uEmail, x.uLogin].filter(isTruthy).join(', '),
     }));
-  }, [userQuery]);
+  }, [users]);
 
   const createUserProxy = React.useCallback(
     (id: string | null | undefined) => {

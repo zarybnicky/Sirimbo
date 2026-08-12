@@ -39,6 +39,43 @@ const eventTypeOptions: RadioButtonGroupItem[] = (
 ).map((type) => ({ id: type, label: formatEventType(type) }));
 
 type EventFormInput = z.input<typeof EventForm>;
+type SplitRegistrationOption = { id: string; label: string };
+
+const SplitRegistrationPicker = React.memo(function SplitRegistrationPicker({
+  rangeKey,
+  value,
+  options,
+  setSplitIds,
+}: {
+  rangeKey: string;
+  value: string | null;
+  options: SplitRegistrationOption[];
+  setSplitIds: React.Dispatch<React.SetStateAction<Record<string, string | null>>>;
+}) {
+  const selectRegistration = React.useCallback(
+    (selected: string | null | undefined) => {
+      setSplitIds((current) => ({
+        ...current,
+        [rangeKey]: selected ?? null,
+      }));
+    },
+    [rangeKey, setSplitIds],
+  );
+
+  return (
+    <ComboboxButton
+      value={value}
+      options={options}
+      placeholder="Volno"
+      buttonClassName={
+        value
+          ? undefined
+          : 'border-green-7 bg-green-3 text-green-11 hover:border-green-7 hover:bg-green-3/80'
+      }
+      onChange={selectRegistration}
+    />
+  );
+});
 
 function EventAccessFields() {
   const { control, setValue } = useFormContext<EventFormInput, unknown, EventFormType>();
@@ -244,21 +281,11 @@ export function EventCreateForm({
                     {shortTimeFormatter.formatRange(range.since, range.until)}
                   </span>
                   <div className="sm:justify-self-end">
-                    <ComboboxButton
+                    <SplitRegistrationPicker
+                      rangeKey={key}
                       value={value}
                       options={splitRegistrationOptions}
-                      placeholder="Volno"
-                      buttonClassName={
-                        value
-                          ? undefined
-                          : 'border-green-7 bg-green-3 text-green-11 hover:border-green-7 hover:bg-green-3/80'
-                      }
-                      onChange={(selected) => {
-                        setSplitIds((current) => ({
-                          ...current,
-                          [key]: selected ?? null,
-                        }));
-                      }}
+                      setSplitIds={setSplitIds}
                     />
                   </div>
                 </div>

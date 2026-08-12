@@ -6,7 +6,7 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { countries } from '@/lib/countries';
+import { countryOptions } from '@/lib/countries';
 import React from 'react';
 import { useMutation } from 'urql';
 import { z } from 'zod';
@@ -197,7 +197,7 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
           label="Národnost"
           name="nationality"
           placeholder="vyberte národnost"
-          options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
+          options={countryOptions}
         />
       </div>
 

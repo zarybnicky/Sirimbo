@@ -26,6 +26,7 @@ export function ParticipantListElement({
   const [open, setOpen] = React.useState<'couple' | 'person' | null>(null);
   const { fields, append, remove, update } = useFieldArray({ name, control });
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
+  const memberships = tenant?.tenant?.tenantMembershipsList;
 
   const possibleCouples = React.useMemo(
     () =>
@@ -38,12 +39,32 @@ export function ParticipantListElement({
     [tenant],
   );
 
-  const possiblePeople = (tenant?.tenant?.tenantMembershipsList || [])
-    .filter((x) => x.status === 'ACTIVE')
-    .map((p) => ({
-      id: p.person?.id ?? '',
-      label: p.person?.name || '?',
-    }));
+  const possiblePeople = React.useMemo(
+    () =>
+      (memberships || [])
+        .filter((x) => x.status === 'ACTIVE')
+        .map((p) => ({
+          id: p.person?.id ?? '',
+          label: p.person?.name || '?',
+        })),
+    [memberships],
+  );
+
+  const selectCouple = React.useCallback(
+    (id: string | null | undefined) => {
+      if (id) append({ personId: null, coupleId: id });
+      setOpen(null);
+    },
+    [append],
+  );
+
+  const selectPerson = React.useCallback(
+    (id: string | null | undefined) => {
+      if (id) append({ personId: id, coupleId: null });
+      setOpen(null);
+    },
+    [append],
+  );
 
   return (
     <>
@@ -73,10 +94,7 @@ export function ParticipantListElement({
             >
               <ComboboxSearchArea
                 options={possibleCouples}
-                onChange={(id) => {
-                  if (id) append({ personId: null, coupleId: id });
-                  setOpen(null);
-                }}
+                onChange={selectCouple}
               />
             </PopoverPrimitive.Content>
           </PopoverPrimitive.Portal>
@@ -103,10 +121,7 @@ export function ParticipantListElement({
             >
               <ComboboxSearchArea
                 options={possiblePeople}
-                onChange={(id) => {
-                  if (id) append({ personId: id, coupleId: null });
-                  setOpen(null);
-                }}
+                onChange={selectPerson}
               />
             </PopoverPrimitive.Content>
           </PopoverPrimitive.Portal>

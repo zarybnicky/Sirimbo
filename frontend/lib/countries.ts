@@ -1,4 +1,4 @@
-export const countries: { code: number; label: string }[] = [
+const countries: { code: number; label: string }[] = [
   { code: 203, label: 'Česko (CZ)' },
   { code: 4, label: 'Afghánistán (AF)' },
   { code: 248, label: 'Alandy (AX)' },
@@ -250,3 +250,8 @@ export const countries: { code: number; label: string }[] = [
   { code: 732, label: 'Západní Sahara (EH)' },
   { code: 716, label: 'Zimbabwe (ZW)' },
 ];
+
+export const countryOptions = countries.map(({ code, label }) => ({
+  id: code.toString(),
+  label,
+}));

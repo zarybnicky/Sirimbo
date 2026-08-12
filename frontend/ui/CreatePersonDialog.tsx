@@ -20,7 +20,7 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
-import { countries } from '@/lib/countries';
+import { countryOptions } from '@/lib/countries';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { FieldLabel, FormError } from '@/ui/form';
 import { ChevronDown, Plus } from 'lucide-react';
@@ -99,15 +99,16 @@ export function CreatePersonDialog() {
     query: FullPersonListDocument,
     pause: open !== 'existing',
   });
+  const people = personQuery.data?.people?.nodes;
   const personOptions = React.useMemo(
     () =>
-      personQuery.data?.people?.nodes
+      people
         ?.map((x) => ({
           id: x.id,
           label: x.name || '?',
         }))
         .toSorted((x, y) => x.label.localeCompare(y.label)),
-    [personQuery],
+    [people],
   );
 
   const { control, handleSubmit, getValues, setValue, reset, trigger } = useForm({
@@ -126,7 +127,7 @@ export function CreatePersonDialog() {
   const selectedCohortCount = useWatch({ control, name: 'cohortIds' })?.length ?? 0;
   const [cohortPickerOpen, setCohortPickerOpen] = React.useState(false);
   React.useEffect(() => {
-    const person = personQuery.data?.people?.nodes.find((x) => x.id === personId);
+    const person = people?.find((x) => x.id === personId);
     if (person) {
       setValue('prefixTitle', person.prefixTitle);
       setValue('suffixTitle', person.suffixTitle);
@@ -149,7 +150,7 @@ export function CreatePersonDialog() {
       setCohortPickerOpen((person.cohortIds?.filter(isTruthy) ?? []).length > 0);
       void trigger();
     }
-  }, [setValue, trigger, personId, setCohortPickerOpen, personQuery.data?.people?.nodes]);
+  }, [setValue, trigger, personId, setCohortPickerOpen, people]);
 
   const email = useWatch({ control, name: 'email' });
   React.useEffect(() => {
@@ -315,7 +316,7 @@ export function CreatePersonDialog() {
               label="Národnost"
               name="nationality"
               placeholder="vyberte národnost"
-              options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
+              options={countryOptions}
             />
             <RadioButtonGroupElement
               control={control}

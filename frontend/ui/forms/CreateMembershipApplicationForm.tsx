@@ -14,7 +14,7 @@ import { FormError, useFormResult } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/ui/use-auth';
-import { countries } from '@/lib/countries';
+import { countryOptions } from '@/lib/countries';
 import { Check, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useMutation } from 'urql';
@@ -160,7 +160,7 @@ export function CreateMembershipApplicationForm({
             label="Národnost"
             name="nationality"
             placeholder="vyberte národnost"
-            options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
+            options={countryOptions}
           />
         </div>
       </fieldset>
