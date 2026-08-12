@@ -16,8 +16,7 @@ export function MyEventsList() {
     variables: {
       start: startDate.toISOString(),
       end: add(startDate, 1, 'week').toISOString(),
-      onlyMine: true,
-      anyParent: true,
+      scope: 'MINE',
     },
   });
 

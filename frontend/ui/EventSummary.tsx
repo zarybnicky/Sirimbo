@@ -42,14 +42,14 @@ export function EventSummary({
       {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
         <Link
           href={`/terminy/${seriesInfo.id}`}
-          className="text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11"
+          className="text-xs underline decoration-accent-11 underline-offset-2 hover:text-accent-11"
         >
           {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
         </Link>
       )}
 
       {offsetButtons && (
-        <div className="mt-2 flex flex-col">
+        <div className="flex flex-col">
           <Link
             href={`/termin/${instance.id}`}
             className={cn('text-xl', instance.isCancelled ? 'line-through' : 'underline')}

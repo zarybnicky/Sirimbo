@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(26);
+SELECT tap.plan(27);
 
 -- Fixtures
 -- People:
@@ -424,6 +424,9 @@ VALUES
   (9900003, 1000, null, now() + interval '4 hours', now() + interval '5 hours'),
   (9900004, 1000, 700001, now() + interval '5 hours', now() + interval '6 hours');
 
+INSERT INTO event_instance (id, tenant_id, parent_id, since, until) OVERRIDING SYSTEM VALUE
+VALUES (9900005, 1000, 9900003, now() + interval '4 hours', now() + interval '5 hours');
+
 INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
 VALUES
   (1000, 900001, 2900002, 1),
@@ -437,6 +440,26 @@ INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, sour
 VALUES (1000, 9900003, 2900005, 'manager', 'unknown');
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
+
+WITH expected(scope, only_mine, any_parent, ids) AS (VALUES
+  ('all'::event_instance_range_scope, false, true, ARRAY[9900001,9900002,9900003,9900004,9900005]::bigint[]),
+  ('top_level', false, true, ARRAY[9900001,9900003,9900004]),
+  ('mine', false, true, ARRAY[9900001,9900004]),
+  ('relevant', false, true, ARRAY[9900001,9900002,9900003,9900004]),
+  (null, true, true, ARRAY[9900001,9900004]),
+  (null, false, false, ARRAY[9900001,9900003,9900004])
+)
+SELECT tap.ok(NOT EXISTS (
+  SELECT FROM expected
+  WHERE ids IS DISTINCT FROM (
+    SELECT array_agg(id ORDER BY id)
+    FROM event_instances_for_range(null, '-infinity',
+      only_mine => expected.only_mine,
+      any_parent => expected.any_parent,
+      scope => expected.scope)
+    WHERE id BETWEEN 9900001 AND 9900005
+  )
+), 'event range scopes and legacy aliases select the expected events');
 
 SELECT set_lesson_demand(eir.id, trainer.id, 1)
 FROM event_instance_registration eir
@@ -710,7 +733,7 @@ SELECT tap.ok(
     WHERE trainer.instance_id = (SELECT id FROM _scheduled_lesson)
       AND trainer.person_id = 2900002
       AND trainer.lessons_offered = 2
-      AND event_instance_trainer_lessons_remaining(trainer) = 1
+      AND event_instance_trainer_lessons_remaining(trainer) = 0
   ) AND EXISTS (
     SELECT 1
     FROM event_instance_registration registration

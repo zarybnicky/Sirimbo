@@ -388,8 +388,7 @@ query EventRange(
   $type: EventType
   $trainerIds: [BigInt]
   $participantIds: [BigInt]
-  $onlyMine: Boolean,
-  $anyParent: Boolean,
+  $scope: EventInstanceRangeScope,
   $parentId: BigInt
 ) {
   list: eventInstancesForRangeList(
@@ -398,27 +397,10 @@ query EventRange(
     onlyType: $type,
     trainerIds: $trainerIds,
     participantIds: $participantIds,
-    onlyMine: $onlyMine,
-    anyParent: $anyParent,
+    scope: $scope,
     parentId: $parentId
   ) {
     ...EventWithTrainer
-  }
-}
-
-mutation CreateEvents($input: QuickCreateEventInstancesInput!) {
-  quickCreateEventInstances(input: $input) {
-    eventInstances {
-      id
-    }
-  }
-}
-
-mutation UpdateEventDetails($input: UpdateEventInstanceDetailsInput!) {
-  updateEventInstanceDetails(input: $input) {
-    eventInstance {
-      id
-    }
   }
 }
 

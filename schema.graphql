@@ -3396,6 +3396,13 @@ input EventInstancePatch {
   updatedAt: Datetime
 }
 
+enum EventInstanceRangeScope {
+  ALL
+  MINE
+  RELEVANT
+  TOP_LEVEL
+}
+
 type EventInstanceRegistration {
   attendanceCreatedAt: Datetime
   attendanceNote: String
@@ -6568,6 +6575,7 @@ type Query {
     onlyType: EventType
     parentId: BigInt
     participantIds: [BigInt]
+    scope: EventInstanceRangeScope
     startRange: Datetime
     trainerIds: [BigInt]
   ): [EventInstance!]

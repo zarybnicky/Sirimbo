@@ -40,7 +40,7 @@ function prepareVariables(
     trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
     participantIds: participantIds.length > 0 ? participantIds : undefined,
     type: eventTypes.length === 1 ? eventTypes[0] : undefined,
-    onlyMine,
+    scope: onlyMine ? 'MINE' : parentId ? 'ALL' : 'RELEVANT',
     parentId,
   };
 }

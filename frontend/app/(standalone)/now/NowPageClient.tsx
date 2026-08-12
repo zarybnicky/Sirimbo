@@ -138,6 +138,7 @@ export default function NowPage() {
     () => ({
       start: reference.toISOString(),
       end: end.toISOString(),
+      scope: 'ALL',
     }),
     [reference, end],
   );

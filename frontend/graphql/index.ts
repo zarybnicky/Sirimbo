@@ -2926,6 +2926,12 @@ export type EventInstancePatch = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+export type EventInstanceRangeScope =
+  | 'ALL'
+  | 'MINE'
+  | 'RELEVANT'
+  | 'TOP_LEVEL';
+
 export type EventInstanceRegistration = {
   __typename?: 'EventInstanceRegistration';
   attendanceCreatedAt: Maybe<Scalars['Datetime']['output']>;
@@ -5728,6 +5734,7 @@ export type QueryEventInstancesForRangeListArgs = {
   onlyType?: InputMaybe<EventType>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
   participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  scope?: InputMaybe<EventInstanceRangeScope>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
   trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
 };
