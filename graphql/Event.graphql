@@ -160,7 +160,7 @@ fragment EventInstanceRegistration on EventInstanceRegistration {
   }
 }
 
-query EventInstanceApproxPrice($id: BigInt!) {
+query EventApproxPrice($id: BigInt!) {
   eventInstance(id: $id) {
     id
     approxPriceList {
@@ -180,7 +180,7 @@ fragment EventRegistrant on Person {
   }
 }
 
-query EventInstanceExport($id: BigInt!) {
+query EventExport($id: BigInt!) {
   eventInstance(id: $id) {
     id
     name
@@ -230,7 +230,7 @@ query EventPayments($id: BigInt!) {
   }
 }
 
-fragment EventInstancePage on EventInstance {
+fragment EventPage on EventInstance {
   ...EventWithTrainer
   description
   eventExternalRegistrationsByInstanceIdList {
@@ -239,11 +239,9 @@ fragment EventInstancePage on EventInstance {
 }
 
 query EventWithAttendance($id: BigInt!) {
-  eventInstance(id: $id) {
-    ...EventInstancePage
-    eventInstanceRegistrationsByInstanceId(
-      condition: { registrationStatus: ACTIVE }
-    ) {
+  event: eventInstance(id: $id) {
+    ...EventPage
+    eventInstanceRegistrationsByInstanceId(condition: { registrationStatus: ACTIVE }) {
       nodes {
         ...EventRegistrationAttendance
       }
@@ -251,7 +249,7 @@ query EventWithAttendance($id: BigInt!) {
   }
 }
 
-query EventInstanceDescription($id: BigInt!) {
+query EventDescription($id: BigInt!) {
   eventInstance(id: $id) {
     id
     summary
@@ -259,7 +257,7 @@ query EventInstanceDescription($id: BigInt!) {
   }
 }
 
-query EventInstanceRegistrations($id: BigInt!) {
+query EventRegistrations($id: BigInt!) {
   eventInstance(id: $id) {
     id
     trainersList: eventInstanceTrainersByInstanceIdList {
@@ -384,7 +382,7 @@ query EventList {
   }
 }
 
-query EventInstanceRange(
+query EventRange(
   $start: Datetime!
   $end: Datetime!
   $type: EventType
@@ -408,7 +406,7 @@ query EventInstanceRange(
   }
 }
 
-mutation CreateEventInstances($input: QuickCreateEventInstancesInput!) {
+mutation CreateEvents($input: QuickCreateEventInstancesInput!) {
   quickCreateEventInstances(input: $input) {
     eventInstances {
       id
@@ -416,7 +414,7 @@ mutation CreateEventInstances($input: QuickCreateEventInstancesInput!) {
   }
 }
 
-mutation UpdateEventInstanceDetails($input: UpdateEventInstanceDetailsInput!) {
+mutation UpdateEventDetails($input: UpdateEventInstanceDetailsInput!) {
   updateEventInstanceDetails(input: $input) {
     eventInstance {
       id
@@ -430,7 +428,7 @@ mutation SetEventSharing($input: SetEventSharingInput!) {
   }
 }
 
-mutation UpdateEventInstance($id: BigInt!, $patch: EventInstancePatch!) {
+mutation UpdateEvent($id: BigInt!, $patch: EventInstancePatch!) {
   updateEventInstance(input: { id: $id, patch: $patch }) {
     eventInstance {
       ...EventInstance
@@ -438,7 +436,7 @@ mutation UpdateEventInstance($id: BigInt!, $patch: EventInstancePatch!) {
   }
 }
 
-mutation DeleteEventInstance($id: BigInt!) {
+mutation DeleteEvent($id: BigInt!) {
   deleteEventInstance(input: { id: $id }) {
     __typename
   }
@@ -483,7 +481,7 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
   }
 }
 
-mutation SetEventInstanceRegistration($input: SetEventInstanceRegistrationInput!) {
+mutation SetEventRegistration($input: SetEventInstanceRegistrationInput!) {
   setEventInstanceRegistration(input: $input) {
     eventInstanceRegistration {
       ...EventInstanceRegistration
@@ -496,7 +494,7 @@ mutation SetEventInstanceRegistration($input: SetEventInstanceRegistrationInput!
   }
 }
 
-mutation MoveEventInstance($input: MoveEventInstanceInput!) {
+mutation MoveEvent($input: MoveEventInstanceInput!) {
   moveEventInstance(input: $input) {
     eventInstance {
       id

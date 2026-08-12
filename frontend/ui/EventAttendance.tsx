@@ -23,11 +23,11 @@ export function EventAttendance({ id }: { id: string }) {
     pause: !id,
   });
 
-  const instance = data?.eventInstance;
-  if (!instance) return null;
+  const event = data?.event;
+  if (!event) return null;
 
-  const canEditAttendance = canManageInstance({ auth, item: instance });
-  const attendanceList = instance.eventInstanceRegistrationsByInstanceId.nodes
+  const canEditAttendance = canManageInstance({ auth, item: event });
+  const attendanceList = event.eventInstanceRegistrationsByInstanceId.nodes
     .filter(keyIsNonNull('status'))
     .filter(keyIsNonNull('person'))
     .toSorted((x, y) =>
@@ -43,8 +43,8 @@ export function EventAttendance({ id }: { id: string }) {
   return (
     <div className="prose prose-accent max-w-none">
       <nav className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Docházka">
-        {instance.seriesId && (
-          <Link href={`/terminy/${instance.seriesId}?tab=attendance`}>
+        {event.seriesId && (
+          <Link href={`/terminy/${event.seriesId}?tab=attendance`}>
             Zpět na seznam termínů
           </Link>
         )}
@@ -54,8 +54,8 @@ export function EventAttendance({ id }: { id: string }) {
           <tr>
             <th>
               {numericDateFormatter.formatRange(
-                new Date(instance.since),
-                new Date(instance.until),
+                new Date(event.since),
+                new Date(event.until),
               )}
             </th>
             <th className="flex justify-center gap-2">
@@ -73,7 +73,7 @@ export function EventAttendance({ id }: { id: string }) {
             <tr key={x.id}>
               <td className="align-middle">
                 <div>{x.person?.name}</div>
-                {canEditAttendance && instance.seriesId && (
+                {canEditAttendance && event.seriesId && (
                   <div className="text-xs text-neutral-9">
                     Poslední účast:{' '}
                     {x.lastAttended

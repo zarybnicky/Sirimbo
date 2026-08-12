@@ -12,7 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
-import { Check, ListFilter } from 'lucide-react';
+import { Check, ArrowUpDown } from 'lucide-react';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
@@ -44,7 +44,7 @@ export function AnnouncementSortControls({
           aria-label="Změnit řazení oznámení"
           className={buttonCls({ variant: 'outline' })}
         >
-          <ListFilter className="size-4" />
+          <ArrowUpDown className="size-4" />
         </DropdownMenuTrigger>
       </div>
       <DropdownMenuContent align="end" className="w-48 p-1">

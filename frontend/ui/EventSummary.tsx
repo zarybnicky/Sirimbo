@@ -1,5 +1,5 @@
 import {
-  EventInstanceApproxPriceDocument,
+  EventApproxPriceDocument,
   EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
@@ -31,9 +31,10 @@ export function EventSummary({
   const locationLabel = instance.location?.name || instance.locationText;
 
   const primaryActions = React.useMemo(() => {
-    return new Date(instance.since) > new Date()
-      ? ['eventInstance.registrations', 'eventInstance.edit']
-      : ['eventInstance.edit', 'eventInstance.attendance']
+    return [
+      new Date(instance.since) > new Date() ? 'eventInstance.registrations' : 'eventInstance.attendance',
+      'eventInstance.edit'
+    ];
   }, [instance.since]);
 
   return (
@@ -80,7 +81,7 @@ export function EventSummary({
         </div>
       )}
 
-      {instance.type === 'LESSON' && <EventInstancePriceView id={instance.id} />}
+      {instance.type === 'LESSON' && <EventPriceView id={instance.id} />}
 
       <div className="flex items-center gap-2">
         <Users className="size-5 text-accent-11 shrink-0" />
@@ -106,9 +107,9 @@ export function EventSummary({
   );
 }
 
-function EventInstancePriceView({ id }: { id: string }) {
+function EventPriceView({ id }: { id: string }) {
   const [response] = useQuery({
-    query: EventInstanceApproxPriceDocument,
+    query: EventApproxPriceDocument,
     variables: { id },
   });
 

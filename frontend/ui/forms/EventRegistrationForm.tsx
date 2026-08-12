@@ -1,7 +1,7 @@
 import {
   type EventInstanceRegistrationFragment,
   type EventInstanceTrainerFragment,
-  SetEventInstanceRegistrationDocument,
+  SetEventRegistrationDocument,
 } from '@/graphql/Event';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError } from '@/ui/form';
@@ -22,7 +22,7 @@ const Form = z.object({
 
 type FormValues = z.infer<typeof Form>;
 
-export function InstanceRegistrationForm({
+export function EventRegistrationForm({
   instanceId,
   enableDetails,
   enableNotes,
@@ -45,18 +45,13 @@ export function InstanceRegistrationForm({
 }) {
   const confirm = useConfirm();
   const [result, setRegistration] = useMutation(
-    SetEventInstanceRegistrationDocument,
+    SetEventRegistrationDocument,
   );
   const requestCounts = Object.fromEntries(
-    registration?.eventLessonDemandsByRegistrationIdList.map((demand) => [
-      demand.trainerId,
-      demand.lessonCount,
-    ]) ?? [],
+    registration?.eventLessonDemandsByRegistrationIdList.map((x) => [x.trainerId, x.lessonCount]) ?? [],
   );
   const lessonTrainers = enableDetails
-    ? allLessonTrainers.filter(
-        (trainer) => trainer.lessonsOffered !== 0 || (requestCounts[trainer.id] ?? 0) > 0,
-      )
+    ? allLessonTrainers.filter((x) => x.lessonsOffered !== 0 || (requestCounts[x.id] ?? 0) > 0)
     : [];
   const showNotes = enableDetails && (enableNotes || !!registration?.note);
   const hasFields = showNotes || lessonTrainers.length > 0;

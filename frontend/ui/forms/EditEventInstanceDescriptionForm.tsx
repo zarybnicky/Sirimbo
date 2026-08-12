@@ -1,6 +1,6 @@
 import {
-  EventInstanceDescriptionDocument,
-  UpdateEventInstanceDocument,
+  EventDescriptionDocument,
+  UpdateEventDocument,
 } from '@/graphql/Event';
 import { TabMenu } from '@/ui/TabMenu';
 import { RichTextEditor } from '@/ui/fields/richtext';
@@ -23,9 +23,9 @@ export function EditEventInstanceDescriptionForm({ id }: { id: string }) {
     shouldUnregister: false,
     resolver: zodResolver(Form),
   });
-  const [result, update] = useMutation(UpdateEventInstanceDocument);
+  const [result, update] = useMutation(UpdateEventDocument);
   const [{ data }] = useQuery({
-    query: EventInstanceDescriptionDocument,
+    query: EventDescriptionDocument,
     variables: { id },
   });
   const [tab, setTab] = React.useState('summary');

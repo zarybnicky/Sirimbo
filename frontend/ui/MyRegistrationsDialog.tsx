@@ -1,20 +1,20 @@
 import {
-  type EventInstanceRegistrationFragment,
-  EventInstanceRegistrationsDocument,
   EventRegistrationCandidatesDocument,
+  EventRegistrationsDocument,
+  SetEventRegistrationDocument,
+  type EventInstanceRegistrationFragment,
   type EventWithTrainerFragment,
-  SetEventInstanceRegistrationDocument,
 } from '@/graphql/Event';
-import { buttonCls } from '@/ui/style';
+import { DialogTitle } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { formatCoupleName, formatRegistrant } from '@/ui/format';
-import { Spinner } from '@/ui/Spinner';
-import { useFuzzySearch } from '@/ui/use-fuzzy-search';
-import { DialogTitle } from '@/ui/dialog';
-import { InstanceRegistrationForm } from '@/ui/forms/InstanceRegistrationForm';
+import { EventRegistrationForm } from '@/ui/forms/EventRegistrationForm';
 import { NewExternalRegistrationForm } from '@/ui/forms/NewExternalRegistrationForm';
+import { Spinner } from '@/ui/Spinner';
+import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
+import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { ChevronLeft, ChevronRight, List, Plus } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -22,7 +22,6 @@ import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 
 type Page = 'overview' | 'candidates' | 'editor';
-const registrantSearchFields: 'label'[] = ['label'];
 
 type Registrant = {
   id: string;
@@ -141,10 +140,10 @@ function RegistrationsDialogContent({
   const [page, setPage] = React.useState<Page>();
   const [selected, setSelected] = React.useState<Registrant>();
   const [query] = useQuery({
-    query: EventInstanceRegistrationsDocument,
+    query: EventRegistrationsDocument,
     variables: { id: instance.id },
   });
-  const setRegistration = useMutation(SetEventInstanceRegistrationDocument)[1];
+  const setRegistration = useMutation(SetEventRegistrationDocument)[1];
   const allRegistrations = query.data?.eventInstance?.registrationsList ?? [];
   const registrations = isManager
     ? allRegistrations
@@ -208,9 +207,8 @@ function RegistrationsDialogContent({
   };
 
   const changeRegistration = (n: number) => {
-    const registration =
-      registrations[(i + n + registrations.length) % registrations.length];
-    if (registration) selectRegistration(registrant(registration));
+    const x = registrations[(i + n + registrations.length) % registrations.length];
+    if (x) selectRegistration(registrant(x));
   };
 
   if (!query.data) {
@@ -317,7 +315,7 @@ function RegistrationsDialogContent({
         )}
       </div>
 
-      <InstanceRegistrationForm
+      <EventRegistrationForm
         key={`${selected.id}:${selectedRegistration?.id ?? 'new'}`}
         instanceId={instance.id}
         enableDetails={!simpleRegistration}
@@ -331,8 +329,7 @@ function RegistrationsDialogContent({
         }}
         onCancelled={() => {
           const remaining = registrations.filter(
-            (registration) =>
-              registrantKey(registration.personId, registration.coupleId) !== selected.id,
+            (r) => registrantKey(r.personId, r.coupleId) !== selected.id,
           );
           if (remaining.length > 1) {
             setPage('overview');
@@ -367,6 +364,8 @@ function IconButton({
   );
 }
 
+const registrantSearchFields: 'label'[] = ['label'];
+
 function RegistrantList({
   autoFocus,
   options,
@@ -399,11 +398,7 @@ function RegistrantList({
           <li key={option.id}>
             <button
               type="button"
-              className={buttonCls({
-                display: 'listItem',
-                variant: 'none',
-                size: 'none',
-              })}
+              className={buttonCls({ display: 'listItem', variant: 'none', size: 'none' })}
               onClick={() => onSelect(option)}
             >
               {option.label}

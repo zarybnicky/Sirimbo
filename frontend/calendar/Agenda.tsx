@@ -12,7 +12,7 @@ import type {
 import { Cake } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { EventCreateForm } from '@/ui/event-form/EventForms';
+import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { useAuth } from '@/ui/use-auth';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { cardCls } from '@/ui/style';
@@ -223,7 +223,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
             className="absolute top-1 right-0"
           />
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            <EventCreateForm defaults={nextEventDefaults} />
+            <CreateEventForm defaults={nextEventDefaults} />
           </DialogContent>
         </Dialog>
       )}

@@ -5,15 +5,15 @@ export type NumberOrString = number | string;
 
 export type stringArray = (string)[];
 
-/** 'SharedEventInstance' parameters type */
-export interface ISharedEventInstanceParams {
+/** 'SharedEvent' parameters type */
+export interface ISharedEventParams {
   id: NumberOrString;
   shareToken?: string | null | void;
   tenantId: NumberOrString;
 }
 
-/** 'SharedEventInstance' return type */
-export interface ISharedEventInstanceResult {
+/** 'SharedEvent' return type */
+export interface ISharedEventResult {
   capacity: number | null;
   capacityUnit: string;
   description: string | null;
@@ -33,13 +33,13 @@ export interface ISharedEventInstanceResult {
   until: string;
 }
 
-/** 'SharedEventInstance' query type */
-export interface ISharedEventInstanceQuery {
-  params: ISharedEventInstanceParams;
-  result: ISharedEventInstanceResult;
+/** 'SharedEvent' query type */
+export interface ISharedEventQuery {
+  params: ISharedEventParams;
+  result: ISharedEventResult;
 }
 
-const sharedEventInstanceIR: any = {"usedParamSet":{"shareToken":true,"id":true,"tenantId":true},"params":[{"name":"shareToken","required":false,"transform":{"type":"scalar"},"locs":[{"a":636,"b":646},{"a":697,"b":707},{"a":811,"b":821},{"a":1350,"b":1360}]},{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":1231,"b":1234}]},{"name":"tenantId","required":true,"transform":{"type":"scalar"},"locs":[{"a":1271,"b":1280}]}],"statement":"select\n  instance.id::text as \"id!\",\n  instance.name as \"name\",\n  instance.type::text as \"type\",\n  instance.since::text as \"since!\",\n  instance.until::text as \"until!\",\n  instance.is_cancelled as \"isCancelled!\",\n  instance.location_id::text as \"locationId\",\n  location.name as \"locationName\",\n  instance.location_text as \"locationText\",\n  instance.summary as \"summary\",\n  instance.description as \"description\",\n  instance.capacity as \"capacity\",\n  instance.capacity_unit::text as \"capacityUnit!\",\n  event_instance_remaining_person_spots(instance) as \"remainingPersonSpots\",\n  instance.has_public_details as \"hasPublicDetails!\",\n  (\n    :shareToken::text is not null\n    and instance.share_token = :shareToken::text\n  ) as \"hasTokenAccess!\",\n  case\n    when instance.has_public_details or instance.share_token = :shareToken::text then\n      array(\n        select person.name\n        from event_instance_trainer trainer\n        join person person on person.id = trainer.person_id\n        where trainer.instance_id = instance.id\n        order by trainer.id\n      )\n    else '{}'::text[]\n  end as \"trainerNames!\"\nfrom event_instance instance\nleft join tenant_location location on location.id = instance.location_id\nwhere instance.id = :id!::bigint\n  and instance.tenant_id = :tenantId!::bigint\n  and (instance.is_public is true or instance.share_token = :shareToken::text)"};
+const sharedEventIR: any = {"usedParamSet":{"shareToken":true,"id":true,"tenantId":true},"params":[{"name":"shareToken","required":false,"transform":{"type":"scalar"},"locs":[{"a":636,"b":646},{"a":697,"b":707},{"a":811,"b":821},{"a":1350,"b":1360}]},{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":1231,"b":1234}]},{"name":"tenantId","required":true,"transform":{"type":"scalar"},"locs":[{"a":1271,"b":1280}]}],"statement":"select\n  instance.id::text as \"id!\",\n  instance.name as \"name\",\n  instance.type::text as \"type\",\n  instance.since::text as \"since!\",\n  instance.until::text as \"until!\",\n  instance.is_cancelled as \"isCancelled!\",\n  instance.location_id::text as \"locationId\",\n  location.name as \"locationName\",\n  instance.location_text as \"locationText\",\n  instance.summary as \"summary\",\n  instance.description as \"description\",\n  instance.capacity as \"capacity\",\n  instance.capacity_unit::text as \"capacityUnit!\",\n  event_instance_remaining_person_spots(instance) as \"remainingPersonSpots\",\n  instance.has_public_details as \"hasPublicDetails!\",\n  (\n    :shareToken::text is not null\n    and instance.share_token = :shareToken::text\n  ) as \"hasTokenAccess!\",\n  case\n    when instance.has_public_details or instance.share_token = :shareToken::text then\n      array(\n        select person.name\n        from event_instance_trainer trainer\n        join person person on person.id = trainer.person_id\n        where trainer.instance_id = instance.id\n        order by trainer.id\n      )\n    else '{}'::text[]\n  end as \"trainerNames!\"\nfrom event_instance instance\nleft join tenant_location location on location.id = instance.location_id\nwhere instance.id = :id!::bigint\n  and instance.tenant_id = :tenantId!::bigint\n  and (instance.is_public is true or instance.share_token = :shareToken::text)"};
 
 /**
  * Query generated from SQL:
@@ -82,6 +82,6 @@ const sharedEventInstanceIR: any = {"usedParamSet":{"shareToken":true,"id":true,
  *   and (instance.is_public is true or instance.share_token = :shareToken::text)
  * ```
  */
-export const sharedEventInstance = new PreparedQuery<ISharedEventInstanceParams,ISharedEventInstanceResult>(sharedEventInstanceIR);
+export const sharedEvent = new PreparedQuery<ISharedEventParams,ISharedEventResult>(sharedEventIR);
 
 

@@ -1,6 +1,6 @@
-import type { ISharedEventInstanceResult } from '@/app/(member)/termin/[id]/termin.queries';
+import type { ISharedEventResult } from '@/app/(member)/termin/[id]/termin.queries';
 import type { EventType } from '@/graphql';
-import type { EventInstancePageFragment } from '@/graphql/Event';
+import type { EventPageFragment } from '@/graphql/Event';
 import { RichTextView } from '@/ui/RichTextView';
 import { dateTimeFormatter, formatEventType } from '@/ui/format';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ import Link from 'next/link';
 export function BasicEventInfo({
   instance,
 }: {
-  instance: EventInstancePageFragment | ISharedEventInstanceResult;
+  instance: EventPageFragment | ISharedEventResult;
 }) {
   const shared = 'trainerNames' in instance;
   const seriesInfo = shared ? null : instance.seriesInfo;

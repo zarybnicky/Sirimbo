@@ -5,27 +5,18 @@ import { getRequestTenant } from '@/tenant/server';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { EventPageClient } from './EventPageClient';
-import { sharedEventInstance } from './termin.queries';
+import { sharedEvent } from './termin.queries';
 
 type PageProps = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ share?: string | string[] }>;
 };
 
-const shareTokenPattern = /^[A-Za-z0-9_-]{32}$/;
-const eventIdPattern = /^\d{1,18}$/;
-
 const loadSharedEvent = cache(
-  async (
-    id: string,
-    token: string | undefined,
-    tenantId: number,
-  ) => {
-    if (!eventIdPattern.test(id)) return null;
-    const shareToken = token && shareTokenPattern.test(token) ? token : null;
-    return runQuery(sharedEventInstance, { id, shareToken, tenantId }).then(x =>
-      x.at(0),
-    );
+  async (id: string, token: string | undefined, tenantId: number) => {
+    if (!/^\d{1,18}$/.test(id)) return null;
+    const shareToken = /^[A-Za-z0-9_-]{32}$/.test(token ?? '') ? token : null;
+    return runQuery(sharedEvent, { id, shareToken, tenantId }).then(x => x.at(0));
   },
 );
 

@@ -1,10 +1,10 @@
-import { EventInstanceExportDocument } from '@/graphql/Event';
+import { EventExportDocument } from '@/graphql/Event';
 import { formatEventType, fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
 export async function exportEventRegistrations(client: Client, id: string) {
-  const result = await client.query(EventInstanceExportDocument, { id }).toPromise();
+  const result = await client.query(EventExportDocument, { id }).toPromise();
   if (result.error) throw result.error;
   const instance = result.data?.eventInstance;
   const { Workbook } = await import('exceljs');
@@ -31,11 +31,8 @@ export async function exportEventRegistrations(client: Client, id: string) {
       }
     }
   }
-  for (const [id, name] of lessonTrainers) {
-    columns.push({
-      header: name,
-      key: id,
-    });
+  for (const [key, header] of lessonTrainers) {
+    columns.push({ header, key });
   }
   worksheet.columns = columns;
 

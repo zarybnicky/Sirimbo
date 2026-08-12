@@ -1,6 +1,6 @@
 import {
-  EventInstanceRegistrationsDocument,
-  type EventInstanceRegistrationsQuery,
+  EventRegistrationsDocument,
+  type EventRegistrationsQuery,
 } from '@/graphql/Event';
 import { FormError } from '@/ui/form';
 import { dateTimeFormatter, formatCoupleName, moneyFormatter } from '@/ui/format';
@@ -10,7 +10,7 @@ import { type Column, DataGrid } from 'react-data-grid';
 import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
 
-type Lesson = NonNullable<EventInstanceRegistrationsQuery['scheduledLessons']>[number];
+type Lesson = NonNullable<EventRegistrationsQuery['scheduledLessons']>[number];
 type Cell = { requested: number; lessons: Lesson[] };
 type Row = {
   id: string;
@@ -25,17 +25,15 @@ type Row = {
 
 export function CampLessonsTable({ id }: { id: string }) {
   const [query] = useQuery({
-    query: EventInstanceRegistrationsDocument,
+    query: EventRegistrationsDocument,
     variables: { id },
   });
   const { rows, trainers, hasLessonDemands } = React.useMemo(() => {
     const registrations = query.data?.eventInstance?.registrationsList ?? [];
     const rows = new Map<string, Row>();
-    const trainers = new Map<string, string>();
-    const hasLessonDemands = registrations.some(
-      (registration) => registration.eventLessonDemandsByRegistrationIdList.length > 0,
-    );
+    const hasLessonDemands = registrations.some((x) => x.eventLessonDemandsByRegistrationIdList.length > 0);
 
+    const trainers = new Map<string, string>();
     for (const trainer of query.data?.eventInstance?.trainersList ?? []) {
       trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
     }

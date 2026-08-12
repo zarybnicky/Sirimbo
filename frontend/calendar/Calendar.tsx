@@ -1,6 +1,6 @@
-import { MoveEventInstanceDocument } from '@/graphql/Event';
+import { MoveEventDocument } from '@/graphql/Event';
 import { Dialog, DialogContent } from '@/ui/dialog';
-import { EventCreateForm } from '@/ui/event-form/EventForms';
+import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -178,7 +178,7 @@ export function Calendar({
     },
     [setColumnMode],
   );
-  const [, moveEvent] = useMutation(MoveEventInstanceDocument);
+  const [, moveEvent] = useMutation(MoveEventDocument);
   const onMove = React.useCallback(
     async ({ instance }: CalendarInstanceEvent, info: InteractionInfo) => {
       const [type, resourceId] = parseResourceKey(info.resource?.resourceId);
@@ -318,7 +318,7 @@ export function Calendar({
           modal={false}
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            {creating && <EventCreateForm defaults={creating} parentId={parentId} />}
+            {creating && <CreateEventForm defaults={creating} parentId={parentId} />}
           </DialogContent>
         </Dialog>
       )}

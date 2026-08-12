@@ -1,10 +1,6 @@
 import { ActivityTimelineDocument } from '@/graphql/ActivityTimeline';
 import type { EventType } from '@/graphql';
-import {
-  EventInstanceRangeDocument,
-  type EventInstanceRangeQuery,
-  type EventInstanceRangeQueryVariables,
-} from '@/graphql/Event';
+import { EventRangeDocument, type EventRangeQuery, type EventRangeQueryVariables } from '@/graphql/Event';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery } from 'urql';
@@ -37,7 +33,7 @@ const calendarDay = (date: string) => ({
 function prepareVariables(
   range: DateRange,
   { onlyMine, trainerIds, participantIds, eventTypes, parentId }: CalendarFilters,
-): EventInstanceRangeQueryVariables {
+): EventRangeQueryVariables {
   return {
     start: startOf(range.since, 'day').toISOString(),
     end: add(startOf(range.until, 'day'), 1, 'day').toISOString(),
@@ -50,7 +46,7 @@ function prepareVariables(
 }
 
 function mapEventsToCalendar(
-  list: EventInstanceRangeQuery['list'] | undefined,
+  list: EventRangeQuery['list'] | undefined,
   groupBy: CalendarGroupBy,
   eventTypes: EventType[],
 ): { events: CalendarInstanceEvent[]; resources: Resource[] } {
@@ -113,7 +109,7 @@ export function useCalendarData(
   const variables = prepareVariables(range, filters);
 
   const [{ data, fetching }, refresh] = useQuery({
-    query: EventInstanceRangeDocument,
+    query: EventRangeDocument,
     variables,
     requestPolicy: 'cache-and-network',
   });
@@ -142,10 +138,10 @@ export function useCalendarData(
     const next = prepareVariables(view.range(view.nav(date, 1)), filters);
     const timeout = setTimeout(() => {
       void client
-        .query(EventInstanceRangeDocument, prev, { requestPolicy: 'cache-first' })
+        .query(EventRangeDocument, prev, { requestPolicy: 'cache-first' })
         .toPromise();
       void client
-        .query(EventInstanceRangeDocument, next, { requestPolicy: 'cache-first' })
+        .query(EventRangeDocument, next, { requestPolicy: 'cache-first' })
         .toPromise();
     }, 100);
     return () => clearTimeout(timeout);

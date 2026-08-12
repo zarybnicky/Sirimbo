@@ -9,13 +9,13 @@ import {
   Trash2,
 } from 'lucide-react';
 import {
-  DeleteEventInstanceDocument,
+  DeleteEventDocument,
   DeleteEventExternalRegistrationDocument,
   type EventWithTrainerFragment,
-  UpdateEventInstanceDocument,
+  UpdateEventDocument,
 } from '@/graphql/Event';
 import { type ActionContext, defineActions } from '@/lib/actions';
-import { EventEditForm } from '@/ui/event-form/EventForms';
+import { EditEventForm } from '@/ui/event-form/EventForms';
 import { AddToEventScheduleForm } from '@/ui/forms/AddToEventScheduleForm';
 import { EditEventInstanceDescriptionForm } from '@/ui/forms/EditEventInstanceDescriptionForm';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
@@ -30,8 +30,7 @@ export function canManageInstance({
 }: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
   return (
     auth.isAdmin ||
-    (auth.isTrainer &&
-      auth.personIds.some((personId) => item.managerPersonIds.includes(personId)))
+    (auth.isTrainer && auth.personIds.some((x) => item.managerPersonIds.includes(x)))
   );
 }
 
@@ -83,7 +82,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     label: 'Upravit',
     icon: Pencil,
     visible: canManageInstance,
-    render: ({ item }) => <EventEditForm instance={item} />,
+    render: ({ item }) => <EditEventForm instance={item} />,
     dialogProps: {
       className: 'sm:max-w-xl',
       onOpenAutoFocus: preventDefault,
@@ -113,7 +112,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
       item.isCancelled ? CheckSquare : Square,
     visible: canManageInstance,
     execute: async ({ item, mutate }) => {
-      await mutate(UpdateEventInstanceDocument, {
+      await mutate(UpdateEventDocument, {
         id: item.id,
         patch: { isCancelled: !item.isCancelled },
       });
@@ -150,12 +149,12 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
           },
     execute: async ({ item, mutate }) => {
       if (item.parentId) {
-        await mutate(UpdateEventInstanceDocument, {
+        await mutate(UpdateEventDocument, {
           id: item.id,
           patch: { parentId: null },
         });
       } else {
-        await mutate(UpdateEventInstanceDocument, {
+        await mutate(UpdateEventDocument, {
           id: item.id,
           patch: { seriesId: null },
         });
@@ -173,7 +172,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
         'Opravdu chcete smazat termín? Tím se smažou také všechny jeho záznamy o účasti a platby.',
     },
     execute: async ({ item, mutate }) => {
-      await mutate(DeleteEventInstanceDocument, { id: item.id });
+      await mutate(DeleteEventDocument, { id: item.id });
     },
   },
   {

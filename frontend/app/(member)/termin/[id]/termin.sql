@@ -1,4 +1,4 @@
-/* @name SharedEventInstance */
+/* @name SharedEvent */
 select
   instance.id::text as "id!",
   instance.name as "name",

@@ -1,5 +1,5 @@
 import {
-  EventInstanceExportDocument,
+  EventExportDocument,
   type EventRegistrantFragment,
 } from '@/graphql/Event';
 import { formatEventType, fullDateFormatter } from '@/ui/format';
@@ -7,7 +7,7 @@ import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
 export async function exportEventParticipants(client: Client, id: string) {
-  const result = await client.query(EventInstanceExportDocument, { id }).toPromise();
+  const result = await client.query(EventExportDocument, { id }).toPromise();
   if (result.error) throw result.error;
   const instance = result.data?.eventInstance;
   const { Workbook } = await import('exceljs');

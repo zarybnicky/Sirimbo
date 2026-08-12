@@ -1,8 +1,8 @@
 import {
-  CreateEventInstancesDocument,
-  DeleteEventInstanceDocument,
-  EventInstanceRegistrationsDocument,
-  type EventInstanceRegistrationsQuery,
+  CreateEventsDocument,
+  DeleteEventDocument,
+  EventRegistrationsDocument,
+  type EventRegistrationsQuery,
 } from '@/graphql/Event';
 import { parseResourceKey } from '@/calendar/eventDefaults';
 import { cn } from '@/lib/cn';
@@ -46,7 +46,7 @@ export function CampSchedule({
 }) {
   const auth = useAuth();
   const [registrationsQuery] = useQuery({
-    query: EventInstanceRegistrationsDocument,
+    query: EventRegistrationsDocument,
     variables: { id },
     pause: !auth.isTrainerOrAdmin,
   });
@@ -58,8 +58,8 @@ export function CampSchedule({
     0,
   );
   const [demandPaneOpen, setDemandPaneOpen] = React.useState<boolean>();
-  const createInstances = useMutation(CreateEventInstancesDocument)[1];
-  const deleteInstance = useMutation(DeleteEventInstanceDocument)[1];
+  const createInstances = useMutation(CreateEventsDocument)[1];
+  const deleteInstance = useMutation(DeleteEventDocument)[1];
   const [groupBy, setGroupBy] = useAtom(groupByAtom);
   const dragSubject = useAtomValue(dragSubjectAtom);
   const isDragging = useAtomValue(isDraggingAtom);
@@ -262,10 +262,10 @@ export function CampSchedule({
 }
 
 type Registration = NonNullable<
-  EventInstanceRegistrationsQuery['eventInstance']
+  EventRegistrationsQuery['eventInstance']
 >['registrationsList'][number];
 type ScheduledLesson = NonNullable<
-  EventInstanceRegistrationsQuery['scheduledLessons']
+  EventRegistrationsQuery['scheduledLessons']
 >[number];
 
 function scheduledTrainers(registration: Registration, lessons: ScheduledLesson[]) {

@@ -1,7 +1,7 @@
 import type { EventType } from '@/graphql';
 import {
-  EventInstanceRangeDocument,
-  type EventInstanceRangeQuery,
+  EventRangeDocument,
+  type EventRangeQuery,
 } from '@/graphql/Event';
 import { dateTimeFormatter, formatEventName } from '@/ui/format';
 import Link from 'next/link';
@@ -10,7 +10,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 
 type ReportRow = {
-  instance: NonNullable<EventInstanceRangeQuery['list']>[number];
+  instance: NonNullable<EventRangeQuery['list']>[number];
   title: string;
   location: string;
   durationMinutes: number;
@@ -84,7 +84,7 @@ export function PersonWorkReportView({ id }: { id: string }) {
   }, [month]);
 
   const [{ data, fetching, error }] = useQuery({
-    query: EventInstanceRangeDocument,
+    query: EventRangeDocument,
     variables: {
       start: months.at(-1)?.since.toISOString() ?? month.toISOString(),
       end: now.toISOString(),

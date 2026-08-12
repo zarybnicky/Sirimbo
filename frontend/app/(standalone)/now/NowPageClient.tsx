@@ -1,9 +1,9 @@
 'use client';
 
 import {
-  EventInstanceRangeDocument,
-  type EventInstanceRangeQuery,
-  type EventInstanceRangeQueryVariables,
+  EventRangeDocument,
+  type EventRangeQuery,
+  type EventRangeQueryVariables,
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { formatEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
@@ -15,7 +15,7 @@ import { useQuery } from 'urql';
 const REFRESH_INTERVAL = 30_000;
 const MILLISECONDS_IN_MINUTE = 60_000;
 
-type Instance = NonNullable<EventInstanceRangeQuery['list']>[number];
+type Instance = NonNullable<EventRangeQuery['list']>[number];
 
 type EnrichedInstance = {
   instance: Instance;
@@ -67,7 +67,7 @@ function trainerGroups(instance: Instance) {
 }
 
 function gatherBuckets(
-  data: EventInstanceRangeQuery | undefined,
+  data: EventRangeQuery | undefined,
   now: Date,
   mode: GroupingMode,
 ): GroupingBucket[] {
@@ -134,7 +134,7 @@ export default function NowPage() {
   const [grouping, setGrouping] = React.useState<GroupingMode>('location');
   const end = React.useMemo(() => add(reference, 24, 'hours'), [reference]);
 
-  const variables = React.useMemo<EventInstanceRangeQueryVariables>(
+  const variables = React.useMemo<EventRangeQueryVariables>(
     () => ({
       start: reference.toISOString(),
       end: end.toISOString(),
@@ -148,7 +148,7 @@ export default function NowPage() {
   }, []);
 
   const [{ data, fetching, error }] = useQuery({
-    query: EventInstanceRangeDocument,
+    query: EventRangeDocument,
     variables,
   });
 

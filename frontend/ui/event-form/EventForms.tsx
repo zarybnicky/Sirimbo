@@ -1,8 +1,8 @@
 import {
-  CreateEventInstancesDocument,
-  EventInstanceRegistrationsDocument,
+  CreateEventsDocument,
+  EventRegistrationsDocument,
   type EventWithTrainerFragment,
-  UpdateEventInstanceDetailsDocument,
+  UpdateEventDetailsDocument,
 } from '@/graphql/Event';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import {
@@ -103,7 +103,7 @@ function EventAccessFields() {
   );
 }
 
-export function EventCreateForm({
+export function CreateEventForm({
   defaults,
   parentId,
 }: {
@@ -111,7 +111,7 @@ export function EventCreateForm({
   parentId?: string;
 }) {
   const { onSuccess } = useFormResult();
-  const [result, createInstances] = useMutation(CreateEventInstancesDocument);
+  const [result, createInstances] = useMutation(CreateEventsDocument);
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const { lockEventsByDefault } = useTenantConfig();
   const [splitLessons, setSplitLessons] = React.useState(false);
@@ -119,7 +119,7 @@ export function EventCreateForm({
   const form = useForm({
     resolver: zodResolver(EventForm),
     defaultValues: {
-      type: defaults.type,
+      type: defaults.type ?? 'LESSON',
       locationId: defaults.locationText ? 'other' : (defaults.locationId ?? 'none'),
       locationText: defaults.locationText,
       isVisible: true,
@@ -319,12 +319,12 @@ export function EventCreateForm({
   );
 }
 
-export function EventEditForm({ instance }: { instance: EventWithTrainerFragment }) {
+export function EditEventForm({ instance }: { instance: EventWithTrainerFragment }) {
   const { onSuccess } = useFormResult();
-  const [result, updateInstance] = useMutation(UpdateEventInstanceDetailsDocument);
+  const [result, updateInstance] = useMutation(UpdateEventDetailsDocument);
   const [registrationsReady, setRegistrationsReady] = React.useState(false);
   const [registrationsQuery] = useQuery({
-    query: EventInstanceRegistrationsDocument,
+    query: EventRegistrationsDocument,
     variables: { id: instance.id },
   });
   const initialTrainers = instance.trainersList.map((trainer) => ({

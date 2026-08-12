@@ -1,4 +1,4 @@
-import { EventInstanceRangeDocument } from '@/graphql/Event';
+import { EventRangeDocument } from '@/graphql/Event';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
@@ -12,7 +12,7 @@ export function MyEventsList() {
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data, fetching }] = useQuery({
-    query: EventInstanceRangeDocument,
+    query: EventRangeDocument,
     variables: {
       start: startDate.toISOString(),
       end: add(startDate, 1, 'week').toISOString(),

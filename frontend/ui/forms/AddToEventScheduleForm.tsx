@@ -3,7 +3,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { EventListDocument, UpdateEventInstanceDocument } from '@/graphql/Event';
+import { EventListDocument, UpdateEventDocument } from '@/graphql/Event';
 import { DialogTitle } from '@/ui/dialog';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
@@ -23,10 +23,8 @@ export function AddToEventScheduleForm({
   const { control, handleSubmit } = useForm<z.infer<typeof Form>>({
     resolver: zodResolver(Form),
   });
-  const [updateResult, update] = useMutation(UpdateEventInstanceDocument);
-  const [{ data, error: queryError, fetching }] = useQuery({
-    query: EventListDocument,
-  });
+  const [updateResult, update] = useMutation(UpdateEventDocument);
+  const [{ data, error, fetching }] = useQuery({ query: EventListDocument });
   const options = React.useMemo(
     () =>
       (data?.eventInstancesList ?? [])
@@ -51,7 +49,7 @@ export function AddToEventScheduleForm({
   return (
     <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
       <DialogTitle>Přidat do rozpisu události</DialogTitle>
-      <FormError error={queryError || updateResult.error} />
+      <FormError error={error || updateResult.error} />
       <ComboboxElement
         control={control}
         name="parentId"

@@ -21,14 +21,14 @@ import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
 import { useQuery } from 'urql';
-import type { ISharedEventInstanceResult } from './termin.queries';
+import type { ISharedEventResult } from './termin.queries';
 
 export function EventPageClient({
   id,
   shared,
 }: {
   id: string;
-  shared: ISharedEventInstanceResult | null | undefined;
+  shared: ISharedEventResult | null | undefined;
 }) {
   const auth = useAuth();
   const authLoading = useAuthLoading();
@@ -37,7 +37,7 @@ export function EventPageClient({
     variables: { id },
     pause: !/^\d{1,18}$/.test(id),
   });
-  const instance = data?.eventInstance;
+  const instance = data?.event;
   const event = instance ?? shared;
   const actions = useActions(eventInstanceActions, instance);
   const primaryAction = actions.some((action) => action.id === 'eventInstance.edit')
