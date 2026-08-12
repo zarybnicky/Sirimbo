@@ -2,27 +2,11 @@ import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { TextFieldElement } from '@/ui/fields/text';
 import React from 'react';
-import { type Control, useController, useWatch } from 'react-hook-form';
+import { useController, useWatch } from 'react-hook-form';
 import { useQuery } from 'urql';
-import { z } from 'zod';
-import { EventForm, type EventFormType } from './types';
+import type { EventFormControl } from './types';
 
-export function eventLocationInput({
-  locationId,
-  locationText,
-}: Pick<EventFormType, 'locationId' | 'locationText'>) {
-  return {
-    locationId:
-      locationId && locationId !== 'none' && locationId !== 'other' ? locationId : null,
-    locationText: locationId === 'none' ? '' : (locationText ?? ''),
-  };
-}
-
-export function LocationField({
-  control,
-}: {
-  control: Control<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>;
-}) {
+export function LocationField({ control }: { control: EventFormControl }) {
   const locationId = useWatch({ control, name: 'locationId' });
   const { field: locationText } = useController({ control, name: 'locationText' });
   const { onChange: setLocationText, value: locationTextValue } = locationText;

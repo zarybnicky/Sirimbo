@@ -24,6 +24,7 @@ SELECT tap.plan(26);
 --   900002 = future (since = now()+1d, until = now()+2d)
 
 INSERT INTO tenant (id, name) VALUES (1000, 'Test Tenant') ON CONFLICT (id) DO NOTHING;
+SELECT set_config('jwt.claims.tenant_id', '1000', true);
 
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
   VALUES (200001, 'Alice',   'Test', 'unspecified', ''),
@@ -79,25 +80,26 @@ INSERT INTO cohort_membership (id, tenant_id, cohort_id, person_id, since, statu
 
 -- The submitted participant list predates the cohort selection. Participant
 -- edits must run first so adding the target can append Evan afterwards.
-SELECT public.update_event_instance_details(
-  p_instance_id => instance.id,
-  p_since => instance.since,
-  p_until => instance.until,
-  p_name => instance.name,
-  p_type => instance.type,
-  p_location_id => instance.location_id,
-  p_location_text => instance.location_text,
-  p_is_visible => instance.is_visible,
-  p_is_public => instance.is_public,
-  p_is_cancelled => instance.is_cancelled,
-  p_registrations => ARRAY[
-    ROW(200001, null)::public.quick_event_registration_input,
-    ROW(200002, null)::public.quick_event_registration_input,
-    ROW(200003, null)::public.quick_event_registration_input,
-    ROW(200004, null)::public.quick_event_registration_input
+SELECT public.save_events(
+  details => ROW(
+    instance.parent_id, instance.name, instance.type,
+    instance.location_id, instance.location_text,
+    instance.capacity, instance.capacity_unit,
+    instance.is_visible, instance.is_public, instance.has_public_details,
+    instance.is_locked, true
+  )::public.event_details_input,
+  events => ARRAY[
+    ROW(
+      instance.id, instance.since, instance.until, instance.is_cancelled,
+      ARRAY[
+        ROW(200001, null)::public.event_registration_input,
+        ROW(200002, null)::public.event_registration_input,
+        ROW(200003, null)::public.event_registration_input,
+        ROW(200004, null)::public.event_registration_input
+      ]
+    )::public.event_input
   ],
-  p_cohort_ids => ARRAY[800001, 800001],
-  p_enable_notes => true
+  cohort_ids => ARRAY[800001, 800001]
 )
 FROM event_instance instance
 WHERE instance.id = 900002;
@@ -155,18 +157,27 @@ SELECT tap.ok(
 INSERT INTO cohort_membership (tenant_id, cohort_id, person_id, since, status)
   VALUES (1000, 800001, 200001, now(), 'active');
 
-SELECT public.update_event_instance_details(
-  p_instance_id => instance.id,
-  p_since => instance.since,
-  p_until => instance.until,
-  p_name => instance.name,
-  p_type => instance.type,
-  p_location_id => instance.location_id,
-  p_location_text => instance.location_text,
-  p_is_visible => instance.is_visible,
-  p_is_public => instance.is_public,
-  p_is_cancelled => instance.is_cancelled,
-  p_cohort_ids => '{}'::bigint[]
+SELECT public.save_events(
+  details => ROW(
+    instance.parent_id, instance.name, instance.type,
+    instance.location_id, instance.location_text,
+    instance.capacity, instance.capacity_unit,
+    instance.is_visible, instance.is_public, instance.has_public_details,
+    instance.is_locked, instance.enable_notes
+  )::public.event_details_input,
+  events => ARRAY[
+    ROW(
+      instance.id, instance.since, instance.until, instance.is_cancelled,
+      ARRAY(
+        SELECT ROW(registration.person_id, registration.couple_id)
+          ::public.event_registration_input
+        FROM event_instance_registration registration
+        WHERE registration.instance_id = instance.id
+          AND registration.parent_registration_id is null
+          AND registration.registration_status = 'active'
+      )
+    )::public.event_input
+  ]
 )
 FROM event_instance instance
 WHERE instance.id = 900002;
@@ -181,18 +192,28 @@ SELECT registration_status = 'cancelled' AS cancelled,
 FROM event_instance_registration
 WHERE instance_id = 900002 AND person_id = 200001;
 
-SELECT public.update_event_instance_details(
-  p_instance_id => instance.id,
-  p_since => instance.since,
-  p_until => instance.until,
-  p_name => instance.name,
-  p_type => instance.type,
-  p_location_id => instance.location_id,
-  p_location_text => instance.location_text,
-  p_is_visible => instance.is_visible,
-  p_is_public => instance.is_public,
-  p_is_cancelled => instance.is_cancelled,
-  p_cohort_ids => ARRAY[800001, 800001]
+SELECT public.save_events(
+  details => ROW(
+    instance.parent_id, instance.name, instance.type,
+    instance.location_id, instance.location_text,
+    instance.capacity, instance.capacity_unit,
+    instance.is_visible, instance.is_public, instance.has_public_details,
+    instance.is_locked, instance.enable_notes
+  )::public.event_details_input,
+  events => ARRAY[
+    ROW(
+      instance.id, instance.since, instance.until, instance.is_cancelled,
+      ARRAY(
+        SELECT ROW(registration.person_id, registration.couple_id)
+          ::public.event_registration_input
+        FROM event_instance_registration registration
+        WHERE registration.instance_id = instance.id
+          AND registration.parent_registration_id is null
+          AND registration.registration_status = 'active'
+      )
+    )::public.event_input
+  ],
+  cohort_ids => ARRAY[800001, 800001]
 )
 FROM event_instance instance
 WHERE instance.id = 900002;
@@ -263,22 +284,24 @@ UPDATE cohort_membership
 SET until = now() - interval '1 second', status = 'expired'
 WHERE id = 860004;
 
-SELECT public.update_event_instance_details(
-  instance.id,
-  instance.since,
-  instance.until,
-  instance.name,
-  instance.type,
-  instance.location_id,
-  instance.location_text,
-  instance.is_visible,
-  instance.is_public,
-  instance.is_cancelled,
-  null,
-  ARRAY[
-    ROW(200003, null)::public.quick_event_registration_input,
-    ROW(200005, null)::public.quick_event_registration_input
-  ]
+SELECT public.save_events(
+  details => ROW(
+    instance.parent_id, instance.name, instance.type,
+    instance.location_id, instance.location_text,
+    instance.capacity, instance.capacity_unit,
+    instance.is_visible, instance.is_public, instance.has_public_details,
+    instance.is_locked, instance.enable_notes
+  )::public.event_details_input,
+  events => ARRAY[
+    ROW(
+      instance.id, instance.since, instance.until, instance.is_cancelled,
+      ARRAY[
+        ROW(200003, null)::public.event_registration_input,
+        ROW(200005, null)::public.event_registration_input
+      ]
+    )::public.event_input
+  ],
+  cohort_ids => ARRAY[800001]
 )
 FROM event_instance instance
 WHERE instance.id = 900002;
@@ -287,23 +310,25 @@ SELECT app_private.reconcile_event_instance_cohort_registrations(
   ARRAY[900002], ARRAY[200002]
 );
 
-SELECT public.update_event_instance_details(
-  instance.id,
-  instance.since,
-  instance.until,
-  instance.name,
-  instance.type,
-  instance.location_id,
-  instance.location_text,
-  instance.is_visible,
-  instance.is_public,
-  instance.is_cancelled,
-  null,
-  ARRAY[
-    ROW(200003, null)::public.quick_event_registration_input,
-    ROW(200004, null)::public.quick_event_registration_input,
-    ROW(200005, null)::public.quick_event_registration_input
-  ]
+SELECT public.save_events(
+  details => ROW(
+    instance.parent_id, instance.name, instance.type,
+    instance.location_id, instance.location_text,
+    instance.capacity, instance.capacity_unit,
+    instance.is_visible, instance.is_public, instance.has_public_details,
+    instance.is_locked, instance.enable_notes
+  )::public.event_details_input,
+  events => ARRAY[
+    ROW(
+      instance.id, instance.since, instance.until, instance.is_cancelled,
+      ARRAY[
+        ROW(200003, null)::public.event_registration_input,
+        ROW(200004, null)::public.event_registration_input,
+        ROW(200005, null)::public.event_registration_input
+      ]
+    )::public.event_input
+  ],
+  cohort_ids => ARRAY[800001]
 )
 FROM event_instance instance
 WHERE instance.id = 900002;
@@ -528,31 +553,23 @@ SET LOCAL ROLE trainer;
 
 CREATE TEMP TABLE _scheduled_lesson ON COMMIT DROP AS
 SELECT id
-FROM public.quick_create_event_instances(
-  ARRAY[
+FROM public.save_events(
+  details => ROW(
+    9900001, 'Scheduled lesson copy', 'lesson'::event_type,
+    null::bigint, 'Scheduled lesson', 2, 'registrations'::event_capacity_unit,
+    false, true, false, false, true
+  )::public.event_details_input,
+  events => ARRAY[
     ROW(
+      null::bigint,
       now() + interval '6 hours',
       now() + interval '7 hours',
-      'lesson'::event_type,
-      null::bigint,
-      'Scheduled lesson',
-      ARRAY[2900002]::bigint[],
-      ARRAY[ROW(2900003, null)::quick_event_registration_input]
-    )::quick_event_input
+      false,
+      ARRAY[ROW(2900003, null)::public.event_registration_input]
+    )::public.event_input
   ],
-  parent_id => 9900001,
-  p_is_visible => false,
-  p_is_public => true,
-  p_is_locked => false,
-  p_enable_notes => true,
-  p_name => 'Scheduled lesson copy',
-  p_capacity => 2,
-  p_capacity_unit => 'registrations',
-  p_description => 'Copied description',
-  p_summary => 'Copied summary',
-  p_files_legacy => 'copied-file',
-  p_cohort_ids => ARRAY[800002]::bigint[],
-  p_trainer_lessons_offered => ARRAY[2]
+  trainers => ARRAY[ROW(2900002, 2)::public.event_trainer_input],
+  cohort_ids => ARRAY[800002]::bigint[]
 );
 
 SELECT set_event_instance_registration(
@@ -616,30 +633,29 @@ SELECT tap.throws_ok(
 
 CREATE TEMP TABLE _created_series_lesson ON COMMIT DROP AS
 SELECT series_id, count(*) instance_count
-FROM public.quick_create_event_instances(
-  ARRAY[
+FROM public.save_events(
+  details => ROW(
+    null::bigint, 'Created series', 'lesson'::event_type,
+    null::bigint, '', 2, 'people'::event_capacity_unit,
+    null, null, null, null, null
+  )::public.event_details_input,
+  events => ARRAY[
     ROW(
+      null::bigint,
       now() + interval '2 days',
       now() + interval '2 days 1 hour',
-      'lesson'::event_type,
-      null::bigint,
-      '',
-      '{}'::bigint[],
-      '{}'::quick_event_registration_input[]
-    )::quick_event_input
-  ],
-  p_name => 'Created series',
-  p_copies => ARRAY[
+      false,
+      '{}'::public.event_registration_input[]
+    )::public.event_input,
     ROW(
+      null::bigint,
       now() + interval '3 days',
       now() + interval '3 days 1 hour',
-      'lesson'::event_type,
-      null::bigint,
-      '',
-      '{}'::bigint[],
-      '{}'::quick_event_registration_input[]
-    )::quick_event_input
-  ]
+      false,
+      '{}'::public.event_registration_input[]
+    )::public.event_input
+  ],
+  series => ROW(null::bigint, 'Created series')::public.event_series_input
 )
 GROUP BY series_id;
 
@@ -665,9 +681,9 @@ SELECT tap.ok(
       AND child.is_public = true
       AND child.is_locked = false
       AND child.enable_notes = true
-      AND child.description = 'Copied description'
-      AND child.summary = 'Copied summary'
-      AND child.files_legacy = 'copied-file'
+      AND child.description = ''
+      AND child.summary = ''
+      AND child.files_legacy = ''
       AND 2900002 = any(child.manager_person_ids)
   ) AND EXISTS (
     SELECT 1
@@ -675,6 +691,14 @@ SELECT tap.ok(
     JOIN _created_series_lesson created ON created.series_id = series.id
     WHERE created.instance_count = 2
       AND series.name = 'Created series'
+      AND NOT EXISTS (
+        SELECT 1
+        FROM event_instance instance
+        WHERE instance.series_id = created.series_id
+          AND (instance.is_visible, instance.is_public,
+            instance.has_public_details, instance.is_locked, instance.enable_notes)
+            IS DISTINCT FROM (true, false, false, false, false)
+      )
   ) AND EXISTS (
     SELECT 1
     FROM event_instance_target_cohort target
@@ -716,7 +740,7 @@ SELECT tap.ok(
     ) root
     WHERE root.id = (SELECT id FROM _scheduled_lesson)
   ),
-  'quick creation makes a managed lesson with registration and scoped range'
+  'event save makes a managed lesson with registration and scoped range'
 );
 
 SELECT tap.lives_ok(
@@ -785,36 +809,30 @@ SELECT tap.ok(
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 
-SELECT public.update_event_instance_details(
-  instance.id,
-  instance.since,
-  instance.until,
-  'Scheduled lesson renamed',
-  instance.type,
-  instance.location_id,
-  instance.location_text,
-  instance.is_visible,
-  instance.is_public,
-  instance.is_cancelled,
-  ARRAY[2900002]::bigint[],
-  ARRAY[ROW(null, 2950001)::quick_event_registration_input],
-  4,
-  'registrations',
-  true,
-  ARRAY[2],
-  ARRAY[800002]::bigint[],
-  true,
-  ARRAY[
+SELECT public.save_events(
+  details => ROW(
+    instance.parent_id, 'Scheduled lesson renamed', instance.type,
+    instance.location_id, instance.location_text,
+    4, 'registrations'::event_capacity_unit,
+    instance.is_visible, instance.is_public, instance.has_public_details,
+    true, true
+  )::public.event_details_input,
+  events => ARRAY[
     ROW(
+      instance.id, instance.since, instance.until, instance.is_cancelled,
+      ARRAY[ROW(null, 2950001)::public.event_registration_input]
+    )::public.event_input,
+    ROW(
+      null::bigint,
       instance.since + interval '1 week',
       instance.until + interval '1 week',
-      instance.type,
-      instance.location_id,
-      instance.location_text,
-      ARRAY[2900002]::bigint[],
-      ARRAY[ROW(null, 2950001)::quick_event_registration_input]
-    )::quick_event_input
-  ]
+      false,
+      ARRAY[ROW(null, 2950001)::public.event_registration_input]
+    )::public.event_input
+  ],
+  trainers => ARRAY[ROW(2900002, 2)::public.event_trainer_input],
+  cohort_ids => ARRAY[800002]::bigint[],
+  series => ROW(null::bigint, 'Scheduled lesson renamed')::public.event_series_input
 )
 FROM event_instance instance
 WHERE instance.id = (SELECT id FROM _scheduled_lesson);
@@ -894,31 +912,33 @@ SELECT tap.ok(
       AND registration.registration_status = 'cancelled'
       AND event_instance_trainer_lessons_remaining(trainer) = 2
   ),
-  'quick edit updates exact settings and replaces registrations consistently'
+  'event save updates exact settings and replaces registrations consistently'
 );
 
-SELECT public.update_event_instance_details(
-  p_instance_id => instance.id,
-  p_since => instance.since,
-  p_until => instance.until,
-  p_name => instance.name,
-  p_type => instance.type,
-  p_location_id => instance.location_id,
-  p_location_text => instance.location_text,
-  p_is_visible => instance.is_visible,
-  p_is_public => instance.is_public,
-  p_is_cancelled => instance.is_cancelled,
-  p_copies => ARRAY[
+SELECT public.save_events(
+  details => ROW(
+    instance.parent_id, instance.name, instance.type,
+    instance.location_id, instance.location_text,
+    instance.capacity, instance.capacity_unit,
+    instance.is_visible, instance.is_public, instance.has_public_details,
+    instance.is_locked, instance.enable_notes
+  )::public.event_details_input,
+  events => ARRAY[
     ROW(
+      instance.id, instance.since, instance.until, instance.is_cancelled,
+      ARRAY[ROW(null, 2950001)::public.event_registration_input]
+    )::public.event_input,
+    ROW(
+      null::bigint,
       instance.since + interval '2 weeks',
       instance.until + interval '2 weeks',
-      instance.type,
-      instance.location_id,
-      instance.location_text,
-      '{}'::bigint[],
-      '{}'::quick_event_registration_input[]
-    )::quick_event_input
-  ]
+      false,
+      ARRAY[ROW(null, 2950001)::public.event_registration_input]
+    )::public.event_input
+  ],
+  trainers => ARRAY[ROW(2900002, 2)::public.event_trainer_input],
+  cohort_ids => ARRAY[800002]::bigint[],
+  series => ROW(instance.series_id, null::text)::public.event_series_input
 )
 FROM event_instance instance
 WHERE instance.id = (SELECT id FROM _scheduled_lesson);
@@ -940,7 +960,7 @@ SELECT tap.ok(
       AND copy.since = original.since + interval '2 weeks'
       AND copy.until = original.until + interval '2 weeks'
   ),
-  'quick edit adds copies to an existing series without replacing it'
+  'event save adds a date to an existing series without replacing it'
 );
 
 SELECT tap.ok(
@@ -959,23 +979,26 @@ SELECT tap.ok(
   'series info reports identity, range, position and length without loading sibling events'
 );
 
-SELECT public.update_event_instance_details(
-  instance.id,
-  instance.since,
-  instance.until,
-  instance.name,
-  instance.type,
-  instance.location_id,
-  instance.location_text,
-  instance.is_visible,
-  instance.is_public,
-  instance.is_cancelled,
-  null,
-  ARRAY[
-    ROW(200001, null)::quick_event_registration_input,
-    ROW(200002, null)::quick_event_registration_input,
-    ROW(200003, null)::quick_event_registration_input
-  ]
+SELECT public.save_events(
+  details => ROW(
+    instance.parent_id, instance.name, instance.type,
+    instance.location_id, instance.location_text,
+    instance.capacity, instance.capacity_unit,
+    instance.is_visible, instance.is_public, instance.has_public_details,
+    instance.is_locked, instance.enable_notes
+  )::public.event_details_input,
+  events => ARRAY[
+    ROW(
+      instance.id, instance.since, instance.until, instance.is_cancelled,
+      ARRAY[
+        ROW(200001, null)::public.event_registration_input,
+        ROW(200002, null)::public.event_registration_input,
+        ROW(200003, null)::public.event_registration_input
+      ]
+    )::public.event_input
+  ],
+  trainers => ARRAY[ROW(2900002, 1)::public.event_trainer_input],
+  cohort_ids => ARRAY[800001]::bigint[]
 )
 FROM event_instance instance
 WHERE instance.id = 900001;
@@ -1011,7 +1034,7 @@ SELECT tap.ok(
       AND registration_status = 'active'
       AND note = 'Instance note'
   ),
-  'quick edit and self-registration reuse exact registration rows'
+  'event save and self-registration reuse exact registration rows'
 );
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);

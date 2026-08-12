@@ -8,6 +8,7 @@ import type {
   TenantTrainer,
   WithTypename,
 } from '@/graphql';
+import type { SaveEventsMutation } from '@/graphql/Event';
 import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
 import { type Cache, cacheExchange } from '@urql/exchange-graphcache';
@@ -403,6 +404,15 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         const instanceId = result.updateEventInstanceDetails?.eventInstance?.id;
         if (instanceId) {
           cache.invalidate({ __typename: 'EventInstance', id: instanceId });
+        }
+        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
+      },
+
+      saveEvents(result, _args, cache, _info) {
+        // Graphcache's schema-generated updater type does not include operation aliases.
+        const payload = result.saveEvents as SaveEventsMutation['saveEvents'];
+        for (const event of payload?.events ?? []) {
+          cache.invalidate({ __typename: 'EventInstance', id: event.id });
         }
         invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
       },

@@ -1,63 +1,45 @@
+import type { Control } from 'react-hook-form';
 import { z } from 'zod';
-
-export type EventFormType = z.infer<typeof EventForm>;
 
 export const EventForm = z.object({
   name: z.string().prefault(''),
-  type: z.enum(['CAMP', 'LESSON', 'RESERVATION', 'HOLIDAY', 'GROUP']),
-  summary: z.string().prefault(''),
-  description: z.string().prefault(''),
-  locationId: z.string().nullish().prefault(null),
-  locationText: z.string().nullish().prefault(''),
-  capacity: z.number().nullish().prefault(0),
+  type: z.enum(['CAMP', 'LESSON', 'RESERVATION', 'HOLIDAY', 'GROUP']).prefault('LESSON'),
+  locationId: z.string().prefault('none'),
+  locationText: z.string().prefault(''),
+  capacity: z.number().prefault(0),
   capacityUnit: z.enum(['PEOPLE', 'REGISTRATIONS']).prefault('PEOPLE'),
   isVisible: z.boolean().prefault(false),
   isPublic: z.boolean().prefault(false),
   hasPublicDetails: z.boolean().prefault(false),
   enableNotes: z.boolean().prefault(false),
   isLocked: z.boolean().prefault(false),
-  titleImageLegacy: z.string().nullish().prefault(null),
   instances: z.array(
     z.object({
-      itemId: z.string().nullish().prefault(null),
-      since: z.string().nullish().prefault(null),
-      until: z.string().nullish().prefault(null),
-      isCancelled: z.boolean().nullish().prefault(false),
-      trainers: z
-        .array(
-          z.object({
-            itemId: z.string().nullish().prefault(null),
-            personId: z.string().nullish(),
-            lessonsOffered: z.number().nullish().prefault(null),
-          }),
-        )
-        .prefault([]),
+      itemId: z.string().nullable().prefault(null),
+      since: z.string(),
+      until: z.string(),
+      isCancelled: z.boolean().prefault(false),
     }),
   ),
   trainers: z
     .array(
       z.object({
-        itemId: z.string().nullish().prefault(null),
-        personId: z.string().nullish(),
+        personId: z.string(),
         lessonsOffered: z.number().nullish().prefault(null),
       }),
     )
     .prefault([]),
-  cohorts: z
-    .array(
-      z.object({
-        itemId: z.string().nullish().prefault(null).optional(),
-        cohortId: z.string().nullish(),
-      }),
-    )
-    .prefault([]),
+  cohorts: z.array(z.object({ cohortId: z.string() })).prefault([]),
   registrations: z
     .array(
       z.object({
-        itemId: z.string().nullish().prefault(null).optional(),
-        personId: z.string().nullish().optional().prefault(null),
-        coupleId: z.string().nullish().optional().prefault(null),
+        personId: z.string().nullable().prefault(null),
+        coupleId: z.string().nullable().prefault(null),
       }),
     )
     .prefault([]),
 });
+
+export type EventFormInput = z.input<typeof EventForm>;
+export type EventFormType = z.infer<typeof EventForm>;
+export type EventFormControl = Control<EventFormInput, unknown, EventFormType>;

@@ -1,39 +1,25 @@
-import { EventForm } from '@/ui/event-form/types';
+import type { EventFormControl } from '@/ui/event-form/types';
 import { buttonCls } from '@/ui/style';
 import { add } from 'date-arithmetic';
 import { Plus, X } from 'lucide-react';
-import React from 'react';
-import { type Control, useFieldArray, useWatch } from 'react-hook-form';
-import { z } from 'zod';
+import { useFieldArray, useWatch } from 'react-hook-form';
 import { DateTimeRangeField } from './DateTimeRangeField';
 
-export function InstanceListElement({
-  control,
-}: {
-  control: Control<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>;
-}) {
+export function InstanceListElement({ control }: { control: EventFormControl }) {
   const { fields, append, remove } = useFieldArray({ name: 'instances', control });
   const instances = useWatch({ control, name: 'instances' });
 
-  const addInstance = React.useCallback(
-    (weeks: 1 | 2) => {
-      const previous = (instances || []).findLast(
-        (instance) => instance.since && instance.until,
-      );
-      const since = previous?.since ? new Date(previous.since) : new Date();
-      const until = previous?.until
-        ? new Date(previous.until)
-        : add(since, 45, 'minutes');
-      append({
-        itemId: null,
-        since: add(since, weeks, 'week').toISOString(),
-        until: add(until, weeks, 'week').toISOString(),
-        isCancelled: false,
-        trainers: [],
-      });
-    },
-    [append, instances],
-  );
+  const addInstance = (weeks: 1 | 2) => {
+    const previous = instances.at(-1);
+    const since = previous ? new Date(previous.since) : new Date();
+    const until = previous ? new Date(previous.until) : add(since, 45, 'minutes');
+    append({
+      itemId: null,
+      since: add(since, weeks, 'week').toISOString(),
+      until: add(until, weeks, 'week').toISOString(),
+      isCancelled: false,
+    });
+  };
 
   return (
     <div className="space-y-2">

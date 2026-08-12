@@ -9313,6 +9313,26 @@
             ]
           },
           {
+            "name": "saveEvents",
+            "type": {
+              "kind": "OBJECT",
+              "name": "SaveEventsPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "setEventInstanceRegistration",
             "type": {
               "kind": "OBJECT",
@@ -14690,6 +14710,36 @@
               "kind": "OBJECT",
               "name": "User",
               "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SaveEventsPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "eventInstances",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "EventInstance",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
             },
             "args": []
           }

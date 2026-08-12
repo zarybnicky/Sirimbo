@@ -2558,6 +2558,22 @@ export type EventConflict = {
   secondUntil: Maybe<Scalars['Datetime']['output']>;
 };
 
+/** An input for mutations affecting `EventDetailsInputRecord` */
+export type EventDetailsInputRecordInput = {
+  capacity?: InputMaybe<Scalars['Int']['input']>;
+  capacityUnit?: InputMaybe<EventCapacityUnit>;
+  enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  hasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
+  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  locationText?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  parentId?: InputMaybe<Scalars['BigInt']['input']>;
+  type?: InputMaybe<EventType>;
+};
+
 export type EventExternalRegistration = {
   __typename?: 'EventExternalRegistration';
   birthDate: Maybe<Scalars['Date']['output']>;
@@ -2677,6 +2693,15 @@ export type EventExternalRegistrationsOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
+
+/** An input for mutations affecting `EventInputRecord` */
+export type EventInputRecordInput = {
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
+  registrations?: InputMaybe<Array<InputMaybe<EventRegistrationInputRecordInput>>>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+};
 
 export type EventInstance = {
   __typename?: 'EventInstance';
@@ -3316,6 +3341,12 @@ export type EventLessonDemandsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
+/** An input for mutations affecting `EventRegistrationInputRecord` */
+export type EventRegistrationInputRecordInput = {
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 export type EventRegistrationSource =
   | 'COHORT'
   | 'MANAGER'
@@ -3388,6 +3419,12 @@ export type EventSeriesInput = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** An input for mutations affecting `EventSeriesInputRecord` */
+export type EventSeriesInputRecordInput = {
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Methods to use when ordering `EventSeries`. */
 export type EventSeriesOrderBy =
   | 'CREATED_AT_ASC'
@@ -3411,6 +3448,12 @@ export type EventSeriesPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `EventTrainerInputRecord` */
+export type EventTrainerInputRecordInput = {
+  lessonsOffered?: InputMaybe<Scalars['Int']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type EventType =
@@ -3912,6 +3955,7 @@ export type Mutation = {
   registerWithoutInvitation: Maybe<RegisterWithoutInvitationPayload>;
   rejectMembershipApplication: Maybe<RejectMembershipApplicationPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
+  saveEvents: Maybe<SaveEventsPayload>;
   setEventInstanceRegistration: Maybe<SetEventInstanceRegistrationPayload>;
   setEventSharing: Maybe<SetEventSharingPayload>;
   setLessonDemand: Maybe<SetLessonDemandPayload>;
@@ -4299,6 +4343,12 @@ export type MutationRejectMembershipApplicationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationSaveEventsArgs = {
+  input: SaveEventsInput;
 };
 
 
@@ -6164,6 +6214,31 @@ export type Result = {
   __typename?: 'Result';
   jwt: Maybe<Scalars['JwtToken']['output']>;
   usr: Maybe<User>;
+};
+
+/** All input for the `saveEvents` mutation. */
+export type SaveEventsInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  cohortIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  details?: InputMaybe<EventDetailsInputRecordInput>;
+  events?: InputMaybe<Array<InputMaybe<EventInputRecordInput>>>;
+  series?: InputMaybe<EventSeriesInputRecordInput>;
+  trainers?: InputMaybe<Array<InputMaybe<EventTrainerInputRecordInput>>>;
+};
+
+/** The output of our `saveEvents` mutation. */
+export type SaveEventsPayload = {
+  __typename?: 'SaveEventsPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  eventInstances: Maybe<Array<EventInstance>>;
 };
 
 export type ScoreboardManualAdjustment = {
@@ -8589,6 +8664,7 @@ export type GraphCacheKeysConfig = {
   RejectMembershipApplicationPayload?: (data: WithTypename<RejectMembershipApplicationPayload>) => null | string,
   ResetPasswordPayload?: (data: WithTypename<ResetPasswordPayload>) => null | string,
   Result?: (data: WithTypename<Result>) => null | string,
+  SaveEventsPayload?: (data: WithTypename<SaveEventsPayload>) => null | string,
   ScoreboardManualAdjustment?: (data: WithTypename<ScoreboardManualAdjustment>) => null | string,
   ScoreboardRecord?: (data: WithTypename<ScoreboardRecord>) => null | string,
   SeriesInfo?: (data: WithTypename<SeriesInfo>) => null | string,
@@ -9689,6 +9765,10 @@ export type GraphCacheResolvers = {
     jwt?: GraphCacheResolver<WithTypename<Result>, Record<string, never>, Scalars['JwtToken']['output'] | string>,
     usr?: GraphCacheResolver<WithTypename<Result>, Record<string, never>, WithTypename<User> | string>
   },
+  SaveEventsPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<SaveEventsPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    eventInstances?: GraphCacheResolver<WithTypename<SaveEventsPayload>, Record<string, never>, Array<WithTypename<EventInstance> | string>>
+  },
   ScoreboardManualAdjustment?: {
     awardedAt?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Date']['output'] | string>,
     cohort?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, WithTypename<Cohort> | string>,
@@ -10154,6 +10234,7 @@ export type GraphCacheOptimisticUpdaters = {
   registerWithoutInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterWithoutInvitationArgs, Maybe<WithTypename<RegisterWithoutInvitationPayload>>>,
   rejectMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationRejectMembershipApplicationArgs, Maybe<WithTypename<RejectMembershipApplicationPayload>>>,
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
+  saveEvents?: GraphCacheOptimisticMutationResolver<MutationSaveEventsArgs, Maybe<WithTypename<SaveEventsPayload>>>,
   setEventInstanceRegistration?: GraphCacheOptimisticMutationResolver<MutationSetEventInstanceRegistrationArgs, Maybe<WithTypename<SetEventInstanceRegistrationPayload>>>,
   setEventSharing?: GraphCacheOptimisticMutationResolver<MutationSetEventSharingArgs, Maybe<WithTypename<SetEventSharingPayload>>>,
   setLessonDemand?: GraphCacheOptimisticMutationResolver<MutationSetLessonDemandArgs, Maybe<WithTypename<SetLessonDemandPayload>>>,
@@ -10318,6 +10399,7 @@ export type GraphCacheUpdaters = {
     registerWithoutInvitation?: GraphCacheUpdateResolver<{ registerWithoutInvitation: Maybe<WithTypename<RegisterWithoutInvitationPayload>> }, MutationRegisterWithoutInvitationArgs>,
     rejectMembershipApplication?: GraphCacheUpdateResolver<{ rejectMembershipApplication: Maybe<WithTypename<RejectMembershipApplicationPayload>> }, MutationRejectMembershipApplicationArgs>,
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,
+    saveEvents?: GraphCacheUpdateResolver<{ saveEvents: Maybe<WithTypename<SaveEventsPayload>> }, MutationSaveEventsArgs>,
     setEventInstanceRegistration?: GraphCacheUpdateResolver<{ setEventInstanceRegistration: Maybe<WithTypename<SetEventInstanceRegistrationPayload>> }, MutationSetEventInstanceRegistrationArgs>,
     setEventSharing?: GraphCacheUpdateResolver<{ setEventSharing: Maybe<WithTypename<SetEventSharingPayload>> }, MutationSetEventSharingArgs>,
     setLessonDemand?: GraphCacheUpdateResolver<{ setLessonDemand: Maybe<WithTypename<SetLessonDemandPayload>> }, MutationSetLessonDemandArgs>,
@@ -11327,6 +11409,10 @@ export type GraphCacheUpdaters = {
   Result?: {
     jwt?: GraphCacheUpdateResolver<Maybe<WithTypename<Result>>, Record<string, never>>,
     usr?: GraphCacheUpdateResolver<Maybe<WithTypename<Result>>, Record<string, never>>
+  },
+  SaveEventsPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SaveEventsPayload>>, Record<string, never>>,
+    eventInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<SaveEventsPayload>>, Record<string, never>>
   },
   ScoreboardManualAdjustment?: {
     awardedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,

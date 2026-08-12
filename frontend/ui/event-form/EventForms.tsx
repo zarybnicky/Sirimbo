@@ -1,8 +1,8 @@
 import {
-  CreateEventsDocument,
+  type EventInstanceRegistrationFragment,
   EventRegistrationsDocument,
   type EventWithTrainerFragment,
-  UpdateEventDetailsDocument,
+  SaveEventsDocument,
 } from '@/graphql/Event';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import {
@@ -10,36 +10,30 @@ import {
   splitIntoLessonRanges,
 } from '@/calendar/eventDefaults';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
-import {
-  RadioButtonGroupElement,
-  type RadioButtonGroupItem,
-} from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxButton } from '@/ui/fields/Combobox';
+import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { TextFieldElement } from '@/ui/fields/text';
 import { formatCoupleName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { FormError, useFormResult } from '@/ui/form';
+import { useTenantConfig } from '@/ui/state/auth';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
-import { z } from 'zod';
-import { useTenantConfig } from '@/ui/state/auth';
+import { CohortListElement } from './CohortListElement';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
-import { TrainerListElement } from './TrainerListElement';
-import { eventLocationInput, LocationField } from './LocationField';
+import { LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
-import { CohortListElement } from './CohortListElement';
-import { EventForm, type EventFormType } from './types';
-import { keyIsNonNull } from '@/lib/truthyFilter';
+import { TrainerListElement } from './TrainerListElement';
+import { EventForm, type EventFormInput, type EventFormType } from './types';
 
-const eventTypeOptions: RadioButtonGroupItem[] = (
+const eventTypeOptions = (
   ['LESSON', 'GROUP', 'RESERVATION', 'CAMP', 'HOLIDAY'] as const
 ).map((type) => ({ id: type, label: formatEventType(type) }));
 
-type EventFormInput = z.input<typeof EventForm>;
-type SplitRegistrationOption = { id: string; label: string };
+type Option = { id: string; label: string };
 
 const SplitRegistrationPicker = React.memo(function SplitRegistrationPicker({
   rangeKey,
@@ -49,19 +43,9 @@ const SplitRegistrationPicker = React.memo(function SplitRegistrationPicker({
 }: {
   rangeKey: string;
   value: string | null;
-  options: SplitRegistrationOption[];
+  options: Option[];
   setSplitIds: React.Dispatch<React.SetStateAction<Record<string, string | null>>>;
 }) {
-  const selectRegistration = React.useCallback(
-    (selected: string | null | undefined) => {
-      setSplitIds((current) => ({
-        ...current,
-        [rangeKey]: selected ?? null,
-      }));
-    },
-    [rangeKey, setSplitIds],
-  );
-
   return (
     <ComboboxButton
       value={value}
@@ -72,15 +56,16 @@ const SplitRegistrationPicker = React.memo(function SplitRegistrationPicker({
           ? undefined
           : 'border-green-7 bg-green-3 text-green-11 hover:border-green-7 hover:bg-green-3/80'
       }
-      onChange={selectRegistration}
+      onChange={(selected) =>
+        setSplitIds((current) => ({ ...current, [rangeKey]: selected ?? null }))
+      }
     />
   );
 });
 
 function EventAccessFields() {
   const { control, setValue } = useFormContext<EventFormInput, unknown, EventFormType>();
-  const type = useWatch({ control, name: 'type' });
-  const isPublic = useWatch({ control, name: 'isPublic' });
+  const [type, isPublic] = useWatch({ control, name: ['type', 'isPublic'] });
 
   React.useEffect(() => {
     if (!isPublic) setValue('hasPublicDetails', false);
@@ -103,70 +88,55 @@ function EventAccessFields() {
   );
 }
 
-export function CreateEventForm({
-  defaults,
+function EventEditor({
+  defaultValues,
   parentId,
+  seriesId,
+  existingCohorts,
+  existingRegistrations = [],
+  mode,
 }: {
-  defaults: CreateEventDefaults;
-  parentId?: string;
+  defaultValues: EventFormType;
+  parentId?: string | null;
+  seriesId?: string | null;
+  existingCohorts?: Option[];
+  existingRegistrations?: EventInstanceRegistrationFragment[];
+  mode: 'create' | 'edit';
 }) {
   const { onSuccess } = useFormResult();
-  const [result, createInstances] = useMutation(CreateEventsDocument);
-  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
-  const { lockEventsByDefault } = useTenantConfig();
+  const [result, saveEvents] = useMutation(SaveEventsDocument);
+  const [{ data: tenant }] = useQuery({
+    query: CurrentTenantDocument,
+    pause: mode === 'edit',
+  });
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
-  const form = useForm({
+  const form = useForm<EventFormInput, unknown, EventFormType>({
     resolver: zodResolver(EventForm),
-    defaultValues: {
-      type: defaults.type ?? 'LESSON',
-      locationId: defaults.locationText ? 'other' : (defaults.locationId ?? 'none'),
-      locationText: defaults.locationText,
-      isVisible: true,
-      isPublic: false,
-      hasPublicDetails: false,
-      isLocked: lockEventsByDefault,
-      enableNotes: false,
-      instances: [
-        {
-          since: defaults.since.toISOString(),
-          until: defaults.until.toISOString(),
-          isCancelled: false,
-          trainers: [],
-        },
-      ],
-      trainers: defaults.trainerPersonIds.map((personId) => ({
-        itemId: null,
-        personId,
-        lessonsOffered: 0,
-      })),
-      registrations: [],
-    },
+    defaultValues,
   });
   const { control, handleSubmit } = form;
-
-  const type = useWatch({ control, name: 'type' });
-  const instances = useWatch({ control, name: 'instances' });
-  const first = instances?.[0];
-  const lessonRanges =
-    first?.since && first.until
-      ? splitIntoLessonRanges(new Date(first.since), new Date(first.until))
-      : [];
+  const [type, instances] = useWatch({ control, name: ['type', 'instances'] });
+  const first = instances[0];
+  const lessonRanges = first
+    ? splitIntoLessonRanges(new Date(first.since), new Date(first.until))
+    : [];
   const canSplit =
+    mode === 'create' &&
     type === 'LESSON' &&
     lessonRanges.length >= 2 &&
-    instances?.filter((instance) => instance.since && instance.until).length === 1;
+    instances.length === 1;
+  const isSplitting = canSplit && splitLessons;
   const splitRegistrationOptions = React.useMemo(
     () => [
-      ...(tenant?.tenant?.couplesList || [])
-        .filter((couple) => couple.status === 'ACTIVE')
-        .map((couple) => ({
-          id: `couple:${couple.id}`,
-          label: formatCoupleName(couple),
-        })),
-      ...(tenant?.tenant?.tenantMembershipsList || []).flatMap((x) =>
-        x.status === 'ACTIVE' && x.person?.id
-          ? [{ id: `person:${x.person.id}`, label: x.person.name }]
+      ...(tenant?.tenant?.couplesList ?? []).flatMap((couple) =>
+        couple.status === 'ACTIVE'
+          ? [{ id: `couple:${couple.id}`, label: formatCoupleName(couple) }]
+          : [],
+      ),
+      ...(tenant?.tenant?.tenantMembershipsList ?? []).flatMap((membership) =>
+        membership.status === 'ACTIVE' && membership.person?.id
+          ? [{ id: `person:${membership.person.id}`, label: membership.person.name }]
           : [],
       ),
     ],
@@ -174,368 +144,270 @@ export function CreateEventForm({
   );
 
   React.useEffect(() => {
-    if (!canSplit) setSplitLessons(false);
-  }, [canSplit]);
+    if (!canSplit && splitLessons) setSplitLessons(false);
+  }, [canSplit, splitLessons]);
 
   const onSubmit = async (values: EventFormType) => {
-    const explicitRanges = values.instances.flatMap((instance) =>
-      instance.since && instance.until
-        ? [{ since: new Date(instance.since), until: new Date(instance.until) }]
-        : [],
-    );
-    const firstRange = explicitRanges[0];
-    if (!firstRange) return;
-    const selectedRegistrations = values.registrations
-      .filter((r) => r.personId || r.coupleId)
-      .map(({ personId, coupleId }) => ({ personId, coupleId }));
-
-    const trainers = values.trainers
-      .filter(keyIsNonNull('personId'))
-      .map(({ personId, lessonsOffered = 0 }) => ({ personId, lessonsOffered }));
-
-    const ranges = splitLessons
-      ? splitIntoLessonRanges(firstRange.since, firstRange.until)
-      : explicitRanges;
-
-    const instancesToCreate = ranges.map((range) => {
-      const [kind, id] = splitIds[range.since.toISOString()]?.split(':') ?? [];
-      const splitRegistration =
-        splitLessons && id
-          ? [
-              {
-                personId: kind === 'person' ? id : null,
-                coupleId: kind === 'couple' ? id : null,
-              },
-            ]
-          : [];
-      return {
-        since: range.since.toISOString(),
-        until: range.until.toISOString(),
-        type: splitLessons ? 'LESSON' : values.type,
-        ...eventLocationInput(values),
-        trainerPersonIds: trainers.map(({ personId }) => personId),
-        registrations: splitLessons ? splitRegistration : selectedRegistrations,
-      };
-    });
-
-    const result = await createInstances({
+    const events = isSplitting
+      ? lessonRanges.map(({ since, until }) => {
+          const sinceString = since.toISOString();
+          const [registrationType, registrationId] =
+            splitIds[sinceString]?.split(':') ?? [];
+          return {
+            since: sinceString,
+            until: until.toISOString(),
+            registrations: registrationId
+              ? [
+                  {
+                    personId: registrationType === 'person' ? registrationId : null,
+                    coupleId: registrationType === 'couple' ? registrationId : null,
+                  },
+                ]
+              : [],
+          };
+        })
+      : values.instances.map(({ itemId: id, since, until, isCancelled }) => ({
+          id,
+          since,
+          until,
+          isCancelled,
+          registrations: values.registrations,
+        }));
+    const name = values.name.trim();
+    const isLesson = values.type === 'LESSON';
+    const result = await saveEvents({
       input: {
-        events: splitLessons ? instancesToCreate : instancesToCreate.slice(0, 1),
-        parentId,
-        pCopies:
-          !splitLessons && instancesToCreate.length > 1
-            ? instancesToCreate.slice(1)
+        details: {
+          parentId,
+          name: isSplitting ? null : name || null,
+          type: values.type,
+          locationId: !['none', 'other'].includes(values.locationId)
+            ? values.locationId
             : null,
-        pName: splitLessons ? null : values.name.trim() || null,
-        pCapacity: values.type === 'LESSON' ? 1 : 0,
-        pCapacityUnit: values.type === 'LESSON' ? 'REGISTRATIONS' : 'PEOPLE',
-        pDescription: values.description,
-        pSummary: values.summary,
-        pFilesLegacy: values.titleImageLegacy,
-        pCohortIds: values.cohorts.flatMap(({ cohortId }) =>
-          cohortId ? [cohortId] : [],
-        ),
-        pTrainerLessonsOffered: trainers.map(({ lessonsOffered }) => lessonsOffered),
-        pIsVisible: values.isVisible,
-        pIsPublic: values.isPublic,
-        pHasPublicDetails: values.hasPublicDetails,
-        pIsLocked: values.isLocked,
-        pEnableNotes: values.enableNotes,
+          locationText: values.locationId === 'none' ? '' : values.locationText,
+          capacity: mode === 'edit' ? values.capacity : isLesson ? 1 : 0,
+          capacityUnit:
+            mode === 'edit' ? values.capacityUnit : isLesson ? 'REGISTRATIONS' : 'PEOPLE',
+          isVisible: values.isVisible,
+          isPublic: values.isPublic,
+          hasPublicDetails: values.hasPublicDetails,
+          isLocked: values.isLocked,
+          enableNotes: values.enableNotes,
+        },
+        events,
+        trainers: values.trainers,
+        cohortIds: values.cohorts.map(({ cohortId }) => cohortId),
+        series:
+          !isSplitting && events.length > 1
+            ? seriesId
+              ? { id: seriesId }
+              : { name }
+            : null,
       },
     });
     if (!result.error) onSuccess();
   };
 
   return (
-    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-      <FormError error={result.error} />
+    <FormProvider {...form}>
+      <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+        <FormError error={result.error} />
 
-      {canSplit && (
-        <Checkbox
-          name="splitLessons"
-          checked={splitLessons}
-          onChange={() => setSplitLessons((value) => !value)}
-          label={`Rozdělit na samostatné lekce? (${lessonRanges.length} x 45 min)`}
-        />
-      )}
-
-      {splitLessons ? (
-        <>
-          <DateTimeRangeField
-            control={control}
-            nameSince="instances.0.since"
-            nameUntil="instances.0.until"
+        {canSplit && (
+          <Checkbox
+            name="splitLessons"
+            checked={splitLessons}
+            onChange={() => setSplitLessons((value) => !value)}
+            label={`Rozdělit na samostatné lekce? (${lessonRanges.length} x 45 min)`}
           />
-          <TrainerListElement control={control} name="trainers" mode="add" />
-          <LocationField control={control} />
-          <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
-            {lessonRanges.map((range) => {
-              const key = range.since.toISOString();
-              const value = splitIds[key] ?? null;
-              return (
-                <div
-                  key={key}
-                  className="flex gap-2 text-sm flex-wrap justify-between items-center"
-                >
-                  <span className="text-neutral-11">
-                    {shortTimeFormatter.formatRange(range.since, range.until)}
-                  </span>
-                  <div className="sm:justify-self-end">
-                    <SplitRegistrationPicker
-                      rangeKey={key}
-                      value={value}
-                      options={splitRegistrationOptions}
-                      setSplitIds={setSplitIds}
-                    />
+        )}
+
+        {isSplitting ? (
+          <>
+            <DateTimeRangeField
+              control={control}
+              nameSince="instances.0.since"
+              nameUntil="instances.0.until"
+            />
+            <TrainerListElement control={control} mode={mode} />
+            <LocationField control={control} />
+            <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
+              {lessonRanges.map((range) => {
+                const key = range.since.toISOString();
+                return (
+                  <div
+                    key={key}
+                    className="flex flex-wrap items-center justify-between gap-2 text-sm"
+                  >
+                    <span className="text-neutral-11">
+                      {shortTimeFormatter.formatRange(range.since, range.until)}
+                    </span>
+                    <div className="sm:justify-self-end">
+                      <SplitRegistrationPicker
+                        rangeKey={key}
+                        value={splitIds[key] ?? null}
+                        options={splitRegistrationOptions}
+                        setSplitIds={setSplitIds}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      ) : (
-        <>
-          <RadioButtonGroupElement
-            control={control}
-            name="type"
-            options={eventTypeOptions}
-          />
-          <TextFieldElement control={control} name="name" label="Název (nepovinný)" />
-          <LocationField control={control} />
-          <TrainerListElement control={control} name="trainers" mode="add" />
-          <InstanceListElement control={control} />
-          <ParticipantListElement control={control} name="registrations" />
-        </>
-      )}
+                );
+              })}
+            </div>
+          </>
+        ) : (
+          <>
+            <RadioButtonGroupElement
+              control={control}
+              name="type"
+              options={eventTypeOptions}
+            />
+            <TextFieldElement
+              control={control}
+              name="name"
+              label={mode === 'create' ? 'Název (nepovinný)' : 'Název'}
+            />
+            <InstanceListElement control={control} />
+            <LocationField control={control} />
+            <TrainerListElement control={control} mode={mode} />
+            <CohortListElement control={control} existingCohorts={existingCohorts} />
+            <ParticipantListElement
+              control={control}
+              existingPeople={existingRegistrations.flatMap(({ person }) =>
+                person ? [{ id: person.id, label: person.name }] : [],
+              )}
+              existingCouples={existingRegistrations.flatMap(({ couple }) =>
+                couple ? [{ id: couple.id, label: formatCoupleName(couple) }] : [],
+              )}
+            />
+          </>
+        )}
 
-      <FormProvider {...form}>
         <EventAccessFields />
-      </FormProvider>
+        {mode === 'edit' && (
+          <CheckboxElement name="instances.0.isCancelled" label="Zrušeno" />
+        )}
 
-      <div className="flex justify-end pt-1">
-        <SubmitButton control={control}>Vytvořit</SubmitButton>
-      </div>
-    </form>
+        <div className="flex justify-end pt-1">
+          <SubmitButton control={control}>
+            {mode === 'create' ? 'Vytvořit' : 'Uložit'}
+          </SubmitButton>
+        </div>
+      </form>
+    </FormProvider>
+  );
+}
+
+export function CreateEventForm({
+  defaults,
+  parentId,
+}: {
+  defaults: CreateEventDefaults;
+  parentId?: string;
+}) {
+  const { lockEventsByDefault } = useTenantConfig();
+  const type = defaults.type ?? 'LESSON';
+
+  return (
+    <EventEditor
+      mode="create"
+      parentId={parentId}
+      defaultValues={{
+        name: '',
+        type,
+        locationId: defaults.locationText ? 'other' : (defaults.locationId ?? 'none'),
+        locationText: defaults.locationText,
+        capacity: type === 'LESSON' ? 1 : 0,
+        capacityUnit: type === 'LESSON' ? 'REGISTRATIONS' : 'PEOPLE',
+        isVisible: true,
+        isPublic: false,
+        hasPublicDetails: false,
+        isLocked: lockEventsByDefault,
+        enableNotes: false,
+        instances: [
+          {
+            itemId: null,
+            since: defaults.since.toISOString(),
+            until: defaults.until.toISOString(),
+            isCancelled: false,
+          },
+        ],
+        trainers: defaults.trainerPersonIds.map((personId) => ({
+          personId,
+          lessonsOffered: 0,
+        })),
+        cohorts: [],
+        registrations: [],
+      }}
+    />
   );
 }
 
 export function EditEventForm({ instance }: { instance: EventWithTrainerFragment }) {
-  const { onSuccess } = useFormResult();
-  const [result, updateInstance] = useMutation(UpdateEventDetailsDocument);
-  const [registrationsReady, setRegistrationsReady] = React.useState(false);
   const [registrationsQuery] = useQuery({
     query: EventRegistrationsDocument,
     variables: { id: instance.id },
+    requestPolicy: 'network-only',
   });
-  const initialTrainers = instance.trainersList.map((trainer) => ({
-    itemId: trainer.id,
-    personId: trainer.personId,
-    lessonsOffered: trainer.lessonsOffered,
-  }));
-  const initialCohorts = React.useMemo(
-    () => (instance.targetCohortsList ?? []).map(({ cohortId }) => ({ cohortId })),
-    [instance.targetCohortsList],
-  );
-  const existingCohorts = React.useMemo(
-    () =>
-      (instance.targetCohortsList ?? []).map((target) => ({
-        id: target.cohortId,
-        label: target.cohort?.name ?? '-',
-      })),
-    [instance.targetCohortsList],
-  );
+  const registrationsEvent = registrationsQuery.data?.eventInstance;
+  const registrations =
+    registrationsEvent?.id === instance.id
+      ? registrationsEvent.registrationsList
+      : undefined;
 
-  const form = useForm({
-    resolver: zodResolver(EventForm),
-    defaultValues: {
-      name: instance.name ?? '',
-      type: instance.type ?? 'LESSON',
-      locationId: instance.locationText ? 'other' : (instance.location?.id ?? 'none'),
-      locationText: instance.locationText ?? '',
-      capacity: instance.capacity ?? 0,
-      capacityUnit: instance.capacityUnit,
-      isVisible: instance.isVisible ?? false,
-      isPublic: instance.isPublic ?? false,
-      hasPublicDetails: instance.hasPublicDetails,
-      isLocked: instance.isLocked ?? false,
-      enableNotes: instance.enableNotes ?? false,
-      cohorts: initialCohorts,
-      registrations: [],
-      instances: [
-        {
-          itemId: instance.id,
-          since: instance.since,
-          until: instance.until,
-          isCancelled: instance.isCancelled,
-          trainers: initialTrainers,
-        },
-      ],
-    },
-  });
-  const { control, handleSubmit, setValue } = form;
-  const instances = useWatch({ control, name: 'instances' });
-  const registrationsPending =
-    instances?.slice(1).some(({ since, until }) => since && until) &&
-    !registrationsReady;
+  if (!registrations && registrationsQuery.fetching) {
+    return <div className="text-sm text-neutral-11">Načítám účastníky…</div>;
+  }
 
-  const registrations = registrationsQuery.data?.eventInstance?.registrationsList ?? [];
-
-  React.useEffect(() => {
-    const instance = registrationsQuery.data?.eventInstance;
-    if (
-      !registrationsReady &&
-      !registrationsQuery.fetching &&
-      !registrationsQuery.error &&
-      instance
-    ) {
-      setValue(
-        'registrations',
-        instance.registrationsList.map((x) => ({
-          itemId: x.id,
-          personId: x.personId,
-          coupleId: x.coupleId,
-        })),
-      );
-      setRegistrationsReady(true);
-    }
-  }, [registrationsQuery, registrationsReady, setValue]);
-
-  const onSubmit = async (values: EventFormType) => {
-    const edited = values.instances[0];
-    if (!edited?.since || !edited.until) return;
-
-    const copies = values.instances
-      .slice(1)
-      .filter(({ since, until }) => since && until)
-      .map(({ since, until }) => ({ since, until }));
-    if (copies.length > 0 && !registrationsReady) return;
-
-    const nextTrainers = edited.trainers
-      .filter(keyIsNonNull('personId'))
-      .map(({ personId, lessonsOffered }) => ({ personId, lessonsOffered }))
-      .toSorted((a, b) => a.personId.localeCompare(b.personId));
-    const currentTrainers = instance.trainersList
-      .map(({ personId, lessonsOffered }) => ({ personId, lessonsOffered }))
-      .toSorted((a, b) => a.personId.localeCompare(b.personId));
-    const trainersChanged =
-      JSON.stringify(nextTrainers) !== JSON.stringify(currentTrainers);
-    const location = eventLocationInput(values);
-    const registrations = values.registrations
-      .filter((x) => x.personId || x.coupleId)
-      .map(({ personId, coupleId }) => ({ personId, coupleId }));
-    const currentCohortIds = instance.targetCohortsList.map((x) => x.cohortId).toSorted();
-    const nextCohortIds = values.cohorts
-      .filter(keyIsNonNull('cohortId'))
-      .map((x) => x.cohortId)
-      .toSorted();
-    const cohortsChanged =
-      JSON.stringify(nextCohortIds) !== JSON.stringify(currentCohortIds);
-    const copyEvents = copies.map(({ since, until }) => ({
-      since,
-      until,
-      type: values.type,
-      ...location,
-      trainerPersonIds: nextTrainers.map((trainer) => trainer.personId),
-      registrations,
-    }));
-    const result = await updateInstance({
-      input: {
-        pInstanceId: instance.id,
-        pSince: edited.since,
-        pUntil: edited.until,
-        pName: values.name.trim() || null,
-        pType: values.type,
-        pLocationId: location.locationId,
-        pLocationText: location.locationText,
-        pIsVisible: values.isVisible,
-        pIsPublic: values.isPublic,
-        pHasPublicDetails: values.hasPublicDetails,
-        pIsCancelled: edited.isCancelled,
-        pIsLocked: values.isLocked,
-        pEnableNotes: values.enableNotes,
-        pTrainerPersonIds:
-          trainersChanged || copies.length > 0
-            ? nextTrainers.map((trainer) => trainer.personId)
-            : null,
-        pTrainerLessonsOffered:
-          trainersChanged || copies.length > 0
-            ? nextTrainers.map((trainer) => trainer.lessonsOffered)
-            : null,
-        pRegistrations: registrationsReady ? registrations : null,
-        pCohortIds: cohortsChanged || copies.length > 0 ? nextCohortIds : null,
-        pCopies: copyEvents.length > 0 ? copyEvents : null,
-      },
-    });
-    if (!result.error) onSuccess();
-  };
+  if (!registrations) {
+    return registrationsQuery.error ? (
+      <FormError error={registrationsQuery.error} />
+    ) : (
+      <div className="text-sm text-neutral-11">Událost není dostupná.</div>
+    );
+  }
 
   return (
-    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-      <FormError error={result.error} />
-
-      <RadioButtonGroupElement control={control} name="type" options={eventTypeOptions} />
-      <TextFieldElement control={control} name="name" label="Název" />
-      {instance.seriesId ? (
-        <DateTimeRangeField
-          control={control}
-          nameSince="instances.0.since"
-          nameUntil="instances.0.until"
-        />
-      ) : (
-        <InstanceListElement control={control} />
-      )}
-      <LocationField control={control} />
-      <TrainerListElement control={control} name="instances.0.trainers" mode="edit" />
-      <CohortListElement
-        control={control}
-        name="cohorts"
-        existingCohorts={existingCohorts}
-      />
-      {/*type !== 'LESSON' && (
-        <>
-          <TextFieldElement
-            control={control}
-            type="number"
-            min={0}
-            name="capacity"
-            label="Kapacita"
-          />
-          <RadioButtonGroupElement
-            control={control}
-            name="capacityUnit"
-            options={[
-              { id: 'PEOPLE', label: 'osob' },
-              { id: 'REGISTRATIONS', label: 'přihlášek' },
-            ]}
-          />
-        </>
-      )*/}
-      {registrationsReady && (
-        <ParticipantListElement
-          control={control}
-          name="registrations"
-          existingPeople={registrations.flatMap(({ person }) =>
-            person ? [{ id: person.id, label: person.name }] : [],
-          )}
-          existingCouples={registrations.flatMap(({ couple }) =>
-            couple ? [{ id: couple.id, label: formatCoupleName(couple) }] : [],
-          )}
-        />
-      )}
-      {!registrationsReady && registrationsQuery.fetching && (
-        <div className="text-sm text-neutral-11">Načítám účastníky…</div>
-      )}
-      <FormProvider {...form}>
-        <EventAccessFields />
-      </FormProvider>
-      <CheckboxElement control={control} name="instances.0.isCancelled" label="Zrušeno" />
-      <FormError error={registrationsQuery.error} />
-
-      <div className="flex justify-end pt-1">
-        <SubmitButton control={control} disabled={registrationsPending}>
-          Uložit
-        </SubmitButton>
-      </div>
-    </form>
+    <EventEditor
+      key={instance.id}
+      mode="edit"
+      parentId={instance.parentId}
+      seriesId={instance.seriesId}
+      existingRegistrations={registrations}
+      existingCohorts={instance.targetCohortsList.map((target) => ({
+        id: target.cohortId,
+        label: target.cohort?.name ?? '-',
+      }))}
+      defaultValues={{
+        name: instance.name ?? '',
+        type: instance.type ?? 'LESSON',
+        locationId: instance.locationText ? 'other' : (instance.location?.id ?? 'none'),
+        locationText: instance.locationText ?? '',
+        capacity: instance.capacity ?? 0,
+        capacityUnit: instance.capacityUnit,
+        isVisible: instance.isVisible ?? false,
+        isPublic: instance.isPublic ?? false,
+        hasPublicDetails: instance.hasPublicDetails,
+        isLocked: instance.isLocked ?? false,
+        enableNotes: instance.enableNotes ?? false,
+        instances: [
+          {
+            itemId: instance.id,
+            since: instance.since,
+            until: instance.until,
+            isCancelled: instance.isCancelled,
+          },
+        ],
+        trainers: instance.trainersList.map((trainer) => ({
+          personId: trainer.personId,
+          lessonsOffered: trainer.lessonsOffered,
+        })),
+        cohorts: instance.targetCohortsList.map(({ cohortId }) => ({ cohortId })),
+        registrations: registrations.map((registration) => ({
+          personId: registration.personId,
+          coupleId: registration.coupleId,
+        })),
+      }}
+    />
   );
 }

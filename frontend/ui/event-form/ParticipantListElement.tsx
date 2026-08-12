@@ -1,5 +1,5 @@
-import { type Control, useFieldArray } from 'react-hook-form';
-import { EventForm } from '@/ui/event-form/types';
+import { useFieldArray } from 'react-hook-form';
+import type { EventFormControl } from '@/ui/event-form/types';
 import React from 'react';
 import { buttonCls } from '@/ui/style';
 import { Popover, PopoverTrigger } from '@/ui/popover';
@@ -8,46 +8,38 @@ import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { formatCoupleName } from '@/ui/format';
 import { cn } from '@/lib/cn';
-import { z } from 'zod';
 import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 
 export function ParticipantListElement({
-  name,
   control,
   existingPeople = [],
   existingCouples = [],
 }: {
-  control: Control<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>;
-  name: 'registrations';
+  control: EventFormControl;
   existingPeople?: { id: string; label: string }[];
   existingCouples?: { id: string; label: string }[];
 }) {
   const [open, setOpen] = React.useState<'couple' | 'person' | null>(null);
-  const { fields, append, remove, update } = useFieldArray({ name, control });
+  const { fields, append, remove } = useFieldArray({ name: 'registrations', control });
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
-  const memberships = tenant?.tenant?.tenantMembershipsList;
 
   const possibleCouples = React.useMemo(
     () =>
-      (tenant?.tenant?.couplesList || [])
-        .filter((x) => x.status === 'ACTIVE')
-        .map((c) => ({
-          id: c.id,
-          label: formatCoupleName(c),
-        })),
+      (tenant?.tenant?.couplesList ?? []).flatMap((couple) =>
+        couple.status === 'ACTIVE'
+          ? [{ id: couple.id, label: formatCoupleName(couple) }]
+          : [],
+      ),
     [tenant],
   );
 
   const possiblePeople = React.useMemo(
     () =>
-      (memberships || [])
-        .filter((x) => x.status === 'ACTIVE')
-        .map((p) => ({
-          id: p.person?.id ?? '',
-          label: p.person?.name || '?',
-        })),
-    [memberships],
+      (tenant?.tenant?.tenantMembershipsList ?? []).flatMap(({ person, status }) =>
+        status === 'ACTIVE' && person ? [{ id: person.id, label: person.name }] : [],
+      ),
+    [tenant],
   );
 
   const selectCouple = React.useCallback(
@@ -69,9 +61,7 @@ export function ParticipantListElement({
   return (
     <>
       <div className="flex flex-wrap items-baseline gap-2 pt-1">
-        <div className="grow">
-          <b>Účastníci ({fields.filter((x) => x.personId || x.coupleId).length})</b>
-        </div>
+        <b className="grow">Účastníci ({fields.length})</b>
 
         <Popover
           open={open === 'couple'}
@@ -92,10 +82,7 @@ export function ParticipantListElement({
               side="top"
               sideOffset={5}
             >
-              <ComboboxSearchArea
-                options={possibleCouples}
-                onChange={selectCouple}
-              />
+              <ComboboxSearchArea options={possibleCouples} onChange={selectCouple} />
             </PopoverPrimitive.Content>
           </PopoverPrimitive.Portal>
         </Popover>
@@ -119,18 +106,13 @@ export function ParticipantListElement({
               side="top"
               sideOffset={5}
             >
-              <ComboboxSearchArea
-                options={possiblePeople}
-                onChange={selectPerson}
-              />
+              <ComboboxSearchArea options={possiblePeople} onChange={selectPerson} />
             </PopoverPrimitive.Content>
           </PopoverPrimitive.Portal>
         </Popover>
       </div>
 
-      <div
-        className={cn('grid gap-x-2 gap-y-1', fields.length > 6 ? ' grid-cols-2' : '')}
-      >
+      <div className={cn('grid gap-x-2 gap-y-1', fields.length > 6 && 'grid-cols-2')}>
         {fields.map((registration, index) => {
           const label = registration.personId
             ? (possiblePeople.find((x) => x.id === registration.personId)?.label ??
@@ -138,20 +120,14 @@ export function ParticipantListElement({
             : (possibleCouples.find((x) => x.id === registration.coupleId)?.label ??
               existingCouples.find((x) => x.id === registration.coupleId)?.label);
 
-          return !registration.personId && !registration.coupleId ? (
-            <React.Fragment key={registration.id} />
-          ) : (
+          return (
             <div className="flex items-center gap-2" key={registration.id}>
               <div className="grow">{label}</div>
               <button
                 type="button"
                 aria-label={`Odebrat ${label ?? 'účastníka'}`}
                 className={buttonCls({ size: 'sm', variant: 'outline' })}
-                onClick={() =>
-                  registration.itemId
-                    ? update(index, { ...registration, personId: null, coupleId: null })
-                    : remove(index)
-                }
+                onClick={() => remove(index)}
               >
                 <X />
               </button>

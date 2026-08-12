@@ -2907,6 +2907,22 @@ type EventConflict {
   secondUntil: Datetime
 }
 
+"""An input for mutations affecting `EventDetailsInputRecord`"""
+input EventDetailsInputRecordInput {
+  capacity: Int
+  capacityUnit: EventCapacityUnit
+  enableNotes: Boolean
+  hasPublicDetails: Boolean
+  isLocked: Boolean
+  isPublic: Boolean
+  isVisible: Boolean
+  locationId: BigInt
+  locationText: String
+  name: String
+  parentId: BigInt
+  type: EventType
+}
+
 type EventExternalRegistration {
   birthDate: Date
   createdAt: Datetime!
@@ -3046,6 +3062,15 @@ enum EventExternalRegistrationsOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+"""An input for mutations affecting `EventInputRecord`"""
+input EventInputRecordInput {
+  id: BigInt
+  isCancelled: Boolean
+  registrations: [EventRegistrationInputRecordInput]
+  since: Datetime
+  until: Datetime
 }
 
 type EventInstance {
@@ -3902,6 +3927,12 @@ enum EventLessonDemandsOrderBy {
   UPDATED_AT_DESC
 }
 
+"""An input for mutations affecting `EventRegistrationInputRecord`"""
+input EventRegistrationInputRecordInput {
+  coupleId: BigInt
+  personId: BigInt
+}
+
 enum EventRegistrationSource {
   COHORT
   MANAGER
@@ -3989,6 +4020,12 @@ input EventSeriesInput {
   updatedAt: Datetime
 }
 
+"""An input for mutations affecting `EventSeriesInputRecord`"""
+input EventSeriesInputRecordInput {
+  id: BigInt
+  name: String
+}
+
 """Methods to use when ordering `EventSeries`."""
 enum EventSeriesOrderBy {
   CREATED_AT_ASC
@@ -4015,6 +4052,12 @@ input EventSeriesPatch {
   name: String
   tenantId: BigInt
   updatedAt: Datetime
+}
+
+"""An input for mutations affecting `EventTrainerInputRecord`"""
+input EventTrainerInputRecordInput {
+  lessonsOffered: Int
+  personId: BigInt
 }
 
 enum EventType {
@@ -4895,6 +4938,12 @@ type Mutation {
     """
     input: ResetPasswordInput!
   ): ResetPasswordPayload
+  saveEvents(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: SaveEventsInput!
+  ): SaveEventsPayload
   setEventInstanceRegistration(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7027,6 +7076,30 @@ type ResetPasswordPayload {
 type Result {
   jwt: JwtToken
   usr: User
+}
+
+"""All input for the `saveEvents` mutation."""
+input SaveEventsInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  cohortIds: [BigInt]
+  details: EventDetailsInputRecordInput
+  events: [EventInputRecordInput]
+  series: EventSeriesInputRecordInput
+  trainers: [EventTrainerInputRecordInput]
+}
+
+"""The output of our `saveEvents` mutation."""
+type SaveEventsPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  eventInstances: [EventInstance!]
 }
 
 type ScoreboardManualAdjustment {

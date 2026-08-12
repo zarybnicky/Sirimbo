@@ -422,6 +422,14 @@ mutation UpdateEventDetails($input: UpdateEventInstanceDetailsInput!) {
   }
 }
 
+mutation SaveEvents($input: SaveEventsInput!) {
+  saveEvents(input: $input) {
+    events: eventInstances {
+      id
+    }
+  }
+}
+
 mutation SetEventSharing($input: SetEventSharingInput!) {
   setEventSharing(input: $input) {
     string

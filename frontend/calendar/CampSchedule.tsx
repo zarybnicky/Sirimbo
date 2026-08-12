@@ -1,8 +1,9 @@
 import {
-  CreateEventsDocument,
   DeleteEventDocument,
+  type EventInstanceRegistrationFragment,
   EventRegistrationsDocument,
   type EventRegistrationsQuery,
+  SaveEventsDocument,
 } from '@/graphql/Event';
 import { parseResourceKey } from '@/calendar/eventDefaults';
 import { cn } from '@/lib/cn';
@@ -33,7 +34,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { Calendar } from './Calendar';
 
-const emptyRegistrations: Registration[] = [];
+const emptyRegistrations: EventInstanceRegistrationFragment[] = [];
 
 export function CampSchedule({
   id,
@@ -58,7 +59,7 @@ export function CampSchedule({
     0,
   );
   const [demandPaneOpen, setDemandPaneOpen] = React.useState<boolean>();
-  const createInstances = useMutation(CreateEventsDocument)[1];
+  const saveEvents = useMutation(SaveEventsDocument)[1];
   const deleteInstance = useMutation(DeleteEventDocument)[1];
   const [groupBy, setGroupBy] = useAtom(groupByAtom);
   const dragSubject = useAtomValue(dragSubjectAtom);
@@ -113,27 +114,29 @@ export function CampSchedule({
       if (!registration || !trainerPersonId) throw new Error('Požadavek už neexistuje');
 
       const [resourceType, resourceId] = parseResourceKey(info.resource?.resourceId);
-      const result = await createInstances({
+      const result = await saveEvents({
         input: {
-          parentId: id,
-          pCapacity: 1,
-          pCapacityUnit: 'REGISTRATIONS',
+          details: {
+            parentId: id,
+            type: 'LESSON',
+            locationId: resourceType === 'location' ? resourceId : null,
+            locationText: resourceType === 'locationText' ? resourceId : '',
+            capacity: 1,
+            capacityUnit: 'REGISTRATIONS',
+          },
           events: [
             {
               since: info.start.toISOString(),
               until: info.end.toISOString(),
-              type: 'LESSON',
-              trainerPersonIds: [trainerPersonId],
               registrations: [
                 {
                   personId: registration.personId,
                   coupleId: registration.coupleId,
                 },
               ],
-              locationId: resourceType === 'location' ? resourceId : null,
-              locationText: resourceType === 'locationText' ? resourceId : '',
             },
           ],
+          trainers: [{ personId: trainerPersonId, lessonsOffered: 0 }],
         },
       });
       if (result.error) throw result.error;
@@ -261,14 +264,12 @@ export function CampSchedule({
   );
 }
 
-type Registration = NonNullable<
-  EventRegistrationsQuery['eventInstance']
->['registrationsList'][number];
-type ScheduledLesson = NonNullable<
-  EventRegistrationsQuery['scheduledLessons']
->[number];
+type ScheduledLesson = NonNullable<EventRegistrationsQuery['scheduledLessons']>[number];
 
-function scheduledTrainers(registration: Registration, lessons: ScheduledLesson[]) {
+function scheduledTrainers(
+  registration: EventInstanceRegistrationFragment,
+  lessons: ScheduledLesson[],
+) {
   const counts = new Map<string, { count: number; name: string }>();
 
   for (const lesson of lessons) {
@@ -316,7 +317,7 @@ function LessonDemandPool({
   error,
   lockTrainers,
 }: {
-  registrations: Registration[];
+  registrations: EventInstanceRegistrationFragment[];
   scheduledLessons: ScheduledLesson[];
   fetching: boolean;
   error: React.ReactNode | Error;

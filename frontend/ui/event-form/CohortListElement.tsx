@@ -1,50 +1,42 @@
-import { EventForm } from '@/ui/event-form/types';
+import type { EventFormControl } from '@/ui/event-form/types';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
-import { type Control, useFieldArray, useWatch } from 'react-hook-form';
-import { z } from 'zod';
+import { useFieldArray, useWatch } from 'react-hook-form';
 import { useQuery } from 'urql';
 import { CohortListDocument } from '@/graphql/Cohorts';
 
 export function CohortListElement({
-  name,
   control,
   existingCohorts,
 }: {
-  control: Control<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>;
-  name: 'cohorts';
+  control: EventFormControl;
   existingCohorts?: ReadonlyArray<{ id: string; label: string }>;
 }) {
   const [open, setOpen] = React.useState(false);
   const type = useWatch({ control, name: 'type' });
-  const { fields, append, remove } = useFieldArray({ name, control });
+  const { fields, append, remove } = useFieldArray({ name: 'cohorts', control });
 
   const [{ data: cohortQuery }] = useQuery({
     query: CohortListDocument,
     variables: { archived: false },
   });
-  const cohortOptions = React.useMemo(
-    () => {
-      const options = new Map(existingCohorts?.map((cohort) => [cohort.id, cohort]));
-      for (const cohort of cohortQuery?.cohortsList ?? []) {
-        options.set(cohort.id, { id: cohort.id, label: cohort.name });
-      }
-      return [...options.values()];
-    },
-    [cohortQuery?.cohortsList, existingCohorts],
-  );
+  const cohortOptions = React.useMemo(() => {
+    const options = new Map(existingCohorts?.map((cohort) => [cohort.id, cohort]));
+    for (const cohort of cohortQuery?.cohortsList ?? []) {
+      options.set(cohort.id, { id: cohort.id, label: cohort.name });
+    }
+    return [...options.values()];
+  }, [cohortQuery?.cohortsList, existingCohorts]);
 
   return (
     <>
       {type !== 'LESSON' && (
         <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
-          <div>
-            <b>Tréninkové skupiny</b>
-          </div>
+          <b>Tréninkové skupiny</b>
 
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -77,27 +69,24 @@ export function CohortListElement({
         </div>
       )}
 
-      {fields.map((cohort, index) =>
-        !cohort.cohortId ? (
-          <React.Fragment key={cohort.id} />
-        ) : (
-          <div className="flex gap-2" key={cohort.id}>
-            <div className="grow">
-              {cohortOptions.find((x) => x.id === cohort.cohortId)?.label}
-            </div>
-            <button
-              type="button"
-              className={buttonCls({ size: 'sm', variant: 'outline' })}
-              aria-label={`Odebrat skupinu ${
-                cohortOptions.find((x) => x.id === cohort.cohortId)?.label ?? cohort.cohortId
-              }`}
-              onClick={() => remove(index)}
-            >
-              <X />
-            </button>
+      {fields.map((cohort, index) => (
+        <div className="flex gap-2" key={cohort.id}>
+          <div className="grow">
+            {cohortOptions.find((x) => x.id === cohort.cohortId)?.label}
           </div>
-        ),
-      )}
+          <button
+            type="button"
+            className={buttonCls({ size: 'sm', variant: 'outline' })}
+            aria-label={`Odebrat skupinu ${
+              cohortOptions.find((x) => x.id === cohort.cohortId)?.label ??
+              cohort.cohortId
+            }`}
+            onClick={() => remove(index)}
+          >
+            <X />
+          </button>
+        </div>
+      ))}
     </>
   );
 }

@@ -9,9 +9,8 @@ import {
   isValid,
   parse,
 } from 'date-fns';
-import { type Control, useController, useWatch } from 'react-hook-form';
-import { EventForm } from '@/ui/event-form/types';
-import { z } from 'zod';
+import { useController, useWatch } from 'react-hook-form';
+import type { EventFormControl } from '@/ui/event-form/types';
 
 function parseLocalDateTime(date: string, time: string) {
   const value = parse(`${date} ${time}`, 'yyyy-MM-dd HH:mm', new Date());
@@ -24,7 +23,7 @@ export function DateTimeRangeField({
   nameUntil,
   className,
 }: {
-  control: Control<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>;
+  control: EventFormControl;
   nameSince: `instances.${number}.since`;
   nameUntil: `instances.${number}.until`;
   className?: string;
@@ -33,11 +32,9 @@ export function DateTimeRangeField({
   const until = useController({ control, name: nameUntil });
   const type = useWatch({ control, name: 'type' });
 
-  const sinceDate = since.field.value
-    ? new Date(since.field.value as string)
-    : new Date();
+  const sinceDate = since.field.value ? new Date(since.field.value) : new Date();
   const untilDate = until.field.value
-    ? new Date(until.field.value as string)
+    ? new Date(until.field.value)
     : addHours(sinceDate, 1);
   const startDate = format(sinceDate, 'yyyy-MM-dd');
   const startTime = format(sinceDate, 'HH:mm');

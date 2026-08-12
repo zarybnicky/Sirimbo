@@ -6,34 +6,29 @@ import { useAuth } from '@/ui/use-auth';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
-import { type Control, useFieldArray, useWatch } from 'react-hook-form';
-import { EventForm } from '@/ui/event-form/types';
-import { z } from 'zod';
+import { useFieldArray, useWatch } from 'react-hook-form';
+import type { EventFormControl } from '@/ui/event-form/types';
 import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
-import { keyIsNonNull } from '@/lib/truthyFilter';
 
 export function TrainerListElement({
-  name,
   control,
   mode,
 }: {
-  control: Control<z.input<typeof EventForm>, unknown, z.infer<typeof EventForm>>;
-  name: 'trainers' | `instances.${number}.trainers`;
-  mode: 'add' | 'edit';
+  control: EventFormControl;
+  mode: 'create' | 'edit';
 }) {
   const auth = useAuth();
   const [open, setOpen] = React.useState(false);
-  const { fields, append, remove, update, replace } = useFieldArray({ name, control });
-  const type = useWatch({ control, name: 'type' });
-  const value = useWatch({ control, name });
+  const { fields, append, remove, update } = useFieldArray({ name: 'trainers', control });
+  const [type, value] = useWatch({ control, name: ['type', 'trainers'] });
 
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const trainers = React.useMemo(
     () =>
-      (tenant?.tenant?.tenantTrainersList || [])
-        .filter(keyIsNonNull('person'))
-        .map(({ person: { id, name } }) => ({ id, label: name })),
+      (tenant?.tenant?.tenantTrainersList ?? []).flatMap(({ person }) =>
+        person ? [{ id: person.id, label: person.name }] : [],
+      ),
     [tenant],
   );
 
@@ -45,21 +40,19 @@ export function TrainerListElement({
   React.useEffect(() => {
     const firstTrainer = enabledTrainers.at(0);
     if (
-      mode === 'add' &&
+      mode === 'create' &&
       fields.length === 0 &&
       enabledTrainers.length === 1 &&
       firstTrainer
     ) {
-      replace([{ itemId: null, personId: firstTrainer.id, lessonsOffered: 0 }]);
+      append({ personId: firstTrainer.id, lessonsOffered: 0 });
     }
-  }, [fields.length, mode, replace, enabledTrainers]);
+  }, [append, enabledTrainers, fields.length, mode]);
 
   return (
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
-        <div>
-          <b>Trenéři</b>
-        </div>
+        <b>Trenéři</b>
 
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
@@ -79,7 +72,7 @@ export function TrainerListElement({
             >
               <ComboboxSearchArea
                 onChange={(id) => {
-                  if (id) append({ itemId: null, personId: id, lessonsOffered: 0 });
+                  if (id) append({ personId: id, lessonsOffered: 0 });
                   setOpen(false);
                 }}
                 options={enabledTrainers}
@@ -91,17 +84,14 @@ export function TrainerListElement({
 
       {fields.map((trainer, trainerIndex) => {
         const currentTrainer = value?.[trainerIndex] ?? trainer;
-        const lessonsOffered = currentTrainer.lessonsOffered as number | null | undefined;
-        const offersLessons = lessonsOffered !== 0;
+        const offersLessons = currentTrainer.lessonsOffered !== 0;
 
-        return !trainer.personId ? (
-          <React.Fragment key={trainer.id} />
-        ) : (
+        return (
           <div className="flex flex-wrap items-center gap-2" key={trainer.id}>
             <div className="grow">
               {trainers.find((x) => x.id === trainer.personId)?.label}
             </div>
-            {!['LESSON', 'GROUP'].includes(type) && (
+            {!['LESSON', 'GROUP'].includes(type ?? 'LESSON') && (
               <div className="flex flex-wrap items-center gap-2">
                 <label className="flex min-h-9 items-center gap-2 whitespace-nowrap text-sm text-neutral-12">
                   <input
@@ -110,7 +100,6 @@ export function TrainerListElement({
                     checked={offersLessons}
                     onChange={(event) =>
                       update(trainerIndex, {
-                        itemId: currentTrainer.itemId,
                         personId: currentTrainer.personId,
                         lessonsOffered: event.currentTarget.checked ? null : 0,
                       })
@@ -122,7 +111,7 @@ export function TrainerListElement({
                   <TextFieldElement
                     control={control}
                     type="number"
-                    name={`${name}.${trainerIndex}.lessonsOffered`}
+                    name={`trainers.${trainerIndex}.lessonsOffered`}
                     placeholder="Bez omezení"
                     aria-label="Limit lekcí"
                     className="w-28"
@@ -135,11 +124,7 @@ export function TrainerListElement({
             <button
               type="button"
               className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() =>
-                trainer.itemId
-                  ? update(trainerIndex, { ...trainer, personId: null })
-                  : remove(trainerIndex)
-              }
+              onClick={() => remove(trainerIndex)}
             >
               <X />
             </button>
