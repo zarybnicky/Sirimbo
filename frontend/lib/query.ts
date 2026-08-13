@@ -396,22 +396,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate('Person', args.input.personId!);
       },
 
-      quickCreateEventInstances(_result, _args, cache, _info) {
-        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
-      },
-
-      updateEventInstanceDetails(result, _args, cache, _info) {
-        const instanceId = result.updateEventInstanceDetails?.eventInstance?.id;
-        if (instanceId) {
-          cache.invalidate({ __typename: 'EventInstance', id: instanceId });
-        }
-        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
-      },
-
       saveEvents(result, _args, cache, _info) {
-        // Graphcache's schema-generated updater type does not include operation aliases.
-        const payload = result.saveEvents as SaveEventsMutation['saveEvents'];
-        for (const event of payload?.events ?? []) {
+        for (const event of result.saveEvents?.eventInstances ?? []) {
           cache.invalidate({ __typename: 'EventInstance', id: event.id });
         }
         invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);

@@ -4915,12 +4915,6 @@ type Mutation {
     """
     input: OtpLoginInput!
   ): OtpLoginPayload
-  quickCreateEventInstances(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: QuickCreateEventInstancesInput!
-  ): QuickCreateEventInstancesPayload
   registerUsingInvitation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5061,12 +5055,6 @@ type Mutation {
     """
     input: UpdateEventInstanceByTenantIdAndIdInput!
   ): UpdateEventInstancePayload
-  updateEventInstanceDetails(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEventInstanceDetailsInput!
-  ): UpdateEventInstanceDetailsPayload
 
   """Updates a single `EventSeries` using a unique key and a patch."""
   updateEventSeries(
@@ -6927,59 +6915,6 @@ type Query {
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersConnection
   wdsfAthlete(min: Int): String
-}
-
-"""All input for the `quickCreateEventInstances` mutation."""
-input QuickCreateEventInstancesInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  events: [QuickEventInputRecordInput]
-  pCapacity: Int
-  pCapacityUnit: EventCapacityUnit
-  pCohortIds: [BigInt]
-  pCopies: [QuickEventInputRecordInput]
-  pDescription: String
-  pEnableNotes: Boolean
-  pFilesLegacy: String
-  pHasPublicDetails: Boolean
-  pIsLocked: Boolean
-  pIsPublic: Boolean
-  pIsVisible: Boolean
-  pName: String
-  pSeriesId: BigInt
-  pSummary: String
-  pTrainerLessonsOffered: [Int]
-  parentId: BigInt
-}
-
-"""The output of our `quickCreateEventInstances` mutation."""
-type QuickCreateEventInstancesPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  eventInstances: [EventInstance!]
-}
-
-"""An input for mutations affecting `QuickEventInputRecord`"""
-input QuickEventInputRecordInput {
-  locationId: BigInt
-  locationText: String
-  registrations: [QuickEventRegistrationInputRecordInput]
-  since: Datetime
-  trainerPersonIds: [BigInt]
-  type: EventType
-  until: Datetime
-}
-
-"""An input for mutations affecting `QuickEventRegistrationInputRecord`"""
-input QuickEventRegistrationInputRecordInput {
-  coupleId: BigInt
-  personId: BigInt
 }
 
 """All input for the `registerUsingInvitation` mutation."""
@@ -9134,64 +9069,6 @@ input UpdateEventInstanceByTenantIdAndIdInput {
   """
   patch: EventInstancePatch!
   tenantId: BigInt!
-}
-
-"""All input for the `updateEventInstanceDetails` mutation."""
-input UpdateEventInstanceDetailsInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  pCapacity: Int
-  pCapacityUnit: EventCapacityUnit
-  pCohortIds: [BigInt]
-  pCopies: [QuickEventInputRecordInput]
-  pEnableNotes: Boolean
-  pHasPublicDetails: Boolean
-  pInstanceId: BigInt
-  pIsCancelled: Boolean
-  pIsLocked: Boolean
-  pIsPublic: Boolean
-  pIsVisible: Boolean
-  pLocationId: BigInt
-  pLocationText: String
-  pName: String
-  pRegistrations: [QuickEventRegistrationInputRecordInput]
-  pSince: Datetime
-  pTrainerLessonsOffered: [Int]
-  pTrainerPersonIds: [BigInt]
-  pType: EventType
-  pUntil: Datetime
-}
-
-"""The output of our `updateEventInstanceDetails` mutation."""
-type UpdateEventInstanceDetailsPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  eventInstance: EventInstance
-
-  """An edge for our `EventInstance`. May be used by Relay 1."""
-  eventInstanceEdge(
-    """The method to use when ordering `EventInstance`."""
-    orderBy: [EventInstancesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventInstancesEdge
-
-  """
-  Reads a single `TenantLocation` that is related to this `EventInstance`.
-  """
-  location: TenantLocation
-
-  """
-  Reads a single `EventInstance` that is related to this `EventInstance`.
-  """
-  parent: EventInstance
-
-  """Reads a single `EventSeries` that is related to this `EventInstance`."""
-  series: EventSeries
 }
 
 """All input for the `updateEventInstance` mutation."""

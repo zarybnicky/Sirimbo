@@ -1,7 +1,3 @@
---!include functions/event_overlaps_reports.sql
---!include functions/activity_timeline.sql
---!include functions/event_instances_for_range.sql
-
 do $$
 begin
   if not exists (
@@ -10,10 +6,7 @@ begin
     join pg_catalog.pg_namespace namespace on namespace.oid = type.typnamespace
     where namespace.nspname = 'public' and type.typname = 'event_registration_input'
   ) then
-    create type public.event_registration_input as (
-      person_id bigint,
-      couple_id bigint
-    );
+    create type public.event_registration_input as (person_id bigint, couple_id bigint);
   end if;
 
   if not exists (
@@ -22,10 +15,7 @@ begin
     join pg_catalog.pg_namespace namespace on namespace.oid = type.typnamespace
     where namespace.nspname = 'public' and type.typname = 'event_trainer_input'
   ) then
-    create type public.event_trainer_input as (
-      person_id bigint,
-      lessons_offered integer
-    );
+    create type public.event_trainer_input as (person_id bigint, lessons_offered integer);
   end if;
 
   if not exists (
@@ -71,12 +61,17 @@ begin
     join pg_catalog.pg_namespace namespace on namespace.oid = type.typnamespace
     where namespace.nspname = 'public' and type.typname = 'event_series_input'
   ) then
-    create type public.event_series_input as (
-      id bigint,
-      name text
-    );
+    create type public.event_series_input as (id bigint, name text);
   end if;
 end
 $$;
 
+--!include functions/event_overlaps_reports.sql
+--!include functions/activity_timeline.sql
+--!include functions/event_instances_for_range.sql
 --!include functions/save_events.sql
+
+drop function if exists quick_create_event_instances;
+drop function if exists update_event_instance_details;
+drop type if exists quick_event_input;
+drop type if exists quick_event_registration_input;
