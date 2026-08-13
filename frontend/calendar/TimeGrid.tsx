@@ -36,6 +36,8 @@ type DayResourceColumn = {
 type DayResourceGroup = {
   date: Date;
   columns: readonly DayResourceColumn[];
+  allDayRange: readonly Date[];
+  allDayEvents: readonly CalendarEvent[];
 };
 
 export default React.memo(function TimeGrid({
@@ -111,9 +113,22 @@ export default React.memo(function TimeGrid({
             ? [{ date, dIdx }]
             : [],
         );
-        return columns.length > 0 ? [{ resource, rIdx, columns }] : [];
+        if (columns.length === 0) return [];
+
+        const allDayRange = columns.map(({ date }) => date);
+        return [
+          {
+            resource,
+            rIdx,
+            columns,
+            allDayRange,
+            allDayEvents: allDayEvents.filter((event) =>
+              columns.some(({ date }) => inEventRange(event, { start: date, end: date })),
+            ),
+          },
+        ];
       }),
-    [grid, showAllResources],
+    [allDayEvents, grid, showAllResources],
   );
   const dayResourceGroups = React.useMemo<readonly DayResourceGroup[]>(
     () => {
@@ -138,10 +153,14 @@ export default React.memo(function TimeGrid({
             columns.length > 0
               ? columns
               : [{ resource: undefined, events: [], backgroundEvents: [] }],
+          allDayRange: [date],
+          allDayEvents: allDayEvents.filter((event) =>
+            inEventRange(event, { start: date, end: date }),
+          ),
         };
       });
     },
-    [grid, primary, showAllResources],
+    [allDayEvents, grid, primary, showAllResources],
   );
 
   return (
@@ -155,7 +174,7 @@ export default React.memo(function TimeGrid({
           style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }}
         />
         {primary === 'resource'
-          ? resourceDayGroups.map(({ resource, columns }) => (
+          ? resourceDayGroups.map(({ resource, columns, allDayRange, allDayEvents }) => (
               <div
                 className="rbc-time-header-content"
                 key={resource?.resourceId ?? '__nothing__'}
@@ -172,18 +191,11 @@ export default React.memo(function TimeGrid({
                   ))}
                 </div>
                 {hasAllDayEvents && (
-                  <AllDayEventLane
-                    range={columns.map(({ date }) => date)}
-                    events={allDayEvents.filter((event) =>
-                      columns.some(({ date }) =>
-                        inEventRange(event, { start: date, end: date }),
-                      ),
-                    )}
-                  />
+                  <AllDayEventLane range={allDayRange} events={allDayEvents} />
                 )}
               </div>
             ))
-          : dayResourceGroups.map(({ date, columns }) => (
+          : dayResourceGroups.map(({ date, columns, allDayRange, allDayEvents }) => (
               <div
                 className="rbc-time-header-content"
                 key={+date}
@@ -203,12 +215,7 @@ export default React.memo(function TimeGrid({
                   ))}
                 </div>
                 {hasAllDayEvents && (
-                  <AllDayEventLane
-                    range={[date]}
-                    events={allDayEvents.filter((event) =>
-                      inEventRange(event, { start: date, end: date }),
-                    )}
-                  />
+                  <AllDayEventLane range={allDayRange} events={allDayEvents} />
                 )}
               </div>
             ))}
@@ -261,7 +268,7 @@ export default React.memo(function TimeGrid({
   );
 });
 
-function AllDayEventLane({
+const AllDayEventLane = React.memo(function AllDayEventLane({
   range,
   events,
 }: {
@@ -294,7 +301,7 @@ function AllDayEventLane({
       )}
     </div>
   );
-}
+});
 
 function buildGrid(
   { since, until }: DateRange,
