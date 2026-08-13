@@ -1,28 +1,59 @@
 import * as React from 'react';
 import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import { useQuery } from 'urql';
-import { authAtom, authHelpersAtom, authLoadingAtom, tokenAtom } from '@/ui/state/auth';
+import {
+  authAtom,
+  authHelpersAtom,
+  authLoadingAtom,
+  clearLegacySession,
+  sessionPresentAtom,
+  tokenAtom,
+  type SessionClaims,
+} from '@/ui/state/auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { buildId } from '@/lib/build-id';
+import { useRouter } from 'next/navigation';
 
 export const UserRefresher = React.memo(function ProvideAuth() {
-  const [token] = useAtom(tokenAtom);
+  const token = useAtomValue(tokenAtom);
+  const [sessionPresent, setSessionPresent] = useAtom(sessionPresentAtom);
   const setAuthLoading = useSetAtom(authLoadingAtom);
   const setAuth = useSetAtom(authAtom);
 
-  const [{ data: currentUser, fetching }, refetch] = useQuery({
+  const [{ data, fetching }, refetch] = useQuery({
     query: CurrentUserDocument,
-    pause: !token,
+    pause: !token && !sessionPresent,
     variables: { versionId: buildId },
   });
 
   React.useEffect(() => setAuthLoading(fetching), [fetching, setAuthLoading]);
 
   React.useEffect(() => {
-    if (!fetching && currentUser) {
-      setAuth(currentUser.refreshJwt, currentUser.getCurrentUser);
+    if (!fetching && data) {
+      setAuth(
+        typeof data.currentClaims === 'string'
+          ? (JSON.parse(data.currentClaims) as SessionClaims)
+          : (data.currentClaims as SessionClaims | null),
+        data.getCurrentUser,
+      );
     }
-  }, [fetching, setAuth, currentUser]);
+  }, [data, fetching, setAuth]);
+
+  React.useEffect(() => {
+    if (!token || sessionPresent) return;
+
+    void fetch('/api/auth/session', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token }),
+    })
+      .then((response) => {
+        if (!response.ok) return;
+        clearLegacySession();
+        setSessionPresent(true);
+      })
+      .catch(() => {});
+  }, [sessionPresent, setSessionPresent, token]);
 
   React.useEffect(() => {
     const launchQuery = () => {
@@ -43,3 +74,16 @@ export const UserRefresher = React.memo(function ProvideAuth() {
 
 export const useAuth = () => useAtomValue(authHelpersAtom);
 export const useAuthLoading = () => useAtomValue(authLoadingAtom);
+
+export function useRedirectLoggedIn() {
+  const router = useRouter();
+  const auth = useAuth();
+  const authLoading = useAuthLoading();
+  const personCount = auth.personIds.length;
+
+  React.useEffect(() => {
+    if (!authLoading && auth.user) {
+      router.replace(personCount === 0 ? '/profil' : '/dashboard');
+    }
+  }, [authLoading, auth.user, personCount, router]);
+}

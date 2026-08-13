@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import Link from 'next/link';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -27,8 +27,7 @@ const Form = z.object({
 
 export default function InvitationPage() {
   const router = useRouter();
-  const auth = useAuth();
-  const authLoading = useAuthLoading();
+  useRedirectLoggedIn();
   const [token] = useQueryState('token', parseAsString.withDefault(''));
   const { setValue, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
@@ -54,10 +53,6 @@ export default function InvitationPage() {
       await router.replace('/dashboard');
     }
   };
-
-  if (!authLoading && auth.user) {
-    void router.replace(auth.personIds.length === 0 ? '/profil' : '/dashboard');
-  }
 
   return (
     <Layout className="grow content relative content-stretch">

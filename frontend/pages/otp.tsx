@@ -1,4 +1,4 @@
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { Layout } from '@/ui/Layout';
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
@@ -10,8 +10,7 @@ import { useTenantConfig } from '@/ui/state/auth';
 
 export default function OtpPage() {
   const router = useRouter();
-  const auth = useAuth();
-  const authLoading = useAuthLoading();
+  useRedirectLoggedIn();
   const { publicSite } = useTenantConfig();
   const [loading, setLoading] = React.useState(true);
   const [status, setStatus] = React.useState('Načítám...');
@@ -56,19 +55,6 @@ export default function OtpPage() {
     router.query.from,
     router.query.token,
   ]);
-
-  const personCount = auth.personIds.length;
-
-  React.useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-
-    if (!authLoading && auth.user) {
-      const destination = personCount === 0 ? '/profil' : '/dashboard';
-      void router.replace(destination);
-    }
-  }, [authLoading, auth.user, personCount, router, router.isReady]);
 
   return (
     <Layout className="grow content relative content-stretch">

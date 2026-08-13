@@ -1,5 +1,4 @@
 import { LogIn, Pencil, Trash2, Unplug } from 'lucide-react';
-import { LogInAsDocument } from '@/graphql/CurrentUser';
 import {
   DeleteUserProxyDocument,
   UpdateUserProxyDocument,
@@ -7,6 +6,7 @@ import {
 } from '@/graphql/Memberships';
 import { defineActions } from '@/lib/actions';
 import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
+import { authAtom, storeRef } from '@/ui/state/auth';
 
 export const userProxyActions = defineActions<UserProxyFragment>()([
   {
@@ -21,9 +21,17 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     label: 'Přihlásit se jako...',
     icon: LogIn,
     visible: ({ auth, item }) => auth.isAdmin && !!item.user,
-    execute: async ({ item, mutate, router }) => {
+    execute: async ({ item, router }) => {
       if (!item.user) return;
-      await mutate(LogInAsDocument, { id: item.user.id });
+      const response = await fetch('/api/auth/log-in-as', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ id: item.user.id }),
+      });
+      if (!response.ok) throw new Error('Přihlášení selhalo');
+
+      storeRef.current.set(authAtom, null, null);
+      storeRef.resetUrqlClient();
       await router.replace('/dashboard');
     },
   },

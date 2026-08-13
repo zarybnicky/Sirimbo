@@ -12,24 +12,17 @@ import { useAuth } from '@/ui/use-auth';
 import { useMemberMenu } from '@/lib/use-menu';
 import { User as Account } from 'lucide-react';
 import React from 'react';
-import { useSetAtom } from 'jotai';
-import { authAtom, storeRef } from '@/ui/state/auth';
+import { signOut } from '@/ui/state/auth';
 import Link from 'next/link';
 
 export function AuthButton() {
   const auth = useAuth();
-  const setAuth = useSetAtom(authAtom);
   const memberMenu = useMemberMenu();
 
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  const signOut = React.useCallback(() => {
-    setAuth(null, null);
-    storeRef.resetUrqlClient?.();
-  }, [setAuth]);
 
   if (!auth.user || !isMounted) {
     return (

@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { CurrentUserDocument } from '@/graphql/CurrentUser';
-import { useQuery } from 'urql';
-import { tokenAtom } from '@/ui/state/auth';
-import { useAtom } from 'jotai';
+import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { toast } from 'react-toastify';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
@@ -10,19 +7,16 @@ import { buttonCls } from './style';
 import { Edit } from 'lucide-react';
 
 export function FillYourProfileReminder() {
-  const [token] = useAtom(tokenAtom);
+  const auth = useAuth();
+  const authLoading = useAuthLoading();
   const [personId, setPersonId] = React.useState<string | null>(null);
 
-  const [{ data: currentUser }] = useQuery({
-    query: CurrentUserDocument,
-    pause: !token,
-  });
-
   React.useEffect(() => {
+    if (authLoading) return;
+
     const now = Date.now() - 24 * 60 * 60 * 1000;
     const shouldCheck = now - 24 * 60 * 60 * 1000;
-    for (const { person } of currentUser?.getCurrentUser?.userProxiesList ?? []) {
-      if (!person) continue;
+    for (const person of auth.persons) {
       if (person.externalIds) continue;
 
       const lastChecked = localStorage.getItem(`profile-checked-${person.id}`);
@@ -55,7 +49,7 @@ export function FillYourProfileReminder() {
         </>,
       );
     }
-  }, [currentUser]);
+  }, [auth.persons, authLoading]);
 
   return (
     <Dialog open={!!personId} onOpenChange={() => setPersonId(null)}>

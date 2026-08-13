@@ -8,7 +8,7 @@ import type {
   TenantTrainer,
   WithTypename,
 } from '@/graphql';
-import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
+import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
 import { type Cache, cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
@@ -28,7 +28,7 @@ import { errorTarget } from '@/ui/ErrorNotifier';
 export const origin =
   typeof window === 'undefined'
     ? (process.env.GRAPHQL_BACKEND ?? `http://localhost:${process.env.PORT || 3000}`)
-    : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? window.origin);
+    : window.origin;
 
 type ErrorEventTarget = TypedEventTarget<{ error: CustomEvent<CombinedError> }>;
 const errorEmitter = (errorTarget: ErrorEventTarget) =>
@@ -114,7 +114,8 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
   url: `${origin}/graphql`,
   requestPolicy: 'cache-and-network',
   preferGetMethod: false,
-  exchanges: typeof window === 'undefined'
+  exchanges:
+    typeof window === 'undefined'
       ? [errorEmitter(errorTarget), ssrExchange ?? noopExchange, fetchExchange]
       : [
           errorEmitter(errorTarget),
@@ -274,10 +275,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           __typename: 'EventInstanceRegistration' as const,
           id: args.input.instanceRegistrationId,
         };
-        const instanceId = cache.resolve(
-          registration,
-          'instanceId',
-        );
+        const instanceId = cache.resolve(registration, 'instanceId');
         cache.invalidate(registration);
         cache.invalidate({
           __typename: 'EventInstanceTrainer',
@@ -438,12 +436,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
           const base64Url = jwt.split('.', 2)[1];
           const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
+          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
         });
       },
       otpLogin(result, _args, cache, _info) {
@@ -453,12 +449,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
           const base64Url = jwt.split('.', 2)[1];
           const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
+          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
         });
       },
       logInAs(result, _args, cache, _info) {
@@ -468,12 +462,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
           const base64Url = jwt.split('.', 2)[1];
           const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
+          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
         });
       },
 
@@ -484,12 +476,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
           const base64Url = jwt.split('.', 2)[1];
           const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
+          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
         });
       },
 
@@ -500,12 +490,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           storeRef.current.set(tokenAtom, jwt);
           const base64Url = jwt.split('.', 2)[1];
           const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {}
+          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
         }
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr
-            ? ({ currentClaims, getCurrentUser: usr, refreshJwt: jwt } as CurrentUserQuery)
-            : old;
+          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
         });
       },
     },

@@ -3,9 +3,18 @@ import { atomWithStorage } from 'jotai/utils';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
+import { SESSION_COOKIE, SESSION_PRESENT_COOKIE } from '@/lib/session-cookies';
 import deepEqual from 'fast-deep-equal';
 import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
+
+export type SessionClaims = {
+  guest_tenant_ids: number[];
+  member_tenant_ids: number[];
+  trainer_tenant_ids: number[];
+  admin_tenant_ids: number[];
+  is_system_admin: boolean;
+};
 
 interface BaseAuthState {
   user: null | {
@@ -129,6 +138,13 @@ export const useTenantConfig = () => useAtomValue(tenantAtom).config;
 
 export const authLoadingAtom = atom(true);
 
+export const sessionPresentAtom: PrimitiveAtom<boolean> = atom(
+  getCookie(SESSION_PRESENT_COOKIE) === '1',
+);
+sessionPresentAtom.onMount = (setPresent) => {
+  setPresent(getCookie(SESSION_PRESENT_COOKIE) === '1');
+};
+
 const baseTokenAtom: PrimitiveAtom<string | null> = atom(storage.getItem('token'));
 const baseUserAtom: PrimitiveAtom<BaseAuthState> = atom(
   (() => {
@@ -149,47 +165,23 @@ export const tokenAtom = atom<string | null, [string | null], void>(
 
 export const authAtom = atom<
   BaseAuthState,
-  [string | null, UserAuthFragment | null],
+  [SessionClaims | null, UserAuthFragment | null],
   void
 >(
   (get) => get(baseUserAtom) || defaultAuthState,
-  (get, set, token, user) => {
+  (get, set, claims, user) => {
     let nextValue = defaultAuthState;
 
-    if (user && token) {
-      const base64Url = token.split('.', 2)[1];
-      const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-      const jwt = (base64 ? JSON.parse(atob(base64)) : {}) as {
-        exp?: number;
-        user_id?: string;
-        tenant_id?: string;
-        username?: string;
-        email?: string;
-        my_person_ids?: string[];
-        my_tenant_ids?: string[];
-        my_cohort_ids?: string[];
-        my_couple_ids?: string[];
-        guest_tenant_ids?: string[];
-        member_tenant_ids?: string[];
-        trainer_tenant_ids?: string[];
-        admin_tenant_ids?: string[];
-        is_member?: boolean;
-        is_trainer?: boolean;
-        is_admin?: boolean;
-        is_system_admin?: boolean;
-      };
-
+    if (user && claims) {
       const persons =
         user.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) || [];
 
-      const tenantId = String(get(tenantIdAtom));
-      const isGuest = jwt.guest_tenant_ids?.includes(tenantId) ?? false;
-      const isMember =
-        jwt.member_tenant_ids?.includes(tenantId) ?? jwt.is_member ?? false;
-      const isTrainer =
-        jwt.trainer_tenant_ids?.includes(tenantId) ?? jwt.is_trainer ?? false;
-      const isAdmin = jwt.admin_tenant_ids?.includes(tenantId) ?? jwt.is_admin ?? false;
-      const isSystemAdmin = jwt.is_system_admin ?? false;
+      const tenantId = Number(get(tenantIdAtom));
+      const isGuest = claims.guest_tenant_ids.includes(tenantId);
+      const isMember = claims.member_tenant_ids.includes(tenantId);
+      const isTrainer = claims.trainer_tenant_ids.includes(tenantId);
+      const isAdmin = claims.admin_tenant_ids.includes(tenantId);
+      const isSystemAdmin = claims.is_system_admin;
 
       nextValue = {
         user,
@@ -207,8 +199,7 @@ export const authAtom = atom<
       };
     }
 
-    set(tokenAtom, token);
-    // only update baseUserAtom if the token payload changes
+    // only update baseUserAtom if the claims-derived state changes
     if (!deepEqual(nextValue, get(baseUserAtom))) {
       set(baseUserAtom, nextValue);
       storage.setItem('user', nextValue ? JSON.stringify(nextValue) : null);
@@ -225,3 +216,25 @@ export const authHelpersAtom = atom((get) => {
       !!id && auth.couples.some((x) => x.id === id),
   };
 });
+
+export function clearLegacySession() {
+  if (typeof window !== 'undefined') {
+    const { hostname } = window.location;
+    deleteCookie(SESSION_COOKIE, { path: '/f' });
+    if (!['localhost', '127.0.0.1', '::1'].includes(hostname)) {
+      deleteCookie(SESSION_COOKIE, { path: '/f', domain: hostname });
+    }
+  }
+
+  storeRef.current.set(tokenAtom, null);
+}
+
+export async function signOut() {
+  const response = await fetch('/api/auth/logout', { method: 'POST' });
+  if (!response.ok) throw new Error('Odhlášení selhalo');
+
+  clearLegacySession();
+  storeRef.current.set(authAtom, null, null);
+  storeRef.current.set(sessionPresentAtom, false);
+  storeRef.resetUrqlClient();
+}

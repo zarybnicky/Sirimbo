@@ -8,7 +8,7 @@ import { useMutation } from 'urql';
 import { RegisterWithoutInvitationDocument } from '@/graphql/CurrentUser';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,8 +22,7 @@ const Form = z.object({
 export default function InvitationPage() {
   const { enableRegistration } = useTenantConfig();
   const router = useRouter();
-  const auth = useAuth();
-  const authLoading = useAuthLoading();
+  useRedirectLoggedIn();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
@@ -36,18 +35,6 @@ export default function InvitationPage() {
       await router.replace('/dashboard');
     }
   };
-
-  const personCount = auth.personIds.length;
-  React.useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-
-    if (!authLoading && auth.user) {
-      const destination = personCount > 0 ? '/dashboard' : '/profil';
-      void router.replace(destination);
-    }
-  }, [authLoading, auth.user, personCount, router, router.isReady]);
 
   if (!enableRegistration) {
     return (

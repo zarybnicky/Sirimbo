@@ -20,7 +20,7 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { Mail } from 'lucide-react';
-import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
+import { storeRef, tenantIdAtom } from '@/ui/state/auth';
 import { origin } from '@/lib/query';
 
 function useMediaQuery(query: string) {
@@ -184,7 +184,6 @@ function TestEmailButton() {
       method: 'POST',
       credentials: 'include',
       headers: {
-        Authorization: `Bearer ${storeRef.current.get(tokenAtom)}`,
         ['x-tenant-id']: storeRef.current.get(tenantIdAtom),
       },
     });

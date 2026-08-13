@@ -1,4 +1,3 @@
-
 export function stripHtml(value: string | null | undefined) {
   return (value ?? '')
     .replaceAll(/<[^>]*>/g, ' ')
@@ -6,4 +5,3 @@ export function stripHtml(value: string | null | undefined) {
     .replaceAll(/\s+/g, ' ')
     .trim();
 }
-
