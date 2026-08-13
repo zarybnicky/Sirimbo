@@ -76,13 +76,37 @@ export const DialogTrigger = Object.assign(
 function DialogPortal({ children, ...props }: DialogPrimitive.DialogPortalProps) {
   return (
     <DialogPrimitive.Portal {...props}>
-      <div className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto overscroll-contain p-4 [-webkit-overflow-scrolling:touch] sm:p-6">
-        {children}
-      </div>
+      <DialogViewport>{children}</DialogViewport>
     </DialogPrimitive.Portal>
   );
 }
 DialogPortal.displayName = DialogPrimitive.Portal.displayName;
+
+function DialogViewport({ children }: { children: React.ReactNode }) {
+  const ref = React.useCallback((element: HTMLDivElement | null) => {
+    const viewport = window.visualViewport;
+    if (!element || !viewport) return;
+
+    const updateViewport = () => {
+      element.style.setProperty('--visual-viewport-height', `${viewport.height}px`);
+    };
+
+    updateViewport();
+    viewport.addEventListener('resize', updateViewport);
+    return () => {
+      viewport.removeEventListener('resize', updateViewport);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className="fixed inset-x-0 top-0 z-40 flex h-[var(--visual-viewport-height)] w-full items-center justify-center overflow-hidden p-4 [--visual-viewport-height:100vh] supports-[height:100dvh]:[--visual-viewport-height:100dvh] sm:p-6"
+    >
+      {children}
+    </div>
+  );
+}
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
@@ -112,7 +136,7 @@ export const DialogContent = React.forwardRef<
       className={cn(
         'relative z-50 grid w-full gap-4 rounded-lg border border-neutral-7 bg-neutral-1 text-neutral-12 p-6 shadow-lg',
         'data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide',
-        'max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain touch-pan-y sm:max-h-[calc(100dvh-3rem)] sm:max-w-lg',
+        'max-h-full overflow-y-auto overscroll-contain touch-pan-y sm:max-w-lg',
         className,
       )}
       {...props}
