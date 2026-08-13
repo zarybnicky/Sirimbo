@@ -68,7 +68,7 @@ export const Layout = React.memo(function Layout({
 
   showTopMenu = publicSite ? showTopMenu : false;
   if (hideTopMenuIfLoggedIn) {
-    showTopMenu = !auth.user;
+    showTopMenu = !!publicSite && !auth.user;
   }
   if (!authLoading && missingPermission) {
     children = auth.user ? (

@@ -75,9 +75,8 @@ export function Calendar({
 }) {
   const auth = useAuth();
 
-  const isInternal = auth.isMember || auth.isTrainerOrAdmin;
-  const defaultView = !dateRange ? 'agenda' : isInternal ? 'range' : 'day';
-  const defaultOnlyMine = !!dateRange && isInternal;
+  const defaultView = !dateRange ? 'agenda' : auth.isMember? 'range' : 'day';
+  const defaultOnlyMine = !!dateRange && auth.isMember;
   const availableViews: readonly CalendarViewKey[] = dateRange ? boundedViewKeys : standardViewKeys;
 
   const [onlyMine, setOnlyMine] = useQueryState(
