@@ -179,7 +179,7 @@ function InstanceEventCell({
       </PopoverTrigger>
 
       <PopoverContent>
-        <EventSummary offsetButtons instance={instance} />
+        <EventSummary instance={instance} />
       </PopoverContent>
     </Popover>
   );

@@ -34,7 +34,7 @@ export function BoundedDayPicker({
   if (days.length <= 1) return null;
 
   const options: RadioButtonGroupItem[] = [
-    { id: 'range', label: 'Celé soustředění' },
+    { id: 'range', label: 'Přehled' },
     ...days.map((day) => ({
       id: dayId(day),
       label: capitalize(dayFormatter.format(day)),

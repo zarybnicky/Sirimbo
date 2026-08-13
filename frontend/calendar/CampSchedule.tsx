@@ -152,14 +152,16 @@ export function CampSchedule({
   });
   const demandError =
     registrationsQuery.error || scheduleDemand.error || removeLesson.error;
-  const showDemandPane = demandPaneOpen ?? (lessonDemandCount > 0 || !!demandError);
+  const canShowDemandPane = auth.isTrainerOrAdmin && lessonDemandCount > 0;
+  const showDemandPane = demandPaneOpen && canShowDemandPane;
+
+  const dragPreview = React.useRef<HTMLDivElement>(null);
   const draggedLesson =
     dragSubject?.action === 'move' &&
     dragSubject.event?.instance.parentId === id &&
     dragSubject.event.instance.type === 'LESSON'
       ? dragSubject.event
       : null;
-  const dragPreview = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (!draggedLesson) return;
@@ -210,7 +212,7 @@ export function CampSchedule({
           primary="day"
         />
       </div>
-      {auth.isTrainerOrAdmin && (
+      {canShowDemandPane && (
         <aside
           data-calendar-remove-target
           className={cn(

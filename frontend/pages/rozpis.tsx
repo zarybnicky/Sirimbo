@@ -26,7 +26,7 @@ export default function CalendarPage() {
       <NextSeo title="Rozpis" />
 
       <div className="overscroll-contain h-[calc(100dvh-68px)] lg:h-full rbc-calendar col-full min-w-0 max-w-full overflow-hidden">
-        <Calendar />
+        <Calendar scrollView />
       </div>
     </Layout>
   );

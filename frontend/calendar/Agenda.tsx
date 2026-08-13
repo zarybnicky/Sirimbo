@@ -1,24 +1,23 @@
-import { EventButton } from '@/ui/EventButton';
-import { EventSummary } from '@/ui/EventSummary';
-import { capitalize, formatEventType, longDayFormatter } from '@/ui/format';
-import { add, startOf } from 'date-arithmetic';
-import Link from 'next/link';
-import React from 'react';
+import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import type {
-  CalendarBirthdayEvent,
-  CalendarCompetitionEvent,
-  ViewProps,
+    CalendarBirthdayEvent,
+    CalendarCompetitionEvent,
+    ViewProps,
 } from '@/calendar/types';
-import { Cake } from 'lucide-react';
-import { cn } from '@/lib/cn';
+import type { EventWithTrainerFragment } from '@/graphql/Event';
+import { isTruthy } from '@/lib/truthyFilter';
+import { CompetitionEventContent } from '@/ui/Competitions';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
-import { useAuth } from '@/ui/use-auth';
-import { CompetitionEventContent } from '@/ui/Competitions';
+import { EventButton } from '@/ui/EventButton';
+import { EventSummary } from '@/ui/EventSummary';
+import { capitalize, longDayFormatter } from '@/ui/format';
 import { cardCls } from '@/ui/style';
-import { isTruthy } from '@/lib/truthyFilter';
-import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
-import type { EventWithTrainerFragment } from '@/graphql/Event';
+import { useAuth } from '@/ui/use-auth';
+import { add, startOf } from 'date-arithmetic';
+import { Cake } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
 
 type MapItem = {
   birthdays: CalendarBirthdayEvent[];
@@ -90,7 +89,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   }, [events]);
 
   return (
-    <div className="col-full-width p-4 lg:pb-8 overflow-y-auto overscroll-contain">
+    <div className="col-full-width p-4 lg:pb-8">
       {!events?.length && (
         <div className="border border-accent-6 p-2 bg-accent-1 text-accent-12 rounded-md">
           Žádné tréninky pro tento týden
@@ -114,7 +113,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
                 key={calendarEvent.id}
                 className={cardCls({
                   className:
-                    'min-w-[200px] w-72 rounded-lg border-green-7 bg-green-2 p-3',
+                    'min-w-[200px] w-full sm:w-72 rounded-lg border-green-7 bg-green-2 p-3',
                 })}
               >
                 <CompetitionEventContent
@@ -155,7 +154,7 @@ function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
     <div
       className={cardCls({
         className:
-          'relative group min-w-[200px] w-72 rounded-lg border-accent-7 border' +
+          'relative group min-w-[200px] w-full sm:w-72 rounded-lg border-accent-7 border' +
           (instance.targetCohortsList && instance.targetCohortsList.length > 0
             ? ' pl-5'
             : ' pl-3'),
@@ -175,17 +174,6 @@ function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
             ))}
         </div>
       )}
-      <div className="text-sm text-accent-11">{formatEventType(instance.type)}</div>
-      <Link
-        href={`/termin/${instance.id}`}
-        className={cn(
-          'block mb-2 text-xl',
-          instance.isCancelled ? 'line-through' : 'underline',
-        )}
-      >
-        {instance.name ||
-          (instance.trainersList ?? []).map((x) => x.person?.name).join(', ')}
-      </Link>
       <EventSummary instance={instance} />
     </div>
   );
@@ -211,7 +199,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
     <div
       className={cardCls({
         className:
-          'relative group min-w-[200px] w-72 p-1 pt-2 rounded-lg border-accent-7 border flex flex-col gap-y-px',
+          'relative group min-w-[200px] w-full sm:w-72 p-1 pt-2 rounded-lg border-accent-7 border flex flex-col gap-y-px',
       })}
     >
       {auth.isTrainerOrAdmin && (

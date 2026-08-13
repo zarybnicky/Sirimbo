@@ -109,7 +109,7 @@ export function EventButton({
         </PopoverTrigger>
 
         <PopoverContent align="start" className="flex flex-col gap-2">
-          <EventSummary offsetButtons instance={instance} />
+          <EventSummary instance={instance} />
         </PopoverContent>
       </Popover>
     </div>

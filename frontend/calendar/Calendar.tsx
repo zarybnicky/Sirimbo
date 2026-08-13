@@ -59,6 +59,7 @@ export function Calendar({
   onRemove,
   availableTrainers,
   primary,
+  scrollView = false,
 }: {
   parentId?: string;
   initialDate?: Date;
@@ -70,6 +71,7 @@ export function Calendar({
   onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
   availableTrainers?: readonly TrainerFilterOption[];
   primary?: ViewProps['primary'];
+  scrollView?: boolean;
 }) {
   const auth = useAuth();
 
@@ -244,10 +246,30 @@ export function Calendar({
     setDragListeners,
   ]);
 
+  const viewElement = (
+    <view.component
+      range={range}
+      events={events}
+      backgroundEvents={emptyArray}
+      resources={displayedResources}
+      primary={primary}
+      showAllResources={columnMode === 'all'}
+    />
+  );
+
   return (
     <>
       <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
         <div className="print:hidden flex w-full min-w-0 max-w-full flex-1 flex-wrap items-start gap-2">
+          {dateRange && (
+            <BoundedDayPicker
+              range={dateRange}
+              date={date}
+              view={viewInput}
+              setDate={setDate}
+              setView={setView}
+            />
+          )}
           {!dateRange && view.nav && (
             <DateNavigator date={date} setDate={setDate} view={view} bounds={dateRange} />
           )}
@@ -271,30 +293,20 @@ export function Calendar({
           <ParticipantFilter />
           <EventTypeFilter />
           {fetching && <Spinner />}
-
-          <div className="grow" />
-          {dateRange && (
-            <BoundedDayPicker
-              range={dateRange}
-              date={date}
-              view={viewInput}
-              setDate={setDate}
-              setView={setView}
-            />
-          )}
         </div>
 
-        <span className="px-3 text-right">{view.label(range)}</span>
+        {!dateRange && (
+          <span className="px-3 text-right">{view.label(range)}</span>
+        )}
       </div>
 
-      <view.component
-        range={range}
-        events={events}
-        backgroundEvents={emptyArray}
-        resources={displayedResources}
-        primary={primary}
-        showAllResources={columnMode === 'all'}
-      />
+      {scrollView ? (
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
+          {viewElement}
+        </div>
+      ) : (
+        viewElement
+      )}
 
       <CalendarConflictsIndicator range={range} />
 

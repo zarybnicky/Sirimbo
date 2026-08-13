@@ -127,7 +127,7 @@
   min-width: auto;
   flex: 1 0 0;
 }
-.rbc-time-view-resources .rbc-day-slot {
+.rbc-time-view .rbc-day-slot {
   min-width: 140px;
 }
 .rbc-time-view-resources .rbc-header, .rbc-time-view-resources .rbc-day-bg {

@@ -1,10 +1,8 @@
-import {
-  EventApproxPriceDocument,
-  EventWithTrainerFragment,
-} from '@/graphql/Event';
+import { EventApproxPriceDocument, EventWithTrainerFragment } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import {
   formatEventName,
+  formatEventType,
   formatRegistrant,
   moneyFormatter,
   shortTimeFormatter,
@@ -18,13 +16,7 @@ import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
 import React from 'react';
 
-export function EventSummary({
-  instance,
-  offsetButtons,
-}: {
-  instance: EventWithTrainerFragment;
-  offsetButtons?: boolean;
-}) {
+export function EventSummary({ instance }: { instance: EventWithTrainerFragment }) {
   const actions = useActions(eventInstanceActions, instance);
   const { seriesInfo, registrations } = instance;
   const registrationCount = registrations.totalCount;
@@ -32,61 +24,63 @@ export function EventSummary({
 
   const primaryActions = React.useMemo(() => {
     return [
-      new Date(instance.since) > new Date() ? 'eventInstance.registrations' : 'eventInstance.attendance',
-      'eventInstance.edit'
+      new Date(instance.since) > new Date()
+        ? 'eventInstance.registrations'
+        : 'eventInstance.attendance',
+      'eventInstance.edit',
     ];
   }, [instance.since]);
 
   return (
     <div className="flex flex-col gap-2 text-sm">
-      {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
-        <div className="-mb-2">
-          <Link
-            href={`/terminy/${seriesInfo.id}`}
-            className="text-xs hover:text-accent-11 underline"
-          >
-            {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
-          </Link>
-        </div>
-      )}
-
-      {instance.parent && (
-        <div className="-mb-2">
+      <div className="-mb-2 text-sm text-accent-11 flex flex-wrap items-center gap-y-1 [&>*:not(:last-child)]:after:content-['•'] [&>*]:after:mx-1.5 [&>*]:after:text-accent-9">
+        <span>{formatEventType(instance.type)}</span>
+        {instance.parent && (
           <Link
             href={`/termin/${instance.parent.id}`}
             className="text-xs hover:text-accent-11 underline"
           >
             {instance.parent.name}
           </Link>
-        </div>
-      )}
-
-      {offsetButtons && (
-        <div className="flex flex-col">
+        )}
+        {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
           <Link
-            href={`/termin/${instance.id}`}
-            className={cn('text-xl', instance.isCancelled ? 'line-through' : 'underline')}
+            href={`/terminy/${seriesInfo.id}`}
+            className="text-xs hover:text-accent-11 underline"
           >
-            {formatEventName(instance)}
+            {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
           </Link>
-        </div>
-      )}
+        )}
+      </div>
+
+      <Link
+        href={`/termin/${instance.id}`}
+        className={cn(
+          'block text-xl',
+          instance.isCancelled ? 'line-through' : 'underline decoration-accent-12/50',
+        )}
+      >
+        {formatEventName(instance)}
+      </Link>
 
       <div className="flex items-center gap-2">
-        <Clock className="size-5 text-accent-11 shrink-0" />
-        {shortTimeFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
+        <Clock className="size-4 text-accent-11 shrink-0" />
+        {shortTimeFormatter.formatRange(
+          new Date(instance.since),
+          new Date(instance.until),
+        )}
       </div>
 
       {locationLabel && (
         <div className="flex items-center gap-2">
-          <MapPin className="size-5 text-accent-11 shrink-0" />
+          <MapPin className="size-4 text-accent-11 shrink-0" />
           {locationLabel}
         </div>
       )}
 
       {!!instance.trainersList?.length && (
         <div className="flex items-center gap-2" key="trainers">
-          <User className="size-5 text-accent-11 shrink-0" />
+          <User className="size-4 text-accent-11 shrink-0" />
           {instance.trainersList
             .map((x) => x.person?.name)
             .filter(Boolean)
@@ -97,7 +91,7 @@ export function EventSummary({
       {instance.type === 'LESSON' && <EventPriceView id={instance.id} />}
 
       <div className="flex items-center gap-2">
-        <Users className="size-5 text-accent-11 shrink-0" />
+        <Users className="size-4 text-accent-11 shrink-0" />
         <div>
           {instance.targetCohortsList && instance.targetCohortsList.length > 0 ? (
             instance.targetCohortsList.map((x) => x.cohort?.name).join(', ')
@@ -135,7 +129,7 @@ function EventPriceView({ id }: { id: string }) {
   if (!priceString) return null;
   return (
     <div className="flex items-center gap-2" key="money">
-      <Coins className="size-5 text-accent-11 shrink-0" />
+      <Coins className="size-4 text-accent-11 shrink-0" />
       {priceString + ' / osobu'}
     </div>
   );

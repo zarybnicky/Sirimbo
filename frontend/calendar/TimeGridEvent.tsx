@@ -187,7 +187,7 @@ function InstanceTimeGridEvent({
       </PopoverTrigger>
 
       <PopoverContent>
-        <EventSummary offsetButtons instance={event.instance} />
+        <EventSummary instance={event.instance} />
       </PopoverContent>
     </Popover>
   );
