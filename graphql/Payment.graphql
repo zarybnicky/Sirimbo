@@ -31,6 +31,7 @@ fragment Payment on Payment {
     id
     name
     since
+    until
     type
     trainersList: eventInstanceTrainersByInstanceIdList {
       id
@@ -79,21 +80,33 @@ fragment PaymentDetail on Payment {
         id
         amount
         account {
-          id
-          tenantId
-          person {
-            id
-            name
-          }
+          ...Account
         }
       }
     }
   }
 }
 
+fragment Account on Account {
+  id
+  balance
+  currency
+  tenantId
+  personId
+  person {
+    id
+    name
+    firstName
+    lastName
+  }
+}
+
 query Payment($id: BigInt!) {
   payment(id: $id) {
     ...PaymentDetail
+    eventInstance {
+      ...EventWithTrainer
+    }
   }
 }
 
@@ -118,11 +131,7 @@ mutation CreateCreditTransaction($input: CreateCreditTransactionForPersonInput!)
         id
         amount
         account {
-          id
-          person {
-            id
-            name
-          }
+          ...Account
         }
       }
     }
@@ -131,13 +140,7 @@ mutation CreateCreditTransaction($input: CreateCreditTransactionForPersonInput!)
 
 query BalanceSheet($since: Datetime, $until: Datetime) {
   accountsList {
-    id
-    person {
-      id
-      name
-      firstName
-      lastName
-    }
+    ...Account
     assets(since: $since, until: $until)
     liabilities(since: $since, until: $until)
   }
@@ -154,9 +157,7 @@ mutation MarkAsPaid($id: BigInt!) {
 
 query TenantTurnoverPage($offset: Int!, $postingsLimit: Int!) {
   accountsList(condition: { personId: null }) {
-    id
-    currency
-    balance
+    ...Account
     postingsList(first: $postingsLimit, offset: $offset, orderBy: [CREATED_AT_DESC]) {
       ...Posting
     }
@@ -185,12 +186,7 @@ query TenantManualCreditTransactions($first: Int, $cursor: Cursor) {
         id
         amount
         account {
-          id
-          currency
-          person {
-            id
-            name
-          }
+          ...Account
         }
       }
     }

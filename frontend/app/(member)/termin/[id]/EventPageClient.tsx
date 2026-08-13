@@ -166,9 +166,9 @@ export function EventPageClient({
           {event && <PageHeader title={title} actions={actions} primary={primaryAction} />}
           {!authLoading && !fetching && !event && (
             <div className="my-12 rounded-md border border-neutral-5 bg-neutral-2 p-6 text-center">
-              <h1 className="text-xl text-neutral-12">Termín nebyl nalezen</h1>
+              <h1 className="text-xl text-neutral-12">Událost nenalezena</h1>
               <p className="mt-2 text-neutral-11">
-                Odkaz není platný, byl zrušen nebo k termínu nemáte přístup.
+                Odkaz není platný, nebo k události nemáte přístup.
               </p>
             </div>
           )}

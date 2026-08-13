@@ -54,15 +54,13 @@ function BaseSubmitButton({
   React.useEffect(() => {
     if (submitState === 'loading') {
       setState('LOADING');
-      return;
-    }
-    if (submitState !== 'success') {
+    } else if (submitState !== 'success') {
       setState('NORMAL');
-      return;
+    } else {
+      setState('LOADED');
+      const timeout = setTimeout(() => setState('NORMAL'), 1000);
+      return () => clearTimeout(timeout);
     }
-    setState('LOADED');
-    const timeout = setTimeout(() => setState('NORMAL'), 1000);
-    return () => clearTimeout(timeout);
   }, [submitState]);
 
   return (

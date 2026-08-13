@@ -8,11 +8,10 @@ import { Dialog, DialogContent } from '@/ui/dialog';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { buttonCls } from './style';
 import { Edit } from 'lucide-react';
-import type { PersonFragment } from '@/graphql/Person';
 
 export function FillYourProfileReminder() {
   const [token] = useAtom(tokenAtom);
-  const [person, setPerson] = React.useState<PersonFragment | null>(null);
+  const [personId, setPersonId] = React.useState<string | null>(null);
 
   const [{ data: currentUser }] = useQuery({
     query: CurrentUserDocument,
@@ -48,7 +47,7 @@ export function FillYourProfileReminder() {
           <button
             type="button"
             className={buttonCls({ variant: 'outline' })}
-            onClick={() => setPerson(person)}
+            onClick={() => setPersonId(person.id)}
           >
             <Edit />
             Upravit osobu
@@ -59,13 +58,13 @@ export function FillYourProfileReminder() {
   }, [currentUser]);
 
   return (
-    <Dialog open={!!person} onOpenChange={() => setPerson(null)}>
-      {person && (
+    <Dialog open={!!personId} onOpenChange={() => setPersonId(null)}>
+      {personId && (
         <DialogContent
           className="sm:max-w-2xl"
           onPointerDownOutside={(e) => e.preventDefault()}
         >
-          <EditPersonForm data={person} />
+          <EditPersonForm id={personId} />
         </DialogContent>
       )}
     </Dialog>

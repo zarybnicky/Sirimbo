@@ -8,18 +8,18 @@ fragment PersonBasic on Person {
   email
   phone
   taxIdentificationNumber
+  externalIds
+  isMember
+  isTrainer
+  isAdmin
 }
 
 fragment Person on Person {
   ...PersonBasic
-  externalIds
   cstsId
   wdsfId
   nationality
   cohortIds
-  isAdmin
-  isTrainer
-  isMember
   prefixTitle
   suffixTitle
   instagramUsername
@@ -72,6 +72,12 @@ fragment PersonWithLinks on Person {
   }
 }
 
+query Person($id: BigInt!) {
+  person(id: $id) {
+    ...Person
+  }
+}
+
 query PersonPayments($id: BigInt!) {
   person(id: $id) {
     ...Person
@@ -86,9 +92,7 @@ query PersonPayments($id: BigInt!) {
       }
     }
     accountsList {
-      id
-      balance
-      currency
+      ...Account
       postingsList {
         ...Posting
       }
@@ -115,9 +119,7 @@ query PersonAccounts {
     nodes {
       ...PersonBasic
       accountsList {
-        id
-        balance
-        currency
+        ...Account
       }
     }
   }

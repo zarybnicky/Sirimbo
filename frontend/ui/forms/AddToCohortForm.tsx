@@ -1,5 +1,5 @@
 import { CreateCohortMembershipDocument } from '@/graphql/Memberships';
-import type { PersonFragment } from '@/graphql/Person';
+import type { PersonBasicFragment } from '@/graphql/Person';
 import { FormError, useFormResult } from '@/ui/form';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
@@ -14,7 +14,7 @@ const Form = z.object({
   cohortIds: z.array(z.string()).min(1, 'Vyberte alespoň jednu skupinu'),
 });
 
-export function AddToCohortForm({ person }: { person: PersonFragment }) {
+export function AddToCohortForm({ person }: { person: PersonBasicFragment }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),

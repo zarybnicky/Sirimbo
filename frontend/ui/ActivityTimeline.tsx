@@ -48,15 +48,17 @@ function rangeFor(mode: TimelineMode, pages: number) {
 }
 
 export function ActivityTimeline({
+  defaultMode = 'past',
   personIds,
   cohortId,
   includeJudging = false,
 }: {
+  defaultMode?: TimelineMode;
   personIds?: string[];
   cohortId?: string;
   includeJudging?: boolean;
 }) {
-  const [mode, setMode] = React.useState<TimelineMode>('future');
+  const [mode, setMode] = React.useState<TimelineMode>(defaultMode);
   const [pages, setPages] = React.useState(1);
   const availableFilters = React.useMemo(
     () => (includeJudging ? [...BASE_FILTERS, JUDGING_FILTER] : BASE_FILTERS),
@@ -87,9 +89,7 @@ export function ActivityTimeline({
   React.useEffect(() => {
     setFilters((value) =>
       value.filter(
-        (filter) =>
-          availableFilters.some(([availableFilter]) => availableFilter === filter) &&
-          (!cohortId || filter !== 'LESSON'),
+        (filter) => availableFilters.some(([x]) => x === filter) && (!cohortId || filter !== 'LESSON'),
       ),
     );
   }, [availableFilters, cohortId]);
@@ -251,13 +251,10 @@ function TimelineDay({
 
   return (
     <section>
-      <h4 className="mb-2 mt-5 text-2xl tracking-wide first:mt-3">
-        {date
-          ? capitalize(longDayFormatter.format(new Date(`${date}T00:00:00`)))
-          : mode === 'future'
-            ? 'Budoucí'
-            : 'Minulé'}
+      <h4 className="my-2 text-xl tracking-tight">
+        {capitalize(longDayFormatter.format(new Date(`${date}T00:00:00`)))}
       </h4>
+
       <div className="flex flex-col gap-2">
         {birthdayItems.length > 0 && (
           <div className={cardCls({ className: 'bg-neutral-2' })}>

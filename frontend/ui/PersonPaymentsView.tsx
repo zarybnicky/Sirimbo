@@ -1,23 +1,24 @@
+import { PostingFragment } from '@/graphql/Payment';
 import { PersonPaymentsDocument, PersonPaymentsQuery } from '@/graphql/Person';
-import React from 'react';
+import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { useActionMap } from '@/lib/actions';
+import { paymentActions } from '@/lib/actions/payment';
+import { transactionActions } from '@/lib/actions/transaction';
+import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
+import { ActionGroup } from '@/ui/ActionGroup';
 import {
   describePosting,
   fullDateFormatter,
   moneyFormatter,
   numericDateWithYearFormatter,
 } from '@/ui/format';
-import { useQuery } from 'urql';
 import { QRPayment } from '@/ui/QRPayment';
 import { exportPostings } from '@/ui/reports/export-postings';
 import { buttonCls } from '@/ui/style';
-import { useAuth } from './use-auth';
-import { keyIsNonNull } from '@/lib/truthyFilter';
+import { useAuth } from '@/ui/use-auth';
+import React from 'react';
 import { Column, DataGrid, SortColumn } from 'react-data-grid';
-import { CurrentTenantDocument } from '@/graphql/Tenant';
-import { useActionMap } from '@/lib/actions';
-import { paymentActions } from '@/lib/actions/payment';
-import { transactionActions } from '@/lib/actions/transaction';
-import { ActionGroup } from '@/ui/ActionGroup';
+import { useQuery } from 'urql';
 
 export function PersonPaymentsView({ id }: { id: string }) {
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
@@ -121,8 +122,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
 type Account = NonNullable<
   NonNullable<PersonPaymentsQuery['person']>['accountsList']
 >[number];
-type Posting = NonNullable<Account['postingsList']>[number];
-type PostingRow = Posting & { transaction: NonNullable<Posting['transaction']> };
+type PostingRow = PostingFragment & { transaction: NonNullable<PostingFragment['transaction']> };
 
 function sortRows(rows: PostingRow[], sortColumns: readonly SortColumn[]) {
   if (sortColumns.length === 0) return rows;
@@ -180,12 +180,7 @@ function AccountPaymentsTable({ account }: { account: Account }) {
   );
   const paymentActionMap = useActionMap(
     paymentActions,
-    baseRows
-      .map((row) => row.transaction.payment)
-      .filter(
-        (payment): payment is NonNullable<PostingRow['transaction']['payment']> =>
-          !!payment,
-      ),
+    baseRows.map((row) => row.transaction.payment).filter(isTruthy),
   );
   const transactionActionMap = useActionMap(
     transactionActions,

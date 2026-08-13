@@ -78,7 +78,7 @@ export const dayFormatter = new Intl.DateTimeFormat('cs-CZ', {
 });
 
 export const longDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
-  weekday: 'long',
+  weekday: 'short',
   day: 'numeric',
   month: 'long',
 });

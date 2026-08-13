@@ -1,5 +1,5 @@
 import { Coins, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
-import { DeletePersonDocument, type PersonFragment } from '@/graphql/Person';
+import { DeletePersonDocument, type PersonBasicFragment } from '@/graphql/Person';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { defineActions } from '@/lib/actions';
@@ -11,14 +11,14 @@ import {
 } from '@/graphql/Memberships';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 
-export const personActions = defineActions<PersonFragment>()([
+export const personActions = defineActions<PersonBasicFragment>()([
   {
     id: 'person.edit',
     group: 'primary',
-    label: 'Upravit osobu',
+    label: 'Upravit',
     icon: Pencil,
     visible: ({ auth, item }) => auth.isAdmin || auth.isMyPerson(item.id),
-    render: ({ item }) => <EditPersonForm data={item} />,
+    render: ({ item }) => <EditPersonForm id={item.id} />,
     dialogProps: {
       className: 'sm:max-w-2xl',
       onPointerDownOutside: (e) => e.preventDefault(),

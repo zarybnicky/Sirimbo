@@ -45,33 +45,27 @@ export default function UserPage() {
 
       {user && (
         <div className="space-y-6">
-          <section>
-            <dl className="tabular">
-              <dt>ID</dt>
-              <dd>{user.id}</dd>
-              <dt>E-mail</dt>
-              <dd>{user.uEmail}</dd>
-              <dt>Jméno</dt>
-              <dd>{[user.uJmeno, user.uPrijmeni].filter(Boolean).join(' ')}</dd>
-              <dt>Vytvořen</dt>
-              <dd>{numericFullFormatter.format(new Date(user.createdAt))}</dd>
-              {user.lastLogin && (
-                <>
-                  <dt>Poslední přihlášení</dt>
-                  <dd>{numericFullFormatter.format(new Date(user.lastLogin))}</dd>
-                </>
-              )}
-              {user.lastActiveAt && (
-                <>
-                  <dt>Naposledy aktivní</dt>
-                  <dd>
-                    {numericFullFormatter.format(new Date(user.lastActiveAt))}
-                    {` (${user.lastVersion})`}
-                  </dd>
-                </>
-              )}
-            </dl>
-          </section>
+          <dl className="tabular text-sm">
+            <dt>ID</dt>
+            <dd>{user.id}</dd>
+            <dt>E-mail</dt>
+            <dd>{user.uEmail}</dd>
+            <dt>Jméno</dt>
+            <dd>{[user.uJmeno, user.uPrijmeni].filter(Boolean).join(' ')}</dd>
+            <dt>Vytvořen</dt>
+            <dd>{numericFullFormatter.format(new Date(user.createdAt))}</dd>
+            <dt>Poslední přihlášení</dt>
+            {user.lastLogin && (
+              <dd>{numericFullFormatter.format(new Date(user.lastLogin))}</dd>
+            )}
+            <dt>Naposledy aktivní</dt>
+            {user.lastActiveAt && (
+              <dd>
+                {numericFullFormatter.format(new Date(user.lastActiveAt))}
+                {` (${user.lastVersion})`}
+              </dd>
+            )}
+          </dl>
 
           <section>
             <h2 className="text-lg font-medium">Připojené osoby</h2>

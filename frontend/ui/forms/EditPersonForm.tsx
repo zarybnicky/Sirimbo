@@ -1,4 +1,4 @@
-import { type PersonFragment, UpdatePersonDocument } from '@/graphql/Person';
+import { PersonDocument, UpdatePersonDocument } from '@/graphql/Person';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { DatePickerElement } from '@/ui/fields/date';
@@ -8,7 +8,7 @@ import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { countryOptions } from '@/lib/countries';
 import React from 'react';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -71,21 +71,28 @@ const Form = z.object({
   }),
 });
 
-export function EditPersonForm({ data }: { data: PersonFragment }) {
+export function EditPersonForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useForm({
-    defaultValues: {
-      ...data,
-      birthDate: data.birthDate ?? null,
-    } as unknown as any,
+  const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const [result, update] = useMutation(UpdatePersonDocument);
+  const [query] = useQuery({ query: PersonDocument, variables: { id } });
+  const data = query.data?.person;
+
+  React.useEffect(() => {
+    if (data) {
+      reset({
+        ...data,
+        birthDate: data.birthDate ?? null,
+      } as unknown as any);
+    }
+  }, [reset, data]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     const result = await update({
       input: {
-        id: data.id,
+        id,
         patch: values,
       },
     });
@@ -94,7 +101,7 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
 
   return (
     <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit)}>
-      <FormError error={result.error} />
+      <FormError error={query.error || result.error} />
 
       <TextFieldElement control={control} name="prefixTitle" label="Titul před jménem" />
       <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />
@@ -211,7 +218,7 @@ export function EditPersonForm({ data }: { data: PersonFragment }) {
       </div>
 
       <div className="col-full">
-        <SubmitButton control={control} />
+        <SubmitButton control={control} disabled={!data} />
       </div>
     </form>
   );
