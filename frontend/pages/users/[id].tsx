@@ -1,139 +1,96 @@
-import { Layout } from '@/ui/Layout';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { z } from 'zod';
-import { useQuery } from 'urql';
-import Link from 'next/link';
-import { CornerLeftUp } from 'lucide-react';
-import { fullDateFormatter } from '@/ui/format';
-import type { UserDetailQuery, UserDetailQueryVariables } from '@/graphql/CurrentUser';
 import { UserDetailDocument } from '@/graphql/CurrentUser';
+import { useActionMap } from '@/lib/actions';
+import { personActions } from '@/lib/actions/person';
+import { ActionRow } from '@/ui/ActionRow';
+import { formatOpenDateRange, numericFullFormatter } from '@/ui/format';
+import { Layout } from '@/ui/Layout';
+import { PageHeader } from '@/ui/TitleBar';
+import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import Link from 'next/link';
+import React from 'react';
+import { useQuery } from 'urql';
+import { z } from 'zod';
 
 const QueryParams = z.object({
   id: zRouterId,
 });
 
-function formatDate(value?: string | null) {
-  return value ? fullDateFormatter.format(new Date(value)) : '—';
-}
-
-function UserPage() {
+export default function UserPage() {
   const router = useTypedRouter(QueryParams);
   const { id } = router.query;
-  const [{ data, fetching, error }] = useQuery<UserDetailQuery, UserDetailQueryVariables>(
-    {
-      query: UserDetailDocument,
-      variables: { id },
-      pause: !id,
-    },
-  );
+  const [{ data, fetching, error }] = useQuery({
+    query: UserDetailDocument,
+    variables: { id },
+    pause: !id,
+  });
 
   const user = data?.user;
+  const pageTitle = user?.uEmail ?? '';
+  const people = React.useMemo(() => {
+    return user?.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) ?? [];
+  }, [user]);
+
+  const personActionMap = useActionMap(personActions, people);
 
   return (
     <Layout requireAdmin>
-      <div className="mx-auto w-full max-w-3xl space-y-6">
-        <div className="lg:hidden">
-          <Link href="/clenove" className="flex gap-2">
-            <CornerLeftUp className="size-4" />
-            Zpět na seznam členů
-          </Link>
-        </div>
+      <PageHeader
+        title={pageTitle}
+        breadcrumbs={[{ label: 'Členové', href: '/clenove' }, { label: pageTitle }]}
+      />
 
-        <header className="space-y-1">
-          <h1 className="text-2xl font-semibold">Uživatel {user?.uEmail ?? id}</h1>
-          <p className="text-neutral-10 text-sm">Login: {user?.uLogin ?? '—'}</p>
-        </header>
+      {fetching && <p>Načítám...</p>}
+      {error && <p className="text-accent-11">Nepodařilo se načíst uživatele.</p>}
+      {!fetching && !error && !user && <p>Uživatel nebyl nalezen.</p>}
 
-        {fetching && <p>Načítám...</p>}
-        {error && <p className="text-accent-11">Nepodařilo se načíst uživatele.</p>}
-        {!fetching && !error && !user && <p>Uživatel nebyl nalezen.</p>}
-
-        {user && (
-          <div className="space-y-6">
-            <section>
-              <h2 className="text-lg font-medium">Základní informace</h2>
-              <dl className="mt-2">
-                <div>
-                  <dt className="text-sm text-neutral-10">ID</dt>
-                  <dd className="text-sm font-medium">{user.id}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-neutral-10">E-mail</dt>
-                  <dd className="text-sm font-medium">{user.uEmail}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-neutral-10">Jméno</dt>
-                  <dd className="text-sm font-medium">
-                    {[user.uJmeno, user.uPrijmeni].filter(Boolean).join(' ') || '—'}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-neutral-10">Tenant ID</dt>
-                  <dd className="text-sm font-medium">{user.tenantId}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-neutral-10">Vytvořen</dt>
-                  <dd className="text-sm font-medium">{formatDate(user.createdAt)}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-neutral-10">Poslední přihlášení</dt>
-                  <dd className="text-sm font-medium">{formatDate(user.lastLogin)}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-neutral-10">Poslední aktivita</dt>
-                  <dd className="text-sm font-medium">{formatDate(user.lastActiveAt)}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-neutral-10">Poslední verze aplikace</dt>
-                  <dd className="text-sm font-medium">{user.lastVersion ?? '—'}</dd>
-                </div>
-              </dl>
-            </section>
-
-            <section>
-              <h2 className="text-lg font-medium">Propojené osoby</h2>
-              {user.userProxiesList.length === 0 ? (
-                <p className="text-sm text-neutral-10">Žádné propojené osoby.</p>
-              ) : (
-                <ul className="space-y-3">
-                  {user.userProxiesList.map((proxy) => (
-                    <li key={proxy.id} className="rounded-md border p-3">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                          <p className="font-medium">
-                            {proxy.person ? (
-                              <Link
-                                href={`/clenove/${proxy.person.id}`}
-                                className="underline"
-                              >
-                                {proxy.person.name}
-                              </Link>
-                            ) : (
-                              '—'
-                            )}
-                          </p>
-                          <p className="text-xs text-neutral-10">
-                            Status: {proxy.status.toLowerCase()}
-                          </p>
-                        </div>
-                        <div className="text-xs text-neutral-10 mt-2 sm:mt-0">
-                          {proxy.status === 'ACTIVE' ? 'Aktivní' : 'Neaktivní'}
-                        </div>
-                      </div>
-                      <div className="mt-2 text-xs text-neutral-10 space-y-1">
-                        <div>Od: {formatDate(proxy.since)}</div>
-                        <div>Do: {formatDate(proxy.until)}</div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+      {user && (
+        <div className="space-y-6">
+          <section>
+            <dl className="tabular">
+              <dt>ID</dt>
+              <dd>{user.id}</dd>
+              <dt>E-mail</dt>
+              <dd>{user.uEmail}</dd>
+              <dt>Jméno</dt>
+              <dd>{[user.uJmeno, user.uPrijmeni].filter(Boolean).join(' ')}</dd>
+              <dt>Vytvořen</dt>
+              <dd>{numericFullFormatter.format(new Date(user.createdAt))}</dd>
+              {user.lastLogin && (
+                <>
+                  <dt>Poslední přihlášení</dt>
+                  <dd>{numericFullFormatter.format(new Date(user.lastLogin))}</dd>
+                </>
               )}
-            </section>
-          </div>
-        )}
-      </div>
+              {user.lastActiveAt && (
+                <>
+                  <dt>Naposledy aktivní</dt>
+                  <dd>
+                    {numericFullFormatter.format(new Date(user.lastActiveAt))}
+                    {` (${user.lastVersion})`}
+                  </dd>
+                </>
+              )}
+            </dl>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-medium">Připojené osoby</h2>
+            {user.userProxiesList.map((item) => (
+              <ActionRow key={item.id} actions={personActionMap.get(item.personId)!}>
+                <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+                  <Link
+                    className="underline font-bold"
+                    href={`/clenove/${item.personId}`}
+                  >
+                    {item.person?.name}
+                  </Link>
+                  <span>{formatOpenDateRange(item)}</span>
+                </div>
+              </ActionRow>
+            ))}
+          </section>
+        </div>
+      )}
     </Layout>
   );
 }
-
-export default UserPage;

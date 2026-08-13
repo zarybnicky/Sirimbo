@@ -8,7 +8,6 @@ import type {
   TenantTrainer,
   WithTypename,
 } from '@/graphql';
-import type { SaveEventsMutation } from '@/graphql/Event';
 import { CurrentUserDocument, CurrentUserQuery } from '@/graphql/CurrentUser';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
 import { type Cache, cacheExchange } from '@urql/exchange-graphcache';

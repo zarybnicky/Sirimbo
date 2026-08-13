@@ -48,9 +48,9 @@ query UserDetail($id: BigInt!) {
       since
       until
       status
+      personId
       person {
-        id
-        name
+        ...Person
       }
     }
   }

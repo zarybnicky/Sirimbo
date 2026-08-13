@@ -145,7 +145,7 @@ export const formatOpenDateRange = (item: {
       ? `od ${fullDateFormatter.format(new Date(item.since))}`
       : item.until
         ? `do ${fullDateFormatter.format(new Date(item.until))}`
-        : 'neomezeně';
+        : '';
 
 export function formatAgeGroup(birthDate: string | null | undefined) {
   if (!birthDate) return;

@@ -12,7 +12,6 @@ import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
 import { PersonWorkReportView } from '@/ui/PersonWorkReportView';
 import { personActions } from '@/lib/actions/person';
 import { useActions } from '@/lib/actions';
-import { useTenantId } from '@/ui/state/auth';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { CstsPersonLink } from '@/ui/csts-links';
 import { Globe, Music2 } from 'lucide-react';
@@ -20,7 +19,6 @@ import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
 
 export function PersonView({ id }: { id: string }) {
   const auth = useAuth();
-  const tenantId = useTenantId();
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
     variables: { id },
@@ -33,9 +31,7 @@ export function PersonView({ id }: { id: string }) {
 
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(id);
   const item = data?.person;
-  const isCurrentTenantTrainer = item?.tenantTrainersList.some(
-    (trainer) => trainer.tenantId === tenantId && trainer.status === 'ACTIVE',
-  );
+
   const actions = useActions(personActions, item);
   const sttProgress = getBestCstsProgress(item?.cstsProgressList, 'Standard');
   const latProgress = getBestCstsProgress(item?.cstsProgressList, 'Latin');
@@ -72,7 +68,7 @@ export function PersonView({ id }: { id: string }) {
         },
       );
     }
-    if (isAdminOrCurrentPerson && isCurrentTenantTrainer) {
+    if (isAdminOrCurrentPerson && auth.isTrainer) {
       tabs.push({
         id: 'workReport',
         title: <>Výkaz práce</>,
@@ -80,7 +76,7 @@ export function PersonView({ id }: { id: string }) {
       });
     }
     return tabs;
-  }, [id, item, isAdminOrCurrentPerson, isCurrentTenantTrainer]);
+  }, [id, item, isAdminOrCurrentPerson, auth.isTrainer]);
 
   if (!item) return null;
 
