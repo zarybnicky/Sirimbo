@@ -2,7 +2,6 @@
 
 import { getTenantUi } from '@/tenant/ui.pages';
 import { ErrorPage } from '@/ui/ErrorPage';
-import { LoginForm } from '@/ui/forms/LoginForm';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { CallToAction } from '@/ui/CallToAction';
 import React, { useMemo } from 'react';
@@ -66,6 +65,12 @@ export const Layout = React.memo(function Layout({
     (requireAdmin && !auth.isAdmin) ||
     (requireSystemAdmin && !auth.isSystemAdmin);
 
+  React.useEffect(() => {
+    if (!authLoading && missingPermission && !auth.user) {
+      window.location.assign(`/login?from=${encodeURIComponent(url)}`);
+    }
+  }, [auth.user, authLoading, missingPermission, url]);
+
   showTopMenu = publicSite ? showTopMenu : false;
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !!publicSite && !auth.user;
@@ -76,9 +81,7 @@ export const Layout = React.memo(function Layout({
         error="Přístup zamítnut"
         details="Nemáte dostatečná práva pro zobrazení této stránky"
       />
-    ) : (
-      <LoginForm />
-    );
+    ) : null;
   }
 
   return (

@@ -1,13 +1,16 @@
-import { LoginDocument, type UserAuthFragment } from '@/graphql/CurrentUser';
+'use client';
+
+import type { LoginMutationVariables, UserAuthFragment } from '@/graphql/CurrentUser';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import Link from 'next/link';
-import { useMutation } from 'urql';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTenantConfig } from '../state/auth';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAsyncCallback } from 'react-async-hook';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const Form = z.object({
   login: z.string().min(1, 'Zadejte přihlašovací jméno nebo e-mail'),
@@ -15,28 +18,37 @@ const Form = z.object({
 });
 
 export function LoginForm({
-  onSuccess,
+  login,
+  enableRegistration,
+  from,
+  defaultRedirect,
 }: {
-  onSuccess?: (result: UserAuthFragment | null) => void;
+  login: (
+    values: LoginMutationVariables,
+  ) => Promise<{ error: string } | { user: UserAuthFragment | null }>;
+  enableRegistration: boolean;
+  from?: string;
+  defaultRedirect: string;
 }) {
-  const [result, executeLogin] = useMutation(LoginDocument);
-  const { enableRegistration } = useTenantConfig();
+  const router = useRouter();
+  useRedirectLoggedIn();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
 
-  const onSubmit = async ({ login, passwd }: z.infer<typeof Form>) => {
-    const result = await executeLogin({ login, passwd });
-    if (!result.error) onSuccess?.(result.data?.login?.result?.usr ?? null);
-  };
+  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
+    const result = await login(values);
+    if ('error' in result) throw new Error(result.error);
+    router.push(!result.user?.userProxiesList.length ? '/profil' : from || defaultRedirect);
+  });
 
   return (
     <div className="flex h-[calc(100dvh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
       <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
-        <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit)}>
+        <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
           <h4 className="text-2xl">Přihlášení do systému</h4>
 
-          <FormError error={result.error} />
+          <FormError error={onSubmit.error} />
           <TextFieldElement
             control={control}
             name="login"

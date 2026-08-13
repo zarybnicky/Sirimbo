@@ -1,5 +1,3 @@
-import { LoginForm } from '@/ui/forms/LoginForm';
-import { useAuth } from '@/ui/use-auth';
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { rgbaToThumbHash, thumbHashToDataURL } from 'thumbhash';
@@ -23,7 +21,6 @@ type Image = {
 };
 
 export default function UploadPage() {
-  const auth = useAuth();
   const [newFiles, setNewFiles] = React.useState<Image[]>([]);
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -134,12 +131,8 @@ export default function UploadPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!auth.user) {
-    return <LoginForm />;
-  }
-
   return (
-    <Layout>
+    <Layout requireAdmin>
       <section className="container prose prose-accent">
         {(directories?.attachmentDirectories?.nodes || []).map((x) => (
           <button

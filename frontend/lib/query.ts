@@ -8,7 +8,6 @@ import type {
   TenantTrainer,
   WithTypename,
 } from '@/graphql';
-import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
 import { type Cache, cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
@@ -429,73 +428,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         invalidateQueryFields(cache, ['paymentDebtorsList']);
       },
 
-      login(result, _args, cache, _info) {
-        const { usr, jwt } = result.login?.result || {};
-        let currentClaims = {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-          const base64Url = jwt.split('.', 2)[1];
-          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
-        });
-      },
-      otpLogin(result, _args, cache, _info) {
-        const { usr, jwt } = result.otpLogin?.result || {};
-        let currentClaims = {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-          const base64Url = jwt.split('.', 2)[1];
-          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
-        });
-      },
-      logInAs(result, _args, cache, _info) {
-        const { usr, jwt } = result.logInAs?.result || {};
-        let currentClaims = {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-          const base64Url = jwt.split('.', 2)[1];
-          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
-        });
-      },
-
-      registerUsingInvitation(result, _args, cache, _info) {
-        const { usr, jwt } = result.registerUsingInvitation?.result || {};
-        let currentClaims = {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-          const base64Url = jwt.split('.', 2)[1];
-          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
-        });
-      },
-
-      registerWithoutInvitation(result, _args, cache, _info) {
-        const { usr, jwt } = result.registerWithoutInvitation?.result || {};
-        let currentClaims = {};
-        if (jwt) {
-          storeRef.current.set(tokenAtom, jwt);
-          const base64Url = jwt.split('.', 2)[1];
-          const base64 = base64Url?.replaceAll('-', '+').replaceAll('_', '/');
-          currentClaims = base64 ? JSON.parse(atob(base64)) : {};
-        }
-        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
-          return usr ? { currentClaims, getCurrentUser: usr, refreshJwt: jwt } : old;
-        });
-      },
     },
   },
 };
