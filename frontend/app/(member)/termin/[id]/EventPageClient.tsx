@@ -103,7 +103,7 @@ export function EventPageClient({
       }
     }
 
-    if (instance?.type === 'CAMP') {
+    if (instance?.type === 'CAMP' && auth.isTrainerOrAdmin) {
       tabs.push(
         {
           id: 'lessons',
