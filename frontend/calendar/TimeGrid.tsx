@@ -9,7 +9,13 @@ import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import TimeGutter from './TimeGutter';
 import { diff, inEventRange, merge, range } from './localizer';
-import { dragListenersAtom, focusedTimeAtom, isDraggingAtom, maxTimeAtom, minTimeAtom } from './state';
+import {
+  dragListenersAtom,
+  focusedTimeAtom,
+  isDraggingAtom,
+  maxTimeAtom,
+  minTimeAtom,
+} from './state';
 import type { CalendarEvent, DateRange, Resource, ViewProps } from './types';
 import { useDragAutoScroll } from './useDragAutoScroll';
 import { dayFormatter } from '@/ui/format';
@@ -73,15 +79,25 @@ export default React.memo(function TimeGrid({
     content.scrollTop = (content.scrollHeight - content.clientHeight) * ratio;
   }, [focusedTime, minTime, maxTime]);
 
-  const birthdayEvents = React.useMemo(
-    () => events.filter((event) => event.kind === 'birthday'),
+  const allDayEvents = React.useMemo(
+    () =>
+      events.filter(
+        (event) =>
+          event.kind === 'birthday' ||
+          (event.kind === 'event' && event.instance.type === 'CAMP'),
+      ),
     [events],
   );
   const timedEvents = React.useMemo(
-    () => events.filter((event) => event.kind !== 'birthday'),
+    () =>
+      events.filter(
+        (event) =>
+          event.kind !== 'birthday' &&
+          (event.kind !== 'event' || event.instance.type !== 'CAMP'),
+      ),
     [events],
   );
-  const hasBirthdayEvents = birthdayEvents.length > 0;
+  const hasAllDayEvents = allDayEvents.length > 0;
 
   const grid = React.useMemo(
     () => buildGrid(range, resources, timedEvents, backgroundEvents),
@@ -155,11 +171,13 @@ export default React.memo(function TimeGrid({
                     <DayButton key={+date} today={today} date={date} />
                   ))}
                 </div>
-                {hasBirthdayEvents && (
+                {hasAllDayEvents && (
                   <AllDayEventLane
                     range={columns.map(({ date }) => date)}
-                    events={birthdayEvents.filter((event) =>
-                      columns.some(({ date }) => eq(event.start, date, 'day')),
+                    events={allDayEvents.filter((event) =>
+                      columns.some(({ date }) =>
+                        inEventRange(event, { start: date, end: date }),
+                      ),
                     )}
                   />
                 )}
@@ -184,11 +202,11 @@ export default React.memo(function TimeGrid({
                     </div>
                   ))}
                 </div>
-                {hasBirthdayEvents && (
+                {hasAllDayEvents && (
                   <AllDayEventLane
                     range={[date]}
-                    events={birthdayEvents.filter((event) =>
-                      eq(event.start, date, 'day'),
+                    events={allDayEvents.filter((event) =>
+                      inEventRange(event, { start: date, end: date }),
                     )}
                   />
                 )}
