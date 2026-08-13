@@ -100,6 +100,9 @@ export function CampSchedule({
     }),
     [since, until],
   );
+  const today = new Date();
+  const initialDate = today >= dateRange.since && today <= dateRange.until ? today : dateRange.since;
+
   const scheduleDemand = useAsyncCallback(
     async (subject: ExternalDragSubject, info: InteractionInfo) => {
       const registration = registrations.find((registration) =>
@@ -197,7 +200,7 @@ export function CampSchedule({
       >
         <Calendar
           parentId={id}
-          initialDate={since}
+          initialDate={initialDate}
           dateRange={dateRange}
           onDropFromOutside={scheduleDemand.execute}
           onRemove={removeLesson.execute}

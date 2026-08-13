@@ -45,7 +45,7 @@ export function BoundedDayPicker({
     <div
       role="radiogroup"
       aria-label="Výběr data"
-      className="scrollbar min-w-0 max-w-full basis-full overflow-x-auto overscroll-x-contain"
+      className="scrollbar min-w-0 max-w-full grow overflow-x-auto overscroll-x-contain"
     >
       <RadioButtonGroup
         name="camp-calendar-range"

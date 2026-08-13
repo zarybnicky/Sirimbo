@@ -46,18 +46,10 @@ import {
 
 const emptyArray: readonly [] = [];
 const preventDefault = (e: Event) => e.preventDefault();
-const calendarViewKeys = [
-  'month',
-  'week',
-  'work_week',
-  'day',
-  'agenda',
-  'range',
-] as const;
 const columnModes = ['all'] as const;
+
 const standardViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as const;
 const boundedViewKeys = ['range', 'day', 'agenda'] as const;
-const rangeOnlyViewKeys = ['range', 'agenda'] as const;
 
 export function Calendar({
   parentId,
@@ -69,7 +61,7 @@ export function Calendar({
   primary,
 }: {
   parentId?: string;
-  initialDate?: string;
+  initialDate?: Date;
   dateRange?: DateRange;
   onDropFromOutside?: (
     subject: ExternalDragSubject,
@@ -80,14 +72,19 @@ export function Calendar({
   primary?: ViewProps['primary'];
 }) {
   const auth = useAuth();
+
+  const isInternal = auth.isMember || auth.isTrainerOrAdmin;
+  const defaultView = !dateRange ? 'agenda' : isInternal ? 'range' : 'day';
+  const defaultOnlyMine = !!dateRange && isInternal;
+  const availableViews: readonly CalendarViewKey[] = dateRange ? boundedViewKeys : standardViewKeys;
+
   const [onlyMine, setOnlyMine] = useQueryState(
     'my',
-    parseAsBoolean.withDefault(false).withOptions({ history: 'push' }),
+    parseAsBoolean.withDefault(defaultOnlyMine).withOptions({ history: 'push' }),
   );
-  const defaultView = dateRange ? 'range' : 'agenda';
-  const [requestedView, setView] = useQueryState(
+  const [viewInput, setView] = useQueryState(
     'v',
-    parseAsStringLiteral(calendarViewKeys)
+    parseAsStringLiteral(availableViews)
       .withDefault(defaultView)
       .withOptions({ history: 'push' }),
   );
@@ -95,14 +92,7 @@ export function Calendar({
     'columns',
     parseAsStringLiteral(columnModes).withOptions({ history: 'push' }),
   );
-  const singleDayRange =
-    !!dateRange && dateRange.since.toDateString() === dateRange.until.toDateString();
-  const availableViews: readonly CalendarViewKey[] = dateRange
-    ? singleDayRange
-      ? rangeOnlyViewKeys
-      : boundedViewKeys
-    : standardViewKeys;
-  const viewInput = availableViews.includes(requestedView) ? requestedView : defaultView;
+
   const rangeView = React.useMemo<CalendarView | undefined>(
     () =>
       dateRange && {
@@ -113,11 +103,8 @@ export function Calendar({
       },
     [dateRange],
   );
-  const view: CalendarView =
-    viewInput === 'range' ? rangeView! : CalendarViews[viewInput];
-  const [date, setDate] = React.useState(() =>
-    initialDate ? new Date(initialDate) : new Date(),
-  );
+  const view: CalendarView = viewInput === 'range' ? rangeView! : CalendarViews[viewInput];
+  const [date, setDate] = React.useState(() => initialDate ?? new Date());
 
   const setDragListeners = useSetAtom(dragListenersAtom);
   const groupBy = useAtomValue(groupByAtom);
@@ -261,15 +248,6 @@ export function Calendar({
     <>
       <div className="bg-neutral-0 p-2 gap-2 flex flex-wrap flex-col-reverse lg:flex-row items-center">
         <div className="print:hidden flex w-full min-w-0 max-w-full flex-1 flex-wrap items-start gap-2">
-          {dateRange && (
-            <BoundedDayPicker
-              range={dateRange}
-              date={date}
-              view={viewInput}
-              setDate={setDate}
-              setView={setView}
-            />
-          )}
           {!dateRange && view.nav && (
             <DateNavigator date={date} setDate={setDate} view={view} bounds={dateRange} />
           )}
@@ -293,6 +271,17 @@ export function Calendar({
           <ParticipantFilter />
           <EventTypeFilter />
           {fetching && <Spinner />}
+
+          <div className="grow" />
+          {dateRange && (
+            <BoundedDayPicker
+              range={dateRange}
+              date={date}
+              view={viewInput}
+              setDate={setDate}
+              setView={setView}
+            />
+          )}
         </div>
 
         <span className="px-3 text-right">{view.label(range)}</span>

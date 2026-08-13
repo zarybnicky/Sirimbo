@@ -1,6 +1,10 @@
 fragment EventInstance on EventInstance {
-  parentId
   seriesId
+  parentId
+  parent {
+    id
+    name
+  }
   id
   name
   type

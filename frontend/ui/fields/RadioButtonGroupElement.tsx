@@ -52,7 +52,7 @@ export function RadioButtonGroup({
           />
           <span
             className={cn(
-              'block cursor-pointer rounded-xl border border-accent-7 bg-neutral-1 px-2.5 py-2 text-sm text-accent-11',
+              'block cursor-pointer rounded-xl border border-accent-7 bg-neutral-1 px-2 py-1.5 text-sm text-accent-11',
               'peer-checked:border-accent-10 peer-checked:bg-accent-9 peer-checked:text-white',
               'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-accent-10',
               'peer-disabled:cursor-not-allowed peer-disabled:border-neutral-6 peer-disabled:text-neutral-11',

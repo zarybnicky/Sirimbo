@@ -12,10 +12,8 @@ import { EventAttendance } from '@/ui/EventAttendance';
 import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
-import { EventList } from '@/ui/lists/EventList';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
-import { WithSidebar } from '@/ui/WithSidebar';
 import { formatEventType, formatEventName } from '@/ui/format';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -66,6 +64,22 @@ export function EventPageClient({
     }[] = [];
     if (!event) return tabs;
 
+    const schedule =
+      instance && auth.user?.id
+        ? instance
+        : shared?.hasTokenAccess || shared?.hasPublicDetails
+          ? shared
+          : null;
+    if (schedule?.type?.toUpperCase() === 'CAMP') {
+      tabs.push({
+        id: 'schedule',
+        title: 'Rozpis',
+        contents: () => (
+          <CampSchedule id={schedule.id} since={schedule.since} until={schedule.until} />
+        ),
+      });
+    }
+
     tabs.push({
       id: 'info',
       title: 'Info',
@@ -89,29 +103,13 @@ export function EventPageClient({
       }
     }
 
-    const schedule =
-      instance && auth.user?.id
-        ? instance
-        : shared?.hasTokenAccess || shared?.hasPublicDetails
-          ? shared
-          : null;
-    if (schedule?.type?.toUpperCase() === 'CAMP') {
-      tabs.push({
-        id: 'schedule',
-        title: 'Rozpis',
-        contents: () => (
-          <CampSchedule id={schedule.id} since={schedule.since} until={schedule.until} />
-        ),
-      });
-    }
-
     if (instance?.type === 'CAMP') {
       tabs.push(
         {
           id: 'lessons',
           title: 'Lekce',
           contents: () => (
-            <div className="col-full-width relative">
+            <div className="col-feature relative">
               <CampLessonsTable id={instance.id} />
             </div>
           ),
@@ -120,7 +118,7 @@ export function EventPageClient({
           id: 'trainers',
           title: 'Trenéři',
           contents: () => (
-            <div className="col-full-width relative">
+            <div className="col-feature relative">
               <CampTrainersTable
                 id={instance.id}
                 since={instance.since}
@@ -158,23 +156,25 @@ export function EventPageClient({
 
   return (
     <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
-      <WithSidebar
-        sidebar={<EventList />}
-        className={auth.user ? 'p-4 lg:pb-8' : 'min-h-[60vh] mb-8'}
-      >
-        <div className="col-feature">
-          {event && <PageHeader title={title} actions={actions} primary={primaryAction} />}
-          {!authLoading && !fetching && !event && (
-            <div className="my-12 rounded-md border border-neutral-5 bg-neutral-2 p-6 text-center">
-              <h1 className="text-xl text-neutral-12">Událost nenalezena</h1>
-              <p className="mt-2 text-neutral-11">
-                Odkaz není platný, nebo k události nemáte přístup.
-              </p>
-            </div>
-          )}
-        </div>
-        <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
-      </WithSidebar>
+      <div className="col-feature">
+        {event && (
+          <PageHeader
+            title={title}
+            subtitle={formatEventType(event.type?.toUpperCase() as EventType | null)}
+            actions={actions}
+            primary={primaryAction}
+          />
+        )}
+        {!authLoading && !fetching && !event && (
+          <div className="my-12 rounded-md border border-neutral-5 bg-neutral-2 p-6 text-center">
+            <h1 className="text-xl text-neutral-12">Událost nenalezena</h1>
+            <p className="mt-2 text-neutral-11">
+              Odkaz není platný, nebo k události nemáte přístup.
+            </p>
+          </div>
+        )}
+      </div>
+      <TabMenu className="col-feature" selected={variant} onSelect={setVariant} options={tabs} />
     </Layout>
   );
 }

@@ -1,6 +1,8 @@
+import { cn } from '@/lib/cn';
 import React, { useCallback, useMemo } from 'react';
 
 export interface TabMenuProps {
+  className?: string;
   options: {
     id: string;
     title: React.ReactNode;
@@ -12,6 +14,7 @@ export interface TabMenuProps {
 }
 
 export const TabMenu = React.memo(function TabMenu({
+  className,
   options,
   selected,
   onSelect,
@@ -29,7 +32,9 @@ export const TabMenu = React.memo(function TabMenu({
 
   return (
     <>
-      <nav className="print:hidden border-b border-neutral-7 mb-2 flex space-x-4 max-w-full overflow-y-auto" aria-label="Tabs">
+      <nav
+        className={cn("print:hidden border-b border-neutral-7 mb-2 flex space-x-4 max-w-full overflow-y-auto", className)}
+      >
         {options.map((tab) => (
           <TabButton
             key={tab.id}

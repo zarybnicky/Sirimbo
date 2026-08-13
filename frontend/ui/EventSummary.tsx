@@ -40,12 +40,25 @@ export function EventSummary({
   return (
     <div className="flex flex-col gap-2 text-sm">
       {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
-        <Link
-          href={`/terminy/${seriesInfo.id}`}
-          className="text-xs underline decoration-accent-11 underline-offset-2 hover:text-accent-11"
-        >
-          {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
-        </Link>
+        <div className="-mb-2">
+          <Link
+            href={`/terminy/${seriesInfo.id}`}
+            className="text-xs hover:text-accent-11 underline"
+          >
+            {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
+          </Link>
+        </div>
+      )}
+
+      {instance.parent && (
+        <div className="-mb-2">
+          <Link
+            href={`/termin/${instance.parent.id}`}
+            className="text-xs hover:text-accent-11 underline"
+          >
+            {instance.parent.name}
+          </Link>
+        </div>
       )}
 
       {offsetButtons && (

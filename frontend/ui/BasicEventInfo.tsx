@@ -1,8 +1,7 @@
 import type { ISharedEventResult } from '@/app/(member)/termin/[id]/termin.queries';
-import type { EventType } from '@/graphql';
 import type { EventPageFragment } from '@/graphql/Event';
 import { RichTextView } from '@/ui/RichTextView';
-import { dateTimeFormatter, formatEventType } from '@/ui/format';
+import { dateTimeFormatter } from '@/ui/format';
 import Link from 'next/link';
 
 export function BasicEventInfo({
@@ -12,9 +11,6 @@ export function BasicEventInfo({
 }) {
   const shared = 'trainerNames' in instance;
   const seriesInfo = shared ? null : instance.seriesInfo;
-  const type = shared
-    ? (instance.type?.toUpperCase() as EventType | null)
-    : instance.type;
   const location =
     (shared ? instance.locationName : instance.location?.name) || instance.locationText;
   const trainers = shared
@@ -23,21 +19,30 @@ export function BasicEventInfo({
 
   return (
     <div className="flex flex-col gap-3">
-      <dl className="not-prose">
-        {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
-          <dd>
-            <Link
-              href={`/terminy/${seriesInfo.id}`}
-              className="text-xs underline decoration-neutral-7 underline-offset-2 hover:text-accent-11"
-            >
-              {seriesInfo.position}. z {seriesInfo.length} v sérii{' '}
-              {seriesInfo.name?.trim()}
-            </Link>
-          </dd>
-        )}
+      {!shared && seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
+        <div>
+          <Link
+            href={`/terminy/${seriesInfo.id}`}
+            className="text-xs hover:text-accent-11 underline"
+          >
+            {seriesInfo.position}. z {seriesInfo.length} v sérii{' '}
+            {seriesInfo.name?.trim()}
+          </Link>
+        </div>
+      )}
 
-        <dd>{formatEventType(type)}</dd>
+      {!shared && instance.parent && (
+        <div>
+          <Link
+            href={`/termin/${instance.parent.id}`}
+            className="text-xs hover:text-accent-11 underline"
+          >
+            {instance.parent.name}
+          </Link>
+        </div>
+      )}
 
+      <dl className="not-prose tabular">
         <dt>Termín</dt>
         <dd>
           {dateTimeFormatter.formatRange(

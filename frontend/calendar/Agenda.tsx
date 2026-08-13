@@ -100,7 +100,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
       {dataByDay.map(([date, dateEntry]) => (
         <React.Fragment key={date}>
           <div className="mt-8 mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <div className="text-2xl tracking-wide">
+            <div className="text-xl tracking-tight">
               {capitalize(longDayFormatter.format(new Date(date)))}
             </div>
             {dateEntry.birthdays.map((calendarEvent) => (
@@ -108,7 +108,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
             ))}
           </div>
 
-          <div className="flex justify-start flex-wrap gap-2 opacity-90">
+          <div className="flex justify-start items-start flex-wrap gap-2 opacity-90">
             {dateEntry.competitions.map((calendarEvent) => (
               <div
                 key={calendarEvent.id}
@@ -142,7 +142,7 @@ function BirthdayChip({ calendarEvent }: { calendarEvent: CalendarBirthdayEvent 
     <Link
       href={`/clenove/${calendarEvent.person.id}`}
       title={`Narozeniny: ${calendarEvent.person.name}`}
-      className="inline-flex max-w-full items-center gap-1 rounded border border-neutral-6 bg-neutral-2 px-2 py-1 text-sm text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
+      className="inline-flex max-w-full items-center gap-1 rounded border border-neutral-6 bg-neutral-2 px-2 py-1 text-xs text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
     >
       <Cake className="size-3.5 shrink-0 text-accent-11" />
       <span className="truncate">{calendarEvent.person.name}</span>
@@ -240,7 +240,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
         return (
           <React.Fragment key={instance.id}>
             {loc !== prevLoc && !!loc && (
-              <div className="ml-2.5 mt-1 text-sm text-accent-11">{loc}</div>
+              <div className="ml-2.5 not:first:mt-1 text-sm text-accent-11">{loc}</div>
             )}
             <EventButton instance={instance} viewer="trainer" />
           </React.Fragment>

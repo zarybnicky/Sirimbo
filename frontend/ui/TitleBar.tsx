@@ -92,7 +92,7 @@ export function PageHeader<Id extends string = string>({
         {actions && <ActionGroup className="ml-auto" primary={primary} groups={groups} actions={actions} />}
       </div>
 
-      {subtitle && <p className="my-2 text-sm text-accent-12">{subtitle}</p>}
+      {subtitle && <p className="mt-1 text-sm text-accent-12">{subtitle}</p>}
     </div>
   );
 }
