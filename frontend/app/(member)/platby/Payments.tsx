@@ -1,5 +1,6 @@
+'use client';
+
 import { PageHeader } from '@/ui/TitleBar';
-import { Layout } from '@/ui/Layout';
 import React from 'react';
 import { parseAsString, useQueryState } from 'nuqs';
 import { TabMenu } from '@/ui/TabMenu';
@@ -21,7 +22,6 @@ import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionRow } from '@/ui/ActionRow';
-import { NextSeo } from 'next-seo';
 
 type TenantAccountPage = NonNullable<TenantTurnoverPageQuery['accountsList']>[number];
 type TenantPosting = TenantAccountPage['postingsList'][number];
@@ -36,13 +36,13 @@ type ManualCreditTransaction = NonNullable<
 const TURNOVER_PAGE_SIZE = 50;
 const DEPOSIT_PAGE_SIZE = 50;
 
-export default function PaymentsPage() {
+export function Payments() {
   const [tab, setTab] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
 
-  const tabs = [
+  const tabs = React.useMemo(() => ([
     {
       id: 'info',
       title: <>Stav kreditu</>,
@@ -63,14 +63,13 @@ export default function PaymentsPage() {
       title: <>Dobití kreditu</>,
       contents: () => <TenantDeposits key="deposits" />,
     },
-  ];
+  ]), []);
 
   return (
-    <Layout requireAdmin>
-      <NextSeo title="Platby" />
+    <>
       <PageHeader title="Platby" />
       <TabMenu selected={tab} onSelect={setTab} options={tabs} />
-    </Layout>
+    </>
   );
 }
 
@@ -94,12 +93,12 @@ function AccountOverview() {
         >
           <span>{x.name}</span>
           <span>
-            {x.accountsList.map(account => (
+            {x.accountsList.map((account) =>
               moneyFormatter.format({
                 amount: account.balance ?? '0',
                 currency: account.currency,
-              })
-            ))}
+              }),
+            )}
           </span>
         </div>
       ))}
@@ -110,7 +109,10 @@ function AccountOverview() {
 function UnpaidPayments() {
   const [{ data }] = useQuery({ query: UnpaidPaymentsDocument });
   const unpaid = data?.unpaidPayments?.filter(keyIsNonNull('payment')) ?? [];
-  const actionMap = useActionMap(paymentActions, unpaid.map(x => x.payment));
+  const actionMap = useActionMap(
+    paymentActions,
+    unpaid.map((x) => x.payment),
+  );
 
   return unpaid.map((x) => (
     <ActionRow
@@ -236,7 +238,7 @@ function TenantTurnover() {
               !!posting.transaction,
           )
           .toSorted((a, b) =>
-            (b.transaction.effectiveDate).localeCompare(a.transaction.effectiveDate),
+            b.transaction.effectiveDate.localeCompare(a.transaction.effectiveDate),
           );
 
         if (postings.length === 0) {
@@ -423,12 +425,7 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
   );
 }
 
-function DepositRow({
-  transaction,
-}: {
-  transaction: ManualCreditTransaction;
-}) {
-
+function DepositRow({ transaction }: { transaction: ManualCreditTransaction }) {
   const personPosting = transaction.postingsList.find(
     (posting) => posting.account?.person,
   );
@@ -467,9 +464,7 @@ function DepositRow({
           </Link>
         )}
       </div>
-      <span className="font-medium">
-        {moneyFormatter.format({ amount, currency })}
-      </span>
+      <span className="font-medium">{moneyFormatter.format({ amount, currency })}</span>
     </div>
   );
 }

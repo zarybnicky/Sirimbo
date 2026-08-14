@@ -1,22 +1,15 @@
+'use client';
+
 import { PaymentDocument } from '@/graphql/Payment';
 import { slugify } from '@/lib/slugify';
 import { EventButton } from '@/ui/EventButton';
 import { moneyFormatter, numericFullFormatter } from '@/ui/format';
-import { Layout } from '@/ui/Layout';
 import { cardCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
 import { useQuery } from 'urql';
-import { z } from 'zod';
 
-const QueryParams = z.object({
-  id: zRouterId,
-});
-
-export default function PaymentPage() {
-  const router = useTypedRouter(QueryParams);
-  const { id } = router.query;
+export function Payment({ id }: { id: string }) {
   const [{ data, fetching, error }] = useQuery({
     query: PaymentDocument,
     variables: { id },
@@ -27,7 +20,7 @@ export default function PaymentPage() {
   const pageTitle = payment ? `Detail platby ${id}` : 'Načítám...';
 
   return (
-    <Layout requireAdmin>
+    <>
       <PageHeader
         title={pageTitle}
         breadcrumbs={[{ label: 'Platby', href: '/platby' }, { label: pageTitle }]}
@@ -117,6 +110,6 @@ export default function PaymentPage() {
           )}
         </div>
       )}
-    </Layout>
+    </>
   );
 }

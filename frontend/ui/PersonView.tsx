@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { PersonMembershipsDocument } from '@/graphql/Person';
 import { PageHeader } from '@/ui/TitleBar';

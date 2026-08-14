@@ -1,23 +1,16 @@
+'use client';
+
 import { UserDetailDocument } from '@/graphql/CurrentUser';
 import { useActionMap } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
 import { ActionRow } from '@/ui/ActionRow';
 import { formatOpenDateRange, numericFullFormatter } from '@/ui/format';
-import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
-import { z } from 'zod';
 
-const QueryParams = z.object({
-  id: zRouterId,
-});
-
-export default function UserPage() {
-  const router = useTypedRouter(QueryParams);
-  const { id } = router.query;
+export function User({ id }: { id: string }) {
   const [{ data, fetching, error }] = useQuery({
     query: UserDetailDocument,
     variables: { id },
@@ -33,7 +26,7 @@ export default function UserPage() {
   const personActionMap = useActionMap(personActions, people);
 
   return (
-    <Layout requireAdmin>
+    <>
       <PageHeader
         title={pageTitle}
         breadcrumbs={[{ label: 'Členové', href: '/clenove' }, { label: pageTitle }]}
@@ -85,6 +78,6 @@ export default function UserPage() {
           </section>
         </div>
       )}
-    </Layout>
+    </>
   );
 }
