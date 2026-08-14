@@ -3,7 +3,7 @@ import {
   EventRangeDocument,
   type EventRangeQuery,
 } from '@/graphql/Event';
-import { dateTimeFormatter, formatEventName } from '@/ui/format';
+import { capitalize, dateTimeFormatter, formatEventName } from '@/ui/format';
 import Link from 'next/link';
 import { parseAsString, useQueryStates } from 'nuqs';
 import React from 'react';
@@ -16,14 +16,6 @@ type ReportRow = {
   durationMinutes: number;
   attended: number;
   total: number;
-};
-
-type MonthReport = {
-  key: string;
-  label: string;
-  since: Date;
-  groupRows: ReportRow[];
-  privateRows: ReportRow[];
 };
 
 const hoursFormatter = new Intl.NumberFormat('cs-CZ', {
@@ -65,20 +57,13 @@ export function PersonWorkReportView({ id }: { id: string }) {
     { history: 'push' },
   );
 
-  const months = React.useMemo<MonthReport[]>(() => {
-    return Array.from({ length: 8 }, (_, index) => {
-      const since = new Date(
-        month.getFullYear(),
-        month.getMonth() - index,
-        1,
-      );
-      const label = monthFormatter.format(since);
+  const months = React.useMemo(() => {
+    return Array.from({ length: 8 }, (_, i) => {
+      const since = new Date(month.getFullYear(), month.getMonth() - i, 1);
       return {
         key: toMonthKey(since),
-        label: label.slice(0, 1).toUpperCase() + label.slice(1),
         since,
-        groupRows: [],
-        privateRows: [],
+        label: capitalize(monthFormatter.format(since)),
       };
     });
   }, [month]);

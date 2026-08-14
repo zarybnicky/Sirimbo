@@ -24,6 +24,15 @@ export type RequestAuthState = {
 
 export const requestAuthAtom = atom<RequestAuthState | null>(null);
 
+// Temporary Pages Router fallback; remove once Layout always receives SSR state.
+const mountedAtom = atom(false);
+mountedAtom.onMount = (setMounted) => setMounted(true);
+const renderingReadyAtom = atom(
+  (get) => get(requestAuthAtom) !== null || get(mountedAtom),
+);
+
+export const useIsRenderingReady = () => useAtomValue(renderingReadyAtom);
+
 interface BaseAuthState {
   user: null | {
     id: string;

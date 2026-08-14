@@ -3,7 +3,6 @@ import { CohortGroupDocument } from '@/graphql/CohortGroup';
 import { executeGraphql } from '@/lib/server/graphql';
 import { slugify } from '@/lib/slugify';
 import { stripHtml } from '@/lib/stripHtml';
-import { Layout } from '@/ui/Layout';
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -46,9 +45,5 @@ export default async function TrainingProgramPage({ params }: Props) {
     redirect(`/treninkove-programy/${item.id}/${expectedSlug}`);
   }
 
-  return (
-    <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
-      <TrainingProgramDetails initialItem={item} />
-    </Layout>
-  );
+  return <TrainingProgramDetails initialItem={item} />;
 }

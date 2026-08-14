@@ -14,7 +14,7 @@ import { ChevronDown, Menu as MenuIcon, User as Account } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useMemo } from 'react';
-import { useTenantId } from '@/ui/state/auth';
+import { useIsRenderingReady, useTenantId } from '@/ui/state/auth';
 
 type Props = {
   isOpen: boolean;
@@ -36,15 +36,11 @@ export function Header({
   const pathname = usePathname() ?? '';
   const auth = useAuth();
   const tenantId = useTenantId();
-  const [isMounted, setIsMounted] = React.useState(false);
+  const isRenderingReady = useIsRenderingReady();
 
   const DesktopLogo = useMemo(() => getTenantUi(tenantId, 'DesktopLogo'), [tenantId]);
   const MobileLogo = useMemo(() => getTenantUi(tenantId, 'MobileLogo'), [tenantId]);
   const SocialIcons = useMemo(() => getTenantUi(tenantId, 'SocialIcons'), [tenantId]);
-
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   return (
     <header className="sticky z-20 top-0 inset-x-0 text-white bg-[#292524] shadow-lg print:hidden">
@@ -75,8 +71,8 @@ export function Header({
 
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
-            href={auth.user && isMounted ? '/profil' : '/login'}
-            aria-label={auth.user && isMounted ? 'Otevřít profil' : 'Přihlásit se'}
+            href={auth.user && isRenderingReady ? '/profil' : '/login'}
+            aria-label={auth.user && isRenderingReady ? 'Otevřít profil' : 'Přihlásit se'}
           >
             <Account aria-hidden="true" />
           </Link>

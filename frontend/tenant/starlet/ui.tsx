@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import LogoIcon from './logo-white-no-text.png';
@@ -18,5 +17,5 @@ export function SidebarLogo() {
 }
 
 export function MobileLogo() {
-  return <Image className="pb-1 pr-4 -mt-1" alt="" src={LogoIcon} height="65" />;
+  return <Image className="pb-1 pr-4 -mt-1" alt="" src={LogoIcon} height="65" loading='eager' />;
 }

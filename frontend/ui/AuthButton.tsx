@@ -12,19 +12,15 @@ import { useAuth } from '@/ui/use-auth';
 import { useMemberMenu } from '@/lib/use-menu';
 import { User as Account } from 'lucide-react';
 import React from 'react';
-import { signOut } from '@/ui/state/auth';
+import { signOut, useIsRenderingReady } from '@/ui/state/auth';
 import Link from 'next/link';
 
 export function AuthButton() {
   const auth = useAuth();
   const memberMenu = useMemberMenu();
+  const isRenderingReady = useIsRenderingReady();
 
-  const [isMounted, setIsMounted] = React.useState(false);
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!auth.user || !isMounted) {
+  if (!auth.user || !isRenderingReady) {
     return (
       <Link href="/login" className="flex items-center gap-2 uppercase font-bold text-sm">
         <Account className="size-4" />

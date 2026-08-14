@@ -8,7 +8,12 @@ import {
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui.pages';
 import { cn } from '@/lib/cn';
-import { signOut, useTenantConfig, useTenantId } from '@/ui/state/auth';
+import {
+  signOut,
+  useIsRenderingReady,
+  useTenantConfig,
+  useTenantId,
+} from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
 import { useRouter } from 'next/compat/router';
@@ -28,20 +33,13 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
   const pathname = usePathname();
   const auth = useAuth();
   const tenantId = useTenantId();
-  const { publicSite, copyrightLine: newCopyrightLine } = useTenantConfig();
+  const { publicSite, copyrightLine } = useTenantConfig();
   const memberMenu = useMemberMenu();
+  const isRenderingReady = useIsRenderingReady();
   const SidebarLogo = React.useMemo(
     () => getTenantUi(tenantId, 'SidebarLogo'),
     [tenantId],
   );
-
-  const [copyrightLine, setCopyrightLine] = React.useState('');
-
-  const [isMounted, setIsMounted] = React.useState(false);
-  React.useEffect(() => {
-    setIsMounted(true);
-    setCopyrightLine(newCopyrightLine);
-  }, [newCopyrightLine]);
 
   React.useEffect(() => {
     if (!router) return;
@@ -89,7 +87,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
       >
         {!showTopMenu && (sidebarLogo ?? <SidebarLogo />)}
         <div className="space-y-1 pt-3 mr-1">
-          {auth.user && isMounted ? (
+          {auth.user && isRenderingReady ? (
             <>
               {memberMenu
                 .map((item) =>
@@ -118,7 +116,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
 
               <Link
                 onClick={signOut}
-                href={isMounted && publicSite ? '/' : '/dashboard'}
+                href={publicSite ? '/' : '/dashboard'}
                 className={cn(
                   'rounded-2xl px-3 py-1.5',
                   'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
@@ -133,7 +131,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {isMounted &&
+          {isRenderingReady &&
             publicSite &&
             (showTopMenu ? (
               topMenu.map((item) => <SidebarSection key={item.title} item={item} />)
@@ -142,7 +140,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
             ))}
 
           <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
-            <div>{copyrightLine}</div>
+            <div>{isRenderingReady ? copyrightLine : null}</div>
             <div>Verze: {buildId?.slice(0, 7)}</div>
             <div>
               <Link href="/now" target="_blank">

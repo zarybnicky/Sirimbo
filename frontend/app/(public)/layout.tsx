@@ -1,19 +1,18 @@
-import { getRequestTenant } from '@/tenant/server';
+import { getRequestState } from '@/lib/server/request-state';
 import type { TenantCatalogEntry } from '@/tenant/catalog';
 import { getTenantUi } from '@/tenant/ui';
-import { JsonLd } from '@/ui/JsonLd';
 import { Providers } from '@/ui/Providers';
 import { Layout } from '@/ui/Layout';
 import type { ReactNode } from 'react';
 
 /* eslint-disable import-x/no-unused-modules */
 export default async function PublicLayout({ children }: { children: ReactNode }) {
-  const tenant = await getRequestTenant();
+  const { tenant, auth } = await getRequestState();
   const ui = getTenantUi(tenant.id);
   const structuredData = getTenantStructuredData(tenant);
 
   return (
-    <Providers initialTenantId={tenant.id}>
+    <Providers initialAuth={auth}>
       {structuredData.length > 0 && <JsonLd data={structuredData} />}
       <Layout
         includeTenantSeo={false}
@@ -68,4 +67,24 @@ function getTenantStructuredData(tenant: TenantCatalogEntry) {
       },
     },
   ];
+}
+
+type JsonLdValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | JsonLdValue[]
+  | { [key: string]: JsonLdValue };
+
+function JsonLd({ data }: { data: JsonLdValue | JsonLdValue[] }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data).replaceAll('<', String.raw`\u003c`),
+      }}
+    />
+  );
 }

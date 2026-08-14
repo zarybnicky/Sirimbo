@@ -1,6 +1,5 @@
 /* eslint-disable import-x/no-unused-modules */
 
-import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import { TrainingPrograms } from '@/ui/TrainingPrograms';
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function TrainingProgramsPage() {
   return (
-    <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
+    <>
       <PageHeader title="Tréninkové programy" />
       <TrainingPrograms />
       <div className="my-8">
@@ -26,6 +25,6 @@ export default function TrainingProgramsPage() {
           <ChevronRight className="mt-0.5 ml-2 -mr-2" />
         </Link>
       </div>
-    </Layout>
+    </>
   );
 }
