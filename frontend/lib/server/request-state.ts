@@ -12,10 +12,7 @@ export async function getRequestState() {
 
   if (!cookieStore.has(SESSION_COOKIE)) {
     const tenant = await tenantPromise;
-    return {
-      tenant,
-      auth: { tenantId: tenant.id, claims: null, user: null } satisfies RequestAuthState,
-    };
+    return { tenant, auth: undefined };
   }
 
   const [tenant, data] = await Promise.all([

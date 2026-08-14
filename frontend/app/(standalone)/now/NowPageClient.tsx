@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  EventRangeDocument,
-  type EventRangeQuery,
-  type EventRangeQueryVariables,
-} from '@/graphql/Event';
+import { EventRangeDocument, type EventRangeQuery } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { formatEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
@@ -131,28 +127,20 @@ function formatTrainers(instance: Instance) {
 
 export default function NowPage() {
   const [reference, setReference] = React.useState(() => new Date());
-  const [grouping, setGrouping] = React.useState<GroupingMode>('location');
-  const end = React.useMemo(() => add(reference, 24, 'hours'), [reference]);
-
-  const variables = React.useMemo<EventRangeQueryVariables>(
-    () => ({
-      start: reference.toISOString(),
-      end: end.toISOString(),
-      scope: 'ALL',
-    }),
-    [reference, end],
-  );
-
   React.useEffect(() => {
     const intervalId = setInterval(() => setReference(new Date()), REFRESH_INTERVAL);
     return () => clearInterval(intervalId);
   }, []);
 
+  const [grouping, setGrouping] = React.useState<GroupingMode>('location');
+
   const [{ data, fetching, error }] = useQuery({
     query: EventRangeDocument,
-    variables,
+    variables: {
+      start: reference.toISOString(),
+      end: add(reference, 24, 'hours').toISOString(),
+    },
   });
-
   const buckets = React.useMemo(
     () => gatherBuckets(data, reference, grouping),
     [data, reference, grouping],
@@ -191,14 +179,13 @@ export default function NowPage() {
               </button>
             ))}
           </div>
-          {error && (
-            <p className="rounded-md border border-accent-6 bg-accent-3/30 px-4 py-2 text-sm text-accent-11">
-              Nepodařilo se načíst data. Zkuste stránku obnovit.
-            </p>
-          )}
         </header>
 
-        {fetching && !data ? (
+        {error ? (
+          <div className="flex min-h-[50vh] items-center justify-center text-accent-9">
+            Nepodařilo se načíst data. Zkuste stránku obnovit.
+          </div>
+        ) : fetching && !data ? (
           <div className="flex min-h-[50vh] items-center justify-center text-accent-9">
             Načítám…
           </div>

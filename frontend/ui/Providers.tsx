@@ -7,7 +7,12 @@ import { configureUrql } from '@/lib/query';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
-import { requestAuthAtom, storeRef, type RequestAuthState } from '@/ui/state/auth';
+import {
+  requestAuthAtom,
+  storeRef,
+  tenantIdAtom,
+  type RequestAuthState,
+} from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
@@ -19,13 +24,19 @@ import { createClient, Provider as UrqlProvider } from 'urql';
 export function Providers({
   children,
   initialAuth,
+  initialTenantId,
 }: {
   children: React.ReactNode;
   initialAuth?: RequestAuthState;
+  initialTenantId?: number;
 }) {
   const [store] = React.useState(() => {
     const store = createStore();
-    if (initialAuth) store.set(requestAuthAtom, initialAuth);
+    if (initialAuth) {
+      store.set(requestAuthAtom, initialAuth);
+    } else if (initialTenantId !== undefined) {
+      store.set(tenantIdAtom, initialTenantId.toString());
+    }
     return store;
   });
   const [client, setClient] = React.useState(() => createClient(configureUrql()));

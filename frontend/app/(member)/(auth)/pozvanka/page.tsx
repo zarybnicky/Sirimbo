@@ -4,6 +4,7 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { ErrorPage } from '@/ui/ErrorPage';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { z } from 'zod';
 import { InvitationRegistrationForm } from './InvitationRegistrationForm';
 
 export const metadata: Metadata = {
@@ -17,8 +18,8 @@ export default async function InvitationPage({
 }) {
   const search = await searchParams;
   const token = Array.isArray(search.token) ? search.token[0] : search.token;
-  const invitation = token
-    ? await executeGraphql(InvitationInfoDocument, { token }).catch(() => null)
+  const invitation = z.uuid().safeParse(token).success
+    ? await executeGraphql(InvitationInfoDocument, { token })
     : null;
 
   return token && invitation?.invitationInfo && invitation.invitationName ? (
@@ -32,8 +33,7 @@ export default async function InvitationPage({
       error="Neplatná pozvánka"
       details={
         <>
-          Vaše pozvánka je neplatná nebo již použitá.{' '}
-          Pokud jste se již registrovali,{' '}
+          Vaše pozvánka je neplatná nebo již použitá. Pokud jste se již registrovali,{' '}
           <Link href="/login">přihlaste se zde</Link>.
         </>
       }

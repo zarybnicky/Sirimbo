@@ -74,7 +74,6 @@ export function PersonWorkReportView({ id }: { id: string }) {
       start: months.at(-1)?.since.toISOString() ?? month.toISOString(),
       end: now.toISOString(),
       trainerIds: [id],
-      scope: 'ALL',
     },
     pause: !id,
     requestPolicy: 'cache-and-network',

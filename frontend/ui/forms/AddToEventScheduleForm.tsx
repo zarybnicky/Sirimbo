@@ -31,7 +31,7 @@ export function AddToEventScheduleForm({
         .filter((event) => event.id !== eventId)
         .map((event) => ({
           id: event.id,
-          label: `${formatEventName(event)} — ${fullDateFormatter.formatRange(
+          label: `${formatEventName(event)} - ${fullDateFormatter.formatRange(
             new Date(event.since),
             new Date(event.until),
           )}`,

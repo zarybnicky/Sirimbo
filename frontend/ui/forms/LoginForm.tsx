@@ -8,10 +8,10 @@ import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useRedirectLoggedIn } from '../use-auth';
+import React from 'react';
 
 const Form = z.object({
   login: z.string().min(1, 'Zadejte přihlašovací jméno nebo e-mail'),
@@ -25,19 +25,22 @@ export function LoginForm() {
   });
   useRedirectLoggedIn();
 
+  const [error, setError] = React.useState('');
+
   const search = useSearchParams();
   const from = search?.get('from');
 
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    const error = await loginAction(values, from);
-    if (error) throw new Error(error);
-  });
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    setError('');
+    const message = await loginAction(values, from);
+    if (message) setError(message);
+  };
 
   return (
-    <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit)}>
       <h2 className="text-xl">Přihlášení do systému</h2>
 
-      <FormError error={onSubmit.error} />
+      <FormError error={error} />
       <TextFieldElement
         control={control}
         name="login"
@@ -65,7 +68,7 @@ export function LoginForm() {
               href="/registrace"
               className="uppercase rounded-md px-3 text-sm py-2 text-accent-10 hover:bg-accent-3 text-left"
             >
-               Registrace nového člena
+              Registrace nového člena
             </Link>
           )}
         </div>
@@ -74,7 +77,7 @@ export function LoginForm() {
             href="/zapomenute-heslo"
             className="uppercase rounded-md px-3 text-sm py-2 text-accent-10 hover:bg-accent-3 text-right"
           >
-             Zapomněli jste heslo?
+            Zapomněli jste heslo?
           </Link>
         </div>
       </div>

@@ -41,10 +41,14 @@ export function FieldHelper({ error, helperText }: FieldHelperProps) {
 }
 
 const errorTranslation: { [key: string]: string } = {
+  INVALID_CREDENTIALS: 'Nesprávné jméno nebo heslo',
   ACCOUNT_NOT_FOUND: 'Zadaná kombinace jména a e-mailu neexistuje',
   INVALID_PASSWORD: 'Nesprávné heslo',
   ACCOUNT_DISABLED: 'Účet byl zablokován',
   ACCOUNT_NOT_CONFIRMED: 'Účet ještě nebyl potvrzen',
+  INVITATION_NOT_FOUND: 'Pozvánka není platná',
+  INVITATION_ALREADY_USED: 'Pozvánka již byla použita',
+  INVALID_EMAIL: 'E-mail neodpovídá pozvánce',
 };
 
 export function FormError({

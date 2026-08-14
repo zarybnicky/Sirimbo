@@ -86,7 +86,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
         )}
       >
         {!showTopMenu && (sidebarLogo ?? <SidebarLogo />)}
-        <div className="space-y-1 pt-3 mr-1">
+        <div className="space-y-1 pt-3 mr-1 relative">
           {auth.user && isRenderingReady ? (
             <>
               {memberMenu
@@ -114,17 +114,18 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
                   <SidebarSection key={item.title} item={item} />
                 ))}
 
-              <Link
-                onClick={signOut}
-                href={publicSite ? '/' : '/dashboard'}
-                className={cn(
-                  'rounded-2xl px-3 py-1.5',
-                  'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
-                  'tracking-wider text-sm',
-                )}
-              >
-                Odhlásit se
-              </Link>
+              <div className="w-full flex px-2">
+                <button
+                  type="button"
+                  onClick={signOut}
+                  className={cn(
+                    'flex items-center flex-1 px-3 py-1.5 rounded-2xl',
+                    'text-sm tracking-wider hover:bg-accent-10 hover:text-white',
+                  )}
+                >
+                   Odhlásit se
+                </button>
+              </div>
               <div className="h-8" />
             </>
           ) : (
@@ -173,9 +174,8 @@ function SidebarLink({ item, onClick }: SidebarLinkProps) {
       href={item.href}
       onClick={onClick}
       className={cn(
-        'rounded-2xl px-3 py-1.5',
-        'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
-        'tracking-wider text-sm',
+        'flex items-center flex-1 mx-2 px-3 py-1.5 rounded-2xl',
+        'text-sm tracking-wider hover:bg-accent-10 hover:text-white',
         inPath ? 'underline font-bold bg-neutral-11 text-white lg:bg-accent-10' : '',
         item.className,
       )}

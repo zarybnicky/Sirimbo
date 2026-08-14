@@ -108,7 +108,6 @@ fragment EventRegistrationAttendance on EventInstanceRegistration {
   status
   attendanceNote
   attendanceCreatedAt
-  attendanceUpdatedAt
   lastAttended
   person {
     id
@@ -518,8 +517,6 @@ mutation UpdateAttendance($input: UpdateAttendanceInput!) {
       id
       status
       attendanceNote
-      attendanceUpdatedAt
-      lastAttended
     }
   }
 }

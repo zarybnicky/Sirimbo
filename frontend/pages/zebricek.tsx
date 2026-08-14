@@ -127,17 +127,15 @@ export default function ScoreboardPage() {
         </section>
 
         <section>
-          {error && (
+          {error ? (
             <p className="not-prose rounded-md border border-accent-7 bg-accent-3 p-3 text-sm text-accent-11">
               Nepodařilo se načíst žebříček. Zkuste to prosím znovu.
             </p>
-          )}
-
-          {fetching && !error && <p>Načítám výsledky…</p>}
-
-          {!fetching && !error && scoreboard.length === 0 && (
+          ) : fetching ? (
+            <p>Načítám výsledky…</p>
+          ) : scoreboard.length === 0 ? (
             <p>Pro vybrané období nejsou žádné body.</p>
-          )}
+          ) : null}
 
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
@@ -179,7 +177,7 @@ export default function ScoreboardPage() {
                             {entry.person.name}
                           </Link>
                         ) : (
-                          '—'
+                          '-'
                         )}
                       </td>
                       <td className="py-1 px-2 text-center">

@@ -6,7 +6,7 @@ import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAsyncCallback } from 'react-async-hook';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -28,17 +28,19 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
     resolver: zodResolver(Form),
     defaultValues: { token: token ?? '', email: email ?? '', passwd: '' },
   });
-  const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    const error = await registerUsingInvitationAction(values);
-    if (error) throw new Error(error);
-  });
+  const [error, setError] = React.useState('');
+  const onSubmit = async (values: z.infer<typeof Form>) => {
+    setError('');
+    const message = await registerUsingInvitationAction(values);
+    if (message) setError(message);
+  };
 
   return (
     <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
-      <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
+      <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit)}>
         <h4 className="text-2xl">Registrace nového uživatele</h4>
 
-        <FormError error={onSubmit.error} />
+        <FormError error={error} />
 
         <p>
           Přišla vám pozvánka do klubového systému. Nastavte si heslo a vytvořte si účet.

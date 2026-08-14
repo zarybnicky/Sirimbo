@@ -155,6 +155,7 @@ const tenantAtom = atom<TenantCatalogEntry>(
 export const useTenantId = () => useAtomValue(tenantIdAtom);
 export const useTenantConfig = () => useAtomValue(tenantAtom).config;
 
+// Keep this until browser-only legacy tokens no longer need time to become sessions.
 const baseAuthLoadingAtom = atom(true);
 export const authLoadingAtom = atom(
   (get) => get(requestAuthAtom) === null && get(baseAuthLoadingAtom),
