@@ -15,16 +15,16 @@ const percentFormatter = new Intl.NumberFormat('cs-CZ', {
 });
 
 export function AttendanceReport() {
+  const now = React.useMemo(() => new Date(), []);
   const period = React.useMemo(() => {
-    const period = computeRange('schoolyear', new Date(), null, null);
+    const period = computeRange('schoolyear', now, null, null);
     if (period.until)
       period.until =
-        // eslint-disable-next-line react-hooks/purity
-        new Date(period.until).getTime() > Date.now()
-          ? new Date().toISOString()
+        new Date(period.until).getTime() > now.getTime()
+          ? now.toISOString()
           : period.until;
     return period;
-  }, []);
+  }, [now]);
 
   const [{ data, fetching, error }] = useQuery({
     query: TrainerAttendanceReportDocument,
@@ -37,7 +37,7 @@ export function AttendanceReport() {
   const { rows, summary } = React.useMemo(() => {
     const source = data?.trainerGroupAttendanceCompletionList ?? [];
     const rows = source.filter(isTruthy).map((row) => ({
-      name: row.person?.name ?? '—',
+      name: row.person?.name ?? '-',
       total: row.totalInstances ?? 0,
       filled: row.filledInstances ?? 0,
       partial: row.partiallyFilledInstances ?? 0,
@@ -68,7 +68,7 @@ export function AttendanceReport() {
       rows,
       summary: {
         ...totals,
-        ratio: totals.total > 0 ? (totals.filled + totals.partial) / totals.total : null,
+        ratio: totals.total > 0 ? (totals.filled + totals.partial) / totals.total : 0,
       },
     };
   }, [data]);
@@ -110,11 +110,9 @@ export function AttendanceReport() {
               <span className="font-semibold text-accent-11">
                 {numberFormatter.format(summary.unfilled)}
               </span>
-              {summary.ratio !== null && (
-                <span className="text-neutral-10">
-                  {` · ${percentFormatter.format(summary.ratio)} alespoň částečně vyplněno`}
-                </span>
-              )}
+              <span className="text-neutral-10">
+                {` · ${percentFormatter.format(summary.ratio)} alespoň částečně vyplněno`}
+              </span>
             </li>
           </ul>
         ) : (

@@ -42,7 +42,7 @@ interface BaseAuthState {
   persons: PersonFragment[];
   couples: CoupleFragment[];
   personIds: string[];
-  tenantIds: string[];
+  tenantIds: number[];
   isExternal: boolean;
   isGuest: boolean;
   isMember: boolean;
