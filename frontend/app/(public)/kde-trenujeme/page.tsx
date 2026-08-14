@@ -1,17 +1,15 @@
 /* eslint-disable import-x/no-unused-modules */
-import { publicPageMetadata } from '@/lib/server/seo';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { LeafletMap } from '@/ui/LeafletMap';
 
-export const generateMetadata = (): Promise<Metadata> =>
-  publicPageMetadata({
-    title: 'Kde trénujeme',
-    description:
-      'Přehled tanečních sálů TK Olymp v Olomouci: Taneční centrum při FZŠ Holečkova a tělocvična Slovanského gymnázia včetně adres a map.',
-    path: '/kde-trenujeme',
-  });
+export const metadata: Metadata = {
+  title: 'Kde trénujeme',
+  description:
+    'Přehled tanečních sálů TK Olymp v Olomouci: Taneční centrum při FZŠ Holečkova a tělocvična Slovanského gymnázia včetně adres a map.',
+  alternates: { canonical: '/kde-trenujeme' },
+};
 
 export default function LocationsPage() {
   return (

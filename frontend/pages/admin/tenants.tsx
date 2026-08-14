@@ -231,17 +231,17 @@ function TenantCard({ tenant }: TenantCardProps) {
       )}
 
       <dl className="text-sm text-neutral-12">
-        <dt className="font-semibold text-neutral-11">Bankovní účet</dt>
-        <dd>{tenant.bankAccount || '—'}</dd>
-        <dt className="font-semibold text-neutral-11">Domény</dt>
-        <dd>{tenant.origins?.length ? tenant.origins.join(', ') : '—'}</dd>
-        <dt className="font-semibold text-neutral-11">IČO / DIČ</dt>
+        <dt>Bankovní účet</dt>
+        <dd>{tenant.bankAccount || '-'}</dd>
+        <dt>Domény</dt>
+        <dd>{tenant.origins?.join(', ') ?? '-'}</dd>
+        <dt>IČO / DIČ</dt>
         <dd>
-          {tenant.czIco || '—'}
+          {tenant.czIco || '-'}
           {tenant.czDic ? ` / ${tenant.czDic}` : ''}
         </dd>
-        <dt className="font-semibold text-neutral-11">Adresa</dt>
-        <dd>{address || '—'}</dd>
+        <dt>Adresa</dt>
+        <dd>{address || '-'}</dd>
       </dl>
     </div>
   );

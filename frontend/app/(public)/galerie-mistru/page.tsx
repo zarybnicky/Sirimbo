@@ -1,16 +1,14 @@
 /* eslint-disable import-x/no-unused-modules */
-import { publicPageMetadata } from '@/lib/server/seo';
 import { ServiceCard } from '@/ui/ServiceCard';
 import { PageHeader } from '@/ui/TitleBar';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
-export const generateMetadata = (): Promise<Metadata> =>
-  publicPageMetadata({
-    title: 'Galerie mistrů',
-    description:
-      'Přehled mistrů České republiky z TK Olymp Olomouc. Podívejte se na úspěšné taneční páry klubu ve standardních, latinskoamerických a deseti tancích.',
-    path: '/galerie-mistru',
-  });
+export const metadata: Metadata = {
+  title: 'Galerie mistrů',
+  description:
+    'Přehled mistrů České republiky z TK Olymp Olomouc. Podívejte se na úspěšné taneční páry klubu ve standardních, latinskoamerických a deseti tancích.',
+  alternates: { canonical: '/galerie-mistru' },
+};
 
 export default function GalerieMistruPage() {
   return (

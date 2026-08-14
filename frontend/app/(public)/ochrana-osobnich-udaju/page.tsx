@@ -1,15 +1,13 @@
 /* eslint-disable import-x/no-unused-modules */
-import { publicPageMetadata } from '@/lib/server/seo';
 import { PageHeader } from '@/ui/TitleBar';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
-export const generateMetadata = (): Promise<Metadata> =>
-  publicPageMetadata({
-    title: 'Ochrana osobních údajů',
-    description:
-      'Informace TK Olymp Olomouc o zpracování osobních údajů, kontaktech správce, účelu zpracování a právech subjektů údajů.',
-    path: '/ochrana-osobnich-udaju',
-  });
+export const metadata: Metadata = {
+  title: 'Ochrana osobních údajů',
+  description:
+    'Informace TK Olymp Olomouc o zpracování osobních údajů, kontaktech správce, účelu zpracování a právech subjektů údajů.',
+  alternates: { canonical: '/ochrana-osobnich-udaju' },
+};
 
 export default function OchranaOsobnichUdajuPage() {
   return (

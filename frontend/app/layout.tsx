@@ -27,6 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     applicationName: tenant.name,
     manifest: linkTags.find((tag) => tag.rel === 'manifest')?.href,
     openGraph: {
+      title: seo.defaultTitle,
       siteName: tenant.name,
       type: 'website',
       locale: 'cs_CZ',

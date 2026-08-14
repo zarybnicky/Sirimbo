@@ -1,12 +1,11 @@
 /* eslint-disable import-x/no-unused-modules */
 import { ArticleDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
-import { getRequestTenant } from '@/tenant/server';
 import { slugify } from '@/lib/slugify';
 import { fullDateFormatter } from '@/ui/format';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 import { stripHtml } from '@/lib/stripHtml';
@@ -37,9 +36,12 @@ function createSeoDescription(
   return `${shortened.slice(0, end)}…`;
 }
 
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: ArticlePageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const { id } = await params;
-  const [item, tenant] = await Promise.all([getArticle(id), getRequestTenant()]);
+  const [item, inherited] = await Promise.all([getArticle(id), parent]);
   if (!item) {
     return {
       title: 'Článek',
@@ -47,9 +49,6 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   }
   const description = createSeoDescription(item.atPreview, item.atText);
   const canonicalPath = `/clanky/${item.id}/${slugify(item.atJmeno)}`;
-  const image = item.titlePhotoUrl
-    ? { url: item.titlePhotoUrl, alt: item.atJmeno }
-    : tenant.config.publicSite?.image;
 
   return {
     title: item.atJmeno,
@@ -58,19 +57,22 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       canonical: canonicalPath,
     },
     openGraph: {
+      ...inherited.openGraph,
       type: 'article',
       title: item.atJmeno,
       description,
       url: canonicalPath,
       publishedTime: item.createdAt ?? undefined,
       modifiedTime: item.updatedAt ?? undefined,
-      images: image ? [image] : undefined,
+      ...(item.titlePhotoUrl
+        ? { images: [{ url: item.titlePhotoUrl, alt: item.atJmeno }] }
+        : {}),
     },
     twitter: {
-      card: 'summary_large_image',
+      ...inherited.twitter,
       title: item.atJmeno,
       description,
-      images: image ? [image.url] : undefined,
+      ...(item.titlePhotoUrl ? { images: [item.titlePhotoUrl] } : {}),
     },
     robots: item.isVisible ? undefined : { index: false, follow: false },
   };

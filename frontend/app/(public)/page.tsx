@@ -9,17 +9,11 @@ import { Hero } from '@/ui/Hero';
 import LiteYouTubeEmbed from '@/ui/LiteYouTubeEmbed';
 import { TrainingPrograms } from '@/ui/TrainingPrograms';
 import { typographyCls } from '@/ui/style';
-import { Metadata } from 'next';
-import { publicPageMetadata } from '@/lib/server/seo';
+import type { Metadata } from 'next';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const tenant = await getRequestTenant();
-  return publicPageMetadata({
-    title: tenant.name,
-    description: tenant.config.seo.description ?? '',
-    path: '/',
-  });
-}
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
 
 export default async function HomePage() {
   const [tenant, data] = await Promise.all([

@@ -1,19 +1,23 @@
+/* eslint-disable import-x/no-unused-modules */
+
+import { Layout } from '@/ui/Layout';
+import { buttonCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import { TrainingPrograms } from '@/ui/TrainingPrograms';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import * as React from 'react';
-import { Layout } from '@/ui/Layout';
-import { buttonCls } from '@/ui/style';
-import { NextSeo } from 'next-seo';
+import type { Metadata } from 'next';
 
-export default function TrainingProgramPage() {
+export const metadata: Metadata = {
+  title: 'Tréninkové programy',
+  description:
+    'Tréninkové programy pro začínající, výkonnostní i vrcholové taneční sportovce od dětí po dospělé.',
+  alternates: { canonical: '/treninkove-programy' },
+};
+
+export default function TrainingProgramsPage() {
   return (
-    <Layout hideTopMenuIfLoggedIn>
-      <NextSeo
-        title="Tréninkové programy"
-        description="Tréninkové programy pro začínající, výkonnostní i vrcholové taneční sportovce od dětí po dospělé."
-      />
+    <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
       <PageHeader title="Tréninkové programy" />
       <TrainingPrograms />
       <div className="my-8">

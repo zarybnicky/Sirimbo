@@ -1,7 +1,6 @@
 /* eslint-disable import-x/no-unused-modules */
 import { ArticlesDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
-import { publicPageMetadata } from '@/lib/server/seo';
 import { getRequestTenant } from '@/tenant/server';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
@@ -28,12 +27,14 @@ export async function generateMetadata({
 }: ArticlesPageProps): Promise<Metadata> {
   const currentPage = await getCurrentPage(searchParams);
 
-  return publicPageMetadata({
+  return {
     title: currentPage > 1 ? `Články - ${currentPage}. stránka` : 'Články',
     description:
       'Aktuality, články a pozvánky TK Olymp Olomouc ze světa tanečního sportu, soutěží, soustředění, tréninků a klubových akcí.',
-    path: currentPage > 1 ? `/clanky?page=${currentPage}` : '/clanky',
-  });
+    alternates: {
+      canonical: currentPage > 1 ? `/clanky?page=${currentPage}` : '/clanky',
+    },
+  };
 }
 
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {

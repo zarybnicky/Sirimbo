@@ -1,17 +1,15 @@
 /* eslint-disable import-x/no-unused-modules */
-import { publicPageMetadata } from '@/lib/server/seo';
 import { Mail, Phone } from 'lucide-react';
 import { PageHeader } from '@/ui/TitleBar';
 import { cardCls } from '@/ui/style';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
-export const generateMetadata = (): Promise<Metadata> =>
-  publicPageMetadata({
-    title: 'Kontakt',
-    description:
-      'Kontakty na TK Olymp Olomouc, fakturační údaje, taneční sály a osoby pro členské příspěvky, ČSTS, Olymp Dance, Pro-Am a klubové vybavení.',
-    path: '/kontakt',
-  });
+export const metadata: Metadata = {
+  title: 'Kontakt',
+  description:
+    'Kontakty na TK Olymp Olomouc, fakturační údaje, taneční sály a osoby pro členské příspěvky, ČSTS, Olymp Dance, Pro-Am a klubové vybavení.',
+  alternates: { canonical: '/kontakt' },
+};
 
 const contacts = [
   {

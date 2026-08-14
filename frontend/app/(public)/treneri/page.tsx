@@ -1,18 +1,16 @@
 /* eslint-disable import-x/no-unused-modules */
-import { publicPageMetadata } from '@/lib/server/seo';
 import { typographyCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
-export const generateMetadata = (): Promise<Metadata> =>
-  publicPageMetadata({
-    title: 'Naši trenéři',
-    description:
-      'Seznamte se s trenéry TK Olymp Olomouc. Klub vede zkušený tým trenérů, porotců a odborníků pro standardní i latinskoamerické tance.',
-    path: '/treneri',
-  });
+export const metadata: Metadata = {
+  title: 'Naši trenéři',
+  description:
+    'Seznamte se s trenéry TK Olymp Olomouc. Klub vede zkušený tým trenérů, porotců a odborníků pro standardní i latinskoamerické tance.',
+  alternates: { canonical: '/treneri' },
+};
 
 export default function TrainersPage() {
   return (
