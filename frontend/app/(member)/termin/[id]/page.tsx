@@ -32,7 +32,6 @@ async function resolvePage(props: PageProps) {
   const shareToken = /^[A-Za-z0-9_-]{32}$/.test(token ?? '') ? token : undefined;
   return {
     id,
-    requestedToken: token,
     hasShareToken: !!shareToken,
     tenant,
     event: await loadEvent(id, shareToken ?? id),
@@ -40,7 +39,7 @@ async function resolvePage(props: PageProps) {
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
-  const { id, requestedToken, event, tenant } = await resolvePage(props);
+  const { id, hasShareToken, event, tenant } = await resolvePage(props);
   const title = event?.name?.trim() || `Termín ${id}`;
   const canonical = new URL(`/termin/${id}`, tenant.config.origin).toString();
 
@@ -48,7 +47,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     title,
     description: stripHtml(event?.summary) || undefined,
     alternates: { canonical },
-    robots: requestedToken || !event ? { index: false, follow: false } : undefined,
+    robots: hasShareToken || !event ? { index: false, follow: false } : undefined,
   };
 }
 

@@ -28,7 +28,6 @@ export async function generateMetadata(): Promise<Metadata> {
     applicationName: name,
     manifest: linkTags.find((tag) => tag.rel === 'manifest')?.href,
     openGraph: {
-      title: seo.defaultTitle,
       siteName: name,
       type: 'website',
       locale: 'cs_CZ',
@@ -38,7 +37,6 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: publicSite?.image
       ? {
           card: 'summary_large_image',
-          title: seo.defaultTitle,
           description: seo.description,
           images: [publicSite?.image.url],
         }

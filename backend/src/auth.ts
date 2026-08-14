@@ -85,25 +85,24 @@ function verifySessionToken(token: string): jwt.JwtPayload | undefined {
   }
 }
 
-const emptySettings = (tenantId: string): Record<string, string> => ({
-  role: 'anonymous',
-  'jwt.claims.tenant_id': tenantId,
-  'jwt.claims.user_id': '',
-  'jwt.claims.username': '',
-  'jwt.claims.email': '',
-  'jwt.claims.my_person_ids': '{}',
-  'jwt.claims.my_tenant_ids': '{}',
-  'jwt.claims.my_cohort_ids': '{}',
-  'jwt.claims.my_couple_ids': '{}',
-  'jwt.claims.shared.event_ids': '{}',
-  'jwt.claims.shared.person_ids': '{}',
-  'jwt.claims.shared.couple_ids': '{}',
-  'jwt.claims.shared.cohort_ids': '{}',
-});
 
 async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
   const tenantId = await findTenantId(req);
-  const settings = emptySettings(tenantId);
+  const settings: Record<string, string> = {
+      role: 'anonymous',
+      'jwt.claims.tenant_id': tenantId,
+      'jwt.claims.user_id': '',
+      'jwt.claims.username': '',
+      'jwt.claims.email': '',
+      'jwt.claims.my_person_ids': '{}',
+      'jwt.claims.my_tenant_ids': '{}',
+      'jwt.claims.my_cohort_ids': '{}',
+      'jwt.claims.my_couple_ids': '{}',
+      'jwt.claims.shared.event_ids': '{}',
+      'jwt.claims.shared.person_ids': '{}',
+      'jwt.claims.shared.couple_ids': '{}',
+      'jwt.claims.shared.cohort_ids': '{}',
+  };
   const token = getBearerOrCookie(req);
   const claims = token ? verifySessionToken(token) : undefined;
   if (claims) {
@@ -172,6 +171,5 @@ export function withPgClientAndPgSettings<T>(
   req: express.Request,
   fn: (client: NodePostgresPgClient) => T,
 ): Promise<T> {
-  const withPgClient = makePgAdaptorWithPgClient(pool);
-  return withPgClient(req.pgSettings, fn);
+  return makePgAdaptorWithPgClient(pool)(req.pgSettings, fn);
 }
