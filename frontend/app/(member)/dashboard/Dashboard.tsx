@@ -9,17 +9,21 @@ import { redirect } from 'next/navigation';
 import { parseAsString, useQueryState } from 'nuqs';
 
 const tabs = [
-  { id: 'myLessons', title: 'Moje události', contents: MyEventsList },
+  { id: 'myLessons', title: 'Moje události', contents: () => <MyEventsList /> },
   {
     id: 'competitions',
     title: 'Soutěže',
     contents: () => <CompetitionWeekPanel allowOnlyMine />,
   },
-  { id: 'myAnnouncements', title: 'Aktuality', contents: MyAnnouncements },
+  {
+    id: 'myAnnouncements',
+    title: 'Aktuality',
+    contents: () => <MyAnnouncements />,
+  },
   {
     id: 'stickyAnnouncements',
     title: 'Stálá nástěnka',
-    contents: StickyAnnouncements,
+    contents: () => <StickyAnnouncements />,
   },
 ];
 

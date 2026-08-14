@@ -7,10 +7,6 @@ import { SelectField } from '@/ui/fields/select';
 
 export function TenantSelect() {
   const auth = useAuth();
-  const [isVisible, setIsVisible] = React.useState(false);
-  React.useEffect(() => {
-    setIsVisible(auth.isSystemAdmin || process.env.NODE_ENV === 'development');
-  }, [auth.isSystemAdmin]);
 
   const [tenantId, setTenantId] = useAtom(tenantIdAtom);
   const options = React.useMemo(() => {
@@ -28,7 +24,7 @@ export function TenantSelect() {
     [setTenantId],
   );
 
-  if (!isVisible) return;
+  if (!auth.isSystemAdmin && process.env.NODE_ENV !== 'development') return;
 
   return (
     <SelectField
