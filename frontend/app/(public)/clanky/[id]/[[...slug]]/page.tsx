@@ -42,11 +42,8 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { id } = await params;
   const [item, inherited] = await Promise.all([getArticle(id), parent]);
-  if (!item) {
-    return {
-      title: 'Článek',
-    };
-  }
+  if (!item) notFound();
+
   const description = createSeoDescription(item.atPreview, item.atText);
   const canonicalPath = `/clanky/${item.id}/${slugify(item.atJmeno)}`;
 

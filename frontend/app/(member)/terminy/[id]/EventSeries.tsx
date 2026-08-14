@@ -1,25 +1,22 @@
+'use client';
+
 import type { AttendanceType } from '@/graphql';
-import { EventSeriesDocument, type EventInstanceFragment } from '@/graphql/Event';
+import {
+  EventSeriesDocument,
+  type EventInstanceFragment,
+  type EventSeriesQuery,
+} from '@/graphql/Event';
 import { cn } from '@/lib/cn';
-import { Layout } from '@/ui/Layout';
-import { Spinner } from '@/ui/Spinner';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { FormError } from '@/ui/form';
 import { formatEventType, fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
-import { NextSeo } from 'next-seo';
 import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';
 import * as React from 'react';
 import { useQuery } from 'urql';
-import { z } from 'zod';
-
-const QueryParams = z.object({
-  id: zRouterId,
-});
 
 const labels: { [key in AttendanceType]: LucideIcon } = {
   ATTENDED: Check,
@@ -27,24 +24,23 @@ const labels: { [key in AttendanceType]: LucideIcon } = {
   NOT_EXCUSED: X,
 };
 
-export default function EventSeriesPage() {
-  const {
-    query: { id },
-  } = useTypedRouter(QueryParams);
+export function EventSeries({
+  initialSeries,
+}: {
+  initialSeries: NonNullable<EventSeriesQuery['eventSeries']>;
+}) {
   const auth = useAuth();
-  const [{ data, error, fetching }] = useQuery({
+  const [{ data, error }] = useQuery({
     query: EventSeriesDocument,
-    variables: { id },
-    pause: !id,
+    variables: { id: initialSeries.id },
   });
-  const series = data?.eventSeries;
-  const title = series?.name || 'Termíny';
+  const series = data?.eventSeries ?? initialSeries;
+  const title = series.name || 'Termíny';
   const [variant, setVariant] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
   const tabs = React.useMemo(() => {
-    if (!series) return [];
     const tabs: {
       id: string;
       title: React.ReactNode;
@@ -66,21 +62,16 @@ export default function EventSeriesPage() {
   }, [auth.isTrainerOrAdmin, series]);
 
   return (
-    <Layout hideTopMenuIfLoggedIn>
-      <NextSeo title={title} />
-      <div className="col-feature min-h-[60vh] p-4 lg:pb-8">
-        <PageHeader title={title} />
-        <FormError error={error} />
-        {fetching && !series ? <Spinner /> : null}
-        {!fetching && !series ? <p>Série termínů nebyla nalezena.</p> : null}
-        {series?.eventsList.length === 0 ? <p>Série nemá žádné termíny.</p> : null}
-        {series?.eventsList.length && (
-          <div className="max-w-full">
-            <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
-          </div>
-        )}
-      </div>
-    </Layout>
+    <div className="col-feature min-h-[60vh] p-4 lg:pb-8">
+      <PageHeader title={title} />
+      <FormError error={error} />
+      {series.eventsList.length === 0 ? <p>Série nemá žádné termíny.</p> : null}
+      {series.eventsList.length > 0 ? (
+        <div className="max-w-full">
+          <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -100,7 +91,9 @@ function Attendance({ instances }: { instances: EventInstanceFragment[] }) {
       <tbody>
         {instances.map((instance) => {
           const stats =
-            typeof instance.stats === 'string' ? JSON.parse(instance.stats) : instance.stats;
+            typeof instance.stats === 'string'
+              ? JSON.parse(instance.stats)
+              : instance.stats;
 
           return (
             <tr key={instance.id}>

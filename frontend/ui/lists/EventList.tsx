@@ -1,3 +1,5 @@
+'use client';
+
 import { EventListDocument } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';

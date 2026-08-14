@@ -1,10 +1,14 @@
+'use client';
+
+import {
+  CohortWithMembersDocument,
+  type CohortWithMembersQuery,
+  type CstsProgressRecordFragment,
+} from '@/graphql/Cohorts';
+import { useQuery } from 'urql';
 import { cohortActions } from '@/lib/actions/cohort';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { useActionMap, useActions } from '@/lib/actions';
-import type {
-  CohortWithMembersQuery,
-  CstsProgressRecordFragment,
-} from '@/graphql/Cohorts';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
 import { formatCstsClass, getBestCstsProgress } from '@/ui/csts';
@@ -16,12 +20,20 @@ import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { useAuth } from './use-auth';
+import { useAuth } from '@/ui/use-auth';
 
-type CohortWithMembers = NonNullable<CohortWithMembersQuery['entity']>;
-
-export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
+export function TrainingGroup({
+  initialCohort,
+}: {
+  initialCohort: NonNullable<CohortWithMembersQuery['entity']>;
+}) {
   const auth = useAuth();
+  const [{ data }] = useQuery({
+    query: CohortWithMembersDocument,
+    variables: { id: initialCohort.id },
+  });
+  const cohort = data?.entity ?? initialCohort;
+
   const members = React.useMemo(
     () => cohort.cohortMembershipsList ?? [],
     [cohort.cohortMembershipsList],
@@ -46,52 +58,55 @@ export function CohortView({ cohort }: { cohort: CohortWithMembers }) {
 
       {auth.isLoggedIn && (
         <>
-      <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
-        Členové ({members.length})
-      </h3>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-[1fr_minmax(0,14rem)_minmax(0,14rem)_auto] pb-4">
-        {members.map((membership) => (
-          <div
-            key={membership.id}
-            className="col-span-full grid grid-cols-subgrid items-center gap-x-4 gap-y-2 text-sm"
-          >
-            <ActionRow
-              className="mb-0 min-w-max"
-              actions={[
-                ...(membership.person ? memberActionMap.get(membership.person.id)! : []),
-                ...membershipActionMap.get(membership.id)!,
-              ]}
-            >
-              {membership.person ? (
-                <span className="inline-flex items-center gap-1">
-                  <Link
-                    className="font-bold underline"
-                    href={`/clenove/${membership.person.id}`}
-                  >
-                    {membership.person.name}
-                  </Link>
-                </span>
-              ) : (
-                '?'
-              )}
-            </ActionRow>
+          <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
+            Členové ({members.length})
+          </h3>
 
-            <div className="order-3 lg:order-2">
-              <CategoryList person={membership.person} discipline="Standard" />
-            </div>
-            <div className="order-4 lg:order-3">
-              <CategoryList person={membership.person} discipline="Latin" />
-            </div>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-[1fr_minmax(0,14rem)_minmax(0,14rem)_auto] pb-4">
+            {members.map((membership) => (
+              <div
+                key={membership.id}
+                className="col-span-full grid grid-cols-subgrid items-center gap-x-4 gap-y-2 text-sm"
+              >
+                <ActionRow
+                  className="mb-0 min-w-max"
+                  actions={[
+                    ...(membership.person
+                      ? memberActionMap.get(membership.person.id)!
+                      : []),
+                    ...membershipActionMap.get(membership.id)!,
+                  ]}
+                >
+                  {membership.person ? (
+                    <span className="inline-flex items-center gap-1">
+                      <Link
+                        className="font-bold underline"
+                        href={`/clenove/${membership.person.id}`}
+                      >
+                        {membership.person.name}
+                      </Link>
+                    </span>
+                  ) : (
+                    '?'
+                  )}
+                </ActionRow>
 
-            <div className="order-2 text-right lg:order-4">
-              {formatOpenDateRange(membership)}
-            </div>
+                <div className="order-3 lg:order-2">
+                  <CategoryList person={membership.person} discipline="Standard" />
+                </div>
+                <div className="order-4 lg:order-3">
+                  <CategoryList person={membership.person} discipline="Latin" />
+                </div>
+
+                <div className="order-2 text-right lg:order-4">
+                  {formatOpenDateRange(membership)}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <ActivityTimeline cohortId={cohort.id} />
-                                                 </>
+          <ActivityTimeline cohortId={cohort.id} />
+        </>
       )}
     </>
   );
