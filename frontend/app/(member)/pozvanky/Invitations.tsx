@@ -1,4 +1,5 @@
-import { Layout } from '@/ui/Layout';
+'use client';
+
 import {
   CreateInvitationDocument,
   PeopleWithAnotherAccountDocument,
@@ -14,9 +15,8 @@ import { PageHeader } from '@/ui/TitleBar';
 import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-import { NextSeo } from 'next-seo';
 
-export default function InvitationOverviewPage() {
+export function Invitations() {
   const [{ data: withAnotherAccount }] = useQuery({
     query: PeopleWithAnotherAccountDocument,
   });
@@ -26,8 +26,8 @@ export default function InvitationOverviewPage() {
   const [{ data: withInvitation }] = useQuery({ query: PeopleWithInvitationDocument });
   const [, sendInvitation] = useMutation(CreateInvitationDocument);
   const invitations =
-    withInvitation?.peopleWithoutAccessWithInvitationList?.flatMap((person) =>
-      person.personInvitationsList,
+    withInvitation?.peopleWithoutAccessWithInvitationList?.flatMap(
+      (person) => person.personInvitationsList,
     ) ?? [];
   const invitationActionMap = useActionMap(personInvitationActions, invitations);
 
@@ -50,8 +50,7 @@ export default function InvitationOverviewPage() {
   });
 
   return (
-    <Layout requireAdmin>
-      <NextSeo title="Přehled pozvánek" />
+    <>
       <PageHeader title="Přehled pozvánek" />
 
       <div className="prose prose-accent">
@@ -66,9 +65,7 @@ export default function InvitationOverviewPage() {
               {withAnotherAccount?.peopleWithoutAccessWithExistingAccountList?.map(
                 (x) => (
                   <li key={x.id}>
-                    <Link href={`/clenove/${x.id}`}>
-                      {x.name}
-                    </Link>
+                    <Link href={`/clenove/${x.id}`}>{x.name}</Link>
                   </li>
                 ),
               )}
@@ -88,9 +85,7 @@ export default function InvitationOverviewPage() {
                 ?.filter((x) => !x.email)
                 .map((x) => (
                   <li key={x.id}>
-                    <Link href={`/clenove/${x.id}`}>
-                      {x.name}
-                    </Link>
+                    <Link href={`/clenove/${x.id}`}>{x.name}</Link>
                     {', vytvořen '}
                     {x.createdAt ? fullDateFormatter.format(new Date(x.createdAt)) : ''}
                     {x.email ? '' : <b>, chybí e-mail, není kam poslat pozvánku</b>}
@@ -121,9 +116,7 @@ export default function InvitationOverviewPage() {
                 ?.filter((x) => x.email)
                 .map((x) => (
                   <li key={x.id}>
-                    <Link href={`/clenove/${x.id}`}>
-                      {x.name}
-                    </Link>
+                    <Link href={`/clenove/${x.id}`}>{x.name}</Link>
                     {', vytvořen '}
                     {x.createdAt ? fullDateFormatter.format(new Date(x.createdAt)) : ''}
                   </li>
@@ -141,13 +134,9 @@ export default function InvitationOverviewPage() {
                 .map((x) => (
                   <li key={x.id}>
                     <div>
-                      <Link href={`/clenove/${x.id}`}>
-                        {x.name}
-                      </Link>
+                      <Link href={`/clenove/${x.id}`}>{x.name}</Link>
                       {', vytvořen '}
-                      {x.createdAt
-                        ? fullDateFormatter.format(new Date(x.createdAt))
-                        : ''}
+                      {x.createdAt ? fullDateFormatter.format(new Date(x.createdAt)) : ''}
                     </div>
                     <div className="not-prose mt-2 space-y-1">
                       {x.personInvitationsList.map((invitation) => (
@@ -176,6 +165,6 @@ export default function InvitationOverviewPage() {
             <div>✅ Všechny v pořádku</div>
           )}
       </div>
-    </Layout>
+    </>
   );
 }

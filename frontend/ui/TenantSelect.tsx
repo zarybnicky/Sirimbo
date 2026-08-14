@@ -24,7 +24,7 @@ export function TenantSelect() {
     [setTenantId],
   );
 
-  if (!auth.isSystemAdmin && process.env.NODE_ENV !== 'development') return;
+  if (!auth.isSystemAdmin && auth.tenantIds.length < 2 && process.env.NODE_ENV !== 'development') return;
 
   return (
     <SelectField

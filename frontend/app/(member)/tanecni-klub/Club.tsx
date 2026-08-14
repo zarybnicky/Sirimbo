@@ -1,4 +1,5 @@
-import { Layout } from '@/ui/Layout';
+'use client';
+
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader, TitleBar } from '@/ui/TitleBar';
@@ -19,9 +20,8 @@ import { tenantLocationActions } from '@/lib/actions/tenantLocation';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionRow } from '@/ui/ActionRow';
 import { CstsIdBackfillWidget } from '@/ui/CstsIdBackfillWidget';
-import { NextSeo } from 'next-seo';
 
-export default function ClubPage() {
+export function Club() {
   const auth = useAuth();
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
   const [{ data: applications }] = useQuery({ query: MyMembershipApplicationsDocument });
@@ -54,8 +54,7 @@ export default function ClubPage() {
   if (!tenant?.tenant) return null;
 
   return (
-    <Layout requireMember>
-      <NextSeo title="Klub" />
+    <>
       <PageHeader title="Klub" actions={tenantActions} />
 
       <RichTextView value={tenant.tenant.description} />
@@ -153,6 +152,6 @@ export default function ClubPage() {
           <CstsIdBackfillWidget />
         </>
       )}
-    </Layout>
+    </>
   );
 }

@@ -1,15 +1,15 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
-import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { computeRange, PeriodPreset, PeriodSelector } from '@/ui/PeriodSelector';
+import { computeRange, type PeriodPreset, PeriodSelector } from '@/ui/PeriodSelector';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import { Combobox } from '@/ui/fields/Combobox';
 import { fullDateFormatter } from '@/ui/format';
-import { NextSeo } from 'next-seo';
 
-export default function ScoreboardPage() {
+export function Scoreboard() {
   const [cohortId, setCohortId] = React.useState<string | null | undefined>(null);
   const [preset, setPreset] = React.useState<PeriodPreset>('schoolyear');
   const [date, setDate] = React.useState(() => new Date());
@@ -40,14 +40,13 @@ export default function ScoreboardPage() {
     : null;
 
   return (
-    <Layout requireMember>
-      <NextSeo title="Žebříček aktivity" />
+    <>
       <PageHeader title="Žebříček aktivity" />
 
-      <div className="prose prose-accent space-y-8">
+      <div className="space-y-4">
         <section>
           <p>Skóre se skládá z:</p>
-          <dl className="tabular not-prose mt-2 text-sm">
+          <dl className="tabular text-sm">
             <div>
               <dt>Individuální lekce</dt>
               <dd>1b, max. 4b/týden</dd>
@@ -200,6 +199,6 @@ export default function ScoreboardPage() {
           </div>
         </section>
       </div>
-    </Layout>
+    </>
   );
 }

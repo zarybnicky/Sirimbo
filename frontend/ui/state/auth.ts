@@ -42,6 +42,7 @@ interface BaseAuthState {
   persons: PersonFragment[];
   couples: CoupleFragment[];
   personIds: string[];
+  tenantIds: string[];
   isExternal: boolean;
   isGuest: boolean;
   isMember: boolean;
@@ -62,6 +63,7 @@ const defaultAuthState: BaseAuthState = {
   persons: [],
   couples: [],
   personIds: [],
+  tenantIds: [],
   isExternal: true,
   isGuest: false,
   isMember: false,
@@ -201,11 +203,19 @@ function resolveAuthState(
   const isAdmin = claims.admin_tenant_ids.includes(tenantId);
   const isSystemAdmin = claims.is_system_admin;
 
+  const tenantIds = new Set([
+    ...claims.guest_tenant_ids,
+    ...claims.member_tenant_ids,
+    ...claims.trainer_tenant_ids,
+    ...claims.admin_tenant_ids,
+  ]);
+
   return {
     user,
     persons,
     couples: persons.flatMap((x) => x.allCouplesList || []),
     personIds: persons.map((x) => x.id),
+    tenantIds: [...tenantIds],
     isLoggedIn: true,
     isExternal: persons.length === 0,
     isGuest,
