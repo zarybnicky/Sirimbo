@@ -120,7 +120,7 @@ export const numericFullFormatter = new Intl.DateTimeFormat('cs-CZ', {
 export const moneyFormatter = {
   format(
     price: {
-      amount: string | null;
+      amount: string | number | null;
       currency: string | null;
     } | null,
   ) {
@@ -131,7 +131,8 @@ export const moneyFormatter = {
       currency: price.currency ?? 'CZK',
       style: 'currency',
     });
-    return formatter.format(Number.parseFloat(price.amount));
+    const amount = typeof price.amount === 'string' ? Number.parseFloat(price.amount) : price.amount;
+    return formatter.format(amount);
   },
 };
 

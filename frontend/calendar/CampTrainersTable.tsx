@@ -3,7 +3,7 @@ import {
   type CampTrainerOverviewQuery,
 } from '@/graphql/Event';
 import { FormError } from '@/ui/form';
-import { moneyFormatter } from '@/ui/format';
+import { dayFormatter, moneyFormatter } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
@@ -20,11 +20,6 @@ type Row = {
 };
 
 const dayKeyFormatter = new Intl.DateTimeFormat('sv-SE');
-const dayFormatter = new Intl.DateTimeFormat('cs-CZ', {
-  weekday: 'short',
-  day: 'numeric',
-  month: 'numeric',
-});
 
 export function CampTrainersTable({
   id,
@@ -129,12 +124,12 @@ export function CampTrainersTable({
           <div className="flex h-full flex-col justify-center text-right tabular-nums">
             {[...row.payouts].map(([currency, amount]) => (
               <div key={currency}>
-                {moneyFormatter.format({ amount: amount.toString(), currency })}
+                {moneyFormatter.format({ amount, currency })}
               </div>
             ))}
-            {row.payouts.size === 0 && '—'}
+            {row.payouts.size === 0 && '-'}
             {row.payoutIncomplete && row.payouts.size > 0 && (
-              <div className="text-xs text-neutral-10">+ bez sazby</div>
+              <div className="text-xs text-neutral-10">+ trenér bez hodinovky</div>
             )}
           </div>
         ),
@@ -169,7 +164,7 @@ export function CampTrainersTable({
 function EventCounts({ events }: { events: ScheduledEvent[] }) {
   const lessons = events.filter((event) => event.type === 'LESSON').length;
   const groups = events.length - lessons;
-  if (events.length === 0) return <span className="text-neutral-9">—</span>;
+  if (events.length === 0) return <span className="text-neutral-9">-</span>;
   return (
     <div className="flex h-full flex-col justify-center tabular-nums">
       {lessons > 0 && (

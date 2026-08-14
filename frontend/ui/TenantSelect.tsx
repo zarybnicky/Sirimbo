@@ -22,8 +22,8 @@ export function TenantSelect() {
 
   const onChange = React.useCallback(
     (tenantId: string) => {
-      storeRef.resetUrqlClient();
       setTenantId(tenantId);
+      storeRef.resetUrqlClient();
     },
     [setTenantId],
   );

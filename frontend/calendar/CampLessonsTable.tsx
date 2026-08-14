@@ -266,7 +266,7 @@ export function CampLessonsTable({ id }: { id: string }) {
           <div className="flex h-full flex-col justify-center text-right tabular-nums">
             {[...row.prices].map(([currency, amount]) => (
               <div key={currency}>
-                {moneyFormatter.format({ amount: amount.toString(), currency })}
+                {moneyFormatter.format({ amount, currency })}
               </div>
             ))}
             {row.prices.size === 0 && '—'}

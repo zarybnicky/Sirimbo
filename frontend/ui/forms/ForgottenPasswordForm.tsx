@@ -1,29 +1,28 @@
+'use client';
+
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useRouter } from 'next/router';
-import React from 'react';
+import { useRouter } from 'next/navigation';
 import { TextFieldElement } from '@/ui/fields/text';
 import { toast } from 'react-toastify';
 import { ResetPasswordDocument } from '@/graphql/CurrentUser';
 import { useMutation } from 'urql';
-import { NextSeo } from 'next-seo';
 import { z } from 'zod';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
-import { Layout } from '@/ui/Layout';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { cardCls } from '@/ui/style';
+import { useRedirectLoggedIn } from '@/ui/use-auth';
 
 const Form = z.object({
   email: z.email(),
 });
 
-function ForgottenPasswordForm() {
+export function ForgottenPasswordForm() {
   const router = useRouter();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const [result, resetPassword] = useMutation(ResetPasswordDocument);
+  useRedirectLoggedIn();
 
   const onSubmit = async (data: z.infer<typeof Form>) => {
     const result = await resetPassword({ input: data });
@@ -31,7 +30,7 @@ function ForgottenPasswordForm() {
       toast.success(
         'Pokud byl e-mail správný, tak za chvíli najdete e-mail s pokyny ve své schránce.',
       );
-      await router.push('/login');
+      router.push('/login');
     }
   };
 
@@ -57,31 +56,5 @@ function ForgottenPasswordForm() {
         Obnovit heslo
       </SubmitButton>
     </form>
-  );
-}
-
-export default function ForgottenPasswordPage() {
-  const router = useRouter();
-  const auth = useAuth();
-  const authLoading = useAuthLoading();
-
-  React.useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-
-    if (!authLoading && auth.user) {
-      void router.replace('/dashboard');
-    }
-  }, [authLoading, auth.user, router, router.isReady]);
-  return (
-    <Layout className="grow content relative content-stretch">
-      <NextSeo title="Zapomenuté heslo" />
-      <div className="flex h-[calc(100dvh-80px)] items-center justify-center p-5 bg-neutral-1 w-full">
-        <div className={cardCls({ className: 'p-4 max-w-lg' })}>
-          <ForgottenPasswordForm />
-        </div>
-      </div>
-    </Layout>
   );
 }

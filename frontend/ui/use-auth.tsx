@@ -12,7 +12,7 @@ import {
 } from '@/ui/state/auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { buildId } from '@/lib/build-id';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 export const UserRefresher = React.memo(function ProvideAuth() {
   const token = useAtomValue(tokenAtom);
@@ -76,12 +76,6 @@ export const useAuth = () => useAtomValue(authHelpersAtom);
 export const useAuthLoading = () => useAtomValue(authLoadingAtom);
 
 export function useRedirectLoggedIn() {
-  const router = useRouter();
   const auth = useAuth();
-
-  React.useEffect(() => {
-    if (auth.user) {
-      router.replace(auth.personIds.length > 0 ? '/dashboard' : '/profil');
-    }
-  }, [auth.personIds.length, auth.user, router]);
+  if (auth.user) redirect(auth.personIds.length > 0 ? '/dashboard' : '/profil');
 }

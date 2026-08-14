@@ -17,7 +17,7 @@ import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
 import { Spinner } from '@/ui/Spinner';
 import Link from 'next/link';
 import { useAuth } from '@/ui/use-auth';
-import { isTruthy } from '@/lib/truthyFilter';
+import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
 import { ActionRow } from '@/ui/ActionRow';
@@ -87,51 +87,42 @@ function AccountOverview() {
       >
         Přehled plateb 2023
       </button>
-      {(data?.people?.nodes || [])
-        .toSorted((a, b) =>
-          `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
-        )
-        .map((x) => (
-          <div
-            key={x.id}
-            className="flex flex-wrap gap-2 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b"
-          >
-            <span>{x.name}</span>
-            <span>
-              {moneyFormatter.format({
-                amount: x.accountsList.find(Boolean)?.balance ?? '0',
-                currency: 'CZK',
-              })}
-            </span>
-          </div>
-        ))}
+      {(data?.people?.nodes || []).map((x) => (
+        <div
+          key={x.id}
+          className="flex flex-wrap gap-2 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b"
+        >
+          <span>{x.name}</span>
+          <span>
+            {x.accountsList.map(account => (
+              moneyFormatter.format({
+                amount: account.balance ?? '0',
+                currency: account.currency,
+              })
+            ))}
+          </span>
+        </div>
+      ))}
     </>
   );
 }
 
 function UnpaidPayments() {
   const [{ data }] = useQuery({ query: UnpaidPaymentsDocument });
-  const { unpaidPayments } = data || {};
-  const actionMap = useActionMap(
-    paymentActions,
-    unpaidPayments?.map((x) => x.payment).filter(isTruthy) ?? [],
-  );
+  const unpaid = data?.unpaidPayments?.filter(keyIsNonNull('payment')) ?? [];
+  const actionMap = useActionMap(paymentActions, unpaid.map(x => x.payment));
 
-  return (
-    <>
-      {unpaidPayments?.map((x) => (
-        <ActionRow
-          key={x.id}
-          actions={actionMap.get(x.payment!.id)!}
-          className="mb-0 flex-wrap justify-between gap-4 even:bg-neutral-2 odd:bg-neutral-1 border-b p-1.5"
-        >
-          <span className="grow">{x.person?.name}</span>
-          <span>{describePosting(x.payment!)}</span>
-          <span>{moneyFormatter.format(x.price)}</span>
-        </ActionRow>
-      ))}
-    </>
-  );
+  return unpaid.map((x) => (
+    <ActionRow
+      key={x.id}
+      actions={actionMap.get(x.payment.id)!}
+      className="mb-0 flex-wrap justify-between gap-4 even:bg-neutral-2 odd:bg-neutral-1 border-b p-1.5"
+    >
+      <span className="grow">{x.person?.name}</span>
+      <span>{describePosting(x.payment)}</span>
+      <span>{moneyFormatter.format(x.price)}</span>
+    </ActionRow>
+  ));
 }
 
 function TenantTurnover() {
@@ -383,7 +374,6 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
     query: TenantManualCreditTransactionsDocument,
     variables: { first: DEPOSIT_PAGE_SIZE, cursor: cursor ?? undefined },
   });
-  const auth = useAuth();
 
   const transactions = data?.transactions;
   const nodes = transactions?.nodes ?? [];
@@ -415,11 +405,7 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
   return (
     <>
       {nodes.map((transaction) => (
-        <DepositRow
-          key={transaction.id}
-          transaction={transaction}
-          showDebug={auth.isAdmin}
-        />
+        <DepositRow key={transaction.id} transaction={transaction} />
       ))}
       {hasMore && onLoadMore && endCursor && (
         <div className="flex justify-center py-3">
@@ -439,14 +425,9 @@ function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
 
 function DepositRow({
   transaction,
-  showDebug,
 }: {
   transaction: ManualCreditTransaction;
-  showDebug: boolean;
 }) {
-  const effectiveDate = transaction.effectiveDate
-    ? numericDateFormatter.format(new Date(transaction.effectiveDate))
-    : '';
 
   const personPosting = transaction.postingsList.find(
     (posting) => posting.account?.person,
@@ -460,7 +441,11 @@ function DepositRow({
 
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2">
-      <span className="text-sm text-neutral-11 min-w-20">{effectiveDate}</span>
+      <span className="text-sm text-neutral-11 min-w-20">
+        {transaction.effectiveDate
+          ? numericDateFormatter.format(new Date(transaction.effectiveDate))
+          : ''}
+      </span>
       <div className="flex min-w-48 flex-1 flex-col gap-1">
         <span className="font-medium">{personName}</span>
         <span className="text-sm text-neutral-11">
@@ -473,7 +458,7 @@ function DepositRow({
             {specificSymbol && <>SS: {specificSymbol}</>}
           </span>
         )}
-        {showDebug && transaction.payment?.id && (
+        {transaction.payment?.id && (
           <Link
             href={`/platby/${transaction.payment.id}`}
             className="text-xs font-medium text-accent-11 hover:underline"
@@ -483,7 +468,7 @@ function DepositRow({
         )}
       </div>
       <span className="font-medium">
-        {moneyFormatter.format({ amount: amount ?? '0', currency })}
+        {moneyFormatter.format({ amount, currency })}
       </span>
     </div>
   );

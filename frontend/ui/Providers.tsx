@@ -10,13 +10,13 @@ import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
 import {
   requestAuthAtom,
   storeRef,
+  tenantIdAtom,
   type RequestAuthState,
 } from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
 import { createStore, Provider as JotaiProvider } from 'jotai';
-import { useHydrateAtoms } from 'jotai/utils';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { createClient, Provider as UrqlProvider } from 'urql';
@@ -24,12 +24,21 @@ import { createClient, Provider as UrqlProvider } from 'urql';
 export function Providers({
   children,
   initialAuth,
+  initialTenantId,
 }: {
   children: React.ReactNode;
   initialAuth?: RequestAuthState;
+  initialTenantId?: number;
 }) {
-  const [store] = React.useState(() => createStore());
-  useHydrateAtoms([[requestAuthAtom, initialAuth ?? null]], { store });
+  const [store] = React.useState(() => {
+    const store = createStore();
+    if (initialAuth) {
+      store.set(requestAuthAtom, initialAuth);
+    } else if (initialTenantId !== undefined) {
+      store.set(tenantIdAtom, initialTenantId.toString());
+    }
+    return store;
+  });
   const [client, setClient] = React.useState(() => createClient(configureUrql()));
   const resetUrqlClient = React.useCallback(() => {
     setClient(createClient(configureUrql()));

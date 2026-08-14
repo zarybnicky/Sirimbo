@@ -100,15 +100,15 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
 
         <div className="text-right m-3">
           <div>
-            {moneyFormatter.format({ amount: balance.toString(), currency: 'CZK' })}
+            {moneyFormatter.format({ amount: balance, currency: 'CZK' })}
           </div>
           <div>
             {isDeposit ? '+ ' : '- '}
-            {moneyFormatter.format({ amount: amount.toString(), currency: 'CZK' })}
+            {moneyFormatter.format({ amount, currency: 'CZK' })}
           </div>
           <div className="border-t">
             {moneyFormatter.format({
-              amount: (balance + (isDeposit ? +amount : -amount)).toString(),
+              amount: balance + (isDeposit ? +amount : -amount),
               currency: 'CZK',
             })}
           </div>

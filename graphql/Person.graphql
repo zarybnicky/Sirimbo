@@ -115,7 +115,7 @@ query FullPersonList {
 }
 
 query PersonAccounts {
-  people(condition: { membership: {} }) {
+  people(condition: { membership: {} }, orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) {
     nodes {
       ...PersonBasic
       accountsList {

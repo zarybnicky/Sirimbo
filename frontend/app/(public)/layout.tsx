@@ -13,7 +13,7 @@ export default async function PublicLayout({ children }: { children: ReactNode }
   const structuredData = getTenantStructuredData(tenant);
 
   return (
-    <Providers>
+    <Providers initialTenantId={tenant.id}>
       {structuredData.length > 0 && <JsonLd data={structuredData} />}
       <Layout
         includeTenantSeo={false}
