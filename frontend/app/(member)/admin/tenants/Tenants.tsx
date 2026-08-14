@@ -1,9 +1,10 @@
+'use client';
+
 import * as React from 'react';
 import { type Column, DataGrid } from 'react-data-grid';
 import { Sheet, type SheetRef } from 'react-modal-sheet';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { Spinner } from '@/ui/Spinner';
-import { Layout } from '@/ui/Layout';
 import { useMutation, useQuery } from 'urql';
 import {
   SystemAdminTenantsDocument,
@@ -73,7 +74,7 @@ const columns: Column<SystemAdminTenantsRecord>[] = [
   },
 ];
 
-export default function SystemAdminTenantsPage() {
+export function Tenants() {
   const [{ data, fetching, error }] = useQuery({ query: SystemAdminTenantsDocument });
   const tenants = React.useMemo(() => data?.systemAdminTenants?.nodes ?? [], [data]);
 
@@ -98,83 +99,81 @@ export default function SystemAdminTenantsPage() {
   const isDesktop = useMediaQuery('(min-width: 1024px)'); // Tailwind lg
 
   return (
-    <Layout requireSystemAdmin>
-      <div className="col-full-width flex">
-        {fetching && (
-          <div className="flex h-40 items-center justify-center">
-            <Spinner />
+    <div className="col-full-width flex">
+      {fetching && (
+        <div className="flex h-40 items-center justify-center">
+          <Spinner />
+        </div>
+      )}
+
+      {error && (
+        <div className="rounded-md border border-accent-7 bg-accent-3 p-4 text-sm text-accent-11">
+          Nepodařilo se načíst seznam klubů: {error.message}
+        </div>
+      )}
+
+      {!fetching && !error && tenants.length === 0 && (
+        <div className="mt-6 rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
+          Nebyly nalezeny žádné kluby.
+        </div>
+      )}
+
+      {!fetching && !error && tenants.length > 0 && (
+        <div className="mt-6 grid gap-4 lg:grid-cols-[3fr_1fr]">
+          <TestEmailButton />
+
+          <div className="rounded-md border border-neutral-6 bg-neutral-1 overflow-auto">
+            <DataGrid
+              columns={columns}
+              rows={tenants}
+              rowKeyGetter={(r) => r.id!}
+              defaultColumnOptions={{ resizable: true }}
+              headerRowHeight={44}
+              rowHeight={44}
+              onCellClick={({ row }) => setSelectedId(row.id)}
+              rowClass={(row) => (row.id === selectedId ? 'bg-neutral-2' : undefined)}
+            />
           </div>
-        )}
 
-        {error && (
-          <div className="rounded-md border border-accent-7 bg-accent-3 p-4 text-sm text-accent-11">
-            Nepodařilo se načíst seznam klubů: {error.message}
-          </div>
-        )}
-
-        {!fetching && !error && tenants.length === 0 && (
-          <div className="mt-6 rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
-            Nebyly nalezeny žádné kluby.
-          </div>
-        )}
-
-        {!fetching && !error && tenants.length > 0 && (
-          <div className="mt-6 grid gap-4 lg:grid-cols-[3fr_1fr]">
-            <TestEmailButton />
-
-            <div className="rounded-md border border-neutral-6 bg-neutral-1 overflow-auto">
-              <DataGrid
-                columns={columns}
-                rows={tenants}
-                rowKeyGetter={(r) => r.id!}
-                defaultColumnOptions={{ resizable: true }}
-                headerRowHeight={44}
-                rowHeight={44}
-                onCellClick={({ row }) => setSelectedId(row.id)}
-                rowClass={(row) => (row.id === selectedId ? 'bg-neutral-2' : undefined)}
-              />
+          <aside className="hidden lg:block">
+            <div className="sticky top-4 space-y-3">
+              {selected ? (
+                <TenantCard tenant={selected} />
+              ) : (
+                <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
+                  Vyber klub pro detail.
+                </div>
+              )}
             </div>
+          </aside>
 
-            <aside className="hidden lg:block">
-              <div className="sticky top-4 space-y-3">
-                {selected ? (
-                  <TenantCard tenant={selected} />
-                ) : (
-                  <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
-                    Vyber klub pro detail.
-                  </div>
-                )}
-              </div>
-            </aside>
+          {!isDesktop && (
+            <Sheet
+              ref={sheetRef}
+              isOpen={!!selected}
+              onClose={() => setSelectedId(null)}
+              snapPoints={snapPoints}
+              initialSnap={1}
+            >
+              <Sheet.Container>
+                <Sheet.Header />
+                <Sheet.Content
+                  scrollStyle={{
+                    overscrollBehavior: 'contain', // prevents scroll chaining to body
+                    WebkitOverflowScrolling: 'touch', // iOS momentum scroll
+                    touchAction: 'pan-y', // let it scroll when enabled
+                  }}
+                >
+                  {selected && <TenantCard tenant={selected} />}
+                </Sheet.Content>
+              </Sheet.Container>
 
-            {!isDesktop && (
-              <Sheet
-                ref={sheetRef}
-                isOpen={!!selected}
-                onClose={() => setSelectedId(null)}
-                snapPoints={snapPoints}
-                initialSnap={1}
-              >
-                <Sheet.Container>
-                  <Sheet.Header />
-                  <Sheet.Content
-                    scrollStyle={{
-                      overscrollBehavior: 'contain', // prevents scroll chaining to body
-                      WebkitOverflowScrolling: 'touch', // iOS momentum scroll
-                      touchAction: 'pan-y', // let it scroll when enabled
-                    }}
-                  >
-                    {selected && <TenantCard tenant={selected} />}
-                  </Sheet.Content>
-                </Sheet.Container>
-
-                {/* Non-blocking: omit Backdrop entirely */}
-              </Sheet>
-            )}
-          </div>
-        )}
-      </div>
-    </Layout>
+              {/* Non-blocking: omit Backdrop entirely */}
+            </Sheet>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 

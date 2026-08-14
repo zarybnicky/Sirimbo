@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { rgbaToThumbHash, thumbHashToDataURL } from 'thumbhash';
@@ -8,7 +10,6 @@ import {
 } from '@/graphql/Attachment';
 import { useMutation, useQuery } from 'urql';
 import { TextField } from '@/ui/fields/text';
-import { Layout } from '@/ui/Layout';
 import { buttonCls } from '@/ui/style';
 
 type Image = {
@@ -20,7 +21,7 @@ type Image = {
   status: 'waiting' | 'uploading' | 'error' | 'done';
 };
 
-export default function UploadPage() {
+export function Upload() {
   const [newFiles, setNewFiles] = React.useState<Image[]>([]);
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -128,80 +129,78 @@ export default function UploadPage() {
         URL.revokeObjectURL(file.objectURL);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Layout requireAdmin>
-      <section className="container prose prose-accent">
-        {(directories?.attachmentDirectories?.nodes || []).map((x) => (
-          <button
-            key={x}
-            type="button"
-            className={buttonCls({ variant: directory === x ? 'primary' : 'outline' })}
-            onClick={() => setDirectory(x || '')}
-          >
-            {x}
-          </button>
+    <section className="container prose prose-accent">
+      {(directories?.attachmentDirectories?.nodes || []).map((x) => (
+        <button
+          key={x}
+          type="button"
+          className={buttonCls({ variant: directory === x ? 'primary' : 'outline' })}
+          onClick={() => setDirectory(x || '')}
+        >
+          {x}
+        </button>
+      ))}
+
+      <div className="flex gap-2 items-stretch">
+        <TextField
+          className="grow"
+          placeholder="Složka"
+          value={directory}
+          onChange={(e) => setDirectory(e.currentTarget.value)}
+        />
+        <button
+          type="button"
+          className={buttonCls()}
+          onClick={confirm}
+          disabled={newFiles.length === 0}
+        >
+          Nahrát
+        </button>
+      </div>
+
+      <div {...getRootProps({ className: 'dropzone' })}>
+        <input {...getInputProps()} />
+
+        <button type="button" className={buttonCls()} onClick={open}>
+          Přidat soubory
+        </button>
+
+        {newFiles.map((image) => (
+          <div className="flex" key={image.file.name}>
+            <div>{image.file.name}</div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={image.objectURL} draggable={false} alt="" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              width={image.width}
+              draggable={false}
+              alt=""
+              height={image.height}
+              src={thumbHashToDataURL(
+                new Uint8Array(
+                  [...atob(image.thumbhash)].map((x) => x.codePointAt(0) ?? Number.NaN),
+                ),
+              )}
+            />
+          </div>
         ))}
 
-        <div className="flex gap-2 items-stretch">
-          <TextField
-            className="grow"
-            placeholder="Složka"
-            value={directory}
-            onChange={(e) => setDirectory(e.currentTarget.value)}
-          />
-          <button
-            type="button"
-            className={buttonCls()}
-            onClick={confirm}
-            disabled={newFiles.length === 0}
+        {(existingFiles?.attachments?.nodes || []).map((x) => (
+          <a
+            className="block"
+            target="_blank"
+            href={x.publicUrl}
+            key={x.objectName}
+            rel="noreferrer"
           >
-            Nahrát
-          </button>
-        </div>
-
-        <div {...getRootProps({ className: 'dropzone' })}>
-          <input {...getInputProps()} />
-
-          <button type="button" className={buttonCls()} onClick={open}>
-            Přidat soubory
-          </button>
-
-          {newFiles.map((image) => (
-            <div className="flex" key={image.file.name}>
-              <div>{image.file.name}</div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={image.objectURL} draggable={false} alt="" />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                width={image.width}
-                draggable={false}
-                alt=""
-                height={image.height}
-                src={thumbHashToDataURL(
-                  new Uint8Array(
-                    [...atob(image.thumbhash)].map((x) => x.codePointAt(0) ?? Number.NaN),
-                  ),
-                )}
-              />
-            </div>
-          ))}
-
-          {(existingFiles?.attachments?.nodes || []).map((x) => (
-            <a
-              className="block"
-              target="_blank"
-              href={x.publicUrl}
-              key={x.objectName}
-              rel="noreferrer"
-            >
-              {x.objectName}
-            </a>
-          ))}
-        </div>
-      </section>
-    </Layout>
+            {x.objectName}
+          </a>
+        ))}
+      </div>
+    </section>
   );
 }
