@@ -4,13 +4,14 @@ import 'core-js/actual/array/to-reversed';
 import 'core-js/actual/array/to-sorted';
 
 import { configureUrql } from '@/lib/query';
+import type { TenantCatalogEntry } from '@/tenant/catalog';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
 import {
   requestAuthAtom,
+  requestTenantAtom,
   storeRef,
-  tenantIdAtom,
   type RequestAuthState,
 } from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
@@ -24,19 +25,16 @@ import { createClient, Provider as UrqlProvider } from 'urql';
 export function Providers({
   children,
   initialAuth,
-  initialTenantId,
+  initialTenant,
 }: {
   children: React.ReactNode;
-  initialAuth?: RequestAuthState;
-  initialTenantId?: number;
+  initialAuth: RequestAuthState;
+  initialTenant: TenantCatalogEntry;
 }) {
   const [store] = React.useState(() => {
     const store = createStore();
-    if (initialAuth) {
-      store.set(requestAuthAtom, initialAuth);
-    } else if (initialTenantId !== undefined) {
-      store.set(tenantIdAtom, initialTenantId.toString());
-    }
+    store.set(requestAuthAtom, initialAuth);
+    store.set(requestTenantAtom, initialTenant);
     return store;
   });
   const [client, setClient] = React.useState(() => createClient(configureUrql()));

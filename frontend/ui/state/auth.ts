@@ -1,10 +1,8 @@
 import { atom, createStore, type PrimitiveAtom, useAtomValue } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import { SESSION_COOKIE, SESSION_PRESENT_COOKIE } from '@/lib/session-cookies';
-import deepEqual from 'fast-deep-equal';
 import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 
@@ -17,21 +15,12 @@ export type SessionClaims = {
 };
 
 export type RequestAuthState = {
-  tenantId: number;
   claims: SessionClaims | null;
   user: UserAuthFragment | null;
 };
 
-export const requestAuthAtom = atom<RequestAuthState | null>(null);
-
-// Temporary Pages Router fallback; remove once Layout always receives SSR state.
-const mountedAtom = atom(false);
-mountedAtom.onMount = (setMounted) => setMounted(true);
-const renderingReadyAtom = atom(
-  (get) => get(requestAuthAtom) !== null || get(mountedAtom),
-);
-
-export const useIsRenderingReady = () => useAtomValue(renderingReadyAtom);
+export const requestAuthAtom = atom<RequestAuthState>({ claims: null, user: null });
+export const requestTenantAtom = atom<TenantCatalogEntry>(defaultTenant);
 
 interface BaseAuthState {
   user: null | {
@@ -54,8 +43,8 @@ interface BaseAuthState {
 }
 
 export interface AuthState extends BaseAuthState {
-  isMyPerson: (id: string) => boolean;
-  isMyCouple: (id: string) => boolean;
+  isMyPerson: (id: string | null | undefined) => boolean;
+  isMyCouple: (id: string | null | undefined) => boolean;
 }
 
 const defaultAuthState: BaseAuthState = {
@@ -92,54 +81,28 @@ const storage = {
   },
 };
 
-const cookieStorage = {
-  getItem(key: string, initialValue: string) {
-    return getTenant(getCookie(key))?.id.toString() ?? initialValue;
-  },
-  setItem(key: string, nextValue: string) {
+export const tenantIdAtom = atom<string, [string], void>(
+  (get) => get(requestTenantAtom).id.toString(),
+  (_get, set, nextValue) => {
+    const tenant = getTenant(nextValue) ?? defaultTenant;
+    const tenantId = tenant.id.toString();
+    set(requestTenantAtom, tenant);
+
     if (typeof window === 'undefined') return;
 
-    const tenant = getTenant(nextValue);
-    if (!tenant) return;
-
-    const tenantId = tenant.id.toString();
-    if (getCookie(key) === tenantId) return;
-
-    const { hostname, protocol } = window.location;
-    setCookie(key, tenantId, {
-      path: '/',
-      domain:
-        hostname === 'localhost' || hostname === '127.0.0.1'
-          ? undefined
-          : hostname.replace(/^www\./, ''),
-      sameSite: 'lax',
-      secure: protocol === 'https:',
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
-    });
-  },
-  removeItem(key: string) {
-    deleteCookie(key, { path: '/' });
-  },
-};
-
-const baseTenantIdAtom = atomWithStorage(
-  'tenant_id',
-  defaultTenant.id.toString(),
-  cookieStorage,
-  {
-    getOnInit: true,
-  },
-);
-
-export const tenantIdAtom = atom<string, [string], void>(
-  (get) => get(requestAuthAtom)?.tenantId.toString() ?? get(baseTenantIdAtom),
-  (get, set, nextValue) => {
-    const tenantId = getTenant(nextValue)?.id ?? defaultTenant.id;
-    const requestAuth = get(requestAuthAtom);
-    if (requestAuth) set(requestAuthAtom, { ...requestAuth, tenantId });
-    set(baseTenantIdAtom, tenantId.toString());
-
-    if (typeof document === 'undefined') return;
+    if (getCookie('tenant_id') !== tenantId) {
+      const { hostname, protocol } = window.location;
+      setCookie('tenant_id', tenantId, {
+        path: '/',
+        domain:
+          hostname === 'localhost' || hostname === '127.0.0.1'
+            ? undefined
+            : hostname.replace(/^www\./, ''),
+        sameSite: 'lax',
+        secure: protocol === 'https:',
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
+      });
+    }
 
     for (const cls of document.body.classList) {
       if (cls.includes('tenant-')) document.body.classList.remove(cls);
@@ -147,20 +110,14 @@ export const tenantIdAtom = atom<string, [string], void>(
     document.body.classList.add(`tenant-${tenantId}`);
   },
 );
-tenantIdAtom.onMount = (setTenantId) => {
-  setTenantId(cookieStorage.getItem('tenant_id', String(defaultTenant.id)));
-};
-const tenantAtom = atom<TenantCatalogEntry>(
-  (get) => getTenant(get(tenantIdAtom)) ?? defaultTenant,
-);
 
 export const useTenantId = () => useAtomValue(tenantIdAtom);
-export const useTenantConfig = () => useAtomValue(tenantAtom).config;
+export const useTenantConfig = () => useAtomValue(requestTenantAtom).config;
 
 // Keep this until browser-only legacy tokens no longer need time to become sessions.
 const baseAuthLoadingAtom = atom(true);
 export const authLoadingAtom = atom(
-  (get) => get(requestAuthAtom) === null && get(baseAuthLoadingAtom),
+  (get) => !get(requestAuthAtom).user && get(baseAuthLoadingAtom),
   (_get, set, loading: boolean) => set(baseAuthLoadingAtom, loading),
 );
 
@@ -172,12 +129,6 @@ sessionPresentAtom.onMount = (setPresent) => {
 };
 
 const baseTokenAtom: PrimitiveAtom<string | null> = atom(storage.getItem('token'));
-const baseUserAtom: PrimitiveAtom<BaseAuthState> = atom(
-  (() => {
-    const item = storage.getItem('user');
-    return item ? { ...defaultAuthState, ...JSON.parse(item) } : defaultAuthState;
-  })(),
-);
 
 export const tokenAtom = atom<string | null, [string | null], void>(
   (get) => get(baseTokenAtom),
@@ -227,33 +178,9 @@ function resolveAuthState(
   };
 }
 
-export const authAtom = atom<
-  BaseAuthState,
-  [SessionClaims | null, UserAuthFragment | null],
-  void
->(
-  (get) => {
-    const requestAuth = get(requestAuthAtom);
-    return requestAuth
-      ? resolveAuthState(requestAuth.claims, requestAuth.user, requestAuth.tenantId)
-      : get(baseUserAtom);
-  },
-  (get, set, claims, user) => {
-    const tenantId = Number(get(tenantIdAtom));
-    const nextValue = resolveAuthState(claims, user, tenantId);
-    const requestAuth = get(requestAuthAtom);
-    if (requestAuth) set(requestAuthAtom, { ...requestAuth, claims, user });
-
-    // only update baseUserAtom if the claims-derived state changes
-    if (!deepEqual(nextValue, get(baseUserAtom))) {
-      set(baseUserAtom, nextValue);
-      storage.setItem('user', nextValue ? JSON.stringify(nextValue) : null);
-    }
-  },
-);
-
-export const authHelpersAtom = atom((get) => {
-  const auth = get(authAtom);
+export const authAtom = atom<AuthState>((get) => {
+  const { claims, user } = get(requestAuthAtom);
+  const auth = resolveAuthState(claims, user, get(requestTenantAtom).id);
   return {
     ...auth,
     isMyPerson: (id: string | null | undefined) => !!id && auth.personIds.includes(id),
@@ -279,7 +206,7 @@ export async function signOut() {
   if (!response.ok) throw new Error('Odhlášení selhalo');
 
   clearLegacySession();
-  storeRef.current.set(authAtom, null, null);
+  storeRef.current.set(requestAuthAtom, { claims: null, user: null });
   storeRef.current.set(sessionPresentAtom, false);
   storeRef.resetUrqlClient();
 }

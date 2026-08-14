@@ -1,5 +1,7 @@
 /* eslint-disable import-x/no-unused-modules, tailwindcss/no-custom-classname */
+import { getRequestAuth } from '@/lib/server/request-auth';
 import { getRequestTenant } from '@/tenant/server';
+import { Providers } from '@/ui/Providers';
 import type { Metadata, Viewport } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
@@ -97,12 +99,16 @@ export async function generateViewport(): Promise<Viewport> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const tenant = await getRequestTenant();
+  const [tenant, auth] = await Promise.all([getRequestTenant(), getRequestAuth()]);
 
   return (
     <html lang="cs" className={`tenant-${tenant.id}`} suppressHydrationWarning>
       <body className={`tenant-${tenant.id}`} suppressHydrationWarning>
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <NuqsAdapter>
+          <Providers initialAuth={auth} initialTenant={tenant}>
+            {children}
+          </Providers>
+        </NuqsAdapter>
       </body>
     </html>
   );

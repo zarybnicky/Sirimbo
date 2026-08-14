@@ -1,30 +1,18 @@
-import { getRequestState } from '@/lib/server/request-state';
 import type { TenantCatalogEntry } from '@/tenant/catalog';
-import { getTenantUi } from '@/tenant/ui';
-import { Providers } from '@/ui/Providers';
+import { getRequestTenant } from '@/tenant/server';
 import { Layout } from '@/ui/Layout';
 import type { ReactNode } from 'react';
 
 /* eslint-disable import-x/no-unused-modules */
 export default async function PublicLayout({ children }: { children: ReactNode }) {
-  const { tenant, auth } = await getRequestState();
-  const ui = getTenantUi(tenant.id);
+  const tenant = await getRequestTenant();
   const structuredData = getTenantStructuredData(tenant);
 
   return (
-    <Providers initialAuth={auth} initialTenantId={tenant.id}>
+    <>
       {structuredData.length > 0 && <JsonLd data={structuredData} />}
-      <Layout
-        showTopMenu
-        desktopLogo={<ui.DesktopLogo />}
-        mobileLogo={<ui.MobileLogo />}
-        sidebarLogo={<ui.SidebarLogo />}
-        socialIcons={<ui.SocialIcons />}
-        footer={<ui.Footer />}
-      >
-        {children}
-      </Layout>
-    </Providers>
+      <Layout showTopMenu>{children}</Layout>
+    </>
   );
 }
 

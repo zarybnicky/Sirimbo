@@ -1,6 +1,6 @@
 import { cn } from '@/lib/cn';
 import { getHrefs, type MenuStructItem, topMenu } from '@/lib/use-menu';
-import { getTenantUi } from '@/tenant/ui.pages';
+import { getTenantUi } from '@/tenant/ui';
 import { AuthButton } from '@/ui/AuthButton';
 import {
   DropdownMenu,
@@ -13,46 +13,32 @@ import { useAuth } from '@/ui/use-auth';
 import { ChevronDown, Menu as MenuIcon, User as Account } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useMemo } from 'react';
-import { useIsRenderingReady, useTenantId } from '@/ui/state/auth';
+import React from 'react';
+import { useTenantId } from '@/ui/state/auth';
 
 type Props = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showTopMenu?: boolean;
-  desktopLogo?: React.ReactNode;
-  mobileLogo?: React.ReactNode;
-  socialIcons?: React.ReactNode;
 };
 
-export function Header({
-  isOpen,
-  setIsOpen,
-  showTopMenu,
-  desktopLogo,
-  mobileLogo,
-  socialIcons,
-}: Props) {
+export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
   const pathname = usePathname() ?? '';
   const auth = useAuth();
   const tenantId = useTenantId();
-  const isRenderingReady = useIsRenderingReady();
-
-  const DesktopLogo = useMemo(() => getTenantUi(tenantId, 'DesktopLogo'), [tenantId]);
-  const MobileLogo = useMemo(() => getTenantUi(tenantId, 'MobileLogo'), [tenantId]);
-  const SocialIcons = useMemo(() => getTenantUi(tenantId, 'SocialIcons'), [tenantId]);
+  const { DesktopLogo, MobileLogo, SocialIcons } = getTenantUi(tenantId);
 
   return (
     <header className="sticky z-20 top-0 inset-x-0 text-white bg-[#292524] shadow-lg print:hidden">
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
-            {desktopLogo ?? <DesktopLogo />}
+            <DesktopLogo />
             {topMenu.map((x) => (
               <DesktopMenuItem key={x.title} item={x} pathname={pathname} />
             ))}
             <AuthButton />
-            {socialIcons ?? <SocialIcons />}
+            <SocialIcons />
           </div>
         )}
 
@@ -67,12 +53,14 @@ export function Header({
             <MenuIcon aria-hidden="true" />
           </button>
 
-          <div className="grow flex items-center">{mobileLogo ?? <MobileLogo />}</div>
+          <div className="grow flex items-center">
+            <MobileLogo />
+          </div>
 
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
-            href={auth.user && isRenderingReady ? '/profil' : '/login'}
-            aria-label={auth.user && isRenderingReady ? 'Otevřít profil' : 'Přihlásit se'}
+            href={auth.user ? '/profil' : '/login'}
+            aria-label={auth.user ? 'Otevřít profil' : 'Přihlásit se'}
           >
             <Account aria-hidden="true" />
           </Link>

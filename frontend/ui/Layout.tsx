@@ -1,10 +1,10 @@
 'use client';
 
-import { getTenantUi } from '@/tenant/ui.pages';
+import { getTenantUi } from '@/tenant/ui';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { useAuth, useAuthLoading } from '@/ui/use-auth';
 import { CallToAction } from '@/ui/CallToAction';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
 import { useTenantConfig, useTenantId } from './state/auth';
@@ -21,11 +21,6 @@ type LayoutProps = {
   requireTrainer?: boolean;
   requireSystemAdmin?: boolean;
   className?: string;
-  desktopLogo?: React.ReactNode;
-  mobileLogo?: React.ReactNode;
-  sidebarLogo?: React.ReactNode;
-  socialIcons?: React.ReactNode;
-  footer?: React.ReactNode;
 };
 
 export const Layout = React.memo(function Layout({
@@ -39,18 +34,13 @@ export const Layout = React.memo(function Layout({
   requireTrainer,
   requireSystemAdmin,
   className,
-  desktopLogo,
-  mobileLogo,
-  sidebarLogo,
-  socialIcons,
-  footer,
 }: LayoutProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const tenantId = useTenantId();
   const { publicSite } = useTenantConfig();
-  const Footer = useMemo(() => getTenantUi(tenantId, 'Footer'), [tenantId]);
+  const { Footer } = getTenantUi(tenantId);
 
   const search = useSearchParams()?.toString();
   const url = usePathname() + (search ? `?${search}` : '');
@@ -72,8 +62,8 @@ export const Layout = React.memo(function Layout({
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !!publicSite && !auth.user;
   }
-  if (!authLoading && missingPermission) {
-    children = auth.user ? (
+  if (missingPermission) {
+    children = authLoading ? null : auth.user ? (
       <ErrorPage
         error="Přístup zamítnut"
         details="Nemáte dostatečná práva pro zobrazení této stránky"
@@ -83,22 +73,10 @@ export const Layout = React.memo(function Layout({
 
   return (
     <>
-      <Header
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        showTopMenu={showTopMenu}
-        desktopLogo={desktopLogo}
-        mobileLogo={mobileLogo}
-        socialIcons={socialIcons}
-      />
+      <Header isOpen={isOpen} setIsOpen={setIsOpen} showTopMenu={showTopMenu} />
 
       <div className="flex min-h-[calc(100dvh-52px)] md:min-h-[calc(100dvh-68px)]">
-        <Sidebar
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          showTopMenu={showTopMenu}
-          sidebarLogo={sidebarLogo}
-        />
+        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} showTopMenu={showTopMenu} />
 
         <div className="flex min-w-0 grow flex-col">
           <main className={className || 'grow content relative content-start'}>
@@ -107,7 +85,7 @@ export const Layout = React.memo(function Layout({
           {showTopMenu && (
             <>
               {!hideCta && <CallToAction url={url} />}
-              {footer ?? <Footer />}
+              <Footer />
             </>
           )}
         </div>

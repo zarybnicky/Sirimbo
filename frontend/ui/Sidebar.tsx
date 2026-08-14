@@ -6,14 +6,9 @@ import {
   topMenu,
   useMemberMenu,
 } from '@/lib/use-menu';
-import { getTenantUi } from '@/tenant/ui.pages';
+import { getTenantUi } from '@/tenant/ui';
 import { cn } from '@/lib/cn';
-import {
-  signOut,
-  useIsRenderingReady,
-  useTenantConfig,
-  useTenantId,
-} from '@/ui/state/auth';
+import { signOut, useTenantConfig, useTenantId } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -24,20 +19,15 @@ type SidebarProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showTopMenu?: boolean;
-  sidebarLogo?: React.ReactNode;
 };
 
-export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: SidebarProps) {
+export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const pathname = usePathname();
   const auth = useAuth();
   const tenantId = useTenantId();
   const { publicSite, copyrightLine } = useTenantConfig();
   const memberMenu = useMemberMenu();
-  const isRenderingReady = useIsRenderingReady();
-  const SidebarLogo = React.useMemo(
-    () => getTenantUi(tenantId, 'SidebarLogo'),
-    [tenantId],
-  );
+  const { SidebarLogo } = getTenantUi(tenantId);
 
   React.useEffect(() => setIsOpen(false), [pathname, setIsOpen]);
 
@@ -74,9 +64,9 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
           'overflow-y-auto scrollbar max-h-screen min-h-screen',
         )}
       >
-        {!showTopMenu && (sidebarLogo ?? <SidebarLogo />)}
+        {!showTopMenu && <SidebarLogo />}
         <div className="space-y-1 pt-3 mr-1 relative">
-          {auth.user && isRenderingReady ? (
+          {auth.user ? (
             <>
               {memberMenu
                 .map((item) =>
@@ -121,8 +111,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
             <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
           )}
 
-          {isRenderingReady &&
-            publicSite &&
+          {publicSite &&
             (showTopMenu ? (
               topMenu.map((item) => <SidebarSection key={item.title} item={item} />)
             ) : (
@@ -130,7 +119,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
             ))}
 
           <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
-            <div>{isRenderingReady ? copyrightLine : null}</div>
+            <div>{copyrightLine}</div>
             <div>Verze: {buildId?.slice(0, 7)}</div>
             <div>
               <Link href="/now" target="_blank">

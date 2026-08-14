@@ -3,9 +3,9 @@ import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import { useQuery } from 'urql';
 import {
   authAtom,
-  authHelpersAtom,
   authLoadingAtom,
   clearLegacySession,
+  requestAuthAtom,
   sessionPresentAtom,
   tokenAtom,
   type SessionClaims,
@@ -18,7 +18,7 @@ export const UserRefresher = React.memo(function ProvideAuth() {
   const token = useAtomValue(tokenAtom);
   const [sessionPresent, setSessionPresent] = useAtom(sessionPresentAtom);
   const setAuthLoading = useSetAtom(authLoadingAtom);
-  const setAuth = useSetAtom(authAtom);
+  const setRequestAuth = useSetAtom(requestAuthAtom);
 
   const [{ data, fetching }, refetch] = useQuery({
     query: CurrentUserDocument,
@@ -30,14 +30,15 @@ export const UserRefresher = React.memo(function ProvideAuth() {
 
   React.useEffect(() => {
     if (!fetching && data) {
-      setAuth(
-        typeof data.currentClaims === 'string'
-          ? (JSON.parse(data.currentClaims) as SessionClaims)
-          : (data.currentClaims as SessionClaims | null),
-        data.getCurrentUser,
-      );
+      setRequestAuth({
+        claims:
+          typeof data.currentClaims === 'string'
+            ? (JSON.parse(data.currentClaims) as SessionClaims)
+            : (data.currentClaims as SessionClaims | null),
+        user: data.getCurrentUser,
+      });
     }
-  }, [data, fetching, setAuth]);
+  }, [data, fetching, setRequestAuth]);
 
   React.useEffect(() => {
     if (!token || sessionPresent) return;
@@ -72,7 +73,7 @@ export const UserRefresher = React.memo(function ProvideAuth() {
   return null;
 });
 
-export const useAuth = () => useAtomValue(authHelpersAtom);
+export const useAuth = () => useAtomValue(authAtom);
 export const useAuthLoading = () => useAtomValue(authLoadingAtom);
 
 export function useRedirectLoggedIn() {
