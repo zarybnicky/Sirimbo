@@ -1,3 +1,5 @@
+'use client';
+
 import {
   ArticleDocument,
   CreateArticleDocument,
@@ -12,7 +14,7 @@ import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
