@@ -1,25 +1,16 @@
-import type { ISharedEventResult } from '@/app/(member)/termin/[id]/termin.queries';
 import type { EventPageFragment } from '@/graphql/Event';
 import { RichTextView } from '@/ui/RichTextView';
 import { dateTimeFormatter } from '@/ui/format';
 import Link from 'next/link';
 
-export function BasicEventInfo({
-  instance,
-}: {
-  instance: EventPageFragment | ISharedEventResult;
-}) {
-  const shared = 'trainerNames' in instance;
-  const seriesInfo = shared ? null : instance.seriesInfo;
-  const location =
-    (shared ? instance.locationName : instance.location?.name) || instance.locationText;
-  const trainers = shared
-    ? instance.trainerNames
-    : instance.trainersList.map((t) => t.person?.name).filter(Boolean);
+export function BasicEventInfo({ instance }: { instance: EventPageFragment }) {
+  const location = instance.location?.name || instance.locationText;
+  const trainers = instance.trainersList.map((t) => t.person?.name).filter(Boolean);
+  const { seriesInfo } = instance;
 
   return (
     <div className="flex flex-col gap-3">
-      {!shared && seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
+      {seriesInfo?.id && (seriesInfo.length ?? 0) > 1 && (
         <div>
           <Link
             href={`/terminy/${seriesInfo.id}`}
@@ -31,7 +22,7 @@ export function BasicEventInfo({
         </div>
       )}
 
-      {!shared && instance.parent && (
+      {instance.parent && (
         <div>
           <Link
             href={`/termin/${instance.parent.id}`}
@@ -78,7 +69,7 @@ export function BasicEventInfo({
       </dl>
 
       {instance.summary?.trim() && <RichTextView value={instance.summary} />}
-      {!shared && instance.description && <RichTextView value={instance.description} />}
+      {instance.description && <RichTextView value={instance.description} />}
     </div>
   );
 }

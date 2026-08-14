@@ -174,6 +174,8 @@
   display: flex;
   flex: 0 0 auto; /* should not shrink below height */
   flex-direction: row;
+  width: 100%;
+  overflow-y: auto;
   scrollbar-gutter: stable;
 }
 .rbc-time-header > .rbc-row:first-child {
@@ -189,11 +191,11 @@
 }
 
 .rbc-time-content {
+  @apply border-t-2 border-neutral-6;
   display: flex;
   flex: 1 0 0%;
   align-items: flex-start;
   width: 100%;
-  @apply border-t-2 border-neutral-6;
   overflow-y: auto;
   scrollbar-gutter: stable;
   position: relative;

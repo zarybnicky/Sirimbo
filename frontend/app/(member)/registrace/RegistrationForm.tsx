@@ -6,7 +6,6 @@ import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -21,13 +20,11 @@ export function RegistrationForm({
 }: {
   register: (input: RegisterWithoutInvitationInput) => Promise<string | undefined>;
 }) {
-  const router = useRouter();
   useRedirectLoggedIn();
   const { control, handleSubmit } = useForm({ resolver: zodResolver(Form) });
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const error = await register(values);
     if (error) throw new Error(error);
-    router.replace('/dashboard');
   });
 
   return (

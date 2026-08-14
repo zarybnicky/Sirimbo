@@ -1,13 +1,12 @@
 'use client';
 
-import type { LoginMutationVariables, UserAuthFragment } from '@/graphql/CurrentUser';
+import type { LoginMutationVariables } from '@/graphql/CurrentUser';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -20,26 +19,18 @@ const Form = z.object({
 export function LoginForm({
   login,
   enableRegistration,
-  from,
-  defaultRedirect,
 }: {
-  login: (
-    values: LoginMutationVariables,
-  ) => Promise<{ error: string } | { user: UserAuthFragment | null }>;
+  login: (values: LoginMutationVariables) => Promise<string | undefined>;
   enableRegistration: boolean;
-  from?: string;
-  defaultRedirect: string;
 }) {
-  const router = useRouter();
   useRedirectLoggedIn();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
 
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
-    const result = await login(values);
-    if ('error' in result) throw new Error(result.error);
-    router.push(!result.user?.userProxiesList.length ? '/profil' : from || defaultRedirect);
+    const error = await login(values);
+    if (error) throw new Error(error);
   });
 
   return (

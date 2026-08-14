@@ -21,6 +21,7 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
   const { seriesInfo, registrations } = instance;
   const registrationCount = registrations.totalCount;
   const locationLabel = instance.location?.name || instance.locationText;
+  const cohorts = instance.targetCohortsList.flatMap(x => x.cohort ? [x.cohort] : []);
 
   const primaryActions = React.useMemo(() => {
     return [
@@ -93,8 +94,8 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
       <div className="flex items-center gap-2">
         <Users className="size-4 text-accent-11 shrink-0" />
         <div>
-          {instance.targetCohortsList && instance.targetCohortsList.length > 0 ? (
-            instance.targetCohortsList.map((x) => x.cohort?.name).join(', ')
+          {cohorts.length > 0 ? (
+            cohorts.map((x) => x.name).join(', ')
           ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
           ) : registrationCount < 6 ? (

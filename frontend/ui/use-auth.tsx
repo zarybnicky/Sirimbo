@@ -78,12 +78,10 @@ export const useAuthLoading = () => useAtomValue(authLoadingAtom);
 export function useRedirectLoggedIn() {
   const router = useRouter();
   const auth = useAuth();
-  const authLoading = useAuthLoading();
-  const personCount = auth.personIds.length;
 
   React.useEffect(() => {
-    if (!authLoading && auth.user) {
-      router.replace(personCount === 0 ? '/profil' : '/dashboard');
+    if (auth.user) {
+      router.replace(auth.personIds.length > 0 ? '/dashboard' : '/profil');
     }
-  }, [authLoading, auth.user, personCount, router]);
+  }, [auth.personIds.length, auth.user, router]);
 }

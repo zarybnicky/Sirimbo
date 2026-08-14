@@ -4,7 +4,10 @@ import { CampSchedule } from '@/calendar/CampSchedule';
 import { CampLessonsTable } from '@/calendar/CampLessonsTable';
 import { CampTrainersTable } from '@/calendar/CampTrainersTable';
 import type { EventType } from '@/graphql';
-import { EventWithAttendanceDocument } from '@/graphql/Event';
+import {
+  EventWithAttendanceDocument,
+  type EventWithAttendanceQuery,
+} from '@/graphql/Event';
 import { eventInstanceActions } from '@/lib/actions/eventInstance';
 import { useActions } from '@/lib/actions';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
@@ -15,46 +18,36 @@ import { Layout } from '@/ui/Layout';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { formatEventType, formatEventName } from '@/ui/format';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useAuth } from '@/ui/use-auth';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
 import { useQuery } from 'urql';
-import type { ISharedEventResult } from './termin.queries';
 
 export function EventPageClient({
   id,
-  shared,
+  initialEvent,
+  hasShareToken,
 }: {
   id: string;
-  shared: ISharedEventResult | null | undefined;
+  initialEvent: EventWithAttendanceQuery['event'];
+  hasShareToken: boolean;
 }) {
   const auth = useAuth();
-  const authLoading = useAuthLoading();
   const [{ data, fetching }] = useQuery({
     query: EventWithAttendanceDocument,
     variables: { id },
     pause: !/^\d{1,18}$/.test(id),
   });
-  const instance = data?.event;
-  const event = instance ?? shared;
+  const instance = data ? data.event : initialEvent;
   const actions = useActions(eventInstanceActions, instance);
   const primaryAction = actions.some((action) => action.id === 'eventInstance.edit')
     ? 'eventInstance.edit'
     : 'eventInstance.registrations';
-  const title =
-    (instance
-      ? formatEventName(instance)
-      : shared &&
-        (shared.name?.trim() ||
-          formatEventType(shared.type?.toUpperCase() as EventType | null))) || '';
+  const title = instance ? formatEventName(instance) || '' : '';
   const [variant, setVariant] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
-
-  React.useEffect(() => {
-    if (title) document.title = title;
-  }, [title]);
 
   const tabs = React.useMemo(() => {
     const tabs: {
@@ -62,14 +55,12 @@ export function EventPageClient({
       title: React.ReactNode;
       contents: () => React.ReactNode;
     }[] = [];
-    if (!event) return tabs;
+    if (!instance) return tabs;
 
     const schedule =
-      instance && auth.user?.id
+      auth.user?.id || instance.hasPublicDetails || hasShareToken
         ? instance
-        : shared?.hasTokenAccess || shared?.hasPublicDetails
-          ? shared
-          : null;
+        : null;
     if (schedule?.type?.toUpperCase() === 'CAMP') {
       tabs.push({
         id: 'schedule',
@@ -83,24 +74,22 @@ export function EventPageClient({
     tabs.push({
       id: 'info',
       title: 'Info',
-      contents: () => <BasicEventInfo instance={event} />,
+      contents: () => <BasicEventInfo instance={instance} />,
     });
 
-    if (instance) {
-      const numRegistrations =
-        instance.registrations.totalCount +
-        instance.eventExternalRegistrationsByInstanceIdList.length;
-      if (auth.user?.id && numRegistrations > 0) {
-        tabs.push({
-          id: 'registrations',
-          title: `Přihlášky (${numRegistrations})`,
-          contents: () => (
-            <div className="col-popout">
-              <EventRegistrations instance={instance} />
-            </div>
-          ),
-        });
-      }
+    const numRegistrations =
+      instance.registrations.totalCount +
+      instance.eventExternalRegistrationsByInstanceIdList.length;
+    if (auth.user?.id && numRegistrations > 0) {
+      tabs.push({
+        id: 'registrations',
+        title: `Přihlášky (${numRegistrations})`,
+        contents: () => (
+          <div className="col-popout">
+            <EventRegistrations instance={instance} />
+          </div>
+        ),
+      });
     }
 
     if (instance?.type === 'CAMP' && auth.isTrainerOrAdmin) {
@@ -129,7 +118,7 @@ export function EventPageClient({
         },
       );
     }
-    if (auth.isTrainerOrAdmin && instance) {
+    if (auth.isTrainerOrAdmin) {
       tabs.push(
         {
           id: 'attendance',
@@ -152,20 +141,20 @@ export function EventPageClient({
       );
     }
     return tabs;
-  }, [auth.isTrainerOrAdmin, auth.user?.id, event, instance, shared]);
+  }, [auth.isTrainerOrAdmin, auth.user?.id, hasShareToken, instance]);
 
   return (
     <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
       <div className="col-feature">
-        {event && (
+        {instance && (
           <PageHeader
             title={title}
-            subtitle={formatEventType(event.type?.toUpperCase() as EventType | null)}
+            subtitle={formatEventType(instance.type?.toUpperCase() as EventType | null)}
             actions={actions}
             primary={primaryAction}
           />
         )}
-        {!authLoading && !fetching && !event && (
+        {!fetching && !instance && (
           <div className="my-12 rounded-md border border-neutral-5 bg-neutral-2 p-6 text-center">
             <h1 className="text-xl text-neutral-12">Událost nenalezena</h1>
             <p className="mt-2 text-neutral-11">

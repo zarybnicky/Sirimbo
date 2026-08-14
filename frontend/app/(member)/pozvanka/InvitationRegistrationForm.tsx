@@ -7,7 +7,6 @@ import { SubmitButton } from '@/ui/submit';
 import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -29,7 +28,6 @@ export function InvitationRegistrationForm({
   email?: string;
   name?: string;
 }) {
-  const router = useRouter();
   useRedirectLoggedIn();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
@@ -38,7 +36,6 @@ export function InvitationRegistrationForm({
   const onSubmit = useAsyncCallback(async (values: z.infer<typeof Form>) => {
     const error = await register(values);
     if (error) throw new Error(error);
-    router.replace('/dashboard');
   });
 
   return (

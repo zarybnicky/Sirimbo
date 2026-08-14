@@ -8,9 +8,13 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { setSessionCookie } from '@/lib/server/session';
 import { Layout } from '@/ui/Layout';
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { InvitationRegistrationForm } from './InvitationRegistrationForm';
 
-export const metadata: Metadata = { title: 'Registrace' };
+export const metadata: Metadata = {
+  title: 'Registrace',
+  robots: { index: false, follow: false },
+};
 
 export default async function InvitationPage({
   searchParams,
@@ -26,19 +30,21 @@ export default async function InvitationPage({
   async function register(input: RegisterUsingInvitationInput) {
     'use server';
 
-    try {
-      const data = await executeGraphql(RegisterUsingInvitationDocument, { input });
-      const result = data.registerUsingInvitation?.result;
-      if (!result?.jwt) return 'Registraci se nepodařilo dokončit';
+    const data = await executeGraphql(RegisterUsingInvitationDocument, {
+      input,
+    }).catch(() => null);
+    const jwt = data?.registerUsingInvitation?.result?.jwt;
+    if (!jwt) return 'Registraci se nepodařilo dokončit';
 
-      await setSessionCookie(result.jwt);
-    } catch {
-      return 'Registraci se nepodařilo dokončit';
-    }
+    await setSessionCookie(jwt);
+    redirect('/dashboard');
   }
 
   return (
-    <Layout className="grow content relative content-stretch">
+    <Layout
+      className="grow content relative content-stretch"
+      includeTenantSeo={false}
+    >
       <InvitationRegistrationForm
         register={register}
         token={token}

@@ -16,6 +16,14 @@ export type SessionClaims = {
   is_system_admin: boolean;
 };
 
+export type RequestAuthState = {
+  tenantId: number;
+  claims: SessionClaims | null;
+  user: UserAuthFragment | null;
+};
+
+export const requestAuthAtom = atom<RequestAuthState | null>(null);
+
 interface BaseAuthState {
   user: null | {
     id: string;
@@ -113,9 +121,11 @@ const baseTenantIdAtom = atomWithStorage(
 );
 
 export const tenantIdAtom = atom<string, [string], void>(
-  (get) => get(baseTenantIdAtom),
-  (_get, set, nextValue) => {
+  (get) => get(requestAuthAtom)?.tenantId.toString() ?? get(baseTenantIdAtom),
+  (get, set, nextValue) => {
     const tenantId = getTenant(nextValue)?.id ?? defaultTenant.id;
+    const requestAuth = get(requestAuthAtom);
+    if (requestAuth) set(requestAuthAtom, { ...requestAuth, tenantId });
     set(baseTenantIdAtom, tenantId.toString());
 
     if (typeof document === 'undefined') return;
@@ -163,41 +173,52 @@ export const tokenAtom = atom<string | null, [string | null], void>(
   },
 );
 
+function resolveAuthState(
+  claims: SessionClaims | null,
+  user: UserAuthFragment | null,
+  tenantId: number,
+) {
+  if (!user || !claims) return defaultAuthState;
+
+  const persons = user.userProxiesList.flatMap((x) => (x.person ? [x.person] : []));
+  const isGuest = claims.guest_tenant_ids.includes(tenantId);
+  const isMember = claims.member_tenant_ids.includes(tenantId);
+  const isTrainer = claims.trainer_tenant_ids.includes(tenantId);
+  const isAdmin = claims.admin_tenant_ids.includes(tenantId);
+  const isSystemAdmin = claims.is_system_admin;
+
+  return {
+    user,
+    persons,
+    couples: persons.flatMap((x) => x.allCouplesList || []),
+    personIds: persons.map((x) => x.id),
+    isLoggedIn: true,
+    isExternal: persons.length === 0,
+    isGuest,
+    isMember,
+    isTrainer,
+    isTrainerOrAdmin: isTrainer || isAdmin,
+    isAdmin: isAdmin || isSystemAdmin,
+    isSystemAdmin,
+  };
+}
+
 export const authAtom = atom<
   BaseAuthState,
   [SessionClaims | null, UserAuthFragment | null],
   void
 >(
-  (get) => get(baseUserAtom) || defaultAuthState,
+  (get) => {
+    const requestAuth = get(requestAuthAtom);
+    return requestAuth
+      ? resolveAuthState(requestAuth.claims, requestAuth.user, requestAuth.tenantId)
+      : get(baseUserAtom);
+  },
   (get, set, claims, user) => {
-    let nextValue = defaultAuthState;
-
-    if (user && claims) {
-      const persons =
-        user.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) || [];
-
-      const tenantId = Number(get(tenantIdAtom));
-      const isGuest = claims.guest_tenant_ids.includes(tenantId);
-      const isMember = claims.member_tenant_ids.includes(tenantId);
-      const isTrainer = claims.trainer_tenant_ids.includes(tenantId);
-      const isAdmin = claims.admin_tenant_ids.includes(tenantId);
-      const isSystemAdmin = claims.is_system_admin;
-
-      nextValue = {
-        user,
-        persons,
-        couples: persons.flatMap((x) => x.allCouplesList || []),
-        personIds: persons.map((x) => x.id),
-        isLoggedIn: !!user?.id,
-        isExternal: !user?.id || persons.length === 0,
-        isGuest,
-        isMember,
-        isTrainer,
-        isTrainerOrAdmin: isTrainer || isAdmin,
-        isAdmin: isAdmin || isSystemAdmin,
-        isSystemAdmin,
-      };
-    }
+    const tenantId = Number(get(tenantIdAtom));
+    const nextValue = resolveAuthState(claims, user, tenantId);
+    const requestAuth = get(requestAuthAtom);
+    if (requestAuth) set(requestAuthAtom, { ...requestAuth, claims, user });
 
     // only update baseUserAtom if the claims-derived state changes
     if (!deepEqual(nextValue, get(baseUserAtom))) {

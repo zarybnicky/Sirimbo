@@ -24,7 +24,11 @@ function graphqlUrl() {
 export async function executeGraphql<
   TResult,
   TVariables extends Record<string, unknown> = Record<string, never>,
->(document: TypedDocumentNode<TResult, TVariables>, variables?: TVariables) {
+>(
+  document: TypedDocumentNode<TResult, TVariables>,
+  variables?: TVariables,
+  headers?: Record<string, string>,
+) {
   const tenant = await getRequestTenant();
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
@@ -32,6 +36,7 @@ export async function executeGraphql<
     method: 'POST',
     cache: 'no-store',
     headers: {
+      ...headers,
       'content-type': 'application/json',
       'x-tenant-id': tenant.id.toString(),
       ...(token ? { cookie: `${SESSION_COOKIE}=${token}` } : {}),

@@ -7,21 +7,29 @@ import { configureUrql } from '@/lib/query';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
-import { storeRef } from '@/ui/state/auth';
+import {
+  requestAuthAtom,
+  storeRef,
+  type RequestAuthState,
+} from '@/ui/state/auth';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
 import { UserRefresher } from '@/ui/use-auth';
 import { createStore, Provider as JotaiProvider } from 'jotai';
+import { useHydrateAtoms } from 'jotai/utils';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { createClient, Provider as UrqlProvider } from 'urql';
 
 export function Providers({
   children,
+  initialAuth,
 }: {
   children: React.ReactNode;
+  initialAuth?: RequestAuthState;
 }) {
   const [store] = React.useState(() => createStore());
+  useHydrateAtoms([[requestAuthAtom, initialAuth ?? null]], { store });
   const [client, setClient] = React.useState(() => createClient(configureUrql()));
   const resetUrqlClient = React.useCallback(() => {
     setClient(createClient(configureUrql()));
