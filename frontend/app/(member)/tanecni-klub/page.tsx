@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ClubPage() {
   return (
-    <Layout requireMember includeTenantSeo={false}>
+    <Layout requireMember>
       <Club />
     </Layout>
   );

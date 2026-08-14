@@ -11,7 +11,7 @@ export default function AnnouncementsLayout({ children }: { children: ReactNode 
   const detail = useSelectedLayoutSegment();
 
   return (
-    <Layout requireMember includeTenantSeo={false}>
+    <Layout requireMember>
       <WithSidebar sidebar={<AnnouncementList />}>
         {detail ? children : undefined}
       </WithSidebar>

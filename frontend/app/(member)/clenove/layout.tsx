@@ -11,7 +11,7 @@ export default function MembersLayout({ children }: { children: ReactNode }) {
   const detail = useSelectedLayoutSegment();
 
   return (
-    <Layout requireMember includeTenantSeo={false}>
+    <Layout requireMember>
       <WithSidebar sidebar={<PersonList />}>{detail ? children : undefined}</WithSidebar>
     </Layout>
   );

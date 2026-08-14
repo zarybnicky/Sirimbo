@@ -1,15 +1,12 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/compat/router';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { GoogleAnalytics, pageView as googlePageView } from 'nextjs-google-analytics';
 import type { init, pageView } from 'react-facebook-pixel';
 import { useTenantConfig } from './state/auth';
 
 export const Tracking = React.memo(function Tracking() {
-  const router = useRouter();
-
   const lastTrackedPath = React.useRef<string | null>(null);
   const { facebookPixelId } = useTenantConfig();
   const facebookRef = React.useRef<{
@@ -33,36 +30,16 @@ export const Tracking = React.memo(function Tracking() {
     };
   }, [facebookPixelId]);
 
-  const track = React.useCallback(
-    (path: string) => {
-      if (process.env.NODE_ENV === 'development') return;
-      if (!facebookPixelId) return;
-      if (path === lastTrackedPath.current) return;
-      lastTrackedPath.current = path;
-      facebookRef.current?.pageView();
-    },
-    [facebookPixelId],
-  );
-
-  React.useEffect(() => {
-    if (!router) return;
-    router.events.on('routeChangeComplete', track);
-    return () => router.events.off('routeChangeComplete', track);
-  }, [track, router]);
-
   const search = useSearchParams()?.toString() ?? '';
   const path = usePathname() + (search ? `?${search}` : '');
 
   React.useEffect(() => {
-    if (router) return;
     if (process.env.NODE_ENV === 'development') return;
     if (lastTrackedPath.current === path) return;
-    if (lastTrackedPath.current !== undefined) {
-      googlePageView({ path: path ?? undefined });
-      facebookRef.current?.pageView();
-    }
+    googlePageView({ path: path ?? undefined });
+    facebookRef.current?.pageView();
     lastTrackedPath.current = path;
-  }, [path, router]);
+  }, [path]);
 
-  return <GoogleAnalytics trackPageViews={router ? { ignoreHashChange: true } : false} />;
+  return <GoogleAnalytics trackPageViews={false} />;
 });

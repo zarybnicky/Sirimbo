@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function PaymentsPage() {
   return (
-    <Layout requireAdmin includeTenantSeo={false}>
+    <Layout requireAdmin>
       <Payments />
     </Layout>
   );

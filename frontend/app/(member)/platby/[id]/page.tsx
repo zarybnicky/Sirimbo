@@ -15,7 +15,7 @@ export default async function PaymentPage({
 }) {
   const { id } = await params;
   return (
-    <Layout requireAdmin includeTenantSeo={false}>
+    <Layout requireAdmin>
       <Payment id={id} />
     </Layout>
   );

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function CrmPage() {
   return (
-    <Layout requireAdmin includeTenantSeo={false}>
+    <Layout requireAdmin>
       <Crm />
     </Layout>
   );

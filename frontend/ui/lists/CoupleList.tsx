@@ -5,21 +5,15 @@ import { formatCoupleName } from '@/ui/format';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
+import { useParams } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
-import { z } from 'zod';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
 
-const QueryParams = z.object({
-  id: zRouterId,
-});
-
 export function CoupleList() {
-  const router = useTypedRouter(QueryParams);
+  const currentId = useParams<{ id?: string }>()?.id;
   const auth = useAuth();
-  const { id: currentId } = router.query;
 
   const [{ data }] = useQuery({ query: CoupleListDocument });
 

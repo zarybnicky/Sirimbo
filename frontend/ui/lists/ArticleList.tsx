@@ -5,20 +5,13 @@ import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
-import { z } from 'zod';
-
-const QueryParams = z.object({
-  id: zRouterId,
-});
 
 export function ArticleList() {
-  const router = useTypedRouter(QueryParams);
-  const { id: currentId } = router.query;
+  const currentId = useParams<{ id?: string }>()?.id;
   const pathname = usePathname() ?? '';
   const auth = useAuth();
 

@@ -13,7 +13,7 @@ export default function TrainingGroupsLayout({ children }: { children: ReactNode
   const auth = useAuth();
 
   return (
-    <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
+    <Layout hideTopMenuIfLoggedIn>
       {detail || auth.user ? (
         <WithSidebar sidebar={<CohortList />}>{children}</WithSidebar>
       ) : (

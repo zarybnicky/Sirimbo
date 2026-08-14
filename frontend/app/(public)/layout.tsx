@@ -15,7 +15,6 @@ export default async function PublicLayout({ children }: { children: ReactNode }
     <Providers initialAuth={auth} initialTenantId={tenant.id}>
       {structuredData.length > 0 && <JsonLd data={structuredData} />}
       <Layout
-        includeTenantSeo={false}
         showTopMenu
         desktopLogo={<ui.DesktopLogo />}
         mobileLogo={<ui.MobileLogo />}

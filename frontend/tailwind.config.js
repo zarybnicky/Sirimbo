@@ -7,7 +7,6 @@ export default {
     './app/**/*.{js,ts,jsx,tsx}',
     './calendar/**/*.{js,ts,jsx,tsx}',
     './lib/**/*.{js,ts,jsx,tsx}',
-    './pages/**/*.{js,ts,jsx,tsx}',
     './scoreboard/**/*.{js,ts,jsx,tsx}',
     './starlet/**/*.{js,ts,jsx,tsx}',
     './style/**/*.{js,ts,jsx,tsx}',
@@ -21,13 +20,13 @@ export default {
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
-    require("windy-radix-typography")({
+    require('windy-radix-typography')({
       colors: ['accent', 'neutral'],
     }),
     require('@tailwindcss/aspect-ratio'),
     require('tailwindcss-opentype'),
   ],
-  safelist: Array.from({ length: 10 }).map(i => `tenant-${i}`),
+  safelist: Array.from({ length: 10 }).map((i) => `tenant-${i}`),
   theme: {
     container: {
       center: true,
@@ -44,19 +43,22 @@ export default {
       black: '#000',
       white: '#fff',
       accent: Object.fromEntries(
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
-          (n) => [n, `hsl(var(--accent-${n}) / <alpha-value>)`]
-        ),
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => [
+          n,
+          `hsl(var(--accent-${n}) / <alpha-value>)`,
+        ]),
       ),
       neutral: Object.fromEntries(
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
-          (n) => [n, `hsl(var(--neutral-${n}) / <alpha-value>)`]
-        ),
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => [
+          n,
+          `hsl(var(--neutral-${n}) / <alpha-value>)`,
+        ]),
       ),
       green: Object.fromEntries(
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
-          (n) => [n, `hsl(var(--green-${n}) / <alpha-value>)`]
-        ),
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => [
+          n,
+          `hsl(var(--green-${n}) / <alpha-value>)`,
+        ]),
       ),
     },
     extend: {

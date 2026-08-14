@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ScoreboardPage() {
   return (
-    <Layout requireMember includeTenantSeo={false}>
+    <Layout requireMember>
       <Scoreboard />
     </Layout>
   );

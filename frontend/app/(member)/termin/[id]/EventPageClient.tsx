@@ -58,9 +58,7 @@ export function EventPageClient({
     if (!instance) return tabs;
 
     const schedule =
-      auth.user?.id || instance.hasPublicDetails || hasShareToken
-        ? instance
-        : null;
+      auth.user?.id || instance.hasPublicDetails || hasShareToken ? instance : null;
     if (schedule?.type?.toUpperCase() === 'CAMP') {
       tabs.push({
         id: 'schedule',
@@ -144,7 +142,7 @@ export function EventPageClient({
   }, [auth.isTrainerOrAdmin, auth.user?.id, hasShareToken, instance]);
 
   return (
-    <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
+    <Layout hideTopMenuIfLoggedIn>
       <div className="col-feature">
         {instance && (
           <PageHeader
@@ -163,7 +161,12 @@ export function EventPageClient({
           </div>
         )}
       </div>
-      <TabMenu className="col-feature" selected={variant} onSelect={setVariant} options={tabs} />
+      <TabMenu
+        className="col-feature"
+        selected={variant}
+        onSelect={setVariant}
+        options={tabs}
+      />
     </Layout>
   );
 }

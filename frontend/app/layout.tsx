@@ -4,7 +4,6 @@ import type { Metadata, Viewport } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
 
-import 'nprogress/nprogress.css';
 import 'react-data-grid/lib/styles.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../style/calendar.css';

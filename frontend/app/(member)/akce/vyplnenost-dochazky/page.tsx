@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function AttendanceReportPage() {
   return (
-    <Layout requireAdmin includeTenantSeo={false}>
+    <Layout requireAdmin>
       <AttendanceReport />
     </Layout>
   );

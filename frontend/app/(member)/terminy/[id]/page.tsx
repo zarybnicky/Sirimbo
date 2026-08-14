@@ -33,7 +33,7 @@ export default async function EventSeriesPage({ params }: Props) {
   if (!series) notFound();
 
   return (
-    <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
+    <Layout hideTopMenuIfLoggedIn>
       <EventSeries initialSeries={series} />
     </Layout>
   );

@@ -10,11 +10,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <Layout
-      requireMember
-      className="grow content relative content-stretch"
-      includeTenantSeo={false}
-    >
+    <Layout requireMember className="grow content relative content-stretch">
       <Dashboard />
     </Layout>
   );

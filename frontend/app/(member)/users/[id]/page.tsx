@@ -12,7 +12,7 @@ export default async function UserPage({ params }: { params: Promise<{ id: strin
   const { id } = await params;
 
   return (
-    <Layout requireAdmin includeTenantSeo={false}>
+    <Layout requireAdmin>
       <User id={id} />
     </Layout>
   );

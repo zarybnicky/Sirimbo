@@ -16,7 +16,6 @@ import {
 } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import Link from 'next/link';
-import { useRouter } from 'next/compat/router';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import { TenantSelect } from '@/ui/TenantSelect';
@@ -29,7 +28,6 @@ type SidebarProps = {
 };
 
 export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: SidebarProps) {
-  const router = useRouter();
   const pathname = usePathname();
   const auth = useAuth();
   const tenantId = useTenantId();
@@ -41,16 +39,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
     [tenantId],
   );
 
-  React.useEffect(() => {
-    if (!router) return;
-    const track = () => setIsOpen(false);
-    router.events.on('routeChangeStart', track);
-    return () => router.events.off('routeChangeStart', track);
-  }, [router, setIsOpen]);
-
-  React.useEffect(() => {
-    if (!router) setIsOpen(false);
-  }, [pathname, router, setIsOpen]);
+  React.useEffect(() => setIsOpen(false), [pathname, setIsOpen]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -123,7 +112,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu, sidebarLogo }: Sidebar
                     'text-sm tracking-wider hover:bg-accent-10 hover:text-white',
                   )}
                 >
-                   Odhlásit se
+                  Odhlásit se
                 </button>
               </div>
               <div className="h-8" />

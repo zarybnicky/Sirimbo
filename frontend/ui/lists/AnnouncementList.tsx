@@ -9,21 +9,15 @@ import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
 import { SubmitButton } from '@/ui/submit';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
-import { z } from 'zod';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
 import { AnnouncementSortControls, type SortOption } from '@/ui/Announcements';
 
-const QueryParams = z.object({
-  id: zRouterId,
-});
-
 export function AnnouncementList() {
-  const router = useTypedRouter(QueryParams);
+  const currentId = useParams<{ id?: string }>()?.id;
   const pathname = usePathname() ?? '';
   const auth = useAuth();
   const [search, setSearch] = React.useState('');
@@ -73,7 +67,7 @@ export function AnnouncementList() {
           <AnnouncementListPage
             key={cursor || ''}
             cursor={cursor}
-            currentId={router.query.id}
+            currentId={currentId}
             search={search}
             orderBy={orderBy}
             onLoadMore={index === pages.length - 1 ? handleLoadMore : undefined}

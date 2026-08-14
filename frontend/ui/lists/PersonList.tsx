@@ -10,19 +10,13 @@ import { useAuth } from '@/ui/use-auth';
 import { buttonCls } from '@/ui/style';
 import { useSessionStorage } from '@/lib/useSessionStorage';
 import { cn } from '@/lib/cn';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
-import { z } from 'zod';
+import { useParams } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { exportNsa } from '../reports/export-nsa';
 import { CohortListDocument } from '@/graphql/Cohorts';
 
-const QueryParams = z.object({
-  id: zRouterId,
-});
-
 export function PersonList() {
-  const router = useTypedRouter(QueryParams);
-  const id = router.query.id;
+  const id = useParams<{ id?: string }>()?.id;
   const auth = useAuth();
   const client = useClient();
 

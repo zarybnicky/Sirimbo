@@ -8,7 +8,6 @@ import React, { useMemo } from 'react';
 import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
 import { useTenantConfig, useTenantId } from './state/auth';
-import { TenantSeo } from '@/tenant/TenantSeo';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 type LayoutProps = {
@@ -27,7 +26,6 @@ type LayoutProps = {
   sidebarLogo?: React.ReactNode;
   socialIcons?: React.ReactNode;
   footer?: React.ReactNode;
-  includeTenantSeo?: boolean;
 };
 
 export const Layout = React.memo(function Layout({
@@ -46,7 +44,6 @@ export const Layout = React.memo(function Layout({
   sidebarLogo,
   socialIcons,
   footer,
-  includeTenantSeo = true,
 }: LayoutProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const auth = useAuth();
@@ -86,7 +83,6 @@ export const Layout = React.memo(function Layout({
 
   return (
     <>
-      {includeTenantSeo && <TenantSeo />}
       <Header
         isOpen={isOpen}
         setIsOpen={setIsOpen}

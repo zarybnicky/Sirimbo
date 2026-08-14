@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function InvitationsPage() {
   return (
-    <Layout requireAdmin includeTenantSeo={false}>
+    <Layout requireAdmin>
       <Invitations />
     </Layout>
   );

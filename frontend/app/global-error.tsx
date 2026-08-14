@@ -5,7 +5,7 @@ import { captureException } from '@sentry/nextjs';
 import { StatusPage } from '@/ui/StatusPage';
 import { useEffect } from 'react';
 
-export default function RootError({
+export default function GlobalError({
   error,
   reset,
 }: {
@@ -16,5 +16,11 @@ export default function RootError({
     captureException(error);
   }, [error]);
 
-  return <StatusPage reset={reset} status="error" />;
+  return (
+    <html lang="cs">
+      <body>
+        <StatusPage reset={reset} status="error" />
+      </body>
+    </html>
+  );
 }

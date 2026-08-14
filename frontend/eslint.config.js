@@ -6,7 +6,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import deMorgan from 'eslint-plugin-de-morgan';
 import { fixupPluginRules } from '@eslint/compat';
 import reactHookForm from 'eslint-plugin-react-hook-form';
-import { importX } from 'eslint-plugin-import-x'
+import { importX } from 'eslint-plugin-import-x';
 
 // eslint-disable-next-line import-x/no-unused-modules
 export default defineConfig([
@@ -81,10 +81,7 @@ export default defineConfig([
         'warn',
         {
           unusedExports: true,
-          ignoreExports: [
-            'pages/**',
-            'graphql/*.ts',
-          ],
+          ignoreExports: ['graphql/*.ts'],
           ignoreUnusedTypeExports: true,
         },
       ],

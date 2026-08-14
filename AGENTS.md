@@ -14,7 +14,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 
 ## High-level structure
 - `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs, current-user fields, and person membership filters). Multi-tenancy and JWT enrichment are handled in `backend/src/auth.ts`.
-- `frontend/`: Next.js 16 app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, pages in `frontend/pages`, feature-specific modules in folders such as `frontend/calendar`, `frontend/scoreboard`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.
+- `frontend/`: Next.js 16 App Router app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, routes in `frontend/app`, feature-specific modules in folders such as `frontend/calendar`, `frontend/scoreboard`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.
 - `worker/`: Graphile Worker package. Queue tasks live in `worker/tasks`, MJML email templates in `worker/templates`, and the federated dance-data crawler/frontier system in `worker/crawler`.
 - `graphql/`: Source `.graphql` operation documents consumed by GraphQL Code Generator. The generated TypeScript bindings land near their usage in `frontend/graphql` (again: avoid committing regenerated outputs unless the task requires it).
 - `e2e/`: Playwright smoke tests and auth fixtures.
@@ -23,7 +23,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - `schema/`: Auto-split DDL organized by domain/type/table/function/view for review purposes only.
 
 ## Frontend tenancy model
-- Tenant host mapping lives in `frontend/tenant/catalog.ts`; `frontend/proxy.ts` and `frontend/pages/_app.tsx` keep the `tenant_id` cookie aligned with the current host.
+- Tenant host mapping lives in `frontend/tenant/catalog.ts`; `frontend/proxy.ts` keeps the `tenant_id` cookie aligned with the current host.
 - Tenant-specific assets/config live under `frontend/tenant/{olymp,kometa,starlet}`. `frontend/tenant/ui.pages.ts` wires those configs to dynamically loaded tenant UI components.
 - Shared tenant metadata/types sit in `frontend/tenant/types.ts`; use these helpers when adding new tenant-aware UI.
 - Pages and components should read the active tenant configuration rather than hard-coding IDs. `frontend/lib/query.ts` injects the active `x-tenant-id` header for URQL requests.
@@ -63,7 +63,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Use the crawler dev tool's backtest support to verify schema changes: `pnpm --silent crawler backtest <federation>:<kind>`
 
 ## Frontend conventions
-- This is a Pages Router app (`frontend/pages`, `frontend/proxy.ts`), not an App Router app. Use the `@/*` import alias to reference files from the frontend root.
+- This is an App Router app. Use the `@/*` import alias to reference files from the frontend root.
 - We use Radix primitives wrapped in our custom wrappers.
 - We use Tailwind processed Radix colors. In the project they are aliased as `accent` and `neutral`, with the usual scale 1 to 12 (`bg-neutral-2`, `text-accent-11`). We don't use shadcn colors (border, background, etc.).
 

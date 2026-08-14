@@ -2,15 +2,14 @@ import React, { type ComponentType, useMemo } from 'react';
 import type { AuthState } from '@/ui/state/auth';
 import { useAuth } from '@/ui/use-auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';
-import { useRouter as useCompatRouter } from 'next/compat/router';
-import { usePathname, useRouter as useAppRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import type { ConfirmOptions } from '@/ui/Confirm';
 import { DialogContent } from '@/ui/dialog';
 
 export type ActionRouter = {
   pathname: string | null;
-  push: (href: string) => Promise<boolean> | void;
-  replace: (href: string) => Promise<boolean> | void;
+  push: (href: string) => void;
+  replace: (href: string) => void;
 };
 
 export type ActionContext<T> = {
@@ -133,27 +132,13 @@ function forItem<T, const A extends readonly Action<T>[]>(
 }
 
 function useActionRouter(): ActionRouter {
-  const router = useCompatRouter();
-  const appRouter = useAppRouter();
+  const router = useRouter();
   const pathname = usePathname();
-  const asPath = router?.asPath;
-  const isReady = router?.isReady;
 
-  return useMemo(() => {
-    if (router) {
-      return {
-        pathname: isReady ? (asPath ?? '').split(/[?#]/, 1)[0] || '/' : router.pathname,
-        push: (href) => router.push(href),
-        replace: (href) => router.replace(href),
-      };
-    }
-
-    return {
-      pathname: pathname,
-      push: appRouter.push,
-      replace: appRouter.replace,
-    };
-  }, [pathname, appRouter, asPath, isReady, router]);
+  return useMemo(
+    () => ({ pathname, push: router.push, replace: router.replace }),
+    [pathname, router],
+  );
 }
 
 function useBase() {

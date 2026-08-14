@@ -16,7 +16,7 @@ export default async function StarletImportPage() {
   if (!tenant.config.enableStarletImport) notFound();
 
   return (
-    <Layout requireAdmin includeTenantSeo={false}>
+    <Layout requireAdmin>
       <PageHeader title="Nastavení importu" />
       <StarletImport />
     </Layout>

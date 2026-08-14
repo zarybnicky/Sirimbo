@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function UploadPage() {
   return (
-    <Layout requireAdmin includeTenantSeo={false}>
+    <Layout requireAdmin>
       <Upload />
     </Layout>
   );

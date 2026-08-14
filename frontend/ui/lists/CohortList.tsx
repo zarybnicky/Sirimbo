@@ -5,22 +5,15 @@ import { CohortForm } from '@/ui/forms/CohortForm';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import React from 'react';
-import { z } from 'zod';
 import { useQuery } from 'urql';
 import { CohortListDocument } from '@/graphql/Cohorts';
 import { slugify } from '@/lib/slugify';
 
-const QueryParams = z.object({
-  id: zRouterId,
-});
-
 export function CohortList() {
-  const {
-    query: { id: currentId },
-  } = useTypedRouter(QueryParams);
+  const currentId = useParams<{ id?: string }>()?.id;
   const auth = useAuth();
   const [isArchive, setIsArchive] = React.useState(false);
   const [isHidden, setIsHidden] = React.useState(false);

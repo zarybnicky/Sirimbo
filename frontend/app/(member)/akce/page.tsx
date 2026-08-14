@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function EventsPage() {
   return (
-    <Layout hideTopMenuIfLoggedIn includeTenantSeo={false}>
+    <Layout hideTopMenuIfLoggedIn>
       <div className="col-feature min-h-[60vh] mt-16 mb-8">
         <EventList />
       </div>

@@ -11,7 +11,7 @@ export default function ArticlesLayout({ children }: { children: ReactNode }) {
   const detail = useSelectedLayoutSegment();
 
   return (
-    <Layout requireMember includeTenantSeo={false}>
+    <Layout requireMember>
       <WithSidebar sidebar={<ArticleList />}>{detail ? children : undefined}</WithSidebar>
     </Layout>
   );

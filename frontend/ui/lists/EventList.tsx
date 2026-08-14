@@ -6,20 +6,15 @@ import { TextField } from '@/ui/fields/text';
 import { formatEventType, fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/ui/use-auth';
 import { useFuzzySearch } from '@/ui/use-fuzzy-search';
-import { useTypedRouter, zRouterId } from '@/ui/useTypedRouter';
 import { add, endOf, startOf } from 'date-arithmetic';
+import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
-import { z } from 'zod';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
 import type { CreateEventDefaults } from '@/calendar/eventDefaults';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
-
-const QueryParams = z.object({
-  instance: zRouterId,
-});
 
 interface EventNode {
   id: string;
@@ -92,9 +87,7 @@ function EventListPage({ search, currentId }: EventListPageProps) {
 
 export function EventList() {
   const [search, setSearch] = React.useState('');
-  const {
-    query: { instance: currentId },
-  } = useTypedRouter(QueryParams);
+  const currentId = useSearchParams()?.get('instance') ?? undefined;
   const auth = useAuth();
 
   const createDefaults = React.useMemo<CreateEventDefaults>(() => {
