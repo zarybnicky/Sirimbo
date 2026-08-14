@@ -9,7 +9,7 @@ import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatEventName, shortTimeFormatter } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
-import { useTenantConfig } from '@/ui/state/auth';
+import { useTenantConfig } from '@/lib/auth';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { Cake } from 'lucide-react';

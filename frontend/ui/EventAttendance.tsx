@@ -4,7 +4,7 @@ import {
   UpdateAttendanceDocument,
 } from '@/graphql/Event';
 import { dateTimeFormatter, numericDateFormatter } from '@/ui/format';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import * as React from 'react';
 import { useMutation, useQuery } from 'urql';
 import type { AttendanceType } from '@/graphql';

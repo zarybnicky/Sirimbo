@@ -2,7 +2,7 @@ import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';

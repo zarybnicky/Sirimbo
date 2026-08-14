@@ -1,21 +1,21 @@
 import {
-  type EventInstanceRegistrationFragment,
+  splitIntoLessonRanges,
+  type CreateEventDefaults,
+} from '@/calendar/eventDefaults';
+import {
   EventRegistrationsDocument,
-  type EventWithTrainerFragment,
   SaveEventsDocument,
+  type EventInstanceRegistrationFragment,
+  type EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
-import {
-  type CreateEventDefaults,
-  splitIntoLessonRanges,
-} from '@/calendar/eventDefaults';
+import { useTenantConfig } from '@/lib/auth';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { TextFieldElement } from '@/ui/fields/text';
-import { formatCoupleName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { FormError, useFormResult } from '@/ui/form';
-import { useTenantConfig } from '@/ui/state/auth';
+import { formatCoupleName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';

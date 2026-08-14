@@ -1,4 +1,4 @@
-import { AgeCategoryTable } from '@/ui/AgeCategoryTable';
+import { AgeCategoryTable } from './AgeCategoryTable';
 
 const standardTempo = [
   ['Waltz', '28–30'],

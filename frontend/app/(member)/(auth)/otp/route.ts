@@ -2,7 +2,7 @@
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
 import { setSessionCookie } from '@/lib/server/session';
-import { getRequestTenant } from '@/tenant/server';
+import { getRequestTenant } from '@/lib/server/tenant';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {

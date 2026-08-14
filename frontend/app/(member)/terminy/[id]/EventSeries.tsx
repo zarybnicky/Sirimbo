@@ -11,7 +11,7 @@ import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { FormError } from '@/ui/form';
 import { formatEventType, fullDateFormatter } from '@/ui/format';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
 import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';

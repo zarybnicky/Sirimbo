@@ -1,12 +1,12 @@
 import { TextField } from '@/ui/fields/text';
 import React from 'react';
 import { PersonListDocument } from '@/graphql/Person';
-import { useFuzzySearch } from '@/ui/use-fuzzy-search';
+import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { useClient, useQuery } from 'urql';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import Link from 'next/link';
 import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { buttonCls } from '@/ui/style';
 import { useSessionStorage } from '@/lib/useSessionStorage';
 import { cn } from '@/lib/cn';

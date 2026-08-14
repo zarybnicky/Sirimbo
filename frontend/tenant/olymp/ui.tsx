@@ -122,7 +122,7 @@ export function SocialIcons() {
   );
 }
 
-export function Sponsors() {
+function Sponsors() {
   return (
     <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-center justify-center text-center text-neutral-11">
       {[

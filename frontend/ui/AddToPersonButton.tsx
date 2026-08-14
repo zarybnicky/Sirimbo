@@ -7,7 +7,7 @@ import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus } from 'lucide-react';
 import { buttonCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { isTruthy } from '@/lib/truthyFilter';
 
 export function AddToPersonButton({ person }: { person: { id: string } }) {

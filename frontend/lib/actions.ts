@@ -1,21 +1,19 @@
 import React, { type ComponentType, useMemo } from 'react';
-import type { AuthState } from '@/ui/state/auth';
-import { useAuth } from '@/ui/use-auth';
+import type { AuthState } from '@/lib/auth';
+import { useAuth } from '@/lib/auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';
 import { usePathname, useRouter } from 'next/navigation';
 import type { ConfirmOptions } from '@/ui/Confirm';
 import { DialogContent } from '@/ui/dialog';
 
-export type ActionRouter = {
-  pathname: string | null;
-  push: (href: string) => void;
-  replace: (href: string) => void;
-};
-
 export type ActionContext<T> = {
   auth: AuthState;
   client: Client;
-  router: ActionRouter;
+  router: {
+    pathname: string | null;
+    push: (href: string) => void;
+    replace: (href: string) => void;
+  };
   mutate: <D, V extends Record<string, unknown>>(
     doc: TypedDocumentNode<D, V>,
     vars: V,
@@ -131,20 +129,12 @@ function forItem<T, const A extends readonly Action<T>[]>(
     .map((a) => resolveOne(a, ctx));
 }
 
-function useActionRouter(): ActionRouter {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  return useMemo(
-    () => ({ pathname, push: router.push, replace: router.replace }),
-    [pathname, router],
-  );
-}
-
 function useBase() {
   const auth = useAuth();
   const client = useClient();
-  const router = useActionRouter();
+  const router = useRouter();
+  const pathname = usePathname();
+
   return useMemo(() => {
     async function mutate<D, V extends Record<string, unknown>>(
       doc: TypedDocumentNode<D, V>,
@@ -154,8 +144,13 @@ function useBase() {
       if (r.error) throw r.error;
       return r.data as D;
     }
-    return { auth, client, router, mutate };
-  }, [auth, client, router]);
+    return {
+      auth,
+      client,
+      mutate,
+      router: { pathname, push: router.push, replace: router.replace },
+    };
+  }, [auth, client, router, pathname]);
 }
 
 export function useActions<T extends object, Ids extends string>(

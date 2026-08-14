@@ -1,19 +1,18 @@
+import { signOut, useAuth, useTenantConfig, useTenantId } from '@/lib/auth';
 import { buildId } from '@/lib/build-id';
+import { cn } from '@/lib/cn';
 import {
   getHrefs,
-  type MenuLink,
-  type MenuStructItem,
   topMenu,
   useMemberMenu,
+  type MenuLink,
+  type MenuStructItem,
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui';
-import { cn } from '@/lib/cn';
-import { signOut, useTenantConfig, useTenantId } from '@/ui/state/auth';
-import { useAuth } from '@/ui/use-auth';
+import { TenantSelect } from '@/ui/TenantSelect';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import { TenantSelect } from '@/ui/TenantSelect';
 
 type SidebarProps = {
   isOpen: boolean;

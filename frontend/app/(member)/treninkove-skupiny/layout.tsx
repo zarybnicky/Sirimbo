@@ -4,7 +4,7 @@
 import { Layout } from '@/ui/Layout';
 import { WithSidebar } from '@/ui/WithSidebar';
 import { CohortList } from '@/ui/lists/CohortList';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import type { ReactNode } from 'react';
 

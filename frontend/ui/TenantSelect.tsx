@@ -1,8 +1,7 @@
 import { useAtom } from 'jotai';
-import { storeRef, tenantIdAtom } from '@/ui/state/auth';
+import { storeRef, useAuth, tenantIdAtom } from '@/lib/auth';
 import React from 'react';
 import { tenantCatalog } from '@/tenant/catalog';
-import { useAuth } from '@/ui/use-auth';
 import { SelectField } from '@/ui/fields/select';
 
 export function TenantSelect() {
@@ -24,7 +23,12 @@ export function TenantSelect() {
     [setTenantId],
   );
 
-  if (!auth.isSystemAdmin && auth.tenantIds.length < 2 && process.env.NODE_ENV !== 'development') return;
+  if (
+    !auth.isSystemAdmin &&
+    auth.tenantIds.length < 2 &&
+    process.env.NODE_ENV !== 'development'
+  )
+    return;
 
   return (
     <SelectField

@@ -9,12 +9,11 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth, useTenantId } from '@/lib/auth';
 import { ChevronDown, Menu as MenuIcon, User as Account } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import { useTenantId } from '@/ui/state/auth';
 
 type Props = {
   isOpen: boolean;

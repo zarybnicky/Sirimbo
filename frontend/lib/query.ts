@@ -8,7 +8,7 @@ import type {
   TenantTrainer,
   WithTypename,
 } from '@/graphql';
-import { storeRef, tenantIdAtom, tokenAtom } from '@/ui/state/auth';
+import { storeRef, tenantIdAtom, tokenAtom } from '@/lib/auth';
 import { type Cache, cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { TypedEventTarget } from 'typescript-event-target';

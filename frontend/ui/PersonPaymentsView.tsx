@@ -15,7 +15,7 @@ import {
 import { QRPayment } from '@/ui/QRPayment';
 import { exportPostings } from '@/ui/reports/export-postings';
 import { buttonCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import React from 'react';
 import { Column, DataGrid, SortColumn } from 'react-data-grid';
 import { useQuery } from 'urql';

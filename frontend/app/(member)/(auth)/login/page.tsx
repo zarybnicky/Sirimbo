@@ -1,6 +1,6 @@
 /* eslint-disable import-x/no-unused-modules */
 
-import { LoginForm } from '@/ui/forms/LoginForm';
+import { LoginForm } from './LoginForm';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

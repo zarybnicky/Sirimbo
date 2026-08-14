@@ -1,5 +1,5 @@
 import { TextField } from '@/ui/fields/text';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import {
   AnnouncementListDocument,
   AnnouncementListQueryVariables,
@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
-import { useFuzzySearch } from '@/ui/use-fuzzy-search';
+import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { AnnouncementSortControls, type SortOption } from '@/ui/Announcements';
 
 export function AnnouncementList() {

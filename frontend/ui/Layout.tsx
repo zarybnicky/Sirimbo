@@ -2,12 +2,11 @@
 
 import { getTenantUi } from '@/tenant/ui';
 import { ErrorPage } from '@/ui/ErrorPage';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useAuth, useAuthLoading, useTenantConfig, useTenantId } from '@/lib/auth';
 import { CallToAction } from '@/ui/CallToAction';
 import React from 'react';
 import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
-import { useTenantConfig, useTenantId } from './state/auth';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 type LayoutProps = {

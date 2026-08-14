@@ -6,7 +6,7 @@ import {
 } from '@/graphql/Memberships';
 import { defineActions } from '@/lib/actions';
 import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
-import { requestAuthAtom, storeRef } from '@/ui/state/auth';
+import { authAtom, storeRef } from '@/lib/auth';
 
 export const userProxyActions = defineActions<UserProxyFragment>()([
   {
@@ -30,9 +30,9 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
       });
       if (!response.ok) throw new Error('Přihlášení selhalo');
 
-      storeRef.current.set(requestAuthAtom, { claims: null, user: null });
+      storeRef.current.set(authAtom, { claims: null, user: null });
       storeRef.resetUrqlClient();
-      await router.replace('/dashboard');
+      router.replace('/dashboard');
     },
   },
   {

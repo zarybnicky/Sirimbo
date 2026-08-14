@@ -14,7 +14,7 @@ import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
 import { diff, range } from './localizer';
 import type { CalendarEvent, CalendarInstanceEvent, Resource } from './types';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import {
   dragListenersAtom,
   dragSubjectAtom,

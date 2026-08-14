@@ -9,7 +9,7 @@ import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipAppl
 import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
 import { EditTenantForm } from '@/ui/forms/EditTenantForm';
 import { typographyCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { Pencil } from 'lucide-react';
 import Link from 'next/link';
 import { useQuery } from 'urql';

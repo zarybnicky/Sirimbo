@@ -1,11 +1,12 @@
 'use client';
 
+import { useAuth } from '@/lib/auth';
 import { registerAction } from '@/lib/auth-actions';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useRedirectLoggedIn } from '@/ui/use-auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { redirect } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -16,6 +17,9 @@ const Form = z.object({
 });
 
 export function RegistrationForm() {
+  const auth = useAuth();
+  if (auth.user) redirect(auth.personIds.length > 0 ? '/dashboard' : '/profil');
+
   const { control, handleSubmit } = useForm({ resolver: zodResolver(Form) });
   const [error, setError] = React.useState('');
   const onSubmit = async (values: z.infer<typeof Form>) => {
@@ -23,7 +27,6 @@ export function RegistrationForm() {
     const message = await registerAction(values);
     if (message) setError(message);
   };
-  useRedirectLoggedIn();
 
   return (
     <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">

@@ -22,8 +22,8 @@ import {
   UpdateCoupleDocument,
   UpdateTenantMembershipDocument,
 } from '@/graphql/Memberships';
-import { useTenantId } from '../state/auth';
-import { capitalize } from '../format';
+import { useTenantId } from '@/lib/auth';
+import { capitalize } from '@/ui/format';
 
 type QueriedStudent = Pick<
   Student,

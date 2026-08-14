@@ -10,7 +10,7 @@ import { RichTextView } from '@/ui/RichTextView';
 import { TitleBar } from '@/ui/TitleBar';
 import { exportCohort } from '@/ui/reports/export-cohort';
 import { buttonCls, cardCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 import { useClient, useQuery } from 'urql';
 

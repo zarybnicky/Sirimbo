@@ -4,7 +4,7 @@ import { MyAnnouncements, StickyAnnouncements } from '@/ui/Announcements';
 import { CompetitionWeekPanel } from '@/ui/Competitions';
 import { MyEventsList } from '@/ui/lists/MyEventsList';
 import { TabMenu } from '@/ui/TabMenu';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useAuth, useAuthLoading } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { parseAsString, useQueryState } from 'nuqs';
 

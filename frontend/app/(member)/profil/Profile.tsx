@@ -2,14 +2,13 @@
 
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
 import { useActions } from '@/lib/actions';
-import { useTenantConfig } from '@/ui/state/auth';
 import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
 import { PersonView } from '@/ui/PersonView';
 import { TabMenu, type TabMenuProps } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useAuth, useAuthLoading, useTenantConfig } from '@/lib/auth';
 import { LockKeyhole } from 'lucide-react';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';

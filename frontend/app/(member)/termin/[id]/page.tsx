@@ -2,7 +2,7 @@
 import { EventWithAttendanceDocument } from '@/graphql/Event';
 import { executeGraphql } from '@/lib/server/graphql';
 import { stripHtml } from '@/lib/stripHtml';
-import { getRequestTenant } from '@/tenant/server';
+import { getRequestTenant } from '@/lib/server/tenant';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { EventPageClient } from './EventPageClient';

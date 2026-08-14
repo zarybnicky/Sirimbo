@@ -19,7 +19,7 @@ import type { CalendarInstanceEvent, InteractionInfo } from '@/calendar/types';
 import { FormError } from '@/ui/form';
 import { formatCoupleName, formatEventName } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { startOf } from 'date-arithmetic';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {

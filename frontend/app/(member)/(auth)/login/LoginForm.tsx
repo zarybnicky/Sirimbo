@@ -3,14 +3,13 @@
 import { loginAction } from '@/lib/auth-actions';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
-import { useTenantConfig } from '@/ui/state/auth';
+import { useAuth, useTenantConfig } from '@/lib/auth';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useRedirectLoggedIn } from '../use-auth';
 import React from 'react';
 
 const Form = z.object({
@@ -19,16 +18,16 @@ const Form = z.object({
 });
 
 export function LoginForm() {
+  const auth = useAuth();
+  if (auth.user) redirect(auth.personIds.length > 0 ? '/dashboard' : '/profil');
+
   const { enableRegistration } = useTenantConfig();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
-  useRedirectLoggedIn();
 
   const [error, setError] = React.useState('');
-
-  const search = useSearchParams();
-  const from = search?.get('from');
+  const from = useSearchParams()?.get('from');
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     setError('');

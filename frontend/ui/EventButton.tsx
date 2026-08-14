@@ -8,7 +8,7 @@ import {
   shortTimeFormatter,
 } from '@/ui/format';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { diff } from 'date-arithmetic';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import * as React from 'react';

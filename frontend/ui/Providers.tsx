@@ -8,19 +8,14 @@ import type { TenantCatalogEntry } from '@/tenant/catalog';
 import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
-import {
-  requestAuthAtom,
-  requestTenantAtom,
-  storeRef,
-  type RequestAuthState,
-} from '@/ui/state/auth';
+import { authAtom, tenantAtom, storeRef, type RequestAuthState } from '@/lib/auth';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
-import { UserRefresher } from '@/ui/use-auth';
 import { createStore, Provider as JotaiProvider } from 'jotai';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { createClient, Provider as UrqlProvider } from 'urql';
+import { SessionRefresher } from './SessionRefresher';
 
 export function Providers({
   children,
@@ -33,8 +28,8 @@ export function Providers({
 }) {
   const [store] = React.useState(() => {
     const store = createStore();
-    store.set(requestAuthAtom, initialAuth);
-    store.set(requestTenantAtom, initialTenant);
+    store.set(authAtom, initialAuth);
+    store.set(tenantAtom, initialTenant);
     return store;
   });
   const [client, setClient] = React.useState(() => createClient(configureUrql()));
@@ -56,7 +51,7 @@ export function Providers({
           <UpdateNotifier />
           <FillYourProfileReminder />
           <ErrorNotifier />
-          <UserRefresher />
+          <SessionRefresher />
           <ToastContainer limit={3} />
         </ConfirmProvider>
       </UrqlProvider>

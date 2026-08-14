@@ -1,5 +1,5 @@
 import type { TenantCatalogEntry } from '@/tenant/catalog';
-import { getRequestTenant } from '@/tenant/server';
+import { getRequestTenant } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import type { ReactNode } from 'react';
 

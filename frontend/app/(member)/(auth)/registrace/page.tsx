@@ -1,6 +1,6 @@
 /* eslint-disable import-x/no-unused-modules */
 
-import { getRequestTenant } from '@/tenant/server';
+import { getRequestTenant } from '@/lib/server/tenant';
 import { ErrorPage } from '@/ui/ErrorPage';
 import type { Metadata } from 'next';
 import { RegistrationForm } from './RegistrationForm';

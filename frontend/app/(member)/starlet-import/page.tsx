@@ -1,5 +1,5 @@
 /* eslint-disable import-x/no-unused-modules */
-import { getRequestTenant } from '@/tenant/server';
+import { getRequestTenant } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import type { Metadata } from 'next';

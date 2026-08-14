@@ -5,7 +5,7 @@ import { PersonMembershipsDocument } from '@/graphql/Person';
 import { PageHeader } from '@/ui/TitleBar';
 import { formatCstsClass, getBestCstsProgress } from '@/ui/csts';
 import { useQuery } from 'urql';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { formatAgeGroup } from '@/ui/format';
 import { parseAsString, useQueryState } from 'nuqs';
 import { TabMenu } from '@/ui/TabMenu';

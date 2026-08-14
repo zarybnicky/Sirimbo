@@ -7,7 +7,7 @@ import Selection, {
   getSlotAtX,
   pointInBox,
 } from './Selection';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { dragListenersAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { cn } from '@/lib/cn';

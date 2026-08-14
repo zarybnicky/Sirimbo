@@ -1,8 +1,8 @@
 /* eslint-disable import-x/no-unused-modules */
 
 import { cardCls } from '@/ui/style';
-import { ForgottenPasswordForm } from '@/ui/forms/ForgottenPasswordForm';
 import { Metadata } from 'next';
+import { ForgottenPasswordForm } from './ForgottenPasswordForm';
 
 export const metadata: Metadata = {
   title: 'Zapomenuté heslo',

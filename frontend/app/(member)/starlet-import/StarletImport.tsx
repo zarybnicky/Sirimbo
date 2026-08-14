@@ -1,12 +1,12 @@
 'use client';
 
 import { TenantSettingsDocument } from '@/graphql/CurrentUser';
-import { useEffect } from 'react';
-import { useQuery } from 'urql';
+import { useTenantId } from '@/lib/auth';
+import { StarletImporter } from '@/ui/starlet-importer';
 import { starletSettingsAtom, starletTokenAtom } from '@/ui/starlet-importer/state';
 import { useAtom } from 'jotai';
-import { StarletImporter } from '@/ui/starlet-importer';
-import { useTenantId } from '@/ui/state/auth';
+import { useEffect } from 'react';
+import { useQuery } from 'urql';
 
 export function StarletImport() {
   const tenantId = useTenantId();

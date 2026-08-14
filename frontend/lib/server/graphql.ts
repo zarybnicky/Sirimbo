@@ -1,4 +1,6 @@
-import { getRequestTenant } from '@/tenant/server';
+import 'server-only';
+
+import { getRequestTenant } from '@/lib/server/tenant';
 import { SESSION_COOKIE } from '@/lib/session-cookies';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { print } from 'graphql';

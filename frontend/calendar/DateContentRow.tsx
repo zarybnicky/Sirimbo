@@ -9,7 +9,7 @@ import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection
 import { eventSegments, type Segment } from './common';
 import { diff, merge } from './localizer';
 import type { CalendarEvent, Resource } from './types';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';

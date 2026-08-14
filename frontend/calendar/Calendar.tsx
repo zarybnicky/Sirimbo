@@ -2,7 +2,7 @@ import { MoveEventDocument } from '@/graphql/Event';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { buttonCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { parseAsBoolean, parseAsStringLiteral, useQueryState } from 'nuqs';
 import React from 'react';

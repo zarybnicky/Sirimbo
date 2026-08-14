@@ -2,7 +2,7 @@
 
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { TextFieldElement } from '@/ui/fields/text';
 import { toast } from 'react-toastify';
 import { ResetPasswordDocument } from '@/graphql/CurrentUser';
@@ -10,19 +10,21 @@ import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRedirectLoggedIn } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 
 const Form = z.object({
   email: z.email(),
 });
 
 export function ForgottenPasswordForm() {
+  const auth = useAuth();
+  if (auth.user) redirect(auth.personIds.length > 0 ? '/dashboard' : '/profil');
+
   const router = useRouter();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
   const [result, resetPassword] = useMutation(ResetPasswordDocument);
-  useRedirectLoggedIn();
 
   const onSubmit = async (data: z.infer<typeof Form>) => {
     const result = await resetPassword({ input: data });

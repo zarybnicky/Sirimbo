@@ -1,28 +1,28 @@
 'use client';
 
-import * as React from 'react';
-import { type Column, DataGrid } from 'react-data-grid';
-import { Sheet, type SheetRef } from 'react-modal-sheet';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { Spinner } from '@/ui/Spinner';
-import { useMutation, useQuery } from 'urql';
+import { AddressDomain, SystemAdminTenantsRecord } from '@/graphql';
 import {
   SystemAdminTenantsDocument,
   SystemAdminUpdateTenantDocument,
 } from '@/graphql/SystemAdmin';
-import { AddressDomain, SystemAdminTenantsRecord } from '@/graphql';
-import z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormError, useFormResult } from '@/ui/form';
-import { useAsyncCallback } from 'react-async-hook';
-import { SubmitButton } from '@/ui/submit';
+import { storeRef, tenantIdAtom } from '@/lib/auth';
+import { origin } from '@/lib/query';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
+import { FormError, useFormResult } from '@/ui/form';
+import { Spinner } from '@/ui/Spinner';
+import { SubmitButton } from '@/ui/submit';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { Mail } from 'lucide-react';
-import { storeRef, tenantIdAtom } from '@/ui/state/auth';
-import { origin } from '@/lib/query';
+import * as React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
+import { DataGrid, type Column } from 'react-data-grid';
+import { useForm } from 'react-hook-form';
+import { Sheet, type SheetRef } from 'react-modal-sheet';
+import { useMutation, useQuery } from 'urql';
+import z from 'zod';
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = React.useState(false);

@@ -1,6 +1,6 @@
 /* eslint-disable import-x/no-unused-modules, tailwindcss/no-custom-classname */
-import { getRequestAuth } from '@/lib/server/request-auth';
-import { getRequestTenant } from '@/tenant/server';
+
+import { getRequestAuth, getRequestTenant } from '@/lib/server/tenant';
 import { Providers } from '@/ui/Providers';
 import type { Metadata, Viewport } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
@@ -14,22 +14,22 @@ import '../style/leaflet.css';
 import '../style/lite-youtube-embed.css';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const tenant = await getRequestTenant();
-  const { seo, publicSite, origin } = tenant.config;
+  const { name, config } = await getRequestTenant();
+  const { seo, publicSite, origin } = config;
   const linkTags = seo.additionalLinkTags ?? [];
 
   return {
-    metadataBase: publicSite ? new URL(origin) : undefined,
+    metadataBase: new URL(origin),
     title: {
       default: seo.defaultTitle,
       template: seo.titleTemplate,
     },
     description: seo.description,
-    applicationName: tenant.name,
+    applicationName: name,
     manifest: linkTags.find((tag) => tag.rel === 'manifest')?.href,
     openGraph: {
       title: seo.defaultTitle,
-      siteName: tenant.name,
+      siteName: name,
       type: 'website',
       locale: 'cs_CZ',
       description: seo.description,

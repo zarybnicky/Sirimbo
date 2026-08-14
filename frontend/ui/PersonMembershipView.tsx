@@ -9,7 +9,7 @@ import {
 } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth, useTenantId } from '@/lib/auth';
 import Link from 'next/link';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
@@ -24,7 +24,6 @@ import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { ActionRow } from '@/ui/ActionRow';
 import { slugify } from '@/lib/slugify';
-import { useTenantId } from '@/ui/state/auth';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();

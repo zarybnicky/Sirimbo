@@ -9,7 +9,7 @@ import {
 } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
 import { setSessionCookie } from '@/lib/server/session';
-import { getRequestTenant } from '@/tenant/server';
+import { getRequestTenant } from '@/lib/server/tenant';
 import { redirect } from 'next/navigation';
 
 export async function loginAction(values: LoginMutationVariables, from?: string | null) {

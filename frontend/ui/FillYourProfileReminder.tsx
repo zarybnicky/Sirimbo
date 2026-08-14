@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAuth, useAuthLoading } from '@/ui/use-auth';
+import { useAuth, useAuthLoading } from '@/lib/auth';
 import { toast } from 'react-toastify';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';

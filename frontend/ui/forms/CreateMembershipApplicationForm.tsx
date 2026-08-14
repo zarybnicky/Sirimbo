@@ -13,7 +13,7 @@ import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { countryOptions } from '@/lib/countries';
 import { Check, Trash2 } from 'lucide-react';
 import React from 'react';

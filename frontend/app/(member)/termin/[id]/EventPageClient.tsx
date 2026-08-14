@@ -18,7 +18,7 @@ import { Layout } from '@/ui/Layout';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { formatEventType, formatEventName } from '@/ui/format';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
 import { useQuery } from 'urql';

@@ -9,7 +9,7 @@ import { cn } from '@/lib/cn';
 import { numericDateFormatter } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { cardCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { add, startOf } from 'date-arithmetic';
 import { ExternalLink } from 'lucide-react';

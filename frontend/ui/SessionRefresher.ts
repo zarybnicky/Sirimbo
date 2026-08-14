@@ -2,23 +2,21 @@ import * as React from 'react';
 import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import { useQuery } from 'urql';
 import {
-  authAtom,
   authLoadingAtom,
   clearLegacySession,
-  requestAuthAtom,
+  authAtom,
   sessionPresentAtom,
   tokenAtom,
   type SessionClaims,
-} from '@/ui/state/auth';
+} from '@/lib/auth';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { buildId } from '@/lib/build-id';
-import { redirect } from 'next/navigation';
 
-export const UserRefresher = React.memo(function ProvideAuth() {
+export const SessionRefresher = React.memo(function SessionRefresher() {
   const token = useAtomValue(tokenAtom);
   const [sessionPresent, setSessionPresent] = useAtom(sessionPresentAtom);
   const setAuthLoading = useSetAtom(authLoadingAtom);
-  const setRequestAuth = useSetAtom(requestAuthAtom);
+  const setRequestAuth = useSetAtom(authAtom);
 
   const [{ data, fetching }, refetch] = useQuery({
     query: CurrentUserDocument,
@@ -72,11 +70,3 @@ export const UserRefresher = React.memo(function ProvideAuth() {
 
   return null;
 });
-
-export const useAuth = () => useAtomValue(authAtom);
-export const useAuthLoading = () => useAtomValue(authLoadingAtom);
-
-export function useRedirectLoggedIn() {
-  const auth = useAuth();
-  if (auth.user) redirect(auth.personIds.length > 0 ? '/dashboard' : '/profil');
-}

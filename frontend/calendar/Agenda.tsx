@@ -13,7 +13,7 @@ import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
 import { capitalize, longDayFormatter } from '@/ui/format';
 import { cardCls } from '@/ui/style';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth } from '@/lib/auth';
 import { add, startOf } from 'date-arithmetic';
 import { Cake } from 'lucide-react';
 import Link from 'next/link';

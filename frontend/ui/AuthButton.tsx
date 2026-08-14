@@ -8,11 +8,10 @@ import {
   DropdownMenuLink,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
-import { useAuth } from '@/ui/use-auth';
+import { useAuth, signOut } from '@/lib/auth';
 import { useMemberMenu } from '@/lib/use-menu';
 import { User as Account } from 'lucide-react';
 import React from 'react';
-import { signOut } from '@/ui/state/auth';
 import Link from 'next/link';
 
 export function AuthButton() {

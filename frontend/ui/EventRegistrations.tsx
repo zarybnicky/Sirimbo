@@ -11,7 +11,7 @@ import { buttonCls } from '@/ui/style';
 import { ChevronRight } from 'lucide-react';
 import React from 'react';
 import { useQuery } from 'urql';
-import { useAuth } from './use-auth';
+import { useAuth } from '../lib/auth';
 
 export function EventRegistrations({
   instance,

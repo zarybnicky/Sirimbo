@@ -1,4 +1,4 @@
-import { useTenantConfig } from '@/ui/state/auth';
+import { useTenantConfig } from '@/lib/auth';
 import type { LinkProps } from 'next/link';
 
 type Route = LinkProps['href'];

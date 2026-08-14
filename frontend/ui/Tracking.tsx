@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import { useTenantConfig } from '@/lib/auth';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { GoogleAnalytics, pageView as googlePageView } from 'nextjs-google-analytics';
+import React from 'react';
 import type { init, pageView } from 'react-facebook-pixel';
-import { useTenantConfig } from './state/auth';
 
 export const Tracking = React.memo(function Tracking() {
   const lastTrackedPath = React.useRef<string | null>(null);

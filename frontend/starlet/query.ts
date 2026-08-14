@@ -2,7 +2,7 @@ import { print } from '@0no-co/graphql.web';
 import type { ExecutionResult, TypedDocumentNode } from 'urql';
 import { origin } from '@/lib/query';
 import { starletTokenAtom } from '@/ui/starlet-importer/state';
-import { storeRef } from '@/ui/state/auth';
+import { storeRef } from '@/lib/auth';
 
 export async function fetchStarlet<TResult, TVariables>(
   document: TypedDocumentNode<TResult, TVariables>,

@@ -19,10 +19,10 @@ export type RequestAuthState = {
   user: UserAuthFragment | null;
 };
 
-export const requestAuthAtom = atom<RequestAuthState>({ claims: null, user: null });
-export const requestTenantAtom = atom<TenantCatalogEntry>(defaultTenant);
+export const authAtom = atom<RequestAuthState>({ claims: null, user: null });
+export const tenantAtom = atom<TenantCatalogEntry>(defaultTenant);
 
-interface BaseAuthState {
+export interface AuthState {
   user: null | {
     id: string;
     uLogin: string | null;
@@ -40,14 +40,11 @@ interface BaseAuthState {
   isSystemAdmin: boolean;
   isTrainerOrAdmin: boolean;
   isLoggedIn: boolean;
-}
-
-export interface AuthState extends BaseAuthState {
   isMyPerson: (id: string | null | undefined) => boolean;
   isMyCouple: (id: string | null | undefined) => boolean;
 }
 
-const defaultAuthState: BaseAuthState = {
+const defaultAuthState: AuthState = {
   user: null,
   persons: [],
   couples: [],
@@ -61,6 +58,8 @@ const defaultAuthState: BaseAuthState = {
   isSystemAdmin: false,
   isTrainerOrAdmin: false,
   isLoggedIn: false,
+  isMyPerson: () => false,
+  isMyCouple: () => false,
 };
 
 export const storeRef = {
@@ -82,11 +81,11 @@ const storage = {
 };
 
 export const tenantIdAtom = atom<string, [string], void>(
-  (get) => get(requestTenantAtom).id.toString(),
+  (get) => get(tenantAtom).id.toString(),
   (_get, set, nextValue) => {
     const tenant = getTenant(nextValue) ?? defaultTenant;
     const tenantId = tenant.id.toString();
-    set(requestTenantAtom, tenant);
+    set(tenantAtom, tenant);
 
     if (typeof window === 'undefined') return;
 
@@ -111,13 +110,10 @@ export const tenantIdAtom = atom<string, [string], void>(
   },
 );
 
-export const useTenantId = () => useAtomValue(tenantIdAtom);
-export const useTenantConfig = () => useAtomValue(requestTenantAtom).config;
-
 // Keep this until browser-only legacy tokens no longer need time to become sessions.
 const baseAuthLoadingAtom = atom(true);
 export const authLoadingAtom = atom(
-  (get) => !get(requestAuthAtom).user && get(baseAuthLoadingAtom),
+  (get) => !get(authAtom).user && get(baseAuthLoadingAtom),
   (_get, set, loading: boolean) => set(baseAuthLoadingAtom, loading),
 );
 
@@ -178,9 +174,9 @@ function resolveAuthState(
   };
 }
 
-export const authAtom = atom<AuthState>((get) => {
-  const { claims, user } = get(requestAuthAtom);
-  const auth = resolveAuthState(claims, user, get(requestTenantAtom).id);
+const authHelpersAtom = atom<AuthState>((get) => {
+  const { claims, user } = get(authAtom);
+  const auth = resolveAuthState(claims, user, get(tenantAtom).id);
   return {
     ...auth,
     isMyPerson: (id: string | null | undefined) => !!id && auth.personIds.includes(id),
@@ -188,6 +184,12 @@ export const authAtom = atom<AuthState>((get) => {
       !!id && auth.couples.some((x) => x.id === id),
   };
 });
+
+export const useTenantId = () => useAtomValue(tenantIdAtom);
+export const useTenantConfig = () => useAtomValue(tenantAtom).config;
+
+export const useAuth = () => useAtomValue(authHelpersAtom);
+export const useAuthLoading = () => useAtomValue(authLoadingAtom);
 
 export function clearLegacySession() {
   if (typeof window !== 'undefined') {
@@ -206,7 +208,7 @@ export async function signOut() {
   if (!response.ok) throw new Error('Odhlášení selhalo');
 
   clearLegacySession();
-  storeRef.current.set(requestAuthAtom, { claims: null, user: null });
+  storeRef.current.set(authAtom, { claims: null, user: null });
   storeRef.current.set(sessionPresentAtom, false);
   storeRef.resetUrqlClient();
 }

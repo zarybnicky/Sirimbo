@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { SESSION_COOKIE, SESSION_PRESENT_COOKIE } from '@/lib/session-cookies';
 import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
