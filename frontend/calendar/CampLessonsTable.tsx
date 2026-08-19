@@ -125,13 +125,12 @@ export function CampLessonsTable({ id }: { id: string }) {
       }
       for (const memberId of couple.coupleMemberIds) {
         const person = rows.get(`person:${memberId}`);
-        if (
-          person &&
-          [...person.cells.values()].some((cell) => cell.lessons.length > 0) &&
-          !nestedIds.has(person.id)
-        ) {
+        if (!person || nestedIds.has(person.id)) {
+          continue;
+        }
+        nestedIds.add(person.id);
+        if ([...person.cells.values()].some((cell) => cell.lessons.length > 0)) {
           nestedRows.set(couple.id, [...(nestedRows.get(couple.id) ?? []), person]);
-          nestedIds.add(person.id);
         }
       }
     }
@@ -295,8 +294,8 @@ export function CampLessonsTable({ id }: { id: string }) {
           columns={columns}
           rows={rows}
           rowKeyGetter={(row) => row.id}
-          rowHeight={52}
-          headerRowHeight={52}
+          rowHeight={44}
+          headerRowHeight={44}
           headerRowClass="bg-neutral-1/50"
           style={{ height: Math.min(720, 52 + rows.length * 52) }}
         />

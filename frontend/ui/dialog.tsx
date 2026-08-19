@@ -101,7 +101,7 @@ function DialogViewport({ children }: { children: React.ReactNode }) {
   return (
     <div
       ref={ref}
-      className="fixed inset-x-0 top-0 z-40 flex h-[var(--visual-viewport-height)] w-full max-w-[100dvh] items-center justify-center overflow-hidden p-4 [--visual-viewport-height:100vh] supports-[height:100dvh]:[--visual-viewport-height:100dvh] sm:p-6"
+      className="fixed inset-x-0 top-0 z-40 flex h-[var(--visual-viewport-height)] w-full max-w-[100dvw] items-center justify-center overflow-hidden p-4 [--visual-viewport-height:100vh] supports-[height:100dvh]:[--visual-viewport-height:100dvh] sm:p-6"
     >
       {children}
     </div>

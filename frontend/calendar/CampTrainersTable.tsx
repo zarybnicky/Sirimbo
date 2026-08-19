@@ -152,7 +152,7 @@ export function CampTrainersTable({
           columns={columns}
           rows={rows}
           rowKeyGetter={(row) => row.id}
-          rowHeight={52}
+          rowHeight={44}
           headerRowHeight={44}
           style={{ height: Math.min(720, 44 + rows.length * 52) }}
         />
