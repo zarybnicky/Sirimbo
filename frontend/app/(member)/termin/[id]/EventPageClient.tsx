@@ -95,14 +95,22 @@ export function EventPageClient({
           id: 'lessons',
           title: 'Lekce',
           contents: () => (
-            <CampLessonsTable id={instance.id} />
+            <div className="col-full-width relative">
+              <CampLessonsTable id={instance.id} />
+            </div>
           ),
         },
         {
           id: 'trainers',
           title: 'Trenéři',
           contents: () => (
-            <CampTrainersTable id={instance.id} since={instance.since} until={instance.until} />
+            <div className="col-full-width relative">
+              <CampTrainersTable
+                id={instance.id}
+                since={instance.since}
+                until={instance.until}
+              />
+            </div>
           ),
         },
       );
