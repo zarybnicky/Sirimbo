@@ -21,28 +21,23 @@ type Row = {
 
 const dayKeyFormatter = new Intl.DateTimeFormat('sv-SE');
 
-export function CampTrainersTable({
-  id,
-  since,
-  until,
-}: {
-  id: string;
-  since: string;
-  until: string;
-}) {
+export function CampTrainersTable({ id }: { id: string }) {
   const [query] = useQuery({ query: CampTrainerOverviewDocument, variables: { id } });
   const { rows, days } = React.useMemo(() => {
     const rows = new Map<string, Row>();
     const days = new Map<string, Date>();
 
+    if (!query.data?.eventInstance) return { rows: [], days: [] };
+    const event = query.data.eventInstance;
+
     for (
-      let day = startOf(new Date(since), 'day');
-      day <= new Date(until);
+      let day = startOf(new Date(event.since), 'day');
+      day <= new Date(event.until);
       day = add(day, 1, 'day')
     ) {
       days.set(dayKeyFormatter.format(day), day);
     }
-    for (const trainer of query.data?.eventInstance?.trainersList ?? []) {
+    for (const trainer of event.trainersList) {
       rows.set(trainer.personId, {
         id: trainer.personId,
         trainer: trainer.person?.name || '-',
@@ -52,7 +47,7 @@ export function CampTrainersTable({
       });
     }
 
-    for (const event of query.data?.scheduledEvents ?? []) {
+    for (const event of query.data.scheduledEvents ?? []) {
       if (event.type !== 'LESSON' && event.type !== 'GROUP') continue;
       const day = new Date(event.since);
       const dayKey = dayKeyFormatter.format(day);
@@ -67,9 +62,7 @@ export function CampTrainersTable({
         };
         row.eventsByDay.set(dayKey, [...(row.eventsByDay.get(dayKey) ?? []), event]);
 
-        const payout = event.payoutTrainers?.find(
-          (candidate) => candidate.personId === trainer.personId,
-        );
+        const payout = event.payoutTrainers?.find((x) => x.personId === trainer.personId);
         if (payout?.memberPayout45MinAmount && payout.currency) {
           const amount =
             (Number(payout.memberPayout45MinAmount) *
@@ -87,12 +80,10 @@ export function CampTrainersTable({
     }
 
     return {
-      rows: [...rows.values()].toSorted((a, b) =>
-        a.trainer.localeCompare(b.trainer, 'cs'),
-      ),
+      rows: [...rows.values()].toSorted((a, b) => a.trainer.localeCompare(b.trainer, 'cs')),
       days: [...days].toSorted(([, a], [, b]) => a.getTime() - b.getTime()),
     };
-  }, [query.data, since, until]);
+  }, [query.data]);
 
   const columns = React.useMemo<Column<Row>[]>(
     () => [

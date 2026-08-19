@@ -105,11 +105,7 @@ export function EventPageClient({
           title: 'Trenéři',
           contents: () => (
             <div className="col-full-width relative">
-              <CampTrainersTable
-                id={instance.id}
-                since={instance.since}
-                until={instance.until}
-              />
+              <CampTrainersTable id={instance.id} />
             </div>
           ),
         },

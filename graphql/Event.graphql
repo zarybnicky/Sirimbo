@@ -346,6 +346,8 @@ query EventRegistrationCandidates {
 query CampTrainerOverview($id: BigInt!) {
   eventInstance(id: $id) {
     id
+    since
+    until
     trainersList: eventInstanceTrainersByInstanceIdList {
       id
       personId
