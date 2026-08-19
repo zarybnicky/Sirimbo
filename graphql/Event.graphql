@@ -54,7 +54,12 @@ fragment EventWithTrainer on EventInstance {
   capacityUnit
   shareToken
   enableNotes
-  remainingPersonSpots
+  registrationInfo {
+    registrations
+    people
+    remainingCapacity
+    my
+  }
   trainersList: eventInstanceTrainersByInstanceIdList {
     id
     personId
@@ -79,7 +84,6 @@ fragment EventWithTrainer on EventInstance {
     condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     first: 3
   ) {
-    totalCount
     nodes {
       id
       person {

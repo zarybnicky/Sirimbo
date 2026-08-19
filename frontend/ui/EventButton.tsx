@@ -74,7 +74,7 @@ export function EventButton({
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
               instance?.type === 'LESSON' &&
                 !instance.isLocked &&
-                (instance.remainingPersonSpots ?? 0) > 0
+                (instance.registrationInfo?.remainingCapacity ?? 0) > 0
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}

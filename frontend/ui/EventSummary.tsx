@@ -19,7 +19,7 @@ import React from 'react';
 export function EventSummary({ instance }: { instance: EventWithTrainerFragment }) {
   const actions = useActions(eventInstanceActions, instance);
   const { seriesInfo, registrations } = instance;
-  const registrationCount = registrations.totalCount;
+  const registrationCount = instance.registrationInfo?.registrations ?? 0;
   const locationLabel = instance.location?.name || instance.locationText;
   const cohorts = instance.targetCohortsList.flatMap(x => x.cohort ? [x.cohort] : []);
 

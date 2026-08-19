@@ -62,7 +62,8 @@ export function BasicEventInfo({ instance }: { instance: EventPageFragment }) {
           <>
             <dt>Kapacita</dt>
             <dd>
-              Zbývá {instance.remainingPersonSpots} míst z {instance.capacity}
+              Zbývá {instance.registrationInfo?.remainingCapacity} míst z{' '}
+              {instance.capacity}
             </dd>
           </>
         )}

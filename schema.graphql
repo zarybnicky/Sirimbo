@@ -3229,6 +3229,7 @@ type EventInstance {
     orderBy: [PaymentsOrderBy!]
   ): [Payment!]!
   range: DatetimeRange!
+  registrationInfo: EventInstanceRegistrationInfo
   remainingPersonSpots: Int
 
   """Reads a single `EventSeries` that is related to this `EventInstance`."""
@@ -3567,6 +3568,13 @@ input EventInstanceRegistrationCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
+}
+
+type EventInstanceRegistrationInfo {
+  my: Boolean
+  people: Int
+  registrations: Int
+  remainingCapacity: Int
 }
 
 enum EventInstanceRegistrationStatus {

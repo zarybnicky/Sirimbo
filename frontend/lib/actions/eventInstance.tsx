@@ -41,7 +41,9 @@ function canOpenRegistrations({
   return (
     canManageInstance({ auth, item }) ||
     (!!(item.isPublic || item.isVisible) &&
-      (!auth.isExternal || !item.capacity || (item.remainingPersonSpots ?? 0) > 0))
+      (!auth.isExternal ||
+        !item.capacity ||
+        (item.registrationInfo?.remainingCapacity ?? 0) > 0))
   );
 }
 
@@ -50,15 +52,10 @@ function registrationActionLabel({
   item,
 }: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
   if (canManageInstance({ auth, item })) {
-    return `Přihlášky (${item.registrations.totalCount})`;
+    return `Přihlášky (${item.registrationInfo?.registrations ?? 0})`;
   }
 
-  const hasRegistration = item.registrations.nodes.some(
-    (r) =>
-      (!!r.person?.id && auth.isMyPerson(r.person.id)) ||
-      (!!r.couple?.id && auth.isMyCouple(r.couple.id)),
-  );
-  return !auth.isLoggedIn || auth.personIds.length === 0 || !hasRegistration
+  return !auth.isLoggedIn || !item.registrationInfo?.my
     ? 'Přihlásit'
     : 'Moje přihlášky';
 }

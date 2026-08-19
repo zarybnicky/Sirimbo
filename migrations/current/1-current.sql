@@ -69,6 +69,7 @@ $$;
 --!include functions/event_overlaps_reports.sql
 --!include functions/activity_timeline.sql
 --!include functions/event_instances_for_range.sql
+--!include functions/event_instance_registration_info.sql
 --!include functions/save_events.sql
 
 drop function if exists quick_create_event_instances;

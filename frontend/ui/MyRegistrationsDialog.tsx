@@ -66,7 +66,8 @@ function useRegistrationCandidates(
       ].flatMap((membership) => (membership.person ? [membership.person] : []))
     : auth.persons;
   const couples = isManager ? (tenant?.couplesList ?? []) : auth.couples;
-  const capacityLeft = instance.remainingPersonSpots ?? Number.POSITIVE_INFINITY;
+  const capacityLeft =
+    instance.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
   const candidates: Registrant[] = [
     ...[...new Map(people.map((person) => [person.id, person])).values()]
       .filter((person) => !registeredPeople.has(person.id))

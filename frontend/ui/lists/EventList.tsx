@@ -46,7 +46,7 @@ function EventListPage({ search, currentId }: EventListPageProps) {
           instance.location?.name,
           instance.locationText,
           (instance.capacity ?? 0) > 0
-            ? `Zbývá ${instance.remainingPersonSpots} míst z ${instance.capacity}`
+            ? `Zbývá ${instance.registrationInfo?.remainingCapacity} míst z ${instance.capacity}`
             : '',
         ]
           .filter(Boolean)

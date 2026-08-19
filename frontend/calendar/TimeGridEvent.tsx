@@ -130,16 +130,14 @@ function InstanceTimeGridEvent({
           'absolute overflow-hidden max-h-full min-h-[20px] border border-b-transparent',
           {
             'w-full h-full': isResizable,
-            'empty-event': event.instance.registrations.totalCount === 0,
+            'empty-event': !event.instance.registrationInfo?.registrations,
             'is-group': event.instance.type === 'GROUP',
             'opacity-75': isBackgroundEvent,
             'rbc-drag-preview': event.__isPreview,
             'rounded-t-none': continuesPrior,
             'rounded-b-none': continuesAfter,
             'rbc-dragged-event': isDragging && currentDragSubject && !event.__isPreview,
-            'pl-3':
-              event.instance.targetCohortsList &&
-              event.instance.targetCohortsList.length > 0,
+            'pl-3': !!event.instance.targetCohortsList?.length,
           },
         )}
       >

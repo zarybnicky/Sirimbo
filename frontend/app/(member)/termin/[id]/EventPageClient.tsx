@@ -75,9 +75,8 @@ export function EventPageClient({
       contents: () => <BasicEventInfo instance={instance} />,
     });
 
-    const numRegistrations =
-      instance.registrations.totalCount +
-      instance.eventExternalRegistrationsByInstanceIdList.length;
+
+    const numRegistrations = instance.registrationInfo?.registrations ?? 0;
     if (auth.user?.id && numRegistrations > 0) {
       tabs.push({
         id: 'registrations',
