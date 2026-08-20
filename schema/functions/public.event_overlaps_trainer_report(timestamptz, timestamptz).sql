@@ -6,6 +6,7 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
       eit.person_id,
       p.name as person_name,
       ei.id as instance_id,
+      ei.parent_id,
       ei.since,
       ei.until,
       ei.range,
@@ -31,6 +32,8 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
   from trainer_instances ti1
   join trainer_instances ti2 on ti1.person_id = ti2.person_id
     and ti1.instance_id < ti2.instance_id
+    and ti1.parent_id is distinct from ti2.instance_id
+    and ti2.parent_id is distinct from ti1.instance_id
     and ti1.range && ti2.range
     and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
 $$;

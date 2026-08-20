@@ -1269,7 +1269,7 @@ CREATE TABLE crawler.rate_limit_rule (
   max_requests int NOT NULL,
   per_interval interval NOT NULL,
   spacing interval GENERATED ALWAYS AS ((per_interval / CAST(max_requests AS double precision)) + '00:00:00.02'::interval) STORED NOT NULL,
-  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+01' AS timestamp with time zone) NOT NULL,
+  next_available_at timestamp with time zone DEFAULT CAST('1970-01-01 00:00:00+00' AS timestamp with time zone) NOT NULL,
   CHECK (max_requests > 0),
   CHECK (per_interval > '00:00:00'::interval)
 );
@@ -1320,13 +1320,23 @@ CREATE TYPE public.competition_participation_record AS (person_id bigint, person
 
 CREATE TYPE public.event_conflict AS (person_id bigint, person_name text, first_instance_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, second_instance_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, overlap_range tstzrange);
 
-CREATE TYPE public.jwt_token AS (exp int, user_id bigint, tenant_id bigint, username text, email text, my_person_ids bigint[], my_tenant_ids bigint[], my_cohort_ids bigint[], my_couple_ids bigint[], is_member boolean, is_trainer boolean, is_admin boolean, is_system_admin boolean, guest_tenant_ids bigint[], member_tenant_ids bigint[], trainer_tenant_ids bigint[], admin_tenant_ids bigint[]);
+CREATE TYPE public.event_details_input AS (parent_id bigint, name text, type public.event_type, location_id bigint, location_text text, capacity int, capacity_unit public.event_capacity_unit, is_visible boolean, is_public boolean, has_public_details boolean, is_locked boolean, enable_notes boolean);
+
+CREATE TYPE public.event_registration_input AS (person_id bigint, couple_id bigint);
+
+CREATE TYPE public.event_input AS (id bigint, since timestamp with time zone, until timestamp with time zone, is_cancelled boolean, registrations public.event_registration_input[]);
+
+CREATE TYPE public.event_instance_range_scope AS ENUM ('all', 'top_level', 'mine', 'relevant');
+
+CREATE TYPE public.event_instance_registration_info AS (registrations int, people int, remaining_capacity int, my boolean);
+
+CREATE TYPE public.event_series_input AS (id bigint, name text);
+
+CREATE TYPE public.event_trainer_input AS (person_id bigint, lessons_offered int);
+
+CREATE TYPE public.jwt_token AS (exp int, user_id bigint, tenant_id bigint, email text, my_person_ids bigint[], my_tenant_ids bigint[], my_cohort_ids bigint[], my_couple_ids bigint[], is_system_admin boolean, guest_tenant_ids bigint[], member_tenant_ids bigint[], trainer_tenant_ids bigint[], admin_tenant_ids bigint[]);
 
 CREATE TYPE public.login_result AS (usr public.users, jwt public.jwt_token);
-
-CREATE TYPE public.quick_event_registration_input AS (person_id bigint, couple_id bigint);
-
-CREATE TYPE public.quick_event_input AS (since timestamp with time zone, until timestamp with time zone, type public.event_type, location_id bigint, location_text text, trainer_person_ids bigint[], registrations public.quick_event_registration_input[]);
 
 CREATE TYPE public.scoreboard_record AS (person_id bigint, cohort_id bigint, lesson_total_score bigint, group_total_score bigint, event_total_score bigint, manual_total_score bigint, total_score bigint, ranking bigint);
 

@@ -2,9 +2,9 @@
 -- PostgreSQL database dump
 --
 
-\restrict iH19WmDVWn64Rt207q2t5JutJ3vcA4mgVP8HTtZhbqqgysyYBuIGR7RCbCUUciG
+\restrict 0Ibj4DdhiH91vhbbdeRYl4Zxi5HS6bwmKET6OxFOZ0Tyjx1buXQoglvF4GeCtZ0
 
--- Dumped from database version 18.4 (Postgres.app)
+-- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
 
 SET statement_timeout = 0;
@@ -553,6 +553,86 @@ COMMENT ON COLUMN public.event_conflict.overlap_range IS '@notNull';
 
 
 --
+-- Name: event_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_type AS ENUM (
+    'camp',
+    'lesson',
+    'reservation',
+    'holiday',
+    'group'
+);
+
+
+--
+-- Name: event_details_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_details_input AS (
+	parent_id bigint,
+	name text,
+	type public.event_type,
+	location_id bigint,
+	location_text text,
+	capacity integer,
+	capacity_unit public.event_capacity_unit,
+	is_visible boolean,
+	is_public boolean,
+	has_public_details boolean,
+	is_locked boolean,
+	enable_notes boolean
+);
+
+
+--
+-- Name: event_registration_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_registration_input AS (
+	person_id bigint,
+	couple_id bigint
+);
+
+
+--
+-- Name: event_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_input AS (
+	id bigint,
+	since timestamp with time zone,
+	until timestamp with time zone,
+	is_cancelled boolean,
+	registrations public.event_registration_input[]
+);
+
+
+--
+-- Name: event_instance_range_scope; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_instance_range_scope AS ENUM (
+    'all',
+    'top_level',
+    'mine',
+    'relevant'
+);
+
+
+--
+-- Name: event_instance_registration_info; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_instance_registration_info AS (
+	registrations integer,
+	people integer,
+	remaining_capacity integer,
+	my boolean
+);
+
+
+--
 -- Name: event_instance_registration_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -574,15 +654,22 @@ CREATE TYPE public.event_registration_source AS ENUM (
 
 
 --
--- Name: event_type; Type: TYPE; Schema: public; Owner: -
+-- Name: event_series_input; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.event_type AS ENUM (
-    'camp',
-    'lesson',
-    'reservation',
-    'holiday',
-    'group'
+CREATE TYPE public.event_series_input AS (
+	id bigint,
+	name text
+);
+
+
+--
+-- Name: event_trainer_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_trainer_input AS (
+	person_id bigint,
+	lessons_offered integer
 );
 
 
@@ -605,15 +692,11 @@ CREATE TYPE public.jwt_token AS (
 	exp integer,
 	user_id bigint,
 	tenant_id bigint,
-	username text,
 	email text,
 	my_person_ids bigint[],
 	my_tenant_ids bigint[],
 	my_cohort_ids bigint[],
 	my_couple_ids bigint[],
-	is_member boolean,
-	is_trainer boolean,
-	is_admin boolean,
 	is_system_admin boolean,
 	guest_tenant_ids bigint[],
 	member_tenant_ids bigint[],
@@ -725,31 +808,6 @@ CREATE TYPE public.price_type AS (
 
 CREATE DOMAIN public.price AS public.price_type
 	CONSTRAINT price_check CHECK (((VALUE IS NULL) OR (((VALUE).currency IS NOT NULL) AND ((VALUE).amount IS NOT NULL) AND (length((VALUE).currency) = 3) AND ((VALUE).currency = upper((VALUE).currency)))));
-
-
---
--- Name: quick_event_registration_input; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.quick_event_registration_input AS (
-	person_id bigint,
-	couple_id bigint
-);
-
-
---
--- Name: quick_event_input; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.quick_event_input AS (
-	since timestamp with time zone,
-	until timestamp with time zone,
-	type public.event_type,
-	location_id bigint,
-	location_text text,
-	trainer_person_ids bigint[],
-	registrations public.quick_event_registration_input[]
-);
 
 
 --
@@ -902,7 +960,6 @@ with
     extract(epoch from now() + interval '7 days')::integer as exp,
     u.id as user_id,
     (select current_tenant_id()) as tenant_id,
-    u.u_login as username,
     u.u_email as email,
 
     coalesce((select array_agg(p.person_id) from person_ids p), '{}'::bigint[]) as my_person_ids,
@@ -910,9 +967,6 @@ with
     coalesce((select array_agg(p.cohort_id) from cohort_ids p), '{}'::bigint[]) as my_cohort_ids,
     coalesce((select array_agg(p.id) from couple_ids p), '{}'::bigint[]) as my_couple_ids,
 
-    exists (select 1 from tenant_ids t where t.tenant_id = (select current_tenant_id())) as is_member,
-    exists (select 1 from tenant_trainers t where t.tenant_id = (select current_tenant_id())) as is_trainer,
-    exists (select 1 from tenant_admins a where a.tenant_id = (select current_tenant_id())) as is_admin,
     app_private.is_system_admin(u.id) as is_system_admin,
 
     '{}'::bigint[] as guest_tenant_ids,
@@ -3552,11 +3606,7 @@ $$;
 CREATE FUNCTION public.current_claims() RETURNS jsonb
     LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
-  select to_jsonb(app_private.create_jwt_token(users))
-    - 'exp'
-    - 'is_member'
-    - 'is_trainer'
-    - 'is_admin'
+  select to_jsonb(app_private.create_jwt_token(users)) - 'exp'
   from users
   where id = nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
 $$;
@@ -3633,6 +3683,47 @@ $$;
 --
 
 COMMENT ON FUNCTION public.event_instance_approx_price(v_instance public.event_instance) IS '@simpleCollections only';
+
+
+--
+-- Name: event_instance_registration_info(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instance_registration_info(inst public.event_instance) RETURNS public.event_instance_registration_info
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'public', 'pg_catalog', 'pg_temp'
+    AS $$
+  with registration_counts as (
+    select
+      count(*) filter (where parent_registration_id is null)::integer
+        as registrations,
+      count(*) filter (where person_id is not null)::integer
+        as people,
+      count(*) filter (where person_id = any(current_person_ids())) > 0 as my
+    from event_instance_registration
+    where instance_id = inst.id and registration_status = 'active'
+  ), external_counts as (
+    select count(*)::integer as registrations
+    from event_external_registration
+    where instance_id = inst.id
+  )
+  select row(
+    registrations.registrations + external.registrations,
+    registrations.people + external.registrations,
+    case
+      when inst.capacity is null or inst.capacity <= 0 then null
+      else inst.capacity
+        - case inst.capacity_unit
+            when 'people' then registrations.people
+            when 'registrations' then registrations.registrations
+          end
+        - external.registrations
+    end,
+    registrations.my
+  )::event_instance_registration_info
+  from registration_counts registrations
+  cross join external_counts external;
+$$;
 
 
 --
@@ -3862,34 +3953,53 @@ COMMENT ON FUNCTION public.event_instance_trainers(v_instance public.event_insta
 
 
 --
--- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, bigint[], bigint[], boolean, bigint); Type: FUNCTION; Schema: public; Owner: -
+-- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, bigint[], bigint[], boolean, boolean, bigint, public.event_instance_range_scope); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[], participant_ids bigint[] DEFAULT NULL::bigint[], only_mine boolean DEFAULT false, parent_id bigint DEFAULT NULL::bigint) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[], participant_ids bigint[] DEFAULT NULL::bigint[], only_mine boolean DEFAULT false, any_parent boolean DEFAULT true, parent_id bigint DEFAULT NULL::bigint, scope public.event_instance_range_scope DEFAULT NULL::public.event_instance_range_scope) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
     AS $_$
+  with mine as (
+    select instance_id from event_instance_registration
+    where person_id = any (current_person_ids()) and registration_status = 'active'
+    union all
+    select instance_id from event_instance_trainer
+    where person_id = any (current_person_ids())
+  )
   select i.*
   from event_instance i
+  cross join (values (coalesce($9, case
+    when only_mine then 'mine'
+    when not any_parent then 'top_level'
+    else 'all'
+  end::event_instance_range_scope))) args(scope)
   where i.tenant_id = current_tenant_id()
-    and (only_type IS NULL OR i.type = only_type)
-    and i.parent_id is not distinct from $7
+    and (only_type is null or i.type = only_type)
+    and case
+      when $8 is not null then i.parent_id = $8
+        and (args.scope <> 'mine' or i.id in (select instance_id from mine))
+      when args.scope = 'all' then true
+      when args.scope = 'top_level' then i.parent_id is null
+      when args.scope = 'mine' then i.id in (select instance_id from mine)
+      when args.scope = 'relevant' then i.parent_id is null
+        or i.id in (select instance_id from mine)
+        or i.parent_id in (select instance_id from mine)
+    end
     and i.since < coalesce(end_range, 'infinity'::timestamptz)
     and i.until > start_range
     and (trainer_ids is null
       or exists (select 1 from event_instance_trainer where instance_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null
       or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any (participant_ids) and registration_status = 'active'))
-    and (only_mine is false
-      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active')
-      or i.manager_person_ids && ((select current_person_ids())::bigint[]));
+  ;
 $_$;
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, parent_id bigint); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, any_parent boolean, parent_id bigint, scope public.event_instance_range_scope); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, parent_id bigint) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, any_parent boolean, parent_id bigint, scope public.event_instance_range_scope) IS '@simpleCollections only';
 
 
 --
@@ -3904,6 +4014,7 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
       ea.person_id,
       p.name as person_name,
       ei.id as instance_id,
+      ei.parent_id,
       ei.since,
       ei.until,
       ei.range,
@@ -3931,6 +4042,8 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
   from instances i1
   join instances i2 on i1.person_id = i2.person_id
     and i1.instance_id < i2.instance_id
+    and i1.parent_id is distinct from i2.instance_id
+    and i2.parent_id is distinct from i1.instance_id
     and i1.range && i2.range
     and greatest(i1.since, i2.since) < least(i1.until, i2.until);
 $$;
@@ -3955,6 +4068,7 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
       eit.person_id,
       p.name as person_name,
       ei.id as instance_id,
+      ei.parent_id,
       ei.since,
       ei.until,
       ei.range,
@@ -3980,6 +4094,8 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
   from trainer_instances ti1
   join trainer_instances ti2 on ti1.person_id = ti2.person_id
     and ti1.instance_id < ti2.instance_id
+    and ti1.parent_id is distinct from ti2.instance_id
+    and ti2.parent_id is distinct from ti1.instance_id
     and ti1.range && ti2.range
     and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
 $$;
@@ -4693,93 +4809,6 @@ $$;
 
 
 --
--- Name: quick_create_event_instances(public.quick_event_input[], bigint, boolean, boolean, boolean, boolean, bigint, text, integer, public.event_capacity_unit, text, text, text, bigint[], integer[], public.quick_event_input[], boolean); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint DEFAULT NULL::bigint, p_is_visible boolean DEFAULT true, p_is_public boolean DEFAULT false, p_is_locked boolean DEFAULT false, p_enable_notes boolean DEFAULT false, p_series_id bigint DEFAULT NULL::bigint, p_name text DEFAULT NULL::text, p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT 'people'::public.event_capacity_unit, p_description text DEFAULT ''::text, p_summary text DEFAULT ''::text, p_files_legacy text DEFAULT ''::text, p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_copies public.quick_event_input[] DEFAULT NULL::public.quick_event_input[], p_has_public_details boolean DEFAULT false) RETURNS SETOF public.event_instance
-    LANGUAGE plpgsql
-    AS $$
-declare
-  quick_event quick_event_input;
-  created_instance event_instance;
-  v_series_id bigint := p_series_id;
-  instances quick_event_input[] := coalesce(events, '{}'::quick_event_input[]);
-begin
-  if cardinality(coalesce(p_copies, '{}'::quick_event_input[])) > 0 then
-    if p_series_id is not null then
-      raise exception 'cannot copy into an existing event series';
-    end if;
-    if cardinality(instances) <> 1 then
-      raise exception 'event copies require exactly one source event';
-    end if;
-
-    insert into event_series (name)
-    values (p_name)
-    returning id into v_series_id;
-
-    instances := instances || p_copies;
-  end if;
-
-  foreach quick_event in array instances loop
-    insert into event_instance (
-      parent_id, series_id, since, until, name, type, location_id, location_text,
-      capacity, capacity_unit, is_visible, is_public, has_public_details,
-      is_locked, enable_notes,
-      description, summary, files_legacy
-    ) values (
-      parent_id, v_series_id, quick_event.since, quick_event.until, p_name,
-      coalesce(quick_event.type, 'lesson'), quick_event.location_id,
-      coalesce(quick_event.location_text, ''),
-      coalesce(p_capacity,
-        case when coalesce(quick_event.type, 'lesson') = 'lesson' then 2 else 0 end),
-      coalesce(p_capacity_unit, 'people'),
-      p_is_visible, p_is_public, p_is_public and p_has_public_details,
-      p_is_locked, p_enable_notes,
-      coalesce(p_description, ''), coalesce(p_summary, ''), coalesce(p_files_legacy, '')
-    )
-    returning * into created_instance;
-
-    with roots as (
-      insert into event_instance_registration (
-        instance_id, person_id, couple_id, source, status
-      )
-      select created_instance.id, registration.person_id, registration.couple_id,
-        'manager',
-        case when registration.person_id is not null then 'unknown'::attendance_type end
-      from unnest(quick_event.registrations) registration
-      returning id, couple_id
-    )
-    insert into event_instance_registration (
-      instance_id, parent_registration_id, person_id, status
-    )
-    select created_instance.id, root.id, person.person_id, 'unknown'
-    from roots root
-    join couple couple on couple.id = root.couple_id
-    cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id)
-    where root.couple_id is not null;
-
-    insert into event_instance_trainer (instance_id, person_id, lessons_offered)
-    select distinct on (trainer.person_id)
-      created_instance.id,
-      trainer.person_id,
-      case when p_trainer_lessons_offered is null then 0
-        else p_trainer_lessons_offered[trainer.ordinality] end
-    from unnest(quick_event.trainer_person_ids) with ordinality
-      trainer(person_id, ordinality)
-    where trainer.person_id is not null;
-
-    insert into event_instance_target_cohort (tenant_id, instance_id, cohort_id)
-    select distinct created_instance.tenant_id, created_instance.id, cohort_id
-    from unnest(coalesce(p_cohort_ids, '{}'::bigint[])) cohort(cohort_id)
-    where cohort_id is not null;
-
-    return next created_instance;
-  end loop;
-end;
-$$;
-
-
---
 -- Name: refresh_jwt(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -5011,6 +5040,337 @@ $$;
 --
 
 COMMENT ON FUNCTION public.resolve_payment_with_credit(p public.payment) IS '@omit';
+
+
+--
+-- Name: save_events(public.event_details_input, public.event_input[], public.event_trainer_input[], bigint[], public.event_series_input); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[] DEFAULT '{}'::public.event_trainer_input[], cohort_ids bigint[] DEFAULT '{}'::bigint[], series public.event_series_input DEFAULT NULL::public.event_series_input) RETURNS SETOF public.event_instance
+    LANGUAGE plpgsql
+    AS $$
+declare
+  event_to_save event_input;
+  v_saved_event event_instance;
+  v_saved_event_ids bigint[] := '{}'::bigint[];
+  v_tenant_id bigint := current_tenant_id();
+  v_series_id bigint;
+  v_assign_series boolean := (series).id is not null or (series).name is not null;
+  v_is_visible boolean := coalesce((details).is_visible, true);
+  v_is_public boolean := coalesce((details).is_public, false);
+  v_has_public_details boolean := v_is_public and coalesce((details).has_public_details, false);
+  v_is_locked boolean := coalesce((details).is_locked, false);
+  v_enable_notes boolean := coalesce((details).enable_notes, false);
+  v_expected_existing_count bigint;
+  v_locked_existing_count bigint;
+begin
+  if details is null then
+    raise exception 'event details are required';
+  end if;
+
+  if (details).type is null
+    or (details).capacity is null
+    or (details).capacity < 0
+    or (details).capacity_unit is null then
+    raise exception 'event details are incomplete';
+  end if;
+
+  if cardinality(coalesce(events, '{}'::event_input[])) = 0 then
+    raise exception 'at least one event is required';
+  end if;
+
+  if exists (
+    select 1 from unnest(events) i
+    where i is null or i.since is null or i.until is null or i.until <= i.since
+  ) then
+    raise exception 'every event requires a valid time range';
+  end if;
+
+  if exists (select i.id from unnest(events) i where i.id is not null group by i.id having count(*) > 1) then
+    raise exception 'an event may only be submitted once';
+  end if;
+
+  if exists (
+    select 1
+    from unnest(events) i
+    cross join lateral unnest(coalesce(i.registrations, '{}'::event_registration_input[])) registration
+    where (registration.person_id is null) = (registration.couple_id is null)
+  ) then
+    raise exception 'an event registration requires exactly one person or couple';
+  end if;
+
+  if exists (
+    select 1
+    from unnest(coalesce(trainers, '{}'::event_trainer_input[])) trainer
+    where trainer.person_id is null or trainer.lessons_offered < 0
+  ) then
+    raise exception 'an event trainer requires a person and a non-negative lesson limit';
+  end if;
+
+  if exists (
+    select 1
+    from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
+    left join cohort cohort on cohort.id = i.cohort_id and cohort.tenant_id = v_tenant_id
+    where i.cohort_id is not null and cohort.id is null
+  ) then
+    raise exception 'event cohort not found';
+  end if;
+
+  if exists (
+    select 1 from unnest(events) i where i.id is null
+  ) and (details).parent_id is not null and not exists (
+    select 1
+    from event_instance parent
+    where parent.id = (details).parent_id and parent.tenant_id = v_tenant_id
+  ) then
+    raise exception 'event parent % not found or not editable', (details).parent_id;
+  end if;
+
+  if v_assign_series then
+    if (series).id is null then
+      insert into event_series (name)
+      values (coalesce((series).name, (details).name))
+      returning id into v_series_id;
+    else
+      select e.id into v_series_id
+      from event_series e where e.id = (series).id and e.tenant_id = v_tenant_id
+      for update;
+
+      if not found then
+        raise exception 'event series % not found or not editable', (series).id;
+      end if;
+    end if;
+  end if;
+
+  select count(*) into v_expected_existing_count from unnest(events) i where i.id is not null;
+
+  perform e.id
+  from event_instance e
+  join unnest(events) i on i.id = e.id
+  where i.id is not null and e.tenant_id = v_tenant_id
+  order by e.id
+  for update of e;
+
+  get diagnostics v_locked_existing_count = row_count;
+  if v_locked_existing_count <> v_expected_existing_count then
+    raise exception 'one or more events were not found or are not editable';
+  end if;
+
+  foreach event_to_save in array events loop
+    if event_to_save.id is null then
+      insert into event_instance (
+        parent_id,
+        series_id,
+        since,
+        until,
+        is_cancelled,
+        name,
+        type,
+        location_id,
+        location_text,
+        capacity,
+        capacity_unit,
+        is_visible,
+        is_public,
+        has_public_details,
+        is_locked,
+        enable_notes,
+        description,
+        summary,
+        files_legacy
+      ) values (
+        (details).parent_id,
+        v_series_id,
+        event_to_save.since,
+        event_to_save.until,
+        coalesce(event_to_save.is_cancelled, false),
+        (details).name,
+        (details).type,
+        (details).location_id,
+        coalesce((details).location_text, ''),
+        (details).capacity,
+        (details).capacity_unit,
+        v_is_visible,
+        v_is_public,
+        v_has_public_details,
+        v_is_locked,
+        v_enable_notes,
+        '',
+        '',
+        ''
+      )
+      returning * into v_saved_event;
+    else
+      update event_instance e
+      set since = event_to_save.since,
+          until = event_to_save.until,
+          is_cancelled = coalesce(event_to_save.is_cancelled, false),
+          name = (details).name,
+          type = (details).type,
+          location_id = (details).location_id,
+          location_text = coalesce((details).location_text, ''),
+          capacity = (details).capacity,
+          capacity_unit = (details).capacity_unit,
+          is_visible = v_is_visible,
+          is_public = v_is_public,
+          has_public_details = v_has_public_details,
+          is_locked = v_is_locked,
+          enable_notes = v_enable_notes,
+          series_id = case
+            when v_assign_series then v_series_id
+            else e.series_id
+          end
+      where e.id = event_to_save.id and e.tenant_id = v_tenant_id
+      returning * into v_saved_event;
+
+      if not found then
+        raise exception 'event % not found or not editable', event_to_save.id;
+      end if;
+    end if;
+
+    v_saved_event_ids := array_append(v_saved_event_ids, v_saved_event.id);
+
+    perform registration.id
+    from event_instance_registration registration
+    where registration.instance_id = v_saved_event.id
+    order by registration.id
+    for update;
+
+    with desired as (
+      select distinct registration.person_id, registration.couple_id
+      from unnest(coalesce(event_to_save.registrations, '{}'::event_registration_input[])) registration
+    ), roots as (
+      select e.id
+      from event_instance_registration e
+      where e.instance_id = v_saved_event.id
+        and e.parent_registration_id is null
+        and not exists (
+          select 1 from desired
+          where desired.person_id is not distinct from e.person_id
+            and desired.couple_id is not distinct from e.couple_id
+        )
+    )
+    update event_instance_registration registration
+    set registration_status = 'cancelled',
+        target_cohort_id = null,
+        source = case when registration.id = roots.id
+          then 'manager'::event_registration_source end
+    from roots
+    where registration.registration_status <> 'cancelled'
+      and (registration.id = roots.id or registration.parent_registration_id = roots.id);
+
+    with desired as (
+      select distinct registration.person_id, registration.couple_id
+      from unnest(
+        coalesce(event_to_save.registrations, '{}'::event_registration_input[])
+      ) registration
+    ), roots as (
+      select e.id
+      from event_instance_registration e
+      join desired
+        on desired.person_id is not distinct from e.person_id
+        and desired.couple_id is not distinct from e.couple_id
+      where e.instance_id = v_saved_event.id
+        and e.parent_registration_id is null
+    )
+    update event_instance_registration registration
+    set registration_status = 'active',
+        target_cohort_id = null,
+        source = case when registration.id = roots.id
+          then 'manager'::event_registration_source end
+    from roots
+    where registration.registration_status <> 'active'
+      and (registration.id = roots.id or registration.parent_registration_id = roots.id);
+
+    with desired as (
+      select distinct registration.person_id, registration.couple_id
+      from unnest(
+        coalesce(event_to_save.registrations, '{}'::event_registration_input[])
+      ) registration
+    ), roots as (
+      insert into event_instance_registration (
+        instance_id, person_id, couple_id, source, status
+      )
+      select v_saved_event.id,
+        desired.person_id,
+        desired.couple_id,
+        'manager',
+        case when desired.person_id is not null
+          then 'unknown'::attendance_type end
+      from desired
+      where not exists (
+        select 1
+        from event_instance_registration e
+        where e.instance_id = v_saved_event.id
+          and e.parent_registration_id is null
+          and e.person_id is not distinct from desired.person_id
+          and e.couple_id is not distinct from desired.couple_id
+      )
+      returning id, couple_id
+    )
+    insert into event_instance_registration (instance_id, parent_registration_id, person_id, status)
+    select v_saved_event.id, roots.id, person.person_id, 'unknown'
+    from roots
+    join couple couple on couple.id = roots.couple_id
+    cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id);
+  end loop;
+
+  delete from event_instance_trainer e
+  where e.instance_id = any(v_saved_event_ids)
+    and not exists (
+      select 1
+      from unnest(coalesce(trainers, '{}'::event_trainer_input[])) trainer
+      where trainer.person_id = e.person_id
+    );
+
+  with desired as (
+    select distinct on (trainer.person_id) trainer.person_id, trainer.lessons_offered
+    from unnest(coalesce(trainers, '{}'::event_trainer_input[]))
+      with ordinality trainer(person_id, lessons_offered, position)
+    order by trainer.person_id, trainer.position
+  )
+  insert into event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
+  select stored_event.tenant_id, stored_event.id, desired.person_id, desired.lessons_offered
+  from event_instance stored_event
+  join unnest(v_saved_event_ids) saved(id) on saved.id = stored_event.id
+  cross join desired
+  on conflict (instance_id, person_id) do update
+  set lessons_offered = excluded.lessons_offered;
+
+  with desired as (
+    select distinct i.cohort_id
+    from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
+    where i.cohort_id is not null
+  )
+  insert into event_instance_target_cohort (tenant_id, instance_id, cohort_id)
+  select stored_event.tenant_id, stored_event.id, desired.cohort_id
+  from event_instance stored_event
+  join unnest(v_saved_event_ids) saved(id) on saved.id = stored_event.id
+  cross join desired
+  on conflict (instance_id, cohort_id) do nothing;
+
+  delete from event_instance_target_cohort e
+  where e.instance_id = any(v_saved_event_ids)
+    and not exists (
+      select 1
+      from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
+      where i.cohort_id = e.cohort_id
+    );
+
+  return query
+  select stored_event.*
+  from unnest(v_saved_event_ids) with ordinality saved(event_id, position)
+  join event_instance stored_event on stored_event.id = saved.event_id
+  order by saved.position;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[], cohort_ids bigint[], series public.event_series_input); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[], cohort_ids bigint[], series public.event_series_input) IS '@simpleCollections only';
 
 
 --
@@ -5907,230 +6267,6 @@ $_$;
 
 
 --
--- Name: update_event_instance_details(bigint, timestamp with time zone, timestamp with time zone, text, public.event_type, bigint, text, boolean, boolean, boolean, bigint[], public.quick_event_registration_input[], integer, public.event_capacity_unit, boolean, integer[], bigint[], boolean, public.quick_event_input[], boolean); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[] DEFAULT NULL::bigint[], p_registrations public.quick_event_registration_input[] DEFAULT NULL::public.quick_event_registration_input[], p_capacity integer DEFAULT NULL::integer, p_capacity_unit public.event_capacity_unit DEFAULT NULL::public.event_capacity_unit, p_is_locked boolean DEFAULT NULL::boolean, p_trainer_lessons_offered integer[] DEFAULT NULL::integer[], p_cohort_ids bigint[] DEFAULT NULL::bigint[], p_enable_notes boolean DEFAULT NULL::boolean, p_copies public.quick_event_input[] DEFAULT NULL::public.quick_event_input[], p_has_public_details boolean DEFAULT NULL::boolean) RETURNS public.event_instance
-    LANGUAGE plpgsql
-    AS $$
-declare
-  updated_instance event_instance;
-  v_series_id bigint;
-begin
-  if p_registrations is not null then
-    perform registration.id
-    from event_instance_registration registration
-    where registration.instance_id = p_instance_id
-    order by registration.id
-    for update;
-  end if;
-
-  update event_instance
-  set
-    since = p_since,
-    until = p_until,
-    name = p_name,
-    type = p_type,
-    location_id = p_location_id,
-    location_text = coalesce(p_location_text, ''),
-    is_visible = coalesce(p_is_visible, is_visible),
-    is_public = coalesce(p_is_public, is_public),
-    has_public_details = case
-      when coalesce(p_is_public, is_public) is true
-        then coalesce(p_has_public_details, has_public_details)
-      else false
-    end,
-    capacity = coalesce(p_capacity, capacity),
-    capacity_unit = coalesce(p_capacity_unit, capacity_unit),
-    is_locked = coalesce(p_is_locked, is_locked),
-    enable_notes = coalesce(p_enable_notes, enable_notes),
-    is_cancelled = p_is_cancelled
-  where id = p_instance_id
-  returning * into updated_instance;
-
-  if not found then
-    raise exception 'event instance % not found', p_instance_id;
-  end if;
-
-  if p_registrations is not null then
-    with desired as (
-      select distinct registration.person_id, registration.couple_id
-      from unnest(p_registrations) registration
-    ), roots as (
-      select existing.id
-      from event_instance_registration existing
-      where existing.instance_id = p_instance_id
-        and existing.parent_registration_id is null
-        and not exists (
-          select 1
-          from desired
-          where desired.person_id is not distinct from existing.person_id
-            and desired.couple_id is not distinct from existing.couple_id
-        )
-    )
-    update event_instance_registration registration
-    set registration_status = 'cancelled',
-        target_cohort_id = null,
-        source = case when registration.id = roots.id
-          then 'manager'::event_registration_source end
-    from roots
-    where registration.registration_status <> 'cancelled'
-      and (
-        registration.id = roots.id
-        or registration.parent_registration_id = roots.id
-      );
-
-    with desired as (
-      select distinct registration.person_id, registration.couple_id
-      from unnest(p_registrations) registration
-    ), roots as (
-      select existing.id
-      from event_instance_registration existing
-      join desired
-        on desired.person_id is not distinct from existing.person_id
-        and desired.couple_id is not distinct from existing.couple_id
-      where existing.instance_id = p_instance_id
-        and existing.parent_registration_id is null
-    )
-    update event_instance_registration registration
-    set registration_status = 'active',
-        target_cohort_id = null,
-        source = case when registration.id = roots.id
-          then 'manager'::event_registration_source end
-    from roots
-    where registration.registration_status <> 'active'
-      and (
-        registration.id = roots.id
-        or registration.parent_registration_id = roots.id
-      );
-
-    with desired as (
-      select distinct registration.person_id, registration.couple_id
-      from unnest(p_registrations) registration
-    ), roots as (
-      insert into event_instance_registration (
-        instance_id, person_id, couple_id, source, status
-      )
-      select
-        p_instance_id,
-        desired.person_id,
-        desired.couple_id,
-        'manager',
-        case when desired.person_id is not null then 'unknown'::attendance_type end
-      from desired
-      where not exists (
-        select 1
-        from event_instance_registration existing
-        where existing.instance_id = p_instance_id
-          and existing.parent_registration_id is null
-          and existing.person_id is not distinct from desired.person_id
-          and existing.couple_id is not distinct from desired.couple_id
-      )
-      returning id, couple_id
-    )
-    insert into event_instance_registration (
-      instance_id, parent_registration_id, person_id, status
-    )
-    select p_instance_id, roots.id, person.person_id, 'unknown'
-    from roots
-    join couple couple on couple.id = roots.couple_id
-    cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id);
-  end if;
-
-  if p_cohort_ids is not null then
-    insert into event_instance_target_cohort (tenant_id, instance_id, cohort_id)
-    select distinct updated_instance.tenant_id, p_instance_id, desired.cohort_id
-    from unnest(p_cohort_ids) desired(cohort_id)
-    where desired.cohort_id is not null
-    on conflict (instance_id, cohort_id) do nothing;
-
-    delete from event_instance_target_cohort target
-    where target.instance_id = p_instance_id
-      and not exists (
-        select 1
-        from unnest(p_cohort_ids) desired(cohort_id)
-        where desired.cohort_id = target.cohort_id
-      );
-  end if;
-
-  if p_trainer_person_ids is not null then
-    if p_trainer_lessons_offered is not null
-      and cardinality(p_trainer_lessons_offered) <> cardinality(p_trainer_person_ids) then
-      raise exception 'trainer lesson offers must match trainers';
-    end if;
-
-    delete from event_instance_trainer
-    where instance_id = p_instance_id
-      and not exists (
-        select 1 from unnest(p_trainer_person_ids) person(id)
-        where person.id = event_instance_trainer.person_id
-      );
-
-    insert into event_instance_trainer (instance_id, person_id, lessons_offered)
-    select distinct on (input.person_id)
-      p_instance_id,
-      input.person_id,
-      case when p_trainer_lessons_offered is null then 0
-        else input.lessons_offered end
-    from (
-      select p_trainer_person_ids[i] person_id,
-        p_trainer_lessons_offered[i] lessons_offered
-      from generate_subscripts(p_trainer_person_ids, 1) item(i)
-    ) input
-    where input.person_id is not null
-    order by input.person_id
-    on conflict (instance_id, person_id) do update
-    set lessons_offered = case when p_trainer_lessons_offered is null
-      then event_instance_trainer.lessons_offered
-      else excluded.lessons_offered end;
-  end if;
-
-  if p_registrations is not null or p_cohort_ids is not null then
-    select * into updated_instance
-    from event_instance
-    where id = p_instance_id;
-  end if;
-
-  if cardinality(coalesce(p_copies, '{}'::quick_event_input[])) > 0 then
-    v_series_id := updated_instance.series_id;
-
-    if v_series_id is null then
-      insert into event_series (name)
-      values (updated_instance.name)
-      returning id into v_series_id;
-
-      update event_instance
-      set series_id = v_series_id
-      where id = p_instance_id
-      returning * into updated_instance;
-    end if;
-
-    perform quick_create_event_instances(
-      events => p_copies,
-      parent_id => updated_instance.parent_id,
-      p_is_visible => updated_instance.is_visible,
-      p_is_public => updated_instance.is_public,
-      p_has_public_details => updated_instance.has_public_details,
-      p_is_locked => updated_instance.is_locked,
-      p_enable_notes => updated_instance.enable_notes,
-      p_series_id => v_series_id,
-      p_name => updated_instance.name,
-      p_capacity => updated_instance.capacity,
-      p_capacity_unit => updated_instance.capacity_unit,
-      p_description => updated_instance.description,
-      p_summary => updated_instance.summary,
-      p_files_legacy => updated_instance.files_legacy,
-      p_cohort_ids => p_cohort_ids,
-      p_trainer_lessons_offered => p_trainer_lessons_offered
-    );
-  end if;
-
-  return updated_instance;
-end;
-$$;
-
-
---
 -- Name: tenant_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6895,7 +7031,7 @@ CREATE TABLE crawler.rate_limit_rule (
     max_requests integer NOT NULL,
     per_interval interval NOT NULL,
     spacing interval GENERATED ALWAYS AS (((per_interval / (max_requests)::double precision) + '00:00:00.02'::interval)) STORED NOT NULL,
-    next_available_at timestamp with time zone DEFAULT '1970-01-01 00:00:00+01'::timestamp with time zone NOT NULL,
+    next_available_at timestamp with time zone DEFAULT '1970-01-01 00:00:00+00'::timestamp with time zone NOT NULL,
     CONSTRAINT rate_limit_rule_max_requests_check CHECK ((max_requests > 0)),
     CONSTRAINT rate_limit_rule_per_interval_check CHECK ((per_interval > '00:00:00'::interval))
 );
@@ -14261,6 +14397,13 @@ GRANT ALL ON FUNCTION public.event_instance_approx_price(v_instance public.event
 
 
 --
+-- Name: FUNCTION event_instance_registration_info(inst public.event_instance); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_instance_registration_info(inst public.event_instance) TO anonymous;
+
+
+--
 -- Name: TABLE event_instance_registration; Type: ACL; Schema: public; Owner: -
 --
 
@@ -14324,10 +14467,10 @@ GRANT ALL ON FUNCTION public.event_instance_trainers(v_instance public.event_ins
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, parent_id bigint); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, any_parent boolean, parent_id bigint, scope public.event_instance_range_scope); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, parent_id bigint) TO anonymous;
+GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, any_parent boolean, parent_id bigint, scope public.event_instance_range_scope) TO anonymous;
 
 
 --
@@ -14548,13 +14691,6 @@ GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
 
 
 --
--- Name: FUNCTION quick_create_event_instances(events public.quick_event_input[], parent_id bigint, p_is_visible boolean, p_is_public boolean, p_is_locked boolean, p_enable_notes boolean, p_series_id bigint, p_name text, p_capacity integer, p_capacity_unit public.event_capacity_unit, p_description text, p_summary text, p_files_legacy text, p_cohort_ids bigint[], p_trainer_lessons_offered integer[], p_copies public.quick_event_input[], p_has_public_details boolean); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.quick_create_event_instances(events public.quick_event_input[], parent_id bigint, p_is_visible boolean, p_is_public boolean, p_is_locked boolean, p_enable_notes boolean, p_series_id bigint, p_name text, p_capacity integer, p_capacity_unit public.event_capacity_unit, p_description text, p_summary text, p_files_legacy text, p_cohort_ids bigint[], p_trainer_lessons_offered integer[], p_copies public.quick_event_input[], p_has_public_details boolean) TO anonymous;
-
-
---
 -- Name: FUNCTION refresh_jwt(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -14703,6 +14839,13 @@ GRANT ALL ON FUNCTION public.resolve_payment_with_credit(p public.payment) TO an
 
 
 --
+-- Name: FUNCTION save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[], cohort_ids bigint[], series public.event_series_input); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[], cohort_ids bigint[], series public.event_series_input) TO anonymous;
+
+
+--
 -- Name: FUNCTION scoreboard_entries(since date, until date, cohort_id bigint); Type: ACL; Schema: public; Owner: -
 --
 
@@ -14798,13 +14941,6 @@ GRANT ALL ON TABLE public.tenant_membership TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.trainer_group_attendance_completion(since timestamp with time zone, until timestamp with time zone) TO anonymous;
-
-
---
--- Name: FUNCTION update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[], p_enable_notes boolean, p_copies public.quick_event_input[], p_has_public_details boolean); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.update_event_instance_details(p_instance_id bigint, p_since timestamp with time zone, p_until timestamp with time zone, p_name text, p_type public.event_type, p_location_id bigint, p_location_text text, p_is_visible boolean, p_is_public boolean, p_is_cancelled boolean, p_trainer_person_ids bigint[], p_registrations public.quick_event_registration_input[], p_capacity integer, p_capacity_unit public.event_capacity_unit, p_is_locked boolean, p_trainer_lessons_offered integer[], p_cohort_ids bigint[], p_enable_notes boolean, p_copies public.quick_event_input[], p_has_public_details boolean) TO anonymous;
 
 
 --
@@ -15399,5 +15535,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict iH19WmDVWn64Rt207q2t5JutJ3vcA4mgVP8HTtZhbqqgysyYBuIGR7RCbCUUciG
+\unrestrict 0Ibj4DdhiH91vhbbdeRYl4Zxi5HS6bwmKET6OxFOZ0Tyjx1buXQoglvF4GeCtZ0
 
