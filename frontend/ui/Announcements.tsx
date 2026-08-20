@@ -79,8 +79,8 @@ export function MyAnnouncements() {
     variables: {
       first: 5,
       offset: (page - 1) * 5,
-      archive: state === 'archive',
-      orderByUpdated: sort === 'updated',
+      status: state === 'archive' ? 'ARCHIVED' : 'PUBLISHED',
+      orderBy: sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC',
     },
   });
 
@@ -150,7 +150,7 @@ export function StickyAnnouncements() {
   const [{ data }] = useQuery({
     query: StickyAnnouncementsDocument,
     variables: {
-      orderByUpdated: sort === 'updated',
+      orderBy: sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC',
     },
   });
 

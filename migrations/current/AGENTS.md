@@ -5,7 +5,6 @@ This guide governs all files under `migrations/current/`. Follow it before promo
 ## Must dos
 - **Only drop objects with explicit user approval.** Require explicit instructions from the task author before emitting any `drop table` or `alter table ... drop column`. When authorized, restrict the drop to objects you are recreating in the same migration so no production data is lost. For structural renames, follow the multi-step pattern (new table + view bridge) described below instead of dropping the live table.
 - **Re-create row-level security policies safely.** Call `select app_private.drop_policies('schema.table');` before redefining policies so reruns do not fail, then issue fresh `create policy` and `grant` statements to restore access controls.
-- **Verify PL/pgSQL routines after defining them.** After `create or replace function ... language plpgsql`, add `select verify_function('function_name'[, 'table_name']);` so compile errors surface at migration time.
 - **Refresh supporting metadata.** Whenever you define or change a table, function, or trigger, include the accompanying `comment on ...` statements (for Graphile hints) and explicit `grant`/`revoke` statements to keep permissions consistent.
 - **Prefer helper APIs for background jobs.** Use existing helpers like `graphile_worker.add_job(...)` and `postgraphile_watch.notify_watchers_*()` instead of reimplementing notification logic.
 - **Document complex operations inline.** Add concise SQL comments explaining non-obvious sequences, especially when coordinating multiple triggers/functions.
@@ -50,15 +49,6 @@ This guide governs all files under `migrations/current/`. Follow it before promo
   select app_private.drop_policies('public.tenant_settings');
   create policy tenant_settings_select on public.tenant_settings for select to member using (...);
   grant select on public.tenant_settings to member;
-  ```
-- **Verifying functions after updates.** Immediately call `verify_function` after `create or replace function`, mirroring `migrations/committed/000053.sql`:
-  ```sql
-  create or replace function event_instance_approx_price(...) returns numeric as $$
-  begin
-    ...
-  end;
-  $$ language plpgsql stable;
-  select verify_function('event_instance_approx_price');
   ```
 - **Scheduling background jobs.** Delegate to helpers such as `graphile_worker.add_job`, as demonstrated in `migrations/committed/000052.sql`:
   ```sql

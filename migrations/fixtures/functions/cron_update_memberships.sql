@@ -28,4 +28,9 @@ AS $$
 
   UPDATE public.tenant_administrator SET status = app_private.relationship_status_next(now(), active_range, status)
   WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
+
+  UPDATE public.announcement
+  SET status = app_private.announcement_status_next(now(), scheduled_since, scheduled_until, status)
+  WHERE status IN ('scheduled', 'published')
+    AND status IS DISTINCT FROM app_private.announcement_status_next(now(), scheduled_since, scheduled_until, status);
 $$;

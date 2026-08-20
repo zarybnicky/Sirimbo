@@ -3,23 +3,15 @@ create or replace function app_private.queue_announcement_notifications(in_annou
 returns void
 language plpgsql
 security definer
+set search_path to pg_catalog, public, pg_temp
 as $$
 declare
-  v_is_visible boolean;
-  v_since timestamptz;
-  v_until timestamptz;
   v_user_ids bigint[];
 begin
-  select is_visible, scheduled_since, scheduled_until
-  into v_is_visible, v_since, v_until
-  from announcement
-  where id = in_announcement_id;
-
-  if not found then
-    return;
-  end if;
-
-  if not (v_is_visible and (v_since is null or v_since <= now()) and (v_until is null or v_until > now())) then
+  if not exists (
+    select from public.announcement
+    where id = in_announcement_id and status = 'published'
+  ) then
     return;
   end if;
 
@@ -86,37 +78,21 @@ create or replace function app_private.tg_announcement__after_write()
 returns trigger
 language plpgsql
 security definer
+set search_path to pg_catalog, public, pg_temp
 as $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare
   rec record;
-  old_row record;
-  was_published boolean;
-  is_published boolean;
 begin
   for rec in
     select * from newtable
   loop
-    is_published := coalesce(rec.is_visible, false)
-      and (rec.scheduled_since is null or rec.scheduled_since <= now())
-      and (rec.scheduled_until is null or rec.scheduled_until > now());
-
-    if TG_OP = 'INSERT' then
-      was_published := false;
-    else
-      select * into old_row from oldtable where id = rec.id;
-
-      if not found then
-        was_published := false;
-      else
-        was_published := coalesce(old_row.is_visible, false)
-          and (old_row.scheduled_since is null or old_row.scheduled_since <= now())
-          and (old_row.scheduled_until is null or old_row.scheduled_until > now());
+    if rec.status = 'published' then
+      if TG_OP = 'INSERT' then
+        perform app_private.queue_announcement_notifications(rec.id);
+      elsif not exists (select from oldtable where id = rec.id and status = 'published') then
+        perform app_private.queue_announcement_notifications(rec.id);
       end if;
-    end if;
-
-    if is_published and not was_published then
-      perform app_private.queue_announcement_notifications(rec.id);
     end if;
   end loop;
 
@@ -128,6 +104,7 @@ create or replace function app_private.tg_announcement_audience__after_write()
 returns trigger
 language plpgsql
 security definer
+set search_path to pg_catalog, public, pg_temp
 as $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare
@@ -166,4 +143,10 @@ create trigger _600_notify_announcement_audience_insert
 create trigger _600_notify_announcement_audience_update
   after update on announcement_audience
   referencing new table as newtable old table as oldtable
+  for each statement execute function app_private.tg_announcement_audience__after_write();
+
+drop trigger if exists _600_notify_announcement_audience_delete on announcement_audience;
+create trigger _600_notify_announcement_audience_delete
+  after delete on announcement_audience
+  referencing old table as oldtable
   for each statement execute function app_private.tg_announcement_audience__after_write();

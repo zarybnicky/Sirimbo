@@ -15,6 +15,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { AnnouncementSortControls, type SortOption } from '@/ui/Announcements';
+import { AnnouncementStatusBadge } from '@/ui/AnnouncementShared';
 
 export function AnnouncementList() {
   const currentId = useParams<{ id?: string }>()?.id;
@@ -40,7 +41,7 @@ export function AnnouncementList() {
       <div className="px-1 my-2 flex gap-2 items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase flex-1">Nástěnka</div>
 
-        {auth.isAdmin && (
+        {auth.isTrainerOrAdmin && (
           <Link
             href="/nastenka/add"
             className={buttonCls({
@@ -116,6 +117,7 @@ function AnnouncementListPage({
       return {
         id: item.id,
         title: item.title,
+        status: item.status,
         subtitle: (
           <div className="flex flex-wrap justify-between items-baseline gap-4">
             <div className="flex flex-col gap-1">
@@ -166,7 +168,17 @@ function AnnouncementListPage({
             className: 'pl-5 m-1 mt-0 grid',
           })}
         >
-          <div>{item.title}</div>
+          <div className="flex items-center gap-2">
+            <span>{item.title}</span>
+            <AnnouncementStatusBadge
+              status={item.status}
+              className={
+                currentId === item.id
+                  ? 'border-white/50 bg-white/15 text-white'
+                  : undefined
+              }
+            />
+          </div>
           <div
             className={cn(
               'text-sm',

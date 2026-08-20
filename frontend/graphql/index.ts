@@ -448,11 +448,10 @@ export type Announcement = {
   body: Scalars['String']['output'];
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
-  isLocked: Scalars['Boolean']['output'];
   isSticky: Scalars['Boolean']['output'];
-  isVisible: Scalars['Boolean']['output'];
   scheduledSince: Maybe<Scalars['Datetime']['output']>;
   scheduledUntil: Maybe<Scalars['Datetime']['output']>;
+  status: AnnouncementStatus;
   tenantId: Scalars['BigInt']['output'];
   title: Scalars['String']['output'];
   updatedAt: Maybe<Scalars['Datetime']['output']>;
@@ -562,16 +561,14 @@ export type AnnouncementCondition = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `isLocked` field. */
-  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isSticky` field. */
   isSticky?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Checks for equality with the object’s `isVisible` field. */
-  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `scheduledSince` field. */
   scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `scheduledUntil` field. */
   scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<AnnouncementStatus>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `title` field. */
@@ -586,25 +583,29 @@ export type AnnouncementPatch = {
   body?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isSticky?: InputMaybe<Scalars['Boolean']['input']>;
-  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
   scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<AnnouncementStatus>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+export type AnnouncementStatus =
+  | 'ARCHIVED'
+  | 'DRAFT'
+  | 'PUBLISHED'
+  | 'SCHEDULED';
+
 /** An input for mutations affecting `AnnouncementTypeInputRecord` */
 export type AnnouncementTypeInputRecordInput = {
   body?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isSticky?: InputMaybe<Scalars['Boolean']['input']>;
-  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
   scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  status?: InputMaybe<AnnouncementStatus>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -640,12 +641,8 @@ export type AnnouncementsOrderBy =
   | 'CREATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'IS_LOCKED_ASC'
-  | 'IS_LOCKED_DESC'
   | 'IS_STICKY_ASC'
   | 'IS_STICKY_DESC'
-  | 'IS_VISIBLE_ASC'
-  | 'IS_VISIBLE_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
@@ -653,6 +650,8 @@ export type AnnouncementsOrderBy =
   | 'SCHEDULED_SINCE_DESC'
   | 'SCHEDULED_UNTIL_ASC'
   | 'SCHEDULED_UNTIL_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'TITLE_ASC'
@@ -5468,8 +5467,6 @@ export type Query = {
   membershipApplication: Maybe<MembershipApplication>;
   /** Reads a set of `MembershipApplication`. */
   membershipApplicationsList: Maybe<Array<MembershipApplication>>;
-  /** Reads and enables pagination through a set of `Announcement`. */
-  myAnnouncements: Maybe<AnnouncementsConnection>;
   /** Get a single `Payment`. */
   payment: Maybe<Payment>;
   /** Get a single `Payment`. */
@@ -5823,19 +5820,6 @@ export type QueryMembershipApplicationsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MembershipApplicationsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryMyAnnouncementsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  archive?: InputMaybe<Scalars['Boolean']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderByUpdated?: InputMaybe<Scalars['Boolean']['input']>;
-  sticky?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -8650,7 +8634,6 @@ export type GraphCacheResolvers = {
     invitationName?: GraphCacheResolver<WithTypename<Query>, QueryInvitationNameArgs, Scalars['String']['output'] | string>,
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
-    myAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryMyAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
     paymentByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryPaymentByTenantIdAndIdArgs, WithTypename<Payment> | string>,
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
@@ -8838,11 +8821,10 @@ export type GraphCacheResolvers = {
     body?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    isLocked?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isSticky?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Boolean']['output'] | string>,
-    isVisible?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     scheduledSince?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     scheduledUntil?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    status?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, AnnouncementStatus | string>,
     tenantId?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     title?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime']['output'] | string>
@@ -10196,7 +10178,6 @@ export type GraphCacheUpdaters = {
     invitationName?: GraphCacheUpdateResolver<{ invitationName: Maybe<Scalars['String']['output']> }, QueryInvitationNameArgs>,
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
-    myAnnouncements?: GraphCacheUpdateResolver<{ myAnnouncements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryMyAnnouncementsArgs>,
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
     paymentByTenantIdAndId?: GraphCacheUpdateResolver<{ paymentByTenantIdAndId: Maybe<WithTypename<Payment>> }, QueryPaymentByTenantIdAndIdArgs>,
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
@@ -10474,11 +10455,10 @@ export type GraphCacheUpdaters = {
     body?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
-    isLocked?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     isSticky?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
-    isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     scheduledSince?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     scheduledUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     title?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>

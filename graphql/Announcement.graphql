@@ -16,7 +16,7 @@ fragment Announcement on Announcement {
   updatedAt
   scheduledSince
   scheduledUntil
-  isVisible
+  status
   isSticky
   author {
     id
@@ -30,8 +30,11 @@ fragment Announcement on Announcement {
   }
 }
 
-query StickyAnnouncements($orderByUpdated: Boolean) {
-  stickyAnnouncements: myAnnouncements(sticky: true, orderByUpdated: $orderByUpdated) {
+query StickyAnnouncements($orderBy: AnnouncementsOrderBy = UPDATED_AT_DESC) {
+  stickyAnnouncements: announcements(
+    condition: {isSticky: true, status: PUBLISHED}
+    orderBy: [$orderBy, CREATED_AT_DESC]
+  ) {
     totalCount
     nodes {
       ...Announcement
@@ -39,12 +42,17 @@ query StickyAnnouncements($orderByUpdated: Boolean) {
   }
 }
 
-query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int, $orderByUpdated: Boolean) {
-  myAnnouncements(
-    archive: $archive,
-    first: $first,
-    offset: $offset,
-    orderByUpdated: $orderByUpdated,
+query MyAnnouncements(
+  $status: AnnouncementStatus = PUBLISHED
+  $first: Int
+  $offset: Int
+  $orderBy: AnnouncementsOrderBy = UPDATED_AT_DESC
+) {
+  myAnnouncements: announcements(
+    condition: {isSticky: false, status: $status}
+    first: $first
+    offset: $offset
+    orderBy: [$orderBy, CREATED_AT_DESC]
   ) {
     totalCount
     nodes {
@@ -71,8 +79,8 @@ query AnnouncementList($first: Int, $cursor: Cursor, $orderBy: AnnouncementsOrde
   }
 }
 
-mutation ToggleAnnouncementVisible($id: BigInt!, $visible: Boolean!) {
-  updateAnnouncement(input: {id: $id, patch: {isVisible: $visible}}) {
+mutation SetAnnouncementStatus($id: BigInt!, $status: AnnouncementStatus!) {
+  updateAnnouncement(input: {id: $id, patch: {status: $status}}) {
     announcement {
       ...Announcement
     }

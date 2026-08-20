@@ -1,10 +1,42 @@
 import { Pencil } from 'lucide-react';
-import type { AnnouncementFragment } from '@/graphql/Announcement';
-import { announcementActions } from '@/lib/actions/announcement';
+import type { AnnouncementFragment, AnnouncementStatus } from '@/graphql/Announcement';
+import {
+  announcementActions,
+  canManageAnnouncement,
+} from '@/lib/actions/announcement';
 import { type Action, useActions } from '@/lib/actions';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
+import { cn } from '@/lib/cn';
 import React from 'react';
+
+const STATUS_LABEL: Partial<Record<AnnouncementStatus, string>> = {
+  DRAFT: 'Koncept',
+  SCHEDULED: 'Naplánováno',
+  ARCHIVED: 'Archivováno',
+};
+
+export function AnnouncementStatusBadge({
+  status,
+  className,
+}: {
+  status: AnnouncementStatus;
+  className?: string;
+}) {
+  const label = STATUS_LABEL[status];
+  if (!label) return null;
+
+  return (
+    <span
+      className={cn(
+        'inline-flex rounded-full bg-accent-3 px-2 py-0.5 text-[11px] tracking-tight uppercase text-accent-11',
+        className,
+      )}
+    >
+      {label}
+    </span>
+  );
+}
 
 export function useAnnouncementActions(
   item: AnnouncementFragment | null | undefined,
@@ -16,7 +48,7 @@ export function useAnnouncementActions(
         id: 'announcement.edit',
         label: 'Upravit',
         icon: Pencil,
-        visible: ({ auth }) => auth.isAdmin,
+        visible: canManageAnnouncement,
         type: 'mutation',
         execute: async () => {
           onEdit();
@@ -60,6 +92,7 @@ export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {
             <span>{authorName}</span>
           </>
         )}
+        <AnnouncementStatusBadge status={item.status} />
       </div>
 
       {item.announcementAudiences.nodes.length > 0 && (

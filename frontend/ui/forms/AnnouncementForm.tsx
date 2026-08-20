@@ -1,4 +1,7 @@
-import type { AnnouncementAudienceRole, UpsertAnnouncementInput } from '@/graphql';
+import type {
+  AnnouncementAudienceRole,
+  UpsertAnnouncementInput,
+} from '@/graphql';
 import {
   AnnouncementAudienceFragment,
   type AnnouncementFragment,
@@ -8,6 +11,7 @@ import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
+import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
@@ -39,11 +43,17 @@ const ROLE_OPTIONS: {
 ];
 
 const AUDIENCE_ROLE_VALUES = ['MEMBER', 'TRAINER', 'ADMINISTRATOR'] as const;
+const STATUS_VALUES = ['DRAFT', 'PUBLISHED', 'ARCHIVED'] as const;
+const STATUS_OPTIONS = [
+  { id: 'DRAFT', label: 'Koncept' },
+  { id: 'PUBLISHED', label: 'Veřejná' },
+  { id: 'ARCHIVED', label: 'Archiv' },
+];
 
 const Form = z.object({
   title: z.string().min(1, 'Zadejte nadpis oznámení'),
   body: z.string().prefault(''),
-  isVisible: z.boolean().prefault(true),
+  status: z.enum(STATUS_VALUES).prefault('PUBLISHED'),
   isSticky: z.boolean().prefault(false),
   scheduledSince: z.date().nullable().optional(),
   scheduledUntil: z.date().nullable().optional(),
@@ -64,6 +74,7 @@ export function AnnouncementForm({
 
   const { reset, control, handleSubmit } = useForm({
     defaultValues: {
+      status: 'DRAFT' as const,
       audienceRoles: [],
       cohortIds: [],
     },
@@ -74,7 +85,7 @@ export function AnnouncementForm({
       {
         title: data?.title ?? '',
         body: data?.body ?? '',
-        isVisible: data ? data.isVisible : true,
+        status: data?.status === 'SCHEDULED' ? 'PUBLISHED' : (data?.status ?? 'DRAFT'),
         isSticky: data?.isSticky ?? false,
         scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
         scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
@@ -125,7 +136,7 @@ export function AnnouncementForm({
           id,
           title: values.title,
           body: values.body,
-          isVisible: values.isVisible,
+          status: values.status,
           isSticky: values.isSticky,
           scheduledSince: values.scheduledSince?.toISOString(),
           scheduledUntil: values.scheduledUntil?.toISOString(),
@@ -151,25 +162,37 @@ export function AnnouncementForm({
         name="body"
         label="Text"
       />
-      <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
-      <CheckboxElement
-        control={control}
-        name="isSticky"
-        value="1"
-        label="Připnout na stálou nástěnku"
-      />
-      <DatePickerElement
-        control={control}
-        name="scheduledSince"
-        label="Odložit zveřejnění na den"
-        clearable
-      />
-      <DatePickerElement
-        control={control}
-        name="scheduledUntil"
-        label="Skrýt příspěvek dne"
-        clearable
-      />
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        <RadioButtonGroupElement
+          control={control}
+          label="Stav"
+          name="status"
+          options={STATUS_OPTIONS}
+        />
+        <CheckboxElement
+          control={control}
+          name="isSticky"
+          value="1"
+          label="Připnout na stálou nástěnku"
+        />
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        <DatePickerElement
+          control={control}
+          name="scheduledSince"
+          label="Zveřejnit od"
+          clearable
+        />
+        <DatePickerElement
+          control={control}
+          name="scheduledUntil"
+          label="Archivovat od"
+          clearable
+        />
+      </div>
+
       <AnnouncementAudienceEditor control={control} />
 
       <SubmitButton control={control} />
@@ -207,37 +230,36 @@ function AnnouncementAudienceEditor({
   const showWarning = audienceRoles.length === 0 && cohortIds.length === 0;
 
   return (
-    <div className="space-y-4 rounded-md border border-neutral-6 bg-neutral-1 p-4">
+    <div className="space-y-2 rounded-md border border-neutral-6 bg-neutral-1 p-2">
       <h3 className="text-sm font-semibold text-neutral-12">Viditelnost</h3>
 
-      <section className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
-          Role
-        </h4>
-        <AudienceRoleCheckboxes control={control} />
-      </section>
-
-      <section className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
-          Skupiny
-        </h4>
-        <AudienceCohortCheckboxes
-          control={control}
-          cohorts={cohortQuery?.cohortsList}
-          loading={cohortsLoading}
-        />
-      </section>
-
-      <div className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
-          Shrnutí
-        </h4>
+      <div>
         <AnnouncementAudienceBadges audiences={audiences} />
         {showWarning && (
-          <div className="rounded-md border border-accent-7 bg-accent-3 px-3 py-2 text-xs text-accent-12">
-            Bez výběru konkrétního publika se oznámení zobrazí všem.
+          <div className="inline-flex items-center rounded-full border border-neutral-7 bg-neutral-2 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-neutral-11" >
+            Viditelný pro všechny
           </div>
         )}
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        <section className="space-y-2">
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
+            Role
+          </h4>
+          <AudienceRoleCheckboxes control={control} />
+        </section>
+
+        <section className="space-y-2">
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
+            Skupiny
+          </h4>
+          <AudienceCohortCheckboxes
+            control={control}
+            cohorts={cohortQuery?.cohortsList}
+            loading={cohortsLoading}
+          />
+        </section>
       </div>
     </div>
   );

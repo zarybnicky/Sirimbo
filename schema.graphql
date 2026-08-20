@@ -489,11 +489,10 @@ type Announcement {
   body: String!
   createdAt: Datetime!
   id: BigInt!
-  isLocked: Boolean!
   isSticky: Boolean!
-  isVisible: Boolean!
   scheduledSince: Datetime
   scheduledUntil: Datetime
+  status: AnnouncementStatus!
   tenantId: BigInt!
   title: String!
   updatedAt: Datetime
@@ -612,20 +611,17 @@ input AnnouncementCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
-  """Checks for equality with the object’s `isLocked` field."""
-  isLocked: Boolean
-
   """Checks for equality with the object’s `isSticky` field."""
   isSticky: Boolean
-
-  """Checks for equality with the object’s `isVisible` field."""
-  isVisible: Boolean
 
   """Checks for equality with the object’s `scheduledSince` field."""
   scheduledSince: Datetime
 
   """Checks for equality with the object’s `scheduledUntil` field."""
   scheduledUntil: Datetime
+
+  """Checks for equality with the object’s `status` field."""
+  status: AnnouncementStatus
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
@@ -645,25 +641,30 @@ input AnnouncementPatch {
   body: String
   createdAt: Datetime
   id: BigInt
-  isLocked: Boolean
   isSticky: Boolean
-  isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
+  status: AnnouncementStatus
   tenantId: BigInt
   title: String
   updatedAt: Datetime
+}
+
+enum AnnouncementStatus {
+  ARCHIVED
+  DRAFT
+  PUBLISHED
+  SCHEDULED
 }
 
 """An input for mutations affecting `AnnouncementTypeInputRecord`"""
 input AnnouncementTypeInputRecordInput {
   body: String
   id: BigInt
-  isLocked: Boolean
   isSticky: Boolean
-  isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
+  status: AnnouncementStatus
   title: String
 }
 
@@ -703,12 +704,8 @@ enum AnnouncementsOrderBy {
   CREATED_AT_DESC
   ID_ASC
   ID_DESC
-  IS_LOCKED_ASC
-  IS_LOCKED_DESC
   IS_STICKY_ASC
   IS_STICKY_DESC
-  IS_VISIBLE_ASC
-  IS_VISIBLE_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -716,6 +713,8 @@ enum AnnouncementsOrderBy {
   SCHEDULED_SINCE_DESC
   SCHEDULED_UNTIL_ASC
   SCHEDULED_UNTIL_DESC
+  STATUS_ASC
+  STATUS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   TITLE_ASC
@@ -6672,30 +6671,6 @@ type Query {
     """The method to use when ordering `MembershipApplication`."""
     orderBy: [MembershipApplicationsOrderBy!]
   ): [MembershipApplication!]
-
-  """Reads and enables pagination through a set of `Announcement`."""
-  myAnnouncements(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-    archive: Boolean
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-    orderByUpdated: Boolean
-    sticky: Boolean
-  ): AnnouncementsConnection
 
   """Get a single `Payment`."""
   payment(id: BigInt!): Payment

@@ -1,11 +1,15 @@
-import { Eye, EyeOff, Pin, PinOff, Trash2 } from 'lucide-react';
+import { Archive, Pin, PinOff, Send, Trash2 } from 'lucide-react';
 import { type ActionContext, defineActions } from '@/lib/actions';
 import {
   type AnnouncementFragment,
   DeleteAnnouncementDocument,
+  SetAnnouncementStatusDocument,
   ToggleAnnouncementStickyDocument,
-  ToggleAnnouncementVisibleDocument,
 } from '@/graphql/Announcement';
+
+export function canManageAnnouncement({ auth, item }: ActionContext<AnnouncementFragment>) {
+  return auth.isAdmin || (auth.isTrainer && item.author?.id === auth.user?.id);
+}
 
 export const announcementActions = defineActions<AnnouncementFragment>()([
   {
@@ -13,7 +17,7 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     label: ({ item }) => (item.isSticky ? 'Odepnout' : 'Připnout'),
     icon: ({ item }: ActionContext<AnnouncementFragment>) =>
       item.isSticky ? PinOff : Pin,
-    visible: ({ auth }) => auth.isAdmin,
+    visible: canManageAnnouncement,
     execute: async ({ item, mutate }) => {
       await mutate(ToggleAnnouncementStickyDocument, {
         id: item.id,
@@ -22,15 +26,16 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     },
   },
   {
-    id: 'announcement.visible',
-    label: ({ item }) => (item.isVisible ? 'Skrýt' : 'Zviditelnit'),
+    id: 'announcement.status',
+    label: ({ item }) =>
+      item.status === 'PUBLISHED' ? 'Archivovat' : 'Zveřejnit',
     icon: ({ item }: ActionContext<AnnouncementFragment>) =>
-      item.isVisible ? EyeOff : Eye,
-    visible: ({ auth }) => auth.isAdmin,
+      item.status === 'PUBLISHED' ? Archive : Send,
+    visible: canManageAnnouncement,
     execute: async ({ item, mutate }) => {
-      await mutate(ToggleAnnouncementVisibleDocument, {
+      await mutate(SetAnnouncementStatusDocument, {
         id: item.id,
-        visible: !item.isVisible,
+        status: item.status === 'PUBLISHED' ? 'ARCHIVED' : 'PUBLISHED',
       });
     },
   },
@@ -39,7 +44,7 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     label: 'Smazat',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth }) => auth.isAdmin,
+    visible: canManageAnnouncement,
     confirm: ({ item }) => ({
       description: `Opravdu chcete smazat příspěvek "${item.title}"?`,
     }),
