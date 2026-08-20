@@ -5,8 +5,6 @@ import {
   SystemAdminTenantsDocument,
   SystemAdminUpdateTenantDocument,
 } from '@/graphql/SystemAdmin';
-import { storeRef, tenantIdAtom } from '@/lib/auth';
-import { origin } from '@/lib/query';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
@@ -23,6 +21,7 @@ import { useForm } from 'react-hook-form';
 import { Sheet, type SheetRef } from 'react-modal-sheet';
 import { useMutation, useQuery } from 'urql';
 import z from 'zod';
+import { sendTestEmail } from './actions';
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = React.useState(false);
@@ -178,18 +177,7 @@ export function Tenants() {
 }
 
 function TestEmailButton() {
-  const sendEmail = useAsyncCallback(async function () {
-    const response = await fetch(`${origin}/system-admin/test-email`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        ['x-tenant-id']: storeRef.current.get(tenantIdAtom),
-      },
-    });
-    if (!response.ok) {
-      throw new Error('Nepodařilo se odeslat testovací e-mail.');
-    }
-  });
+  const sendEmail = useAsyncCallback(sendTestEmail);
 
   return (
     <SubmitButton state={sendEmail.status} onClick={sendEmail.execute}>

@@ -111,6 +111,10 @@ in
                 value = "https://api.rozpisovnik.cz";
               }
               {
+                name = "runtime.jwtSecret";
+                value = cfg.backend.jwtSecret;
+              }
+              {
                 name = "runtime.sentryDsn";
                 value = "https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825";
               }
@@ -158,6 +162,10 @@ in
               {
                 name = "runtime.graphqlBackend";
                 value = "https://api.rozpisovnik.cz";
+              }
+              {
+                name = "runtime.jwtSecret";
+                value = cfg.backend.jwtSecret;
               }
               {
                 name = "runtime.sentryDsn";

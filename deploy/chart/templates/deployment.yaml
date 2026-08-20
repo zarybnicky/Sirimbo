@@ -43,6 +43,8 @@ spec:
               value: {{ .Values.s3.secretAccessKey | quote }}
             - name: GRAPHQL_BACKEND
               value: {{ .Values.runtime.graphqlBackend | quote }}
+            - name: JWT_SECRET
+              value: {{ .Values.runtime.jwtSecret | quote }}
             - name: NEXT_PUBLIC_SENTRY_ENVIRONMENT
               value: {{ .Values.runtime.sentryEnvironment | quote }}
             - name: NEXT_PUBLIC_SENTRY_DSN
