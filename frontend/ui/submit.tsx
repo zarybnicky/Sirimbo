@@ -1,18 +1,18 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
+import type { AsyncState } from 'react-async-hook';
 import { type Control, type FieldValues, useFormState } from 'react-hook-form';
 import { buttonCls } from '@/ui/style';
 import { Spinner } from '@/ui/Spinner';
 
-export type SubmitButtonState = 'not-requested' | 'loading' | 'success' | 'error';
-
 type BaseSubmitButtonProps = React.ComponentPropsWithRef<'button'> & {
-  state?: SubmitButtonState;
+  action?: AsyncState<unknown>;
+  state?: AsyncState<unknown>['status'];
   variant?: NonNullable<Parameters<typeof buttonCls>[0]>['variant'];
 };
 
 export type SubmitButtonProps<T extends FieldValues = FieldValues> =
-  BaseSubmitButtonProps & { control?: Control<T> };
+  Omit<BaseSubmitButtonProps, 'state'> & { control?: Control<T> };
 
 export function SubmitButton<T extends FieldValues>({
   control,
@@ -29,25 +29,35 @@ function FormStateSubmitButton<T extends FieldValues>({
   control,
   state,
   disabled,
+  type,
   ...props
 }: BaseSubmitButtonProps & { control: Control<T> }) {
-  const { isSubmitting } = useFormState({ control });
+  const { isSubmitted, isSubmitting, isSubmitSuccessful } = useFormState({ control });
+  const controlState = isSubmitting
+    ? 'loading'
+    : isSubmitSuccessful
+      ? 'success'
+      : isSubmitted
+        ? 'error'
+        : undefined;
 
   return (
     <BaseSubmitButton
       {...props}
-      state={isSubmitting ? 'loading' : state}
+      state={controlState ?? state}
       disabled={disabled}
     />
   );
 }
 
 function BaseSubmitButton({
-  state: submitState = 'not-requested',
+  action,
+  state: submitState = action?.status ?? 'not-requested',
   disabled,
   className,
   children = 'Uložit',
   variant,
+  type,
   ...props
 }: BaseSubmitButtonProps) {
   const [state, setState] = React.useState<'NORMAL' | 'LOADING' | 'LOADED'>('NORMAL');
@@ -65,7 +75,7 @@ function BaseSubmitButton({
 
   return (
     <button
-      type="submit"
+      type={type ?? (action !== undefined ? 'button' : 'submit')}
       {...props}
       disabled={submitState === 'loading' || disabled}
       className={buttonCls({

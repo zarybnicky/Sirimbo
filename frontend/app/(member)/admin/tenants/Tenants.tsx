@@ -180,7 +180,7 @@ function TestEmailButton() {
   const sendEmail = useAsyncCallback(sendTestEmail);
 
   return (
-    <SubmitButton state={sendEmail.status} onClick={sendEmail.execute}>
+    <SubmitButton action={sendEmail} onClick={sendEmail.execute}>
       <Mail />
       Poslat testovací e-mail
     </SubmitButton>

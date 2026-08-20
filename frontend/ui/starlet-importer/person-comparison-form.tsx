@@ -354,11 +354,7 @@ export function PersonComparisonForm() {
       </ul>
 
       {tasks.length > 0 && (
-        <SubmitButton
-          className="mb-2"
-          onClick={onSubmit.execute}
-          state={onSubmit.status}
-        >
+        <SubmitButton className="mb-2" action={onSubmit}>
           Synchronizovat
         </SubmitButton>
       )}
@@ -374,11 +370,7 @@ export function PersonComparisonForm() {
       </ul>
 
       {(couplesToCreate.size > 0 || couplesToDelete.length > 0) && (
-        <SubmitButton
-          className="mb-2"
-          onClick={onSubmitCouples.execute}
-          state={onSubmitCouples.status}
-        >
+        <SubmitButton className="mb-2" action={onSubmitCouples}>
           Synchronizovat
         </SubmitButton>
       )}

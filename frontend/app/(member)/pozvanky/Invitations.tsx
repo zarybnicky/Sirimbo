@@ -103,11 +103,7 @@ export function Invitations() {
           <>
             <h2>Osoby bez přístupu do systému - ještě nepozvaní</h2>
 
-            <SubmitButton
-              type="button"
-              onClick={bulkSendInvitations.execute}
-              state={bulkSendInvitations.status}
-            >
+            <SubmitButton type="button" action={bulkSendInvitations}>
               Pozvat všechny
             </SubmitButton>
 

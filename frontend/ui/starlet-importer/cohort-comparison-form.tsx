@@ -58,11 +58,7 @@ export function CohortComparisonForm() {
       <ul>{views}</ul>
 
       {tasks.length > 0 && (
-        <SubmitButton
-          className="mb-2"
-          onClick={onSubmit.execute}
-          state={onSubmit.status}
-        >
+        <SubmitButton className="mb-2" action={onSubmit}>
           Synchronizovat
         </SubmitButton>
       )}

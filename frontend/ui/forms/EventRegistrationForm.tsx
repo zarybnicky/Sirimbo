@@ -14,6 +14,7 @@ import { type Control, useController, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { z } from 'zod';
+import { useAsyncCallback } from 'react-async-hook';
 
 const Form = z.object({
   note: z.string(),
@@ -44,14 +45,17 @@ export function EventRegistrationForm({
   onCancelled: () => void;
 }) {
   const confirm = useConfirm();
-  const [result, setRegistration] = useMutation(
-    SetEventRegistrationDocument,
-  );
+  const [result, setRegistration] = useMutation(SetEventRegistrationDocument);
   const requestCounts = Object.fromEntries(
-    registration?.eventLessonDemandsByRegistrationIdList.map((x) => [x.trainerId, x.lessonCount]) ?? [],
+    registration?.eventLessonDemandsByRegistrationIdList.map((x) => [
+      x.trainerId,
+      x.lessonCount,
+    ]) ?? [],
   );
   const lessonTrainers = enableDetails
-    ? allLessonTrainers.filter((x) => x.lessonsOffered !== 0 || (requestCounts[x.id] ?? 0) > 0)
+    ? allLessonTrainers.filter(
+        (x) => x.lessonsOffered !== 0 || (requestCounts[x.id] ?? 0) > 0,
+      )
     : [];
   const showNotes = enableDetails && (enableNotes || !!registration?.note);
   const hasFields = showNotes || lessonTrainers.length > 0;
@@ -83,7 +87,7 @@ export function EventRegistrationForm({
     }
   };
 
-  const cancel = async () => {
+  const cancel = useAsyncCallback(async () => {
     try {
       await confirm({ description: 'Opravdu chcete zrušit přihlášku?' });
     } catch {
@@ -101,7 +105,7 @@ export function EventRegistrationForm({
       toast.success('Přihláška zrušena.');
       onCancelled();
     }
-  };
+  });
 
   return (
     <form className="grid gap-3" onSubmit={handleSubmit(save)}>
@@ -132,20 +136,7 @@ export function EventRegistrationForm({
 
       <div className="flex justify-between gap-2">
         {registration && (
-          <SubmitButton
-            type="button"
-            variant="outline"
-            state={
-              result.fetching
-                ? 'loading'
-                : result.error
-                  ? 'error'
-                  : result.data
-                    ? 'success'
-                    : 'not-requested'
-            }
-            onClick={cancel}
-          >
+          <SubmitButton variant="outline" action={cancel}>
             Zrušit přihlášku
           </SubmitButton>
         )}
