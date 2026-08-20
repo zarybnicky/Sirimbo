@@ -79,7 +79,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     label: 'Upravit',
     icon: Pencil,
     visible: canManageInstance,
-    render: ({ item }) => <EditEventForm instance={item} />,
+    render: ({ item }) => <EditEventForm event={item} />,
     dialogProps: {
       className: 'sm:max-w-xl',
       onOpenAutoFocus: preventDefault,

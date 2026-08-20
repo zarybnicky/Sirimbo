@@ -20,12 +20,12 @@ export function EventRegistrations({
 }) {
   const auth = useAuth();
   const [selectedRegistrationId, setSelectedRegistrationId] = React.useState<string>();
-  const [registrationsQuery] = useQuery({
+  const [query] = useQuery({
     query: EventRegistrationsDocument,
     variables: { id: instance.id },
   });
-  const registrations = registrationsQuery.data?.eventInstance?.registrationsList ?? [];
-  const externalRegistrations = instance.eventExternalRegistrationsByInstanceIdList;
+  const registrations = query.data?.event?.registrationsList ?? [];
+  const externalRegistrations = instance.externalRegistrations;
   const externalRegistrationActionMap = useActionMap(
     eventExternalRegistrationActions,
     externalRegistrations,
@@ -34,8 +34,8 @@ export function EventRegistrations({
 
   return (
     <div>
-      <FormError error={registrationsQuery.error} />
-      {registrationsQuery.fetching && !registrationsQuery.data && <Spinner />}
+      <FormError error={query.error} />
+      {query.fetching && !query.data && <Spinner />}
       {externalRegistrations.length > 0 && registrations.length > 0 && (
         <h3 className="mb-1 font-medium text-neutral-11">Přihlášky členů</h3>
       )}

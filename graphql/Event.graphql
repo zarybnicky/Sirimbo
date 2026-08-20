@@ -189,31 +189,34 @@ fragment EventRegistrant on Person {
 }
 
 query EventExport($id: BigInt!) {
-  eventInstance(id: $id) {
+  event: eventInstance(id: $id) {
     id
     name
     type
     trainersList: eventInstanceTrainersByInstanceIdList {
       ...EventInstanceTrainer
     }
-    registrations: eventInstanceRegistrationsByInstanceIdList(
+    registrations: eventInstanceRegistrationsByInstanceId(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
-      ...EventInstanceRegistration
-      person {
-        ...EventRegistrant
-      }
-      couple {
-        id
-        man {
+      totalCount
+      nodes {
+        ...EventInstanceRegistration
+        person {
           ...EventRegistrant
         }
-        woman {
-          ...EventRegistrant
+        couple {
+          id
+          man {
+            ...EventRegistrant
+          }
+          woman {
+            ...EventRegistrant
+          }
         }
       }
     }
-    eventExternalRegistrationsByInstanceIdList {
+    externalRegistrations: eventExternalRegistrationsByInstanceIdList {
       ...EventExternalRegistration
     }
   }
@@ -241,7 +244,7 @@ query EventPayments($id: BigInt!) {
 fragment EventPage on EventInstance {
   ...EventWithTrainer
   description
-  eventExternalRegistrationsByInstanceIdList {
+  externalRegistrations: eventExternalRegistrationsByInstanceIdList {
     ...EventExternalRegistration
   }
 }
@@ -266,7 +269,7 @@ query EventDescription($id: BigInt!) {
 }
 
 query EventRegistrations($id: BigInt!) {
-  eventInstance(id: $id) {
+  event: eventInstance(id: $id) {
     id
     trainersList: eventInstanceTrainersByInstanceIdList {
       ...EventInstanceTrainer

@@ -9,7 +9,7 @@ import {
 } from '@/graphql/Cohorts';
 import { SubmitButton } from '@/ui/submit';
 import { useAsyncCallback } from 'react-async-hook';
-import React, { type JSX, useMemo } from 'react';
+import { type JSX, useMemo } from 'react';
 import Link from 'next/link';
 
 export function CohortComparisonForm() {

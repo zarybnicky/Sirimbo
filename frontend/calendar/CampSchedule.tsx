@@ -46,13 +46,12 @@ export function CampSchedule({
   until: string;
 }) {
   const auth = useAuth();
-  const [registrationsQuery] = useQuery({
+  const [query] = useQuery({
     query: EventRegistrationsDocument,
     variables: { id },
     pause: !auth.isTrainerOrAdmin,
   });
-  const registrations =
-    registrationsQuery.data?.eventInstance?.registrationsList ?? emptyRegistrations;
+  const registrations = query.data?.event?.registrationsList ?? emptyRegistrations;
   const requestCount = registrations.reduce((n, x) => n + x.requests.length, 0);
   const [requestsOpen, setRequestsOpen] = React.useState<boolean>();
   const saveEvents = useMutation(SaveEventsDocument)[1];
@@ -69,7 +68,7 @@ export function CampSchedule({
 
   const availableTrainers = React.useMemo(() => {
     const trainers = new Map<string, string>();
-    for (const trainer of registrationsQuery.data?.eventInstance?.trainersList ?? []) {
+    for (const trainer of query.data?.event?.trainersList ?? []) {
       trainers.set(trainer.personId, trainer.person?.name ?? '');
     }
     for (const registration of registrations) {
@@ -78,7 +77,7 @@ export function CampSchedule({
         if (person) trainers.set(person.id, person.name);
       }
     }
-    for (const lesson of registrationsQuery.data?.scheduledLessons ?? []) {
+    for (const lesson of query.data?.scheduledLessons ?? []) {
       for (const trainer of lesson.trainersList ?? []) {
         trainers.set(trainer.personId, trainer.person?.name ?? '');
       }
@@ -86,8 +85,8 @@ export function CampSchedule({
     return [...trainers].map(([id, name]) => ({ id, name }));
   }, [
     registrations,
-    registrationsQuery.data?.eventInstance?.trainersList,
-    registrationsQuery.data?.scheduledLessons,
+    query.data?.event?.trainersList,
+    query.data?.scheduledLessons,
   ]);
   const dateRange = React.useMemo(
     () => ({
@@ -141,7 +140,7 @@ export function CampSchedule({
     if (result.error) throw result.error;
   });
   const requestError =
-    registrationsQuery.error || scheduleRequest.error || removeLesson.error;
+    query.error || scheduleRequest.error || removeLesson.error;
   const canShowRequests = auth.isTrainerOrAdmin && requestCount > 0;
   const showRequests = requestsOpen && canShowRequests;
 
@@ -196,9 +195,7 @@ export function CampSchedule({
           dateRange={dateRange}
           onDropFromOutside={scheduleRequest.execute}
           onRemove={removeLesson.execute}
-          availableTrainers={
-            registrationsQuery.data?.eventInstance ? availableTrainers : undefined
-          }
+          availableTrainers={query.data?.event ? availableTrainers : undefined}
           primary="day"
         />
       </div>
@@ -238,8 +235,8 @@ export function CampSchedule({
             <div id="lesson-requests-pane">
               <LessonRequests
                 registrations={registrations}
-                scheduledLessons={registrationsQuery.data?.scheduledLessons ?? []}
-                fetching={registrationsQuery.fetching}
+                scheduledLessons={query.data?.scheduledLessons ?? []}
+                fetching={query.fetching}
                 error={requestError}
                 lockTrainers={groupBy === 'trainer'}
               />

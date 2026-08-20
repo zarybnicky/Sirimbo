@@ -28,17 +28,22 @@ export function CampLessonsTable({ id }: { id: string }) {
     query: EventRegistrationsDocument,
     variables: { id },
   });
+
   const { rows, trainers, hasRequests } = React.useMemo(() => {
-    const registrations = query.data?.eventInstance?.registrationsList ?? [];
+    const event = query.data?.event;
+    const lessons = query.data?.scheduledLessons;
+
+    if (!event || !lessons) return { rows: [], trainers: [], hasRequests: false };
+
     const rows = new Map<string, Row>();
-    const hasRequests = registrations.some((x) => x.requests.length > 0);
+    const hasRequests = event.registrationsList.some((x) => x.requests.length > 0);
 
     const trainers = new Map<string, string>();
-    for (const trainer of query.data?.eventInstance?.trainersList ?? []) {
+    for (const trainer of event.trainersList) {
       trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
     }
 
-    for (const registration of registrations) {
+    for (const registration of event.registrationsList) {
       const id = registration.personId
         ? `person:${registration.personId}`
         : `couple:${registration.coupleId}`;

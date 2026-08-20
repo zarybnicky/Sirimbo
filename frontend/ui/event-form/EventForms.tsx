@@ -343,25 +343,25 @@ export function CreateEventForm({
   );
 }
 
-export function EditEventForm({ instance }: { instance: EventWithTrainerFragment }) {
-  const [registrationsQuery] = useQuery({
+export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
+  const [query] = useQuery({
     query: EventRegistrationsDocument,
-    variables: { id: instance.id },
+    variables: { id: event.id },
     requestPolicy: 'network-only',
   });
-  const registrationsEvent = registrationsQuery.data?.eventInstance;
+  const registrationsEvent = query.data?.event;
   const registrations =
-    registrationsEvent?.id === instance.id
+    registrationsEvent?.id === event.id
       ? registrationsEvent.registrationsList
       : undefined;
 
-  if (!registrations && registrationsQuery.fetching) {
+  if (!registrations && query.fetching) {
     return <div className="text-sm text-neutral-11">Načítám účastníky…</div>;
   }
 
   if (!registrations) {
-    return registrationsQuery.error ? (
-      <FormError error={registrationsQuery.error} />
+    return query.error ? (
+      <FormError error={query.error} />
     ) : (
       <div className="text-sm text-neutral-11">Událost není dostupná.</div>
     );
@@ -369,40 +369,40 @@ export function EditEventForm({ instance }: { instance: EventWithTrainerFragment
 
   return (
     <EventEditor
-      key={instance.id}
+      key={event.id}
       mode="edit"
-      parentId={instance.parentId}
-      seriesId={instance.seriesId}
+      parentId={event.parentId}
+      seriesId={event.seriesId}
       existingRegistrations={registrations}
-      existingCohorts={instance.targetCohortsList.map((target) => ({
+      existingCohorts={event.targetCohortsList.map((target) => ({
         id: target.cohortId,
         label: target.cohort?.name ?? '-',
       }))}
       defaultValues={{
-        name: instance.name ?? '',
-        type: instance.type ?? 'LESSON',
-        locationId: instance.locationText ? 'other' : (instance.location?.id ?? 'none'),
-        locationText: instance.locationText ?? '',
-        capacity: instance.capacity ?? 0,
-        capacityUnit: instance.capacityUnit,
-        isVisible: instance.isVisible ?? false,
-        isPublic: instance.isPublic ?? false,
-        hasPublicDetails: instance.hasPublicDetails,
-        isLocked: instance.isLocked ?? false,
-        enableNotes: instance.enableNotes ?? false,
+        name: event.name ?? '',
+        type: event.type ?? 'LESSON',
+        locationId: event.locationText ? 'other' : (event.location?.id ?? 'none'),
+        locationText: event.locationText ?? '',
+        capacity: event.capacity ?? 0,
+        capacityUnit: event.capacityUnit,
+        isVisible: event.isVisible ?? false,
+        isPublic: event.isPublic ?? false,
+        hasPublicDetails: event.hasPublicDetails,
+        isLocked: event.isLocked ?? false,
+        enableNotes: event.enableNotes ?? false,
         instances: [
           {
-            itemId: instance.id,
-            since: instance.since,
-            until: instance.until,
-            isCancelled: instance.isCancelled,
+            itemId: event.id,
+            since: event.since,
+            until: event.until,
+            isCancelled: event.isCancelled,
           },
         ],
-        trainers: instance.trainersList.map((trainer) => ({
+        trainers: event.trainersList.map((trainer) => ({
           personId: trainer.personId,
           lessonsOffered: trainer.lessonsOffered,
         })),
-        cohorts: instance.targetCohortsList.map(({ cohortId }) => ({ cohortId })),
+        cohorts: event.targetCohortsList.map(({ cohortId }) => ({ cohortId })),
         registrations: registrations.map((registration) => ({
           personId: registration.personId,
           coupleId: registration.coupleId,

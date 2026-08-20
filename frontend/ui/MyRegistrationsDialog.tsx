@@ -69,8 +69,8 @@ function useRegistrationCandidates(
   const capacityLeft =
     instance.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
   const candidates: Registrant[] = [
-    ...[...new Map(people.map((person) => [person.id, person])).values()]
-      .filter((person) => !registeredPeople.has(person.id))
+    ...[...new Map(people.map((x) => [x.id, x])).values()]
+      .filter((x) => !registeredPeople.has(x.id))
       .map((p) => ({
         id: registrantKey(p.id, null),
         label: p.name,
@@ -145,7 +145,7 @@ function RegistrationsDialogContent({
     variables: { id: instance.id },
   });
   const setRegistration = useMutation(SetEventRegistrationDocument)[1];
-  const allRegistrations = query.data?.eventInstance?.registrationsList ?? [];
+  const allRegistrations = query.data?.event?.registrationsList ?? [];
   const registrations = isManager
     ? allRegistrations
     : allRegistrations.filter(
@@ -324,7 +324,7 @@ function RegistrationsDialogContent({
         personId={selected.personId}
         coupleId={selected.coupleId}
         registration={selectedRegistration}
-        lessonTrainers={query.data.eventInstance?.trainersList ?? []}
+        lessonTrainers={query.data.event?.trainersList ?? []}
         onSaved={() => {
           if (!selectedRegistration) onClose();
         }}

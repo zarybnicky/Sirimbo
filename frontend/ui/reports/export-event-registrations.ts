@@ -1,15 +1,17 @@
 import { EventExportDocument } from '@/graphql/Event';
-import { formatEventType, fullDateFormatter } from '@/ui/format';
+import { formatEventName, fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
 export async function exportEventRegistrations(client: Client, id: string) {
   const result = await client.query(EventExportDocument, { id }).toPromise();
   if (result.error) throw result.error;
-  const instance = result.data?.eventInstance;
+  const { event } = result.data ?? {};
+  if (!event) throw new Error("Událost nenalezena");
+
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
-  const name = instance?.name || formatEventType(instance?.type) || 'Sheet 1';
+  const name = event.name || formatEventName(event) || 'Sheet 1';
   const worksheet = workbook.addWorksheet(name);
 
   const columns = [
@@ -19,12 +21,12 @@ export async function exportEventRegistrations(client: Client, id: string) {
     { header: 'Poznámka', key: 'note' },
   ];
   const lessonTrainers = new Map<string, string>();
-  for (const trainer of instance?.trainersList ?? []) {
+  for (const trainer of event.trainersList ?? []) {
     if (trainer.lessonsOffered !== 0) {
       lessonTrainers.set(trainer.personId, trainer.person?.name ?? '?');
     }
   }
-  for (const registration of instance?.registrations ?? []) {
+  for (const registration of event.registrations.nodes) {
     for (const request of registration.requests) {
       if (request.trainer?.personId) {
         lessonTrainers.set(request.trainer.personId, request.trainer.person?.name ?? '?');
@@ -43,7 +45,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
   }
 
   const rows: { [k: string]: string }[] = [];
-  for (const x of instance?.registrations || []) {
+  for (const x of event.registrations.nodes) {
     const row: { [key: string]: string } = {
       man: x.person?.name || x.couple?.man?.name || '',
       woman: x.couple?.woman?.name || '',
@@ -58,7 +60,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
     }
     rows.push(row);
   }
-  for (const x of instance?.eventExternalRegistrationsByInstanceIdList || []) {
+  for (const x of event.externalRegistrations || []) {
     const row: { [key: string]: string } = {
       man: `${x.prefixTitle} ${x.firstName} ${x.lastName} ${x.suffixTitle}`,
       woman: '',
