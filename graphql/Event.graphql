@@ -139,6 +139,7 @@ fragment EventLessonDemand on EventLessonDemand {
   trainerId
   trainer {
     id
+    personId
     person {
       id
       name
@@ -162,7 +163,7 @@ fragment EventInstanceRegistration on EventInstanceRegistration {
   couple {
     ...Couple
   }
-  eventLessonDemandsByRegistrationIdList {
+  requests: eventLessonDemandsByRegistrationIdList {
     ...EventLessonDemand
   }
 }

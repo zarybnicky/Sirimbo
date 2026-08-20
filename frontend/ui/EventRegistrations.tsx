@@ -63,9 +63,9 @@ export function EventRegistrations({
               </div>
               {auth.isTrainerOrAdmin && (
                 <div className="mt-1 text-sm text-neutral-11">
-                  {r.eventLessonDemandsByRegistrationIdList.map((demand) => (
-                    <div key={demand.id}>
-                      {demand.lessonCount}× {demand.trainer?.person?.name}
+                  {r.requests.map((request) => (
+                    <div key={request.id}>
+                      {request.lessonCount}× {request.trainer?.person?.name}
                     </div>
                   ))}
                   {r.note && (

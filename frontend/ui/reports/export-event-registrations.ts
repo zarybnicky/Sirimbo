@@ -25,9 +25,9 @@ export async function exportEventRegistrations(client: Client, id: string) {
     }
   }
   for (const registration of instance?.registrations ?? []) {
-    for (const demand of registration.eventLessonDemandsByRegistrationIdList) {
-      if (demand.trainer?.person) {
-        lessonTrainers.set(demand.trainer.person.id, demand.trainer.person.name ?? '?');
+    for (const request of registration.requests) {
+      if (request.trainer?.personId) {
+        lessonTrainers.set(request.trainer.personId, request.trainer.person?.name ?? '?');
       }
     }
   }
@@ -50,10 +50,10 @@ export async function exportEventRegistrations(client: Client, id: string) {
       registered: fullDateFormatter.format(new Date(x.createdAt)),
       note: x.note || '',
     };
-    for (const demand of x.eventLessonDemandsByRegistrationIdList) {
-      const trainerId = demand.trainer?.person?.id;
+    for (const request of x.requests) {
+      const trainerId = request.trainer?.personId;
       if (trainerId) {
-        row[trainerId] = String(Number(row[trainerId] ?? 0) + demand.lessonCount);
+        row[trainerId] = String(Number(row[trainerId] ?? 0) + request.lessonCount);
       }
     }
     rows.push(row);

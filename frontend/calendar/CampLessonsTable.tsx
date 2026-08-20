@@ -28,10 +28,10 @@ export function CampLessonsTable({ id }: { id: string }) {
     query: EventRegistrationsDocument,
     variables: { id },
   });
-  const { rows, trainers, hasLessonDemands } = React.useMemo(() => {
+  const { rows, trainers, hasRequests } = React.useMemo(() => {
     const registrations = query.data?.eventInstance?.registrationsList ?? [];
     const rows = new Map<string, Row>();
-    const hasLessonDemands = registrations.some((x) => x.eventLessonDemandsByRegistrationIdList.length > 0);
+    const hasRequests = registrations.some((x) => x.requests.length > 0);
 
     const trainers = new Map<string, string>();
     for (const trainer of query.data?.eventInstance?.trainersList ?? []) {
@@ -53,10 +53,10 @@ export function CampLessonsTable({ id }: { id: string }) {
         prices: new Map(),
         priceIncomplete: false,
       };
-      for (const demand of registration.eventLessonDemandsByRegistrationIdList) {
-        const trainerId = demand.trainer?.person?.id ?? `trainer:${demand.trainerId}`;
-        trainers.set(trainerId, demand.trainer?.person?.name || 'Bez trenéra');
-        row.cells.set(trainerId, { requested: demand.lessonCount, lessons: [] });
+      for (const request of registration.requests) {
+        const trainerId = request.trainer?.personId ?? '';
+        trainers.set(trainerId, request.trainer?.person?.name || 'Bez trenéra');
+        row.cells.set(trainerId, { requested: request.lessonCount, lessons: [] });
       }
       rows.set(id, row);
     }
@@ -65,12 +65,10 @@ export function CampLessonsTable({ id }: { id: string }) {
       const duration =
         new Date(lesson.until).getTime() - new Date(lesson.since).getTime();
       const participantCount = lesson.registrationsList.reduce(
-        (sum, registration) => sum + (registration.couple ? 2 : 1),
+        (sum, x) => sum + (x.couple ? 2 : 1),
         0,
       );
-      const priceTrainers = new Map(
-        (lesson.trainersList ?? []).map((trainer) => [trainer.personId, trainer]),
-      );
+      const priceTrainers = new Map((lesson.trainersList ?? []).map((t) => [t.personId, t]));
 
       for (const trainer of lesson.trainersList ?? []) {
         trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
@@ -147,7 +145,7 @@ export function CampLessonsTable({ id }: { id: string }) {
       );
     }
 
-    return { rows: result, trainers: [...trainers], hasLessonDemands };
+    return { rows: result, trainers: [...trainers], hasRequests };
   }, [query.data]);
 
   const columns = React.useMemo<Column<Row>[]>(
@@ -202,7 +200,7 @@ export function CampLessonsTable({ id }: { id: string }) {
               title={title}
               className="flex h-full flex-col justify-center text-center tabular-nums"
               style={
-                !hasLessonDemands
+                !hasRequests
                   ? undefined
                   : assigned > requested
                     ? {
@@ -218,7 +216,7 @@ export function CampLessonsTable({ id }: { id: string }) {
               }
             >
               {assigned}
-              {hasLessonDemands && ` (${requested})`}
+              {hasRequests && ` (${requested})`}
             </div>
           );
         },
@@ -236,7 +234,7 @@ export function CampLessonsTable({ id }: { id: string }) {
             <div
               className="flex h-full flex-col justify-center tabular-nums"
               style={
-                !hasLessonDemands
+                !hasRequests
                   ? undefined
                   : assigned > requested
                     ? {
@@ -252,7 +250,7 @@ export function CampLessonsTable({ id }: { id: string }) {
               }
             >
               {assigned}
-              {hasLessonDemands && ` (${requested})`}
+              {hasRequests && ` (${requested})`}
             </div>
           );
         },
@@ -276,7 +274,7 @@ export function CampLessonsTable({ id }: { id: string }) {
         ),
       },
     ],
-    [hasLessonDemands, trainers],
+    [hasRequests, trainers],
   );
 
   return (

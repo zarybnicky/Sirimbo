@@ -53,12 +53,8 @@ export function CampSchedule({
   });
   const registrations =
     registrationsQuery.data?.eventInstance?.registrationsList ?? emptyRegistrations;
-  const lessonDemandCount = registrations.reduce(
-    (count, registration) =>
-      count + registration.eventLessonDemandsByRegistrationIdList.length,
-    0,
-  );
-  const [demandPaneOpen, setDemandPaneOpen] = React.useState<boolean>();
+  const requestCount = registrations.reduce((n, x) => n + x.requests.length, 0);
+  const [requestsOpen, setRequestsOpen] = React.useState<boolean>();
   const saveEvents = useMutation(SaveEventsDocument)[1];
   const deleteInstance = useMutation(DeleteEventDocument)[1];
   const [groupBy, setGroupBy] = useAtom(groupByAtom);
@@ -77,8 +73,8 @@ export function CampSchedule({
       trainers.set(trainer.personId, trainer.person?.name ?? '');
     }
     for (const registration of registrations) {
-      for (const demand of registration.eventLessonDemandsByRegistrationIdList) {
-        const person = demand.trainer?.person;
+      for (const request of registration.requests) {
+        const person = request.trainer?.person;
         if (person) trainers.set(person.id, person.name);
       }
     }
@@ -103,17 +99,11 @@ export function CampSchedule({
   const today = new Date();
   const initialDate = today >= dateRange.since && today <= dateRange.until ? today : dateRange.since;
 
-  const scheduleDemand = useAsyncCallback(
+  const scheduleRequest = useAsyncCallback(
     async (subject: ExternalDragSubject, info: InteractionInfo) => {
-      const registration = registrations.find((registration) =>
-        registration.eventLessonDemandsByRegistrationIdList.some(
-          (demand) => demand.id === subject.id,
-        ),
-      );
-      const demand = registration?.eventLessonDemandsByRegistrationIdList.find(
-        (demand) => demand.id === subject.id,
-      );
-      const trainerPersonId = demand?.trainer?.person?.id;
+      const registration = registrations.find((r) => r.requests.some((x) => x.id === subject.id));
+      const request = registration?.requests.find((x) => x.id === subject.id);
+      const trainerPersonId = request?.trainer?.personId;
       if (!registration || !trainerPersonId) throw new Error('Požadavek už neexistuje');
 
       const [resourceType, resourceId] = parseResourceKey(info.resource?.resourceId);
@@ -150,10 +140,10 @@ export function CampSchedule({
     const result = await deleteInstance({ id: instance.id });
     if (result.error) throw result.error;
   });
-  const demandError =
-    registrationsQuery.error || scheduleDemand.error || removeLesson.error;
-  const canShowDemandPane = auth.isTrainerOrAdmin && lessonDemandCount > 0;
-  const showDemandPane = demandPaneOpen && canShowDemandPane;
+  const requestError =
+    registrationsQuery.error || scheduleRequest.error || removeLesson.error;
+  const canShowRequests = auth.isTrainerOrAdmin && requestCount > 0;
+  const showRequests = requestsOpen && canShowRequests;
 
   const dragPreview = React.useRef<HTMLDivElement>(null);
   const draggedLesson =
@@ -182,7 +172,7 @@ export function CampSchedule({
     <div
       className={cn(
         'col-full-width relative max-w-full',
-        showDemandPane ? 'lg:pr-80' : 'lg:pr-10',
+        showRequests ? 'lg:pr-80' : 'lg:pr-10',
       )}
     >
       {draggedLesson && (
@@ -204,7 +194,7 @@ export function CampSchedule({
           parentId={id}
           initialDate={initialDate}
           dateRange={dateRange}
-          onDropFromOutside={scheduleDemand.execute}
+          onDropFromOutside={scheduleRequest.execute}
           onRemove={removeLesson.execute}
           availableTrainers={
             registrationsQuery.data?.eventInstance ? availableTrainers : undefined
@@ -212,50 +202,50 @@ export function CampSchedule({
           primary="day"
         />
       </div>
-      {canShowDemandPane && (
+      {canShowRequests && (
         <aside
           data-calendar-remove-target
           className={cn(
             'relative min-h-10 max-w-full overflow-x-hidden border-neutral-6 bg-neutral-2 lg:absolute lg:inset-y-0 lg:right-0 lg:border-l',
-            showDemandPane ? 'lg:w-80 lg:overflow-y-auto' : 'lg:w-10',
+            showRequests ? 'lg:w-80 lg:overflow-y-auto' : 'lg:w-10',
           )}
         >
           {!draggedLesson && (
             <>
               <button
                 type="button"
-                title={showDemandPane ? 'Skrýt požadavky' : 'Zobrazit požadavky'}
-                aria-label={showDemandPane ? 'Skrýt požadavky' : 'Zobrazit požadavky'}
-                aria-expanded={showDemandPane}
-                aria-controls="lesson-demand-pane"
+                title={showRequests ? 'Skrýt požadavky' : 'Zobrazit požadavky'}
+                aria-label={showRequests ? 'Skrýt požadavky' : 'Zobrazit požadavky'}
+                aria-expanded={showRequests}
+                aria-controls="lesson-requests-pane"
                 className="absolute right-1 top-1 z-30 rounded p-1.5 text-neutral-11 hover:bg-neutral-4 hover:text-neutral-12"
-                onClick={() => setDemandPaneOpen(!showDemandPane)}
+                onClick={() => setRequestsOpen(!showRequests)}
               >
-                {showDemandPane ? (
+                {showRequests ? (
                   <PanelRightClose className="size-5" />
                 ) : (
                   <PanelRightOpen className="size-5" />
                 )}
               </button>
-              {!showDemandPane && (
+              {!showRequests && (
                 <span className="pointer-events-none absolute left-3 top-2 text-xs text-neutral-10 lg:left-1/2 lg:top-11 lg:-translate-x-1/2 lg:[writing-mode:vertical-rl]">
-                  Požadavky{lessonDemandCount > 0 && ` (${lessonDemandCount})`}
+                  Požadavky{requestCount > 0 && ` (${requestCount})`}
                 </span>
               )}
             </>
           )}
-          {showDemandPane && (
-            <div id="lesson-demand-pane">
-              <LessonDemandPool
+          {showRequests && (
+            <div id="lesson-requests-pane">
+              <LessonRequests
                 registrations={registrations}
                 scheduledLessons={registrationsQuery.data?.scheduledLessons ?? []}
                 fetching={registrationsQuery.fetching}
-                error={demandError}
+                error={requestError}
                 lockTrainers={groupBy === 'trainer'}
               />
             </div>
           )}
-          {showDemandPane && draggedLesson && (
+          {showRequests && draggedLesson && (
             <div className="pointer-events-none absolute inset-0 z-20 flex items-start justify-center border-2 border-dashed border-neutral-8 bg-neutral-2/95 p-6 pt-24 text-center font-medium text-neutral-12">
               <div>
                 <Trash2 className="mx-auto mb-2 size-6 text-neutral-11" />
@@ -278,10 +268,10 @@ function scheduledTrainers(
   const counts = new Map<string, { count: number; name: string }>();
 
   for (const lesson of lessons) {
-    const hasRegistration = lesson.registrationsList.some((scheduledRegistration) =>
+    const hasRegistration = lesson.registrationsList.some((scheduled) =>
       registration.personId
-        ? scheduledRegistration.personId === registration.personId
-        : scheduledRegistration.coupleId === registration.coupleId,
+        ? scheduled.personId === registration.personId
+        : scheduled.coupleId === registration.coupleId,
     );
     if (!hasRegistration) continue;
 
@@ -315,7 +305,7 @@ function progressStyle(scheduled: number, requested: number): React.CSSPropertie
   };
 }
 
-function LessonDemandPool({
+function LessonRequests({
   registrations,
   scheduledLessons,
   fetching,
@@ -333,25 +323,21 @@ function LessonDemandPool({
   const registrationRows = registrations
     .map((registration) => {
       const scheduledByTrainer = scheduledTrainers(registration, scheduledLessons);
-      const demandTrainerIds = new Set(
-        registration.eventLessonDemandsByRegistrationIdList.flatMap((demand) =>
-          demand.trainer?.person?.id ? [demand.trainer.person.id] : [],
-        ),
+      const requestTrainerIds = new Set(
+        registration.requests.flatMap(({ trainer }) => trainer?.personId ? [trainer.personId] : []),
       );
       const extras = [...scheduledByTrainer.entries()].filter(
-        ([trainerPersonId]) => !demandTrainerIds.has(trainerPersonId),
+        ([id]) => !requestTrainerIds.has(id),
       );
       return { registration, scheduledByTrainer, extras };
     })
     .filter(
       ({ registration, scheduledByTrainer }) =>
-        registration.eventLessonDemandsByRegistrationIdList.length > 0 ||
+        registration.requests.length > 0 ||
         scheduledByTrainer.size > 0,
     );
-  const demands = registrationRows.flatMap(
-    ({ registration }) => registration.eventLessonDemandsByRegistrationIdList,
-  );
-  const lessonCount = demands.reduce((sum, demand) => sum + demand.lessonCount, 0);
+  const requests = registrationRows.flatMap(({ registration }) => registration.requests);
+  const lessonCount = requests.reduce((sum, x) => sum + x.lessonCount, 0);
   const scheduledCount = registrationRows.reduce(
     (sum, { scheduledByTrainer }) =>
       sum +
@@ -363,10 +349,10 @@ function LessonDemandPool({
     <div className="flex min-h-full flex-col">
       <div className="border-b border-neutral-6 bg-neutral-1 py-2 pl-3 pr-10">
         <div className="font-semibold text-neutral-12">Požadavky na lekce</div>
-        {(demands.length > 0 || scheduledCount > 0) && (
+        {(requests.length > 0 || scheduledCount > 0) && (
           <div className="text-sm text-neutral-11">
             {lessonCount > 0
-              ? `${demands.length} požadavků · ${scheduledCount} / ${lessonCount} lekcí`
+              ? `${requests.length} požadavků · ${scheduledCount} / ${lessonCount} lekcí`
               : `${scheduledCount} lekcí navíc`}
           </div>
         )}
@@ -377,10 +363,7 @@ function LessonDemandPool({
 
       <div className="grid gap-2 p-2">
         {registrationRows.map(({ registration, scheduledByTrainer, extras }) => {
-          const requested = registration.eventLessonDemandsByRegistrationIdList.reduce(
-            (sum, demand) => sum + demand.lessonCount,
-            0,
-          );
+          const requested = registration.requests.reduce((sum, x) => sum + x.lessonCount, 0);
           const scheduled = [...scheduledByTrainer.values()].reduce(
             (sum, item) => sum + item.count,
             0,
@@ -404,20 +387,20 @@ function LessonDemandPool({
                 </span>
               </summary>
               <div className="grid gap-1 p-1">
-                {registration.eventLessonDemandsByRegistrationIdList.map((demand) => {
-                  const trainerPersonId = demand.trainer?.person?.id;
+                {registration.requests.map((request) => {
+                  const trainerPersonId = request.trainer?.person?.id;
                   const scheduled = trainerPersonId
                     ? (scheduledByTrainer.get(trainerPersonId)?.count ?? 0)
                     : 0;
                   return (
                     <div
-                      key={demand.id}
+                      key={request.id}
                       draggable
                       title="Přetáhnout do rozpisu"
                       className="flex cursor-grab items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-neutral-3 active:cursor-grabbing"
                       onDragStart={(event) => {
                         const subject = {
-                          id: demand.id,
+                          id: request.id,
                           durationMinutes: 45,
                           ...(lockTrainers && trainerPersonId
                             ? { resourceId: `person:${trainerPersonId}` }
@@ -428,7 +411,7 @@ function LessonDemandPool({
                           externalDragDataType,
                           JSON.stringify(subject),
                         );
-                        event.dataTransfer.setData('text/plain', demand.id);
+                        event.dataTransfer.setData('text/plain', request.id);
                         setExternalDragSubject(subject);
                         setIsDragging(true);
                       }}
@@ -439,14 +422,14 @@ function LessonDemandPool({
                     >
                       <GripVertical className="size-4 shrink-0 text-neutral-9" />
                       <span className="min-w-0 grow truncate">
-                        {demand.trainer?.person?.name || 'Bez trenéra'}
+                        {request.trainer?.person?.name || 'Bez trenéra'}
                       </span>
                       <span
                         className="shrink-0 rounded-full px-2 py-0.5 font-semibold"
-                        style={progressStyle(scheduled, demand.lessonCount)}
+                        style={progressStyle(scheduled, request.lessonCount)}
                         title="Naplánováno / požadováno"
                       >
-                        {scheduled} / {demand.lessonCount}
+                        {scheduled} / {request.lessonCount}
                       </span>
                     </div>
                   );

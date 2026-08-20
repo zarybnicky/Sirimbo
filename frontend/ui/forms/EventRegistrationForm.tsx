@@ -47,10 +47,7 @@ export function EventRegistrationForm({
   const confirm = useConfirm();
   const [result, setRegistration] = useMutation(SetEventRegistrationDocument);
   const requestCounts = Object.fromEntries(
-    registration?.eventLessonDemandsByRegistrationIdList.map((x) => [
-      x.trainerId,
-      x.lessonCount,
-    ]) ?? [],
+    registration?.requests.map((x) => [x.trainerId, x.lessonCount]) ?? [],
   );
   const lessonTrainers = enableDetails
     ? allLessonTrainers.filter(
