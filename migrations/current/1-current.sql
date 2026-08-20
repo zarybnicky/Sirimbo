@@ -68,4 +68,12 @@ $$;
 create index if not exists announcement_status_created_at_idx
   on public.announcement (tenant_id, status, is_sticky, created_at desc);
 
--- TODO(next migration): remove my_announcements, is_visible, is_locked, and their input attributes.
+drop function if exists public.my_announcements(boolean, boolean, boolean);
+
+alter type public.announcement_type_input
+  drop attribute if exists is_locked,
+  drop attribute if exists is_visible;
+
+alter table public.announcement
+  drop column if exists is_locked,
+  drop column if exists is_visible;
