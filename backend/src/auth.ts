@@ -92,7 +92,6 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
       role: 'anonymous',
       'jwt.claims.tenant_id': tenantId,
       'jwt.claims.user_id': '',
-      'jwt.claims.username': '',
       'jwt.claims.email': '',
       'jwt.claims.my_person_ids': '{}',
       'jwt.claims.my_tenant_ids': '{}',

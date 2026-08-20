@@ -77,6 +77,7 @@ drop function if exists update_event_instance_details;
 drop type if exists quick_event_input;
 drop type if exists quick_event_registration_input;
 
+alter type public.jwt_token drop attribute if exists username;
 alter type public.jwt_token drop attribute if exists is_member;
 alter type public.jwt_token drop attribute if exists is_trainer;
 alter type public.jwt_token drop attribute if exists is_admin;

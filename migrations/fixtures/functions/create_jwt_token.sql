@@ -35,7 +35,6 @@ with
     extract(epoch from now() + interval '7 days')::integer as exp,
     u.id as user_id,
     (select current_tenant_id()) as tenant_id,
-    u.u_login as username,
     u.u_email as email,
 
     coalesce((select array_agg(p.person_id) from person_ids p), '{}'::bigint[]) as my_person_ids,
