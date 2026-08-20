@@ -43,9 +43,6 @@ with
     coalesce((select array_agg(p.cohort_id) from cohort_ids p), '{}'::bigint[]) as my_cohort_ids,
     coalesce((select array_agg(p.id) from couple_ids p), '{}'::bigint[]) as my_couple_ids,
 
-    exists (select 1 from tenant_ids t where t.tenant_id = (select current_tenant_id())) as is_member,
-    exists (select 1 from tenant_trainers t where t.tenant_id = (select current_tenant_id())) as is_trainer,
-    exists (select 1 from tenant_admins a where a.tenant_id = (select current_tenant_id())) as is_admin,
     app_private.is_system_admin(u.id) as is_system_admin,
 
     '{}'::bigint[] as guest_tenant_ids,

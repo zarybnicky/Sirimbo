@@ -76,3 +76,10 @@ drop function if exists quick_create_event_instances;
 drop function if exists update_event_instance_details;
 drop type if exists quick_event_input;
 drop type if exists quick_event_registration_input;
+
+alter type public.jwt_token drop attribute if exists is_member;
+alter type public.jwt_token drop attribute if exists is_trainer;
+alter type public.jwt_token drop attribute if exists is_admin;
+
+--!include functions/create_jwt_token.sql
+--!include functions/current_claims.sql

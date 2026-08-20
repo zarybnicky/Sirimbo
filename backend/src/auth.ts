@@ -106,20 +106,18 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
   const token = getBearerOrCookie(req);
   const claims = token ? verifySessionToken(token) : undefined;
   if (claims) {
-    // FIXME: process tenant_member_ids, etc, replace reading is_admin, ...
-    // and remove the override of tenant_id below!
     settings.role = claims.is_system_admin
       ? 'system_admin'
-      : claims.is_admin
+      : claims.admin_tenant_ids?.some((id: unknown) => String(id) === tenantId)
         ? 'administrator'
-        : claims.is_trainer
+        : claims.trainer_tenant_ids?.some((id: unknown) => String(id) === tenantId)
           ? 'trainer'
-          : claims.is_member
+          : claims.member_tenant_ids?.some((id: unknown) => String(id) === tenantId)
             ? 'member'
             : 'anonymous';
 
     for (const key in claims) {
-      if (['exp', 'aud', 'iat', 'iss'].includes(key)) continue;
+      if (['exp', 'aud', 'iat', 'iss', 'tenant_id'].includes(key)) continue;
       if (Array.isArray(claims[key])) {
         settings[`jwt.claims.${key}`] = '{' + claims[key].map(String).join(',') + '}';
       } else {
@@ -149,9 +147,6 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
       settings['jwt.claims.shared.cohort_ids'] = `{${share.cohort_ids.join(',')}}`;
     }
   }
-
-  // FIXME: Or verify claims.tenant === request.tenant, otherwise log out?
-  settings['jwt.claims.tenant_id'] = tenantId;
 
   return settings;
 }
