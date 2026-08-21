@@ -1,13 +1,7 @@
-import js from "@eslint/js";
 import * as graphqlPlugin from '@graphql-eslint/eslint-plugin';
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
-  {
-    files: ['**/*.{js,jsx,ts,tsx,mjs,cjs}'],
-    rules: js.configs.recommended.rules,
-  },
-
   {
     files: ['**/*.graphql'],
     languageOptions: {

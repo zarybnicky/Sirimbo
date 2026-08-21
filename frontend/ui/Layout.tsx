@@ -7,7 +7,7 @@ import { CallToAction } from '@/ui/CallToAction';
 import React from 'react';
 import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;
@@ -41,6 +41,7 @@ export const Layout = React.memo(function Layout({
   const { publicSite } = useTenantConfig();
   const { Footer } = getTenantUi(tenantId);
 
+  const router = useRouter();
   const search = useSearchParams()?.toString();
   const url = usePathname() + (search ? `?${search}` : '');
 
@@ -53,9 +54,9 @@ export const Layout = React.memo(function Layout({
 
   React.useEffect(() => {
     if (!authLoading && missingPermission && !auth.user) {
-      window.location.assign(`/login?from=${encodeURIComponent(url)}`);
+      router.push(`/login?from=${encodeURIComponent(url)}`);
     }
-  }, [auth.user, authLoading, missingPermission, url]);
+  }, [router, auth.user, authLoading, missingPermission, url]);
 
   showTopMenu = publicSite ? showTopMenu : false;
   if (hideTopMenuIfLoggedIn) {

@@ -11,5 +11,5 @@
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true
   },
-  "exclude": ["node_modules", "frontend", "backend", "worker"]
+  "exclude": ["node_modules", "frontend", "backend", "worker", "e2e"]
 }

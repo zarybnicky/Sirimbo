@@ -32,7 +32,9 @@ export default compose(
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: true,
-  devIndicators: false,
+  devIndicators: {
+    position: 'bottom-left',
+  },
   typedRoutes: true,
   transpilePackages: ['html-react-parser'],
 

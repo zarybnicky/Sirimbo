@@ -374,7 +374,7 @@ type Aktuality {
   updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Aktuality`."""
-  user: User
+  userByAtKdo: User
 }
 
 """
@@ -771,7 +771,7 @@ type Attachment {
   uploadedBy: BigInt
 
   """Reads a single `User` that is related to this `Attachment`."""
-  user: User
+  userByUploadedBy: User
   width: Int
 }
 
@@ -1735,7 +1735,7 @@ type CreateAktualityPayload {
   clientMutationId: String
 
   """Reads a single `User` that is related to this `Aktuality`."""
-  user: User
+  userByAtKdo: User
 }
 
 """All input for the create `Attachment` mutation."""
@@ -1768,7 +1768,7 @@ type CreateAttachmentPayload {
   clientMutationId: String
 
   """Reads a single `User` that is related to this `Attachment`."""
-  user: User
+  userByUploadedBy: User
 }
 
 """All input for the create `Cohort` mutation."""
@@ -1922,7 +1922,7 @@ type CreateEventExternalRegistrationPayload {
   """
   Reads a single `User` that is related to this `EventExternalRegistration`.
   """
-  user: User
+  userByCreatedBy: User
 }
 
 """All input for the create `EventSeries` mutation."""
@@ -1979,7 +1979,7 @@ type CreateMembershipApplicationPayload {
   membershipApplication: MembershipApplication
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  user: User
+  userByCreatedBy: User
 }
 
 """All input for the `createPerson` mutation."""
@@ -2293,7 +2293,7 @@ type DeleteAktualityPayload {
   clientMutationId: String
 
   """Reads a single `User` that is related to this `Aktuality`."""
-  user: User
+  userByAtKdo: User
 }
 
 """All input for the `deleteAnnouncement` mutation."""
@@ -2448,7 +2448,7 @@ type DeleteEventExternalRegistrationPayload {
   """
   Reads a single `User` that is related to this `EventExternalRegistration`.
   """
-  user: User
+  userByCreatedBy: User
 }
 
 """All input for the `deleteEventInstanceByTenantIdAndId` mutation."""
@@ -2558,7 +2558,7 @@ type DeleteMembershipApplicationPayload {
   membershipApplication: MembershipApplication
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  user: User
+  userByCreatedBy: User
 }
 
 """All input for the `deletePaymentByTenantIdAndId` mutation."""
@@ -2948,7 +2948,7 @@ type EventExternalRegistration {
   """
   Reads a single `User` that is related to this `EventExternalRegistration`.
   """
-  user: User
+  userByCreatedBy: User
 }
 
 """
@@ -4302,7 +4302,7 @@ type MembershipApplication {
   updatedAt: Datetime!
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  user: User
+  userByCreatedBy: User
   wdsfId: Int
 }
 
@@ -6971,7 +6971,7 @@ type RejectMembershipApplicationPayload {
   ): MembershipApplicationsEdge
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  user: User
+  userByCreatedBy: User
 }
 
 enum RelationshipStatus {
@@ -8834,7 +8834,7 @@ type UpdateAktualityPayload {
   clientMutationId: String
 
   """Reads a single `User` that is related to this `Aktuality`."""
-  user: User
+  userByAtKdo: User
 }
 
 """All input for the `updateAnnouncement` mutation."""
@@ -9170,7 +9170,7 @@ type UpdateMembershipApplicationPayload {
   membershipApplication: MembershipApplication
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
-  user: User
+  userByCreatedBy: User
 }
 
 """All input for the `updatePaymentByTenantIdAndId` mutation."""
