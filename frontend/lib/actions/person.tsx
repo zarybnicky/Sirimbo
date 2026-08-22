@@ -94,7 +94,7 @@ export const personActions = defineActions<PersonBasicFragment>()([
     execute: async ({ item: { id }, mutate, router }) => {
       await mutate(DeletePersonDocument, { id });
       if (router.pathname === `/clenove/${id}`) {
-        await router.replace('/clenove');
+        router.replace('/clenove');
       }
     },
   },

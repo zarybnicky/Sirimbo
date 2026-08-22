@@ -11,7 +11,7 @@ import {
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui';
 import { TenantSelect } from '@/ui/TenantSelect';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';

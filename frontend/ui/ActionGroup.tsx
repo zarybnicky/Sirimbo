@@ -116,7 +116,8 @@ export function ActionGroup<Id extends string = string>({
   ) => {
     if ('render' in action) {
       openingDialogFromDropdown.current = fromDropdown;
-      return setDialogAction(action);
+      requestAnimationFrame(() => setDialogAction(action));
+      return;
     }
     if (!('execute' in action)) return;
     if (action.confirm) {
