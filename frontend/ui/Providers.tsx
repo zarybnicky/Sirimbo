@@ -9,9 +9,10 @@ import { ConfirmProvider } from '@/ui/Confirm';
 import { ErrorNotifier } from '@/ui/ErrorNotifier';
 import { FillYourProfileReminder } from '@/ui/FillYourProfileReminder';
 import { authAtom, tenantAtom, storeRef, type RequestAuthState } from '@/lib/auth';
+import { parseUiState, sidebarWidthAtom, uiAtom } from '@/lib/ui';
 import { Tracking } from '@/ui/Tracking';
 import { UpdateNotifier } from '@/ui/UpdateNotifier';
-import { createStore, Provider as JotaiProvider } from 'jotai';
+import { createStore, Provider as JotaiProvider, useAtomValue } from 'jotai';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { createClient, Provider as UrqlProvider } from 'urql';
@@ -21,15 +22,18 @@ export function Providers({
   children,
   initialAuth,
   initialTenant,
+  initialUiCookie,
 }: {
   children: React.ReactNode;
   initialAuth: RequestAuthState;
   initialTenant: TenantCatalogEntry;
+  initialUiCookie?: string;
 }) {
   const [store] = React.useState(() => {
     const store = createStore();
     store.set(authAtom, initialAuth);
     store.set(tenantAtom, initialTenant);
+    store.set(uiAtom, parseUiState(initialUiCookie));
     return store;
   });
   const [client, setClient] = React.useState(() => createClient(configureUrql()));
@@ -47,7 +51,7 @@ export function Providers({
       <UrqlProvider value={client}>
         <ConfirmProvider>
           <Tracking />
-          {children}
+          <UiStateStyles>{children}</UiStateStyles>
           <UpdateNotifier />
           <FillYourProfileReminder />
           <ErrorNotifier />
@@ -56,5 +60,22 @@ export function Providers({
         </ConfirmProvider>
       </UrqlProvider>
     </JotaiProvider>
+  );
+}
+
+function UiStateStyles({ children }: { children: React.ReactNode }) {
+  const sidebarWidth = useAtomValue(sidebarWidthAtom);
+
+  return (
+    <div
+      className="contents"
+      style={
+        sidebarWidth === null
+          ? undefined
+          : ({ '--sidebar-width': `${sidebarWidth}px` } as React.CSSProperties)
+      }
+    >
+      {children}
+    </div>
   );
 }

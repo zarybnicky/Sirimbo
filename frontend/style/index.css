@@ -169,6 +169,28 @@
 }
 
 @layer components {
+  .app-sidebar {
+    --sidebar-default-width: 14rem;
+  }
+
+  @media (min-width: 1280px) {
+    .app-sidebar {
+      --sidebar-default-width: 16rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .app-sidebar {
+      --sidebar-default-width: 18rem;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .app-sidebar {
+      --sidebar-default-width: 20rem;
+    }
+  }
+
   /* https://ryanmulligan.dev/blog/layout-breakouts/ */
   .content {
     --gap: clamp(0.5rem, 6vw, 3rem);

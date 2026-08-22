@@ -1,8 +1,10 @@
 /* eslint-disable import-x/no-unused-modules, tailwindcss/no-custom-classname */
 
 import { getRequestAuth, getRequestTenant } from '@/lib/server/tenant';
+import { UI_COOKIE } from '@/lib/session-cookies';
 import { Providers } from '@/ui/Providers';
 import type { Metadata, Viewport } from 'next';
+import { cookies } from 'next/headers';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
 
@@ -97,13 +99,21 @@ export async function generateViewport(): Promise<Viewport> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [tenant, auth] = await Promise.all([getRequestTenant(), getRequestAuth()]);
+  const [tenant, auth, cookieStore] = await Promise.all([
+    getRequestTenant(),
+    getRequestAuth(),
+    cookies(),
+  ]);
 
   return (
     <html lang="cs" className={`tenant-${tenant.id}`} suppressHydrationWarning>
       <body className={`tenant-${tenant.id}`} suppressHydrationWarning>
         <NuqsAdapter>
-          <Providers initialAuth={auth} initialTenant={tenant}>
+          <Providers
+            initialAuth={auth}
+            initialTenant={tenant}
+            initialUiCookie={cookieStore.get(UI_COOKIE)?.value}
+          >
             {children}
           </Providers>
         </NuqsAdapter>
