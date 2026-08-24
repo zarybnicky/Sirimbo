@@ -14,7 +14,6 @@ import { postgraphile } from 'postgraphile';
 import preset from './graphile.config.ts';
 import { grafserv } from 'postgraphile/grafserv/express/v4';
 import { createServer } from 'node:http';
-import { installStarletProxy } from './starlet-proxy.ts';
 import { authContext, withPgClientAndPgSettings } from './auth.ts';
 
 const app = express();
@@ -33,8 +32,6 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.text({ type: 'application/graphql' }));
-
-installStarletProxy(app);
 
 app.use(authContext());
 
