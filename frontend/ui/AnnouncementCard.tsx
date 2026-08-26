@@ -56,7 +56,7 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
       ) : (
         <>
           <div className="relative pt-1">
-            <RichTextView className={expanded ? '' : 'ClampFade'} value={item.body} />
+            <RichTextView className={expanded ? '' : 'clamp-fade'} value={item.body} />
           </div>
           {!expanded && (
             <div className="absolute bottom-2 text-accent-11 font-bold">

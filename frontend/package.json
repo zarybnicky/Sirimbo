@@ -75,7 +75,6 @@
     "tailwind-merge": "~3.6.0",
     "tailwind-variants": "^3.3.1",
     "tailwindcss": "~3.4.19",
-    "tailwindcss-opentype": "~1.2.0",
     "thumbhash": "^0.1.1",
     "typescript-event-target": "~1.1.2",
     "urql": "~5.0.4",
@@ -89,7 +88,6 @@
     "@pgtyped/cli": "^2.4.3",
     "@serwist/cli": "^9.5.12",
     "@swc/core": "~1.16.1",
-    "@tailwindcss/aspect-ratio": "~0.4.2",
     "@tailwindcss/forms": "~0.5.11",
     "@tailwindcss/typography": "~0.5.20",
     "@types/d3": "^7.4.3",
@@ -120,7 +118,6 @@
     "postcss": "~8.5.26",
     "prettier": "^3.9.6",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.67.0",
-    "windy-radix-typography": "~0.2.1"
+    "typescript-eslint": "^8.67.0"
   }
 }

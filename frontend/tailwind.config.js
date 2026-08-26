@@ -7,26 +7,11 @@ export default {
     './app/**/*.{js,ts,jsx,tsx}',
     './calendar/**/*.{js,ts,jsx,tsx}',
     './lib/**/*.{js,ts,jsx,tsx}',
-    './scoreboard/**/*.{js,ts,jsx,tsx}',
     './starlet/**/*.{js,ts,jsx,tsx}',
-    './style/**/*.{js,ts,jsx,tsx}',
     './tenant/**/*.{js,ts,jsx,tsx}',
     './ui/**/*.{js,ts,jsx,tsx}',
   ],
-  darkMode: 'media',
-  corePlugins: {
-    aspectRatio: false,
-  },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-    require('windy-radix-typography')({
-      colors: ['accent', 'neutral'],
-    }),
-    require('@tailwindcss/aspect-ratio'),
-    require('tailwindcss-opentype'),
-  ],
-  safelist: Array.from({ length: 10 }).map((i) => `tenant-${i}`),
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
   theme: {
     container: {
       center: true,
@@ -62,12 +47,6 @@ export default {
       ),
     },
     extend: {
-      width: {
-        fit: 'fit-content',
-      },
-      height: {
-        fit: 'fit-content',
-      },
       gridColumn: {
         full: '1 / -1',
         content: 'content',

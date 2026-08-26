@@ -418,9 +418,6 @@ importers:
       tailwindcss:
         specifier: ~3.4.19
         version: 3.4.19(yaml@2.8.1)
-      tailwindcss-opentype:
-        specifier: ~1.2.0
-        version: 1.2.0(tailwindcss@3.4.19(yaml@2.8.1))
       thumbhash:
         specifier: ^0.1.1
         version: 0.1.1
@@ -455,9 +452,6 @@ importers:
       '@swc/core':
         specifier: ~1.16.1
         version: 1.16.1(@swc/helpers@0.5.23)
-      '@tailwindcss/aspect-ratio':
-        specifier: ~0.4.2
-        version: 0.4.2(tailwindcss@3.4.19(yaml@2.8.1))
       '@tailwindcss/forms':
         specifier: ~0.5.11
         version: 0.5.11(tailwindcss@3.4.19(yaml@2.8.1))
@@ -551,9 +545,6 @@ importers:
       typescript-eslint:
         specifier: ^8.67.0
         version: 8.67.0(eslint@9.39.5(jiti@1.21.7))(typescript@6.0.3)
-      windy-radix-typography:
-        specifier: ~0.2.1
-        version: 0.2.1(@tailwindcss/typography@0.5.20(tailwindcss@3.4.19(yaml@2.8.1)))(tailwindcss@3.4.19(yaml@2.8.1))
 
   graphql:
     dependencies:
@@ -4313,11 +4304,6 @@ packages:
 
   '@swc/types@0.1.28':
     resolution: {integrity: sha512-V6Mnml8v09QALx6K0elJ7o9K/MkVDtW3t6L+7Ou/JcWtb3xwId2AH4FeOceySd2JaO87IMw4+6vSZxLm34LPbw==}
-
-  '@tailwindcss/aspect-ratio@0.4.2':
-    resolution: {integrity: sha512-8QPrypskfBa7QIMuKHg2TA7BqES6vhBrDLOv8Unb6FcFyd3TjKbc6lcmb9UPQHxfl24sXoJ41ux/H7qQQvfaSQ==}
-    peerDependencies:
-      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
 
   '@tailwindcss/forms@0.5.11':
     resolution: {integrity: sha512-h9wegbZDPurxG22xZSoWtdzc41/OlNEUQERNqI/0fOwa2aVlWGu7C35E/x6LDyD3lgtztFSSjKZyuVM0hxhbgA==}
@@ -9787,12 +9773,6 @@ packages:
       tailwindcss:
         optional: true
 
-  tailwindcss-opentype@1.2.0:
-    resolution: {integrity: sha512-vQ+Od/E57o6CG2pt4IBalN4yzs67a9QrP5at6NdD2wb4bMBLwnfyMity6QeP3HPtWVwjaCdUbP4vMYMLo/PCSw==}
-    engines: {node: '>=16'}
-    peerDependencies:
-      tailwindcss: '>=3'
-
   tailwindcss@3.4.19:
     resolution: {integrity: sha512-3ofp+LL8E+pK/JuPLPggVAIaEuhvIz4qNcf3nA1Xn2o/7fb7s/TYpHhwGDv1ZU3PkBluUVaF8PyCHcm48cKLWQ==}
     engines: {node: '>=14.0.0'}
@@ -10238,12 +10218,6 @@ packages:
   widest-line@5.0.0:
     resolution: {integrity: sha512-c9bZp7b5YtRj2wOe6dlj32MK+Bx/M/d+9VB2SHM1OtsUHR0aV0tdP6DWh/iMt0kWi1t5g1Iudu6hQRNd1A4PVA==}
     engines: {node: '>=18'}
-
-  windy-radix-typography@0.2.1:
-    resolution: {integrity: sha512-bPrEwsLKAgxcMgLGPh/PE9wx31caC2CqN7G7yuhve1ZRUDhWCvgx/nXWtls44ClmpNc+G1+U0pdpdZjRO3jQ6w==}
-    peerDependencies:
-      '@tailwindcss/typography': '>=0.1.0'
-      tailwindcss: '>=3.0.0'
 
   winston-transport@4.9.0:
     resolution: {integrity: sha512-8drMJ4rkgaPo1Me4zD/3WLfI/zPdA9o2IipKODunnGDcuqbHwjsbB79ylv04LCGGzU0xQ6vTznOMpQGaLhhm6A==}
@@ -10858,8 +10832,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-cloud-services@47.6.2':
     dependencies:
@@ -10889,8 +10861,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-watchdog': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-easy-image@47.6.2':
     dependencies:
@@ -10975,16 +10945,12 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-enter@47.6.2':
     dependencies:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-engine': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-essentials@47.6.2':
     dependencies:
@@ -11209,8 +11175,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-mention@47.6.2':
     dependencies:
@@ -11220,8 +11184,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-minimap@47.6.2':
     dependencies:
@@ -11230,8 +11192,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-page-break@47.6.2':
     dependencies:
@@ -11241,8 +11201,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-paragraph@47.6.2':
     dependencies:
@@ -11363,8 +11321,6 @@ snapshots:
       color-parse: 2.0.2
       es-toolkit: 1.39.5
       vanilla-colorful: 0.7.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-undo@47.6.2':
     dependencies:
@@ -11383,8 +11339,6 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-ui': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-watchdog@47.6.2':
     dependencies:
@@ -11393,8 +11347,6 @@ snapshots:
       '@ckeditor/ckeditor5-engine': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-widget@47.6.2':
     dependencies:
@@ -14935,10 +14887,6 @@ snapshots:
   '@swc/types@0.1.28':
     dependencies:
       '@swc/counter': 0.1.3
-
-  '@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.4.19(yaml@2.8.1))':
-    dependencies:
-      tailwindcss: 3.4.19(yaml@2.8.1)
 
   '@tailwindcss/forms@0.5.11(tailwindcss@3.4.19(yaml@2.8.1))':
     dependencies:
@@ -21647,10 +21595,6 @@ snapshots:
       tailwind-merge: 3.6.0
       tailwindcss: 3.4.19(yaml@2.8.1)
 
-  tailwindcss-opentype@1.2.0(tailwindcss@3.4.19(yaml@2.8.1)):
-    dependencies:
-      tailwindcss: 3.4.19(yaml@2.8.1)
-
   tailwindcss@3.4.19(yaml@2.8.1):
     dependencies:
       '@alloc/quick-lru': 5.2.0
@@ -22226,11 +22170,6 @@ snapshots:
   widest-line@5.0.0:
     dependencies:
       string-width: 7.2.0
-
-  windy-radix-typography@0.2.1(@tailwindcss/typography@0.5.20(tailwindcss@3.4.19(yaml@2.8.1)))(tailwindcss@3.4.19(yaml@2.8.1)):
-    dependencies:
-      '@tailwindcss/typography': 0.5.20(tailwindcss@3.4.19(yaml@2.8.1))
-      tailwindcss: 3.4.19(yaml@2.8.1)
 
   winston-transport@4.9.0:
     dependencies:

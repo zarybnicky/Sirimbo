@@ -46,7 +46,7 @@ export default function GalleryPage() {
             target="_blank"
             rel="noreferrer"
             href={item.href}
-            className="relative aspect-w-16 aspect-h-9 group"
+            className="group relative aspect-video"
           >
             <div className="absolute inset-0 border-8 border-accent-7 overflow-hidden">
               <Image

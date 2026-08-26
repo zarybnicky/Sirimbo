@@ -104,6 +104,11 @@
     display: none;
   }
 
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
   html, body, #__next {
     @apply bg-neutral-1 text-accent-12;
     min-height: 100%;
@@ -169,6 +174,41 @@
 }
 
 @layer components {
+  .prose-accent {
+    --tw-prose-body: hsl(var(--accent-12) / 1);
+    --tw-prose-headings: hsl(var(--accent-12) / 1);
+    --tw-prose-lead: hsl(var(--accent-11) / 1);
+    --tw-prose-links: hsl(var(--accent-12) / 1);
+    --tw-prose-bold: hsl(var(--accent-12) / 1);
+    --tw-prose-counters: hsl(var(--accent-11) / 1);
+    --tw-prose-bullets: hsl(var(--accent-7) / 1);
+    --tw-prose-hr: hsl(var(--accent-6) / 1);
+    --tw-prose-quotes: hsl(var(--accent-12) / 1);
+    --tw-prose-quote-borders: hsl(var(--accent-6) / 1);
+    --tw-prose-captions: hsl(var(--accent-11) / 1);
+    --tw-prose-code: hsl(var(--accent-12) / 1);
+    --tw-prose-pre-code: hsl(var(--accent-12) / 1);
+    --tw-prose-pre-bg: hsl(var(--accent-3) / 1);
+    --tw-prose-th-borders: hsl(var(--accent-7) / 1);
+    --tw-prose-td-borders: hsl(var(--accent-6) / 1);
+    --tw-prose-invert-body: hsl(var(--accent-12) / 1);
+    --tw-prose-invert-headings: hsl(var(--accent-12) / 1);
+    --tw-prose-invert-lead: hsl(var(--accent-11) / 1);
+    --tw-prose-invert-links: hsl(var(--accent-12) / 1);
+    --tw-prose-invert-bold: hsl(var(--accent-12) / 1);
+    --tw-prose-invert-counters: hsl(var(--accent-11) / 1);
+    --tw-prose-invert-bullets: hsl(var(--accent-7) / 1);
+    --tw-prose-invert-hr: hsl(var(--accent-6) / 1);
+    --tw-prose-invert-quotes: hsl(var(--accent-12) / 1);
+    --tw-prose-invert-quote-borders: hsl(var(--accent-6) / 1);
+    --tw-prose-invert-captions: hsl(var(--accent-11) / 1);
+    --tw-prose-invert-code: hsl(var(--accent-12) / 1);
+    --tw-prose-invert-pre-code: hsl(var(--accent-12) / 1);
+    --tw-prose-invert-pre-bg: hsl(var(--accent-3) / 1);
+    --tw-prose-invert-th-borders: hsl(var(--accent-7) / 1);
+    --tw-prose-invert-td-borders: hsl(var(--accent-6) / 1);
+  }
+
   .app-sidebar {
     --sidebar-default-width: 14rem;
   }
@@ -251,19 +291,19 @@
     grid-column: 2;
   }
 
-  .ClampFade {
+  .clamp-fade {
     max-height: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .ClampFade:after {
+  .clamp-fade:after {
     @apply absolute inset-x-0 bottom-0;
     content: '';
     height: 60px;
     background: linear-gradient(transparent, white);
   }
   @media (prefers-color-scheme: dark) {
-    .ClampFade:after {
+    .clamp-fade:after {
       background: linear-gradient(transparent, black);
     }
   }
