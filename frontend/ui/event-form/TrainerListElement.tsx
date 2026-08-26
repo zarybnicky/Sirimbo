@@ -1,7 +1,7 @@
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
 import { Popover, PopoverTrigger } from '@/ui/popover';
-import { buttonCls } from '@/ui/style';
+import { buttonCls, checkboxInputCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
@@ -96,7 +96,7 @@ export function TrainerListElement({
                 <label className="flex min-h-9 items-center gap-2 whitespace-nowrap text-sm text-neutral-12">
                   <input
                     type="checkbox"
-                    className="focus:ring-accent-9 size-4 bg-accent-2 text-accent-10 border-accent-9 border-2 rounded-sm"
+                    className={checkboxInputCls()}
                     checked={offersLessons}
                     onChange={(event) =>
                       update(trainerIndex, {

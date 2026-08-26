@@ -14,9 +14,12 @@ export const DropdownMenuTrigger = Object.assign(DropdownMenuPrimitive.Trigger, 
     return (
       <DropdownMenuPrimitive.Trigger
         {...props}
-        className={cn('absolute right-1 top-2', className)}
+        className={cn(
+          'absolute right-1 top-2 text-neutral-10 hover:text-neutral-11 data-[state=open]:text-neutral-12',
+          className,
+        )}
       >
-        <MoreVertical className="text-neutral-10 w-6 group:data-[state=open]:text-neutral-12 group-hover:text-neutral-11" />
+        <MoreVertical className="w-6" />
       </DropdownMenuPrimitive.Trigger>
     );
   },
@@ -118,4 +121,4 @@ export const DropdownMenuButton = React.forwardRef<
     {children}
   </DropdownMenuPrimitive.Item>
 ));
-DropdownMenuButton.displayName = DropdownMenuPrimitive.Trigger.displayName;
+DropdownMenuButton.displayName = DropdownMenuPrimitive.Item.displayName;

@@ -15,6 +15,7 @@ import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
+import { badgeCls } from '@/ui/style';
 import React from 'react';
 import { type Control, useController, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -236,7 +237,7 @@ function AnnouncementAudienceEditor({
       <div>
         <AnnouncementAudienceBadges audiences={audiences} />
         {showWarning && (
-          <div className="inline-flex items-center rounded-full border border-neutral-7 bg-neutral-2 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-neutral-11" >
+          <div className={badgeCls()}>
             Viditelný pro všechny
           </div>
         )}

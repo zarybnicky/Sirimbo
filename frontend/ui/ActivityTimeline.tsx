@@ -13,7 +13,7 @@ import { formatCstsCategoryName } from '@/ui/csts';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/EventAttendance';
 import { capitalize, longDayFormatter } from '@/ui/format';
-import { buttonCls, cardCls } from '@/ui/style';
+import { buttonCls, buttonGroupCls, cardCls } from '@/ui/style';
 import { add, subtract } from 'date-arithmetic';
 import { Cake } from 'lucide-react';
 import Link from 'next/link';
@@ -132,7 +132,7 @@ export function ActivityTimeline({
   return (
     <section className="flex flex-col">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="inline-flex rounded-xl shadow-md [&_button]:rounded-none [&_button]:shadow-none [&_button:first-child]:rounded-l-xl [&_button:last-child]:rounded-r-xl">
+        <div className={buttonGroupCls()}>
           {[
             ['future', 'Budoucí'],
             ['past', 'Minulé'],
@@ -385,7 +385,7 @@ function AttendanceSummary({
       <div className="inline-flex items-center gap-1 whitespace-nowrap text-neutral-11">
         <AttendedIcon className="size-4 text-green-11" />
         <span>{counts.ATTENDED}</span>
-        <NotExcusedIcon className="size-4 text-[#b42346] dark:text-[#ffb4c2]" />
+        <NotExcusedIcon className="size-4 text-danger-11" />
         <span>{counts.NOT_EXCUSED}</span>
         <span>/ {items.length}</span>
       </div>

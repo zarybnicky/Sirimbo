@@ -137,7 +137,7 @@ export function Hero({
             href={x.href}
             className="group relative block w-full shrink-0 snap-start overflow-hidden"
           >
-            <div className="absolute inset-x-0 bottom-0 z-10 bg-red-black-red p-4 text-white group-hover:underline text-2xl lg:text-3xl text-center font-bold">
+            <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-r from-accent-9/80 via-black/80 to-accent-9/80 p-4 text-center text-2xl font-bold text-white group-hover:underline lg:text-3xl">
               {x.name}
             </div>
             <div className="h-[60vh]">

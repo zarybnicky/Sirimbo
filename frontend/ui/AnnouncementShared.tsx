@@ -7,8 +7,8 @@ import {
 import { type Action, useActions } from '@/lib/actions';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
-import { cn } from '@/lib/cn';
 import React from 'react';
+import { badgeCls } from '@/ui/style';
 
 const STATUS_LABEL: Partial<Record<AnnouncementStatus, string>> = {
   DRAFT: 'Koncept',
@@ -28,10 +28,7 @@ export function AnnouncementStatusBadge({
 
   return (
     <span
-      className={cn(
-        'inline-flex rounded-full bg-accent-3 px-2 py-0.5 text-[11px] tracking-tight uppercase text-accent-11',
-        className,
-      )}
+      className={badgeCls({ variant: 'accent', className })}
     >
       {label}
     </span>

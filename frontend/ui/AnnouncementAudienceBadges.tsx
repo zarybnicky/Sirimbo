@@ -2,6 +2,7 @@ import { AnnouncementAudienceRole } from '@/graphql';
 import { cn } from '@/lib/cn';
 import { isTruthy } from '@/lib/truthyFilter';
 import { AnnouncementAudienceFragment } from '@/graphql/Announcement';
+import { badgeCls } from '@/ui/style';
 
 const ROLE_LABEL: Record<AnnouncementAudienceRole, string> = {
   MEMBER: 'Člen',
@@ -43,7 +44,7 @@ export function AnnouncementAudienceBadges({ audiences, className }: Readonly<Pr
           {derivedRoles.map((role) => (
             <span
               key={role}
-              className="inline-flex items-center rounded-full border border-neutral-7 bg-neutral-2 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-neutral-11"
+              className={badgeCls()}
             >
               {ROLE_LABEL[role]}
             </span>

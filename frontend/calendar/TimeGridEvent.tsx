@@ -210,7 +210,7 @@ function CompetitionTimeGridEvent({
       title={event.title}
       className={cn(
         className,
-        'competition-time-grid-event rbc-event absolute max-h-full min-h-5 overflow-y-auto border border-green-7 bg-green-3 p-2 text-green-12',
+        '@container/competition rbc-event absolute max-h-full min-h-5 overflow-y-auto border border-green-7 bg-green-3 p-2 text-green-12',
       )}
     >
       <CompetitionEventContent

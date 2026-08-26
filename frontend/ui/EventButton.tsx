@@ -140,7 +140,7 @@ function InlineAttendanceStats({ stats: input }: { stats: any; }) {
           title="nezúčastnilo se"
           className={cn(
             'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
-            'bg-[#fbe4e8] text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]',
+            'bg-danger-3 text-danger-11',
           )}
         >
           <X className="size-3 shrink-0" aria-hidden="true" />

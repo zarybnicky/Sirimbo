@@ -49,7 +49,7 @@ export function CohortListElement({
             </PopoverTrigger>
             <PopoverPrimitive.Portal>
               <PopoverPrimitive.Content
-                className="z-40 PopoverContent"
+                className="z-40 max-h-(--radix-popover-content-available-height)"
                 align="end"
                 side="top"
                 sideOffset={5}

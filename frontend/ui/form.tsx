@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/cn';
 import type { FieldError, Path } from 'react-hook-form';
 import { typographyCls } from '@/ui/style';
+import { AlertCircle } from 'lucide-react';
 
 interface FormResultContext {
   onSuccess: () => void;
@@ -30,11 +31,19 @@ export type FieldHelperProps = {
   helperText?: React.ReactNode;
 };
 
+export function FieldErrorIcon() {
+  return (
+    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+      <AlertCircle className="size-5 text-danger-11" aria-hidden="true" />
+    </div>
+  );
+}
+
 export function FieldHelper({ error, helperText }: FieldHelperProps) {
   const parsedHelperText = !error ? helperText : error.message;
   if (!parsedHelperText) return null;
   return (
-    <p className={cn('mt-2 text-sm', error ? 'text-accent-11' : 'text-neutral-10')}>
+    <p className={cn('mt-2 text-sm', error ? 'text-danger-11' : 'text-neutral-10')}>
       {parsedHelperText}
     </p>
   );
@@ -72,7 +81,7 @@ export function FormError({
   }
 
   return (
-    <div className="rounded-lg px-4 py-2 bg-accent-10 text-accent-1 col-full">
+    <div className="col-full rounded-lg bg-danger-9 px-4 py-2 text-white">
       {errorTranslation[error as any] || (
         <>
           <div className="font-bold">

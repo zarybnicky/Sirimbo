@@ -9,8 +9,9 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
 
 import '../style/index.css';
+import 'leaflet/dist/leaflet.css';
 import '../style/leaflet.css';
-import '../style/lite-youtube-embed.css';
+import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { name, config } = await getRequestTenant();

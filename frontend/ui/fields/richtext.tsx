@@ -1,6 +1,5 @@
 import type { EditorProps } from '@/ui/fields/richtext.client';
-import { FieldHelper, FieldLabel } from '@/ui/form';
-import { AlertCircle } from 'lucide-react';
+import { FieldErrorIcon, FieldHelper, FieldLabel } from '@/ui/form';
 import dynamic from 'next/dynamic';
 import React, { type JSX } from 'react';
 import {
@@ -43,12 +42,8 @@ export function RichTextEditor<T extends FieldValues>({
           onBlur={field.onBlur}
           initialState={initialState}
         />
+        {fieldState.error && <FieldErrorIcon />}
       </div>
-      {fieldState.error && (
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <AlertCircle className="size-5 text-accent-7" aria-hidden="true" />
-        </div>
-      )}
       <FieldHelper error={fieldState.error} helperText={helperText} />
     </div>
   );

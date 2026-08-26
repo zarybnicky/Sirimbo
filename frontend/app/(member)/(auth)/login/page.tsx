@@ -1,6 +1,7 @@
 /* eslint-disable import-x/no-unused-modules */
 
 import { LoginForm } from './LoginForm';
+import { cardCls } from '@/ui/style';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="group bg-neutral-1 relative border border-neutral-6 shadow-xs sm:rounded-lg p-3 mb-1">
+    <div className={cardCls()}>
       <LoginForm />
     </div>
   );

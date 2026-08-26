@@ -4,6 +4,7 @@ import { useAuth } from '@/lib/auth';
 import { registerAction } from '@/lib/auth-actions';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
+import { cardCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { redirect } from 'next/navigation';
@@ -29,7 +30,7 @@ export function RegistrationForm() {
   };
 
   return (
-    <div className="group bg-neutral-1 relative border border-neutral-6 shadow-xs sm:rounded-lg p-3 mb-1">
+    <div className={cardCls()}>
       <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit)}>
         <h4 className="text-2xl">Přihláška nového člena</h4>
 

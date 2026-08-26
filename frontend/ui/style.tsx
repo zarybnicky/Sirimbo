@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants';
 
 export const buttonCls = tv({
-  base: 'relative appearance-none',
+  base: 'relative appearance-none focus:outline-hidden focus-visible:ring-3 focus-visible:ring-accent-10',
   variants: {
     display: {
       none: ' ',
@@ -40,6 +40,22 @@ export const cardCls = tv({
 
 export const buttonGroupCls = tv({
   base: 'inline-flex rounded-xl shadow-md [&_button]:rounded-none [&_button]:shadow-none [&_button:first-child]:rounded-l-xl [&_button:last-child]:rounded-r-xl',
+});
+
+export const badgeCls = tv({
+  base: 'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] uppercase',
+  variants: {
+    variant: {
+      neutral:
+        'border border-neutral-7 bg-neutral-2 font-medium tracking-wide text-neutral-11',
+      accent: 'bg-accent-3 tracking-tight text-accent-11',
+    },
+  },
+  defaultVariants: { variant: 'neutral' },
+});
+
+export const checkboxInputCls = tv({
+  base: 'size-4 rounded-sm border-2 border-accent-9 bg-accent-2 text-accent-10 checked:border-transparent checked:bg-accent-10 focus:ring-accent-9',
 });
 
 export const typographyCls = tv({

@@ -183,7 +183,8 @@ export function CampSchedule({
       )}
       <div
         className={cn(
-          'min-w-0 max-w-full flex flex-col items-stretch camp',
+          'min-w-0 max-w-full flex flex-col items-stretch',
+          '[&_.rbc-time-view]:min-h-fit [&_.rbc-time-view]:overflow-x-visible',
           isDragging ? 'rbc-is-dragging' : '',
         )}
       >

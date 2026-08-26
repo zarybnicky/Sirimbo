@@ -108,7 +108,7 @@ function AnimatedCheck() {
       viewBox="0 0 130.2 130.2"
     >
       <circle
-        className="animated circle"
+        className="animate-dash [stroke-dasharray:1000] [stroke-dashoffset:0]"
         fill="none"
         stroke="currentColor"
         strokeWidth="6"
@@ -118,7 +118,7 @@ function AnimatedCheck() {
         r="62.1"
       />
       <polyline
-        className="animated check"
+        className="animate-dash-check [stroke-dasharray:1000] [stroke-dashoffset:-100]"
         fill="none"
         stroke="currentColor"
         strokeWidth="6"

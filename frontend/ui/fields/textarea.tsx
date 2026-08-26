@@ -1,5 +1,4 @@
-import { FieldHelper, type FieldHelperProps, FieldLabel } from '@/ui/form';
-import { AlertCircle as ReportProblemIcon } from 'lucide-react';
+import { FieldErrorIcon, FieldHelper, type FieldHelperProps, FieldLabel } from '@/ui/form';
 import React from 'react';
 import {
   type Control,
@@ -40,11 +39,7 @@ function TextArea({
           {...props}
           className="bg-accent-3 text-accent-12 shadow-xs focus:ring-accent-7 focus:border-accent-8 block w-full sm:text-sm border-accent-7 rounded-md"
         />
-        {error && (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ReportProblemIcon className="size-5 text-accent-7" aria-hidden="true" />
-          </div>
-        )}
+        {error && <FieldErrorIcon />}
       </div>
       <FieldHelper error={error} helperText={helperText} />
     </div>

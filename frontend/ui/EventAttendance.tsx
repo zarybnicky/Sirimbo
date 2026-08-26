@@ -62,7 +62,7 @@ export function EventAttendance({ id }: { id: string }) {
               <div className="rounded-full flex gap-2 items-center bg-green-3 px-3 py-2 tabular-nums text-sm font-medium text-green-11">
                 {attendedCount}
               </div>
-              <div className="rounded-full flex gap-2 items-center bg-[#fbe4e8] px-3 py-2 tabular-nums text-sm font-medium text-[#b42346] dark:bg-[#471823] dark:text-[#ffb4c2]">
+              <div className="flex items-center gap-2 rounded-full bg-danger-3 px-3 py-2 text-sm font-medium tabular-nums text-danger-11">
                 {notAttendedCount}
               </div>
             </th>
@@ -155,7 +155,7 @@ function AttendanceItem({
               'border-green-10 bg-green-9 hover:bg-green-8 text-white',
             attendance.status === key &&
               key === 'NOT_EXCUSED' &&
-              'border-[#b42346] bg-[#d94b67] hover:bg-[#e05570] text-white',
+              'border-danger-11 bg-danger-9 text-white hover:bg-danger-10',
           )}
         >
           {React.createElement(label)}
