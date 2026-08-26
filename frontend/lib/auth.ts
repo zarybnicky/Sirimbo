@@ -103,10 +103,7 @@ export const tenantIdAtom = atom<string, [string], void>(
       });
     }
 
-    for (const cls of document.body.classList) {
-      if (cls.includes('tenant-')) document.body.classList.remove(cls);
-    }
-    document.body.classList.add(`tenant-${tenantId}`);
+    document.documentElement.dataset.tenant = tenantId;
   },
 );
 

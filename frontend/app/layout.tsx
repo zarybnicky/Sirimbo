@@ -1,4 +1,4 @@
-/* eslint-disable import-x/no-unused-modules, tailwindcss/no-custom-classname */
+/* eslint-disable import-x/no-unused-modules */
 
 import { getRequestAuth, getRequestTenant } from '@/lib/server/tenant';
 import { UI_COOKIE } from '@/lib/session-cookies';
@@ -106,8 +106,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   ]);
 
   return (
-    <html lang="cs" className={`tenant-${tenant.id}`} suppressHydrationWarning>
-      <body className={`tenant-${tenant.id}`} suppressHydrationWarning>
+    <html lang="cs" data-tenant={tenant.id} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <NuqsAdapter>
           <Providers
             initialAuth={auth}

@@ -12,6 +12,11 @@ export default defineConfig([
   importPlugin.flatConfigs.recommended,
 
   {
+    parserOptions: {
+      projectService: true,
+      tsconfigRootDir: import.meta.dirname,
+    },
+
     rules: {
       'no-extra-semi': 'off',
       'no-irregular-whitespace': 'off',
