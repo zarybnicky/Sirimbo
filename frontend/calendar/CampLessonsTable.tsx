@@ -183,7 +183,7 @@ export function CampLessonsTable({ id }: { id: string }) {
         key: trainerId,
         name: trainer,
         width: 120,
-        cellClass: '!p-0',
+        cellClass: 'p-0!',
         renderHeaderCell: () => (
           <div className="min-w-0 grow text-center font-medium truncate" title={trainer}>
             {trainer}
@@ -230,7 +230,7 @@ export function CampLessonsTable({ id }: { id: string }) {
         key: 'total',
         name: 'Celkem',
         width: 120,
-        cellClass: '!p-0',
+        cellClass: 'p-0!',
         renderCell: ({ row }) => {
           const cells = [...row.cells.values()];
           const assigned = cells.reduce((sum, cell) => sum + cell.lessons.length, 0);

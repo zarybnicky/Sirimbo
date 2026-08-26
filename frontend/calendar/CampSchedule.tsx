@@ -83,11 +83,7 @@ export function CampSchedule({
       }
     }
     return [...trainers].map(([id, name]) => ({ id, name }));
-  }, [
-    registrations,
-    query.data?.event?.trainersList,
-    query.data?.scheduledLessons,
-  ]);
+  }, [registrations, query.data?.event?.trainersList, query.data?.scheduledLessons]);
   const dateRange = React.useMemo(
     () => ({
       since: startOf(new Date(since), 'day'),
@@ -96,11 +92,14 @@ export function CampSchedule({
     [since, until],
   );
   const today = new Date();
-  const initialDate = today >= dateRange.since && today <= dateRange.until ? today : dateRange.since;
+  const initialDate =
+    today >= dateRange.since && today <= dateRange.until ? today : dateRange.since;
 
   const scheduleRequest = useAsyncCallback(
     async (subject: ExternalDragSubject, info: InteractionInfo) => {
-      const registration = registrations.find((r) => r.requests.some((x) => x.id === subject.id));
+      const registration = registrations.find((r) =>
+        r.requests.some((x) => x.id === subject.id),
+      );
       const request = registration?.requests.find((x) => x.id === subject.id);
       const trainerPersonId = request?.trainer?.personId;
       if (!registration || !trainerPersonId) throw new Error('Požadavek už neexistuje');
@@ -139,8 +138,7 @@ export function CampSchedule({
     const result = await deleteInstance({ id: instance.id });
     if (result.error) throw result.error;
   });
-  const requestError =
-    query.error || scheduleRequest.error || removeLesson.error;
+  const requestError = query.error || scheduleRequest.error || removeLesson.error;
   const canShowRequests = auth.isTrainerOrAdmin && requestCount > 0;
   const showRequests = requestsOpen && canShowRequests;
 
@@ -171,7 +169,7 @@ export function CampSchedule({
     <div
       className={cn(
         'col-full-width relative max-w-full',
-        showRequests ? 'lg:pr-80' : 'lg:pr-10',
+        showRequests ? 'lg:pr-80' : canShowRequests ? 'lg:pr-10' : '',
       )}
     >
       {draggedLesson && (
@@ -215,7 +213,7 @@ export function CampSchedule({
                 aria-label={showRequests ? 'Skrýt požadavky' : 'Zobrazit požadavky'}
                 aria-expanded={showRequests}
                 aria-controls="lesson-requests-pane"
-                className="absolute right-1 top-1 z-30 rounded p-1.5 text-neutral-11 hover:bg-neutral-4 hover:text-neutral-12"
+                className="absolute right-1 top-1 z-30 rounded-sm p-1.5 text-neutral-11 hover:bg-neutral-4 hover:text-neutral-12"
                 onClick={() => setRequestsOpen(!showRequests)}
               >
                 {showRequests ? (
@@ -290,8 +288,8 @@ function progressStyle(scheduled: number, requested: number): React.CSSPropertie
   }
   if (scheduled === requested) {
     return {
-      backgroundColor: 'hsl(var(--neutral-1))',
-      color: 'hsl(var(--neutral-12))',
+      backgroundColor: 'var(--color-neutral-1)',
+      color: 'var(--color-neutral-12)',
     };
   }
 
@@ -321,7 +319,9 @@ function LessonRequests({
     .map((registration) => {
       const scheduledByTrainer = scheduledTrainers(registration, scheduledLessons);
       const requestTrainerIds = new Set(
-        registration.requests.flatMap(({ trainer }) => trainer?.personId ? [trainer.personId] : []),
+        registration.requests.flatMap(({ trainer }) =>
+          trainer?.personId ? [trainer.personId] : [],
+        ),
       );
       const extras = [...scheduledByTrainer.entries()].filter(
         ([id]) => !requestTrainerIds.has(id),
@@ -330,8 +330,7 @@ function LessonRequests({
     })
     .filter(
       ({ registration, scheduledByTrainer }) =>
-        registration.requests.length > 0 ||
-        scheduledByTrainer.size > 0,
+        registration.requests.length > 0 || scheduledByTrainer.size > 0,
     );
   const requests = registrationRows.flatMap(({ registration }) => registration.requests);
   const lessonCount = requests.reduce((sum, x) => sum + x.lessonCount, 0);
@@ -360,7 +359,10 @@ function LessonRequests({
 
       <div className="grid gap-2 p-2">
         {registrationRows.map(({ registration, scheduledByTrainer, extras }) => {
-          const requested = registration.requests.reduce((sum, x) => sum + x.lessonCount, 0);
+          const requested = registration.requests.reduce(
+            (sum, x) => sum + x.lessonCount,
+            0,
+          );
           const scheduled = [...scheduledByTrainer.values()].reduce(
             (sum, item) => sum + item.count,
             0,
@@ -372,7 +374,7 @@ function LessonRequests({
             >
               <summary className="flex min-w-0 cursor-pointer list-none items-center gap-2 px-3 py-2 text-neutral-12 [&::-webkit-details-marker]:hidden">
                 <ChevronRight className="size-4 shrink-0 transition-transform group-open:rotate-90 motion-reduce:transition-none" />
-                <span className="min-w-0 grow text-sm break-words">
+                <span className="min-w-0 grow text-sm wrap-break-word">
                   {registration.person?.name || formatCoupleName(registration.couple)}
                 </span>
                 <span
@@ -394,7 +396,7 @@ function LessonRequests({
                       key={request.id}
                       draggable
                       title="Přetáhnout do rozpisu"
-                      className="flex cursor-grab items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-neutral-3 active:cursor-grabbing"
+                      className="flex cursor-grab items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-neutral-3 active:cursor-grabbing"
                       onDragStart={(event) => {
                         const subject = {
                           id: request.id,
@@ -434,7 +436,7 @@ function LessonRequests({
                 {extras.map(([trainerPersonId, extra]) => (
                   <div
                     key={trainerPersonId}
-                    className="flex items-center gap-2 rounded px-2 py-1.5 text-sm"
+                    className="flex items-center gap-2 rounded-sm px-2 py-1.5 text-sm"
                   >
                     <span className="size-4 shrink-0" />
                     <span className="min-w-0 grow truncate">{extra.name}</span>

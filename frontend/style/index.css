@@ -1,101 +1,276 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss" source(none);
+@import "react-data-grid/lib/styles.css" layer(components);
+@import "react-toastify/dist/ReactToastify.css" layer(components);
+@import "./calendar.css" layer(components);
 
-  [data-tenant='1'] {
-    --accent-1: 0deg 100% 99%;
-    --accent-2: 7deg 100% 98%;
-    --accent-3: 5deg 100% 95%;
-    --accent-4: 6deg 100% 92%;
-    --accent-5: 5deg 100% 89%;
-    --accent-6: 4deg 100% 85%;
-    --accent-7: 3deg 98% 81%;
-    --accent-8: 3deg 88% 74%;
-    --accent-9: 352deg 86% 51%;
-    --accent-10: 350deg 100% 44%;
-    --accent-11: 350deg 100% 43%;
-    --accent-12: 352deg 89% 22%;
+@source "../app";
+@source "../calendar";
+@source "../lib";
+@source "../starlet";
+@source "../tenant";
+@source "../ui";
+
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-*: initial;
+  --color-black: #000;
+  --color-white: #fff;
+
+  --color-neutral-0: #fff;
+  --color-neutral-1: hsl(0deg 0% 99%);
+  --color-neutral-2: hsl(0deg 0% 97.3%);
+  --color-neutral-3: hsl(0deg 0% 95.1%);
+  --color-neutral-4: hsl(0deg 0% 93%);
+  --color-neutral-5: hsl(0deg 0% 90.9%);
+  --color-neutral-6: hsl(0deg 0% 88.7%);
+  --color-neutral-7: hsl(0deg 0% 85.8%);
+  --color-neutral-8: hsl(0deg 0% 78%);
+  --color-neutral-9: hsl(0deg 0% 56.1%);
+  --color-neutral-10: hsl(0deg 0% 52.3%);
+  --color-neutral-11: hsl(0deg 0% 43.5%);
+  --color-neutral-12: hsl(0deg 0% 9%);
+
+  --color-accent-0: var(--color-neutral-0);
+  --color-accent-1: var(--color-neutral-1);
+  --color-accent-2: var(--color-neutral-2);
+  --color-accent-3: var(--color-neutral-3);
+  --color-accent-4: var(--color-neutral-4);
+  --color-accent-5: var(--color-neutral-5);
+  --color-accent-6: var(--color-neutral-6);
+  --color-accent-7: var(--color-neutral-7);
+  --color-accent-8: var(--color-neutral-8);
+  --color-accent-9: var(--color-neutral-9);
+  --color-accent-10: var(--color-neutral-10);
+  --color-accent-11: var(--color-neutral-11);
+  --color-accent-12: var(--color-neutral-12);
+
+  --color-green-1: hsl(136deg 50% 98.9%);
+  --color-green-2: hsl(138deg 62.5% 96.9%);
+  --color-green-3: hsl(139deg 55.2% 94.5%);
+  --color-green-4: hsl(140deg 48.7% 91%);
+  --color-green-5: hsl(141deg 43.7% 86%);
+  --color-green-6: hsl(143deg 40.3% 79%);
+  --color-green-7: hsl(146deg 38.5% 69%);
+  --color-green-8: hsl(151deg 40.2% 54.1%);
+  --color-green-9: hsl(151deg 55% 41.5%);
+  --color-green-10: hsl(152deg 57.5% 37.6%);
+  --color-green-11: hsl(153deg 67% 28.5%);
+  --color-green-12: hsl(155deg 40% 14%);
+
+  --animate-slideDownAndFade: slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slideLeftAndFade: slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slideUpAndFade: slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slideRightAndFade: slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-overlayShow: overlayShow 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-overlayHide: overlayHide 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-contentShow: contentShow 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-contentHide: contentHide 350ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  @keyframes slideDownAndFade {
+    from { opacity: 0; transform: translateY(-2px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  @media (prefers-color-scheme: dark) {
-    [data-tenant='1'] {
-      --accent-1: 0deg 26% 7%;
-      --accent-2: 4deg 32% 10%;
-      --accent-3: 359deg 66% 15%;
-      --accent-4: 352deg 100% 17%;
-      --accent-5: 352deg 93% 21%;
-      --accent-6: 356deg 70% 28%;
-      --accent-7: 358deg 59% 37%;
-      --accent-8: 357deg 58% 48%;
-      --accent-9: 352deg 86% 51%;
-      --accent-10: 358deg 56% 51%;
-      --accent-11: 3deg 100% 77%;
-      --accent-12: 5deg 100% 90%;
-    }
+
+  @keyframes slideLeftAndFade {
+    from { opacity: 0; transform: translateX(2px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideUpAndFade {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRightAndFade {
+    from { opacity: 0; transform: translateX(-2px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes overlayShow {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes overlayHide {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes contentShow {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes contentHide {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.96); }
+  }
+}
+
+@layer theme {
+  [data-tenant='1'] {
+    --color-accent-1: hsl(0deg 100% 99%);
+    --color-accent-2: hsl(7deg 100% 98%);
+    --color-accent-3: hsl(5deg 100% 95%);
+    --color-accent-4: hsl(6deg 100% 92%);
+    --color-accent-5: hsl(5deg 100% 89%);
+    --color-accent-6: hsl(4deg 100% 85%);
+    --color-accent-7: hsl(3deg 98% 81%);
+    --color-accent-8: hsl(3deg 88% 74%);
+    --color-accent-9: hsl(352deg 86% 51%);
+    --color-accent-10: hsl(350deg 100% 44%);
+    --color-accent-11: hsl(350deg 100% 43%);
+    --color-accent-12: hsl(352deg 89% 22%);
   }
 
   [data-tenant='2'],
   [data-tenant='4'] {
-    --accent-1: 50deg 20% 99.1%;
-    --accent-2: 47deg 52.9% 96.7%;
-    --accent-3: 46deg 38.2% 93.7%;
-    --accent-4: 44deg 32.7% 90.1%;
-    --accent-5: 43deg 29.9% 85.7%;
-    --accent-6: 41deg 28.3% 79.8%;
-    --accent-7: 39deg 27.6% 71.9%;
-    --accent-8: 36deg 27.2% 61.8%;
-    --accent-9: 36deg 20% 49.5%;
-    --accent-10: 36deg 19.8% 45.7%;
-    --accent-11: 36deg 20% 39%;
-    --accent-12: 36deg 16% 20%;
-  }
-  @media (prefers-color-scheme: dark) {
-    [data-tenant='2'],
-    [data-tenant='4'] {
-      --accent-1: 44deg 9% 8.3%;
-      --accent-2: 43deg 14.3% 9.6%;
-      --accent-3: 42deg 15.5% 13%;
-      --accent-4: 41deg 16.4% 15.6%;
-      --accent-5: 41deg 16.9% 17.8%;
-      --accent-6: 40deg 17.6% 20.8%;
-      --accent-7: 38deg 18.5% 26.4%;
-      --accent-8: 36deg 19.6% 35.1%;
-      --accent-9: 36deg 20% 49.5%;
-      --accent-10: 36deg 22.3% 54.5%;
-      --accent-11: 35deg 30% 64%;
-      --accent-12: 49deg 52% 93.8%;
-    }
+    --color-accent-1: hsl(50deg 20% 99.1%);
+    --color-accent-2: hsl(47deg 52.9% 96.7%);
+    --color-accent-3: hsl(46deg 38.2% 93.7%);
+    --color-accent-4: hsl(44deg 32.7% 90.1%);
+    --color-accent-5: hsl(43deg 29.9% 85.7%);
+    --color-accent-6: hsl(41deg 28.3% 79.8%);
+    --color-accent-7: hsl(39deg 27.6% 71.9%);
+    --color-accent-8: hsl(36deg 27.2% 61.8%);
+    --color-accent-9: hsl(36deg 20% 49.5%);
+    --color-accent-10: hsl(36deg 19.8% 45.7%);
+    --color-accent-11: hsl(36deg 20% 39%);
+    --color-accent-12: hsl(36deg 16% 20%);
   }
 
   [data-tenant='3'] {
-    --accent-1: 45deg 67% 99%;
-    --accent-2: 46deg 100% 96%;
-    --accent-3: 47deg 100% 88%;
-    --accent-4: 45deg 100% 83%;
-    --accent-5: 43deg 100% 77%;
-    --accent-6: 39deg 100% 73%;
-    --accent-7: 39deg 81% 68%;
-    --accent-8: 40deg 70% 56%;
-    --accent-9: 40deg 73% 58%;
-    --accent-10: 40deg 67% 53%;
-    --accent-11: 41deg 100% 31%;
-    --accent-12: 38deg 38% 20%;
+    --color-accent-1: hsl(45deg 67% 99%);
+    --color-accent-2: hsl(46deg 100% 96%);
+    --color-accent-3: hsl(47deg 100% 88%);
+    --color-accent-4: hsl(45deg 100% 83%);
+    --color-accent-5: hsl(43deg 100% 77%);
+    --color-accent-6: hsl(39deg 100% 73%);
+    --color-accent-7: hsl(39deg 81% 68%);
+    --color-accent-8: hsl(40deg 70% 56%);
+    --color-accent-9: hsl(40deg 73% 58%);
+    --color-accent-10: hsl(40deg 67% 53%);
+    --color-accent-11: hsl(41deg 100% 31%);
+    --color-accent-12: hsl(38deg 38% 20%);
   }
+
   @media (prefers-color-scheme: dark) {
+    :root {
+      --color-neutral-0: #000;
+      --color-neutral-1: hsl(0deg 0% 8.5%);
+      --color-neutral-2: hsl(0deg 0% 11%);
+      --color-neutral-3: hsl(0deg 0% 13.6%);
+      --color-neutral-4: hsl(0deg 0% 15.8%);
+      --color-neutral-5: hsl(0deg 0% 17.9%);
+      --color-neutral-6: hsl(0deg 0% 20.5%);
+      --color-neutral-7: hsl(0deg 0% 24.3%);
+      --color-neutral-8: hsl(0deg 0% 31.2%);
+      --color-neutral-9: hsl(0deg 0% 43.9%);
+      --color-neutral-10: hsl(0deg 0% 49.4%);
+      --color-neutral-11: hsl(0deg 0% 62.8%);
+      --color-neutral-12: hsl(0deg 0% 93%);
+
+      --color-green-1: hsl(146deg 30% 7.4%);
+      --color-green-2: hsl(155deg 44.2% 8.4%);
+      --color-green-3: hsl(155deg 46.7% 10.9%);
+      --color-green-4: hsl(154deg 48.4% 12.9%);
+      --color-green-5: hsl(154deg 49.7% 14.9%);
+      --color-green-6: hsl(154deg 50.9% 17.6%);
+      --color-green-7: hsl(153deg 51.8% 21.8%);
+      --color-green-8: hsl(151deg 51.7% 28.4%);
+      --color-green-9: hsl(151deg 55% 41.5%);
+      --color-green-10: hsl(151deg 49.3% 46.5%);
+      --color-green-11: hsl(151deg 50% 53.2%);
+      --color-green-12: hsl(137deg 72% 94%);
+    }
+
+    [data-tenant='1'] {
+      --color-accent-1: hsl(0deg 26% 7%);
+      --color-accent-2: hsl(4deg 32% 10%);
+      --color-accent-3: hsl(359deg 66% 15%);
+      --color-accent-4: hsl(352deg 100% 17%);
+      --color-accent-5: hsl(352deg 93% 21%);
+      --color-accent-6: hsl(356deg 70% 28%);
+      --color-accent-7: hsl(358deg 59% 37%);
+      --color-accent-8: hsl(357deg 58% 48%);
+      --color-accent-9: hsl(352deg 86% 51%);
+      --color-accent-10: hsl(358deg 56% 51%);
+      --color-accent-11: hsl(3deg 100% 77%);
+      --color-accent-12: hsl(5deg 100% 90%);
+    }
+
+    [data-tenant='2'],
+    [data-tenant='4'] {
+      --color-accent-1: hsl(44deg 9% 8.3%);
+      --color-accent-2: hsl(43deg 14.3% 9.6%);
+      --color-accent-3: hsl(42deg 15.5% 13%);
+      --color-accent-4: hsl(41deg 16.4% 15.6%);
+      --color-accent-5: hsl(41deg 16.9% 17.8%);
+      --color-accent-6: hsl(40deg 17.6% 20.8%);
+      --color-accent-7: hsl(38deg 18.5% 26.4%);
+      --color-accent-8: hsl(36deg 19.6% 35.1%);
+      --color-accent-9: hsl(36deg 20% 49.5%);
+      --color-accent-10: hsl(36deg 22.3% 54.5%);
+      --color-accent-11: hsl(35deg 30% 64%);
+      --color-accent-12: hsl(49deg 52% 93.8%);
+    }
+
     [data-tenant='3'] {
-      --accent-1: 43deg 23% 6%;
-      --accent-2: 38deg 24% 9%;
-      --accent-3: 39deg 48% 11%;
-      --accent-4: 41deg 87% 12%;
-      --accent-5: 41deg 94% 14%;
-      --accent-6: 41deg 77% 19%;
-      --accent-7: 40deg 69% 24%;
-      --accent-8: 41deg 75% 30%;
-      --accent-9: 40deg 73% 58%;
-      --accent-10: 40deg 67% 53%;
-      --accent-11: 39deg 78% 61%;
-      --accent-12: 38deg 78% 85%;
+      --color-accent-1: hsl(43deg 23% 6%);
+      --color-accent-2: hsl(38deg 24% 9%);
+      --color-accent-3: hsl(39deg 48% 11%);
+      --color-accent-4: hsl(41deg 87% 12%);
+      --color-accent-5: hsl(41deg 94% 14%);
+      --color-accent-6: hsl(41deg 77% 19%);
+      --color-accent-7: hsl(40deg 69% 24%);
+      --color-accent-8: hsl(41deg 75% 30%);
+      --color-accent-9: hsl(40deg 73% 58%);
+      --color-accent-10: hsl(40deg 67% 53%);
+      --color-accent-11: hsl(39deg 78% 61%);
+      --color-accent-12: hsl(38deg 78% 85%);
     }
   }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: .5rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility col-full {
+  grid-column: 1 / -1;
+}
+
+@utility col-content {
+  grid-column: content;
+}
+
+@utility col-feature {
+  grid-column: feature;
+}
+
+@utility col-popout {
+  grid-column: popout;
+}
+
+@utility col-full-width {
+  grid-column: full;
+}
+
+@utility bg-red-black-red {
+  background-image: linear-gradient(
+    90deg,
+    rgb(216 28 58 / 80%) 0%,
+    rgb(0 0 0 / 80%) 50%,
+    rgb(216 28 58 / 80%) 100%
+  );
+}
 
 @layer base {
   .content > * {
@@ -116,99 +291,42 @@
     min-height: 100%;
     max-width: 100vw;
   }
-
-  :root {
-    --green-1: 136deg 50% 98.9%;
-    --green-2: 138deg 62.5% 96.9%;
-    --green-3: 139deg 55.2% 94.5%;
-    --green-4: 140deg 48.7% 91%;
-    --green-5: 141deg 43.7% 86%;
-    --green-6: 143deg 40.3% 79%;
-    --green-7: 146deg 38.5% 69%;
-    --green-8: 151deg 40.2% 54.1%;
-    --green-9: 151deg 55% 41.5%;
-    --green-10: 152deg 57.5% 37.6%;
-    --green-11: 153deg 67% 28.5%;
-    --green-12: 155deg 40% 14%;
-
-    --neutral-1: 0deg 0% 99%;
-    --neutral-2: 0deg 0% 97.3%;
-    --neutral-3: 0deg 0% 95.1%;
-    --neutral-4: 0deg 0% 93%;
-    --neutral-5: 0deg 0% 90.9%;
-    --neutral-6: 0deg 0% 88.7%;
-    --neutral-7: 0deg 0% 85.8%;
-    --neutral-8: 0deg 0% 78%;
-    --neutral-9: 0deg 0% 56.1%;
-    --neutral-10: 0deg 0% 52.3%;
-    --neutral-11: 0deg 0% 43.5%;
-    --neutral-12: 0deg 0% 9%;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --green-1: 146deg 30% 7.4%;
-      --green-2: 155deg 44.2% 8.4%;
-      --green-3: 155deg 46.7% 10.9%;
-      --green-4: 154deg 48.4% 12.9%;
-      --green-5: 154deg 49.7% 14.9%;
-      --green-6: 154deg 50.9% 17.6%;
-      --green-7: 153deg 51.8% 21.8%;
-      --green-8: 151deg 51.7% 28.4%;
-      --green-9: 151deg 55% 41.5%;
-      --green-10: 151deg 49.3% 46.5%;
-      --green-11: 151deg 50% 53.2%;
-      --green-12: 137deg 72% 94%;
-
-      --neutral-1: 0deg 0% 8.5%;
-      --neutral-2: 0deg 0% 11%;
-      --neutral-3: 0deg 0% 13.6%;
-      --neutral-4: 0deg 0% 15.8%;
-      --neutral-5: 0deg 0% 17.9%;
-      --neutral-6: 0deg 0% 20.5%;
-      --neutral-7: 0deg 0% 24.3%;
-      --neutral-8: 0deg 0% 31.2%;
-      --neutral-9: 0deg 0% 43.9%;
-      --neutral-10: 0deg 0% 49.4%;
-      --neutral-11: 0deg 0% 62.8%;
-      --neutral-12: 0deg 0% 93%;
-    }
-  }
 }
 
 @layer components {
   .prose-accent {
-    --tw-prose-body: hsl(var(--accent-12) / 1);
-    --tw-prose-headings: hsl(var(--accent-12) / 1);
-    --tw-prose-lead: hsl(var(--accent-11) / 1);
-    --tw-prose-links: hsl(var(--accent-12) / 1);
-    --tw-prose-bold: hsl(var(--accent-12) / 1);
-    --tw-prose-counters: hsl(var(--accent-11) / 1);
-    --tw-prose-bullets: hsl(var(--accent-7) / 1);
-    --tw-prose-hr: hsl(var(--accent-6) / 1);
-    --tw-prose-quotes: hsl(var(--accent-12) / 1);
-    --tw-prose-quote-borders: hsl(var(--accent-6) / 1);
-    --tw-prose-captions: hsl(var(--accent-11) / 1);
-    --tw-prose-code: hsl(var(--accent-12) / 1);
-    --tw-prose-pre-code: hsl(var(--accent-12) / 1);
-    --tw-prose-pre-bg: hsl(var(--accent-3) / 1);
-    --tw-prose-th-borders: hsl(var(--accent-7) / 1);
-    --tw-prose-td-borders: hsl(var(--accent-6) / 1);
-    --tw-prose-invert-body: hsl(var(--accent-12) / 1);
-    --tw-prose-invert-headings: hsl(var(--accent-12) / 1);
-    --tw-prose-invert-lead: hsl(var(--accent-11) / 1);
-    --tw-prose-invert-links: hsl(var(--accent-12) / 1);
-    --tw-prose-invert-bold: hsl(var(--accent-12) / 1);
-    --tw-prose-invert-counters: hsl(var(--accent-11) / 1);
-    --tw-prose-invert-bullets: hsl(var(--accent-7) / 1);
-    --tw-prose-invert-hr: hsl(var(--accent-6) / 1);
-    --tw-prose-invert-quotes: hsl(var(--accent-12) / 1);
-    --tw-prose-invert-quote-borders: hsl(var(--accent-6) / 1);
-    --tw-prose-invert-captions: hsl(var(--accent-11) / 1);
-    --tw-prose-invert-code: hsl(var(--accent-12) / 1);
-    --tw-prose-invert-pre-code: hsl(var(--accent-12) / 1);
-    --tw-prose-invert-pre-bg: hsl(var(--accent-3) / 1);
-    --tw-prose-invert-th-borders: hsl(var(--accent-7) / 1);
-    --tw-prose-invert-td-borders: hsl(var(--accent-6) / 1);
+    --tw-prose-body: var(--color-accent-12);
+    --tw-prose-headings: var(--color-accent-12);
+    --tw-prose-lead: var(--color-accent-11);
+    --tw-prose-links: var(--color-accent-12);
+    --tw-prose-bold: var(--color-accent-12);
+    --tw-prose-counters: var(--color-accent-11);
+    --tw-prose-bullets: var(--color-accent-7);
+    --tw-prose-hr: var(--color-accent-6);
+    --tw-prose-quotes: var(--color-accent-12);
+    --tw-prose-quote-borders: var(--color-accent-6);
+    --tw-prose-captions: var(--color-accent-11);
+    --tw-prose-code: var(--color-accent-12);
+    --tw-prose-pre-code: var(--color-accent-12);
+    --tw-prose-pre-bg: var(--color-accent-3);
+    --tw-prose-th-borders: var(--color-accent-7);
+    --tw-prose-td-borders: var(--color-accent-6);
+    --tw-prose-invert-body: var(--color-accent-12);
+    --tw-prose-invert-headings: var(--color-accent-12);
+    --tw-prose-invert-lead: var(--color-accent-11);
+    --tw-prose-invert-links: var(--color-accent-12);
+    --tw-prose-invert-bold: var(--color-accent-12);
+    --tw-prose-invert-counters: var(--color-accent-11);
+    --tw-prose-invert-bullets: var(--color-accent-7);
+    --tw-prose-invert-hr: var(--color-accent-6);
+    --tw-prose-invert-quotes: var(--color-accent-12);
+    --tw-prose-invert-quote-borders: var(--color-accent-6);
+    --tw-prose-invert-captions: var(--color-accent-11);
+    --tw-prose-invert-code: var(--color-accent-12);
+    --tw-prose-invert-pre-code: var(--color-accent-12);
+    --tw-prose-invert-pre-bg: var(--color-accent-3);
+    --tw-prose-invert-th-borders: var(--color-accent-7);
+    --tw-prose-invert-td-borders: var(--color-accent-6);
   }
 
   .app-sidebar {
@@ -237,7 +355,7 @@
   .content {
     --gap: clamp(0.5rem, 6vw, 3rem);
     --full: minmax(var(--gap), 1fr);
-    --content: min(65ch, 100% - var(--gap) * 2);
+    --content: min(70ch, 100% - var(--gap) * 2);
     --popout: minmax(0, 4rem);
     --feature: minmax(0, 8rem);
 
@@ -313,8 +431,8 @@
 
 @layer utilities {
   .scrollbar {
-    --scrollbar-thumb: hsl(var(--accent-7));
-    --scrollbar-track: hsl(var(--neutral-2));
+    --scrollbar-thumb: var(--color-accent-7);
+    --scrollbar-track: var(--color-neutral-2);
 
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     scrollbar-width: thin;
@@ -337,22 +455,6 @@
     }
   }
 
-  .bg-neutral-0, .bg-accent-0 {
-    background-color: white;
-  }
-  @media (prefers-color-scheme: dark) {
-    .bg-neutral-0, .bg-accent-0 {
-      background-color: black;
-    }
-  }
-  .text-neutral-0, .text-accent-0 {
-    color: white;
-  }
-  @media (prefers-color-scheme: dark) {
-    .text-neutral-0, .text-accent-0 {
-      color: black;
-    }
-  }
 }
 
 .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
@@ -364,8 +466,8 @@
 html,
 body {
   --ck-border-radius: .5rem;
-  --ck-color-base-border: hsl(var(--accent-9));
-  --ck-color-toolbar-border: hsl(var(--accent-9));
+  --ck-color-base-border: var(--color-accent-9);
+  --ck-color-toolbar-border: var(--color-accent-9);
   --ck-z-default: 50;
   --ck-z-panel: calc(var(--ck-z-default) + 999);
 }

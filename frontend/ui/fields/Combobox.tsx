@@ -186,14 +186,14 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
           autoFocus
           placeholder="Vyhledat.."
           className={cn(
-            'flex h-10 pl-10 w-full border-none bg-transparent py-2 text-sm outline-none',
+            'flex h-10 pl-10 w-full border-none bg-transparent py-2 text-sm outline-hidden',
             'disabled:cursor-not-allowed disabled:opacity-50 focus:ring-transparent',
           )}
         />
         {value && (
           <button
             type="button"
-            className="absolute right-0 top-0 h-full py-2 px-3 border-l border-neutral-8 focus:outline-none"
+            className="absolute right-0 top-0 h-full py-2 px-3 border-l border-neutral-8 focus:outline-hidden"
             onClick={() => onChange(null)}
           >
             <XCircle className="size-4 shrink-0 opacity-50" />
@@ -206,7 +206,7 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
         className={cn(
           'scrollbar overflow-auto overscroll-contain',
           'max-h-[calc(var(--radix-popover-content-available-height)-var(--radix-popover-trigger-height)-15px)]',
-          'h-[var(--cmdk-list-height)]',
+          'h-(--cmdk-list-height)',
         )}
       >
         {options.map((item) => (
@@ -215,8 +215,8 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
             key={item.id}
             onSelect={(value) => onChange(value.split(/: (.*)/, 1)[0] || null)}
             className={cn(
-              'relative flex p-2 cursor-default select-none items-center rounded-sm',
-              'text-sm outline-none data-[selected=true]:bg-accent-7 data-[selected=true]:text-accent-12 text-accent-11',
+              'relative flex p-2 cursor-default select-none items-center rounded-xs',
+              'text-sm outline-hidden data-[selected=true]:bg-accent-7 data-[selected=true]:text-accent-12 text-accent-11',
               'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
             )}
           >

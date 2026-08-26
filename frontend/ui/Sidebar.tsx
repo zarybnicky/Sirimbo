@@ -4,10 +4,10 @@ import { cn } from '@/lib/cn';
 import { sidebarWidthAtom } from '@/lib/ui';
 import {
   getHrefs,
-  topMenu,
-  useMemberMenu,
   type MenuLink,
   type MenuStructItem,
+  topMenu,
+  useMemberMenu,
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui';
 import { TenantSelect } from '@/ui/TenantSelect';
@@ -58,7 +58,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           isOpen ? 'translate-x-0 shadow-lg' : '-translate-x-full lg:translate-x-0',
           showTopMenu ? 'lg:hidden' : '',
           'app-sidebar w-3/4 sm:w-1/2 md:w-1/3',
-          'lg:w-[var(--sidebar-width,var(--sidebar-default-width))]',
+          'lg:w-(--sidebar-width,var(--sidebar-default-width))',
           'z-50 lg:z-10 flex-none transition-transform duration-200 ease-in-out',
           'bg-accent-1 text-neutral-12 lg:bg-accent-9 lg:text-white',
           'max-h-screen min-h-screen',
@@ -168,7 +168,7 @@ function SidebarResizeHandle() {
       tabIndex={0}
       className={cn(
         'group absolute inset-y-0 left-full ml-0.5 hidden w-2 lg:block',
-        'touch-none select-none cursor-col-resize outline-none',
+        'touch-none select-none cursor-col-resize outline-hidden',
       )}
       onPointerDown={(event) => {
         if (event.button !== 0) return;

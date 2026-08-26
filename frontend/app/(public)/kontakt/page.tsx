@@ -154,7 +154,7 @@ function ContactCard({
         <div className="mt-3 space-y-2 text-sm text-neutral-12">
           {phone && (
             <a
-              className="flex w-fit max-w-full items-center gap-3 hover:text-accent-11 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-9"
+              className="flex w-fit max-w-full items-center gap-3 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-9"
               href={`tel:+420${phone.replaceAll(' ', '')}`}
             >
               <Phone aria-hidden="true" className="size-4 shrink-0 text-accent-10" />
@@ -163,11 +163,11 @@ function ContactCard({
           )}
           {email && (
             <a
-              className="flex max-w-full items-center gap-3 hover:text-accent-11 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-9"
+              className="flex max-w-full items-center gap-3 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-9"
               href={`mailto:${email}`}
             >
               <Mail aria-hidden="true" className="size-4 shrink-0 text-accent-10" />
-              <span className="min-w-0 break-words">{email}</span>
+              <span className="min-w-0 wrap-break-word">{email}</span>
             </a>
           )}
         </div>

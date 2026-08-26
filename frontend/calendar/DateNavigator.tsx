@@ -32,7 +32,7 @@ export function DateNavigator({
         disabled={!canShow(previous)}
         onClick={() => previous && setDate(previous)}
       >
-        <MoveLeft className="!size-6 mx-1" />
+        <MoveLeft className="size-6! mx-1" />
       </button>
       <button
         type="button"
@@ -48,7 +48,7 @@ export function DateNavigator({
         disabled={!canShow(next)}
         onClick={() => next && setDate(next)}
       >
-        <MoveRight className="!size-6 mx-1" />
+        <MoveRight className="size-6! mx-1" />
       </button>
     </div>
   );

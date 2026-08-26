@@ -254,12 +254,12 @@ function DateContentRow({
         />
       )}
 
-      <div className="relative select-none z-[4]" role="row">
+      <div className="relative select-none z-4" role="row">
         <div className="rbc-row" ref={headingRowRef}>
           {range.map((date, index) => (
             <div
               key={`header_${index}`}
-              className={cn('flex-1 min-w-0 pr-[5px] text-right', {
+              className={cn('flex-1 min-w-0 pr-1.25 text-right', {
                 'font-bold': eq(date, new Date(), 'day'),
                 'text-neutral-9': neq(date, currentDate, 'month'),
               })}
@@ -289,17 +289,10 @@ function DateContentRow({
         ) : (
           <div ref={draggableRef} className="relative">
             {slotMetrics.levels.map((segs, idx) => (
-              <EventRow
-                key={idx}
-                segments={segs}
-                slotMetrics={slotMetrics}
-              />
+              <EventRow key={idx} segments={segs} slotMetrics={slotMetrics} />
             ))}
             {slotMetrics.extra.length > 0 && (
-              <EventEndingRow
-                segments={slotMetrics.extra}
-                slotMetrics={slotMetrics}
-              />
+              <EventEndingRow segments={slotMetrics.extra} slotMetrics={slotMetrics} />
             )}
             {segment && (
               <EventRow

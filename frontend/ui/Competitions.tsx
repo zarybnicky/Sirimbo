@@ -39,14 +39,21 @@ function toLocalDateInput(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-function formatRank(row: Pick<ActivityTimelineItem_ActivityCompetitionResult_Fragment, 'ranking' | 'rankingTo'>) {
+function formatRank(
+  row: Pick<
+    ActivityTimelineItem_ActivityCompetitionResult_Fragment,
+    'ranking' | 'rankingTo'
+  >,
+) {
   if (!row.ranking) return '';
   return row.rankingTo && row.rankingTo !== row.ranking
     ? `${row.ranking}-${row.rankingTo}.`
     : `${row.ranking}.`;
 }
 
-function cstsResultSourceUrl(entry: ActivityTimelineItem_ActivityCompetitionResult_Fragment) {
+function cstsResultSourceUrl(
+  entry: ActivityTimelineItem_ActivityCompetitionResult_Fragment,
+) {
   if (entry.federation !== 'csts') return null;
   const event = Number(entry.competitionEventExternalId);
   const competition = Number(entry.competitionExternalId);
@@ -57,7 +64,8 @@ function cstsResultSourceUrl(entry: ActivityTimelineItem_ActivityCompetitionResu
 
 function cstsUpcomingCalendarUrl(entries: readonly CompetitionEntry[]) {
   return entries.some(
-    (entry) => entry.federation === 'csts' && entry.__typename === 'ActivityCompetitionBrief',
+    (entry) =>
+      entry.federation === 'csts' && entry.__typename === 'ActivityCompetitionBrief',
   )
     ? `https://www.csts.cz/dancesport/kalendar_akci`
     : null;
@@ -83,7 +91,9 @@ function groupByCompetitor(items: readonly CompetitionEntry[] | null | undefined
     groups.set(groupKey, group);
   }
 
-  return [...groups.values()].toSorted((a, b) => a.competitorName.localeCompare(b.competitorName));
+  return [...groups.values()].toSorted((a, b) =>
+    a.competitorName.localeCompare(b.competitorName),
+  );
 }
 
 function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
@@ -112,7 +122,11 @@ function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
           sourceUrl: cstsUpcomingCalendarUrl(entries),
           competitorGroups: groupByCompetitor(entries),
         }))
-        .toSorted((a, b) => a.eventName.localeCompare(b.eventName) || a.eventLocation.localeCompare(b.eventLocation)),
+        .toSorted(
+          (a, b) =>
+            a.eventName.localeCompare(b.eventName) ||
+            a.eventLocation.localeCompare(b.eventLocation),
+        ),
     }));
 }
 
@@ -175,7 +189,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
   return (
     <>
       <div className="flex items-start justify-between gap-3 min-w-0 pb-1">
-        <h5 className="break-words text-sm font-medium leading-tight text-neutral-12">
+        <h5 className="wrap-break-word text-sm font-medium leading-tight text-neutral-12">
           {group.competitorName}
         </h5>
       </div>
@@ -188,7 +202,7 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
             {entry.checkInEnd ? entry.checkInEnd.split(':').slice(0, 2).join(':') : ''}
           </div>
           <div className="flex min-w-0 items-center gap-1.5">
-            <span className="h-3 w-1 rounded-sm" aria-hidden />
+            <span className="h-3 w-1 rounded-xs" aria-hidden />
             <CompetitionCategoryLine entry={entry} />
           </div>
         </div>
@@ -283,7 +297,7 @@ function CompetitionSourceName({
       target="_blank"
       rel="noreferrer"
       className={cn(
-        'inline-flex min-w-0 items-center gap-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        'inline-flex min-w-0 items-center gap-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >
@@ -317,7 +331,10 @@ export function CompetitionWeekPanel({
         until: weekUntil.toISOString(),
         personIds,
         cohortId,
-        kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT'] satisfies ActivityTimelineKind[],
+        kinds: [
+          'COMPETITION_BRIEF',
+          'COMPETITION_RESULT',
+        ] satisfies ActivityTimelineKind[],
       },
     };
   }, [cohortId, personIds, startDate]);
@@ -329,22 +346,21 @@ export function CompetitionWeekPanel({
   });
 
   const { briefs, reports, locations } = React.useMemo(() => {
-    const entries = (data?.activityTimelineList ?? [])
-      .filter(
-        (
-          item,
-        ): item is
-          | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
-          | ActivityTimelineItem_ActivityCompetitionResult_Fragment =>
-          item.__typename === 'ActivityCompetitionBrief' ||
-          item.__typename === 'ActivityCompetitionResult',
-      );
+    const entries = (data?.activityTimelineList ?? []).filter(
+      (
+        item,
+      ): item is
+        | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
+        | ActivityTimelineItem_ActivityCompetitionResult_Fragment =>
+        item.__typename === 'ActivityCompetitionBrief' ||
+        item.__typename === 'ActivityCompetitionResult',
+    );
 
     const isRelevant = (entry: CompetitionEntry) =>
-      (entry.__typename === 'ActivityCompetitionBrief'
+      entry.__typename === 'ActivityCompetitionBrief'
         ? mode !== 'past' &&
           (mode !== 'current' || (entry.competitionDate ?? '') >= todayKey)
-        : mode !== 'future');
+        : mode !== 'future';
     const visible = (entry: CompetitionEntry) =>
       isRelevant(entry) && (!onlyMine || myPersonIds.has(entry.personId ?? '-'));
 

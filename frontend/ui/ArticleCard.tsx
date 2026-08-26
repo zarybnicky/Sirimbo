@@ -20,7 +20,7 @@ export function ArticleCard(x: Props) {
   return (
     <Link href={x.href}>
       <div className={cardCls({ className: 'h-full flex flex-col group' })}>
-        <div className="relative -m-3 mb-2 overflow-hidden h-[240px]">
+        <div className="relative -m-3 mb-2 overflow-hidden h-60">
           {(x.img || x.fallbackImage) && (
             <Image
               fill

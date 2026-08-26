@@ -59,7 +59,6 @@ export default function Editor(props: EditorProps) {
     [onChange],
   );
 
-  // eslint-disable-next-line
   const _ckContent = <div className="ck-content" />; // for tailwind's JIT
   return (
     <>
@@ -142,20 +141,20 @@ function EditorClassPlugin(editor: ClassicEditor) {
     editor.ui.view.body.bodyCollectionContainer?.classList.add(
       'prose',
       'prose-accent',
-      '!bg-accent-1',
+      'bg-accent-1!',
     );
 
     if (editor.ui.view.element) {
       editor.ui.view.element.parentElement?.classList.add(
         'prose',
         'prose-accent',
-        '!bg-accent-1',
+        'bg-accent-1!',
       );
     }
   });
 
   editor.editing.view.change((writer) => {
     const root = editor.editing.view.document?.getRoot()?.parent;
-    if (root) writer.addClass('prose prose-accent !bg-accent-1', root as any);
+    if (root) writer.addClass('prose prose-accent bg-accent-1!', root as any);
   });
 }

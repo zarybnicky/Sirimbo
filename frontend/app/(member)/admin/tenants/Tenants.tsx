@@ -13,15 +13,12 @@ import { Spinner } from '@/ui/Spinner';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { Mail } from 'lucide-react';
-import * as React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
+import React from 'react';
 import { DataGrid, type Column } from 'react-data-grid';
 import { useForm } from 'react-hook-form';
 import { Sheet, type SheetRef } from 'react-modal-sheet';
 import { useMutation, useQuery } from 'urql';
 import z from 'zod';
-import { sendTestEmail } from './actions';
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = React.useState(false);
@@ -119,7 +116,6 @@ export function Tenants() {
 
       {!fetching && !error && tenants.length > 0 && (
         <div className="mt-6 grid gap-4 lg:grid-cols-[3fr_1fr]">
-          <TestEmailButton />
 
           <div className="rounded-md border border-neutral-6 bg-neutral-1 overflow-auto">
             <DataGrid
@@ -173,17 +169,6 @@ export function Tenants() {
         </div>
       )}
     </div>
-  );
-}
-
-function TestEmailButton() {
-  const sendEmail = useAsyncCallback(sendTestEmail);
-
-  return (
-    <SubmitButton action={sendEmail} onClick={sendEmail.execute}>
-      <Mail />
-      Poslat testovací e-mail
-    </SubmitButton>
   );
 }
 

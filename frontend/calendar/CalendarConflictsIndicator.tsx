@@ -73,7 +73,7 @@ export function CalendarConflictsIndicator({ range }: Props) {
   return (
     <Dialog>
       <DialogTrigger.Plain
-        className="fixed bottom-6 right-6 z-30 flex h-12 min-w-12 items-center justify-center gap-1 rounded-full bg-accent-9 px-4 text-white shadow-lg transition-colors hover:bg-accent-10 focus:outline-none focus:ring-2 focus:ring-accent-3 focus:ring-offset-2"
+        className="fixed bottom-6 right-6 z-30 flex h-12 min-w-12 items-center justify-center gap-1 rounded-full bg-accent-9 px-4 text-white shadow-lg transition-colors hover:bg-accent-10 focus:outline-hidden focus:ring-2 focus:ring-accent-3 focus:ring-offset-2"
         aria-label={`Zobrazit ${conflicts.length} konfliktů v kalendáři`}
       >
         <AlertTriangle className="size-5" />
@@ -95,7 +95,7 @@ export function CalendarConflictsIndicator({ range }: Props) {
               {conflicts.map((conflict) => (
                 <li
                   key={`${conflict.person?.id}:${conflict.first?.id}:${conflict.second?.id}`}
-                  className="rounded-lg border border-neutral-6 p-3 shadow-sm"
+                  className="rounded-lg border border-neutral-6 p-3 shadow-xs"
                 >
                   <ConflictEventsSummary conflict={conflict} />
                 </li>

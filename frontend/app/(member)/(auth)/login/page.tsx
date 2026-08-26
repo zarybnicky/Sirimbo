@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
+    <div className="group bg-neutral-1 relative border border-neutral-6 shadow-xs sm:rounded-lg p-3 mb-1">
       <LoginForm />
     </div>
   );

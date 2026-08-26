@@ -96,7 +96,7 @@ export function TrainerListElement({
                 <label className="flex min-h-9 items-center gap-2 whitespace-nowrap text-sm text-neutral-12">
                   <input
                     type="checkbox"
-                    className="focus:ring-accent-9 size-4 bg-accent-2 text-accent-10 border-accent-9 border-2 rounded"
+                    className="focus:ring-accent-9 size-4 bg-accent-2 text-accent-10 border-accent-9 border-2 rounded-sm"
                     checked={offersLessons}
                     onChange={(event) =>
                       update(trainerIndex, {

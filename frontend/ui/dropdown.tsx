@@ -54,8 +54,8 @@ const DropdownMenuContentWrapper = React.forwardRef<
     <DropdownMenuPrimitive.Content
       ref={ref}
       className={cn(
-        'min-w-[220px] bg-neutral-2 rounded-md p-[5px] z-30 flex flex-col',
-        'shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]',
+        'min-w-55 bg-neutral-2 rounded-md p-[5pp-1.25 flex flex-col',
+        'shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)] will-change-[opacity,transform]',
         'data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade',
         'max-h-[calc(var(--radix-dropdown-menu-content-available-height))]',
         'overflow-y-auto',
@@ -87,9 +87,9 @@ export const DropdownMenuLink = React.forwardRef<
     <Link
       className={cn(
         'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] inline-flex gap-3 items-center p-3 relative pl-4',
-        'select-none outline-none',
-        'data-[disabled]:text-neutral-11 data-[disabled]:pointer-events-none cursor-pointer',
-        'data-[highlighted]:bg-accent-9 data-[highlighted]:text-white data-[highlighted]:font-bold',
+        'select-none outline-hidden',
+        'data-disabled:text-neutral-11 data-disabled:pointer-events-none cursor-pointer',
+        'data-highlighted:bg-accent-9 dadata-highlighted:text-whiteata-[highlighted]:font-bold',
         className,
       )}
       {...props}
@@ -108,9 +108,9 @@ export const DropdownMenuButton = React.forwardRef<
     ref={ref}
     className={cn(
       'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] inline-flex gap-3 items-center p-3 relative pl-4',
-      'select-none outline-none',
-      'data-[disabled]:text-neutral-11 data-[disabled]:pointer-events-none cursor-pointer',
-      'data-[highlighted]:bg-accent-9 data-[highlighted]:text-white data-[highlighted]:font-bold',
+      'select-none outline-hidden',
+      'data-disabled:text-neutral-11 dadata-disabled:pointer-events-noneursor-pointer',
+      'data-highlighted:bg-accent-9 dadata-highlighted:text-whiteata-[highlighted]:font-bold',
       className,
     )}
     {...props}

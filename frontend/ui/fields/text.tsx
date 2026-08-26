@@ -41,7 +41,7 @@ export function TextField({
   return (
     <div className={className || ''}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <div className="flex gap-2 relative rounded-md shadow-sm">
+      <div className="flex gap-2 relative rounded-md shadow-xs">
         {prefix}
         <input
           id={name}
@@ -53,7 +53,7 @@ export function TextField({
             'bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7',
             'disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9',
             'read-only:bg-neutral-2 read-only:border-neutral-7 read-only:text-neutral-11 read-only:placeholder:text-neutral-9',
-            'focus:outline-none focus:ring-accent-7 focus:border-accent-8',
+            'focus:outline-hidden focus:ring-accent-7 focus:border-accent-8',
             inputClassName,
           )}
         />

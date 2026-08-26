@@ -21,7 +21,7 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
   const { seriesInfo, registrations } = instance;
   const registrationCount = instance.registrationInfo?.registrations ?? 0;
   const locationLabel = instance.location?.name || instance.locationText;
-  const cohorts = instance.targetCohortsList.flatMap(x => x.cohort ? [x.cohort] : []);
+  const cohorts = instance.targetCohortsList.flatMap((x) => (x.cohort ? [x.cohort] : []));
 
   const primaryActions = React.useMemo(() => {
     return [
@@ -34,7 +34,7 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
 
   return (
     <div className="flex flex-col gap-2 text-sm">
-      <div className="-mb-2 text-sm text-accent-11 flex flex-wrap items-center gap-y-1 [&>*:not(:last-child)]:after:content-['•'] [&>*]:after:mx-1.5 [&>*]:after:text-accent-9">
+      <div className="-mb-2 text-sm text-accent-11 flex flex-wrap items-center gap-y-1 [&>*:not(:last-child)]:after:content-['•'] *:after:mx-1.5 *:after:text-accent-9">
         <span>{formatEventType(instance.type)}</span>
         {instance.parent && (
           <Link

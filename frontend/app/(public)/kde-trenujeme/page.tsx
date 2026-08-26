@@ -29,7 +29,7 @@ export default function LocationsPage() {
           (vchod brankou u zastávky Povel – škola)
         </LocationCard>
 
-        <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
+        <div className="min-h-50 md:min-h-75 my-4 relative">
           <Image
             className="object-cover"
             alt="Taneční sál v Tanečním centru při FZŠ Holečkova v Olomouci"
@@ -50,7 +50,7 @@ export default function LocationsPage() {
           (vchod brankou z ulice U reálky)
         </LocationCard>
 
-        <div className="min-h-[200px] md:min-h-[300px] my-4 relative">
+        <div className="min-h-50 md:min-h-75 my-4 relative">
           <Image
             className="object-cover"
             alt="Tělocvična Slovanského gymnázia používaná pro tréninky TK Olymp"

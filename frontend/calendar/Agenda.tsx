@@ -141,7 +141,7 @@ function BirthdayChip({ calendarEvent }: { calendarEvent: CalendarBirthdayEvent 
     <Link
       href={`/clenove/${calendarEvent.person.id}`}
       title={`Narozeniny: ${calendarEvent.person.name}`}
-      className="inline-flex max-w-full items-center gap-1 rounded border border-neutral-6 bg-neutral-2 px-2 py-1 text-xs text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
+      className="inline-flex max-w-full items-center gap-1 rounded-sm border border-neutral-6 bg-neutral-2 px-2 py-1 text-xs text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
     >
       <Cake className="size-3.5 shrink-0 text-accent-11" />
       <span className="truncate">{calendarEvent.person.name}</span>
@@ -165,7 +165,7 @@ function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
         className="absolute right-8 top-3 text-accent-11"
       />
       {instance.targetCohortsList && instance.targetCohortsList.length > 0 && (
-        <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
+        <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-xs inset-y-0 left-0 flex flex-col">
           {instance.targetCohortsList
             .map((x) => x.cohort?.colorRgb)
             .filter(isTruthy)

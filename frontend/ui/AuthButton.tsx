@@ -8,7 +8,7 @@ import {
   DropdownMenuLink,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
-import { useAuth, signOut } from '@/lib/auth';
+import { signOut, useAuth } from '@/lib/auth';
 import { useMemberMenu } from '@/lib/use-menu';
 import { User as Account } from 'lucide-react';
 import React from 'react';
@@ -29,7 +29,7 @@ export function AuthButton() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="min-h-[48px] md:min-h-[64px] flex gap-2 items-center drop-shadow">
+      <DropdownMenuTrigger className="min-h-12 md:min-h-16 flex gap-2 items-center drop-shadow-sm">
         <Account className="size-4" />
         <div
           className="flex flex-col justify-center items-start"

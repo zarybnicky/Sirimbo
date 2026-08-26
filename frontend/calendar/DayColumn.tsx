@@ -39,12 +39,12 @@ function pointTargetsDate(
   { x, y }: { x: number; y: number },
 ) {
   const dateId = (+date).toString();
-  return [...grid.querySelectorAll<HTMLElement>(`[data-calendar-date="${CSS.escape(dateId)}"]`)].some(
-    (column) => {
-      const { left, right, top, bottom } = getBoundsForNode(column);
-      return x >= left && x < right && y >= top && y <= bottom;
-    },
-  );
+  return [
+    ...grid.querySelectorAll<HTMLElement>(`[data-calendar-date="${CSS.escape(dateId)}"]`),
+  ].some((column) => {
+    const { left, right, top, bottom } = getBoundsForNode(column);
+    return x >= left && x < right && y >= top && y <= bottom;
+  });
 }
 
 type DayColumnProps = {
@@ -395,8 +395,7 @@ function DayColumn({
         const { action } = store.get(dragSubjectAtom) || {};
         if (
           event &&
-          (action === 'resize' ||
-            (action === 'move' && pointInColumn(bounds, point)))
+          (action === 'resize' || (action === 'move' && pointInColumn(bounds, point)))
         ) {
           setIsDragging(false);
           setDragSubject(null);
@@ -466,7 +465,7 @@ function DayColumn({
         </div>
       ))}
 
-      <div className="absolute inset-0 mr-[4px] md:mr-[8px] lg:mr-[16px]">
+      <div className="absolute inset-0 mr-1 md:mr-2 lg:mr-4">
         {backgroundEventsInRange.map(({ event, style }) => (
           <TimeGridEvent
             isBackgroundEvent
@@ -501,7 +500,7 @@ function DayColumn({
 
       {backgroundState.startDate && backgroundState.endDate && (
         <div
-          className="absolute z-10 w-full p-[3px] text-xs bg-neutral-9 text-white"
+          className="absolute z-10 w-full p-0.75 text-xs bg-neutral-9 text-white"
           style={{ top: backgroundState.top, height: backgroundState.height }}
         >
           <span>

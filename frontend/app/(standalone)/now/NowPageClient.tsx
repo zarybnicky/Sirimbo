@@ -202,7 +202,7 @@ export default function NowPage() {
             {buckets.map((bucket) => (
               <section
                 key={bucket.key}
-                className="flex flex-col gap-3 rounded-3xl border border-accent-6 bg-accent-2 p-5 shadow-xl shadow-black/30 backdrop-blur"
+                className="flex flex-col gap-3 rounded-3xl border border-accent-6 bg-accent-2 p-5 shadow-xl shadow-black/30 backdrop-blur-sm"
               >
                 <div className="flex items-baseline justify-between gap-4 border-b border-accent-6 pb-2">
                   <h2 className="text-2xl font-semibold text-accent-12">

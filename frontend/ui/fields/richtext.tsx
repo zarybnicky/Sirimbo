@@ -36,7 +36,7 @@ export function RichTextEditor<T extends FieldValues>({
   return (
     <div className={className}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <div className="mt-1 relative rounded-md shadow-sm">
+      <div className="mt-1 relative rounded-md shadow-xs">
         <Editor
           name={name}
           onChange={field.onChange}

@@ -127,7 +127,7 @@ function InstanceTimeGridEvent({
         className={cn(
           className,
           'rbc-event group transition-opacity',
-          'absolute overflow-hidden max-h-full min-h-[20px] border border-b-transparent',
+          'absolute overflow-hidden max-h-full min-h-5 border border-b-transparent',
           {
             'w-full h-full': isResizable,
             'empty-event': !event.instance.registrationInfo?.registrations,
@@ -143,11 +143,11 @@ function InstanceTimeGridEvent({
       >
         <ConflictsInstanceBadge
           instanceId={event.id}
-          className="absolute right-1 top-1 text-accent-11 drop-shadow"
+          className="absolute right-1 top-1 text-accent-11 drop-shadow-sm"
         />
         {event.instance.targetCohortsList &&
           event.instance.targetCohortsList.length > 0 && (
-            <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-sm inset-y-0 left-0 flex flex-col">
+            <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-xs inset-y-0 left-0 flex flex-col">
               {event.instance.targetCohortsList
                 .map((x) => x.cohort?.colorRgb)
                 .filter(isTruthy)
@@ -168,13 +168,16 @@ function InstanceTimeGridEvent({
         )}
 
         <div
-          className={cn('rbc-event-content w-full break-words leading-none min-h-[1em]', {
-            'line-through': event.instance.isCancelled,
-          })}
+          className={cn(
+            'rbc-event-content w-full wrap-break-word leading-none min-h-[1em]',
+            {
+              'line-through': event.instance.isCancelled,
+            },
+          )}
         >
           {title}
         </div>
-        <div className="block truncate text-[80%] pr-[5px] w-auto">{label}</div>
+        <div className="block truncate text-[80%] pr-1.25 w-auto">{label}</div>
 
         {!continuesPrior && isResizable && (
           <div
@@ -207,7 +210,7 @@ function CompetitionTimeGridEvent({
       title={event.title}
       className={cn(
         className,
-        'competition-time-grid-event rbc-event absolute max-h-full min-h-[20px] overflow-y-auto border border-green-7 bg-green-3 p-2 text-green-12',
+        'competition-time-grid-event rbc-event absolute max-h-full min-h-5 overflow-y-auto border border-green-7 bg-green-3 p-2 text-green-12',
       )}
     >
       <CompetitionEventContent
@@ -235,7 +238,7 @@ function BirthdayTimeGridEvent({
       title={`Narozeniny: ${event.person.name}`}
       className={cn(
         className,
-        'rbc-event absolute flex max-h-full min-h-[20px] items-start gap-1 overflow-hidden border border-neutral-6 bg-neutral-2 p-2 text-neutral-12',
+        'rbc-event absolute flex max-h-full min-h-5 items-start gap-1 overflow-hidden border border-neutral-6 bg-neutral-2 p-2 text-neutral-12',
       )}
     >
       <Cake className="mt-0.5 size-3 shrink-0 text-accent-11" />

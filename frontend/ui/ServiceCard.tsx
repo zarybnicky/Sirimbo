@@ -18,10 +18,10 @@ export function ServiceCard(props: ServiceCardProps) {
       href={props.href || { hash: '#' }}
       className={cn(
         'group p-0 my-4 flex flex-col md:grid md:grid-cols-[1fr_4px_2fr]',
-        'bg-neutral-0 relative border border-neutral-3 shadow-sm sm:rounded-lg mb-2',
+        'bg-neutral-0 relative border border-neutral-3 shadow-xs sm:rounded-lg mb-2',
       )}
     >
-      <div className="relative overflow-hidden min-h-[300px]">
+      <div className="relative overflow-hidden min-h-75">
         <Image
           className="sm:rounded-l-lg object-cover object-[50%_30%] transition-transform duration-300 group-hover:scale-110"
           src={props.image}

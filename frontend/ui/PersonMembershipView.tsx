@@ -162,7 +162,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           {item.userProxiesList?.filter(keyIsNonNull('user')).map((proxy) => (
             <ActionRow key={proxy.id} actions={userProxyActionMap.get(proxy.id)!}>
               <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between text-sm gap-y-1 sm:gap-x-3">
-                <b className="break-words">
+                <b className="wrap-break-word">
                   <Link href={`/users/${proxy.user.id}`} className="underline">
                     {[proxy.user.uEmail, proxy.user.uLogin].filter(Boolean).join(', ')}
                   </Link>
@@ -190,7 +190,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
                   actions={invitationActionMap.get(invitation.id)!}
                 >
                   <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3 text-sm py-1">
-                    <b className="break-words">{invitation.email}</b>
+                    <b className="wrap-break-word">{invitation.email}</b>
                     <span>
                       vytvořena {fullDateFormatter.format(new Date(invitation.createdAt))}
                     </span>

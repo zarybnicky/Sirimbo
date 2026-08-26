@@ -181,7 +181,7 @@ export function PersonList() {
                 .join(', ')}
             </div>
             <div
-              className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-sm inset-y-0 left-0"
+              className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-xs inset-y-0 left-0"
               style={{
                 backgroundColor: item.cohortColor || '#fff',
               }}

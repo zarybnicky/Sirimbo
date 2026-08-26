@@ -27,6 +27,7 @@ export default compose(
       sourcemaps: {
         deleteSourcemapsAfterUpload: true,
       },
+      telemetry: false,
     }),
 )({
   reactStrictMode: true,

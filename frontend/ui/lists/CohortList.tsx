@@ -106,7 +106,7 @@ export function CohortList() {
               {item.subtitle}
             </div>
             <div
-              className="absolute rounded-l-xl w-4 shadow-sm inset-y-0 left-0"
+              className="absolute rounded-l-xl w-4 shadow-xs inset-y-0 left-0"
               style={{ backgroundColor: item.colorRgb }}
             />
           </Link>

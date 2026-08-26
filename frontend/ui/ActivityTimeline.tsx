@@ -267,7 +267,7 @@ function TimelineDay({
                 <Link
                   key={item.id}
                   href={`/clenove/${item.personId!}`}
-                  className="rounded border border-neutral-6 bg-neutral-1 px-2 py-1 text-sm text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
+                  className="rounded-sm border border-neutral-6 bg-neutral-1 px-2 py-1 text-sm text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
                 >
                   {item.person?.name}
                 </Link>

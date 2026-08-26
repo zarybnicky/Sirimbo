@@ -68,10 +68,10 @@ type TrainerCardProps = {
 function TrainerCard(props: TrainerCardProps) {
   return (
     <div className="mb-14 relative overflow-visible">
-      <div className="lg:mb-0 lg:absolute lg:left-[-220px] lg:-top-8 ml-8 lg:ml-0 mb-4">
+      <div className="lg:mb-0 lg:absolute lg:-left-55 lg:-top-8 ml-8 lg:ml-0 mb-4">
         {props.image && (
           <Image
-            className="drop-shadow"
+            className="drop-shadow-sm"
             src={props.image}
             alt={props.name}
             width={200}
@@ -79,8 +79,8 @@ function TrainerCard(props: TrainerCardProps) {
           />
         )}
       </div>
-      <h3 className="text-4xl mb-4 text-accent-7 drop-shadow">{props.name}</h3>
-      <div className="prose prose-accent lg:min-h-[220px]">{props.children}</div>
+      <h3 className="text-4xl mb-4 text-accent-7 drop-shadow-sm">{props.name}</h3>
+      <div className="prose prose-accent lg:min-h-55">{props.children}</div>
     </div>
   );
 }

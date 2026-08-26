@@ -20,7 +20,7 @@ export function CstsPersonLink({
       rel="noreferrer"
       title="Otevřít osobu na ČSTS"
       className={cn(
-        'inline-flex gap-1 items-baseline rounded-sm text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >
@@ -52,7 +52,7 @@ export function CstsResultsLink({
       rel="noreferrer"
       title="Otevřít výsledky na ČSTS"
       className={cn(
-        'inline-flex gap-1 items-baseline rounded-sm text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >

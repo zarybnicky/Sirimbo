@@ -8,9 +8,6 @@ import { cookies } from 'next/headers';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
 
-import 'react-data-grid/lib/styles.css';
-import 'react-toastify/dist/ReactToastify.css';
-import '../style/calendar.css';
 import '../style/index.css';
 import '../style/leaflet.css';
 import '../style/lite-youtube-embed.css';

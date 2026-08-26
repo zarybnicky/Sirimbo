@@ -139,10 +139,10 @@ function InstanceEventCell({
         >
           <ConflictsInstanceBadge
             instanceId={event.instance.id}
-            className="absolute right-1 top-1 text-accent-11 drop-shadow"
+            className="absolute right-1 top-1 text-accent-11 drop-shadow-sm"
           />
           {event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0 && (
-            <div className="absolute rounded-l-lg overflow-hidden border-r border-neutral-6 shadow-sm inset-y-0 left-0 flex flex-col">
+            <div className="absolute rounded-l-lg overflow-hidden border-r border-neutral-6 shadow-xs inset-y-0 left-0 flex flex-col">
               {event.instance.targetCohortsList
                 .map((x) => x.cohort?.colorRgb)
                 .filter(isTruthy)

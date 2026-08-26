@@ -128,7 +128,7 @@ export function Hero({
       <div
         ref={scrollerRef}
         onScroll={handleScroll}
-        className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-none [&::-webkit-scrollbar]:hidden"
         aria-label="Aktuality"
       >
         {articles.map((x, i) => (
@@ -163,7 +163,7 @@ export function Hero({
         aria-label="Předchozí snímek"
         disabled={!canNavigate}
         onClick={() => scrollToIndex(activeIndex - 1)}
-        className="absolute left-4 top-[calc(30vh-1rem)] z-20 rounded-full bg-black/45 p-2 text-white shadow-md transition hover:bg-black/65 focus:outline-none focus:ring-2 focus:ring-accent-10 disabled:hidden"
+        className="absolute left-4 top-[calc(30vh-1rem)] z-20 rounded-full bg-black/45 p-2 text-white shadow-md transition hover:bg-black/65 focus:outline-hidden focus:ring-2 focus:ring-accent-10 disabled:hidden"
       >
         <ChevronLeft className="size-6" />
       </button>
@@ -173,7 +173,7 @@ export function Hero({
         aria-label="Další snímek"
         disabled={!canNavigate}
         onClick={() => scrollToIndex(activeIndex + 1)}
-        className="absolute right-4 top-[calc(30vh-1rem)] z-20 rounded-full bg-black/45 p-2 text-white shadow-md transition hover:bg-black/65 focus:outline-none focus:ring-2 focus:ring-accent-10 disabled:hidden"
+        className="absolute right-4 top-[calc(30vh-1rem)] z-20 rounded-full bg-black/45 p-2 text-white shadow-md transition hover:bg-black/65 focus:outline-hidden focus:ring-2 focus:ring-accent-10 disabled:hidden"
       >
         <ChevronRight className="size-6" />
       </button>
@@ -188,7 +188,7 @@ export function Hero({
               aria-current={i === activeIndex ? 'true' : undefined}
               onClick={() => scrollToIndex(i)}
               className={cn(
-                'h-[9px] w-[50px] bg-neutral-5 transition hover:bg-neutral-7 focus:outline-none focus:ring-2 focus:ring-accent-7',
+                'h-2.25 w-12.5 bg-neutral-5 transition hover:bg-neutral-7 focus:outline-hidden focus:ring-2 focus:ring-accent-7',
                 i === activeIndex && 'bg-accent-9 hover:bg-accent-9',
               )}
             />

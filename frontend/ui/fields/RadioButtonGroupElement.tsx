@@ -54,7 +54,7 @@ export function RadioButtonGroup({
             className={cn(
               'block cursor-pointer rounded-xl border border-accent-7 bg-neutral-1 px-2 py-1.5 text-sm text-accent-11',
               'peer-checked:border-accent-10 peer-checked:bg-accent-9 peer-checked:text-white',
-              'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-accent-10',
+              'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring-3 peer-focus-visible:ring-accent-10',
               'peer-disabled:cursor-not-allowed peer-disabled:border-neutral-6 peer-disabled:text-neutral-11',
               'peer-disabled:peer-checked:border-neutral-10 peer-disabled:peer-checked:bg-neutral-9 peer-disabled:peer-checked:text-white',
             )}
@@ -141,7 +141,7 @@ export function VerticalCheckboxButtonGroupElement<T extends FieldValues>({
                 'block w-full cursor-pointer bg-neutral-1 py-2 pl-8 pr-2.5 text-sm text-accent-11',
                 'border-x border-t border-accent-7',
                 'peer-checked:border-accent-10 peer-checked:bg-accent-9 peer-checked:text-white',
-                'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-accent-10',
+                'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring-3 peer-focus-visible:ring-accent-10',
                 'peer-disabled:cursor-not-allowed peer-disabled:border-neutral-6 peer-disabled:text-neutral-11',
                 'peer-disabled:peer-checked:border-neutral-10 peer-disabled:peer-checked:bg-neutral-9 peer-disabled:peer-checked:text-white',
                 index === 0 && 'rounded-t-xl',

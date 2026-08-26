@@ -72,7 +72,7 @@ export function Crm() {
                 'block cursor-pointer bg-accent-3 px-2 py-1 text-sm text-accent-11',
                 'border-y border-l border-accent-5',
                 'peer-checked:border-accent-8 peer-checked:bg-accent-5',
-                'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-accent-8',
+                'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring-3 peer-focus-visible:ring-accent-8',
                 index === 0 && 'rounded-l-xl',
                 index === types.length - 1 && 'rounded-r-xl border-r',
               )}

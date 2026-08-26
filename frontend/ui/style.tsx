@@ -21,10 +21,10 @@ export const buttonCls = tv({
     size: {
       none: ' ',
       icon: 'size-8 rounded-xl [&_svg]:size-4',
-      xs: 'px-1.5 py-1 text-xs rounded-xl tracking-tight [&_svg]:w-3 [&_svg]:h-3',
-      sm: 'px-2 py-1.5 text-xs rounded-xl tracking-tight [&_svg]:w-3 [&_svg]:h-3',
-      md: 'px-3 py-2 text-sm rounded-xl [&_svg]:w-4 [&_svg]:h-4',
-      lg: 'px-6 py-3 text-base rounded-xl [&_svg]:w-5 [&_svg]:h-5',
+      xs: 'px-1.5 py-1 text-xs rounded-xl tracking-tight [&_svg]:size-3',
+      sm: 'px-2 py-1.5 text-xs rounded-xl tracking-tight [&_svg]:size-3',
+      md: 'px-3 py-2 text-sm rounded-xl [&_svg]:size-4',
+      lg: 'px-6 py-3 text-base rounded-xl [&_svg]:size-5',
     },
   },
   defaultVariants: {
@@ -35,7 +35,7 @@ export const buttonCls = tv({
 });
 
 export const cardCls = tv({
-  base: 'group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1',
+  base: 'group bg-neutral-1 relative border border-neutral-6 shadow-xs sm:rounded-lg p-3 mb-1',
 });
 
 export const buttonGroupCls = tv({
@@ -46,10 +46,10 @@ export const typographyCls = tv({
   base: '',
   variants: {
     variant: {
-      heading: 'text-3xl md:text-4xl text-accent-12 drop-shadow tracking-wide',
-      smallHeading: 'text-xl md:text-2xl text-neutral-12 drop-shadow tracking-wide',
+      heading: 'text-3xl md:text-4xl text-accent-12 drop-shadow-sm tracking-wide',
+      smallHeading: 'text-xl md:text-2xl text-neutral-12 drop-shadow-sm tracking-wide',
       cardHeading: 'text-lg font-bold text-accent-12',
-      section: 'text-3xl text-accent-11 drop-shadow tracking-wide',
+      section: 'text-3xl text-accent-11 drop-shadow-sm tracking-wide',
       label: 'block text-sm text-neutral-11 mt-1',
     },
     spacing: {

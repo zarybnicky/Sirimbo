@@ -39,7 +39,7 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
   };
 
   return (
-    <div className="group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
+    <div className="group bg-neutral-1 relative border border-neutral-6 shadow-xs sm:rounded-lg p-3 mb-1">
       <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit)}>
         <h4 className="text-2xl">Registrace nového uživatele</h4>
 

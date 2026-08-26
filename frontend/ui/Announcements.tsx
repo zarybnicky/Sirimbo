@@ -12,7 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
-import { Check, ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Check } from 'lucide-react';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
@@ -56,7 +56,7 @@ export function AnnouncementSortControls({
           >
             <Check
               className={cn(
-                'absolute left-2 size-4 text-accent-9 group-data-[highlighted]:text-accent-1 transition-opacity',
+                'absolute left-2 size-4 text-accent-9 group-data-highlighted:text-accent-1 transition-opacity',
                 sort === value ? 'opacity-100' : 'opacity-0',
               )}
               aria-hidden
@@ -113,7 +113,7 @@ export function MyAnnouncements() {
                   'block cursor-pointer bg-neutral-3 px-2 py-1 text-sm text-neutral-11',
                   'border-y border-l border-neutral-5',
                   'peer-checked:border-neutral-8 peer-checked:bg-neutral-5',
-                  'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring peer-focus-visible:ring-neutral-8',
+                  'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring-3 peer-focus-visible:ring-neutral-8',
                   index === 0 && 'rounded-l-xl',
                   index === options.length - 1 && 'rounded-r-xl border-r',
                 )}

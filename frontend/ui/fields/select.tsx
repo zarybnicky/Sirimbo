@@ -48,7 +48,7 @@ export function SelectField<Value extends string = string>({
           'bg-accent-2 border-accent-7 text-accent-12',
           'py-2 pl-3 pr-8 text-sm',
           'disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11',
-          'focus:outline-none focus:ring-accent-7 focus:border-accent-8',
+          'focus:outline-hidden focus:ring-accent-7 focus:border-accent-8',
           selectClassName,
         )}
       >

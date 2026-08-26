@@ -141,7 +141,7 @@ export function PersonView({ id }: { id: string }) {
         title={item.name}
         subtitle={
           subtitleParts.length > 0 ? (
-            <span className="inline-flex flex-wrap items-center gap-y-1 [&>*:not(:last-child)]:after:content-['•'] [&>*]:after:mx-1.5 [&>*]:after:text-neutral-9">
+            <span className="inline-flex flex-wrap items-center gap-y-1 [&>*:not(:last-child)]:after:content-['•'] *:after:mx-1.5 *:after:text-neutral-9">
               {subtitleParts.map((part, index) => (
                 <span key={index}>{part}</span>
               ))}
@@ -160,7 +160,7 @@ export function PersonView({ id }: { id: string }) {
               target="_blank"
               rel="noreferrer"
               aria-label={`Otevřít ${label}`}
-              className="inline-flex min-h-8 items-center gap-1.5 rounded-md border border-neutral-5 bg-neutral-2 px-2.5 py-1 text-sm text-neutral-12 hover:border-accent-7 hover:bg-accent-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+              className="inline-flex min-h-8 items-center gap-1.5 rounded-md border border-neutral-5 bg-neutral-2 px-2.5 py-1 text-sm text-neutral-12 hover:border-accent-7 hover:bg-accent-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
             >
               <Icon className="size-4 shrink-0" aria-hidden="true" />
               <span>{text}</span>

@@ -4,8 +4,8 @@ import { atom } from 'jotai';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 import { z } from 'zod';
 
-export const SIDEBAR_MIN_WIDTH = 224;
-export const SIDEBAR_MAX_WIDTH = 448;
+const SIDEBAR_MIN_WIDTH = 224;
+const SIDEBAR_MAX_WIDTH = 448;
 
 const uiStateSchema = z.object({
   sidebarWidth: z.number().int().min(SIDEBAR_MIN_WIDTH).max(SIDEBAR_MAX_WIDTH).nullable(),

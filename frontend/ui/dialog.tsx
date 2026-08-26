@@ -107,7 +107,7 @@ function DialogViewport({ children }: { children: React.ReactNode }) {
   return (
     <div
       ref={ref}
-      className="fixed inset-x-0 top-0 z-40 flex h-[var(--visual-viewport-height)] w-full max-w-[100dvw] items-center justify-center overflow-hidden p-4 [--visual-viewport-height:100vh] supports-[height:100dvh]:[--visual-viewport-height:100dvh] sm:p-6"
+      className="fixed inset-x-0 top-0 z-40 flex h-(--visual-viewport-height) w-full max-w-dvw items-center justify-center overflow-hidden p-4 [--visual-viewport-height:100vh] supports-[height:100dvh]:[--visual-viewport-height:100dvh] sm:p-6"
     >
       {children}
     </div>
@@ -121,7 +121,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'fixed inset-0 z-40 bg-black/10 backdrop-blur-sm',
+      'fixed inset-0 z-40 bg-black/10 backdrop-blur-xs',
       'data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide',
       className,
     )}
@@ -148,7 +148,7 @@ export const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-xs opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white">
         <X className="size-4" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -170,10 +170,7 @@ export function DialogHeader({
 }
 DialogHeader.displayName = 'DialogHeader';
 
-export function DialogFooter({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(

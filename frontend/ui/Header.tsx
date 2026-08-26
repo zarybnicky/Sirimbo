@@ -31,7 +31,7 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
     <header className="sticky z-20 top-0 inset-x-0 text-white bg-[#292524] shadow-lg print:hidden">
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
-          <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
+          <div className="relative hidden lg:flex items-stretch justify-between min-h-12 md:min-h-16">
             <DesktopLogo />
             {topMenu.map((x) => (
               <DesktopMenuItem key={x.title} item={x} pathname={pathname} />
@@ -41,7 +41,7 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
           </div>
         )}
 
-        <div className="flex lg:hidden items-stretch justify-between min-h-[48px] md:min-h-[64px] p-2">
+        <div className="flex lg:hidden items-stretch justify-between min-h-12 md:min-h-16 p-2">
           <button
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
             onClick={() => setIsOpen((x) => !x)}
@@ -70,7 +70,7 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
 }
 
 function DesktopMenuItem({ item, pathname }: { item: MenuStructItem; pathname: string }) {
-  const inPath = !!getHrefs(item).some((x) => {
+  const inPath = getHrefs(item).some((x) => {
     const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
     if (!y) return false;
     return y === '/' ? pathname === '/' : pathname.startsWith(y);
@@ -82,7 +82,7 @@ function DesktopMenuItem({ item, pathname }: { item: MenuStructItem; pathname: s
     'hover:text-white hover:border-b-[3px] border-white data-[state=open]:border-b-[3px]',
     inPath
       ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide -mb-px'
-      : 'text-[#f3f3f3] drop-shadow',
+      : 'text-[#f3f3f3] drop-shadow-sm',
   );
 
   if (item.type === 'link') {

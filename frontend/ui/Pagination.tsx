@@ -67,7 +67,7 @@ export function Pagination({ total, limit, page, href, onPageChange }: Paginatio
             aria-current={item === currentPage ? 'page' : undefined}
             className={cn(
               pageButtonClassName,
-              item === currentPage && 'text-white !bg-accent-5',
+              item === currentPage && 'text-white bg-accent-5!',
             )}
           >
             {item}
@@ -79,7 +79,7 @@ export function Pagination({ total, limit, page, href, onPageChange }: Paginatio
             aria-current={item === currentPage ? 'page' : undefined}
             className={cn(
               pageButtonClassName,
-              item === currentPage && 'text-white !bg-accent-5',
+              item === currentPage && 'text-white bg-accent-5!',
             )}
             onClick={() => onPageChange(item)}
           >

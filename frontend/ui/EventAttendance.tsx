@@ -149,7 +149,7 @@ function AttendanceItem({
             'px-2 py-1 text-sm first:rounded-l-xl border last:rounded-r-xl',
             'border-y border-l last:border-r border-neutral-6',
             'disabled:border-neutral-6 disabled:bg-neutral-2 disabled:text-neutral-8',
-            'focus:relative focus:outline-none focus-visible:z-30 focus-visible:ring focus-visible:ring-accent-10',
+            'focus:relative focus:outline-hidden focus-visible:z-30 focus-visible:ring-3 focus-visible:ring-accent-10',
             attendance.status === key &&
               key === 'ATTENDED' &&
               'border-green-10 bg-green-9 hover:bg-green-8 text-white',

@@ -12,7 +12,7 @@ import { importX } from 'eslint-plugin-import-x';
 export default defineConfig([
   ...nextVitals,
   ...nextTs,
-  ...tailwind.configs['flat/recommended'],
+  tailwind.configs.recommended,
   eslintPluginUnicorn.configs.recommended,
   deMorgan.configs.recommended,
   importX.flatConfigs.recommended,
@@ -30,8 +30,7 @@ export default defineConfig([
   {
     settings: {
       tailwindcss: {
-        callees: ['classNames', 'ctl', 'cn'],
-        cssFilesRefreshRate: 5_000_000,
+        cssConfigPath: './style/index.css',
       },
     },
     rules: {
@@ -68,6 +67,7 @@ export default defineConfig([
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/triple-slash-reference': 'off',
       'tailwindcss/classnames-order': 'off',
+      'tailwindcss/no-custom-classname': 'off',
 
       'import/no-anonymous-default-export': 'off',
       'import/no-unused-modules': 'off',

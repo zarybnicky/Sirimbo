@@ -83,7 +83,7 @@ export function AttendanceReport() {
           fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
       </section>
 
-      <section className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 text-sm shadow-sm">
+      <section className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 text-sm shadow-xs">
         <p className="font-medium text-neutral-12">Shrnutí</p>
         {summary.total > 0 ? (
           <ul className="mt-2 list-disc space-y-1 pl-5">

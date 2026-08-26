@@ -57,8 +57,8 @@ export function MobileLogo() {
 
 export function DesktopLogo() {
   return (
-    <div className="relative overflow-visible min-w-[104px]">
-      <div className="w-[104px] h-[130px] text-white bg-accent-9 z-30 shadow-accent-9/60 shadow-lg absolute top-0 inset-x-0">
+    <div className="relative overflow-visible min-w-26">
+      <div className="w-26 h-32.5 text-white bg-accent-9 z-30 shadow-accent-9/60 shadow-lg absolute top-0 inset-x-0">
         <Link href="/" aria-label="Domů" className="block p-0 m-0 size-full relative">
           <OlympLogoVertical
             style={{
@@ -82,7 +82,7 @@ export function SidebarLogo() {
   return (
     <div className="hidden lg:flex">
       <Link href="/" aria-label="Domů" className="h-20 mt-3 mx-auto">
-        <OlympLogoVertical className="size-full text-white !fill-white" />
+        <OlympLogoVertical className="size-full text-white fill-white!" />
       </Link>
     </div>
   );
@@ -135,15 +135,13 @@ function Sponsors() {
         <div key={x.label} className="grow flex lg:flex-1 flex-col items-center gap-1">
           <Image
             alt={x.label ?? ''}
-            className="w-full h-auto max-w-[200px] max-h-[120px] min-h-[60px] object-contain"
+            className="w-full h-auto max-w-50 max-h-30 min-h-15 object-contain"
             src={x.image}
             loading="lazy"
             fetchPriority="low"
             sizes="(min-width: 1024px) 160px, (min-width: 640px) 30vw, 50vw"
           />
-          {x.label && (
-            <div className="min-w-0">{x.label}</div>
-          )}
+          {x.label && <div className="min-w-0">{x.label}</div>}
         </div>
       ))}
     </div>
@@ -209,9 +207,12 @@ export function Footer() {
           <h2 className="text-xl text-accent-9 font-bold mb-4">Podporují nás</h2>
           <Sponsors />
 
-        <div className="col-span-2 text-sm text-accent-12 p-2">
-          Taneční klub v roce 2026 finančně podpořila Národní sportovní agentura částkou 632.900 Kč v oblasti sportovní aktivity dětí a mládeže ve věku 4 až 19 let za účelem zabezpečení sportovní, tělovýchovné a organizační funkce klubu v souladu s platnými a registrovanými stanovami.
-        </div>
+          <div className="col-span-2 text-sm text-accent-12 p-2">
+            Taneční klub v roce 2026 finančně podpořila Národní sportovní agentura částkou
+            632.900 Kč v oblasti sportovní aktivity dětí a mládeže ve věku 4 až 19 let za
+            účelem zabezpečení sportovní, tělovýchovné a organizační funkce klubu v
+            souladu s platnými a registrovanými stanovami.
+          </div>
         </div>
 
         <div className="mt-4 col-span-2 flex flex-wrap justify-between">

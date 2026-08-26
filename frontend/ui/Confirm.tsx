@@ -84,7 +84,7 @@ export const ConfirmProvider = React.memo(function ConfirmProvider({
                 'inline-flex select-none justify-center rounded-md px-4 py-2 text-sm font-medium',
                 'bg-accent-9 text-white hover:bg-accent-10',
                 'border border-transparent',
-                'focus:outline-none focus-visible:ring focus-visible:ring-accent-8/75',
+                'focus:outline-hidden focus-visible:ring-3 focus-visible:ring-accent-8/75',
               )}
             >
               {options.confirmationText}
