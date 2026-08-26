@@ -54,7 +54,7 @@ const DropdownMenuContentWrapper = React.forwardRef<
     <DropdownMenuPrimitive.Content
       ref={ref}
       className={cn(
-        'min-w-55 bg-neutral-2 rounded-md p-[5pp-1.25 flex flex-col',
+        'min-w-55 bg-neutral-2 rounded-md p-1.25 z-30 flex flex-col',
         'shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)] will-change-[opacity,transform]',
         'data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade',
         'max-h-[calc(var(--radix-dropdown-menu-content-available-height))]',
@@ -89,7 +89,7 @@ export const DropdownMenuLink = React.forwardRef<
         'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] inline-flex gap-3 items-center p-3 relative pl-4',
         'select-none outline-hidden',
         'data-disabled:text-neutral-11 data-disabled:pointer-events-none cursor-pointer',
-        'data-highlighted:bg-accent-9 dadata-highlighted:text-whiteata-[highlighted]:font-bold',
+        'data-highlighted:bg-accent-9 data-highlighted:text-white data-highlighted:font-bold',
         className,
       )}
       {...props}
@@ -109,8 +109,8 @@ export const DropdownMenuButton = React.forwardRef<
     className={cn(
       'group text-sm leading-none text-accent-11 bg-neutral-1 rounded-[3px] inline-flex gap-3 items-center p-3 relative pl-4',
       'select-none outline-hidden',
-      'data-disabled:text-neutral-11 dadata-disabled:pointer-events-noneursor-pointer',
-      'data-highlighted:bg-accent-9 dadata-highlighted:text-whiteata-[highlighted]:font-bold',
+      'data-disabled:text-neutral-11 data-disabled:pointer-events-none cursor-pointer',
+      'data-highlighted:bg-accent-9 data-highlighted:text-white data-highlighted:font-bold',
       className,
     )}
     {...props}

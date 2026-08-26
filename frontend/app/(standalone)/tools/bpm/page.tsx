@@ -1001,7 +1001,7 @@ export default function TempoDetector() {
 
             <button
               onClick={handleTap}
-              className="w-full py-14 rounded-xl border text-lg font-bold tracking-wide active:scale-0.98 transition-transform select-none"
+              className="w-full py-14 rounded-xl border text-lg font-bold tracking-wide transition-transform select-none"
               style={{
                 background: 'var(--bpm-surface)',
                 borderColor: 'var(--bpm-border)',

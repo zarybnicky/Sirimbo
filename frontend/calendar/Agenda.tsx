@@ -228,7 +228,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
         return (
           <React.Fragment key={instance.id}>
             {loc !== prevLoc && !!loc && (
-              <div className="ml-2.5 not:first:mt-1 text-sm text-accent-11">{loc}</div>
+              <div className="ml-2.5 not-first:mt-1 text-sm text-accent-11">{loc}</div>
             )}
             <EventButton instance={instance} viewer="trainer" />
           </React.Fragment>
