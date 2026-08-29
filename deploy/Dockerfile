@@ -20,7 +20,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY patches/ patches/
 COPY frontend/package.json frontend/package.json
 
-RUN --mount=type=cache,id=pnpm-web,target=/pnpm/store,sharing=locked \
+RUN --mount=type=cache,id=sirimbo-pnpm,target=/pnpm/store,sharing=locked \
   pnpm install --frozen-lockfile --filter @rozpisovnik/web...
 
 FROM deps AS builder
@@ -36,7 +36,7 @@ ARG GITHUB_SHA
 ENV SENTRY_RELEASE=${GITHUB_SHA}
 ENV NEXT_DEPLOYMENT_ID=${GITHUB_SHA}
 
-RUN --mount=type=cache,id=next-web,target=/repo/frontend/.next/cache,sharing=locked \
+RUN --mount=type=cache,id=sirimbo-next,target=/repo/frontend/.next/cache,sharing=locked \
   pnpm --filter @rozpisovnik/web build
 
 FROM gcr.io/distroless/nodejs24-debian12:nonroot AS runner
