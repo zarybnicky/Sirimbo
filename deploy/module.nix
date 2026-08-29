@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -187,80 +186,5 @@ in
         };
       }
     ];
-
-    users.users.github-runner-sirimbo = {
-      uid = 1234;
-      isSystemUser = true;
-      group = "github-runner-sirimbo";
-      home = "/var/lib/github-runner-sirimbo";
-      createHome = true;
-      linger = true;
-      subUidRanges = [{ startUid = 100000; count = 65536; }];
-      subGidRanges = [{ startGid = 100000; count = 65536; }];
-    };
-    users.groups.github-runner-sirimbo = {};
-
-    virtualisation.docker.rootless = {
-      enable = true;
-      setSocketVariable = true;
-      daemon.settings = {
-        features.containerd-snapshotter = true;
-      };
-    };
-    systemd.user.services.docker.environment.DOCKERD_ROOTLESS_ROOTLESSKIT_DISABLE_HOST_LOOPBACK = "false";
-
-    systemd.user.services.buildkitd = {
-      description = "Rootless BuildKit daemon";
-      unitConfig.ConditionUser = "1234";
-      wantedBy = [ "default.target" ];
-      path = with pkgs; [ rootlesskit buildkit runc "/run/wrappers" ];
-      serviceConfig = let
-        buildkitdToml = pkgs.writeText "buildkitd.toml" ''
-          [worker.oci]
-          enabled = true
-          gc = true
-          reservedSpace = "5GB"
-          maxUsedSpace = "10GB"
-          networkMode = "host"
-
-          [registry."127.0.0.1:5000"]
-          http = true
-          insecure = true
-        '';
-      in {
-        ExecStart = ''
-          ${pkgs.rootlesskit}/bin/rootlesskit --net=host --copy-up=/etc --copy-up=/run --propagation=rslave ${pkgs.buildkit}/bin/buildkitd --config ${buildkitdToml}
-        '';
-        Restart = "always";
-        RestartSec = 2;
-      };
-    };
-
-    services.github-runners."sirimbo" = {
-      enable = true;
-      name = "${config.networking.hostName}-sirimbo";
-      url = "https://github.com/zarybnicky/Sirimbo";
-      replace = true;
-      user = "github-runner-sirimbo";
-      group = "github-runner-sirimbo";
-      extraLabels = [ "deploy" "sirimbo" ];
-      extraPackages = with pkgs; [
-        argocd
-        git
-        jq
-        kubectl
-        skopeo
-        docker
-      ];
-      serviceOverrides = {
-        PrivateUsers = lib.mkForce false;
-        ProtectHome = lib.mkForce false;
-      };
-      extraEnvironment = {
-        KUBECONFIG = "/etc/rancher/k3s/argocd-ns.yaml:/etc/rancher/k3s/k3s.yaml";
-        DOCKER_HOST = "unix:///run/user/1234/docker.sock";
-        XDG_RUNTIME_DIR = "/run/user/1234";
-      };
-    };
   };
 }
