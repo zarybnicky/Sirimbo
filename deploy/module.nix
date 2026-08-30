@@ -121,7 +121,7 @@ in
                 name = "runtime.sentryEnvironment";
                 value = "production";
               }
-            ];
+            ] ++ config.my.seaweedfs.buckets.olymp.helmValues;
           };
           destination = {
             server = "https://kubernetes.default.svc";
