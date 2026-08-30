@@ -15,6 +15,7 @@ type HeroArticle = {
   summary: string | null;
   img: string;
   inset: boolean;
+  background?: string;
 };
 
 export function Hero({
@@ -42,8 +43,10 @@ export function Hero({
         name: 'Přijď tančit!',
         summary:
           'Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.',
-        inset: false,
-        img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837164-0016-DSC_0009%201.jpg',
+        inset: true,
+        background: '#E32A3A',
+        img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1788092007301-WhatsApp%20Image%202026-08-26%20at%2014.24.57.jpeg',
+        // img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837164-0016-DSC_0009%201.jpg',
       },
       ...mappedData.filter((x) => x.id !== '467' && x.id !== '468' && x.id !== '470'),
     ] as HeroArticle[];
@@ -137,15 +140,20 @@ export function Hero({
             href={x.href}
             className="group relative block w-full shrink-0 snap-start overflow-hidden"
           >
-            <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-r from-accent-9/80 via-black/80 to-accent-9/80 p-4 text-center text-2xl font-bold text-white group-hover:underline lg:text-3xl">
-              {x.name}
-            </div>
+            {!x.inset && (
+              <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-r from-accent-9/80 via-black/80 to-accent-9/80 p-4 text-center text-2xl font-bold text-white group-hover:underline lg:text-3xl">
+                {x.name}
+              </div>
+            )}
             <div className="h-[60vh]">
               <Image
                 className={cn(
                   'transition-transform duration-300 group-hover:scale-110',
-                  x.inset ? 'object-contain' : 'object-cover object-[50%_30%]',
+                  x.inset ? 'object-contain' : 'object-cover object-[50%_35%]',
                 )}
+                style={{
+                  backgroundColor: x.background ?? undefined,
+                }}
                 src={x.img}
                 alt={x.name}
                 fill
